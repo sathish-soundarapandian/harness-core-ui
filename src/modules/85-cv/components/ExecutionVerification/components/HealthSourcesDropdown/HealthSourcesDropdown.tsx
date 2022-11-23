@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Select, SelectOption } from '@wings-software/uicore'
+import { Select, SelectOption } from '@harness/uicore'
 import classNames from 'classnames'
 import { useStrings } from 'framework/strings'
 import { getDropdownOptions } from '@cv/components/HealthSourceDropDown/HealthSourceDropDown.utils'

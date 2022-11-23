@@ -12,11 +12,11 @@ import {
   Button,
   Card,
   FormInput,
-  Color,
   Icon,
   ButtonVariation,
   RadioButtonGroup
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { FieldArray } from 'formik'
 import React from 'react'
 import { Draggable } from 'react-beautiful-dnd'

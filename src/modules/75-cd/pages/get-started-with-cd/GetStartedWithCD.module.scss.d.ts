@@ -15,6 +15,7 @@ declare const styles: {
   readonly ciIcon: string
   readonly ciLogo: string
   readonly containerItemCss: string
+  readonly contentWrapper: string
   readonly icon: string
   readonly iconPadding: string
   readonly iconPaddingSmall: string

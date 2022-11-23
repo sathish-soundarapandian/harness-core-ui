@@ -1502,6 +1502,7 @@ exports[`Create Access Point Wizard Tests renders for rule creation mode without
                   </div>
                 </div>
                 <button
+                  aria-label="ce.co.accessPoint.proceed"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
                   style="position: absolute; bottom: 0px;"
                   type="button"
@@ -2109,6 +2110,7 @@ exports[`Create Access Point Wizard Tests renders without crashing 1`] = `
                   </div>
                 </div>
                 <button
+                  aria-label="ce.co.accessPoint.proceed"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
                   style="position: absolute; bottom: 0px;"
                   type="button"

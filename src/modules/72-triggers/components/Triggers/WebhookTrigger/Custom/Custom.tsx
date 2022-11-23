@@ -6,16 +6,16 @@
  */
 
 import type { StringsMap } from 'stringTypes'
-import { WebhookTrigger } from '@triggers/components/Triggers/WebhookTrigger/WebhookTrigger'
-import { SourceRepo } from '../../TriggerInterface'
-import type { WebhookInitialValuesInterface } from '../utils'
+import type { TriggerArtifactType } from '../../TriggerInterface'
+import { ArtifactTrigger } from '../../ArtifactTrigger/ArtifactTrigger'
+import type { ArtifactTriggerValues } from '../../ArtifactTrigger/utils'
 
-export class Custom extends WebhookTrigger<WebhookInitialValuesInterface> {
-  protected type: SourceRepo = SourceRepo.Custom
+export class Custom extends ArtifactTrigger<ArtifactTriggerValues> {
+  protected type: TriggerArtifactType = 'CustomArtifact'
   protected triggerDescription: keyof StringsMap = 'common.repo_provider.customLabel'
 
   protected defaultValues = {
     triggerType: this.baseType,
-    sourceRepo: this.type
+    artifactType: this.type
   }
 }

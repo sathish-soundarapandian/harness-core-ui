@@ -7,8 +7,8 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import isEmpty from 'lodash/isEmpty'
-import { Text, Container, ButtonVariation, Card, PageError } from '@wings-software/uicore'
+import { isEmpty } from 'lodash-es'
+import { Text, Container, ButtonVariation, Card, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { TokenDTO, useListAggregatedApiKeys } from 'services/cd-ng'
 import type { ProjectPathProps, ServiceAccountPathProps } from '@common/interfaces/RouteInterfaces'

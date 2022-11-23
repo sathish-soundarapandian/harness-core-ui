@@ -12,14 +12,14 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  AllowedTypes
-} from '@wings-software/uicore'
+  AllowedTypes,
+  Accordion
+} from '@harness/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
 
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import { isEmpty } from 'lodash-es'
-import { Accordion } from '@harness/uicore'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { K8sRollingStepInfo, StepElementConfig } from 'services/cd-ng'
 import { FormMultiTypeCheckboxField } from '@common/components'
@@ -40,6 +40,7 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -167,7 +168,7 @@ function K8RolloutDeployWidget(
   )
 }
 
-const K8RolloutDeployInputStep: React.FC<K8RolloutDeployProps> = ({ inputSetData, allowableTypes }) => {
+const K8RolloutDeployInputStep: React.FC<K8RolloutDeployProps> = ({ inputSetData, allowableTypes, stepViewType }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   return (
@@ -178,7 +179,9 @@ const K8RolloutDeployInputStep: React.FC<K8RolloutDeployProps> = ({ inputSetData
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
             label={getString('pipelineSteps.timeoutLabel')}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: inputSetData?.readonly

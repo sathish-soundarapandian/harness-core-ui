@@ -9,16 +9,15 @@ import { useHistory } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
 import { returnUrlParams } from '@common/utils/routeUtils'
 import SecureStorage from './SecureStorage'
+import { getLocationPathName } from './WindowLocation'
 
 interface GetLoginPageURL {
   returnUrl?: string
 }
 
 export const getLoginPageURL = ({ returnUrl }: GetLoginPageURL): string => {
-  // for basepath, pick current path, but remove `/ng/` or `/ng`, to respect PR env namespaces
-  const basePath = window.HARNESS_ENABLE_NG_AUTH_UI
-    ? `${window.location.pathname.replace(/\/ng\/?/, '/')}auth/#/signin`
-    : `${window.location.pathname.replace(/\/ng\/?/, '/')}#/login`
+  const locationPath = getLocationPathName().replace(/\/ng\/?/, '/')
+  const basePath = window.HARNESS_ENABLE_NG_AUTH_UI ? `${locationPath}auth/#/signin` : `${locationPath}#/login`
 
   return returnUrl
     ? `${basePath}?action=signout&returnUrl=${encodeURIComponent(returnUrl)}`
@@ -28,8 +27,8 @@ export const getLoginPageURL = ({ returnUrl }: GetLoginPageURL): string => {
 export const getForgotPasswordURL = (): string => {
   // for basepath, pick current path, but remove `/ng/` or `/ng`, to respect PR env namespaces
   return window.HARNESS_ENABLE_NG_AUTH_UI
-    ? `${window.location.pathname.replace(/\/ng\/?/, '/')}auth/#/forgot-password`
-    : `${window.location.pathname.replace(/\/ng\//, '/')}#/forgot-password`
+    ? `${getLocationPathName().replace(/\/ng\/?/, '/')}auth/#/forgot-password`
+    : `${getLocationPathName().replace(/\/ng\//, '/')}#/forgot-password`
 }
 
 export interface UseLogoutReturn {

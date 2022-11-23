@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Text, FormInput, Icon } from '@wings-software/uicore'
+import { Container, Text, FormInput, Icon } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'

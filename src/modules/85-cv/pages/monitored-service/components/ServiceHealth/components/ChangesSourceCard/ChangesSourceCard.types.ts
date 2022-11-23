@@ -8,7 +8,8 @@
 import type { CategoryCountDetails } from 'services/cv'
 
 export interface ChangeSourceCardInterface {
-  monitoredServiceIdentifier: string
+  monitoredServiceIdentifier?: string
+  monitoredServiceIdentifiers?: string[]
   startTime: number
   endTime: number
 }

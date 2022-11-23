@@ -27,7 +27,7 @@ export interface DetailsPanelProps {
 }
 
 export interface KeyValuePairProps {
-  keyText: string
+  label: string
   value: string
 }
 

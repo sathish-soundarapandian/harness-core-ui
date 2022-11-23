@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import Telemetry from '@wings-software/telemetry'
+import Telemetry from '@harness/telemetry'
 
 const stubTelemetry = {
   identify: () => void 0,

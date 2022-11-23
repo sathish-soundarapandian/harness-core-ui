@@ -7,12 +7,11 @@
 
 import React, { useState, useRef, DragEvent, useCallback } from 'react'
 import type { FormikProps } from 'formik'
-import { Icon, Text } from '@harness/uicore'
-import { Button, ButtonVariation, FormInput } from '@wings-software/uicore'
+import { Icon, Text, Button, ButtonVariation, FormInput } from '@harness/uicore'
 import { debounce } from 'lodash-es'
 import { useToaster } from '@common/exports'
 import { useStrings } from 'framework/strings'
-import type { uploadHostItem } from '../StepDetails/PdcDetails'
+import type { SelectionType, uploadHostItem } from '../StepDetails/PdcDetails'
 
 import css from './UploadJSON.module.scss'
 
@@ -21,6 +20,7 @@ interface UploadJSONInterface {
   formikProps?: FormikProps<{
     hostsJson: string
     hosts: string | string[]
+    selectionType: SelectionType
   }>
   previousHosts?: uploadHostItem[] | string
 }

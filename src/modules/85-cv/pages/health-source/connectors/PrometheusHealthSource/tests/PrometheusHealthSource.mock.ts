@@ -6,6 +6,8 @@
  */
 
 import { cloneDeep } from 'lodash-es'
+import { AWSDataSourceType } from '@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
+import type { PrometheusSetupSource } from '../PrometheusHealthSource.constants'
 
 export const MockManualQueryData = {
   isEdit: true,
@@ -376,11 +378,38 @@ export const sourceDataPrometheusPayload = {
         type: 'Percentage',
         spec: {
           greaterThan: 1222
-        },
-        criteriaPercentageType: 'greaterThan'
+        }
       }
     }
   ]
+}
+
+export const expectedAWSPrometheusPayload = {
+  identifier: 'test',
+  name: 'test',
+  spec: {
+    connectorRef: 'testprometheus2',
+    feature: 'apm',
+    metricDefinitions: [],
+    metricPacks: [{ identifier: 'Custom', metricThresholds: [] }],
+    region: 'region 1',
+    workspaceId: 'wp1'
+  },
+  type: 'AwsPrometheus'
+}
+
+export const dataSourceTypePayloadMock: PrometheusSetupSource = {
+  isEdit: true,
+  mappedServicesAndEnvs: new Map(),
+  region: 'region 1',
+  workspaceId: 'wp1',
+  dataSourceType: AWSDataSourceType,
+  healthSourceIdentifier: 'test',
+  healthSourceName: 'test',
+  connectorRef: 'testprometheus2',
+  ignoreThresholds: [],
+  failFastThresholds: [],
+  product: { label: 'test', value: 'test' }
 }
 
 export const expectedResultPrometheusPayload = {
@@ -402,7 +431,7 @@ export const expectedResultPrometheusPayload = {
             type: 'IgnoreThreshold'
           },
           {
-            criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 1222 }, type: 'Percentage' },
+            criteria: { spec: { greaterThan: 1222 }, type: 'Percentage' },
             metricName: 'Prometheus Metric',
             metricType: 'Custom',
             spec: { action: 'FailAfterOccurrence', spec: { count: 12 } },

@@ -18,7 +18,7 @@ import { useToaster } from '@common/components'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import { getGaClientID, getSavedRefererURL } from '@common/utils/utils'
+import { getGaClientID, getSavedRefererURL, isOnPrem } from '@common/utils/utils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useQueryParams } from '@common/hooks'
@@ -26,12 +26,11 @@ import bgImage from './images/cehomebg.svg'
 
 const CETrialHomePage: React.FC = () => {
   const { getString } = useStrings()
-
   const { accountId } = useParams<AccountPathProps>()
   const history = useHistory()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
-  const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
+  const isFreeEnabled = !isOnPrem()
   const module = 'ce'
   const moduleType = 'CE'
   const microfrontendEnabled = useFeatureFlag(FeatureFlag.CCM_MICRO_FRONTEND)
@@ -57,7 +56,7 @@ const CETrialHomePage: React.FC = () => {
       accountIdentifier: accountId,
       moduleType,
       ...(refererURL ? { referer: refererURL } : {}),
-      ...(gaClientID ? { gaClientID } : {})
+      ...(gaClientID ? { gaClientId: gaClientID } : {})
     },
     requestOptions: {
       headers: {

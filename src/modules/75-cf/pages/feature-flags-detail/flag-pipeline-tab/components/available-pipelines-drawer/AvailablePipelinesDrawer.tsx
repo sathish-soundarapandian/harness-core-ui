@@ -6,17 +6,8 @@
  */
 
 import { Drawer, Position } from '@blueprintjs/core'
-import {
-  Color,
-  Container,
-  FontVariation,
-  Layout,
-  Text,
-  ExpandingSearchInput,
-  Button,
-  ButtonVariation,
-  Heading
-} from '@harness/uicore'
+import { Container, Layout, Text, ExpandingSearchInput, Button, ButtonVariation, Heading } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useStrings, String } from 'framework/strings'

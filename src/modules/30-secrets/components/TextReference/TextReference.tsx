@@ -5,13 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { get, isPlainObject } from 'lodash-es'
 import { FormikContextType, connect } from 'formik'
 import { Classes, FormGroup, Intent } from '@blueprintjs/core'
-import { FormInput, Layout, Container, FormikTooltipContext, DataTooltipInterface } from '@wings-software/uicore'
+import { FormInput, Layout, Container, FormikTooltipContext, DataTooltipInterface } from '@harness/uicore'
 import type { StringsMap } from 'stringTypes'
 
 import { useStrings } from 'framework/strings'
@@ -58,10 +58,6 @@ const TextReference: React.FC<FormikTextReference> = props => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { showError } = useToaster()
   const { formik, name, allowSelection, privateSecret } = props
-  const [username, setUsername] = useState<TextReferenceInterface>({
-    value: formik.values[`${name}textField`] || formik.values[`${name}`]?.value,
-    type: ValueType.TEXT
-  })
   const hasError = errorCheck(props.name, formik)
 
   useEffect(() => {
@@ -71,13 +67,6 @@ const TextReference: React.FC<FormikTextReference> = props => {
       formik.setFieldValue(`${name}fieldType`, ValueType.TEXT)
     }
   }, [props.type])
-
-  useEffect(() => {
-    if (formik.values[`${name}fieldType`] === ValueType.TEXT) {
-      formik.setFieldValue(name, username)
-      formik.setFieldValue(`${name}textField`, username?.value)
-    }
-  }, [formik.values[`${name}fieldType`]])
 
   useEffect(() => {
     if (formik.values[`${name}secretField`]) {
@@ -170,7 +159,6 @@ const TextReference: React.FC<FormikTextReference> = props => {
                   value: (e.target as any).value,
                   type: ValueType.TEXT
                 })
-                setUsername({ value: (e.target as any).value, type: ValueType.TEXT })
               }
             }}
             className={css.textCss}

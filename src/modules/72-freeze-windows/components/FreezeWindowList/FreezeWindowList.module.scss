@@ -10,14 +10,17 @@
   padding: var(--spacing-2) var(--spacing-3) !important;
   display: inline-block !important;
   text-transform: uppercase;
-  &.active {
+  &[data-state='ACTIVE'] {
     background-color: var(--primary-2);
     color: var(--primary-7);
   }
-
-  &.inactive {
-    background-color: var(--grey-200);
-    color: var(--grey-700);
+  &[data-state='INACTIVE'] {
+    background-color: var(--grey-100);
+    color: var(--grey-600);
+  }
+  &[data-state='EXPIRED'] {
+    background-color: var(--grey-400);
+    color: var(--grey-0) !important;
   }
 }
 
@@ -45,4 +48,12 @@
 
 .switch {
   margin-bottom: 0 !important;
+}
+
+.checkbox {
+  :global {
+    .bp3-checkbox .bp3-control-indicator {
+      margin-right: 0 !important;
+    }
+  }
 }

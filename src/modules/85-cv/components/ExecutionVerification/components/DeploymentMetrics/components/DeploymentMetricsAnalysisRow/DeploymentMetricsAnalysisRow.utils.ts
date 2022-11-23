@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import { getRiskColorValue } from '@cv/utils/CommonUtils'
 import type { TransactionMetricInfo } from 'services/cv'
 import type { HostControlTestData, HostTestData } from './DeploymentMetricsAnalysisRow.constants'
@@ -18,6 +18,7 @@ export function healthSourceTypeToLogo(healthSourceType: TransactionMetricInfo['
     case 'NEW_RELIC':
       return 'service-newrelic'
     case 'PROMETHEUS':
+    case 'AWS_PROMETHEUS':
       return 'service-prometheus'
     case 'SPLUNK':
       return 'service-splunk'

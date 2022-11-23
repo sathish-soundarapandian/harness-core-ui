@@ -12,12 +12,14 @@ import { useFreezeWindowListContext } from '@freeze-windows/context/FreezeWindow
 import type { FreezeSummaryResponse } from 'services/cd-ng'
 import css from './FreezeWindowList.module.scss'
 
-export const ToggleAllSelection: FC<{ data: FreezeSummaryResponse[] }> = ({ data }) => {
+export const ToggleAllSelection: FC<{ data: FreezeSummaryResponse[]; canEdit: boolean }> = ({ data, canEdit }) => {
   const { toggleAllSelect, selectedItems } = useFreezeWindowListContext()
 
   return (
     <div className={css.checkbox} onClick={killEvent}>
       <Checkbox
+        readOnly={!canEdit}
+        aria-label="Select all rows"
         indeterminate={selectedItems.length > 0 && selectedItems.length !== data.length}
         large
         checked={selectedItems.length === data.length}

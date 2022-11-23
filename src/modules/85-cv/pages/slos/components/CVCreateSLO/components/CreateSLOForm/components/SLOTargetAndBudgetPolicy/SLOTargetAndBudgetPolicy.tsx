@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Card, FormInput, Heading, Icon, Layout, Text, Container } from '@wings-software/uicore'
+import { Card, FormInput, Heading, Icon, Layout, Text, Container } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -25,7 +25,8 @@ import {
   SLOTargetAndBudgetPolicyProps,
   PeriodTypes,
   PeriodLengthTypes,
-  SLOFormFields
+  SLOFormFields,
+  ErrorBudgetInterface
 } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import SLOTargetContextualHelpText from './components/SLOTargetContextualHelpText'
@@ -33,11 +34,90 @@ import { flexStart } from './SLOTargetAndBudgetPolicy.constants'
 import SLOTargetNotificationsContainer from './components/SLOTargetNotificationsContainer/SLOTargetNotificationsContainer'
 import css from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.module.scss'
 
+interface SLOPeriodInterface {
+  periodType?: string
+  periodLengthType?: string
+  verticalOrientation?: boolean
+}
+
+export const SloPeriodLength = ({
+  periodType,
+  periodLengthType,
+  verticalOrientation
+}: SLOPeriodInterface): JSX.Element => {
+  const { getString } = useStrings()
+  const ComponentLayout = verticalOrientation ? Layout.Vertical : Layout.Horizontal
+  return (
+    <ComponentLayout spacing="medium">
+      <FormInput.Select
+        name={SLOFormFields.PERIOD_TYPE}
+        label={getString('cv.slos.sloTargetAndBudget.periodType')}
+        items={getPeriodTypeOptions(getString)}
+      />
+      {periodType === PeriodTypes.CALENDAR ? (
+        <>
+          <FormInput.Select
+            name={SLOFormFields.PERIOD_LENGTH_TYPE}
+            label={getString('cv.periodLength')}
+            items={getPeriodLengthOptions(getString)}
+          />
+          {periodLengthType === PeriodLengthTypes.MONTHLY && (
+            <FormInput.Select
+              name={SLOFormFields.DAY_OF_MONTH}
+              label={getString('cv.windowEndsDay')}
+              items={getWindowEndOptionsForMonth()}
+              disabled={!periodLengthType}
+            />
+          )}
+          {periodLengthType === PeriodLengthTypes.WEEKLY && (
+            <FormInput.Select
+              name={SLOFormFields.DAY_OF_WEEK}
+              label={getString('cv.widowEnds')}
+              items={getWindowEndOptionsForWeek(getString)}
+              disabled={!periodLengthType}
+            />
+          )}
+        </>
+      ) : (
+        <FormInput.Select
+          name={SLOFormFields.PERIOD_LENGTH}
+          label={getString('cv.periodLengthDays')}
+          items={getPeriodLengthOptionsForRolling()}
+        />
+      )}
+    </ComponentLayout>
+  )
+}
+
+export const ErrorBudgetCard = (props: ErrorBudgetInterface): JSX.Element => {
+  const { getString } = useStrings()
+  return (
+    <Container height={180} background={Color.GREY_100} padding="medium" className={css.errorBudget}>
+      <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_600}>
+        {getString('cv.errorBudget')}
+      </Text>
+      <Heading inline level={1} font={{ variation: FontVariation.DISPLAY2 }}>
+        {getErrorBudget({ ...props })}
+      </Heading>
+      <Text inline font={{ variation: FontVariation.FORM_SUB_SECTION }}>
+        {getString('cv.mins')}
+      </Text>
+    </Container>
+  )
+}
+
 const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ children, formikProps, ...rest }) => {
   const { getString } = useStrings()
   const { identifier } = useParams<ProjectPathProps & { identifier: string }>()
 
-  const { periodType, periodLengthType, notificationRuleRefs } = formikProps.values || {}
+  const {
+    periodType,
+    periodLengthType,
+    notificationRuleRefs,
+    periodLength = '',
+    SLOTargetPercentage
+  } = formikProps.values || {}
+  const errorBudgetCardProps = { periodType, periodLength, periodLengthType, SLOTargetPercentage }
 
   return (
     <>
@@ -55,45 +135,7 @@ const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ chi
               >
                 {getString('cv.slos.sloTargetAndBudget.complianceTimePeriodTitle')}
               </Heading>
-              <Layout.Horizontal spacing="medium">
-                <FormInput.Select
-                  name={SLOFormFields.PERIOD_TYPE}
-                  label={getString('cv.slos.sloTargetAndBudget.periodType')}
-                  items={getPeriodTypeOptions(getString)}
-                />
-                {periodType === PeriodTypes.CALENDAR ? (
-                  <>
-                    <FormInput.Select
-                      name={SLOFormFields.PERIOD_LENGTH_TYPE}
-                      label={getString('cv.periodLength')}
-                      items={getPeriodLengthOptions(getString)}
-                    />
-                    {periodLengthType === PeriodLengthTypes.MONTHLY && (
-                      <FormInput.Select
-                        name={SLOFormFields.DAY_OF_MONTH}
-                        label={getString('cv.windowEndsDay')}
-                        items={getWindowEndOptionsForMonth()}
-                        disabled={!periodLengthType}
-                      />
-                    )}
-                    {periodLengthType === PeriodLengthTypes.WEEKLY && (
-                      <FormInput.Select
-                        name={SLOFormFields.DAY_OF_WEEK}
-                        label={getString('cv.widowEnds')}
-                        items={getWindowEndOptionsForWeek(getString)}
-                        disabled={!periodLengthType}
-                      />
-                    )}
-                  </>
-                ) : (
-                  <FormInput.Select
-                    name={SLOFormFields.PERIOD_LENGTH}
-                    label={getString('cv.periodLengthDays')}
-                    items={getPeriodLengthOptionsForRolling()}
-                  />
-                )}
-              </Layout.Horizontal>
-
+              <SloPeriodLength periodType={periodType} periodLengthType={periodLengthType} />
               <FormInput.Text
                 name={SLOFormFields.SLO_TARGET_PERCENTAGE}
                 label={getString('cv.SLOTarget')}
@@ -109,7 +151,7 @@ const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ chi
               <Layout.Horizontal spacing="xxxlarge" flex={{ alignItems: flexStart, justifyContent: flexStart }}>
                 <Container width={450}>
                   <SLOTargetChartWrapper
-                    customChartOptions={getCustomOptionsForSLOTargetChart(formikProps.values)}
+                    customChartOptions={getCustomOptionsForSLOTargetChart(formikProps.values.SLOTargetPercentage)}
                     monitoredServiceIdentifier={formikProps.values.monitoredServiceRef}
                     serviceLevelIndicator={convertSLOFormDataToServiceLevelIndicatorDTO(formikProps.values)}
                     {...rest}
@@ -126,18 +168,7 @@ const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ chi
                     }
                   />
                 </Container>
-
-                <Container height={180} background={Color.GREY_100} padding="medium" className={css.errorBudget}>
-                  <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_600}>
-                    {getString('cv.errorBudget')}
-                  </Text>
-                  <Heading inline level={1} font={{ variation: FontVariation.DISPLAY2 }}>
-                    {getErrorBudget(formikProps.values)}
-                  </Heading>
-                  <Text inline font={{ variation: FontVariation.FORM_SUB_SECTION }}>
-                    {getString('cv.mins')}
-                  </Text>
-                </Container>
+                <ErrorBudgetCard {...errorBudgetCardProps} />
               </Layout.Horizontal>
             </Layout.Vertical>
           </Container>

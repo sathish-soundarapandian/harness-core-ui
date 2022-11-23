@@ -8,7 +8,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import cx from 'classnames'
-import { Card, Text, Tag, Icon, IconName } from '@wings-software/uicore'
+import { Card, Text, Tag, Icon, IconName } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import css from './GlanceCard.module.scss'
 

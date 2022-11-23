@@ -7,41 +7,48 @@
 
 import React, { FC } from 'react'
 import { Classes, Intent, Spinner, Switch } from '@blueprintjs/core'
-import { defaultTo } from 'lodash-es'
-import {
-  Dialog,
-  OverlaySpinner,
-  useConfirmationDialog,
-  useToaster,
-  Text,
-  Layout,
-  FontVariation,
-  Color
-} from '@harness/uicore'
+import { defaultTo, isEmpty } from 'lodash-es'
+import { Dialog, OverlaySpinner, useConfirmationDialog, useToaster, Text, Layout, Icon } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import moment from 'moment'
-import { useStrings } from 'framework/strings'
+import { useStrings, String } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FreezeWindow, useGetGlobalFreeze, useGlobalFreeze } from 'services/cd-ng'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
-import { scopeText } from '@freeze-windows/utils/freezeWindowUtils'
+import { getReadableDateFromDateString, scopeText } from '@freeze-windows/utils/freezeWindowUtils'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { GlobalFreezeScheduleForm } from './GlobalFreezeScheduleForm'
 import css from './GlobalFreezeToggle.module.scss'
 
-interface GlobalFreezeToggleProps {
+export interface GlobalFreezeToggleProps {
   freezeListLoading?: boolean
+  refreshGlobalFreezeBanner: () => void
 }
 
-export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoading }) => {
+export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoading, refreshGlobalFreezeBanner }) => {
   const { getString } = useStrings()
   const { showSuccess, showWarning } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountId })
+
+  const [canEdit] = usePermission({
+    resourceScope: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    resource: {
+      resourceType: ResourceType.DEPLOYMENTFREEZE
+    },
+    permissions: [PermissionIdentifier.GLOBAL_DEPLOYMENT_FREEZE]
+  })
 
   const {
     loading: getGlobalFreezeLoading,
@@ -55,6 +62,9 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
     }
   })
 
+  const isGlobalFreezeEnabled =
+    getGlobalFreezeData?.data?.status === 'Enabled' && !isEmpty(getGlobalFreezeData?.data.currentOrUpcomingWindow)
+
   const { mutate: updateGlobalFreeze, loading: updateGlobalFreezeLoading } = useGlobalFreeze({
     queryParams: {
       accountIdentifier: accountId,
@@ -65,7 +75,7 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
   })
 
   const freeze = yamlParse<any>(defaultTo(getGlobalFreezeData?.data?.yaml, ''))?.freeze || {}
-  const freezeWindow = freeze?.windows?.[0] || ({} as FreezeWindow)
+  const freezeWindow = isGlobalFreezeEnabled ? defaultTo(freeze?.windows?.[0], {}) : ({} as FreezeWindow)
   const { endTime, timeZone, startTime, duration } = freezeWindow
 
   const { openDialog: openDisableFreezeDialog } = useConfirmationDialog({
@@ -78,16 +88,26 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
       if (isConfirmed) {
         handleDisableGlobalFreeze()
       }
-    }
+    },
+    className: css.confirmDisable
   })
 
   const [openEnableFreezeDialog, hideEnableFreezeDialog] = useModalHook(
     () => (
       <Dialog
-        // usePortal={false}
         isOpen
         canOutsideClickClose={false}
-        title={`${getString('freezeWindows.globalFreeze.enableFreezeTitle', { scope: scopeText[scope] })} ?`}
+        title={
+          <Layout.Horizontal padding={{ left: 'xsmall' }} flex={{ alignItems: 'center' }}>
+            <Icon name="warning-icon" size={32} margin={{ right: 'small' }} intent="warning" />
+            <Text
+              font={{ variation: FontVariation.H4 }}
+              tooltip={getString('freezeWindows.globalFreeze.enableFreezeTitleInfo', { scope: scopeText[scope] })}
+            >
+              {`${getString('freezeWindows.globalFreeze.enableFreezeTitle', { scope: scopeText[scope] })} ?`}
+            </Text>
+          </Layout.Horizontal>
+        }
         onClose={hideEnableFreezeDialog}
         enforceFocus={false}
         className={cx(css.dialog, Classes.DIALOG)}
@@ -108,6 +128,7 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
       await updateGlobalFreeze(body)
       refetchGetGlobalFreeze()
       showSuccess(getString('freezeWindows.globalFreeze.disableFreezeSuccess', { scope: scopeText[scope] }))
+      refreshGlobalFreezeBanner()
     } catch (err: any) {
       showWarning(defaultTo(getRBACErrorMessage(err), getString('freezeWindows.globalFreeze.disableFreezeFailure')))
     }
@@ -116,12 +137,14 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
   const handleEnableGlobalFreeze = async (scheduledFreezeWindow: FreezeWindow): Promise<void> => {
     try {
       freeze.status = 'Enabled'
+      freeze.description = undefined
       freeze.windows = [scheduledFreezeWindow]
       const body = yamlStringify({ freeze: freeze })
       await updateGlobalFreeze(body)
       refetchGetGlobalFreeze()
       hideEnableFreezeDialog()
       showSuccess(getString('freezeWindows.globalFreeze.enableFreezeSuccess', { scope: scopeText[scope] }))
+      refreshGlobalFreezeBanner()
     } catch (err: any) {
       showWarning(defaultTo(getRBACErrorMessage(err), getString('freezeWindows.globalFreeze.enableFreezeFailure')))
     }
@@ -131,41 +154,42 @@ export const GlobalFreezeToggle: FC<GlobalFreezeToggleProps> = ({ freezeListLoad
     return null // avoid showing double loader
   }
 
-  const isGlobalFreezeEnabled = getGlobalFreezeData?.data?.status === 'Enabled'
-
   return (
     <OverlaySpinner show={updateGlobalFreezeLoading || getGlobalFreezeLoading} size={Spinner.SIZE_SMALL}>
-      <Layout.Horizontal>
+      <Layout.Horizontal className={css.toggleContainer}>
         <Switch
-          disabled={!updateGlobalFreeze}
+          aria-label="Global Freeze Toggle"
+          disabled={!canEdit}
           onChange={event => (event.currentTarget.checked ? openEnableFreezeDialog() : openDisableFreezeDialog())}
           className={css.switch}
           checked={isGlobalFreezeEnabled}
         />
         <Text font={{ variation: FontVariation.SMALL }}>
-          {isGlobalFreezeEnabled
-            ? getString('freezeWindows.globalFreeze.enabled')
-            : getString('freezeWindows.globalFreeze.disabled')}
+          <String
+            stringID={
+              isGlobalFreezeEnabled ? 'freezeWindows.globalFreeze.enabled' : 'freezeWindows.globalFreeze.disabled'
+            }
+            useRichText
+            vars={{
+              scope: scopeText[scope]
+            }}
+          />
         </Text>
-        <Text font={{ variation: FontVariation.SMALL_SEMI }}>&nbsp;{scopeText[scope]}</Text>
+
         {isGlobalFreezeEnabled && (
-          <>
-            <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_900}>
-              &nbsp;from
-            </Text>
-            <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
-              &nbsp;{moment(startTime).format('lll')}
-            </Text>
-            <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_900}>
-              &nbsp;{duration ? 'for' : 'to'}
-            </Text>
-            <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
-              &nbsp;{duration || moment(endTime).format('lll')}
-            </Text>
-            <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
-              &nbsp;{timeZone}
-            </Text>
-          </>
+          <Text font={{ variation: FontVariation.SMALL }}>
+            &nbsp;
+            <String
+              stringID="freezeWindows.globalFreeze.enabledWindow"
+              useRichText
+              vars={{
+                startTime: getReadableDateFromDateString(startTime),
+                supportText: duration ? 'for' : 'to',
+                endTimeOrDuration: duration || getReadableDateFromDateString(endTime),
+                timeZone
+              }}
+            />
+          </Text>
         )}
       </Layout.Horizontal>
     </OverlaySpinner>

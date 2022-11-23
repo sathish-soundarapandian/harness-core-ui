@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Layout, Icon } from '@wings-software/uicore'
+import { Text, Layout, Icon } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useGetSelectionLogsV2 } from 'services/portal'
 import { String, useStrings } from 'framework/strings'

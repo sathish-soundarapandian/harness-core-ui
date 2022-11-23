@@ -16,13 +16,13 @@ import {
   Icon,
   getMultiTypeFromValue,
   MultiTypeInputType
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, get, defaultTo } from 'lodash-es'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import {
   AzureWebAppInfrastructure,
   useGetAzureResourceGroupsBySubscription,
@@ -268,7 +268,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                   }}
                 />
                 {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME && !readonly && (
-                  <ConfigureOptions
+                  <ConnectorConfigureOptions
                     value={formik.values.connectorRef as string}
                     type={
                       <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
@@ -287,6 +287,16 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                     }
                     isReadonly={readonly}
                     className={css.marginTop}
+                    connectorReferenceFieldProps={{
+                      accountIdentifier: accountId,
+                      projectIdentifier,
+                      orgIdentifier,
+                      type: Connectors.AZURE,
+                      label: getString('common.azureConnector'),
+
+                      disabled: readonly,
+                      gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
+                    }}
                   />
                 )}
               </Layout.Horizontal>

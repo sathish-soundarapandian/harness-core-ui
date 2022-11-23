@@ -243,6 +243,7 @@ export enum FeatureActions {
   CreateAFlagView = 'Create a Flag View Loaded',
   SetUpYourApplicationView = 'Set Up Your Application View Loaded',
   SetUpYourApplicationVerify = 'Set Up Your Application Verify Clicked',
+  SetUpYourCodeView = 'Set Up Your Code View Clicked',
   TestYourFlagBack = 'Test Your Flag Back to Quick Start Guide Clicked',
   GetStartedPrevious = 'Get Started Previous Clicked',
   GetStartedNext = 'Get Started Next Clicked',
@@ -262,7 +263,10 @@ export enum CCMActions {
 }
 
 export enum CIOnboardingActions {
-  SelectGitProvider = 'Git Provider Selected'
+  SelectGitProvider = 'Git Provider Selected',
+  GetStartedClicked = 'Clicked on Get Started for CI',
+  ConfigurePipelineClicked = 'Clicked on Configure Pipeline',
+  CreatePipelineClicked = 'Clicked on Create Pipeline'
 }
 
 export enum CDOnboardingActions {
@@ -275,4 +279,9 @@ export enum CDOnboardingActions {
   DownloadOnboardingYAML = 'Download Onboarding YAML File',
   HeartbeatVerifiedOnboardingYAML = 'HeartBeat Verified Onboarding YAML',
   HeartBeatFailedOnboardingYAML = 'HeartBeat Failed Onboarding YAML'
+}
+
+export enum CFOverviewActions {
+  OverviewStartFreePlan = 'FF Overview - Start a free plan',
+  InviteCollaboratorsClick = 'Clicked Invite Collaborators'
 }

@@ -6,7 +6,7 @@
  */
 
 import { defaultTo, flatMap } from 'lodash-es'
-import type { MultiSelectOption, SelectOption } from '@wings-software/uicore'
+import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import type { ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
 import { EmptyStageName } from '../PipelineConstants'

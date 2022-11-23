@@ -6,7 +6,7 @@
  */
 
 import type { FormikProps } from 'formik'
-import type { Item } from '@wings-software/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
+import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
 import type {
   ChangeSourceDTO,
   HarnessCDCurrentGenChangeSourceSpec,

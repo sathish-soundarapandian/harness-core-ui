@@ -8,7 +8,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
-import { ButtonVariation, Container, HarnessDocTooltip, Layout, Text } from '@wings-software/uicore'
+import { ButtonVariation, Container, HarnessDocTooltip, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { IOptionProps, Radio } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'

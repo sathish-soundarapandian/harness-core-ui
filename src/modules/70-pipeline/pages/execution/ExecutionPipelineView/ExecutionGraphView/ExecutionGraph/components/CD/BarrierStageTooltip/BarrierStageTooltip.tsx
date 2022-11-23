@@ -7,7 +7,7 @@
 
 import React from 'react'
 import moment from 'moment'
-import { Container, Icon, Layout, Text } from '@wings-software/uicore'
+import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { Spinner } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

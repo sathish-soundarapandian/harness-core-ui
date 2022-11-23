@@ -6,6 +6,53 @@
  */
 
 import { MultiTypeInputType } from '@harness/uicore'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+
+const stateWithKubernetesDeploymentType = {
+  state: {
+    pipeline: {
+      name: 'Pipeline 1',
+      identifier: 'Pipeline_1',
+      description: '',
+      tags: {},
+      stages: [
+        {
+          stage: {
+            name: 'Stage 1',
+            identifier: 'Stage_1',
+            description: '',
+            type: 'Deployment',
+            spec: {
+              serviceConfig: {
+                service: {
+                  identifier: 'Service_1',
+                  name: 'Service 1',
+                  description: ''
+                },
+                serviceDefinition: {
+                  type: ServiceDeploymentType.Kubernetes,
+                  spec: {
+                    artifacts: { sidecars: [], primary: null },
+                    manifests: []
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    selectionState: { selectedStageId: 'Stage_1' }
+  }
+}
+export const pipelineContextKubernetes = {
+  ...stateWithKubernetesDeploymentType,
+  getStageFromPipeline: jest.fn(() => {
+    return { stage: stateWithKubernetesDeploymentType.state.pipeline.stages[0], parent: undefined }
+  }),
+  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  updateStage: jest.fn()
+} as any
 
 const stateWithECSDeploymentType = {
   state: {
@@ -29,7 +76,7 @@ const stateWithECSDeploymentType = {
                   description: ''
                 },
                 serviceDefinition: {
-                  type: 'ECS',
+                  type: ServiceDeploymentType.ECS,
                   spec: {
                     artifacts: { sidecars: [], primary: null },
                     manifests: []

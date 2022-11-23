@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, IconName, Layout, Text } from '@wings-software/uicore'
+import { Icon, IconName, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import css from './ResourceCenter.module.scss'

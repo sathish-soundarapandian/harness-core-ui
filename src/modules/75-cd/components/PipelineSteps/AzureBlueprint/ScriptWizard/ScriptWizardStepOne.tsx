@@ -20,7 +20,7 @@ import {
   ButtonVariation,
   FormikForm,
   ButtonSize
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { isEmpty, get } from 'lodash-es'
@@ -41,7 +41,7 @@ import {
   ConnectorLabelMap,
   ConnectorMap,
   ConnectorTypes
-} from '../../AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
+} from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import type { AzureBlueprintData } from '../AzureBlueprintTypes.types'
 
 import css from './ScriptWizard.module.scss'

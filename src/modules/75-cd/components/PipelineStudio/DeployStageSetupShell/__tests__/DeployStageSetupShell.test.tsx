@@ -8,7 +8,7 @@
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { noop } from 'lodash-es'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
@@ -124,7 +124,7 @@ describe('DeployStageSetupShell tests', () => {
     await waitFor(() => expect(context.getStageFromPipeline).toBeDefined())
   })
 
-  test('Should handleChange be called when button previous is clicked', async () => {
+  test('checking back button functionality', async () => {
     const errorContextProvider = {
       state: {} as any,
       checkErrorsForTab: jest.fn().mockResolvedValue(Promise.resolve()),
@@ -151,10 +151,7 @@ describe('DeployStageSetupShell tests', () => {
     })
 
     const overviewTab = await findByTestId('overview')
-
     expect(overviewTab.getAttribute('aria-selected')).toBe('true')
-    expect(await waitFor(() => errorContextProvider.checkErrorsForTab)).toBeCalled()
-    expect(await waitFor(() => errorContextProvider.checkErrorsForTab)).toBeCalledWith('SERVICE')
   })
 
   test('Should handleChange be called when button next is clicked', async () => {

@@ -64,6 +64,7 @@ RbacFactory.registerResourceCategory(ResourceCategory.ADMINSTRATIVE_FUNCTIONS, {
 RbacFactory.registerResourceTypeHandler(ResourceType.USER, {
   icon: 'res-users',
   label: 'users',
+  labelSingular: 'common.userLabel',
   category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_USER]: <String stringID="rbac.permissionLabels.view" />,
@@ -75,6 +76,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.USER, {
 RbacFactory.registerResourceTypeHandler(ResourceType.USERGROUP, {
   icon: 'res-userGroups',
   label: 'common.userGroups',
+  labelSingular: 'common.userGroup',
   category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_USERGROUP]: <String stringID="rbac.permissionLabels.view" />,
@@ -89,6 +91,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.USERGROUP, {
 RbacFactory.registerResourceTypeHandler(ResourceType.RESOURCEGROUP, {
   icon: 'res-resourceGroups',
   label: 'resourceGroups',
+  labelSingular: 'common.resourceGroupLabel',
   category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_RESOURCEGROUP]: <String stringID="rbac.permissionLabels.view" />,
@@ -104,6 +107,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.RESOURCEGROUP, {
 RbacFactory.registerResourceTypeHandler(ResourceType.ROLE, {
   icon: 'res-roles',
   label: 'roles',
+  labelSingular: 'common.role',
   category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_ROLE]: <String stringID="rbac.permissionLabels.view" />,
@@ -115,6 +119,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.ROLE, {
 RbacFactory.registerResourceTypeHandler(ResourceType.AUTHSETTING, {
   icon: 'nav-settings',
   label: 'authSettings.authenticationSettings',
+  labelSingular: 'common.singularLabels.authenticationSetting',
   category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_AUTHSETTING]: <String stringID="rbac.permissionLabels.view" />,
@@ -126,6 +131,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.AUTHSETTING, {
 RbacFactory.registerResourceTypeHandler(ResourceType.SERVICEACCOUNT, {
   icon: 'nav-settings',
   label: 'rbac.serviceAccounts.label',
+  labelSingular: 'serviceAccount',
   category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_SERVICEACCOUNT]: <String stringID="rbac.permissionLabels.view" />,

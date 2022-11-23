@@ -409,6 +409,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
               </div>
             </div>
             <button
+              aria-label="newLabel common.repo_provider.githubLabel connector"
               class="bp3-button Button--button StyledProps--font StyledProps--main newConnectorButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="new-connector"
               id="new-connector"
@@ -445,6 +446,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="continue"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             disabled=""
@@ -892,6 +894,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
               </div>
             </div>
             <button
+              aria-label="newLabel common.repo_provider.githubLabel connector"
               class="bp3-button Button--button StyledProps--font StyledProps--main newConnectorButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="new-connector"
               id="new-connector"
@@ -928,6 +931,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="continue"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             disabled=""
@@ -1375,6 +1379,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
               </div>
             </div>
             <button
+              aria-label="newLabel common.repo_provider.githubLabel connector"
               class="bp3-button Button--button StyledProps--font StyledProps--main newConnectorButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="new-connector"
               id="new-connector"
@@ -1411,6 +1416,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="continue"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             disabled=""
@@ -1858,6 +1864,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
               </div>
             </div>
             <button
+              aria-label="newLabel common.repo_provider.githubLabel connector"
               class="bp3-button Button--button StyledProps--font StyledProps--main newConnectorButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="new-connector"
               id="new-connector"
@@ -1894,6 +1901,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="continue"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             disabled=""
@@ -2346,6 +2354,7 @@ exports[`Test cloudformation remote tags step one should error when submitting 1
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="continue"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             disabled=""
@@ -2793,6 +2802,7 @@ exports[`Test cloudformation remote tags step one should open new connector moda
               </div>
             </div>
             <button
+              aria-label="newLabel common.repo_provider.githubLabel connector"
               class="bp3-button Button--button StyledProps--font StyledProps--main newConnectorButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="new-connector"
               id="new-connector"
@@ -2829,6 +2839,7 @@ exports[`Test cloudformation remote tags step one should open new connector moda
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="continue"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             disabled=""
@@ -3276,6 +3287,7 @@ exports[`Test cloudformation remote tags step one should open new connector moda
               </div>
             </div>
             <button
+              aria-label="newLabel common.repo_provider.githubLabel connector"
               class="bp3-button Button--button StyledProps--font StyledProps--main newConnectorButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="new-connector"
               id="new-connector"
@@ -3312,6 +3324,7 @@ exports[`Test cloudformation remote tags step one should open new connector moda
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="continue"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             disabled=""
@@ -3799,6 +3812,7 @@ exports[`Test cloudformation remote tags step one should render tags details inc
               </div>
             </div>
             <button
+              aria-label="newLabel pipelineSteps.awsConnectorLabel connector"
               class="bp3-button Button--button StyledProps--font StyledProps--main newConnectorButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="new-connector"
               id="new-connector"
@@ -3919,6 +3933,7 @@ exports[`Test cloudformation remote tags step one should render tags details inc
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="continue"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             disabled=""
@@ -4406,6 +4421,7 @@ exports[`Test cloudformation remote tags step one should render with initial dat
               </div>
             </div>
             <button
+              aria-label="newLabel common.repo_provider.githubLabel connector"
               class="bp3-button Button--button StyledProps--font StyledProps--main newConnectorButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="new-connector"
               id="new-connector"
@@ -4442,6 +4458,7 @@ exports[`Test cloudformation remote tags step one should render with initial dat
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="continue"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             disabled=""
@@ -4894,6 +4911,7 @@ exports[`Test cloudformation remote tags step one should render with no initial 
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="continue"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             disabled=""
@@ -5361,6 +5379,7 @@ exports[`Test cloudformation remote tags step one should render with runtime dat
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="continue"
             class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             disabled=""
@@ -5823,6 +5842,7 @@ exports[`Test cloudformation remote tags step one should submit step one 1`] = `
               </div>
             </div>
             <button
+              aria-label="newLabel common.repo_provider.githubLabel connector"
               class="bp3-button Button--button StyledProps--font StyledProps--main newConnectorButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="new-connector"
               id="new-connector"
@@ -5859,6 +5879,7 @@ exports[`Test cloudformation remote tags step one should submit step one 1`] = `
           class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
         >
           <button
+            aria-label="continue"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             data-testid="submit"
             type="submit"

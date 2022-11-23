@@ -60,9 +60,6 @@ jest.mock('services/cd-ng', () => ({
     loading: false,
     data: {}
   }),
-  useGetSourceCodeManagers: () => ({
-    data: []
-  }),
   useCreatePR: () => ({ data: [], mutate: jest.fn() }),
   useCreatePRV2: () => ({ data: [], mutate: jest.fn() }),
   useGetFileContent: () => ({
@@ -71,15 +68,19 @@ jest.mock('services/cd-ng', () => ({
     refetch: jest.fn()
   }),
   useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
-  useListGitSync: () => ({
-    data: [],
-    mutate: jest.fn(),
-    refetch: jest.fn()
-  }),
   useGetConnector: () => ({
     loading: false,
     data: connectorMock,
     refetch: jest.fn()
+  }),
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: [], refetch: jest.fn() }
+  })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: [], refetch: jest.fn() }
   })
 }))
 

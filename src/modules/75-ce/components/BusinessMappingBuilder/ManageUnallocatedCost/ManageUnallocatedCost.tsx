@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Container, FontVariation, FormInput, Layout, Text } from '@harness/uicore'
+import { Container, FormInput, Layout, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { UnallocatedCost } from 'services/ce'
 import css from './ManageUnallocatedCost.module.scss'

@@ -243,7 +243,7 @@ describe('GIT SYNC ENABLED', () => {
     cy.createDeploymentStage()
   })
 
-  it('should display the git sync dialog on save', () => {
+  it.skip('should display the git sync dialog on save', () => {
     // open the sav confirmation dialog
     cy.contains('span', 'Save').click({ force: true })
     cy.contains(
@@ -260,7 +260,6 @@ describe('Execution Stages', () => {
     })
     cy.wait(2000)
     cy.visitPageAssertion()
-    cy.wait('@inputSetsTemplateCall', { timeout: 30000 })
     cy.wait('@pipelineDetails', { timeout: 30000 })
     cy.wait(2000)
   }
@@ -320,11 +319,7 @@ describe('Execution Stages', () => {
     })
   }
 
-  const stepLibrarySelection = function (
-    stageText: string,
-    resourceName: StepResourceObject[],
-    withWarning?: boolean
-  ): void {
+  const stepLibrarySelection = function (stageText: string, resourceName: StepResourceObject[]): void {
     cy.get('*[class^="ExecutionGraph-module_canvas"]')
       .should('be.visible')
       .within(() => {
@@ -341,13 +336,6 @@ describe('Execution Stages', () => {
     cy.wait('@stepLibrary').wait(500)
     cy.contains('section', stageText).click({ force: true })
 
-    if (withWarning) {
-      cy.get('.pipeline-studio-right-drawer span[icon="cross"]').click()
-      cy.wait(1000)
-      cy.get('span[icon="warning-sign"]').should('exist')
-      cy.get('p').contains(stageText).click({ force: true })
-    }
-
     stepFieldSelection(stageText, resourceName)
     cy.wait(500)
     cy.get('span[icon="warning-sign"]').should('not.exist')
@@ -361,7 +349,7 @@ describe('Execution Stages', () => {
       }).should('be.visible')
       cy.contains('p', 'testStage_Cypress').click()
       cy.contains('span', 'Execution').click()
-      stepLibrarySelection(key, value?.resourceName, value?.warningCheck)
+      stepLibrarySelection(key, value?.resourceName)
     })
   })
 })
@@ -420,7 +408,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     yamlValidations('stage1', 'region1')
   })
 
-  it.skip(`runtime values to region, stage in infrastructure tab`, () => {
+  it(`runtime values to region, stage in infrastructure tab`, () => {
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
     cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
@@ -433,7 +421,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.wait(1000)
     cy.contains('span', 'Continue').click()
     cy.get('span[data-icon="fixed-input"]').eq(1).click()
-    cy.get('.MultiTypeInput--header svg[data-icon="cross"]').eq(0).click()
+    cy.get('.MultiTypeInput--learnMore svg[data-icon="cross"]').eq(0).click()
     cy.contains('div', 'Runtime input').click()
     cy.wait(1000)
     cy.get('[data-name="toggle-option-two"]').click({ force: true })
@@ -725,7 +713,8 @@ describe('Add stage view with disabled licences', () => {
     cy.visit(pipelinesRoute, {
       timeout: 30000
     })
-    cy.contains('span', 'Create a Pipeline').click()
+    cy.visitPageAssertion(pageHeaderClassName)
+    cy.contains('span', 'Create a Pipeline').should('be.visible').click()
     cy.fillName('testPipeline_Cypress')
     cy.clickSubmit()
   })

@@ -7,7 +7,7 @@
 
 import React, { useCallback } from 'react'
 import { get } from 'lodash-es'
-import { FormInput, Text, TextInput, HarnessDocTooltip } from '@wings-software/uicore'
+import { FormInput, Text, TextInput, HarnessDocTooltip } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import type { ConnectorConfigDTO } from 'services/cd-ng'

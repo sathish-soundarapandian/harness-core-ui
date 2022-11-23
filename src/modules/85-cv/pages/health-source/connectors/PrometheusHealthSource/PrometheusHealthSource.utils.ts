@@ -11,7 +11,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { clone, cloneDeep, defaultTo, isEmpty, isEqual, isNumber } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type { PrometheusFilter, PrometheusHealthSourceSpec } from 'services/cv'
@@ -27,6 +27,7 @@ import {
 } from './PrometheusHealthSource.constants'
 import { HealthSourceTypes } from '../../types'
 import type {
+  AwsPrometheusHealthSourceType,
   PrometheusHealthSourceType,
   UpdatedHealthSource
 } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
@@ -42,6 +43,7 @@ import {
 } from '../../common/MetricThresholds/MetricThresholds.utils'
 import type { PersistMappedMetricsType, PrometheusMetricThresholdType } from './PrometheusHealthSource.types'
 import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
+import { AWSDataSourceType } from '../../HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
 
 type UpdateSelectedMetricsMap = {
   updatedMetric: string
@@ -414,12 +416,22 @@ export function transformPrometheusHealthSourceToSetupSource(
   return setupSource
 }
 
+function getHealthSourceType(dataSourceType?: string): UpdatedHealthSource['type'] {
+  if (dataSourceType === AWSDataSourceType) {
+    return HealthSourceTypes.AwsPrometheus
+  }
+
+  return HealthSourceTypes.Prometheus
+}
+
 export function transformPrometheusSetupSourceToHealthSource(
   setupSource: PrometheusSetupSource,
   isMetricThresholdEnabled: boolean
-): PrometheusHealthSourceType {
-  const dsConfig: PrometheusHealthSourceType = {
-    type: HealthSourceTypes.Prometheus as UpdatedHealthSource['type'],
+): PrometheusHealthSourceType | AwsPrometheusHealthSourceType {
+  const { dataSourceType, region, workspaceId } = setupSource || {}
+
+  const dsConfig: PrometheusHealthSourceType | AwsPrometheusHealthSourceType = {
+    type: getHealthSourceType(dataSourceType),
     identifier: setupSource.healthSourceIdentifier,
     name: setupSource.healthSourceName,
     spec: {
@@ -429,7 +441,9 @@ export function transformPrometheusSetupSourceToHealthSource(
           : (setupSource?.connectorRef?.value as string),
       feature: PrometheusProductNames.APM,
       metricDefinitions: [],
-      metricPacks: []
+      metricPacks: [],
+      region,
+      workspaceId
     }
   }
 

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Tab, Tabs, Text } from '@wings-software/uicore'
+import { Container, Tab, Tabs, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { Feature, Segment } from 'services/cf'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'

@@ -10,7 +10,7 @@ import type { MonacoEditorProps } from 'react-monaco-editor'
 import { useParams } from 'react-router-dom'
 import { Drawer, Position } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
-import { Button, Heading, Icon, Layout, PageError } from '@wings-software/uicore'
+import { Button, Heading, Icon, Layout, PageError } from '@harness/uicore'
 import { PageSpinner } from '@common/components'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import { PipelineExecutionSummary, useGetExecutionData } from 'services/pipeline-ng'
@@ -41,7 +41,8 @@ export function ExecutionCompiledYaml({ executionSummary, onClose }: ExecutionCo
     planExecutionId: executionSummary?.planExecutionId || '',
     queryParams: {
       accountIdentifier: accountId
-    }
+    },
+    lazy: !executionSummary?.planExecutionId
   })
   const { module } = useParams<PipelineType<PipelinePathProps>>()
 

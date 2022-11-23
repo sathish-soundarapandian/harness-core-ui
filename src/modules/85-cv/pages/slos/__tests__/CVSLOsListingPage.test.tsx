@@ -8,6 +8,7 @@
 import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { render, waitFor, screen, fireEvent } from '@testing-library/react'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvServices from 'services/cv'
@@ -129,7 +130,7 @@ describe('CVSLOsListingPage', () => {
 
     expect(screen.queryByText('cv.slos.completeTitle')).toBeInTheDocument()
     expect(screen.getByText('cv.slos.createSLO')).toBeInTheDocument()
-    expect(document.title).toBe('cv.srmTitle | cv.slos.title | harness')
+    expect(document.title).toBe('cv.srmTitle | cv.slos.title | project_identifier | harness')
   })
 
   test('With monitoredServiceIdentifier it should not render with the page headers', () => {
@@ -191,7 +192,7 @@ describe('CVSLOsListingPage', () => {
     const { container } = render(<ComponentWrapper />)
 
     expect(screen.getByText('Loading, please wait...')).toBeInTheDocument()
-    expect(container.querySelectorAll('.TableV2--body [role="row"]').length).toEqual(1)
+    expect(container.querySelectorAll('.TableV2--body [role="row"]').length).toEqual(2)
   })
 
   test('page retry should trigger both dashboard widget and user journey APIs when both returned error response', () => {
@@ -391,6 +392,48 @@ describe('CVSLOsListingPage', () => {
       expect(monitoredServicesFilter).toBeInTheDocument()
       expect(sloTargetAndBudgetFilter).toBeInTheDocument()
       expect(sliTypeFilter).toBeInTheDocument()
+    })
+  })
+
+  describe('Composite SLO', () => {
+    test('should check comopsite SLO button is present', () => {
+      jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(true)
+      jest.spyOn(cvServices, 'useGetSLOHealthListView').mockReturnValue({
+        data: mockSLODashboardWidgetsData,
+        loading: false,
+        error: null,
+        refetch: jest.fn()
+      } as any)
+      const { getByTestId, getByText } = render(<ComponentWrapper />)
+      expect(getByTestId('createCompositeSLO')).toBeInTheDocument()
+      expect(getByText('Composite')).toBeInTheDocument()
+    })
+
+    test('deleting a composite SLO', async () => {
+      const deleteMutate = jest.fn()
+      jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(true)
+      jest.spyOn(cvServices, 'useGetSLOHealthListView').mockReturnValue({
+        data: mockSLODashboardWidgetsData,
+        loading: false,
+        error: null,
+        refetch: jest.fn()
+      } as any)
+      jest
+        .spyOn(cvServices, 'useDeleteSLOV2Data')
+        .mockReturnValue({ mutate: deleteMutate, loading: false, error: null } as any)
+
+      const { container, getByText, getByTestId } = render(<ComponentWrapper />)
+
+      // Deleting the widget
+      await waitFor(() => userEvent.click(container.querySelector('[data-icon="main-trash"]') as HTMLElement))
+      await waitFor(() => userEvent.click(getByText('delete')))
+      expect(deleteMutate).toHaveBeenCalledWith(mockSLODashboardWidgetsData.data.content[0].sloIdentifier)
+
+      // Editing the SLO Widget
+      await waitFor(() => userEvent.click(container.querySelector('[data-icon="Edit"]') as HTMLElement))
+      expect(getByTestId('location').innerHTML).toContain(
+        '/account/account_id/cv/orgs/org_identifier/projects/project_identifier/slos/SLO4?tab=Configurations&amp;sloType=Composite'
+      )
     })
   })
 })

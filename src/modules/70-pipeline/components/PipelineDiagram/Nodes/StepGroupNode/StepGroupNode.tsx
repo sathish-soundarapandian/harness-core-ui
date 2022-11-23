@@ -7,11 +7,11 @@
 
 import * as React from 'react'
 import cx from 'classnames'
-import { Icon, Layout, Text, Button, ButtonVariation } from '@wings-software/uicore'
-import { debounce, defaultTo, get } from 'lodash-es'
-import { Event, DiagramDrag, DiagramType } from '@pipeline/components/Diagram'
+import { Icon, Layout, Text, Button, ButtonVariation, useToaster } from '@harness/uicore'
+import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
+import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
 import { BaseReactComponentProps, NodeType } from '../../types'
 import SVGMarker from '../SVGMarker'
@@ -19,6 +19,7 @@ import { getPositionOfAddIcon } from '../utils'
 import { useNodeDimensionContext } from '../NodeDimensionStore'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
+import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import css from './StepGroupNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
@@ -26,15 +27,16 @@ export function StepGroupNode(props: any): JSX.Element {
   const allowAdd = defaultTo(props.allowAdd, false)
   const { getString } = useStrings()
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
-  const [showAddLink, setShowAddLink] = React.useState(false)
   const [isNodeCollapsed, setNodeCollapsed] = React.useState(false)
+  const { showPrimary } = useToaster()
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const DefaultNode: React.FC<any> | undefined = props?.getDefaultNode()?.component
   const stepGroupData = defaultTo(props?.data?.stepGroup, props?.data?.step?.data?.stepGroup) || props?.data?.step
   const stepsData = stepGroupData?.steps
   const isParentMatrix = defaultTo(props?.isParentMatrix, false)
 
-  const isExecutionView = Boolean(defaultTo(props?.data?.status, props?.status))
+  const stepStatus = defaultTo(props?.status || props?.data?.status, props?.data?.step?.status as ExecutionStatus)
+  const isExecutionView = Boolean(stepStatus)
 
   const { updateDimensions } = useNodeDimensionContext()
   const isNestedStepGroup = Boolean(
@@ -67,6 +69,9 @@ export function StepGroupNode(props: any): JSX.Element {
       {isNodeCollapsed && DefaultNode ? (
         <DefaultNode
           onClick={() => {
+            if (isEmpty(stepsData) && isExecutionView) {
+              showPrimary(getString('pipeline.execution.emptyStepGroup'))
+            }
             setNodeCollapsed(false)
           }}
           {...props}
@@ -194,6 +199,9 @@ export function StepGroupNode(props: any): JSX.Element {
                       data: { ...props }
                     })
                   }}
+                  tooltipProps={{
+                    position: 'bottom'
+                  }}
                 >
                   {props.name}
                 </Text>
@@ -242,10 +250,7 @@ export function StepGroupNode(props: any): JSX.Element {
               identifier={props.identifier}
               prevNodeIdentifier={props.prevNodeIdentifier as string}
               style={{ left: getPositionOfAddIcon(props), top: isNestedStepGroup ? '48px' : '22px' }}
-              setShowAddLink={setShowAddLink}
-              className={cx(defaultCss.addNodeIcon, 'stepAddIcon', defaultCss.stepGroupAddIcon, {
-                [defaultCss.show]: showAddLink
-              })}
+              className={cx(defaultCss.addNodeIcon, 'stepAddIcon', defaultCss.stepGroupAddIcon)}
             />
           )}
           {!props?.nextNode && props?.parentIdentifier && !props.readonly && !props.isParallelNode && (
@@ -261,7 +266,6 @@ export function StepGroupNode(props: any): JSX.Element {
               identifier={props.identifier}
               prevNodeIdentifier={props.prevNodeIdentifier as string}
               className={cx(defaultCss.addNodeIcon, 'stepAddIcon')}
-              setShowAddLink={setShowAddLink}
             />
           )}
           {allowAdd && !props.readonly && CreateNode && (

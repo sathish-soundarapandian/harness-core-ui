@@ -4,19 +4,20 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
 import React from 'react'
-import { fireEvent, act, render, screen, waitFor } from '@testing-library/react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
+import { act, render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
 import { TestWrapper } from '@common/utils/testUtils'
+
+import { formikInitialValuesCriteriaLessThanMock } from '@cv/pages/health-source/common/MetricThresholds/__tests__/MetricThresholds.utils.mock'
 import {
-  PrometheusThresholdProps as MockContextValues,
   formikInitialValues,
-  formikInitialValuesCriteriaMock,
-  formikInitialValuesCriteriaGreaterThanMock
+  PrometheusThresholdProps as MockContextValues
 } from '../../__tests__/PrometheusMetricThreshold.mock'
-import { PrometheusMetricThresholdContext } from '../../PrometheusMetricThresholdConstants'
 import IgnoreThresholdContent from '../IgnoreThresholdsContent'
+import { PrometheusMetricThresholdContext } from '../../PrometheusMetricThresholdConstants'
 
 const WrappingComponent = ({ formValues }: { formValues?: any }): JSX.Element => {
   return (
@@ -32,7 +33,7 @@ const WrappingComponent = ({ formValues }: { formValues?: any }): JSX.Element =>
   )
 }
 
-describe('PrometheusIgnoreThresholdTabContent', () => {
+describe('CloudWatch IgnoreThresholdTabContent', () => {
   test('should render the component with all input fields', () => {
     const { container } = render(<WrappingComponent />)
 
@@ -59,7 +60,7 @@ describe('PrometheusIgnoreThresholdTabContent', () => {
       ?.querySelector('[data-icon="chevron-down"]')
 
     expect(selectCaretMetricName).toBeInTheDocument()
-    fireEvent.click(selectCaretMetricName!)
+    userEvent.click(selectCaretMetricName!)
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
     expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('Prometheus Metric')
   })
@@ -77,7 +78,7 @@ describe('PrometheusIgnoreThresholdTabContent', () => {
       ?.querySelector('[data-icon="chevron-down"]')
 
     expect(selectCaretCriteriaType).toBeInTheDocument()
-    fireEvent.click(selectCaretCriteriaType!)
+    userEvent.click(selectCaretCriteriaType!)
 
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
 
@@ -89,30 +90,11 @@ describe('PrometheusIgnoreThresholdTabContent', () => {
     )
 
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
+      userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
     })
 
-    expect(greaterThanInput).toBeInTheDocument()
-    expect(lessThanInput).not.toBeInTheDocument()
-
-    const selectCaretPercentageType = container
-      .querySelector(`[name="ignoreThresholds.0.criteria.criteriaPercentageType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretPercentageType).toBeInTheDocument()
-    fireEvent.click(selectCaretPercentageType!)
-
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
-    })
-
-    const greaterThanInput2 = container.querySelector(`[name="ignoreThresholds.0.criteria.spec.greaterThan"]`)
-    const lessThanInput2 = container.querySelector(`[name="ignoreThresholds.0.criteria.spec.lessThan"]`)
-
-    expect(greaterThanInput2).not.toBeInTheDocument()
-    expect(lessThanInput2).toBeInTheDocument()
+    expect(greaterThanInput).not.toBeInTheDocument()
+    expect(lessThanInput).toBeInTheDocument()
   })
 
   test('should check whether a new row is added when Add Threshold button is clicked', () => {
@@ -123,45 +105,26 @@ describe('PrometheusIgnoreThresholdTabContent', () => {
     const addButton = screen.getByTestId('AddThresholdButton')
 
     act(() => {
-      fireEvent.click(addButton)
+      userEvent.click(addButton)
     })
 
     expect(screen.getAllByTestId('ThresholdRow')).toHaveLength(2)
 
     act(() => {
-      fireEvent.click(screen.getAllByText('trash')[0])
+      userEvent.click(screen.getAllByText('trash')[0])
     })
 
     expect(screen.getAllByTestId('ThresholdRow')).toHaveLength(1)
   })
 
-  test('should check whether criteria section works correctly', () => {
-    const { container } = render(<WrappingComponent formValues={formikInitialValuesCriteriaMock} />)
+  test('should check whether criteria section works correctly for greaterThan', () => {
+    const { container } = render(<WrappingComponent formValues={formikInitialValuesCriteriaLessThanMock} />)
 
     const lessThanInput = container.querySelector('input[name="ignoreThresholds.0.criteria.spec.lessThan"]')
     const greaterThanInput = container.querySelector('input[name="ignoreThresholds.0.criteria.spec.greaterThan"]')
-    const criteriaPercentageType = container.querySelector(
-      'input[name="ignoreThresholds.0.criteria.criteriaPercentageType"]'
-    )
 
     expect(lessThanInput).toBeInTheDocument()
     expect(lessThanInput).toHaveValue(21)
-    expect(criteriaPercentageType).toHaveValue('cv.monitoringSources.appD.lesserThan')
     expect(greaterThanInput).toBeNull()
-  })
-
-  test('should check whether criteria section works correctly for greaterThan', () => {
-    const { container } = render(<WrappingComponent formValues={formikInitialValuesCriteriaGreaterThanMock} />)
-
-    const lessThanInput = container.querySelector('input[name="ignoreThresholds.0.criteria.spec.lessThan"]')
-    const greaterThanInput = container.querySelector('input[name="ignoreThresholds.0.criteria.spec.greaterThan"]')
-    const criteriaPercentageType = container.querySelector(
-      'input[name="ignoreThresholds.0.criteria.criteriaPercentageType"]'
-    )
-
-    expect(greaterThanInput).toBeInTheDocument()
-    expect(greaterThanInput).toHaveValue(21)
-    expect(criteriaPercentageType).toHaveValue('cv.monitoringSources.appD.greaterThan')
-    expect(lessThanInput).toBeNull()
   })
 })

@@ -18,7 +18,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { noop } from 'lodash-es'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
@@ -93,9 +93,19 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
 
   const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
 
+  const { dataSourceType, region, workspaceId } = sourceData || {}
   const labelNamesResponse = useGetLabelNames({
     lazy: isConnectorRuntimeOrExpression,
-    queryParams: { projectIdentifier, orgIdentifier, accountId, connectorIdentifier, tracingId: labelNameTracingId }
+    queryParams: {
+      projectIdentifier,
+      orgIdentifier,
+      accountId,
+      connectorIdentifier,
+      tracingId: labelNameTracingId,
+      dataSourceType,
+      region,
+      workspaceId
+    }
   })
   const metricNamesResponse = useGetMetricNames({
     queryParams: {
@@ -103,7 +113,10 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
       orgIdentifier,
       accountId,
       tracingId: metricNameTracingId,
-      connectorIdentifier
+      connectorIdentifier,
+      dataSourceType,
+      region,
+      workspaceId
     }
   })
 
@@ -296,6 +309,9 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
                             connectorIdentifier={connectorIdentifier}
                             labelNamesResponse={labelNamesResponse}
                             metricNamesResponse={metricNamesResponse}
+                            dataSourceType={dataSourceType}
+                            region={region}
+                            workspaceId={workspaceId}
                             aggregatorValue={formikProps.values?.aggregator}
                             onUpdateFilter={(fieldName, updatedItem) => {
                               formikProps.setFieldValue(
@@ -338,6 +354,9 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
                   <PrometheusQueryViewer
                     isTemplate={isTemplate}
                     expressions={expressions}
+                    dataSourceType={dataSourceType}
+                    region={region}
+                    workspaceId={workspaceId}
                     onChange={(fieldName, value) => {
                       if (
                         fieldName === PrometheusMonitoringSourceFieldNames.IS_MANUAL_QUERY &&
@@ -396,7 +415,10 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
                       {
                         ...transformedSourceData,
                         ...filteredCVDisabledMetricThresholds,
-                        mappedServicesAndEnvs: mappedMetrics as Map<string, MapPrometheusQueryToService>
+                        mappedServicesAndEnvs: mappedMetrics as Map<string, MapPrometheusQueryToService>,
+                        dataSourceType,
+                        region,
+                        workspaceId
                       },
                       isMetricThresholdEnabled
                     )

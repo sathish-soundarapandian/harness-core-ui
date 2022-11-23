@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import * as Yup from 'yup'
-import { Container, FormikForm, Layout, Formik, Button, PageSpinner } from '@wings-software/uicore'
+import { Container, FormikForm, Layout, Formik, Button, PageSpinner } from '@harness/uicore'
 import { buildErrorTrackingPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

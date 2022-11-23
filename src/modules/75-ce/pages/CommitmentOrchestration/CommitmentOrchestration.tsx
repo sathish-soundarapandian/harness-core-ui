@@ -7,16 +7,8 @@
 
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import {
-  Button,
-  ButtonVariation,
-  Container,
-  FontVariation,
-  Layout,
-  PageHeader,
-  PageSpinner,
-  Text
-} from '@harness/uicore'
+import { Button, ButtonVariation, Container, Layout, PageHeader, PageSpinner, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { get } from 'lodash-es'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useStrings } from 'framework/strings'

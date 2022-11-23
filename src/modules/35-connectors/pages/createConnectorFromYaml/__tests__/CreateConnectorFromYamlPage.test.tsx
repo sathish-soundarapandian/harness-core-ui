@@ -26,8 +26,13 @@ jest.mock('services/cd-ng', () => ({
   useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useGetYamlSchema: jest.fn(() => ({})),
-  useListGitSync: jest.fn().mockImplementation(() => gitConfigs),
-  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: jest.fn() }
+  })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })
 }))

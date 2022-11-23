@@ -68,6 +68,7 @@ exports[`EnvironmentsList should be possible to delete from Environment menu 1`]
     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
   >
     <button
+      aria-label="delete"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-danger Button--with-current-color"
       type="button"
     >
@@ -78,6 +79,7 @@ exports[`EnvironmentsList should be possible to delete from Environment menu 1`]
       </span>
     </button>
     <button
+      aria-label="cancel"
       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
       type="button"
     >

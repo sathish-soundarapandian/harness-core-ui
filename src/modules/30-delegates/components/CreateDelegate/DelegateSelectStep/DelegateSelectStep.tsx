@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 
-import { Layout, StepProps, Button, Text, Container } from '@wings-software/uicore'
+import { Layout, StepProps, Button, Text, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 
@@ -57,18 +57,18 @@ const DelegateSelectStep: React.FC<StepProps<DelegateInfoDTO> & DelegateSelectSt
 
   const selectCardData: CardData[] = [
     {
-      text: getString('delegate.cardData.docker.text'),
-      value: getString('delegate.cardData.docker.value'),
-      icon: getString('delegate.cardData.docker.icon'),
-      name: getString('delegate.cardData.docker.name'),
-      type: DelegateTypes.DOCKER
-    },
-    {
       text: getString('delegate.cardData.kubernetes.text'),
       value: getString('delegate.cardData.kubernetes.value'),
       icon: getString('delegate.cardData.kubernetes.icon'),
       name: getString('kubernetesText'),
       type: DelegateTypes.KUBERNETES_CLUSTER
+    },
+    {
+      text: getString('delegate.cardData.docker.text'),
+      value: getString('delegate.cardData.docker.value'),
+      icon: getString('delegate.cardData.docker.icon'),
+      name: getString('delegate.cardData.docker.name'),
+      type: DelegateTypes.DOCKER
     }
     /* Disable this item for now (see https://harness.atlassian.net/browse/DEL-4537)
     {

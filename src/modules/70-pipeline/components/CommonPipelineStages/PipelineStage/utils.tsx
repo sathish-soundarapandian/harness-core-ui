@@ -8,18 +8,8 @@
 /* eslint-disable react/function-component-definition */
 import React from 'react'
 import type { CellProps, Renderer } from 'react-table'
-import {
-  Text,
-  FontVariation,
-  Layout,
-  Icon,
-  Color,
-  Popover,
-  ButtonSize,
-  ButtonVariation,
-  Button,
-  IconName
-} from '@harness/uicore'
+import { Text, Layout, Icon, Popover, ButtonSize, ButtonVariation, Button, IconName } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { defaultTo, get } from 'lodash-es'
 import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
@@ -29,6 +19,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getLocationPathName } from 'framework/utils/WindowLocation'
 import css from './PipelineStageMinimalMode.module.scss'
 
 interface CodeSourceWrapper {
@@ -36,6 +27,14 @@ interface CodeSourceWrapper {
   iconName: IconName
   size: number
 }
+
+export enum PipelineStageTabs {
+  OVERVIEW = 'OVERVIEW',
+  INPUTS = 'INPUTS',
+  ADVANCED = 'ADVANCED'
+}
+
+export const TabsHeadingOrder = [PipelineStageTabs.OVERVIEW, PipelineStageTabs.INPUTS, PipelineStageTabs.ADVANCED]
 
 export const PipelineNameIdTagCell: Renderer<CellProps<PMSPipelineSummaryResponse>> = ({ row }) => {
   const data = row.original
@@ -138,7 +137,7 @@ export const ViewPipelineButtonCell: Renderer<CellProps<PMSPipelineSummaryRespon
       branch: get(data, 'gitDetails.branch'),
       storeType: get(data, 'storeType') as StoreType
     })
-    window.open(`${window.location.origin}${window.location.pathname}#${pipelineStudioPath}`, '_blank')
+    window.open(`${window.location.origin}${getLocationPathName()}#${pipelineStudioPath}`, '_blank')
   }
 
   return (

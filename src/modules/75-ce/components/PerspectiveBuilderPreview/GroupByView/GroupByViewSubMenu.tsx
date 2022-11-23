@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, TextInput } from '@wings-software/uicore'
+import { Container, TextInput } from '@harness/uicore'
 import { MenuItem } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import {

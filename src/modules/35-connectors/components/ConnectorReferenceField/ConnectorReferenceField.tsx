@@ -22,7 +22,7 @@ import {
   Container,
   Popover,
   useToaster
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
 import { isEmpty, merge } from 'lodash-es'

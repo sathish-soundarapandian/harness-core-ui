@@ -6,7 +6,7 @@
  */
 
 import React, { ReactNode } from 'react'
-import { TabNavigation } from '@wings-software/uicore'
+import { TabNavigation } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams, Link, useHistory } from 'react-router-dom'
-import { Container, Layout, Text, ButtonVariation, useConfirmationDialog, Views } from '@wings-software/uicore'
+import { Container, Layout, Text, ButtonVariation, useConfirmationDialog, Views } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, getByText, render, waitFor } from '@testing-library/react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'

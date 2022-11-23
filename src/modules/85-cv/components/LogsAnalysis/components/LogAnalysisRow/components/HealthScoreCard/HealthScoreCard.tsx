@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Layout } from '@wings-software/uicore'
+import { Text, Layout } from '@harness/uicore'
 import { getRiskColorValue } from '@cv/utils/CommonUtils'
 import type { RiskData } from 'services/cv'
 import css from './HealthScoreCard.module.scss'

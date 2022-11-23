@@ -5,18 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React from 'react'
-import { Button } from '@wings-software/uicore'
+import { Button, Text } from '@harness/uicore'
 import { FieldArray, FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
-import { defaultTo, flatMap, get, isEmpty, uniq } from 'lodash-es'
+import { defaultTo, difference, flatMap, get, isEmpty, uniq } from 'lodash-es'
 import cx from 'classnames'
-
 import { Color } from '@harness/design-system'
-import { Text } from '@harness/uicore'
 import { String, useStrings } from 'framework/strings'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepMode as Modes } from '@pipeline/utils/stepUtils'
 
+import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import FailureTypeMultiSelect from './FailureTypeMultiSelect'
 import { allowedStrategiesAsPerStep, errorTypesForStages } from './StrategySelection/StrategyConfig'
 import StrategySelection from './StrategySelection/StrategySelection'
@@ -56,6 +57,7 @@ export default function FailureStrategyPanel(props: FailureStrategyPanelProps): 
   const currentTabHasErrors = !isEmpty(get(errors, `failureStrategies[${selectedStrategyNum}]`))
   const addedAllStratgies = filterTypes.length === errorTypesForStages[stageType].length
   const isAddBtnDisabled = addedAllStratgies || isReadonly || currentTabHasErrors
+  const isNgExecutionInputFFEnabled = useFeatureFlag(FeatureFlag.NG_EXECUTION_INPUT)
 
   async function handleTabChange(n: number): Promise<void> {
     await submitForm()
@@ -200,7 +202,10 @@ export default function FailureStrategyPanel(props: FailureStrategyPanelProps): 
           <StrategySelection
             name={`failureStrategies[${selectedStrategyNum}].onFailure.action`}
             label={getString('pipeline.failureStrategies.performAction')}
-            allowedStrategies={allowedStrategiesAsPerStep(stageType)[mode]}
+            allowedStrategies={difference(
+              allowedStrategiesAsPerStep(stageType)[mode],
+              isNgExecutionInputFFEnabled ? [Strategy.ProceedWithDefaultValues] : []
+            )}
             disabled={isReadonly}
           />
         </React.Fragment>

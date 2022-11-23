@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Position } from '@blueprintjs/core'
-import { Button, ButtonVariation } from '@wings-software/uicore'
+import { Button, ButtonVariation } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { merge, noop } from 'lodash-es'
 import cx from 'classnames'
@@ -41,11 +41,13 @@ function NewTemplatePopoverWrapper({ onImportTemplateClick }: NewTemplatePopover
   const history = useHistory()
   const { module, ...params } = useParams<ProjectPathProps & ModulePathParams>()
   const { projectIdentifier, orgIdentifier, accountId } = params
-  const { CUSTOM_SECRET_MANAGER_NG, CVNG_TEMPLATE_MONITORED_SERVICE, NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const { CUSTOM_SECRET_MANAGER_NG, CVNG_TEMPLATE_MONITORED_SERVICE, NG_SVC_ENV_REDESIGN, ARTIFACT_SOURCE_TEMPLATE } =
+    useFeatureFlags()
   const allowedTemplateTypes = getAllowedTemplateTypes(getScopeFromDTO(params), {
     [TemplateType.SecretManager]: !!CUSTOM_SECRET_MANAGER_NG,
     [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE,
-    [TemplateType.CustomDeployment]: !!NG_SVC_ENV_REDESIGN
+    [TemplateType.CustomDeployment]: !!NG_SVC_ENV_REDESIGN,
+    [TemplateType.ArtifactSource]: !!ARTIFACT_SOURCE_TEMPLATE
   })
   const { supportingTemplatesGitx } = useAppStore()
   const [menuOpen, setMenuOpen] = React.useState(false)

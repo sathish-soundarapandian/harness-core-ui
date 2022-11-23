@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, ButtonVariation, Container, Layout, useConfirmationDialog } from '@wings-software/uicore'
+import { Button, ButtonVariation, Container, Layout, useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import type { TemplateSummaryResponse } from 'services/template-ng'
@@ -30,9 +30,12 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
     selectedTemplate: defaultTemplate,
     storeMetadata,
     disableVersionChange = false,
+    hideTemplatesView = false,
+    showChangeTemplateDialog = true,
+    disableUseTemplateIfUnchanged = true,
     allowedUsages = [TemplateUsage.USE, TemplateUsage.COPY]
   } = selectorData || {}
-  const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummaryResponse | undefined>()
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummaryResponse | undefined>(defaultTemplate)
   const { getString } = useStrings()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
@@ -106,15 +109,15 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
     }
   })
 
-  const onUseTemplateClick = React.useCallback(async () => {
-    if (defaultTemplate) {
+  const onUseTemplateClick = React.useCallback(() => {
+    if (defaultTemplate && showChangeTemplateDialog) {
       openChangeTemplateDialog()
     } else {
       onUseTemplateConfirm()
     }
-  }, [defaultTemplate, openChangeTemplateDialog, onUseTemplateConfirm])
+  }, [defaultTemplate, showChangeTemplateDialog, openChangeTemplateDialog, onUseTemplateConfirm])
 
-  const onCopyTemplateClick = React.useCallback(async () => {
+  const onCopyTemplateClick = React.useCallback(() => {
     if (defaultTemplate) {
       openCopyTemplateDialog()
     } else {
@@ -128,7 +131,7 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
   return (
     <Container height={'100%'} className={css.container}>
       <Layout.Horizontal height={'100%'}>
-        <TemplateSelectorLeftView setTemplate={setSelectedTemplate} />
+        {!hideTemplatesView && <TemplateSelectorLeftView setTemplate={setSelectedTemplate} />}
         <Container width={525}>
           {selectedTemplate ? (
             <Layout.Vertical height={'100%'}>
@@ -151,8 +154,8 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
                       <Button
                         variation={ButtonVariation.PRIMARY}
                         text={getString('templatesLibrary.useTemplateLabel')}
-                        disabled={areTemplatesEqual(defaultTemplate, selectedTemplate)}
                         onClick={onUseTemplateClick}
+                        disabled={disableUseTemplateIfUnchanged && areTemplatesEqual(defaultTemplate, selectedTemplate)}
                       />
                     )}
                     {showCopyTemplate && (

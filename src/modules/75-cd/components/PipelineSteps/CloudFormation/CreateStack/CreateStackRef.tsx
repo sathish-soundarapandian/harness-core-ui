@@ -16,7 +16,6 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  Color,
   Layout,
   Label,
   Text,
@@ -27,6 +26,7 @@ import {
   useToaster,
   AllowedTypes
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { map, get, isEmpty, defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

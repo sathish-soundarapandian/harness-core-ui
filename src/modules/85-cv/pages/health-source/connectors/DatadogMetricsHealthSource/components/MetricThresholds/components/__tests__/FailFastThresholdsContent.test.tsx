@@ -1,8 +1,8 @@
 import React from 'react'
 import { fireEvent, act, render, screen, waitFor } from '@testing-library/react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import { formikInitialValues, MockContextValues, setThresholdStateMockFn } from './IgnoreThresholdsContent.mock'
+import { formikInitialValues, MockContextValues } from './IgnoreThresholdsContent.mock'
 import FailFastThresholdContent from '../FailFastThresholdsContent'
 import { MetricThresholdContext } from '../../MetricThresholds.constants'
 
@@ -21,9 +21,6 @@ const WrappingComponent = ({ formValues }: { formValues?: any }): JSX.Element =>
 }
 
 describe('FailFastThresholdContent', () => {
-  afterEach(() => {
-    setThresholdStateMockFn.mockClear()
-  })
   test('should render the component with all input fields', () => {
     const { container } = render(<WrappingComponent />)
 
@@ -55,7 +52,6 @@ describe('FailFastThresholdContent', () => {
     fireEvent.click(selectCaretMetricName!)
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
     expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('dataDogMetric')
-    expect(setThresholdStateMockFn).toBeCalledWith(expect.any(Function))
   })
 
   test('should render action dropdown with correct options', async () => {
@@ -121,58 +117,6 @@ describe('FailFastThresholdContent', () => {
     })
     const countInput3 = container.querySelector(`[name="failFastThresholds.0.spec.spec.count"]`)
     expect(countInput3).not.toBeDisabled()
-  })
-
-  test('should render the criteria dropdown and other functionalities should work properly', async () => {
-    const { container } = render(<WrappingComponent />)
-
-    const greaterThanInput = container.querySelector(`[name="failFastThresholds.0.criteria.spec.greaterThan"]`)
-    const lessThanInput = container.querySelector(`[name="failFastThresholds.0.criteria.spec.lessThan"]`)
-
-    expect(greaterThanInput).toBeInTheDocument()
-    expect(lessThanInput).toBeInTheDocument()
-
-    const selectCaretCriteriaType = container
-      .querySelector(`[name="failFastThresholds.0.criteria.type"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretCriteriaType).toBeInTheDocument()
-    fireEvent.click(selectCaretCriteriaType!)
-
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent(
-      'cv.monitoringSources.appD.absoluteValue'
-    )
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[1]).toHaveTextContent(
-      'cv.monitoringSources.appD.percentageDeviation'
-    )
-
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
-    })
-
-    expect(greaterThanInput).toBeInTheDocument()
-    expect(lessThanInput).not.toBeInTheDocument()
-
-    const selectCaretPercentageType = container
-      .querySelector(`[name="failFastThresholds.0.criteria.criteriaPercentageType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretPercentageType).toBeInTheDocument()
-    fireEvent.click(selectCaretPercentageType!)
-
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
-    })
-
-    const greaterThanInput2 = container.querySelector(`[name="failFastThresholds.0.criteria.spec.greaterThan"]`)
-    const lessThanInput2 = container.querySelector(`[name="failFastThresholds.0.criteria.spec.lessThan"]`)
-
-    expect(greaterThanInput2).not.toBeInTheDocument()
-    expect(lessThanInput2).toBeInTheDocument()
   })
 
   test('should check whether a new row is added when Add Threshold button is clicked', () => {

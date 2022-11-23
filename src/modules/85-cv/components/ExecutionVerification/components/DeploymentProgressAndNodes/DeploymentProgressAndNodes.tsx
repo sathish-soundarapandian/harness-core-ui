@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, Text } from '@wings-software/uicore'
+import { Container, Text } from '@harness/uicore'
 import moment from 'moment'
 import cx from 'classnames'
 import type { DeploymentVerificationJobInstanceSummary } from 'services/cv'
@@ -17,6 +17,7 @@ import { PrimaryAndCanaryNodes } from '../ExecutionVerificationSummary/component
 import VerificationStatusCard from './components/VerificationStatusCard/VerificationStatusCard'
 import type { DeploymentNodeAnalysisResult } from './components/DeploymentNodes/DeploymentNodes.constants'
 import { DurationView } from './components/DurationView/DurationView'
+import { deploymentTypesToShowNodes } from './DeploymentProgressAndNodes.constants'
 import css from './DeploymentProgressAndNodes.module.scss'
 
 export interface DeploymentProgressAndNodesProps {
@@ -30,7 +31,7 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
   const { deploymentSummary, onSelectNode, className, isConsoleView } = props
   const { getString } = useStrings()
   const deploymentNodesData = useMemo(() => {
-    if (deploymentSummary?.additionalInfo?.type === 'CANARY') {
+    if (deploymentSummary && deploymentTypesToShowNodes.includes(deploymentSummary.additionalInfo?.type)) {
       const {
         primary: before = [],
         canary: after = [],

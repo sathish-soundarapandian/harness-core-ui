@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, Checkbox, Layout, Popover, Text } from '@wings-software/uicore'
+import { Button, Checkbox, Layout, Popover, Text } from '@harness/uicore'
 import { Tabs, Tab } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -20,8 +20,7 @@ import { returnLaunchUrl } from '@common/utils/routeUtils'
 import NavExpandable from '@common/navigation/NavExpandable/NavExpandable'
 import { LaunchButton } from '@common/components/LaunchButton/LaunchButton'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { featureNames } from '@ce/constants'
 import css from './CESideNav.module.scss'
 
@@ -134,7 +133,7 @@ const SideNavItems = () => {
   const { accountId } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
-  const showCO = useFeatureFlag(FeatureFlag.CCM_COMMORCH)
+  const { CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI, CCM_COMMORCH: showCO } = useFeatureFlags()
 
   return (
     <Layout.Vertical spacing="small">
@@ -201,6 +200,15 @@ const SideNavItems = () => {
             trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.BI_DASHBOARD_FEATURE })
           }}
         />
+        {CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI && (
+          <SidebarLink
+            label={getString('ce.governance.sideNavText')}
+            to={routes.toCEGovernance({ accountId })}
+            onClick={() => {
+              trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.GOVERNANCE })
+            }}
+          />
+        )}
         <NavExpandable title={getString('common.setup')} route={routes.toCECOAccessPoints({ accountId })}>
           <Layout.Vertical spacing="small">
             <SidebarLink

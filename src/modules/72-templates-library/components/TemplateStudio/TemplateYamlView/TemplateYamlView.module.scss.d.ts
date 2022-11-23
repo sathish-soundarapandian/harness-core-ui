@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly buttonsWrapper: string
+  readonly editModeCheckbox: string
   readonly yamlBuilder: string
 }
 export default styles

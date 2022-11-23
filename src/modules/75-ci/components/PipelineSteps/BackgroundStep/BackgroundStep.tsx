@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import { parse } from 'yaml'
-import get from 'lodash-es/get'
+import { get } from 'lodash-es'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -120,10 +120,11 @@ export class BackgroundStep extends PipelineStep<BackgroundStepData> {
 
   protected type = StepType.Background
   protected stepName = 'Configure Background Step'
-  protected stepIcon: IconName = 'background-step'
+  protected stepIcon: IconName = 'background-ci-step'
   protected stepIconColor = '#4F5162'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.Background'
   protected stepPaletteVisible = false
+  protected stepIconSize = 34
 
   protected defaultValues: BackgroundStepData = {
     identifier: '',

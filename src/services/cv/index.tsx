@@ -78,7 +78,7 @@ export interface ActivityVerificationSummary {
 }
 
 export interface AdditionalInfo {
-  type?: 'TEST' | 'CANARY' | 'BLUE_GREEN'
+  type?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO'
 }
 
 export interface AnalysisDTO {
@@ -88,9 +88,23 @@ export interface AnalysisDTO {
 }
 
 export interface AnalysisInput {
+  controlHosts?: string[]
   endTime?: number
+  learningEngineTaskType?:
+    | 'SERVICE_GUARD_TIME_SERIES'
+    | 'LOG_CLUSTER'
+    | 'SERVICE_GUARD_LOG_ANALYSIS'
+    | 'CANARY_LOG_ANALYSIS'
+    | 'TEST_LOG_ANALYSIS'
+    | 'TIME_SERIES_CANARY'
+    | 'CANARY_DEPLOYMENT_TIME_SERIES'
+    | 'BEFORE_AFTER_DEPLOYMENT_TIME_SERIES'
+    | 'SERVICE_GUARD_FEEDBACK_ANALYSIS'
+    | 'TIME_SERIES_LOAD_TEST'
   startTime?: number
+  testHosts?: string[]
   timeRange?: TimeRange
+  verificationJobInstanceId?: string
   verificationTaskId?: string
 }
 
@@ -117,6 +131,7 @@ export interface AnalysisState {
     | 'COMPLETED'
     | 'TERMINATED'
   type?:
+    | 'HOST_SAMPLING_STATE'
     | 'CANARY_TIME_SERIES'
     | 'DEPLOYMENT_LOG_ANALYSIS'
     | 'SERVICE_GUARD_LOG_ANALYSIS'
@@ -127,6 +142,7 @@ export interface AnalysisState {
     | 'SERVICE_GUARD_LOG_CLUSTER'
     | 'SERVICE_GUARD_TREND_ANALYSIS'
     | 'SLI_METRIC_ANALYSIS'
+    | 'DEPLOYMENT_TIME_SERIES_ANALYSIS_STATE'
     | 'COMPOSOITE_SLO_METRIC_ANALYSIS'
 }
 
@@ -391,8 +407,8 @@ export type AwsManualConfigSpec = AwsCredentialSpec & {
 export type AwsPrometheusHealthSourceSpec = HealthSourceSpec & {
   metricDefinitions?: PrometheusMetricDefinition[]
   metricPacks?: TimeSeriesMetricPackDTO[]
-  region?: string
-  workspaceId?: string
+  region: string
+  workspaceId: string
 }
 
 export interface AwsPrometheusWorkspaceDTO {
@@ -634,20 +650,20 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   awsAccountId?: string
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
   billingExportSpec?: BillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   subscriptionId: string
   tenantId: string
 }
 
 export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
   connectorRef: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
 }
 
 export interface CVConfig {
@@ -686,7 +702,7 @@ export interface CVConfig {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
   uuid?: string
@@ -865,7 +881,7 @@ export interface CloudWatchMetricDefinition {
 export type CloudWatchMetricsHealthSourceSpec = HealthSourceSpec & {
   feature: string
   metricDefinitions?: CloudWatchMetricDefinition[]
-  metricThresholds?: TimeSeriesMetricPackDTO[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
   region: string
 }
 
@@ -908,6 +924,10 @@ export interface ClusteredLog {
   timestamp?: number
   uuid?: string
   verificationTaskId?: string
+}
+
+export type CompositeServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
+  serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
 }
 
 export interface ConnectorConfigDTO {
@@ -965,7 +985,7 @@ export interface ConnectorInfoDTO {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
-    | 'ELK'
+    | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
     | 'Spot'
@@ -1045,6 +1065,7 @@ export type CustomHealthSourceLogSpec = HealthSourceSpec & {
 
 export type CustomHealthSourceMetricSpec = HealthSourceSpec & {
   metricDefinitions?: CustomHealthMetricDefinition[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
 }
 
 export type CustomSecretManager = ConnectorConfigDTO & {
@@ -1748,6 +1769,10 @@ export interface Error {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2162,6 +2187,10 @@ export interface Failure {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2186,7 +2215,7 @@ export interface GcpBillingExportSpec {
 
 export type GcpCloudCostConnector = ConnectorConfigDTO & {
   billingExportSpec?: GcpBillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   projectId: string
   serviceAccountEmail: string
 }
@@ -2457,8 +2486,9 @@ export interface HealthSource {
     | 'CustomHealthMetric'
     | 'CustomHealthLog'
     | 'SplunkMetric'
-    | 'ELKLog'
+    | 'ElasticSearch'
     | 'CloudWatchMetrics'
+    | 'AwsPrometheus'
 }
 
 export interface HealthSourceDTO {
@@ -2479,7 +2509,7 @@ export interface HealthSourceDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
   verificationType?: 'TIME_SERIES' | 'LOG'
@@ -2699,6 +2729,8 @@ export interface LearningEngineTask {
     | 'CANARY_LOG_ANALYSIS'
     | 'TEST_LOG_ANALYSIS'
     | 'TIME_SERIES_CANARY'
+    | 'CANARY_DEPLOYMENT_TIME_SERIES'
+    | 'BEFORE_AFTER_DEPLOYMENT_TIME_SERIES'
     | 'SERVICE_GUARD_FEEDBACK_ANALYSIS'
     | 'TIME_SERIES_LOAD_TEST'
   createdAt?: number
@@ -2719,6 +2751,8 @@ export interface LearningEngineTask {
     | 'CANARY_LOG_ANALYSIS'
     | 'TEST_LOG_ANALYSIS'
     | 'TIME_SERIES_CANARY'
+    | 'CANARY_DEPLOYMENT_TIME_SERIES'
+    | 'BEFORE_AFTER_DEPLOYMENT_TIME_SERIES'
     | 'SERVICE_GUARD_FEEDBACK_ANALYSIS'
     | 'TIME_SERIES_LOAD_TEST'
   uuid?: string
@@ -2999,7 +3033,7 @@ export interface MetricPack {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
   identifier?: string
@@ -3028,7 +3062,7 @@ export interface MetricPackDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
   identifier?: string
@@ -3129,6 +3163,17 @@ export interface MonitoredServiceDTO {
   }
   template?: TemplateDTO
   type: 'Application' | 'Infrastructure'
+}
+
+export interface MonitoredServiceDetail {
+  environmentIdentifier?: string
+  environmentName?: string
+  healthSourceIdentifier?: string
+  healthSourceName?: string
+  monitoredServiceIdentifier?: string
+  monitoredServiceName?: string
+  serviceIdentifier?: string
+  serviceName?: string
 }
 
 export interface MonitoredServiceListItemDTO {
@@ -3467,6 +3512,16 @@ export interface PageNotificationRuleResponse {
   totalPages?: number
 }
 
+export interface PageSLOConsumptionBreakdown {
+  content?: SLOConsumptionBreakdown[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageSLOHealthListView {
   content?: SLOHealthListView[]
   empty?: boolean
@@ -3479,6 +3534,16 @@ export interface PageSLOHealthListView {
 
 export interface PageServiceLevelObjectiveResponse {
   content?: ServiceLevelObjectiveResponse[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageServiceLevelObjectiveV2Response {
+  content?: ServiceLevelObjectiveV2Response[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -4214,6 +4279,10 @@ export interface ResponseMessage {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4315,6 +4384,13 @@ export interface ResponsePageNotificationRuleResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponsePageSLOConsumptionBreakdown {
+  correlationId?: string
+  data?: PageSLOConsumptionBreakdown
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponsePageSLOHealthListView {
   correlationId?: string
   data?: PageSLOHealthListView
@@ -4325,6 +4401,13 @@ export interface ResponsePageSLOHealthListView {
 export interface ResponsePageServiceLevelObjectiveResponse {
   correlationId?: string
   data?: PageServiceLevelObjectiveResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageServiceLevelObjectiveV2Response {
+  correlationId?: string
+  data?: PageServiceLevelObjectiveV2Response
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4861,6 +4944,14 @@ export interface RestResponseServiceLevelObjectiveResponse {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseServiceLevelObjectiveV2Response {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: ServiceLevelObjectiveV2Response
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseSetHealthSourceDTO {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -5039,6 +5130,32 @@ export interface SLIRecord {
   version?: number
 }
 
+export interface SLOConsumptionBreakdown {
+  contributedErrorBudgetBurned: number
+  environmentIdentifier: string
+  errorBudgetBurned: number
+  monitoredServiceIdentifier: string
+  serviceName: string
+  sliStatusPercentage: number
+  sliType: 'Availability' | 'Latency'
+  sloIdentifier: string
+  sloName: string
+  sloTargetPercentage: number
+  weightagePercentage: number
+}
+
+export interface SLODashboardApiFilter {
+  compositeSLOIdentifier?: string
+  errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
+  monitoredServiceIdentifier?: string
+  searchFilter?: string
+  sliTypes?: ('Availability' | 'Latency')[]
+  sloTargetFilterDTO?: SLOTargetFilterDTO
+  targetTypes?: ('Rolling' | 'Calender')[]
+  type?: 'Simple' | 'Composite'
+  userJourneyIdentifiers?: string[]
+}
+
 export interface SLODashboardDetail {
   createdAt?: number
   description?: string
@@ -5053,30 +5170,32 @@ export interface SLODashboardWidget {
   currentPeriodEndTime: number
   currentPeriodLengthDays: number
   currentPeriodStartTime: number
-  environmentIdentifier: string
-  environmentName: string
+  environmentIdentifier?: string
+  environmentName?: string
   errorBudgetBurndown: Point[]
   errorBudgetRemaining: number
   errorBudgetRemainingPercentage: number
   errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
-  healthSourceIdentifier: string
-  healthSourceName: string
-  monitoredServiceIdentifier: string
-  monitoredServiceName: string
+  healthSourceIdentifier?: string
+  healthSourceName?: string
+  monitoredServiceDetails?: MonitoredServiceDetail[]
+  monitoredServiceIdentifier?: string
+  monitoredServiceName?: string
   recalculatingSLI?: boolean
-  serviceIdentifier: string
-  serviceName: string
+  serviceIdentifier?: string
+  serviceName?: string
   sloIdentifier: string
   sloPerformanceTrend: Point[]
   sloTargetPercentage: number
   sloTargetType: 'Rolling' | 'Calender'
+  sloType: 'Simple' | 'Composite'
   tags?: {
     [key: string]: string
   }
   timeRemainingDays: number
   title: string
   totalErrorBudget: number
-  type: 'Availability' | 'Latency'
+  type?: 'Availability' | 'Latency'
 }
 
 export interface SLODebugResponse {
@@ -5128,29 +5247,30 @@ export interface SLOHealthIndicator {
 export interface SLOHealthListView {
   burnRate: number
   description?: string
-  environmentIdentifier: string
-  environmentName: string
+  environmentIdentifier?: string
+  environmentName?: string
   errorBudgetRemaining: number
   errorBudgetRemainingPercentage: number
   errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
-  healthSourceIdentifier: string
-  healthSourceName: string
-  monitoredServiceIdentifier: string
-  monitoredServiceName: string
+  healthSourceIdentifier?: string
+  healthSourceName?: string
+  monitoredServiceIdentifier?: string
+  monitoredServiceName?: string
   name: string
   noOfActiveAlerts: number
-  noOfMaximumAlerts: number
-  serviceIdentifier: string
-  serviceName: string
+  serviceIdentifier?: string
+  serviceName?: string
+  sliType?: 'Availability' | 'Latency'
   sloIdentifier: string
   sloTargetPercentage: number
   sloTargetType: 'Rolling' | 'Calender'
+  sloType: 'Simple' | 'Composite'
   tags?: {
     [key: string]: string
   }
   totalErrorBudget: number
-  userJourneyIdentifier: string
-  userJourneyName: string
+  userJourneyName?: string
+  userJourneys: UserJourneyDTO[]
 }
 
 export interface SLORiskCountResponse {
@@ -5165,6 +5285,11 @@ export interface SLOTarget {
 
 export interface SLOTargetDTO {
   sloTargetPercentage: number
+  spec: SLOTargetSpec
+  type?: 'Rolling' | 'Calender'
+}
+
+export interface SLOTargetFilterDTO {
   spec: SLOTargetSpec
   type?: 'Rolling' | 'Calender'
 }
@@ -5303,16 +5428,66 @@ export interface ServiceLevelObjectiveDTO {
   userJourneyRef: string
 }
 
+export interface ServiceLevelObjectiveDetailsDTO {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  serviceLevelObjectiveRef: string
+  weightagePercentage: number
+}
+
 export interface ServiceLevelObjectiveResponse {
   createdAt?: number
   lastModifiedAt?: number
   serviceLevelObjective: ServiceLevelObjectiveDTO
 }
 
+export interface ServiceLevelObjectiveSpec {
+  [key: string]: any
+}
+
+export interface ServiceLevelObjectiveV2DTO {
+  description?: string
+  identifier: string
+  name: string
+  notificationRuleRefs?: NotificationRuleRefDTO[]
+  orgIdentifier?: string
+  projectIdentifier?: string
+  sloTarget: SLOTargetDTO
+  spec: ServiceLevelObjectiveSpec
+  tags?: {
+    [key: string]: string
+  }
+  type: 'Simple' | 'Composite'
+  userJourneyRefs: string[]
+}
+
+export interface ServiceLevelObjectiveV2Response {
+  createdAt?: number
+  lastModifiedAt?: number
+  serviceLevelObjectiveV2: ServiceLevelObjectiveV2DTO
+}
+
+export interface ServiceNowAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface ServiceNowAuthenticationDTO {
+  spec: ServiceNowAuthCredentialsDTO
+  type: 'UsernamePassword'
+}
+
 export type ServiceNowConnector = ConnectorConfigDTO & {
+  auth?: ServiceNowAuthenticationDTO
   delegateSelectors?: string[]
   passwordRef: string
   serviceNowUrl: string
+  username?: string
+  usernameRef?: string
+}
+
+export type ServiceNowUserNamePasswordDTO = ServiceNowAuthCredentialsDTO & {
+  passwordRef: string
   username?: string
   usernameRef?: string
 }
@@ -5327,6 +5502,13 @@ export interface ServiceSummaryDetails {
   serviceName?: string
   serviceRef?: string
   type?: 'Application' | 'Infrastructure'
+}
+
+export type SimpleServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
+  healthSourceRef: string
+  monitoredServiceRef: string
+  serviceLevelIndicatorType: 'Availability' | 'Latency'
+  serviceLevelIndicators: ServiceLevelIndicatorDTO[]
 }
 
 export interface SloHealthIndicatorDTO {
@@ -5369,6 +5551,7 @@ export interface SplunkMetricDefinition {
 export type SplunkMetricHealthSourceSpec = HealthSourceSpec & {
   feature: string
   metricDefinitions?: SplunkMetricDefinition[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
 }
 
 export interface SplunkSavedSearch {
@@ -5384,17 +5567,17 @@ export type SpotConnector = ConnectorConfigDTO & {
 
 export interface SpotCredential {
   spec?: SpotCredentialSpec
-  type: 'ManualConfig'
+  type: 'PermanentTokenConfig'
 }
 
 export interface SpotCredentialSpec {
   [key: string]: any
 }
 
-export type SpotManualConfigSpec = SpotCredentialSpec & {
-  accountId?: string
-  accountIdRef?: string
+export type SpotPermanentTokenConfigSpec = SpotCredentialSpec & {
   apiTokenRef: string
+  spotAccountId?: string
+  spotAccountIdRef?: string
 }
 
 export interface StackTraceElement {
@@ -5425,6 +5608,7 @@ export interface StackdriverDefinition {
   identifier: string
   isManualQuery?: boolean
   jsonMetricDefinition?: { [key: string]: any }
+  jsonMetricDefinitionString?: string
   metricName: string
   metricTags?: string[]
   riskProfile?: RiskProfile
@@ -5450,7 +5634,7 @@ export type SumoLogicConnectorDTO = ConnectorConfigDTO & {
 }
 
 export interface TaskInfo {
-  taskType?: 'LIVE_MONITORING' | 'DEPLOYMENT' | 'SLI'
+  taskType?: 'LIVE_MONITORING' | 'DEPLOYMENT' | 'SLI' | 'COMPOSITE_SLO'
 }
 
 export interface TemplateDTO {
@@ -5590,7 +5774,7 @@ export interface TimeSeriesMetricDataDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
   environmentIdentifier?: string
@@ -5695,7 +5879,7 @@ export interface TimeSeriesThreshold {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
@@ -5738,7 +5922,7 @@ export interface TimeSeriesThresholdDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
   metricGroupName?: string
@@ -5799,7 +5983,7 @@ export interface TransactionMetricInfo {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
   nodeRiskCountDTO?: NodeRiskCountDTO
@@ -5895,7 +6079,7 @@ export interface VerificationJob {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
   )[]
@@ -5912,7 +6096,7 @@ export interface VerificationJob {
   orgIdentifier?: string
   projectIdentifier?: string
   serviceIdentifier: string
-  type?: 'TEST' | 'CANARY' | 'BLUE_GREEN'
+  type?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO'
   uuid?: string
   verificationJobUrl?: string
 }
@@ -6108,6 +6292,8 @@ export type ServiceGuardTimeSeriesAnalysisDTORequestBody = ServiceGuardTimeSerie
 export type ServiceLevelIndicatorDTORequestBody = ServiceLevelIndicatorDTO
 
 export type ServiceLevelObjectiveDTORequestBody = ServiceLevelObjectiveDTO
+
+export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
@@ -6911,11 +7097,95 @@ export const getAppDynamicsTiersPromise = (
     signal
   )
 
+export interface GetPrometheusWorkspacesQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorIdentifier: string
+  region: string
+  tracingId: string
+}
+
+export type GetPrometheusWorkspacesProps = Omit<
+  GetProps<ResponseListAwsPrometheusWorkspaceDTO, Failure | Error, GetPrometheusWorkspacesQueryParams, void>,
+  'path'
+>
+
+/**
+ * get Prometheus Workspaces
+ */
+export const GetPrometheusWorkspaces = (props: GetPrometheusWorkspacesProps) => (
+  <Get<ResponseListAwsPrometheusWorkspaceDTO, Failure | Error, GetPrometheusWorkspacesQueryParams, void>
+    path={`/aws/prometheus/workspaces`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetPrometheusWorkspacesProps = Omit<
+  UseGetProps<ResponseListAwsPrometheusWorkspaceDTO, Failure | Error, GetPrometheusWorkspacesQueryParams, void>,
+  'path'
+>
+
+/**
+ * get Prometheus Workspaces
+ */
+export const useGetPrometheusWorkspaces = (props: UseGetPrometheusWorkspacesProps) =>
+  useGet<ResponseListAwsPrometheusWorkspaceDTO, Failure | Error, GetPrometheusWorkspacesQueryParams, void>(
+    `/aws/prometheus/workspaces`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get Prometheus Workspaces
+ */
+export const getPrometheusWorkspacesPromise = (
+  props: GetUsingFetchProps<
+    ResponseListAwsPrometheusWorkspaceDTO,
+    Failure | Error,
+    GetPrometheusWorkspacesQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListAwsPrometheusWorkspaceDTO, Failure | Error, GetPrometheusWorkspacesQueryParams, void>(
+    getConfig('cv/api'),
+    `/aws/prometheus/workspaces`,
+    props,
+    signal
+  )
+
+export type GetAllAwsRegionsProps = Omit<GetProps<ResponseListString, Failure | Error, void, void>, 'path'>
+
+/**
+ * get regions
+ */
+export const GetAllAwsRegions = (props: GetAllAwsRegionsProps) => (
+  <Get<ResponseListString, Failure | Error, void, void> path={`/aws/regions`} base={getConfig('cv/api')} {...props} />
+)
+
+export type UseGetAllAwsRegionsProps = Omit<UseGetProps<ResponseListString, Failure | Error, void, void>, 'path'>
+
+/**
+ * get regions
+ */
+export const useGetAllAwsRegions = (props: UseGetAllAwsRegionsProps) =>
+  useGet<ResponseListString, Failure | Error, void, void>(`/aws/regions`, { base: getConfig('cv/api'), ...props })
+
+/**
+ * get regions
+ */
+export const getAllAwsRegionsPromise = (
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) => getUsingFetch<ResponseListString, Failure | Error, void, void>(getConfig('cv/api'), `/aws/regions`, props, signal)
+
 export interface GetMonitoredServiceChangeEventSummaryQueryParams {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
   monitoredServiceIdentifier?: string
+  monitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert')[]
   changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD')[]
   startTime: number
@@ -8752,7 +9022,7 @@ export interface GetMetricPacksQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
 }
@@ -8820,7 +9090,7 @@ export interface SaveMetricPacksQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
 }
@@ -10924,6 +11194,7 @@ export interface GetNotificationRuleDataQueryParams {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  notificationRuleIdentifiers?: string[]
   pageNumber: number
   pageSize: number
 }
@@ -11200,6 +11471,7 @@ export interface GetServicesFromPagerDutyQueryParams {
   projectIdentifier: string
   connectorIdentifier?: string
   requestGuid: string
+  query?: string
 }
 
 export type GetServicesFromPagerDutyProps = Omit<
@@ -11320,8 +11592,10 @@ export interface GetLabelNamesQueryParams {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
-  connectorIdentifier: string
   tracingId: string
+  region?: string
+  workspaceId?: string
+  connectorIdentifier: string
   dataSourceType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -11337,11 +11611,9 @@ export interface GetLabelNamesQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
-  region?: string
-  workspaceId?: string
 }
 
 export type GetLabelNamesProps = Omit<
@@ -11392,9 +11664,11 @@ export interface GetLabeValuesQueryParams {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
-  connectorIdentifier: string
   labelName: string
   tracingId: string
+  region?: string
+  workspaceId?: string
+  connectorIdentifier: string
   dataSourceType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -11410,11 +11684,9 @@ export interface GetLabeValuesQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
-  region?: string
-  workspaceId?: string
 }
 
 export type GetLabeValuesProps = Omit<
@@ -11465,9 +11737,11 @@ export interface GetMetricNamesQueryParams {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
-  connectorIdentifier: string
   filter?: string
   tracingId: string
+  region?: string
+  workspaceId?: string
+  connectorIdentifier: string
   dataSourceType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -11483,11 +11757,9 @@ export interface GetMetricNamesQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
-  region?: string
-  workspaceId?: string
 }
 
 export type GetMetricNamesProps = Omit<
@@ -11538,9 +11810,11 @@ export interface GetSampleDataQueryParams {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
-  connectorIdentifier: string
   query: string
   tracingId: string
+  region?: string
+  workspaceId?: string
+  connectorIdentifier: string
   dataSourceType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -11556,11 +11830,9 @@ export interface GetSampleDataQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
-    | 'ELK_LOG'
+    | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
-  region?: string
-  workspaceId?: string
 }
 
 export type GetSampleDataProps = Omit<
@@ -11911,6 +12183,7 @@ export interface GetServiceLevelObjectivesRiskCountQueryParams {
   sliTypes?: ('Availability' | 'Latency')[]
   targetTypes?: ('Rolling' | 'Calender')[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
+  filter?: string
 }
 
 export type GetServiceLevelObjectivesRiskCountProps = Omit<
@@ -12020,6 +12293,93 @@ export const getSLODetailsPromise = (
     signal
   )
 
+export interface GetSloConsumptionBreakdownViewQueryParams {
+  startTime?: number
+  endTime?: number
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface GetSloConsumptionBreakdownViewPathParams {
+  identifier: string
+}
+
+export type GetSloConsumptionBreakdownViewProps = Omit<
+  GetProps<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >,
+  'path'
+> &
+  GetSloConsumptionBreakdownViewPathParams
+
+/**
+ * get SLO consumption breakdown
+ */
+export const GetSloConsumptionBreakdownView = ({ identifier, ...props }: GetSloConsumptionBreakdownViewProps) => (
+  <Get<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >
+    path={`/slo-dashboard/widget/${identifier}/consumption`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSloConsumptionBreakdownViewProps = Omit<
+  UseGetProps<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >,
+  'path'
+> &
+  GetSloConsumptionBreakdownViewPathParams
+
+/**
+ * get SLO consumption breakdown
+ */
+export const useGetSloConsumptionBreakdownView = ({ identifier, ...props }: UseGetSloConsumptionBreakdownViewProps) =>
+  useGet<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >(
+    (paramsInPath: GetSloConsumptionBreakdownViewPathParams) =>
+      `/slo-dashboard/widget/${paramsInPath.identifier}/consumption`,
+    { base: getConfig('cv/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * get SLO consumption breakdown
+ */
+export const getSloConsumptionBreakdownViewPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >(getConfig('cv/api'), `/slo-dashboard/widget/${identifier}/consumption`, props, signal)
+
 export interface GetSLOHealthListViewQueryParams {
   accountId: string
   orgIdentifier: string
@@ -12029,9 +12389,9 @@ export interface GetSLOHealthListViewQueryParams {
   sliTypes?: ('Availability' | 'Latency')[]
   targetTypes?: ('Rolling' | 'Calender')[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
+  filter?: string
   pageNumber?: number
   pageSize?: number
-  filter?: string
 }
 
 export type GetSLOHealthListViewProps = Omit<
@@ -12077,6 +12437,441 @@ export const getSLOHealthListViewPromise = (
     props,
     signal
   )
+
+export interface GetSLOHealthListViewV2QueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pageNumber?: number
+  pageSize?: number
+}
+
+export type GetSLOHealthListViewV2Props = Omit<
+  MutateProps<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewV2QueryParams, SLODashboardApiFilter, void>,
+  'path' | 'verb'
+>
+
+/**
+ * get slo list view
+ */
+export const GetSLOHealthListViewV2 = (props: GetSLOHealthListViewV2Props) => (
+  <Mutate<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewV2QueryParams, SLODashboardApiFilter, void>
+    verb="POST"
+    path={`/slo-dashboard/widgets/list`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSLOHealthListViewV2Props = Omit<
+  UseMutateProps<
+    ResponsePageSLOHealthListView,
+    unknown,
+    GetSLOHealthListViewV2QueryParams,
+    SLODashboardApiFilter,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * get slo list view
+ */
+export const useGetSLOHealthListViewV2 = (props: UseGetSLOHealthListViewV2Props) =>
+  useMutate<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewV2QueryParams, SLODashboardApiFilter, void>(
+    'POST',
+    `/slo-dashboard/widgets/list`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get slo list view
+ */
+export const getSLOHealthListViewV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponsePageSLOHealthListView,
+    unknown,
+    GetSLOHealthListViewV2QueryParams,
+    SLODashboardApiFilter,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageSLOHealthListView,
+    unknown,
+    GetSLOHealthListViewV2QueryParams,
+    SLODashboardApiFilter,
+    void
+  >('POST', getConfig('cv/api'), `/slo-dashboard/widgets/list`, props, signal)
+
+export interface GetServiceLevelObjectivesV2QueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  offset: number
+  pageSize: number
+  userJourneys?: string[]
+  identifiers?: string[]
+  sliTypes?: ('Availability' | 'Latency')[]
+  targetTypes?: ('Rolling' | 'Calender')[]
+  errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
+}
+
+export type GetServiceLevelObjectivesV2Props = Omit<
+  GetProps<ResponsePageServiceLevelObjectiveV2Response, unknown, GetServiceLevelObjectivesV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * get all service level objectives
+ */
+export const GetServiceLevelObjectivesV2 = (props: GetServiceLevelObjectivesV2Props) => (
+  <Get<ResponsePageServiceLevelObjectiveV2Response, unknown, GetServiceLevelObjectivesV2QueryParams, void>
+    path={`/slo/v2`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetServiceLevelObjectivesV2Props = Omit<
+  UseGetProps<ResponsePageServiceLevelObjectiveV2Response, unknown, GetServiceLevelObjectivesV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * get all service level objectives
+ */
+export const useGetServiceLevelObjectivesV2 = (props: UseGetServiceLevelObjectivesV2Props) =>
+  useGet<ResponsePageServiceLevelObjectiveV2Response, unknown, GetServiceLevelObjectivesV2QueryParams, void>(
+    `/slo/v2`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get all service level objectives
+ */
+export const getServiceLevelObjectivesV2Promise = (
+  props: GetUsingFetchProps<
+    ResponsePageServiceLevelObjectiveV2Response,
+    unknown,
+    GetServiceLevelObjectivesV2QueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageServiceLevelObjectiveV2Response, unknown, GetServiceLevelObjectivesV2QueryParams, void>(
+    getConfig('cv/api'),
+    `/slo/v2`,
+    props,
+    signal
+  )
+
+export interface SaveSLOV2DataQueryParams {
+  accountId: string
+}
+
+export type SaveSLOV2DataProps = Omit<
+  MutateProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    SaveSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * saves slo data
+ */
+export const SaveSLOV2Data = (props: SaveSLOV2DataProps) => (
+  <Mutate<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    SaveSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    void
+  >
+    verb="POST"
+    path={`/slo/v2`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseSaveSLOV2DataProps = Omit<
+  UseMutateProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    SaveSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * saves slo data
+ */
+export const useSaveSLOV2Data = (props: UseSaveSLOV2DataProps) =>
+  useMutate<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    SaveSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    void
+  >('POST', `/slo/v2`, { base: getConfig('cv/api'), ...props })
+
+/**
+ * saves slo data
+ */
+export const saveSLOV2DataPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    SaveSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    SaveSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    void
+  >('POST', getConfig('cv/api'), `/slo/v2`, props, signal)
+
+export interface DeleteSLOV2DataQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type DeleteSLOV2DataProps = Omit<
+  MutateProps<RestResponseBoolean, unknown, DeleteSLOV2DataQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * delete slo data
+ */
+export const DeleteSLOV2Data = (props: DeleteSLOV2DataProps) => (
+  <Mutate<RestResponseBoolean, unknown, DeleteSLOV2DataQueryParams, string, void>
+    verb="DELETE"
+    path={`/slo/v2`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteSLOV2DataProps = Omit<
+  UseMutateProps<RestResponseBoolean, unknown, DeleteSLOV2DataQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * delete slo data
+ */
+export const useDeleteSLOV2Data = (props: UseDeleteSLOV2DataProps) =>
+  useMutate<RestResponseBoolean, unknown, DeleteSLOV2DataQueryParams, string, void>('DELETE', `/slo/v2`, {
+    base: getConfig('cv/api'),
+    ...props
+  })
+
+/**
+ * delete slo data
+ */
+export const deleteSLOV2DataPromise = (
+  props: MutateUsingFetchProps<RestResponseBoolean, unknown, DeleteSLOV2DataQueryParams, string, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseBoolean, unknown, DeleteSLOV2DataQueryParams, string, void>(
+    'DELETE',
+    getConfig('cv/api'),
+    `/slo/v2`,
+    props,
+    signal
+  )
+
+export interface GetServiceLevelObjectiveV2QueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface GetServiceLevelObjectiveV2PathParams {
+  identifier: string
+}
+
+export type GetServiceLevelObjectiveV2Props = Omit<
+  GetProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    GetServiceLevelObjectiveV2QueryParams,
+    GetServiceLevelObjectiveV2PathParams
+  >,
+  'path'
+> &
+  GetServiceLevelObjectiveV2PathParams
+
+/**
+ * get service level objective data
+ */
+export const GetServiceLevelObjectiveV2 = ({ identifier, ...props }: GetServiceLevelObjectiveV2Props) => (
+  <Get<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    GetServiceLevelObjectiveV2QueryParams,
+    GetServiceLevelObjectiveV2PathParams
+  >
+    path={`/slo/v2/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetServiceLevelObjectiveV2Props = Omit<
+  UseGetProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    GetServiceLevelObjectiveV2QueryParams,
+    GetServiceLevelObjectiveV2PathParams
+  >,
+  'path'
+> &
+  GetServiceLevelObjectiveV2PathParams
+
+/**
+ * get service level objective data
+ */
+export const useGetServiceLevelObjectiveV2 = ({ identifier, ...props }: UseGetServiceLevelObjectiveV2Props) =>
+  useGet<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    GetServiceLevelObjectiveV2QueryParams,
+    GetServiceLevelObjectiveV2PathParams
+  >((paramsInPath: GetServiceLevelObjectiveV2PathParams) => `/slo/v2/${paramsInPath.identifier}`, {
+    base: getConfig('cv/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * get service level objective data
+ */
+export const getServiceLevelObjectiveV2Promise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    GetServiceLevelObjectiveV2QueryParams,
+    GetServiceLevelObjectiveV2PathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    GetServiceLevelObjectiveV2QueryParams,
+    GetServiceLevelObjectiveV2PathParams
+  >(getConfig('cv/api'), `/slo/v2/${identifier}`, props, signal)
+
+export interface UpdateSLOV2DataQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface UpdateSLOV2DataPathParams {
+  identifier: string
+}
+
+export type UpdateSLOV2DataProps = Omit<
+  MutateProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    UpdateSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    UpdateSLOV2DataPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateSLOV2DataPathParams
+
+/**
+ * update slo data
+ */
+export const UpdateSLOV2Data = ({ identifier, ...props }: UpdateSLOV2DataProps) => (
+  <Mutate<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    UpdateSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    UpdateSLOV2DataPathParams
+  >
+    verb="PUT"
+    path={`/slo/v2/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateSLOV2DataProps = Omit<
+  UseMutateProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    UpdateSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    UpdateSLOV2DataPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateSLOV2DataPathParams
+
+/**
+ * update slo data
+ */
+export const useUpdateSLOV2Data = ({ identifier, ...props }: UseUpdateSLOV2DataProps) =>
+  useMutate<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    UpdateSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    UpdateSLOV2DataPathParams
+  >('PUT', (paramsInPath: UpdateSLOV2DataPathParams) => `/slo/v2/${paramsInPath.identifier}`, {
+    base: getConfig('cv/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * update slo data
+ */
+export const updateSLOV2DataPromise = (
+  {
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    UpdateSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    UpdateSLOV2DataPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseServiceLevelObjectiveV2Response,
+    unknown,
+    UpdateSLOV2DataQueryParams,
+    ServiceLevelObjectiveV2DTORequestBody,
+    UpdateSLOV2DataPathParams
+  >('PUT', getConfig('cv/api'), `/slo/v2/${identifier}`, props, signal)
 
 export interface DeleteSLODataQueryParams {
   accountId: string

@@ -28,8 +28,10 @@ declare const styles: {
   readonly fieldsGroup: string
   readonly formGroup: string
   readonly inpLabel: string
+  readonly inputWidth: string
   readonly kvpairLg: string
   readonly label: string
+  readonly layoutVerticalSpacing: string
   readonly lg: string
   readonly lgOverride: string
   readonly mainLabel: string
@@ -49,6 +51,7 @@ declare const styles: {
   readonly topPadding3: string
   readonly topPadding7: string
   readonly topSpacingLarge: string
+  readonly verticalSpacingInput: string
   readonly withoutAligning: string
   readonly withoutSpacing: string
   readonly xlg: string

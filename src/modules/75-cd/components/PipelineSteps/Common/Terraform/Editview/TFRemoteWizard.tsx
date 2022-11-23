@@ -18,7 +18,7 @@ import {
   SelectOption,
   StepProps,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import React from 'react'
 import { Color } from '@harness/design-system'
 import { unset, map, defaultTo, get } from 'lodash-es'

@@ -87,6 +87,7 @@ connectivityMode:
 title:
   customSecretManager: 'Custom Secrets Manager'
   gcpSecretManager: 'GCP Secrets Manager'
+  azureArtifacts: 'Azure Artifacts'
   k8sCluster: 'Kubernetes Cluster'
   gcpConnector: 'Google Cloud Provider'
   pdcConnector: 'Physical Data Center'
@@ -160,12 +161,14 @@ testConnectionStep:
     vault: 'Vault URL : '
     bitbucket: 'URL : '
     gcr: 'GCR URL : '
+    spot: 'SPOT URL : '
   validationText:
     k8s: Validating the reachability of provided URL
     docker: Validating Docker Registry authentication and permissions
     artifactory: Validating Artifactory Repository authentication and permissions
     nexus: Validating Nexus Repository authentication and permissions
     gcp: Validating Google Cloud Provider authentication and permissions
+    gcpSM: Validating Google Cloud Provider Secrets Manager authentication and permissions
     gcr: Validating Google Container Registry authentication and permissions
     aws: Validating the AWS Cloud Provider authentication and permissions
     appD: Validating AppDynamics authentication and permissions
@@ -187,6 +190,7 @@ testConnectionStep:
     gcpKms: Validating GCP Key Management Service authentication and permissions
     testingURLReachability: Testing reachability to the URL
     customSM: Validating Custom Secret Manager authentication and permissions
+    spot: Validating the Spot connector authentication and permissions
 validation:
   serviceNowUrl: 'ServiceNow URL is required.'
   personalAccessToken: Personal Access Token is required
@@ -313,6 +317,10 @@ jenkins:
   jenkins: 'Jenkins'
   jenkinsUrlRequired: 'Jenkins Registry URL is required'
   jenkinsUrl: 'Jenkins Registry URL'
+azureArtifacts:
+  azureArtifactsUrlRequired: Azure Artifacts URL is required
+  tokenRefRequired: Token ref is required
+  azureArtifactsUrl: Azure Artifacts URL
 helmRepo:
   helmRepoUrl: 'Helm Repository URL'
 aws:
@@ -352,9 +360,9 @@ newRelic:
   products:
     fullStackObservability: 'Full Stack Observability: APM'
 elk:
-  elkConnectorDetails: 'ELK Connector Details'
+  elkConnectorDetails: 'ElasticSearch Connector Details'
   testConnectionStepValidation: 'Validating ELK authentication and permissions'
-  elkLabel: ELK
+  elkLabel: ElasticSearch
   apiId: API ID
   noAuthentication: No Authentication
   validation:
@@ -452,6 +460,7 @@ connectorDetails: Connector Details
 verifyConnection: Verify connection
 createdSuccessfully: 'Connector {{name}} created successfully'
 updatedSuccessfully: 'Connector {{name}} updated successfully'
+spotAccountId: Spot Account Id
 splunk:
   connectorDetailsHeader: Splunk Connection Details
 awsSecretManager:
@@ -636,8 +645,24 @@ ceAws:
       'Harness uses the secure cross-account role to access your AWS account. The role includes a restricted policy to
       access the cost and usage reports and resources for the sole purpose of cost analysis and cost optimization'
     description: 'Select the Cloud Cost Management features that you would like to enable.'
-    info: 'Cost visibility of the resources for which you added the CUR in the previous step is enabled by default. Select the others as per your requirements.'
+    info: '(Selecting features will add the necessary permissions to the IAM role in the next step. Cost Visibility permissions are required by default)'
     cost: 'Cost'
+    hoverOver: Hover over feature for more info
+    adding: Adding
+    thesePermissions: these permissions
+    iamRole: to an IAM role in the next step.
+    cards:
+      providedBy: 'Provided by:'
+      permissionsInvolved: 'Permissions involved:'
+      costVisibility:
+        footer2: from the Cost and Usage Report created in the previoue step.
+        footer3: This cannot be deselected.
+      autoStopping:
+        prefix: Optimization by
+      governance:
+        header: Cloud Governance
+        feat1: Asset Management (EC2, EBS, RDS, S3)
+        feat2: Automated Actions
     visibility: '{{ $.common.ce.visibility }}'
     optimization: '{{ $.common.ce.optimization }}'
     visibilityDes: '{{ $.connectors.ceAzure.chooseRequirements.visibilityCardDesc }}'
@@ -652,6 +677,7 @@ ceAws:
       heading: Inventory management
     optimize:
       feat1: Orchestrate VMs and ASGs based on idleness
+      feat2: Run on fully orchesterated spot instances
       prefix: AWS OPTIMIZATION BY
       footer: to IAM role
   crossAccountRoleStep2:
@@ -903,6 +929,8 @@ pdc:
   selectLabel: 'Select how you would like to define your list of hosts'
   manuallyHosts: 'Manually enter host names'
   uploadJson: 'Upload JSON file'
+  validateHosts: 'At least one host should be provided'
+  validateHostsJson: 'At least one entry with hostname field should be provided'
   hosts: 'Hosts'
   hostsJson: 'JSON content'
   hostsRule: 'Enter JSON or comma separated list here'
@@ -913,8 +941,6 @@ pdc:
   editHosts: 'Edit hosts'
   testConnection:
     step1: 'Validating the PDC hosts connectivity'
-connectorReferenceText: "can't be deleted as it is being referenced by other entities. To see the list of entities referencing this connector,"
-cantDeleteConnector: "Can't Delete Connector"
 policyEvaluations:
   failedToSave: Connector cannot be saved due to the policy evaluation failures
   warning: Connector saved with policy warnings
@@ -943,5 +969,6 @@ customSM:
     template: Please select a template
 gcpSecretManager:
   gcpSMSecretFile: Google Secrets Manager Credentials File
+  gcpCredentialsFile: Credentials File
   validation:
     credFileRequired: Credentials File is required

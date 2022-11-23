@@ -538,6 +538,7 @@ exports[`Save to git form rendering form to git save form without git credential
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium"
             >
               <button
+                aria-label="save"
                 class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main formButton StyledProps--intent-primary Button--with-current-color"
                 disabled=""
                 tabindex="-1"
@@ -550,6 +551,7 @@ exports[`Save to git form rendering form to git save form without git credential
                 </span>
               </button>
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--margin-left-medium Button--with-current-color"
                 type="button"
               >
@@ -1075,6 +1077,7 @@ exports[`Save to git form rendering form to save resouces 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--intent-primary Button--with-current-color"
                 type="submit"
               >
@@ -1085,6 +1088,7 @@ exports[`Save to git form rendering form to save resouces 1`] = `
                 </span>
               </button>
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--margin-left-medium Button--with-current-color"
                 type="button"
               >
@@ -1610,6 +1614,7 @@ exports[`Save to git form rendering form to save resouces 2`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--intent-primary Button--with-current-color"
                 type="submit"
               >
@@ -1620,6 +1625,7 @@ exports[`Save to git form rendering form to save resouces 2`] = `
                 </span>
               </button>
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--margin-left-medium Button--with-current-color"
                 type="button"
               >

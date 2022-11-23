@@ -16,11 +16,11 @@ import {
   PageSpinner,
   useToaster,
   useConfirmationDialog
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { parse } from 'yaml'
 import { useParams } from 'react-router-dom'
 import { isEmpty, noop, omit } from 'lodash-es'
-import type { ToasterProps } from '@wings-software/uicore/dist/hooks/useToaster/useToaster'
+import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToaster'
 import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { useStrings } from 'framework/strings'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
@@ -289,14 +289,10 @@ const ConnectorYAMLEditor: React.FC<ConnectorYAMLEditorProp> = props => {
       <div className={css.fullWidth}>
         <YamlBuilder
           {...yamlBuilderProps}
-          // snippets={snippetMetaData?.data?.yamlSnippets}
-          // onSnippetCopy={onSnippetCopy}
-          // snippetFetchResponse={snippetFetchResponse}
           schema={connectorSchema?.data}
           isReadOnlyMode={false}
           bind={setYamlHandler}
           onChange={onConnectorChange}
-          showSnippetSection={false}
         />
         <Layout.Horizontal spacing="small">
           <Button

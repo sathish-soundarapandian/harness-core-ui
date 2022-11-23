@@ -53,6 +53,10 @@ export const HEALTHSOURCE_LIST = [
   {
     name: HealthSourceTypes.CloudWatch,
     icon: getConnectorIconByType(Connectors.AWS)
+  },
+  {
+    name: HealthSourceTypes.SumoLogic,
+    icon: getConnectorIconByType(Connectors.SUMOLOGIC)
   }
 ]
 
@@ -70,7 +74,15 @@ export const SplunkProduct = {
 }
 
 export const ElkProduct = {
-  ELK_LOGS: 'ELK Logs'
+  ELK_LOGS: 'ElasticSearch Logs'
 }
+
+export const DataSourceTypeFieldNames = {
+  Region: 'region',
+  DataSourceType: 'dataSourceType',
+  WorkspaceId: 'workspaceId'
+}
+
+export const AWSDataSourceType = 'AWS_PROMETHEUS'
 
 export const ConnectorRefFieldName = 'connectorRef'

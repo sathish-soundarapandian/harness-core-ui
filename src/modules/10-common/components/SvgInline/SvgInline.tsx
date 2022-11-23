@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Text, Icon, Layout } from '@wings-software/uicore'
+import { Text, Icon, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 

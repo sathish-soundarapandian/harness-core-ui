@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@harness/uicore'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import { Connectors } from '@connectors/constants'
 import type { GCSStepProps } from './GCSStep'

@@ -18,7 +18,7 @@ import {
   ButtonVariation,
   Container,
   Icon
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
 import { Classes, Dialog } from '@blueprintjs/core'
@@ -51,6 +51,7 @@ export interface ReferenceSelectDialogTitleProps {
   createNewHandler?: () => void
   createNewBtnComponent?: JSX.Element
   isNewConnectorLabelVisible?: boolean
+  title?: string
 }
 export interface ReferenceSelectProps<T extends MinimalObject>
   extends Omit<EntityReferenceProps<T>, 'onSelect' | 'onMultiSelect' | 'selectedRecords'>,
@@ -82,9 +83,10 @@ export const ReferenceSelectDialogTitle = (props: ReferenceSelectDialogTitleProp
     <Layout.Horizontal flex={{ distribution: 'space-between' }}>
       <Layout.Vertical spacing="xsmall">
         <Text font={{ variation: FontVariation.H4 }}>
-          {getString('common.entityReferenceTitle', {
-            compName: componentName
-          })}
+          {props.title ||
+            getString('common.entityReferenceTitle', {
+              compName: componentName
+            })}
         </Text>
         <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500}>
           {getString('common.sortedByCreatedTime')}
@@ -330,6 +332,8 @@ export const MultiReferenceSelectPlaceholder: FC<MultiReferenceSelectPlaceholder
                     background={Color.PRIMARY_2}
                     key={scope}
                     onClick={() => {
+                      if (disabled) return
+
                       onClick(scope)
                     }}
                     border={{ radius: 100 }}

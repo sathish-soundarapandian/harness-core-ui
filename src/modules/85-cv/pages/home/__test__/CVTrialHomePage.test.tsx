@@ -43,6 +43,7 @@ jest.mock('services/cd-ng', () => ({
 
 describe('CVTrialHomePage snapshot test', () => {
   test('should render properly', async () => {
+    window.deploymentType = 'ON_PREM'
     const { container } = render(
       <TestWrapper pathParams={{ orgIdentifier: 'dummy' }}>
         <CVTrialHomePage />

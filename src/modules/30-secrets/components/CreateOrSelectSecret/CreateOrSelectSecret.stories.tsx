@@ -8,7 +8,7 @@
 import React from 'react'
 import type { Meta, Story } from '@storybook/react'
 
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import CreateOrSelectSecret, { CreateOrSelectSecretProps } from './CreateOrSelectSecret'
 

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, IconName } from '@wings-software/uicore'
+import { Icon, IconName } from '@harness/uicore'
 import moment from 'moment'
 
 import type { HarnessApprovalActivity } from 'services/pipeline-ng'

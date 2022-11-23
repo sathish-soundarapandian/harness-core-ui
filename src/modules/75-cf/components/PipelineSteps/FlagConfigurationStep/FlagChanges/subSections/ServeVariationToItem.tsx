@@ -6,7 +6,7 @@
  */
 
 import React, { FC, useEffect, useMemo, useState } from 'react'
-import { AvatarGroup, AvatarGroupProps, Button, ButtonVariation, Layout, Text } from '@wings-software/uicore'
+import { AvatarGroup, AvatarGroupProps, Button, ButtonVariation, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { Variation } from 'services/cf'
 import { VariationWithIcon } from '@cf/components/VariationWithIcon/VariationWithIcon'
@@ -82,7 +82,7 @@ const ServeVariationToItem: FC<ServeVariationToItemProps> = ({
 
   return (
     <>
-      {selectedVariation && selectedItems.length && (
+      {selectedVariation && !!selectedItems.length && (
         <Layout.Vertical spacing="medium" border={{ bottom: true }} padding={{ bottom: 'medium' }}>
           <p className={css.variationParagraph}>
             {getString('cf.pipeline.flagConfiguration.serve')}

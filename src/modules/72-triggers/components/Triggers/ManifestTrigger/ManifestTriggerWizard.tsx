@@ -21,7 +21,7 @@ import {
   Text,
   useConfirmationDialog,
   VisualYamlSelectedView as SelectedView
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { getIdentifierFromValue, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 import Wizard from '@common/components/Wizard/Wizard'
@@ -98,7 +98,7 @@ import {
   TriggerTypes
 } from './ManifestWizardPageUtils'
 import type { TriggerProps } from '../Trigger'
-import useGitAwareForTriggerEnabled from '../useGitAwareForTriggerEnabled'
+import useIsNewGitSyncRemotePipeline from '../useIsNewGitSyncRemotePipeline'
 import css from '@triggers/pages/triggers/TriggersWizardPage.module.scss'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
@@ -166,7 +166,7 @@ export default function ManifestTriggerWizard(
     }
   })
 
-  const gitAwareForTriggerEnabled = useGitAwareForTriggerEnabled()
+  const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
   const [connectorScopeParams] = useState<GetConnectorQueryParams | undefined>(undefined)
   const [ignoreError, setIgnoreError] = useState<boolean>(false)
@@ -176,7 +176,7 @@ export default function ManifestTriggerWizard(
       orgIdentifier,
       projectIdentifier,
       targetIdentifier: pipelineIdentifier,
-      ...(gitAwareForTriggerEnabled
+      ...(isNewGitSyncRemotePipeline
         ? {
             ignoreError,
             branch,
@@ -192,7 +192,7 @@ export default function ManifestTriggerWizard(
       projectIdentifier,
       pipelineIdentifier,
       ignoreError,
-      gitAwareForTriggerEnabled,
+      isNewGitSyncRemotePipeline,
       branch,
       pipelineConnectorRef,
       pipelineRepoName,
@@ -254,9 +254,9 @@ export default function ManifestTriggerWizard(
       orgIdentifier,
       projectIdentifier,
       pipelineIdentifier,
-      gitAwareForTriggerEnabled
+      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
     })
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       delete res.inputYaml
       if (values.inputSetSelected?.length) {
         res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
@@ -271,7 +271,7 @@ export default function ManifestTriggerWizard(
     entityType: 'Triggers',
     width: 'calc(100vw - 350px)',
     height: 'calc(100vh - 280px)',
-    showSnippetSection: false,
+
     yamlSanityConfig: {
       removeEmptyString: false,
       removeEmptyObject: false,
@@ -443,7 +443,7 @@ export default function ManifestTriggerWizard(
           // set error
           setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
-      } else if (gitAwareForTriggerEnabled) {
+      } else if (isNewGitSyncRemotePipeline) {
         pipelineJson = resolvedPipeline
       }
       const eventConditions = source?.spec?.spec?.eventConditions || []
@@ -568,7 +568,7 @@ export default function ManifestTriggerWizard(
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
     setErrorToasterMessage('')
 
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       delete triggerYaml.inputYaml
 
       // Set pipelineBranchName to proper expression when it's left empty
@@ -580,7 +580,7 @@ export default function ManifestTriggerWizard(
       }
     }
     const successCallback = ({ status, data, message }: ResponseNGTriggerResponseWithMessage): void => {
-      if (status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+      if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
         retryTriggerSubmit({ message })
       } else if (data?.errors && !isEmpty(data?.errors)) {
         const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -611,7 +611,7 @@ export default function ManifestTriggerWizard(
     }
 
     const errorCallback = (err: any): void => {
-      if (err?.data?.status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+      if (err?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
         retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
       } else {
         setErrorToasterMessage(getErrorMessage(err))
@@ -654,7 +654,7 @@ export default function ManifestTriggerWizard(
       orgIdentifier,
       projectIdentifier,
       pipelineIdentifier,
-      gitAwareForTriggerEnabled
+      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
     })
     submitTrigger(triggerYaml)
   }
@@ -985,7 +985,7 @@ export default function ManifestTriggerWizard(
     let _pipelineBranchNameError = ''
     let _inputSetRefsError = ''
 
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       // Custom validation when pipeline Reference Branch Name is an expression for non-webhook triggers
       if (formikProps?.values?.triggerType !== TriggerTypes.WEBHOOK) {
         const pipelineBranchName = (formikProps?.values?.pipelineBranchName || '').trim()
@@ -1018,7 +1018,7 @@ export default function ManifestTriggerWizard(
       orgPipeline: values.pipeline,
       setSubmitting
     })
-    const gitXErrors = gitAwareForTriggerEnabled
+    const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)
       : undefined
     // https://github.com/formium/formik/issues/1392

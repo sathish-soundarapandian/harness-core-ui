@@ -12,6 +12,7 @@ declare const styles: {
   readonly header: string
   readonly name: string
   readonly page: string
+  readonly referenceByFilter: string
   readonly table: string
 }
 export default styles

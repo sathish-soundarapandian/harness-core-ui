@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
@@ -21,6 +21,8 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { JiraProjectBasicNG, JiraProjectNG, useGetJiraIssueCreateMetadata, useGetJiraProjects } from 'services/cd-ng'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { getGenuineValue, setIssueTypeOptions } from '../JiraApproval/helper'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
@@ -39,7 +41,8 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
     fetchingProjectMetadata,
     fetchingProjects,
     projectMetadataFetchError,
-    projectsFetchError
+    projectsFetchError,
+    stepViewType
   } = formContentProps
   const template = inputSetData?.template
   const path = inputSetData?.path
@@ -130,7 +133,9 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
           label={getString('pipelineSteps.timeoutLabel')}
           className={css.deploymentViewMedium}
           multiTypeDurationProps={{
-            enableConfigureOptions: false,
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             allowableTypes,
             expressions,
             disabled: isApprovalStepFieldDisabled(readonly)
@@ -157,12 +162,15 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
             allowableTypes,
             expressions
           }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
           type={'Jira'}
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
         />
       ) : null}
       {getMultiTypeFromValue(template?.spec?.projectKey) === MultiTypeInputType.RUNTIME ? (
-        <FormInput.MultiTypeInput
+        <SelectInputSetView
           selectItems={projectOptions}
           className={css.deploymentViewMedium}
           label={getString('pipeline.jiraApprovalStep.project')}
@@ -183,12 +191,17 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
               items: projectOptions
             }
           }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
           disabled={isApprovalStepFieldDisabled(readonly)}
+          fieldPath={'spec.projectKey'}
+          template={template}
         />
       ) : null}
 
       {getMultiTypeFromValue(template?.spec?.issueType) === MultiTypeInputType.RUNTIME ? (
-        <FormInput.MultiTypeInput
+        <SelectInputSetView
           selectItems={setIssueTypeOptions(projectMetadata?.issuetypes)}
           className={css.deploymentViewMedium}
           placeholder={
@@ -210,6 +223,11 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
               items: setIssueTypeOptions(projectMetadata?.issuetypes)
             }
           }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          fieldPath={'spec.issueType'}
+          template={template}
         />
       ) : null}
     </React.Fragment>

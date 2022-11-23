@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Card, Container, FontVariation, Text } from '@harness/uicore'
+import { Card, Container, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ChangesTableContentWrapper } from './ChangesTable.types'
 import css from './ChangeTable.module.scss'

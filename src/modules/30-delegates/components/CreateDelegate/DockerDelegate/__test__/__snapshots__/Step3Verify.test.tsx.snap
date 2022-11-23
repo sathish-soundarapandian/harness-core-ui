@@ -118,6 +118,7 @@ exports[`Create Docker Step3Verify render data and create delegate group 1`] = `
     class="Layout--horizontal StyledProps--main StyledProps--padding-xxxlarge"
   >
     <button
+      aria-label="back"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--withLeftIcon"
       id="stepReviewScriptBackButton"
       type="button"
@@ -148,6 +149,7 @@ exports[`Create Docker Step3Verify render data and create delegate group 1`] = `
       </span>
     </button>
     <button
+      aria-label="done"
       class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--padding-small Button--with-current-color"
       disabled=""
       tabindex="-1"
@@ -307,6 +309,7 @@ exports[`Create Docker Step3Verify render data and go back 1`] = `
     class="Layout--horizontal StyledProps--main StyledProps--padding-xxxlarge"
   >
     <button
+      aria-label="back"
       class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--withLeftIcon"
       disabled=""
       id="stepReviewScriptBackButton"
@@ -365,6 +368,7 @@ exports[`Create Docker Step3Verify render data and go back 1`] = `
       </span>
     </button>
     <button
+      aria-label="done"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--padding-small Button--with-current-color"
       type="button"
     >

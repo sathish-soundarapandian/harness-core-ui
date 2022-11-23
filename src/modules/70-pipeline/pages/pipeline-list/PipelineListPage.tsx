@@ -16,7 +16,7 @@ import {
   shouldShowError,
   Text,
   useToggleOpen
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { defaultTo, pick } from 'lodash-es'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
@@ -39,6 +39,7 @@ import {
   PipelineFilterProperties,
   PMSPipelineSummaryResponse,
   useGetPipelineList,
+  useGetRepositoryList,
   useSoftDeletePipeline
 } from 'services/pipeline-ng'
 import { DEFAULT_PIPELINE_LIST_TABLE_SORT, DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
@@ -46,6 +47,10 @@ import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import type { PartiallyRequired } from '@pipeline/utils/types'
 import { ClonePipelineForm } from '@pipeline/components/ClonePipelineForm/ClonePipelineForm'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
+
+import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
+import { RepoFilter } from '@common/components/RepoFilter/RepoFilter'
 import { PipelineListEmpty } from './PipelineListEmpty/PipelineListEmpty'
 import { PipelineListFilter } from './PipelineListFilter/PipelineListFilter'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
@@ -67,7 +72,7 @@ const queryParamOptions = {
   }
 }
 
-export function PipelineListPage(): React.ReactElement {
+function PipelineListView(): React.ReactElement {
   const { getString } = useStrings()
   const searchRef = useRef({} as ExpandingSearchInputHandle)
   const [pipelineList, setPipelineList] = useState<PagePMSPipelineSummaryResponse | undefined>()
@@ -78,6 +83,7 @@ export function PipelineListPage(): React.ReactElement {
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [pipelineToClone, setPipelineToClone] = useState<PMSPipelineSummaryResponse>()
+
   const {
     open: openClonePipelineModal,
     isOpen: isClonePipelineModalOpen,
@@ -85,11 +91,10 @@ export function PipelineListPage(): React.ReactElement {
   } = useToggleOpen()
 
   const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
-  const { searchTerm, repoIdentifier, branch, page, size } = queryParams
+  const { searchTerm, repoIdentifier, branch, page, size, repoName } = queryParams
   const pathParams = useParams<PipelineListPagePathParams>()
   const { projectIdentifier, orgIdentifier, accountId } = pathParams
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<PipelineListPageQueryParams>>()
-
   const { preference: sortingPreference, setPreference: setSortingPreference } = usePreferenceStore<string | undefined>(
     PreferenceScope.USER,
     'PipelineSortingPreference'
@@ -116,6 +121,10 @@ export function PipelineListPage(): React.ReactElement {
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
+  const onChangeRepo = (_repoName: string): void => {
+    updateQueryParams({ repoName: (_repoName || []) as string })
+  }
+
   const { mutate: deletePipeline, loading: isDeletingPipeline } = useSoftDeletePipeline({
     queryParams: {
       accountIdentifier: accountId,
@@ -134,6 +143,7 @@ export function PipelineListPage(): React.ReactElement {
     try {
       const filter: PipelineFilterProperties = {
         filterType: 'PipelineSetup',
+        repoName,
         ...appliedFilter?.filterProperties
       }
       const { status, data } = await loadPipelineList(filter, {
@@ -160,17 +170,20 @@ export function PipelineListPage(): React.ReactElement {
         showError(getRBACErrorMessage(e), undefined, 'pipeline.fetch.pipeline.error')
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    accountId,
+    repoName,
     appliedFilter?.filterProperties,
-    branch,
-    orgIdentifier,
-    page,
+    loadPipelineList,
+    accountId,
     projectIdentifier,
-    repoIdentifier,
+    orgIdentifier,
     searchTerm,
+    page,
+    sort,
     size,
-    sort?.toString()
+    repoIdentifier,
+    branch
   ])
 
   useDocumentTitle([getString('pipelines')])
@@ -228,8 +241,10 @@ export function PipelineListPage(): React.ReactElement {
     />
   )
 
+  const { globalFreezes } = useGlobalFreezeBanner()
+
   return (
-    <GitSyncStoreProvider>
+    <>
       <Page.Header
         title={
           <div className="ng-tooltip-native">
@@ -240,9 +255,9 @@ export function PipelineListPage(): React.ReactElement {
         breadcrumbs={<NGBreadcrumbs links={[]} />}
       />
       <Page.SubHeader className={css.subHeader}>
-        <Layout.Horizontal>
+        <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
           {createPipelineButton}
-          {isGitSyncEnabled && (
+          {isGitSyncEnabled ? (
             <GitFilters
               onChange={handleRepoChange}
               className={css.gitFilter}
@@ -251,6 +266,8 @@ export function PipelineListPage(): React.ReactElement {
                 branch
               }}
             />
+          ) : (
+            <RepoFilter onChange={onChangeRepo} value={repoName} getRepoListPromise={useGetRepositoryList} />
           )}
         </Layout.Horizontal>
         <Layout.Horizontal style={{ alignItems: 'center' }}>
@@ -272,6 +289,7 @@ export function PipelineListPage(): React.ReactElement {
           />
         </Layout.Horizontal>
       </Page.SubHeader>
+      <GlobalFreezeBanner globalFreezes={globalFreezes} />
       <Page.Body
         className={css.pageBody}
         error={pipelineListLoadingError?.message}
@@ -321,6 +339,20 @@ export function PipelineListPage(): React.ReactElement {
           />
         )}
       </Page.Body>
-    </GitSyncStoreProvider>
+    </>
   )
+}
+
+export function PipelineListPage(): React.ReactElement {
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+
+  if (isGitSyncEnabled) {
+    return (
+      <GitSyncStoreProvider>
+        <PipelineListView />
+      </GitSyncStoreProvider>
+    )
+  }
+  return <PipelineListView />
 }

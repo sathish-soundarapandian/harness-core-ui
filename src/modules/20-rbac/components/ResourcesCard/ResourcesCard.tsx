@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Layout, Text, Card, Button, Radio, Container, ButtonVariation } from '@wings-software/uicore'
+import { Layout, Text, Card, Button, Radio, Container, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import RbacFactory from '@rbac/factories/RbacFactory'
@@ -72,7 +72,11 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
             color={Color.BLACK}
             font={{ weight: 'semi-bold' }}
             icon={icon}
-            iconProps={{ size: 30, padding: { right: 'medium' } }}
+            iconProps={{
+              size: 30,
+              padding: { right: 'medium' },
+              className: css.iconColor
+            }}
           >
             {getString(label)}
           </Text>

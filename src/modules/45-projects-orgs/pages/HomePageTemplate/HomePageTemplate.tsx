@@ -6,15 +6,7 @@
  */
 
 import React from 'react'
-import {
-  ButtonVariation,
-  Container,
-  FlexExpander,
-  Heading,
-  Layout,
-  Link as ExternalLink,
-  Text
-} from '@wings-software/uicore'
+import { ButtonVariation, Container, FlexExpander, Heading, Layout, Link as ExternalLink, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useProjectModal } from '@projects-orgs/modals/ProjectModal/useProjectModal'

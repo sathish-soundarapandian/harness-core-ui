@@ -10,6 +10,7 @@ declare const styles: {
   readonly expandSearch: string
   readonly gitFilter: string
   readonly pageBody: string
+  readonly repoFilterContainer: string
   readonly subHeader: string
   readonly tableTitle: string
 }

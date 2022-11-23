@@ -10,7 +10,7 @@
 import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Dialog } from '@wings-software/uicore'
+import { Dialog } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import TargetGroupCriteria, { TargetGroupCriteriaProps } from '../TargetGroupCriteria'
 
@@ -97,7 +97,7 @@ describe('TargetGroupCriteria', () => {
 
     expect(screen.queryByTestId('edit-target-group-criteria-dialog')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'edit edit' }))
+    userEvent.click(screen.getByRole('button', { name: 'edit' }))
 
     await waitFor(() => {
       expect(screen.getByTestId('edit-target-group-criteria-dialog')).toBeInTheDocument()

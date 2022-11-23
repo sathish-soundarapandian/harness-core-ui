@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
+import { unstable_batchedUpdates } from 'react-dom'
 import { useFormikContext } from 'formik'
-import { get, isEmpty, isNil, pick, set, unset } from 'lodash-es'
+import { get, isBoolean, isEmpty, isNil, omit, pick, set, unset } from 'lodash-es'
 import cx from 'classnames'
 
-import { Color, Container, RUNTIME_INPUT_VALUE, Text } from '@harness/uicore'
+import { Container, RUNTIME_INPUT_VALUE, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import type { DeploymentStageConfig, EnvironmentYamlV2, Infrastructure, ServiceSpec } from 'services/cd-ng'
@@ -238,7 +240,7 @@ function MultiEnvironmentsInputSetForm({
           readonly={readonly}
           customStepProps={{
             gitOpsEnabled: deploymentStage?.gitOpsEnabled,
-            pathSuffix: pathToEnvironments,
+            pathToEnvironments,
             // If this is passed, the environments list is fetched based on this query param
             envGroupIdentifier: isValueRuntimeInput(deploymentStageTemplate.environmentGroup?.envGroupRef as string)
               ? deploymentStageInputSet.environmentGroup.envGroupRef
@@ -248,6 +250,16 @@ function MultiEnvironmentsInputSetForm({
              * If the question arises why another condition for this scenario?
              * Because we need to repeat the same selection steps without the field*/
             deployToAllEnvironments: deploymentStage?.environmentGroup?.deployToAll
+          }}
+          onUpdate={data => {
+            unstable_batchedUpdates(() => {
+              formik.setFieldValue(`${path}.${pathToEnvironments}`, get(data, pathToEnvironments))
+
+              const deployToAll = get(data, 'environmentGroup.deployToAll')
+              if (isBoolean(deployToAll)) {
+                formik.setFieldValue(`${path}.environmentGroup.deployToAll`, deployToAll)
+              }
+            })
           }}
         />
       )}
@@ -308,8 +320,7 @@ function MultiEnvironmentsInputSetForm({
 
               return (
                 deploymentType &&
-                environment.environmentRef &&
-                stageIdentifier && (
+                environment.environmentRef && (
                   <React.Fragment key={`${environment.environmentRef}_${index}`}>
                     {showEnvironmentPrefix && (
                       <Text
@@ -412,7 +423,16 @@ function MultiEnvironmentsInputSetForm({
                           customStepProps={{
                             environmentIdentifier: environment.environmentRef,
                             isMultipleCluster: true,
-                            deployToAllClusters: environmentInDeploymentStage?.deployToAll
+                            deployToAllClusters: environmentInDeploymentStage?.deployToAll,
+                            showEnvironmentsSelectionInputField
+                          }}
+                          onUpdate={data => {
+                            const environmentAtIndex = get(formik.values, `${path}.${pathToEnvironments}[${index}]`)
+
+                            formik.setFieldValue(`${path}.${pathToEnvironments}[${index}]`, {
+                              ...omit(environmentAtIndex, ['deployToAll', 'gitOpsClusters']),
+                              ...pick(data, ['deployToAll', 'gitOpsClusters'])
+                            })
                           }}
                         />
                       )}
@@ -432,7 +452,18 @@ function MultiEnvironmentsInputSetForm({
                             environmentIdentifier: environment.environmentRef,
                             isMultipleInfrastructure: true,
                             customDeploymentRef: deploymentStage?.customDeploymentRef,
-                            deployToAllInfrastructures: environmentInDeploymentStage?.deployToAll
+                            deployToAllInfrastructures: environmentInDeploymentStage?.deployToAll,
+                            showEnvironmentsSelectionInputField: deploymentStage?.environmentGroup?.deployToAll
+                              ? false
+                              : showEnvironmentsSelectionInputField
+                          }}
+                          onUpdate={data => {
+                            const environmentAtIndex = get(formik.values, `${path}.${pathToEnvironments}[${index}]`)
+
+                            formik.setFieldValue(`${path}.${pathToEnvironments}[${index}]`, {
+                              ...omit(environmentAtIndex, ['deployToAll', 'infrastructureDefinitions']),
+                              ...pick(data, ['deployToAll', 'infrastructureDefinitions'])
+                            })
                           }}
                         />
                       )}

@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Color, FontVariation, Icon, Layout, Tag, Text } from '@harness/uicore'
+import { Icon, Layout, Tag, TagsPopover, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import React from 'react'
 import type { ClusterFromGitops } from 'services/cd-ng'
 import css from './AddCluster.module.scss'
@@ -46,17 +47,31 @@ const ClusterCard = (props: ClusterCardProps): React.ReactElement => {
     >
       <div className={css.clusterCardRightSide}>
         <Icon name="gitops-clusters" />
-        <Layout.Vertical flex={{ justifyContent: 'flex-start' }} spacing="small" margin={{ bottom: 'small' }}>
-          <Text data-id="cluster-id-label" lineClamp={1} color={Color.BLACK} className={css.clusterName} width={150}>
-            {defaultTo(cluster.name, '')}
-          </Text>
+        <Layout.Vertical
+          flex={{ justifyContent: 'flex-start' }}
+          spacing="small"
+          margin={{ bottom: 'small' }}
+          style={{ alignItems: 'unset' }}
+        >
+          <Layout.Horizontal margin={{ left: 'small' }} className={css.clusterTitle}>
+            <Text data-id="cluster-id-label" lineClamp={1} color={Color.BLACK} className={css.clusterName} width={125}>
+              {defaultTo(cluster.name, '')}
+            </Text>
+            {!isEmpty(cluster.tags) && cluster.tags ? (
+              <TagsPopover
+                className={css.tagsPopover}
+                iconProps={{ size: 14, color: Color.GREY_600 }}
+                tags={cluster.tags}
+              />
+            ) : null}
+          </Layout.Horizontal>
           <Text
             data-id="cluster-id-text"
             lineClamp={1}
             font={{ variation: FontVariation.FORM_LABEL }}
             color={Color.GREY_400}
             className={css.clusterId}
-            margin={{ left: 'medium' }}
+            margin={{ left: 'small' }}
             width={150}
           >
             ID: {cluster.identifier}

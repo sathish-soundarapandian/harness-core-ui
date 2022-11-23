@@ -7,32 +7,32 @@
 
 import React, { useMemo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Button, ButtonVariation, Container, FlexExpander, Layout, MultiStepProgressIndicator } from '@harness/uicore'
-import { Intent, Color } from '@harness/design-system'
+import {
+  Button,
+  ButtonVariation,
+  Container,
+  FlexExpander,
+  Heading,
+  Layout,
+  MultiStepProgressIndicator
+} from '@harness/uicore'
+import { Intent, Color, FontVariation } from '@harness/design-system'
+import { Divider } from '@blueprintjs/core'
 import { StepStatus } from '@common/constants/StepStatusTypes'
 import type { ApiKey, Feature } from 'services/cf'
+import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
 import type { PlatformEntry } from '@cf/components/LanguageSelection/LanguageSelection'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { CreateAFlagView } from './views/CreateAFlagView'
+import { OnboardingSelectedFlag } from './OnboardingSelectedFlag'
 import { SetUpYourApplicationView } from './views/SetUpYourApplicationView'
 import { ValidateYourFlagView } from './views/ValidatingYourFlagView'
 import css from './OnboardingDetailPage.module.scss'
 
-enum TabId {
-  CREATE_A_FLAG = 'created-a-flag',
-  SET_UP_APP = 'set-up-your-app',
-  TEST_YOUR_FLAG = 'test-your-flag'
-}
-
 enum STEP {
-  NEXT = 'next',
-  BACK = 'back'
-}
-
-enum STATUS {
   CREATE_A_FLAG,
   SELECT_ENV_SDK,
   VALIDATE_FLAG
@@ -40,100 +40,85 @@ enum STATUS {
 
 export const OnboardingDetailPage: React.FC = () => {
   const { getString } = useStrings()
-  const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
-  const [selectedTabId, setSelectedTabId] = React.useState<string>(TabId.CREATE_A_FLAG)
-  const [language, setLanguage] = useState<PlatformEntry>()
-  const [apiKey, setApiKey] = useState<ApiKey>()
-  const [environmentIdentifier, setEnvironmentIdentifier] = useState<string | undefined>()
-  const [testDone, setTestDone] = useState(false)
-  const [selectedFlag, setSelectedFlag] = useState<Feature | undefined>()
-  const [progressStep, setProgressStep] = useState('')
-  const [createFlagError, setCreateFlagError] = useState(false)
-
   const history = useHistory()
 
-  const switchTab = (tabId: string): void => setSelectedTabId(tabId)
+  const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
+  const [currentStep, setCurrentStep] = React.useState<number>(1)
+  const [language, setLanguage] = useState<PlatformEntry>()
+  const [apiKey, setApiKey] = useState<ApiKey>()
+  const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO | undefined>()
+  const [testDone, setTestDone] = useState(false)
+  const [selectedFlag, setSelectedFlag] = useState<Feature | undefined>()
+
+  const totalSteps = Object.keys(STEP).length / 2
 
   const onNext = (): void => {
-    switch (selectedTabId) {
-      case TabId.CREATE_A_FLAG:
-        switchTab(TabId.SET_UP_APP)
-        return
-      case TabId.SET_UP_APP:
-        setSelectedTabId(TabId.TEST_YOUR_FLAG)
-        return
-      case TabId.TEST_YOUR_FLAG:
-        history.push(routes.toCFOnboarding({ accountId: accountIdentifier, orgIdentifier, projectIdentifier }))
-        return
+    if (currentStep !== totalSteps) {
+      const nextStep = currentStep + 1
+      setCurrentStep(nextStep)
+    } else {
+      history.push(routes.toCFOnboarding({ accountId: accountIdentifier, orgIdentifier, projectIdentifier }))
     }
   }
 
   const onPrevious = (): void => {
-    switch (selectedTabId) {
-      case TabId.CREATE_A_FLAG:
-        history.push(routes.toCFOnboarding({ accountId: accountIdentifier, orgIdentifier, projectIdentifier }))
-        return
-      case TabId.SET_UP_APP:
-        setSelectedTabId(TabId.CREATE_A_FLAG)
-        return
-      case TabId.TEST_YOUR_FLAG:
-        setSelectedTabId(TabId.SET_UP_APP)
-        return
+    if (currentStep !== 0) {
+      const nextStep = currentStep - 1
+      setCurrentStep(nextStep)
+    } else {
+      history.push(routes.toCFOnboarding({ accountId: accountIdentifier, orgIdentifier, projectIdentifier }))
     }
-    setProgressStep(STEP.BACK)
   }
 
   const firstStepStatus = useMemo<StepStatus>(() => {
-    if (createFlagError || (selectedTabId === TabId.CREATE_A_FLAG && progressStep === STEP.BACK)) {
-      return StepStatus.INPROGRESS
-    } else if ((selectedTabId === TabId.SET_UP_APP && progressStep === STEP.BACK) || progressStep === STEP.NEXT) {
+    if (currentStep > 1) {
       return StepStatus.SUCCESS
     }
     return StepStatus.INPROGRESS
-  }, [createFlagError, progressStep, selectedTabId])
+  }, [currentStep])
 
   const secondStepStatus = useMemo<StepStatus>(() => {
-    if (createFlagError) {
-      return StepStatus.FAILED
-    } else if (selectedTabId === TabId.TEST_YOUR_FLAG && progressStep === STEP.NEXT) {
-      return StepStatus.SUCCESS
-    } else if (progressStep === STEP.NEXT || (selectedTabId === TabId.SET_UP_APP && progressStep === STEP.BACK)) {
+    if (currentStep === 2) {
       return StepStatus.INPROGRESS
+    } else if (currentStep > 2) {
+      return StepStatus.SUCCESS
     }
     return StepStatus.TODO
-  }, [createFlagError, progressStep, selectedTabId])
+  }, [currentStep])
 
   const thirdStepStatus = useMemo<StepStatus>(() => {
-    if (selectedTabId === TabId.TEST_YOUR_FLAG && language && apiKey) {
+    if (currentStep === 3) {
       return StepStatus.INPROGRESS
     }
     return StepStatus.TODO
-  }, [selectedTabId, language, apiKey])
+  }, [currentStep])
 
-  const state = useMemo<STATUS>(() => {
-    if (selectedTabId === TabId.SET_UP_APP && selectedFlag) {
-      return STATUS.SELECT_ENV_SDK
-    } else if (selectedTabId === TabId.TEST_YOUR_FLAG && language && apiKey && selectedFlag) {
-      return STATUS.VALIDATE_FLAG
+  const selectedStep = useMemo<STEP>(() => {
+    // use this to determine the order of the tabs
+    switch (currentStep) {
+      case 2:
+        return STEP.SELECT_ENV_SDK
+      case 3:
+        return STEP.VALIDATE_FLAG
+      default:
+        // first step/tab
+        return STEP.CREATE_A_FLAG
     }
+  }, [currentStep])
 
-    return STATUS.CREATE_A_FLAG
-  }, [apiKey, language, selectedFlag, selectedTabId])
-
-  const disableNext =
-    !selectedFlag?.identifier || (!!selectedFlag?.identifier && selectedTabId === TabId.SET_UP_APP && !apiKey)
+  const disableNext = !selectedFlag?.identifier || (selectedStep === STEP.SELECT_ENV_SDK && !apiKey)
 
   const { trackEvent } = useTelemetry()
 
   return (
-    <Container height="100%" background={Color.WHITE} className={css.container}>
-      <Layout.Horizontal
-        padding={{ top: 'xxlarge', left: 'large' }}
-        spacing="xsmall"
-        flex
-        height={80}
-        data-testid="getStartedProgressStepper"
-      >
+    <Layout.Vertical
+      className={css.grid}
+      height="100vh"
+      padding={{ top: 'huge', left: 'huge', right: 'huge', bottom: 'none' }}
+      style={{ overflowY: 'auto' }}
+      background={Color.WHITE}
+    >
+      <Layout.Horizontal spacing="xsmall" flex data-testid="getStartedProgressStepper" height="10px">
         <MultiStepProgressIndicator
           progressMap={
             new Map([
@@ -144,53 +129,58 @@ export const OnboardingDetailPage: React.FC = () => {
           }
         />
       </Layout.Horizontal>
-      <Container height="calc(100% - 102px)">
-        {state === STATUS.CREATE_A_FLAG && (
-          <CreateAFlagView
-            selectedFlag={selectedFlag}
-            setSelectedFlag={setSelectedFlag}
-            setCreateFlagError={setCreateFlagError}
-          />
+      <Container style={{ flexGrow: 1 }} padding={{ top: 'xxlarge', bottom: 'xxlarge' }}>
+        {selectedStep !== STEP.VALIDATE_FLAG ? (
+          <>
+            <Heading level={3} font={{ variation: FontVariation.H3 }} margin={{ bottom: 'large' }}>
+              {getString('cf.onboarding.letsGetStarted')}
+            </Heading>
+            <Heading level={4} font={{ variation: FontVariation.H4 }} margin="none">
+              {getString('cf.onboarding.createFlag')}
+            </Heading>
+
+            {selectedFlag && selectedStep === STEP.SELECT_ENV_SDK && (
+              <Layout.Vertical spacing="medium">
+                <OnboardingSelectedFlag selectedFlag={selectedFlag} />
+                <Divider />
+              </Layout.Vertical>
+            )}
+          </>
+        ) : (
+          <Heading level={3} font={{ variation: FontVariation.H3 }} margin={{ bottom: 'large' }}>
+            {getString('cf.onboarding.validatingYourFlag')}
+          </Heading>
         )}
 
-        {state === STATUS.SELECT_ENV_SDK && (
+        {selectedStep === STEP.CREATE_A_FLAG && (
+          <CreateAFlagView selectedFlag={selectedFlag} setSelectedFlag={setSelectedFlag} />
+        )}
+
+        {selectedStep === STEP.SELECT_ENV_SDK && selectedFlag && (
           <SetUpYourApplicationView
-            flagInfo={selectedFlag as Feature}
+            flagInfo={selectedFlag}
             language={language}
             setLanguage={setLanguage}
-            apiKey={apiKey as ApiKey}
+            apiKey={apiKey}
             setApiKey={setApiKey}
-            setEnvironmentIdentifier={_environmentIdentifier => {
-              setEnvironmentIdentifier(_environmentIdentifier)
-            }}
+            selectedEnvironment={selectedEnvironment}
+            setSelectedEnvironment={setSelectedEnvironment}
           />
         )}
 
-        {state === STATUS.VALIDATE_FLAG && (
+        {selectedStep === STEP.VALIDATE_FLAG && selectedFlag && selectedEnvironment && (
           <ValidateYourFlagView
             flagInfo={selectedFlag as Feature}
             language={language as PlatformEntry}
             apiKey={apiKey as ApiKey}
             testDone={testDone}
             setTestDone={setTestDone}
-            environmentIdentifier={environmentIdentifier}
+            environmentIdentifier={selectedEnvironment.identifier}
           />
         )}
       </Container>
-      <Layout.Horizontal
-        spacing="small"
-        height={60}
-        style={{
-          boxShadow: '0px -4px 4px rgba(0, 0, 0, 0.1)',
-          alignItems: 'center',
-          paddingLeft: 'var(--spacing-xlarge)',
-          position: 'fixed',
-          left: '288px',
-          bottom: 0,
-          background: 'var(--white)',
-          right: 0
-        }}
-      >
+      <Divider />
+      <Layout.Horizontal spacing="small" padding="small">
         <Button
           text={getString('back')}
           icon="chevron-left"
@@ -199,21 +189,20 @@ export const OnboardingDetailPage: React.FC = () => {
               category: Category.FEATUREFLAG
             })
             onPrevious()
-            setProgressStep(STEP.BACK)
           }}
         />
         <Button
-          text={getString(selectedTabId !== TabId.TEST_YOUR_FLAG ? 'next' : 'cf.onboarding.backToStart')}
-          rightIcon={selectedTabId === TabId.TEST_YOUR_FLAG ? undefined : 'chevron-right'}
+          text={getString(selectedStep !== STEP.VALIDATE_FLAG ? 'next' : 'cf.onboarding.complete')}
+          rightIcon={selectedStep !== STEP.VALIDATE_FLAG ? 'chevron-right' : undefined}
           intent={Intent.PRIMARY}
           variation={ButtonVariation.PRIMARY}
           disabled={disableNext}
           onClick={() => {
-            if (selectedTabId === TabId.SET_UP_APP) {
+            if (selectedStep === STEP.SELECT_ENV_SDK) {
               trackEvent(FeatureActions.SetUpYourApplicationVerify, {
                 category: Category.FEATUREFLAG
               })
-            } else if (selectedTabId === TabId.TEST_YOUR_FLAG) {
+            } else if (selectedStep === STEP.VALIDATE_FLAG) {
               trackEvent(FeatureActions.TestYourFlagBack, {
                 category: Category.FEATUREFLAG
               })
@@ -223,11 +212,10 @@ export const OnboardingDetailPage: React.FC = () => {
               })
             }
             onNext()
-            setProgressStep(STEP.NEXT)
           }}
         />
         <FlexExpander />
       </Layout.Horizontal>
-    </Container>
+    </Layout.Vertical>
   )
 }

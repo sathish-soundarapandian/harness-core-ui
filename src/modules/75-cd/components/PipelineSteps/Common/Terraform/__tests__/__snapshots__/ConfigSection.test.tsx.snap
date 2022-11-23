@@ -1,9 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Config section tests initial render with basic data 1`] = `<div />`;
+exports[`Config section tests initial render with basic data 1`] = `
+<div>
+  <label
+    class="Label--main"
+  >
+    cd.configurationFile
+  </label>
+</div>
+`;
 
 exports[`Config section tests render with artifactory data 1`] = `
 <div>
+  <label
+    class="Label--main"
+  >
+    cd.configurationFile
+  </label>
   <div
     class="formGroup md"
   >

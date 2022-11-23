@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { Dialog } from '@blueprintjs/core'
-import { Layout, ExpandingSearchInput, Text } from '@wings-software/uicore'
+import { Layout, ExpandingSearchInput, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { String, useStrings } from 'framework/strings'

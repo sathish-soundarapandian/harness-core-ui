@@ -5,20 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useModalHook } from '@harness/use-modal'
-import { Layout, SelectOption, shouldShowError } from '@wings-software/uicore'
+import React, { useMemo, useRef } from 'react'
+import { SelectOption, shouldShowError } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
-import React, { useEffect, useMemo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { Spinner } from '@blueprintjs/core'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
 import { Filter, FilterRef } from '@common/components/Filter/Filter'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 import { isObjectEmpty, UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import { StringUtils, useToaster } from '@common/exports'
-import { useDeepCompareEffect, useUpdateQueryParams } from '@common/hooks'
+import { useBooleanStatus, useDeepCompareEffect, useUpdateQueryParams } from '@common/hooks'
 import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
 import { getBuildType, getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 import {
@@ -65,8 +63,8 @@ export function PipelineListFilter({
   const { showError } = useToaster()
   const { selectedProject } = useAppStore()
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<PipelineListPageQueryParams>>()
-  const { filters } = queryParams
-  const { projectIdentifier, orgIdentifier, accountId, module } = useParams<PipelineListPagePathParams>()
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<PipelineListPagePathParams>()
+  const { state: isFiltersDrawerOpen, open: openFilterDrawer, close: hideFilterDrawer } = useBooleanStatus()
 
   const { mutate: createFilter } = usePostFilter({
     queryParams: { accountIdentifier: accountId }
@@ -85,27 +83,25 @@ export function PipelineListFilter({
   } = useGetFilterList({
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, type: 'PipelineSetup' }
   })
-  const { data: deploymentTypeResponse, loading: isFetchingDeploymentTypes } = useGetServiceDefinitionTypes({})
-  const {
-    data: servicesResponse,
-    loading: isFetchingServices,
-    refetch: fetchServices
-  } = useGetServiceListForProject({
-    queryParams: { accountId, orgIdentifier, projectIdentifier },
-    lazy: true
+
+  const { data: deploymentTypeResponse, loading: isFetchingDeploymentTypes } = useGetServiceDefinitionTypes({
+    queryParams: { accountId },
+    lazy: !isFiltersDrawerOpen
   })
-  const {
-    data: environmentsResponse,
-    loading: isFetchingEnvironments,
-    refetch: fetchEnvironments
-  } = useGetEnvironmentListForProject({
+
+  const { data: servicesResponse, loading: isFetchingServices } = useGetServiceListForProject({
     queryParams: { accountId, orgIdentifier, projectIdentifier },
-    lazy: true
+    lazy: !isFiltersDrawerOpen
+  })
+
+  const { data: environmentsResponse, loading: isFetchingEnvironments } = useGetEnvironmentListForProject({
+    queryParams: { accountId, orgIdentifier, projectIdentifier },
+    lazy: !isFiltersDrawerOpen
   })
 
   const isCDEnabled = !!selectedProject?.modules?.includes('CD')
   const isCIEnabled = !!selectedProject?.modules?.includes('CI')
-  const reset = () => {
+  const reset = (): void => {
     setAppliedFilter(undefined)
     replaceQueryParams({})
   }
@@ -143,12 +139,8 @@ export function PipelineListFilter({
         }))
       return options
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploymentTypeResponse])
-
-  useEffect(() => {
-    fetchServices()
-    fetchEnvironments()
-  }, [projectIdentifier])
 
   useDeepCompareEffect(() => {
     const calculatedFilter =
@@ -179,53 +171,73 @@ export function PipelineListFilter({
     await refetchFilterList()
   }
 
-  const [openFilterDrawer, hideFilterDrawer] = useModalHook(() => {
-    const onApply = (inputFormData: FormikProps<PipelineFormType>['values']) => {
-      if (!isObjectEmpty(inputFormData)) {
-        const filterFromFormData = getValidFilterArguments({ ...inputFormData })
-        updateQueryParams({
-          page: undefined,
-          filterIdentifier: undefined,
-          filters: filterFromFormData || {}
-        })
-        hideFilterDrawer()
-      } else {
-        showError(getString('filters.invalidCriteria'), undefined, 'pipeline.invalid.criteria.error')
-      }
+  const onApply = (inputFormData: FormikProps<PipelineFormType>['values']): void => {
+    if (!isObjectEmpty(inputFormData)) {
+      const filterFromFormData = getValidFilterArguments({ ...inputFormData })
+      updateQueryParams({
+        page: undefined,
+        filterIdentifier: undefined,
+        filters: filterFromFormData || {}
+      })
+      hideFilterDrawer()
+    } else {
+      showError(getString('filters.invalidCriteria'), undefined, 'pipeline.invalid.criteria.error')
     }
+  }
 
-    const handleFilterSelect = (filterIdentifier: string): void => {
-      if (filterIdentifier !== unsavedFilter.identifier) {
-        updateQueryParams({
-          filterIdentifier,
-          filters: undefined
-        })
-      }
+  const handleFilterSelect = (filterIdentifier: string): void => {
+    if (filterIdentifier !== unsavedFilter.identifier) {
+      updateQueryParams({
+        filterIdentifier,
+        filters: undefined
+      })
     }
+  }
 
-    const {
-      name: pipelineName,
-      pipelineTags: _pipelineTags,
-      moduleProperties,
-      description
-    } = (appliedFilter?.filterProperties as PipelineFilterProperties) || {}
-    const { name = '', filterVisibility, identifier = '' } = appliedFilter || {}
-    const { ci, cd } = moduleProperties || {}
-    const { branch, tag, ciExecutionInfoDTO, repoName } = ci || {}
-    const { deploymentTypes, environmentNames, infrastructureTypes, serviceNames } = cd || {}
-    const { sourceBranch, targetBranch } = ciExecutionInfoDTO?.pullRequest || {}
-    const buildType = getBuildType(moduleProperties || {})
+  const {
+    name: pipelineName,
+    pipelineTags: _pipelineTags,
+    moduleProperties,
+    description
+  } = (appliedFilter?.filterProperties as PipelineFilterProperties) || {}
+  const { name = '', filterVisibility, identifier = '' } = appliedFilter || {}
+  const { ci, cd } = moduleProperties || {}
+  const { branch, tag, ciExecutionInfoDTO, repoName } = ci || {}
+  const { deploymentTypes, environmentNames, infrastructureTypes, serviceNames } = cd || {}
+  const { sourceBranch, targetBranch } = ciExecutionInfoDTO?.pullRequest || {}
+  const buildType = getBuildType(moduleProperties || {})
 
-    if (errorFetchingFilters && shouldShowError(errorFetchingFilters)) {
-      showError(getRBACErrorMessage(errorFetchingFilters), undefined, 'pipeline.fetch.filter.error')
+  if (errorFetchingFilters && shouldShowError(errorFetchingFilters)) {
+    showError(getRBACErrorMessage(errorFetchingFilters), undefined, 'pipeline.fetch.filter.error')
+  }
+
+  const onFilterSelect = (option: SelectOption): void => {
+    if (option.value) {
+      updateQueryParams({
+        filterIdentifier: option.value.toString(),
+        filters: undefined
+      })
+    } else {
+      reset()
     }
+  }
 
-    return isFetchingFilters && isFetchingMetaData ? (
-      <Layout.Vertical height={'calc(100vh - 128px)'} flex={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Spinner />
-      </Layout.Vertical>
-    ) : (
+  const { fieldToLabelMapping, filterWithValidFieldsWithMetaInfo } = usePipeLineListFilterMapper(
+    appliedFilter?.filterProperties
+  )
+
+  return (
+    <>
+      <FilterSelector<FilterDTO>
+        appliedFilter={appliedFilter}
+        filters={filterListResponse?.data?.content}
+        onFilterBtnClick={openFilterDrawer}
+        onFilterSelect={onFilterSelect}
+        fieldToLabelMapping={fieldToLabelMapping}
+        filterWithValidFields={filterWithValidFieldsWithMetaInfo}
+      />
       <Filter<PipelineFormType, FilterDTO>
+        isOpen={isFiltersDrawerOpen}
         formFields={
           <ExecutionListFilterForm<PipelineFormType>
             isCDEnabled={isCDEnabled}
@@ -274,40 +286,6 @@ export function PipelineListFilter({
         }
         onSuccessfulCrudOperation={refetchFilterList}
       />
-    )
-  }, [
-    isFetchingFilters,
-    appliedFilter,
-    filters,
-    module,
-    environmentsResponse?.data?.content,
-    servicesResponse?.data?.content,
-    deploymentTypeSelectOptions
-  ])
-
-  const onFilterSelect = (option: SelectOption) => {
-    if (option.value) {
-      updateQueryParams({
-        filterIdentifier: option.value.toString(),
-        filters: undefined
-      })
-    } else {
-      reset()
-    }
-  }
-
-  const { fieldToLabelMapping, filterWithValidFieldsWithMetaInfo } = usePipeLineListFilterMapper(
-    appliedFilter?.filterProperties
-  )
-
-  return (
-    <FilterSelector<FilterDTO>
-      appliedFilter={appliedFilter}
-      filters={filterListResponse?.data?.content}
-      onFilterBtnClick={openFilterDrawer}
-      onFilterSelect={onFilterSelect}
-      fieldToLabelMapping={fieldToLabelMapping}
-      filterWithValidFields={filterWithValidFieldsWithMetaInfo}
-    />
+    </>
   )
 }

@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Layout, Toggle, Tabs, Tab, HarnessDocTooltip } from '@wings-software/uicore'
+import { Layout, Toggle, Tabs, Tab, HarnessDocTooltip } from '@harness/uicore'
 import { defaultTo as _defaultTo } from 'lodash-es'
 import { AdvancedConfigTabs, CONFIG_STEP_IDS, RESOURCES } from '@ce/constants'
 import { useStrings } from 'framework/strings'

@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { FormInput, FormikForm, Container } from '@wings-software/uicore'
+import { FormInput, FormikForm, Container } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 
 import { parse } from 'yaml'

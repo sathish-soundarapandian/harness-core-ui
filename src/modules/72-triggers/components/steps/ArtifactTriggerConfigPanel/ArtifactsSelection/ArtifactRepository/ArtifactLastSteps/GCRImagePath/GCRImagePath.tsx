@@ -16,7 +16,7 @@ import {
   Text,
   SelectOption,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'

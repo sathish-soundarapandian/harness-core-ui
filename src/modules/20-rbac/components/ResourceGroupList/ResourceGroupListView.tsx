@@ -9,7 +9,7 @@ import React, { useMemo } from 'react'
 import cx from 'classnames'
 import type { CellProps, Column, Renderer } from 'react-table'
 import ReactTimeago from 'react-timeago'
-import { Layout, Text, Button, ButtonVariation, NoDataCard, TableV2 } from '@wings-software/uicore'
+import { Layout, Text, Button, ButtonVariation, NoDataCard, TableV2 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get } from 'lodash-es'
@@ -83,12 +83,16 @@ const RenderColumnSummary: Renderer<CellProps<ResourceGroupV2Response>> = ({ row
       return defaultTo(
         data.resources
           ?.map(resource => {
-            const label = RbacFactory.getResourceTypeHandler(resource?.resourceType as ResourceType)?.label
+            const resourceTemp = RbacFactory.getResourceTypeHandler(resource?.resourceType as ResourceType)
+            let label = resourceTemp?.label
             if (label) {
               if (!resource.identifiers?.length) {
                 return getString('common.all', {
                   name: getString(label)
                 })
+              }
+              if ((resource as StaticResourceSelector).identifiers?.length === 1 && resourceTemp?.labelSingular) {
+                label = resourceTemp?.labelSingular
               }
               return `${(resource as StaticResourceSelector).identifiers?.length || 0} ${getString(label)}`
             }

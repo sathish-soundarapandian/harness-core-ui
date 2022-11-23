@@ -52,8 +52,8 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { usePermission } from '@rbac/hooks/usePermission'
-import ApplicationConfigSelection from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceConfiguration/AzureWebAppServiceConfigSelection'
-import { AzureWebAppSelectionTypes } from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceConfiguration/AzureWebAppServiceConfig.types'
+import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
+import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
 import { ServiceOverrideTab } from './ServiceOverridesUtils'
 import AddEditServiceOverride from './AddEditServiceOverride'
 import ServiceManifestOverridesList from './ServiceManifestOverride/ServiceManifestOverridesList'
@@ -458,11 +458,11 @@ export function ServiceOverrides(): React.ReactElement {
                             details={
                               <Layout.Vertical>
                                 <ApplicationConfigSelection
-                                  environmentAllowableTypes={allowableTypes}
+                                  allowableTypes={allowableTypes}
                                   readonly={!canEdit}
                                   showApplicationSettings={true}
                                   data={applicationSettings as ApplicationSettingsConfiguration}
-                                  selectionType={AzureWebAppSelectionTypes.SERVICE_OVERRIDE}
+                                  selectionType={ApplicationConfigSelectionTypes.SERVICE_OVERRIDE}
                                   handleDeleteConfig={index =>
                                     handleDeleteOverride(
                                       'applicationSettings',
@@ -508,11 +508,11 @@ export function ServiceOverrides(): React.ReactElement {
                             details={
                               <Layout.Vertical>
                                 <ApplicationConfigSelection
-                                  environmentAllowableTypes={allowableTypes}
+                                  allowableTypes={allowableTypes}
                                   readonly={!canEdit}
                                   showConnectionStrings={true}
                                   data={connectionStrings as ConnectionStringsConfiguration}
-                                  selectionType={AzureWebAppSelectionTypes.SERVICE_OVERRIDE}
+                                  selectionType={ApplicationConfigSelectionTypes.SERVICE_OVERRIDE}
                                   handleDeleteConfig={index =>
                                     handleDeleteOverride(
                                       'connectionStrings',

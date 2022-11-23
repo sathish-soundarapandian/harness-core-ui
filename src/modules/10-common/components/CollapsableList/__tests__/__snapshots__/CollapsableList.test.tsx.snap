@@ -79,6 +79,7 @@ exports[`Test CollapsableList Should render CollapsableList: only record render 
       class="Layout--horizontal StyledProps--main"
     >
       <button
+        aria-label="Prev"
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
         disabled=""
         tabindex="-1"
@@ -110,6 +111,7 @@ exports[`Test CollapsableList Should render CollapsableList: only record render 
         </span>
       </button>
       <button
+        aria-label="Next"
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
         disabled=""
         tabindex="-1"

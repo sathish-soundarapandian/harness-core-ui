@@ -13,9 +13,9 @@ import {
   Formik,
   FormikForm,
   Icon,
-  VisualYamlSelectedView as SelectedView
-} from '@wings-software/uicore'
-import type { IconName } from '@wings-software/uicore'
+  VisualYamlSelectedView as SelectedView,
+  IconName
+} from '@harness/uicore'
 import { useHistory } from 'react-router-dom'
 import cx from 'classnames'
 import { isEqual, noop } from 'lodash-es'

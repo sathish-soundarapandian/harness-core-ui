@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import {
   QlceViewAggregateOperation,

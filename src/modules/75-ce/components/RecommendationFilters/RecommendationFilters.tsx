@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import { pick } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'

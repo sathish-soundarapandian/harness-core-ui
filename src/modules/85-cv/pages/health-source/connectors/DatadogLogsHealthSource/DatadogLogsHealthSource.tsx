@@ -6,7 +6,7 @@
  */
 
 import React, { useContext, useMemo, useState } from 'react'
-import { Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType, Utils } from '@wings-software/uicore'
+import { Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType, Utils } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'

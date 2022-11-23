@@ -9,7 +9,7 @@ import React, { useState, useRef } from 'react'
 import { isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type { TabId } from '@blueprintjs/core'
-import { Container, MultiTypeInputType, Tab, Tabs } from '@wings-software/uicore'
+import { Container, MultiTypeInputType, Tab, Tabs } from '@harness/uicore'
 
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 

@@ -17,7 +17,7 @@ import {
   Icon,
   AllowedTypes,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { debounce, defaultTo, isEmpty, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
@@ -196,7 +196,8 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
                   multiTypeInputProps={{
                     selectProps: {
                       items: regions,
-                      popoverClassName: css.regionPopover
+                      popoverClassName: css.regionPopover,
+                      allowCreatingNewItems: true
                     },
                     onChange: selectedRegion => {
                       if (!isEmpty(formik.values.connectorRef)) {
@@ -244,7 +245,8 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
                   multiTypeInputProps={{
                     selectProps: {
                       items: clusters,
-                      popoverClassName: css.regionPopover
+                      popoverClassName: css.regionPopover,
+                      allowCreatingNewItems: true
                     }
                   }}
                   label={getString('common.cluster')}

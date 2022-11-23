@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Popover, Container, Layout, Card, Icon } from '@wings-software/uicore'
+import { Text, Popover, Container, Layout, Card, Icon } from '@harness/uicore'
 import { Classes, IPopoverProps, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { isEmpty, isNil } from 'lodash-es'
@@ -17,11 +17,12 @@ import type { StepData } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import type { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { StringsMap } from 'stringTypes'
+import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import type { AbstractStepFactory } from '../../../AbstractSteps/AbstractStepFactory'
 import css from './StepPopover.module.scss'
 
 export interface StepPopoverProps {
-  stepData?: StepData
+  stepData?: StepData & { iconUrl?: string }
   stepsFactory: AbstractStepFactory
   popoverProps?: IPopoverProps
   className?: string
@@ -95,13 +96,20 @@ export function StepPopover(props: StepPopoverProps): React.ReactElement {
           {stepsFactory.getStepIsHarnessSpecific(stepData.type || '') && (
             <Icon size={12} name="harness-logo-white-bg-blue" className={css.stepHarnessLogo} />
           )}
-
-          <Icon
-            name={!isNil(step) ? step.getIconName?.() : iconMap[stepData.name || '']}
-            size={!isNil(step?.getIconSize?.()) ? step?.getIconSize?.() : 25}
-            {...(!isNil(step) && !isNil(step?.getIconColor?.()) ? { color: step.getIconColor() } : {})}
-            style={{ color: step?.getIconColor?.() }}
-          />
+          {stepData?.iconUrl ? (
+            <ImagePreview
+              src={stepData.iconUrl}
+              size={25}
+              fallbackIcon={!isNil(step) ? step.getIconName?.() : iconMap[stepData.name || '']}
+            />
+          ) : (
+            <Icon
+              name={!isNil(step) ? step.getIconName?.() : iconMap[stepData.name || '']}
+              size={!isNil(step?.getIconSize?.()) ? step?.getIconSize?.() : 25}
+              {...(!isNil(step) && !isNil(step?.getIconColor?.()) ? { color: step.getIconColor() } : {})}
+              style={{ color: step?.getIconColor?.() }}
+            />
+          )}
         </Card>
         <TooltipContent
           description={description}

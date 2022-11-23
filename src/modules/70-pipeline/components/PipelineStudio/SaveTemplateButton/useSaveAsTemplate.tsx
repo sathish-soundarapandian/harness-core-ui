@@ -12,7 +12,7 @@ import { isEmpty, omit } from 'lodash-es'
 import { Dialog } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import classNames from 'classnames'
-import { useToaster } from '@wings-software/uicore'
+import { useToaster } from '@harness/uicore'
 import { DefaultTemplate } from 'framework/Templates/templates'
 import {
   ModalProps,
@@ -30,10 +30,11 @@ import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateErrors'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
-import type { NGTemplateInfoConfig } from 'services/template-ng'
+import type { NGTemplateInfoConfig, TemplateSummaryResponse } from 'services/template-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
-import { StoreType } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import css from './SaveAsTemplate.module.scss'
 
 interface TemplateActionsReturnType {
@@ -51,13 +52,11 @@ export function useSaveAsTemplate({
   const { orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [modalProps, setModalProps] = React.useState<ModalProps>()
   const { supportingTemplatesGitx } = React.useContext(AppStoreContext)
-
+  const { showSuccess, showError, clear } = useToaster()
   const { getString } = useStrings()
   const templateConfigDialogHandler = useRef<TemplateConfigModalHandle>(null)
-  const { saveAndPublish } = useSaveTemplate({ isTemplateStudio: false })
   const { openTemplateErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.TEMPLATE })
   const { getRBACErrorMessage } = useRBACError()
-  const { showError, clear } = useToaster()
 
   const [showConfigModal, hideConfigModal] = useModalHook(
     () => (
@@ -75,6 +74,21 @@ export function useSaveAsTemplate({
     ),
     [modalProps, templateConfigDialogHandler.current]
   )
+
+  const { saveAndPublish } = useSaveTemplate({
+    onSuccessCallback: async (
+      latestTemplate: TemplateSummaryResponse,
+      updatedGitDetails?: SaveToGitFormInterface,
+      updatedStoreMetadata?: StoreMetadata
+    ) => {
+      window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: latestTemplate }))
+      const isInlineTemplate = isEmpty(updatedGitDetails) && updatedStoreMetadata?.storeType !== StoreType.REMOTE
+      if (isInlineTemplate) {
+        clear()
+        showSuccess(getString('common.template.saveTemplate.publishTemplate'))
+      }
+    }
+  })
 
   const onFailure = (error: any, latestTemplate: NGTemplateInfoConfig) => {
     if (!isEmpty((error as any)?.metadata?.errorNodeSummary)) {

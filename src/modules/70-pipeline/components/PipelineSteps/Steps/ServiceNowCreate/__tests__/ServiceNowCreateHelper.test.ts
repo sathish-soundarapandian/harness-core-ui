@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import type { MultiSelectOption } from '@wings-software/uicore'
+import type { MultiSelectOption } from '@harness/uicore'
 import type { ServiceNowFieldAllowedValueNG, ServiceNowFieldValueNG } from 'services/cd-ng'
 import { setAllowedValuesOptions } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { convertTemplateFieldsForDisplay, omitDescNShortDesc, processFormData } from '../helper'

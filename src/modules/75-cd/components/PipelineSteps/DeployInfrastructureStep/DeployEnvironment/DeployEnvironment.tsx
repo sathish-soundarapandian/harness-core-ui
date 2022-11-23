@@ -40,19 +40,20 @@ import {
 } from 'services/cd-ng'
 
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { isMultiTypeRuntime } from '@common/utils/utils'
+import { useMutateAsGet } from '@common/hooks'
 
 import RbacButton from '@rbac/components/Button/Button'
-
-import { useMutateAsGet } from '@common/hooks'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
-import { isMultiTypeRuntime } from '@common/utils/utils'
+
 import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { isEditEnvironment } from '../utils'
 
@@ -67,6 +68,8 @@ interface DeployEnvironmentProps {
   path?: string
   gitOpsEnabled?: boolean
   stepViewType?: StepViewType
+  environmentRefType: MultiTypeInputType
+  setEnvironmentRefType: React.Dispatch<React.SetStateAction<MultiTypeInputType>>
 }
 
 function DeployEnvironment({
@@ -77,10 +80,13 @@ function DeployEnvironment({
   serviceRef,
   path,
   gitOpsEnabled,
-  stepViewType
+  stepViewType,
+  environmentRefType,
+  setEnvironmentRefType
 }: DeployEnvironmentProps): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
+  const { expressions } = useVariablesExpression()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
 
@@ -88,9 +94,6 @@ function DeployEnvironment({
   const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO>()
   const [environmentsSelectOptions, setEnvironmentsSelectOptions] = useState<SelectOption[]>()
   const [firstRender, setFirstRender] = React.useState<boolean>(true)
-  const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
-    getMultiTypeFromValue(initialValues.environment?.environmentRef)
-  )
 
   const {
     data: environmentsResponse,
@@ -105,7 +108,10 @@ function DeployEnvironment({
     body: {
       filterType: 'Environment'
     },
-    lazy: !orgIdentifier || (stepViewType === StepViewType.InputSet && isMultiTypeRuntime(environmentRefType))
+    lazy:
+      !orgIdentifier ||
+      (stepViewType === StepViewType.InputSet && isMultiTypeRuntime(environmentRefType)) ||
+      environmentRefType === MultiTypeInputType.EXPRESSION
   })
 
   const {
@@ -421,7 +427,8 @@ function DeployEnvironment({
             addClearBtn: !readonly,
             items: defaultTo(environmentsSelectOptions, [])
           },
-          allowableTypes
+          allowableTypes,
+          expressions
         }}
         selectItems={defaultTo(environmentsSelectOptions, [])}
       />

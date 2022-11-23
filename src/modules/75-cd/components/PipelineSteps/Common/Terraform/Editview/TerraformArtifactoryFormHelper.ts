@@ -4,9 +4,9 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
-import { cloneDeep, unset, size, isUndefined, set } from 'lodash-es'
+import { cloneDeep, unset, size, isUndefined, set, get } from 'lodash-es'
 import { IdentifierSchema } from '@common/utils/Validation'
 import { TerraformStoreTypes, PathInterface } from '../TerraformInterfaces'
 
@@ -16,7 +16,60 @@ const formatPaths = (paths: any) => {
     : paths.map((item: string) => ({ path: item }))
 }
 
-export const formatInitialValues = (isConfig: boolean, prevStepData: any, isTerraformPlan: boolean) => {
+export const formatInitialValues = (
+  isConfig: boolean,
+  isBackendConfig: boolean,
+  prevStepData: any,
+  isTerraformPlan: boolean
+) => {
+  if (isBackendConfig && isTerraformPlan) {
+    return {
+      spec: {
+        configuration: {
+          backendConfig: {
+            spec: {
+              store: {
+                spec: {
+                  repositoryName:
+                    prevStepData?.formValues?.spec?.configuration?.backendConfig?.spec?.store?.spec?.repositoryName ||
+                    '',
+                  artifactPaths: formatPaths(
+                    prevStepData?.formValues?.spec?.configuration?.backendConfig?.spec?.store?.spec?.artifactPaths || [
+                      ''
+                    ]
+                  )
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (isBackendConfig) {
+    return {
+      spec: {
+        configuration: {
+          backendConfig: {
+            spec: {
+              store: {
+                spec: {
+                  repositoryName:
+                    prevStepData?.formValues?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec
+                      ?.repositoryName || '',
+                  artifactPaths: formatPaths(
+                    prevStepData?.formValues?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec
+                      ?.artifactPaths || ['']
+                  )
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   if (isConfig && isTerraformPlan) {
     return {
       spec: {
@@ -73,12 +126,21 @@ export const formatInitialValues = (isConfig: boolean, prevStepData: any, isTerr
   }
 }
 
-export const getConnectorRef = (isConfig: boolean, isTerraformPlan: boolean, prevStepData: any) => {
+export const getConnectorRef = (
+  isConfig: boolean,
+  isBackendConfig: boolean,
+  isTerraformPlan: boolean,
+  prevStepData: any
+) => {
   let connectorValue
   if (isConfig && isTerraformPlan) {
     connectorValue = prevStepData?.formValues.spec?.configuration?.configFiles?.store?.spec?.connectorRef
   } else if (isConfig) {
     connectorValue = prevStepData?.formValues?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef
+  } else if (isBackendConfig && isTerraformPlan) {
+    connectorValue = prevStepData?.formValues.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
+  } else if (isBackendConfig) {
+    connectorValue = prevStepData?.formValues?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
   } else connectorValue = prevStepData?.varFile?.spec?.store?.spec?.connectorRef
 
   if (size(prevStepData) > 5) {
@@ -92,7 +154,7 @@ export const getConnectorRef = (isConfig: boolean, isTerraformPlan: boolean, pre
   return connectorValue
 }
 
-export const terraformArtifactorySchema = (isConfig: boolean, getString: any) => {
+export const terraformArtifactorySchema = (isConfig: boolean, isBackendConfig: boolean, getString: any) => {
   const artifacts = {
     repositoryName: Yup.string().required(getString('cd.artifactFormErrors.repositoryName')),
     artifactPaths: Yup.lazy((value): Yup.Schema<unknown> => {
@@ -107,17 +169,39 @@ export const terraformArtifactorySchema = (isConfig: boolean, getString: any) =>
     })
   }
 
-  const configSetup = {
-    configFiles: Yup.object().shape({
-      store: Yup.object().shape({
-        spec: Yup.object().shape({
-          ...artifacts
+  if (isConfig) {
+    const configSetup = {
+      configFiles: Yup.object().shape({
+        store: Yup.object().shape({
+          spec: Yup.object().shape({
+            ...artifacts
+          })
+        })
+      })
+    }
+
+    return Yup.object().shape({
+      spec: Yup.object().shape({
+        configuration: Yup.object().shape({
+          ...configSetup
         })
       })
     })
   }
 
-  if (isConfig) {
+  if (isBackendConfig) {
+    const configSetup = {
+      backendConfig: Yup.object().shape({
+        spec: Yup.object().shape({
+          store: Yup.object().shape({
+            spec: Yup.object().shape({
+              ...artifacts
+            })
+          })
+        })
+      })
+    }
+
     return Yup.object().shape({
       spec: Yup.object().shape({
         configuration: Yup.object().shape({
@@ -141,11 +225,18 @@ export const terraformArtifactorySchema = (isConfig: boolean, getString: any) =>
   })
 }
 
-export const tfArtifactoryFormInputNames = (isConfig: boolean) => {
+export const tfArtifactoryFormInputNames = (isConfig: boolean, isBackendConfig: boolean) => {
   if (isConfig) {
     return {
       repositoryName: 'spec.configuration.configFiles.store.spec.repositoryName',
       artifactPaths: 'spec.configuration.configFiles.store.spec.artifactPaths'
+    }
+  }
+
+  if (isBackendConfig) {
+    return {
+      repositoryName: 'spec.configuration.backendConfig.spec.store.spec.repositoryName',
+      artifactPaths: 'spec.configuration.backendConfig.spec.store.spec.artifactPaths'
     }
   }
 
@@ -185,7 +276,7 @@ export const formatOnSubmitData = (values: any, prevStepData: any, connectorValu
   }
 }
 /* istanbul ignore next */
-export const formatArtifactoryData = (prevStepData: any, data: any, configObject: any, formik: any) => {
+export const formatArtifactoryData = (prevStepData: any, data: any, configObject: any, formik: any, path: string) => {
   if (prevStepData.identifier && prevStepData.identifier !== data?.identifier) {
     set(configObject, 'store.spec.connectorRef', prevStepData?.identifier)
   }
@@ -198,7 +289,15 @@ export const formatArtifactoryData = (prevStepData: any, data: any, configObject
     unset(configObject?.store?.spec, 'repoName')
   }
 
-  const configFiles = data?.spec?.configuration?.configFiles?.store?.spec
+  if (configObject?.store?.spec?.files) {
+    unset(configObject?.store?.spec, 'files')
+  }
+
+  if (configObject?.store?.spec?.secretFiles) {
+    unset(configObject?.store?.spec, 'secretFiles')
+  }
+
+  const configFiles = get(data, `${path}.store.spec`)
   if (getMultiTypeFromValue(configFiles.artifactPaths) === MultiTypeInputType.FIXED) {
     configObject.store.spec.artifactPaths = configFiles.artifactPaths.map((item: PathInterface) => item.path)
   } else {

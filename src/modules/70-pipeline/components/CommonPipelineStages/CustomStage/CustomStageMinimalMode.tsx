@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { noop } from 'lodash-es'
-import { Button, Container, FormikForm, Text } from '@wings-software/uicore'
+import { Button, Container, FormikForm, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Formik } from 'formik'
 import * as Yup from 'yup'

@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { Expander } from '@blueprintjs/core'
 import { cloneDeep, isEmpty, isEqual, set } from 'lodash-es'
 import produce from 'immer'
-import { Tabs, Tab, Icon, Button, Layout, ButtonVariation, IconName } from '@wings-software/uicore'
+import { Tabs, Tab, Icon, Button, Layout, ButtonVariation, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { HarnessIconName } from '@harness/icons'
 import {
@@ -95,22 +95,20 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
       selectionState: { selectedStageId = '', selectedStepId, selectedSectionId },
       gitDetails,
       storeMetadata,
-      templateTypes
+      templateTypes,
+      templateIcons
     },
     contextType,
-    stepsFactory,
     getStageFromPipeline,
     updatePipelineView,
     isReadonly,
     updateStage,
     setSelectedStepId,
-    getStagePathFromPipeline,
     updatePipeline,
     setSelectedSectionId
   } = pipelineContext
 
   const query = useQueryParams()
-  const stagePath = getStagePathFromPipeline(selectedStageId || '', 'pipeline.stages')
   const [stageData, setStageData] = React.useState<BuildStageElementConfig | undefined>()
   const poolName =
     ((stageData?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)?.spec?.poolName ||
@@ -348,11 +346,11 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
                 hasRollback={false}
                 isReadonly={isReadonly}
                 hasDependencies={true}
-                stepsFactory={stepsFactory}
                 stage={selectedStageClone}
                 originalStage={originalStage}
                 ref={executionRef}
                 templateTypes={templateTypes}
+                templateIcons={templateIcons}
                 updateStage={newStageData => {
                   const newData = produce(newStageData, draft => {
                     // cleanup rollbackSteps (note: rollbackSteps does not exist on CI stage at all)
@@ -370,7 +368,6 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
                   }
                 }}
                 // Check and update the correct stage path here
-                pathToStage={`${stagePath}.stage.spec.execution`}
                 onAddStep={(event: ExecutionGraphAddStepEvent) => {
                   if (event.parentIdentifier === STATIC_SERVICE_GROUP_NAME) {
                     updatePipelineView({

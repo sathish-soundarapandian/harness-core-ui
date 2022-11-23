@@ -735,7 +735,7 @@ exports[`Create Docker Connector  Wizard Should render form 2`] = `
               </div>
             </div>
             <div
-              class="bp3-form-group"
+              class="bp3-form-group bp3-intent-danger"
             >
               <div
                 class="bp3-form-content"
@@ -830,6 +830,11 @@ exports[`Create Docker Connector  Wizard Should render form 2`] = `
                     </div>
                   </div>
                 </div>
+                <div
+                  class="bp3-form-helper-text"
+                >
+                  validation.username
+                </div>
               </div>
             </div>
             <div
@@ -905,6 +910,7 @@ exports[`Create Docker Connector  Wizard Should render form 2`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-name="dockerBackButton"
               type="button"
@@ -935,6 +941,7 @@ exports[`Create Docker Connector  Wizard Should render form 2`] = `
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1884,6 +1891,7 @@ exports[`Create Docker Connector  Wizard Should render form for editing provider
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-name="dockerBackButton"
               type="button"
@@ -1914,6 +1922,7 @@ exports[`Create Docker Connector  Wizard Should render form for editing provider
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -2833,6 +2842,7 @@ exports[`Create Docker Connector  Wizard Should render form for editing provider
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-small"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-name="dockerBackButton"
               type="button"
@@ -2863,6 +2873,7 @@ exports[`Create Docker Connector  Wizard Should render form for editing provider
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >

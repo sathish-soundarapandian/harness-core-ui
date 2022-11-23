@@ -187,6 +187,7 @@ exports[`<TemplateSettingsModal /> tests should match snapshot 1`] = `
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-end StyledProps--flex-justifyContent-flex-start"
                 >
                   <button
+                    aria-label="save"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                     type="submit"
                   >
@@ -197,6 +198,7 @@ exports[`<TemplateSettingsModal /> tests should match snapshot 1`] = `
                     </span>
                   </button>
                   <button
+                    aria-label="cancel"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                     type="button"
                   >
@@ -416,7 +418,7 @@ exports[`<TemplateSettingsModal /> tests should match snapshot 1`] = `
             class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--padding-top-medium"
           >
             <div
-              class="css-21x249"
+              class="css-12eylzo"
               fill="#EADEFF"
               stroke="#E1D0FF"
               width="100"

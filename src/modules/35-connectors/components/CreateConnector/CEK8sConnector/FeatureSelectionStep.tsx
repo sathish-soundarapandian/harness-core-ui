@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, Heading, Layout, StepProps, CardSelect, Icon, IconName, Text } from '@wings-software/uicore'
+import { Button, Heading, Layout, StepProps, CardSelect, Icon, IconName, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 

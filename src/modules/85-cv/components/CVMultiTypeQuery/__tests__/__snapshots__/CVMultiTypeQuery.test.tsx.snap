@@ -96,7 +96,8 @@ exports[`Validate CVMultiTypeQuery should render CVMultiTypeQuery 1`] = `
           </button>
         </div>
         <button
-          class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+          aria-label="cv.monitoringSources.gcoLogs.fetchRecords"
+          class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-medium Button--with-current-color"
           disabled=""
           tabindex="-1"
           type="button"
@@ -209,7 +210,8 @@ exports[`Validate CVMultiTypeQuery should validate cliking on fetchrecords 1`] =
           </button>
         </div>
         <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+          aria-label="cv.monitoringSources.gcoLogs.fetchRecords"
+          class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-medium Button--with-current-color"
           type="button"
         >
           <span

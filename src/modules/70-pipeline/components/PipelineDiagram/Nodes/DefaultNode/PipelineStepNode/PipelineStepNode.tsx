@@ -8,18 +8,19 @@
 import React from 'react'
 import cx from 'classnames'
 import { debounce, defaultTo } from 'lodash-es'
-import { Icon, Text, Button, ButtonVariation, IconName, Utils } from '@wings-software/uicore'
+import { Icon, Text, Button, ButtonVariation, IconName, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
+import { DiagramDrag, DiagramType, Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import stepsfactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { useStrings } from 'framework/strings'
+import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import SVGMarker from '../../SVGMarker'
 import { BaseReactComponentProps, NodeType } from '../../../types'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
-import { getPositionOfAddIcon } from '../../utils'
+import { getPositionOfAddIcon, attachDragImageToEventHandler } from '../../utils'
 import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
 import defaultCss from '../DefaultNode.module.scss'
 
@@ -29,7 +30,7 @@ const TEMPLATE_ICON: IconName = 'template-library'
 interface PipelineStepNodeProps extends BaseReactComponentProps {
   status: string
   isNodeCollapsed?: boolean
-  matrixNodeName?: boolean
+  matrixNodeName?: string
 }
 
 function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
@@ -63,6 +64,8 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
   }
 
   const stepIcon = defaultTo(defaultTo(stepData?.icon, props?.icon), props?.data?.step?.icon)
+  const stepIconUrl = props.iconUrl
+
   const onDropEvent = (event: React.DragEvent) => {
     event.stopPropagation()
 
@@ -163,6 +166,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           event.dataTransfer.setData(DiagramDrag.AllowDropOnLink, '1')
           event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
           event.dataTransfer.dropEffect = 'move'
+          attachDragImageToEventHandler(event)
         }}
         onDragEnd={event => {
           event.preventDefault()
@@ -191,14 +195,18 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
         {props?.data?.isInComplete && (
           <Icon className={defaultCss.inComplete} size={12} name={'warning-sign'} color="orange500" />
         )}
-        {stepIcon && (
-          <>
-            <Icon
-              size={stepIconSize || 28}
-              {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
-              name={defaultTo(stepIcon, 'cross') as IconName}
-            />
-          </>
+        {stepIconUrl ? (
+          <ImagePreview size={28} src={stepIconUrl} fallbackIcon={defaultTo(stepIcon, 'cross') as IconName} />
+        ) : (
+          stepIcon && (
+            <>
+              <Icon
+                size={stepIconSize || 28}
+                {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
+                name={defaultTo(stepIcon, 'cross') as IconName}
+              />
+            </>
+          )
         )}
         {secondaryIcon && (
           <Icon
@@ -301,7 +309,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
             tooltipProps={{ popoverClassName: matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
             {defaultTo(matrixNodeName, props?.data?.matrixNodeName) ? (
-              <MatrixNodeNameLabelWrapper matrixLabel={props?.name as string} />
+              <MatrixNodeNameLabelWrapper nodeName={props?.name as string} matrixNodeName={matrixNodeName} />
             ) : (
               props.name
             )}

@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback, useEffect } from 'react'
+import cx from 'classnames'
 import {
   Formik,
   FormInput,
@@ -19,12 +20,14 @@ import {
   ButtonVariation,
   RUNTIME_INPUT_VALUE,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { FormikContextType, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { defaultTo, get, isEmpty, isNil, merge } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, memoize, merge } from 'lodash-es'
+import { Menu } from '@blueprintjs/core'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import {
   AcrBuildDetailsDTO,
   ConnectorConfigDTO,
@@ -70,12 +73,14 @@ export function ACRArtifact({
   artifactIdentifiers,
   isReadonly = false,
   selectedArtifact,
-  isMultiArtifactSource
+  isMultiArtifactSource,
+  formClassName = ''
 }: StepProps<ConnectorConfigDTO> & ACRArtifactProps): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+  const isTemplateContext = context === ModalViewFor.Template
 
   const loadingItems = [{ label: 'Loading...', value: 'Loading Loading...' }]
 
@@ -437,6 +442,19 @@ export function ACRArtifact({
     handleSubmit(artifactObj)
   }
 
+  const handleValidate = (formData: ACRArtifactType & { connectorId?: string }) => {
+    if (isTemplateContext) {
+      submitFormData({
+        ...prevStepData,
+        ...formData,
+        connectorId: getConnectorIdValue(prevStepData),
+        subscriptionId: getValue(formData.subscriptionId),
+        registry: getValue(formData.registry),
+        repository: getValue(formData.repository)
+      })
+    }
+  }
+
   const getSelectItems = useCallback(() => {
     return (tagList as AcrBuildDetailsDTO[])?.map(tag => ({ label: tag.tag, value: tag.tag })) as SelectOption[]
   }, [tagList])
@@ -462,15 +480,34 @@ export function ACRArtifact({
     }
   }, [formikRef?.current?.values?.tag])
 
+  const getItemRenderer = memoize((item: SelectOption, { handleClick }: IItemRendererProps, disabled: boolean) => {
+    return (
+      <div key={item.label.toString()}>
+        <Menu.Item
+          text={
+            <Layout.Horizontal spacing="small">
+              <Text>{item.label}</Text>
+            </Layout.Horizontal>
+          }
+          disabled={disabled}
+          onClick={handleClick}
+        />
+      </div>
+    )
+  })
+
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
+      {!isTemplateContext && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         formName="acrArtifact"
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
@@ -487,7 +524,7 @@ export function ACRArtifact({
           formikRef.current = formik
           return (
             <FormikForm>
-              <div className={css.connectorForm}>
+              <div className={cx(css.connectorForm, formClassName)}>
                 {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
                 {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
                 <div className={css.imagePathContainer}>
@@ -531,6 +568,7 @@ export function ACRArtifact({
                       selectProps: {
                         defaultSelectedItem: formik.values.subscriptionId as SelectOption,
                         items: subscriptions,
+                        itemRenderer: (item, props) => getItemRenderer(item, props, loadingSubscriptions),
                         allowCreatingNewItems: true,
                         addClearBtn: !(loadingSubscriptions || isReadonly),
                         noResults: (
@@ -618,6 +656,7 @@ export function ACRArtifact({
                       selectProps: {
                         defaultSelectedItem: formik.values.registry as SelectOption,
                         items: registries,
+                        itemRenderer: (item, props) => getItemRenderer(item, props, loadingRegistries),
                         allowCreatingNewItems: true,
                         addClearBtn: !(loadingRegistries || isReadonly),
                         noResults: (
@@ -699,6 +738,7 @@ export function ACRArtifact({
                       selectProps: {
                         items: repositories,
                         allowCreatingNewItems: true,
+                        itemRenderer: (item, props) => getItemRenderer(item, props, loadingRepositories),
                         defaultSelectedItem: formik.values.repository as SelectOption,
                         addClearBtn: !(loadingRepositories || isReadonly),
                         noResults: (
@@ -835,20 +875,22 @@ export function ACRArtifact({
                 ) : null}
               </div>
 
-              <Layout.Horizontal spacing="medium">
-                <Button
-                  variation={ButtonVariation.SECONDARY}
-                  text={getString('back')}
-                  icon="chevron-left"
-                  onClick={() => previousStep?.(prevStepData)}
-                />
-                <Button
-                  variation={ButtonVariation.PRIMARY}
-                  type="submit"
-                  text={getString('submit')}
-                  rightIcon="chevron-right"
-                />
-              </Layout.Horizontal>
+              {!isTemplateContext && (
+                <Layout.Horizontal spacing="medium">
+                  <Button
+                    variation={ButtonVariation.SECONDARY}
+                    text={getString('back')}
+                    icon="chevron-left"
+                    onClick={() => previousStep?.(prevStepData)}
+                  />
+                  <Button
+                    variation={ButtonVariation.PRIMARY}
+                    type="submit"
+                    text={getString('submit')}
+                    rightIcon="chevron-right"
+                  />
+                </Layout.Horizontal>
+              )}
             </FormikForm>
           )
         }}

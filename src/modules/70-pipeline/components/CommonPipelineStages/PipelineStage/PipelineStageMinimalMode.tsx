@@ -13,17 +13,16 @@ import {
   Text,
   Button,
   ButtonVariation,
-  Color,
   Container,
   Icon,
   Layout,
   PageError,
   TextInput,
   Dialog,
-  FontVariation,
   shouldShowError,
   useToaster
 } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { get, isEmpty } from 'lodash-es'
 import { Classes } from '@blueprintjs/core'
@@ -247,7 +246,7 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
               <div className={css.noPipelineSection}>
                 <img src={CDPipelineIllustration} className={css.image} />
                 <Text className={css.noPipelineText} margin={{ top: 'medium', bottom: 'small' }}>
-                  {getString('pipeline.noPipelineText')}
+                  {getString('pipeline.noPipelinesText')}
                 </Text>
               </div>
             )}

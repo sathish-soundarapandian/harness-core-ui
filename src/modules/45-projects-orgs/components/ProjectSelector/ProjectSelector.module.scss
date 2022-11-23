@@ -40,6 +40,11 @@
   box-sizing: content-box;
 }
 
+.projectSearch {
+  flex: 1;
+  margin-right: var(--spacing-large);
+}
+
 .projectContainerWrapper {
   height: calc(100vh - 156px);
   justify-content: space-between;

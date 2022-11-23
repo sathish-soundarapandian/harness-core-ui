@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Checkbox, Text } from '@wings-software/uicore'
+import { Layout, Checkbox, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { StageElementConfig } from 'services/pipeline-ng'
 

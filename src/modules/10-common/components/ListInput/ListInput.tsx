@@ -9,7 +9,7 @@ import React from 'react'
 import { defaultTo, map } from 'lodash-es'
 import { FieldArray } from 'formik'
 import type { IconProps } from '@harness/icons'
-import { Button, Layout } from '@wings-software/uicore'
+import { Button, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 export interface ListInputProps {

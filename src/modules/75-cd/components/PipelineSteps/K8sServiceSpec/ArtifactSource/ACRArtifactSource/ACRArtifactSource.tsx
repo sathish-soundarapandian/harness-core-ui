@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo, get, memoize } from 'lodash-es'
 
 import {
   FormInput,
@@ -16,7 +16,9 @@ import {
   MultiTypeInputValue,
   SelectOption,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
+import type { IItemRendererProps } from '@blueprintjs/select'
+import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
 import {
@@ -361,6 +363,22 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     return typeof item === 'string' ? (item as string) : item?.value
   }
 
+  const getItemRenderer = memoize((item: SelectOption, { handleClick }: IItemRendererProps, disabled: boolean) => {
+    return (
+      <div key={item.label.toString()}>
+        <Menu.Item
+          text={
+            <Layout.Horizontal spacing="small">
+              <Text>{item.label}</Text>
+            </Layout.Horizontal>
+          }
+          disabled={disabled}
+          onClick={handleClick}
+        />
+      </div>
+    )
+  })
+
   const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
@@ -374,6 +392,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
               placeholder={''}
               accountIdentifier={accountId}
               projectIdentifier={projectIdentifier}
+              configureOptionsProps={{ className: css.connectorConfigOptions }}
               orgIdentifier={orgIdentifier}
               width={391}
               setRefValue
@@ -448,6 +467,8 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                 selectProps: {
                   allowCreatingNewItems: true,
                   addClearBtn: !(loadingSubscriptions || readonly),
+                  itemRenderer: (item: SelectOption, eventProps: IItemRendererProps) =>
+                    getItemRenderer(item, eventProps, loadingSubscriptions),
                   noResults: (
                     <Text padding={'small'}>
                       {get(subscriptionsError, 'data.message', null) || getString('pipeline.ACR.subscriptionError')}
@@ -510,6 +531,8 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                 selectProps: {
                   allowCreatingNewItems: true,
                   items: registries,
+                  itemRenderer: (item: SelectOption, eventProps: IItemRendererProps) =>
+                    getItemRenderer(item, eventProps, loadingRegistries),
                   addClearBtn: !(loadingRegistries || readonly),
                   noResults: (
                     <Text padding={'small'}>
@@ -542,6 +565,8 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                 selectProps: {
                   allowCreatingNewItems: true,
                   addClearBtn: !(loadingRepositories || readonly),
+                  itemRenderer: (item: SelectOption, eventProps: IItemRendererProps) =>
+                    getItemRenderer(item, eventProps, loadingRepositories),
                   items: repositories,
                   noResults: (
                     <Text padding={'small'}>

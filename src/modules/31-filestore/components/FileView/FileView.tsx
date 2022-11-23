@@ -17,7 +17,7 @@ import css from '@filestore/components/FileView/FileView.module.scss'
 
 export default function FileView(): React.ReactElement {
   const { getString } = useStrings()
-  const { activeTab, setActiveTab, isModalView, currentNode } = useContext(FileStoreContext)
+  const { activeTab, setActiveTab, isModalView, currentNode, isCachedNode } = useContext(FileStoreContext)
   const [error, setError] = React.useState('')
 
   React.useEffect(() => {
@@ -52,16 +52,34 @@ export default function FileView(): React.ReactElement {
             {
               id: FILE_VIEW_TAB.REFERENCED_BY,
               title: getString('referencedBy'),
-              panel: <ReferencedBy />
+              panel: !isCachedNode(currentNode.identifier) ? <ReferencedBy /> : <div />
             },
             { id: FILE_VIEW_TAB.ACTIVITY_LOG, title: getString('activityLog'), panel: <div /> }
           ]}
         />
       ) : (
-        <FileDetails
-          handleError={(errorType: string) => {
-            setError(errorType)
-          }}
+        <Tabs
+          id={'serviceLandingPageTabs'}
+          selectedTabId={activeTab}
+          onChange={tabId => setActiveTab(tabId as FILE_VIEW_TAB)}
+          tabList={[
+            {
+              id: FILE_VIEW_TAB.DETAILS,
+              title: getString('details'),
+              panel: (
+                <FileDetails
+                  handleError={(errorType: string) => {
+                    setError(errorType)
+                  }}
+                />
+              )
+            },
+            {
+              id: FILE_VIEW_TAB.REFERENCED_BY,
+              title: getString('referencedBy'),
+              panel: !isCachedNode(currentNode.identifier) ? <ReferencedBy /> : <div />
+            }
+          ]}
         />
       )}
     </Container>

@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 
 import { useParams } from 'react-router-dom'
 

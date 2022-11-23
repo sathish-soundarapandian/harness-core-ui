@@ -8,20 +8,20 @@
 import * as React from 'react'
 import { debounce, defaultTo, isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import { Text, IconName, Icon, Button, ButtonVariation } from '@wings-software/uicore'
+import { Text, IconName, Icon, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
-import { getPositionOfAddIcon } from '../utils'
+import { getPositionOfAddIcon, attachDragImageToEventHandler } from '../utils'
 import MatrixNodeNameLabelWrapper from '../MatrixNodeNameLabelWrapper'
+import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './IconNode.module.scss'
 
 interface IconNodeProps extends BaseReactComponentProps {
   isInComplete?: boolean
   graphType?: PipelineGraphType
-  matrixNodeName?: boolean
+  matrixNodeName?: string
 }
 export function IconNode(props: IconNodeProps): React.ReactElement {
   const allowAdd = props.allowAdd ?? false
@@ -55,6 +55,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
   return (
     <div
       className={cx(cssDefault.defaultNode, css.iconNodeContainer)}
+      data-testid="icon-node"
       onMouseDown={e => e.stopPropagation()}
       onDragOver={event => {
         event.stopPropagation()
@@ -113,6 +114,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
           //   event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
           // if (options.allowDropOnNode) event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
           event.dataTransfer.dropEffect = 'move'
+          attachDragImageToEventHandler(event)
         }}
         onDragEnd={event => {
           event.preventDefault()
@@ -175,7 +177,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
             tooltipProps={{ popoverClassName: matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
             {defaultTo(matrixNodeName, props?.data?.matrixNodeName) ? (
-              <MatrixNodeNameLabelWrapper matrixLabel={props?.name as string} />
+              <MatrixNodeNameLabelWrapper matrixNodeName={matrixNodeName} nodeName={props?.name as unknown as string} />
             ) : (
               props.name
             )}

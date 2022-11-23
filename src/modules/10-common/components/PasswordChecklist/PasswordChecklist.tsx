@@ -7,7 +7,7 @@
 
 import React from 'react'
 import * as yup from 'yup'
-import { Text, Layout } from '@wings-software/uicore'
+import { Text, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { PasswordStrengthPolicy } from 'services/cd-ng'

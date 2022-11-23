@@ -7,20 +7,43 @@
 
 import React, { useRef } from 'react'
 import cx from 'classnames'
-import { Button, Icon, Layout, Tab, Tabs } from '@wings-software/uicore'
-import { capitalize as _capitalize, toUpper } from 'lodash-es'
+import { Button, Icon, Layout, Tab, Tabs } from '@harness/uicore'
+import { capitalize as _capitalize, get, isEmpty, set, toUpper } from 'lodash-es'
 import { Expander } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
+import * as Yup from 'yup'
+import type { ValidationError } from 'yup'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { useStrings } from 'framework/strings'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { StageElementConfig } from 'services/cd-ng'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { useQueryParams } from '@common/hooks'
+import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import ApprovalAdvancedSpecifications from '../ApprovalStage/ApprovalStageAdvanced'
 import { ApprovalStageOverview } from '../ApprovalStage/ApprovalStageOverview'
 import { ApprovalStageExecution } from '../ApprovalStage/ApprovalStageExecution'
 import approvalStepCss from '../ApprovalStage/ApprovalStageSetupShellMode.module.scss'
+
+enum CustomTabs {
+  OVERVIEW = 'OVERVIEW',
+  EXECUTION = 'EXECUTION',
+  ADVANCED = 'ADVANCED'
+}
+
+function getCustomStageValidationSchema(
+  getString: UseStringsReturn['getString'],
+  contextType?: string
+): Yup.Schema<unknown> {
+  return Yup.object().shape({
+    ...getNameAndIdentifierSchema(getString, contextType),
+    spec: Yup.object().shape({
+      execution: Yup.object().shape({
+        steps: Yup.array().required().min(1, getString('common.executionTab.stepsCount'))
+      })
+    })
+  })
+}
 
 export function CustomStageSetupShellMode(): React.ReactElement {
   const { getString } = useStrings()
@@ -43,6 +66,7 @@ export function CustomStageSetupShellMode(): React.ReactElement {
   const query = useQueryParams()
 
   const { stage: selectedStage } = getStageFromPipeline<StageElementConfig>(selectedStageId)
+  const [incompleteTabs, setIncompleteTabs] = React.useState<{ [key in CustomTabs]?: boolean }>({})
 
   React.useEffect(() => {
     const sectionId = (query as any).sectionId || ''
@@ -83,6 +107,38 @@ export function CustomStageSetupShellMode(): React.ReactElement {
     }
   }, [selectedTabId])
 
+  const validate = React.useCallback(() => {
+    try {
+      getCustomStageValidationSchema(getString, contextType).validateSync(selectedStage?.stage, {
+        abortEarly: false,
+        context: selectedStage?.stage
+      })
+      setIncompleteTabs({})
+    } catch (error) {
+      if (error.name !== 'ValidationError') {
+        return
+      }
+      const response = error.inner.reduce((errors: ValidationError, currentError: ValidationError) => {
+        errors = set(errors, currentError.path, currentError.message)
+        return errors
+      }, {})
+      const newIncompleteTabs: { [key in CustomTabs]?: boolean } = {}
+      if (!isEmpty(response.name) || !isEmpty(response.identifier)) {
+        newIncompleteTabs[CustomTabs.OVERVIEW] = true
+      }
+
+      if (!isEmpty(get(response.spec, 'execution'))) {
+        newIncompleteTabs[CustomTabs.EXECUTION] = true
+      }
+
+      setIncompleteTabs(newIncompleteTabs)
+    }
+  }, [setIncompleteTabs, selectedStage?.stage])
+
+  React.useEffect(() => {
+    validate()
+  }, [JSON.stringify(selectedStage)])
+
   return (
     <section ref={layoutRef} key={selectedStageId} className={approvalStepCss.approvalStageSetupShellWrapper}>
       <Tabs
@@ -120,8 +176,8 @@ export function CustomStageSetupShellMode(): React.ReactElement {
         <Tab
           id={tabHeadings[1]}
           title={
-            <span className={approvalStepCss.tab}>
-              <Icon name="deployment-success-legacy" height={20} size={20} />
+            <span data-completed={!incompleteTabs[CustomTabs.EXECUTION]}>
+              <Icon name={incompleteTabs[CustomTabs.EXECUTION] ? 'execution' : 'tick'} size={16} />
               {tabHeadings[1]}
             </span>
           }

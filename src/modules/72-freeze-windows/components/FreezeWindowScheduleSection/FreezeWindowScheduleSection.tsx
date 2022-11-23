@@ -7,7 +7,8 @@
 
 import React, { useCallback } from 'react'
 import { Spinner } from '@blueprintjs/core'
-import { Card, Container, Heading, ButtonVariation, Button, Layout, Color } from '@harness/uicore'
+import { Card, Container, Heading, ButtonVariation, Button, Layout } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { FreezeWindow } from 'services/cd-ng'
@@ -33,61 +34,65 @@ export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionPr
   } = useFreezeWindowContext()
   const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<WindowPathProps>()
   const { onSave, isSaveDisabled, isSaveInProgress } = useSaveFreeze()
-  const validate = useCallback((formData: any) => {
-    updateFreeze({ ...freezeObj, windows: [formData] })
-  }, [])
+  const validate = useCallback(
+    (formData: any) => {
+      updateFreeze({ ...freezeObj, windows: [formData] })
+    },
+    [freezeObj]
+  )
 
   return (
     <Container padding={{ top: 'small', right: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge' }}>
       <Heading color={Color.BLACK} level={3} style={{ fontWeight: 600, fontSize: '16px', lineHeight: '24px' }}>
-        {getString('freezeWindows.freezeStudio.freezeSchedule')}
+        {getString('common.schedule')}
       </Heading>
       <Card className={css.sectionCard}>
         <ScheduleFreezeForm
           freezeWindow={(freezeObj?.windows as FreezeWindow[])?.[0]}
           onSubmit={onSave}
           onChange={validate}
-          formActions={
-            <Layout.Horizontal
-              spacing="small"
-              margin={{ top: 'xxlarge' }}
-              flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-            >
-              <Button
-                icon="chevron-left"
-                onClick={onBack}
-                variation={ButtonVariation.SECONDARY}
-                text={getString('back')}
-              />
-              {isSaveInProgress ? (
-                <Container padding={{ left: 'xxlarge', right: 'medium' }}>
-                  <Spinner size={Spinner.SIZE_SMALL} />
-                </Container>
-              ) : (
-                <RbacButton
-                  type="submit"
-                  disabled={isSaveDisabled}
-                  variation={ButtonVariation.PRIMARY}
-                  text={getString('save')}
-                  icon="send-data"
-                  loading={isSaveInProgress}
-                  permission={{
-                    permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,
-                    resource: {
-                      resourceType: ResourceType.DEPLOYMENTFREEZE
-                    },
-                    resourceScope: {
-                      accountIdentifier,
-                      orgIdentifier,
-                      projectIdentifier
-                    }
-                  }}
-                />
-              )}
-            </Layout.Horizontal>
-          }
         />
       </Card>
+      <Layout.Horizontal
+        spacing="small"
+        margin={{ top: 'xxlarge' }}
+        flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+      >
+        <Button
+          margin={{ top: 'medium' }}
+          icon="chevron-left"
+          onClick={onBack}
+          variation={ButtonVariation.SECONDARY}
+          text={getString('back')}
+        />
+        {isSaveInProgress ? (
+          <Container padding={{ left: 'xxlarge', right: 'medium' }} margin={{ top: 'medium' }}>
+            <Spinner size={Spinner.SIZE_SMALL} />
+          </Container>
+        ) : (
+          <RbacButton
+            onClick={onSave}
+            margin={{ top: 'medium' }}
+            type="submit"
+            disabled={isSaveDisabled}
+            variation={ButtonVariation.PRIMARY}
+            text={getString('save')}
+            icon="send-data"
+            loading={isSaveInProgress}
+            permission={{
+              permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,
+              resource: {
+                resourceType: ResourceType.DEPLOYMENTFREEZE
+              },
+              resourceScope: {
+                accountIdentifier,
+                orgIdentifier,
+                projectIdentifier
+              }
+            }}
+          />
+        )}
+      </Layout.Horizontal>
     </Container>
   )
 }

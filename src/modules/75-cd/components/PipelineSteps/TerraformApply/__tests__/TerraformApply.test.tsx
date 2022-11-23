@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { act, fireEvent, render } from '@testing-library/react'
-import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -720,5 +720,75 @@ describe('Test TerraformApply', () => {
     const errMsg = getByText('common.validation.provisionerIdentifierIsRequired')
     expect(errMsg).toBeInTheDocument()
     expect(container).toMatchSnapshot()
+  })
+
+  test('renders remote backend config when TERRAFORM_REMOTE_BACKEND_CONFIG is on for TerraformApply', async () => {
+    const { getByText } = render(
+      <TestStepWidget
+        initialValues={{
+          type: 'TerraformApply',
+          name: 'Test A',
+          identifier: 'Test_A',
+          timeout: '10m',
+          spec: {
+            provisionerIdentifier: '<+service.test.id>',
+            configuration: {
+              type: 'Inline',
+              spec: {
+                configFiles: {
+                  store: {
+                    spec: {
+                      folderPath: 'test',
+                      connectorRef: {
+                        label: 'test',
+                        value: 'test',
+                        scope: 'account',
+
+                        connector: { type: 'Git' }
+                      }
+                    }
+                  }
+                },
+                varFiles: [
+                  {
+                    varFile: {
+                      type: 'Inline',
+                      content: 'test'
+                    }
+                  }
+                ],
+                backendConfig: {
+                  type: 'Remote',
+                  spec: {
+                    store: {
+                      type: 'Github',
+                      spec: {
+                        gitFetchType: 'Branch',
+                        repoName: '',
+                        branch: 'master',
+                        folderPath: ['test-path'],
+                        connectorRef: 'jelenaterraformtest'
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }}
+        type={StepType.TerraformApply}
+        stepViewType={StepViewType.Edit}
+        testWrapperProps={{
+          defaultAppStoreValues: {
+            featureFlags: { TERRAFORM_REMOTE_BACKEND_CONFIG: true }
+          }
+        }}
+      />
+    )
+
+    fireEvent.click(getByText('common.optionalConfig')!)
+
+    expect(getByText('cd.backendConfigurationFile')!).toBeInTheDocument()
+    expect(getByText('/test-path')!).toBeInTheDocument()
   })
 })

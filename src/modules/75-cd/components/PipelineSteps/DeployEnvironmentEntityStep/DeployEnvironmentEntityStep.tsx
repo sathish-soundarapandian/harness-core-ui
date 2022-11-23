@@ -6,6 +6,8 @@
  */
 
 import React from 'react'
+import { Formik } from 'formik'
+import { noop } from 'lodash-es'
 
 import type { IconName } from '@harness/uicore'
 
@@ -47,12 +49,18 @@ export class DeployEnvironmentEntityStep extends Step<DeployEnvironmentEntityCon
 
     if (isTemplatizedView(stepViewType)) {
       return (
-        <DeployEnvironmentEntityInputStep
-          initialValues={initialValues}
-          inputSetData={inputSetData}
-          allowableTypes={allowableTypes}
-          {...(customStepProps as Required<DeployEnvironmentEntityCustomInputStepProps>)}
-        />
+        <Formik initialValues={initialValues} validate={onUpdate} onSubmit={noop}>
+          {/** Wrapping this component in formik to prevent the pseudo fields from corrupting the main input set formik.
+           * The onUpdate call takes care of picking only the required data and naturally eliminate the pseudo fields.
+           * The pseudo fields are present within the component - DeployEnvironmentEntityInputStep */}
+          <DeployEnvironmentEntityInputStep
+            initialValues={initialValues}
+            inputSetData={inputSetData}
+            allowableTypes={allowableTypes}
+            stepViewType={stepViewType}
+            {...(customStepProps as Required<DeployEnvironmentEntityCustomInputStepProps>)}
+          />
+        </Formik>
       )
     }
 

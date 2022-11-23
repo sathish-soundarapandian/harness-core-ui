@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react'
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import { compile } from 'path-to-regexp'
 
 import routes from '@common/RouteDefinitions'
@@ -76,7 +76,6 @@ export default function CISideNav(): React.ReactElement {
     accountIdentifier: accountId,
     projectIdentifier,
     orgIdentifier,
-    module,
     lazy: true,
     size: 1
   })

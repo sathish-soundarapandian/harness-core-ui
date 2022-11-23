@@ -49,6 +49,7 @@ exports[`Test Filter component Initial render should match snapshot: Filter 1`] 
                     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-bottom-xsmall"
                   >
                     <button
+                      aria-label="filters.apply"
                       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                       type="submit"
                     >
@@ -59,6 +60,7 @@ exports[`Test Filter component Initial render should match snapshot: Filter 1`] 
                       </span>
                     </button>
                     <button
+                      aria-label="filters.clearAll"
                       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                       type="reset"
                     >
@@ -141,6 +143,7 @@ exports[`Test Filter component Initial render should match snapshot: Filter 1`] 
                   class="Layout--vertical StyledProps--main StyledProps--padding-top-xlarge"
                 >
                   <button
+                    aria-label="filters.newFilter"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addNewFilterBtn StyledProps--padding-left-large StyledProps--border StyledProps--border-false Button--with-current-color Button--without-shadow Button--withLeftIcon"
                     type="button"
                   >

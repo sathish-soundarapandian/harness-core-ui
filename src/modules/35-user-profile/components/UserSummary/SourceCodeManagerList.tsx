@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { Text, Layout, Button, Icon, ButtonVariation, useConfirmationDialog } from '@wings-software/uicore'
+import { Text, Layout, Button, Icon, ButtonVariation, useConfirmationDialog } from '@harness/uicore'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Color } from '@harness/design-system'
 import { useSourceCodeModal } from '@user-profile/modals/SourceCodeManager/useSourceCodeManager'

@@ -19,7 +19,7 @@ import {
   TextInput,
   ButtonVariation,
   Label
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'

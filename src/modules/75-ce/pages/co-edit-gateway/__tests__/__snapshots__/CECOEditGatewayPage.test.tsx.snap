@@ -712,6 +712,7 @@ exports[`Edit rule page render edit rule page successfully 1`] = `
       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main footer"
     >
       <button
+        aria-label="Previous"
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon"
         disabled=""
         tabindex="-1"
@@ -743,6 +744,7 @@ exports[`Edit rule page render edit rule page successfully 1`] = `
         </span>
       </button>
       <button
+        aria-label="next"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
         type="button"
       >

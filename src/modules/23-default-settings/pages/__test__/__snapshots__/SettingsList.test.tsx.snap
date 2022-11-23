@@ -111,6 +111,7 @@ exports[`Default Settings Page render data and save the changed data 1`] = `
           </div>
         </div>
         <button
+          aria-label="save"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           disabled=""
           tabindex="-1"
@@ -479,6 +480,7 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
           </div>
         </div>
         <button
+          aria-label="save"
           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           disabled=""
           tabindex="-1"
@@ -662,11 +664,16 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                           <div
                             class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_6"
                             >
-                              test_setting_CI_6
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_6
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -718,6 +725,7 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -768,11 +776,16 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_2"
                             >
-                              test_setting_CI_2
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_2
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -825,6 +838,7 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -866,11 +880,16 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_5"
                             >
-                              test_setting_CI_5
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_5
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -922,6 +941,7 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -963,11 +983,16 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_3"
                             >
-                              test_setting_CI_3
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_3
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -1059,11 +1084,16 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_5"
                             >
-                              test_setting_CI_5
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_5
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -1115,6 +1145,7 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -1156,11 +1187,16 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_4"
                             >
-                              test_setting_CI_4
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_4
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -1233,11 +1269,16 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                           <div
                             class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_7"
                             >
-                              test_setting_CI_7
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_7
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -1290,6 +1331,7 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -1523,6 +1565,7 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
           </div>
         </div>
         <button
+          aria-label="save"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="submit"
         >
@@ -1704,11 +1747,16 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                           <div
                             class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_6"
                             >
-                              test_setting_CI_6
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_6
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -1776,11 +1824,16 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_2"
                             >
-                              test_setting_CI_2
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_2
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -1833,6 +1886,7 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -1874,11 +1928,16 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_5"
                             >
-                              test_setting_CI_5
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_5
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -1930,6 +1989,7 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -1971,11 +2031,16 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_3"
                             >
-                              test_setting_CI_3
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_3
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -2067,11 +2132,16 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_5"
                             >
-                              test_setting_CI_5
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_5
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -2123,6 +2193,7 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -2164,11 +2235,16 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_4"
                             >
-                              test_setting_CI_4
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_4
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -2241,11 +2317,16 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                           <div
                             class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_7"
                             >
-                              test_setting_CI_7
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_7
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -2298,6 +2379,7 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -2531,6 +2613,7 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
           </div>
         </div>
         <button
+          aria-label="save"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="submit"
         >
@@ -2712,11 +2795,16 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                           <div
                             class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_6"
                             >
-                              test_setting_CI_6
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_6
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -2784,11 +2872,16 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_2"
                             >
-                              test_setting_CI_2
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_2
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -2841,6 +2934,7 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -2882,11 +2976,16 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_5"
                             >
-                              test_setting_CI_5
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_5
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -2938,6 +3037,7 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -2979,11 +3079,16 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_3"
                             >
-                              test_setting_CI_3
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_3
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -3075,11 +3180,16 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_5"
                             >
-                              test_setting_CI_5
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_5
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -3131,6 +3241,7 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -3172,11 +3283,16 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_4"
                             >
-                              test_setting_CI_4
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_4
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -3249,11 +3365,16 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                           <div
                             class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_7"
                             >
-                              test_setting_CI_7
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_7
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -3306,6 +3427,7 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -3539,6 +3661,7 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
           </div>
         </div>
         <button
+          aria-label="save"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="submit"
         >
@@ -3720,11 +3843,16 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                           <div
                             class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_6"
                             >
-                              test_setting_CI_6
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_6
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -3792,11 +3920,16 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_2"
                             >
-                              test_setting_CI_2
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_2
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -3849,6 +3982,7 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -3890,11 +4024,16 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_5"
                             >
-                              test_setting_CI_5
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_5
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -3946,6 +4085,7 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -3987,11 +4127,16 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_3"
                             >
-                              test_setting_CI_3
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_3
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -4083,11 +4228,16 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_5"
                             >
-                              test_setting_CI_5
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_5
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -4139,6 +4289,7 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >
@@ -4180,11 +4331,16 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                           <div
                             class="StyledProps--font StyledProps--main subCategoryLabel StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_4"
                             >
-                              test_setting_CI_4
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_4
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -4257,11 +4413,16 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                           <div
                             class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <p
-                              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsForm_test_setting_CI_7"
                             >
-                              test_setting_CI_7
-                            </p>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+                              >
+                                test_setting_CI_7
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div
@@ -4314,6 +4475,7 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                               data-tooltip-id="defaultSettingsFormRestoreToDefault"
                             >
                               <button
+                                aria-label="defaultSettings.restoreToDefault"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                                 type="button"
                               >

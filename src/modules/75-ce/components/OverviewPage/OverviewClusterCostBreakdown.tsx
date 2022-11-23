@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, Text, Layout } from '@wings-software/uicore'
+import { Container, Text, Layout } from '@harness/uicore'
 import { Link, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import routes from '@common/RouteDefinitions'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import { get, isEmpty } from 'lodash-es'
 import { parse } from 'yaml'

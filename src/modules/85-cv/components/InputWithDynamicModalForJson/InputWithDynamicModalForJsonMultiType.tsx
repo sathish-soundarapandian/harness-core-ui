@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Text, ExpressionAndRuntimeType, AllowedTypes, MultiTypeInputType } from '@wings-software/uicore'
+import { Layout, Text, ExpressionAndRuntimeType, AllowedTypes, MultiTypeInputType } from '@harness/uicore'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import type { InputWithDynamicModalForJsonProps } from './InputWithDynamicModalForJson.types'
 import { InputWithDynamicModalForJson } from './InputWithDynamicModalForJson'

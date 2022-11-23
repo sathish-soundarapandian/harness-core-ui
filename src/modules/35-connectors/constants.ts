@@ -76,6 +76,7 @@ export const Connectors: ConnectorType = {
   GITLAB: 'Gitlab',
   BITBUCKET: 'Bitbucket',
   AZURE_REPO: 'AzureRepo',
+  AZURE_ARTIFACTS: 'AzureArtifacts',
   VAULT: 'Vault',
   APP_DYNAMICS: 'AppDynamics',
   SPLUNK: 'Splunk',
@@ -111,7 +112,7 @@ export const Connectors: ConnectorType = {
   AWSSECRETMANAGER: 'AwsSecretManager',
   JENKINS: 'Jenkins',
   CUSTOM_SECRET_MANAGER: 'CustomSecretManager',
-  ELK: 'ELK',
+  ELK: 'ElasticSearch',
   GcpSecretManager: 'GcpSecretManager',
   SPOT: 'Spot'
 }
@@ -130,6 +131,7 @@ export const ConnectorInfoText = {
   LOCAL: 'Secret Manager',
   AWS: 'AWS',
   NEXUS: 'Nexus',
+  AZURE_ARTIFACTS: 'Azure Artifacts',
   ARTIFACTORY: 'Artifactory',
   DYNATRACE: 'Dynatrace',
   AZURE: 'Azure'

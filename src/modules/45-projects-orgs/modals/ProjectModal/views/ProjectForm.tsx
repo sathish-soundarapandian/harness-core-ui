@@ -21,7 +21,7 @@ import {
   ButtonVariation,
   IconName,
   Heading
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation, Color } from '@harness/design-system'
 import { DescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'

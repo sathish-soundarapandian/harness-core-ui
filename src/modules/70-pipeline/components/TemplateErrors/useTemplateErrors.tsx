@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useModalHook } from '@harness/use-modal'
-import { Dialog } from '@wings-software/uicore'
+import { Dialog } from '@harness/uicore'
 import type { ErrorNodeSummary } from 'services/pipeline-ng'
 import { ReconcileDialog } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
 import type { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'

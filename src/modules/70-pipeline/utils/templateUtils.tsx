@@ -45,6 +45,7 @@ import { INPUT_EXPRESSION_REGEX_STRING, parseInput } from '@common/components/Co
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import type { TemplateIcons } from './types'
 
 export const TEMPLATE_INPUT_PATH = 'template.templateInputs'
 export interface TemplateServiceDataType {
@@ -126,7 +127,7 @@ export const createStepNodeFromTemplate = (template: TemplateSummaryResponse, is
       })) as unknown as StepElementConfig
 }
 
-export const getScopedTemplatesFromTemplateRefs = (templateRefs: string[]) => {
+export const getScopedTemplatesFromTemplateRefs = (templateRefs: string[]): Record<string, string[]> => {
   return templateRefs.reduce((a: { [key: string]: string[] }, b) => {
     const identifier = getIdentifierFromValue(b)
     const scope = getScopeFromValue(b)
@@ -139,7 +140,10 @@ export const getScopedTemplatesFromTemplateRefs = (templateRefs: string[]) => {
   }, {})
 }
 
-const getPromisesForTemplateList = (params: GetTemplateListQueryParams, templateRefs: string[]) => {
+const getPromisesForTemplateList = (
+  params: GetTemplateListQueryParams,
+  templateRefs: string[]
+): Promise<ResponsePageTemplateSummaryResponse>[] => {
   const scopedTemplates = getScopedTemplatesFromTemplateRefs(templateRefs)
 
   const promises: Promise<ResponsePageTemplateSummaryResponse>[] = []
@@ -169,7 +173,7 @@ const getPromisesForTemplateGet = (
   params: GetTemplateQueryParams,
   templateRefs: string[],
   storeMetadata?: StoreMetadata
-) => {
+): Promise<ResponseTemplateResponse>[] => {
   const promises: Promise<ResponseTemplateResponse>[] = []
   templateRefs.forEach(templateRef => {
     const templateIdentifier = getIdentifierFromValue(templateRef)
@@ -230,20 +234,23 @@ export const getTemplateTypesByRef = (
 ): Promise<{
   templateTypes: { [key: string]: string }
   templateServiceData: TemplateServiceDataType
+  templateIcons: TemplateIcons
 }> => {
   return supportingTemplatesGitx
     ? getTemplateTypesByRefV2(params, templateRefs, storeMetadata)
     : getTemplateTypesByRefV1(params as GetTemplateListQueryParams, templateRefs)
 }
 
-const setTemplateTypesAndService = (
+const setTemplateProperties = (
   templateTypes: Record<string, unknown>,
   templateServiceData: Record<string, unknown>,
+  templateIcons: TemplateIcons,
   template: TemplateSummaryResponse | TemplateResponse
-) => {
+): void => {
   const templateData = parse<any>(template.yaml || '').template
   const scopeBasedTemplateRef = getScopeBasedTemplateRef(template)
   set(templateTypes, scopeBasedTemplateRef, templateData.spec.type)
+  set(templateIcons, scopeBasedTemplateRef, template.icon || templateData.icon)
 
   const serviceData = defaultTo(
     templateData.spec.spec?.serviceConfig?.serviceDefinition?.type,
@@ -260,21 +267,23 @@ export const getTemplateTypesByRefV1 = (
 ): Promise<{
   templateTypes: { [key: string]: string }
   templateServiceData: TemplateServiceDataType
+  templateIcons: TemplateIcons
 }> => {
   const promises = getPromisesForTemplateList(params, templateRefs)
   return Promise.all(promises)
     .then(responses => {
       const templateServiceData = {}
       const templateTypes = {}
+      const templateIcons = {}
       responses.forEach(response => {
         response.data?.content?.forEach(item => {
-          setTemplateTypesAndService(templateTypes, templateServiceData, item)
+          setTemplateProperties(templateTypes, templateServiceData, templateIcons, item)
         })
       })
-      return { templateTypes, templateServiceData }
+      return { templateTypes, templateServiceData, templateIcons }
     })
     .catch(_ => {
-      return { templateTypes: {}, templateServiceData: {} }
+      return { templateTypes: {}, templateServiceData: {}, templateIcons: {} }
     })
 }
 
@@ -285,21 +294,23 @@ export const getTemplateTypesByRefV2 = (
 ): Promise<{
   templateTypes: { [key: string]: string }
   templateServiceData: TemplateServiceDataType
+  templateIcons: TemplateIcons
 }> => {
   const promises = getPromisesForTemplateGet(omit(params, 'templateListType'), templateRefs, storeMetadata)
   return Promise.all(promises)
     .then(responses => {
       const templateServiceData = {}
       const templateTypes = {}
+      const templateIcons = {}
       responses.forEach(response => {
         if (response?.data) {
-          setTemplateTypesAndService(templateTypes, templateServiceData, response.data)
+          setTemplateProperties(templateTypes, templateServiceData, templateIcons, response.data)
         }
       })
-      return { templateTypes, templateServiceData }
+      return { templateTypes, templateServiceData, templateIcons }
     })
     .catch(_ => {
-      return { templateTypes: {}, templateServiceData: {} }
+      return { templateTypes: {}, templateServiceData: {}, templateIcons: {} }
     })
 }
 

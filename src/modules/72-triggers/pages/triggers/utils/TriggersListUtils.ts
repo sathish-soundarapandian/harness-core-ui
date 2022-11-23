@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 // temporary mock data
 import { parse } from 'yaml'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
@@ -108,11 +108,6 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string, isNewService: 
           iconName: GitSourceProviders.AZURE_REPO.iconName
         },
         {
-          itemLabel: getString('common.repo_provider.awscodecommit'),
-          value: GitSourceProviders.AWS_CODECOMMIT.value,
-          iconName: GitSourceProviders.AWS_CODECOMMIT.iconName
-        },
-        {
           itemLabel: getString('common.repo_provider.customLabel'),
           value: GitSourceProviders.CUSTOM.value,
           iconName: GitSourceProviders.CUSTOM.iconName
@@ -165,6 +160,24 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string, isNewService: 
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonS3]),
           value: ENABLED_ARTIFACT_TYPES.AmazonS3,
           iconName: ArtifactIconByType.AmazonS3 as IconName,
+          disabled: isNewService
+        },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry]),
+          value: ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry,
+          iconName: ArtifactIconByType.GoogleArtifactRegistry as IconName,
+          disabled: isNewService
+        },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.CustomArtifact]),
+          value: ENABLED_ARTIFACT_TYPES.CustomArtifact,
+          iconName: ArtifactIconByType.CustomArtifact as IconName,
+          disabled: isNewService
+        },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GithubPackageRegistry]),
+          value: ENABLED_ARTIFACT_TYPES.GithubPackageRegistry,
+          iconName: ArtifactIconByType.GithubPackageRegistry as IconName,
           disabled: isNewService
         },
         ...(isNewService
@@ -226,7 +239,6 @@ export const getSourceRepoOptions = (getString: (str: StringKeys) => string): { 
   { label: getString('common.repo_provider.gitlabLabel'), value: GitSourceProviders.GITLAB.value },
   { label: getString('common.repo_provider.bitbucketLabel'), value: GitSourceProviders.BITBUCKET.value },
   { label: getString('common.repo_provider.azureRepos'), value: GitSourceProviders.AZURE_REPO.value },
-  { label: getString('common.repo_provider.codecommit'), value: GitSourceProviders.AWS_CODECOMMIT.value },
   { label: getString('common.repo_provider.customLabel'), value: GitSourceProviders.CUSTOM.value }
 ]
 

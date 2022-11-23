@@ -41,11 +41,15 @@ describe('Validate Healthsource table Utils', () => {
     expect(getIconBySourceType('Dynatrace')).toEqual('service-dynatrace')
     expect(getIconBySourceType('SplunkMetric')).toEqual('service-splunk')
     expect(getIconBySourceType('Splunk')).toEqual('service-splunk')
+    expect(getIconBySourceType('AwsPrometheus')).toEqual('service-prometheus')
+    expect(getIconBySourceType('AWS_PROMETHEUS')).toEqual('service-prometheus')
+    expect(getIconBySourceType('CLOUDWATCH_METRICS')).toEqual('service-aws')
   })
 
   test('Ensure correct type is returned by getTypeByFeature', async () => {
     expect(getTypeByFeature('SplunkMetric', a => a)).toEqual('pipeline.verification.analysisTab.metrics')
     expect(getTypeByFeature('Splunk', a => a)).toEqual('pipeline.verification.analysisTab.logs')
+    expect(getTypeByFeature('AwsPrometheus', a => a)).toEqual('pipeline.verification.analysisTab.metrics')
     expect(getTypeByFeature('abc', a => a)).toEqual('common.repo_provider.customLabel')
   })
 })

@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
@@ -23,6 +23,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { JiraStatusNG, useGetJiraStatuses } from 'services/cd-ng'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JiraUpdateDeploymentModeFormContentInterface, JiraUpdateDeploymentModeProps } from './types'
@@ -36,7 +37,8 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
     fetchingStatuses,
     refetchStatuses,
     statusFetchError,
-    allowableTypes
+    allowableTypes,
+    stepViewType
   } = formContentProps
   const template = inputSetData?.template
   const path = inputSetData?.path
@@ -101,7 +103,9 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
           label={getString('pipelineSteps.timeoutLabel')}
           className={css.deploymentViewMedium}
           multiTypeDurationProps={{
-            enableConfigureOptions: false,
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             allowableTypes,
             expressions,
             disabled: isApprovalStepFieldDisabled(readonly)
@@ -128,6 +132,9 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
             allowableTypes,
             expressions
           }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
           type={'Jira'}
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
         />
@@ -141,6 +148,9 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
           disabled={isApprovalStepFieldDisabled(readonly)}
           placeholder={getString('pipeline.jiraApprovalStep.issueKeyPlaceholder')}
           multiTextInputProps={{ expressions, allowableTypes }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
           template={template}
           fieldPath="spec.issueKey"
         />
@@ -171,6 +181,9 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
               }
             }
           }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
         />
       ) : null}
 
@@ -182,6 +195,9 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
           name={`${prefix}spec.transitionTo.transitionName`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTextInputProps={{ expressions, allowableTypes }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
           template={template}
           fieldPath="spec.transitionTo.transitionName"
         />

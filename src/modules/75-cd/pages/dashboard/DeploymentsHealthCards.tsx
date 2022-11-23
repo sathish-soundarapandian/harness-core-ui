@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, Text, Icon, Layout } from '@wings-software/uicore'
+import { Container, Text, Icon, Layout } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
@@ -14,8 +14,7 @@ import cx from 'classnames'
 
 import { useParams } from 'react-router-dom'
 import { Classes } from '@blueprintjs/core'
-import merge from 'lodash-es/merge'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { merge, defaultTo, isEmpty } from 'lodash-es'
 import moment from 'moment'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

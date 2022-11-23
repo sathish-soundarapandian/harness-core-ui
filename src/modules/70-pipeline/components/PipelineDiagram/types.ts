@@ -35,6 +35,7 @@ export interface PipelineGraphState {
   type: string
   name: string
   icon: IconName
+  iconUrl?: string
   status?: string
   data: any
   nodeType?: string
@@ -155,6 +156,7 @@ export interface BaseReactComponentProps {
   identifier?: string
   id: string
   icon?: string
+  iconUrl?: string
   iconStyle?: CSSProperties
   readonly?: boolean
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
@@ -174,4 +176,9 @@ export interface BaseReactComponentProps {
   data?: any
   showMarkers?: boolean
   customNodeStyle?: CSSProperties
+}
+
+export interface Position {
+  x: number
+  y: number
 }

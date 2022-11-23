@@ -20,7 +20,7 @@ import {
   Text,
   ModalErrorHandlerProps,
   FormError
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'

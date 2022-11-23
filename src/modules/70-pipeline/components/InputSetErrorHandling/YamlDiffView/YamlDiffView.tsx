@@ -6,9 +6,8 @@
  */
 
 import React, { useRef } from 'react'
-import { Container, Layout, Text } from '@wings-software/uicore'
+import { Container, Layout, Text, PageError } from '@harness/uicore'
 import { MonacoDiffEditor } from 'react-monaco-editor'
-import { PageError } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { get } from 'lodash-es'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'

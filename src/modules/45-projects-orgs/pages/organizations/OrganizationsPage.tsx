@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { ExpandingSearchInput, Layout, Container, ButtonVariation } from '@wings-software/uicore'
+import { ExpandingSearchInput, Layout, Container, ButtonVariation, Pagination } from '@harness/uicore'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import { OrganizationAggregateDTO, useGetOrganizationAggregateDTOList, Error } from 'services/cd-ng'
@@ -27,17 +27,22 @@ import css from './OrganizationsPage.module.scss'
 const OrganizationsPage: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const [searchParam, setSearchParam] = useState<string>()
+  const [page, setPage] = useState(0)
   const history = useHistory()
   const { getString } = useStrings()
   useDocumentTitle(getString('orgsText'))
   const { loading, data, refetch, error } = useGetOrganizationAggregateDTOList({
-    queryParams: { accountIdentifier: accountId, searchTerm: searchParam },
+    queryParams: { accountIdentifier: accountId, searchTerm: searchParam, pageIndex: page, pageSize: 30 },
     debounce: 300
   })
   const { openOrganizationModal } = useOrganizationModal({
     onSuccess: () => refetch()
   })
   const { openCollaboratorModal } = useCollaboratorModal()
+
+  React.useEffect(() => {
+    setPage(0)
+  }, [searchParam])
 
   const newOrgButton = (): JSX.Element => (
     <RbacButton
@@ -120,6 +125,15 @@ const OrganizationsPage: React.FC = () => {
               />
             )}
             keyOf={(org: OrganizationAggregateDTO) => org.organizationResponse.organization.identifier as string}
+          />
+        </Container>
+        <Container className={css.pagination}>
+          <Pagination
+            itemCount={data?.data?.totalItems || 0}
+            pageSize={data?.data?.pageSize || 10}
+            pageCount={data?.data?.totalPages || 0}
+            pageIndex={data?.data?.pageIndex || 0}
+            gotoPage={(pageNumber: number) => setPage(pageNumber)}
           />
         </Container>
       </Page.Body>

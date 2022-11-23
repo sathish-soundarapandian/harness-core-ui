@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Container, Layout, Text, PageError, PageSpinner } from '@wings-software/uicore'
+import { Button, ButtonVariation, Container, Layout, Text, PageError, PageSpinner } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'

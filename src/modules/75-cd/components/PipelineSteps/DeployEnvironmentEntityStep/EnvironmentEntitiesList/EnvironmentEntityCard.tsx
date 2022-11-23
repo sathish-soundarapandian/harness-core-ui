@@ -9,12 +9,11 @@ import React, { useState } from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Collapse, Divider } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
-
+import { Color } from '@harness/design-system'
 import {
   ButtonVariation,
   Card,
   Text,
-  Color,
   AllowedTypes,
   Container,
   Layout,
@@ -190,7 +189,7 @@ export function EnvironmentEntityCard({
         </>
       ) : null}
 
-      {!values.environment && (
+      {!values.environment && Array.isArray(values.environments) && (
         <>
           <Container margin={{ top: 'medium', bottom: 'medium' }}>
             <Divider />

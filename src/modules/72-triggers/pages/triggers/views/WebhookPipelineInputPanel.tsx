@@ -16,7 +16,7 @@ import {
   NestedAccordionProvider,
   HarnessDocTooltip,
   PageSpinner
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { merge, cloneDeep, isEmpty, defaultTo, get, debounce, remove } from 'lodash-es'
 import type { FormikProps } from 'formik'
@@ -42,13 +42,13 @@ import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/util
 import { memoizedParse } from '@common/utils/YamlHelperMethods'
 import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
 import NewInputSetModal from '@pipeline/components/InputSetForm/NewInputSetModal'
+import { getPipelineWithInjectedWithCloneCodebase } from '@triggers/components/Triggers/WebhookTrigger/utils'
 import {
   ciCodebaseBuild,
   ciCodebaseBuildPullRequest,
   filterArtifactIndex,
   getFilteredStage,
   TriggerTypes,
-  eventTypes,
   getTriggerInputSetsBranchQueryParameter,
   getErrorMessage,
   TriggerGitEventTypes,
@@ -146,49 +146,6 @@ const applySelectedArtifactToPipelineObject = (
     return applyArtifactToPipeline(newPipelineObject, formikProps)
   }
   return newPipelineObject
-}
-
-const getPipelineWithInjectedWithCloneCodebase = ({
-  event,
-  pipeline,
-  isPipelineFromTemplate
-}: {
-  event: string
-  pipeline: PipelineInfoConfig
-  isPipelineFromTemplate: boolean
-}): any => {
-  if (isPipelineFromTemplate) {
-    const pipelineFromTemplate = { ...(pipeline || {}) }
-    if (pipelineFromTemplate?.template?.templateInputs?.properties?.ci?.codebase?.build) {
-      pipelineFromTemplate.template.templateInputs.properties.ci.codebase.build =
-        event === eventTypes.PULL_REQUEST ? ciCodebaseBuildPullRequest : ciCodebaseBuild
-    }
-
-    return pipelineFromTemplate
-  }
-  if (event === eventTypes.PULL_REQUEST) {
-    return {
-      ...pipeline,
-      properties: {
-        ci: {
-          codebase: {
-            build: ciCodebaseBuildPullRequest
-          }
-        }
-      }
-    }
-  } else {
-    return {
-      ...pipeline,
-      properties: {
-        ci: {
-          codebase: {
-            build: ciCodebaseBuild
-          }
-        }
-      }
-    }
-  }
 }
 
 function WebhookPipelineInputPanelForm({

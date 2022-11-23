@@ -6,14 +6,7 @@
  */
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react'
-import {
-  Button,
-  Container,
-  Formik,
-  FormikForm,
-  getMultiTypeFromValue,
-  MultiTypeInputType
-} from '@wings-software/uicore'
+import { Button, Container, Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'

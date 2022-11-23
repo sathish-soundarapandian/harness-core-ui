@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Accordion, Layout, Utils } from '@wings-software/uicore'
+import { Accordion, Layout, Utils } from '@harness/uicore'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { MapGCPLogsToServiceFieldNames } from '@cv/pages/health-source/connectors/GCOLogsMonitoringSource/components/MapQueriesToHarnessService/constants'

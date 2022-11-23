@@ -17,7 +17,7 @@ import {
   FormikForm,
   PageSpinner,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useParams } from 'react-router-dom'

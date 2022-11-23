@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption } from '@wings-software/uicore'
-import { NotificationType } from '@notifications/interfaces/Notifications'
+import type { SelectOption } from '@harness/uicore'
+import { NotificationType } from '@rbac/interfaces/Notifications'
 
 export const getAllNotificationTypeSelectOption = (getString: any): SelectOption => ({
   label: getString('allNotificationFormat'),

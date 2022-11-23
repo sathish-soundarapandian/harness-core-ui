@@ -77,7 +77,15 @@ export function DynamicPopover<T>(props: DynamicPopoverProps<T>): JSX.Element {
   const [isHoverView, setIsHoverView] = React.useState<boolean>()
 
   const { styles, attributes, forceUpdate } = usePopper(referenceElement, popperElement, {
-    modifiers: [{ name: 'arrow', options: { element: arrowElement } }],
+    modifiers: [
+      { name: 'arrow', options: { element: arrowElement } },
+      {
+        name: 'offset',
+        options: {
+          offset: [0, 10]
+        }
+      }
+    ],
     placement
   })
 

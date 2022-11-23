@@ -8,7 +8,7 @@
 import React from 'react'
 import { omit } from 'lodash-es'
 import { render, waitFor, act, queryByAttribute } from '@testing-library/react'
-import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'

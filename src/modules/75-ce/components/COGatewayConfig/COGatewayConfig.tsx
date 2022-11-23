@@ -8,7 +8,7 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import { debounce as _debounce, isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
 import { Drawer } from '@blueprintjs/core'
-import { Container, Layout, Button } from '@wings-software/uicore'
+import { Container, Layout, Button } from '@harness/uicore'
 import type { ASRuleCreationActiveStep, GatewayDetails } from '@ce/components/COCreateGateway/models'
 import COHelpSidebar from '@ce/components/COHelpSidebar/COHelpSidebar'
 import type { Service } from 'services/lw'

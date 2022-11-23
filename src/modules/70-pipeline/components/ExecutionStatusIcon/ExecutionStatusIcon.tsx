@@ -6,7 +6,7 @@
  */
 
 import type { IconProps } from '@harness/icons'
-import { Icon, Layout, Popover } from '@wings-software/uicore'
+import { Icon, Layout, Popover } from '@harness/uicore'
 import cx from 'classnames'
 import React from 'react'
 import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
@@ -26,6 +26,7 @@ export const iconMap: Record<ExecutionStatus, IconProps> = {
   ResourceWaiting: { name: 'time', size: 14 },
   ApprovalWaiting: { name: 'time', size: 14 },
   Aborted: { name: 'circle-stop', size: 14 },
+  AbortedByFreeze: { name: 'circle-stop', size: 14 },
   Discontinuing: { name: 'circle-stop', size: 14 },
   Expired: { name: 'expired', size: 14 },
   Suspended: { name: 'banned', size: 14 },

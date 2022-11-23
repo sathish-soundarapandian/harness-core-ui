@@ -6,6 +6,8 @@
  */
 
 import React from 'react'
+import { Formik } from 'formik'
+import { noop } from 'lodash-es'
 
 import type { IconName } from '@harness/uicore'
 
@@ -13,17 +15,16 @@ import { Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 
-import type { DeployEnvironmentEntityConfig } from '../DeployEnvironmentEntityStep/types'
 import DeployInfrastructureEntityInputStep from './DeployInfrastructureEntityInputStep'
-import type { DeployInfrastructureEntityCustomInputStepProps } from './types'
+import type { DeployInfrastructureEntityCustomInputStepProps, DeployInfrastructureEntityStepProps } from './types'
 
-export class DeployInfrastructureEntityStep extends Step<DeployEnvironmentEntityConfig['environment']> {
+export class DeployInfrastructureEntityStep extends Step<DeployInfrastructureEntityStepProps> {
   protected type = StepType.DeployInfrastructureEntity
   protected stepPaletteVisible = false
   protected stepName = 'Deploy Infrastructure Entity'
   protected stepIcon: IconName = 'infrastructure'
 
-  protected defaultValues: DeployEnvironmentEntityConfig['environment'] = {
+  protected defaultValues: DeployInfrastructureEntityStepProps = {
     environmentRef: ''
   }
 
@@ -31,19 +32,32 @@ export class DeployInfrastructureEntityStep extends Step<DeployEnvironmentEntity
     super()
   }
 
-  renderStep(props: StepProps<DeployEnvironmentEntityConfig['environment']>): JSX.Element {
-    const { initialValues, readonly = false, allowableTypes, inputSetData, stepViewType, customStepProps } = props
+  renderStep(props: StepProps<DeployInfrastructureEntityStepProps>): JSX.Element {
+    const {
+      initialValues,
+      readonly = false,
+      allowableTypes,
+      inputSetData,
+      stepViewType,
+      customStepProps,
+      onUpdate
+    } = props
 
     if (isTemplatizedView(stepViewType)) {
       return (
-        <DeployInfrastructureEntityInputStep
-          initialValues={initialValues}
-          readonly={readonly}
-          inputSetData={inputSetData}
-          allowableTypes={allowableTypes}
-          stepViewType={stepViewType}
-          {...(customStepProps as Required<DeployInfrastructureEntityCustomInputStepProps>)}
-        />
+        <Formik initialValues={initialValues} validate={onUpdate} onSubmit={noop}>
+          {/** Wrapping this component in formik to prevent the pseudo fields from corrupting the main input set formik.
+           * The onUpdate call takes care of picking only the required data and naturally eliminate the pseudo fields.
+           * The pseudo fields are present within the component - DeployInfrastructureEntityInputStep */}
+          <DeployInfrastructureEntityInputStep
+            initialValues={initialValues}
+            readonly={readonly}
+            inputSetData={inputSetData}
+            allowableTypes={allowableTypes}
+            stepViewType={stepViewType}
+            {...(customStepProps as Required<DeployInfrastructureEntityCustomInputStepProps>)}
+          />
+        </Formik>
       )
     }
 

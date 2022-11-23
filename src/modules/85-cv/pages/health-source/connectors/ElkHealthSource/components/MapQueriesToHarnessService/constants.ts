@@ -19,7 +19,7 @@ export const MapElkToServiceFieldNames = {
 }
 
 export const initialFormData: MapElkQueryToService = {
-  metricName: 'ELK Logs Query',
+  metricName: 'ElasticSearch Logs Query',
   query: '',
   timeStampFormat: '',
   serviceInstance: '',

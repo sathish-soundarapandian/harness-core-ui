@@ -6,25 +6,27 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { Button, ButtonVariation, Container, Icon, Layout, Tab, Tabs } from '@wings-software/uicore'
+import { Button, ButtonVariation, Container, Icon, Layout, Tab, Tabs } from '@harness/uicore'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { useStrings } from 'framework/strings'
+import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { ExecutionPanel } from './components/ExecutionPanel/ExecutionPanel'
-import { DeploymentInfraWrapperWithRef } from './DeploymentInfraWrapper/DeploymentInfraWrapper'
+import {
+  DeploymentConfigFormTabs,
+  DeploymentInfraWrapperWithRef
+} from './DeploymentInfraWrapper/DeploymentInfraWrapper'
 import css from './DeploymentConfigForm.module.scss'
-
-export enum DeploymentConfigFormTabs {
-  Infrastructure = 'Infrastructure',
-  Execution = 'Execution'
-}
 
 function DeploymentConfigForm(_props: unknown, formikRef: TemplateFormRef): JSX.Element {
   const { getString } = useStrings()
   const [selectedTab, setSelectedTab] = useState<DeploymentConfigFormTabs>(DeploymentConfigFormTabs.Infrastructure)
+  const { checkErrorsForTab } = React.useContext(StageErrorContext)
 
   const handleTabChange = useCallback(
     (tab: DeploymentConfigFormTabs) => {
-      setSelectedTab(tab)
+      checkErrorsForTab(selectedTab).then(_ => {
+        setSelectedTab(tab)
+      })
     },
     [setSelectedTab]
   )

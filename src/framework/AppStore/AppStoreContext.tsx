@@ -5,10 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 
-import { fromPairs, defaultTo } from 'lodash-es'
+import { defaultTo, fromPairs } from 'lodash-es'
+import { withFeatureFlags } from '@harnessio/ff-react-client-sdk'
 
 // useToaster not imported from '@common/exports' to prevent circular dependency
 import { PageSpinner, useToaster } from '@harness/uicore'
@@ -31,6 +32,7 @@ import { useTelemetryInstance } from '@common/hooks/useTelemetryInstance'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import routes from '@common/RouteDefinitions'
 import type { Error } from 'services/cd-ng'
+import { getLocationPathName } from 'framework/utils/WindowLocation'
 
 export type FeatureFlagMap = Partial<Record<FeatureFlag, boolean>>
 
@@ -43,7 +45,7 @@ export interface AppStoreContextProps {
   readonly selectedProject?: Project
   readonly selectedOrg?: Organization
   readonly isGitSyncEnabled?: boolean
-  readonly isGitSimplificationEnabled?: boolean // DB state for a roject
+  readonly isGitSimplificationEnabled?: boolean // DB state for a project
   readonly supportingGitSimplification?: boolean // Computed value based on multiple flags
   readonly gitSyncEnabledOnlyForFF?: boolean
   readonly supportingTemplatesGitx?: boolean
@@ -87,15 +89,17 @@ const getIdentifiersFromSavedProj = (savedProject: SavedProjectDetails): SavedPr
 }
 
 const getRedirectionUrl = (accountId: string, source: string | undefined): string => {
-  const baseUrl = window.location.pathname.replace(/\/ng\//, '/')
+  const baseUrl = getLocationPathName().replace(/\/ng\//, '/')
   const dashboardUrl = `${baseUrl}#/account/${accountId}/dashboard`
   const onboardingUrl = `${baseUrl}#/account/${accountId}/onboarding`
   return source === 'signup' ? onboardingUrl : dashboardUrl
 }
 
-const LOCAL_FF_PREFERENCE_STORE_ENABLED = true
-
-export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
+export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown>>(function AppStoreProvider({
+  children,
+  flags: featureFlags,
+  loading: loadingFeatureFlags
+}): ReactElement {
   const { showError } = useToaster()
   const history = useHistory()
 
@@ -124,15 +128,20 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     connectivityMode: undefined
   })
 
-  if (!projectIdentifier && !orgIdentifier && LOCAL_FF_PREFERENCE_STORE_ENABLED) {
+  if (!projectIdentifier && !orgIdentifier) {
     const identifiersFromSavedProj = getIdentifiersFromSavedProj(savedProject)
     projectIdentifier = identifiersFromSavedProj.projectIdentifier
     orgIdentifier = identifiersFromSavedProj.orgIdentifier
   }
 
-  const { data: featureFlags, loading: featureFlagsLoading } = useGetFeatureFlags({
+  const {
+    data: legacyFeatureFlags,
+    loading: legacyFeatureFlagsLoading,
+    refetch: fetchLegacyFeatureFlags
+  } = useGetFeatureFlags({
     accountId,
-    pathParams: { accountId }
+    pathParams: { accountId },
+    lazy: true
   })
 
   const { refetch: refetchOrg, data: orgDetails } = useGetOrganization({
@@ -158,11 +167,14 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
   }
 
   useEffect(() => {
+    const currentAccount = userInfo?.data?.accounts?.find(account => account.uuid === accountId)
     // don't redirect on local because it goes into infinite loop
     // because there may be no current gen to go to
-    const currentAccount = userInfo?.data?.accounts?.find(account => account.uuid === accountId)
     if (!__DEV__ && currentAccount && !currentAccount.nextGenEnabled) {
       window.location.href = getRedirectionUrl(accountId, source)
+    }
+    if (currentAccount) {
+      localStorage.setItem('defaultExperience', currentAccount.defaultExperience || '')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo?.data?.accounts])
@@ -179,9 +191,9 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
   // update feature flags in context
   useEffect(() => {
     // TODO: Handle better if fetching feature flags fails
-    if (featureFlags) {
-      const featureFlagsMap = fromPairs(
-        featureFlags?.resource?.map(flag => {
+    if (legacyFeatureFlags) {
+      const featureFlagsMap: FeatureFlagMap = fromPairs(
+        legacyFeatureFlags?.resource?.map(flag => {
           return [flag.name, !!flag.enabled]
         })
       )
@@ -192,11 +204,32 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
 
       setState(prevState => ({
         ...prevState,
-        featureFlags: featureFlagsMap as FeatureFlagMap
+        featureFlags: featureFlagsMap
       }))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [featureFlags])
+  }, [legacyFeatureFlags])
+
+  useEffect(() => {
+    if (window.featureFlagsConfig.useLegacyFeatureFlags) {
+      fetchLegacyFeatureFlags()
+    }
+  }, [fetchLegacyFeatureFlags])
+
+  useEffect(() => {
+    if (!window.featureFlagsConfig.useLegacyFeatureFlags && !loadingFeatureFlags) {
+      const featureFlagsMap = { ...featureFlags }
+
+      if (__DEV__ && DEV_FF) {
+        Object.assign(featureFlagsMap, DEV_FF)
+      }
+
+      setState(prevState => ({
+        ...prevState,
+        featureFlags: featureFlagsMap
+      }))
+    }
+  }, [featureFlags, loadingFeatureFlags])
 
   useEffect(() => {
     if (
@@ -286,14 +319,10 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
             ...prevState,
             selectedProject: project
           }))
-          if (LOCAL_FF_PREFERENCE_STORE_ENABLED) {
-            setSavedProject({ projectIdentifier, orgIdentifier })
-          }
+          setSavedProject({ projectIdentifier, orgIdentifier })
         } else {
           // if no project was fetched, clear preference
-          if (LOCAL_FF_PREFERENCE_STORE_ENABLED) {
-            clearSavedProject()
-          }
+          clearSavedProject()
           setState(prevState => ({
             ...prevState,
             selectedOrg: undefined,
@@ -358,7 +387,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
         updateAppStore
       }}
     >
-      {featureFlagsLoading || userInfoLoading ? <PageSpinner /> : props.children}
+      {loadingFeatureFlags || legacyFeatureFlagsLoading || userInfoLoading ? <PageSpinner /> : children}
     </AppStoreContext.Provider>
   )
-}
+})

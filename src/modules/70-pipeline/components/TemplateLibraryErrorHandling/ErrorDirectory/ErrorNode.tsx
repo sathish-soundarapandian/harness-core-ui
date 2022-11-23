@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Icon, Layout, Text } from '@wings-software/uicore'
+import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Intent, Radio } from '@blueprintjs/core'
 import { defaultTo, isEqual, noop } from 'lodash-es'

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, waitFor, queryByAttribute } from '@testing-library/react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { renderHook } from '@testing-library/react-hooks'
 import type { UseMutateReturn } from 'restful-react'
 import * as pipelineNg from 'services/pipeline-ng'
@@ -51,8 +51,11 @@ jest.mock('services/cd-ng', () => ({
   }),
   useListGitSync: jest.fn().mockImplementation(() => {
     return { data: gitConfigs, refetch: getListGitSync }
-  }),
-  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
+  })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })
 }))

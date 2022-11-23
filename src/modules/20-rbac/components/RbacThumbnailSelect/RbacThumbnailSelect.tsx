@@ -6,8 +6,8 @@
  */
 
 import React, { ReactElement } from 'react'
-import { ThumbnailSelect, ThumbnailSelectProps } from '@wings-software/uicore'
-import type { Item } from '@wings-software/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
+import { ThumbnailSelect, ThumbnailSelectProps } from '@harness/uicore'
+import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
 import type { PermissionsRequest } from '@rbac/hooks/usePermission'
 import type { FeatureProps } from 'framework/featureStore/featureStoreUtil'
 import { useFeature } from '@common/hooks/useFeatures'

@@ -8,7 +8,7 @@
 import React from 'react'
 import { noop } from 'lodash-es'
 import { render, waitFor, act, fireEvent } from '@testing-library/react'
-import { Container, Formik, FormikForm, FormInput } from '@wings-software/uicore'
+import { Container, Formik, FormikForm, FormInput } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 
 import { CustomHealthKeyValueMapper } from '../CustomHealthKeyValueMapper'

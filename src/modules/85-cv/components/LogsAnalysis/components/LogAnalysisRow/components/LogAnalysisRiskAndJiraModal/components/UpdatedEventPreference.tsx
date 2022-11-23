@@ -1,5 +1,5 @@
 // import React from 'react'
-// import { Container, Text, Layout } from '@wings-software/uicore'
+// import { Container, Text, Layout } from '@harness/uicore'
 // import { Color } from '@harness/design-system'
 // import { useStrings } from 'framework/strings'
 // import { EVENT_TYPE } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.utils'

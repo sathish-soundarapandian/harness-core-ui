@@ -9,7 +9,8 @@ import React from 'react'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
 
-import { IconName, Color, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { StringsMap } from 'stringTypes'
 
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -63,6 +64,7 @@ export class WaitStep extends PipelineStep<WaitStepData> {
           template={inputSetData?.template}
           path={inputSetData?.path || ''}
           allowableTypes={allowableTypes}
+          stepViewType={stepViewType}
         />
       )
     }

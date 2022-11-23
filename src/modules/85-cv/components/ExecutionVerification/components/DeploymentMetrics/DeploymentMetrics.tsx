@@ -21,7 +21,7 @@ import {
   MultiSelectDropDown,
   MultiSelectOption,
   Icon
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 import { isEqual } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'

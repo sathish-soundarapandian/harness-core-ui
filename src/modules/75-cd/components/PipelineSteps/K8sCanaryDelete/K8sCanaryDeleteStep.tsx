@@ -6,14 +6,7 @@
  */
 
 import React from 'react'
-import {
-  IconName,
-  Formik,
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  AllowedTypes
-} from '@wings-software/uicore'
+import { IconName, Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
@@ -37,6 +30,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
 import type { StringsMap } from 'stringTypes'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -144,7 +138,7 @@ function K8sCanaryDeleteWidget(
   )
 }
 
-const K8sCanaryDeleteInputWidget: React.FC<K8sCanaryDeployProps> = ({ inputSetData, allowableTypes }) => {
+const K8sCanaryDeleteInputWidget: React.FC<K8sCanaryDeployProps> = ({ inputSetData, allowableTypes, stepViewType }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   return (
@@ -154,7 +148,9 @@ const K8sCanaryDeleteInputWidget: React.FC<K8sCanaryDeployProps> = ({ inputSetDa
           <TimeoutFieldInputSetView
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: inputSetData?.readonly

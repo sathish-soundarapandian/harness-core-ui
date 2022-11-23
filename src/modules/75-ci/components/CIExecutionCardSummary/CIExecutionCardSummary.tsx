@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, Layout, Text } from '@wings-software/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
 import type { ExecutionSummaryProps, ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
 import { CommitsInfo } from '@ci/components/CommitsInfo/CommitsInfo'
 import { useStrings, UseStringsReturn } from 'framework/strings'

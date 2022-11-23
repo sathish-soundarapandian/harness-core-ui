@@ -14,6 +14,7 @@ declare const styles: {
   readonly projectCard: string
   readonly projectContainer: string
   readonly projectContainerWrapper: string
+  readonly projectSearch: string
   readonly projectSelector: string
   readonly projectText: string
   readonly selectButton: string

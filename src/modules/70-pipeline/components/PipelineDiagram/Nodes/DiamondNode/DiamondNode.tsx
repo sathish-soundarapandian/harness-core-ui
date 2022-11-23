@@ -6,18 +6,19 @@
  */
 
 import React from 'react'
-import { Icon, Text, Button, ButtonVariation, IconName } from '@wings-software/uicore'
+import { Icon, Text, Button, ButtonVariation, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
+import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
 import SVGMarker from '../SVGMarker'
-import { getPositionOfAddIcon } from '../utils'
+import { DiagramDrag, DiagramType, Event } from '../../Constants'
+import { getPositionOfAddIcon, attachDragImageToEventHandler } from '../utils'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
 import MatrixNodeNameLabelWrapper from '../MatrixNodeNameLabelWrapper'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
@@ -30,7 +31,6 @@ interface PipelineStepNodeProps extends BaseReactComponentProps {
 export function DiamondNodeWidget(props: any): JSX.Element {
   const { getString } = useStrings()
   const isSelected = props?.isSelected || props?.selectedNodeId === props?.id
-  const [showAddLink, setShowAddLink] = React.useState(false)
   const stepStatus = defaultTo(props?.status, props?.data?.step?.status as ExecutionStatus)
   const { secondaryIconProps, secondaryIcon, secondaryIconStyle } = getStatusProps(
     stepStatus as ExecutionStatus,
@@ -87,6 +87,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           // checking in onDragOver if this type (AllowDropOnLink/AllowDropOnNode) exist we allow drop
           event.dataTransfer.setData(DiagramDrag.AllowDropOnLink, '1')
           event.dataTransfer.dropEffect = 'move'
+          attachDragImageToEventHandler(event)
         }}
         onDragEnd={event => {
           event.preventDefault()
@@ -139,14 +140,18 @@ export function DiamondNodeWidget(props: any): JSX.Element {
         {props?.data?.isInComplete && (
           <Icon className={css.inComplete} size={12} name={'warning-sign'} color="orange500" />
         )}
-        {props.icon && (
-          <Icon
-            size={28}
-            className={css.primaryIcon}
-            inverse={isSelected}
-            name={props.icon}
-            color={isSelected ? Color.WHITE : Color.PRIMARY_7}
-          />
+        {props.iconUrl ? (
+          <ImagePreview src={props.iconUrl} size={28} className={css.iconImage} fallbackIcon={props.icon} />
+        ) : (
+          props.icon && (
+            <Icon
+              size={28}
+              className={css.primaryIcon}
+              inverse={isSelected}
+              name={props.icon}
+              color={isSelected ? Color.WHITE : Color.PRIMARY_7}
+            />
+          )
         )}
         {props?.tertiaryIcon && (
           <Icon
@@ -244,7 +249,11 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             lineClamp={2}
             tooltipProps={{ popoverClassName: matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
-            {matrixNodeName ? <MatrixNodeNameLabelWrapper matrixLabel={props?.name as string} /> : props.name}
+            {matrixNodeName ? (
+              <MatrixNodeNameLabelWrapper nodeName={props?.name as string} matrixNodeName={matrixNodeName} />
+            ) : (
+              props.name
+            )}
           </Text>
         </div>
       )}
@@ -262,16 +271,12 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           className={cx(
             cssDefault.addNodeIcon,
             {
-              [cssDefault.show]: showAddLink
-            },
-            {
               ['stepAddIcon']: props.data?.graphType === PipelineGraphType.STEP_GRAPH
             },
             {
               [cssDefault.stageAddIcon]: props.data?.graphType === PipelineGraphType.STAGE_GRAPH
             }
           )}
-          setShowAddLink={setShowAddLink}
         />
       )}
       {(props?.nextNode?.nodeType === NodeType.StepGroupNode || (!props?.nextNode && props?.parentIdentifier)) &&
@@ -297,7 +302,6 @@ export function DiamondNodeWidget(props: any): JSX.Element {
                 [cssDefault.stageAddIcon]: props.data?.graphType === PipelineGraphType.STAGE_GRAPH
               }
             )}
-            setShowAddLink={setShowAddLink}
           />
         )}
     </div>

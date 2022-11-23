@@ -8,7 +8,7 @@
 import React from 'react'
 import { noop } from 'lodash-es'
 import { render, fireEvent, waitFor } from '@testing-library/react'
-import { Button, Container, FormInput } from '@wings-software/uicore'
+import { Button, Container, FormInput } from '@harness/uicore'
 import { act } from 'react-test-renderer'
 import { TestWrapper } from '@common/utils/testUtils'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'

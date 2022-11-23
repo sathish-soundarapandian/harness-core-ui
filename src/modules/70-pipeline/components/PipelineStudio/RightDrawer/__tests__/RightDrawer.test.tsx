@@ -7,8 +7,8 @@
 
 import React from 'react'
 import { fireEvent, render, act, waitFor, getByRole } from '@testing-library/react'
-import { Formik, FormikForm, FormInput, IconName } from '@wings-software/uicore'
-import type { FormikProps } from '@wings-software/uicore/dist/components/FormikForm/FormikForm'
+import { Formik, FormikForm, FormInput, IconName } from '@harness/uicore'
+import type { FormikProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 import type { StepElementConfig } from 'services/cd-ng'
 import * as cdng from 'services/cd-ng'
 import * as pipelineng from 'services/pipeline-ng'
@@ -47,12 +47,14 @@ const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
 jest.spyOn(cdng, 'useGetListOfBranchesWithStatus').mockImplementation((): any => {
   return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
 })
-jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {
-  return { data: gitConfigs, refetch: getListGitSync, loading: false }
-})
-jest.spyOn(cdng, 'useGetSourceCodeManagers').mockImplementation((): any => {
-  return { data: sourceCodeManagers, refetch: jest.fn(), loading: false }
-})
+jest.mock('services/cd-ng-rq', () => ({
+  useListGitSyncQuery: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: getListGitSync }
+  }),
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
+}))
 jest.spyOn(cdng, 'useGetExecutionStrategyList').mockImplementation((): any => {
   return { data: [] }
 })
@@ -657,7 +659,7 @@ describe('Right Drawer tests', () => {
         </PipelineContext.Provider>
       )
 
-      const notificationHeader = await findAllByText('notifications.name')
+      const notificationHeader = await findAllByText('rbac.notifications.name')
       expect(notificationHeader).toHaveLength(1)
     })
   })

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Container, Icon, Text, TextProps, Utils } from '@wings-software/uicore'
+import { Button, Icon, Layout, Text, TextProps, Utils } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
@@ -14,17 +14,32 @@ import css from './IdentifierText.module.scss'
 export interface IdentifierTextProps extends TextProps {
   identifier?: string
   allowCopy?: boolean
+  hideLabel?: boolean
 }
 
-export const IdentifierText: React.FC<IdentifierTextProps> = ({ identifier, style, allowCopy, ...props }) => {
+export const IdentifierText: React.FC<IdentifierTextProps> = ({
+  identifier,
+  style,
+  allowCopy,
+  hideLabel = false,
+  ...props
+}) => {
   const { getString } = useStrings()
   const { showSuccess, clear } = useToaster()
 
   return (
-    <Container className={css.identifierContainer}>
-      <Text inline font={{ variation: FontVariation.SMALL }} margin={{ right: 'xsmall' }}>
-        {getString('idLabel')}
-      </Text>
+    <Layout.Horizontal
+      className={css.containerBorder}
+      background={Color.PRIMARY_1}
+      padding="small"
+      spacing="small"
+      width="max-content"
+    >
+      {!hideLabel && (
+        <Text inline font={{ variation: FontVariation.SMALL }}>
+          {getString('idLabel')}
+        </Text>
+      )}
       <Text inline {...props} font={{ variation: FontVariation.SMALL }}>
         {identifier}
       </Text>
@@ -42,6 +57,6 @@ export const IdentifierText: React.FC<IdentifierTextProps> = ({ identifier, styl
           <Icon name="duplicate" size={12} color={Color.GREY_350} />
         </Button>
       )}
-    </Container>
+    </Layout.Horizontal>
   )
 }

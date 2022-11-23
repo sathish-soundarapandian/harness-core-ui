@@ -7,7 +7,7 @@
 
 import React, { useState, useMemo, FC } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, Text, Dialog, ExpandingSearchInput, Button } from '@wings-software/uicore'
+import { Layout, Text, Dialog, ExpandingSearchInput, Button } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 

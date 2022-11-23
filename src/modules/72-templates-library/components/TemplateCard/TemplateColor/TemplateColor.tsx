@@ -9,7 +9,7 @@ import React, { LegacyRef, useRef } from 'react'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 import styled from '@emotion/styled'
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import css from './TemplateColor.module.scss'
 
 interface StyledTrapazoidTitleContainerInterface {
@@ -23,7 +23,7 @@ export const StyledTrapazoidTitleContainer = styled.div`
   padding: 0px 18px;
   ${(props: StyledTrapazoidTitleContainerInterface) =>
     props.width
-      ? `  
+      ? `
   -webkit-perspective: ${props.width}px;
   -moz-perspective: ${props.width}px;
   -ms-perspective: ${props.width}px;

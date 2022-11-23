@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Icon, Text, ButtonVariation, ButtonSize } from '@wings-software/uicore'
+import { Button, Icon, Text, ButtonVariation, ButtonSize } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'

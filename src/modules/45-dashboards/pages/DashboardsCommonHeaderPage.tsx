@@ -22,7 +22,7 @@ import css from './home/HomePage.module.scss'
 const DashboardsHeader: React.FC = () => {
   const { getString } = useStrings()
   const { breadcrumbs } = useDashboardsContext()
-  const { updateTitle } = useDocumentTitle(getString('common.dashboards'), true)
+  const { updateTitle } = useDocumentTitle(getString('common.dashboards'))
   const { accountId, folderId } = useParams<{ accountId: string; folderId: string }>()
   const [isOpen, setDrawerOpen] = useState(false)
 

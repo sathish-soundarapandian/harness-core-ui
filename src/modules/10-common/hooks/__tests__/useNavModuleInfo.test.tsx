@@ -98,7 +98,8 @@ describe('useModuleInfo tests', () => {
         defaultLicenseStoreValues: {
           licenseInformation: {
             SCM: {
-              licenseType: 'PAID'
+              licenseType: 'PAID',
+              id: '1212'
             }
           }
         }
@@ -108,6 +109,6 @@ describe('useModuleInfo tests', () => {
     expect(result.current['CODE'].icon).toBe('code')
     expect(result.current['CODE'].label).toBe('common.purpose.code.name')
     expect(result.current['CODE'].shouldVisible).toBe(false)
-    expect(result.current['CODE'].licenseType).toBe('PAID')
+    expect(result.current['CODE'].hasLicense).toBe('PAID')
   })
 })

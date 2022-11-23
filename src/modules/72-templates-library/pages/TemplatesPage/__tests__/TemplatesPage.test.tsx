@@ -28,6 +28,7 @@ import { StageTemplate } from '@templates-library/components/Templates/StageTemp
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { PipelineTemplate } from '@templates-library/components/Templates/PipelineTemplate/PipelineTemplate'
+import { useGetRepositoryList } from 'services/template-ng'
 
 const templateListCallMock = jest
   .spyOn(hooks, 'useMutateAsGet')
@@ -68,11 +69,33 @@ jest.mock('@common/components/GitFilters/GitFilters', () => ({
   }
 }))
 
+const mockRepositories = {
+  status: 'SUCCESS',
+  data: {
+    repositories: ['main', 'main-patch', 'main-patch1', 'main-patch2']
+  },
+  metaData: null,
+  correlationId: 'cc779876-d3af-44e5-8991-916dfecb4548'
+}
+
+const fetchRepositories = jest.fn(() => {
+  return Object.create(mockRepositories)
+})
+
+jest.mock('services/template-ng', () => ({
+  useGetRepositoryList: jest.fn().mockImplementation(() => {
+    return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
+  })
+}))
+
 jest.mock('services/cd-ng', () => ({
   useListGitSync: jest.fn().mockImplementation(() => {
     return { data: gitConfigs, refetch: jest.fn() }
-  }),
-  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
+  })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })
 }))
@@ -123,9 +146,11 @@ describe('<TemplatesPage /> tests', () => {
         <TemplatesPage />
       </TestWrapper>
     )
+    expect(useGetRepositoryList).toBeCalled()
+
     expect(container).toMatchSnapshot()
     expect(templateListCallMock).toBeCalledWith(
-      expect.anything(),
+      undefined,
       expect.objectContaining({
         queryParams: defaultQueryParams
       })
@@ -138,6 +163,7 @@ describe('<TemplatesPage /> tests', () => {
         <TemplatesPage />
       </TestWrapper>
     )
+    expect(useGetRepositoryList).toBeCalled()
 
     const typeFilterButton = getByText('all')
     act(() => {
@@ -155,7 +181,7 @@ describe('<TemplatesPage /> tests', () => {
     })
 
     expect(useMutateAsGet).toBeCalledWith(
-      expect.anything(),
+      undefined,
       expect.objectContaining({ body: { filterType: 'Template', templateEntityTypes: ['Stage'] } })
     )
   })
@@ -195,7 +221,7 @@ describe('<TemplatesPage /> tests', () => {
       fireEvent.click(changeGitFilterButton)
     })
     expect(useMutateAsGet).toBeCalledWith(
-      expect.anything(),
+      undefined,
       expect.objectContaining({
         queryParams: {
           ...defaultQueryParams,
@@ -214,6 +240,7 @@ describe('<TemplatesPage /> tests', () => {
         <TemplatesPage />
       </TestWrapper>
     )
+    expect(useGetRepositoryList).toBeCalled()
 
     expect(container).toMatchSnapshot()
   })
@@ -226,6 +253,7 @@ describe('<TemplatesPage /> tests', () => {
         <TemplatesPage />
       </TestWrapper>
     )
+    expect(useGetRepositoryList).toBeCalled()
 
     expect(container).toMatchSnapshot()
   })
@@ -239,6 +267,7 @@ describe('<TemplatesPage /> tests', () => {
         <TemplatesPage />
       </TestWrapper>
     )
+    expect(useGetRepositoryList).toBeCalled()
 
     expect(container).toMatchSnapshot()
 
@@ -280,7 +309,7 @@ describe('<TemplatesPage /> tests', () => {
 
     expect(templateListCallMock).toHaveBeenNthCalledWith(
       4,
-      expect.anything(),
+      undefined,
       expect.objectContaining({
         body: {
           filterType: 'Template'

@@ -15,7 +15,7 @@ import {
   ButtonVariation,
   SelectOption,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 
 import { v4 as nameSpace, v5 as uuid } from 'uuid'

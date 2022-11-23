@@ -6,17 +6,15 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Container, Layout, Text, useToaster } from '@wings-software/uicore'
-import { FontVariation } from '@harness/design-system'
-import { Color } from '@wings-software/design-system'
-import { clone, defaultTo, isEmpty, isEqual } from 'lodash-es'
+import { Button, ButtonVariation, Container, Layout, Text, useToaster, PageSpinner } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
+import { clone, defaultTo, isEmpty, isEqual, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { PageSpinner } from '@harness/uicore'
 import {
   refreshAllPromise as refreshAllTemplatePromise,
   ErrorNodeSummary,
   TemplateResponse,
-  updateExistingTemplateVersionPromise
+  NGTemplateInfoConfig
 } from 'services/template-ng'
 import { YamlDiffView } from '@pipeline/components/TemplateLibraryErrorHandling/YamlDiffView/YamlDiffView'
 import { ErrorNode } from '@pipeline/components/TemplateLibraryErrorHandling/ErrorDirectory/ErrorNode'
@@ -24,13 +22,15 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String, useStrings } from 'framework/strings'
-import { refreshAllPromise as refreshAllPipelinePromise } from 'services/pipeline-ng'
+import { EntityGitDetails, refreshAllPromise as refreshAllPipelinePromise } from 'services/pipeline-ng'
 import { getScopeBasedProjectPathParams, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
-import type { GitQueryParams, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { useQueryParams } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
+import { parse } from '@common/utils/YamlHelperMethods'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { getFirstLeafNode, getTitleFromErrorNodeSummary, TemplateErrorEntity } from '../utils'
 import css from './ReconcileDialog.module.scss'
 
@@ -42,6 +42,8 @@ export interface ReconcileDialogProps {
   setResolvedTemplateResponses?: (resolvedTemplateInfos: TemplateResponse[]) => void
   onRefreshEntity?: () => void
   updateRootEntity: (refreshedYaml: string) => Promise<void>
+  gitDetails?: EntityGitDetails
+  storeMetadata?: StoreMetadata
 }
 
 export function ReconcileDialog({
@@ -51,14 +53,15 @@ export function ReconcileDialog({
   originalEntityYaml,
   setResolvedTemplateResponses: setResolvedTemplates,
   onRefreshEntity,
-  updateRootEntity
+  updateRootEntity,
+  gitDetails,
+  storeMetadata
 }: ReconcileDialogProps) {
   const { nodeInfo, templateResponse, childrenErrorNodes } = errorNodeSummary
   const hasChildren = !isEmpty(childrenErrorNodes)
   const [selectedErrorNodeSummary, setSelectedErrorNodeSummary] = React.useState<ErrorNodeSummary>()
   const [resolvedTemplateResponses, setResolvedTemplateResponses] = React.useState<TemplateResponse[]>([])
   const params = useParams<ProjectPathProps & ModulePathParams>()
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
   const [loading, setLoading] = React.useState<boolean>(false)
   const { showError } = useToaster()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
@@ -71,6 +74,14 @@ export function ReconcileDialog({
       resourceType: ResourceType.TEMPLATE
     },
     permissions: [PermissionIdentifier.EDIT_TEMPLATE]
+  })
+
+  const { saveAndPublish } = useSaveTemplate({
+    onSuccessCallback: async () => {
+      if (selectedErrorNodeSummary?.templateResponse) {
+        setResolvedTemplateResponses([...resolvedTemplateResponses, clone(selectedErrorNodeSummary?.templateResponse)])
+      }
+    }
   })
 
   const updateButtonEnabled = React.useMemo(() => {
@@ -101,9 +112,10 @@ export function ReconcileDialog({
             ...getScopeBasedProjectPathParams(params, scope),
             templateIdentifier: defaultTo(templateResponse.identifier, ''),
             versionLabel: defaultTo(templateResponse.versionLabel, ''),
-            branch,
-            repoIdentifier,
-            getDefaultFromOtherRepo: true
+            ...(omit(gitDetails, 'commitId', 'objectId', 'repoIdentifier', 'rootFolder', 'repoUrl', 'fileUrl') ?? {}),
+            lastCommitId: gitDetails?.commitId,
+            lastObjectId: gitDetails?.objectId,
+            ...(storeMetadata?.storeType === StoreType.REMOTE ? storeMetadata : {})
           },
           body: undefined
         })
@@ -123,9 +135,10 @@ export function ReconcileDialog({
           queryParams: {
             ...getScopeBasedProjectPathParams(params, Scope.PROJECT),
             identifier: defaultTo(nodeInfo?.identifier, ''),
-            branch,
-            repoIdentifier,
-            getDefaultFromOtherRepo: true
+            ...(omit(gitDetails, 'commitId', 'objectId', 'repoIdentifier', 'rootFolder', 'repoUrl', 'fileUrl') ?? {}),
+            lastCommitId: gitDetails?.commitId,
+            lastObjectId: gitDetails?.objectId,
+            ...(storeMetadata?.storeType === StoreType.REMOTE ? storeMetadata : {})
           },
           body: undefined
         })
@@ -143,35 +156,33 @@ export function ReconcileDialog({
   }
 
   const updateTemplate = async (refreshedYaml: string) => {
-    setLoading(true)
+    const isInlineTemplate =
+      isEmpty(selectedErrorNodeSummary?.templateResponse?.gitDetails?.branch) &&
+      selectedErrorNodeSummary?.templateResponse?.storeType !== StoreType.REMOTE
+    if (isInlineTemplate) {
+      setLoading(true)
+    }
     try {
-      const response = await updateExistingTemplateVersionPromise({
-        templateIdentifier: defaultTo(selectedErrorNodeSummary?.templateResponse?.identifier, ''),
-        versionLabel: defaultTo(selectedErrorNodeSummary?.templateResponse?.versionLabel, ''),
-        body: refreshedYaml,
-        queryParams: {
-          accountIdentifier: defaultTo(selectedErrorNodeSummary?.templateResponse?.accountId, ''),
-          projectIdentifier: defaultTo(selectedErrorNodeSummary?.templateResponse?.projectIdentifier, ''),
-          orgIdentifier: defaultTo(selectedErrorNodeSummary?.templateResponse?.orgIdentifier, ''),
-          comments: 'Reconciling template'
-        },
-        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-      })
-      if (response && response.status === 'SUCCESS') {
-        if (selectedErrorNodeSummary?.templateResponse) {
-          setResolvedTemplateResponses([
-            ...resolvedTemplateResponses,
-            clone(selectedErrorNodeSummary?.templateResponse)
-          ])
+      await saveAndPublish(parse<{ template: NGTemplateInfoConfig }>(refreshedYaml).template, {
+        isEdit: true,
+        disableCreatingNewBranch: true,
+        updatedGitDetails: selectedErrorNodeSummary?.templateResponse?.gitDetails,
+        storeMetadata: {
+          storeType: selectedErrorNodeSummary?.templateResponse?.storeType,
+          connectorRef: selectedErrorNodeSummary?.templateResponse?.connectorRef,
+          repoName: selectedErrorNodeSummary?.templateResponse?.gitDetails?.repoName,
+          branch: selectedErrorNodeSummary?.templateResponse?.gitDetails?.branch,
+          filePath: selectedErrorNodeSummary?.templateResponse?.gitDetails?.filePath
         }
-      } else {
-        throw response
-      }
+      })
     } catch (error) {
-      showError(getRBACErrorMessage(error as RBACError), undefined, 'template.update.error')
-      throw error
+      if (isInlineTemplate) {
+        showError(getRBACErrorMessage(error as RBACError), undefined, 'template.update.error')
+      }
     } finally {
-      setLoading(false)
+      if (isInlineTemplate) {
+        setLoading(false)
+      }
     }
   }
 

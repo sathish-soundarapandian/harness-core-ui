@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Text, Layout, Container, Icon, ButtonVariation, useToaster, Page, Card, Button } from '@wings-software/uicore'
+import { Text, Layout, Container, Icon, ButtonVariation, useToaster, Page, Card, Button } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import { useParams } from 'react-router-dom'
@@ -336,6 +336,7 @@ const ResourceGroupDetails: React.FC = () => {
                 onResourceCategorySelect={onResourceCategorySelect}
                 preSelectedResourceList={Array.from(selectedResourcesMap.keys())}
                 disableAddingResources={disableAddingResources}
+                isHarnessManaged={isHarnessManaged}
                 onSelectionTypeChange={onSelectionTypeChange}
               />
             </Container>

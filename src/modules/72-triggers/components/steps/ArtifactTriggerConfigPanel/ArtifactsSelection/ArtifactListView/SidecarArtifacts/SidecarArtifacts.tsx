@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Icon } from '@harness/icons'
-import { Button, Color, FontVariation, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { Button, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useStrings } from 'framework/strings'

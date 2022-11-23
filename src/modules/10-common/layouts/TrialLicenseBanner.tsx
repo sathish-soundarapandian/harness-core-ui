@@ -10,7 +10,7 @@ import moment from 'moment'
 import cx from 'classnames'
 import { capitalize, pick } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Text, Layout, Button, PageSpinner, ButtonVariation, ButtonSize } from '@wings-software/uicore'
+import { Text, Layout, Button, PageSpinner, ButtonVariation, ButtonSize } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
@@ -231,7 +231,6 @@ export const TrialLicenseBanner: React.FC = () => {
     {},
     window.sessionStorage
   )
-  const [extendingTrial, setExtendingTrial] = useState<boolean>(false)
 
   const {
     data,
@@ -240,10 +239,12 @@ export const TrialLicenseBanner: React.FC = () => {
   } = useGetLicensesAndSummary({
     queryParams: { moduleType: module?.toUpperCase() as GetLicensesAndSummaryQueryParams['moduleType'] },
     accountIdentifier: accountId,
-    lazy: module === undefined || isBannerDismissed[module]
+    lazy: true
   })
-
-  const { maxExpiryTime, edition, licenseType } = data?.data || {}
+  const [extendingTrial, setExtendingTrial] = useState<boolean>(false)
+  const maxExpiryTime = (module && licenseInformation?.[module.toUpperCase()]?.expiryTime) || 0
+  const edition = (module && licenseInformation?.[module.toUpperCase()]?.edition) || ''
+  const licenseType = (module && licenseInformation?.[module.toUpperCase()]?.licenseType) || ''
   const updatedLicenseInfo = data?.data &&
     module && {
       ...licenseInformation?.[module.toUpperCase()],
@@ -259,7 +260,6 @@ export const TrialLicenseBanner: React.FC = () => {
     return () => setExtendingTrial(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
-
   const days = Math.round(moment(maxExpiryTime).diff(moment.now(), 'days', true))
   const isExpired = days < 0
   const expiredDays = Math.abs(days)
@@ -313,7 +313,6 @@ export const TrialLicenseBanner: React.FC = () => {
   })
 
   const loading = extendingTrial || loadingContactSales || sendingFeedback || gettingLicense
-
   const contactSalesLink = (
     <Layout.Horizontal padding={{ left: 'large' }} flex={{ alignItems: 'center' }}>
       <Text
@@ -326,15 +325,12 @@ export const TrialLicenseBanner: React.FC = () => {
       </Text>
     </Layout.Horizontal>
   )
-
   if (module === undefined || isBannerDismissed[module] || licenseType !== 'TRIAL') {
     return <></>
   }
-
   if (loading) {
     return <PageSpinner />
   }
-
   return (
     <div className={cx(css.trialLicenseBanner, expiredClassName)} data-trial-banner-is-visible>
       <Layout.Horizontal width="95%" padding={{ left: 'large' }}>

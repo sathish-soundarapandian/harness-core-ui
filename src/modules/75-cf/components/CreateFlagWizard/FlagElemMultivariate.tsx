@@ -23,7 +23,7 @@ import {
   Container,
   ModalErrorHandler,
   FlexExpander
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FieldArray } from 'formik'
 import { Color } from '@harness/design-system'
 import { FormikEffect, FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
@@ -154,7 +154,11 @@ const FlagElemMultivariate: React.FC<FlagElemMultivariateProps> = props => {
       validationSchema={yup.object().shape({
         variations: yup.array().of(
           yup.object().shape({
-            name: yup.string().trim().required(getString('cf.creationModal.nameIsRequired')),
+            name: yup
+              .string()
+              .trim()
+              .matches(/[a-z]/gi, getString('cf.creationModal.mustContainLetter'))
+              .required(getString('cf.creationModal.nameIsRequired')),
             value: yup.string().trim().required(getString('cf.creationModal.valueIsRequired')),
             identifier: yup.string().trim().required(getString('cf.creationModal.idIsRequired'))
           })

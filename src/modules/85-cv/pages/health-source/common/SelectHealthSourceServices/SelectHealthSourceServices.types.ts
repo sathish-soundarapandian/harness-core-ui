@@ -40,4 +40,5 @@ export type SelectHealthSourceServicesProps = {
   fieldNames?: Partial<HealthSourceServicesFieldNames>
   riskProfileCategoryName?: string
   riskProfileResponse?: ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>
+  hideServiceInstanceMetricPathTemplate?: boolean
 }

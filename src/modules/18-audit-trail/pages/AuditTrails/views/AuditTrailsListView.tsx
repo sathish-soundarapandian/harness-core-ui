@@ -6,13 +6,13 @@
  */
 
 import React, { ReactElement, useState } from 'react'
-import { TableV2, Text, Layout, Avatar, Icon, Container, Popover } from '@wings-software/uicore'
+import { TableV2, Text, Layout, Avatar, Icon, Container, Popover } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { Column, Renderer, CellProps } from 'react-table'
 import { Link, useParams } from 'react-router-dom'
 import { PopoverInteractionKind, Position, Classes } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
-import defaultTo from 'lodash-es/defaultTo'
+import { defaultTo } from 'lodash-es'
 import { actionToLabelMap, getModuleNameFromAuditModule, moduleInfoMap } from '@audit-trail/utils/RequestUtil'
 import type { AuditEventDTO, PageAuditEventDTO, ResourceDTO } from 'services/audit'
 import { useStrings } from 'framework/strings'

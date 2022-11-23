@@ -207,6 +207,7 @@ exports[`Test MonitoredTemplateCanvasWithRef should match snapshot for Monitored
                   </div>
                 </div>
                 <button
+                  aria-label="cv.changeSource.addChangeSource"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-top-small Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
                   type="button"
                 >
@@ -442,6 +443,7 @@ exports[`Test MonitoredTemplateCanvasWithRef should match snapshot for Monitored
                   </div>
                 </div>
                 <button
+                  aria-label="cv.healthSource.addHealthSource"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-top-small Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
                   data-testid="addHealthSource-button"
                   type="button"
@@ -688,6 +690,7 @@ exports[`Test MonitoredTemplateCanvasWithRef should match snapshot for default M
                   </div>
                 </div>
                 <button
+                  aria-label="cv.changeSource.addChangeSource"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-top-small Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
                   type="button"
                 >
@@ -775,6 +778,7 @@ exports[`Test MonitoredTemplateCanvasWithRef should match snapshot for default M
                   </div>
                 </div>
                 <button
+                  aria-label="cv.healthSource.addHealthSource"
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-top-small Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
                   data-testid="addHealthSource-button"
                   type="button"

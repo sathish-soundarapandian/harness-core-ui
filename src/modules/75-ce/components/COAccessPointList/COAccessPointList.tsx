@@ -7,17 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import type { CellProps } from 'react-table'
-import {
-  Text,
-  Layout,
-  Container,
-  Button,
-  Page,
-  PageSpinner,
-  Icon,
-  TableV2,
-  ButtonVariation
-} from '@wings-software/uicore'
+import { Text, Layout, Container, Button, Page, PageSpinner, Icon, TableV2, ButtonVariation } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import copy from 'copy-to-clipboard'
 import { useParams } from 'react-router-dom'

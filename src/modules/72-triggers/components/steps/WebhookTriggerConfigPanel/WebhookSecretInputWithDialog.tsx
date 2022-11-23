@@ -9,10 +9,11 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { get } from 'lodash-es'
-import { Button, Color, Dialog, FontVariation, Layout, Text, useToaster } from '@harness/uicore'
+import { Button, Dialog, Layout, Text, useToaster } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
-import { getSecretV2Promise } from 'services/cd-ng'
+import { getSecretV2Promise, ResponseSecretResponseWrapper } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -32,11 +33,22 @@ const WebhookSecretInputWithDialogImpl: React.FC<SecretInputWithDialogProps> = (
   const [loadingSecret, setLoadingSecret] = useState(false)
   const { showError } = useToaster()
   const secretValue = get(formikProps.values, yamlWebhookSecretIdentifierName)
+  const isGithubWebhookAuthenticationEnabled = get(formikProps.values, 'isGithubWebhookAuthenticationEnabled')
 
   useEffect(() => {
     if (secretValue && typeof secretValue === 'string') {
       const identifier = secretValue.includes('.') ? secretValue.split('.')[1] : secretValue
       const controller = new AbortController()
+      const updateFormikSecretValue = (response?: ResponseSecretResponseWrapper) => {
+        formikProps.setFieldValue(yamlWebhookSecretIdentifierName, {
+          identifier: get(response, 'data.secret.identifier', identifier),
+          name: get(response, 'data.secret.identifier', identifier),
+          referenceString: secretValue,
+          accountIdentifier: accountId,
+          orgIdentifier: orgIdentifier,
+          projectIdentifier: projectIdentifier
+        })
+      }
       const getSecretInfo = async (): Promise<void> => {
         setLoadingSecret(true)
         try {
@@ -52,16 +64,10 @@ const WebhookSecretInputWithDialogImpl: React.FC<SecretInputWithDialogProps> = (
             controller.signal
           )
 
-          formikProps.setFieldValue(yamlWebhookSecretIdentifierName, {
-            identifier: response.data?.secret?.identifier || identifier,
-            name: response.data?.secret?.name || identifier,
-            referenceString: secretValue,
-            accountIdentifier: accountId,
-            orgIdentifier: orgIdentifier,
-            projectIdentifier: projectIdentifier
-          })
+          updateFormikSecretValue(response)
         } catch (e) {
           showError(e.message)
+          updateFormikSecretValue()
         } finally {
           setLoadingSecret(false)
         }
@@ -90,6 +96,10 @@ const WebhookSecretInputWithDialogImpl: React.FC<SecretInputWithDialogProps> = (
     </Text>
   )
 
+  const secretInputLabel = `${getString('secrets.secret.configureSecret')} ${
+    isGithubWebhookAuthenticationEnabled ? `` : `(${getString('projectsOrgs.optional')})`
+  }`
+
   return (
     <div className={cx(css.nameIdDescriptionTags, css.secret)}>
       {loadingSecret ? (
@@ -97,7 +107,7 @@ const WebhookSecretInputWithDialogImpl: React.FC<SecretInputWithDialogProps> = (
       ) : (
         <SecretInput
           name={yamlWebhookSecretIdentifierName}
-          label={getString('secrets.secret.configureSecret')}
+          label={secretInputLabel}
           onSuccess={() => {
             setIsDialogOpen(true)
           }}

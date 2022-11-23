@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, queryByText, waitFor } from '@testing-library/react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { renderHook } from '@testing-library/react-hooks'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useStrings } from 'framework/strings'
@@ -27,7 +27,7 @@ const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactEle
 )
 const { result } = renderHook(() => useStrings(), { wrapper })
 
-jest.mock('@wings-software/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
+jest.mock('@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
   getLanguageService: jest.fn()
 }))
 

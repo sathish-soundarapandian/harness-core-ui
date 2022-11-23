@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { FormikForm } from '@wings-software/uicore'
+import { FormikForm } from '@harness/uicore'
 import { Formik } from 'formik'
 import { act } from 'react-test-renderer'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -107,18 +107,71 @@ describe('Unit tests for InputWithDynamicModalForJson component', () => {
   })
 
   test('Verify if formatJSONPath method returns correct jsonPath if last element is not a number', () => {
-    const pathSelected = 'series.0.expression'
-    const expectedJSONPath = '$.series.[*].expression'
+    const pathSelected = ['series', '1', 'expression']
+    const expectedJSONPath = `$.['series'].[*].['expression']`
     expect(formatJSONPath(pathSelected)).toEqual(expectedJSONPath)
 
     // verify if path has double digit numbers
-    const multiDigitpathSelected = 'series.10.expression'
+    const multiDigitpathSelected = ['series', '10', 'expression']
     expect(formatJSONPath(multiDigitpathSelected)).toEqual(expectedJSONPath)
   })
 
   test('Verify if formatJSONPath method returns correct jsonPath if last element is a number', () => {
-    const pathSelected = 'series.0.pointlist.0.1'
-    const expectedJSONPath = '$.series.[*].pointlist.[*].[1]'
+    const pathSelected = ['series', '1', 'pointlist', '0', '1']
+    const expectedJSONPath = `$.['series'].[*].['pointlist'].[*].[1]`
+    expect(formatJSONPath(pathSelected)).toEqual(expectedJSONPath)
+  })
+
+  test('Verify if formatJSONPath method returns correct jsonPath if last three elements are number', () => {
+    const pathSelected = ['series', '1', 'pointlist', '0', '1', '3']
+    const expectedJSONPath = `$.['series'].[*].['pointlist'].[*].[*].[3]`
+    expect(formatJSONPath(pathSelected)).toEqual(expectedJSONPath)
+  })
+  test('Verify if formatJSONPath method returns correct jsonPath if random values are numbers', () => {
+    const pathSelected = ['aggregations', 'by_district', 'buckets', '0', 'tops', 'hits', 'hits', '1', '_score']
+    const expectedJSONPath = `$.['aggregations'].['by_district'].['buckets'].[*].['tops'].['hits'].['hits'].[*].['_score']`
+    expect(formatJSONPath(pathSelected)).toEqual(expectedJSONPath)
+  })
+  test('Verify if formatJSONPath method returns correct jsonPath if more numbers are present in middle', () => {
+    const pathSelected = [
+      'aggregations',
+      'by_district',
+      'buckets',
+      '0',
+      'tops',
+      'hits',
+      'hits',
+      '1',
+      '_score',
+      '2',
+      '4',
+      '5',
+      '34',
+      'ABC'
+    ]
+    const expectedJSONPath = `$.['aggregations'].['by_district'].['buckets'].[*].['tops'].['hits'].['hits'].[*].['_score'].[*].[*].[*].[*].['ABC']`
+    expect(formatJSONPath(pathSelected)).toEqual(expectedJSONPath)
+  })
+  test('Verify if formatJSONPath method returns correct jsonPath if more numbers are present in middle and in end', () => {
+    const pathSelected = [
+      'aggregations',
+      'by_district',
+      'buckets',
+      '0',
+      'tops',
+      'hits',
+      'hits',
+      '1',
+      '_score',
+      '2',
+      '4',
+      '5',
+      '34',
+      'ABC',
+      '1',
+      '21'
+    ]
+    const expectedJSONPath = `$.['aggregations'].['by_district'].['buckets'].[*].['tops'].['hits'].['hits'].[*].['_score'].[*].[*].[*].[*].['ABC'].[*].[21]`
     expect(formatJSONPath(pathSelected)).toEqual(expectedJSONPath)
   })
 })

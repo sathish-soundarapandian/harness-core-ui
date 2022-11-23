@@ -123,6 +123,7 @@ exports[`test cases for Budgets List Page should be able to render the budget li
       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
     >
       <button
+        aria-label="edit"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
         type="button"
       >
@@ -152,6 +153,7 @@ exports[`test cases for Budgets List Page should be able to render the budget li
         </span>
       </button>
       <button
+        aria-label="delete"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-tertiary"
         type="button"
       >

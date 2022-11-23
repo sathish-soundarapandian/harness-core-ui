@@ -283,7 +283,7 @@ Cypress.Commands.add('addNewMonitoredServiceWithServiceAndEnv', () => {
   // clear any cached values
   cy.get('body').then($body => {
     if ($body.text().includes('Unsaved changes')) {
-      cy.contains('span', 'Discard').click()
+      cy.contains('span', 'Discard').click({ force: true })
     }
   })
 
@@ -353,6 +353,7 @@ Cypress.Commands.add('populateDefineHealthSource', (connectorType, connectorName
   if (!isVerifyStep) {
     cy.contains('span', 'Add New Health Source').click()
   }
+  cy.wait(1000)
   cy.contains('span', 'Next').click()
   // Validate and fill Define HealthSource Ta
   cy.contains('span', 'Next').click()

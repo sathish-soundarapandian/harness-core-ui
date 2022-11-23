@@ -6,13 +6,21 @@
  */
 
 import React, { useRef } from 'react'
-import { Button, ButtonSize, ButtonVariation, Container, Layout, Text, useIsMounted } from '@wings-software/uicore'
-import { Color } from '@wings-software/design-system'
+import {
+  Button,
+  ButtonSize,
+  ButtonVariation,
+  Container,
+  Layout,
+  Text,
+  useIsMounted,
+  PageError,
+  PageSpinner
+} from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { MonacoDiffEditor } from 'react-monaco-editor'
-import { PageError, PageSpinner } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
 import {
   ErrorNodeSummary,
   getRefreshedYamlPromise,
@@ -24,12 +32,12 @@ import {
   getScopeBasedProjectPathParams,
   getScopeFromDTO
 } from '@common/components/EntityReference/EntityReference'
-import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
-import { useQueryParams } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import css from './YamlDiffView.module.scss'
 
 export interface YamlDiffViewProps {
@@ -52,7 +60,6 @@ export function YamlDiffView({
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const params = useParams<ProjectPathProps>()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
   const editorRef = useRef<MonacoDiffEditor>(null)
   const [loading, setLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<any>()
@@ -65,24 +72,34 @@ export function YamlDiffView({
     [resolvedTemplateResponses, errorNodeSummary?.templateResponse]
   )
 
-  const onNodeUpdate = () => {
-    onUpdate(refreshedYaml).then(_ => {
-      if (isMounted) {
-        setOriginalYaml(refreshedYaml)
-      }
-    })
+  React.useEffect(() => {
+    if (isMounted && isTemplateResolved) {
+      setOriginalYaml(refreshedYaml)
+    }
+  }, [isTemplateResolved])
+
+  const onNodeUpdate = async () => {
+    await onUpdate(refreshedYaml)
   }
 
   const getYamlDiffFromYaml = async () => {
     try {
+      const templateResponse = errorNodeSummary?.templateResponse
       const response = await getRefreshedYamlPromise({
         queryParams: {
           accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
-          branch,
-          repoIdentifier,
-          getDefaultFromOtherRepo: true
+          ...getGitQueryParamsWithParentScope(
+            {
+              branch: templateResponse?.gitDetails?.branch,
+              connectorRef: templateResponse?.connectorRef,
+              repoName: templateResponse?.gitDetails?.repoName,
+              filePath: templateResponse?.gitDetails?.filePath,
+              storeType: templateResponse?.storeType
+            },
+            params
+          )
         },
         body: { yaml: originalEntityYaml }
       })
@@ -109,9 +126,16 @@ export function YamlDiffView({
           ...getScopeBasedProjectPathParams(params, scope),
           templateIdentifier: getIdentifierFromValue(templateRef),
           versionLabel: defaultTo(templateResponse?.versionLabel, ''),
-          branch,
-          repoIdentifier,
-          getDefaultFromOtherRepo: true
+          ...getGitQueryParamsWithParentScope(
+            {
+              branch: templateResponse?.gitDetails?.branch,
+              connectorRef: templateResponse?.connectorRef,
+              repoName: templateResponse?.gitDetails?.repoName,
+              filePath: templateResponse?.gitDetails?.filePath,
+              storeType: templateResponse?.storeType
+            },
+            params
+          )
         }
       })
       if (response && response.status === 'SUCCESS') {

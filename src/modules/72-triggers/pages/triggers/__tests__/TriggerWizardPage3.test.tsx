@@ -29,7 +29,7 @@ import {
   GetParseableArtifactTriggerResponse,
   GetParseableParallelStageArtifactTriggerResponse,
   clearedArtifactIdentifierResponse,
-  GetSettingValueResponse
+  GithubWebhookAuthenticationEnabledFalse
 } from './webhookMockResponses'
 
 import {
@@ -73,12 +73,14 @@ jest.spyOn(cdng, 'useGetConnector').mockImplementation((): any => {
   return { data: connectorsData, refetch: fetchConnectors, loading: false }
 })
 
-jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {
-  return { data: gitConfigs, refetch: getListGitSync, loading: false }
-})
-jest.spyOn(cdng, 'useGetSourceCodeManagers').mockImplementation((): any => {
-  return { data: sourceCodeManagers, refetch: jest.fn(), loading: false }
-})
+jest.mock('services/cd-ng-rq', () => ({
+  useListGitSyncQuery: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: getListGitSync }
+  }),
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
+}))
 
 const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
   <TestWrapper>{children}</TestWrapper>
@@ -140,7 +142,7 @@ describe('Artifact Trigger Tests', () => {
     jest.spyOn(pipelineNg, 'useUpdateTrigger').mockReturnValue({
       mutate: mockUpdate as unknown
     } as UseMutateReturn<any, any, any, any, any>)
-    jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+    jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
     const { container } = render(<WrapperComponent />)
     await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
 
@@ -196,7 +198,7 @@ describe('Artifact Trigger Tests', () => {
     jest.spyOn(pipelineNg, 'useUpdateTrigger').mockReturnValue({
       mutate: mockUpdate as unknown
     } as UseMutateReturn<any, any, any, any, any>)
-    jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GetSettingValueResponse as any)
+    jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
     const { container } = render(<WrapperComponent />)
     await waitFor(() => expect(() => queryByText(document.body, 'Loading, please wait...')).toBeDefined())
 

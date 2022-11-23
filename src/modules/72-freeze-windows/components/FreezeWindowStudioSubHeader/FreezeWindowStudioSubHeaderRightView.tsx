@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
-import { Button, ButtonVariation, Icon, Container } from '@wings-software/uicore'
+import { Button, ButtonVariation, Icon, Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { WindowPathProps } from '@freeze-windows/types'
 import RbacButton from '@rbac/components/Button/Button'
@@ -24,6 +24,7 @@ export const FreezeWindowStudioSubHeaderRightView = () => {
   const {
     state: { isUpdated },
     isReadOnly,
+    isActiveFreeze,
     refetchFreezeObj
   } = React.useContext(FreezeWindowContext)
   const {
@@ -43,7 +44,14 @@ export const FreezeWindowStudioSubHeaderRightView = () => {
         </div>
       )}
 
-      {isUpdated && !isReadOnly && (
+      {!isReadOnly && isActiveFreeze && (
+        <div className={css.readonlyAccessTag}>
+          <Icon name="eye-open" size={16} />
+          <div className={css.readonlyAccessText}>{getString('freezeWindows.freezeStudio.activeFreeze')}</div>
+        </div>
+      )}
+
+      {isUpdated && !isReadOnly && !isActiveFreeze && (
         <Button variation={ButtonVariation.LINK} intent="warning" className={css.unsavedChanges}>
           {getString('unsavedChanges')}
         </Button>
@@ -75,7 +83,7 @@ export const FreezeWindowStudioSubHeaderRightView = () => {
           />
         )}
       </div>
-      {windowIdentifier !== DefaultFreezeId && !isReadOnly && (
+      {windowIdentifier !== DefaultFreezeId && !isReadOnly && !isActiveFreeze && (
         <Button
           disabled={!isUpdated}
           className={css.discardBtn}

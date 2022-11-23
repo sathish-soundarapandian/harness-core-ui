@@ -17,7 +17,7 @@ import {
   ButtonVariation,
   PageSpinner,
   ThumbnailSelect
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import React, { useState, useEffect } from 'react'
 import * as Yup from 'yup'
 import { FontVariation, Color } from '@harness/design-system'

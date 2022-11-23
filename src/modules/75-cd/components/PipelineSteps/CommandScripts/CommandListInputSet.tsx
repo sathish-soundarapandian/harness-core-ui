@@ -9,23 +9,15 @@ import React from 'react'
 import { FieldArray } from 'formik'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import {
-  AllowedTypes,
-  Color,
-  Container,
-  getMultiTypeFromValue,
-  Icon,
-  Layout,
-  MultiTypeInputType,
-  Text
-} from '@harness/uicore'
-
+import { AllowedTypes, Container, getMultiTypeFromValue, Icon, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { CommandScriptsData, CopyCommandUnit, CustomScriptCommandUnit } from './CommandScriptsTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './CommandListInputSet.module.scss'
@@ -40,7 +32,7 @@ interface CommandListInputSetProps {
 }
 
 export function CommandListInputSet(props: CommandListInputSetProps): React.ReactElement {
-  const { initialValues, allowableTypes, readonly, path, template } = props
+  const { initialValues, allowableTypes, readonly, path, template, stepViewType } = props
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { expressions } = useVariablesExpression()
@@ -109,6 +101,9 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                             allowableTypes,
                             disabled: readonly,
                             placeholder: getString('cd.enterWorkDirectory')
+                          }}
+                          configureOptionsProps={{
+                            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
                           }}
                           fieldPath={`spec.commandUnits[${i}].spec.workingDirectory`}
                           template={template}

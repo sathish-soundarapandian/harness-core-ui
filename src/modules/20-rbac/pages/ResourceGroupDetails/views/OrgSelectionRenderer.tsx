@@ -6,7 +6,8 @@
  */
 
 import React, { useMemo } from 'react'
-import { Color, Layout, PageSpinner, TableV2, Tag, TagsPopover, Text } from '@harness/uicore'
+import { Layout, PageSpinner, TableV2, Tag, TagsPopover, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { groupBy } from 'lodash-es'
@@ -47,7 +48,7 @@ const RenderColumnProject: Renderer<CellProps<OrgSelector>> = ({ row }) => {
     return <Text>{getString('rbac.resourceScope.noProjects')}</Text>
   } else {
     return projects.length ? (
-      <Layout.Horizontal spacing="xsmall">
+      <Layout.Horizontal className={css.projectRenderer}>
         {data?.data?.content?.map(({ project }) => (
           <Tag key={`${project.orgIdentifier}-${project.identifier}`} className={css.projectTags}>{`${
             project.name

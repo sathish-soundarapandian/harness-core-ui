@@ -8,7 +8,7 @@
 import React, { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { noop } from 'lodash-es'
-import { Layout, Text, Button, Container, Icon } from '@wings-software/uicore'
+import { Layout, Text, Button, Container, Icon } from '@harness/uicore'
 import { DateRangePicker } from '@blueprintjs/datetime'
 import moment from 'moment'
 import { Color } from '@harness/design-system'

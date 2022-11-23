@@ -9,13 +9,14 @@ import React from 'react'
 import { defaultTo, toLower } from 'lodash-es'
 import { useParams, Link } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
-import { Container, Layout, Text } from '@wings-software/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ResourceConstraintDetail } from 'services/pipeline-ng'
 import type { CDStageModuleInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
-import type { PipelineType, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
+import type { PipelineType, ExecutionPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { useQueryParams } from '@common/hooks'
 import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
 
 export interface ResourceConstraintTooltipProps {
@@ -44,6 +45,7 @@ const getnoOfExecutionsBeforePipeline = (
 }
 export default function ResourceConstraintTooltip(props: ResourceConstraintTooltipProps): React.ReactElement {
   const { projectIdentifier, orgIdentifier, accountId, module, source } = useParams<PipelineType<ExecutionPathProps>>()
+  const { connectorRef, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const noOfExecutionsBeforePipeline = getnoOfExecutionsBeforePipeline(
     props?.data?.executionList,
@@ -86,7 +88,11 @@ export default function ResourceConstraintTooltip(props: ResourceConstraintToolt
                   module,
                   accountId,
                   executionIdentifier: pipeline?.planExecutionId || '',
-                  source
+                  source,
+                  connectorRef,
+                  repoName,
+                  branch,
+                  storeType
                 })}
               >
                 <Layout.Horizontal>

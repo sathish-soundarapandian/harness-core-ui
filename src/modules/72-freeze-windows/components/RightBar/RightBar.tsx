@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Button, ButtonVariation } from '@wings-software/uicore'
+import { Button, ButtonVariation } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import { DrawerTypes } from '@freeze-windows/context/FreezeWidowActions'
@@ -28,7 +28,7 @@ export const RightBar = (): JSX.Element => {
         font={{ weight: 'semi-bold', size: 'xsmall' }}
         icon="pipeline-deploy"
         iconProps={{ size: 24 }}
-        text={getString('notifications.pipelineName')}
+        text={getString('rbac.notifications.pipelineName')}
         withoutCurrentColor={true}
       />
       <RightDrawer />

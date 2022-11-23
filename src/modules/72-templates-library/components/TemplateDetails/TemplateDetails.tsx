@@ -18,7 +18,7 @@ import {
   Tab,
   Tabs,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, unset } from 'lodash-es'
@@ -50,8 +50,7 @@ import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import { TemplateYaml } from '@pipeline/components/PipelineStudio/TemplateYaml/TemplateYaml'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getVersionLabelText } from '@templates-library/utils/templatesUtils'
-import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
-import { EntityType } from '@common/pages/entityUsage/EntityConstants'
+import { TemplateReferenceByTabPanel } from '@templates-library/components/TemplateDetails/TemplateReferenceByTabPanel'
 import NoEntityFound, { ErrorPlacement } from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
@@ -63,6 +62,7 @@ import templateFactory from '@templates-library/components/Templates/TemplatesFa
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
+import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
 import css from './TemplateDetails.module.scss'
 
@@ -83,20 +83,6 @@ export enum TemplateTabs {
 export enum ParentTemplateTabs {
   BASIC = 'BASIC',
   ACTVITYLOG = 'ACTVITYLOG'
-}
-
-interface Params {
-  selectedTemplate: TemplateSummaryResponse
-  templates: TemplateSummaryResponse[]
-}
-
-const getTemplateEntityIdentifier = ({ selectedTemplate, templates }: Params): string => {
-  const versionLabel = selectedTemplate.versionLabel
-    ? selectedTemplate.versionLabel
-    : (templates.find(template => template.stableTemplate && template.versionLabel) as TemplateSummaryResponse)
-        .versionLabel
-
-  return `${selectedTemplate.identifier}/${versionLabel}/`
 }
 
 export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
@@ -164,7 +150,8 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
-  const templateIcon = React.useMemo(() => getIconForTemplate(getString, selectedTemplate), [selectedTemplate])
+  const templateIconName = React.useMemo(() => getIconForTemplate(getString, selectedTemplate), [selectedTemplate])
+  const templateIconUrl = React.useMemo(() => selectedTemplate?.icon, [selectedTemplate?.icon])
   const templateType = React.useMemo(() => getTypeForTemplate(getString, selectedTemplate), [selectedTemplate])
 
   const templateYamlErrorResponseMessages = (templateYamlError?.data as Error)?.responseMessages ?? []
@@ -401,7 +388,16 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                                     spacing={'small'}
                                     flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
                                   >
-                                    {templateIcon && <Icon name={templateIcon} size={20} />}
+                                    {templateIconUrl ? (
+                                      <ImagePreview
+                                        src={templateIconUrl}
+                                        size={20}
+                                        alt={getString('common.template.templateIcon')}
+                                        fallbackIcon={templateIconName}
+                                      />
+                                    ) : (
+                                      templateIconName && <Icon size={20} name={templateIconName} />
+                                    )}
                                     {templateType && <Text color={Color.GREY_900}>{templateType}</Text>}
                                   </Layout.Horizontal>
                                 </Container>
@@ -460,12 +456,9 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                               title={getString('templatesLibrary.referencedBy')}
                               className={css.referencedByTab}
                               panel={
-                                <EntitySetupUsage
-                                  pageSize={4}
-                                  pageHeaderClassName={css.referencedByHeader}
-                                  pageBodyClassName={css.referencedByBody}
-                                  entityType={EntityType.Template}
-                                  entityIdentifier={getTemplateEntityIdentifier({ selectedTemplate, templates })}
+                                <TemplateReferenceByTabPanel
+                                  selectedTemplate={selectedTemplate}
+                                  templates={templates}
                                 />
                               }
                             />

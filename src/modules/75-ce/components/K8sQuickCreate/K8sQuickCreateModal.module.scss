@@ -1,0 +1,129 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.modal {
+  .stepWizard {
+    flex-grow: 1;
+    min-height: 680px;
+  }
+
+  .crossIcon {
+    position: absolute;
+    right: var(--spacing-small);
+    top: var(--spacing-small);
+  }
+
+  .errorHandler {
+    margin: var(--spacing-large) 0 !important;
+  }
+
+  .retestBtn {
+    position: absolute;
+    right: 90px;
+    top: 40px;
+  }
+
+  .delegateErrorCtn {
+    padding: var(--spacing-medium) var(--spacing-large);
+    background-color: rgba(252, 237, 236, 0.5);
+
+    .textCtn {
+      display: flex;
+
+      &:first-child {
+        align-items: center;
+      }
+    }
+
+    .troubleshootBtn {
+      padding-left: 0 !important;
+    }
+  }
+
+  .titleCtn {
+    margin-top: var(--spacing-small);
+    margin-bottom: var(--spacing-xxlarge);
+    text-align: center;
+
+    p:nth-child(2) {
+      display: block !important;
+
+      path {
+        fill: var(--grey-100);
+      }
+    }
+  }
+
+  :global {
+    span[data-icon='step-kubernetes'] {
+      path:nth-child(3) {
+        fill: transparent;
+      }
+    }
+  }
+
+  .modalContent {
+    min-height: 504px;
+  }
+
+  .buttonsCtn {
+    margin-top: auto !important;
+  }
+
+  .applySteps {
+    margin-top: 10px !important;
+    margin-left: var(--spacing-tiny);
+  }
+
+  .onContinue {
+    margin-top: var(--spacing-tiny) !important;
+  }
+
+  .infoText {
+    padding: var(--spacing-small) var(--spacing-medium);
+    background-color: var(--blue-50);
+    margin-bottom: var(--spacing-small);
+  }
+
+  .nameInput {
+    width: 320px;
+  }
+
+  .progressBar {
+    background: var(--grey-200);
+    border-radius: 2px;
+  }
+
+  .progressStepCtn {
+    display: grid;
+    grid-template-columns: 25px 1fr;
+    align-items: center;
+  }
+}
+
+.stepCtn {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+
+  .stepNumber {
+    text-transform: uppercase;
+    align-self: center;
+  }
+}
+
+.copyCodeSection {
+  div {
+    line-height: 24px !important;
+    width: calc(100% - 90px);
+    margin-left: 60px !important;
+    margin-top: 0 !important;
+  }
+
+  svg {
+    fill: var(--primary-7) !important;
+  }
+}

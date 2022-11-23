@@ -15,6 +15,8 @@ declare const styles: {
   readonly executionWidgetWrapper: string
   readonly headerText: string
   readonly marginLeft: string
+  readonly marginRight: string
   readonly stepsContainer: string
+  readonly updateTemplateSettingsDialog: string
 }
 export default styles

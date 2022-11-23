@@ -367,6 +367,7 @@ exports[`COProviderSelector Rendering should render COProviderSelector 1`] = `
         </div>
       </div>
       <button
+        aria-label="Next"
         class="bp3-button Button--button StyledProps--font StyledProps--main footer StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
         type="button"
       >
@@ -727,6 +728,7 @@ exports[`COProviderSelector passing a provider property shows the gateway basics
         </div>
       </div>
       <button
+        aria-label="Next"
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main footer StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
         disabled=""
         tabindex="-1"
@@ -1089,6 +1091,7 @@ exports[`COProviderSelector selecting AWS provider shows option to select connec
         </div>
       </div>
       <button
+        aria-label="Next"
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main footer StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
         disabled=""
         tabindex="-1"
@@ -1451,6 +1454,7 @@ exports[`COProviderSelector selecting Azure provider shows option to select conn
         </div>
       </div>
       <button
+        aria-label="Next"
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main footer StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
         disabled=""
         tabindex="-1"
@@ -1813,6 +1817,7 @@ exports[`COProviderSelector selecting GCP provider shows option to select connec
         </div>
       </div>
       <button
+        aria-label="Next"
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main footer StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
         disabled=""
         tabindex="-1"

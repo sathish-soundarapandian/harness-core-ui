@@ -8,7 +8,8 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
-import { useToggleOpen, ConfirmationDialog, Intent, Dialog, AllowedTypes } from '@harness/uicore'
+import { useToggleOpen, ConfirmationDialog, Dialog, AllowedTypes } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 import { IDialogProps, Spinner } from '@blueprintjs/core'
 
 import { useStrings } from 'framework/strings'
@@ -100,7 +101,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
   return (
     <>
       <div className={css.cardsContainer}>
-        {servicesData.map(row => {
+        {servicesData.map((row, index: number) => {
           return (
             <ServiceEntityCard
               key={row.service.identifier}
@@ -113,6 +114,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
               readonly={readonly}
               deploymentType={selectedDeploymentType}
               defaultExpanded={!isMultiSvc}
+              cardClassName={servicesData.length - 1 !== index ? css.marginBottom : ''}
             />
           )
         })}

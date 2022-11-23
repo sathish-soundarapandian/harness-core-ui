@@ -7,7 +7,7 @@
 
 import React, { useMemo, useState } from 'react'
 import { Divider } from '@blueprintjs/core'
-import { Card } from '@wings-software/uicore'
+import { Card } from '@harness/uicore'
 import type { ChangeEventDTO } from 'services/cv'
 import ChangeEventServiceHealth from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeCard/components/ChangeEventServiceHealth/ChangeEventServiceHealth'
 import SLOAndErrorBudget from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeCard/components/SLOAndErrorBudget/SLOAndErrorBudget'

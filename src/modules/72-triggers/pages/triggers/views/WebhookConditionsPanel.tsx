@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, FormInput, Text, HarnessDocTooltip } from '@wings-software/uicore'
+import { Layout, FormInput, Text, HarnessDocTooltip } from '@harness/uicore'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

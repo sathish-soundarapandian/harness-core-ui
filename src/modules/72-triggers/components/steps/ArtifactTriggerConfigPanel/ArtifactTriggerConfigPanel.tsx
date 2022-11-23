@@ -6,30 +6,40 @@
  */
 
 import React from 'react'
-import { Layout, Text } from '@wings-software/uicore'
+import { Layout, Text } from '@harness/uicore'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import ArtifactsSelection from './ArtifactsSelection/ArtifactsSelection'
 import css from './ArtifactTriggerConfigPanel.module.scss'
 export interface ArtifactTriggerConfigPanelPropsInterface {
   formikProps?: any
+  isEdit?: boolean
 }
 
-const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterface> = ({ formikProps }) => {
+const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterface> = ({
+  formikProps,
+  isEdit = false
+}) => {
   const { getString } = useStrings()
   const artifactText = getString('pipeline.artifactTriggerConfigPanel.artifact')
 
   return (
     <Layout.Vertical className={css.artifactTriggerConfigContainer} padding="xxlarge">
       <Text className={css.formContentTitle} inline={true} tooltipProps={{ dataTooltipId: 'artifactLabel' }}>
-        {`${getString('triggers.triggerConfigurationLabel')}: ${getString('triggers.onNewArtifactTitle', {
-          artifact: artifactText
-        })}`}
+        {getString('triggers.triggerConfigurationLabel')}
+        {isEdit
+          ? ``
+          : `: ${getString('triggers.onNewArtifactTitle', {
+              artifact: artifactText
+            })}`}
       </Text>
       <div className={css.formContent}>
         <NameIdDescriptionTags
           className={css.nameIdDescriptionTags}
           formikProps={formikProps}
+          identifierProps={{
+            isIdentifierEditable: !isEdit
+          }}
           tooltipProps={{
             dataTooltipId: 'artifactTrigger'
           }}

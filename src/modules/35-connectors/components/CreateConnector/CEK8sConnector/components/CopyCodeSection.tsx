@@ -7,7 +7,7 @@
 
 import React from 'react'
 import copy from 'copy-to-clipboard'
-import { Container, Icon, Text } from '@wings-software/uicore'
+import { Container, Icon, Text } from '@harness/uicore'
 import { useToaster } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import css from '../CEK8sConnector.module.scss'

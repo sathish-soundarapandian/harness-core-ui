@@ -5,102 +5,49 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React from 'react'
 import { useFormikContext } from 'formik'
 import { FormInput, Layout, SelectOption } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
-import type { MetricThresholdCriteria } from 'services/cv'
 import type { AppDynamicsFomikFormInterface } from '@cv/pages/health-source/connectors/AppDynamics/AppDHealthSource.types'
 import { AppDynamicsMonitoringSourceFieldNames as FieldName } from '@cv/pages/health-source/connectors/AppDynamics/AppDHealthSource.constants'
+import type { MetricThresholdCriteria } from 'services/cv'
 import ThresholdSelect from './ThresholdSelect'
-import type { CriteriaThresholdValues, ThresholdCriteriaPropsType } from '../MetricThresholds.types'
-import {
-  getCriterialItems,
-  getCriteriaPercentageDropdownOptions,
-  getIsShowGreaterThan,
-  getIsShowLessThan
-} from '../MetricThresholds.utils'
-import { MetricCriteriaValues, PercentageCriteriaDropdownValues as PercentageType } from '../MetricThresholds.constants'
+import type { ThresholdCriteriaPropsType } from '../MetricThresholds.types'
+import { getCriterialItems, handleCriteriaPercentageUpdate } from '../MetricThresholds.utils'
+import { MetricCriteriaValues, MetricThresholdPropertyName } from '../MetricThresholds.constants'
 import css from './MetricThreshold.module.scss'
 
 export default function ThresholdCriteria(props: ThresholdCriteriaPropsType): JSX.Element {
-  const { index, thresholdTypeName, criteriaType, criteriaPercentageType, replaceFn } = props
+  const { index, thresholdTypeName, criteriaType, replaceFn } = props
 
-  const { values: formValues, setFieldValue } = useFormikContext<AppDynamicsFomikFormInterface>()
+  const { values: formValues } = useFormikContext<AppDynamicsFomikFormInterface>()
 
   const { getString } = useStrings()
 
   const isAbsoluteSelected = criteriaType === MetricCriteriaValues.Absolute
 
-  const criteriaSpecValue = formValues[thresholdTypeName][index].criteria.spec
+  const isIgnoreThresholdTab = thresholdTypeName === MetricThresholdPropertyName.IgnoreThreshold
+  const isFailFastThresholdTab = thresholdTypeName === MetricThresholdPropertyName.FailFastThresholds
 
-  const showGreaterThan = useMemo(
-    () => getIsShowGreaterThan(criteriaType, criteriaPercentageType, criteriaSpecValue),
-    [criteriaType, criteriaPercentageType, criteriaSpecValue]
-  )
+  const showGreaterThan = isFailFastThresholdTab || isAbsoluteSelected
 
-  const showLessThan = useMemo(
-    () => getIsShowLessThan(criteriaType, criteriaPercentageType, criteriaSpecValue),
-    [criteriaType, criteriaPercentageType, criteriaSpecValue]
-  )
-
-  useEffect(() => {
-    // This is to set criteriaPercentageType during edit
-    if (!isAbsoluteSelected && !criteriaPercentageType) {
-      setFieldValue(
-        `${thresholdTypeName}.${index}.criteria.${FieldName.METRIC_THRESHOLD_CRITERIA_PERCENTAGE_TYPE}`,
-        showGreaterThan ? PercentageType.GreaterThan : PercentageType.LessThan
-      )
-    }
-  }, [index, thresholdTypeName, isAbsoluteSelected, criteriaPercentageType, setFieldValue, showGreaterThan])
+  const showLessThan = isIgnoreThresholdTab || isAbsoluteSelected
 
   const handleCriteriaUpdate = (selectedValue: MetricThresholdCriteria['type']): void => {
     if (selectedValue === MetricCriteriaValues.Absolute) {
       return void 0
     }
 
-    const clonedThresholdValue = [...formValues[thresholdTypeName]]
-
-    const updatedThresholds = { ...clonedThresholdValue[index] }
-
-    const criteriaDetails = updatedThresholds.criteria
-
-    // whenever the criteria value is changed to Percentage, Greater than value is set as default and Less than is set to undefined
-    criteriaDetails.type = selectedValue
-    criteriaDetails.criteriaPercentageType = PercentageType.GreaterThan
-
-    if (!criteriaDetails.spec) {
-      criteriaDetails.spec = {}
-    }
-
-    criteriaDetails.spec.lessThan = undefined
-
-    clonedThresholdValue[index] = updatedThresholds
-
-    replaceFn(updatedThresholds)
-  }
-
-  const handleCriteriaPercentageUpdate = (selectedValue: CriteriaThresholdValues): void => {
-    const clonedThresholdValue = [...formValues[thresholdTypeName]]
-
-    const updatedThresholds = { ...clonedThresholdValue[index] }
-    const criteriaDetails = updatedThresholds.criteria
-    criteriaDetails.criteriaPercentageType = selectedValue
-
-    if (!criteriaDetails.spec) {
-      criteriaDetails.spec = {}
-    }
-
-    if (selectedValue === PercentageType.GreaterThan) {
-      criteriaDetails.spec.lessThan = undefined
-    } else if (selectedValue === PercentageType.LessThan) {
-      criteriaDetails.spec.greaterThan = undefined
-    }
-
-    clonedThresholdValue[index] = updatedThresholds
-
-    replaceFn(updatedThresholds)
+    handleCriteriaPercentageUpdate({
+      thresholds: formValues[thresholdTypeName],
+      isIgnoreThresholdTab,
+      isFailFastThresholdTab,
+      index,
+      selectedValue,
+      replaceFn
+    })
   }
 
   return (
@@ -112,19 +59,12 @@ export default function ThresholdCriteria(props: ThresholdCriteriaPropsType): JS
         onChange={({ value }: SelectOption) => handleCriteriaUpdate(value as MetricThresholdCriteria['type'])}
         name={`${thresholdTypeName}.${index}.${FieldName.METRIC_THRESHOLD_CRITERIA}.type`}
       />
-      {criteriaType === MetricCriteriaValues.Percentage && (
-        <ThresholdSelect
-          items={getCriteriaPercentageDropdownOptions(getString)}
-          className={cx(css.metricThresholdContentSelect, css.metricThresholdContentCriteria)}
-          onChange={({ value }: SelectOption) => handleCriteriaPercentageUpdate(value as CriteriaThresholdValues)}
-          name={`${thresholdTypeName}.${index}.${FieldName.METRIC_THRESHOLD_CRITERIA}.${FieldName.METRIC_THRESHOLD_CRITERIA_PERCENTAGE_TYPE}`}
-        />
-      )}
+
       {showGreaterThan && (
         <FormInput.Text
           inline
           className={css.metricThresholdContentInput}
-          label={isAbsoluteSelected ? getString('cv.monitoringSources.appD.greaterThan') : null}
+          label={getString('cv.monitoringSources.appD.greaterThan')}
           inputGroup={{ type: 'number', min: 1 }}
           name={`${thresholdTypeName}.${index}.criteria.spec.${FieldName.METRIC_THRESHOLD_GREATER_THAN}`}
         />
@@ -134,7 +74,7 @@ export default function ThresholdCriteria(props: ThresholdCriteriaPropsType): JS
         <FormInput.Text
           inline
           className={css.metricThresholdContentInput}
-          label={isAbsoluteSelected ? getString('cv.monitoringSources.appD.lesserThan') : null}
+          label={getString('cv.monitoringSources.appD.lesserThan')}
           inputGroup={{ type: 'number', min: 1 }}
           name={`${thresholdTypeName}.${index}.criteria.spec.${FieldName.METRIC_THRESHOLD_LESS_THAN}`}
         />

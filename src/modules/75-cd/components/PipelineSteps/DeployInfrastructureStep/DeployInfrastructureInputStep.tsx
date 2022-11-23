@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import {
+  AllowedTypes,
   Container,
   getMultiTypeFromValue,
   MultiTypeInputType,
@@ -59,6 +60,10 @@ function DeployInfrastructureInputStepInternal({
   const shouldRenderInfrastructure =
     getMultiTypeFromValue(inputSetData?.template?.environment?.environmentRef) !== MultiTypeInputType.RUNTIME
 
+  const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(initialValues.environment?.environmentRef)
+  )
+
   return (
     <>
       {/* Environment Group Section */}
@@ -69,7 +74,11 @@ function DeployInfrastructureInputStepInternal({
           </Text>
           <DeployEnvironmentGroup
             initialValues={initialValues}
-            allowableTypes={allowableTypes}
+            allowableTypes={
+              (allowableTypes as MultiTypeInputType[])?.filter(
+                item => item !== MultiTypeInputType.EXPRESSION && item !== MultiTypeInputType.EXECUTION_TIME
+              ) as AllowedTypes
+            }
             path={inputSetData?.path}
             readonly={readonly}
           />
@@ -123,12 +132,18 @@ function DeployInfrastructureInputStepInternal({
                 </Text>
                 <DeployEnvironment
                   initialValues={initialValues}
-                  allowableTypes={allowableTypes}
+                  allowableTypes={
+                    (allowableTypes as MultiTypeInputType[])?.filter(
+                      item => item !== MultiTypeInputType.EXPRESSION && item !== MultiTypeInputType.EXECUTION_TIME
+                    ) as AllowedTypes
+                  }
                   path={inputSetData?.path}
                   serviceRef={defaultTo(initialValues.service?.serviceRef, serviceRef)}
                   gitOpsEnabled={gitOpsEnabled}
                   stepViewType={stepViewType}
                   readonly={readonly}
+                  environmentRefType={environmentRefType}
+                  setEnvironmentRefType={setEnvironmentRefType}
                 />
               </Container>
             )}
@@ -173,9 +188,9 @@ function DeployInfrastructureInputStepInternal({
               </>
             )}
 
-            {(serviceOverrideInputs?.variables ||
-              serviceOverrideInputs?.manifest ||
-              serviceOverrideInputs?.configFiles) && (
+            {(serviceOverrideInputs?.variables?.length ||
+              serviceOverrideInputs?.manifests?.length ||
+              serviceOverrideInputs?.configFiles?.length) && (
               <>
                 <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
                   {getString('common.serviceOverrides')}
@@ -209,12 +224,17 @@ function DeployInfrastructureInputStepInternal({
                   </Text>
                   <DeployInfrastructures
                     initialValues={initialValues || inputSetData?.allValues}
-                    allowableTypes={allowableTypes}
+                    allowableTypes={
+                      (allowableTypes as MultiTypeInputType[])?.filter(
+                        item => item !== MultiTypeInputType.EXPRESSION && item !== MultiTypeInputType.EXECUTION_TIME
+                      ) as AllowedTypes
+                    }
                     environmentRef={initialValues.environment?.environmentRef || environmentRef}
                     path={inputSetData?.path}
                     readonly={readonly}
                     deploymentType={deploymentType}
                     customDeploymentData={customDeploymentData}
+                    environmentRefType={environmentRefType}
                   />
                 </Container>
               )}
@@ -229,7 +249,11 @@ function DeployInfrastructureInputStepInternal({
                     {getString('common.clusters')}
                   </Text>
                   <DeployClusters
-                    allowableTypes={allowableTypes}
+                    allowableTypes={
+                      (allowableTypes as MultiTypeInputType[])?.filter(
+                        item => item !== MultiTypeInputType.EXPRESSION && item !== MultiTypeInputType.EXECUTION_TIME
+                      ) as AllowedTypes
+                    }
                     environmentIdentifier={defaultTo(initialValues.environment?.environmentRef || environmentRef, '')}
                     readonly={readonly}
                   />

@@ -9,12 +9,14 @@ import React from 'react'
 import {
   AllowedTypes,
   Button,
+  Container,
   FormikTooltipContext,
   getMultiTypeFromValue,
   HarnessDocTooltip,
+  Layout,
   MultiTextInput,
   MultiTypeInputType
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import {
   FormGroup,
   HTMLInputProps,
@@ -33,6 +35,11 @@ import { useStrings, UseStringsReturn } from 'framework/strings'
 import { errorCheck } from '@common/utils/formikHelpers'
 // import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
+import {
+  ALLOWED_VALUES_TYPE,
+  ConfigureOptions,
+  ConfigureOptionsProps
+} from '@common/components/ConfigureOptions/ConfigureOptions'
 import css from './InstanceDropdownField.module.scss'
 
 export enum InstanceTypes {
@@ -217,6 +224,8 @@ export interface FormInstanceDropdownFieldProps extends Omit<InstanceDropdownFie
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formik?: any
   readonly?: boolean
+  enableConfigureOptions?: boolean
+  configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
 }
 
 const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (props): JSX.Element => {
@@ -230,6 +239,8 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
       props.formik.setFieldValue(props.name, { ...valueObj })
     },
     readonly,
+    enableConfigureOptions = false,
+    configureOptionsProps,
     ...restProps
   } = props
   const hasError = errorCheck(`${name}.type`, formik)
@@ -241,22 +252,47 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
   } = restProps
 
   const value: InstanceFieldValue = get(formik?.values, name, { type: InstanceTypes.Instances, spec: { count: 0 } })
+  const valueForConfigureOptions = (value?.spec?.count as string) || (value?.spec?.percentage as string)
 
   const tooltipContext = React.useContext(FormikTooltipContext)
   const dataTooltipId = tooltipContext?.formName ? `${tooltipContext?.formName}_${name}` : ''
 
+  const isPercentageType = value.type === InstanceTypes.Percentage
+
   return (
-    <InstanceDropdownField
-      label={<HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} />}
-      name={name}
-      textProps={{ ...textProps }}
-      value={value}
-      intent={intent}
-      helperText={helperText}
-      readonly={readonly}
-      onChange={onChange}
-      {...rest}
-    />
+    <Container>
+      <Layout.Horizontal spacing={'medium'}>
+        <InstanceDropdownField
+          label={<HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} />}
+          name={name}
+          textProps={{ ...textProps }}
+          value={value}
+          intent={intent}
+          helperText={helperText}
+          readonly={readonly}
+          onChange={onChange}
+          style={{ flexGrow: 1 }}
+          {...rest}
+        />
+        {enableConfigureOptions && getMultiTypeFromValue(valueForConfigureOptions) === MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            value={valueForConfigureOptions}
+            type="String"
+            variableName={name}
+            showRequiredField={false}
+            showDefaultField={false}
+            showAdvanced={true}
+            onChange={val => {
+              formik?.setFieldValue(name, { ...value, spec: isPercentageType ? { percentage: val } : { count: val } })
+            }}
+            style={{ marginTop: 'var(--spacing-6)' }}
+            allowedValuesType={ALLOWED_VALUES_TYPE.NUMBER}
+            {...configureOptionsProps}
+            isReadonly={readonly}
+          />
+        )}
+      </Layout.Horizontal>
+    </Container>
   )
 }
 

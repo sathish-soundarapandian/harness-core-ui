@@ -20,7 +20,7 @@ import {
   Button,
   SimpleTagInput,
   Container
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import { Dialog, Menu, Spinner } from '@blueprintjs/core'

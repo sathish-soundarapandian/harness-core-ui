@@ -9,7 +9,7 @@ import React from 'react'
 import { connect, FormikContextType } from 'formik'
 import { Link } from 'react-router-dom'
 
-import { Layout, Icon, Text } from '@harness/uicore'
+import { Layout, Icon, Text, FormError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { get, isPlainObject } from 'lodash-es'
 import { FormGroup, Intent } from '@blueprintjs/core'
@@ -97,7 +97,7 @@ function EncryptedFileSelectField(props: SelectEncryptedProps): React.ReactEleme
 
   return (
     <FormGroup
-      helperText={errorCheck() ? get(formik?.errors, name) : null}
+      helperText={errorCheck() ? <FormError name={name} errorMessage={get(formik?.errors, name)} /> : null}
       intent={errorCheck() ? Intent.DANGER : Intent.NONE}
       style={{ width: '100%' }}
     >

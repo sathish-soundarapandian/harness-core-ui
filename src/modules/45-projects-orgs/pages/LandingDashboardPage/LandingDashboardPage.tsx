@@ -16,7 +16,7 @@ import {
   Text,
   PageError,
   ButtonSize
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import { Callout } from '@blueprintjs/core'

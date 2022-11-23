@@ -6,7 +6,7 @@
  */
 
 import React, { Dispatch, SetStateAction } from 'react'
-import { Button, Layout, TableV2, Text } from '@wings-software/uicore'
+import { Button, Layout, TableV2, Text } from '@harness/uicore'
 import { RadioGroup, Radio } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { artifactTableItem } from '../../interface/TriggersWizardInterface'

@@ -19,7 +19,7 @@ import {
   Icon,
   Text,
   Radio
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import { defaultTo, get, omit, pick } from 'lodash-es'
@@ -32,7 +32,8 @@ import {
   GetConnectorListV2QueryParams,
   Failure,
   AwsCurAttributes,
-  ConnectorResponse
+  ConnectorResponse,
+  CEAwsConnector
 } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { Description, Tags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
@@ -42,7 +43,6 @@ import { Connectors } from '@connectors/constants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
-import type { CEAwsConnector } from 'services/ce'
 import css from '../CreateCeAwsConnector.module.scss'
 
 interface OverviewDetails {
@@ -111,10 +111,10 @@ const OverviewStep: React.FC<OverviewProps> = props => {
     setIsLoading(true)
     const newspec: CEAwsConnector = {
       crossAccountAccess: { crossAccountRoleArn: '' },
-      isAWSGovCloudAccount: isGovCloudAccount,
       ...get(connectorInfo, 'spec'),
       ...get(prevStepData, 'spec'),
-      ...pick(formData, ['awsAccountId'])
+      ...pick(formData, ['awsAccountId']),
+      isAWSGovCloudAccount: isGovCloudAccount
     }
     const payload: CEAwsConnectorDTO = {
       ...omit(formData, ['awsAccountId']),

@@ -10,6 +10,9 @@ declare const styles: {
   readonly button: string
   readonly card: string
   readonly centerAlign: string
+  readonly emailInfoCard: string
+  readonly infoCard: string
   readonly overflow: string
+  readonly sendEmailToAllUsersContainer: string
 }
 export default styles

@@ -10,7 +10,7 @@ import { Select, ItemListRenderer } from '@blueprintjs/select'
 import { Button, MenuItem, Menu } from '@blueprintjs/core'
 import cx from 'classnames'
 
-import { Avatar, Icon, Layout, Text } from '@wings-software/uicore'
+import { Avatar, Icon, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import css from './VersionSelector.module.scss'

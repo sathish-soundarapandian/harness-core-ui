@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React, { useEffect, useMemo, useState } from 'react'
-import { Button, Container, Utils } from '@wings-software/uicore'
+import { Button, Container, Utils } from '@harness/uicore'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { SelectedAppsSideNav } from './components/SelectedAppsSideNav/SelectedAppsSideNav'
 import {

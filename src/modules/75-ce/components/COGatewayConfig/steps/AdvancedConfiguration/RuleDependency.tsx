@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Button, Layout, Text } from '@wings-software/uicore'
+import { Button, Layout, Text } from '@harness/uicore'
 import type { GatewayDetails } from '@ce/components/COCreateGateway/models'
 import type { Service, ServiceDep } from 'services/lw'
 import { useStrings } from 'framework/strings'

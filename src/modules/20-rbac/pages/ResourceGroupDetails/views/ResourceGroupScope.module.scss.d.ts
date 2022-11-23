@@ -10,6 +10,7 @@ declare const styles: {
   readonly card: string
   readonly collapse: string
   readonly dropdown: string
+  readonly projectRenderer: string
   readonly projectSelection: string
   readonly projectTags: string
 }

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Text, TextInput } from '@wings-software/uicore'
+import { Layout, Text, TextInput } from '@harness/uicore'
 import { Callout } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { CopyText } from '@common/components/CopyText/CopyText'

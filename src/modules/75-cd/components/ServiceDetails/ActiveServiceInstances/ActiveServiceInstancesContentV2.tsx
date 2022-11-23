@@ -10,13 +10,13 @@ import type { CellProps, Renderer } from 'react-table'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
-import { Container, Layout, Popover, Text, PageError, useToaster } from '@wings-software/uicore'
+import { Container, Layout, Popover, Text, PageError, useToaster } from '@harness/uicore'
 import { HTMLTable, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
 import ReactTimeago from 'react-timeago'
 import { useParams } from 'react-router-dom'
 import { PageSpinner, Table } from '@common/components'
-import type { InstanceGroupedByArtifact } from 'services/cd-ng'
+import type { InstanceGroupedByArtifact, InstanceGroupedByInfrastructure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
 import { numberFormatter } from '@cd/components/Services/common'
@@ -50,6 +50,19 @@ export enum TableType {
   FULL = 'full' // for details popup expanded row (headers hidden)
 }
 
+export const isClusterData = (data: InstanceGroupedByArtifact[]): boolean => {
+  let isCluster = false
+  data.forEach(artifact => {
+    artifact.instanceGroupedByEnvironmentList?.forEach(env => {
+      if (env.instanceGroupedByClusterList?.length) {
+        isCluster = true
+      }
+    })
+  })
+  return isCluster
+}
+
+// full table is the expanded table in the dialog
 export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifact[]): TableRowData[] => {
   const tableData: TableRowData[] = []
   instanceGroupedByArtifact?.forEach(artifact => {
@@ -58,23 +71,46 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
       let envShow = true
       artifact.instanceGroupedByEnvironmentList.forEach(env => {
         if (env.envId && env.envName) {
+          const getData = (entity: InstanceGroupedByInfrastructure, index: number): TableRowData => {
+            return {
+              artifactVersion: artifactVersion,
+              artifactPath: defaultTo(artifact.artifactPath, ''),
+              showArtifact: envShow && !index,
+              showEnv: !index,
+              infraIdentifier: defaultTo(entity.infraIdentifier, '-'),
+              infraName: defaultTo(entity.infraName, '-'),
+              instanceCount: defaultTo(entity.count, 0),
+              lastPipelineExecutionId: defaultTo(entity.lastPipelineExecutionId, ''),
+              lastPipelineExecutionName: defaultTo(entity.lastPipelineExecutionName, ''),
+              lastDeployedAt: defaultTo(entity.lastDeployedAt, ''),
+              envId: defaultTo(env.envId, ''),
+              envName: defaultTo(env.envName, ''),
+              tableType: TableType.FULL
+            }
+          }
           env.instanceGroupedByInfraList?.forEach((infra, infraIndex) => {
+            tableData.push(getData(infra, infraIndex))
+          })
+          env.instanceGroupedByClusterList?.forEach((cluster, clusterIndex) => {
+            tableData.push({ ...getData(cluster, clusterIndex), infraName: defaultTo(cluster.clusterIdentifier, '-') }) //overriding clusterName as clusterIdentifier, as we dont have clusterName field from swagger/response currently
+          })
+          if (!env.instanceGroupedByClusterList?.length && !env.instanceGroupedByInfraList?.length) {
             tableData.push({
               artifactVersion: artifactVersion,
               artifactPath: defaultTo(artifact.artifactPath, ''),
-              showArtifact: envShow && !infraIndex,
+              showArtifact: envShow,
               envId: env.envId,
               envName: env.envName,
-              showEnv: !infraIndex,
-              infraIdentifier: infra.infraIdentifier,
-              infraName: infra.infraName,
-              instanceCount: infra.count,
-              lastPipelineExecutionId: infra.lastPipelineExecutionId,
-              lastPipelineExecutionName: infra.lastPipelineExecutionName,
-              lastDeployedAt: infra.lastDeployedAt,
+              showEnv: true,
+              infraIdentifier: '-',
+              infraName: '-',
+              instanceCount: 0,
+              lastPipelineExecutionId: '',
+              lastPipelineExecutionName: '',
+              lastDeployedAt: '',
               tableType: TableType.FULL
             })
-          })
+          }
           envShow = false
         }
       })
@@ -83,6 +119,7 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
   return tableData
 }
 
+// preview is the table on serviceDetail page
 export const getPreviewTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifact[]): TableRowData[] => {
   const tableData: TableRowData[] = []
   instanceGroupedByArtifact?.forEach(artifact => {
@@ -95,6 +132,12 @@ export const getPreviewTableData = (instanceGroupedByArtifact?: InstanceGroupedB
           env.instanceGroupedByInfraList?.forEach(infra => {
             totalInstancesPerEnv += infra.count || 0
             if (infra.infraIdentifier) {
+              totalInfraPerEnv += 1
+            }
+          })
+          env.instanceGroupedByClusterList?.forEach(cluster => {
+            totalInstancesPerEnv += cluster.count || 0
+            if (cluster.clusterIdentifier) {
               totalInfraPerEnv += 1
             }
           })
@@ -117,6 +160,7 @@ export const getPreviewTableData = (instanceGroupedByArtifact?: InstanceGroupedB
   return tableData
 }
 
+// summaryView is the compressed data on dialog
 export const getSummaryTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifact[]): TableRowData[] => {
   const tableData: TableRowData[] = []
   let artifactVersion: string | undefined
@@ -142,6 +186,15 @@ export const getSummaryTableData = (instanceGroupedByArtifact?: InstanceGroupedB
             if (infra.lastDeployedAt) {
               lastDeployedAt =
                 parseInt(lastDeployedAt) >= parseInt(infra.lastDeployedAt) ? lastDeployedAt : infra.lastDeployedAt
+            }
+          })
+          env.instanceGroupedByClusterList?.forEach(cluster => {
+            infraName ??= cluster.clusterIdentifier
+            totalInfras++
+            totalInstances += cluster.count || 0
+            if (cluster.lastDeployedAt) {
+              lastDeployedAt =
+                parseInt(lastDeployedAt) >= parseInt(cluster.lastDeployedAt) ? lastDeployedAt : cluster.lastDeployedAt
             }
           })
         }
@@ -280,7 +333,7 @@ export const RenderInfra: Renderer<CellProps<TableRowData>> = ({
       </Layout.Horizontal>
     </Container>
   ) : (
-    <></>
+    <>{'-'}</>
   )
 }
 
@@ -483,8 +536,8 @@ export const ActiveServiceInstancesContentV2 = (
   }>
 ): React.ReactElement => {
   const { tableType, loading = false, data, error, refetch } = props
+  const isCluster = isClusterData(defaultTo(data, []))
   const { getString } = useStrings()
-
   const tableData: TableRowData[] = useMemo(() => {
     switch (tableType) {
       case TableType.SUMMARY:
@@ -513,7 +566,9 @@ export const ActiveServiceInstancesContentV2 = (
       {
         Header: (
           <Text lineClamp={1} color={Color.GREY_900}>
-            {getString('cd.serviceDashboard.headers.infrastructures').toLocaleUpperCase()}
+            {isCluster
+              ? getString('common.cluster')
+              : getString('cd.serviceDashboard.headers.infrastructures').toLocaleUpperCase()}
           </Text>
         ),
         id: 'infra',
@@ -545,9 +600,9 @@ export const ActiveServiceInstancesContentV2 = (
 
     return columnsArray
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isCluster])
 
-  if (loading || error || !(data || []).length) {
+  if (loading || error || !(data || []).length || (tableType === TableType.PREVIEW && !tableData.length)) {
     const component = (() => {
       if (loading) {
         return (

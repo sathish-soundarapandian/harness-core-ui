@@ -11,6 +11,7 @@ import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import GetStartedWithCD from '../GetStartedWithCD'
 
+jest.mock('nanoid', () => ({ nanoid: () => 'hjhj87878' }))
 describe('Test Get Started With CD', () => {
   test('initial render', async () => {
     const { getByText } = render(
@@ -22,7 +23,7 @@ describe('Test Get Started With CD', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('cd.installDelegate')
+    const createPipelineBtn = getByText('getStarted')
     expect(createPipelineBtn).toBeInTheDocument()
   })
 })

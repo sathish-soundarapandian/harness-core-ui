@@ -8,7 +8,7 @@
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { Formik } from 'formik'
-import { FormikForm } from '@wings-software/uicore'
+import { FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { initialFormData } from '@cv/pages/slos/components/CVCreateSLO/__tests__/CVCreateSLO.mock'
 import { getUserJourneyOptions } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.utils'

@@ -14,7 +14,7 @@ import {
   Layout,
   MultiTypeInputType,
   Utils
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'

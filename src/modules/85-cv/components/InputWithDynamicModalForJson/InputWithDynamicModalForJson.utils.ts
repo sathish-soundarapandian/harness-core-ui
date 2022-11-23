@@ -5,7 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { max } from 'lodash-es'
 import { isNumeric } from '@cv/utils/CommonUtils'
 import type { UseStringsReturn } from 'framework/strings'
 import type { NoRecordForm } from './InputWithDynamicModalForJson.types'
@@ -21,13 +20,40 @@ export function validate(value: NoRecordForm, getString: UseStringsReturn['getSt
   return errors
 }
 
-export const formatJSONPath = (selectedValue: string): string => {
+export const surroundGivenStringWithBracket = (str: string): string => {
+  if (!str) {
+    return ''
+  }
+
+  if (str === '*') {
+    return `[*]`
+  }
+
+  if (isNumeric(str)) {
+    return `[${str}]`
+  }
+
+  return `['${str}']`
+}
+
+export const wrapJsonKeysWithBrackets = (path?: string[]): string => {
+  if (!path || !Array.isArray(path)) {
+    return ''
+  }
+
+  const bracketAddedPathArray = path.map(currentPath => {
+    return surroundGivenStringWithBracket(currentPath)
+  })
+
+  return bracketAddedPathArray.join('.')
+}
+
+export const formatJSONPath = (selectedValue: string[]): string => {
   let formattedJSONPath = ''
-  const selectedValuePathElements = selectedValue.split('.')
 
   // replacing the array index in the path with [*]
-  if (isNumeric(selectedValuePathElements[selectedValuePathElements.length - 1])) {
-    formattedJSONPath = getJSONPathIfLastElementIsNum(selectedValuePathElements)
+  if (isNumeric(selectedValue[selectedValue.length - 1])) {
+    formattedJSONPath = getJSONPathIfLastElementIsNum(selectedValue)
   } else {
     formattedJSONPath = replaceAllNum(selectedValue)
   }
@@ -39,14 +65,19 @@ export const getJSONPathIfLastElementIsNum = (selectedValuePathElements: string[
   const pathElementsExceptLastNumElement = selectedValuePathElements.slice(0, selectedValuePathElements.length - 1)
   const lastNumElement = selectedValuePathElements[selectedValuePathElements.length - 1]
 
-  let path = pathElementsExceptLastNumElement.join('.')
-  path = replaceAllNum(path)
+  const path = replaceAllNum(pathElementsExceptLastNumElement)
 
   return `${path}.[${lastNumElement}]`
 }
 
-export const replaceAllNum = (path: string): string => {
-  const maxNumericValueInPath = Number(max(path.split('.').filter(item => isNumeric(item)))) || MAX_ARRAY_LENGTH
-  const matchNumber = new RegExp(`\\d{1,${maxNumericValueInPath}}`, 'g')
-  return path.replace(matchNumber, '[*]')
+export const replaceAllNum = (path: string[]): string => {
+  const updatedPath = path.map(currentPath => {
+    if (isNumeric(currentPath)) {
+      return '*'
+    }
+
+    return currentPath
+  })
+
+  return wrapJsonKeysWithBrackets(updatedPath)
 }

@@ -14,8 +14,8 @@ import {
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle,
   useToaster
-} from '@wings-software/uicore'
-import type { ToasterProps } from '@wings-software/uicore/dist/hooks/useToaster/useToaster'
+} from '@harness/uicore'
+import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToaster'
 import type {
   ConnectorInfoDTO,
   ConnectorResponse,
@@ -239,7 +239,6 @@ const ConnectorView: React.FC<ConnectorViewProps> = props => {
               <div className={css.yamlView} data-test="yamlBuilderContainer">
                 <YamlBuilder
                   {...yamlBuilderReadOnlyModeProps}
-                  showSnippetSection={false}
                   onEnableEditMode={() => state.setEnableEdit(true)}
                   isEditModeSupported={canEditConnector}
                   isHarnessManaged={isHarnessManaged}

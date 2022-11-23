@@ -55,6 +55,7 @@ export default function CVMultiTypeQuery({
         onClick={async () => {
           fetchRecords?.()
         }}
+        margin={{ top: 'medium' }}
         disabled={disableFetchButton}
       />
     </MultiTypeFieldSelector>

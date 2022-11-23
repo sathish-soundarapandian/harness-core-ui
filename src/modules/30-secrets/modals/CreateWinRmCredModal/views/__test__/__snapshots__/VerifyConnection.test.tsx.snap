@@ -58,6 +58,7 @@ exports[`Create WinRm Cred Wizard Step Verify Test for winrm step verify 1`] = `
               secrets.createSSHCredWizard.hostnameInfo
             </p>
             <button
+              aria-label="common.smtp.testConnection"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-top-medium Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
               style="font-size: smaller;"
               type="submit"

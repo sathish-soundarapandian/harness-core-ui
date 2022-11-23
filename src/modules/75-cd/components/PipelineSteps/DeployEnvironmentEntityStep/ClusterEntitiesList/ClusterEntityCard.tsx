@@ -7,7 +7,8 @@
 
 import React from 'react'
 
-import { ButtonVariation, Card, Text, Color, Container, Layout, Button } from '@harness/uicore'
+import { ButtonVariation, Card, Text, Container, Layout, Button } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 

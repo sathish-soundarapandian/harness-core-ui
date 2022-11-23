@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormInput, MultiTypeInputType } from '@wings-software/uicore'
+import { FormInput, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import css from '../../ArtifactConnector.module.scss'

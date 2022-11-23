@@ -6,17 +6,8 @@
  */
 
 import React from 'react'
-import {
-  Button,
-  ButtonVariation,
-  Container,
-  HarnessDocTooltip,
-  Heading,
-  Icon,
-  Layout,
-  Text
-} from '@wings-software/uicore'
-import { Color, FontVariation } from '@wings-software/design-system'
+import { Button, ButtonVariation, Container, HarnessDocTooltip, Heading, Icon, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { Intent } from '@blueprintjs/core'
 import { matchPath, useHistory, useLocation, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
@@ -25,7 +16,7 @@ import routes from '@common/RouteDefinitions'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { PipelinePathProps, PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ErrorNodeSummary } from 'services/pipeline-ng'
 import css from '@pipeline/components/RunPipelineModal/RunPipelineForm.module.scss'
 
@@ -37,6 +28,7 @@ export interface PipelineErrorViewProps {
   connectorRef?: string
   repoName?: string
   storeType?: 'INLINE' | 'REMOTE'
+  onClose?: () => void
 }
 
 export function PipelineErrorView({
@@ -46,31 +38,28 @@ export function PipelineErrorView({
   branch,
   connectorRef,
   repoName,
-  storeType
+  storeType,
+  onClose
 }: PipelineErrorViewProps): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const hasChildren = !isEmpty(errorNodeSummary?.childrenErrorNodes)
   const history = useHistory()
   const location = useLocation()
-  const routeParams = {
+  const pathParams: PipelineType<PipelinePathProps> = {
     orgIdentifier,
     projectIdentifier,
     pipelineIdentifier,
     accountId,
-    module,
-    repoIdentifier,
-    branch,
-    connectorRef,
-    repoName,
-    storeType
+    module
   }
+  const isPipeLineStudioView = !!matchPath(location.pathname, { path: routes.toPipelineStudio(pathParams) })
 
   const onOpenInPipelineStudio = () => {
-    history.push(routes.toPipelineStudio(routeParams))
+    history.push(
+      routes.toPipelineStudio({ ...pathParams, ...{ repoIdentifier, branch, connectorRef, repoName, storeType } })
+    )
   }
-
-  const isPipeLineStudioView = !!matchPath(location.pathname, { path: routes.toPipelineStudio(routeParams) })
 
   return (
     <Layout.Vertical>
@@ -98,13 +87,7 @@ export function PipelineErrorView({
             )}
           </Text>
           {isPipeLineStudioView ? (
-            <Button
-              variation={ButtonVariation.SECONDARY}
-              text={getString('close')}
-              onClick={() => {
-                window.location.reload()
-              }}
-            />
+            <Button variation={ButtonVariation.SECONDARY} text={getString('close')} onClick={onClose} />
           ) : (
             <RbacButton
               variation={ButtonVariation.SECONDARY}

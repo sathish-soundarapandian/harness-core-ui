@@ -6,7 +6,8 @@
  */
 
 import React, { ReactNode } from 'react'
-import { ButtonProps, Container, FontVariation, Text } from '@harness/uicore'
+import { ButtonProps, Container, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import FlagDialog from '@cf/components/CreateFlagDialog/FlagDialog'
 import { NoData } from '@cf/components/NoData/NoData'
 import { useStrings, String } from 'framework/strings'
@@ -105,7 +106,7 @@ export const NoFeatureFlags: React.FC<NoFeatureFlagsProps> = ({
     )
   }
   return (
-    <Container flex={{ align: 'center-center' }} style={{ paddingTop: '150px' }}>
+    <Container flex={{ align: 'center-center' }} style={{ paddingTop: '80px' }}>
       <FlagsSectionNoData>
         <FlagDialog environment={environmentIdentifier} isLinkVariation />
       </FlagsSectionNoData>

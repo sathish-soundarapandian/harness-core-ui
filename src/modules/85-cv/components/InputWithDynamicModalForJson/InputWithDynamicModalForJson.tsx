@@ -6,13 +6,14 @@
  */
 
 import React from 'react'
-import { Container, Formik, FormikForm, FormInput, Layout, Text, Button } from '@wings-software/uicore'
+import { Container, Formik, FormikForm, FormInput, Layout, Text, Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import JsonSelector from '@cv/components/JsonSelector/JsonSelector'
 import { NoRecordForm, InputWithDynamicModalForJsonProps, DialogProps } from './InputWithDynamicModalForJson.types'
-import { formatJSONPath, validate } from './InputWithDynamicModalForJson.utils'
+import { formatJSONPath, validate, wrapJsonKeysWithBrackets } from './InputWithDynamicModalForJson.utils'
+import type { JsonRawSelectedPathType } from '../JsonSelector/JsonSelectorType'
 import css from './InputWithDynamicModalForJson.module.scss'
 
 export function InputWithDynamicModalForJson(props: InputWithDynamicModalForJsonProps): JSX.Element {
@@ -80,9 +81,12 @@ export function InputWithDynamicModalForJson(props: InputWithDynamicModalForJson
           </Text>
           <JsonSelector
             json={sampleRecord as Record<string, any>}
-            onPathSelect={(pathSelected: string) => {
+            onPathSelect={(pathSelected: JsonRawSelectedPathType) => {
               hideModalForSelectingField()
-              const selectedValue = showExactJsonPath ? formatJSONPath(pathSelected) : pathSelected
+
+              const pathArray = [...pathSelected.path, pathSelected.key]
+              const selectedValue = showExactJsonPath ? formatJSONPath(pathArray) : wrapJsonKeysWithBrackets(pathArray)
+
               onChange(inputName, selectedValue)
             }}
           />

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { isEmpty, set, isArray, defaultTo } from 'lodash-es'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'

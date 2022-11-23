@@ -220,6 +220,7 @@ describe('Unit tests for createAppd monitoring source', () => {
 
       expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
       expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
+      expect(screen.getByTestId('emptyThresholdsDisplay')).toBeInTheDocument()
 
       expect(container.querySelector("input[name='Errors']")).toBeChecked()
       expect(container.querySelector("input[name='Performance']")).toBeChecked()
@@ -338,6 +339,7 @@ describe('Unit tests for createAppd monitoring source', () => {
       fireEvent.click(addButton)
 
       expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
+      expect(screen.queryByTestId('emptyThresholdsDisplay')).not.toBeInTheDocument()
 
       expect(container.querySelector('input[name="ignoreThresholds.0.metricType"]')).toHaveValue('Performance')
 

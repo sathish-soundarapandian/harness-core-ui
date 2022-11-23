@@ -16,11 +16,13 @@ import { AllowedTypes, getMultiTypeFromValue, Layout, MultiTypeInputType, Select
 import { useStrings } from 'framework/strings'
 import { Failure, ServiceSpec, useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import type { ImagePathTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import css from '../../ArtifactConnector.module.scss'
+import repositoryFieldCss from './ServerlessArtifactoryRepository.module.scss'
 
 function NoRepositoryResults({ error }: { error: GetDataError<Failure | Error> | null }): JSX.Element {
   const { getString } = useStrings()
@@ -46,6 +48,7 @@ export interface ServerlessArtifactoryRepositoryProps {
   template?: ServiceSpec
   fieldPath?: string
   repoFormat?: string
+  stepViewType?: StepViewType
 }
 
 export default function ServerlessArtifactoryRepository(
@@ -62,7 +65,8 @@ export default function ServerlessArtifactoryRepository(
     serviceId,
     template,
     fieldPath,
-    repoFormat
+    repoFormat,
+    stepViewType
   } = props
   const { getString } = useStrings()
   const [connectorRepos, setConnectorRepos] = useState<SelectOption[]>([])
@@ -150,10 +154,14 @@ export default function ServerlessArtifactoryRepository(
   return (
     <div className={css.imagePathContainer}>
       <SelectInputSetView
-        className={css.tagInputButton}
+        className={
+          getMultiTypeFromValue(get(formik.values, fieldName)) === MultiTypeInputType.RUNTIME
+            ? repositoryFieldCss.repositoryFieldContainer
+            : undefined
+        }
         name={fieldName}
         label={getString('repository')}
-        fieldPath={defaultTo(fieldPath, '')} // // Only used for Runtime view
+        fieldPath={defaultTo(fieldPath, '')} // Only used for Runtime view
         selectItems={connectorRepos}
         template={defaultTo(template, {})} // Only used for Runtime view
         disabled={isReadonly}
@@ -181,26 +189,10 @@ export default function ServerlessArtifactoryRepository(
             getArtifactRepos()
           }
         }}
+        configureOptionsProps={{
+          isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+        }}
       />
-
-      {getMultiTypeFromValue(formik.values.repository) === MultiTypeInputType.RUNTIME && (
-        <div className={css.configureOptions}>
-          <SelectConfigureOptions
-            value={formik.values.repository as string}
-            options={connectorRepos}
-            loading={artifactRepoLoading}
-            type="String"
-            variableName="repository"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={value => {
-              formik.setFieldValue('repository', value)
-            }}
-            isReadonly={isReadonly}
-          />
-        </div>
-      )}
     </div>
   )
 }

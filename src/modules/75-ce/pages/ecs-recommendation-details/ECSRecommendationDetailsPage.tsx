@@ -20,7 +20,7 @@ import {
   Button,
   ButtonVariation,
   ButtonSize
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Position, Menu, MenuItem } from '@blueprintjs/core'
 import { defaultTo, isEmpty } from 'lodash-es'
@@ -56,7 +56,7 @@ const ECSRecommendationDetailsPage: React.FC = () => {
     accountId: string
   }>()
 
-  useDocumentTitle([getString('ce.recommendation.sideNavText'), recommendationName], true)
+  useDocumentTitle([getString('ce.recommendation.sideNavText'), recommendationName])
 
   const [timeRange, setTimeRange] = useQueryParamsState<TimeRangeValue>('timeRange', {
     value: TimeRangeType.LAST_7,

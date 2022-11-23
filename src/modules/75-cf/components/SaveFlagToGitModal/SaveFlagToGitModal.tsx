@@ -7,7 +7,7 @@
 
 import React, { ReactElement } from 'react'
 import * as yup from 'yup'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import type { ObjectSchema } from 'yup'
 import { useStrings } from 'framework/strings'
 import type { GitSyncFormValues } from '@cf/hooks/useGitSync'

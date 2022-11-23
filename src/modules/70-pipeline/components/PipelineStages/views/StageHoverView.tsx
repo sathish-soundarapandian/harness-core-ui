@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, IconName, Layout, Text } from '@wings-software/uicore'
+import { Icon, IconName, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { SelectedAddStageTypeData } from './AddStageView'

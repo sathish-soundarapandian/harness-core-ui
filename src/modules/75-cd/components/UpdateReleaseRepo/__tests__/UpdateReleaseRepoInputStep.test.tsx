@@ -8,7 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 // import userEvent from '@testing-library/user-event'
-import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'

@@ -14,6 +14,7 @@ declare const styles: {
   readonly artifactsAccordion: string
   readonly cardSection: string
   readonly configureOptions: string
+  readonly connectorConfigOptions: string
   readonly connectorMargin: string
   readonly customVariables: string
   readonly disabled: string
@@ -30,6 +31,7 @@ declare const styles: {
   readonly nopadLeft: string
   readonly notwide: string
   readonly padSmall: string
+  readonly runtimeSelectWithSubmenu: string
   readonly sectionCard: string
   readonly sectionHeader: string
   readonly selectPopover: string

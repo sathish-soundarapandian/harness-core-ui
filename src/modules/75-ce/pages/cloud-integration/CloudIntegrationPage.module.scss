@@ -53,33 +53,86 @@
 }
 
 .newConnectorPopover {
+  min-width: 536px;
+  height: 268px;
   padding: var(--spacing-huge) var(--spacing-xxlarge) !important;
 
-  > div {
-    margin-top: 0 !important;
+  .k8sCardCtn {
+    display: grid;
+    grid-template-columns: repeat(2, 100px);
+    grid-template-rows: 100px;
+    column-gap: var(--spacing-xlarge);
+    margin-top: var(--spacing-medium);
 
-    > div:nth-child(1) {
-      :global(.bp3-card) {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 4px;
-      }
-
-      grid-template-columns: repeat(4, 100px);
-      grid-template-rows: 100px;
-      column-gap: var(--spacing-xlarge);
-      margin-top: var(--spacing-medium);
+    .k8sCard {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+      height: 100px;
+      border: none !important;
     }
 
-    > div:nth-child(2) {
-      grid-template-columns: repeat(4, 100px);
-      column-gap: var(--spacing-xlarge);
+    .recommended {
+      font-size: 10px;
+      background-color: var(--primary-2);
+      position: absolute;
+      font-weight: 700;
+      left: 3px;
+      bottom: 3px;
+      right: 3px;
+      text-transform: uppercase;
+      padding: var(--spacing-1) 6px;
+      border-radius: 4px;
+      text-align: center;
+    }
+  }
 
-      > p {
-        color: var(--grey-600);
+  .k8sCardLabelCtn {
+    margin-top: var(--spacing-small);
+    display: grid;
+    grid-template-columns: repeat(2, 100px);
+    column-gap: var(--spacing-xlarge);
+    text-align: center;
+
+    > p {
+      color: var(--grey-600);
+    }
+  }
+
+  .allConnectorsState {
+    > div {
+      margin-top: 0 !important;
+
+      > div:nth-child(1) {
+        :global(.bp3-card) {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 4px;
+        }
+
+        grid-template-columns: repeat(4, 100px);
+        grid-template-rows: 100px;
+        column-gap: var(--spacing-xlarge);
+        margin-top: var(--spacing-medium);
+      }
+
+      > div:nth-child(2) {
+        grid-template-columns: repeat(4, 100px);
+        column-gap: var(--spacing-xlarge);
+
+        > p {
+          color: var(--grey-600);
+        }
       }
     }
+  }
+
+  .backButton {
+    position: absolute;
+    top: var(--spacing-medium);
+    left: var(--spacing-large);
   }
 }
 

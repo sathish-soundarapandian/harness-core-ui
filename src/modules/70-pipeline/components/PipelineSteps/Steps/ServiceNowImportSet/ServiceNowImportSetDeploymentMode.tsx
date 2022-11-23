@@ -8,7 +8,7 @@
 import React, { Fragment, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import type {
@@ -25,13 +25,14 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/helper'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { ServiceNowImportSetDeploymentModeProps, ServiceNowStagingTableSelectOption } from './types'
 import css from '@pipeline/components/PipelineSteps/Steps/ServiceNowImportSet/ServiceNowImportSet.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function ServiceNowImportSetDeploymentMode(props: ServiceNowImportSetDeploymentModeProps): JSX.Element {
-  const { inputSetData, initialValues, allowableTypes } = props
+  const { inputSetData, initialValues, allowableTypes, stepViewType } = props
   const readonly = inputSetData?.readonly
   const path = inputSetData?.path
   const template = inputSetData?.template
@@ -92,7 +93,9 @@ export default function ServiceNowImportSetDeploymentMode(props: ServiceNowImpor
           label={getString('pipelineSteps.timeoutLabel')}
           className={css.deploymentViewMedium}
           multiTypeDurationProps={{
-            enableConfigureOptions: false,
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             allowableTypes,
             expressions,
             disabled: isApprovalStepFieldDisabled(readonly)
@@ -119,8 +122,15 @@ export default function ServiceNowImportSetDeploymentMode(props: ServiceNowImpor
             allowableTypes,
             expressions
           }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
           type={'ServiceNow'}
           gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
+          templateProps={{
+            isTemplatizedView: true,
+            templateValue: template?.spec?.connectorRef
+          }}
         />
       )}
 

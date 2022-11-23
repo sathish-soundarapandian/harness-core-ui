@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Color, Container, FontVariation, Text } from '@harness/uicore'
+import { Container, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import css from './PermissionError.module.scss'

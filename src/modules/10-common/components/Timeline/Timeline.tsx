@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import css from './Timeline.module.scss'
 export interface TimelineNode {
   label: string

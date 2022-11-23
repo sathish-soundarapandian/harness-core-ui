@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Text, Container, Heading, Button, Layout, ButtonVariation } from '@wings-software/uicore'
+import { Text, Container, Heading, Button, Layout, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import tiUpgrade from './images/ti_upgrade.svg'

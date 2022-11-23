@@ -22,7 +22,7 @@ import {
   Tab,
   Tabs,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as yup from 'yup'
 import {
   Clause,

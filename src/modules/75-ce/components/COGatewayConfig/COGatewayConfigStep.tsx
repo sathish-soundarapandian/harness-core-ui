@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { HarnessDocTooltip, Icon, Layout, Text } from '@wings-software/uicore'
+import { HarnessDocTooltip, Icon, Layout, Text } from '@harness/uicore'
 import css from './COGatewayConfig.module.scss'
 
 interface DataTooltip {

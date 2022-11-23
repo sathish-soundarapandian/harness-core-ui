@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Text, Formik, FormInput, Container, ThumbnailSelect } from '@wings-software/uicore'
+import { Text, Formik, FormInput, Container, ThumbnailSelect } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'

@@ -37,13 +37,13 @@ jest.mock('services/cd-ng', () => ({
   useGetConnector: () => {
     return { data: mockConnectorsResponse.data, refetch: fetchConnectors, error: null, loading: false }
   },
-  useGetJobDetailsForJenkins: jest.fn().mockImplementation(() => {
+  useGetJobDetailsForJenkinsServiceV2: jest.fn().mockImplementation(() => {
     return { data: mockJobResponse.data, refetch: refetchJobs, error: null, loading: false }
   }),
-  useGetArtifactPathForJenkins: jest.fn().mockImplementation(() => {
+  useGetArtifactPathForJenkinsServiceV2: jest.fn().mockImplementation(() => {
     return { data: mockArtifactPathResponse, refetch: refetchArtifactPath, error: null, loading: false }
   }),
-  useGetBuildsForJenkins: jest.fn().mockImplementation(() => {
+  useGetBuildsForJenkinsServiceV2: jest.fn().mockImplementation(() => {
     return { data: mockBuildResponse, refetch: refetchJenkinsBuild, error: null, loading: false }
   })
 }))
@@ -102,7 +102,7 @@ const renderComponent = (passedProps?: Omit<ArtifactSourceRenderProps, 'formik'>
 
 describe('JenkinsArtifactSource tests', () => {
   beforeEach(() => {
-    jest.spyOn(cdng, 'useGetArtifactPathForJenkins').mockImplementation((): any => {
+    jest.spyOn(cdng, 'useGetArtifactPathForJenkinsServiceV2').mockImplementation((): any => {
       return {
         loading: false,
         data: mockArtifactPathResponse,
@@ -124,7 +124,7 @@ describe('JenkinsArtifactSource tests', () => {
   })
 
   test(`after selecting jobName, artifactPath should be fetched and loading will be shown till response comes`, async () => {
-    jest.spyOn(cdng, 'useGetArtifactPathForJenkins').mockImplementation((): any => {
+    jest.spyOn(cdng, 'useGetArtifactPathForJenkinsServiceV2').mockImplementation((): any => {
       return {
         loading: true,
         data: [],

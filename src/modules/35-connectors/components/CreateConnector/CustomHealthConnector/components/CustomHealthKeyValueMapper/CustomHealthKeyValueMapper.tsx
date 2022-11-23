@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { get } from 'lodash-es'
-import { Button, ButtonVariation, FormInput, Layout, Text, Container } from '@wings-software/uicore'
+import { Button, ButtonVariation, FormInput, Layout, Text, Container } from '@harness/uicore'
 import { FieldArray } from 'formik'
 import { useStrings } from 'framework/strings'
 import TextReference, { ValueType } from '@secrets/components/TextReference/TextReference'

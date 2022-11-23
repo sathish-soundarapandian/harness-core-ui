@@ -11,11 +11,10 @@ import { useParams } from 'react-router-dom'
 import { defaultTo, memoize } from 'lodash-es'
 import * as Yup from 'yup'
 import { Menu } from '@blueprintjs/core'
-
+import { FontVariation } from '@harness/design-system'
 import {
   Button,
   ButtonVariation,
-  FontVariation,
   Formik,
   FormInput,
   getMultiTypeFromValue,

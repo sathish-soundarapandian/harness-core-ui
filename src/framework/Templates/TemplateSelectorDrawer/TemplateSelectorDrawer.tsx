@@ -7,7 +7,7 @@
 
 import React, { useCallback } from 'react'
 import { Drawer, Position } from '@blueprintjs/core'
-import { Button } from '@wings-software/uicore'
+import { Button } from '@harness/uicore'
 import { TemplateSelector } from '@templates-library/components/TemplateSelector/TemplateSelector'
 import { useTemplateSelectorContext } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 import css from './TemplateSelectorDrawer.module.scss'
@@ -16,7 +16,7 @@ export const TemplateSelectorDrawer: React.FC = (): JSX.Element => {
   const {
     state: { isDrawerOpened, selectorData }
   } = useTemplateSelectorContext()
-  const { onCancel } = selectorData || {}
+  const { hideTemplatesView = false, onCancel } = selectorData || {}
 
   const closeTemplateView = useCallback(() => {
     onCancel?.()
@@ -35,7 +35,7 @@ export const TemplateSelectorDrawer: React.FC = (): JSX.Element => {
       canOutsideClickClose={true}
       enforceFocus={false}
       hasBackdrop={true}
-      size={'1287px'}
+      size={hideTemplatesView ? 'auto' : '1287px'}
       isOpen={true}
       position={Position.RIGHT}
     >

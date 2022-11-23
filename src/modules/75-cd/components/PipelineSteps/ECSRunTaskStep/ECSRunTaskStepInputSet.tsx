@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { connect, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, FormInput, Layout } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, FormInput, Layout } from '@harness/uicore'
 
 import type { GitConfigDTO, Scope } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

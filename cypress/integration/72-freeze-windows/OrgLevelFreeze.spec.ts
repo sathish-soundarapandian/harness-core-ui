@@ -58,7 +58,7 @@ describe('Org Level Freeze', () => {
 
     // Click on Freeze Config Tab
     cy.get('#bp3-tab-title_freezeWindowStudio_FREEZE_CONFIG').should('be.visible').click()
-    cy.get('h4').contains('Define which resources you want to include in this freeze window')
+    cy.get('h4').contains('Freeze any deployments that have the following resources defined in the rules below')
 
     // Click on Add rule, All Projects
     cy.get('button span[icon="plus"]').click()
@@ -225,13 +225,13 @@ describe('Org Level Freeze', () => {
 
     // Should land on Overview Tab
     cy.get('#bp3-tab-title_freezeWindowStudio_FREEZE_CONFIG').should('be.visible').click()
-    cy.get('h4').contains('Define which resources you want to include in this freeze window')
+    cy.get('h4').contains('Freeze any deployments that have the following resources defined in the rules below')
     cy.get('[data-testid="config-view-mode_0"]').should('have.length', 1)
     cy.get('[data-testid="config-view-mode_1"]').should('have.length', 1)
     cy.get('[data-testid="config-view-mode_2"]').should('have.length', 1)
 
     // Delete Rule 2
-    cy.get('[data-testid="config-view-mode_1"] button span.bp3-icon-trash').click()
+    cy.get('[data-testid="config-view-mode_1"] button span[data-icon="main-trash"]').click()
     cy.get('button').contains('span', 'Save').parent().should('not.be.disabled')
     cy.get('button').contains('span', 'Discard').parent().should('not.be.disabled')
     cy.get('button span').contains('Unsaved changes')

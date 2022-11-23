@@ -10,7 +10,7 @@ import { useTelemetryInstance } from '../useTelemetryInstance'
 
 const identifyMock = jest.fn()
 
-jest.mock('@wings-software/telemetry', () => {
+jest.mock('@harness/telemetry', () => {
   return jest.fn().mockImplementation(() => {
     return {
       initialized: true,

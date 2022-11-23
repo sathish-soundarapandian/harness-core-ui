@@ -6,14 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import {
-  FormInput,
-  Icon,
-  ModalErrorHandler,
-  ModalErrorHandlerBinding,
-  SelectOption,
-  Text
-} from '@wings-software/uicore'
+import { FormInput, Icon, ModalErrorHandler, ModalErrorHandlerBinding, SelectOption, Text } from '@harness/uicore'
 import type { FormikContextType } from 'formik'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'

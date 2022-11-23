@@ -23,6 +23,7 @@ jest.mock('services/cd-ng', () => ({
   usePostSecret: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   usePostSecretFileV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   usePutSecretFileV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useGetGcpRegions: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useGetSecretV2: jest.fn().mockImplementation(() => ({ refetch: jest.fn(), data: secretMockData })),
   useGetConnectorList: () => {
     return {

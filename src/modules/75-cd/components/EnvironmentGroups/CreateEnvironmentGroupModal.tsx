@@ -59,7 +59,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   entityType: 'EnvironmentGroup',
   width: '100%',
   height: 250,
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -317,7 +316,6 @@ export default function CreateEnvironmentGroupModal({
                     }}
                     schema={/* istanbul ignore next */ environmentGroupSchema?.data}
                     bind={setYamlHandler}
-                    showSnippetSection={false}
                   />
                   <Layout.Horizontal padding={{ top: 'large' }}>
                     <Button

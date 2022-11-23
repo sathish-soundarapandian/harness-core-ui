@@ -5,6 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { DeployEnvironmentEntityConfig } from '../DeployEnvironmentEntityStep/types'
+
+export type DeployClusterEntityStepProps = Required<DeployEnvironmentEntityConfig>['environment']
+
 export interface DeployClusterEntityCustomStepProps {
   environmentIdentifier?: string
   isMultipleCluster?: boolean
@@ -12,4 +16,5 @@ export interface DeployClusterEntityCustomStepProps {
 
 export interface DeployClusterEntityCustomInputStepProps extends DeployClusterEntityCustomStepProps {
   deployToAllClusters?: boolean
+  showEnvironmentsSelectionInputField?: boolean
 }

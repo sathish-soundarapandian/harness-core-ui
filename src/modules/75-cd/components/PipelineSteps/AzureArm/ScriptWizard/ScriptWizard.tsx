@@ -31,10 +31,7 @@ import {
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 
-import {
-  ConnectorMap,
-  AllowedTypes
-} from '../../AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
+import { ConnectorMap, AllowedTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import { ScriptWizardStepOne } from './ScriptWizardStepOne'
 import { ScriptWizardStepTwo } from './ScriptWizardStepTwo'
 

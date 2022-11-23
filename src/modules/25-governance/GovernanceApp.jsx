@@ -7,7 +7,7 @@
 
 import React, { Suspense, lazy } from 'react'
 import { useRouteMatch } from 'react-router-dom'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import GitFilters from '@common/components/GitFilters/GitFilters'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'

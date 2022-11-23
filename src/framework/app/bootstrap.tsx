@@ -7,7 +7,7 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { HashRouter, Route, Switch } from 'react-router-dom'
+import { Route, Switch, BrowserRouter, HashRouter } from 'react-router-dom'
 
 import languageLoader from 'strings/languageLoader'
 import type { LangLocale } from 'strings/languageLoader'
@@ -15,7 +15,18 @@ import type { LangLocale } from 'strings/languageLoader'
 import { AppWithAuthentication, AppWithoutAuthentication } from './App'
 
 const ignoredErrorClasses = ['YAMLSemanticError', 'YAMLSyntaxError', 'AbortError']
-
+const DefaultRouter: React.FC<React.PropsWithChildren<unknown>> = props => {
+  const { browserRouterEnabled } = window
+  return (
+    <>
+      {browserRouterEnabled ? (
+        <BrowserRouter basename={`${window.harnessNameSpace}/ng`}>{props.children}</BrowserRouter>
+      ) : (
+        <HashRouter>{props.children}</HashRouter>
+      )}
+    </>
+  )
+}
 export default async function render(): Promise<void> {
   const lang: LangLocale = 'en'
   const strings = await languageLoader(lang)
@@ -36,7 +47,7 @@ export default async function render(): Promise<void> {
   }
 
   ReactDOM.render(
-    <HashRouter>
+    <DefaultRouter>
       <Switch>
         <Route
           path={[
@@ -53,7 +64,7 @@ export default async function render(): Promise<void> {
           <AppWithoutAuthentication strings={strings} />
         </Route>
       </Switch>
-    </HashRouter>,
+    </DefaultRouter>,
     document.getElementById('react-root')
   )
 }

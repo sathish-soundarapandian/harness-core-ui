@@ -1018,16 +1018,22 @@ const routes = {
   ),
   toExecutionPipelineView: withAccountId(
     ({
+      accountId: _accountId,
       orgIdentifier,
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
       module,
-      source
-    }: PipelineType<ExecutionPathProps>) => {
+      source,
+      ...rest
+    }: PipelineType<ExecutionPathProps> & GitQueryParams) => {
       const basePath = module || 'home'
-
-      return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/pipeline`
+      const queryString = qs.stringify(rest, { skipNulls: true })
+      if (queryString.length > 0) {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/pipeline?${queryString}`
+      } else {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/pipeline`
+      }
     }
   ),
   toExecutionInputsView: withAccountId(
@@ -1512,6 +1518,11 @@ const routes = {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/create`
     }
   ),
+  toCVCreateCompositeSLOs: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
+      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/create/composite`
+    }
+  ),
   toCVAddMonitoringServicesSetup: withAccountId(
     ({ projectIdentifier, orgIdentifier }: Partial<ProjectPathProps & { identifier: string }>) =>
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservices/setup`
@@ -1759,6 +1770,13 @@ const routes = {
   toCommitmentOrchestration: withAccountId(() => `/ce/commitment-orchestration`),
   toCommitmentOrchestrationSetup: withAccountId(() => `/ce/commitment-orchestration/setup`),
   toCECloudIntegration: withAccountId(() => `/ce/cloud-integrations/`),
+  toCEGovernance: withAccountId(() => `/ce/governance/`),
+  toCEGovernanceRules: withAccountId(() => `/ce/governance/rules/`),
+  toCEGovernanceEnforcements: withAccountId(() => `/ce/governance/enforcements/`),
+  toCEGovernanceEvaluations: withAccountId(() => `/ce/governance/evaluations/`),
+  toCEGovernanceRuleEditor: withAccountId(
+    ({ ruleId }: { ruleId: string }) => `/ce/governance/rules/${ruleId}/rule-editor/`
+  ),
   toCCMMFE: withAccountId(() => `/ce/new`),
   /********************************************************************************************************************/
   toSTO: withAccountId(() => `/sto`),

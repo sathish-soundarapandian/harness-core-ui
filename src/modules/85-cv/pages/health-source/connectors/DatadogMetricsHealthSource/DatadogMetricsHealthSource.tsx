@@ -14,11 +14,10 @@ import {
   useToaster,
   Utils,
   Container
-} from '@wings-software/uicore'
-import { debounce, noop } from 'lodash-es'
+} from '@harness/uicore'
+import { debounce, noop, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
-import isEmpty from 'lodash-es/isEmpty'
 import { useStrings } from 'framework/strings'
 import type {
   DatadogMetricInfo,

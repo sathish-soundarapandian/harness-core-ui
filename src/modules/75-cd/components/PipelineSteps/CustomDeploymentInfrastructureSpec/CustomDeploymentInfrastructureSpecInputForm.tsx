@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 
 import cx from 'classnames'
 

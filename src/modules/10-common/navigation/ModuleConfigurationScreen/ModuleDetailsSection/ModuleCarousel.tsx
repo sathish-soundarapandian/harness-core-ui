@@ -8,7 +8,8 @@
 import React, { useState, useEffect } from 'react'
 import Lottie from 'react-lottie-player'
 import { Icon } from '@harness/icons'
-import { Container, Layout, Text, FontVariation, Color, Carousel } from '@harness/uicore'
+import { Container, Layout, Text, Carousel } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import useNavModuleInfo, { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import { MassagedModuleData, ModuleContentType } from '../useGetContentfulModules'
 import CarouselImageAndDescription from '../CarousellmageAndDescription/CarousellmageAndDescription'
@@ -54,8 +55,9 @@ const ModuleCarousel: React.FC<ModuleCarouselProps> = ({ module: selectedModule,
           hideSlideChangeButtons
           slideClassName={css.carouselSlide}
           indicatorsClassName={css.indicators}
+          activeIndicatorClassName={css.indicatorActive}
           autoPlay
-          autoPlayInterval={3000}
+          autoPlayInterval={10000}
           hideIndicators={data.length <= 1}
         >
           {data.length > 0 ? (

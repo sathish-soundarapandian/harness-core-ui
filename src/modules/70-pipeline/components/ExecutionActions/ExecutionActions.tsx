@@ -18,7 +18,7 @@ import {
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Classes, Dialog, IDialogProps, Intent, Menu, MenuItem, Position } from '@blueprintjs/core'
-import { Link, useLocation, matchPath } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 
 import { HandleInterruptQueryParams, useHandleInterrupt, useHandleStageInterrupt } from 'services/pipeline-ng'
@@ -77,6 +77,7 @@ export interface ExecutionActionsProps {
   onViewCompiledYaml?: () => void
   onCompareExecutions?: () => void
   menuOnlyActions?: boolean
+  isExecutionListView?: boolean
 }
 
 function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {
@@ -154,7 +155,8 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     isPipelineInvalid,
     onViewCompiledYaml,
     onCompareExecutions,
-    menuOnlyActions
+    menuOnlyActions,
+    isExecutionListView
   } = props
   const {
     orgIdentifier,
@@ -180,7 +182,6 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
 
   const { showSuccess, showError, clear } = useToaster()
   const { getString } = useStrings()
-  const location = useLocation()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { isCompareMode } = useExecutionCompareContext()
@@ -204,31 +205,21 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
 
   const interruptMethod = stageId ? stageInterrupt : interrupt
 
-  const executionDetailsView = routes.toExecutionPipelineView({
-    source,
+  const commonRouteProps = {
     orgIdentifier,
     pipelineIdentifier,
-    executionIdentifier,
     projectIdentifier,
-    accountId,
-    module
-  })
-  const pipelineDetailsView = routes.toPipelineStudio({
-    orgIdentifier,
-    projectIdentifier,
-    pipelineIdentifier,
     accountId,
     module,
-    branch,
-    repoIdentifier,
     connectorRef,
     repoName,
+    repoIdentifier,
+    branch,
     storeType
-  })
+  }
 
-  const isExecutionDetailsView = !!matchPath(location.pathname, {
-    path: executionDetailsView
-  })
+  const executionDetailsView = routes.toExecutionPipelineView({ ...commonRouteProps, source, executionIdentifier })
+  const pipelineDetailsView = routes.toPipelineStudio(commonRouteProps)
 
   async function executeAction(interruptType: HandleInterruptQueryParams['interruptType']): Promise<void> {
     clear()
@@ -291,12 +282,13 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
             executionIdentifier={executionIdentifier}
             pipelineIdentifier={pipelineIdentifier}
             modules={modules}
+            params={params}
           />
           <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
         </div>
       </Dialog>
     )
-  }, [pipelineIdentifier, executionIdentifier])
+  }, [pipelineIdentifier, executionIdentifier, params])
 
   /*--------------------------------------Retry Pipeline---------------------------------------------*/
 
@@ -381,7 +373,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
                 disabled={!canRerun || isPipelineInvalid}
               />
             )}
-            {!isExecutionDetailsView && (
+            {isExecutionListView && (
               <Menu.Item
                 className={css.link}
                 text={<Link to={executionDetailsView}>{getString('pipeline.viewExecution')}</Link>}
@@ -408,7 +400,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
             <MenuItem text={getString(abortText)} onClick={openAbortDialog} disabled={!canAbort} />
             <MenuItem text={getString(pauseText)} onClick={pausePipeline} disabled={!canPause} />
             <MenuItem text={getString(resumeText)} onClick={resumePipeline} disabled={!canResume} />
-            {!isExecutionDetailsView && (
+            {isExecutionListView && (
               <>
                 <MenuItem
                   text={getString('pipeline.execution.actions.viewCompiledYaml')}

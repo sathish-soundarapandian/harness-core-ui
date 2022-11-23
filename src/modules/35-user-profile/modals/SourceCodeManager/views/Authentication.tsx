@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Text, Container, FormInput, SelectOption } from '@wings-software/uicore'
+import { Layout, Text, Container, FormInput, SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

@@ -17,7 +17,7 @@ import {
   Icon,
   Layout,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { isEmpty, unset } from 'lodash-es'

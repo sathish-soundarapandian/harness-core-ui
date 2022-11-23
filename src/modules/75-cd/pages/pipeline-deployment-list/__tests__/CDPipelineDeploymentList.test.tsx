@@ -46,9 +46,11 @@ jest.mock('services/pipeline-ng', () => ({
     mockGetCallFunction(args)
     return { mutate: jest.fn(() => Promise.resolve(pipelineList)), cancel: jest.fn(), loading: false }
   }),
+  useGetExecutionBranchesList: jest.fn().mockImplementation(() => {
+    return { data: jest.fn(), refetch: jest.fn() }
+  }),
   useGetTemplateFromPipeline: jest.fn(() => ({ data: {} })),
   useGetPipeline: jest.fn(() => ({ data: {} })),
-  useGetPipelineSummary: jest.fn(() => PipelineDetailsMockResponse),
   useCreateInputSetForPipeline: jest.fn(() => ({ data: {} })),
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => ({ data: {} })),
   useHandleInterrupt: jest.fn(() => ({})),
@@ -82,6 +84,10 @@ jest.mock('services/pipeline-ng', () => ({
   useValidateTemplateInputs: jest.fn(() => ({ data: null }))
 }))
 
+jest.mock('services/pipeline-rq', () => ({
+  useGetPipelineSummaryQuery: jest.fn(() => PipelineDetailsMockResponse)
+}))
+
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
 const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
 
@@ -101,13 +107,17 @@ jest.mock('services/cd-ng', () => ({
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
   }),
-  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
-    return { data: sourceCodeManagers, refetch: jest.fn() }
-  }),
   useCreatePR: jest.fn(() => noop),
   useCreatePRV2: jest.fn(() => noop),
   useGetFileContent: jest.fn(() => noop),
-  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
+  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
+  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
 }))
 
 jest.mock('services/template-ng', () => ({
@@ -147,13 +157,14 @@ describe('CDPipelineDeploymentList', () => {
     })
     expect(pipeline).toHaveAttribute(
       'href',
-      '/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/NgFnOCXUTNm5D9eNovvILg/pipeline'
+      '/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/NgFnOCXUTNm5D9eNovvILg/pipeline?storeType=INLINE'
     )
   })
 
   test('should be able to show any pipeline`s executions', async () => {
     renderExecutionPage()
     expect(useGetListOfExecutions).toHaveBeenCalled()
+
     // In pipeline execution history avoid module filter since we show all pipelines in any module and execution history also should be shown for any pipeline
     expect(useGetListOfExecutions).not.toHaveBeenLastCalledWith(
       expect.objectContaining({ queryParams: expect.objectContaining({ module: 'cd' }) })

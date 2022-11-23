@@ -2,13 +2,21 @@ rules:
   no-restricted-imports:
     - error
     - patterns:
-        - lodash.*
-        - microfrontends/*
-        - '!microfrontends/ChildAppMounter'
-        - modules/85-cv/*
-        - modules/90-gitops/*
-        - '@cv/*'
-        - '@gitops/*'
+        - group:
+            - lodash/*
+            - lodash.*
+            - lodash-es/*
+            - '!lodash/fp'
+          message: Import from 'lodash-es' instead
+        - group:
+            - microfrontends/*
+            - '!microfrontends/ChildAppMounter'
+        - group:
+            - modules/85-cv/*
+            - modules/90-gitops/*
+            - '@cv/*'
+            - '@gitops/*'
+          message: Import from higher layer modules is not allowed
       paths:
         - lodash
         - name: js-yaml
@@ -21,7 +29,7 @@ rules:
           message: import from "react-router-dom" instead
         - name: microfrontends
           message: Import from 'microfrontends' is only allowed in child apps
-        - name: '@wings-software/uicore'
+        - name: '@harness/uicore'
           importNames:
             - Color
             - FontVariation

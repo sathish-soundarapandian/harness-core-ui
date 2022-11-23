@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import type { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import {

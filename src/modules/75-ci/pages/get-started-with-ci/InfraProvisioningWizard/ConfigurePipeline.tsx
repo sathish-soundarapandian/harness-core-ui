@@ -13,7 +13,6 @@ import type { FormikContextType } from 'formik'
 import { noop } from 'lodash-es'
 import {
   Text,
-  FontVariation,
   Layout,
   Card,
   Icon,
@@ -25,6 +24,7 @@ import {
   FormInput,
   SelectOption
 } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { PipelineConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
@@ -330,10 +330,10 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
         </Container>
       </Layout.Vertical>
       {selectedConfigOption &&
-      ![PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.ChooseExistingYAML].includes(
-        StarterConfigIdToOptionMap[selectedConfigOption.id]
-      ) ? (
-        pipelineYAML ? (
+        ![PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.ChooseExistingYAML].includes(
+          StarterConfigIdToOptionMap[selectedConfigOption.id]
+        ) &&
+        pipelineYAML && (
           <Container margin={{ top: 'xxxlarge' }}>
             <YAMLBuilder
               entityType="Pipelines"
@@ -341,16 +341,13 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
               isReadOnlyMode={true}
               isEditModeSupported={false}
               existingYaml={pipelineYAML}
-              showSnippetSection={false}
               width={'75%'}
               height={'calc(100vh - 330px)'}
               showCopyIcon={false}
+              hideErrorMesageOnReadOnlyMode={true}
             />
           </Container>
-        ) : (
-          <></>
-        )
-      ) : null}
+        )}
     </Layout.Horizontal>
   )
 }

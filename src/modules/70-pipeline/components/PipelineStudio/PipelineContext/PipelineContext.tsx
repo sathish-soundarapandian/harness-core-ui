@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
-import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge, map, omitBy } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge, map, uniq } from 'lodash-es'
 import {
   AllowedTypes,
   AllowedTypesWithRunTime,
@@ -40,8 +40,6 @@ import {
   PutPipelineQueryParams,
   putPipelineV2Promise,
   ResponsePMSPipelineResponseDTO,
-  validateTemplateInputsPromise,
-  ValidateTemplateInputsQueryParams,
   YamlSchemaErrorWrapperDTO,
   ResponsePMSPipelineSummaryResponse
 } from 'services/pipeline-ng'
@@ -60,7 +58,7 @@ import {
   TemplateServiceDataType
 } from '@pipeline/utils/templateUtils'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
-import type { Pipeline } from '@pipeline/utils/types'
+import type { Pipeline, TemplateIcons } from '@pipeline/utils/types'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
   ActionReturnType,
@@ -141,7 +139,8 @@ export const getPipelineByIdentifier = (
         ...(yamlPipelineDetails !== null && { ...yamlPipelineDetails.pipeline }),
         gitDetails: obj.data.gitDetails ?? {},
         entityValidityDetails: obj.data.entityValidityDetails ?? {},
-        yamlSchemaErrorWrapper: obj.data.yamlSchemaErrorWrapper ?? {}
+        yamlSchemaErrorWrapper: obj.data.yamlSchemaErrorWrapper ?? {},
+        modules: response.data?.modules
       }
     } else if (response?.status === 'ERROR' && params?.storeType === StoreType.REMOTE) {
       return { remoteFetchError: response } as FetchError // handling remote pipeline not found
@@ -190,23 +189,6 @@ export const getPipelineMetadataByIdentifier = (
   })
 }
 
-const getTemplateErrorNodeSummary = (
-  queryParams: ValidateTemplateInputsQueryParams
-): Promise<ErrorNodeSummary | undefined> => {
-  return validateTemplateInputsPromise({ queryParams })
-    .then(response => {
-      if (response && response.status === 'SUCCESS') {
-        if (response.data?.validYaml === false && response.data.errorNodeSummary) {
-          return response.data.errorNodeSummary
-        }
-      }
-      throw response
-    })
-    .catch(_error => {
-      return undefined
-    })
-}
-
 export const savePipeline = (
   params: CreatePipelineQueryParams & PutPipelineQueryParams,
   pipeline: PipelineInfoConfig,
@@ -229,8 +211,8 @@ export const savePipeline = (
         body: body as any,
         requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
       })
-        .then((response: any) => {
-          if ((typeof response as unknown) === 'string') {
+        .then((response: unknown) => {
+          if (typeof response === 'string') {
             return JSON.parse(response as string) as Failure
           } else {
             return response
@@ -292,6 +274,7 @@ export interface PipelineContextInterface {
   fetchPipeline: (args: FetchPipelineUnboundProps) => Promise<void>
   setYamlHandler: (yamlHandler: YamlBuilderHandlerBinding) => void
   setTemplateTypes: (data: { [key: string]: string }) => void
+  setTemplateIcons: (data: TemplateIcons) => void
   setTemplateServiceData: (data: TemplateServiceDataType) => void
   updatePipeline: (pipeline: PipelineInfoConfig, viewType?: SelectedView) => Promise<void>
   updatePipelineStoreMetadata: (storeMetadata: StoreMetadata, gitDetails: EntityGitDetails) => Promise<void>
@@ -323,6 +306,7 @@ interface PipelinePayload {
   pipeline: PipelineInfoConfig | undefined
   originalPipeline?: PipelineInfoConfig
   isUpdated: boolean
+  modules?: string[]
   storeMetadata?: StoreMetadata
   gitDetails: EntityGitDetails
   entityValidityDetails?: EntityValidityDetails
@@ -372,8 +356,11 @@ export const findAllByKey = (keyToFind: string, obj?: PipelineInfoConfig): strin
     : []
 }
 
-const getResolvedCustomDeploymentDetailsMap = (pipeline: PipelineInfoConfig, queryParams: GetPipelineQueryParams) => {
-  const templateRefs = map(findAllByKey('customDeploymentRef', pipeline), 'templateRef')
+const getResolvedCustomDeploymentDetailsMap = (
+  pipeline: PipelineInfoConfig,
+  queryParams: GetPipelineQueryParams
+): ReturnType<typeof getResolvedCustomDeploymentDetailsByRef> => {
+  const templateRefs = uniq(map(findAllByKey('customDeploymentRef', pipeline), 'templateRef'))
   return getResolvedCustomDeploymentDetailsByRef(
     {
       accountIdentifier: queryParams.accountIdentifier,
@@ -393,8 +380,8 @@ const getTemplateType = (
   queryParams: GetPipelineQueryParams,
   storeMetadata?: StoreMetadata,
   supportingTemplatesGitx?: boolean
-) => {
-  const templateRefs = findAllByKey('templateRef', pipeline)
+): ReturnType<typeof getTemplateTypesByRef> => {
+  const templateRefs = uniq(findAllByKey('templateRef', pipeline))
   return getTemplateTypesByRef(
     {
       accountIdentifier: queryParams.accountIdentifier,
@@ -411,7 +398,7 @@ const getTemplateType = (
   )
 }
 
-const getRepoIdentifierName = (gitDetails?: EntityGitDetails) => {
+const getRepoIdentifierName = (gitDetails?: EntityGitDetails): string => {
   return gitDetails?.repoIdentifier || gitDetails?.repoName || ''
 }
 
@@ -446,14 +433,6 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
   }
 
   if ((!data || forceFetch) && pipelineId !== DefaultNewPipelineId) {
-    const templateInputsErrorNodeSummary = await getTemplateErrorNodeSummary({
-      ...queryParams,
-      identifier: pipelineId,
-      repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
-    })
-
     const pipelineByIdPromise = getPipelineByIdentifier(
       { ...queryParams, ...(repoIdentifier ? { repoIdentifier } : {}), ...(branch ? { branch } : {}) },
       pipelineId,
@@ -468,17 +447,24 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
 
     const pipelineAPIResponses = await Promise.allSettled([pipelineByIdPromise, pipelineMetaDataPromise])
 
-    const getResponseFromPromise = (response: PromiseSettledResult<any>) => {
+    const [pipelineById, pipelineMetaData] = pipelineAPIResponses.map((response: PromiseSettledResult<unknown>) => {
       if (response?.status === 'fulfilled') {
         return response?.value
       } else {
-        // For aborted request reason comes with stack trace which we have to ignore else Abort error will be set as pipeline in IDB
-        return response?.reason?.stack ? undefined : response?.reason
+        return response?.reason
       }
-    }
+    })
 
-    const pipelineById = getResponseFromPromise(pipelineAPIResponses[0])
-    const pipelineMetaData = getResponseFromPromise(pipelineAPIResponses[1])
+    // For aborted request, we have to ignore else Abort error will be set as pipeline in IDB
+    // Adding check for stack trace too to ignore other unexpected error
+    if (
+      pipelineById?.stack ||
+      pipelineById?.name === 'AbortError' ||
+      pipelineMetaData?.stack ||
+      pipelineMetaData?.name === 'AbortError'
+    ) {
+      return
+    }
 
     if (pipelineById?.templateError) {
       dispatch(PipelineContextActions.error({ templateError: pipelineById.templateError }))
@@ -496,14 +482,14 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       return
     }
 
-    const pipelineWithGitDetails = pipelineById as PipelineInfoConfigWithGitDetails
+    const pipelineWithGitDetails = pipelineById as PipelineInfoConfigWithGitDetails & { modules?: string[] }
 
     id = getId(
       queryParams.accountIdentifier,
       defaultTo(queryParams.orgIdentifier, ''),
       defaultTo(queryParams.projectIdentifier, ''),
       pipelineId,
-      defaultTo(gitDetails.repoIdentifier, getRepoIdentifierName(pipelineWithGitDetails.gitDetails)),
+      defaultTo(gitDetails.repoIdentifier, getRepoIdentifierName(pipelineWithGitDetails?.gitDetails)),
       defaultTo(gitDetails.branch, defaultTo(pipelineWithGitDetails?.gitDetails?.branch, ''))
     )
 
@@ -520,13 +506,15 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       'branch',
       'connectorRef',
       'filePath',
-      'yamlSchemaErrorWrapper'
+      'yamlSchemaErrorWrapper',
+      'modules'
     ) as PipelineInfoConfig
     const payload: PipelinePayload = {
       [KeyPath]: id,
       pipeline,
       originalPipeline: cloneDeep(pipeline),
       isUpdated: false,
+      modules: pipelineWithGitDetails?.modules,
       gitDetails:
         pipelineWithGitDetails?.gitDetails?.objectId || pipelineWithGitDetails?.gitDetails?.commitId
           ? pipelineWithGitDetails.gitDetails
@@ -535,7 +523,6 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
         pipelineWithGitDetails?.entityValidityDetails,
         defaultTo(data?.entityValidityDetails, {})
       ),
-      templateInputsErrorNodeSummary,
       yamlSchemaErrorWrapper: defaultTo(
         pipelineWithGitDetails?.yamlSchemaErrorWrapper,
         defaultTo(data?.yamlSchemaErrorWrapper, {})
@@ -550,14 +537,13 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       branch: defaultTo(gitDetails.branch, defaultTo(pipelineWithGitDetails?.gitDetails?.branch, ''))
     }
     if (data && !forceUpdate) {
-      const { templateTypes, templateServiceData } = data.pipeline
+      const { templateTypes, templateServiceData, templateIcons } = data.pipeline
         ? await getTemplateType(data.pipeline, templateQueryParams, storeMetadata, supportingTemplatesGitx)
-        : { templateTypes: {}, templateServiceData: {} }
+        : { templateTypes: {}, templateServiceData: {}, templateIcons: {} }
 
       const { resolvedCustomDeploymentDetailsByRef } = data.pipeline
         ? await getResolvedCustomDeploymentDetailsMap(data.pipeline, templateQueryParams)
         : { resolvedCustomDeploymentDetailsByRef: {} }
-
       dispatch(
         PipelineContextActions.success({
           error: '',
@@ -566,18 +552,19 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           originalPipeline: cloneDeep(pipeline),
           isBEPipelineUpdated: !isEqual(pipeline, data.originalPipeline),
           isUpdated: !isEqual(pipeline, data.pipeline),
+          modules: defaultTo(pipelineWithGitDetails?.modules, data.modules),
           gitDetails:
             pipelineWithGitDetails?.gitDetails?.objectId || pipelineWithGitDetails?.gitDetails?.commitId
               ? pipelineWithGitDetails.gitDetails
               : defaultTo(data?.gitDetails, {}),
           templateTypes,
+          templateIcons,
           templateServiceData,
           resolvedCustomDeploymentDetailsByRef,
           entityValidityDetails: defaultTo(
             pipelineWithGitDetails?.entityValidityDetails,
             defaultTo(data?.entityValidityDetails, {})
           ),
-          templateInputsErrorNodeSummary,
           yamlSchemaErrorWrapper: defaultTo(
             pipelineWithGitDetails?.yamlSchemaErrorWrapper,
             defaultTo(data?.yamlSchemaErrorWrapper, {})
@@ -591,7 +578,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       } catch (_) {
         logger.info(DBNotFoundErrorMessage)
       }
-      const { templateTypes, templateServiceData } = await getTemplateType(
+      const { templateTypes, templateServiceData, templateIcons } = await getTemplateType(
         pipeline,
         templateQueryParams,
         storeMetadata,
@@ -608,12 +595,13 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           originalPipeline: cloneDeep(pipeline),
           isBEPipelineUpdated: false,
           isUpdated: false,
+          modules: payload.modules,
           gitDetails: payload.gitDetails,
           entityValidityDetails: payload.entityValidityDetails,
           templateTypes,
+          templateIcons,
           templateServiceData,
           resolvedCustomDeploymentDetailsByRef,
-          templateInputsErrorNodeSummary,
           yamlSchemaErrorWrapper: payload?.yamlSchemaErrorWrapper
         })
       )
@@ -637,6 +625,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           })
         ),
         isUpdated: true,
+        modules: data?.modules,
         isBEPipelineUpdated: false,
         gitDetails: defaultTo(data?.gitDetails, {}),
         entityValidityDetails: defaultTo(data?.entityValidityDetails, {}),
@@ -998,6 +987,7 @@ export const PipelineContext = React.createContext<PipelineContextInterface>({
   getStageFromPipeline: () => ({ stage: undefined, parent: undefined }),
   setYamlHandler: () => undefined,
   setTemplateTypes: () => undefined,
+  setTemplateIcons: () => undefined,
   setTemplateServiceData: () => undefined,
   updatePipeline: () => new Promise<void>(() => undefined),
   pipelineSaved: () => undefined,
@@ -1145,7 +1135,7 @@ export function PipelineProvider({
 
   // stage/step selection
   const queryParamStateSelection = usePipelineQuestParamState()
-  const setSelection = (selectedState: PipelineSelectionState) => {
+  const setSelection = (selectedState: PipelineSelectionState): void => {
     queryParamStateSelection.setPipelineQuestParamState(selectedState)
   }
   /** @deprecated use `setSelection` */
@@ -1189,8 +1179,9 @@ export function PipelineProvider({
       templateRefs,
       state.storeMetadata,
       supportingTemplatesGitx
-    ).then(({ templateTypes, templateServiceData }) => {
+    ).then(({ templateTypes, templateServiceData, templateIcons }) => {
       setTemplateTypes(merge(state.templateTypes, templateTypes))
+      setTemplateIcons({ ...merge(state.templateIcons, templateIcons) })
       setTemplateServiceData(merge(state.templateServiceData, templateServiceData))
     })
 
@@ -1239,6 +1230,10 @@ export function PipelineProvider({
     dispatch(PipelineContextActions.setTemplateTypes({ templateTypes }))
   }, [])
 
+  const setTemplateIcons = React.useCallback(templateIcons => {
+    dispatch(PipelineContextActions.setTemplateIcons({ templateIcons }))
+  }, [])
+
   const setTemplateServiceData = React.useCallback(templateServiceData => {
     dispatch(PipelineContextActions.setTemplateServiceData({ templateServiceData }))
   }, [])
@@ -1261,7 +1256,7 @@ export function PipelineProvider({
         return stages.map(node => {
           if (node.stage?.identifier === newStage.identifier) {
             // This omitBy condition is required to remove any pseudo fields used in the stage
-            return { stage: omitBy(newStage, (_val, key) => key.startsWith('_')) as StageElementConfig }
+            return { stage: newStage }
           } else if (node.parallel) {
             return {
               parallel: _updateStages(node.parallel)
@@ -1294,8 +1289,10 @@ export function PipelineProvider({
   })
 
   React.useEffect(() => {
-    abortControllerRef.current = new AbortController()
-    fetchPipeline({ forceFetch: true, signal: abortControllerRef.current?.signal })
+    if (state.isDBInitialized) {
+      abortControllerRef.current = new AbortController()
+      fetchPipeline({ forceFetch: true, signal: abortControllerRef.current?.signal })
+    }
 
     return () => {
       if (abortControllerRef.current) {
@@ -1348,6 +1345,7 @@ export function PipelineProvider({
         setSelection,
         getStagePathFromPipeline,
         setTemplateTypes,
+        setTemplateIcons,
         setTemplateServiceData,
         setIntermittentLoading
       }}

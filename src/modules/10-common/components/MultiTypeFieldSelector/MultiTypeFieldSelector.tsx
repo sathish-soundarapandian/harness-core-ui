@@ -17,14 +17,16 @@ import {
   FormInput,
   EXECUTION_TIME_INPUT_VALUE,
   AllowedTypes,
-  AllowedTypesWithExecutionTime
-} from '@wings-software/uicore'
+  AllowedTypesWithExecutionTime,
+  Layout
+} from '@harness/uicore'
 import { IFormGroupProps, Intent, FormGroup } from '@blueprintjs/core'
 import cx from 'classnames'
 import { FormikContextType, connect } from 'formik'
 import { get } from 'lodash-es'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeSelectorButton from '../MultiTypeSelectorButton/MultiTypeSelectorButton'
 
 import css from './MultiTypeFieldSelctor.module.scss'
@@ -46,6 +48,8 @@ export interface MultiTypeFieldSelectorProps extends Omit<IFormGroupProps, 'labe
   onTypeChange?: (type: MultiTypeInputType) => void
   hideError?: boolean
   supportListOfExpressions?: boolean
+  enableConfigureOptions?: boolean
+  configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
 }
 
 export interface ConnectedMultiTypeFieldSelectorProps extends MultiTypeFieldSelectorProps {
@@ -69,6 +73,8 @@ export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorPro
     optionalLabel = '(optional)',
     onTypeChange,
     supportListOfExpressions,
+    enableConfigureOptions = false,
+    configureOptionsProps,
     ...restProps
   } = props
   const error = get(formik?.errors, name)
@@ -140,7 +146,23 @@ export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorPro
       ) : type === MultiTypeInputType.EXPRESSION && typeof expressionRender === 'function' ? (
         expressionRender()
       ) : isMultiTypeRuntime(type) && typeof value === 'string' ? (
-        <FormInput.Text className={css.runtimeDisabled} name={name} disabled label="" />
+        <Layout.Horizontal spacing={'medium'}>
+          <FormInput.Text style={{ flexGrow: 1 }} className={css.runtimeDisabled} name={name} disabled label="" />
+          {enableConfigureOptions && (
+            <ConfigureOptions
+              value={value}
+              type={'String'}
+              variableName={name}
+              showRequiredField={false}
+              showDefaultField={false}
+              showAdvanced={true}
+              onChange={val => formik?.setFieldValue(name, val)}
+              style={{ marginTop: 'var(--spacing-2)' }}
+              {...configureOptionsProps}
+              isReadonly={disabled}
+            />
+          )}
+        </Layout.Horizontal>
       ) : null}
     </FormGroup>
   )

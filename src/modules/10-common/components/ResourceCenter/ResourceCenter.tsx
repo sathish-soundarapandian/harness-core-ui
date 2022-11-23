@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { noop } from 'lodash-es'
-import { Button, ButtonVariation, Icon, Layout, Text, IconName } from '@wings-software/uicore'
+import { Button, ButtonVariation, Icon, Layout, Text, IconName } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
 import _refiner from 'refiner-js'

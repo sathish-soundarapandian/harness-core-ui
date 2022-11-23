@@ -115,22 +115,9 @@ jest.mock('@pipeline/utils/templateUtils', () => ({
   getTemplateTypesByRef: () =>
     Promise.resolve({
       templateTypes: { Test_Stage_Template: 'Deployment' },
-      templateServiceData: { Test_Template_Stage_Type: 'Kubernetes' }
+      templateServiceData: { Test_Template_Stage_Type: 'Kubernetes' },
+      templateIcons: {}
     })
-}))
-
-jest.mock('@pipeline/components/Diagram', () => ({
-  ...jest.requireActual('@pipeline/components/Diagram'),
-  CanvasWidget: () => {
-    return <div className={'canvas-widget-mock'} />
-  }
-}))
-
-jest.mock('@pipeline/components/CanvasButtons/CanvasButtons', () => ({
-  ...jest.requireActual('@pipeline/components/CanvasButtons/CanvasButtons'),
-  CanvasButtons: () => {
-    return <div className={'canvas-buttons-mock'} />
-  }
 }))
 
 const contextMock = produce(pipelineContextMock, draft => {

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Layout, Text } from '@wings-software/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { BorderProps } from '@harness/design-system'
 import cx from 'classnames'

@@ -9,7 +9,8 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty, map, get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
-import { FormikForm, Text, Color, MultiSelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { FormikForm, Text, MultiSelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -25,6 +26,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { DeleteStackData, DeleteStackProps } from '../CloudFormationInterfaces.types'
 import { isRuntime } from '../CloudFormationHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -32,7 +34,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackData>(
   props: DeleteStackProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
-  const { inputSetData, readonly, path, allowableTypes, allValues, formik, initialValues } = props
+  const { inputSetData, readonly, path, allowableTypes, allValues, formik, initialValues, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -122,7 +124,9 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
               multiTypeDurationProps={{
-                enableConfigureOptions: false,
+                configureOptionsProps: {
+                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                },
                 allowableTypes,
                 expressions,
                 disabled: readonly
@@ -145,6 +149,9 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
                 expressions,
                 allowableTypes
               }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              }}
               template={inputSetData?.template}
               fieldPath={'spec.configuration.spec.provisionerIdentifier'}
             />
@@ -165,6 +172,9 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
               orgIdentifier={orgIdentifier}
               style={{ marginBottom: 10 }}
               multiTypeProps={{ expressions, allowableTypes }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              }}
               disabled={readonly}
               width={300}
               onChange={(selected: any, _typeValue, type) => {
@@ -184,6 +194,10 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
                 setAwsRoles([])
               }}
               setRefValue
+              templateProps={{
+                isTemplatizedView: true,
+                templateValue: inputSetData?.template?.spec?.configuration?.spec?.connectorRef
+              }}
             />
           </div>
         )
@@ -216,6 +230,9 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
                 expressions,
                 allowableTypes
               }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              }}
               selectItems={regions ? regions : []}
             />
           </div>
@@ -241,6 +258,9 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
                 expressions,
                 allowableTypes
               }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              }}
               selectItems={awsRoles ? awsRoles : []}
             />
           </div>
@@ -257,6 +277,9 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
               multiTextInputProps={{
                 expressions,
                 allowableTypes
+              }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               }}
               template={inputSetData?.template}
               fieldPath={'spec.configuration.spec.stackName'}

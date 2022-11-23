@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Text, Layout, Avatar, Icon, PageError, Button } from '@wings-software/uicore'
+import { Text, Layout, Avatar, Icon, PageError, Button } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'

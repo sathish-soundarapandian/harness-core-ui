@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import CustomMenuItem from '@ce/components/CustomMenu/CustomMenuItem'
 import type { QlceViewFieldIdentifierData } from 'services/ce/services'
 

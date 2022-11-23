@@ -28,6 +28,8 @@ const OAuthConnectorPayload: ConnectorRequestBody = {
     name: '',
     identifier: '',
     type: 'Github',
+    orgIdentifier: '',
+    projectIdentifier: '',
     spec: {
       authentication: {
         type: 'Http',

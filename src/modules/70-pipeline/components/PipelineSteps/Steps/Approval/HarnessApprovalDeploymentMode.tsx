@@ -8,13 +8,16 @@
 import React from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
-import { FormMultiTypeUserGroupInput } from '@common/components/UserGroupsInput/FormMultitypeUserGroupInput'
+import { FormMultiTypeUserGroupInput } from '@rbac/components/UserGroupsInput/FormMultitypeUserGroupInput'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import UserGroupsInput from '@rbac/components/UserGroupsInput/UserGroupsInput'
+import { ALLOWED_VALUES_TYPE } from '@common/components/ConfigureOptions/constants'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { HarnessApprovalDeploymentModeProps } from './types'
 import css from './HarnessApproval.module.scss'
@@ -25,7 +28,7 @@ Provide values for all runtime fields in approval step
 Open the same form in readonly view while viewing already run executions
 */
 export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDeploymentModeProps): JSX.Element {
-  const { inputSetData, allowableTypes, formik } = props
+  const { inputSetData, allowableTypes, formik, stepViewType } = props
   const template = inputSetData?.template
   const path = inputSetData?.path
   const prefix = isEmpty(path) ? '' : `${path}.`
@@ -41,7 +44,9 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
           label={getString('pipelineSteps.timeoutLabel')}
           className={css.deploymentViewMedium}
           multiTypeDurationProps={{
-            enableConfigureOptions: false,
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             allowableTypes,
             expressions,
             disabled: isApprovalStepFieldDisabled(readonly)
@@ -59,6 +64,9 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
           name={`${prefix}spec.approvalMessage`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeTextArea={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             expressions,
             allowableTypes
           }}
@@ -72,6 +80,13 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
             expressions={expressions}
             formik={formik}
             allowableTypes={allowableTypes}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              getAllowedValuesCustomComponent: () => (
+                <UserGroupsInput name="allowedValues" label={getString('allowedValues')} />
+              ),
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             name={`${prefix}spec.approvers.userGroups`}
             label={getString('common.userGroups')}
             disabled={isApprovalStepFieldDisabled(readonly)}
@@ -94,6 +109,11 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
             expressions,
             allowableTypes,
             textProps: { type: 'number' }
+          }}
+          disabled={isApprovalStepFieldDisabled(readonly)}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType),
+            allowedValuesType: ALLOWED_VALUES_TYPE.NUMBER
           }}
           className={css.deploymentViewMedium}
           fieldPath="spec.approvers.minimumCount"

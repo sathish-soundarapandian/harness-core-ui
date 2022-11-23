@@ -8,8 +8,8 @@
 import React from 'react'
 import { Color } from '@harness/design-system'
 import { Icon } from '@harness/uicore'
-import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import type { FireEventMethod } from '@pipeline/components/PipelineDiagram/types'
+import { DiagramDrag, DiagramType, Event } from '@pipeline/components/PipelineDiagram/Constants'
 interface AddLinkNodeProps<T> {
   nextNode: any
   style: any

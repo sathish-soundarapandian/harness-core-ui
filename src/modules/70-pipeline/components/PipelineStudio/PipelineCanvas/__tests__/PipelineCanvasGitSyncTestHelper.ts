@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { PipelineContextInterface } from '../../PipelineContext/PipelineContext'
 import type { PipelineSelectionState } from '../../PipelineQueryParamState/usePipelineQueryParam'
@@ -239,6 +239,7 @@ const pipelineContextMock: PipelineContextInterface = {
   setSelection: (_selectedState: PipelineSelectionState) => undefined,
   getStagePathFromPipeline: () => '',
   setTemplateTypes: () => undefined,
+  setTemplateIcons: () => undefined,
   setTemplateServiceData: () => undefined,
   setIntermittentLoading: () => undefined
 }

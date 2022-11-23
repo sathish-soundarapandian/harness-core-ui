@@ -6,7 +6,7 @@
  */
 
 import { Spinner } from '@blueprintjs/core'
-import { Container, Text } from '@wings-software/uicore'
+import { Container, Text } from '@harness/uicore'
 import moment from 'moment'
 import { Color, FontVariation } from '@harness/design-system'
 import React, { useCallback, useEffect, useMemo } from 'react'
@@ -81,7 +81,7 @@ export default function AnomaliesCard(props: AnomaliesCardProps): JSX.Element {
   const momentTimeformat = getTimeFormatMoment(timeFormat)
 
   useEffect(() => {
-    if ((timeRange?.startTime || timeRange?.endTime) && monitoredServiceIdentifier) {
+    if ((timeRange?.startTime || timeRange?.endTime) && monitoredServiceIdentifier && !showOnlyChanges) {
       fetchAnomaliesData({
         queryParams: {
           ...queryParams,

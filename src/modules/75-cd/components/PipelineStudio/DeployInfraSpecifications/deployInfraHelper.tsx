@@ -19,7 +19,8 @@ import {
   isCustomDeploymentType,
   isServerlessDeploymentType,
   isSSHWinRMDeploymentType,
-  ServiceDeploymentType
+  ServiceDeploymentType,
+  isElastigroupDeploymentType
 } from '@pipeline/utils/stageHelpers'
 
 const DEFAULT_RELEASE_NAME = 'release-<+INFRA_KEY>'
@@ -197,6 +198,14 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
+    case InfraDeploymentType.Elastigroup: {
+      const { connectorRef, configuration } = infrastructure?.spec || {}
+      return {
+        connectorRef,
+        configuration,
+        allowSimultaneousDeployments
+      }
+    }
     default: {
       return {}
     }
@@ -270,6 +279,19 @@ export const getInfraGroups = (
     }
   ]
 
+  const elastigroupInfraGroups: InfrastructureGroup[] = [
+    {
+      groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
+      items: [
+        {
+          label: getString('pipeline.serviceDeploymentTypes.elastigroup'),
+          icon: 'elastigroup',
+          value: InfraDeploymentType.Elastigroup
+        }
+      ]
+    }
+  ]
+
   const kuberntesInfraGroups: InfrastructureGroup[] = [
     {
       groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
@@ -290,6 +312,8 @@ export const getInfraGroups = (
       return sshWinRMInfraGroups
     case deploymentType === ServiceDeploymentType.ECS:
       return ecsInfraGroups
+    case isElastigroupDeploymentType(deploymentType):
+      return elastigroupInfraGroups
     case isCustomDeploymentType(deploymentType):
       return customDeploymentInfraGroups
     default:
@@ -356,6 +380,11 @@ const infraGroupItems: {
     label: 'cd.steps.azureInfraStep.azure',
     icon: 'microsoft-azure',
     value: InfraDeploymentType.KubernetesAzure
+  },
+  [InfraDeploymentType.Elastigroup]: {
+    label: 'pipeline.serviceDeploymentTypes.elastigroup',
+    icon: 'elastigroup',
+    value: InfraDeploymentType.Elastigroup
   }
 }
 
@@ -382,6 +411,11 @@ export const isServerlessInfrastructureType = (infrastructureType?: string): boo
 export const isAzureWebAppInfrastructureType = (infrastructureType?: string): boolean => {
   return infrastructureType === InfraDeploymentType.AzureWebApp
 }
+
+export const isElastigroupInfrastructureType = (infrastructureType?: string): boolean => {
+  return infrastructureType === InfraDeploymentType.Elastigroup
+}
+
 export const isCustomDeploymentInfrastructureType = (infrastructureType?: string): boolean => {
   return infrastructureType === InfraDeploymentType.CustomDeployment
 }

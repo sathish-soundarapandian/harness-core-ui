@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Drawer, IDrawerProps, Classes } from '@blueprintjs/core'
-import { Button, Layout } from '@wings-software/uicore'
+import { Button, Layout } from '@harness/uicore'
 import { String } from 'framework/strings'
 import css from './FilterDrawer.module.scss'
 

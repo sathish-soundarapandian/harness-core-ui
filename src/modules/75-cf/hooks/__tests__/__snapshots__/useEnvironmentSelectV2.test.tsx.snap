@@ -14,8 +14,9 @@ exports[`Test useEnvironmentSelectV2 useEnvironmentSelectV2 should send back pro
         <input
           autocomplete="off"
           class="bp3-input"
+          id="selectOrCreateEnvironmentInput"
           name="environmentSelectEl"
-          placeholder="- Select -"
+          placeholder="cf.shared.selectEnvironment"
           style="padding-right: 0px;"
           type="text"
           value="abc"

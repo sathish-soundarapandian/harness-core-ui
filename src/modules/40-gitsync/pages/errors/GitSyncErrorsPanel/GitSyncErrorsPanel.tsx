@@ -19,7 +19,7 @@ import {
   PillToggleProps,
   Text,
   Icon
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
 import {
@@ -245,7 +245,6 @@ export const GitSyncErrorsPanel: React.FC = () => {
           isReadOnlyMode
           isEditModeSupported={false}
           existingYaml={selectedFile?.content}
-          showSnippetSection={false}
           renderCustomHeader={renderCustomHeader}
         />
       </Drawer>

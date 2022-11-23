@@ -301,6 +301,7 @@ export function ServicePipelineProvider({
         setSelection,
         getStagePathFromPipeline,
         setTemplateTypes: noop,
+        setTemplateIcons: noop,
         setTemplateServiceData: noop,
         setIntermittentLoading: noop
       }}

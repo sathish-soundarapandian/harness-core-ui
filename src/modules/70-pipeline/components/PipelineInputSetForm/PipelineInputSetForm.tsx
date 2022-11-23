@@ -6,22 +6,19 @@
  */
 
 import React from 'react'
-import {
-  Layout,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  Text,
-  Icon,
-  IconName,
-  AllowedTypes
-} from '@wings-software/uicore'
+import { Layout, getMultiTypeFromValue, MultiTypeInputType, Text, Icon, IconName, AllowedTypes } from '@harness/uicore'
 import { isEmpty, get, defaultTo, set } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import produce from 'immer'
 import type { DeploymentStageConfig } from 'services/cd-ng'
-import type { PipelineInfoConfig, StageElementWrapperConfig, StageElementConfig } from 'services/pipeline-ng'
+import type {
+  PipelineInfoConfig,
+  StageElementWrapperConfig,
+  StageElementConfig,
+  PipelineStageConfig
+} from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -34,6 +31,7 @@ import { useDeepCompareEffect } from '@common/hooks'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { StageInputSetForm } from './StageInputSetForm'
 import { StageAdvancedInputSetForm } from './StageAdvancedInputSetForm'
 import { CICodebaseInputSetForm } from './CICodebaseInputSetForm'
@@ -66,6 +64,7 @@ export interface PipelineInputSetFormProps {
   viewTypeMetadata?: Record<string, boolean>
   gitAwareForTriggerEnabled?: boolean
   selectedStageData?: StageSelectionData
+  hideTitle?: boolean
 }
 
 export const stageTypeToIconMap: Record<string, IconName> = {
@@ -245,7 +244,8 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     executionIdentifier,
     viewTypeMetadata,
     allowableTypes,
-    selectedStageData
+    selectedStageData,
+    hideTitle
   } = props
   const { getString } = useStrings()
   const isTemplatePipeline = !!template.template
@@ -299,7 +299,10 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
       ) : null}
       {finalTemplate?.variables && finalTemplate?.variables?.length > 0 && (
         <>
-          <Layout.Horizontal spacing="small" padding={{ top: 'medium', left: 'large', right: 0, bottom: 0 }}>
+          <Layout.Horizontal
+            spacing="small"
+            padding={{ top: hideTitle ? 0 : 'medium', left: 'large', right: 0, bottom: 0 }}
+          >
             <Text
               color={Color.BLACK_100}
               font={{ weight: 'semi-bold' }}
@@ -343,33 +346,99 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             const pathPrefix = !isEmpty(finalPath) ? `${finalPath}.` : ''
             if (stageObj.stage) {
               const allValues = getStageFromPipeline(stageObj?.stage?.identifier || '', originalPipeline)
+              const pipelineStageTemplate = (stageObj?.stage?.spec as PipelineStageConfig)
+                ?.pipelineInputs as PipelineInfoConfig
+              const _originalPipeline = (originalPipeline?.stages?.[index]?.stage?.spec as PipelineStageConfig)
+                ?.pipelineInputs as PipelineInfoConfig
 
               return (
                 <Layout.Vertical key={stageObj?.stage?.identifier || index}>
-                  <StageForm
-                    template={stageObj}
-                    allValues={allValues}
-                    path={`${pathPrefix}stages[${index}].stage`}
-                    readonly={isInputStageDisabled(stageObj?.stage?.identifier)}
-                    viewType={viewType}
-                    allowableTypes={allowableTypes}
-                    executionIdentifier={executionIdentifier}
-                  />
+                  {stageObj.stage.type === StageType.PIPELINE ? (
+                    <>
+                      <Layout.Horizontal
+                        spacing="small"
+                        padding={{ top: 'medium', left: 'large', right: 0, bottom: 0 }}
+                      >
+                        <Icon name={stageTypeToIconMap[StageType.PIPELINE]} size={18} />
+                        <Text color={Color.BLACK_100} font={{ weight: 'semi-bold' }}>
+                          Stage: {defaultTo(allValues?.stage?.name, '')}
+                        </Text>
+                      </Layout.Horizontal>
+                      <PipelineInputSetFormInternal
+                        originalPipeline={_originalPipeline}
+                        template={pipelineStageTemplate}
+                        path={`${pathPrefix}stages[${index}].stage.spec.pipelineInputs`}
+                        readonly={readonly}
+                        viewType={viewType}
+                        maybeContainerClass={maybeContainerClass}
+                        executionIdentifier={executionIdentifier}
+                        viewTypeMetadata={viewTypeMetadata}
+                        allowableTypes={allowableTypes}
+                        selectedStageData={selectedStageData}
+                        hideTitle={true}
+                      />
+                    </>
+                  ) : (
+                    <StageForm
+                      template={stageObj}
+                      allValues={allValues}
+                      path={`${pathPrefix}stages[${index}].stage`}
+                      readonly={isInputStageDisabled(stageObj?.stage?.identifier)}
+                      viewType={viewType}
+                      allowableTypes={allowableTypes}
+                      executionIdentifier={executionIdentifier}
+                      hideTitle={!!hideTitle}
+                    />
+                  )}
                 </Layout.Vertical>
               )
             } else if (stageObj.parallel) {
               return stageObj.parallel.map((stageP, indexp) => {
                 const allValues = getStageFromPipeline(stageP?.stage?.identifier || '', originalPipeline)
+                const pipelineStageTemplate = (stageP?.stage?.spec as PipelineStageConfig)
+                  ?.pipelineInputs as PipelineInfoConfig
+                const _originalPipeline = (
+                  originalPipeline?.stages?.[index]?.parallel?.[indexp]?.stage?.spec as PipelineStageConfig
+                )?.pipelineInputs as PipelineInfoConfig
+
                 return (
                   <Layout.Vertical key={`${stageObj?.stage?.identifier}-${stageP.stage?.identifier}-${indexp}`}>
-                    <StageForm
-                      template={stageP}
-                      allValues={allValues}
-                      path={`${pathPrefix}stages[${index}].parallel[${indexp}].stage`}
-                      readonly={isInputStageDisabled(stageP?.stage?.identifier as string)}
-                      viewType={viewType}
-                      allowableTypes={allowableTypes}
-                    />
+                    {stageP.stage?.type === StageType.PIPELINE ? (
+                      <>
+                        <Layout.Horizontal
+                          spacing="small"
+                          padding={{ top: 'medium', left: 'large', right: 0, bottom: 0 }}
+                        >
+                          <Icon name={stageTypeToIconMap[StageType.PIPELINE]} size={18} />
+                          <Text color={Color.BLACK_100} font={{ weight: 'semi-bold' }}>
+                            Stage: {defaultTo(allValues?.stage?.name, '')}
+                          </Text>
+                        </Layout.Horizontal>
+                        <PipelineInputSetFormInternal
+                          originalPipeline={_originalPipeline}
+                          template={pipelineStageTemplate}
+                          path={`${pathPrefix}stages[${index}].parallel[${indexp}].stage.spec.pipelineInputs`}
+                          readonly={readonly}
+                          viewType={viewType}
+                          maybeContainerClass={maybeContainerClass}
+                          executionIdentifier={executionIdentifier}
+                          viewTypeMetadata={viewTypeMetadata}
+                          allowableTypes={allowableTypes}
+                          selectedStageData={selectedStageData}
+                          hideTitle={true}
+                        />
+                      </>
+                    ) : (
+                      <StageForm
+                        template={stageP}
+                        allValues={allValues}
+                        path={`${pathPrefix}stages[${index}].parallel[${indexp}].stage`}
+                        readonly={isInputStageDisabled(stageP?.stage?.identifier as string)}
+                        viewType={viewType}
+                        allowableTypes={allowableTypes}
+                        hideTitle={!!hideTitle}
+                      />
+                    )}
                   </Layout.Vertical>
                 )
               })

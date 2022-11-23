@@ -79,6 +79,11 @@ jest.mock('services/cd-ng', () => ({
     return {
       mutate: jest.fn()
     }
+  }),
+  useIsImmutableDelegateEnabled: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
   })
 }))
 

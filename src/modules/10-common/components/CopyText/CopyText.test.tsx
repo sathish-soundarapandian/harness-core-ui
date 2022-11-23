@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, fireEvent, act } from '@testing-library/react'
-import { Utils } from '@wings-software/uicore'
+import { Utils } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { CopyText } from './CopyText'
 

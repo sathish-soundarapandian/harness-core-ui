@@ -6,7 +6,7 @@
  */
 
 import React, { FC } from 'react'
-import get from 'lodash/get'
+import { get } from 'lodash-es'
 import { Container, ExpandingSearchInput, Pagination, TableV2 } from '@harness/uicore'
 import type { Segment, Segments } from 'services/cf'
 import { useStrings } from 'framework/strings'

@@ -6,7 +6,7 @@
  */
 
 import React, { ReactElement } from 'react'
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Classes, Switch } from '@blueprintjs/core'
 import cx from 'classnames'

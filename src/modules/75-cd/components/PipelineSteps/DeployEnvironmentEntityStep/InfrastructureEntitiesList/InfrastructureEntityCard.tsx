@@ -9,12 +9,11 @@ import React, { useState } from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Collapse } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
-
+import { Color } from '@harness/design-system'
 import {
   ButtonVariation,
   Card,
   Text,
-  Color,
   AllowedTypes,
   Container,
   Layout,
@@ -34,7 +33,7 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { infraDefinitionTypeMapping } from '@pipeline/utils/stageHelpers'
+import { getCustomStepProps, infraDefinitionTypeMapping } from '@pipeline/utils/stageHelpers'
 
 import type { DeployEnvironmentEntityFormState, InfrastructureData } from '../types'
 
@@ -155,6 +154,7 @@ export function InfrastructureEntityCard({
                 stepViewType={StepViewType.TemplateUsage}
                 customStepProps={{
                   // serviceRef: deploymentStage?.service?.serviceRef,
+                  ...getCustomStepProps(infrastructureInputs.type, getString),
                   environmentRef: environmentIdentifier,
                   infrastructureRef: identifier
                 }}

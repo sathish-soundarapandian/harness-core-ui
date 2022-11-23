@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Container, Layout, Text, TextInput, ButtonVariation } from '@wings-software/uicore'
+import { Button, Container, Layout, Text, TextInput, ButtonVariation } from '@harness/uicore'
 import QRCode from 'react-qr-code'
 import { Color } from '@harness/design-system'
 import { TwoFactorAuthSettingsInfo, useEnableTwoFactorAuth, useGetTwoFactorAuthSettings } from 'services/cd-ng'

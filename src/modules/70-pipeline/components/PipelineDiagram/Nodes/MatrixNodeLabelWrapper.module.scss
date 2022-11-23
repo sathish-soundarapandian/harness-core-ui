@@ -40,3 +40,12 @@
     }
   }
 }
+
+.matrixLabelWrapper {
+  :global {
+    .matrixLabelNestedWrapper {
+      margin-left: 10px !important;
+      padding: 0 !important;
+    }
+  }
+}

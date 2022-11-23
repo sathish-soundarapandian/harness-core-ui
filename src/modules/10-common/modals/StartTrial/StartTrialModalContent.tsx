@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, Heading, Container, Layout, IconName, Icon, Text } from '@wings-software/uicore'
+import { Button, Heading, Container, Layout, IconName, Icon, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { String, useStrings } from 'framework/strings'
@@ -18,6 +18,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useUpdateAccountDefaultExperienceNG } from 'services/cd-ng'
 import { Experiences } from '@common/constants/Utils'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isOnPrem } from '@common/utils/utils'
 
 export interface StartTrialModalContentProps {
   handleStartTrial?: () => void
@@ -28,7 +29,7 @@ const StartTrialModalContent: React.FC<StartTrialModalContentProps> = props => {
   const { handleStartTrial, module } = props
 
   const { getString } = useStrings()
-  const { CDNG_ENABLED, FREE_PLAN_ENABLED } = useFeatureFlags()
+  const { CDNG_ENABLED } = useFeatureFlags()
   const { accountId } = useParams<{
     accountId: string
   }>()
@@ -40,7 +41,6 @@ const StartTrialModalContent: React.FC<StartTrialModalContentProps> = props => {
   const initialSelectedInfoCard = moduleInfoCards ? moduleInfoCards[0] : undefined
   const [selectedInfoCard, setSelectedInfoCard] = useState<ModuleInfoCard | undefined>(initialSelectedInfoCard)
   const { licenseInformation } = useLicenseStore()
-
   const getModuleButton = (): React.ReactElement => {
     const handleOnClick = async (): Promise<void> => {
       if (!selectedInfoCard || selectedInfoCard?.isNgRoute) {
@@ -58,7 +58,7 @@ const StartTrialModalContent: React.FC<StartTrialModalContentProps> = props => {
       }
     }
 
-    const startTrialDescription = FREE_PLAN_ENABLED ? 'common.startFreePlan' : 'common.startTrial'
+    const startTrialDescription = !isOnPrem() ? 'common.startFreePlan' : 'common.startTrial'
 
     const getButtonText = (): string | undefined => {
       if (source) {

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Text, Card, CardBody } from '@wings-software/uicore'
+import { Container, Text, Card, CardBody } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import type { FormikProps } from 'formik'
 import { Color } from '@harness/design-system'

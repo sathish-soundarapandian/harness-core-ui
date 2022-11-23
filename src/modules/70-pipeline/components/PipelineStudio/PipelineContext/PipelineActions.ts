@@ -10,7 +10,6 @@ import type { IDrawerProps } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
 import type { YamlSnippetMetaData } from 'services/cd-ng'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import type * as Diagram from '@pipeline/components/Diagram'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type {
   EntityGitDetails,
@@ -22,6 +21,7 @@ import type {
 } from 'services/pipeline-ng'
 import type { DependencyElement } from 'services/ci'
 import type { TemplateServiceDataType } from '@pipeline/utils/templateUtils'
+import type { TemplateIcons } from '@pipeline/utils/types'
 import type { StepState } from '../ExecutionGraph/ExecutionGraphUtil'
 import type { AdvancedPanels, StepOrStepGroupOrTemplateStepData } from '../StepCommands/StepCommandTypes'
 
@@ -37,6 +37,7 @@ export enum PipelineActions {
   SetYamlHandler = 'SetYamlHandler',
   SetTemplateTypes = 'SetTemplateTypes',
   SetTemplateServiceData = 'SetTemplateServiceData',
+  SetTemplateIcons = 'SetTemplateIcons',
   SetResolvedCustomDeploymentDetailsByRef = 'SetResolvedCustomDeploymentDetailsByRef',
   PipelineSaved = 'PipelineSaved',
   UpdateSchemaErrorsFlag = 'UpdateSchemaErrorsFlag',
@@ -92,7 +93,7 @@ export interface DrawerData extends Omit<IDrawerProps, 'isOpen'> {
       isRollback: boolean
       isParallelNodeClicked: boolean
       onUpdate?: (stepOrGroup: StepOrStepGroupOrTemplateStepData | DependencyElement) => void
-      entity: Diagram.DefaultNodeModel
+      entity: any
       stepsMap: Map<string, StepState>
       hiddenAdvancedPanels?: AdvancedPanels[]
     }
@@ -135,6 +136,7 @@ export interface PipelineReducerState {
   schemaErrors: boolean
   templateTypes: { [key: string]: string }
   templateServiceData: TemplateServiceDataType
+  templateIcons?: TemplateIcons
   resolvedCustomDeploymentDetailsByRef: { [key: string]: Record<string, string | string[]> }
   storeMetadata?: StoreMetadata
   gitDetails: EntityGitDetails
@@ -145,11 +147,11 @@ export interface PipelineReducerState {
   isInitialized: boolean
   isBEPipelineUpdated: boolean
   isUpdated: boolean
+  modules: string[]
   snippets?: YamlSnippetMetaData[]
   selectionState: SelectionState
   templateError?: GetDataError<Failure | Error> | null
   remoteFetchError?: GetDataError<Failure | Error> | null
-  templateInputsErrorNodeSummary?: ErrorNodeSummary
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }
 
@@ -162,6 +164,7 @@ export interface ActionResponse {
   error?: string
   schemaErrors?: boolean
   isUpdated?: boolean
+  modules?: string[]
   storeMetadata?: StoreMetadata
   gitDetails?: EntityGitDetails
   entityValidityDetails?: EntityValidityDetails
@@ -170,6 +173,7 @@ export interface ActionResponse {
   yamlHandler?: YamlBuilderHandlerBinding
   templateTypes?: { [key: string]: string }
   templateServiceData?: TemplateServiceDataType
+  templateIcons?: TemplateIcons
   resolvedCustomDeploymentDetailsByRef?: { [key: string]: Record<string, string | string[]> }
   originalPipeline?: PipelineInfoConfig
   isIntermittentLoading?: boolean
@@ -209,6 +213,10 @@ const setTemplateServiceData = (response: ActionResponse): ActionReturnType => (
   type: PipelineActions.SetTemplateServiceData,
   response
 })
+const setTemplateIcons = (response: ActionResponse): ActionReturnType => ({
+  type: PipelineActions.SetTemplateIcons,
+  response
+})
 const setResolvedCustomDeploymentDetailsByRef = (response: ActionResponse): ActionReturnType => ({
   type: PipelineActions.SetResolvedCustomDeploymentDetailsByRef,
   response
@@ -245,6 +253,7 @@ export const PipelineContextActions = {
   setYamlHandler,
   setTemplateTypes,
   setTemplateServiceData,
+  setTemplateIcons,
   setResolvedCustomDeploymentDetailsByRef,
   success,
   error,
@@ -271,6 +280,7 @@ export const initialState: PipelineReducerState = {
   gitDetails: {},
   entityValidityDetails: {},
   templateTypes: {},
+  templateIcons: {},
   templateServiceData: {},
   resolvedCustomDeploymentDetailsByRef: {},
   isLoading: false,
@@ -278,6 +288,7 @@ export const initialState: PipelineReducerState = {
   isBEPipelineUpdated: false,
   isDBInitialized: false,
   isUpdated: false,
+  modules: [],
   isInitialized: false,
   selectionState: {
     selectedStageId: undefined,
@@ -318,6 +329,11 @@ export const PipelineReducer = (state = initialState, data: ActionReturnType): P
       return {
         ...state,
         templateServiceData: data.response?.templateServiceData || {}
+      }
+    case PipelineActions.SetTemplateIcons:
+      return {
+        ...state,
+        templateIcons: data.response?.templateIcons || {}
       }
     case PipelineActions.SetResolvedCustomDeploymentDetailsByRef:
       return {

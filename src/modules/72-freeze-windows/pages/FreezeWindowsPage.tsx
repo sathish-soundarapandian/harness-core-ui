@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, ButtonVariation, Color, Layout, Page, PageSpinner, Text, useToaster } from '@harness/uicore'
+import { Button, ButtonVariation, Layout, Page, PageSpinner, Text, useToaster } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import React, { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
@@ -35,6 +36,9 @@ import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { NewFreezeWindowButton } from '@freeze-windows/components/NewFreezeWindowButton/NewFreezeWindowButton'
 import { useComputedFreezeStatusMap } from '@freeze-windows/hooks/useComputedFreezeStatusMap'
 import freezeWindowsIllustration from '@freeze-windows/images/freeze-windows-illustration.svg'
+import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
+import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
+import EmptySearchResults from '@common/images/EmptySearchResults.svg'
 import css from '@freeze-windows/components/FreezeWindowListSubHeader/FreezeWindowListSubHeader.module.scss'
 
 function _FreezeWindowsPage(): React.ReactElement {
@@ -67,9 +71,14 @@ function _FreezeWindowsPage(): React.ReactElement {
     body: {
       freezeStatus,
       searchTerm,
-      sort,
+      sort: [sort.join(',')],
       startTime,
       endTime
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
     }
   })
 
@@ -121,18 +130,24 @@ function _FreezeWindowsPage(): React.ReactElement {
   const pageFreezeSummaryResponse = data?.data
 
   const freezeStatusMap = useComputedFreezeStatusMap(data?.data?.content)
+  const { globalFreezes, refetch: refreshGlobalFreezeBanner } = useGlobalFreezeBanner()
 
   return (
     <div className={css.main}>
-      <FreezeWindowListHeader freezeListLoading={freezeListLoading} />
+      <FreezeWindowListHeader
+        freezeListLoading={freezeListLoading}
+        refreshGlobalFreezeBanner={refreshGlobalFreezeBanner}
+      />
       <FreezeWindowListSubHeader />
+      <GlobalFreezeBanner globalFreezes={globalFreezes} />
+
       <Page.Body
         loading={freezeListLoading}
         error={error?.message}
         retryOnError={refetch}
         noData={{
           when: () => !pageFreezeSummaryResponse?.content?.length,
-          image: freezeWindowsIllustration,
+          image: hasFilter ? EmptySearchResults : freezeWindowsIllustration,
           messageTitle: hasFilter
             ? getString('common.filters.noResultsFound')
             : getString('freezeWindows.freezeWindowsPage.noFreezeWindows', { scope }),

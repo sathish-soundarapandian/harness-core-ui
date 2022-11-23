@@ -18,9 +18,9 @@ import {
   MultiTypeInputType,
   Icon,
   AllowedTypes,
-  Heading,
-  Color
+  Heading
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { Form } from 'formik'
 import * as Yup from 'yup'

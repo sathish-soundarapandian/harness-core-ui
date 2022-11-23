@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
-import { Button, FormInput, Layout } from '@wings-software/uicore'
+import { Button, FormInput, Layout } from '@harness/uicore'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { JiraFieldNG } from 'services/cd-ng'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'

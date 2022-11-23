@@ -17,7 +17,7 @@ import {
   useConfirmationDialog,
   ButtonVariation,
   Button
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { parse } from 'yaml'
 import { isEmpty, isUndefined, merge, defaultTo, noop, get, omitBy, omit } from 'lodash-es'
@@ -99,7 +99,7 @@ import {
   EventConditionTypes,
   getTriggerArtifactInitialSource
 } from './TriggersWizardPageUtils'
-import useGitAwareForTriggerEnabled from '../useGitAwareForTriggerEnabled'
+import useIsNewGitSyncRemotePipeline from '../useIsNewGitSyncRemotePipeline'
 import css from '@triggers/pages/triggers/TriggersWizardPage.module.scss'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
@@ -162,7 +162,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
     }
   })
 
-  const gitAwareForTriggerEnabled = useGitAwareForTriggerEnabled()
+  const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
   const [connectorScopeParams] = useState<GetConnectorQueryParams | undefined>(undefined)
   const [ignoreError, setIgnoreError] = useState<boolean>(false)
@@ -232,9 +232,9 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
         orgIdentifier,
         projectIdentifier,
         pipelineIdentifier,
-        gitAwareForTriggerEnabled
+        gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
       })
-      if (gitAwareForTriggerEnabled) {
+      if (isNewGitSyncRemotePipeline) {
         delete res.inputYaml
         if (values.inputSetSelected?.length) {
           res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
@@ -249,7 +249,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
     entityType: 'Triggers',
     width: 'calc(100vw - 350px)',
     height: 'calc(100vh - 280px)',
-    showSnippetSection: false,
+
     yamlSanityConfig: {
       removeEmptyString: false,
       removeEmptyObject: false,
@@ -442,7 +442,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
           // set error
           setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
-      } else if (gitAwareForTriggerEnabled) {
+      } else if (isNewGitSyncRemotePipeline) {
         pipelineJson = resolvedPipeline
       }
       const eventConditions = source?.spec?.spec?.eventConditions || []
@@ -571,7 +571,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
     setErrorToasterMessage('')
 
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       delete triggerYaml.inputYaml
 
       // Set pipelineBranchName to proper expression when it's left empty
@@ -584,7 +584,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
     }
 
     const successCallback = ({ status, data, message }: ResponseNGTriggerResponseWithMessage): void => {
-      if (status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+      if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
         retryTriggerSubmit({ message })
       } else if (data?.errors && !isEmpty(data?.errors)) {
         const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -616,7 +616,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
     }
 
     const errorCallback = (err: any): void => {
-      if (err?.data?.status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+      if (err?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
         retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
       } else {
         setErrorToasterMessage(err?.data?.message)
@@ -659,7 +659,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
       orgIdentifier,
       projectIdentifier,
       pipelineIdentifier,
-      gitAwareForTriggerEnabled
+      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline
     })
     submitTrigger(triggerYaml)
   }
@@ -997,7 +997,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
     let _pipelineBranchNameError = ''
     let _inputSetRefsError = ''
 
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       // Custom validation when pipeline Reference Branch Name is an expression for non-webhook triggers
       if (formikProps?.values?.triggerType !== TriggerTypes.WEBHOOK) {
         const pipelineBranchName = (formikProps?.values?.pipelineBranchName || '').trim()
@@ -1030,7 +1030,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
       orgPipeline: values.pipeline,
       setSubmitting
     })
-    const gitXErrors = gitAwareForTriggerEnabled
+    const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)
       : undefined
     // https://github.com/formium/formik/issues/1392

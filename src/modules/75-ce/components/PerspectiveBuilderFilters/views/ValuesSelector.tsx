@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { TextInput } from '@wings-software/uicore'
+import { TextInput } from '@harness/uicore'
 import { Popover, PopoverInteractionKind, Position, TagInput } from '@blueprintjs/core'
 import { debounce, isEqual } from 'lodash-es'
 import { useStrings } from 'framework/strings'

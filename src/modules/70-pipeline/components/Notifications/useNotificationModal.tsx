@@ -7,7 +7,7 @@
 
 import React, { useCallback, useState } from 'react'
 import { isNil } from 'lodash-es'
-import { StepWizard, Button, MultiSelectOption, StepProps } from '@wings-software/uicore'
+import { StepWizard, Button, MultiSelectOption, StepProps } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, Classes } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -83,11 +83,11 @@ export const useNotificationModal = ({
           {EventsTabComponent ? (
             <EventsTabComponent name={getString('conditions')} />
           ) : (
-            <PipelineEvents name={getString('notifications.pipelineEvents')} stagesOptions={stagesOptions} />
+            <PipelineEvents name={getString('rbac.notifications.pipelineEvents')} stagesOptions={stagesOptions} />
           )}
 
           <NotificationMethods
-            name={getString('notifications.notificationMethod')}
+            name={getString('rbac.notifications.notificationMethod')}
             typeOptions={NotificationTypeSelectOptions}
             expressions={expressions}
           />

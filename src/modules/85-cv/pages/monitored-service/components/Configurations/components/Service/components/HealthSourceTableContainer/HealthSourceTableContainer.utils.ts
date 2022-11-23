@@ -45,3 +45,6 @@ export function createOpenHealthSourceTableProps({
     monitoredServiceType: formik.values.type
   }
 }
+
+export const getIsNotDeleteOrCreate = (isDelete?: boolean, identifier?: string): boolean =>
+  Boolean(!isDelete || !identifier)

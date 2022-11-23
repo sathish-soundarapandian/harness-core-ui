@@ -8,14 +8,7 @@
 import React, { useCallback, useEffect } from 'react'
 import type { FormikValues } from 'formik'
 import { Menu } from '@blueprintjs/core'
-import {
-  FormInput,
-  getMultiTypeFromValue,
-  Layout,
-  MultiTypeInputType,
-  SelectOption,
-  Text
-} from '@wings-software/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 import { isNil, get, memoize } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'

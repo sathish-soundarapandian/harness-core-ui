@@ -7,9 +7,9 @@
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Container, FormInput, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
-import type { FormikContextType } from 'formik'
 import React from 'react'
 import { get } from 'lodash-es'
+import type { ManifestConfigWrapper } from 'services/cd-ng'
 import List from '@common/components/List/List'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
@@ -19,9 +19,8 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export function K8sOverrideValuesRuntimeFields(
   props: K8sApplyProps & {
-    overrideValue: any
+    overrideValue: ManifestConfigWrapper
     index: number
-    formik?: FormikContextType<any>
   }
 ): React.ReactElement {
   const { overrideValue, index, allowableTypes, initialValues, inputSetData, readonly } = props
@@ -46,7 +45,7 @@ export function K8sOverrideValuesRuntimeFields(
           accountIdentifier={accountId}
           selected={get(
             initialValues,
-            `${inputSetData?.path}.spec.overrides[${index}].spec.store.spec.connectorRef`,
+            `${inputSetData?.path}.spec.overrides[${index}].manifest.spec.store.spec.connectorRef`,
             ''
           )}
           multiTypeProps={{ allowableTypes, expressions }}
@@ -54,7 +53,7 @@ export function K8sOverrideValuesRuntimeFields(
           orgIdentifier={orgIdentifier}
           width={400}
           type={overrideValue?.manifest?.spec?.type}
-          name={`${inputSetData?.path}.spec.overrides[${index}].spec.store.spec.connectorRef`}
+          name={`${inputSetData?.path}.spec.overrides[${index}].manifest.spec.store.spec.connectorRef`}
           label={getString('connector')}
           disabled={readonly}
           placeholder={getString('select')}
@@ -64,7 +63,7 @@ export function K8sOverrideValuesRuntimeFields(
       {getMultiTypeFromValue(overrideValue.manifest?.spec?.store?.spec?.branch) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormInput.MultiTextInput
-            name={`${inputSetData?.path}.spec.overrides[${index}].spec.store.spec.branch`}
+            name={`${inputSetData?.path}.spec.overrides[${index}].manifest.spec.store.spec.branch`}
             label={getString('pipelineSteps.deploy.inputSet.branch')}
             multiTextInputProps={{
               expressions,
@@ -77,7 +76,7 @@ export function K8sOverrideValuesRuntimeFields(
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <List
             label={getString('filePaths')}
-            name={`${inputSetData?.path}.spec.overrides[${index}].spec.store.spec.paths`}
+            name={`${inputSetData?.path}.spec.overrides[${index}].manifest.spec.store.spec.paths`}
             disabled={readonly}
             style={{ marginBottom: 'var(--spacing-small)' }}
             isNameOfArrayType
@@ -87,7 +86,7 @@ export function K8sOverrideValuesRuntimeFields(
       {getMultiTypeFromValue(overrideValue.manifest?.spec?.store?.spec?.commitId) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormInput.MultiTextInput
-            name={`${inputSetData?.path}.spec.overrides[${index}].spec.store.spec.commitId`}
+            name={`${inputSetData?.path}.spec.overrides[${index}].manifest.spec.store.spec.commitId`}
             label={getString('pipeline.manifestType.commitId')}
             multiTextInputProps={{
               expressions,
@@ -100,7 +99,7 @@ export function K8sOverrideValuesRuntimeFields(
       {getMultiTypeFromValue(overrideValue.manifest?.spec?.store?.spec?.content) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormInput.MultiTextInput
-            name={`${inputSetData?.path}.spec.overrides[${index}].spec.store.spec.content`}
+            name={`${inputSetData?.path}.spec.overrides[${index}].manifest.spec.store.spec.content`}
             label={getString('pipelineSteps.content')}
             multiTextInputProps={{
               expressions,

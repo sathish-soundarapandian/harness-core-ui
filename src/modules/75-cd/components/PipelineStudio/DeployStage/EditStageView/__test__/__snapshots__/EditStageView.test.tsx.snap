@@ -431,6 +431,7 @@ exports[`Edit stage view test Should match snapshot when template is provided 1`
                 Using Template: name (Stable)
               </p>
               <button
+                aria-label="pipelineSteps.build.create.setupStage"
                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-top-medium Button--with-current-color Button--variation Button--variation-primary"
                 type="submit"
               >

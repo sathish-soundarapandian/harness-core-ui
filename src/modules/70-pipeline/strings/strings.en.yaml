@@ -13,7 +13,8 @@ enableVerificationTitle: Add Continuous Verification
 enableVerificationOptions: Enable Continuous Verification
 enableVerificationHelpText: Apply verification step to a deployment to detect regressions or anomalies, and to rollback failed deployments.
 openInPipelineStudio: Open in Pipeline Studio
-closeStepConfig: Step Config
+closeStepConfig: Close step configuration?
+stepConfigContent: Changes to your step configuration will be lost if you do not apply your changes.
 stepConfigHasChanges: Form has some unsaved changes, Do you want to apply the changes?
 clickHere: Click here
 stepDetails: Step details
@@ -39,15 +40,15 @@ pipelineTimeoutHelpText: Enter a timeout for the entire Pipeline. You can change
 stageExecutionSettings: Stage Execution Settings
 stageExecutionsHelperText: Allow selective stage(s) executions?
 sslVerify: SSL Verify
-noPipelineText: There are no pipelines in your project
-noDeploymentText: There are no deployments in your project
-runModalNoPipelineText: There are no pipelines in your project. Please create a new pipeline
-noBuildsText: There are no builds in your project
-noBuildsLabel: No builds
+noPipelinesLabel: No pipelines
+noPipelinesText: There are no pipelines in your project. Click the button below to create a pipeline.
+noRunsSimpleText: No {{moduleRunType}}
+noRunsLabel: No {{moduleRunType}} in your project
+noRunsText: Your project does not have any {{moduleRunType}} yet. Click the button below to run a pipeline.
 parallelSelectedStages: '{{selected}}, +{{total}} Stages'
 parallelStages: '+{{total}} Stages'
 runAPipeline: Run a Pipeline
-regionPlaceholder: Select Region
+regionPlaceholder: Select or Enter Region
 repositoryPlaceholder: <container-registry-name>.azurecr.io/<image>
 repositoryUrlPlaceholder: Enter Repository URL
 lastSevenDays: In Last 7 days
@@ -84,6 +85,9 @@ utilitiesStep:
   url: Enter the URL
   requestBody: Enter the message body
   assertion: Enter Assertion
+  to: Enter recipient email
+  subject: Enter the email subject
+  cc: Cc
 terraformStep:
   provisionerIdentifier: Enter Provisioner Identifier
   workspace: Enter Workspace
@@ -500,6 +504,7 @@ execution:
   timePrefix: 'Execution Time: '
   compareAction: Compare
   compareExecutionsTitle: Select executions to compare the compiled YAML
+  emptyStepGroup: Step Group is empty
   ignoreFailedWarningText: A failed step was ignored because the step’s Failure Strategy is Ignore Failure. The step’s failure did not impact the Pipeline’s success.
   iotab:
     noInputText: No input found for current step
@@ -523,7 +528,7 @@ execution:
     abortStage: Abort Stage
     downloadLogs: Download logs
     viewCompiledYaml: View Compiled YAML
-    compareExecutions: Compare Executions
+    compareExecutions: Compare Pipeline Executions
   layouts:
     bottom: Align to bottom
     right: Align to right
@@ -554,6 +559,7 @@ executionStatus:
   Failed: FAILED
   Success: SUCCESS
   Aborted: ABORTED
+  AbortedByFreeze: ABORTED BY FREEZE
   Error: ERROR
   Paused: PAUSED
   Pausing: PAUSING
@@ -571,6 +577,7 @@ executionStatus:
 executionFilters:
   labels:
     Aborted: Aborted
+    AbortedByFreeze: Aborted by Freeze
     Expired: Expired
     Failed: '{{ $.failed }}'
     Running: Running
@@ -580,6 +587,8 @@ executionFilters:
     ApprovalWaiting: Waiting on approval
     InterventionWaiting: Waiting on intervention
     Waiting: Waiting for resources
+    InputWaiting: Waiting on inputs
+    WaitStepRunning: Waiting on wait step
 logs:
   sectionName: 'Section {{index}}'
   errorText: Something has gone wrong while fetching logs
@@ -667,7 +676,6 @@ dashboards:
   successfulBuilds: Successful Builds
   pipelineHealth: Pipeline health
   totalExecutions: Total Executions
-  pipelineExecution: Pipeline Executions
   executionsLabel: '# of Executions'
   successRate: Success Rate
   meanDuration: Mean Duration
@@ -787,7 +795,6 @@ addStage:
 pipelineSteps:
   templateStage: Template Stage
   customStage: Custom Stage
-  chainedPipeline: Chained Pipeline
   templateStageDescription: Use stage template.
   customStageDescription: Use this to set up a stage configurable to your needs.
   chainedPipelineDescription: Run a Pipeline as a stage in another Pipeline.
@@ -823,17 +830,23 @@ selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
 artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
   artifactId: Artifact ID
+  customArtifactManualFill: Manually Enter an artifact version
+  customArtifactScriptFill: Provide a script to dynamically pull the artifact location.
   artifactIdPlaceholder: Enter Artifact ID
   groupId: Group ID
   groupIdPlaceholder: Enter Group ID
+  groupPlaceholder: Enter Group
   extension: Extension
   extensionPlaceholder: Enter Extension
   classifier: Classifier
   classifierPlaceholder: Enter Classifier
   packageName: Package Name
+  packageNamePlaceholder: Select Package
   addPrimaryArtifact: Add Primary Artifact
   addArtifactSource: Add Artifact Source
   addSidecar: Add Sidecar
+  feed: Feed
+  feedPlaceholder: Select Feed
   artifactSourceName: Artifact Source Name
   projectPlaceholder: Enter Project
   repositoryTypePlaceholder: Select Repository Type
@@ -862,21 +875,29 @@ artifactsSelection:
   amazonS3Title: Amazon S3
   googleArtifactRegistryTitle: Google Artifact Registry
   githubPackageRegistryTitle: Github Package Registry
-  azureArtifactRegistryTitle: Azure Artifact Registry
+  AmazonMachineImageTitle: Amazon Machine Image
   existingDocker:
     sidecarId: Sidecar Name
     sidecarIdPlaceholder: Enter Artifact Name
     imageNamePlaceholder: Enter Image Path
     enterTagRegex: Enter Tag Regex
   validation:
+    script: Script is required
+    artifactsArrayPath: Artifact array path is required
+    versionPath: Version path is required
     noBuild: No build found with given details
+    noPackage: No package found with given details
+    noFeeds: No feeds found with given details
+    noVersion: No version found with given details
     packageType: Package Type is required
+    feed: Feed is required
     versionRegex: Version Regex is required
     packageName: Package Name is required
     imagePath: Image Path is required
     artifactPath: Artifact Path is required
     artifactId: Artifact ID is required
     groupId: Group ID is required
+    group: Group is required
     region: '{{$.validation.regionRequired}}'
     tag: Tag is required
     tagRegex: Tag Regex is required
@@ -996,7 +1017,7 @@ dependencyRequired: 'Connector is required to fetch buckets'
 myDeploymentsText: My Deployments
 myBuildsText: My Builds
 mySecurityTestsText: My Security Tests
-myPipelineRunsText: My Pipeline Runs
+myExecutionsText: My Executions
 noRegions: No regions found
 noBuckets: No buckets found with given region
 noBucketsFound: No buckets found
@@ -1007,6 +1028,7 @@ stepDescription:
   HTTP: Run HTTP requests containing URLs, methods, headers, assertions, and variables.
   ShellScriptProvision: The Shell Script Provisioner supports custom provisioners or your existing shell script implementations.
   SHELLSCRIPT: Execute scripts in the shell session. The scripts can be executed on the pod/instance running a Harness Delegate or on a remote host in the infrastructure.
+  Email: Send email messages to Harness users as part of the pipeline execution.
   Wait: Suspend/Wait the execution for the given amount of time.
   Barrier: Synchronize multiple Pipelines to coordinate deployments systematically.
   Queue: Queue pipeline executions to prevent multiple stages or pipelines from requesting the same deployment resources simultaneously.
@@ -1048,6 +1070,9 @@ stepDescription:
   HelmDeploy: Performs native Helm deployments. Requires Helm and Tiller and supports basic deployments. Helm charts are also supported in Harness Kubernetes deployments without requiring Helm or Tiller and using all deployment strategies.
   HelmRollback: Rolls back all the deployed objects to the previous version.
   ServiceNowApproval: Use ServiceNow issues to approve steps and stages.
+  ServiceNowCreate: Create a Service Now ticket as part of the pipeline execution
+  ServiceNowUpdate: Update a Service Now ticket as part of the pipeline execution
+  ServiceNowImportSet: Create or Update Service Now issues using Service Now Import Set APIs
   Policy: Evaluate policy during pipeline execution
   ServerlessLambdaDeploy: Create the Lambda functions defined in this Stage.
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
@@ -1068,6 +1093,7 @@ stepDescription:
   ECSRunTask: Run one-time or periodic batch job tasks using placement constraints and strategies.
   GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
+  ElastigroupRollback: Rollback for the Elastigroup steps
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
@@ -1230,6 +1256,7 @@ imageVersionDeprecated: Image version outdated
 unsupportedImagesWarning: 'You are using unsupported Harness CI images. Harness allows builds to use these images, but we cannot ensure that builds will not fail. Please update the versions of the following image(s) {{summary}}'
 invalidRequest: Invalid Request
 serviceDeploymentTypes:
+  elastigroup: Elastigroup
   kubernetes: '{{$.kubernetesText}}'
   amazonEcs: '{{$.delegate.cardData.amazonECS.name}}'
   amazonAmi: AWS AMI
@@ -1248,6 +1275,7 @@ serviceDeploymentTypes:
   customDeployment: Deployment Template
   serverlessAwsType: Serverless Aws Lambda
   customDeploy: Custom Deployment
+  spotElastigroup: Spot Elastigroup
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
@@ -1325,6 +1353,7 @@ configFiles:
     files: 'File(s) is required'
     file: 'This field is required'
     fileSelection: 'Select atleast one config file'
+    duplicateIdError: 'Failed to create Config File: There is already a Config File with identifier {{ configFileIdentifier }} present or soft deleted. Please provide a new unique identifier and save again.'
 OverviewEmptyStates:
   createPipelineHeaderMsg: Set up a Pipeline and run your first {{executionLabel}}!
   createPipelineInfo: A Harness Pipeline is a series of stages that performs operations like {{pipelineOperation1}} and {{pipelineOperation2}} software.
@@ -1352,6 +1381,7 @@ lastExecution: 'Last Execution'
 executionId: Execution Id
 imageTag: 'image: {{image}}'
 fileSource: 'File Source'
+configSource: Configuration Source
 fileDetails: 'File Details'
 appServiceConfig:
   title: App Services Configuration
@@ -1371,11 +1401,17 @@ appServiceConfig:
     filePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'
     subtitle: 'Specify {{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Type'
     overrides: '{{$.pipeline.appServiceConfig.connectionStrings.name}} Overrides'
-startupCommand:
-  name: Startup Command
-  subtitle: 'Specify Azure Web App Startup Command Store Type'
-  fileDetails: '{{$.pipeline.startupCommand.name}} File Details'
-  fileSource: '{{$.pipeline.startupCommand.name}} File Source'
+startup:
+  script:
+    name: Startup Script
+    subtitle: 'Specify {{deploymentType}} {{$.pipeline.startup.script.name}} Store Type'
+    fileDetails: '{{$.pipeline.startup.script.name}} File Details'
+    fileSource: '{{$.pipeline.startup.script.name}} File Source'
+  command:
+    name: Startup Command
+    subtitle: 'Specify {{deploymentType}} {{$.pipeline.startup.command.name}} Store Type'
+    fileDetails: '{{$.pipeline.startup.command.name}} File Details'
+    fileSource: '{{$.pipeline.startup.command.name}} File Source'
   scriptFilePath: 'Script File Path'
   fileValidation: 'file is required'
   plainText: 'Plain Text'
@@ -1405,6 +1441,7 @@ duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
 alwaysEditModeYAML: Enable read/write mode always
 warningForInvalidYAMLDiscard: Enabling this sets the YAML editor in read/write mode for the Pipelines you view. You can enable/disable this setting in any Pipeline.
 azureWebApp:
+  name: Azure Web App
   strategy:
     basic: In a Basic deployment, a new Service/Artifact version is deployed to the deployment slot. Basic deployments are useful for development, learning Harness, and any non-mission critical workflows.
     canary: 'Harness performs a three phase deployment: Phase 1 deploys a new service version to the deployment slot. Phase 2 performs a Traffic Shift to that deployment slot. Phase 3 swaps the deployment slot with target slot.'

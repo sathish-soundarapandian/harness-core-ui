@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Container, Text, Icon, Color, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
+import { Container, Text, Icon, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { ManifestIconByType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ManifestStores } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import css from '../ManifestSelection.module.scss'

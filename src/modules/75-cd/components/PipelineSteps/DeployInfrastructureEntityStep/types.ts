@@ -6,6 +6,9 @@
  */
 
 import type { ServiceDefinition, TemplateLinkConfig } from 'services/cd-ng'
+import type { DeployEnvironmentEntityConfig } from '../DeployEnvironmentEntityStep/types'
+
+export type DeployInfrastructureEntityStepProps = Required<DeployEnvironmentEntityConfig>['environment']
 
 export interface DeployInfrastructureEntityCustomStepProps {
   deploymentType?: ServiceDefinition['type']
@@ -16,4 +19,5 @@ export interface DeployInfrastructureEntityCustomStepProps {
 export interface DeployInfrastructureEntityCustomInputStepProps extends DeployInfrastructureEntityCustomStepProps {
   deployToAllInfrastructures?: boolean
   customDeploymentRef?: TemplateLinkConfig
+  showEnvironmentsSelectionInputField?: boolean
 }

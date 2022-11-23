@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Text } from '@wings-software/uicore'
+import { Container, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { TimelineBar } from '@cv/components/TimelineView/TimelineBar'
 import type { TimelineProps } from './Timeline.types'

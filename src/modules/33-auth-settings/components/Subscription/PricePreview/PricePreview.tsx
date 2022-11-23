@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import cx from 'classnames'
 import { defaultTo, toInteger, isNil } from 'lodash-es'
-import { Text, Layout, Toggle } from '@wings-software/uicore'
+import { Text, Layout, Toggle } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { TimeType, SubscriptionProps, CurrencyType } from '@common/constants/SubscriptionTypes'

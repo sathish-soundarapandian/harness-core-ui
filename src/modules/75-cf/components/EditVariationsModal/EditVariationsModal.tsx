@@ -190,7 +190,11 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
           validationSchema={yup.object().shape({
             variations: yup.array().of(
               yup.object().shape({
-                name: yup.string().trim().required(getString('cf.creationModal.nameIsRequired')),
+                name: yup
+                  .string()
+                  .matches(/[a-z]/gi, getString('cf.creationModal.mustContainLetter'))
+                  .trim()
+                  .required(getString('cf.creationModal.nameIsRequired')),
                 identifier: yup.string().trim().required(getString('cf.creationModal.idIsRequired')),
                 value: yup.string().trim().required(getString('cf.creationModal.valueIsRequired'))
               })

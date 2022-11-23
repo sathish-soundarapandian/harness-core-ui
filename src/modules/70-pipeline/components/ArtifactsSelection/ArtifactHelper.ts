@@ -6,7 +6,7 @@
  */
 
 import type { Schema } from 'yup'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName, SelectOption } from '@harness/uicore'
 import type { IOptionProps } from '@blueprintjs/core'
 import { isEmpty } from 'lodash-es'
 import { NameSchema } from '@common/utils/Validation'
@@ -18,7 +18,8 @@ import type { ArtifactType } from './ArtifactInterface'
 
 export enum ModalViewFor {
   PRIMARY = 1,
-  SIDECAR = 2
+  SIDECAR = 2,
+  Template = 3
 }
 
 export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
@@ -36,6 +37,7 @@ export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isRe
       deploymentType === ServiceDeploymentType.WinRm ||
       deploymentType === ServiceDeploymentType.Ssh ||
       deploymentType === ServiceDeploymentType.AzureWebApp ||
+      deploymentType === ServiceDeploymentType.Elastigroup ||
       deploymentType === ServiceDeploymentType.CustomDeployment
     )
   )
@@ -62,9 +64,9 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   Jenkins: 'service-jenkins',
   AmazonS3: 'service-service-s3',
   GoogleArtifactRegistry: 'service-gar',
-  GithubPackageRegistry: 'service-github',
-  AzureArtifacts: 'service-github',
-  AmazonMachineImage: 'service-github'
+  GithubPackageRegistry: 'service-github-package',
+  AzureArtifacts: 'service-azure-artifacts',
+  AmazonMachineImage: 'service-ami'
 }
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
@@ -80,8 +82,8 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   AmazonS3: 'pipeline.artifactsSelection.amazonS3Title',
   GoogleArtifactRegistry: 'pipeline.artifactsSelection.googleArtifactRegistryTitle',
   GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle',
-  AzureArtifacts: 'pipeline.artifactsSelection.azureArtifactRegistryTitle',
-  AmazonMachineImage: 'pipeline.artifactsSelection.azureArtifactRegistryTitle'
+  AzureArtifacts: 'connectors.title.azureArtifacts',
+  AmazonMachineImage: 'pipeline.artifactsSelection.AmazonMachineImageTitle'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
@@ -96,7 +98,9 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   Jenkins: 'Jenkins',
   AmazonS3: 'AmazonS3',
   GoogleArtifactRegistry: 'GoogleArtifactRegistry',
-  GithubPackageRegistry: 'GithubPackageRegistry'
+  GithubPackageRegistry: 'GithubPackageRegistry',
+  AmazonMachineImage: 'AmazonMachineImage',
+  AzureArtifacts: 'AzureArtifacts'
 }
 
 export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -110,7 +114,9 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   Jenkins: Connectors.JENKINS,
   AmazonS3: Connectors.AWS,
   GoogleArtifactRegistry: Connectors.GCP,
-  GithubPackageRegistry: Connectors.GITHUB
+  GithubPackageRegistry: Connectors.GITHUB,
+  AzureArtifacts: Connectors.AZURE_ARTIFACTS,
+  AmazonMachineImage: Connectors.AWS
 }
 
 export const ArtifactConnectorLabelMap: Record<string, string> = {
@@ -124,7 +130,9 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   Jenkins: 'Jenkins',
   AmazonS3: 'AWS',
   GoogleArtifactRegistry: 'GCP',
-  GithubPackageRegistry: 'Github'
+  GithubPackageRegistry: 'Github',
+  AzureArtifacts: 'Azure Artifacts',
+  AmazonMachineImage: 'AWS'
 }
 
 export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<ArtifactType>> = {
@@ -182,6 +190,7 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Acr
   ],
+  Elastigroup: [ENABLED_ARTIFACT_TYPES.AmazonS3],
   CustomDeployment: [
     ENABLED_ARTIFACT_TYPES.CustomArtifact,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
@@ -203,6 +212,17 @@ export const tagOptions: IOptionProps[] = [
   {
     label: 'Regex',
     value: 'regex'
+  }
+]
+
+export const scopeOptions: SelectOption[] = [
+  {
+    label: 'Project',
+    value: 'project'
+  },
+  {
+    label: 'Org',
+    value: 'org'
   }
 ]
 

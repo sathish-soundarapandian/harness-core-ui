@@ -20,7 +20,7 @@ import { useExecutionListFilterContext } from '../ExecutionListFilterContext/Exe
 export function useExecutionListEmptyAction(isPipelineInvalid: boolean, onRunPipeline: () => void) {
   const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier } =
     useParams<PipelineType<PipelinePathProps>>()
-  const { module = 'cd' } = useModuleInfo()
+  const { module } = useModuleInfo()
   const { getString } = useStrings()
   const history = useHistory()
   const { queryParams } = useExecutionListFilterContext()
@@ -29,7 +29,6 @@ export function useExecutionListEmptyAction(isPipelineInvalid: boolean, onRunPip
     accountIdentifier: accountId,
     projectIdentifier,
     orgIdentifier,
-    module,
     size: 1,
     lazy: false
   })

@@ -6,11 +6,10 @@
  */
 
 /* eslint-disable no-console */
-import React, { useEffect, useLayoutEffect, useState, useRef, useMemo } from 'react'
+import React, { useEffect, useLayoutEffect, useState, useRef, useMemo, useCallback } from 'react'
 import classNames from 'classnames'
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable'
 import { v4 as uuid } from 'uuid'
-import { Event } from '@pipeline/components/Diagram'
 import {
   CANVAS_CLICK_EVENT,
   dispatchCustomEvent,
@@ -18,21 +17,25 @@ import {
   getSVGLinksFromPipeline,
   getTerminalNodeLinks,
   INITIAL_ZOOM_LEVEL,
-  scrollZoom,
-  setupDragEventListeners
+  scrollZoom
 } from './PipelineGraphUtils'
 import GraphActions from '../GraphActions/GraphActions'
 import { PipelineGraphRecursive } from './PipelineGraphNode'
-import type { NodeCollapsibleProps, NodeIds, PipelineGraphState, SVGPathRecord, GetNodeMethod, KVPair } from '../types'
+import type {
+  NodeCollapsibleProps,
+  NodeIds,
+  PipelineGraphState,
+  SVGPathRecord,
+  GetNodeMethod,
+  KVPair,
+  Position
+} from '../types'
 import GraphConfigStore from './GraphConfigStore'
+import { Event } from '../Constants'
+import { useCanvasDrag } from '../hooks/useCanvasDrag'
 import css from './PipelineGraph.module.scss'
 
-interface ControlPosition {
-  x: number
-  y: number
-}
-
-const DEFAULT_POSITION: ControlPosition = { x: 30, y: 120 }
+const DEFAULT_POSITION: Position = { x: 30, y: 120 }
 export interface PipelineGraphProps {
   data: PipelineGraphState[]
   fireEvent: (event: any) => void
@@ -75,11 +78,11 @@ function PipelineGraph({
   const [treeRectangle, setTreeRectangle] = useState<DOMRect | void>()
   const [state, setState] = useState<PipelineGraphState[]>(data)
   const [graphScale, setGraphScale] = useState(INITIAL_ZOOM_LEVEL)
-  const [position, setPosition] = useState<ControlPosition>(DEFAULT_POSITION)
+  const [position, setPosition] = useState<Position>(DEFAULT_POSITION)
   const [isDragging, setDragging] = useState(false)
-  const draggableRef = useRef<HTMLDivElement>(null)
-  const canvasRef = useRef<HTMLDivElement>(null)
-  const overlayRef = useRef<HTMLDivElement>(null)
+  const draggableParentRef = useRef<HTMLDivElement | null>(null)
+  const graphRef = useRef<HTMLDivElement | null>(null)
+  const overlayRef = useRef<HTMLDivElement | null>(null)
   const uniqueNodeIds = useMemo(
     (): NodeIds => ({
       startNode: uuid(),
@@ -145,20 +148,21 @@ function PipelineGraph({
 
   useEffect(() => {
     updateTreeRect()
-    const draggableParent = draggableRef.current
+    const draggableParent = draggableParentRef.current
     const overlay = overlayRef.current as HTMLElement
     if (draggableParent && overlay) {
-      setupDragEventListeners(draggableParent, overlay)
       panZoom && scrollZoom(overlay, 40, 0.01, updateGraphScale)
     }
-  }, [])
+  }, [panZoom])
+
+  const { setCanvasRef, setElementRef } = useCanvasDrag({ position, setPosition, isDragging, setDragging })
 
   const handleScaleToFit = (): void => {
     setPosition(DEFAULT_POSITION)
 
     setGraphScale(
       getScaleToFitValue(
-        canvasRef.current as unknown as HTMLElement,
+        graphRef.current as unknown as HTMLElement,
         document.querySelector(parentSelector as string) as HTMLElement,
         DEFAULT_POSITION.x,
         DEFAULT_POSITION.y
@@ -174,10 +178,28 @@ function PipelineGraph({
     setDragging(false)
     redrawSVGLinks()
   }
+
   const resetGraphState = (): void => {
     setGraphScale(INITIAL_ZOOM_LEVEL)
     setPosition(DEFAULT_POSITION)
   }
+
+  const draggableParentRefCallback = useCallback(
+    el => {
+      draggableParentRef.current = el
+      setCanvasRef(el)
+    },
+    [setCanvasRef]
+  )
+
+  const overlayRefCallback = useCallback(
+    el => {
+      overlayRef.current = el
+      setElementRef(el)
+    },
+    [setElementRef]
+  )
+
   return (
     <GraphConfigStore.Provider
       value={{
@@ -194,7 +216,7 @@ function PipelineGraph({
         graphLinkClassname
       }}
     >
-      <div id="draggable-parent" className={css.draggableParent} ref={draggableRef}>
+      <div id="draggable-parent" className={css.draggableParent} ref={draggableParentRefCallback}>
         <Draggable
           scale={graphScale}
           position={position}
@@ -209,9 +231,9 @@ function PipelineGraph({
               dispatchCustomEvent(CANVAS_CLICK_EVENT, {})
             }}
             className={css.overlay}
-            ref={overlayRef}
+            ref={overlayRefCallback}
           >
-            <div className={css.graphMain} ref={canvasRef} style={{ transform: `scale(${graphScale})` }}>
+            <div className={css.graphMain} ref={graphRef} style={{ transform: `scale(${graphScale})` }}>
               <SVGComponent svgPath={svgPath} className={graphLinkClassname} />
               <PipelineGraphRecursive
                 key="PipelineGraphRecursive"

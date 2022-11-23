@@ -20,7 +20,7 @@ import {
   ButtonSize,
   PillToggle,
   Icon
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Position, Menu, MenuItem, Slider } from '@blueprintjs/core'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -201,7 +201,7 @@ const RecommendationDetailsPage: React.FC = () => {
     label: TimeRange.LAST_7
   })
 
-  useDocumentTitle([getString('ce.recommendation.sideNavText'), recommendationName], true)
+  useDocumentTitle([getString('ce.recommendation.sideNavText'), recommendationName])
 
   const [qualityOfService, setQualityOfService] = useQueryParamsState<QualityOfService>(
     'QoS',

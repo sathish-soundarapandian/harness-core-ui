@@ -178,23 +178,28 @@ exports[`<MultiTypeFieldSelector /> tests Change from "Fixed value" to "Runtime 
         class="bp3-form-content"
       >
         <div
-          class="bp3-form-group bp3-disabled runtimeDisabled"
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
         >
-          
           <div
-            class="bp3-form-content"
+            class="bp3-form-group bp3-disabled runtimeDisabled"
+            style="flex-grow: 1;"
           >
+            
             <div
-              class="bp3-input-group bp3-disabled"
+              class="bp3-form-content"
             >
-              <input
-                autocomplete="off"
-                class="bp3-input"
-                disabled=""
-                name="test"
-                type="text"
-                value="<+input>"
-              />
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  disabled=""
+                  name="test"
+                  type="text"
+                  value="<+input>"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -344,23 +349,28 @@ exports[`<MultiTypeFieldSelector /> tests Detects "Runtime input" correctly: inp
         class="bp3-form-content"
       >
         <div
-          class="bp3-form-group bp3-disabled runtimeDisabled"
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
         >
-          
           <div
-            class="bp3-form-content"
+            class="bp3-form-group bp3-disabled runtimeDisabled"
+            style="flex-grow: 1;"
           >
+            
             <div
-              class="bp3-input-group bp3-disabled"
+              class="bp3-form-content"
             >
-              <input
-                autocomplete="off"
-                class="bp3-input"
-                disabled=""
-                name="test"
-                type="text"
-                value="<+input>"
-              />
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  disabled=""
+                  name="test"
+                  type="text"
+                  value="<+input>"
+                />
+              </div>
             </div>
           </div>
         </div>

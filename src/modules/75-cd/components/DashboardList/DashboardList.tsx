@@ -6,8 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { ExpandingSearchInput, Layout, Text, PageError, TableV2 } from '@wings-software/uicore'
-import type { TableProps } from '@harness/uicore'
+import { ExpandingSearchInput, Layout, Text, PageError, TableV2, TableProps } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'

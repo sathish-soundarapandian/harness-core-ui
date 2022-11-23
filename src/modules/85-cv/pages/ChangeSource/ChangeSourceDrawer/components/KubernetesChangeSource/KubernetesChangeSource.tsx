@@ -7,7 +7,7 @@
 
 import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { Text, Container, Utils } from '@wings-software/uicore'
+import { Text, Container, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useValidateK8sConnectivity } from 'services/cv'
 import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'

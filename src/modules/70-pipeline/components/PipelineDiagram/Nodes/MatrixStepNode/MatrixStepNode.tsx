@@ -7,10 +7,9 @@
 
 import * as React from 'react'
 import cx from 'classnames'
-import { Icon, Layout, Text, Button, ButtonVariation } from '@wings-software/uicore'
+import { Icon, Layout, Text, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { debounce, defaultTo, get, lowerCase } from 'lodash-es'
-import { Event, DiagramDrag, DiagramType } from '@pipeline/components/Diagram'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -21,9 +20,9 @@ import {
   getMatrixHeight,
   getPositionOfAddIcon,
   LayoutStyles,
-  matrixNodeNameToJSON,
   MAX_ALLOWED_MATRIX_COLLAPSED_NODES
 } from '../utils'
+import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import { Dimensions, useNodeDimensionContext } from '../NodeDimensionStore'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import { NodeStatusIndicator } from '../../NodeStatusIndicator/NodeStatusIndicator'
@@ -275,9 +274,6 @@ export function MatrixStepNode(props: any): JSX.Element {
                         defaultNode
                       ) as React.FC<BaseReactComponentProps>
                       const matrixNodeName = defaultTo(node?.matrixNodeName, node?.data?.matrixNodeName)
-                      const formattedMatrixName = matrixNodeName
-                        ? `${matrixNodeNameToJSON(matrixNodeName)} ${node.name}`
-                        : node?.name
                       return (
                         <React.Fragment key={node.data?.identifier}>
                           {index < (showAllNodes ? stepGroupData?.length : COLLAPSED_MATRIX_NODE_LENGTH) ? (
@@ -307,7 +303,8 @@ export function MatrixStepNode(props: any): JSX.Element {
                               readonly={props.readonly}
                               selectedNodeId={props?.selectedNodeId}
                               showMarkers={false}
-                              name={formattedMatrixName}
+                              name={node.name}
+                              matrixNodeName={matrixNodeName}
                               isParentMatrix={true}
                             />
                           ) : null}

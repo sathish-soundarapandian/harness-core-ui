@@ -8,7 +8,7 @@
 import React, { useMemo, useEffect } from 'react'
 import { merge } from 'lodash-es'
 import type Highcharts from 'highcharts'
-import { Container, Icon, PageError, Text } from '@wings-software/uicore'
+import { Container, Icon, PageError, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { TimeSeriesAreaChart } from '@common/components'

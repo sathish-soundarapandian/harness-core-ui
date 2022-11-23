@@ -11,6 +11,7 @@ declare const styles: {
   readonly cardBody: string
   readonly cardSelect: string
   readonly container: string
+  readonly dialog: string
   readonly languageIcon: string
   readonly nameTextbox: string
 }

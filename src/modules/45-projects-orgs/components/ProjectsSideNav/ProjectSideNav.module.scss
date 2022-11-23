@@ -6,6 +6,8 @@
  */
 
 .iconColor {
+  margin-left: var(--spacing-small);
+  padding-left: 12px;
   :global {
     span[data-icon='nav-project'] {
       color: var(--white);
@@ -20,6 +22,22 @@
   }
 }
 .divStyle {
-  margin: var(--spacing-small) var(--spacing-xlarge) var(--spacing-xsmall) var(--spacing-xxlarge);
+  margin: var(--layout-spacing) var(--spacing-small) 0 var(--spacing-small);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebarlink {
+  margin-top: var(--layout-spacing);
+}
+
+.projectSelectorContainer {
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.selector {
+  margin-bottom: var(--layout-spacing) !important;
 }

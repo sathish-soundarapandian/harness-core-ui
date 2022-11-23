@@ -8,7 +8,7 @@
 import React, { useEffect, useRef } from 'react'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ruleServiceStatusLabelMap } from '@ce/constants'
 import css from './InstanceStatusIndicator.module.scss'

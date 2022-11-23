@@ -16,7 +16,7 @@ import {
   Text,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -41,7 +41,8 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
   const {
     state: { freezeObj },
     updateFreeze,
-    isReadOnly
+    isReadOnly,
+    isActiveFreeze
   } = React.useContext(FreezeWindowContext)
   const history = useHistory()
   const { view } = React.useContext(FreezeWindowContext)
@@ -70,7 +71,7 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
             <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_800}>
               {freezeObj.identifier === DefaultFreezeId
                 ? getString('freezeWindows.freezeWindowsPage.newFreezeWindow')
-                : getString('freezeWindows.freezeWindowsPage.editFreezeWindow')}
+                : /* istanbul ignore next */ getString('freezeWindows.freezeWindowsPage.editFreezeWindow')}
             </Text>
           </Container>
         }
@@ -100,10 +101,12 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
           {isYaml || isReadOnly ? null : (
             <Switch
               aria-label="Toggle freeze"
-              onChange={event => {
-                const checked = event.currentTarget.checked
-                updateFreeze({ status: checked ? 'Enabled' : 'Disabled' })
-              }}
+              onChange={
+                /* istanbul ignore next */ event => {
+                  const checked = event.currentTarget.checked
+                  updateFreeze({ status: checked ? 'Enabled' : 'Disabled' })
+                }
+              }
               checked={freezeObj?.status === 'Enabled'}
               className={css.freezeToggler}
             />
@@ -111,17 +114,20 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
           <Text lineClamp={1} className={css.freezeName}>
             {freezeObj.name as string}
           </Text>
-          {isYaml || isReadOnly ? null : (
+          {isYaml || isReadOnly || isActiveFreeze ? null : (
             <Button variation={ButtonVariation.ICON} icon="Edit" onClick={showConfigModal} />
           )}
         </Layout.Horizontal>
         <Container>
           <VisualYamlToggle
             className={css.visualYamlToggle}
+            /* istanbul ignore next */
             selectedView={isYaml || isVisualViewDisabled ? SelectedView.YAML : SelectedView.VISUAL}
-            onChange={nextMode => {
-              onViewChange(nextMode)
-            }}
+            onChange={
+              /* istanbul ignore next */ nextMode => {
+                onViewChange(nextMode)
+              }
+            }
             disableToggle={isVisualViewDisabled}
           />
         </Container>

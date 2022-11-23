@@ -7,8 +7,8 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import type { SelectOption } from '@wings-software/uicore'
-import { DropDown } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
+import { DropDown } from '@harness/uicore'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetPipelineList } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
@@ -21,7 +21,7 @@ export interface NewPipelineSelectProps {
 }
 
 export default function NewPipelineSelect(props: NewPipelineSelectProps): React.ReactElement {
-  const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelineType<ProjectPathProps>>()
   const [query, setQuery] = React.useState('')
   const { getString } = useStrings()
 
@@ -29,7 +29,6 @@ export default function NewPipelineSelect(props: NewPipelineSelectProps): React.
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
-      module,
       orgIdentifier,
       searchTerm: query,
       size: 10
@@ -53,6 +52,7 @@ export default function NewPipelineSelect(props: NewPipelineSelectProps): React.
 
   return (
     <DropDown
+      minWidth={120}
       buttonTestId="pipeline-select"
       onChange={option => {
         props.onPipelineSelect(option.value as string)

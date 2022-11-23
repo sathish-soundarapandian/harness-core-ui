@@ -8,7 +8,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty as _isEmpty, debounce as _debounce, defaultTo as _defaultTo } from 'lodash-es'
-import { Container, FormInput, Layout, SelectOption, Text } from '@wings-software/uicore'
+import { Container, FormInput, Layout, SelectOption, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Radio } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'

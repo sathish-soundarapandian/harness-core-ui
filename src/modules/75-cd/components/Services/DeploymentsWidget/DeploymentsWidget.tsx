@@ -8,7 +8,7 @@
 import React, { useCallback, useContext, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import type { SeriesAreaOptions } from 'highcharts'
-import { Card, Container, Layout, Text, PageError } from '@wings-software/uicore'
+import { Card, Container, Layout, Text, PageError } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import moment from 'moment'
 import { Color } from '@harness/design-system'

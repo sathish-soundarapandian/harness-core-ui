@@ -5,7 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 import { set } from 'lodash-es'
 import type {
@@ -16,13 +15,14 @@ import type {
 } from 'services/cv'
 import type { NotificationToToggle } from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.types'
 import type { StringKeys } from 'framework/strings'
-import { defaultOption } from './NotificationsContainer.constants'
 import type {
   NotificationConditions,
   NotificationRule,
   SRMNotification,
   SRMNotificationType
 } from './NotificationsContainer.types'
+import { Condition } from './components/ConfigureMonitoredServiceAlertConditions/ConfigureMonitoredServiceAlertConditions.constants'
+import type { FieldValueType, MoreFieldsType } from './components/NotificationRuleRow/NotificationRuleRow.types'
 
 export const createNotificationRule = (): NotificationRule => {
   return {
@@ -36,22 +36,20 @@ export function getUpdatedNotificationRules({
   notificationRule,
   currentField,
   currentFieldValue,
-  nextField,
-  nextFieldValue
+  moreFields
 }: {
   conditions: NotificationRule[]
   notificationRule: NotificationRule
   currentField: string
-  currentFieldValue: string | SelectOption | MultiSelectOption[]
-  nextField?: string
-  nextFieldValue?: string | SelectOption | MultiSelectOption[]
+  currentFieldValue: FieldValueType
+  moreFields?: MoreFieldsType
 }): NotificationRule[] {
   return conditions.map(el => {
     if (el.id === notificationRule.id) {
       return {
         ...el,
         [currentField]: currentFieldValue,
-        ...(nextField && { [nextField]: nextFieldValue ?? defaultOption })
+        ...moreFields
       }
     } else return el
   })
@@ -145,7 +143,18 @@ export function validateNotificationConditions(
   const errors = {}
   dataTillCurrentStep?.conditions?.forEach((condition, index) => {
     if (!condition?.condition && !values?.conditions?.[index]?.condition) {
-      set(errors, `conditions.${index}.condition`, `${getString('cv.notifications.validations.conditionIsRequired')}`)
+      set(errors, `conditions.${index}.condition`, getString('cv.notifications.validations.conditionIsRequired'))
+    }
+    if (
+      condition?.condition?.value === Condition.CODE_ERRORS ||
+      values?.conditions?.[index]?.condition === Condition.CODE_ERRORS
+    ) {
+      if (!condition?.eventStatus?.length && !values?.conditions?.[index]?.eventStatus?.length) {
+        set(errors, `conditions.${index}.eventStatus`, getString('cv.notifications.validations.eventStatusIsRequired'))
+      }
+      if (!condition?.eventType?.length && !values?.conditions?.[index]?.eventType?.length) {
+        set(errors, `conditions.${index}.eventType`, getString('cv.notifications.validations.eventTypeIsRequired'))
+      }
     }
   })
   return errors

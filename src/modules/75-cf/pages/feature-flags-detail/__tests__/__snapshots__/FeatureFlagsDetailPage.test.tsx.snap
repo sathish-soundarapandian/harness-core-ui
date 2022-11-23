@@ -190,10 +190,10 @@ exports[`FeatureFlagsDetailPage FeatureFlagsDetailPage should render data correc
             </span>
           </h4>
           <div
-            class="StyledProps--font StyledProps--main identifierContainer"
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main containerBorder StyledProps--background-primary1 StyledProps--padding-small"
           >
             <span
-              class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small StyledProps--margin-right-xsmall"
+              class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small"
             >
               idLabel
             </span>
@@ -500,6 +500,7 @@ exports[`FeatureFlagsDetailPage FeatureFlagsDetailPage should render data correc
               class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
             >
               <button
+                aria-label="cf.featureFlags.newPrerequisite"
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--font StyledProps--font-size-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--size Button--small"
                 data-testid="add-prerequisites-button"
                 style="padding: 0px;"

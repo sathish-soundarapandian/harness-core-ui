@@ -13,8 +13,6 @@ import {
   AllowedTypes,
   Button,
   ButtonVariation,
-  Color,
-  FontVariation,
   FormikTooltipContext,
   HarnessDocTooltip,
   Icon,
@@ -22,7 +20,14 @@ import {
   Layout,
   Text
 } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import type { GetExecutionStrategyYamlQueryParams } from 'services/cd-ng'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { getServiceDefinitionType } from '@pipeline/utils/stageHelpers'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import type { CommandScriptsData } from './CommandScriptsTypes'
 import useCommands from './Commands/useCommand'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -40,10 +45,26 @@ export function CommandList(props: CommandListProps): React.ReactElement {
   const formik = useFormikContext<CommandScriptsData>()
   const arrayHelpersRef = useRef<FieldArrayRenderProps>()
   const dataTooltipId = tooltipContext?.formName ? `${tooltipContext?.formName}_commandUnits` : ''
+  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+
+  const { state, getStageFromPipeline } = usePipelineContext()
+  const { templateServiceData } = state
+  const { stage } = getStageFromPipeline(state.selectionState.selectedStageId || '')
+
+  const serviceDefinitionType = React.useCallback((): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
+    return getServiceDefinitionType(
+      stage,
+      getStageFromPipeline,
+      isNewServiceEnvEntity,
+      isSvcEnvEntityEnabled,
+      templateServiceData
+    )
+  }, [getStageFromPipeline, isSvcEnvEntityEnabled, stage, templateServiceData])
 
   const { openCommandModal } = useCommands({
     allowableTypes,
-    readonly
+    readonly,
+    deploymentType: serviceDefinitionType()
   })
 
   return (

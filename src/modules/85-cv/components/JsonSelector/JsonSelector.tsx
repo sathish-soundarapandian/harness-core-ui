@@ -7,14 +7,15 @@
 
 import React from 'react'
 import classnames from 'classnames'
-import { Container } from '@wings-software/uicore'
-import isUndefined from 'lodash/isUndefined'
+import { Container } from '@harness/uicore'
+import { isUndefined } from 'lodash-es'
+import type { JsonRawSelectedPathType } from './JsonSelectorType'
 import css from './JsonSelector.module.scss'
 
 export interface JsonSelectorProps {
   json: Record<string, any>
   className?: string
-  onPathSelect?: (path: string) => void
+  onPathSelect?: (path: JsonRawSelectedPathType) => void
 }
 
 const MAX_NESTING_LEVEL = 100
@@ -64,10 +65,9 @@ const ident = (nestingLevel: number): string => {
 const JsonSelector: React.FC<JsonSelectorProps> = ({ json, className, onPathSelect }) => {
   const rows: Array<any> = calculateRows(json)
 
-  const onSelect = (row: any) => {
+  const onSelect = (row: JsonRawSelectedPathType): void => {
     if (onPathSelect) {
-      const path = [...row.path, row.key]
-      onPathSelect(path.join('.'))
+      onPathSelect(row)
     }
   }
 

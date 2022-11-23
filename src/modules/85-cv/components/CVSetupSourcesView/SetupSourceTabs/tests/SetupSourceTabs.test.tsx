@@ -6,7 +6,7 @@
  */
 
 import React, { useContext } from 'react'
-import { Button, Container, Text } from '@wings-software/uicore'
+import { Button, Container, Text } from '@harness/uicore'
 import { waitFor, render, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'

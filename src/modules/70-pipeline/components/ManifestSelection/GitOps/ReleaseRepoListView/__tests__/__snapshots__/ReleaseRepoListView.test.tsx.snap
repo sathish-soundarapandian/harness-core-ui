@@ -690,6 +690,7 @@ exports[`Release repo list view  render with no manifests 1`] = `
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
     >
       <button
+        aria-label="pipeline.addReleaseRepo"
         class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
         data-test-id="add-release-repo"
         id="add-release-repo"

@@ -6,7 +6,7 @@
  */
 
 import React, { forwardRef, Fragment, useEffect, useRef, useState } from 'react'
-import { Formik, FormikForm, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { Formik, FormikForm, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
@@ -36,6 +36,8 @@ import { ConnectorRefSchema } from '@common/utils/Validation'
 import { useGetServiceNowStagingTables } from 'services/cd-ng'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { Connectors } from '@connectors/constants'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import type {
   ServiceNowImportSetData,
   ServiceNowImportSetFormContentInterface,
@@ -193,7 +195,7 @@ function FormContent({
           gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
         />
         {getMultiTypeFromValue(formik.values.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
+          <ConnectorConfigureOptions
             style={{ marginTop: 14 }}
             value={get(formik?.values, 'spec.connectorRef') as string}
             type="String"
@@ -203,6 +205,15 @@ function FormContent({
             showAdvanced={true}
             onChange={/* istanbul ignore next */ value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
+            connectorReferenceFieldProps={{
+              accountIdentifier: accountId,
+              projectIdentifier,
+              orgIdentifier,
+              type: Connectors.SERVICE_NOW,
+              label: getString('pipeline.serviceNowApprovalStep.connectorRef'),
+              disabled: isApprovalStepFieldDisabled(readonly),
+              gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
+            }}
           />
         )}
       </div>

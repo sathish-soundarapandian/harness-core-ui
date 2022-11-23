@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, act } from '@testing-library/react'
-import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'

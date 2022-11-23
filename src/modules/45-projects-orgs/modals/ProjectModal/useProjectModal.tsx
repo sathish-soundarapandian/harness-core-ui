@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { StepWizard, Button } from '@wings-software/uicore'
+import { StepWizard, Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
 import type { ModuleName } from 'framework/types/ModuleName'
@@ -98,10 +98,7 @@ export const useProjectModal = ({
             stepClassName={css.stepClass}
           >
             <StepAboutProject name={getString('projectsOrgs.aboutProject')} modules={projectData?.modules} />
-            <ProjectCollaboratorsStep
-              name={getString('projectsOrgs.invite')}
-              subTitle={getString('projectsOrgs.optional')}
-            />
+            <ProjectCollaboratorsStep name={getString('projectsOrgs.invite')} subTitle={getString('titleOptional')} />
           </StepWizard>
         ) : null}
 

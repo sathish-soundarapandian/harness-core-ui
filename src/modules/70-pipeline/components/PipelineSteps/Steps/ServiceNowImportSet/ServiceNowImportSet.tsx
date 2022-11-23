@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { connect, FormikErrors, yupToFormErrors } from 'formik'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import { isEmpty, set } from 'lodash-es'
 import * as Yup from 'yup'
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
@@ -41,7 +41,7 @@ export class ServiceNowImportSet extends PipelineStep<ServiceNowImportSetData> {
   protected referenceId = 'serviceNowImportSetStep'
   protected stepName = 'ServiceNow Import Set'
   protected stepIcon: IconName = 'servicenow-update'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServiceNowApproval'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServiceNowImportSet'
   protected defaultValues: ServiceNowImportSetData = {
     identifier: '',
     timeout: '1d',

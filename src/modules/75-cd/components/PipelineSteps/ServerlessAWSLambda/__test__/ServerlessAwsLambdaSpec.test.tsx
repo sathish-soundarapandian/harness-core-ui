@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { act, fireEvent, getByText, render, waitFor } from '@testing-library/react'
-import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { ServerlessAwsLambdaInfrastructure } from 'services/cd-ng'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { awsConnectorListResponse } from '@connectors/components/ConnectorReferenceField/__tests__/mocks'

@@ -18,7 +18,7 @@ import {
   Collapse,
   Text,
   Utils
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { Color } from '@harness/design-system'
 import type { IconName } from '@blueprintjs/core'

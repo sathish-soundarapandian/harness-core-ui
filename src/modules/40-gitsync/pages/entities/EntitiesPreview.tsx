@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Layout, Text, Card, TableV2 } from '@wings-software/uicore'
+import { Container, Layout, Text, Card, TableV2 } from '@harness/uicore'
 import { pick } from 'lodash-es'
 import { Color } from '@harness/design-system'
 

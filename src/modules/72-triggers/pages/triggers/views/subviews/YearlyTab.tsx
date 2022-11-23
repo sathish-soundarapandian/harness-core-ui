@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, SelectOption } from '@wings-software/uicore'
+import { Layout, SelectOption } from '@harness/uicore'
 import { Toothpick, TimeSelect } from '@common/components'
 import { useStrings } from 'framework/strings'
 import ExpressionBreakdown, { ActiveInputs } from './ExpressionBreakdown'

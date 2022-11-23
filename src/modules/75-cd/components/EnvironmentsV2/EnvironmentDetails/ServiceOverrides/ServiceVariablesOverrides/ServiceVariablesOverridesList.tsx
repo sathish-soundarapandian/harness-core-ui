@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { FontVariation, Layout, Text } from '@harness/uicore'
+import { Layout, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'

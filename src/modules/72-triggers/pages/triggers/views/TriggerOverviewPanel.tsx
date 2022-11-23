@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { HarnessDocTooltip, Layout, Text, PageSpinner } from '@wings-software/uicore'
+import { HarnessDocTooltip, Layout, Text, PageSpinner } from '@harness/uicore'
 import cx from 'classnames'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'

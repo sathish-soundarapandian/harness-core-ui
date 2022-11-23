@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -85,9 +85,10 @@ export class SaveCacheS3Step extends PipelineStep<SaveCacheS3StepData> {
 
   protected type = StepType.SaveCacheS3
   protected stepName = 'Save Cache to S3'
-  protected stepIcon: IconName = 'save-cache-s3-step'
+  protected stepIcon: IconName = 'save-cache-s3-ci-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SaveCacheS3'
   protected stepPaletteVisible = false
+  protected stepIconSize = 34
 
   protected defaultValues: SaveCacheS3StepData = {
     identifier: '',

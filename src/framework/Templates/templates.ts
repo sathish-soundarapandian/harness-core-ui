@@ -16,3 +16,8 @@ export const DefaultTemplate: NGTemplateInfoConfig = {
   versionLabel: DefaultNewVersionLabel,
   type: 'Step'
 }
+
+export const ICON_FILE_MAX_SIZE_IN_KB = 30
+export const ICON_FILE_MAX_SIZE = ICON_FILE_MAX_SIZE_IN_KB * 1024
+export const ICON_FILE_SUPPORTED_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/svg+xml']
+export const ICON_FILE_MAX_DIMENSION = 32

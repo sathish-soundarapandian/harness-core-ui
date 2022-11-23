@@ -6,7 +6,7 @@
  */
 
 import { pick, isString, get } from 'lodash-es'
-import type { IconName, StepProps } from '@wings-software/uicore'
+import type { IconName, StepProps } from '@harness/uicore'
 import { Connectors, ElkAuthType, EntityTypes } from '@connectors/constants'
 import type {
   ConnectorInfoDTO,
@@ -293,9 +293,10 @@ export const buildSpotPayload = (formData: FormData) => {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
       executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
       credential: {
-        type: CredTypeValues.ManualConfig,
+        type: CredTypeValues.PermanentTokenConfig,
         spec: {
-          [formData.accountId.type === ValueType.TEXT ? 'accountId' : 'accountIdRef']: formData.accountId.value,
+          [formData.spotAccountId.type === ValueType.TEXT ? 'spotAccountId' : 'spotAccountIdRef']:
+            formData.spotAccountId.value,
           apiTokenRef: formData.apiTokenRef.referenceString
         }
       }
@@ -509,7 +510,8 @@ export const setupGitFormData = async (connectorInfo: ConnectorInfoDTO, accountI
           }
         : undefined,
 
-    password: await setSecretField(connectorInfo?.spec?.spec?.passwordRef, scopeQueryParams)
+    password: await setSecretField(connectorInfo?.spec?.spec?.passwordRef, scopeQueryParams),
+    connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate)
   }
 
   return formData
@@ -678,11 +680,11 @@ export const setupSpotFormData = async (connectorInfo: ConnectorInfoDTO, account
 
   const authdata = connectorInfo?.spec?.credential?.spec
   const formData = {
-    accountId:
-      authdata?.accountId || authdata?.accountIdRef
+    spotAccountId:
+      authdata?.spotAccountId || authdata?.spotAccountIdRef
         ? {
-            value: authdata.accountId || authdata.accountIdRef,
-            type: authdata.accountIdRef ? ValueType.ENCRYPTED : ValueType.TEXT
+            value: authdata.spotAccountId || authdata.spotAccountIdRef,
+            type: authdata.spotAccountIdRef ? ValueType.ENCRYPTED : ValueType.TEXT
           }
         : undefined,
     apiTokenRef: await setSecretField(authdata?.apiTokenRef, scopeQueryParams),
@@ -791,6 +793,22 @@ export const setupJenkinsFormData = async (connectorInfo: ConnectorInfoDTO, acco
         : undefined,
     bearerToken:
       connectorInfo.spec.auth.type === AuthTypes.BEARER_TOKEN ? connectorInfo.spec.auth.spec.tokenRef : undefined
+  }
+  return formData
+}
+export const setupAzureArtifactsFormData = async (
+  connectorInfo: ConnectorInfoDTO,
+  accountId: string
+): Promise<FormData> => {
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo.projectIdentifier,
+    orgIdentifier: connectorInfo.orgIdentifier
+  }
+  const formData = {
+    azureArtifactsUrl: connectorInfo.spec.azureArtifactsUrl,
+    authType: connectorInfo.spec.auth.spec.type,
+    tokenRef: await setSecretField(connectorInfo.spec.auth.spec.spec.tokenRef, scopeQueryParams)
   }
   return formData
 }
@@ -1269,6 +1287,31 @@ export const buildJenkinsPayload = (formData: FormData) => {
   return { connector: savedData }
 }
 
+export const buildAzureArtifactsPayload = (formData: FormData) => {
+  const savedData = {
+    name: formData.name,
+    description: formData.description,
+    projectIdentifier: formData.projectIdentifier,
+    identifier: formData.identifier,
+    orgIdentifier: formData.orgIdentifier,
+    tags: formData.tags,
+    type: Connectors.AZURE_ARTIFACTS,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      azureArtifactsUrl: formData.azureArtifactsUrl.trim(),
+      auth: {
+        spec: {
+          type: 'PersonalAccessToken',
+          spec: {
+            tokenRef: formData.tokenRef.referenceString
+          }
+        }
+      }
+    }
+  }
+  return { connector: savedData }
+}
+
 export const buildJiraPayload = (formData: FormData) => {
   const savedData = {
     name: formData.name,
@@ -1584,6 +1627,7 @@ export const buildGitPayload = (formData: FormData) => {
     type: Connectors.GIT,
     spec: {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
       connectionType: formData.urlType,
       url: formData.url,
       type: formData.connectionType,
@@ -2165,10 +2209,14 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'microsoft-azure'
     case Connectors.JENKINS:
       return 'service-jenkins'
+    case Connectors.AZURE_ARTIFACTS:
+      return 'service-azure-artifact-connector'
     case Connectors.CUSTOM_SECRET_MANAGER:
       return 'custom-sm'
     case Connectors.GcpSecretManager:
       return 'gcp-secret-manager'
+    case Connectors.SPOT:
+      return 'spot'
     default:
       return 'cog'
   }
@@ -2248,6 +2296,8 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'GCP Secrets Manager'
     case Connectors.SPOT:
       return 'Spot'
+    case Connectors.AZURE_ARTIFACTS:
+      return 'Azure Artifacts'
     default:
       return ''
   }
@@ -2347,6 +2397,10 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.azure')
     case Connectors.CUSTOM_SECRET_MANAGER:
       return getString('connectors.testConnectionStep.validationText.customSM')
+    case Connectors.GcpSecretManager:
+      return getString('connectors.testConnectionStep.validationText.gcpSM')
+    case Connectors.SPOT:
+      return getString('connectors.testConnectionStep.validationText.spot')
     default:
       return ''
   }

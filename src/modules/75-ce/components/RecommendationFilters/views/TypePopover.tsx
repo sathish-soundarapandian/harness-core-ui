@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import type { FilterStatsDto, Maybe } from 'services/ce/services'
 import { useStrings } from 'framework/strings'

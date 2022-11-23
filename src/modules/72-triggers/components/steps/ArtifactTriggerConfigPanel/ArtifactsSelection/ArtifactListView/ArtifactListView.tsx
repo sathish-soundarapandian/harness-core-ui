@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Text, Button, ButtonSize, ButtonVariation, Label, HarnessDocTooltip } from '@wings-software/uicore'
+import { Layout, Text, Button, ButtonSize, ButtonVariation, Label, HarnessDocTooltip } from '@harness/uicore'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
@@ -25,7 +25,12 @@ function ArtifactListView({
   addNewArtifact
 }: ArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
-
+  let isArtifactSelected = false
+  if (primaryArtifact?.type === 'CustomArtifact') {
+    isArtifactSelected = primaryArtifact?.spec?.script
+  } else {
+    isArtifactSelected = !isEmpty(primaryArtifact?.spec?.connectorRef)
+  }
   return (
     <Layout.Vertical
       style={{ flexShrink: 'initial', width: '100%' }}
@@ -33,7 +38,7 @@ function ArtifactListView({
       spacing="medium"
     >
       <div>
-        {isEmpty(primaryArtifact?.spec?.connectorRef) ? (
+        {!isArtifactSelected ? (
           <>
             <Label
               style={{

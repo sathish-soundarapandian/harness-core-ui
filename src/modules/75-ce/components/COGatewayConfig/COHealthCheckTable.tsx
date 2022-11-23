@@ -7,10 +7,10 @@
 
 import React, { useEffect, useState } from 'react'
 import { defaultTo } from 'lodash-es'
-import { FieldArray, Select, Text, TextInput } from '@wings-software/uicore'
+import { FieldArray, Select, Text, TextInput } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Formik } from 'formik'
-import type { Field } from '@wings-software/uicore/dist/components/FieldArray/FieldArray'
+import type { Field } from '@harness/uicore/dist/components/FieldArray/FieldArray'
 import type { HealthCheck } from 'services/lw'
 import { useStrings } from 'framework/strings'
 import css from './COGatewayConfig.module.scss'

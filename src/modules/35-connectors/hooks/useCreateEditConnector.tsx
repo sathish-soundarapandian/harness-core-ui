@@ -7,7 +7,7 @@
 
 import { useState } from 'react'
 import { omit, noop } from 'lodash-es'
-import { shouldShowError } from '@wings-software/uicore'
+import { shouldShowError } from '@harness/uicore'
 import { useToaster } from '@common/exports'
 import { UseSaveSuccessResponse, useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'

@@ -10,7 +10,6 @@ import {
   Button,
   ButtonVariation,
   Container,
-  FontVariation,
   Heading,
   PopoverProps,
   SplitButton,
@@ -18,6 +17,7 @@ import {
   useToaster,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, noop, omit } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
@@ -200,7 +200,16 @@ function SavePipelinePopover(
     }
     if (updatedGitDetails?.isNewBranch) {
       navigateToLocation(newPipelineId, updatedGitDetails)
-      location.reload()
+      const repoId =
+        storeMetadata?.storeType === StoreType.REMOTE
+          ? defaultTo(updatedGitDetails.repoName, repoName)
+          : defaultTo(updatedGitDetails.repoIdentifier, repoIdentifier)
+      await fetchPipeline({
+        forceFetch: true,
+        forceUpdate: true,
+        repoIdentifier: repoId,
+        branch: updatedGitDetails?.branch
+      })
     }
   }
 
@@ -343,6 +352,30 @@ function SavePipelinePopover(
       )
   })
 
+  const initPipelinePublish = async (latestPipeline: PipelineInfoConfig) => {
+    // if Git sync enabled then display modal
+    if (isGitSyncEnabled || storeMetadata?.storeType === 'REMOTE') {
+      if ((storeMetadata?.storeType !== 'REMOTE' && isEmpty(gitDetails.repoIdentifier)) || isEmpty(gitDetails.branch)) {
+        clear()
+        showError(getString('pipeline.gitExperience.selectRepoBranch'))
+        return
+      }
+      openSaveToGitDialog({
+        isEditing: pipelineIdentifier !== DefaultNewPipelineId,
+        resource: {
+          type: 'Pipelines',
+          name: latestPipeline.name,
+          identifier: latestPipeline.identifier,
+          gitDetails: gitDetails ?? {},
+          storeMetadata: storeMetadata?.storeType ? storeMetadata : undefined
+        },
+        payload: { pipeline: omit(latestPipeline, 'repo', 'branch') }
+      })
+    } else {
+      await saveAndPublishPipeline(latestPipeline, storeMetadata)
+    }
+  }
+
   const saveAndPublish = React.useCallback(async () => {
     window.dispatchEvent(new CustomEvent('SAVE_PIPELINE_CLICKED'))
 
@@ -368,27 +401,7 @@ function SavePipelinePopover(
       return
     }
 
-    // if Git sync enabled then display modal
-    if (isGitSyncEnabled || storeMetadata?.storeType === 'REMOTE') {
-      if ((storeMetadata?.storeType !== 'REMOTE' && isEmpty(gitDetails.repoIdentifier)) || isEmpty(gitDetails.branch)) {
-        clear()
-        showError(getString('pipeline.gitExperience.selectRepoBranch'))
-        return
-      }
-      openSaveToGitDialog({
-        isEditing: pipelineIdentifier !== DefaultNewPipelineId,
-        resource: {
-          type: 'Pipelines',
-          name: latestPipeline.name,
-          identifier: latestPipeline.identifier,
-          gitDetails: gitDetails ?? {},
-          storeMetadata: storeMetadata?.storeType ? storeMetadata : undefined
-        },
-        payload: { pipeline: omit(latestPipeline, 'repo', 'branch') }
-      })
-    } else {
-      await saveAndPublishPipeline(latestPipeline, storeMetadata)
-    }
+    await initPipelinePublish(latestPipeline)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     deletePipelineCache,
@@ -402,17 +415,18 @@ function SavePipelinePopover(
     showError,
     pipelineIdentifier,
     isYaml,
-    yamlHandler
+    yamlHandler,
+    initPipelinePublish
   ])
 
   React.useImperativeHandle(
     ref,
     () => ({
       updatePipeline: async (pipelineYaml: string) => {
-        await saveAndPublishPipeline((parse(pipelineYaml) as { pipeline: PipelineInfoConfig }).pipeline, storeMetadata)
+        await initPipelinePublish(parse<Pipeline>(pipelineYaml).pipeline)
       }
     }),
-    [saveAndPublishPipeline, storeMetadata]
+    [initPipelinePublish]
   )
 
   if (loading) {

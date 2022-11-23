@@ -15,11 +15,10 @@ import {
   FormikForm,
   Accordion,
   Container
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikErrors, FormikProps } from 'formik'
-import get from 'lodash/get'
-import merge from 'lodash/merge'
+import { get, merge } from 'lodash-es'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -79,7 +78,7 @@ export const RunStepBase = (
       formName="ciRunStep"
       validate={valuesToValidate => {
         let errors: FormikErrors<any> = {}
-        /* If a user configures AWS VMs as an infra, the steps can be executed directly on the VMS or in a container on a VM. 
+        /* If a user configures AWS VMs as an infra, the steps can be executed directly on the VMS or in a container on a VM.
         For the latter case, even though Container Registry and Image are optional for AWS VMs infra, they both need to be specified for container to be spawned properly */
         if (
           [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(

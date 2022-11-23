@@ -17,8 +17,9 @@ import {
   useConfirmationDialog,
   useToaster,
   Page,
-  TableV2
-} from '@wings-software/uicore'
+  TableV2,
+  ButtonSize
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Classes, Position, Menu, Intent, PopoverInteractionKind, MenuItem } from '@blueprintjs/core'
@@ -117,8 +118,9 @@ const RenderColumnRoleAssignments: Renderer<CellProps<UserAggregate>> = ({ row, 
     >
       <RoleBindingsList data={data} length={2} />
       <ManagePrincipalButton
-        text={getString('common.plusNumber', { number: getString('common.role') })}
-        variation={ButtonVariation.LINK}
+        text={`${getString('common.manage')} ${getString('roles')}`}
+        variation={ButtonVariation.SECONDARY}
+        size={ButtonSize.SMALL}
         className={css.roleButton}
         data-testid={`addRole-${row.original.user.uuid}`}
         onClick={handleAddRole}
@@ -279,6 +281,19 @@ const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) =
           }}
         />
         <Menu>
+          <RbacMenuItem
+            icon="res-roles"
+            text={getString('rbac.manageRoleBindings')}
+            onClick={e => {
+              e.stopPropagation()
+              ;(column as any).openRoleAssignmentModal(
+                PrincipalType.USER,
+                row.original.user,
+                row.original.roleAssignmentMetadata
+              )
+            }}
+            permission={permissionRequest}
+          />
           {data.locked ? (
             <RbacMenuItem
               icon="unlock"
@@ -411,7 +426,8 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
         width: '5%',
         Cell: RenderColumnMenu,
         refetchActiveUsers: refetch,
-        disableSortBy: true
+        disableSortBy: true,
+        openRoleAssignmentModal: addRole
       }
     ],
     [openRoleAssignmentModal, refetch]

@@ -262,6 +262,7 @@ exports[`Create CustomHealth connector Wizard Ensure component renders 3 substep
             class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
               type="button"
             >
@@ -272,6 +273,7 @@ exports[`Create CustomHealth connector Wizard Ensure component renders 3 substep
               </span>
             </button>
             <button
+              aria-label="next"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
               type="submit"
             >

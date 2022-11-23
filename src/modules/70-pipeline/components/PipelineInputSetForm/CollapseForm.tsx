@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, Icon, Text } from '@wings-software/uicore'
-import type { TextProps } from '@wings-software/uicore/dist/components/Text/Text'
+import { Layout, Icon, Text } from '@harness/uicore'
+import type { TextProps } from '@harness/uicore/dist/components/Text/Text'
 
 export interface CollapseFormProps {
   header: string

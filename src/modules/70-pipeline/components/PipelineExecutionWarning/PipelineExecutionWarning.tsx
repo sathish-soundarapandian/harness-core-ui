@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Layout, Button } from '@wings-software/uicore'
+import { Layout, Button } from '@harness/uicore'
 
 import css from './PipelineExecutionWarning.module.scss'
 

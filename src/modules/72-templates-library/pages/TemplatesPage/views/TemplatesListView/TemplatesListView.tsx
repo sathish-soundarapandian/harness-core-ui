@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
+import cx from 'classnames'
 import type { CellProps, Column, Renderer } from 'react-table'
-import { Container, Layout, TableV2, Text } from '@wings-software/uicore'
+import { Container, Icon, Layout, TableV2, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Position } from '@blueprintjs/core'
 import { defaultTo, isEmpty, isEqual } from 'lodash-es'
@@ -21,6 +22,8 @@ import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import GitDetailsColumn from '@common/components/Table/GitDetailsColumn/GitDetailsColumn'
 import { ScopeBadge } from '@common/components/ScopeBadge/ScopeBadge'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
+import { getIconForTemplate } from '../../TemplatesPageUtils'
 import css from './TemplatesListView.module.scss'
 
 type CustomColumn<T extends Record<string, any>> = Column<T> & {
@@ -48,7 +51,7 @@ const RenderColumnMenu: Renderer<CellProps<TemplateSummaryResponse>> = ({ row, c
   )
 }
 
-const RenderColumnType: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
+export const RenderColumnType: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
   const data = row.original
   const templateEntityType = defaultTo(data.templateEntityType, '')
   const templateLabel = templateFactory.getTemplateLabel(templateEntityType)
@@ -56,7 +59,7 @@ const RenderColumnType: Renderer<CellProps<TemplateSummaryResponse>> = ({ row })
 
   return (
     <Layout.Horizontal
-      className={css.templateColor}
+      className={cx(css.templateColor, 'templateLabelColor')}
       spacing="large"
       flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
       padding={{ right: 'medium' }}
@@ -77,7 +80,7 @@ const RenderColumnType: Renderer<CellProps<TemplateSummaryResponse>> = ({ row })
   )
 }
 
-const RenderColumnTemplate: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
+export const RenderColumnTemplate: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
   const data = row.original
   const { getString } = useStrings()
   return (
@@ -133,7 +136,7 @@ const RenderColumnTemplate: Renderer<CellProps<TemplateSummaryResponse>> = ({ ro
   )
 }
 
-const RenderColumnLabel: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
+export const RenderColumnLabel: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
   const data = row.original
   return (
     <Layout.Horizontal padding={{ right: 'medium' }}>
@@ -144,7 +147,7 @@ const RenderColumnLabel: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }
   )
 }
 
-const RenderColumnScope: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
+export const RenderColumnScope: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
   const data = row.original
   return (
     <Layout.Horizontal padding={{ right: 'medium' }}>
@@ -153,7 +156,7 @@ const RenderColumnScope: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }
   )
 }
 
-const RenderRepoName: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
+export const RenderRepoName: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
   const { gitDetails } = row.original
   const repoName = gitDetails?.repoName || '-'
 
@@ -162,6 +165,28 @@ const RenderRepoName: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) =
       <Text color={Color.GREY_800} lineClamp={1}>
         {repoName}
       </Text>
+    </Layout.Horizontal>
+  )
+}
+
+export const RenderIcon: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
+  const { getString } = useStrings()
+  const template = row.original
+  const templateIconName = getIconForTemplate(getString, template)
+  const templateIconUrl = template.icon
+
+  return (
+    <Layout.Horizontal padding={{ right: 'medium' }}>
+      {templateIconUrl ? (
+        <ImagePreview
+          src={templateIconUrl}
+          size={24}
+          alt={getString('common.template.templateIcon')}
+          fallbackIcon={templateIconName}
+        />
+      ) : (
+        templateIconName && <Icon size={24} name={templateIconName} />
+      )}
     </Layout.Horizontal>
   )
 }
@@ -181,14 +206,14 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
   const getTemplateNameWidth = React.useCallback(() => {
     if (isGitView) {
       if (hideMenu) {
-        return '35%'
+        return '30%'
       }
-      return '30%'
+      return '25%'
     } else {
       if (hideMenu) {
-        return '45%'
+        return '40%'
       }
-      return '40%'
+      return '35%'
     }
   }, [isGitView, hideMenu])
 
@@ -199,6 +224,12 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
         accessor: 'templateEntityType',
         width: isGitView ? '15%' : '20%',
         Cell: RenderColumnType
+      },
+      {
+        accessor: 'icon',
+        width: '5%',
+        Cell: RenderIcon,
+        disableSortBy: true
       },
       {
         Header: 'Template',
@@ -247,7 +278,7 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
   }
 
   if (!isGitView) {
-    columns.splice(3, 1)
+    columns.splice(4, 1)
   }
 
   return (

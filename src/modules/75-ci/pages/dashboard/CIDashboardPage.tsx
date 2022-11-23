@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { Container, PageHeader, Dialog, PageSpinner } from '@wings-software/uicore'
+import { Container, PageHeader, Dialog, PageSpinner } from '@harness/uicore'
 import { useParams, useHistory } from 'react-router-dom'
 import type { GetDataError } from 'restful-react'
 import type { IDialogProps } from '@blueprintjs/core'

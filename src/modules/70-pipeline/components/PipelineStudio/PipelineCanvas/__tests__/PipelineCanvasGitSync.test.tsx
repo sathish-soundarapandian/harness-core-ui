@@ -46,6 +46,10 @@ jest.mock('services/pipeline-ng', () => ({
   }))
 }))
 
+jest.mock('services/pipeline-rq', () => ({
+  useValidateTemplateInputsQuery: jest.fn(() => ({ data: null }))
+}))
+
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
 const getListGitSync = jest.fn(() => Promise.resolve(gitSyncListResponse))
 const createPullRequest = jest.fn(() => Promise.resolve())
@@ -60,13 +64,16 @@ jest.mock('services/cd-ng', () => ({
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
   }),
+  getListOfBranchesWithStatusPromise: jest.fn().mockImplementation(() => Promise.resolve(branchStatusMock)),
   useListGitSync: jest.fn().mockImplementation(() => {
-    return { data: gitSyncListResponse, refetch: getListGitSync, loading: false }
-  }),
-  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
+    return { data: gitSyncListResponse, refetch: getListGitSync }
+  })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
-  }),
-  getListOfBranchesWithStatusPromise: jest.fn().mockImplementation(() => Promise.resolve(branchStatusMock))
+  })
 }))
 
 jest.mock('resize-observer-polyfill', () => {

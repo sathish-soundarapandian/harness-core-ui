@@ -240,7 +240,7 @@ describe('SegmentsPage', () => {
       </TestWrapper>
     )
 
-    expect(screen.getByRole('button', { name: 'plus cf.segments.create' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'cf.segments.create' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'cf.shared.targetManagement: cf.shared.segments' })).toBeInTheDocument()
   })
 
@@ -273,7 +273,7 @@ describe('SegmentsPage', () => {
       </TestWrapper>
     )
 
-    expect(screen.getByRole('button', { name: 'plus cf.targets.newEnvironmentTarget' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'cf.targets.newEnvironmentTarget' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'cf.shared.targetManagement: cf.shared.segments' })).toBeInTheDocument()
   })
 

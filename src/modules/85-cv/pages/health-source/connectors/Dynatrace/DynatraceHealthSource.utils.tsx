@@ -6,7 +6,7 @@
  */
 
 import { cloneDeep, isEmpty, isEqual } from 'lodash-es'
-import { RUNTIME_INPUT_VALUE, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import type {
   RowData,

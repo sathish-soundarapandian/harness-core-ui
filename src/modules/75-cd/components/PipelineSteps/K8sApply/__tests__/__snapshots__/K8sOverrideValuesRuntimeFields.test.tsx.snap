@@ -11,6 +11,7 @@ exports[`OverrideYamlValues runtimefields tests Render empty if no runtime field
     >
       cd.manifestId
       : 
+      
     </p>
   </div>
 </div>
@@ -38,7 +39,7 @@ exports[`OverrideYamlValues runtimefields tests Render runtime fields if gitfetc
     >
       <label
         class="bp3-label"
-        for="stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].spec.store.spec.commitId"
+        for="stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].manifest.spec.store.spec.commitId"
       >
         pipeline.manifestType.commitId
          
@@ -58,7 +59,7 @@ exports[`OverrideYamlValues runtimefields tests Render runtime fields if gitfetc
             <input
               autocomplete="off"
               class="bp3-input"
-              name="stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].spec.store.spec.commitId"
+              name="stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].manifest.spec.store.spec.commitId"
               type="text"
               value=""
             />
@@ -137,7 +138,7 @@ exports[`OverrideYamlValues runtimefields tests Render runtime fields in run pip
           >
             <button
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
-              data-testid="cr-field-stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].spec.store.spec.connectorRef"
+              data-testid="cr-field-stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].manifest.spec.store.spec.connectorRef"
               style="width: 400px;"
               type="button"
             >
@@ -211,7 +212,7 @@ exports[`OverrideYamlValues runtimefields tests Render runtime fields in run pip
     >
       <label
         class="bp3-label"
-        for="stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].spec.store.spec.branch"
+        for="stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].manifest.spec.store.spec.branch"
       >
         pipelineSteps.deploy.inputSet.branch
          
@@ -231,7 +232,7 @@ exports[`OverrideYamlValues runtimefields tests Render runtime fields in run pip
             <input
               autocomplete="off"
               class="bp3-input"
-              name="stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].spec.store.spec.branch"
+              name="stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].manifest.spec.store.spec.branch"
               type="text"
               value=""
             />
@@ -295,7 +296,7 @@ exports[`OverrideYamlValues runtimefields tests Render runtime fields in run pip
               >
                 <input
                   class="bp3-input"
-                  data-testid="value-stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].spec.store.spec.paths-[0]"
+                  data-testid="value-stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].manifest.spec.store.spec.paths-[0]"
                   type="text"
                   value=""
                 />
@@ -304,7 +305,7 @@ exports[`OverrideYamlValues runtimefields tests Render runtime fields in run pip
           </div>
           <button
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-            data-testid="remove-stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].spec.store.spec.paths-[0]"
+            data-testid="remove-stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].manifest.spec.store.spec.paths-[0]"
             type="button"
           >
             <span
@@ -335,8 +336,9 @@ exports[`OverrideYamlValues runtimefields tests Render runtime fields in run pip
           </button>
         </div>
         <button
+          aria-label="plusAdd"
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
-          data-testid="add-stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].spec.store.spec.paths"
+          data-testid="add-stages[0].stage.spec.execution.steps[0].step.spec.overrides[0].manifest.spec.store.spec.paths"
           type="button"
         >
           <span

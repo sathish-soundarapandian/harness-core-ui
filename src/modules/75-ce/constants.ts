@@ -292,5 +292,6 @@ export const featureNames = {
   AUTOSTROPPING_FEATURE: 'Auto Stopping',
   CLOUD_INTEGRATION_FEATURE: 'Cloud Integration',
   LOAD_BALANCER_FEATURE: 'Load Balancer',
-  COST_CATEGORY_FEATURE: 'Cost Categories'
+  COST_CATEGORY_FEATURE: 'Cost Categories',
+  GOVERNANCE: 'Governance'
 }

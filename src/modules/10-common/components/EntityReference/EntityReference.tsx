@@ -408,7 +408,7 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
               trackEvent(StageActions.ApplySelectedConnector, {
                 category: Category.STAGE,
                 selectedRecord,
-                selectedScope: getScopeFromDTO(selectedRecord as ScopedObjectDTO)
+                selectedScope: selectedTab
               })
             }
           }}
@@ -425,7 +425,7 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
                 trackEvent(StageActions.CancelSelectConnector, {
                   category: Category.STAGE,
                   selectedRecord,
-                  selectedScope: getScopeFromDTO(selectedRecord as ScopedObjectDTO)
+                  selectedScope: selectedTab
                 })
               }
             }}

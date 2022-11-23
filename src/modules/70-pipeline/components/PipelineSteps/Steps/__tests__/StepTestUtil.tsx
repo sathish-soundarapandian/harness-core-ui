@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Formik, MultiTypeInputType, Text } from '@wings-software/uicore'
+import { Button, Formik, MultiTypeInputType, Text } from '@harness/uicore'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepWidgetWithFormikRef, StepWidgetProps } from '@pipeline/components/AbstractSteps/StepWidget'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'

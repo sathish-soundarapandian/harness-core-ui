@@ -22,7 +22,7 @@ import {
   Text,
   PageSpinner,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { ALLOWED_VALUES_TYPE, VALIDATORS, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -67,6 +67,8 @@ import { FormMultiTypeTextAreaField } from '@common/components'
 import { processFormData } from '@pipeline/components/PipelineSteps/Steps/ServiceNowUpdate/helper'
 import { ServiceNowTemplateFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowTemplateFieldRenderer'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { Connectors } from '@connectors/constants'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { ServiceNowUpdateStepModeProps, ServiceNowUpdateData, ServiceNowUpdateFormContentInterface } from './types'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
@@ -369,7 +371,7 @@ function FormContent({
           gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
         />
         {getMultiTypeFromValue(formik.values.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
+          <ConnectorConfigureOptions
             style={{ marginTop: 14 }}
             value={formik.values.spec.connectorRef as string}
             type="String"
@@ -379,6 +381,15 @@ function FormContent({
             showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
+            connectorReferenceFieldProps={{
+              accountIdentifier: accountId,
+              projectIdentifier,
+              orgIdentifier,
+              type: Connectors.SERVICE_NOW,
+              label: getString('pipeline.serviceNowApprovalStep.connectorRef'),
+              disabled: isApprovalStepFieldDisabled(readonly),
+              gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
+            }}
           />
         )}
       </div>

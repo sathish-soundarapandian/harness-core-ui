@@ -14,6 +14,12 @@
   display: flex !important;
   justify-content: center;
   align-items: center;
+
+  // Specific icons need to render larger
+  span[data-icon='initialize-ci-step'] svg {
+    height: 34px !important;
+    width: 34px !important;
+  }
   &.addStep {
     border: 2px dashed var(--grey-300);
   }

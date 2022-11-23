@@ -12,7 +12,7 @@ dashboard:
 steps:
   common:
     clusterDetails: Cluster Details
-    selectOrEnterClusterPlaceholder: Select or add Cluster
+    selectOrEnterClusterPlaceholder: Select or Enter Cluster
     releaseNamePlaceholder: Enter Release Name
     specifyCredentials: Specify Credentials
     undefinedType: Undefined deployment type
@@ -65,7 +65,7 @@ steps:
     resourceGroupError: 'No resource groups found with given Subscription'
     clusterError: 'No cluster found with given Resource Group'
   azureWebAppInfra:
-    azureWebApp: 'Azure Web App'
+    azureWebApp: '{{ $.pipeline.azureWebApp.name }}'
     subscription: '{{ $.common.subscriptionId }}'
     subscriptionPlaceholder: '{{ $.common.subscriptionPlaceholder }}'
     webAppPlaceholder: 'Select or add Web App Name'
@@ -79,6 +79,9 @@ steps:
   serverless:
     regionPlaceholder: Specify a region
     stagePlaceholder: Specify a stage
+  emailStep:
+    ccOptionalLabel: CC (optional)
+    timeout1DayMinimum: 'Minimum Timeout is 1 day'
   awsInfraStep:
     regionError: Error fetching regions
     placeholders:
@@ -110,6 +113,13 @@ steps:
       prodListenerRuleARN: Prod Listener Rule ARN
       stageListener: Stage Listener
       stageListenerRuleARN: Stage Listener Rule ARN
+  elastigroup:
+    infraDetailHeader: Elastigroup Infrastructure Details
+    connectorSpot: Spot Connector
+    elastigroupConfig: Elastigroup Configuration
+    elastigroupConfigReq: Elastigroup Configuration is required
+    elastigroupTitle: Elastigroup Configuration Source
+    elastigroupConfigDetails: '{{$.common.configDetails}}'
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -143,6 +153,7 @@ setUpProvisionerBtnText: Set Up Provisioner
 filePathRequired: Atleast one file path is required
 pathCannotBeEmpty: File Path cannot be empty
 configFilePlaceHolder: 'Specify Config File...'
+backendConfigFilePlaceHolder: 'Specify Backend Config File...'
 
 configIdentifer: Configuration Identifier
 addInline: Add Inline
@@ -156,9 +167,11 @@ specifyTfVarStore: Specify Terraform Var File Store
 addTFVarFileLabel: 'Add File Path'
 enterWorkDirectory: Enter Working Directory
 enterTragets: Enter Targets
-exportTerraformPlanJson: Export Json representation of Terraform Plan
+exportTerraformPlanJson: Export JSON representation of Terraform Plan
+exportTerraformHumanReadablePlan: Export Human Readable representation of Terraform Plan
 specifyTargetHost: Specify Target Host
 configurationFile: 'Configuration File Repository'
+backendConfigurationFile: 'Backend Configuration File Repository (optional)'
 terraformVarFiles: 'Terraform Var Files'
 secretManagerRequired: 'Secret Manager is required.'
 pipelineSteps:
@@ -199,11 +212,11 @@ pipelineSteps:
     hideInfrastructureInputs: Hide infrastructure inputs
     multiEnvironmentsParallelDeployLabel: Deploy environments in parallel?
     environmentGroupDialogTitleText: Deploy to environment group?
-    environmentGroupConfirmationText: Are you sure you want to switch to deploying to a single environment group?. If you choose to proceed, your existing environments will be lost.
+    environmentGroupConfirmationText: Are you sure you want to switch to deploying to a single environment group? If you choose to proceed, your existing environments will be lost.
     multiEnvironmentsDialogTitleText: Deploy to multiple environments or infrastructures?
-    multiEnvironmentsConfirmationText: Are you sure you want to switch to deploying multiple environments or infrastructures?. If you choose to proceed, your existing environment will be migrated automatically.
+    multiEnvironmentsConfirmationText: Are you sure you want to switch to deploying multiple environments or infrastructures? If you choose to proceed, your existing environment will be migrated automatically.
     singleEnvironmentDialogTitleText: Deploy to single environment?
-    singleEnvironmentConfirmationText: Are you sure you want to switch to deploying to a single environment?. If you choose to proceed, your existing environments will be lost.
+    singleEnvironmentConfirmationText: Are you sure you want to switch to deploying to a single environment? If you choose to proceed, your existing environments will be lost.
     deleteEnvironmentFromListDialogTitleText: Remove Environment from list?
     deleteEnvironmentFromListConfirmationText: Are you sure you want to remove Environment - {{name}} from the list?
     deleteInfrastructureFromListDialogTitleText: Remove Infrastructure from list?
@@ -246,8 +259,6 @@ pipelineSteps:
     deploymentType: Infrastructure type selection is required
     clusterError: No cluster found with given Connector
     stageIsRequired: Stage is required
-  executionTab:
-    stepsCount: At least one step is required
 cdLaunchText: Launch CD First Generation
 serviceDashboard:
   activeServiceInstancesLabel: '{{$.common.subscriptions.usage.srvcInst}}'
@@ -375,6 +386,10 @@ configFileDetails: 'Config File Details'
 configFileStore: 'Specify Terraform Config File Store'
 configFileStepOne: 'Terraform Config Store'
 configFileStoreTitle: 'Config File'
+backendConfigFileDetails: 'Backend Config File Details'
+backendConfigFileStore: 'Specify Terraform Backend Config File Store'
+backendConfigFileStepOne: 'Terraform Backend Config Store'
+backendConfigFileStoreTitle: 'Backend Config File'
 selectRepository: Select a repository
 selectArtifact: Select an artifact
 artifactName: Artifact Name
@@ -502,7 +517,8 @@ getStartedWithCD:
   envName: Environment Name
   infraName: Infrastructure Name
   setupDelegate: Setup Delegate
-  delegateInfo: Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform.
+  delegateInfo1: Harness Continuous Delivery empowers teams to deliver new features, fast and securely. The first step to creating deployment pipelines is connecting to your target environment by installing a Harness Delegate.
+  delegateInfo2: The delegate is a worker process that runs on your infrastructure execute tasks on your infrastructure on behalf of Harness platform.
   delegateRequiredWarning: The delegate is not successfully connected, you will not be able to deploy without a delegate. Are you sure you want to continue?
   setupaNewDelegate: + Setup a New Delegate
 ecsRollingDeployStep:
@@ -534,17 +550,17 @@ azureBlueprint:
 validation:
   specifyFilter: Specify the filter condition
 welcomeMessage: Welcome to Harness
-delegateInstallation: Install the Delegate to deploy your cluster
+welcomeToHarnessCD: Welcome to Harness Continuous Delivery!
 learnMoreDelegate: Learn more about Delegates
 runDelegate: How do you want to run the Delegate
 installDelegate: Install Delegate
 instructionsDelegate: Instructions to Install the Delegate
-downloadYAML: DOWNLOAD THE YAML
+downloadYAML: Download the YAML
 previewYAML: Preview Yaml
-installCluster: INSTALL ON YOUR CLUSTER
+installCluster: Install on your Cluster
 checkCluster: Check if you can connect to your cluster
 delegateInstallCommand: Install the delegate by running the following command
-delegateConnectionWait: WAITING FOR DELEGATE TO CONNECT
+delegateConnectionWait: Waiting for Delegate to connect
 delegateFailed: Delegate Failed to connect to Harness
 delegateFailText1: Harness Delegate Failed to connect to our Harness SaaS. Please make sure the infrastructure the delegate is installed on can reach https://app.harness.io
 delegateFailText2: The Delegate failed to come up on the cluster, please check to see if the pods are healthy or could be scheduled on the cluster
@@ -579,7 +595,11 @@ miniKubeCmd4: kubectl get pods -A
 deploymentSteps: Deployment Steps
 useStepTemplatesForYourDeploymentType: Use step templates for your deployment type here
 removeStepTemplate: Remove Step Template
+duplicateStep: Step with same name already exists
 removeStepTemplateConfirmationLabel: 'Are you sure you want to remove linked step template ?'
+apiParameters: API Parameters
+artifactSource:
+  artifactRepositoryTypeIsRequired: Artifact Repository Type is required
 azureArm:
   description: Deploy resources using Azure Resource Manager (ARM).
   location: Location
@@ -600,3 +620,5 @@ createAndUseTemplate: Create and Use Template
 ignoreReleaseHistFailStatus: 'Ignore Release History Failed Status'
 artifactVersion: 'Version :'
 artifactPath: 'Path :'
+logoOfName: 'Logo of {{name}}'
+deploymentTemplates: 'Deployment Templates'

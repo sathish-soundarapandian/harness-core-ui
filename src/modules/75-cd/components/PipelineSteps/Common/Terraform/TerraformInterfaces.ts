@@ -6,7 +6,7 @@
  */
 
 import { unset } from 'lodash-es'
-import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -50,6 +50,7 @@ export interface TerraformProps<T = TerraformData> {
   stepType?: string
   gitScope?: GitFilterScope
   allValues?: T
+  isBackendConfig?: boolean
 }
 
 export interface TerraformPlanProps {
@@ -69,6 +70,7 @@ export interface TerraformPlanProps {
   gitScope?: GitFilterScope
   stepType?: string
   allValues?: TFPlanFormData
+  isBackendConfig?: boolean
 }
 
 export interface RemoteVar {
@@ -119,6 +121,10 @@ export const ConfigurationTypes: Record<TerraformStepConfiguration['type'], Terr
   Inline: 'Inline',
   InheritFromPlan: 'InheritFromPlan',
   InheritFromApply: 'InheritFromApply'
+}
+export const BackendConfigurationTypes = {
+  Inline: 'Inline',
+  Remote: 'Remote'
 }
 
 export const CommandTypes = {
@@ -207,7 +213,22 @@ export interface TerraformPlanData extends StepElementConfig {
 
 export interface TFDataSpec {
   workspace?: string
-  backendConfig?: TerraformBackendConfig
+  backendConfig?:
+    | TerraformBackendConfig
+    | {
+        store?: {
+          type?: string
+          spec?: {
+            gitFetchType?: string
+            branch?: string
+            commitId?: string
+            folderPath?: string
+            connectorRef?: string | Connector
+            repositoryName?: string
+            artifactPaths?: string
+          }
+        }
+      }
   targets?: any
 
   environmentVariables?: any
@@ -227,6 +248,7 @@ export interface TFDataSpec {
   }
   varFiles?: TerraformVarFileWrapper[]
   exportTerraformPlanJson?: boolean
+  exportTerraformHumanReadablePlan?: boolean
 }
 
 export interface TFFormData extends StepElementConfig {
@@ -296,6 +318,8 @@ export const onSubmitTerraformData = (values: any): TFFormData => {
     }
 
     const connectorValue = values?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef as any
+    const backendConfigConnectorValue = values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec
+      ?.connectorRef as any
 
     const configObject: TerraformExecutionData = {
       workspace: values?.spec?.configuration?.spec?.workspace,
@@ -303,9 +327,36 @@ export const onSubmitTerraformData = (values: any): TFFormData => {
     }
     if (values?.spec?.configuration?.spec?.backendConfig?.spec?.content) {
       configObject['backendConfig'] = {
-        type: 'Inline',
+        type: BackendConfigurationTypes.Inline,
         spec: {
           content: values?.spec?.configuration?.spec?.backendConfig?.spec?.content
+        }
+      }
+    } else if (values?.spec?.configuration?.spec?.backendConfig?.spec?.store) {
+      if (values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.type === 'Harness') {
+        configObject['backendConfig'] = { ...values?.spec?.configuration?.spec?.backendConfig }
+      } else {
+        configObject['backendConfig'] = {
+          type: BackendConfigurationTypes.Remote,
+          ...values.spec?.configuration?.spec?.backendConfig,
+          spec: {
+            store: {
+              ...values.spec?.configuration?.spec?.backendConfig?.spec?.store,
+              type:
+                backendConfigConnectorValue?.connector?.type ||
+                values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.type,
+              spec: {
+                ...values.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec,
+                connectorRef: values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
+                  ? getMultiTypeFromValue(
+                      values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
+                    ) === MultiTypeInputType.RUNTIME || !backendConfigConnectorValue?.value
+                    ? values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
+                    : backendConfigConnectorValue?.value
+                  : ''
+              }
+            }
+          }
         }
       }
     } else {
@@ -350,6 +401,11 @@ export const onSubmitTerraformData = (values: any): TFFormData => {
         }
       }
     }
+
+    if (values?.spec?.configuration?.spec?.configFiles?.store?.type === 'Harness') {
+      configObject['configFiles'] = { ...values?.spec?.configuration?.spec?.configFiles }
+    }
+
     return {
       ...values,
       spec: {
@@ -402,6 +458,7 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
   }
 
   const connectorValue = values?.spec?.configuration?.configFiles?.store?.spec?.connectorRef
+  const backendConfigConnectorValue = values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
 
   const configObject: TerraformPlanExecutionData = {
     command: values?.spec?.configuration?.command,
@@ -409,13 +466,42 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
     configFiles: {} as TerraformConfigFilesWrapper,
     secretManagerRef: ''
   }
+
   if (values?.spec?.configuration?.backendConfig?.spec?.content) {
     configObject['backendConfig'] = {
-      type: 'Inline',
+      type: BackendConfigurationTypes.Inline,
       spec: {
         content: values?.spec?.configuration?.backendConfig?.spec?.content
       }
     }
+  } else if (values?.spec?.configuration?.backendConfig?.spec?.store?.spec) {
+    if (values?.spec?.configuration?.backendConfig?.spec?.store?.type === 'Harness') {
+      configObject['backendConfig'] = { ...values?.spec?.configuration?.backendConfig }
+    } else {
+      configObject['backendConfig'] = {
+        type: BackendConfigurationTypes.Remote,
+        ...values.spec?.configuration?.backendConfig,
+        spec: {
+          store: {
+            ...values.spec?.configuration?.backendConfig?.spec?.store,
+            type:
+              backendConfigConnectorValue?.connector?.type ||
+              values?.spec?.configuration?.backendConfig?.spec?.store?.type,
+            spec: {
+              ...values.spec?.configuration?.backendConfig?.spec?.store?.spec,
+              connectorRef: values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
+                ? getMultiTypeFromValue(values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef) ===
+                    MultiTypeInputType.RUNTIME || !backendConfigConnectorValue?.value
+                  ? values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
+                  : backendConfigConnectorValue?.value
+                : ''
+            }
+          }
+        }
+      }
+    }
+  } else {
+    unset(values?.spec?.configuration, 'backendConfig')
   }
 
   if (envMap.length) {
@@ -456,6 +542,10 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
     }
   }
 
+  if (values?.spec?.configuration?.configFiles?.store?.type === 'Harness') {
+    configObject['configFiles'] = { ...values?.spec?.configuration?.configFiles }
+  }
+
   if (values?.spec?.configuration?.secretManagerRef) {
     configObject['secretManagerRef'] = values?.spec?.configuration?.secretManagerRef
       ? values?.spec?.configuration?.secretManagerRef
@@ -465,6 +555,12 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
   if (values?.spec?.configuration?.exportTerraformPlanJson) {
     configObject['exportTerraformPlanJson'] = values?.spec?.configuration?.exportTerraformPlanJson
       ? values?.spec?.configuration?.exportTerraformPlanJson
+      : false
+  }
+
+  if (values?.spec?.configuration?.exportTerraformHumanReadablePlan) {
+    configObject['exportTerraformHumanReadablePlan'] = values?.spec?.configuration?.exportTerraformHumanReadablePlan
+      ? values?.spec?.configuration?.exportTerraformHumanReadablePlan
       : false
   }
 

@@ -7,10 +7,10 @@
 
 import React from 'react'
 import { isEmpty as _isEmpty, debounce as _debounce } from 'lodash-es'
-import { FieldArray, Select, TextInput, Text } from '@wings-software/uicore'
+import { FieldArray, Select, TextInput, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Formik } from 'formik'
-import type { Field } from '@wings-software/uicore/dist/components/FieldArray/FieldArray'
+import type { Field } from '@harness/uicore/dist/components/FieldArray/FieldArray'
 import type { PortConfig } from 'services/lw'
 import { useStrings } from 'framework/strings'
 import css from './COGatewayConfig.module.scss'

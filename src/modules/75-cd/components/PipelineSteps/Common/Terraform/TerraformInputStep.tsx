@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { isEmpty } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
 
 import {
   getMultiTypeFromValue,
@@ -17,24 +17,28 @@ import {
   Text,
   Container,
   Label
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import type { FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import List from '@common/components/List/List'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { TerraformData, TerraformProps, TerraformStoreTypes } from './TerraformInterfaces'
 import ConfigInputs from './InputSteps/ConfigSection'
 import TFRemoteSection from './InputSteps/TFRemoteSection'
+import { TFMonaco } from './Editview/TFMonacoEditor'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function TerraformInputStep<T extends TerraformData = TerraformData>(
-  props: TerraformProps<T>
+  props: TerraformProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
   const { getString } = useStrings()
-  const { inputSetData, readonly, path, allowableTypes, onUpdate, onChange } = props
+  const { inputSetData, readonly, path, allowableTypes, onUpdate, onChange, stepViewType, formik } = props
   const { expressions } = useVariablesExpression()
   /* istanbul ignore next */
   const onUpdateRef = (arg: TerraformData): void => {
@@ -58,6 +62,9 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
               expressions,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             fieldPath={'spec.provisionerIdentifier'}
             template={inputSetData?.template}
           />
@@ -70,7 +77,9 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
             disabled={readonly}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -123,15 +132,40 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
         return <></>
       })}
 
-      {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.spec?.backendConfig?.spec?.content) ===
+      {getMultiTypeFromValue(get(inputSetData?.template, 'spec.configuration.spec.backendConfig.spec.content')) ===
         MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.TextArea
-            name={`${path}.spec.configuration.spec.backendConfig.spec.content`}
+          <MultiTypeFieldSelector
+            name={`${path}.spec.configuration.backendConfig.spec.content`}
             label={getString('cd.backEndConfig')}
-          />
+            defaultValueToReset=""
+            allowedTypes={allowableTypes}
+            skipRenderValueInExpressionLabel
+            disabled={readonly}
+            expressionRender={() => {
+              /* istanbul ignore next */
+              return (
+                <TFMonaco
+                  name={`${path}.spec.configuration.backendConfig.spec.content`}
+                  formik={formik!}
+                  expressions={expressions}
+                  title={getString('tagsLabel')}
+                />
+              )
+            }}
+          >
+            <TFMonaco
+              name={`${path}.spec.configuration.backendConfig.spec.content`}
+              formik={formik!}
+              expressions={expressions}
+              title={getString('tagsLabel')}
+            />
+          </MultiTypeFieldSelector>
         </div>
       )}
+
+      <ConfigInputs {...props} isBackendConfig={true} onUpdate={onUpdateRef} onChange={onChangeRef} />
+
       {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.spec?.targets as string) ===
         MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>

@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, PageBody, PageHeader, Text } from '@wings-software/uicore'
+import { Container, PageBody, PageHeader, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
 import { Drawer, Position } from '@blueprintjs/core'
@@ -79,7 +79,7 @@ const AnomaliesOverviewPage: React.FC = () => {
     from: DATE_RANGE_SHORTCUTS.LAST_30_DAYS[0].format(CE_DATE_FORMAT_INTERNAL)
   })
 
-  useDocumentTitle(getString('ce.anomalyDetection.sideNavText'), true)
+  useDocumentTitle(getString('ce.anomalyDetection.sideNavText'))
 
   const [sortByObj, setSortByObj] = useState<SortByObjInterface>({})
 

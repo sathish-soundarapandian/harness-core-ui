@@ -8,7 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import { Formik, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { Formik, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'

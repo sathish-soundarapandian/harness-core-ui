@@ -16,7 +16,7 @@ import {
   MultiTypeInputType,
   Icon,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, defaultTo } from 'lodash-es'
 import cx from 'classnames'
@@ -36,6 +36,7 @@ import type { ServerlessInfraTypes } from '@pipeline/utils/stageHelpers'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { getValidationSchema, getValidationSchemaWithRegion } from '../PipelineStepsUtil'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ServerlessInfraSpec.module.scss'
@@ -138,7 +139,7 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                 />
                 {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME && !readonly && (
-                  <ConfigureOptions
+                  <ConnectorConfigureOptions
                     value={formik.values.connectorRef as string}
                     type={
                       <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
@@ -155,6 +156,15 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
                     }}
                     isReadonly={readonly}
                     className={css.marginTop}
+                    connectorReferenceFieldProps={{
+                      accountIdentifier: accountId,
+                      projectIdentifier,
+                      orgIdentifier,
+                      type: formInfo.type,
+                      label: getString('connector'),
+                      disabled: readonly,
+                      gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
+                    }}
                   />
                 )}
               </Layout.Horizontal>
@@ -278,9 +288,13 @@ export const ServerlessInputForm: React.FC<ServerlessSpecEditableProps & { path:
             placeholder={getString('connectors.selectConnector')}
             disabled={readonly}
             multiTypeProps={{ allowableTypes, expressions }}
-            type={formInfo.type}
+            type={formInfo?.type}
             setRefValue
             gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
+            templateProps={{
+              isTemplatizedView: true,
+              templateValue: template?.connectorRef
+            }}
           />
         </div>
       )}

@@ -22,7 +22,7 @@ import {
   MultiTypeInputType,
   PageSpinner,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, StringKeys, useStrings } from 'framework/strings'
@@ -52,6 +52,8 @@ import { ConnectorRefSchema } from '@common/utils/Validation'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { ServiceNowTemplateFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowTemplateFieldRenderer'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { Connectors } from '@connectors/constants'
 import type { ServiceNowTicketTypeSelectOption } from '../ServiceNowApproval/types'
 import { getGenuineValue } from '../ServiceNowApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
@@ -375,7 +377,7 @@ function FormContent({
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
         />
         {getMultiTypeFromValue(formik.values.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
+          <ConnectorConfigureOptions
             style={{ marginTop: 14 }}
             value={formik.values.spec.connectorRef as string}
             type="String"
@@ -385,6 +387,15 @@ function FormContent({
             showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
+            connectorReferenceFieldProps={{
+              accountIdentifier: accountId,
+              projectIdentifier,
+              orgIdentifier,
+              type: Connectors.SERVICE_NOW,
+              label: getString('pipeline.serviceNowApprovalStep.connectorRef'),
+              disabled: isApprovalStepFieldDisabled(readonly),
+              gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
+            }}
           />
         )}
       </div>

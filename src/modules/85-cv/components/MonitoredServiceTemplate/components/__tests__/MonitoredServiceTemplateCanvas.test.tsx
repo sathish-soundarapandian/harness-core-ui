@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { Container, Button } from '@wings-software/uicore'
+import { Container, Button } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { TemplateType } from '@templates-library/utils/templatesUtils'

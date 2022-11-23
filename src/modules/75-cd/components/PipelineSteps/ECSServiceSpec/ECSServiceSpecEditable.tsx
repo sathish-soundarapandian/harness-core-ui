@@ -6,10 +6,10 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { defaultTo, get, isEmpty, set } from 'lodash-es'
+import { defaultTo, get, set } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'
-import { Card, HarnessDocTooltip } from '@wings-software/uicore'
+import { Card, HarnessDocTooltip } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type {
@@ -20,12 +20,11 @@ import type {
   ManifestConfig
 } from 'services/cd-ng'
 
-import { useCache } from '@common/hooks/useCache'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
-import { getSelectedDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getSelectedDeploymentType, getVariablesHeaderTooltipId } from '@pipeline/utils/stageHelpers'
 import { getManifestsHeaderTooltipId, ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import {
@@ -34,7 +33,6 @@ import {
 } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
@@ -66,7 +64,6 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
   const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
   const {
     state: {
-      pipeline,
       templateServiceData,
       selectionState: { selectedStageId }
     },
@@ -80,9 +77,6 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
   const selectedDeploymentType =
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
 
-  const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
-  const { getCache } = useCache([getServiceCacheId])
-  const serviceInfo = getCache<ServiceDefinition>(getServiceCacheId)
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
     !!NG_ARTIFACT_SOURCES,
     stage?.stage as DeploymentStageElementConfig
@@ -92,14 +86,11 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
   const listOfManifests: ManifestConfigWrapper[] = useMemo(() => {
     /* istanbul ignore next */
     /* istanbul ignore else */
-    if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
-      return defaultTo(serviceInfo?.spec.manifests, [])
-    }
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.manifests', [])
     }
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', [])
-  }, [isReadonlyServiceMode, serviceInfo, isPropagating, stage])
+  }, [isPropagating, stage])
 
   const taskDefinitionManifests: ManifestConfigWrapper[] = useMemo(() => {
     return listOfManifests.filter(currManifest => currManifest.manifest?.type === ManifestDataType.EcsTaskDefinition)
@@ -423,6 +414,10 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
                 data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
               >
                 {getString('pipelineSteps.configFiles')}
+                <HarnessDocTooltip
+                  tooltipId={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
+                  useStandAlone={true}
+                />
               </div>
               <ConfigFilesSelection
                 isReadonlyServiceMode={isReadonlyServiceMode as boolean}
@@ -440,18 +435,20 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
           {getString('advancedTitle')}
         </div>
         <Card className={css.sectionCard} id={getString('common.variables')}>
-          <div className={cx(css.tabSubHeading, css.listHeader)}>{getString('common.variables')}</div>
-          {isReadonlyServiceMode ? (
-            <VariableListReadOnlyView />
-          ) : (
-            <WorkflowVariables
-              tabName={DeployTabs.SERVICE}
-              formName={'addEditServiceCustomVariableForm'}
-              factory={factory as any}
-              isPropagating={isPropagating}
-              readonly={!!readonly}
-            />
-          )}
+          <div
+            className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
+            data-tooltip-id={getVariablesHeaderTooltipId(selectedDeploymentType)}
+          >
+            {getString('common.variables')}
+            <HarnessDocTooltip tooltipId={getVariablesHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
+          </div>
+          <WorkflowVariables
+            tabName={DeployTabs.SERVICE}
+            formName={'addEditServiceCustomVariableForm'}
+            factory={factory as any}
+            isPropagating={isPropagating}
+            readonly={!!readonly}
+          />
         </Card>
       </div>
     </div>

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Page } from '@wings-software/uicore'
+import { Page } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'

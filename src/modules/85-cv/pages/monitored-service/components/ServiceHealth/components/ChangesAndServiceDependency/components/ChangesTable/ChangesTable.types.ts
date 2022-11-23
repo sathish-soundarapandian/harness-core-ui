@@ -7,6 +7,7 @@
 
 import type { Column } from 'react-table'
 import type { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
+import type { MonitoredServiceDetail } from 'services/cv'
 
 export interface ChangesTableInterface {
   isCardView?: boolean
@@ -21,6 +22,7 @@ export interface ChangesTableInterface {
   changeSourceTypes?: ChangeSourceTypes[]
   recordsPerPage?: number
   dataTooltipId?: string
+  monitoredServiceDetails?: MonitoredServiceDetail[]
 }
 
 export interface ChangesTableContentWrapper {

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -74,7 +74,7 @@ export class GCSStep extends PipelineStep<GCSStepData> {
 
   protected type = StepType.GCS
   protected stepName = 'Upload Artifacts to GCS'
-  protected stepIcon: IconName = 'gcs-step'
+  protected stepIcon: IconName = 'gcs-ci-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.GCS'
   protected stepPaletteVisible = false
 

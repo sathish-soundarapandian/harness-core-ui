@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Color, Container, AllowedTypes, Text } from '@harness/uicore'
+import { Container, AllowedTypes, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
@@ -39,7 +40,10 @@ export function DownloadArtifactCommandEdit(props: DownloadArtifactCommandEditPr
           }
           name="spec.destinationPath"
           multiTextInputProps={{
-            multiTextInputProps: { expressions, allowableTypes },
+            multiTextInputProps: {
+              expressions,
+              allowableTypes
+            },
             disabled: readonly,
             placeholder: getString('cd.steps.commands.destinationPathPlaceholder')
           }}

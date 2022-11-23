@@ -15,7 +15,7 @@ import {
   useConfirmationDialog,
   useToaster,
   VisualYamlSelectedView as SelectedView
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import classNames from 'classnames'
 import { useStrings } from 'framework/strings'
@@ -299,6 +299,8 @@ export function TemplateStudioInternal(): React.ReactElement {
             fetchTemplate({ forceFetch: true, forceUpdate: true })
           }}
           updateRootEntity={updateEntity}
+          gitDetails={gitDetails}
+          storeMetadata={storeMetadata}
         />
       )}
       <Container className={css.canvasContainer}>{renderView}</Container>

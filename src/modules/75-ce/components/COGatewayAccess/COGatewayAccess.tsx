@@ -6,18 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import {
-  Heading,
-  Container,
-  Layout,
-  Checkbox,
-  Icon,
-  Tabs,
-  Tab,
-  Button,
-  Text,
-  HarnessDocTooltip
-} from '@wings-software/uicore'
+import { Heading, Container, Layout, Checkbox, Icon, Tabs, Tab, Button, Text, HarnessDocTooltip } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { isEmpty as _isEmpty, map as _map, defaultTo as _defaultTo, omit as _omit } from 'lodash-es'
 import { Drawer } from '@blueprintjs/core'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Icon, Text, SelectOption, Select, MultiSelectOption } from '@wings-software/uicore'
+import { Layout, Icon, Text, SelectOption, Select, MultiSelectOption } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import type { EntityGitDetails } from 'services/cd-ng'

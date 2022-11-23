@@ -24,6 +24,7 @@ exports[`Git Clone Step InputSet View Render should not render any fields 1`] = 
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -995,6 +996,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >

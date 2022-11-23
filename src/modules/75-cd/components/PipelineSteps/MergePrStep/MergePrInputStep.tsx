@@ -6,19 +6,24 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@wings-software/uicore'
-import { get, defaultTo } from 'lodash-es'
+import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, FormInput, SelectOption } from '@harness/uicore'
+import { get, defaultTo, isArray } from 'lodash-es'
 import cx from 'classnames'
+import { FieldArray } from 'formik'
 
 import { useStrings } from 'framework/strings'
+import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { MergePRStepData } from './MergePrStep'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import css from '@cd/components/UpdateReleaseRepo/UpdateReleaseRepo.module.scss'
 
 export interface MergePrInputStepProps {
   initialValues: MergePRStepData
@@ -31,11 +36,17 @@ export interface MergePrInputStepProps {
   path?: string
 }
 
+const scriptOutputType: SelectOption[] = [
+  { label: 'String', value: 'String' },
+  { label: 'Number', value: 'Number' }
+]
+
 export default function MergePRInputStep(props: MergePrInputStepProps): React.ReactElement {
-  const { template, path, readonly, allowableTypes } = props
+  const { template, path, readonly, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = defaultTo(path, '')
+  const variables = get(template, 'spec.variables', [])
 
   return (
     <>
@@ -43,7 +54,9 @@ export default function MergePRInputStep(props: MergePrInputStepProps): React.Re
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -56,6 +69,59 @@ export default function MergePRInputStep(props: MergePrInputStepProps): React.Re
           />
         </div>
       )}
+      {isArray(variables) && variables.length ? (
+        <div className={stepCss.formGroup}>
+          <MultiTypeFieldSelector
+            name="spec.variables"
+            label={getString('common.variables')}
+            defaultValueToReset={[]}
+            disableTypeSelection
+          >
+            <FieldArray
+              name="spec.variables"
+              render={() => {
+                return (
+                  <div className={css.panel}>
+                    <div className={css.environmentVarHeader}>
+                      <span className={css.label}>Name</span>
+                      <span className={css.label}>Type</span>
+                      <span className={css.label}>Value</span>
+                    </div>
+                    {variables.map((type, i: number) => {
+                      return (
+                        <div className={css.environmentVarHeader} key={type.value}>
+                          <FormInput.Text
+                            name={`${prefix}.spec.variables[${i}].name`}
+                            placeholder={getString('name')}
+                            disabled={true}
+                          />
+                          <FormInput.Select
+                            items={scriptOutputType}
+                            name={`${prefix}.spec.variables[${i}].type`}
+                            placeholder={getString('typeLabel')}
+                            disabled={true}
+                          />
+                          <FormInput.MultiTextInput
+                            name={`${prefix}.spec.variables[${i}].value`}
+                            multiTextInputProps={{
+                              allowableTypes,
+                              expressions,
+                              disabled: readonly
+                            }}
+                            label=""
+                            disabled={readonly}
+                            placeholder={getString('valueLabel')}
+                          />
+                        </div>
+                      )
+                    })}
+                  </div>
+                )
+              }}
+            />
+          </MultiTypeFieldSelector>
+        </div>
+      ) : null}
     </>
   )
 }

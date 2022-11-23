@@ -18,7 +18,7 @@ import {
   getMultiTypeFromValue,
   FormInput,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
@@ -82,7 +82,8 @@ function FormComponent(
     isReadonly = false,
     formik,
     selectedArtifact,
-    isMultiArtifactSource
+    isMultiArtifactSource,
+    formClassName = ''
   } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -100,6 +101,7 @@ function FormComponent(
   const projectValue = getGenuineValue(formik.values.spec.project || initialValues?.spec?.project)
   const regionValue = getGenuineValue(formik.values.spec.region || initialValues?.spec?.region)
   const repositoryNameValue = getGenuineValue(formik.values?.spec.repositoryName || initialValues?.spec?.repositoryName)
+  const isTemplateContext = context === ModalViewFor.Template
 
   const {
     data: buildDetails,
@@ -172,7 +174,7 @@ function FormComponent(
 
   return (
     <FormikForm>
-      <div className={css.artifactForm}>
+      <div className={cx(css.artifactForm, formClassName)}>
         {isMultiArtifactSource && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.jenkinsFieldContainer}>
@@ -402,20 +404,22 @@ function FormComponent(
           </div>
         )}
       </div>
-      <Layout.Horizontal spacing="medium">
-        <Button
-          variation={ButtonVariation.SECONDARY}
-          text={getString('back')}
-          icon="chevron-left"
-          onClick={() => previousStep?.(prevStepData)}
-        />
-        <Button
-          variation={ButtonVariation.PRIMARY}
-          type="submit"
-          text={getString('submit')}
-          rightIcon="chevron-right"
-        />
-      </Layout.Horizontal>
+      {!isTemplateContext && (
+        <Layout.Horizontal spacing="medium">
+          <Button
+            variation={ButtonVariation.SECONDARY}
+            text={getString('back')}
+            icon="chevron-left"
+            onClick={() => previousStep?.(prevStepData)}
+          />
+          <Button
+            variation={ButtonVariation.PRIMARY}
+            type="submit"
+            text={getString('submit')}
+            rightIcon="chevron-right"
+          />
+        </Layout.Horizontal>
+      )}
     </FormikForm>
   )
 }
@@ -426,6 +430,7 @@ export function GoogleArtifactRegistry(
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
+  const isTemplateContext = context === ModalViewFor.Template
 
   const getInitialValues = (): GoogleArtifactRegistryInitialValuesType => {
     return getArtifactFormData(
@@ -463,6 +468,17 @@ export function GoogleArtifactRegistry(
     })
   }
 
+  const handleValidate = (formData: GoogleArtifactRegistryInitialValuesType) => {
+    if (isTemplateContext) {
+      submitFormData(
+        {
+          ...formData
+        },
+        getConnectorIdValue(prevStepData)
+      )
+    }
+  }
+
   const schemaObject = {
     versionType: Yup.string().required(),
     spec: Yup.object().shape({
@@ -494,13 +510,16 @@ export function GoogleArtifactRegistry(
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
+      {!isTemplateContext && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         formName="imagePath"
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData(
             {

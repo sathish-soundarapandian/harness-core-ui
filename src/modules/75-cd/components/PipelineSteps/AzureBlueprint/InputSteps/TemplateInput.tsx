@@ -10,7 +10,8 @@ import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikContextType } from 'formik'
-import { Text, Color, Container, Layout } from '@harness/uicore'
+import { Text, Container, Layout } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
@@ -18,17 +19,18 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isValueRuntimeInput } from '@common/utils/utils'
-import type { AzureBlueprintProps } from '../AzureBlueprintTypes.types'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import {
   ConnectorLabelMap,
   ConnectorTypes,
   ConnectorMap
-} from '../../AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
+} from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
+import type { AzureBlueprintProps } from '../AzureBlueprintTypes.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './Template.module.scss'
 
 export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: FormikContextType<any> }): JSX.Element => {
-  const { inputSetData, readonly, path, allowableTypes, formik } = props
+  const { inputSetData, readonly, path, allowableTypes, formik, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -59,6 +61,9 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
               orgIdentifier={orgIdentifier}
               style={{ marginBottom: 10 }}
               multiTypeProps={{ expressions, allowableTypes }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              }}
               disabled={readonly}
               setRefValue
               onChange={(value: any, _unused, _notUsed) => {
@@ -81,6 +86,9 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
                 expressions,
                 allowableTypes
               }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              }}
               fieldPath={'spec.configuration.template.store.spec.repoName'}
               template={inputSetData?.template}
             />
@@ -98,6 +106,9 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
               multiTextInputProps={{
                 expressions,
                 allowableTypes
+              }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               }}
               fieldPath={'spec.configuration.template.store.spec.branch'}
               template={inputSetData?.template}
@@ -117,6 +128,9 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
                 expressions,
                 allowableTypes
               }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              }}
               fieldPath={'spec.configuration.template.store.spec.commitId'}
               template={inputSetData?.template}
             />
@@ -134,6 +148,9 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
               multiTextInputProps={{
                 expressions,
                 allowableTypes
+              }}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               }}
               fieldPath={'spec.configuration.template.store.spec.folderPath'}
               template={inputSetData?.template}

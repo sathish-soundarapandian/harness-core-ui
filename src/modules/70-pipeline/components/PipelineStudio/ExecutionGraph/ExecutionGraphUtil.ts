@@ -5,12 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { NodeModelListener, LinkModelListener } from '@projectstorm/react-diagrams-core'
-import type { BaseModelListener } from '@projectstorm/react-canvas-core'
 import { v4 as nameSpace, v5 as uuid, version } from 'uuid'
 import { defaultTo, isNil } from 'lodash-es'
-import type { IconName } from '@wings-software/uicore'
-import { IconNodeModel } from '@pipeline/components/Diagram/node/IconNode/IconNodeModel'
+import type { IconName } from '@harness/uicore'
 import type {
   ExecutionElementConfig,
   ExecutionWrapperConfig,
@@ -21,13 +18,7 @@ import type {
 import type { DependencyElement } from 'services/ci'
 import { StepType as PipelineStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import {
-  DefaultLinkModel,
-  DefaultNodeModel,
-  StepGroupNodeLayerModel,
-  DiamondNodeModel,
-  DiagramType
-} from '../../Diagram'
+import { DiagramType } from '@pipeline/components/PipelineDiagram/Constants'
 
 // TODO: have to be auto generated from swagger/API
 export interface DependenciesWrapper {
@@ -42,12 +33,6 @@ export interface ExecutionGraphState {
   states: StepStateMap
   stepsData: ExecutionElementConfig
   dependenciesData: DependencyElement[]
-}
-
-export interface Listeners {
-  nodeListeners: NodeModelListener
-  linkListeners: LinkModelListener
-  layerListeners: BaseModelListener
 }
 
 export const generateRandomString = (name: string): string => uuid(name, nameSpace())
@@ -94,7 +79,7 @@ export const getDefaultDependencyServiceState = (): StepState => ({
 })
 interface GetStepFromNodeProps {
   stepData: ExecutionWrapper | undefined
-  node?: DefaultNodeModel
+  node?: any
   isComplete: boolean
   isFindParallelNode: boolean
   nodeId?: string
@@ -152,7 +137,7 @@ export const calculateDepthPS = (
 
 export const getDependencyFromNode = (
   servicesData: DependencyElement[] | undefined,
-  node: DefaultNodeModel
+  node: any
 ): { node: DependencyElement | undefined; parent: DependencyElement[] | undefined } => {
   const _service = servicesData?.find((service: DependenciesWrapper) => node.getIdentifier() === service.identifier)
   return { node: _service, parent: servicesData }
@@ -515,19 +500,6 @@ export const removeStepOrGroup = ({
   return isRemoved
 }
 
-export const isLinkUnderStepGroup = (link: DefaultLinkModel): boolean => {
-  const sourceNode = link.getSourcePort().getNode() as DefaultNodeModel
-  const targetNode = link.getTargetPort().getNode() as DefaultNodeModel
-  if (
-    sourceNode.getParent() instanceof StepGroupNodeLayerModel &&
-    targetNode.getParent() instanceof StepGroupNodeLayerModel &&
-    sourceNode.getParent() === targetNode.getParent()
-  ) {
-    return true
-  }
-  return false
-}
-
 export const addService = (data: DependencyElement[], service: DependencyElement): void => {
   data.push(service)
 }
@@ -637,42 +609,6 @@ export const addStepOrGroup = (
       }
     }
   }
-}
-
-export const StepToNodeModelDataMap: { [key: string]: { model: any; defaultProps: Record<string, any> } } = {
-  APPROVAL: {
-    model: DiamondNodeModel,
-    defaultProps: {
-      icon: 'command-approval'
-    }
-  },
-  Barrier: {
-    model: IconNodeModel,
-    defaultProps: {
-      icon: 'barrier-open'
-    }
-  },
-  ResourceConstraint: {
-    model: IconNodeModel,
-    defaultProps: {
-      icon: 'traffic-lights'
-    }
-  },
-  Default: {
-    model: DefaultNodeModel,
-    defaultProps: {}
-  }
-}
-
-export const getModelByStepType = (type: string, props: any) => {
-  let StepModel = StepToNodeModelDataMap[type]?.model
-  let defaultProps = StepToNodeModelDataMap[type]?.defaultProps
-  if (!StepModel) {
-    StepModel = StepToNodeModelDataMap['Default'].model
-    defaultProps = StepToNodeModelDataMap['Default'].defaultProps
-    return new StepModel({ ...props, ...defaultProps, allowAdd: true })
-  }
-  return new StepModel({ ...props, ...defaultProps })
 }
 
 export const StepTypeToPipelineIconMap: Record<any, IconName> = {

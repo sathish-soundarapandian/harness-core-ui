@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react'
+import cx from 'classnames'
 import {
   Formik,
   FormInput,
@@ -18,7 +19,7 @@ import {
   SelectOption,
   ButtonVariation,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
@@ -61,7 +62,8 @@ export function GCRImagePath({
   artifactIdentifiers,
   isReadonly = false,
   selectedArtifact,
-  isMultiArtifactSource
+  isMultiArtifactSource,
+  formClassName = ''
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
 
@@ -93,6 +95,7 @@ export function GCRImagePath({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+  const isTemplateContext = context === ModalViewFor.Template
 
   const [tagList, setTagList] = useState([])
   const [lastQueryData, setLastQueryData] = useState({ imagePath: '', registryHostname: '' })
@@ -157,6 +160,17 @@ export function GCRImagePath({
     handleSubmit(artifactObj)
   }
 
+  const handleValidate = (formData: ImagePathTypes & { connectorId?: string }) => {
+    if (isTemplateContext) {
+      submitFormData({
+        ...prevStepData,
+        ...formData,
+        tag: formData?.tag?.value ? formData?.tag?.value : formData?.tag,
+        connectorId: getConnectorIdValue(prevStepData)
+      })
+    }
+  }
+
   const registryHostNameRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
       <Menu.Item
@@ -172,14 +186,16 @@ export function GCRImagePath({
   ))
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
-
+      {!isTemplateContext && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         formName="gcrImagePath"
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
@@ -191,7 +207,7 @@ export function GCRImagePath({
       >
         {formik => (
           <FormikForm>
-            <div className={css.connectorForm}>
+            <div className={cx(css.connectorForm, formClassName)}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
@@ -248,20 +264,22 @@ export function GCRImagePath({
                 tagDisabled={isTagDisabled(formik?.values)}
               />
             </div>
-            <Layout.Horizontal spacing="medium">
-              <Button
-                variation={ButtonVariation.SECONDARY}
-                text={getString('back')}
-                icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
-              />
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                type="submit"
-                text={getString('submit')}
-                rightIcon="chevron-right"
-              />
-            </Layout.Horizontal>
+            {!isTemplateContext && (
+              <Layout.Horizontal spacing="medium">
+                <Button
+                  variation={ButtonVariation.SECONDARY}
+                  text={getString('back')}
+                  icon="chevron-left"
+                  onClick={() => previousStep?.(prevStepData)}
+                />
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  type="submit"
+                  text={getString('submit')}
+                  rightIcon="chevron-right"
+                />
+              </Layout.Horizontal>
+            )}
           </FormikForm>
         )}
       </Formik>

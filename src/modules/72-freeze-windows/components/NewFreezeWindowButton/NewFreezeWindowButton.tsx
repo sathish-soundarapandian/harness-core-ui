@@ -7,7 +7,7 @@
 
 import React, { FC } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { ButtonVariation } from '@wings-software/uicore'
+import { ButtonVariation } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -42,7 +42,7 @@ export const NewFreezeWindowButton: FC<NewFreezeWindowButtonProps> = ({ text }) 
     <RbacButton
       variation={ButtonVariation.PRIMARY}
       icon="plus"
-      text={text || getString('freezeWindows.freezeWindowsPage.newFreezeWindow')}
+      text={/* istanbul ignore next */ text || getString('freezeWindows.freezeWindowsPage.newFreezeWindow')}
       onClick={goToFreezeWindowStudio}
       permission={{
         permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,

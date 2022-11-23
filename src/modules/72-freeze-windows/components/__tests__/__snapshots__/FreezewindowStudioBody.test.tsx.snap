@@ -89,7 +89,7 @@ exports[`Freeze Window Studio Body Visual View it should render Visual View, Ove
                   />
                 </svg>
               </span>
-              freezeWindows.freezeStudio.freezeConfiguration
+              common.coverage
             </span>
           </div>
           <div
@@ -150,7 +150,7 @@ exports[`Freeze Window Studio Body Visual View it should render Visual View, Ove
                     level="3"
                     style="font-weight: 600; font-size: 16px; line-height: 24px;"
                   >
-                    freezeWindows.freezeStudio.freezeOverview
+                    overview
                   </h3>
                   <div
                     class="bp3-card bp3-elevation-0 Card--card sectionCard"
@@ -186,13 +186,15 @@ exports[`Freeze Window Studio Body Visual View it should render Visual View, Ove
                               class="bp3-popover-target"
                             >
                               <div
-                                class="bp3-editable-text bp3-editable-text-placeholder InputWithIdentifier--idValue"
+                                class="bp3-editable-text InputWithIdentifier--idValue"
                                 tabindex="0"
                               >
                                 <span
                                   class="bp3-editable-text-content"
                                   style="height: 1px; line-height: 1px; min-width: 0;"
-                                />
+                                >
+                                  -1
+                                </span>
                               </div>
                             </span>
                           </span>
@@ -337,6 +339,7 @@ exports[`Freeze Window Studio Body Visual View it should render Visual View, Ove
                     class="StyledProps--font StyledProps--main StyledProps--margin-top-xxlarge"
                   >
                     <button
+                      aria-label="continue"
                       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-top-medium Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                       type="button"
                     >
@@ -373,6 +376,48 @@ exports[`Freeze Window Studio Body Visual View it should render Visual View, Ove
         </div>
       </div>
     </section>
+  </div>
+</div>
+`;
+
+exports[`Freeze Window Studio Body Visual View it should render YAML View: YAML View Snapshot 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main canvasContainer"
+  >
+    <div
+      class="yamlBuilder"
+    >
+      <div />
+      <div
+        class="buttonsWrapper"
+      >
+        <span
+          class="Tag--main"
+        >
+          <span
+            class="bp3-tag"
+          >
+            <span
+              class="bp3-text-overflow-ellipsis bp3-fill"
+            >
+              common.readOnly
+            </span>
+          </span>
+        </span>
+        <button
+          aria-label="common.editYaml"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            common.editYaml
+          </span>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 `;

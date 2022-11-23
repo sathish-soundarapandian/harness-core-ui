@@ -6,13 +6,11 @@
  */
 
 import React, { useMemo } from 'react'
-import { Layout, useToaster, useConfirmationDialog } from '@wings-software/uicore'
+import { Layout, useToaster, useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import cx from 'classnames'
 import { cloneDeep, debounce, isNil } from 'lodash-es'
-import type { NodeModelListener, LinkModelListener } from '@projectstorm/react-diagrams-core'
 import SplitPane from 'react-split-pane'
-import produce from 'immer'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useParams } from 'react-router-dom'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
@@ -20,7 +18,6 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StageActions } from '@common/constants/TrackingConstants'
 import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
-import { moveStageToFocusDelayed } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import HoverCard from '@pipeline/components/HoverCard/HoverCard'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
@@ -39,20 +36,11 @@ import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import type { DeploymentStageConfig } from 'services/cd-ng'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
-import {
-  createEngine,
-  DefaultLinkModel,
-  DefaultNodeEvent,
-  DefaultNodeModel,
-  Event,
-  NodeStartModel
-} from '../../Diagram'
-import { StageBuilderModel } from './StageBuilderModel'
+import { Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { EmptyStageName, MinimumSplitPaneSize, DefaultSplitPaneSize, MaximumSplitPaneSize } from '../PipelineConstants'
 import {
   getNewStageFromType,
   PopoverData,
-  EmptyNodeSeparator,
   StageState,
   removeNodeFromPipeline,
   mayBeStripCIProps,
@@ -63,13 +51,12 @@ import {
   MoveDirection,
   MoveStageDetailsType,
   moveStage,
-  getFlattenedStages
+  getFlattenedStages,
+  Listeners
 } from './StageBuilderUtil'
-import { useStageBuilderCanvasState } from './useStageBuilderCanvasState'
 import { StageList } from './views/StageList'
 import { SplitViewTypes } from '../PipelineContext/PipelineActions'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
-import { getNodeListenersOld, getLinkListernersOld } from './StageBuildOldUtils'
 import type { PipelineSelectionState } from '../PipelineQueryParamState/usePipelineQueryParam'
 import css from './StageBuilder.module.scss'
 
@@ -206,12 +193,12 @@ function StageBuilder(): JSX.Element {
       isInitialized,
       selectionState: { selectedStageId },
       templateTypes,
+      templateIcons,
       gitDetails,
       storeMetadata
     },
     // contextType = 'Pipeline',
     isReadonly,
-    stagesMap,
     updatePipeline,
     updatePipelineView,
     renderPipelineStage,
@@ -295,122 +282,6 @@ function StageBuilder(): JSX.Element {
     setDeleteId(id)
   }
 
-  const addStage = (
-    newStage: StageElementWrapper,
-    isParallel = false,
-    event?: DefaultNodeEvent,
-    insertAt?: number,
-    openSetupAfterAdd?: boolean,
-    pipelineTemp?: PipelineInfoConfig
-  ): void => {
-    // call telemetry
-    trackEvent(StageActions.SetupStage, { stageType: newStage?.stage?.type || '' })
-    if (!pipeline.stages) {
-      pipeline.stages = []
-    }
-    if (event?.entity && event.entity instanceof DefaultLinkModel) {
-      let node = event.entity.getSourcePort().getNode() as DefaultNodeModel
-      if (node instanceof NodeStartModel) {
-        pipeline.stages = produce(pipeline.stages, draft => {
-          draft.unshift(newStage)
-        })
-      } else {
-        let { stage } = getStageFromPipeline(node.getIdentifier())
-        let next = 1
-        if (!stage) {
-          node = event.entity.getTargetPort().getNode() as DefaultNodeModel
-          stage = getStageFromPipeline(node.getIdentifier()).stage
-          next = 0
-        }
-        if (stage) {
-          const index = pipeline.stages.indexOf(stage)
-          if (index > -1) {
-            pipeline.stages = produce(pipeline.stages, draft => {
-              draft.splice(index + next, 0, newStage)
-            })
-          }
-        } else {
-          // parallel next parallel case
-          let nodeParallel = event.entity.getSourcePort().getNode() as DefaultNodeModel
-          let nodeId = nodeParallel.getIdentifier().split(EmptyNodeSeparator)[1]
-          stage = getStageFromPipeline(nodeId).parent
-          next = 1
-          if (!stage) {
-            nodeParallel = event.entity.getTargetPort().getNode() as DefaultNodeModel
-            nodeId = nodeParallel.getIdentifier().split(EmptyNodeSeparator)[2]
-            const parallelOrRootLevelStage = getStageFromPipeline(nodeId)
-            // NOTE: in a case of two stages parallel node is moved to root level
-            // so we use parallelOrRootLevelStage.parent if defined, otherwise we use parallelOrRootLevelStage
-            stage = parallelOrRootLevelStage.parent ? parallelOrRootLevelStage.parent : parallelOrRootLevelStage.stage
-            next = 0
-          }
-          if (stage) {
-            const index = pipeline.stages.indexOf(stage)
-            if (index > -1) {
-              pipeline.stages = produce(pipeline.stages, draft => {
-                draft.splice(index + next, 0, newStage)
-              })
-            }
-          }
-        }
-      }
-    } else if (isParallel && event?.entity && event.entity instanceof DefaultNodeModel) {
-      const { stage, parent } = getStageFromPipeline(event.entity.getIdentifier())
-      const parentTemp = parent as StageElementWrapperConfig
-      if (stage) {
-        if (parentTemp && parentTemp.parallel && parentTemp.parallel.length > 0) {
-          parentTemp.parallel = produce(parentTemp.parallel, draft => {
-            draft.push(newStage)
-          })
-        } else {
-          const index = pipeline.stages.indexOf(stage)
-          if (index > -1) {
-            pipeline.stages = produce(pipeline.stages, draft => {
-              draft.splice(index, 1, {
-                parallel: [stage, newStage]
-              })
-            })
-          }
-        }
-      }
-    } else {
-      if (!isNil(insertAt) && insertAt > -1) {
-        pipeline.stages = produce(pipeline.stages, draft => {
-          draft.splice(insertAt, 0, newStage)
-        })
-      } else {
-        pipeline.stages = produce(pipeline.stages, draft => {
-          draft.push(newStage)
-        })
-      }
-    }
-    dynamicPopoverHandler?.hide()
-    model.addUpdateGraph({
-      data: pipeline,
-      listeners: {
-        nodeListeners,
-        linkListeners
-      },
-      stagesMap,
-      getString,
-      isReadonly,
-      parentPath: 'pipeline.stages',
-      errorMap,
-      templateTypes,
-      zoomLevel: 0
-    })
-    if (newStage.stage && newStage.stage.name !== EmptyStageName) {
-      stageMap.set(newStage.stage.identifier, { isConfigured: true, stage: newStage })
-    }
-    engine.repaintCanvas()
-    updatePipeline({ ...(pipelineTemp || {}), ...pipeline }).then(() => {
-      if (openSetupAfterAdd) {
-        setSelectionRef.current({ stageId: newStage.stage?.identifier })
-        moveStageToFocusDelayed(engine, newStage.stage?.identifier || '', true)
-      }
-    })
-  }
-
   const addStageNew = (
     newStage: StageElementWrapper,
     isParallel?: boolean,
@@ -470,7 +341,6 @@ function StageBuilder(): JSX.Element {
     updatePipeline({ ...(pipelineTemp || {}), ...pipeline }).then(() => {
       if (openSetupAfterAdd) {
         setSelectionRef.current({ stageId: newStage.stage?.identifier })
-        moveStageToFocusDelayed(engine, newStage.stage?.identifier || '', true)
       }
     })
   }
@@ -505,33 +375,6 @@ function StageBuilder(): JSX.Element {
   }, [isInitialized, pipeline.stages, isSplitViewOpen])
 
   // updates stages when stage is dragged to add stage link
-  const updateStageOnAddLink = (event: any, dropNode: StageElementWrapper | undefined, current: any): void => {
-    // Check Drop Node and Current node should not be same
-    if (event.node.identifier !== event.entity.getIdentifier()) {
-      const isRemove = removeNodeFromPipeline(getStageFromPipeline(event.node.identifier), pipeline, stageMap, false)
-      if (isRemove && dropNode) {
-        if (!current.parent && current.stage) {
-          const index = pipeline.stages?.indexOf(current.stage) ?? -1
-          if (index > -1) {
-            // Remove current Stage also and make it parallel
-            pipeline?.stages?.splice(index, 1)
-            // Now make a parallel stage and update at the same place
-            addStage(
-              {
-                parallel: [current.stage, dropNode]
-              },
-              false,
-              event,
-              index,
-              false
-            )
-          }
-        } else {
-          addStage(dropNode, current?.parent?.parallel?.length > 0, event, undefined, false)
-        }
-      }
-    }
-  }
 
   const updateStageOnAddLinkNew = (event: any, dropNode: StageElementWrapper | undefined, current: any): void => {
     // Check Drop Node and Current node should not be same
@@ -571,12 +414,6 @@ function StageBuilder(): JSX.Element {
     }
   }
 
-  //1) setup the diagram engine
-  const engine = React.useMemo(() => createEngine({}), [])
-
-  //2) setup the diagram model
-  const model = React.useMemo(() => new StageBuilderModel(), [])
-
   React.useEffect(() => {
     setDeleteId(deleteId)
   }, [deleteId])
@@ -599,9 +436,7 @@ function StageBuilder(): JSX.Element {
       if (isConfirmed) {
         moveStage({
           moveStageDetails,
-          updateStageOnAddLink,
           updateStageOnAddLinkNew,
-          addStage,
           pipelineContext,
           stageMap,
           resetPipelineStages,
@@ -611,21 +446,7 @@ function StageBuilder(): JSX.Element {
     }
   })
 
-  const nodeListeners: NodeModelListener = getNodeListenersOld(
-    updateStageOnAddLink,
-    setSelectionRef,
-    confirmDeleteStage,
-    updateDeleteId,
-    dynamicPopoverHandler,
-    pipelineContext,
-    addStage,
-    updateMoveStageDetails,
-    confirmMoveStage,
-    stageMap,
-    engine
-  )
-
-  const nodeListenersNew: NodeModelListener = getNodeEventListerner(
+  const nodeListenersNew: Listeners['nodeListeners'] = getNodeEventListerner(
     updateStageOnAddLinkNew,
     setSelectionRef,
     confirmDeleteStage,
@@ -653,17 +474,7 @@ function StageBuilder(): JSX.Element {
       ...DEFAULT_MOVE_STAGE_DETAILS
     })
 
-  const linkListeners: LinkModelListener = getLinkListernersOld(
-    dynamicPopoverHandler,
-    pipelineContext,
-    addStage,
-    openSplitView,
-    updateMoveStageDetails,
-    confirmMoveStage,
-    stageMap
-  )
-
-  const linkListenersNew: LinkModelListener = getLinkEventListeners(
+  const linkListenersNew: Listeners['linkListeners'] = getLinkEventListeners(
     dynamicPopoverHandler,
     pipelineContext,
     addStageNew,
@@ -693,34 +504,13 @@ function StageBuilder(): JSX.Element {
 
   const [splitPaneSize, setSplitPaneSize] = React.useState(DefaultSplitPaneSize)
 
-  model.addUpdateGraph({
-    data: pipeline,
-    listeners: {
-      nodeListeners,
-      linkListeners
-    },
-    stagesMap,
-    getString,
-    isReadonly,
-    selectedStageId,
-    splitPaneSize,
-    parentPath: 'pipeline.stages',
-    errorMap,
-    templateTypes,
-    zoomLevel: 0
-  })
   const setSplitPaneSizeDeb = React.useRef(debounce(setSplitPaneSize, 200))
-  // load model into engine
-  engine.setModel(model)
 
   /* Ignoring this function as it is used by "react-split-pane" */
   /* istanbul ignore next */
   function handleStageResize(size: number): void {
     setSplitPaneSizeDeb.current(size)
   }
-
-  // handle position and zoom of canvas
-  useStageBuilderCanvasState(engine, [])
 
   // eslint-disable-next-line
   const resizerStyle = !!navigator.userAgent.match(/firefox/i)
@@ -732,11 +522,12 @@ function StageBuilder(): JSX.Element {
     return getPipelineGraphData({
       data: pipeline.stages as StageElementWrapperConfig[],
       templateTypes: templateTypes,
+      templateIcons,
       serviceDependencies: undefined,
       errorMap: errorMap,
       parentPath: `pipeline.stages`
     })
-  }, [pipeline, errorMap, templateTypes])
+  }, [pipeline, errorMap, templateTypes, templateIcons])
 
   const referenceId = (sectionIdPassed: string | null | undefined): string => {
     switch (sectionIdPassed) {

@@ -49,7 +49,7 @@ describe('<MultiLogLine /> tests', () => {
         text={{
           level: 'info',
           time: '20/08/2021 11:12:18',
-          out: '+ echo @wings-software:registry=https://npm.pkg.github.com'
+          out: '+ echo @harness:registry=https://npm.pkg.github.com'
         }}
         searchIndices={{
           out: [0]
@@ -70,14 +70,16 @@ describe('<MultiLogLine /> tests', () => {
         rel="noreferrer"
         target="_blank"
       >
-        https://npm.
-        <mark
-          data-current-search-result="true"
-          data-search-result-index="0"
-        >
-          pk
-        </mark>
-        g.github.com
+        <span>
+          https://npm.
+          <mark
+            data-current-search-result="true"
+            data-search-result-index="0"
+          >
+            pk
+          </mark>
+          g.github.com
+        </span>
       </a>
     `)
     expect(container).toMatchSnapshot()

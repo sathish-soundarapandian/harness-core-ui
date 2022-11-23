@@ -7,7 +7,8 @@
 
 import React, { useMemo } from 'react'
 import { defaultTo } from 'lodash-es'
-import { Container, FontVariation, Layout, Tab, Tabs, Text } from '@harness/uicore'
+import { Container, Layout, Tab, Tabs, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import CommandBlock from '@ce/common/CommandBlock/CommandBlock'
 import type { ConnectorInfoDTO } from 'services/cd-ng'

@@ -7,14 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { defaultTo } from 'lodash-es'
-import {
-  AllowedTypes,
-  Container,
-  MultiTypeInput,
-  MultiTypeInputType,
-  Select,
-  SelectOption
-} from '@wings-software/uicore'
+import { AllowedTypes, Container, MultiTypeInput, MultiTypeInputType, Select, SelectOption } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useHarnessServicetModal } from '@common/modals/HarnessServiceModal/HarnessServiceModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

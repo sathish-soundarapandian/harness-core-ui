@@ -1,4 +1,5 @@
-import { Card, Color, Container, FontVariation, Heading, Layout, Text } from '@harness/uicore'
+import { Card, Container, Heading, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import React from 'react'
 
 export interface CustomMetricDetailsProps {

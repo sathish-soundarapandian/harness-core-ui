@@ -8,7 +8,7 @@
 import React from 'react'
 import produce from 'immer'
 import { defaultTo, isEmpty, lowerCase, set } from 'lodash-es'
-import { Text, NestedAccordionPanel, AllowedTypes } from '@wings-software/uicore'
+import { Text, NestedAccordionPanel, AllowedTypes } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import type { DeploymentStageConfig, ServiceSpec, StageElementConfig } from 'services/cd-ng'

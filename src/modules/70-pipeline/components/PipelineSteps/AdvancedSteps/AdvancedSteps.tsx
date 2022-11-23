@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { Formik, FormikForm, Accordion, AccordionHandle } from '@wings-software/uicore'
+import { Formik, FormikForm, Accordion, AccordionHandle } from '@harness/uicore'
 import * as Yup from 'yup'
 import { debounce, defaultTo, isEmpty } from 'lodash-es'
 

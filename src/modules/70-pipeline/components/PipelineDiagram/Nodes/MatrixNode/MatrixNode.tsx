@@ -7,10 +7,9 @@
 
 import * as React from 'react'
 import cx from 'classnames'
-import { Icon, Layout, Text, Button, ButtonVariation } from '@wings-software/uicore'
+import { Icon, Layout, Text, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
-import { Event, DiagramDrag, DiagramType } from '@pipeline/components/Diagram'
 import { isMultiSvcOrMultiEnv, STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -27,9 +26,9 @@ import {
   getMatrixHeight,
   getPositionOfAddIcon,
   LayoutStyles,
-  matrixNodeNameToJSON,
   MAX_ALLOWED_MATRIX_COLLAPSED_NODES
 } from '../utils'
+import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import { getPipelineGraphData } from '../../PipelineGraph/PipelineGraphUtils'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import { NodeStatusIndicator } from '../../NodeStatusIndicator/NodeStatusIndicator'
@@ -49,7 +48,7 @@ const getCalculatedStyles = (data: PipelineGraphState[], parallelism: number, sh
       finalWidth += 30
     }
     return {
-      height: finalHeight - 20,
+      height: finalHeight,
       width: finalWidth
     }
   } else {
@@ -63,7 +62,7 @@ const getCalculatedStyles = (data: PipelineGraphState[], parallelism: number, sh
       finalWidth += 30
     }
     return {
-      height: finalHeight - 20,
+      height: finalHeight,
       width: finalWidth
     }
   }
@@ -106,7 +105,7 @@ export function MatrixNode(props: any): JSX.Element {
   const maxParallelism = props?.data?.maxParallelism
   const { errorMap } = useValidationErrors()
   const {
-    state: { templateTypes },
+    state: { templateTypes, templateIcons },
     getStagePathFromPipeline
   } = usePipelineContext()
 
@@ -141,6 +140,7 @@ export function MatrixNode(props: any): JSX.Element {
         getPipelineGraphData({
           data: props.data?.children,
           templateTypes: templateTypes,
+          templateIcons,
           serviceDependencies: undefined,
           errorMap: errorMap,
           graphDataType: PipelineGraphType.STAGE_GRAPH,
@@ -151,7 +151,7 @@ export function MatrixNode(props: any): JSX.Element {
       setState([])
       setNodeCollapsed(true)
     }
-  }, [treeRectangle, props.data, templateTypes])
+  }, [treeRectangle, props.data, templateTypes, templateIcons])
 
   React.useLayoutEffect(() => {
     if (state?.length) {
@@ -310,9 +310,6 @@ export function MatrixNode(props: any): JSX.Element {
                         defaultNode
                       ) as React.FC<BaseReactComponentProps>
 
-                      const formattedMatrixName = node?.matrixNodeName
-                        ? `${matrixNodeNameToJSON(node.matrixNodeName)} ${node.name}`
-                        : node?.name
                       return (
                         <React.Fragment key={node.data?.identifier}>
                           {index < (showAllNodes ? state?.length : COLLAPSED_MATRIX_NODE_LENGTH) ? (
@@ -342,7 +339,8 @@ export function MatrixNode(props: any): JSX.Element {
                                   : queryParams?.stageExecId || props?.selectedNodeId
                               }
                               showMarkers={false}
-                              name={formattedMatrixName}
+                              name={node.name}
+                              matrixNodeName={node.matrixNodeName}
                             />
                           ) : null}
                         </React.Fragment>

@@ -15,11 +15,12 @@ import {
   Text,
   ModalErrorHandlerBinding,
   ModalErrorHandler,
-  ButtonVariation
-} from '@wings-software/uicore'
+  ButtonVariation,
+  MultiSelectOption
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { pick } from 'lodash-es'
+import { pick, get } from 'lodash-es'
 import {
   usePutSecret,
   usePutSecretFileV2,
@@ -74,7 +75,7 @@ interface CreateUpdateSecretProps {
   privateSecret?: boolean
 }
 
-const LocalFormFieldsSMList = ['Local', 'GcpKms', 'AwsKms', 'GcpSecretManager']
+const LocalFormFieldsSMList = ['Local', 'GcpKms', 'AwsKms']
 const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
@@ -151,6 +152,7 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   const {
     data: connectorDetails,
     loading: loadingConnectorDetails,
+    error: connectorFetchError,
     refetch: getConnectorDetails
   } = useGetConnector({
     identifier:
@@ -158,6 +160,14 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
       (secretResponse?.data?.secret?.spec as SecretTextSpecDTO)?.secretManagerIdentifier,
     lazy: true
   })
+
+  useEffect(() => {
+    if (!loadingConnectorDetails && connectorFetchError) {
+      modalErrorHandler?.showDanger(getRBACErrorMessage(connectorFetchError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingConnectorDetails, connectorFetchError])
+
   const { mutate: createSecretText, loading: loadingCreateText } = usePostSecret({
     queryParams: { accountIdentifier, orgIdentifier, projectIdentifier, privateSecret }
   })
@@ -180,6 +190,16 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
       orgIdentifier: propsSecret?.orgIdentifier
     }
   })
+  const convertRegionsMultiSelectDataToPayload = (data: MultiSelectOption[]): string =>
+    data.map(val => val.value.toString()).join(',')
+
+  const convertPayloadtoRegionsMultiSelectData = (data: string) => {
+    const returnOptions: MultiSelectOption[] = []
+    data?.split(',').forEach(val => {
+      returnOptions.push({ value: val, label: val })
+    })
+    return returnOptions
+  }
 
   const loading = loadingCreateText || loadingUpdateText || loadingCreateFile || loadingUpdateFile
   const editing = !!propsSecret
@@ -212,6 +232,16 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
           orgIdentifier: editFlag ? propsSecret?.orgIdentifier : orgIdentifier,
           projectIdentifier: editFlag ? propsSecret?.projectIdentifier : projectIdentifier,
           spec: {
+            ...(get(data, 'regions') &&
+              get(data, 'configureRegions') && {
+                additionalMetadata: {
+                  values: {
+                    ...(get(data, 'regions') && {
+                      regions: convertRegionsMultiSelectDataToPayload(get(data, 'regions'))
+                    })
+                  }
+                }
+              }),
             ...pick(data, ['secretManagerIdentifier'])
           } as SecretFileSpecDTO
         } as SecretDTOV2
@@ -230,6 +260,17 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
         orgIdentifier: editFlag ? propsSecret?.orgIdentifier : orgIdentifier,
         projectIdentifier: editFlag ? propsSecret?.projectIdentifier : projectIdentifier,
         spec: {
+          ...(((get(data, 'regions') && get(data, 'configureRegions')) || get(data, 'version')) && {
+            additionalMetadata: {
+              values: {
+                ...(get(data, 'regions') &&
+                  data.valueType === 'Inline' && {
+                    regions: convertRegionsMultiSelectDataToPayload(get(data, 'regions'))
+                  }),
+                ...(get(data, 'version') && data.valueType === 'Reference' && { version: get(data, 'version') })
+              }
+            }
+          }),
           value: data.templateInputs ? JSON.stringify(data.templateInputs) : data.value,
           ...pick(data, ['secretManagerIdentifier', 'valueType'])
         } as SecretTextSpecDTO
@@ -325,6 +366,10 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
     }
   }
 
+  const isGcpSMInlineEditMode = () =>
+    selectedSecretManager?.type === 'GcpSecretManager' &&
+    editing &&
+    (secret?.type === 'SecretText' && (secret?.spec as SecretTextSpecDTO)?.valueType) === 'Inline'
   // update selectedSecretManager and readOnly flag in state when we get new data
   useEffect(() => {
     const selectedSM = editing
@@ -338,7 +383,6 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
     setSelectedSecretManager(selectedSM)
     setReadOnlySecretManager((selectedSM?.spec as VaultConnectorDTO)?.readOnly)
   }, [defaultSecretManagerId, connectorDetails])
-
   return (
     <>
       <ModalErrorHandler bind={setModalErrorHandler} />
@@ -364,7 +408,16 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
           ...(editing &&
             secret &&
             (secret?.spec as SecretTextSpecDTO)?.valueType === 'Reference' &&
-            pick(secret?.spec, ['value']))
+            pick(secret?.spec, ['value'])),
+          ...(editing &&
+            secret && {
+              regions: convertPayloadtoRegionsMultiSelectData(get(secret, 'spec.additionalMetadata.values.regions'))
+            }),
+          ...(editing && secret && pick((secret?.spec as SecretTextSpecDTO)?.additionalMetadata?.values, ['version'])),
+          ...(editing &&
+            get(secret, 'spec.additionalMetadata.values.regions') && {
+              configureRegions: !!get(secret, 'spec.additionalMetadata.values.regions')
+            })
         }}
         formName="createUpdateSecretForm"
         enableReinitialize
@@ -381,7 +434,16 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
               ? Yup.object().shape({
                   environmentVariables: VariableSchemaWithoutHook(getString)
                 })
-              : Yup.object()
+              : Yup.object(),
+          version:
+            selectedSecretManager?.type === 'GcpSecretManager'
+              ? Yup.string()
+                  .trim()
+                  .when('valueType', {
+                    is: 'Reference',
+                    then: Yup.string().required(getString('secrets.secret.referenceSecretVersionRqrd'))
+                  })
+              : Yup.string()
         })}
         validate={formData => {
           props.onChange?.({
@@ -442,7 +504,9 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
                 inputLabel={getString('secrets.labelSecretName')}
                 idName="identifier"
                 isIdentifierEditable={!editing}
-                inputGroupProps={{ disabled: loadingSecret }}
+                inputGroupProps={{
+                  disabled: isGcpSMInlineEditMode() || loading
+                }}
               />
 
               {!typeOfSelectedSecretManager ? <Text>{getString('secrets.secret.messageSelectSM')}</Text> : null}
@@ -459,9 +523,17 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
               ) : null}
               {typeOfSelectedSecretManager === 'Vault' ||
               typeOfSelectedSecretManager === 'AzureKeyVault' ||
-              typeOfSelectedSecretManager === 'AwsSecretManager' ? (
-                <VaultFormFields formik={formikProps} type={type} editing={editing} readonly={readOnlySecretManager} />
+              typeOfSelectedSecretManager === 'AwsSecretManager' ||
+              typeOfSelectedSecretManager === 'GcpSecretManager' ? (
+                <VaultFormFields
+                  secretManagerType={typeOfSelectedSecretManager}
+                  formik={formikProps}
+                  type={type}
+                  editing={editing}
+                  readonly={readOnlySecretManager}
+                />
               ) : null}
+
               <Button
                 intent="primary"
                 type="submit"

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Card, Color, FontVariation, SelectOption, Text } from '@harness/uicore'
+import { Card, SelectOption, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import {
   useGetHarnessServices,
@@ -52,7 +53,7 @@ export default function ServiceEnvironmentInputSet({
             isMultiType: isReadOnlyInputSet,
             item: serviceOptions?.find(item => item?.value === serviceValue) || serviceValue,
             options: serviceOptions,
-            onSelect: selectedService => onChange('serviceRef', selectedService.value),
+            onSelect: (selectedService: SelectOption) => onChange('serviceRef', selectedService.value),
             onNewCreated: newOption => {
               if (newOption?.identifier && newOption.name) {
                 const newServiceOption = { label: newOption.name, value: newOption.identifier }

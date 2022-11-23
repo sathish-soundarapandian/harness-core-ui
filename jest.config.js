@@ -48,6 +48,7 @@ module.exports = {
     '!src/modules/70-pipeline/components/PipelineStudio/ExecutionGraph/**',
     '!src/modules/25-governance/**', // 25-governance will be moved to a separate micro-frontend repository shortly
     '!src/modules/75-cd/factory/**',
+    '!src/modules/75-cf/pages/FFUIApp/FFUIApp.tsx',
     '!src/framework/tooltip/TooltipContext.tsx'
   ],
   coverageReporters: ['lcov', 'json-summary', 'json'],
@@ -64,10 +65,8 @@ module.exports = {
     'monaco-editor': '<rootDir>/node_modules/react-monaco-editor',
     'worker-loader!.+': '<rootDir>/scripts/jest/file-mock.js',
     '@harness/monaco-yaml.*': '<rootDir>/scripts/jest/file-mock.js',
-    '@wings-software/monaco-yaml.*': '<rootDir>/scripts/jest/file-mock.js',
     '\\.(jpg|jpeg|png|gif|svg|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
       '<rootDir>/scripts/jest/file-mock.js',
-    '@wings-software/(.*)': '<rootDir>/node_modules/@harness/$1',
     ...pathsToModuleNameMapper(compilerOptions.paths)
   },
   coverageThreshold: {

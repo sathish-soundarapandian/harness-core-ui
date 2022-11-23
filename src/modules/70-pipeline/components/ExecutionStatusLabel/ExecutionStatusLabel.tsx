@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Icon } from '@wings-software/uicore'
+import { Icon } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
@@ -18,6 +18,7 @@ import css from './ExecutionStatusLabel.module.scss'
 
 export const stringsMap: Record<ExecutionStatus, StringKeys> = {
   Aborted: 'pipeline.executionStatus.Aborted',
+  AbortedByFreeze: 'pipeline.executionStatus.AbortedByFreeze',
   Discontinuing: 'pipeline.executionStatus.Aborted',
   Running: 'pipeline.executionStatus.Running',
   AsyncWaiting: 'pipeline.executionStatus.Running',
@@ -57,6 +58,7 @@ export const iconMap: Record<ExecutionStatus, IconProps> = {
   TimedWaiting: { name: 'loading', size: 10 },
   Running: { name: 'loading', size: 10 },
   Aborted: { name: 'circle-stop', size: 9 },
+  AbortedByFreeze: { name: 'circle-stop', size: 9 },
   Discontinuing: { name: 'circle-stop', size: 9 },
   Expired: { name: 'expired', size: 9 },
   Suspended: { name: 'banned', size: 9 },

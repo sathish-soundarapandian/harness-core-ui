@@ -7,7 +7,8 @@
 
 import React, { useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Button, ButtonVariation, Container, FontVariation, Layout, Page, PageHeader, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Container, Layout, Page, PageHeader, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'

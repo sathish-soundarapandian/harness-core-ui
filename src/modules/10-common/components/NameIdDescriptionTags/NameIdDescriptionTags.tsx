@@ -6,8 +6,8 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, FormInput, Icon, Label, DataTooltipInterface, HarnessDocTooltip } from '@wings-software/uicore'
-import type { InputWithIdentifierProps } from '@wings-software/uicore/dist/components/InputWithIdentifier/InputWithIdentifier'
+import { Container, FormInput, Icon, Label, DataTooltipInterface, HarnessDocTooltip } from '@harness/uicore'
+import type { InputWithIdentifierProps } from '@harness/uicore/dist/components/InputWithIdentifier/InputWithIdentifier'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Classes, IInputGroupProps, ITagInputProps } from '@blueprintjs/core'
 import cx from 'classnames'

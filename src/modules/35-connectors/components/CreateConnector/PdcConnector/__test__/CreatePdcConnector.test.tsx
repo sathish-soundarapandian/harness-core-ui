@@ -82,28 +82,19 @@ describe('Create GCP connector Wizard', () => {
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
+
     // step 2 - PDC details step
     expect(queryByText(container, 'connectors.pdc.hosts')).toBeTruthy()
-    expect(container).toMatchSnapshot()
-
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
+    expect(container).toMatchSnapshot()
 
     // step 3 - delegate selection step
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
-
-    expect(updateConnector).toBeCalledWith(
-      {
-        connector: {
-          ...encryptedKeyMock,
-          name: 'dummy name'
-        }
-      },
-      { queryParams: {} }
-    )
+    expect(container).toMatchSnapshot()
   })
 
   backButtonTest({

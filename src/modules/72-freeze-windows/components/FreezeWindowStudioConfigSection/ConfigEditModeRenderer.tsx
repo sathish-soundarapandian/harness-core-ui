@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, FormikForm, FormInput, Layout } from '@wings-software/uicore'
+import { Button, FormikForm, FormInput, Layout } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import { FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
 import type { FieldVisibility } from '@freeze-windows/utils/FreezeWindowStudioUtil'

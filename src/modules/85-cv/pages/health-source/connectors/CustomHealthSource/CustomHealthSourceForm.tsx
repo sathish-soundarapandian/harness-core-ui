@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useCallback, useEffect } from 'react'
-import { Container, Layout, Accordion } from '@wings-software/uicore'
+import { Container, Layout, Accordion } from '@harness/uicore'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import { useStrings } from 'framework/strings'
 import { useGetRiskCategoryForCustomHealthMetric } from 'services/cv'

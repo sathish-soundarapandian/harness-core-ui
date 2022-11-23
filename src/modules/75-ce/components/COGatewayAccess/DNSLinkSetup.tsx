@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Heading, Layout, Formik, FormikForm } from '@wings-software/uicore'
+import { Heading, Layout, Formik, FormikForm } from '@harness/uicore'
 import * as Yup from 'yup'
 import { isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
 import type { DNSLinkSetupFormVal } from '@ce/types'

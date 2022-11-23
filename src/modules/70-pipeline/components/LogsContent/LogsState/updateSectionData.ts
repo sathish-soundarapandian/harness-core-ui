@@ -11,6 +11,8 @@ import { formatDatetoLocale } from '@common/utils/dateUtils'
 import { sanitizeHTML } from '@common/utils/StringUtils'
 import type { Action, ActionType, State, LogSectionData, LogLineData } from './types'
 
+const MAX_DATA_LENGTH = 10_000
+
 export function processLogsData(data: string): LogLineData[] {
   return String(data)
     .split('\n')
@@ -57,7 +59,10 @@ export function updateSectionData(state: State, action: Action<ActionType.Update
 
     if (payload.append) {
       const dataToupdate = get(draft.dataMap[payload.id], 'data', []) as LogLineData[]
+      const itemsToDelete = dataToupdate.length + data.length - MAX_DATA_LENGTH
       dataToupdate.push(...data)
+      // only maintain data till max limit
+      dataToupdate.splice(0, Math.max(0, itemsToDelete))
       set(draft.dataMap[payload.id], 'data', dataToupdate)
     } else {
       set(draft.dataMap[payload.id], 'data', data)

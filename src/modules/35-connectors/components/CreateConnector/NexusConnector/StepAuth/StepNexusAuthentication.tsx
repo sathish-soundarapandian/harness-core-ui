@@ -16,7 +16,7 @@ import {
   Container,
   SelectOption,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { setupNexusFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'

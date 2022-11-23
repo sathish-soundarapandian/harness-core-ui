@@ -2,11 +2,7 @@ import {
   failFastThresholdsMockData,
   ignoreThresholdsMockData
 } from '@cv/pages/health-source/connectors/AppDynamics/__tests__/AppDMonitoredSource.mock'
-import {
-  DefaultCustomMetricGroupName,
-  MetricCriteriaValues,
-  PercentageCriteriaDropdownValues
-} from '../MetricThresholds.constants'
+import { DefaultCustomMetricGroupName, MetricCriteriaValues } from '../MetricThresholds.constants'
 import type { MetricThresholdType, ThresholdsPropertyNames } from '../MetricThresholds.types'
 
 export const groupedCreatedMetrics = {
@@ -62,7 +58,6 @@ export const mockThresholdValue = {
   },
   criteria: {
     type: MetricCriteriaValues.Percentage,
-    criteriaPercentageType: PercentageCriteriaDropdownValues.LessThan,
     spec: {
       lessThan: 10
     }
@@ -83,7 +78,7 @@ export const metricPacksMock = [
 
 export const metricThresholdsArrayMock: MetricThresholdType[] = [
   {
-    criteria: { criteriaPercentageType: 'lessThan', spec: { lessThan: 1 }, type: 'Percentage' },
+    criteria: { spec: { lessThan: 1 }, type: 'Percentage' },
     groupName: 'testP2',
     metricName: 'average_wait_time_ms',
     metricType: 'Performance',
@@ -91,7 +86,7 @@ export const metricThresholdsArrayMock: MetricThresholdType[] = [
     type: 'IgnoreThreshold'
   },
   {
-    criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
+    criteria: { spec: { greaterThan: 12 }, type: 'Percentage' },
     groupName: 'testP',
     metricName: 'stall_count',
     metricType: 'Performance',
@@ -99,7 +94,7 @@ export const metricThresholdsArrayMock: MetricThresholdType[] = [
     type: 'IgnoreThreshold'
   },
   {
-    criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 22 }, type: 'Percentage' },
+    criteria: { spec: { greaterThan: 22 }, type: 'Percentage' },
     groupName: 'testPE',
     metricName: 'average_response_time_ms',
     metricType: 'Performance',
@@ -117,7 +112,7 @@ export const metricThresholdsPayloadMockData = [
     identifier: 'Custom',
     metricThresholds: [
       {
-        criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
+        criteria: { spec: { greaterThan: 12 }, type: 'Percentage' },
         groupName: 'testP',
         metricName: 'stall_count',
         metricType: 'Custom',
@@ -157,7 +152,7 @@ export const expectedCustomOnlyResult = [
     identifier: 'Custom',
     metricThresholds: [
       {
-        criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
+        criteria: { spec: { greaterThan: 12 }, type: 'Percentage' },
         groupName: 'testP',
         metricName: 'stall_count',
         metricType: 'Custom',
@@ -218,6 +213,25 @@ export const singleFailFastThreshold: MetricThresholdType = {
 
 export const formikInitialValuesCriteriaGreaterThanMock = {
   ignoreThresholds: [singleIgnoreThreshold],
+  failFastThresholds: []
+}
+
+export const formikInitialValuesCriteriaLessThanMock = {
+  ignoreThresholds: [
+    {
+      metricType: 'Custom',
+      type: 'IgnoreThreshold',
+      spec: {
+        action: 'Ignore'
+      },
+      criteria: {
+        type: 'Percentage',
+        spec: {
+          lessThan: 21
+        }
+      }
+    }
+  ],
   failFastThresholds: []
 }
 
@@ -339,7 +353,7 @@ export const cvEnabledThresholdsExpectedResultMock = {
 
 export const metricThresholdExpectedMock = [
   {
-    criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 22 }, type: 'Percentage' },
+    criteria: { spec: { greaterThan: 22 }, type: 'Percentage' },
     groupName: 'testPE',
     metricName: 'average_response_time_ms',
     metricType: 'Performance',

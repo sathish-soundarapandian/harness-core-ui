@@ -10,7 +10,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
-import { useGetPipelineSummary } from 'services/pipeline-ng'
+import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import { ExecutionList } from '@pipeline/pages/execution-list/ExecutionList'
 
 export default function CIPipelineDeploymentList(): React.ReactElement {
@@ -38,18 +38,30 @@ export default function CIPipelineDeploymentList(): React.ReactElement {
     )
   }
 
-  const { data: pipeline } = useGetPipelineSummary({
-    pipelineIdentifier,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      repoIdentifier,
-      branch
-    }
-  })
+  const { data: pipeline } = useGetPipelineSummaryQuery(
+    {
+      pipelineIdentifier,
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        repoIdentifier,
+        branch,
+        getMetadataOnly: true
+      }
+    },
+    { staleTime: 5 * 60 * 1000 }
+  )
 
   const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
 
-  return <ExecutionList showHealthAndExecution onRunPipeline={onRunPipeline} isPipelineInvalid={isPipelineInvalid} />
+  return (
+    <ExecutionList
+      showHealthAndExecution
+      repoName={repoName}
+      showBranchFilter
+      onRunPipeline={onRunPipeline}
+      isPipelineInvalid={isPipelineInvalid}
+    />
+  )
 }

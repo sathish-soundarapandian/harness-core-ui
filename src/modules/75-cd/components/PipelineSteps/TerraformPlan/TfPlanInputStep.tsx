@@ -8,10 +8,11 @@
 import React from 'react'
 import cx from 'classnames'
 
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm, Text } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Text } from '@harness/uicore'
 
 import { get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import type { FormikContextType } from 'formik'
 
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeCheckboxField } from '@common/components'
@@ -24,14 +25,20 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import type { TerraformBackendConfigSpec } from 'services/cd-ng'
+import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { TFMonaco } from '../Common/Terraform/Editview/TFMonacoEditor'
 import type { TerraformPlanProps } from '../Common/Terraform/TerraformInterfaces'
 import ConfigInputs from './InputSteps/TfConfigSection'
 import TfVarFiles from './InputSteps/TfPlanVarFiles'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export default function TfPlanInputStep(props: TerraformPlanProps): React.ReactElement {
+export default function TfPlanInputStep(
+  props: TerraformPlanProps & { formik?: FormikContextType<any> }
+): React.ReactElement {
   const { getString } = useStrings()
-  const { inputSetData, readonly, initialValues, allowableTypes } = props
+  const { inputSetData, readonly, initialValues, allowableTypes, stepViewType, formik } = props
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -54,6 +61,9 @@ export default function TfPlanInputStep(props: TerraformPlanProps): React.ReactE
               expressions,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
           />
         </div>
       )}
@@ -66,7 +76,9 @@ export default function TfPlanInputStep(props: TerraformPlanProps): React.ReactE
             fieldPath={'timeout'}
             template={inputSetData?.template}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -86,6 +98,9 @@ export default function TfPlanInputStep(props: TerraformPlanProps): React.ReactE
             orgIdentifier={orgIdentifier}
             width={400}
             multiTypeProps={{ allowableTypes, expressions }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             category={'SECRET_MANAGER'}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.secretManagerRef`}
             placeholder={getString('select')}
@@ -100,22 +115,52 @@ export default function TfPlanInputStep(props: TerraformPlanProps): React.ReactE
       inputSetData?.template?.spec?.configuration?.varFiles?.length > 0 ? (
         <TfVarFiles {...props} />
       ) : null}
-      {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.backendConfig?.spec?.content) ===
-        MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
-            name={`${
-              isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
-            }spec.configuration.backendConfig.spec.content`}
-            label={getString('cd.backEndConfig')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-          />
-        </div>
-      )}
+      {
+        /* istanbul ignore next */
+        getMultiTypeFromValue(
+          (inputSetData?.template?.spec?.configuration?.backendConfig?.spec as TerraformBackendConfigSpec)?.content
+        ) === MultiTypeInputType.RUNTIME && (
+          <div className={cx(stepCss.formGroup, stepCss.md)}>
+            <MultiTypeFieldSelector
+              name={`${
+                isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+              }spec.configuration.backendConfig.spec.content`}
+              label={getString('cd.backEndConfig')}
+              defaultValueToReset=""
+              allowedTypes={allowableTypes}
+              skipRenderValueInExpressionLabel
+              disabled={readonly}
+              configureOptionsProps={{
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              }}
+              expressionRender={() => {
+                /* istanbul ignore next */
+                return (
+                  <TFMonaco
+                    name={`${
+                      isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+                    }spec.configuration.backendConfig.spec.content`}
+                    formik={formik!}
+                    expressions={expressions}
+                    title={getString('tagsLabel')}
+                  />
+                )
+              }}
+            >
+              <TFMonaco
+                name={`${
+                  isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+                }spec.configuration.backendConfig.spec.content`}
+                formik={formik!}
+                expressions={expressions}
+                title={getString('tagsLabel')}
+              />
+            </MultiTypeFieldSelector>
+          </div>
+        )
+      }
+      <ConfigInputs isBackendConfig={true} {...props} />
+
       {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.targets as string) ===
         MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -129,7 +174,6 @@ export default function TfPlanInputStep(props: TerraformPlanProps): React.ReactE
           />
         </div>
       )}
-
       {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.exportTerraformPlanJson) ===
         MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -139,6 +183,26 @@ export default function TfPlanInputStep(props: TerraformPlanProps): React.ReactE
             }spec.configuration.exportTerraformPlanJson`}
             label={getString('cd.exportTerraformPlanJson')}
             multiTypeTextbox={{ expressions, allowableTypes }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.exportTerraformHumanReadablePlan) ===
+        MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            name={`${
+              isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+            }spec.configuration.exportTerraformHumanReadablePlan`}
+            label={getString('cd.exportTerraformHumanReadablePlan')}
+            multiTypeTextbox={{ expressions, allowableTypes }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
           />
         </div>
       )}

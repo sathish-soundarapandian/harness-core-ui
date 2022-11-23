@@ -7,7 +7,7 @@
 
 import React, { LegacyRef, useRef } from 'react'
 import styled from '@emotion/styled'
-import { Container, Layout, Text } from '@wings-software/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import type { TemplateType } from '@templates-library/utils/templatesUtils'

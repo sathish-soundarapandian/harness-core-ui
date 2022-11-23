@@ -8,7 +8,7 @@
 import React from 'react'
 import { Formik } from 'formik'
 import { fireEvent, render } from '@testing-library/react'
-import { FormikForm, TextInput } from '@wings-software/uicore'
+import { FormikForm, TextInput } from '@harness/uicore'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import { TestWrapper } from '@common/utils/testUtils'
 import { InputWithDynamicModalForJsonMultiType } from '../InputWithDynamicModalForJsonMultiType'

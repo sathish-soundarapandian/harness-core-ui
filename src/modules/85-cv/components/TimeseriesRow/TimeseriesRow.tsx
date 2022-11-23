@@ -6,15 +6,14 @@
  */
 
 import React, { useMemo, useState, useEffect, useRef } from 'react'
-import { Container, Text, Icon, Button } from '@wings-software/uicore'
+import { Container, Text, Icon, Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Color } from '@harness/design-system'
-import type { FontProps } from '@harness/design-system'
+import { Color, FontProps } from '@harness/design-system'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
 import classnames from 'classnames'
 import moment from 'moment'
-import merge from 'lodash-es/merge'
+import { merge } from 'lodash-es'
 import { Popover, Menu, MenuItem, Dialog } from '@blueprintjs/core'
 import { TimelineBar } from '@cv/components/TimelineView/TimelineBar'
 import { useStrings } from 'framework/strings'

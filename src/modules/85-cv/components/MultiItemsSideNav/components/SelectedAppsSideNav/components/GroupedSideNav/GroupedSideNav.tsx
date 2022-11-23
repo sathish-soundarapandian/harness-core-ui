@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { Container, Text, CollapseList, CollapseListPanel } from '@wings-software/uicore'
+import { Container, Text, CollapseList, CollapseListPanel } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'

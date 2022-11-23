@@ -7,7 +7,7 @@
 
 import React from 'react'
 
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import type { ModuleName } from 'framework/types/ModuleName'
 
 import type { ModuleLicenseDTO } from 'services/cd-ng'
@@ -38,7 +38,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         trialInformation={trialInformation}
         refetchGetLicense={refetchGetLicense}
       />
-      {enabled && licenseData && <SubscriptionUsageCard module={module} />}
+      {enabled && licenseData && <SubscriptionUsageCard module={module} licenseData={licenseData} />}
     </Layout.Vertical>
   )
 }

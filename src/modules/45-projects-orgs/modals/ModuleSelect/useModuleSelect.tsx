@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { Button, Card, Container, Icon, Layout, Text, ButtonVariation, useToaster } from '@wings-software/uicore'
+import { Button, Card, Container, Icon, Layout, Text, ButtonVariation, useToaster } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
@@ -52,6 +52,7 @@ interface ModulesRoutesMap extends GoToModuleBtnProps {
   search?: string
   accountId: string
   freePlanEnabled?: boolean
+  cdOnboardingEnabled?: boolean
 }
 interface UpdateLicneseStoreAndGotoModulePageProps {
   planData: ResponseModuleLicenseDTO
@@ -62,7 +63,8 @@ const getModulesWithSubscriptionsRoutesMap = ({
   projectData,
   search = '',
   accountId,
-  freePlanEnabled = false
+  freePlanEnabled = false,
+  cdOnboardingEnabled = false
 }: ModulesRoutesMap): Map<ModuleName, any> => {
   const cdCiPath = {
     pathname: routes.toPipelineStudio({
@@ -73,6 +75,14 @@ const getModulesWithSubscriptionsRoutesMap = ({
       module: selectedModuleName.toLowerCase() as Module
     }),
     search: `modal=${freePlanEnabled ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL}`
+  }
+  const cdOnboardingPath = {
+    pathname: routes.toGetStartedWithCD({
+      orgIdentifier: projectData.orgIdentifier || '',
+      projectIdentifier: projectData.identifier,
+      accountId,
+      module: selectedModuleName.toLowerCase() as Module
+    })
   }
   return new Map([
     [
@@ -95,7 +105,7 @@ const getModulesWithSubscriptionsRoutesMap = ({
         })
       }
     ],
-    [ModuleName.CD, cdCiPath],
+    [ModuleName.CD, cdOnboardingEnabled ? cdOnboardingPath : cdCiPath],
     [ModuleName.CI, cdCiPath],
     [
       ModuleName.STO,
@@ -114,7 +124,8 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const { FREE_PLAN_ENABLED } = useFeatureFlags()
+  const FREE_PLAN_ENABLED = !isOnPrem()
+  const { CD_ONBOARDING_ENABLED } = useFeatureFlags()
   const history = useHistory()
   const { selectedModuleName, projectData } = props
   const { accountId } = useParams<AccountPathProps>()
@@ -133,7 +144,8 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
       projectData,
       accountId,
       search: `?experience=${experienceType}&&modal=${experienceType}`,
-      freePlanEnabled: FREE_PLAN_ENABLED
+      freePlanEnabled: FREE_PLAN_ENABLED,
+      cdOnboardingEnabled: CD_ONBOARDING_ENABLED
     })
     history.push(moudleRoutePathMap.get(selectedModuleName))
   }

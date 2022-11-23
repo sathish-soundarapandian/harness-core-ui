@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { Utils } from '@wings-software/uicore'
+import { Utils } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { SelectHealthSourceServicesProps } from '@cv/pages/health-source/common/SelectHealthSourceServices/SelectHealthSourceServices.types'
 import { riskCategoryMock } from '@cv/pages/health-source/connectors/__tests__/HealthSources.mock'

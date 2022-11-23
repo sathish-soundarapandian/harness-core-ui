@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import type { GetDataError } from 'restful-react'
-import { Container, FormInput, MultiSelectOption, SelectOption } from '@wings-software/uicore'
+import { Container, FormInput, MultiSelectOption, SelectOption } from '@harness/uicore'
 import type { Failure, useGetLabelNames, useGetMetricNames } from 'services/cv'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useStrings } from 'framework/strings'
@@ -23,6 +23,9 @@ interface PrometheusQueryBuilderProps {
   metricNamesResponse: ReturnType<typeof useGetMetricNames>
   aggregatorValue?: string
   isManualQuery?: boolean
+  dataSourceType?: string
+  region?: string
+  workspaceId?: string
 }
 
 export function PrometheusQueryBuilder(props: PrometheusQueryBuilderProps): JSX.Element {
@@ -33,7 +36,10 @@ export function PrometheusQueryBuilder(props: PrometheusQueryBuilderProps): JSX.
     labelNamesResponse,
     metricNamesResponse,
     isManualQuery,
-    aggregatorValue
+    aggregatorValue,
+    dataSourceType,
+    region,
+    workspaceId
   } = props
   const { showError, clear } = useToaster()
   const { getString } = useStrings()
@@ -93,6 +99,9 @@ export function PrometheusQueryBuilder(props: PrometheusQueryBuilderProps): JSX.
       />
       <PrometheusFilterSelector
         items={transformedLabelNames}
+        dataSourceType={dataSourceType}
+        region={region}
+        workspaceId={workspaceId}
         name={PrometheusMonitoringSourceFieldNames.ENVIRONMENT_FILTER}
         label={getString('cv.monitoringSources.prometheus.environmentFilter')}
         connectorIdentifier={connectorIdentifier}
@@ -103,6 +112,9 @@ export function PrometheusQueryBuilder(props: PrometheusQueryBuilderProps): JSX.
       />
       <PrometheusFilterSelector
         items={transformedLabelNames}
+        dataSourceType={dataSourceType}
+        region={region}
+        workspaceId={workspaceId}
         name={PrometheusMonitoringSourceFieldNames.SERVICE_FILTER}
         label={getString('cv.monitoringSources.prometheus.serviceFilter')}
         connectorIdentifier={connectorIdentifier}
@@ -111,6 +123,9 @@ export function PrometheusQueryBuilder(props: PrometheusQueryBuilderProps): JSX.
       />
       <PrometheusFilterSelector
         items={transformedLabelNames}
+        dataSourceType={dataSourceType}
+        region={region}
+        workspaceId={workspaceId}
         name={PrometheusMonitoringSourceFieldNames.ADDITIONAL_FILTER}
         label={getString('cv.monitoringSources.prometheus.additionalFilter')}
         connectorIdentifier={connectorIdentifier}

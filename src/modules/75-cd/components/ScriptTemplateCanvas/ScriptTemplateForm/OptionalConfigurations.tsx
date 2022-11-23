@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Formik, AllowedTypes } from '@wings-software/uicore'
+import { Formik, AllowedTypes } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import { setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'

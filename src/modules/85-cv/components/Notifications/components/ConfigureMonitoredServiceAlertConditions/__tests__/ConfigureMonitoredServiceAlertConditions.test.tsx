@@ -33,7 +33,7 @@ describe('Unit tests for ConfigureMonitoredServiceAlertConditions', () => {
   }
   test('Verify if ConfigureMonitoredServiceAlertConditions renders', async () => {
     const { getByText } = render(<WrapperComponent {...props} />)
-    expect(getByText('notifications.configureConditions')).toBeInTheDocument()
+    expect(getByText('rbac.notifications.configureConditions')).toBeInTheDocument()
     expect(getByText('Category:cv.notifications.serviceHealth')).toBeInTheDocument()
     expect(getByText('cv.notifications.serviceHealthDescription')).toBeInTheDocument()
   })

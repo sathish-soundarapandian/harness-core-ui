@@ -16,7 +16,7 @@ import {
   StepProps,
   Text,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Form } from 'formik'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'

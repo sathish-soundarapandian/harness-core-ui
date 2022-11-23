@@ -7,6 +7,18 @@
 
 .table {
   padding: var(--spacing-large);
+
+  [role='cell'],
+  [role='columnheader'] {
+    width: auto !important;
+    padding-right: var(--spacing-small);
+  }
+
+  div[class*='TableV2--cells'],
+  div[class*='TableV2--header'] {
+    display: grid !important;
+    grid-template-columns: 2.5rem 17rem 9rem 2fr 1.2fr 3.5rem 2.5rem;
+  }
 }
 
 .triggerInfo {
@@ -28,9 +40,9 @@
 
 .stage {
   display: grid;
-  margin-left: 3%;
-  margin-right: 3%;
-  grid-template-columns: 20% 11% 1fr 4%;
+  margin-left: 2.5rem;
+  margin-right: 2.5rem;
+  grid-template-columns: 17rem 9rem 1fr 3.5rem;
   padding: var(--spacing-4) 0;
   position: relative;
   align-items: center;
@@ -116,9 +128,9 @@
   background-color: var(--purple-300);
   display: flex;
   transform: rotate(270deg);
-  left: 34px;
+  left: 32px;
   top: -16px;
-  padding: var(--spacing-tiny);
+  padding: var(--spacing-tiny) var(--spacing-xsmall);
   border-radius: var(--spacing-2);
   height: var(--spacing-13);
 }
@@ -150,8 +162,4 @@
   color: var(--grey-700) !important;
   padding: var(--spacing-1) var(--spacing-2) !important;
   display: inline-block !important;
-}
-
-[role='cell'] {
-  padding-right: var(--spacing-small);
 }

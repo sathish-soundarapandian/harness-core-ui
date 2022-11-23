@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { Button, Layout, StepProps } from '@wings-software/uicore'
+import { Button, Layout, StepProps } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useCreateDelegateGroup } from 'services/portal'
 

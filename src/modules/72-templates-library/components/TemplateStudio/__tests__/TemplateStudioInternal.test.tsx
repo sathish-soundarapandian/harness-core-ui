@@ -15,16 +15,17 @@ import { TemplateContextTestWrapper } from '@templates-library/utils/templateCon
 
 import { DefaultTemplate } from 'framework/Templates/templates'
 import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-import * as cdng from 'services/cd-ng'
 import { TemplateStudioInternal } from '../TemplateStudioInternal'
 import templateContextProps from './__mock__/templateContextProps.json'
 
-jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {
-  return { data: gitConfigs, refetch: jest.fn(), loading: false }
-})
-jest.spyOn(cdng, 'useGetSourceCodeManagers').mockImplementation((): any => {
-  return { data: sourceCodeManagers, refetch: jest.fn(), loading: false }
-})
+jest.mock('services/cd-ng-rq', () => ({
+  useListGitSyncQuery: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: jest.fn() }
+  }),
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
+}))
 
 jest.mock('services/template-ng', () => ({
   useGetTemplateSchema: jest.fn(() => ({})),

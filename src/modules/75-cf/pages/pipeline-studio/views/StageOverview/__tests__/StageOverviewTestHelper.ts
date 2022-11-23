@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
@@ -39,6 +39,7 @@ export const getPipelineContext = (): PipelineContextInterface => ({
     isLoading: false,
     isIntermittentLoading: false,
     isUpdated: false,
+    modules: [],
     templateTypes: {},
     templateServiceData: {},
     resolvedCustomDeploymentDetailsByRef: {}
@@ -75,6 +76,7 @@ export const getPipelineContext = (): PipelineContextInterface => ({
   setSelection: jest.fn(),
   getStagePathFromPipeline: jest.fn(),
   setTemplateTypes: jest.fn(),
+  setTemplateIcons: jest.fn(),
   setTemplateServiceData: jest.fn(),
   setIntermittentLoading: jest.fn()
 })
@@ -101,6 +103,7 @@ export const getEditPipelineContext = (): PipelineContextInterface => ({
     isLoading: false,
     isIntermittentLoading: false,
     isUpdated: true,
+    modules: [],
     templateTypes: {},
     templateServiceData: {},
     resolvedCustomDeploymentDetailsByRef: {}
@@ -137,6 +140,7 @@ export const getEditPipelineContext = (): PipelineContextInterface => ({
   setSelection: jest.fn(),
   getStagePathFromPipeline: jest.fn(),
   setTemplateTypes: jest.fn(),
+  setTemplateIcons: jest.fn(),
   setTemplateServiceData: jest.fn(),
   setIntermittentLoading: jest.fn()
 })

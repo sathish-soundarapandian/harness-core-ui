@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { Text, Layout, Formik, FormikForm as Form, Button, FormInput } from '@wings-software/uicore'
+import { Text, Layout, Formik, FormikForm as Form, Button, FormInput } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'

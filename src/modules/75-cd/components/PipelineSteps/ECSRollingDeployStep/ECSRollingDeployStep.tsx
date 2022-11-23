@@ -8,7 +8,7 @@
 import React from 'react'
 import type { FormikErrors } from 'formik'
 import { isEmpty } from 'lodash-es'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 
 import type { StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -72,6 +72,7 @@ export class ECSRollingDeployStep extends PipelineStep<StepElementConfig> {
         <GenericExecutionStepInputSet
           allowableTypes={allowableTypes}
           inputSetData={inputSetData as InputSetData<StepElementConfig>}
+          stepViewType={stepViewType}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {

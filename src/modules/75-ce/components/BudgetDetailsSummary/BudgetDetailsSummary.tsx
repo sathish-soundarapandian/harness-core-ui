@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { Card, Container, FlexExpander, Layout, Text } from '@wings-software/uicore'
+import { Card, Container, FlexExpander, Layout, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

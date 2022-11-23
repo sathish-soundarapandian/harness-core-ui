@@ -8,14 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 
-import {
-  AllowedTypes,
-  Formik,
-  FormInput,
-  getMultiTypeFromValue,
-  IconName,
-  MultiTypeInputType
-} from '@wings-software/uicore'
+import { AllowedTypes, Formik, FormInput, getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 

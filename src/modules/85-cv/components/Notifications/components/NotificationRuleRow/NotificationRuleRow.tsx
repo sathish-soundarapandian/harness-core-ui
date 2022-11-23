@@ -5,42 +5,42 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import {
-  Button,
-  Container,
-  FormInput,
-  Layout,
-  MultiSelectDropDown,
-  MultiSelectOption,
-  SelectOption,
-  Text,
-  TextInput
-} from '@harness/uicore'
+import { Button, Container, FormInput, Layout, MultiSelectDropDown, Text, TextInput } from '@harness/uicore'
 import React from 'react'
 import HorizontalLineWithText from '@cv/components/HorizontalLineWithText/HorizontalLineWithText'
 import { StringKeys, useStrings } from 'framework/strings'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import {
+  eventStatusOptions,
+  eventTypeOptions,
   conditionOptions,
   changeTypeOptions,
   Condition
 } from '../ConfigureMonitoredServiceAlertConditions/ConfigureMonitoredServiceAlertConditions.constants'
-import type { NotificationRuleRowProps } from './NotificationRuleRow.types'
-import { getValueFromEvent } from './NotificationRuleRow.utils'
+import type { FieldValueType, MoreFieldsType, NotificationRuleRowProps } from './NotificationRuleRow.types'
+import {
+  getArrayOrEmpty,
+  getValueFromEvent,
+  getOptionsWithAllEvents,
+  onConditionChange
+} from './NotificationRuleRow.utils'
 import type { NotificationRule } from '../../NotificationsContainer.types'
+import { defaultOption } from '../../NotificationsContainer.constants'
 import css from './NotificationRuleRow.module.scss'
 
 const renderConnectedFields = (
   notificationRule: NotificationRule,
+  index: number,
   handleChangeField: (
     notificationRule: NotificationRule,
-    currentFieldValue: SelectOption | MultiSelectOption[] | string,
+    currentFieldValue: FieldValueType,
     currentField: string,
-    nextField?: string,
-    nextFieldValue?: SelectOption | MultiSelectOption[] | string
+    moreFields?: MoreFieldsType
   ) => void,
   getString: (key: StringKeys) => string
 ): JSX.Element => {
-  const { changeType, duration, id, condition, threshold } = notificationRule
+  const { changeType, duration, id, condition, threshold, eventStatus, eventType } = notificationRule
   switch (condition?.value) {
     case Condition.CHANGE_IMPACT:
       return (
@@ -49,11 +49,11 @@ const renderConnectedFields = (
             <Layout.Vertical spacing="xsmall" padding={{ left: 'small', right: 'small' }}>
               <Text>{getString('cv.notifications.changeType')}</Text>
               <MultiSelectDropDown
-                value={Array.isArray(changeType) ? changeType : []}
+                value={getArrayOrEmpty(changeType)}
                 items={changeTypeOptions}
                 className={css.field}
                 onChange={option => {
-                  handleChangeField(notificationRule, option, 'changeType', 'threshold', threshold)
+                  handleChangeField(notificationRule, option, 'changeType', { threshold: threshold || defaultOption })
                 }}
               />
             </Layout.Vertical>
@@ -72,7 +72,9 @@ const renderConnectedFields = (
                 name={`${id}.threshold`}
                 className={css.numberField}
                 onChange={e => {
-                  handleChangeField(notificationRule, getValueFromEvent(e), 'threshold', 'duration', duration)
+                  handleChangeField(notificationRule, getValueFromEvent(e), 'threshold', {
+                    duration: duration || defaultOption
+                  })
                 }}
               />
             </Layout.Vertical>
@@ -111,7 +113,9 @@ const renderConnectedFields = (
                 name={`${id}.threshold`}
                 className={css.numberField}
                 onChange={e => {
-                  handleChangeField(notificationRule, getValueFromEvent(e), 'threshold', 'duration', duration)
+                  handleChangeField(notificationRule, getValueFromEvent(e), 'threshold', {
+                    duration: duration || defaultOption
+                  })
                 }}
               />
             </Layout.Vertical>
@@ -135,14 +139,14 @@ const renderConnectedFields = (
           ) : null}
         </>
       )
-    case Condition.CHNAGE_OBSERVED:
+    case Condition.CHANGE_OBSERVED:
       return (
         <>
           {changeType ? (
             <Layout.Vertical spacing="xsmall" padding={{ left: 'small', right: 'small' }}>
               <Text>{getString('cv.notifications.changeType')}</Text>
               <MultiSelectDropDown
-                value={Array.isArray(changeType) ? changeType : []}
+                value={getArrayOrEmpty(changeType)}
                 items={changeTypeOptions}
                 className={css.field}
                 onChange={option => {
@@ -151,6 +155,44 @@ const renderConnectedFields = (
               />
             </Layout.Vertical>
           ) : null}
+        </>
+      )
+    case Condition.CODE_ERRORS:
+      return (
+        <>
+          <Layout.Vertical spacing="xsmall" padding={{ left: 'small', right: 'small' }}>
+            <Text>{getString('events')}</Text>
+            <FormInput.CustomRender
+              name={`conditions.${index}.eventStatus`}
+              render={() => (
+                <MultiSelectDropDown
+                  value={getArrayOrEmpty(eventStatus)}
+                  items={eventStatusOptions}
+                  className={css.field}
+                  onChange={option => {
+                    handleChangeField(notificationRule, option, 'eventStatus')
+                  }}
+                />
+              )}
+            />
+          </Layout.Vertical>
+          <Layout.Vertical spacing="xsmall" padding={{ left: 'small', right: 'small' }}>
+            <Text>{getString('pipeline.verification.logs.eventType')}</Text>
+            <FormInput.CustomRender
+              name={`conditions.${index}.eventType`}
+              render={() => (
+                <MultiSelectDropDown
+                  value={getArrayOrEmpty(eventType)}
+                  items={eventTypeOptions}
+                  className={css.field}
+                  onChange={options => {
+                    const actualOptions = getOptionsWithAllEvents(getArrayOrEmpty(eventType), options)
+                    handleChangeField(notificationRule, actualOptions, 'eventType')
+                  }}
+                />
+              )}
+            />
+          </Layout.Vertical>
         </>
       )
     default:
@@ -166,28 +208,28 @@ export default function NotificationRuleRow({
   index
 }: NotificationRuleRowProps): JSX.Element {
   const { getString } = useStrings()
-  const { changeType, id, condition, threshold } = notificationRule
+  const SRM_CODE_ERROR_NOTIFICATIONS = useFeatureFlag(FeatureFlag.SRM_CODE_ERROR_NOTIFICATIONS)
+
+  const actualConditionOptions = SRM_CODE_ERROR_NOTIFICATIONS
+    ? conditionOptions
+    : conditionOptions.filter(el => el.value != Condition.CODE_ERRORS)
 
   return (
     <>
-      <Layout.Horizontal padding={{ top: 'large' }} key={id} spacing="medium">
+      <Layout.Horizontal padding={{ top: 'large' }} key={notificationRule.id} spacing="medium">
         <Layout.Vertical spacing="xsmall" padding={{ right: 'small' }}>
           <Text>{getString('cv.notifications.condition')}</Text>
           <FormInput.Select
             name={`conditions.${index}.condition`}
             className={css.conditionField}
-            value={condition}
-            items={conditionOptions}
+            value={notificationRule.condition}
+            items={actualConditionOptions}
             onChange={option => {
-              const { nextField, nextFieldValue } =
-                option?.value === Condition.HEALTH_SCORE
-                  ? { nextField: 'threshold', nextFieldValue: threshold }
-                  : { nextField: 'changeType', nextFieldValue: changeType }
-              handleChangeField(notificationRule, option, 'condition', nextField, nextFieldValue)
+              onConditionChange(option, notificationRule, handleChangeField)
             }}
           />
         </Layout.Vertical>
-        {renderConnectedFields(notificationRule, handleChangeField, getString)}
+        {renderConnectedFields(notificationRule, index, handleChangeField, getString)}
         {showDeleteNotificationsIcon ? (
           <Container padding={{ top: 'large' }}>
             <Button

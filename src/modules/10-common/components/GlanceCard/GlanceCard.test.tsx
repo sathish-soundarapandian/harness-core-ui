@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { FontVariation, Icon, Layout, Text } from '@harness/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
 import GlanceCard from './GlanceCard'
 

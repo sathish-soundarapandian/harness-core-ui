@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { FormInput } from '@wings-software/uicore'
+import { FormInput } from '@harness/uicore'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
 import { Filter, FilterProps } from '../Filter'

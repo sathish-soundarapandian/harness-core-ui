@@ -131,5 +131,24 @@
 }
 
 .gitOpsCheck {
-  margin-top: var(--spacing-medium) !important;
+  margin-block: var(--spacing-medium) !important;
+}
+
+.recentDeploymentTemplates {
+  margin-block-end: var(--spacing-medium);
+  display: flex;
+  align-items: start;
+  gap: var(--spacing-medium);
+
+  .thumbnailContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-small);
+    inline-size: 72px;
+  }
+
+  .doubleChevron {
+    margin-block-start: var(--spacing-medium);
+  }
 }

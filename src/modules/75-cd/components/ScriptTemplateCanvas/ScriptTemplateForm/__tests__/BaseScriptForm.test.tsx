@@ -6,12 +6,10 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType } from '@harness/uicore'
+import { MultiTypeInputType, Formik } from '@harness/uicore'
 import { render, waitFor, act } from '@testing-library/react'
 import { Form } from 'formik'
-import { Formik } from '@wings-software/uicore'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
-
 import { TestWrapper } from '@common/utils/testUtils'
 import { BaseScriptWithRef } from '../BaseScriptForm'
 

@@ -400,6 +400,7 @@ exports[`ECR Artifact tests renders correctly in edit case 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -429,6 +430,7 @@ exports[`ECR Artifact tests renders correctly in edit case 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -865,6 +867,7 @@ exports[`ECR Artifact tests renders while adding step first time 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -894,6 +897,7 @@ exports[`ECR Artifact tests renders while adding step first time 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1330,6 +1334,7 @@ exports[`ECR Artifact tests renders without crashing 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -1359,6 +1364,7 @@ exports[`ECR Artifact tests renders without crashing 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >

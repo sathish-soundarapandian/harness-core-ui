@@ -90,6 +90,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CCM_OVERVIEW, {
 RbacFactory.registerResourceTypeHandler(ResourceType.CCM_PERSPECTIVE, {
   icon: 'ccm-solid',
   label: 'ce.perspectives.sideNavText',
+  labelSingular: 'ce.sideNav.perspective',
   category: ResourceCategory.CLOUD_COSTS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_CCM_PERSPECTIVE]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -112,6 +113,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CCM_PERSPECTIVE_FOLDERS, {
 RbacFactory.registerResourceTypeHandler(ResourceType.CCM_BUDGETS, {
   icon: 'ccm-solid',
   label: 'ce.budgets.sideNavText',
+  labelSingular: 'ce.common.budget',
   category: ResourceCategory.CLOUD_COSTS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_CCM_BUDGET]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -123,6 +125,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CCM_BUDGETS, {
 RbacFactory.registerResourceTypeHandler(ResourceType.CCM_COST_CATEGORY, {
   icon: 'ccm-solid',
   label: 'ce.businessMapping.sideNavText',
+  labelSingular: 'ce.businessMapping.costCategory',
   category: ResourceCategory.CLOUD_COSTS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_CCM_COST_CATEGORY]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -134,6 +137,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CCM_COST_CATEGORY, {
 RbacFactory.registerResourceTypeHandler(ResourceType.AUTOSTOPPINGRULE, {
   icon: 'ccm-solid',
   label: 'ce.co.breadCrumb.rules',
+  labelSingular: 'common.singularLabels.autoStoppingRule',
   category: ResourceCategory.CLOUD_COSTS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_CCM_AUTOSTOPPING_RULE]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -353,6 +357,11 @@ const RedirectToNewNodeRecommendationDetailsRoute = (): React.ReactElement => {
       })}
     />
   )
+}
+
+const RedirectToGovernanceRules = (): React.ReactElement => {
+  const params = useParams<AccountPathProps>()
+  return <Redirect to={routes.toCEGovernanceRules(params)} />
 }
 
 const licenseRedirectData: LicenseRedirectProps = {
@@ -632,6 +641,37 @@ const CENonMFERoutes = (
     >
       <CECOLoadBalancersPage />
     </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCECOEditGateway({
+        ...accountPathProps,
+        ...projectPathProps,
+        gatewayIdentifier: ':gatewayIdentifier'
+      })}
+      exact
+      pageName={PAGE_NAME.CECOEditGatewayPage}
+    >
+      <CECOEditGatewayPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCommitmentOrchestration({ ...accountPathProps })}
+      exact
+      pageName={PAGE_NAME.CECommitmentOrchestrationPage}
+    >
+      <CommitmentOrchestration />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCommitmentOrchestrationSetup({ ...accountPathProps })}
+      exact
+      pageName={PAGE_NAME.CECommitmentOrchestrationPage}
+    >
+      <CommitmentOrchestrationSetup />
+    </RouteWithLayout>
   </>
 )
 
@@ -722,9 +762,20 @@ const CERoutes: React.FC = () => {
           nodeId: ':nodeId'
         }),
         routes.toCEDashboards({ ...accountPathProps }),
-        routes.toCECORules({ ...accountPathProps, params: '' }),
         routes.toCECOCreateGateway({ ...accountPathProps, ...projectPathProps }),
-        routes.toCECOAccessPoints({ ...accountPathProps, ...projectPathProps })
+        routes.toCECOAccessPoints({ ...accountPathProps, ...projectPathProps }),
+        routes.toCECOEditGateway({
+          ...accountPathProps,
+          ...projectPathProps,
+          gatewayIdentifier: ':gatewayIdentifier'
+        }),
+        routes.toCECORules({ ...accountPathProps, params: '' }),
+        routes.toCommitmentOrchestration({ ...accountPathProps }),
+        routes.toCommitmentOrchestrationSetup({ ...accountPathProps }),
+        routes.toCEGovernanceRules({ ...accountPathProps }),
+        routes.toCEGovernanceEnforcements({ ...accountPathProps }),
+        routes.toCEGovernanceEvaluations({ ...accountPathProps }),
+        routes.toCEGovernanceRuleEditor({ ...accountPathProps, ruleId: ':ruleId' })
       ]
     : []
 
@@ -752,20 +803,6 @@ const CERoutes: React.FC = () => {
         </RouteWithLayout>
 
         {!enableMicroFrontend && CENonMFERoutes.props.children}
-
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCECOEditGateway({
-            ...accountPathProps,
-            ...projectPathProps,
-            gatewayIdentifier: ':gatewayIdentifier'
-          })}
-          exact
-          pageName={PAGE_NAME.CECOEditGatewayPage}
-        >
-          <CECOEditGatewayPage />
-        </RouteWithLayout>
 
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
@@ -802,7 +839,14 @@ const CERoutes: React.FC = () => {
         >
           <CloudIntegrationPage />
         </RouteWithLayout>
-
+        <RouteWithLayout
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CESideNavProps}
+          path={routes.toCEGovernance({ ...accountPathProps })}
+          exact
+        >
+          <RedirectToGovernanceRules />
+        </RouteWithLayout>
         {enableMicroFrontend ? (
           <RouteWithLayout path={[...mfePaths, routes.toCCMMFE({ ...accountPathProps })]} sidebarProps={CESideNavProps}>
             <ChildAppMounter<CCMUIAppCustomProps>
@@ -818,25 +862,6 @@ const CERoutes: React.FC = () => {
             />
           </RouteWithLayout>
         ) : null}
-
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCommitmentOrchestration({ ...accountPathProps })}
-          exact
-          pageName={PAGE_NAME.CECommitmentOrchestrationPage}
-        >
-          <CommitmentOrchestration />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCommitmentOrchestrationSetup({ ...accountPathProps })}
-          exact
-          pageName={PAGE_NAME.CECommitmentOrchestrationPage}
-        >
-          <CommitmentOrchestrationSetup />
-        </RouteWithLayout>
 
         <Route path="*">
           <NotFoundPage />

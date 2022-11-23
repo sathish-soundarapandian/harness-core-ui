@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback, useEffect } from 'react'
+import cx from 'classnames'
 import {
   Formik,
   FormInput,
@@ -18,7 +19,7 @@ import {
   Text,
   ButtonVariation,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
@@ -59,12 +60,14 @@ export function ECRArtifact({
   artifactIdentifiers,
   isReadonly = false,
   selectedArtifact,
-  isMultiArtifactSource
+  isMultiArtifactSource,
+  formClassName = ''
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+  const isTemplateContext = context === ModalViewFor.Template
 
   const [tagList, setTagList] = React.useState([])
   const [regions, setRegions] = React.useState<SelectOption[]>([])
@@ -184,15 +187,28 @@ export function ECRArtifact({
     handleSubmit(artifactObj)
   }
 
+  const handleValidate = (formData: ImagePathTypes & { connectorId?: string }) => {
+    if (isTemplateContext) {
+      submitFormData({
+        ...prevStepData,
+        ...formData,
+        connectorId: getConnectorIdValue(prevStepData)
+      })
+    }
+  }
+
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
+      {!isTemplateContext && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         formName="ecrArtifact"
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
@@ -204,7 +220,7 @@ export function ECRArtifact({
       >
         {formik => (
           <FormikForm>
-            <div className={css.connectorForm}>
+            <div className={cx(css.connectorForm, formClassName)}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
@@ -259,20 +275,22 @@ export function ECRArtifact({
               />
             </div>
 
-            <Layout.Horizontal spacing="medium">
-              <Button
-                variation={ButtonVariation.SECONDARY}
-                text={getString('back')}
-                icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
-              />
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                type="submit"
-                text={getString('submit')}
-                rightIcon="chevron-right"
-              />
-            </Layout.Horizontal>
+            {!isTemplateContext && (
+              <Layout.Horizontal spacing="medium">
+                <Button
+                  variation={ButtonVariation.SECONDARY}
+                  text={getString('back')}
+                  icon="chevron-left"
+                  onClick={() => previousStep?.(prevStepData)}
+                />
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  type="submit"
+                  text={getString('submit')}
+                  rightIcon="chevron-right"
+                />
+              </Layout.Horizontal>
+            )}
           </FormikForm>
         )}
       </Formik>

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Color, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 
 export const SuccessState = {
   icon: 'tick-circle',

@@ -10,7 +10,8 @@ import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikContextType } from 'formik'
-import { Text, Color, Container, Layout } from '@harness/uicore'
+import { Text, Container, Layout } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
@@ -23,7 +24,7 @@ import {
   ConnectorLabelMap,
   ConnectorTypes,
   ConnectorMap
-} from '../../AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
+} from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import type { AzureArmProps } from '../AzureArm.types'
 import css from './FileInputStep.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'

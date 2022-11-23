@@ -97,6 +97,7 @@ exports[`LDAP Provider LDAP Provider Snapshot 1`] = `
                   authSettings.authorizationEnabled
                 </p>
                 <button
+                  aria-label="test"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
                   data-testid="ldap-config-test"
                   type="button"
@@ -285,6 +286,7 @@ exports[`LDAP Wizard in edit mode Check for wizard rendering in edit mode and ov
                   authSettings.authorizationEnabled
                 </p>
                 <button
+                  aria-label="test"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
                   data-testid="ldap-config-test"
                   type="button"
@@ -444,6 +446,7 @@ exports[`LDAP Wizard in edit mode Check for wizard rendering in edit mode and qu
                   authSettings.authorizationEnabled
                 </p>
                 <button
+                  aria-label="test"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
                   data-testid="ldap-config-test"
                   type="button"
@@ -1301,6 +1304,7 @@ exports[`LDAP setup Wizard Connection Settings step renders in LDAP wizard ADD m
                         class="StyledProps--font StyledProps--main connectionFieldSet hangingFieldSet"
                       >
                         <button
+                          aria-label="common.smtp.testConnection"
                           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-medium StyledProps--margin-bottom-medium Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                           data-testid="testConnSettings"
                           type="button"
@@ -1322,6 +1326,7 @@ exports[`LDAP setup Wizard Connection Settings step renders in LDAP wizard ADD m
                   class="Layout--horizontal StyledProps--main stepCtaContainer"
                 >
                   <button
+                    aria-label="back"
                     class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                     data-testid="back-to-overview-step"
                     type="button"
@@ -1352,6 +1357,7 @@ exports[`LDAP setup Wizard Connection Settings step renders in LDAP wizard ADD m
                     </span>
                   </button>
                   <button
+                    aria-label="continue"
                     class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                     data-testid="submit-connection-step"
                     type="submit"
@@ -1691,6 +1697,7 @@ exports[`LDAP setup Wizard Connection Settings step works in LDAP wizard ADD mod
                 authSettings.ldap.addUserQueryDescription
               </p>
               <button
+                aria-label="authSettings.ldap.newUserQuery"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                 data-testid="add-first-user-query-btn"
                 type="button"
@@ -1726,6 +1733,7 @@ exports[`LDAP setup Wizard Connection Settings step works in LDAP wizard ADD mod
             class="Layout--horizontal StyledProps--main stepCtaContainer"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-testid="back-to-connection-step"
               type="button"
@@ -1756,6 +1764,7 @@ exports[`LDAP setup Wizard Connection Settings step works in LDAP wizard ADD mod
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
               data-testid="submit-usery-query-step"
               type="button"
@@ -2056,6 +2065,7 @@ exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  1`
               authSettings.ldap.setScopeForUserQuery
             </p>
             <button
+              aria-label="authSettings.ldap.newUserQuery"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-testid="add-another-user-query-btn"
               type="button"
@@ -2278,6 +2288,7 @@ exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  1`
             class="Layout--horizontal StyledProps--main stepCtaContainer"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-testid="back-to-connection-step"
               type="button"
@@ -2308,6 +2319,7 @@ exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  1`
               </span>
             </button>
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
               data-testid="submit-usery-query-step"
               type="button"
@@ -2899,6 +2911,7 @@ exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  2`
             class="Layout--horizontal StyledProps--main stepCtaContainer"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               data-testid="back-to-group-query-step"
               type="button"
@@ -2929,6 +2942,7 @@ exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  2`
               </span>
             </button>
             <button
+              aria-label="save"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
               data-testid="submit-cron-expression-step"
               type="submit"
@@ -3288,6 +3302,7 @@ exports[`LDAP setup Wizard Setup Wizard renders with Overview step in ADD mode 1
                   class="Layout--horizontal StyledProps--main stepCtaContainer"
                 >
                   <button
+                    aria-label="back"
                     class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                     data-testid="cancel-overview-step"
                     type="button"
@@ -3318,6 +3333,7 @@ exports[`LDAP setup Wizard Setup Wizard renders with Overview step in ADD mode 1
                     </span>
                   </button>
                   <button
+                    aria-label="continue"
                     class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                     data-testid="submit-overview-step"
                     type="submit"

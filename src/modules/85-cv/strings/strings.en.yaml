@@ -209,6 +209,12 @@ monitoringSources:
   addMetric: Add Metric
   addQuery: Add Query
   totalMappedQueries: '{{total}} {{query}} mapped'
+  commonHealthSource:
+    metric: HealthSource Metric
+    addMetric: Add metric
+    metricName: Metric name
+    addGroupName: Add group Name
+    confirmDeleteMetric: 'Are you sure you want to delete metric {{name}}'
   appD:
     advancedOptional: Advanced (Optional)
     ignoreThresholds: Ignore Thresholds
@@ -396,7 +402,7 @@ monitoringSources:
       uniqueName: '{{existingName}} already exists. Provide a unique name.'
       recordCount: Current query yields too many records. Please change query to yield one record.
   elk:
-    elkLogsQuery: ELK Logs Query
+    elkLogsQuery: ElasticSearch Logs Query
     identifyTimeStampnoRecordModalHeader: 'New TimeStamp Identifier'
     identifyTimeStampnoRecordInputLabel: 'Add TimeStamp Identifier'
     identifyTimeStamprecordsModalHeader: 'Select Path for TimeStamp'
@@ -577,6 +583,8 @@ notifications:
   thresholdBelow: Threshold is below
   validations:
     conditionIsRequired: Condition is required
+    eventStatusIsRequired: Events is required
+    eventTypeIsRequired: Event Type is required
 changeSource:
   alertText: Alert
   incident: Incident
@@ -640,6 +648,13 @@ healthSource:
   customizeHealthSource: Customize Health Source
   deleteHealthSourceWarning: Are you sure you want to delete Health Source
   deleteHealthSource: Delete Health Source
+  selectConnectionTypeInfo: Select the connection type to see your hosted entities directly in Harness
+  awsRegionLabel: Select AWS Region
+  awsWorkspaceLabel: Select Workspace Id
+  awsDataSourceName: Amazon Web services
+  awsWorkspaceIdValidation: Workspace Id is required
+  awsWorkspacePlaceholderText: Select a Workspace Id
+  dataSourceTypeValidation: Connection Type is required
   noDataPresentHealthSource: No data is present for the selected Health Source
   seriveEnvironmentNote: Service selected is {{service}} and Environment selected is {{environment}}
   table:
@@ -730,6 +745,7 @@ slos:
   burnRate: BURN RATE/DAY
   deleteSLO: Delete SLO
   createSLO: Create SLO
+  createCompositeSLO: Create Composite SLO
   healthSource: Health source
   sloCreated: SLO created successfully
   sloUpdated: SLO updated successfully
@@ -812,6 +828,29 @@ slos:
       calendarBased: Calendar-based
       calendarBasedDefinition: Compliance periods can be set to calendar periods like a weekly, monthly or quarterly. At the end of a calendar period, you are given a performance score. The performance score, which is calculated against the performance threshold, tells you whether your service was compliant or not. Even though you may view the performance throughout the period when you use a calendar period, you only get a compliance rating for every compliance period.
       calendarBasedDefinition2: Calendar windows are more closely aligned with business planning and project work.
+CompositeSLO:
+  CreateTitle: Create a Composite Service Level Objective (SLO)
+  CreateMessage: Combines multiple SLOs to measure the services for a specific time frame that contribute to a single budget.
+  DefineSLO: Define SLO Identification
+  SetTimeWindow: Set SLO Time Window
+  AddSLO: Add SLOs
+  AddSLOMessage: By default, all services are equally weighted. If you assign a service a custom weighting, the remaining services will be computed automatically to receive 100 percent for the composite SLO.
+  SetTarget: Set SLO Target
+  ErrorBudgetPolicy: Error Budget Policy
+  Weightage: Weightage
+  NoData: You don’t have any matching SLOs
+  NoDataSuggestion: Try changing the time window or clearing your search input.
+  Consumption:
+    title: SLO consumption breakdown for the period
+    AssignedWeightage: Assigned Weightage
+    ActualSlo: Actual SLO
+    ErrorBudgetBurned: Error Budget Burned
+    ContributedErrorBudgetBurned: Contributed Error Budget Burned
+  PeriodChangeWarning:
+    title: Review Period Type Change
+    message: Updating period type will reset selected SLOs, Do you want to continue ?
+  MatchingSLO: SLOs matching the time window.
+  NoSloFound: There are no SLOs available for selected filter
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on
@@ -963,6 +1002,7 @@ metricThresholds:
     duplicateThreshold: Duplicate threshold
     percentageValidation: Enter value below 100
   deletePromptTitle: Confirm delete Metric thresholds
+  noThresholdsMessage: No thresholds created yet
   metricPacksDeletePromptContent: Unchecking the metric pack will also remove the corresponding metric thresholds settings. This action cannot be undone.
   customMetricsDeletePromptContent: Deleting the custom metric will also remove the corresponding metric thresholds settings. This action cannot be undone.
 codeErrors: Code Errors
@@ -970,3 +1010,5 @@ codeErrorsHeading: Review code errors related to your project
 codeErrorsAgents: '{{projectName}} Code Error Agents'
 codeErrorsAgentsHeading: Agents running on your machines connected to Code Errors.
 codeErrorsAgentsTokens: '{{projectName}} Code Error Tokens'
+CVStepper:
+  StepError: Required fields are missing or incorrect data

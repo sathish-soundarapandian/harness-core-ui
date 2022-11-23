@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon } from '@wings-software/uicore'
+import { Icon } from '@harness/uicore'
 import Draggable from 'react-draggable'
 import type { TimelineSliderHandleProps } from './TimelineSliderHandle.types'
 import css from './TimelineSliderHandle.module.scss'

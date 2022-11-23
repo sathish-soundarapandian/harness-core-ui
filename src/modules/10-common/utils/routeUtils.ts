@@ -37,6 +37,7 @@ import type {
   VariablesPathProps,
   SCMPathProps
 } from '@common/interfaces/RouteInterfaces'
+import { getLocationPathName } from 'framework/utils/WindowLocation'
 
 export const accountPathProps: AccountPathProps = {
   accountId: ':accountId'
@@ -229,4 +230,6 @@ export const validateReturnUrl = (url: string): boolean => {
   }
 }
 
-export const returnLaunchUrl = (url: string): string => `${window.location.pathname.replace(/\/ng\//, '/')}${url}`
+export const returnLaunchUrl = (url: string): string => {
+  return `${getLocationPathName().replace(/\/ng\//, '/')}${url}`
+}

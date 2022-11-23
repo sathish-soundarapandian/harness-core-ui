@@ -7,7 +7,7 @@
 
 import React from 'react'
 
-import { Layout, Icon, Text, Tabs, Tab } from '@wings-software/uicore'
+import { Layout, Icon, Text, Tabs, Tab } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import CommonProblems from '../../CommonProblems/CommonProblems'
 import TroubleShooting from './TroubleShooting'

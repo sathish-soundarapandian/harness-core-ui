@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Heading, Layout } from '@wings-software/uicore'
+import { Button, Heading, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
 import { EntityConfig, EntityType, EnvironmentType, FIELD_KEYS, ResourcesInterface } from '@freeze-windows/types'
@@ -34,9 +34,9 @@ export const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
   isReadOnly,
   index
 }) => {
-  const { name, entities } = config || {}
+  const { name, entities } = config || /* istanbul ignore next */ {}
   const entitiesMap: Record<FIELD_KEYS, EntityType> =
-    entities?.reduce((accum: any, item: EntityType) => {
+    /* istanbul ignore next */ entities?.reduce((accum: any, item: EntityType) => {
       if (item?.type) {
         accum[item.type] = item as EntityType
       }
@@ -64,12 +64,15 @@ export const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
         <ServicesAndEnvRenderer
           freezeWindowLevel={fieldsVisibility.freezeWindowLevel}
           getString={getString}
-          envType={(entitiesMap[FIELD_KEYS.EnvType]?.entityRefs?.[0] || EnvironmentType.All) as EnvironmentType}
+          envType={
+            /* istanbul ignore next */ (entitiesMap[FIELD_KEYS.EnvType]?.entityRefs?.[0] ||
+              EnvironmentType.All) as EnvironmentType
+          }
         />
       </Layout.Vertical>
       <Layout.Horizontal>
-        <Button disabled={isReadOnly} icon="edit" minimal withoutCurrentColor onClick={setEditView} />
-        <Button disabled={isReadOnly} icon="trash" minimal withoutCurrentColor onClick={deleteConfig} />
+        <Button disabled={isReadOnly} icon="Edit" minimal withoutCurrentColor onClick={setEditView} />
+        <Button disabled={isReadOnly} icon="main-trash" minimal withoutCurrentColor onClick={deleteConfig} />
       </Layout.Horizontal>
     </Layout.Horizontal>
   )

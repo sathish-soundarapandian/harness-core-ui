@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import { parse } from 'yaml'
-import get from 'lodash-es/get'
+import { get } from 'lodash-es'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -119,10 +119,11 @@ export class RunStep extends PipelineStep<RunStepData> {
 
   protected type = StepType.Run
   protected stepName = 'Configure Run Step'
-  protected stepIcon: IconName = 'run-step'
+  protected stepIcon: IconName = 'run-ci-step'
   protected stepIconColor = '#4F5162'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.Run'
   protected stepPaletteVisible = false
+  protected stepIconSize = 34
 
   protected defaultValues: RunStepData = {
     identifier: '',

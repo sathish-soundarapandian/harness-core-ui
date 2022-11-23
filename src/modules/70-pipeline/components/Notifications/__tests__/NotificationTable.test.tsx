@@ -112,13 +112,13 @@ describe('Notification Table test', () => {
       await act(async () => {
         //Step 1
         if (form) clickSubmit(form)
-        await waitFor(() => getAllByTextGlobal(document.body, 'notifications.selectPipelineEvents')[0])
+        await waitFor(() => getAllByTextGlobal(document.body, 'rbac.notifications.selectPipelineEvents')[0])
       })
       form = findDialogContainer()
       await act(async () => {
         //Step 2
         if (form) clickSubmit(form)
-        await waitFor(() => getAllByTextGlobal(document.body, 'notifications.notificationMethod')[1])
+        await waitFor(() => getAllByTextGlobal(document.body, 'rbac.notifications.notificationMethod')[1])
       })
       form = findDialogContainer()
       await act(async () => {
@@ -136,7 +136,7 @@ describe('Notification Table test', () => {
       })
     }),
     test('New Notfication', async () => {
-      const addNotification = getByText('notifications.name')
+      const addNotification = getByText('rbac.notifications.name')
       await act(async () => {
         fireEvent.click(addNotification!)
       })
@@ -172,7 +172,7 @@ describe('testing notification method', () => {
     userEvent.click(notificationMethodDropDown)
     await waitFor(() => getByText('Microsoft Teams'))
     userEvent.click(getByText('Microsoft Teams'))
-    await waitFor(() => expect(getByText('notifications.helpMSTeams')).toBeTruthy())
+    await waitFor(() => expect(getByText('rbac.notifications.helpMSTeams')).toBeTruthy())
     const urlInput = document.querySelector('input[name="msTeamKeys.0"]')
     act(() => {
       fireEvent.change(urlInput!, { target: { value: 'https://docs.microsoft.com/outlook/actionable-messages' } })
@@ -203,7 +203,7 @@ describe('testing notification method', () => {
     userEvent.click(notificationMethodDropDown)
     await waitFor(() => getByText('Microsoft Teams'))
     userEvent.click(getByText('Microsoft Teams'))
-    await waitFor(() => expect(getByText('notifications.helpMSTeams')).toBeTruthy())
+    await waitFor(() => expect(getByText('rbac.notifications.helpMSTeams')).toBeTruthy())
     await waitFor(() => getByText('back'))
     userEvent.click(getByText('back'))
     await waitFor(() =>

@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, Layout, FormInput, Radio, TableV2, Text, ButtonVariation } from '@wings-software/uicore'
+import { Button, Layout, FormInput, Radio, TableV2, Text, ButtonVariation } from '@harness/uicore'
 import type { CellProps, Renderer } from 'react-table'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'

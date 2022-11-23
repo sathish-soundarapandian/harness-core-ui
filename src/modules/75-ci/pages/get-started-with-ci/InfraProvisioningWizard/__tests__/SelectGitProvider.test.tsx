@@ -449,7 +449,7 @@ describe('Test SelectGitProvider component', () => {
       </TestWrapper>
     )
 
-    const nextBtn = getByText('next: ci.getStartedWithCI.selectRepo')
+    const nextBtn = getByText('next: common.selectRepository')
     await act(async () => {
       fireEvent.click(nextBtn)
     })

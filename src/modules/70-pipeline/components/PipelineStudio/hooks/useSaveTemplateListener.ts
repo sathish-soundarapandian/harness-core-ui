@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { useConfirmationDialog } from '@wings-software/uicore'
+import { useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@blueprintjs/core'
 import { defaultTo, set } from 'lodash-es'
 import produce from 'immer'

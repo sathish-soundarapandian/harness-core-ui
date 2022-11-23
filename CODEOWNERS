@@ -23,6 +23,7 @@ src/framework/ @harness/ui-council
 src/framework/featureStore @harness/ui-plg
 src/framework/LicenseStore @harness/ui-plg
 src/services/ @harness/ui-council
+src/services/cv @harness/ui-cv
 src/modules/10-common/navigation/ @harness/ui-platform
 src/modules/10-common/RouteDefinitions.ts @harness/ui-council
 src/modules/10-common/layouts @harness/ui-council @harness/ui-plg
@@ -34,7 +35,6 @@ src/modules/10-common/modals/ExtendTrial @harness/ui-plg
 src/modules/10-common/modals/ContactSales @harness/ui-plg
 src/modules/10-common/modals/StartTrial @harness/ui-plg
 src/modules/10-common/pages/welcome @harness/ui-plg
-src/modules/15-notifications @harness/ui-platform
 src/modules/18-audit-trail @harness/ui-platform
 src/modules/20-rbac @harness/ui-platform
 src/modules/20-rbac/components/TrialHomePageTemplate @harness/ui-plg
@@ -59,6 +59,11 @@ src/modules/72-freeze-windows @harness/ui-pipeline
 src/modules/75-cd @harness/ui-pipeline
 src/modules/75-cd/modals/CDTrial @harness/ui-plg
 src/modules/75-cd/pages/home @harness/ui-plg
+src/modules/75-cd/components/EnvironmentsV2 @vkbansal-harness @AshwinBhatkal-Harness
+src/modules/75-cd/components/PipelineSteps/DeployClusterEntityStep @vkbansal-harness @AshwinBhatkal-Harness
+src/modules/75-cd/components/PipelineSteps/DeployEnvironmentEntityStep @vkbansal-harness @AshwinBhatkal-Harness
+src/modules/75-cd/components/PipelineSteps/DeployInfrastructureEntityStep @vkbansal-harness @AshwinBhatkal-Harness
+src/modules/75-cd/components/PipelineSteps/DeployEnvironmentGroupStep @vkbansal-harness @AshwinBhatkal-Harness
 src/modules/85-cv @harness/ui-cv
 src/modules/85-cv/pages/home @harness/ui-plg
 src/modules/85-sto @harness/ui-sto

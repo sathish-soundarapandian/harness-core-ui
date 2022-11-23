@@ -61,7 +61,6 @@ export function DeployServiceEntityInputStep({
   const { updateStageFormTemplate } = useStageFormContext()
   const isStageTemplateInputSetForm = inputSetData?.path?.startsWith('template.templateInputs')
   const formik = useFormikContext()
-  const pathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
 
   const { templateRef: deploymentTemplateIdentifier, versionLabel } = customDeploymentData || {}
   const shouldAddCustomDeploymentData =
@@ -95,6 +94,12 @@ export function DeployServiceEntityInputStep({
     (Array.isArray(servicesTemplate) &&
       servicesTemplate.some(svc => getMultiTypeFromValue(svc.serviceRef) === MultiTypeInputType.RUNTIME))
 
+  // This contains the full path to the service being referenced. Used specifically to update the template
+  const fullPathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+  // This is the path prefix for updating inner formik values.
+  // The inner formik receives the outer formik values object reduced to an object which has a key as one of the below prefixes
+  const localPathPrefix = isMultiSvcTemplate ? 'services.' : 'service.'
+
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */
     if (!isNil(servicesList)) {
@@ -108,25 +113,31 @@ export function DeployServiceEntityInputStep({
     // if this is a multi service template, then set up a dummy field,
     // so that services can be updated in this dummy field
     if (isMultiSvcTemplate) {
-      formik.setFieldValue(
-        uniquePath.current,
-        serviceIdentifiers.map(svcId => ({
-          label: defaultTo(servicesList.find(s => s.identifier === svcId)?.name, svcId),
-          value: svcId
-        }))
-      )
+      if (isValueRuntimeInput(get(formik.values, `${localPathPrefix}values`))) {
+        formik.setFieldValue(uniquePath.current, RUNTIME_INPUT_VALUE)
+      } else {
+        formik.setFieldValue(
+          uniquePath.current,
+          serviceIdentifiers.map(svcId => ({
+            label: defaultTo(servicesList.find(s => s.identifier === svcId)?.name, svcId),
+            value: svcId
+          }))
+        )
+      }
     }
   }, [servicesList])
 
   useDeepCompareEffect(() => {
     // if no value is selected, clear the inputs and template
     if (serviceIdentifiers.length === 0) {
-      if (isMultiSvcTemplate) {
-        updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}values`)
-        formik.setFieldValue(`${pathPrefix}values`, [])
+      if (isValueRuntimeInput(servicesValue as unknown as string)) {
+        return
+      } else if (isMultiSvcTemplate) {
+        updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${fullPathPrefix}values`)
+        formik.setFieldValue(`${localPathPrefix}values`, [])
       } else {
-        updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}serviceInputs`)
-        formik.setFieldValue(`${pathPrefix}serviceInputs`, RUNTIME_INPUT_VALUE)
+        updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${fullPathPrefix}serviceInputs`)
+        formik.setFieldValue(`${localPathPrefix}serviceInputs`, RUNTIME_INPUT_VALUE)
       }
       return
     }
@@ -143,9 +154,9 @@ export function DeployServiceEntityInputStep({
     const newServicesValues: ServiceYamlV2[] = serviceIdentifiers.map(svcId => {
       const svcTemplate = servicesData.find(svcTpl => svcTpl.service.identifier === svcId)?.serviceInputs
       let serviceInputs = isMultiSvcTemplate
-        ? get(formik.values, `${pathPrefix}values`)?.find((svc: ServiceYamlV2) => svc.serviceRef === svcId)
+        ? get(formik.values, `${localPathPrefix}values`)?.find((svc: ServiceYamlV2) => svc.serviceRef === svcId)
             ?.serviceInputs
-        : get(formik.values, `${pathPrefix}serviceInputs`)
+        : get(formik.values, `${localPathPrefix}serviceInputs`)
 
       if (!serviceInputs || isValueRuntimeInput(serviceInputs)) {
         serviceInputs = svcTemplate ? clearRuntimeInput(svcTemplate) : undefined
@@ -160,8 +171,8 @@ export function DeployServiceEntityInputStep({
     })
 
     if (isMultiSvcTemplate) {
-      updateStageFormTemplate(newServicesTemplate, `${pathPrefix}values`)
-      formik.setFieldValue(`${pathPrefix}values`, newServicesValues)
+      updateStageFormTemplate(newServicesTemplate, `${fullPathPrefix}values`)
+      formik.setFieldValue(`${localPathPrefix}values`, newServicesValues)
     } else {
       updateStageFormTemplate(
         defaultTo(
@@ -170,10 +181,10 @@ export function DeployServiceEntityInputStep({
             ? RUNTIME_INPUT_VALUE
             : undefined
         ),
-        `${pathPrefix}serviceInputs`
+        `${fullPathPrefix}serviceInputs`
       )
       formik.setFieldValue(
-        `${pathPrefix}serviceInputs`,
+        `${localPathPrefix}serviceInputs`,
         defaultTo(
           newServicesValues[0].serviceInputs,
           isStageTemplateInputSetForm && getMultiTypeFromValue(serviceValue) === MultiTypeInputType.RUNTIME
@@ -185,30 +196,31 @@ export function DeployServiceEntityInputStep({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [servicesData, serviceIdentifiers])
 
-  const onServiceRefChange = (): void => {
-    formik.setFieldValue(`${pathPrefix}serviceInputs`, RUNTIME_INPUT_VALUE)
-  }
-
   function handleServicesChange(values: SelectOption[]): void {
-    const newValues = values.map(val => ({
-      serviceRef: val.value as string,
-      serviceInputs: RUNTIME_INPUT_VALUE
-    }))
+    if (isValueRuntimeInput(values)) {
+      updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${fullPathPrefix}values`)
+      formik.setFieldValue(`${localPathPrefix}values`, RUNTIME_INPUT_VALUE)
+    } else {
+      const newValues = values.map(val => ({
+        serviceRef: val.value as string,
+        serviceInputs: RUNTIME_INPUT_VALUE
+      }))
 
-    formik.setFieldValue(`${pathPrefix}values`, newValues)
+      formik.setFieldValue(`${localPathPrefix}values`, newValues)
+    }
   }
 
   const loading = loadingServicesList || loadingServicesData || updatingData
 
   return (
     <>
-      <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
+      <Layout.Horizontal style={{ alignItems: 'flex-end' }}>
         <div className={css.inputFieldLayout}>
           {getMultiTypeFromValue(serviceTemplate) === MultiTypeInputType.RUNTIME ? (
             <ExperimentalInput
               tooltipProps={{ dataTooltipId: 'specifyYourService' }}
               label={getString('cd.pipelineSteps.serviceTab.specifyYourService')}
-              name={`${pathPrefix}serviceRef`}
+              name={`${localPathPrefix}serviceRef`}
               placeholder={getString('cd.pipelineSteps.serviceTab.selectService')}
               selectItems={selectOptions}
               useValue
@@ -218,19 +230,19 @@ export function DeployServiceEntityInputStep({
                 selectProps: {
                   addClearBtn: !inputSetData?.readonly,
                   items: selectOptions
-                },
-                onChange: onServiceRefChange
+                }
               }}
               disabled={inputSetData?.readonly}
               className={css.inputWidth}
               formik={formik}
             />
           ) : null}
-          {getMultiTypeFromValue(get(formik?.values, `${pathPrefix}serviceRef`)) === MultiTypeInputType.RUNTIME && (
+          {getMultiTypeFromValue(get(formik?.values, `${localPathPrefix}serviceRef`)) ===
+            MultiTypeInputType.RUNTIME && (
             <ConfigureOptions
               className={css.configureOptions}
               style={{ alignSelf: 'center' }}
-              value={get(formik?.values, `${pathPrefix}serviceRef`)}
+              value={get(formik?.values, `${localPathPrefix}serviceRef`)}
               type="String"
               variableName="skipResourceVersioning"
               isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
@@ -238,7 +250,7 @@ export function DeployServiceEntityInputStep({
               showDefaultField={true}
               showAdvanced={true}
               onChange={value => {
-                formik.setFieldValue(`${pathPrefix}serviceRef`, value)
+                formik.setFieldValue(`${localPathPrefix}serviceRef`, value)
               }}
             />
           )}
@@ -257,6 +269,7 @@ export function DeployServiceEntityInputStep({
             onChange={handleServicesChange}
             multiTypeProps={{
               width: 300,
+              height: 32,
               expressions,
               allowableTypes
             }}

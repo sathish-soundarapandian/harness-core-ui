@@ -61,7 +61,7 @@ describe('Project Level Freeze', () => {
 
     // Click on Freeze Config Tab
     cy.get('#bp3-tab-title_freezeWindowStudio_FREEZE_CONFIG').should('be.visible').click()
-    cy.get('h4').contains('Define which resources you want to include in this freeze window')
+    cy.get('h4').contains('Freeze any deployments that have the following resources defined in the rules below')
 
     // Click on Add rule
     cy.get('button span[icon="plus"]').click()
@@ -103,7 +103,7 @@ describe('Project Level Freeze', () => {
     cy.get('[data-testid="config-view-mode_1"]').should('have.length', 1)
 
     // Edit First Rule
-    cy.get('[data-testid="config-view-mode_0"] button span.bp3-icon-edit').click()
+    cy.get('[data-testid="config-view-mode_0"] button span[data-icon="Edit"]').click()
     cy.get('[data-testid="config-view-mode_0"]').should('have.length', 0)
     cy.get('[data-testid="config-edit-mode_0"]').should('have.length', 1)
 
@@ -152,7 +152,7 @@ describe('Project Level Freeze', () => {
     cy.contains('span', 'EnvType').should('be.visible')
     cy.contains('span', 'Equals').should('be.visible')
     cy.contains('span', 'entityRefs').should('be.visible')
-    cy.contains('span', 'PROD').should('be.visible')
+    cy.contains('span', 'Production').should('be.visible')
     cy.contains('span', 'Equals').should('be.visible')
     cy.contains('span', 'entityRefs').should('be.visible')
     cy.contains('span', 'testService').should('be.visible')
@@ -184,7 +184,7 @@ describe('Project Level Freeze', () => {
         - type: EnvType
           filterType: Equals
           entityRefs:
-            - PROD
+            - Production
     - name: Rule Number 2
       entities:
         - type: Service
@@ -212,12 +212,12 @@ describe('Project Level Freeze', () => {
     cy.get('button').contains('span', 'Discard').parent().should('be.disabled')
 
     // Should land on Config Tab
-    cy.get('h4').contains('Define which resources you want to include in this freeze window')
+    cy.get('h4').contains('Freeze any deployments that have the following resources defined in the rules below')
     cy.get('[data-testid="config-view-mode_0"]').should('have.length', 1)
     cy.get('[data-testid="config-view-mode_1"]').should('have.length', 1)
 
     // Delete Rule 2
-    cy.get('[data-testid="config-view-mode_1"] button span.bp3-icon-trash').click()
+    cy.get('[data-testid="config-view-mode_1"] button span[data-icon="main-trash"]').click()
     cy.get('button').contains('span', 'Save').parent().should('not.be.disabled')
     cy.get('button').contains('span', 'Discard').parent().should('not.be.disabled')
 
@@ -241,7 +241,7 @@ describe('Project Level Freeze', () => {
         - type: EnvType
           filterType: Equals
           entityRefs:
-            - PROD
+            - Production
   status: Disabled
   orgIdentifier: default
   projectIdentifier: project1

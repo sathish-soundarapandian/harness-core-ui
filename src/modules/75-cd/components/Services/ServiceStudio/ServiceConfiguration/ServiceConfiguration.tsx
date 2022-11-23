@@ -12,7 +12,7 @@ import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import produce from 'immer'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
+import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import { NGServiceConfig, useGetEntityYamlSchema } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
@@ -37,7 +37,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   entityType: 'Service',
   width: '100%',
   height: 'calc(100vh - 250px)',
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -63,6 +62,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
 
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
+
   const { data: serviceSchema } = useGetEntityYamlSchema({
     queryParams: {
       entityType: 'Service',
@@ -92,17 +92,15 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
     (yamlChanged: boolean): void => {
       if (yamlChanged) {
         const newServiceData = getUpdatedPipelineYaml()
-        const errorMap = yamlHandler?.getYAMLValidationErrorMap?.()
-        if (!errorMap || errorMap.size === 0) {
-          newServiceData && updatePipeline(newServiceData)
-        }
+
+        newServiceData && updatePipeline(newServiceData)
       }
     },
-    [getUpdatedPipelineYaml, updatePipeline, yamlHandler]
+    [getUpdatedPipelineYaml, updatePipeline]
   )
 
   const handleModeSwitch = useCallback(
-    (view: SelectedView) => {
+    (view: SelectedView): void => {
       if (view === SelectedView.VISUAL) {
         const newServiceData = getUpdatedPipelineYaml()
         newServiceData && updatePipeline(newServiceData, view)
@@ -134,7 +132,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
         </>
       ) : (
         <div className={css.yamlBuilder}>
-          <YAMLBuilder
+          <YamlBuilderMemo
             {...yamlBuilderReadOnlyModeProps}
             key={isYamlEditable.toString()}
             isReadOnlyMode={isReadonly || !isYamlEditable}
@@ -146,7 +144,6 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
             existingJSON={serviceData}
             bind={setYamlHandler}
             schema={serviceSchema?.data}
-            showSnippetSection={false}
           />
           {isReadonly || !isYamlEditable ? (
             <div className={css.buttonsWrapper}>

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -23,9 +23,10 @@ import NavExpandable from '../NavExpandable/NavExpandable'
 
 interface ProjectSetupMenuProps {
   module?: Module
+  defaultExpanded?: boolean
 }
 
-const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
+const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpanded }) => {
   const { getString } = useStrings()
   const {
     accountId,
@@ -40,7 +41,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
     USE_OLD_GIT_SYNC,
     CD_ONBOARDING_ENABLED,
     NG_DEPLOYMENT_FREEZE,
-    SRM_ET_EXPERIMENTAL
+    SRM_ET_EXPERIMENTAL,
+    NEW_LEFT_NAVBAR_SETTINGS
   } = useFeatureFlags()
   const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
@@ -68,8 +70,13 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
     (isGitSyncEnabled && !gitSyncEnabledOnlyForFF) ||
     (USE_OLD_GIT_SYNC && (isCIorCDorSTO || !module) && !isGitSimplificationEnabled)
 
+  const showTemplates = isCIorCDorSTO || (!module && NEW_LEFT_NAVBAR_SETTINGS)
   return (
-    <NavExpandable title={getString('common.projectSetup')} route={routes.toSetup(params)}>
+    <NavExpandable
+      title={getString('common.projectSetup')}
+      route={routes.toSetup(params)}
+      defaultExpanded={defaultExpanded}
+    >
       <Layout.Vertical spacing="small">
         <SidebarLink label={getString('connectorsLabel')} to={routes.toConnectors(params)} />
         <SidebarLink label={getString('common.secrets')} to={routes.toSecrets(params)} />
@@ -86,7 +93,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
             to={routes.toGitSyncAdmin({ accountId, orgIdentifier, projectIdentifier, module })}
           />
         ) : null}
-        {isCIorCDorSTO && <SidebarLink label={getString('common.templates')} to={routes.toTemplates(params)} />}
+        {showTemplates && <SidebarLink label={getString('common.templates')} to={routes.toTemplates(params)} />}
         {CVNG_TEMPLATE_MONITORED_SERVICE && isCV && (
           <SidebarLink
             label={getString('common.templates')}

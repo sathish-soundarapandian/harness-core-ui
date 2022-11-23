@@ -1,0 +1,533 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption with data 1`] = `
+<div>
+  <div
+    class="bp3-card bp3-elevation-0 Card--card serviceDetailsCard"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title StyledProps--color StyledProps--color-grey800 StyledProps--padding-bottom-medium"
+    >
+      cv.CompositeSLO.Consumption.title
+      (
+      Jan 1, 1970 12:00 AM
+       - 
+      Jan 1, 1970 12:00 AM
+      )
+    </p>
+    <div
+      class="TableV2--table"
+    >
+      <div
+        class="TableV2--header"
+        role="row"
+      >
+        <div
+          class="TableV2--cell TableV2--sortable"
+          colspan="1"
+          role="columnheader"
+          style="width: 20%;"
+          title="Toggle SortBy"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            CV.SLOS.SLONAME
+          </p>
+          <span
+            class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+            icon="double-caret-vertical"
+          >
+            <svg
+              data-icon="double-caret-vertical"
+              height="15"
+              viewBox="0 0 16 16"
+              width="15"
+            >
+              <desc>
+                double-caret-vertical
+              </desc>
+              <path
+                d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="TableV2--cell TableV2--sortable"
+          colspan="1"
+          role="columnheader"
+          style="width: 15%;"
+          title="Toggle SortBy"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            CV.SLOS.MONITOREDSERVICE
+          </p>
+          <span
+            class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+            icon="double-caret-vertical"
+          >
+            <svg
+              data-icon="double-caret-vertical"
+              height="15"
+              viewBox="0 0 16 16"
+              width="15"
+            >
+              <desc>
+                double-caret-vertical
+              </desc>
+              <path
+                d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="TableV2--cell TableV2--sortable"
+          colspan="1"
+          role="columnheader"
+          style="width: 10%;"
+          title="Toggle SortBy"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            cv.slos.sliType
+          </p>
+          <span
+            class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+            icon="double-caret-vertical"
+          >
+            <svg
+              data-icon="double-caret-vertical"
+              height="15"
+              viewBox="0 0 16 16"
+              width="15"
+            >
+              <desc>
+                double-caret-vertical
+              </desc>
+              <path
+                d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="TableV2--cell TableV2--sortable"
+          colspan="1"
+          role="columnheader"
+          style="width: 10%;"
+          title="Toggle SortBy"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            CV.COMPOSITESLO.CONSUMPTION.ASSIGNEDWEIGHTAGE
+          </p>
+          <span
+            class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+            icon="double-caret-vertical"
+          >
+            <svg
+              data-icon="double-caret-vertical"
+              height="15"
+              viewBox="0 0 16 16"
+              width="15"
+            >
+              <desc>
+                double-caret-vertical
+              </desc>
+              <path
+                d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="TableV2--cell TableV2--sortable"
+          colspan="1"
+          role="columnheader"
+          style="width: 10%;"
+          title="Toggle SortBy"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            CV.SLOS.TARGET
+          </p>
+          <span
+            class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+            icon="double-caret-vertical"
+          >
+            <svg
+              data-icon="double-caret-vertical"
+              height="15"
+              viewBox="0 0 16 16"
+              width="15"
+            >
+              <desc>
+                double-caret-vertical
+              </desc>
+              <path
+                d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="TableV2--cell TableV2--sortable"
+          colspan="1"
+          role="columnheader"
+          style="width: 10%;"
+          title="Toggle SortBy"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            CV.COMPOSITESLO.CONSUMPTION.ACTUALSLO
+          </p>
+          <span
+            class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+            icon="double-caret-vertical"
+          >
+            <svg
+              data-icon="double-caret-vertical"
+              height="15"
+              viewBox="0 0 16 16"
+              width="15"
+            >
+              <desc>
+                double-caret-vertical
+              </desc>
+              <path
+                d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="TableV2--cell TableV2--sortable"
+          colspan="1"
+          role="columnheader"
+          style="width: 10%;"
+          title="Toggle SortBy"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            CV.COMPOSITESLO.CONSUMPTION.ERRORBUDGETBURNED
+          </p>
+          <span
+            class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+            icon="double-caret-vertical"
+          >
+            <svg
+              data-icon="double-caret-vertical"
+              height="15"
+              viewBox="0 0 16 16"
+              width="15"
+            >
+              <desc>
+                double-caret-vertical
+              </desc>
+              <path
+                d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="TableV2--cell TableV2--sortable"
+          colspan="1"
+          role="columnheader"
+          style="width: 10%;"
+          title="Toggle SortBy"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            CV.COMPOSITESLO.CONSUMPTION.CONTRIBUTEDERRORBUDGETBURNED
+          </p>
+          <span
+            class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+            icon="double-caret-vertical"
+          >
+            <svg
+              data-icon="double-caret-vertical"
+              height="15"
+              viewBox="0 0 16 16"
+              width="15"
+            >
+              <desc>
+                double-caret-vertical
+              </desc>
+              <path
+                d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
+      </div>
+      <div
+        class="TableV2--body"
+      >
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            >
+              <a
+                href="/account/undefined/cv/orgs/undefined/projects/undefined/slos/slo_1?sloType=Simple"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                  title="SLO 1"
+                >
+                  SLO 1
+                </p>
+              </a>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 15%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main StyledProps--padding-left-small"
+              >
+                <a
+                  href="/account/undefined/cv/orgs/undefined/projects/undefined/monitoringservices/edit/prommock_gcpl"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main titleInSloTable StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                    title="prommock"
+                  >
+                    prommock
+                  </p>
+                </a>
+                <a
+                  href="/account/undefined/cv/orgs/undefined/projects/undefined/monitoringservices/edit/prommock_gcpl"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-xsmall"
+                    title="gcpl"
+                  >
+                    gcpl
+                  </p>
+                </a>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+              >
+                Latency
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+              >
+                50
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                title=" 75%"
+              >
+                 75%
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+              >
+                99.49
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+              >
+                36
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+              >
+                18
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            >
+              <a
+                href="/account/undefined/cv/orgs/undefined/projects/undefined/slos/slo_1?sloType=Simple"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                  title="SLO 2"
+                >
+                  SLO 2
+                </p>
+              </a>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 15%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main StyledProps--padding-left-small"
+              >
+                <a
+                  href="/account/undefined/cv/orgs/undefined/projects/undefined/monitoringservices/edit/prommock_env"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main titleInSloTable StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                    title="prommock"
+                  >
+                    prommock
+                  </p>
+                </a>
+                <a
+                  href="/account/undefined/cv/orgs/undefined/projects/undefined/monitoringservices/edit/prommock_env"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-xsmall"
+                    title="env"
+                  >
+                    env
+                  </p>
+                </a>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+              >
+                Latency
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+              >
+                50
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                title=" 89%"
+              >
+                 89%
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+              >
+                95.40
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+              >
+                327
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+              >
+                163
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

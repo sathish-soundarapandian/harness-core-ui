@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
-import { Layout } from '@wings-software/uicore'
+import { useParams, useHistory, useRouteMatch, matchPath, useLocation } from 'react-router-dom'
+import { Container, Layout } from '@harness/uicore'
 import { compile } from 'path-to-regexp'
 
 import routes from '@common/RouteDefinitions'
@@ -22,6 +22,7 @@ import css from './ProjectSideNav.module.scss'
 export default function ProjectsSideNav(): React.ReactElement {
   const params = useParams<PipelinePathProps>()
   const routeMatch = useRouteMatch()
+  const location = useLocation()
   const history = useHistory()
   const { selectedProject, updateAppStore } = useAppStore()
   const { NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
@@ -32,6 +33,12 @@ export default function ProjectsSideNav(): React.ReactElement {
     projectIdentifier: selectedProject?.identifier ? selectedProject.identifier : '',
     orgIdentifier: selectedProject?.orgIdentifier ? selectedProject.orgIdentifier : ''
   }
+
+  const allProjectsPath = matchPath(location.pathname, {
+    path: routes.toAllProjects({ accountId: params.accountId }),
+    exact: true,
+    strict: false
+  })
 
   return (
     <Layout.Vertical spacing="small">
@@ -49,30 +56,39 @@ export default function ProjectsSideNav(): React.ReactElement {
         </>
       )}
       {selectedProject && (
-        <>
-          <ProjectSelector
-            onSelect={data => {
-              updateAppStore({ selectedProject: data })
-              // changing project
-              history.push(
-                compile(routeMatch.path)({
-                  ...routeMatch.params,
-                  projectIdentifier: data.identifier,
-                  orgIdentifier: data.orgIdentifier
-                })
-              )
-            }}
-          />
+        <Container className={allProjectsPath?.isExact ? css.projectSelectorContainer : undefined}>
+          <Container className={css.selector}>
+            <ProjectSelector
+              onSelect={data => {
+                updateAppStore({ selectedProject: data })
+                // changing project
+                history.push(
+                  compile(routeMatch.path)({
+                    ...routeMatch.params,
+                    projectIdentifier: data.identifier,
+                    orgIdentifier: data.orgIdentifier
+                  })
+                )
+              }}
+            />
+          </Container>
           <SidebarLink label={getString('overview')} to={routes.toProjectDetails(projectDetailsParams)} />
           {NEW_LEFT_NAVBAR_SETTINGS && (
-            <SidebarLink label={getString('pipelines')} to={routes.toPipelines(projectDetailsParams)} />
+            <SidebarLink
+              className={css.sidebarlink}
+              label={getString('common.pipelineExecution')}
+              to={routes.toDeployments(projectDetailsParams)}
+            />
           )}
           {NEW_LEFT_NAVBAR_SETTINGS && (
-            <SidebarLink label={getString('executionsText')} to={routes.toDeployments(projectDetailsParams)} />
+            <SidebarLink
+              className={css.sidebarlink}
+              label={getString('pipelines')}
+              to={routes.toPipelines(projectDetailsParams)}
+            />
           )}
-
-          <ProjectSetupMenu />
-        </>
+          <ProjectSetupMenu defaultExpanded={NEW_LEFT_NAVBAR_SETTINGS} />
+        </Container>
       )}
     </Layout.Vertical>
   )

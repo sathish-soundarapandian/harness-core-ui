@@ -7,7 +7,7 @@
 
 import React, { ReactElement } from 'react'
 import { capitalize } from 'lodash-es'
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'

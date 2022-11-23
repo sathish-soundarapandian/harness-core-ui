@@ -11,7 +11,7 @@ import * as Yup from 'yup'
 import type { FormikErrors } from 'formik'
 import { defaultTo, isUndefined, omit, omitBy, isNull, set } from 'lodash-es'
 import type { MutateMethod } from 'restful-react'
-import { Button, ButtonVariation, Container, Formik, Layout, Popover } from '@wings-software/uicore'
+import { Button, ButtonVariation, Container, Formik, Layout, Popover } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import {
@@ -187,6 +187,7 @@ function SaveAsInputSet({
     connectorRef,
     storeType
   })
+  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
 
   const { mutate: createInputSet, loading: createInputSetLoading } = useCreateInputSetForPipeline({
     queryParams: {
@@ -221,6 +222,7 @@ function SaveAsInputSet({
           initialStoreMetadata,
           data
         ).then(res => {
+          setIsPopoverOpen(false)
           refetchParentData(res?.data?.identifier)
           return res
         })
@@ -266,6 +268,7 @@ function SaveAsInputSet({
           })
         } else {
           createUpdateInputSet(inputSetObj).then(data => {
+            setIsPopoverOpen(false)
             refetchParentData(data?.data?.identifier)
           })
         }
@@ -273,11 +276,15 @@ function SaveAsInputSet({
     },
     [createInputSet, showSuccess, showError, isGitSyncEnabled, pipeline]
   )
+
   if (pipeline && currentPipeline && template) {
     return (
       <Popover
         disabled={!canEdit}
         lazy
+        // component is controlled to close the popover on successful creation of input set
+        isOpen={isPopoverOpen}
+        onInteraction={setIsPopoverOpen}
         content={
           <div data-testid="save-as-inputset-form">
             <Formik<InputSetDTO & GitContextProps & StoreMetadata>

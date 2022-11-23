@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Page, Layout, NoDataCard, FlexExpander } from '@wings-software/uicore'
+import { Page, Layout, NoDataCard, FlexExpander } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import noServiceAvailableImage from '@cv/assets/noServiceAvailable.png'
 import { DependencyGraph } from '@cv/components/DependencyGraph/DependencyGraph'

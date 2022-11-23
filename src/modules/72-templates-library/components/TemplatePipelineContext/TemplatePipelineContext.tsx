@@ -6,13 +6,8 @@
  */
 
 import React from 'react'
-import { cloneDeep, get, isEmpty, isEqual, noop } from 'lodash-es'
-import {
-  AllowedTypesWithRunTime,
-  MultiTypeInputType,
-  VisualYamlSelectedView as SelectedView
-} from '@wings-software/uicore'
-import merge from 'lodash-es/merge'
+import { cloneDeep, isEqual, noop } from 'lodash-es'
+import { AllowedTypesWithRunTime, MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import {
   findAllByKey,
   PipelineContext,
@@ -136,7 +131,7 @@ export function TemplatePipelineProvider({
     dispatch(PipelineContextActions.updatePipelineView({ pipelineView: data }))
   }, [])
 
-  const fetchPipeline = async () => {
+  const fetchPipeline = async (): Promise<void> => {
     const originalPipeline = isEqual(state.originalPipeline, DefaultPipeline)
       ? cloneDeep(initialValue)
       : state.originalPipeline
@@ -153,7 +148,7 @@ export function TemplatePipelineProvider({
     )
     const templateRefs = findAllByKey('templateRef', initialValue)
     if (templateRefs.length > 0) {
-      const { templateTypes, templateServiceData } = await getTemplateTypesByRef(
+      const { templateTypes, templateServiceData, templateIcons } = await getTemplateTypesByRef(
         {
           accountIdentifier: queryParams.accountIdentifier,
           orgIdentifier: queryParams.orgIdentifier,
@@ -175,6 +170,11 @@ export function TemplatePipelineProvider({
       dispatch(
         PipelineContextActions.setTemplateServiceData({
           templateServiceData
+        })
+      )
+      dispatch(
+        PipelineContextActions.setTemplateIcons({
+          templateIcons
         })
       )
     }
@@ -212,29 +212,6 @@ export function TemplatePipelineProvider({
   const scope = getScopeFromDTO(queryParams)
 
   React.useEffect(() => {
-    const templateRefs = findAllByKey('templateRef', state.pipeline).filter(templateRef =>
-      isEmpty(get(state.templateTypes, templateRef))
-    )
-    getTemplateTypesByRef(
-      {
-        ...queryParams,
-        templateListType: 'Stable',
-        repoIdentifier: state.gitDetails?.repoIdentifier,
-        branch: state.gitDetails?.branch,
-        getDefaultFromOtherRepo: true
-      },
-      templateRefs,
-      storeMetadata,
-      supportingTemplatesGitx
-    ).then(resp => {
-      PipelineContextActions.setTemplateTypes({ templateTypes: merge(state.templateTypes, resp.templateTypes) })
-      PipelineContextActions.setTemplateServiceData({
-        templateServiceData: merge(state.templateServiceData, resp.templateServiceData)
-      })
-    })
-  }, [state.pipeline])
-
-  React.useEffect(() => {
     fetchPipeline()
   }, [initialValue, gitDetails])
 
@@ -270,6 +247,7 @@ export function TemplatePipelineProvider({
         setSelection,
         getStagePathFromPipeline,
         setTemplateTypes: noop,
+        setTemplateIcons: noop,
         setTemplateServiceData: noop,
         setIntermittentLoading
       }}

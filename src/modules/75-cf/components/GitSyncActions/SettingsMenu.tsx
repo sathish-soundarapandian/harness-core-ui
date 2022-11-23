@@ -6,7 +6,7 @@
  */
 
 import React, { ReactElement } from 'react'
-import { Text, Layout, Container, Switch } from '@wings-software/uicore'
+import { Text, Layout, Container, Switch } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'

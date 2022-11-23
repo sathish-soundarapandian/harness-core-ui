@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import type { ChangeSourceTypes as ChangeSourceTypeRequest } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import type { ChangeSourceTypes } from './ChangeTimeline.constants'
 

@@ -18,10 +18,10 @@ import {
   useConfirmationDialog,
   MultiTypeInputType,
   getMultiTypeFromValue
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { ResponseListPrometheusSampleData, useGetSampleData } from 'services/cv'
+import { GetMetricNamesQueryParams, ResponseListPrometheusSampleData, useGetSampleData } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Records } from '@cv/components/Records/Records'
 import { QueryContent } from '@cv/components/QueryViewer/QueryViewer'
@@ -41,6 +41,9 @@ export interface PrometheusQueryViewerProps {
   onChange: (fieldName: string, value: any) => void
   isTemplate?: boolean
   expressions?: string[]
+  dataSourceType?: string
+  region?: string
+  workspaceId?: string
 }
 
 interface ChartAndRecordsProps {
@@ -118,7 +121,18 @@ export function ChartAndRecords(props: ChartAndRecordsProps): JSX.Element {
 }
 
 export function PrometheusQueryViewer(props: PrometheusQueryViewerProps): JSX.Element {
-  const { values, className, connectorIdentifier, onChange, isTemplate, expressions } = props
+  const {
+    values,
+    className,
+    connectorIdentifier,
+    onChange,
+    isTemplate,
+    expressions,
+    dataSourceType,
+    region,
+    workspaceId
+  } = props
+
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const [isQueryExecuted, setIsQueryExecuted] = useState(false)
@@ -138,7 +152,9 @@ export function PrometheusQueryViewer(props: PrometheusQueryViewerProps): JSX.El
     values?.query,
     values?.prometheusMetric
   ])
-  const { data, refetch, cancel, error, loading } = useGetSampleData({ lazy: true })
+  const { data, refetch, cancel, error, loading } = useGetSampleData({
+    lazy: true
+  })
   useEffect(() => {
     if (!isManualQuery) {
       onChange(PrometheusMonitoringSourceFieldNames.QUERY, query)
@@ -185,7 +201,10 @@ export function PrometheusQueryViewer(props: PrometheusQueryViewerProps): JSX.El
                 orgIdentifier,
                 query: query || '',
                 tracingId: Utils.randomId(),
-                connectorIdentifier: connectorIdentifier as string
+                connectorIdentifier: connectorIdentifier as string,
+                dataSourceType: dataSourceType as GetMetricNamesQueryParams['dataSourceType'],
+                region,
+                workspaceId
               }
             })
             if (!isQueryExecuted) {
@@ -204,7 +223,10 @@ export function PrometheusQueryViewer(props: PrometheusQueryViewerProps): JSX.El
                 orgIdentifier,
                 query: query || '',
                 tracingId: Utils.randomId(),
-                connectorIdentifier: connectorIdentifier as string
+                connectorIdentifier: connectorIdentifier as string,
+                dataSourceType: dataSourceType as GetMetricNamesQueryParams['dataSourceType'],
+                region,
+                workspaceId
               }
             })
             if (!isQueryExecuted) {
@@ -232,7 +254,10 @@ export function PrometheusQueryViewer(props: PrometheusQueryViewerProps): JSX.El
               orgIdentifier,
               query: query || '',
               tracingId: Utils.randomId(),
-              connectorIdentifier: connectorIdentifier as string
+              connectorIdentifier: connectorIdentifier as string,
+              dataSourceType: dataSourceType as GetMetricNamesQueryParams['dataSourceType'],
+              region,
+              workspaceId
             }
           })
         }

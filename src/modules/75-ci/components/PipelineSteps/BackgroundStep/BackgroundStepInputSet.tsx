@@ -8,7 +8,7 @@
 import React from 'react'
 import { connect } from 'formik'
 import { useLocation } from 'react-router-dom'
-import { Text, getMultiTypeFromValue, MultiTypeInputType, FormikForm, Container, Layout } from '@wings-software/uicore'
+import { Text, getMultiTypeFromValue, MultiTypeInputType, FormikForm, Container, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 import cx from 'classnames'

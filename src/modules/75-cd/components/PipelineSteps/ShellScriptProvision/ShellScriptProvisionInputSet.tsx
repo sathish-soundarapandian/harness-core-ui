@@ -6,14 +6,7 @@
  */
 
 import React from 'react'
-import {
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  FormikForm,
-  AllowedTypes,
-  FormInput,
-  Text
-} from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, AllowedTypes, FormInput, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import { isArray, isEmpty, defaultTo } from 'lodash-es'
@@ -26,6 +19,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import ShellScriptProvisionConfig from './ShellScriptProvisionConfig'
 
 import {
@@ -53,7 +47,7 @@ export interface ShellScriptProvisionInputSetStepProps {
 export default function ShellScriptProvisionInputSetStep(
   props: ShellScriptProvisionInputSetStepProps
 ): React.ReactElement {
-  const { template, path, readonly, allowableTypes, initialValues, formikRef } = props
+  const { template, path, readonly, allowableTypes, initialValues, formikRef, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const scriptType = 'Bash'
@@ -65,7 +59,9 @@ export default function ShellScriptProvisionInputSetStep(
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -88,6 +84,10 @@ export default function ShellScriptProvisionInputSetStep(
             defaultValueToReset=""
             disabled={readonly}
             allowedTypes={allowableTypes}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             disableTypeSelection={readonly}
             skipRenderValueInExpressionLabel
             expressionRender={() => {
@@ -128,6 +128,9 @@ export default function ShellScriptProvisionInputSetStep(
                 </Text>
               ),
               allowedTypes: allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
           />
         </div>

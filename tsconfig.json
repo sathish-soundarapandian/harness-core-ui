@@ -26,7 +26,6 @@
     "noUnusedParameters": true,
     "paths": {
       "@common/*": ["modules/10-common/*"],
-      "@notifications/*": ["modules/15-notifications/*"],
       "@audit-trail/*": ["modules/18-audit-trail/*"],
       "@rbac/*": ["modules/20-rbac/*"],
       "@default-settings/*": ["modules/23-default-settings/*"],
@@ -54,8 +53,7 @@
       "@cv/*": ["modules/85-cv/*"],
       "@sto/*": ["modules/85-sto/*"],
       "@ce/*": ["modules/75-ce/*"],
-      "@gitops/*": ["modules/90-gitops/*"],
-      "@wings-software/*": ["../node_modules/@harness/*"]
+      "@gitops/*": ["modules/90-gitops/*"]
     }
   },
   "types": ["cypress"],

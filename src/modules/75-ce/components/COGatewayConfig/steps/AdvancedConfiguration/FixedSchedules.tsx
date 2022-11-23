@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { isEmpty as _isEmpty } from 'lodash-es'
-import { Button, Layout, Text } from '@wings-software/uicore'
+import { Button, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { FixedScheduleClient } from '@ce/components/COCreateGateway/models'
 import FixedSchedeulesList from '@ce/common/FixedSchedulesList/FixedSchedulesList'

@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { pick } from 'lodash-es'
-import { PageError } from '@wings-software/uicore'
+import { PageError } from '@harness/uicore'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useStrings } from 'framework/strings'
 import { HomePageTemplate } from '@projects-orgs/pages/HomePageTemplate/HomePageTemplate'
@@ -50,7 +50,8 @@ const CFHomePage: React.FC = () => {
     loading: gettingLicense
   } = useGetLicensesAndSummary({
     queryParams: { moduleType },
-    accountIdentifier
+    accountIdentifier,
+    lazy: true
   })
 
   // get project lists via accountId

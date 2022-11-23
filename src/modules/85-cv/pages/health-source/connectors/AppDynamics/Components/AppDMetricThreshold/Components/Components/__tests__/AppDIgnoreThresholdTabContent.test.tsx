@@ -1,7 +1,8 @@
 import React from 'react'
 import { fireEvent, act, render, screen, waitFor } from '@testing-library/react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
+
 import {
   AppDMetricThresholdProps as MockContextValues,
   formikInitialValues
@@ -12,7 +13,7 @@ import { AppDMetricThresholdContext } from '../../../AppDMetricThresholdConstant
 const WrappingComponent = () => {
   return (
     <TestWrapper>
-      <Formik initialValues={formikInitialValues} onSubmit={jest.fn()} formName="appDHealthSourceform">
+      <Formik initialValues={formikInitialValues} onSubmit={jest.fn()} formName="dynatraceForm">
         <FormikForm>
           {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
           {/* @ts-ignore */}
@@ -46,10 +47,9 @@ describe('AppDIgnoreThresholdTabContent', () => {
     expect(selectCaret).toBeInTheDocument()
 
     fireEvent.click(selectCaret!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(3))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('Performance')
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[1]).toHaveTextContent('Errors')
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[2]).toHaveTextContent('Custom')
+
+    await waitFor(() => expect(screen.getByText(/Performance/)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/Custom/)).toBeInTheDocument())
   })
 
   test('should render the Group based on metricType', async () => {
@@ -62,11 +62,11 @@ describe('AppDIgnoreThresholdTabContent', () => {
     expect(selectCaret).toBeInTheDocument()
 
     fireEvent.click(selectCaret!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(3))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('Performance')
+    await waitFor(() => expect(screen.getByText(/Performance/)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/Custom/)).toBeInTheDocument())
 
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
+      fireEvent.click(screen.getByText(/Performance/))
     })
 
     expect(screen.getByPlaceholderText('cv.monitoringSources.appD.groupTransaction')).toBeInTheDocument()
@@ -76,9 +76,10 @@ describe('AppDIgnoreThresholdTabContent', () => {
       ?.querySelector('[data-icon="chevron-down"]')
 
     fireEvent.click(selectCaret2!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(3))
+    await waitFor(() => expect(screen.getByText(/Performance/)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/Custom/)).toBeInTheDocument())
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[2])
+      fireEvent.click(screen.getByText(/Custom/))
     })
     expect(screen.queryByPlaceholderText('cv.monitoringSources.appD.groupTransaction')).not.toBeInTheDocument()
   })
@@ -86,17 +87,16 @@ describe('AppDIgnoreThresholdTabContent', () => {
   test('should render the Groups dropdown with correct options', async () => {
     const { container } = render(<WrappingComponent />)
 
-    screen.debug(container, 30000)
-
     const selectCaretMetricType = container
       .querySelector(`[name="ignoreThresholds.0.metricType"] + [class*="bp3-input-action"]`)
       ?.querySelector('[data-icon="chevron-down"]')
 
     expect(selectCaretMetricType).toBeInTheDocument()
     fireEvent.click(selectCaretMetricType!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(3))
+    await waitFor(() => expect(screen.getByText(/Performance/)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/Custom/)).toBeInTheDocument())
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[2])
+      fireEvent.click(screen.getByText(/Custom/))
     })
 
     const selectCaretGroupName = container
@@ -105,8 +105,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
 
     fireEvent.click(selectCaretGroupName!)
 
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('g1')
+    await waitFor(() => expect(screen.getByText(/g1/)).toBeInTheDocument())
   })
 
   test('should render the metric name dropdown as disabled if no value is selected for metric type', async () => {
@@ -120,9 +119,10 @@ describe('AppDIgnoreThresholdTabContent', () => {
 
     expect(selectCaretMetricType).toBeInTheDocument()
     fireEvent.click(selectCaretMetricType!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(3))
+    await waitFor(() => expect(screen.getByText(/Performance/)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/Custom/)).toBeInTheDocument())
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[2])
+      fireEvent.click(screen.getByText(/Custom/))
     })
 
     const selectCaretGroupName = container
@@ -131,9 +131,8 @@ describe('AppDIgnoreThresholdTabContent', () => {
 
     fireEvent.click(selectCaretGroupName!)
 
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0])
+      fireEvent.click(screen.getByText(/g1/))
     })
     expect(container.querySelector(`[name="ignoreThresholds.0.metricName"]`)).not.toBeDisabled()
 
@@ -143,8 +142,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
 
     expect(selectCaretMetricName).toBeInTheDocument()
     fireEvent.click(selectCaretMetricName!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('appdMetric')
+    await waitFor(() => expect(screen.getByText(/appdMetric/)).toBeInTheDocument())
   })
   test('should render the criteria dropdown and other functionalities should work properly', async () => {
     const { container } = render(<WrappingComponent />)
@@ -162,56 +160,18 @@ describe('AppDIgnoreThresholdTabContent', () => {
     expect(selectCaretCriteriaType).toBeInTheDocument()
     fireEvent.click(selectCaretCriteriaType!)
 
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent(
-      'cv.monitoringSources.appD.absoluteValue'
-    )
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[1]).toHaveTextContent(
-      'cv.monitoringSources.appD.percentageDeviation'
-    )
+    expect(screen.getByText(/cv.monitoringSources.appD.absoluteValue/)).toBeInTheDocument()
+    expect(screen.getByText(/cv.monitoringSources.appD.percentageDeviation/)).toBeInTheDocument()
 
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
-    })
-
-    const selectCaretPercentageType = container
-      .querySelector(`[name="ignoreThresholds.0.criteria.criteriaPercentageType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretPercentageType).toBeInTheDocument()
-    fireEvent.click(selectCaretPercentageType!)
-
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
-    })
-
-    const greaterThanInput2 = container.querySelector(`[name="ignoreThresholds.0.criteria.spec.greaterThan"]`)
-    const lessThanInput2 = container.querySelector(`[name="ignoreThresholds.0.criteria.spec.lessThan"]`)
-
-    expect(greaterThanInput2).not.toBeInTheDocument()
-    expect(lessThanInput2).toBeInTheDocument()
-
-    const selectCaretPercentageType2 = container
-      .querySelector(`[name="ignoreThresholds.0.criteria.criteriaPercentageType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretPercentageType2).toBeInTheDocument()
-    fireEvent.click(selectCaretPercentageType2!)
-
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0])
+      fireEvent.click(screen.getByText(/cv.monitoringSources.appD.percentageDeviation/))
     })
 
     const greaterThanInput3 = container.querySelector(`[name="ignoreThresholds.0.criteria.spec.greaterThan"]`)
     const lessThanInput3 = container.querySelector(`[name="ignoreThresholds.0.criteria.spec.lessThan"]`)
 
-    expect(greaterThanInput3).toBeInTheDocument()
-    expect(lessThanInput3).not.toBeInTheDocument()
+    expect(greaterThanInput3).not.toBeInTheDocument()
+    expect(lessThanInput3).toBeInTheDocument()
   })
 
   test('should check whether a new row is added when Add Threshold button is clicked', () => {

@@ -35,13 +35,12 @@ settings:
   import/resolver:
     typescript:
       alwaysTryTypes: true
-    alias:
-      - ['@wings-software', '@harness']
 rules:
   # custom rules
   no-document-body-snapshot: 2
   aliased-module-imports: 2
   strings-restrict-modules: 2
+  no-restricted-variables: 2
   no-only-tests: 'warn'
   duplicate-data-tooltip-id: 'warn'
   no-direct-runtime-comparision: 2
@@ -101,9 +100,15 @@ rules:
   no-restricted-imports:
     - error
     - patterns:
-        - lodash.*
-        - microfrontends/*
-        - '!microfrontends/ChildAppMounter'
+        - group:
+            - lodash/*
+            - lodash.*
+            - lodash-es/*
+            - '!lodash/fp'
+          message: "Import from 'lodash-es' instead"
+        - group:
+            - microfrontends/*
+            - '!microfrontends/ChildAppMounter'
       paths:
         - lodash
         - name: 'js-yaml'
@@ -116,7 +121,7 @@ rules:
           message: 'import from "react-router-dom" instead'
         - name: microfrontends
           message: Import from 'microfrontends' is only allowed in child apps
-        - name: '@wings-software/uicore'
+        - name: '@harness/uicore'
           importNames:
             - Color
             - FontVariation

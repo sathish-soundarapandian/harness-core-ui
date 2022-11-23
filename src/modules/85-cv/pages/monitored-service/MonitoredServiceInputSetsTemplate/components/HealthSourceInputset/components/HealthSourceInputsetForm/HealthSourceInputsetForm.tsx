@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Card, Color, FormInput, MultiTypeInputType, Text } from '@harness/uicore'
+import { Card, FormInput, MultiTypeInputType, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import type { ConnectorInfoDTO, HealthSource } from 'services/cv'

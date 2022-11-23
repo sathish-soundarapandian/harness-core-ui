@@ -18,12 +18,12 @@ import {
 import {
   useTemplateResponse,
   afterUseTemplateListResponse,
-  deploymentTemplatesListCall,
   useTemplateCall,
   afterUseTemplateListCall,
   afterSaveServiceEndpointPOST,
   afterSaveServiceNameEndpoint,
-  afterSaveServiceHeaderEndpoint
+  afterSaveServiceHeaderEndpoint,
+  recentDeploymentTemplatesUrl
 } from '../../support/72-templates-library/constants'
 
 describe('ServiceV2 - Deployment Template', () => {
@@ -68,8 +68,9 @@ describe('ServiceV2 - Deployment Template', () => {
     cy.intercept('POST', afterSaveServiceEndpointPOST, afterSaveServiceResponse).as('afterSaveService')
     cy.intercept('GET', afterSaveServiceNameEndpoint, afterSaveServiceNameResponse).as('afterSaveServiceName')
     cy.intercept('GET', afterSaveServiceHeaderEndpoint, afterSaveServiceHeaderResponse).as('afterSaveServiceHeader')
-    cy.intercept('POST', deploymentTemplatesListCall, { fixture: '/ng/api/deploymentTemplateList' }).as('templateList')
-
+    cy.intercept('POST', recentDeploymentTemplatesUrl, {
+      fixture: '/ng/api/deploymentTemplate/recentDeploymentTemplates'
+    }).as('recentDeploymentTemplates')
     cy.intercept('GET', useTemplateCall, useTemplateResponse).as('useTemplate')
     cy.intercept('POST', afterUseTemplateListCall, afterUseTemplateListResponse).as('afterUseTemplateList')
 
@@ -80,8 +81,8 @@ describe('ServiceV2 - Deployment Template', () => {
     cy.contains('span', 'Save').click()
     cy.contains('span', 'Service created successfully').should('be.visible')
 
-    cy.contains('p', 'Deployment Template').should('be.visible').click()
-    cy.contains('p', 'dep temp test').should('be.visible').click()
+    cy.get('input[value="dep_temp_test"]').click({ force: true })
+    cy.get('[data-template-id="dep_temp_test"]').should('be.visible')
     cy.contains('span', 'Use Template').should('be.visible').click()
     cy.get('span[icon="more"]').should('be.visible').click()
     cy.contains('p', 'Change Template').should('be.visible')

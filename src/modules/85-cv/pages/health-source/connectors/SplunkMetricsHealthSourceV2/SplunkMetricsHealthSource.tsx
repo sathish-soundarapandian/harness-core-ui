@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useContext, useMemo } from 'react'
-import { Container, Formik, FormikForm, Layout, SelectOption, Utils, Accordion } from '@wings-software/uicore'
+import { Container, Formik, FormikForm, Layout, SelectOption, Utils, Accordion } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { noop } from 'lodash-es'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'

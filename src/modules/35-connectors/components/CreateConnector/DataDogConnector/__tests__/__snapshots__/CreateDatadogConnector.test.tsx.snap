@@ -119,6 +119,7 @@ exports[`Create datadog connector Wizard Ensure create flow works 1`] = `
             class="Layout--horizontal Layout--layout-spacing-xlarge StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
               type="button"
             >
@@ -129,6 +130,7 @@ exports[`Create datadog connector Wizard Ensure create flow works 1`] = `
               </span>
             </button>
             <button
+              aria-label="next"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
               type="submit"
             >

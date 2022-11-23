@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
-import { Text, TextInput, Card, Button, MultiTypeInputType, MultiTextInput } from '@wings-software/uicore'
+import { Text, TextInput, Card, Button, MultiTypeInputType, MultiTextInput } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { get, isEmpty } from 'lodash-es'
 import { connect, FormikContextType } from 'formik'
@@ -92,9 +92,24 @@ export const List = (props: ListProps): React.ReactElement => {
     })
   }
 
-  const removeValue: (id: string) => () => void = id => () => {
-    setValue(currentValue => currentValue.filter(item => item.id !== id))
-  }
+  const removeValue: (id: string) => void = React.useCallback(
+    id => {
+      setValue(currentValue => {
+        let updatedValueinArray: ListType = []
+        const updatedValue = currentValue.filter(item => item.id !== id)
+        if (Array.isArray(updatedValue)) {
+          updatedValueinArray = updatedValue.filter(item => !!item.value).map(item => item.value)
+        }
+        if (isEmpty(updatedValueinArray)) {
+          formik?.setFieldValue(name, undefined)
+        } else {
+          formik?.setFieldValue(name, updatedValueinArray)
+        }
+        return updatedValue
+      })
+    },
+    [formik, name]
+  )
 
   const changeValue: (id: string, newValue: string) => void = React.useCallback(
     (id, newValue) => {
@@ -183,7 +198,7 @@ export const List = (props: ListProps): React.ReactElement => {
                   icon="main-trash"
                   iconProps={{ size: 20 }}
                   minimal
-                  onClick={removeValue(id)}
+                  onClick={() => removeValue(id)}
                   data-testid={`remove-${name}-[${index}]`}
                 />
               )}

@@ -174,51 +174,23 @@ exports[`JenkinsArtifactSource tests renders fine for all Runtime values 1`] = `
               class="bp3-form-content"
             >
               <div
-                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
                 style="width: 400px;"
               >
                 <div
-                  class="bp3-popover-wrapper Select--main bp3-fill"
+                  class="TextInput--main MultiTypeInput--input"
                 >
                   <div
-                    class="bp3-popover-target"
+                    class="bp3-input-group bp3-disabled"
                   >
-                    <div
-                      class="bp3-input-group"
-                    >
-                      <input
-                        autocomplete="off"
-                        class="bp3-input"
-                        name="pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.spec.artifacts.primary.spec.jobName"
-                        placeholder="select"
-                        style="padding-right: 0px;"
-                        type="text"
-                        value="<+input>"
-                      />
-                      <span
-                        class="bp3-input-action"
-                      >
-                        <span
-                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                          icon="chevron-down"
-                        >
-                          <svg
-                            data-icon="chevron-down"
-                            height="14"
-                            viewBox="0 0 16 16"
-                            width="14"
-                          >
-                            <desc>
-                              chevron-down
-                            </desc>
-                            <path
-                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                      </span>
-                    </div>
+                    <input
+                      class="bp3-input"
+                      disabled=""
+                      name="pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.spec.artifacts.primary.spec.jobName"
+                      placeholder="<+input>"
+                      type="text"
+                      value="<+input>"
+                    />
                   </div>
                 </div>
               </div>

@@ -11,7 +11,7 @@ import { sum } from 'lodash-es'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
 
 import { GroupHeader, GroupHeaderProps, LogViewerAccordionStatus } from './GroupHeader/GroupHeader'
-import { MultiLogLine } from './MultiLogLine/MultiLogLine'
+import { MultiLogLineMemo as MultiLogLine } from './MultiLogLine/MultiLogLine'
 import type { CommonLogsProps } from './LogsProps'
 import css from '../LogsContent.module.scss'
 
@@ -62,7 +62,7 @@ export function GroupedLogs(
   return (
     <pre className={css.container} {...addHotJarSuppressionAttribute()}>
       <GroupedVirtuoso
-        overscan={50}
+        increaseViewportBy={40}
         ref={ref}
         groupCounts={groupedCounts}
         atBottomThreshold={Math.ceil(sum(groupedCounts) / 3)}

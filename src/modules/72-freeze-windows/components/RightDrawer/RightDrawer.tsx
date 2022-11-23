@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { Drawer, Position } from '@blueprintjs/core'
-import { Button } from '@wings-software/uicore'
+import { Button } from '@harness/uicore'
 import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import { DrawerTypes } from '@freeze-windows/context/FreezeWidowActions'
 import { FreezeNotifications } from '@freeze-windows/components/FreezeNotifications/FreezeNotifications'
@@ -19,7 +19,6 @@ export function RightDrawer(): React.ReactElement {
 
   return (
     <Drawer
-      onClose={() => setDrawerType()}
       usePortal={true}
       autoFocus={true}
       canEscapeKeyClose={false}

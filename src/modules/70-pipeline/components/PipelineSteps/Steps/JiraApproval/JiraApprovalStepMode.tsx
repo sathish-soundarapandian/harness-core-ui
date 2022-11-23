@@ -19,7 +19,7 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -50,6 +50,7 @@ import { useQueryParams } from '@common/hooks'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { ApprovalRejectionCriteriaType } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import type {
   JiraApprovalData,
   JiraApprovalStepModeProps,
@@ -281,7 +282,7 @@ function FormContent({
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
         />
         {getMultiTypeFromValue(formik.values.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
+          <ConnectorConfigureOptions
             style={{ marginTop: 14 }}
             value={formik.values.spec.connectorRef as string}
             type="String"
@@ -291,6 +292,15 @@ function FormContent({
             showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
+            connectorReferenceFieldProps={{
+              accountIdentifier: accountId,
+              projectIdentifier,
+              orgIdentifier,
+              type: 'Jira',
+              label: getString('pipeline.jiraApprovalStep.connectorRef'),
+              disabled: isApprovalStepFieldDisabled(readonly),
+              gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
+            }}
           />
         )}
       </div>

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Card, Layout, Text, IconName, Container } from '@wings-software/uicore'
+import { Card, Layout, Text, IconName, Container } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import css from './RecommendationSavingsCard.module.scss'

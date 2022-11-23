@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Button, FormInput, Formik, StepProps, Text, ButtonVariation } from '@wings-software/uicore'
+import { Layout, Button, FormInput, Formik, StepProps, Text, ButtonVariation } from '@harness/uicore'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'

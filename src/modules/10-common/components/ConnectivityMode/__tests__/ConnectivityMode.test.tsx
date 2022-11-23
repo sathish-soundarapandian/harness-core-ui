@@ -8,7 +8,7 @@
 import React from 'react'
 import { Form } from 'formik'
 import { render } from '@testing-library/react'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 
 import ConnectivityMode, { ConnectivityModeForm, ConnectivityModeType } from '../ConnectivityMode'

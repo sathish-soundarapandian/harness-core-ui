@@ -3,7 +3,7 @@
 exports[`<KubernetesServiceSpecInputSetMode /> tests snapshot test for kubernetes service spec input set mode 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
   >
     <div
       class="nopadLeft accordionSummary"

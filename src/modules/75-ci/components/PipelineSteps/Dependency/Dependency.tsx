@@ -9,7 +9,7 @@ import React from 'react'
 import type { AllowedTypes, IconName } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import { parse } from 'yaml'
-import get from 'lodash-es/get'
+import { get } from 'lodash-es'
 import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import type { StepProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -99,9 +99,10 @@ export class Dependency extends PipelineStep<DependencyData> {
 
   protected type = StepType.Dependency
   protected stepName = 'Configure Service Dependency'
-  protected stepIcon: IconName = 'dependency-step'
+  protected stepIcon: IconName = 'dependency-ci-step'
   protected stepIconColor = '#004BA4'
   protected stepPaletteVisible = false
+  protected stepIconSize = 34
 
   protected defaultValues: DependencyData = {
     identifier: '',

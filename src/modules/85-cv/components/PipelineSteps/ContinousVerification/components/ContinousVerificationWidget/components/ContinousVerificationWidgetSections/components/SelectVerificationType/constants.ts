@@ -7,6 +7,11 @@
 
 export const continousVerificationTypes = [
   {
+    value: 'Auto',
+    label: 'Auto',
+    icon: { name: 'nav-settings' }
+  },
+  {
     value: 'Rolling',
     label: 'Rolling Update',
     icon: { name: 'rolling' }

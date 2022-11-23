@@ -18,7 +18,7 @@ import {
   OverlaySpinner,
   Container,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
 import { useToaster } from '@common/components'

@@ -5,10 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import type { MultiSelectOption, SelectOption } from '@wings-software/uicore'
+import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import type { FormikContextType } from 'formik'
 import type { JiraFieldNG, JiraStatusNG } from 'services/cd-ng'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 export enum ApprovalRejectionCriteriaType {
   Jexl = 'Jexl',
@@ -44,6 +45,7 @@ export interface ApprovalRejectionCriteriaProps {
   readonly?: boolean
   title: string
   stepType: StepType
+  stepViewType?: StepViewType
 }
 
 export interface ConditionsInterface extends ApprovalRejectionCriteriaProps {

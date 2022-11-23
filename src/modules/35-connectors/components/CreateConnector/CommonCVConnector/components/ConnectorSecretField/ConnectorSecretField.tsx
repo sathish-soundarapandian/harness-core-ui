@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { FormInput } from '@wings-software/uicore'
+import { FormInput } from '@harness/uicore'
 import SecretInput, { SecretInputProps } from '@secrets/components/SecretInput/SecretInput'
 import { useToaster } from '@common/exports'
 import { setSecretField } from '@secrets/utils/SecretField'

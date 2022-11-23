@@ -122,6 +122,7 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
               </div>
             </div>
             <button
+              aria-label="cd.addService"
               class="bp3-button Button--button StyledProps--font StyledProps--main serviceActionWrapper Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="add-new-service"
               type="button"
@@ -157,7 +158,7 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
           class="cardsContainer"
         >
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -277,7 +278,7 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
             </div>
           </div>
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -645,6 +646,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
               </div>
             </div>
             <button
+              aria-label="cd.addService"
               class="bp3-button Button--button StyledProps--font StyledProps--main serviceActionWrapper Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="add-new-service"
               type="button"
@@ -680,7 +682,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
           class="cardsContainer"
         >
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -800,7 +802,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
             </div>
           </div>
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -1304,7 +1306,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
             deploymentTypeText
           </div>
           <div
-            class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
+            class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
           >
             <div
               class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
@@ -1402,6 +1404,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main stickyBtnContainer StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
     >
       <button
+        aria-label="save"
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main saveButton Button--with-current-color Button--variation Button--variation-primary"
         disabled=""
         tabindex="-1"
@@ -1414,6 +1417,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
         </span>
       </button>
       <button
+        aria-label="cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -1551,6 +1555,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
               </div>
             </div>
             <button
+              aria-label="cd.addService"
               class="bp3-button Button--button StyledProps--font StyledProps--main serviceActionWrapper Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="add-new-service"
               type="button"
@@ -1713,6 +1718,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
               </div>
             </div>
             <button
+              aria-label="cd.addService"
               class="bp3-button Button--button StyledProps--font StyledProps--main serviceActionWrapper Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
               data-testid="add-new-service"
               type="button"
@@ -1748,7 +1754,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
           class="cardsContainer"
         >
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"
@@ -1868,7 +1874,7 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
             </div>
           </div>
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card marginBottom"
           >
             <div
               class="row"

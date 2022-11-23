@@ -6,16 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import {
-  Button,
-  Text,
-  Formik,
-  IconName,
-  Layout,
-  StepProps,
-  ThumbnailSelect,
-  ButtonVariation
-} from '@wings-software/uicore'
+import { Button, Text, Formik, IconName, Layout, StepProps, ThumbnailSelect, ButtonVariation } from '@harness/uicore'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'

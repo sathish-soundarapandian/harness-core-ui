@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Color, getErrorInfoFromErrorObject, Layout, Text } from '@harness/uicore'
+import { getErrorInfoFromErrorObject, Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import type { GetDataError } from 'restful-react'

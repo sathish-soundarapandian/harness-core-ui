@@ -5,14 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import { render, getByText, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   PipelineContext,
   PipelineContextInterface
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import * as cdngServices from 'services/cd-ng'
 import { ServiceContext, ServiceContextValues } from '@cd/context/ServiceContext'
 import {
@@ -25,25 +24,9 @@ import {
 
 import ServiceConfiguration from '../ServiceConfiguration'
 
-jest.mock('yaml', () => {
-  const originalModule = jest.requireActual('yaml')
-
-  return {
-    ...originalModule,
-    parse: jest.fn(() => serviceConfigProps)
-  }
-})
-
+jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.spyOn(cdngServices, 'useGetEntityYamlSchema').mockImplementation(() => {
   return { serviceSchemaMock } as any
-})
-
-jest.mock('@common/components/YAMLBuilder/YamlBuilder', () => ({ onChange }: YamlBuilderProps) => {
-  useEffect(() => {
-    onChange ? onChange(true) : null
-  }, [])
-
-  return 'dummy'
 })
 
 jest.mock('yaml', () => {

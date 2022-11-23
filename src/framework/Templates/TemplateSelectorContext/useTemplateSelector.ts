@@ -24,6 +24,12 @@ export interface GetTemplateProps {
     templateIdentifiers?: string[]
   }
   disableVersionChange?: boolean
+  hideTemplatesView?: boolean
+  showChangeTemplateDialog?: boolean
+  /** disables "Use Template" button if the template selected inside the drawer is same as the one sent as `GetTemplateProps.selectedTemplate`
+   * @default true
+   */
+  disableUseTemplateIfUnchanged?: boolean
   allowedUsages?: TemplateUsage[]
   selectedTemplate?: TemplateSummaryResponse
   gitDetails?: EntityGitDetails

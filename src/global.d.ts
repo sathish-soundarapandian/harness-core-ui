@@ -75,6 +75,13 @@ declare interface Window {
   newNavContetfulSpace: string
   newNavContentfulEnvironment: 'master'
   stripeApiKey: string
+  featureFlagsConfig: {
+    useLegacyFeatureFlags: boolean
+    baseUrl: string
+    enableStream: boolean
+    sdkKey: string
+    async: boolean
+  }
 }
 
 declare interface WindowEventMap {

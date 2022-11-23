@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import set from 'lodash-es/set'
+import { set } from 'lodash-es'
 import {
   Layout,
   Formik,
@@ -20,8 +20,10 @@ import {
   StepProps,
   SelectOption,
   Tag,
-  HarnessDocTooltip
-} from '@wings-software/uicore'
+  HarnessDocTooltip,
+  useToaster,
+  PageSpinner
+} from '@harness/uicore'
 import type { FormikProps, FormikHelpers } from 'formik'
 import {
   DelegateSizeDetails,
@@ -31,7 +33,12 @@ import {
   DelegateTokenDetails
 } from 'services/portal'
 
-import { useListDelegateProfilesNg, useGetDelegateTokens, GetDelegateTokensQueryParams } from 'services/cd-ng'
+import {
+  useListDelegateProfilesNg,
+  useGetDelegateTokens,
+  GetDelegateTokensQueryParams,
+  useIsImmutableDelegateEnabled
+} from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
 import type { DelegateProfile } from '@delegates/DelegateInterface'
@@ -46,7 +53,6 @@ import { DelegateSize, isHelmDelegateEnabled } from '@delegates/constants'
 import { useCreateTokenModal } from '@delegates/components/DelegateTokens/modals/useCreateTokenModal'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import SelectDelegateType, { FormikForSelectDelegateType } from './components/SelectDelegateType'
 import DelegateSizes from '../../components/DelegateSizes/DelegateSizes'
 import { DelegateType, k8sPermissionType } from './DelegateSetupStep.types'
@@ -110,7 +116,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
       name: '',
       identifier: '',
       description: '',
-      delegateType: '',
+      delegateType: DelegateType.KUBERNETES,
       size: DelegateSize.LAPTOP,
       sesssionIdentifier: '',
       tokenName: '',
@@ -125,7 +131,19 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const IS_HELM_DELEGATE_ENABLED: boolean = isHelmDelegateEnabled(true)
-  const { USE_IMMUTABLE_DELEGATE } = useFeatureFlags()
+  const { showError } = useToaster()
+  const {
+    data: useImmutableDelegate,
+    error,
+    loading
+  } = useIsImmutableDelegateEnabled({
+    accountIdentifier: accountId
+  })
+  useEffect(() => {
+    if (error) {
+      showError(error.message)
+    }
+  }, [error])
   const { mutate: createKubernetesYaml } = useValidateKubernetesYaml({
     queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier }
   })
@@ -242,6 +260,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
 
   return (
     <Layout.Vertical padding="xxlarge">
+      {loading ? <PageSpinner /> : null}
       <Container padding="small">
         <Formik
           initialValues={formData}
@@ -282,7 +301,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                           formikProps={formikProps as unknown as FormikProps<FormikForSelectDelegateType>}
                         />
                       )}
-                      {!USE_IMMUTABLE_DELEGATE && profileOptions?.length > 0 && (
+                      {!useImmutableDelegate?.data && profileOptions?.length > 0 && (
                         <div className={`${css.formGroup} ${css.profileSelect}`}>
                           <FormInput.Select
                             items={profileOptions}
@@ -292,7 +311,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                         </div>
                       )}
 
-                      {!USE_IMMUTABLE_DELEGATE && formikProps.values.delegateConfigurationId && selectors && (
+                      {!useImmutableDelegate?.data && formikProps.values.delegateConfigurationId && selectors && (
                         <Container className={css.profileSelectors}>
                           <Text>{getString('delegate.tagsFromDelegateConfig')}</Text>
                           <div className={css.profileSelectorsItemsContainer}>
@@ -321,7 +340,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                           text={getString('add')}
                         />
                       </Layout.Horizontal>
-                      {USE_IMMUTABLE_DELEGATE ? (
+                      {useImmutableDelegate?.data ? (
                         <Layout.Horizontal className={css.runAsRootCheckbox}>
                           <FormInput.CheckBox
                             name="runAsRoot"

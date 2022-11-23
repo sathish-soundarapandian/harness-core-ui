@@ -8,7 +8,7 @@
 import React from 'react'
 import type { FormikErrors } from 'formik'
 import { isEmpty } from 'lodash-es'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 
 import type { StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -87,6 +87,7 @@ export class ECSBlueGreenSwapTargetGroupsStep extends PipelineStep<ECSBlueGreenS
         <GenericExecutionStepInputSet
           allowableTypes={allowableTypes}
           inputSetData={inputSetData as InputSetData<ECSBlueGreenSwapTargetGroupsStepValues>}
+          stepViewType={stepViewType}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {

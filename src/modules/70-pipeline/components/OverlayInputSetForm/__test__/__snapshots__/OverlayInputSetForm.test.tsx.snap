@@ -490,6 +490,7 @@ exports[`OverlayInputSetForm Tests Create OverlayInputSet -  entityValidity fals
               class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -501,6 +502,7 @@ exports[`OverlayInputSetForm Tests Create OverlayInputSet -  entityValidity fals
               </button>
                  
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                 type="button"
               >
@@ -1064,6 +1066,7 @@ exports[`OverlayInputSetForm Tests Create OverlayInputSet -  render create Overl
                     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium"
                   >
                     <button
+                      aria-label="save"
                       class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--intent-primary Button--with-current-color"
                       type="submit"
                     >
@@ -1074,6 +1077,7 @@ exports[`OverlayInputSetForm Tests Create OverlayInputSet -  render create Overl
                       </span>
                     </button>
                     <button
+                      aria-label="cancel"
                       class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--margin-left-medium Button--with-current-color"
                       type="button"
                     >
@@ -1609,6 +1613,7 @@ exports[`OverlayInputSetForm Tests Create OverlayInputSet -  render create Overl
               class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -1620,6 +1625,7 @@ exports[`OverlayInputSetForm Tests Create OverlayInputSet -  render create Overl
               </button>
                  
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                 type="button"
               >
@@ -2265,6 +2271,7 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
               class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -2276,6 +2283,7 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
               </button>
                  
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                 type="button"
               >
@@ -2839,6 +2847,7 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
                     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium"
                   >
                     <button
+                      aria-label="save"
                       class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--intent-primary Button--with-current-color"
                       type="submit"
                     >
@@ -2849,6 +2858,7 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
                       </span>
                     </button>
                     <button
+                      aria-label="cancel"
                       class="bp3-button Button--button StyledProps--font StyledProps--main formButton StyledProps--margin-left-medium Button--with-current-color"
                       type="button"
                     >
@@ -3558,6 +3568,7 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Overlay Input 
                                 </li>
                               </ul>
                               <button
+                                aria-label="pipeline.inputSets.applyInputSet"
                                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-small Button--with-current-color Button--variation Button--variation-primary"
                                 type="button"
                               >
@@ -3580,6 +3591,7 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Overlay Input 
               class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
             >
               <button
+                aria-label="save"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -3591,6 +3603,7 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Overlay Input 
               </button>
                  
               <button
+                aria-label="cancel"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                 type="button"
               >

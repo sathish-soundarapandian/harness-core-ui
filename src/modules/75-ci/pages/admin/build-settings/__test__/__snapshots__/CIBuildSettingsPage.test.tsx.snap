@@ -19,6 +19,7 @@ exports[`CIBuildSettingsPage snapshot test should render properly 1`] = `
       class="StyledProps--font StyledProps--main"
     >
       <button
+        aria-label="ci.newItem"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
         type="button"
       >
@@ -104,6 +105,7 @@ exports[`CIBuildSettingsPage snapshot test should render properly 1`] = `
           class="NoDataCard--buttonContainer"
         >
           <button
+            aria-label="ci.newItem"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--font StyledProps--font-size-medium StyledProps--font-weight-semi-bold Button--with-current-color Button--variation Button--variation-primary Button--size Button--large"
             type="button"
           >

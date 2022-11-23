@@ -6,10 +6,8 @@
  */
 
 import React, { FC } from 'react'
-import { Heading } from '@harness/uicore'
+import { Heading, HarnessDocTooltip } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { HarnessDocTooltip } from '@wings-software/uicore'
-
 export interface ListingPageHeadingProps {
   tooltipId?: string
 }

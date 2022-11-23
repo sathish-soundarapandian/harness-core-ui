@@ -15,7 +15,6 @@ import {
   Button,
   ButtonVariation,
   getMultiTypeFromValue,
-  Intent,
   Layout,
   MultiTypeInputType,
   Text,
@@ -23,6 +22,7 @@ import {
   useToaster,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 
 import {
   NGTriggerConfigV2,
@@ -94,7 +94,7 @@ import {
   getValidationSchema,
   getPanels
 } from './utils'
-import useGitAwareForTriggerEnabled from '../useGitAwareForTriggerEnabled'
+import useIsNewGitSyncRemotePipeline from '../useIsNewGitSyncRemotePipeline'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
 
@@ -186,7 +186,7 @@ export default function ScheduledTriggerWizard(
       })
     )
 
-  const gitAwareForTriggerEnabled = useGitAwareForTriggerEnabled()
+  const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
   const [ignoreError, setIgnoreError] = useState<boolean>(false)
 
@@ -196,7 +196,7 @@ export default function ScheduledTriggerWizard(
       orgIdentifier,
       projectIdentifier,
       targetIdentifier: pipelineIdentifier,
-      ...(gitAwareForTriggerEnabled
+      ...(isNewGitSyncRemotePipeline
         ? {
             ignoreError,
             branch,
@@ -212,7 +212,7 @@ export default function ScheduledTriggerWizard(
       projectIdentifier,
       pipelineIdentifier,
       ignoreError,
-      gitAwareForTriggerEnabled,
+      isNewGitSyncRemotePipeline,
       branch,
       pipelineConnectorRef,
       pipelineRepoName,
@@ -265,7 +265,7 @@ export default function ScheduledTriggerWizard(
     entityType: 'Triggers',
     width: 'calc(100vw - 350px)',
     height: 'calc(100vh - 280px)',
-    showSnippetSection: false,
+
     yamlSanityConfig: {
       removeEmptyString: false,
       removeEmptyObject: false,
@@ -484,7 +484,7 @@ export default function ScheduledTriggerWizard(
           // set error
           showError(getString('triggers.cannotParseInputValues'))
         }
-      } else if (gitAwareForTriggerEnabled) {
+      } else if (isNewGitSyncRemotePipeline) {
         pipelineJson = resolvedPipeline
       }
       const expressionBreakdownValues = getBreakdownValues(expression)
@@ -565,14 +565,14 @@ export default function ScheduledTriggerWizard(
         }
       },
       inputYaml: stringifyPipelineRuntimeInput,
-      pipelineBranchName: gitAwareForTriggerEnabled ? pipelineBranchName : undefined,
-      inputSetRefs: gitAwareForTriggerEnabled ? inputSetRefs : undefined
+      pipelineBranchName: isNewGitSyncRemotePipeline ? pipelineBranchName : undefined,
+      inputSetRefs: isNewGitSyncRemotePipeline ? inputSetRefs : undefined
     })
   }
 
   const convertFormikValuesToYaml = (values: any): { trigger: TriggerConfigDTO } | undefined => {
     const res = getScheduleTriggerYaml({ values })
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       delete res.inputYaml
       if (values.inputSetSelected?.length) {
         res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
@@ -711,7 +711,7 @@ export default function ScheduledTriggerWizard(
     let _pipelineBranchNameError = ''
     let _inputSetRefsError = ''
 
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       const pipelineBranchName = (formikProps?.values?.pipelineBranchName || '').trim()
 
       if (getMultiTypeFromValue(pipelineBranchName) === MultiTypeInputType.EXPRESSION) {
@@ -741,7 +741,7 @@ export default function ScheduledTriggerWizard(
       orgPipeline: values.pipeline,
       setSubmitting
     })
-    const gitXErrors = gitAwareForTriggerEnabled
+    const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)
       : undefined
     // https://github.com/formium/formik/issues/1392
@@ -770,7 +770,7 @@ export default function ScheduledTriggerWizard(
   }, [])
 
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       delete triggerYaml.inputYaml
     }
 
@@ -780,7 +780,7 @@ export default function ScheduledTriggerWizard(
           yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
         )) as ResponseNGTriggerResponseWithMessage
 
-        if (status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+        if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
           retryTriggerSubmit({ message })
         } else if (data?.errors && !isEmpty(data?.errors)) {
           const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -797,7 +797,7 @@ export default function ScheduledTriggerWizard(
         }
       } catch (err) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((err as any)?.data?.status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+        if ((err as any)?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
           retryTriggerSubmit({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: getErrorMessage((err as any)?.data) || getString('triggers.retryTriggerSave')
@@ -816,7 +816,7 @@ export default function ScheduledTriggerWizard(
           yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
         )) as ResponseNGTriggerResponseWithMessage
 
-        if (status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+        if (status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
           retryTriggerSubmit({ message })
         } else if (data?.errors && !isEmpty(data?.errors)) {
           const displayErrors = displayPipelineIntegrityResponse(data.errors)
@@ -833,7 +833,7 @@ export default function ScheduledTriggerWizard(
         }
       } catch (err) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((err as any)?.data?.status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+        if ((err as any)?.data?.status === ResponseStatus.ERROR && isNewGitSyncRemotePipeline) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           retryTriggerSubmit({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

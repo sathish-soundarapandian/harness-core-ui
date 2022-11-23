@@ -24,17 +24,14 @@ export interface RolloutStrategyProps {
 
 export const RolloutStrategy: React.FC<RolloutStrategyProps> = ({ selectedStageId }) => {
   const {
-    state: { pipeline, originalPipeline, pipelineView, templateTypes },
-    stepsFactory,
+    state: { pipeline, originalPipeline, pipelineView, templateTypes, templateIcons },
     isReadonly,
     updatePipeline,
     updateStage,
     getStageFromPipeline,
     updatePipelineView,
-    setSelectedStepId,
-    getStagePathFromPipeline
+    setSelectedStepId
   } = usePipelineContext()
-  const stagePath = getStagePathFromPipeline(selectedStageId || '', 'pipeline.stages')
 
   React.useEffect(() => {
     const { stage: data } = getStageFromPipeline(selectedStageId)
@@ -64,7 +61,6 @@ export const RolloutStrategy: React.FC<RolloutStrategyProps> = ({ selectedStageI
       hasRollback={false}
       isReadonly={isReadonly}
       hasDependencies={false}
-      stepsFactory={stepsFactory}
       ref={executionRef}
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       stage={selectedStage!}
@@ -72,8 +68,8 @@ export const RolloutStrategy: React.FC<RolloutStrategyProps> = ({ selectedStageI
       updateStage={stageData => {
         updateStage(stageData.stage!)
       }}
-      pathToStage={`${stagePath}.stage.spec.execution`}
       templateTypes={templateTypes}
+      templateIcons={templateIcons}
       onAddStep={(event: ExecutionGraphAddStepEvent) => {
         if (event.isTemplate) {
           addTemplate(event)

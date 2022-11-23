@@ -14,7 +14,7 @@ import {
   Formik,
   PageError,
   AllowedTypesWithRunTime
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { parse } from 'yaml'
 import { Color } from '@harness/design-system'
 import { defaultTo, noop } from 'lodash-es'
@@ -32,6 +32,10 @@ import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/Tem
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { DeploymentConfigRuntimeInputs } from '@pipeline/components/DeploymentConfigRuntimeInputs/DeploymentConfigRuntimeInputs'
+import {
+  ArtifactSourceConfigDetails,
+  ArtifactSourceConfigRuntimeInputs
+} from '@pipeline/components/ArtifactSourceConfigRuntimeInputs/ArtifactSourceConfigRuntimeInputs'
 import { PipelineInputSetFormInternal, StageForm } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import type { DeploymentConfig } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
@@ -46,6 +50,14 @@ export interface TemplateInputsProps {
   template: TemplateSummaryResponse | NGTemplateInfoConfigWithGitDetails
   storeMetadata?: StoreMetadata
 }
+
+type TemplateInputsFormData =
+  | StepElementConfig
+  | StageElementConfig
+  | PipelineInfoConfig
+  | SecretManagerTemplateInputSet
+  | DeploymentConfig
+  | ArtifactSourceConfigDetails
 
 export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeMetadata = {} }) => {
   const templateSpec =
@@ -131,7 +143,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
                 {getTemplateNameWithLabel(template)}
               </Text>
               <Formik<{
-                data: StepElementConfig | StageElementConfig | PipelineInfoConfig | SecretManagerTemplateInputSet
+                data: TemplateInputsFormData
               }>
                 onSubmit={noop}
                 initialValues={{ data: templateSpec }}
@@ -201,6 +213,21 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
                         >
                           <DeploymentConfigRuntimeInputs
                             template={inputSetTemplate as DeploymentConfig}
+                            allowableTypes={allowableTypes}
+                            readonly
+                            path={'data'}
+                          />
+                        </Container>
+                      )}
+                      {templateEntityType === TemplateType.ArtifactSource && (
+                        <Container
+                          className={css.inputsCard}
+                          background={Color.WHITE}
+                          padding={'large'}
+                          margin={{ bottom: 'xxlarge' }}
+                        >
+                          <ArtifactSourceConfigRuntimeInputs
+                            template={inputSetTemplate as ArtifactSourceConfigDetails}
                             allowableTypes={allowableTypes}
                             readonly
                             path={'data'}

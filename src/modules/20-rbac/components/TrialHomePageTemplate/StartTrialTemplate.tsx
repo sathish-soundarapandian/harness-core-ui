@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Heading, Layout, Text, Container, Button } from '@wings-software/uicore'
+import { Heading, Layout, Text, Container, Button } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams, useHistory, Link } from 'react-router-dom'
 import { useToaster } from '@common/components'
@@ -25,9 +25,7 @@ import { Category, PlanActions, TrialActions } from '@common/constants/TrackingC
 import routes from '@common/RouteDefinitions'
 import useStartTrialModal from '@common/modals/StartTrial/StartTrialModal'
 import { Editions, ModuleLicenseType, SubscriptionTabNames } from '@common/constants/SubscriptionTypes'
-import { useFeatureFlags, useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { getGaClientID, getSavedRefererURL } from '@common/utils/utils'
-import { FeatureFlag } from '@common/featureFlags'
+import { getGaClientID, getSavedRefererURL, isOnPrem } from '@common/utils/utils'
 import css from './StartTrialTemplate.module.scss'
 
 interface StartTrialTemplateProps {
@@ -64,7 +62,7 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
   const { getString } = useStrings()
   const { showModal } = useStartTrialModal({ module, handleStartTrial })
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const { FREE_PLAN_ENABLED, PLANS_ENABLED } = useFeatureFlags()
+  const FREE_PLAN_ENABLED = !isOnPrem()
   const clickEvent = FREE_PLAN_ENABLED ? PlanActions.StartFreeClick : TrialActions.StartTrialClick
   const experience = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
   const modal = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
@@ -114,7 +112,7 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
         onClick={startBtn.onClick ? startBtn.onClick : handleStartButtonClick}
         disabled={loading}
       />
-      {PLANS_ENABLED && (
+      {!isOnPrem() && (
         <Link to={routes.toSubscriptions({ accountId, moduleCard: module, tab: SubscriptionTabNames.PLANS })}>
           {getString('common.exploreAllPlans')}
         </Link>
@@ -130,8 +128,7 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
   module
 }) => {
   const { accountId } = useParams<AccountPathProps>()
-
-  const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
+  const isFreeEnabled = !isOnPrem()
 
   const startTrialRequestBody: StartTrialDTORequestBody = {
     moduleType: module.toUpperCase() as any,
@@ -153,7 +150,7 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
       accountIdentifier: accountId,
       moduleType,
       ...(refererURL ? { referer: refererURL } : {}),
-      ...(gaClientID ? { gaClientID } : {})
+      ...(gaClientID ? { gaClientId: gaClientID } : {})
     },
     requestOptions: {
       headers: {

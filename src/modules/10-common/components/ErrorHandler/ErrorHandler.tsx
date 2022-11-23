@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import cx from 'classnames'
-import { Layout, Text, Icon, IconName, Container } from '@wings-software/uicore'
+import { Layout, Text, Icon, IconName, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { ResponseMessage as ResponseMessageCDNG } from 'services/cd-ng'
 import type { ResponseMessage as ResponseMessagePipeline } from 'services/pipeline-ng'

@@ -19,11 +19,10 @@ import {
   Layout,
   SelectOption,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikErrors, FormikProps } from 'formik'
-import get from 'lodash/get'
-import merge from 'lodash/merge'
+import { get, merge } from 'lodash-es'
 import cx from 'classnames'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'

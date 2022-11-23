@@ -5,13 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, PageSpinner } from '@wings-software/uicore'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+
+import { Container, PageSpinner, Text } from '@harness/uicore'
+
+import { Color } from '@harness/design-system'
+
 import { matchPath, useLocation, useParams } from 'react-router-dom'
 import { Page } from '@common/exports'
-import { useMutateAsGet, useQueryParams } from '@common/hooks'
+import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
-import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { PipelineType, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetCommunity } from '@common/utils/utils'
 import PipelineBuildExecutionsChart from '@pipeline/components/Dashboards/BuildExecutionsChart/PipelineBuildExecutionsChart'
 import PipelineSummaryCards from '@pipeline/components/Dashboards/PipelineSummaryCards/PipelineSummaryCards'
@@ -25,6 +29,9 @@ import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
+import { useStrings } from 'framework/strings'
+import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
 import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
 import {
   ExecutionListFilterContextProvider,
@@ -34,18 +41,27 @@ import { ExecutionListSubHeader } from './ExecutionListSubHeader/ExecutionListSu
 import { MemoisedExecutionListTable } from './ExecutionListTable/ExecutionListTable'
 import { ExecutionListCards } from './ExecutionListCards/ExecutionListCards'
 import css from './ExecutionList.module.scss'
-
 export interface ExecutionListProps {
   onRunPipeline(): void
+  repoName?: string
   showHealthAndExecution?: boolean
   isPipelineInvalid?: boolean
+  showBranchFilter?: boolean
 }
 
 function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
+  const params = useParams<PipelinePathProps>()
   const { showHealthAndExecution, ...rest } = props
+  const { getString } = useStrings()
+  const defaultBranchSelect: string = getString('common.gitSync.selectBranch')
+  const { repoName } = useQueryParams<{ repoName?: string }>()
+  const { updateQueryParams } = useUpdateQueryParams<{ repoName?: string }>()
+
+  const [selectedBranch, setSelectedBranch] = useState<string | undefined>(defaultBranchSelect)
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId } =
     useParams<PipelineType<PipelinePathProps>>()
-  const { isAnyFilterApplied, isSavedFilterApplied, queryParams } = useExecutionListFilterContext()
+  const { isSavedFilterApplied, queryParams, isAnyFilterApplied } = useExecutionListFilterContext()
+
   const {
     page,
     size,
@@ -58,9 +74,10 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     searchTerm,
     pipelineIdentifier: pipelineIdentifierFromQueryParam
   } = queryParams
+
   const NEW_EXECUTION_LIST_VIEW = useFeatureFlag(FeatureFlag.NEW_EXECUTION_LIST_VIEW)
 
-  const { module = 'cd' } = useModuleInfo()
+  const { module } = useModuleInfo()
   const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
   const location = useLocation()
   // TODO: Temporary, remove once released
@@ -79,6 +96,9 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     })
   })
 
+  const isDeploymentsPage = !!matchPath(location.pathname, {
+    path: routes.toDeployments({ ...params, module })
+  })
   const {
     data,
     loading,
@@ -97,10 +117,11 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
       sort: sort.join(','), // TODO: this is temporary until BE supports common format for all. Currently BE supports status in  arrayFormat: 'repeat' and sort in  arrayFormat: 'comma'
       myDeployments,
       status,
-      branch,
+      repoName,
+      ...(selectedBranch !== defaultBranchSelect ? { branch: selectedBranch } : {}),
       repoIdentifier,
       searchTerm,
-      ...(!isExecutionHistoryView ? { module } : {})
+      ...(!isExecutionHistoryView && module ? { module } : {})
     },
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
@@ -114,19 +135,29 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   })
 
   // Only do polling on first page and not initial default loading
-  const isPolling = usePolling(fetchExecutions, { startPolling: page === DEFAULT_PAGE_INDEX && !loading })
+  const isPolling = usePolling(fetchExecutions, {
+    startPolling: page === DEFAULT_PAGE_INDEX && !loading,
+    pollingInterval: 5_000
+  })
 
   const isCommunity = useGetCommunity()
   const isCommunityAndCDModule = module === 'cd' && isCommunity
   const executionList = data?.data
   const hasExecutions = executionList?.totalElements && executionList?.totalElements > 0
-  const showSpinner = initLoading || (loading && !isPolling)
-  const showSubHeader = hasExecutions || isAnyFilterApplied
+  const showSubHeader = hasExecutions || isAnyFilterApplied || selectedBranch !== defaultBranchSelect
 
+  const showSpinner = initLoading || (loading && !isPolling)
+
+  const onChangeRepo = (_repoName: string): void => {
+    updateQueryParams({ repoName: (_repoName || []) as string })
+  }
+  useEffect(() => {
+    if (!repoName) setSelectedBranch(undefined)
+  }, [repoName])
+
+  const { globalFreezes } = useGlobalFreezeBanner()
   return (
     <>
-      {showSubHeader && <ExecutionListSubHeader {...rest} />}
-
       <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
         {showHealthAndExecution && !isCommunityAndCDModule && (
           <Container className={css.healthAndExecutions} data-testid="health-and-executions">
@@ -135,11 +166,33 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
           </Container>
         )}
 
+        {showSubHeader && (
+          <ExecutionListSubHeader
+            onBranchChange={(value: string) => {
+              setSelectedBranch(value)
+            }}
+            selectedBranch={selectedBranch}
+            showRepoBranchFilter={isDeploymentsPage}
+            onChangeRepo={onChangeRepo}
+            repoName={repoName}
+            borderless
+            {...rest}
+          />
+        )}
+        <GlobalFreezeBanner globalFreezes={globalFreezes} />
+
         <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
         {showSpinner ? (
           <PageSpinner />
         ) : executionList && hasExecutions ? (
-          <Executions executionList={executionList} onViewCompiledYaml={setViewCompiledYaml} {...rest} />
+          <>
+            <div className={css.tableTitle}>
+              <Text color={Color.GREY_800} font={{ weight: 'bold' }}>
+                {`${getString('total')}: ${data?.data?.totalElements}`}
+              </Text>
+            </div>
+            <Executions executionList={executionList} onViewCompiledYaml={setViewCompiledYaml} {...rest} />
+          </>
         ) : (
           <ExecutionListEmpty {...rest} />
         )}

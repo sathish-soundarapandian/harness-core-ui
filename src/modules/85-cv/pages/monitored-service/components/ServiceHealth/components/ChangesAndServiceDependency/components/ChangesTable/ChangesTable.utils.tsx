@@ -7,7 +7,7 @@
 
 import React from 'react'
 import moment from 'moment'
-import { Text, Container } from '@wings-software/uicore'
+import { Text, Container } from '@harness/uicore'
 import type { Renderer, CellProps } from 'react-table'
 import { timeFormat, dateFormat } from './ChangesTable.constants'
 import css from './ChangeTable.module.scss'

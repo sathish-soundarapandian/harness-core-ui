@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import type { CellProps, Column } from 'react-table'
-import { Button, Table } from '@wings-software/uicore'
+import { Button, Table } from '@harness/uicore'
 import type { InstanceDetails } from '@ce/components/COCreateGateway/models'
 import { NameCell, TableCell } from './common'
 import css from '../../COGatewayConfig.module.scss'

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, Layout, Text, IconName, FlexExpander } from '@wings-software/uicore'
+import { Icon, Layout, Text, IconName, FlexExpander } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import type { FontSize } from '@harness/design-system'
 import cx from 'classnames'

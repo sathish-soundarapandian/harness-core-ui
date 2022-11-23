@@ -7,7 +7,7 @@
 
 // This is used in ConnectorView for connector details page
 import React from 'react'
-import { Layout, Container, Icon, Text } from '@wings-software/uicore'
+import { Layout, Container, Icon, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { StringUtils } from '@common/exports'
 import type { ConnectorInfoDTO, ConnectorConnectivityDetails, ConnectorResponse } from 'services/cd-ng'

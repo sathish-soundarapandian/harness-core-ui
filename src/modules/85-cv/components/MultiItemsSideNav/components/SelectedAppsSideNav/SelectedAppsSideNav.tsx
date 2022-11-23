@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Icon, Text, PageError, PageErrorProps } from '@wings-software/uicore'
+import { Container, Icon, Text, PageError, PageErrorProps } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import cx from 'classnames'
 import { TableFilter, TableFilterProps } from '@cv/components/TableFilter/TableFilter'

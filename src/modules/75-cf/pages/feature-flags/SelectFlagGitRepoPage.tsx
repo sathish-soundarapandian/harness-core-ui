@@ -7,7 +7,7 @@
 
 import React, { ReactElement, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Text, Container, Icon } from '@wings-software/uicore'
+import { Text, Container, Icon } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'

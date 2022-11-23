@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Layout, Text, Icon, FlexExpander } from '@wings-software/uicore'
+import { Container, Layout, Text, Icon, FlexExpander } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type {
   Maybe,

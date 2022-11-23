@@ -8,6 +8,7 @@
 import React from 'react'
 import { set } from 'lodash-es'
 import produce from 'immer'
+import { useToaster } from '@harness/uicore'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
 import { useGlobalEventListener } from '@common/hooks'
@@ -19,6 +20,7 @@ import {
 } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/ExecutionPanel/ExecutionPanelUtils'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { DeploymentConfigStepDrawer } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/DeploymentConfigStepDrawer/DeploymentConfigStepDrawer'
+import { DeployStageErrorProvider } from '@pipeline/context/StageErrorContext'
 import { DeploymentConfigFormWithRef } from './DeploymentTemplateForm/DeploymentConfigForm'
 
 function useSaveStepTemplateListener(): void {
@@ -30,10 +32,15 @@ function useSaveStepTemplateListener(): void {
     templateDetailsByRef,
     setTemplateDetailsByRef
   } = useDeploymentContext()
+  const { showWarning } = useToaster()
 
   const updateViewForSavedStepTemplate = (savedTemplate: TemplateSummaryResponse) => {
     const templateRef = getScopeBasedTemplateRef(savedTemplate as TemplateSummaryResponse)
-
+    const stepTemplateRefs = deploymentConfig.execution?.stepTemplateRefs || /* istanbul ignore next */ []
+    if (stepTemplateRefs.some(item => item === templateRef)) {
+      showWarning('Duplicate step cannot be added')
+      return
+    }
     const updatedDeploymentConfig = getUpdatedDeploymentConfig({ templateRef, deploymentConfig })
     const updatedTemplateDetailsByRef = getUpdatedTemplateDetailsByRef({
       templateDetailsObj: savedTemplate as TemplateSummaryResponse,
@@ -58,15 +65,16 @@ function useSaveStepTemplateListener(): void {
   })
 }
 
+// eslint-disable-next-line react/display-name
 export const DeploymentConfigCanvasWithRef = React.forwardRef(
   (_props: unknown, formikRef: TemplateFormRef): JSX.Element => {
     useSaveStepTemplateListener()
 
     return (
-      <>
+      <DeployStageErrorProvider>
         <DeploymentConfigFormWithRef ref={formikRef} />
         <DeploymentConfigStepDrawer />
-      </>
+      </DeployStageErrorProvider>
     )
   }
 )

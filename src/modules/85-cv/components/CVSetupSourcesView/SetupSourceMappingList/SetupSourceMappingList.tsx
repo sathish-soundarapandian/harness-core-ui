@@ -15,7 +15,7 @@ import {
   PageError,
   PageErrorProps,
   TableV2
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import type { Column } from 'react-table'
 import type { TableProps } from '@harness/uicore'

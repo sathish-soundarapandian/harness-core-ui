@@ -17,7 +17,7 @@ import {
   Text,
   useConfirmationDialog,
   VisualYamlSelectedView as SelectedView
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
@@ -143,6 +143,7 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
       template.versionLabel = data.versionLabel
       template.orgIdentifier = data.orgIdentifier
       template.projectIdentifier = data.projectIdentifier
+      template.icon = data.icon
 
       try {
         await updateTemplate(template)
@@ -281,7 +282,9 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
                     initialValues: template,
                     promise: onSubmit,
                     ...(templateIdentifier !== DefaultNewTemplateId && { gitDetails }),
-                    title: getString('templatesLibrary.createNewModal.editHeading', { entity: template.type }),
+                    title: getString('templatesLibrary.createNewModal.editHeading', {
+                      entity: templateFactory.getTemplateLabel(template.type)
+                    }),
                     intent: templateIdentifier === DefaultNewTemplateId ? Intent.START : Intent.EDIT,
                     disabledFields:
                       templateIdentifier === DefaultNewTemplateId ? [] : [Fields.VersionLabel, Fields.Identifier],

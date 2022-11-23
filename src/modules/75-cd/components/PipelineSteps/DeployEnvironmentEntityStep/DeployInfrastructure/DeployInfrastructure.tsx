@@ -35,9 +35,12 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import InfrastructureModal from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
 
+import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import InfrastructureEntitiesList from '../InfrastructureEntitiesList/InfrastructureEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -56,6 +59,7 @@ interface DeployInfrastructureProps
   allowableTypes: AllowedTypes
   environmentIdentifier: string
   isMultiInfrastructure?: boolean
+  lazyInfrastructure?: boolean
 }
 
 export function getAllFixedInfrastructures(
@@ -89,10 +93,13 @@ export default function DeployInfrastructure({
   environmentIdentifier,
   isMultiInfrastructure,
   deploymentType,
-  customDeploymentRef
+  customDeploymentRef,
+  lazyInfrastructure
 }: DeployInfrastructureProps): JSX.Element {
   const { values, setFieldValue, setValues } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
+  const { expressions } = useVariablesExpression()
+  const { refetchPipelineVariable } = usePipelineVariables()
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
   const { templateRef: deploymentTemplateIdentifier, versionLabel } = customDeploymentRef || {}
   const { getTemplate } = useTemplateSelector()
@@ -102,12 +109,15 @@ export default function DeployInfrastructure({
   const [selectedInfrastructures, setSelectedInfrastructures] = useState(
     getAllFixedInfrastructures(initialValues, environmentIdentifier)
   )
+  const [infrastructureRefType, setInfrastructureRefType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(initialValues.infrastructure)
+  )
 
   // Constants
   const isFixed =
-    getMultiTypeFromValue(
-      isMultiInfrastructure ? values.infrastructures?.[environmentIdentifier] : values.infrastructure
-    ) === MultiTypeInputType.FIXED
+    (isMultiInfrastructure
+      ? getMultiTypeFromValue(values.infrastructures?.[environmentIdentifier])
+      : infrastructureRefType) === MultiTypeInputType.FIXED
 
   const shouldAddCustomDeploymentData =
     deploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier
@@ -125,12 +135,14 @@ export default function DeployInfrastructure({
     prependInfrastructureToInfrastructureList
   } = useGetInfrastructuresData({
     environmentIdentifier,
-    infrastructureIdentifiers: selectedInfrastructures,
+    // this condition makes the yaml metadata call data
+    infrastructureIdentifiers: lazyInfrastructure ? [] : selectedInfrastructures,
     deploymentType,
     ...(shouldAddCustomDeploymentData && {
       deploymentTemplateIdentifier,
       versionLabel
-    })
+    }),
+    lazyInfrastructure
   })
 
   const selectOptions = useMemo(() => {
@@ -288,6 +300,7 @@ export default function DeployInfrastructure({
   }
 
   const onInfrastructureEntityUpdate = (): void => {
+    refetchPipelineVariable?.()
     refetchInfrastructuresList()
     refetchInfrastructuresData()
   }
@@ -337,7 +350,7 @@ export default function DeployInfrastructure({
             }}
             multiTypeProps={{
               width: 280,
-              allowableTypes
+              allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
             }}
           />
         ) : (
@@ -349,18 +362,20 @@ export default function DeployInfrastructure({
             disabled={disabled}
             placeholder={placeHolderForInfrastructure}
             multiTypeInputProps={{
+              onTypeChange: setInfrastructureRefType,
               width: 300,
               selectProps: { items: selectOptions },
               allowableTypes,
               defaultValueToReset: '',
               onChange: item => {
                 setSelectedInfrastructures(getSelectedInfrastructuresFromOptions([item as SelectOption]))
-              }
+              },
+              expressions
             }}
             selectItems={selectOptions}
           />
         )}
-        {isFixed && (
+        {isFixed && !lazyInfrastructure && (
           <RbacButton
             margin={{ top: 'xlarge' }}
             size={ButtonSize.SMALL}

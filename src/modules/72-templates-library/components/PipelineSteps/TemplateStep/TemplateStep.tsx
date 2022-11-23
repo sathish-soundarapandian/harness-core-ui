@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { FormikErrors } from 'formik'
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import { parse } from 'yaml'
 import { defaultTo, get } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
@@ -223,6 +223,7 @@ export class TemplateStep extends PipelineStep<TemplateStepNode> {
         readonly={readonly}
         factory={factory}
         allowableTypes={allowableTypes}
+        customStepProps={customStepProps}
       />
     )
   }

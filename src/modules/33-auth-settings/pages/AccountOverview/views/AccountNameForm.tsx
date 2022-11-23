@@ -7,7 +7,7 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { Button, FormInput, Formik, FormikForm, Layout, ButtonVariation } from '@wings-software/uicore'
+import { Button, FormInput, Formik, FormikForm, Layout, ButtonVariation } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/components'

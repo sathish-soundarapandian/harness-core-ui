@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Layout, Pagination } from '@wings-software/uicore'
+import { Container, Layout, Pagination } from '@harness/uicore'
 import { defaultTo, isEqual } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
 import { TemplateCard } from '@templates-library/components/TemplateCard/TemplateCard'

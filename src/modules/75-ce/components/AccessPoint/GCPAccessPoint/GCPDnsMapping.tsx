@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { defaultTo as _defaultTo } from 'lodash-es'
-import { Button, Color, Container, Formik, FormikForm, FormInput, Layout, Text } from '@harness/uicore'
+import { Button, Container, Formik, FormikForm, FormInput, Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import type { AccessPointScreenMode } from '@ce/types'
 import type { AccessPoint } from 'services/lw'

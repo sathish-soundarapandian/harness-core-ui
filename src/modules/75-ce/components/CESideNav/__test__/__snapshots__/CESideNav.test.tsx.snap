@@ -141,6 +141,16 @@ exports[`side nav tests feedback tooltip appears on hover of project 1`] = `
               ce.biDashboard.sideNavText
             </p>
           </a>
+          <a
+            class="link"
+            href="/account/accountId/ce/governance/"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.governance.sideNavText
+            </p>
+          </a>
           <div>
             <div
               class="border"
@@ -327,6 +337,16 @@ exports[`side nav tests side nav renders without error when no project is select
               class="StyledProps--font StyledProps--main text"
             >
               ce.biDashboard.sideNavText
+            </p>
+          </a>
+          <a
+            class="link"
+            href="/account/accountId/ce/governance/"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.governance.sideNavText
             </p>
           </a>
           <div>
@@ -517,6 +537,16 @@ exports[`side nav tests side nav renders without error when on Access Point tab 
               ce.biDashboard.sideNavText
             </p>
           </a>
+          <a
+            class="link"
+            href="/account/accountId/ce/governance/"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.governance.sideNavText
+            </p>
+          </a>
           <div>
             <div
               class="border"
@@ -703,6 +733,16 @@ exports[`side nav tests side nav renders without error when on AutoStopping Rule
               class="StyledProps--font StyledProps--main text"
             >
               ce.biDashboard.sideNavText
+            </p>
+          </a>
+          <a
+            class="link"
+            href="/account/accountId/ce/governance/"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.governance.sideNavText
             </p>
           </a>
           <div>

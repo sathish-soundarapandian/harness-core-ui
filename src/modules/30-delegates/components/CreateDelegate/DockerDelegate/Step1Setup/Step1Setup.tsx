@@ -8,17 +8,8 @@
 import React, { useState, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import type { FormikHelpers } from 'formik'
-import set from 'lodash-es/set'
-import {
-  Layout,
-  Formik,
-  Button,
-  FormikForm,
-  Container,
-  StepProps,
-  SelectOption,
-  FormInput
-} from '@wings-software/uicore'
+import { set } from 'lodash-es'
+import { Layout, Formik, Button, FormikForm, Container, StepProps, SelectOption, FormInput } from '@harness/uicore'
 import * as Yup from 'yup'
 import { validateDockerDelegatePromise, ValidateDockerDelegateQueryParams } from 'services/portal'
 import type { DelegateTokenDetails } from 'services/portal'

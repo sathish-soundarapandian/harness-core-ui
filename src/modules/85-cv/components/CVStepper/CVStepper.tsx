@@ -10,26 +10,31 @@ import { Layout } from '@harness/uicore'
 import type { CVStepperProps } from './CVStepper.types'
 import Step from './components/Step/Step'
 
+export const StepperContext = React.createContext<CVStepperProps>({ id: '', stepList: [] })
+
 export const CVStepper = (props: React.PropsWithChildren<CVStepperProps>): React.ReactElement => {
   const { stepList, isStepValid, onStepChange, runValidationOnMount } = props
   const [selectedStepId, setSelectedStepId] = useState(() => stepList[0]?.id)
   return (
-    <Layout.Vertical margin="large" data-testid="CVStepper_main">
-      {stepList?.map((step, index) => {
-        return (
-          <Step
-            key={step.id}
-            step={step}
-            index={index}
-            stepList={stepList}
-            selectedStepId={selectedStepId}
-            isStepValid={isStepValid}
-            setSelectedStepId={setSelectedStepId}
-            onStepChange={onStepChange}
-            runValidationOnMount={runValidationOnMount}
-          />
-        )
-      })}
-    </Layout.Vertical>
+    <StepperContext.Provider value={{ ...props }}>
+      <Layout.Vertical margin="large" data-testid="CVStepper_main">
+        {stepList?.map((step, index) => {
+          return (
+            <Step
+              key={step.id}
+              step={step}
+              index={index}
+              stepList={stepList}
+              selectedStepId={selectedStepId}
+              isStepValid={isStepValid}
+              setSelectedStepId={setSelectedStepId}
+              onStepChange={onStepChange}
+              runValidationOnMount={runValidationOnMount}
+              isOptional={step.isOptional}
+            />
+          )
+        })}
+      </Layout.Vertical>
+    </StepperContext.Provider>
   )
 }

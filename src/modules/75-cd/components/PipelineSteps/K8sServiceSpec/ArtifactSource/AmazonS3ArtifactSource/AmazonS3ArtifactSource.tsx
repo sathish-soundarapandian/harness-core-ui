@@ -10,14 +10,7 @@ import type { FormikValues } from 'formik'
 import { defaultTo, get, isEmpty, isNil, memoize } from 'lodash-es'
 import { Menu } from '@blueprintjs/core'
 
-import {
-  FormInput,
-  getMultiTypeFromValue,
-  Layout,
-  MultiTypeInputType,
-  SelectOption,
-  Text
-} from '@wings-software/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 import { BucketResponse, SidecarArtifact, useListBucketsWithServiceV2 } from 'services/cd-ng'
 import { useListAwsRegions } from 'services/portal'
 import { useStrings } from 'framework/strings'
@@ -267,6 +260,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
               placeholder={''}
               accountIdentifier={accountId}
               projectIdentifier={projectIdentifier}
+              configureOptionsProps={{ className: css.connectorConfigOptions }}
               orgIdentifier={orgIdentifier}
               width={391}
               setRefValue

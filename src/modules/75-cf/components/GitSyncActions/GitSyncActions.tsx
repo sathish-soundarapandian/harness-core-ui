@@ -6,7 +6,7 @@
  */
 
 import React, { ReactElement, useState } from 'react'
-import { Text, Container, Icon, Layout } from '@wings-software/uicore'
+import { Text, Container, Icon, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { GitSyncSetupRedirect } from '@cf/components/GitSyncSetupRedirect/GitSyncSetupRedirect'
@@ -18,10 +18,10 @@ export interface GitSyncActionsProps {
 }
 
 const GitSyncActions = ({ isLoading }: GitSyncActionsProps): ReactElement => {
-  const { gitRepoDetails, isGitSyncEnabled } = useFFGitSyncContext()
+  const { gitRepoDetails, isGitSyncActionsEnabled } = useFFGitSyncContext()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
-  return isGitSyncEnabled ? (
+  return isGitSyncActionsEnabled ? (
     <Layout.Horizontal spacing="small" width={400}>
       <Container className={css.gitRepoText}>
         <Icon name="repository" />

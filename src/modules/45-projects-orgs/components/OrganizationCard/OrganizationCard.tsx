@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Card, Container, Icon, Layout, Text, CardBody, useConfirmationDialog } from '@wings-software/uicore'
+import { Card, Container, Icon, Layout, Text, CardBody, useConfirmationDialog } from '@harness/uicore'
 import React, { useState } from 'react'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'

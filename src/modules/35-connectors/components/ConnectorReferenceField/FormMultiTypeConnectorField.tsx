@@ -19,7 +19,7 @@ import {
   useToaster,
   ButtonVariation,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { Classes, FormGroup, Intent } from '@blueprintjs/core'
 import { get, isEmpty } from 'lodash-es'

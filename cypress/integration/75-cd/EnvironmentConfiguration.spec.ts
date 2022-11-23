@@ -4,7 +4,7 @@ import {
   environmentConfigurationCall,
   environmentConfigurationSecretCall
 } from '../../support/75-cd/constants'
-
+const accountLicense = 'ng/api/licenses/account?routingId=accountId&accountIdentifier=accountId'
 describe('EnvironmentsV2 Configuration Page', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
@@ -12,7 +12,7 @@ describe('EnvironmentsV2 Configuration Page', () => {
       // failing the test
       return false
     })
-
+    cy.intercept('GET', accountLicense, { fixture: 'pipeline/api/approvals/accountLicense' })
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
       cy.intercept('GET', featureFlagsCall, {
         ...featureFlagsData,
@@ -42,11 +42,10 @@ describe('EnvironmentsV2 Configuration Page', () => {
       fixture: 'ng/api/environmentConfiguration/createEnvironmentConfigurationSecret.json'
     }).as('envSecretCall')
     cy.wait(3000)
-
     cy.visitPageAssertion(pageHeaderClassName)
     cy.get('[data-testid="advanced-panel"]').click()
     cy.contains('p', 'Variables').should('be.visible')
-    cy.contains('button[type="button"]', 'New Variable Override').should('be.visible').as('addVariable')
+    cy.contains('button[type="button"]', 'New Variable').should('be.visible').as('addVariable')
 
     // Adding var1
     cy.get('@addVariable').click()

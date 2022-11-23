@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
+import { AllowedTypes, NestedAccordionPanel, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import type { StepElementConfig } from 'services/cd-ng'

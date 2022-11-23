@@ -1,0 +1,2300 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Valiate SLOTarget should render SLOTarget 1`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-small"
+  >
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+      >
+        cv.slos.sloTargetAndBudget.periodType
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+      >
+        
+      </p>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
+    style="width: 250px;"
+  >
+    <div
+      class="bp3-form-group"
+    >
+      <label
+        class="bp3-label"
+        for="SLOTargetPercentage"
+      >
+        cv.SLOTarget
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <div
+          class="bp3-input-group"
+        >
+          <input
+            autocomplete="off"
+            class="bp3-input"
+            max="100"
+            min="0"
+            name="SLOTargetPercentage"
+            step="any"
+            style="padding-right: 0px;"
+            type="number"
+            value="0"
+          />
+          <span
+            class="bp3-input-action"
+          >
+            <span
+              class="bp3-icon bp3-icon-percentage StyledProps--main StyledProps--padding-small"
+              icon="percentage"
+            >
+              <svg
+                data-icon="percentage"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  percentage
+                </desc>
+                <path
+                  d="M6 6V4c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2zM3.5 6c-.28 0-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1c0 .28-.22.5-.5.5zM13 8h-1c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2zm0 3.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1zM12 3a1.003 1.003 0 00-1.87-.5l-5.99 9.98c-.09.15-.14.33-.14.52a1.003 1.003 0 001.87.5l5.99-9.98c.09-.15.14-.33.14-.52z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+  >
+    <div
+      class="StyledProps--font StyledProps--main"
+      style="width: 450px;"
+    >
+      <div>
+        <div
+          data-highcharts-chart="0"
+          style="overflow: hidden;"
+        >
+          <div
+            class="highcharts-container "
+            dir="ltr"
+            id="highcharts-0"
+            style="position: relative; overflow: hidden; width: 600px; height: 200px; text-align: left; line-height: normal; z-index: 0; user-select: none; outline: none;"
+          >
+            <svg
+              class="highcharts-root"
+              height="200"
+              style="font-family:\\"Lucida Grande\\", \\"Lucida Sans Unicode\\", Arial, Helvetica, sans-serif;font-size:12px;"
+              version="1.1"
+              viewBox="0 0 600 200"
+              width="600"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <desc>
+                Created with Highcharts 9.2.0
+              </desc>
+              <defs>
+                <clippath
+                  id="highcharts-1-"
+                >
+                  <rect
+                    fill="none"
+                    height="160"
+                    width="NaN"
+                    x="0"
+                    y="0"
+                  />
+                </clippath>
+                <clippath
+                  id="highcharts-2-"
+                >
+                  <rect
+                    fill="none"
+                    height="200"
+                    width="NaN"
+                    x="-99"
+                    y="-20"
+                  />
+                </clippath>
+                <clippath
+                  id="highcharts-3-"
+                >
+                  <rect
+                    fill="none"
+                    height="160"
+                    width="NaN"
+                    x="0"
+                    y="0"
+                  />
+                </clippath>
+              </defs>
+              <rect
+                class="highcharts-background"
+                fill="#ffffff"
+                height="200"
+                rx="0"
+                ry="0"
+                width="600"
+                x="0"
+                y="0"
+              />
+              <rect
+                class="highcharts-plot-background"
+                fill="none"
+                height="160"
+                width="NaN"
+                x="NaN"
+                y="20"
+              />
+              <g
+                class="highcharts-grid highcharts-xaxis-grid"
+                data-z-index="1"
+              />
+              <g
+                class="highcharts-grid highcharts-yaxis-grid"
+                data-z-index="1"
+              >
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+              </g>
+              <rect
+                class="highcharts-plot-border"
+                data-z-index="1"
+                fill="none"
+                height="160"
+                width="0"
+                x="0"
+                y="20"
+              />
+              <g
+                class="highcharts-axis highcharts-xaxis"
+                data-z-index="2"
+              >
+                <path
+                  class="highcharts-axis-line"
+                  d="M 0 0"
+                  data-z-index="7"
+                  fill="none"
+                  stroke="#ccd6eb"
+                  stroke-width="1"
+                />
+              </g>
+              <g
+                class="highcharts-axis highcharts-yaxis"
+                data-z-index="2"
+              >
+                <path
+                  class="highcharts-axis-line"
+                  d="M 0 0"
+                  data-z-index="7"
+                  fill="none"
+                />
+              </g>
+              <g
+                class="highcharts-series-group"
+                data-z-index="3"
+              >
+                <g
+                  class="highcharts-series highcharts-series-0 highcharts-area-series"
+                  clip-path="url(#highcharts-3-)"
+                  data-z-index="0.1"
+                  opacity="1"
+                  transform="translate(0,20) scale(1 1)"
+                >
+                  <path
+                    class="highcharts-area"
+                    d="M 0 0"
+                    data-z-index="0"
+                    fill="var(--primary-3)"
+                  />
+                </g>
+                <g
+                  class="highcharts-markers highcharts-series-0 highcharts-area-series"
+                  clip-path="url(#highcharts-2-)"
+                  data-z-index="0.1"
+                  opacity="1"
+                  transform="translate(0,20) scale(1 1)"
+                />
+              </g>
+              <text
+                class="highcharts-title"
+                data-z-index="4"
+                style="color:#333333;font-size:18px;fill:#333333;"
+                text-anchor="middle"
+                x="300"
+                y="34"
+              />
+              <text
+                class="highcharts-subtitle"
+                data-z-index="4"
+                style="color:#666666;fill:#666666;"
+                text-anchor="middle"
+                x="300"
+                y="20"
+              />
+              <text
+                class="highcharts-caption"
+                data-z-index="4"
+                style="color:#666666;fill:#666666;"
+                text-anchor="start"
+                x="0"
+                y="192"
+              />
+              <g
+                class="highcharts-plot-lines-4"
+                data-z-index="4"
+              >
+                <path
+                  class="highcharts-plot-line "
+                  d="M 0 0"
+                  fill="none"
+                  stroke="var(--primary-7)"
+                  stroke-width="2"
+                />
+              </g>
+              <g
+                class="highcharts-legend highcharts-no-tooltip"
+                data-z-index="7"
+              >
+                <rect
+                  class="highcharts-legend-box"
+                  fill="none"
+                  height="8"
+                  rx="0"
+                  ry="0"
+                  visibility="hidden"
+                  width="8"
+                  x="0"
+                  y="0"
+                />
+                <g
+                  data-z-index="1"
+                >
+                  <g />
+                </g>
+              </g>
+              <g
+                class="highcharts-axis-labels highcharts-xaxis-labels"
+                data-z-index="7"
+              />
+              <g
+                class="highcharts-axis-labels highcharts-yaxis-labels"
+                data-z-index="7"
+              >
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  0%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  25%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  50%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  75%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  100%
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-semi StyledProps--margin-top-large StyledProps--margin-left-xxxlarge"
+          style="display: flex; align-items: center;"
+        >
+          <span
+            class="bp3-icon bp3-icon-symbol-square StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary4"
+            icon="symbol-square"
+          >
+            <svg
+              data-icon="symbol-square"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                symbol-square
+              </desc>
+              <path
+                d="M12 3.01H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h8c.55 0 1-.45 1-1v-8c0-.56-.45-1-1-1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          cv.SLIMetricRatio
+        </p>
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main errorBudget StyledProps--background-grey100 StyledProps--padding-medium"
+      style="height: 180px;"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-grey600"
+      >
+        cv.errorBudget
+      </p>
+      <h1
+        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--inline StyledProps--font-variation-display2"
+        level="1"
+      >
+        0
+      </h1>
+      <span
+        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-sub-section"
+      >
+        cv.mins
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Valiate SLOTarget should render SLOTarget for calendar 1`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-small"
+  >
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+      >
+        cv.slos.sloTargetAndBudget.periodType
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+      >
+        Calender
+      </p>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+      >
+        cv.periodLength
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+      >
+        Monthly
+      </p>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+      >
+        cv.widowEnds
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+      >
+        10
+      </p>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
+    style="width: 250px;"
+  >
+    <div
+      class="bp3-form-group"
+    >
+      <label
+        class="bp3-label"
+        for="SLOTargetPercentage"
+      >
+        cv.SLOTarget
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <div
+          class="bp3-input-group"
+        >
+          <input
+            autocomplete="off"
+            class="bp3-input"
+            max="100"
+            min="0"
+            name="SLOTargetPercentage"
+            step="any"
+            style="padding-right: 0px;"
+            type="number"
+            value="70"
+          />
+          <span
+            class="bp3-input-action"
+          >
+            <span
+              class="bp3-icon bp3-icon-percentage StyledProps--main StyledProps--padding-small"
+              icon="percentage"
+            >
+              <svg
+                data-icon="percentage"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  percentage
+                </desc>
+                <path
+                  d="M6 6V4c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2zM3.5 6c-.28 0-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1c0 .28-.22.5-.5.5zM13 8h-1c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2zm0 3.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1zM12 3a1.003 1.003 0 00-1.87-.5l-5.99 9.98c-.09.15-.14.33-.14.52a1.003 1.003 0 001.87.5l5.99-9.98c.09-.15.14-.33.14-.52z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+  >
+    <div
+      class="StyledProps--font StyledProps--main"
+      style="width: 450px;"
+    >
+      <div>
+        <div
+          data-highcharts-chart="2"
+          style="overflow: hidden;"
+        >
+          <div
+            class="highcharts-container "
+            dir="ltr"
+            id="highcharts-8"
+            style="position: relative; overflow: hidden; width: 600px; height: 200px; text-align: left; line-height: normal; z-index: 0; user-select: none; outline: none;"
+          >
+            <svg
+              class="highcharts-root"
+              height="200"
+              style="font-family:\\"Lucida Grande\\", \\"Lucida Sans Unicode\\", Arial, Helvetica, sans-serif;font-size:12px;"
+              version="1.1"
+              viewBox="0 0 600 200"
+              width="600"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <desc>
+                Created with Highcharts 9.2.0
+              </desc>
+              <defs>
+                <clippath
+                  id="highcharts-9-"
+                >
+                  <rect
+                    fill="none"
+                    height="160"
+                    width="NaN"
+                    x="0"
+                    y="0"
+                  />
+                </clippath>
+                <clippath
+                  id="highcharts-10-"
+                >
+                  <rect
+                    fill="none"
+                    height="200"
+                    width="NaN"
+                    x="-99"
+                    y="-20"
+                  />
+                </clippath>
+                <clippath
+                  id="highcharts-11-"
+                >
+                  <rect
+                    fill="none"
+                    height="160"
+                    width="NaN"
+                    x="0"
+                    y="0"
+                  />
+                </clippath>
+              </defs>
+              <rect
+                class="highcharts-background"
+                fill="#ffffff"
+                height="200"
+                rx="0"
+                ry="0"
+                width="600"
+                x="0"
+                y="0"
+              />
+              <rect
+                class="highcharts-plot-background"
+                fill="none"
+                height="160"
+                width="NaN"
+                x="NaN"
+                y="20"
+              />
+              <g
+                class="highcharts-grid highcharts-xaxis-grid"
+                data-z-index="1"
+              />
+              <g
+                class="highcharts-grid highcharts-yaxis-grid"
+                data-z-index="1"
+              >
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+              </g>
+              <rect
+                class="highcharts-plot-border"
+                data-z-index="1"
+                fill="none"
+                height="160"
+                width="0"
+                x="0"
+                y="20"
+              />
+              <g
+                class="highcharts-axis highcharts-xaxis"
+                data-z-index="2"
+              >
+                <path
+                  class="highcharts-axis-line"
+                  d="M 0 0"
+                  data-z-index="7"
+                  fill="none"
+                  stroke="#ccd6eb"
+                  stroke-width="1"
+                />
+              </g>
+              <g
+                class="highcharts-axis highcharts-yaxis"
+                data-z-index="2"
+              >
+                <path
+                  class="highcharts-axis-line"
+                  d="M 0 0"
+                  data-z-index="7"
+                  fill="none"
+                />
+              </g>
+              <g
+                class="highcharts-series-group"
+                data-z-index="3"
+              >
+                <g
+                  class="highcharts-series highcharts-series-0 highcharts-area-series"
+                  clip-path="url(#highcharts-11-)"
+                  data-z-index="0.1"
+                  opacity="1"
+                  transform="translate(0,20) scale(1 1)"
+                >
+                  <path
+                    class="highcharts-area"
+                    d="M 0 0"
+                    data-z-index="0"
+                    fill="var(--primary-3)"
+                  />
+                </g>
+                <g
+                  class="highcharts-markers highcharts-series-0 highcharts-area-series"
+                  clip-path="url(#highcharts-10-)"
+                  data-z-index="0.1"
+                  opacity="1"
+                  transform="translate(0,20) scale(1 1)"
+                />
+              </g>
+              <text
+                class="highcharts-title"
+                data-z-index="4"
+                style="color:#333333;font-size:18px;fill:#333333;"
+                text-anchor="middle"
+                x="300"
+                y="34"
+              />
+              <text
+                class="highcharts-subtitle"
+                data-z-index="4"
+                style="color:#666666;fill:#666666;"
+                text-anchor="middle"
+                x="300"
+                y="20"
+              />
+              <text
+                class="highcharts-caption"
+                data-z-index="4"
+                style="color:#666666;fill:#666666;"
+                text-anchor="start"
+                x="0"
+                y="192"
+              />
+              <g
+                class="highcharts-plot-lines-4"
+                data-z-index="4"
+              >
+                <path
+                  class="highcharts-plot-line "
+                  d="M 0 0"
+                  fill="none"
+                  stroke="var(--primary-7)"
+                  stroke-width="2"
+                />
+              </g>
+              <g
+                class="highcharts-legend highcharts-no-tooltip"
+                data-z-index="7"
+              >
+                <rect
+                  class="highcharts-legend-box"
+                  fill="none"
+                  height="8"
+                  rx="0"
+                  ry="0"
+                  visibility="hidden"
+                  width="8"
+                  x="0"
+                  y="0"
+                />
+                <g
+                  data-z-index="1"
+                >
+                  <g />
+                </g>
+              </g>
+              <g
+                class="highcharts-axis-labels highcharts-xaxis-labels"
+                data-z-index="7"
+              />
+              <g
+                class="highcharts-axis-labels highcharts-yaxis-labels"
+                data-z-index="7"
+              >
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  0%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  25%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  50%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  75%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  100%
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-semi StyledProps--margin-top-large StyledProps--margin-left-xxxlarge"
+          style="display: flex; align-items: center;"
+        >
+          <span
+            class="bp3-icon bp3-icon-symbol-square StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary4"
+            icon="symbol-square"
+          >
+            <svg
+              data-icon="symbol-square"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                symbol-square
+              </desc>
+              <path
+                d="M12 3.01H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h8c.55 0 1-.45 1-1v-8c0-.56-.45-1-1-1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          cv.SLIMetricRatio
+        </p>
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main errorBudget StyledProps--background-grey100 StyledProps--padding-medium"
+      style="height: 180px;"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-grey600"
+      >
+        cv.errorBudget
+      </p>
+      <h1
+        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--inline StyledProps--font-variation-display2"
+        level="1"
+      >
+        12960
+      </h1>
+      <span
+        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-sub-section"
+      >
+        cv.mins
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Valiate SLOTarget should render SLOTarget for calendar 2`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-small"
+  >
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+      >
+        cv.slos.sloTargetAndBudget.periodType
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+      >
+        Calender
+      </p>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+      >
+        cv.periodLength
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+      >
+        Weekly
+      </p>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+      >
+        cv.widowEnds
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+      >
+        Mon
+      </p>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
+    style="width: 250px;"
+  >
+    <div
+      class="bp3-form-group"
+    >
+      <label
+        class="bp3-label"
+        for="SLOTargetPercentage"
+      >
+        cv.SLOTarget
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <div
+          class="bp3-input-group"
+        >
+          <input
+            autocomplete="off"
+            class="bp3-input"
+            max="100"
+            min="0"
+            name="SLOTargetPercentage"
+            step="any"
+            style="padding-right: 0px;"
+            type="number"
+            value="99"
+          />
+          <span
+            class="bp3-input-action"
+          >
+            <span
+              class="bp3-icon bp3-icon-percentage StyledProps--main StyledProps--padding-small"
+              icon="percentage"
+            >
+              <svg
+                data-icon="percentage"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  percentage
+                </desc>
+                <path
+                  d="M6 6V4c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2zM3.5 6c-.28 0-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1c0 .28-.22.5-.5.5zM13 8h-1c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2zm0 3.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1zM12 3a1.003 1.003 0 00-1.87-.5l-5.99 9.98c-.09.15-.14.33-.14.52a1.003 1.003 0 001.87.5l5.99-9.98c.09-.15.14-.33.14-.52z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+  >
+    <div
+      class="StyledProps--font StyledProps--main"
+      style="width: 450px;"
+    >
+      <div>
+        <div
+          data-highcharts-chart="3"
+          style="overflow: hidden;"
+        >
+          <div
+            class="highcharts-container "
+            dir="ltr"
+            id="highcharts-12"
+            style="position: relative; overflow: hidden; width: 600px; height: 200px; text-align: left; line-height: normal; z-index: 0; user-select: none; outline: none;"
+          >
+            <svg
+              class="highcharts-root"
+              height="200"
+              style="font-family:\\"Lucida Grande\\", \\"Lucida Sans Unicode\\", Arial, Helvetica, sans-serif;font-size:12px;"
+              version="1.1"
+              viewBox="0 0 600 200"
+              width="600"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <desc>
+                Created with Highcharts 9.2.0
+              </desc>
+              <defs>
+                <clippath
+                  id="highcharts-13-"
+                >
+                  <rect
+                    fill="none"
+                    height="160"
+                    width="NaN"
+                    x="0"
+                    y="0"
+                  />
+                </clippath>
+                <clippath
+                  id="highcharts-14-"
+                >
+                  <rect
+                    fill="none"
+                    height="200"
+                    width="NaN"
+                    x="-99"
+                    y="-20"
+                  />
+                </clippath>
+                <clippath
+                  id="highcharts-15-"
+                >
+                  <rect
+                    fill="none"
+                    height="160"
+                    width="NaN"
+                    x="0"
+                    y="0"
+                  />
+                </clippath>
+              </defs>
+              <rect
+                class="highcharts-background"
+                fill="#ffffff"
+                height="200"
+                rx="0"
+                ry="0"
+                width="600"
+                x="0"
+                y="0"
+              />
+              <rect
+                class="highcharts-plot-background"
+                fill="none"
+                height="160"
+                width="NaN"
+                x="NaN"
+                y="20"
+              />
+              <g
+                class="highcharts-grid highcharts-xaxis-grid"
+                data-z-index="1"
+              />
+              <g
+                class="highcharts-grid highcharts-yaxis-grid"
+                data-z-index="1"
+              >
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+              </g>
+              <rect
+                class="highcharts-plot-border"
+                data-z-index="1"
+                fill="none"
+                height="160"
+                width="0"
+                x="0"
+                y="20"
+              />
+              <g
+                class="highcharts-axis highcharts-xaxis"
+                data-z-index="2"
+              >
+                <path
+                  class="highcharts-axis-line"
+                  d="M 0 0"
+                  data-z-index="7"
+                  fill="none"
+                  stroke="#ccd6eb"
+                  stroke-width="1"
+                />
+              </g>
+              <g
+                class="highcharts-axis highcharts-yaxis"
+                data-z-index="2"
+              >
+                <path
+                  class="highcharts-axis-line"
+                  d="M 0 0"
+                  data-z-index="7"
+                  fill="none"
+                />
+              </g>
+              <g
+                class="highcharts-series-group"
+                data-z-index="3"
+              >
+                <g
+                  class="highcharts-series highcharts-series-0 highcharts-area-series"
+                  clip-path="url(#highcharts-15-)"
+                  data-z-index="0.1"
+                  opacity="1"
+                  transform="translate(0,20) scale(1 1)"
+                >
+                  <path
+                    class="highcharts-area"
+                    d="M 0 0"
+                    data-z-index="0"
+                    fill="var(--primary-3)"
+                  />
+                </g>
+                <g
+                  class="highcharts-markers highcharts-series-0 highcharts-area-series"
+                  clip-path="url(#highcharts-14-)"
+                  data-z-index="0.1"
+                  opacity="1"
+                  transform="translate(0,20) scale(1 1)"
+                />
+              </g>
+              <text
+                class="highcharts-title"
+                data-z-index="4"
+                style="color:#333333;font-size:18px;fill:#333333;"
+                text-anchor="middle"
+                x="300"
+                y="34"
+              />
+              <text
+                class="highcharts-subtitle"
+                data-z-index="4"
+                style="color:#666666;fill:#666666;"
+                text-anchor="middle"
+                x="300"
+                y="20"
+              />
+              <text
+                class="highcharts-caption"
+                data-z-index="4"
+                style="color:#666666;fill:#666666;"
+                text-anchor="start"
+                x="0"
+                y="192"
+              />
+              <g
+                class="highcharts-plot-lines-4"
+                data-z-index="4"
+              >
+                <path
+                  class="highcharts-plot-line "
+                  d="M 0 0"
+                  fill="none"
+                  stroke="var(--primary-7)"
+                  stroke-width="2"
+                />
+              </g>
+              <g
+                class="highcharts-legend highcharts-no-tooltip"
+                data-z-index="7"
+              >
+                <rect
+                  class="highcharts-legend-box"
+                  fill="none"
+                  height="8"
+                  rx="0"
+                  ry="0"
+                  visibility="hidden"
+                  width="8"
+                  x="0"
+                  y="0"
+                />
+                <g
+                  data-z-index="1"
+                >
+                  <g />
+                </g>
+              </g>
+              <g
+                class="highcharts-axis-labels highcharts-xaxis-labels"
+                data-z-index="7"
+              />
+              <g
+                class="highcharts-axis-labels highcharts-yaxis-labels"
+                data-z-index="7"
+              >
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  0%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  25%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  50%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  75%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  100%
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-semi StyledProps--margin-top-large StyledProps--margin-left-xxxlarge"
+          style="display: flex; align-items: center;"
+        >
+          <span
+            class="bp3-icon bp3-icon-symbol-square StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary4"
+            icon="symbol-square"
+          >
+            <svg
+              data-icon="symbol-square"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                symbol-square
+              </desc>
+              <path
+                d="M12 3.01H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h8c.55 0 1-.45 1-1v-8c0-.56-.45-1-1-1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          cv.SLIMetricRatio
+        </p>
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main errorBudget StyledProps--background-grey100 StyledProps--padding-medium"
+      style="height: 180px;"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-grey600"
+      >
+        cv.errorBudget
+      </p>
+      <h1
+        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--inline StyledProps--font-variation-display2"
+        level="1"
+      >
+        101
+      </h1>
+      <span
+        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-sub-section"
+      >
+        cv.mins
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Valiate SLOTarget should render SLOTarget for calendar 3`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-small"
+  >
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+      >
+        cv.slos.sloTargetAndBudget.periodType
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+      >
+        Calender
+      </p>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+      >
+        cv.periodLength
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+      >
+        Quarterly
+      </p>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
+    style="width: 250px;"
+  >
+    <div
+      class="bp3-form-group"
+    >
+      <label
+        class="bp3-label"
+        for="SLOTargetPercentage"
+      >
+        cv.SLOTarget
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <div
+          class="bp3-input-group"
+        >
+          <input
+            autocomplete="off"
+            class="bp3-input"
+            max="100"
+            min="0"
+            name="SLOTargetPercentage"
+            step="any"
+            style="padding-right: 0px;"
+            type="number"
+            value="88"
+          />
+          <span
+            class="bp3-input-action"
+          >
+            <span
+              class="bp3-icon bp3-icon-percentage StyledProps--main StyledProps--padding-small"
+              icon="percentage"
+            >
+              <svg
+                data-icon="percentage"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  percentage
+                </desc>
+                <path
+                  d="M6 6V4c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2zM3.5 6c-.28 0-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1c0 .28-.22.5-.5.5zM13 8h-1c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2zm0 3.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1zM12 3a1.003 1.003 0 00-1.87-.5l-5.99 9.98c-.09.15-.14.33-.14.52a1.003 1.003 0 001.87.5l5.99-9.98c.09-.15.14-.33.14-.52z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+  >
+    <div
+      class="StyledProps--font StyledProps--main"
+      style="width: 450px;"
+    >
+      <div>
+        <div
+          data-highcharts-chart="4"
+          style="overflow: hidden;"
+        >
+          <div
+            class="highcharts-container "
+            dir="ltr"
+            id="highcharts-16"
+            style="position: relative; overflow: hidden; width: 600px; height: 200px; text-align: left; line-height: normal; z-index: 0; user-select: none; outline: none;"
+          >
+            <svg
+              class="highcharts-root"
+              height="200"
+              style="font-family:\\"Lucida Grande\\", \\"Lucida Sans Unicode\\", Arial, Helvetica, sans-serif;font-size:12px;"
+              version="1.1"
+              viewBox="0 0 600 200"
+              width="600"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <desc>
+                Created with Highcharts 9.2.0
+              </desc>
+              <defs>
+                <clippath
+                  id="highcharts-17-"
+                >
+                  <rect
+                    fill="none"
+                    height="160"
+                    width="NaN"
+                    x="0"
+                    y="0"
+                  />
+                </clippath>
+                <clippath
+                  id="highcharts-18-"
+                >
+                  <rect
+                    fill="none"
+                    height="200"
+                    width="NaN"
+                    x="-99"
+                    y="-20"
+                  />
+                </clippath>
+                <clippath
+                  id="highcharts-19-"
+                >
+                  <rect
+                    fill="none"
+                    height="160"
+                    width="NaN"
+                    x="0"
+                    y="0"
+                  />
+                </clippath>
+              </defs>
+              <rect
+                class="highcharts-background"
+                fill="#ffffff"
+                height="200"
+                rx="0"
+                ry="0"
+                width="600"
+                x="0"
+                y="0"
+              />
+              <rect
+                class="highcharts-plot-background"
+                fill="none"
+                height="160"
+                width="NaN"
+                x="NaN"
+                y="20"
+              />
+              <g
+                class="highcharts-grid highcharts-xaxis-grid"
+                data-z-index="1"
+              />
+              <g
+                class="highcharts-grid highcharts-yaxis-grid"
+                data-z-index="1"
+              >
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+              </g>
+              <rect
+                class="highcharts-plot-border"
+                data-z-index="1"
+                fill="none"
+                height="160"
+                width="0"
+                x="0"
+                y="20"
+              />
+              <g
+                class="highcharts-axis highcharts-xaxis"
+                data-z-index="2"
+              >
+                <path
+                  class="highcharts-axis-line"
+                  d="M 0 0"
+                  data-z-index="7"
+                  fill="none"
+                  stroke="#ccd6eb"
+                  stroke-width="1"
+                />
+              </g>
+              <g
+                class="highcharts-axis highcharts-yaxis"
+                data-z-index="2"
+              >
+                <path
+                  class="highcharts-axis-line"
+                  d="M 0 0"
+                  data-z-index="7"
+                  fill="none"
+                />
+              </g>
+              <g
+                class="highcharts-series-group"
+                data-z-index="3"
+              >
+                <g
+                  class="highcharts-series highcharts-series-0 highcharts-area-series"
+                  clip-path="url(#highcharts-19-)"
+                  data-z-index="0.1"
+                  opacity="1"
+                  transform="translate(0,20) scale(1 1)"
+                >
+                  <path
+                    class="highcharts-area"
+                    d="M 0 0"
+                    data-z-index="0"
+                    fill="var(--primary-3)"
+                  />
+                </g>
+                <g
+                  class="highcharts-markers highcharts-series-0 highcharts-area-series"
+                  clip-path="url(#highcharts-18-)"
+                  data-z-index="0.1"
+                  opacity="1"
+                  transform="translate(0,20) scale(1 1)"
+                />
+              </g>
+              <text
+                class="highcharts-title"
+                data-z-index="4"
+                style="color:#333333;font-size:18px;fill:#333333;"
+                text-anchor="middle"
+                x="300"
+                y="34"
+              />
+              <text
+                class="highcharts-subtitle"
+                data-z-index="4"
+                style="color:#666666;fill:#666666;"
+                text-anchor="middle"
+                x="300"
+                y="20"
+              />
+              <text
+                class="highcharts-caption"
+                data-z-index="4"
+                style="color:#666666;fill:#666666;"
+                text-anchor="start"
+                x="0"
+                y="192"
+              />
+              <g
+                class="highcharts-plot-lines-4"
+                data-z-index="4"
+              >
+                <path
+                  class="highcharts-plot-line "
+                  d="M 0 0"
+                  fill="none"
+                  stroke="var(--primary-7)"
+                  stroke-width="2"
+                />
+              </g>
+              <g
+                class="highcharts-legend highcharts-no-tooltip"
+                data-z-index="7"
+              >
+                <rect
+                  class="highcharts-legend-box"
+                  fill="none"
+                  height="8"
+                  rx="0"
+                  ry="0"
+                  visibility="hidden"
+                  width="8"
+                  x="0"
+                  y="0"
+                />
+                <g
+                  data-z-index="1"
+                >
+                  <g />
+                </g>
+              </g>
+              <g
+                class="highcharts-axis-labels highcharts-xaxis-labels"
+                data-z-index="7"
+              />
+              <g
+                class="highcharts-axis-labels highcharts-yaxis-labels"
+                data-z-index="7"
+              >
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  0%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  25%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  50%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  75%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  100%
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-semi StyledProps--margin-top-large StyledProps--margin-left-xxxlarge"
+          style="display: flex; align-items: center;"
+        >
+          <span
+            class="bp3-icon bp3-icon-symbol-square StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary4"
+            icon="symbol-square"
+          >
+            <svg
+              data-icon="symbol-square"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                symbol-square
+              </desc>
+              <path
+                d="M12 3.01H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h8c.55 0 1-.45 1-1v-8c0-.56-.45-1-1-1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          cv.SLIMetricRatio
+        </p>
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main errorBudget StyledProps--background-grey100 StyledProps--padding-medium"
+      style="height: 180px;"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-grey600"
+      >
+        cv.errorBudget
+      </p>
+      <h1
+        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--inline StyledProps--font-variation-display2"
+        level="1"
+      >
+        15552
+      </h1>
+      <span
+        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-sub-section"
+      >
+        cv.mins
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Valiate SLOTarget should render SLOTarget for rolling 1`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-small"
+  >
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+      >
+        cv.slos.sloTargetAndBudget.periodType
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+      >
+        Rolling
+      </p>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
+      >
+        cv.periodLength
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
+      >
+        10
+      </p>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
+    style="width: 250px;"
+  >
+    <div
+      class="bp3-form-group"
+    >
+      <label
+        class="bp3-label"
+        for="SLOTargetPercentage"
+      >
+        cv.SLOTarget
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <div
+          class="bp3-input-group"
+        >
+          <input
+            autocomplete="off"
+            class="bp3-input"
+            max="100"
+            min="0"
+            name="SLOTargetPercentage"
+            step="any"
+            style="padding-right: 0px;"
+            type="number"
+            value="70"
+          />
+          <span
+            class="bp3-input-action"
+          >
+            <span
+              class="bp3-icon bp3-icon-percentage StyledProps--main StyledProps--padding-small"
+              icon="percentage"
+            >
+              <svg
+                data-icon="percentage"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  percentage
+                </desc>
+                <path
+                  d="M6 6V4c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2zM3.5 6c-.28 0-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1c0 .28-.22.5-.5.5zM13 8h-1c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2zm0 3.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1zM12 3a1.003 1.003 0 00-1.87-.5l-5.99 9.98c-.09.15-.14.33-.14.52a1.003 1.003 0 001.87.5l5.99-9.98c.09-.15.14-.33.14-.52z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+  >
+    <div
+      class="StyledProps--font StyledProps--main"
+      style="width: 450px;"
+    >
+      <div>
+        <div
+          data-highcharts-chart="1"
+          style="overflow: hidden;"
+        >
+          <div
+            class="highcharts-container "
+            dir="ltr"
+            id="highcharts-4"
+            style="position: relative; overflow: hidden; width: 600px; height: 200px; text-align: left; line-height: normal; z-index: 0; user-select: none; outline: none;"
+          >
+            <svg
+              class="highcharts-root"
+              height="200"
+              style="font-family:\\"Lucida Grande\\", \\"Lucida Sans Unicode\\", Arial, Helvetica, sans-serif;font-size:12px;"
+              version="1.1"
+              viewBox="0 0 600 200"
+              width="600"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <desc>
+                Created with Highcharts 9.2.0
+              </desc>
+              <defs>
+                <clippath
+                  id="highcharts-5-"
+                >
+                  <rect
+                    fill="none"
+                    height="160"
+                    width="NaN"
+                    x="0"
+                    y="0"
+                  />
+                </clippath>
+                <clippath
+                  id="highcharts-6-"
+                >
+                  <rect
+                    fill="none"
+                    height="200"
+                    width="NaN"
+                    x="-99"
+                    y="-20"
+                  />
+                </clippath>
+                <clippath
+                  id="highcharts-7-"
+                >
+                  <rect
+                    fill="none"
+                    height="160"
+                    width="NaN"
+                    x="0"
+                    y="0"
+                  />
+                </clippath>
+              </defs>
+              <rect
+                class="highcharts-background"
+                fill="#ffffff"
+                height="200"
+                rx="0"
+                ry="0"
+                width="600"
+                x="0"
+                y="0"
+              />
+              <rect
+                class="highcharts-plot-background"
+                fill="none"
+                height="160"
+                width="NaN"
+                x="NaN"
+                y="20"
+              />
+              <g
+                class="highcharts-grid highcharts-xaxis-grid"
+                data-z-index="1"
+              />
+              <g
+                class="highcharts-grid highcharts-yaxis-grid"
+                data-z-index="1"
+              >
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+                <path
+                  class="highcharts-grid-line"
+                  d="M 0 0"
+                  data-z-index="1"
+                  fill="none"
+                  opacity="1"
+                  stroke="var(--grey-200)"
+                  stroke-dasharray="none"
+                  stroke-width="1"
+                />
+              </g>
+              <rect
+                class="highcharts-plot-border"
+                data-z-index="1"
+                fill="none"
+                height="160"
+                width="0"
+                x="0"
+                y="20"
+              />
+              <g
+                class="highcharts-axis highcharts-xaxis"
+                data-z-index="2"
+              >
+                <path
+                  class="highcharts-axis-line"
+                  d="M 0 0"
+                  data-z-index="7"
+                  fill="none"
+                  stroke="#ccd6eb"
+                  stroke-width="1"
+                />
+              </g>
+              <g
+                class="highcharts-axis highcharts-yaxis"
+                data-z-index="2"
+              >
+                <path
+                  class="highcharts-axis-line"
+                  d="M 0 0"
+                  data-z-index="7"
+                  fill="none"
+                />
+              </g>
+              <g
+                class="highcharts-series-group"
+                data-z-index="3"
+              >
+                <g
+                  class="highcharts-series highcharts-series-0 highcharts-area-series"
+                  clip-path="url(#highcharts-7-)"
+                  data-z-index="0.1"
+                  opacity="1"
+                  transform="translate(0,20) scale(1 1)"
+                >
+                  <path
+                    class="highcharts-area"
+                    d="M 0 0"
+                    data-z-index="0"
+                    fill="var(--primary-3)"
+                  />
+                </g>
+                <g
+                  class="highcharts-markers highcharts-series-0 highcharts-area-series"
+                  clip-path="url(#highcharts-6-)"
+                  data-z-index="0.1"
+                  opacity="1"
+                  transform="translate(0,20) scale(1 1)"
+                />
+              </g>
+              <text
+                class="highcharts-title"
+                data-z-index="4"
+                style="color:#333333;font-size:18px;fill:#333333;"
+                text-anchor="middle"
+                x="300"
+                y="34"
+              />
+              <text
+                class="highcharts-subtitle"
+                data-z-index="4"
+                style="color:#666666;fill:#666666;"
+                text-anchor="middle"
+                x="300"
+                y="20"
+              />
+              <text
+                class="highcharts-caption"
+                data-z-index="4"
+                style="color:#666666;fill:#666666;"
+                text-anchor="start"
+                x="0"
+                y="192"
+              />
+              <g
+                class="highcharts-plot-lines-4"
+                data-z-index="4"
+              >
+                <path
+                  class="highcharts-plot-line "
+                  d="M 0 0"
+                  fill="none"
+                  stroke="var(--primary-7)"
+                  stroke-width="2"
+                />
+              </g>
+              <g
+                class="highcharts-legend highcharts-no-tooltip"
+                data-z-index="7"
+              >
+                <rect
+                  class="highcharts-legend-box"
+                  fill="none"
+                  height="8"
+                  rx="0"
+                  ry="0"
+                  visibility="hidden"
+                  width="8"
+                  x="0"
+                  y="0"
+                />
+                <g
+                  data-z-index="1"
+                >
+                  <g />
+                </g>
+              </g>
+              <g
+                class="highcharts-axis-labels highcharts-xaxis-labels"
+                data-z-index="7"
+              />
+              <g
+                class="highcharts-axis-labels highcharts-yaxis-labels"
+                data-z-index="7"
+              >
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  0%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  25%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  50%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  75%
+                </text>
+                <text
+                  style="color:var(--grey-400);cursor:default;font-size:var(--font-size-xsmall);fill:var(--grey-400);"
+                  text-anchor="end"
+                  transform="translate(0,0)"
+                  x="0"
+                >
+                  100%
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-semi StyledProps--margin-top-large StyledProps--margin-left-xxxlarge"
+          style="display: flex; align-items: center;"
+        >
+          <span
+            class="bp3-icon bp3-icon-symbol-square StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary4"
+            icon="symbol-square"
+          >
+            <svg
+              data-icon="symbol-square"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                symbol-square
+              </desc>
+              <path
+                d="M12 3.01H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h8c.55 0 1-.45 1-1v-8c0-.56-.45-1-1-1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          cv.SLIMetricRatio
+        </p>
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main errorBudget StyledProps--background-grey100 StyledProps--padding-medium"
+      style="height: 180px;"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-grey600"
+      >
+        cv.errorBudget
+      </p>
+      <h1
+        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--inline StyledProps--font-variation-display2"
+        level="1"
+      >
+        4320
+      </h1>
+      <span
+        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-sub-section"
+      >
+        cv.mins
+      </span>
+    </div>
+  </div>
+</div>
+`;

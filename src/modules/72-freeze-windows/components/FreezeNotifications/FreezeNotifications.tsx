@@ -37,6 +37,7 @@ export const FreezeNotifications = () => {
   const { getString } = useStrings()
   const {
     isReadOnly,
+    isActiveFreeze,
     state: { freezeObj },
     updateFreeze: updateFreezeInContext,
     setDrawerType
@@ -86,7 +87,7 @@ export const FreezeNotifications = () => {
   return (
     <>
       <NotificationsHeader
-        isReadonly={isReadOnly}
+        isReadonly={isReadOnly || isActiveFreeze}
         applyChanges={applyChanges}
         discardChanges={() => setDrawerType()}
         name={freezeObj.name as string}
@@ -133,7 +134,7 @@ export const FreezeNotifications = () => {
           pageItemCount={PAGE_SIZE}
           pageSize={PAGE_SIZE}
           pageIndex={page}
-          isReadonly={isReadOnly}
+          isReadonly={isReadOnly || isActiveFreeze}
           EventsTabComponent={FreezeEvents}
           eventsColumnConfig={eventsColumnConfig as any}
         />

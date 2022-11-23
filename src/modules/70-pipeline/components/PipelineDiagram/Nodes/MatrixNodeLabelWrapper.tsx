@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Color, Icon, Layout, Text } from '@harness/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import React from 'react'
 import cx from 'classnames'
 import { isMultiSvcOrMultiEnv } from '@pipeline/utils/executionUtils'
@@ -31,7 +32,7 @@ export default function MatrixNodeLabelWrapper({
       })}
     >
       <Icon size={16} name="looping" style={{ marginRight: '5px' }} color={Color.WHITE} />
-      <Text color={Color.WHITE} font="small" style={{ paddingRight: '5px' }}>
+      <Text color={Color.WHITE} font="small" style={{ paddingRight: '5px' }} lineClamp={1}>
         {nodeType}
       </Text>
     </Layout.Horizontal>

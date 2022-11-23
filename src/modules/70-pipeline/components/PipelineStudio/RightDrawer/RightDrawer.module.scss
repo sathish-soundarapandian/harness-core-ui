@@ -155,3 +155,15 @@ $top-offset: 110px;
   border-radius: 4px 0 0 4px !important;
   padding: 0 !important;
 }
+
+.customButtons {
+  display: flex;
+  justify-content: space-between;
+  width: 70%;
+}
+
+.dialogWrapper {
+  :global(.bp3-button-text) {
+    flex-shrink: 0 !important;
+  }
+}

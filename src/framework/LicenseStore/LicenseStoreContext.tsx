@@ -8,9 +8,8 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import { useParams } from 'react-router-dom'
-import { isEqual } from 'lodash-es'
+import { isEmpty, isEqual } from 'lodash-es'
 
-import isEmpty from 'lodash/isEmpty'
 import { PageSpinner } from '@harness/uicore'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'

@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { Layout, ExpandingSearchInput, ButtonVariation, PageHeader, PageBody } from '@wings-software/uicore'
+import { Layout, ExpandingSearchInput, ButtonVariation, PageHeader, PageBody } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { useResourceGroupModal } from '@rbac/modals/ResourceGroupModal/useResourceGroupModal'

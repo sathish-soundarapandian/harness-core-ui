@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { FormInput } from '@wings-software/uicore'
+import { FormInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 

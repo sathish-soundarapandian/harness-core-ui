@@ -8,7 +8,7 @@
 import { parse } from 'yaml'
 import * as Yup from 'yup'
 import { defaultTo, isEmpty, once, pick, set } from 'lodash-es'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { accountPathProps, modulePathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import type { UseStringsReturn, StringKeys } from 'framework/strings'
@@ -43,8 +43,8 @@ export const allServicesObj = (getString: UseStringsReturn['getString']) => ({
 
 export const getEnvTypeMap = once((getString: UseStringsReturn['getString']) => {
   return {
-    [EnvironmentType.PROD]: getString('production'),
-    [EnvironmentType.NON_PROD]: getString('common.preProduction'),
+    [EnvironmentType.Production]: getString('production'),
+    [EnvironmentType.PreProduction]: getString('common.preProduction'),
     All: getString('common.allEnvironments')
   }
 })

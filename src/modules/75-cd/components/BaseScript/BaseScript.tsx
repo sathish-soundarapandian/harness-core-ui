@@ -8,13 +8,7 @@
 import React from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import {
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  SelectOption,
-  AllowedTypes
-} from '@wings-software/uicore'
+import { FormInput, getMultiTypeFromValue, MultiTypeInputType, SelectOption, AllowedTypes } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -50,6 +44,7 @@ export default function BaseScript(props: {
         <FormInput.Select
           items={shellScriptType}
           name="spec.shell"
+          disabled={readonly}
           label={getString('common.scriptType')}
           placeholder={getString('common.scriptType')}
           onChange={() => {

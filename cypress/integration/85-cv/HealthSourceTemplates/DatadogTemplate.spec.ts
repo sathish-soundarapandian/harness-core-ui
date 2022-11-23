@@ -27,7 +27,7 @@ import {
 import { errorResponse } from '../../../support/85-cv/slos/constants'
 import { Connectors } from '../../../utils/connctors-utils'
 
-describe('Configure Datadog health source', () => {
+describe.skip('Configure Datadog health source', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       return false

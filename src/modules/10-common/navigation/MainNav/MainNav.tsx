@@ -9,7 +9,7 @@ import React, { useEffect, useLayoutEffect } from 'react'
 import cx from 'classnames'
 import { NavLink as Link, useParams } from 'react-router-dom'
 import type { NavLinkProps } from 'react-router-dom'
-import { Text, Icon, Layout, Avatar, useToggleOpen, Container, Popover } from '@wings-software/uicore'
+import { Text, Icon, Layout, Avatar, useToggleOpen, Container, Popover } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { String } from 'framework/strings'
@@ -63,15 +63,37 @@ export default function L1Nav(): React.ReactElement {
     root.style.setProperty('--main-nav-height', `${minNavHeight}px`)
 
     NEW_LEFT_NAVBAR_SETTINGS &&
-      document.getElementsByClassName(css.active)[0]?.scrollIntoView({ inline: 'nearest', block: 'start' })
+      document.getElementsByClassName(css.active)[0]?.scrollIntoView({ inline: 'nearest', block: 'nearest' })
   })
 
   useEffect(() => {
-    if (!modulesPreferenceData?.orderedModules?.length && NEW_LEFT_NAVBAR_SETTINGS) {
-      const modulesWithLicense = DEFAULT_MODULES_ORDER.filter(m => !!moduleMap[m].licenseType)
+    if (NEW_LEFT_NAVBAR_SETTINGS) {
+      let selectedModules = modulesPreferenceData?.selectedModules
+      let orderedModules = modulesPreferenceData?.orderedModules
+
+      if (modulesPreferenceData?.selectedModules?.length) {
+        // Remove modules from the selected modules if the feature flag of that module gets turned off
+        selectedModules = modulesPreferenceData?.selectedModules.filter(module => moduleMap[module].shouldVisible)
+      }
+
+      // if the modules order is not present in preference store data :
+      // - User should see the default order
+      // - Modules with licenses should be default selected
+      if (!modulesPreferenceData?.orderedModules.length) {
+        const modulesWithLicense = DEFAULT_MODULES_ORDER.filter(m => !!moduleMap[m].hasLicense)
+        selectedModules = modulesWithLicense
+        orderedModules = DEFAULT_MODULES_ORDER
+      } else if (modulesPreferenceData?.orderedModules.length < DEFAULT_MODULES_ORDER.length) {
+        // This will be executed when a new module is introduced.
+        // Adding new module to the last
+        const newModules = DEFAULT_MODULES_ORDER.filter(
+          module => !modulesPreferenceData.orderedModules.includes(module)
+        )
+        orderedModules = [...(modulesPreferenceData?.orderedModules || []), ...newModules]
+      }
       setModuleConfigPreference({
-        selectedModules: modulesWithLicense,
-        orderedModules: DEFAULT_MODULES_ORDER
+        orderedModules,
+        selectedModules
       })
     }
   }, [])
@@ -117,7 +139,7 @@ export default function L1Nav(): React.ReactElement {
             </Link>
           </li>
           {NEW_LEFT_NAVBAR_SETTINGS ? (
-            <li>
+            <li className={css.modulesContainerNavItem}>
               <ModulesContainer />
             </li>
           ) : (

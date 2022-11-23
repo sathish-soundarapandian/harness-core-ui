@@ -131,16 +131,21 @@ exports[`AddCluster tests initial render 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -189,16 +194,21 @@ exports[`AddCluster tests initial render 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -247,16 +257,21 @@ exports[`AddCluster tests initial render 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -305,22 +320,27 @@ exports[`AddCluster tests initial render 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
+                    >
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-c
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
+                      data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
+                      ID: 
                       test-cluster-c
                     </p>
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
-                      data-id="cluster-id-text"
-                      style="--text-line-clamp: 1; width: 150px;"
-                    >
-                      ID: 
-                      test-cluster-c
-                    </p>
                   </div>
                 </div>
                 <span
@@ -363,16 +383,21 @@ exports[`AddCluster tests initial render 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-d
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-d
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -421,16 +446,21 @@ exports[`AddCluster tests initial render 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-e
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-e
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -479,16 +509,21 @@ exports[`AddCluster tests initial render 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-f
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-f
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -537,16 +572,21 @@ exports[`AddCluster tests initial render 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-g
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-g
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -595,16 +635,21 @@ exports[`AddCluster tests initial render 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-h
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-h
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -653,16 +698,21 @@ exports[`AddCluster tests initial render 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-1
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-1
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -711,16 +761,21 @@ exports[`AddCluster tests initial render 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-2
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-2
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -769,16 +824,21 @@ exports[`AddCluster tests initial render 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-3
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-3
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -827,16 +887,21 @@ exports[`AddCluster tests initial render 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-4
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-4
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -901,6 +966,7 @@ exports[`AddCluster tests initial render 1`] = `
       class="StyledProps--font StyledProps--main footerStyle"
     >
       <button
+        aria-label="Add"
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         disabled=""
         tabindex="-1"
@@ -913,6 +979,7 @@ exports[`AddCluster tests initial render 1`] = `
         </span>
       </button>
       <button
+        aria-label="Cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -1058,16 +1125,21 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -1116,16 +1188,21 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -1174,16 +1251,21 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -1232,22 +1314,27 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
+                    >
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-c
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
+                      data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
+                      ID: 
                       test-cluster-c
                     </p>
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
-                      data-id="cluster-id-text"
-                      style="--text-line-clamp: 1; width: 150px;"
-                    >
-                      ID: 
-                      test-cluster-c
-                    </p>
                   </div>
                 </div>
                 <span
@@ -1290,16 +1377,21 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-d
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-d
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -1348,16 +1440,21 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-e
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-e
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -1406,16 +1503,21 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-f
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-f
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -1464,16 +1566,21 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-g
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-g
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -1522,16 +1629,21 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-h
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-h
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -1580,16 +1692,21 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-1
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-1
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -1638,16 +1755,21 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-2
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-2
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -1696,16 +1818,21 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-3
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-3
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -1754,16 +1881,21 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-4
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-4
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -1841,6 +1973,7 @@ exports[`AddCluster tests select a cluster 1`] = `
       class="StyledProps--font StyledProps--main footerStyle"
     >
       <button
+        aria-label="Add"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -1851,6 +1984,7 @@ exports[`AddCluster tests select a cluster 1`] = `
         </span>
       </button>
       <button
+        aria-label="Cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >
@@ -1996,16 +2130,21 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -2054,16 +2193,21 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -2112,16 +2256,21 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -2170,22 +2319,27 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
+                    >
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-c
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
+                      data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
+                      ID: 
                       test-cluster-c
                     </p>
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
-                      data-id="cluster-id-text"
-                      style="--text-line-clamp: 1; width: 150px;"
-                    >
-                      ID: 
-                      test-cluster-c
-                    </p>
                   </div>
                 </div>
                 <span
@@ -2228,16 +2382,21 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-d
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-d
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -2286,16 +2445,21 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-e
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-e
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -2344,16 +2508,21 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-f
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-f
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -2402,16 +2571,21 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-g
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-g
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -2460,16 +2634,21 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-h
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-h
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -2518,16 +2697,21 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-1
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-1
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -2576,16 +2760,21 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-2
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-2
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -2634,16 +2823,21 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-3
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-3
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -2692,16 +2886,21 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      test-cluster-4
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        test-cluster-4
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -2766,6 +2965,7 @@ exports[`AddCluster tests when no clusters 1`] = `
       class="StyledProps--font StyledProps--main footerStyle"
     >
       <button
+        aria-label="Add"
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         disabled=""
         tabindex="-1"
@@ -2778,6 +2978,7 @@ exports[`AddCluster tests when no clusters 1`] = `
         </span>
       </button>
       <button
+        aria-label="Cancel"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
         type="button"
       >

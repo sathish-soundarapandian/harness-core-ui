@@ -43,6 +43,7 @@ exports[`Account Overview Page Rendering should render properly 1`] = `
           account name
         </p>
         <button
+          aria-label="edit"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
           type="button"
         >
@@ -78,6 +79,7 @@ exports[`Account Overview Page Rendering should render properly 1`] = `
           </span>
         </button>
         <button
+          aria-label="common.switchAccount"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link"
           type="button"
         >
@@ -130,6 +132,7 @@ exports[`Account Overview Page Rendering should render properly 1`] = `
           common.harnessNextGeneration
         </p>
         <button
+          aria-label="change"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--padding-none Button--with-current-color Button--variation Button--variation-link"
           type="button"
         >
@@ -189,6 +192,42 @@ exports[`Account Overview Page Rendering should render properly 1`] = `
         >
           <div
             class="bp3-collapse"
+          >
+            <div
+              aria-hidden="false"
+              class="bp3-collapse-body"
+              style="transform: translateY(-undefinedpx);"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main container StyledProps--margin-xlarge StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-white"
+    >
+      <div
+        class="Accordion--accordion"
+      >
+        <div
+          class="Accordion--panel"
+          data-open="false"
+          data-testid="serviceVersions-panel"
+        >
+          <div
+            class="Accordion--summary"
+            data-testid="serviceVersions-summary"
+          >
+            <div
+              class="Accordion--label"
+            >
+              common.platformServiceVersions
+            </div>
+            <div
+              class="Accordion--chevron"
+            />
+          </div>
+          <div
+            class="bp3-collapse Accordion--collapse"
           >
             <div
               aria-hidden="false"

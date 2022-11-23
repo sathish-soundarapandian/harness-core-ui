@@ -11,7 +11,8 @@ import classnames from 'classnames'
 import { useParams, NavLink } from 'react-router-dom'
 import moment from 'moment'
 import { Spinner } from '@blueprintjs/core'
-import { Color, Icon, Layout } from '@harness/uicore'
+import { Icon, Layout } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
 import { useStrings, StringKeys } from 'framework/strings'
 import type { Module } from 'framework/types/ModuleName'
@@ -21,6 +22,8 @@ import {
   ResponseResourceConstraintExecutionInfo,
   useGetResourceConstraintsExecutionInfo
 } from 'services/pipeline-ng'
+import { useQueryParams } from '@common/hooks'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import stepDetailsTabCss from '../StepDetailsTab/StepDetailsTab.module.scss'
 import css from './QueuedExecutionsTab.module.scss'
 
@@ -46,7 +49,8 @@ const renderState = (getString: getStringType, state?: string, isCurrent?: boole
 const renderData = (
   resourceConstraintsData: ResponseResourceConstraintExecutionInfo | null,
   getString: getStringType,
-  params: Record<string, string>
+  params: Record<string, string>,
+  queryParams: GitQueryParams
 ) => {
   const resourceConstraints = resourceConstraintsData?.data?.resourceConstraints || []
   if (!resourceConstraints.length) {
@@ -58,6 +62,7 @@ const renderData = (
     )
   }
   const { executionIdentifier, orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, module } = params
+  const { connectorRef, repoName, branch, storeType } = queryParams
 
   return (
     <>
@@ -72,7 +77,11 @@ const renderData = (
             projectIdentifier: resourceConstraint.projectIdentifier || projectIdentifier,
             accountId,
             module: module as Module,
-            source: 'executions'
+            source: 'executions',
+            connectorRef,
+            repoName,
+            branch,
+            storeType
           })
           return (
             <div
@@ -110,6 +119,7 @@ const renderData = (
 export function QueuedExecutionsTab(props: ExecutionStepDetailsTabProps): React.ReactElement {
   const { getString } = useStrings()
   const params = useParams<Record<string, string>>()
+  const queryParams = useQueryParams<GitQueryParams>()
 
   const { step } = props
   const resourceUnit = step?.stepParameters?.spec?.key
@@ -142,7 +152,11 @@ export function QueuedExecutionsTab(props: ExecutionStepDetailsTabProps): React.
       <div className={css.header}>
         <span className={css.headerLabel}>{getString('pipeline.queueStep.queuedByResourceKey')}</span> {resourceUnit}
       </div>
-      {<section className={css.contentSection}>{renderData(resourceConstraintsData, getString, params)}</section>}
+      {
+        <section className={css.contentSection}>
+          {renderData(resourceConstraintsData, getString, params, queryParams)}
+        </section>
+      }
     </div>
   )
 }

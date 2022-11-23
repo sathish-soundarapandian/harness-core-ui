@@ -143,13 +143,14 @@ export interface NavButtonsProps {
   loading?: boolean
 }
 
-export interface SLONameProps {
-  children: JSX.Element
-  formikProps: FormikProps<SLOForm>
+export interface SLONameProps<T> {
+  children?: JSX.Element
+  formikProps: FormikProps<T>
   identifier?: string
-  monitoredServicesLoading: boolean
-  monitoredServicesOptions: SelectOption[]
-  fetchingMonitoredServices: () => void
+  monitoredServicesLoading?: boolean
+  monitoredServicesOptions?: SelectOption[]
+  fetchingMonitoredServices?: () => void
+  isMultiSelect?: boolean
 }
 
 export interface SLIProps
@@ -162,4 +163,10 @@ export interface SLOTargetAndBudgetPolicyProps
   extends Omit<SLOTargetChartWithAPIGetSliGraphProps, 'serviceLevelIndicator' | 'monitoredServiceIdentifier'> {
   children: JSX.Element
   formikProps: FormikProps<SLOForm>
+}
+export interface ErrorBudgetInterface {
+  periodType: SLOForm['periodType']
+  periodLength: SLOForm['periodLength']
+  periodLengthType: SLOForm['periodLengthType']
+  SLOTargetPercentage: SLOForm['SLOTargetPercentage']
 }

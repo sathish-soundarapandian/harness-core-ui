@@ -7,11 +7,11 @@
 
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { v4 as uuid } from 'uuid'
 import { Button, Container, Layout, PageSpinner, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { get, isEmpty, set } from 'lodash-es'
+import { nanoid as nanoUuid } from 'nanoid'
 import { StringUtils } from '@common/exports'
 import {
   DelegateType,
@@ -35,7 +35,6 @@ import { Category, CDOnboardingActions } from '@common/constants/TrackingConstan
 import StepProcessing from './StepProcessing'
 import type { DelegateSuccessHandler } from '../CDOnboardingUtils'
 import css from './CreateK8sDelegate.module.scss'
-
 export interface CreateK8sDelegateProps {
   onSuccessHandler: (data: DelegateSuccessHandler) => void
   handleHelpPanel: () => void
@@ -93,7 +92,7 @@ export const CreateK8sDelegate = ({
       showError(getString('somethingWentWrong'))
     } else {
       const delegateToken = get(delegateTokens, 'resource[0].name')
-      const delegateName1 = `sample-${uuid()}-delegate`
+      const delegateName1 = `del-${nanoUuid()}`
       setDelegateName(delegateName1)
       delegateNameRef.current = delegateName1
       trackEvent(CDOnboardingActions.StartOnboardingDelegateCreation, {
@@ -185,13 +184,13 @@ export const CreateK8sDelegate = ({
   return (
     <>
       <Layout.Vertical>
-        <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
+        <Text font="normal" className={css.subHeading}>
           {getString('cd.instructionsDelegate')}
         </Text>
         <ul className={css.progress}>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
-              <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
+              <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.downloadYAML')}
               </Text>
               <Layout.Horizontal className={css.spacing}>
@@ -230,7 +229,6 @@ export const CreateK8sDelegate = ({
                       isEditModeSupported={false}
                       hideErrorMesageOnReadOnlyMode={true}
                       existingYaml={visibleYaml}
-                      showSnippetSection={false}
                       height="462px"
                       theme="DARK"
                     />
@@ -242,7 +240,7 @@ export const CreateK8sDelegate = ({
           </li>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical className={css.panelLeft}>
-              <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
+              <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.installCluster')}
               </Text>
               <Layout.Horizontal>
@@ -281,7 +279,7 @@ export const CreateK8sDelegate = ({
           </li>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
-              <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
+              <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.delegateConnectionWait')}
               </Text>
               <StepProcessing

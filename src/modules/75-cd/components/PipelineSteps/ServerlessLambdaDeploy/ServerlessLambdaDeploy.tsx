@@ -14,7 +14,7 @@ import {
   MultiTypeInputType,
   AllowedTypes,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
 
@@ -45,6 +45,7 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { ServerlessDeployCommandOptions } from './ServerlessDeployCommandOptions'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -158,7 +159,9 @@ const ServerlessLambdaDeployInputStep: React.FC<ServerlessLambdaDeployProps> = (
             name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}timeout`}
             label={getString('pipelineSteps.timeoutLabel')}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: inputSetData.readonly

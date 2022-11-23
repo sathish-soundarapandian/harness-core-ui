@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { FlexExpander, Layout } from '@wings-software/uicore'
+import { FlexExpander, Layout } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'

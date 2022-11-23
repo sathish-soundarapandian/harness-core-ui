@@ -8,7 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   PipelineContext,
@@ -47,6 +47,7 @@ const getPipelineContext = (): PipelineContextInterface => ({
     isLoading: false,
     isIntermittentLoading: false,
     isUpdated: true,
+    modules: [],
     templateTypes: {},
     templateServiceData: {},
     resolvedCustomDeploymentDetailsByRef: {}
@@ -83,6 +84,7 @@ const getPipelineContext = (): PipelineContextInterface => ({
   setSelection: jest.fn(),
   getStagePathFromPipeline: jest.fn(),
   setTemplateTypes: jest.fn(),
+  setTemplateIcons: jest.fn(),
   setTemplateServiceData: jest.fn(),
   setIntermittentLoading: jest.fn()
 })

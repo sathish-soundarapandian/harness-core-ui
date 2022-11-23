@@ -255,6 +255,95 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
                           </div>
                         </div>
                       </div>
+                      <div
+                        class="bp3-form-group logoInputGroup"
+                        data-id="iconFile-2"
+                      >
+                        <label
+                          class="bp3-label"
+                          for="iconFile"
+                        >
+                          <span
+                            class="Tooltip--acenter"
+                            data-tooltip-id="createStepTemplate_iconFile"
+                          >
+                            templatesLibrary.createNewModal.logo common.optionalLabel
+                          </span>
+                           
+                          <span
+                            class="bp3-text-muted"
+                          />
+                        </label>
+                        <div
+                          class="bp3-form-content"
+                        >
+                          <div
+                            class="logoInput"
+                          >
+                            <input
+                              accept="image/jpg,image/jpeg,image/png,image/svg+xml"
+                              name="iconFile"
+                              style="display: none;"
+                              type="file"
+                            />
+                            <span
+                              class="bp3-icon StyledProps--main icon"
+                              data-icon="upload-box"
+                            >
+                              <svg
+                                fill="none"
+                                height="32"
+                                viewBox="0 0 16 16"
+                                width="32"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M5.333 8.334l2.668-2.667L8 13.334V5.667l2.67 2.667"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                                <path
+                                  d="M3.333 6V3.333h9.334V6"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </span>
+                          </div>
+                          <div
+                            class="bp3-form-helper-text"
+                          >
+                            <div
+                              class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="info"
+                              >
+                                <svg
+                                  height="16"
+                                  viewBox="0 0 12 12"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                              >
+                                templatesLibrary.createNewModal.logoHelpText
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -266,6 +355,7 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-end StyledProps--flex-justifyContent-flex-start"
                 >
                   <button
+                    aria-label="start"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                     type="submit"
                   >
@@ -276,6 +366,7 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
                     </span>
                   </button>
                   <button
+                    aria-label="cancel"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                     type="button"
                   >
@@ -388,7 +479,7 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
             class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--padding-top-medium"
           >
             <div
-              class="css-21x249"
+              class="css-12eylzo"
               fill="#EADEFF"
               stroke="#E1D0FF"
               width="100"
@@ -687,6 +778,95 @@ exports[`Git experience git experience snapshot 1`] = `
                           </div>
                         </div>
                       </div>
+                      <div
+                        class="bp3-form-group logoInputGroup"
+                        data-id="iconFile-2"
+                      >
+                        <label
+                          class="bp3-label"
+                          for="iconFile"
+                        >
+                          <span
+                            class="Tooltip--acenter"
+                            data-tooltip-id="createStepTemplate_iconFile"
+                          >
+                            templatesLibrary.createNewModal.logo common.optionalLabel
+                          </span>
+                           
+                          <span
+                            class="bp3-text-muted"
+                          />
+                        </label>
+                        <div
+                          class="bp3-form-content"
+                        >
+                          <div
+                            class="logoInput"
+                          >
+                            <input
+                              accept="image/jpg,image/jpeg,image/png,image/svg+xml"
+                              name="iconFile"
+                              style="display: none;"
+                              type="file"
+                            />
+                            <span
+                              class="bp3-icon StyledProps--main icon"
+                              data-icon="upload-box"
+                            >
+                              <svg
+                                fill="none"
+                                height="32"
+                                viewBox="0 0 16 16"
+                                width="32"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M5.333 8.334l2.668-2.667L8 13.334V5.667l2.67 2.667"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                                <path
+                                  d="M3.333 6V3.333h9.334V6"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </span>
+                          </div>
+                          <div
+                            class="bp3-form-helper-text"
+                          >
+                            <div
+                              class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="info"
+                              >
+                                <svg
+                                  height="16"
+                                  viewBox="0 0 12 12"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                              >
+                                templatesLibrary.createNewModal.logoHelpText
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div
@@ -821,7 +1001,7 @@ exports[`Git experience git experience snapshot 1`] = `
                       >
                         <div
                           class="bp3-form-group"
-                          data-id="null-2"
+                          data-id="null-3"
                         >
                           <label
                             class="bp3-label"
@@ -922,7 +1102,7 @@ exports[`Git experience git experience snapshot 1`] = `
                         >
                           <div
                             class="bp3-form-group"
-                            data-id="repo-3"
+                            data-id="repo-4"
                           >
                             <label
                               class="bp3-label"
@@ -994,7 +1174,7 @@ exports[`Git experience git experience snapshot 1`] = `
                         >
                           <div
                             class="bp3-form-group branchSelector"
-                            data-id="branch-4"
+                            data-id="branch-5"
                           >
                             <label
                               class="bp3-label"
@@ -1063,7 +1243,7 @@ exports[`Git experience git experience snapshot 1`] = `
                         </div>
                         <div
                           class="bp3-form-group"
-                          data-id="filePath-5"
+                          data-id="filePath-6"
                         >
                           <label
                             class="bp3-label"
@@ -1109,6 +1289,7 @@ exports[`Git experience git experience snapshot 1`] = `
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-end StyledProps--flex-justifyContent-flex-start"
                 >
                   <button
+                    aria-label="start"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                     type="submit"
                   >
@@ -1119,6 +1300,7 @@ exports[`Git experience git experience snapshot 1`] = `
                     </span>
                   </button>
                   <button
+                    aria-label="cancel"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
                     type="button"
                   >
@@ -1276,7 +1458,7 @@ exports[`Git experience git experience snapshot 1`] = `
             class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--padding-top-medium"
           >
             <div
-              class="css-21x249"
+              class="css-12eylzo"
               fill="#EADEFF"
               stroke="#E1D0FF"
               width="100"

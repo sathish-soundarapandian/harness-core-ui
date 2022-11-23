@@ -6,7 +6,7 @@
  */
 
 import { render, fireEvent, act } from '@testing-library/react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'

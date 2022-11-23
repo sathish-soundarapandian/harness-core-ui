@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Text, Layout, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { Text, Layout, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -231,6 +231,10 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
               }
             }
             gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
+            templateProps={{
+              isTemplatizedView: true,
+              templateValue: template?.connectorRef
+            }}
           />
         </div>
       )}

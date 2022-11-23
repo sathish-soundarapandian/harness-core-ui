@@ -28,7 +28,7 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
                 class="formGroup sm"
               >
                 <div
-                  class="bp3-form-group"
+                  class="bp3-form-group bp3-disabled"
                   data-id="spec.packageType-0"
                 >
                   <label
@@ -56,16 +56,17 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
                         class="bp3-popover-target"
                       >
                         <div
-                          class="bp3-input-group"
+                          class="bp3-input-group bp3-disabled"
                         >
                           <input
                             autocomplete="off"
                             class="bp3-input"
+                            disabled=""
                             name="spec.packageType"
                             placeholder="- pipeline.packageTypePlaceholder -"
                             style="padding-right: 0px;"
                             type="text"
-                            value=""
+                            value="container"
                           />
                           <span
                             class="bp3-input-action"
@@ -112,7 +113,7 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_spec.org"
                   >
-                    projectsOrgs.orgName
+                    projectsOrgs.orgName (optional)
                   </span>
                    
                   <span
@@ -198,16 +199,48 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
                     <div
-                      class="bp3-input-group MultiTypeInput--input"
+                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
                     >
-                      <input
-                        autocomplete="off"
-                        class="bp3-input"
-                        name="spec.packageName"
-                        placeholder="pipeline.manifestType.packagePlaceholder"
-                        type="text"
-                        value=""
-                      />
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="spec.packageName"
+                            placeholder="pipeline.manifestType.packagePlaceholder"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value=""
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
                     </div>
                     <span
                       class="bp3-popover-wrapper MultiTypeInput--wrapper"
@@ -336,16 +369,48 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
                     <div
-                      class="bp3-input-group MultiTypeInput--input"
+                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
                     >
-                      <input
-                        autocomplete="off"
-                        class="bp3-input"
-                        name="spec.version"
-                        placeholder="pipeline.artifactsSelection.versionPlaceholder"
-                        type="text"
-                        value=""
-                      />
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="spec.version"
+                            placeholder="pipeline.artifactsSelection.versionPlaceholder"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value=""
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
                     </div>
                     <span
                       class="bp3-popover-wrapper MultiTypeInput--wrapper"
@@ -384,6 +449,7 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -413,6 +479,7 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -477,7 +544,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
                 class="formGroup sm"
               >
                 <div
-                  class="bp3-form-group"
+                  class="bp3-form-group bp3-disabled"
                   data-id="spec.packageType-0"
                 >
                   <label
@@ -505,11 +572,12 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
                         class="bp3-popover-target"
                       >
                         <div
-                          class="bp3-input-group"
+                          class="bp3-input-group bp3-disabled"
                         >
                           <input
                             autocomplete="off"
                             class="bp3-input"
+                            disabled=""
                             name="spec.packageType"
                             placeholder="- pipeline.packageTypePlaceholder -"
                             style="padding-right: 0px;"
@@ -561,7 +629,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_spec.org"
                   >
-                    projectsOrgs.orgName
+                    projectsOrgs.orgName (optional)
                   </span>
                    
                   <span
@@ -647,16 +715,48 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
                     <div
-                      class="bp3-input-group MultiTypeInput--input"
+                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
                     >
-                      <input
-                        autocomplete="off"
-                        class="bp3-input"
-                        name="spec.packageName"
-                        placeholder="pipeline.manifestType.packagePlaceholder"
-                        type="text"
-                        value="testPackage"
-                      />
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="spec.packageName"
+                            placeholder="pipeline.manifestType.packagePlaceholder"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value="testPackage"
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
                     </div>
                     <span
                       class="bp3-popover-wrapper MultiTypeInput--wrapper"
@@ -833,6 +933,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -862,6 +963,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -926,7 +1028,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
                 class="formGroup sm"
               >
                 <div
-                  class="bp3-form-group"
+                  class="bp3-form-group bp3-disabled"
                   data-id="spec.packageType-0"
                 >
                   <label
@@ -954,11 +1056,12 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
                         class="bp3-popover-target"
                       >
                         <div
-                          class="bp3-input-group"
+                          class="bp3-input-group bp3-disabled"
                         >
                           <input
                             autocomplete="off"
                             class="bp3-input"
+                            disabled=""
                             name="spec.packageType"
                             placeholder="- pipeline.packageTypePlaceholder -"
                             style="padding-right: 0px;"
@@ -1010,7 +1113,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_spec.org"
                   >
-                    projectsOrgs.orgName
+                    projectsOrgs.orgName (optional)
                   </span>
                    
                   <span
@@ -1096,16 +1199,48 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
                     <div
-                      class="bp3-input-group MultiTypeInput--input"
+                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
                     >
-                      <input
-                        autocomplete="off"
-                        class="bp3-input"
-                        name="spec.packageName"
-                        placeholder="pipeline.manifestType.packagePlaceholder"
-                        type="text"
-                        value="testPackage"
-                      />
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="spec.packageName"
+                            placeholder="pipeline.manifestType.packagePlaceholder"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value="testPackage"
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
                     </div>
                     <span
                       class="bp3-popover-wrapper MultiTypeInput--wrapper"
@@ -1234,16 +1369,48 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
                     <div
-                      class="bp3-input-group MultiTypeInput--input"
+                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
                     >
-                      <input
-                        autocomplete="off"
-                        class="bp3-input"
-                        name="spec.version"
-                        placeholder="pipeline.artifactsSelection.versionPlaceholder"
-                        type="text"
-                        value="xyz.zip"
-                      />
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="spec.version"
+                            placeholder="pipeline.artifactsSelection.versionPlaceholder"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value="xyz.zip"
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
                     </div>
                     <span
                       class="bp3-popover-wrapper MultiTypeInput--wrapper"
@@ -1282,6 +1449,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -1311,6 +1479,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >

@@ -22,6 +22,7 @@ import {
   NewDefaultVauesForFailFastThreshold
 } from '@cv/pages/health-source/common/MetricThresholds/MetricThresholds.constants'
 import type { FailFasthresholdsFieldArrayInterface } from '../MetricThresholds.types'
+import EmptyThresholdsDisplay from './components/EmptyThresholdsDisplay'
 import css from './MetricThreshold.module.scss'
 
 export default function FailFastThresholdsFieldArray<T>({
@@ -137,6 +138,8 @@ export default function FailFastThresholdsFieldArray<T>({
               </Layout.Horizontal>
             </Container>
 
+            {!props?.form?.values?.failFastThresholds?.length && <EmptyThresholdsDisplay />}
+
             {props?.form?.values?.failFastThresholds?.map((data: MetricThresholdType, index: number) => {
               return (
                 <Container
@@ -186,7 +189,7 @@ export default function FailFastThresholdsFieldArray<T>({
                       data.groupName,
                       isOnlyCustomMetricHealthSource
                     )}
-                    key={`${data?.metricType}-${data.groupName}`}
+                    key={`${data.metricType}-${data.groupName}-${data.metricName}`}
                     name={`failFastThresholds.${index}.${FieldName.METRIC_THRESHOLD_METRIC_NAME}`}
                   />
 
@@ -222,7 +225,6 @@ export default function FailFastThresholdsFieldArray<T>({
                   <ThresholdCriteria
                     criteriaType={data?.criteria?.type}
                     thresholdTypeName="failFastThresholds"
-                    criteriaPercentageType={data?.criteria?.criteriaPercentageType}
                     index={index}
                     replaceFn={props.replace.bind(null, index)}
                   />

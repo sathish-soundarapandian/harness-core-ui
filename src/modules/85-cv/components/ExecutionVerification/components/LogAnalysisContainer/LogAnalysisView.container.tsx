@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Container, NoDataCard } from '@wings-software/uicore'
+import { Container, NoDataCard } from '@harness/uicore'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import {

@@ -7,12 +7,33 @@
 
 import React, { FC, useMemo } from 'react'
 import { get } from 'lodash-es'
-import { useStrings } from 'framework/strings'
+import * as Yup from 'yup'
+import { useFormikContext } from 'formik'
+import { FormError } from '@harness/uicore'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { Segment, Variation } from 'services/cf'
 import type { FlagConfigurationStepFormDataValues } from '@cf/components/PipelineSteps/FlagConfigurationStep/types'
 import SubSection, { SubSectionProps } from '../SubSection'
 import ServeVariationToItem from './ServeVariationToItem'
 import { CFPipelineInstructionType } from '../../types'
+
+export const serveVariationToTargetGroupSchema = (getString: UseStringsReturn['getString']): Yup.Schema<any> =>
+  Yup.object({
+    spec: Yup.lazy<any>(spec => {
+      if (!spec?.segments?.length || !spec?.variation) {
+        return Yup.object({
+          variation: Yup.string().required(
+            getString('cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroup.variationTargetGroups')
+          )
+        })
+      }
+
+      return Yup.object({
+        variation: Yup.string(),
+        segments: Yup.array().of(Yup.string())
+      })
+    })
+  })
 
 export interface ServeVariationToTargetGroupProps extends SubSectionProps {
   setField: (fieldName: string, value: unknown) => void
@@ -31,6 +52,7 @@ const ServeVariationToTargetGroup: FC<ServeVariationToTargetGroupProps> = ({
   ...props
 }) => {
   const { getString } = useStrings()
+  const { errors, isValid, touched } = useFormikContext()
 
   const selectedTargetGroups = useMemo<Segment[]>(() => {
     const selectedTargetGroupIds = get(fieldValues, prefix('spec.segments'))
@@ -44,6 +66,14 @@ const ServeVariationToTargetGroup: FC<ServeVariationToTargetGroupProps> = ({
 
   return (
     <SubSection data-testid="flagChanges-serveVariationToTargetGroup" {...props}>
+      {!isValid && errors && get(touched, prefix('identifier')) && get(errors, prefix('spec.variation')) && (
+        <FormError
+          name={prefix('spec.variation')}
+          errorMessage={getString(
+            'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroup.variationTargetGroups'
+          )}
+        />
+      )}
       <ServeVariationToItem
         dialogTitle={getString('cf.pipeline.flagConfiguration.addEditVariationToTargetGroups')}
         itemLabel={getString('cf.shared.segments')}

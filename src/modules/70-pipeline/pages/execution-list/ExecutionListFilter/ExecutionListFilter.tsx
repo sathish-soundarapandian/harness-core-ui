@@ -8,7 +8,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import { isEmpty, pick } from 'lodash-es'
@@ -70,16 +70,17 @@ export function ExecutionListFilter(): React.ReactElement {
 
   const { data: servicesResponse, loading: isFetchingServices } = useGetServiceListForProject({
     queryParams: { accountId, orgIdentifier, projectIdentifier },
-    lazy: isFiltersDrawerOpen
+    lazy: !isFiltersDrawerOpen
   })
 
   const { data: deploymentTypeResponse, loading: isFetchingDeploymentTypes } = useGetServiceDefinitionTypes({
-    lazy: isFiltersDrawerOpen
+    queryParams: { accountId },
+    lazy: !isFiltersDrawerOpen
   })
 
   const { data: environmentsResponse, loading: isFetchingEnvironments } = useGetEnvironmentListForProject({
     queryParams: { accountId, orgIdentifier, projectIdentifier },
-    lazy: isFiltersDrawerOpen
+    lazy: !isFiltersDrawerOpen
   })
 
   const [deploymentTypeSelectOptions, setDeploymentTypeSelectOptions] = React.useState<SelectOption[]>([])

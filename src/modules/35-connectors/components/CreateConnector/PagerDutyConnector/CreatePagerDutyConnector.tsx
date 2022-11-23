@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import * as Yup from 'yup'
-import { Container, FormikForm, Layout, Formik, Button, PageSpinner } from '@wings-software/uicore'
+import { Container, FormikForm, Layout, Formik, Button, PageSpinner } from '@harness/uicore'
 import { buildPagerDutyPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import type { ConnectorConfigDTO } from 'services/cd-ng'

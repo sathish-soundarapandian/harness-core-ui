@@ -1,5 +1,1425 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ProjectSelector render list view 1`] = `
+<div
+  class="bp3-popover-content"
+>
+  <div
+    class="StyledProps--font StyledProps--main selectContainer StyledProps--padding-xlarge"
+    style="width: 600px;"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--padding-bottom-large"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-weight-bold StyledProps--color StyledProps--color-black"
+      >
+        selectProject
+      </p>
+      <button
+        aria-label="projectsOrgs.viewAllProjects"
+        class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          projectsOrgs.viewAllProjects
+        </span>
+      </button>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main"
+    >
+      <div
+        class="bp3-input-group ui-search-box ExpandingSearchInput--main projectSearch  ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+        data-name=""
+      >
+        <span
+          class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+          data-icon="thinner-search"
+        >
+          <svg
+            fill="none"
+            height="14"
+            viewBox="0 0 16 16"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <input
+          class="bp3-input  ExpandingSearchInput--filter"
+          dir="auto"
+          placeholder="projectsOrgs.searchProjectPlaceHolder"
+          style="padding-right: 38px;"
+          type="search"
+          value=""
+        />
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <button
+          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main GridListToggle--gridButton StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
+          data-testid="grid-view"
+          data-tooltip-id="grid-view"
+          type="button"
+        >
+          <span
+            class="bp3-icon bp3-icon-grid-view StyledProps--main"
+            icon="grid-view"
+          >
+            <svg
+              data-icon="grid-view"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                grid-view
+              </desc>
+              <path
+                d="M0 1v6h7V0H1C.45 0 0 .45 0 1zm0 14c0 .55.45 1 1 1h6V9H0v6zM15 0H9v7h7V1c0-.55-.45-1-1-1zM9 16h6c.55 0 1-.45 1-1V9H9v7z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </button>
+        <button
+          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main GridListToggle--listUnselected GridListToggle--listButton Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          data-testid="list-view"
+          data-tooltip-id="list-view"
+          type="button"
+        >
+          <span
+            class="bp3-icon bp3-icon-list StyledProps--main"
+            icon="list"
+          >
+            <svg
+              data-icon="list"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                list
+              </desc>
+              <path
+                d="M1 3h14c.55 0 1-.45 1-1s-.45-1-1-1H1c-.55 0-1 .45-1 1s.45 1 1 1zm14 10H1c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1zm0-4H1c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1zm0-4H1c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="Layout--vertical StyledProps--main projectContainerWrapper"
+    >
+      <div
+        class="projectContainer"
+      >
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card projectCard projectCard bp3-popover-dismiss Card--interactive"
+          data-testid="project-card-testtestOrg"
+          tabindex="0"
+        >
+          <div
+            class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="colorBar"
+                style="background-color: rgb(230, 184, 0);"
+              />
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                test
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey700"
+                style="--text-line-clamp: 1;"
+              >
+                idLabel
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="--text-line-clamp: 1; display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="union"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 14 15"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M7 5.885c1.289 0 2.333-1.106 2.333-2.47C9.333 2.05 8.29.945 7 .945c-1.289 0-2.333 1.105-2.333 2.47 0 1.364 1.044 2.47 2.333 2.47zm0-.823c.86 0 1.556-.737 1.556-1.647S7.859 1.768 7 1.768c-.859 0-1.555.737-1.555 1.647S6.14 5.062 7 5.062zm-2.333 7.41c0 1.365-1.045 2.47-2.334 2.47-1.288 0-2.333-1.105-2.333-2.47 0-1.103.684-2.038 1.627-2.355a6.139 6.139 0 01-.071-.937c0-2.321 1.296-4.323 3.164-5.236.049.236.13.46.237.666-1.586.81-2.701 2.534-2.701 4.57 0 .28.02.555.061.822h.016c1.289 0 2.334 1.106 2.334 2.47zm-.778-.001c0 .91-.697 1.647-1.556 1.647-.859 0-1.555-.737-1.555-1.647s.696-1.647 1.555-1.647c.86 0 1.556.737 1.556 1.647zM14 12.473c0 1.364-1.045 2.47-2.333 2.47-1.289 0-2.334-1.106-2.334-2.47 0-1.365 1.045-2.471 2.334-2.471h.016a5.54 5.54 0 00.061-.822c0-2.036-1.115-3.76-2.7-4.57.107-.206.187-.43.236-.666 1.868.913 3.164 2.915 3.164 5.236 0 .32-.024.632-.071.937.943.317 1.627 1.252 1.627 2.355zm-.778-.002c0 .91-.696 1.647-1.555 1.647-.86 0-1.556-.737-1.556-1.647s.696-1.647 1.556-1.647c.859 0 1.555.737 1.555 1.647zm-3.694.994c.091.22.212.424.357.605a5.2 5.2 0 01-5.77 0 2.5 2.5 0 00.357-.605c.736.495 1.605.78 2.528.78s1.792-.285 2.528-.78z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </p>
+              </div>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--padding-top-small"
+                style="--text-line-clamp: 2;"
+              >
+                test
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag1
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag2:tag3
+                      </span>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-right-large"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    adminLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    collaboratorsLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+                >
+                  modules
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card projectCard projectCard bp3-popover-dismiss Card--interactive"
+          data-testid="project-card-Online_BankingCisco_Meraki"
+          tabindex="0"
+        >
+          <div
+            class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="colorBar"
+                style="background-color: rgb(28, 28, 40);"
+              />
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                Online Banking
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey700"
+                style="--text-line-clamp: 1;"
+              >
+                idLabel
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="--text-line-clamp: 1; display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="union"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 14 15"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M7 5.885c1.289 0 2.333-1.106 2.333-2.47C9.333 2.05 8.29.945 7 .945c-1.289 0-2.333 1.105-2.333 2.47 0 1.364 1.044 2.47 2.333 2.47zm0-.823c.86 0 1.556-.737 1.556-1.647S7.859 1.768 7 1.768c-.859 0-1.555.737-1.555 1.647S6.14 5.062 7 5.062zm-2.333 7.41c0 1.365-1.045 2.47-2.334 2.47-1.288 0-2.333-1.105-2.333-2.47 0-1.103.684-2.038 1.627-2.355a6.139 6.139 0 01-.071-.937c0-2.321 1.296-4.323 3.164-5.236.049.236.13.46.237.666-1.586.81-2.701 2.534-2.701 4.57 0 .28.02.555.061.822h.016c1.289 0 2.334 1.106 2.334 2.47zm-.778-.001c0 .91-.697 1.647-1.556 1.647-.859 0-1.555-.737-1.555-1.647s.696-1.647 1.555-1.647c.86 0 1.556.737 1.556 1.647zM14 12.473c0 1.364-1.045 2.47-2.333 2.47-1.289 0-2.334-1.106-2.334-2.47 0-1.365 1.045-2.471 2.334-2.471h.016a5.54 5.54 0 00.061-.822c0-2.036-1.115-3.76-2.7-4.57.107-.206.187-.43.236-.666 1.868.913 3.164 2.915 3.164 5.236 0 .32-.024.632-.071.937.943.317 1.627 1.252 1.627 2.355zm-.778-.002c0 .91-.696 1.647-1.555 1.647-.86 0-1.556-.737-1.556-1.647s.696-1.647 1.556-1.647c.859 0 1.555.737 1.555 1.647zm-3.694.994c.091.22.212.424.357.605a5.2 5.2 0 01-5.77 0 2.5 2.5 0 00.357-.605c.736.495 1.605.78 2.528.78s1.792-.285 2.528-.78z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </p>
+              </div>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--padding-top-small"
+                style="--text-line-clamp: 2;"
+              >
+                UI for the Payment
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag1
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag2:tag3
+                      </span>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-right-large"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    adminLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    collaboratorsLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+                >
+                  modules
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card projectCard projectCard bp3-popover-dismiss Card--interactive"
+          data-testid="project-card-PortalCisco_Meraki"
+          tabindex="0"
+        >
+          <div
+            class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="colorBar"
+                style="background-color: rgb(255, 136, 0);"
+              />
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                Portal
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey700"
+                style="--text-line-clamp: 1;"
+              >
+                idLabel
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="--text-line-clamp: 1; display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="union"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 14 15"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M7 5.885c1.289 0 2.333-1.106 2.333-2.47C9.333 2.05 8.29.945 7 .945c-1.289 0-2.333 1.105-2.333 2.47 0 1.364 1.044 2.47 2.333 2.47zm0-.823c.86 0 1.556-.737 1.556-1.647S7.859 1.768 7 1.768c-.859 0-1.555.737-1.555 1.647S6.14 5.062 7 5.062zm-2.333 7.41c0 1.365-1.045 2.47-2.334 2.47-1.288 0-2.333-1.105-2.333-2.47 0-1.103.684-2.038 1.627-2.355a6.139 6.139 0 01-.071-.937c0-2.321 1.296-4.323 3.164-5.236.049.236.13.46.237.666-1.586.81-2.701 2.534-2.701 4.57 0 .28.02.555.061.822h.016c1.289 0 2.334 1.106 2.334 2.47zm-.778-.001c0 .91-.697 1.647-1.556 1.647-.859 0-1.555-.737-1.555-1.647s.696-1.647 1.555-1.647c.86 0 1.556.737 1.556 1.647zM14 12.473c0 1.364-1.045 2.47-2.333 2.47-1.289 0-2.334-1.106-2.334-2.47 0-1.365 1.045-2.471 2.334-2.471h.016a5.54 5.54 0 00.061-.822c0-2.036-1.115-3.76-2.7-4.57.107-.206.187-.43.236-.666 1.868.913 3.164 2.915 3.164 5.236 0 .32-.024.632-.071.937.943.317 1.627 1.252 1.627 2.355zm-.778-.002c0 .91-.696 1.647-1.555 1.647-.86 0-1.556-.737-1.556-1.647s.696-1.647 1.556-1.647c.859 0 1.555.737 1.555 1.647zm-3.694.994c.091.22.212.424.357.605a5.2 5.2 0 01-5.77 0 2.5 2.5 0 00.357-.605c.736.495 1.605.78 2.528.78s1.792-.285 2.528-.78z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </p>
+              </div>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--padding-top-small"
+                style="--text-line-clamp: 2;"
+              >
+                Online users
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag1
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag2:tag3
+                      </span>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-right-large"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    adminLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    collaboratorsLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+                >
+                  modules
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card projectCard projectCard bp3-popover-dismiss Card--interactive"
+          data-testid="project-card-Project_1Cisco_Prime"
+          tabindex="0"
+        >
+          <div
+            class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="colorBar"
+                style="background-color: rgb(230, 184, 0);"
+              />
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                Project 1
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey700"
+                style="--text-line-clamp: 1;"
+              >
+                idLabel
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="--text-line-clamp: 1; display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="union"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 14 15"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M7 5.885c1.289 0 2.333-1.106 2.333-2.47C9.333 2.05 8.29.945 7 .945c-1.289 0-2.333 1.105-2.333 2.47 0 1.364 1.044 2.47 2.333 2.47zm0-.823c.86 0 1.556-.737 1.556-1.647S7.859 1.768 7 1.768c-.859 0-1.555.737-1.555 1.647S6.14 5.062 7 5.062zm-2.333 7.41c0 1.365-1.045 2.47-2.334 2.47-1.288 0-2.333-1.105-2.333-2.47 0-1.103.684-2.038 1.627-2.355a6.139 6.139 0 01-.071-.937c0-2.321 1.296-4.323 3.164-5.236.049.236.13.46.237.666-1.586.81-2.701 2.534-2.701 4.57 0 .28.02.555.061.822h.016c1.289 0 2.334 1.106 2.334 2.47zm-.778-.001c0 .91-.697 1.647-1.556 1.647-.859 0-1.555-.737-1.555-1.647s.696-1.647 1.555-1.647c.86 0 1.556.737 1.556 1.647zM14 12.473c0 1.364-1.045 2.47-2.333 2.47-1.289 0-2.334-1.106-2.334-2.47 0-1.365 1.045-2.471 2.334-2.471h.016a5.54 5.54 0 00.061-.822c0-2.036-1.115-3.76-2.7-4.57.107-.206.187-.43.236-.666 1.868.913 3.164 2.915 3.164 5.236 0 .32-.024.632-.071.937.943.317 1.627 1.252 1.627 2.355zm-.778-.002c0 .91-.696 1.647-1.555 1.647-.86 0-1.556-.737-1.556-1.647s.696-1.647 1.556-1.647c.859 0 1.555.737 1.555 1.647zm-3.694.994c.091.22.212.424.357.605a5.2 5.2 0 01-5.77 0 2.5 2.5 0 00.357-.605c.736.495 1.605.78 2.528.78s1.792-.285 2.528-.78z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </p>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                />
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-right-large"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    adminLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    collaboratorsLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+                >
+                  modules
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card projectCard projectCard bp3-popover-dismiss Card--interactive"
+          data-testid="project-card-Project_DemoCisco_Prime"
+          tabindex="0"
+        >
+          <div
+            class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="colorBar"
+                style="background-color: rgb(0, 79, 196);"
+              />
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                Project Demo
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey700"
+                style="--text-line-clamp: 1;"
+              >
+                idLabel
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="--text-line-clamp: 1; display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="union"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 14 15"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M7 5.885c1.289 0 2.333-1.106 2.333-2.47C9.333 2.05 8.29.945 7 .945c-1.289 0-2.333 1.105-2.333 2.47 0 1.364 1.044 2.47 2.333 2.47zm0-.823c.86 0 1.556-.737 1.556-1.647S7.859 1.768 7 1.768c-.859 0-1.555.737-1.555 1.647S6.14 5.062 7 5.062zm-2.333 7.41c0 1.365-1.045 2.47-2.334 2.47-1.288 0-2.333-1.105-2.333-2.47 0-1.103.684-2.038 1.627-2.355a6.139 6.139 0 01-.071-.937c0-2.321 1.296-4.323 3.164-5.236.049.236.13.46.237.666-1.586.81-2.701 2.534-2.701 4.57 0 .28.02.555.061.822h.016c1.289 0 2.334 1.106 2.334 2.47zm-.778-.001c0 .91-.697 1.647-1.556 1.647-.859 0-1.555-.737-1.555-1.647s.696-1.647 1.555-1.647c.86 0 1.556.737 1.556 1.647zM14 12.473c0 1.364-1.045 2.47-2.333 2.47-1.289 0-2.334-1.106-2.334-2.47 0-1.365 1.045-2.471 2.334-2.471h.016a5.54 5.54 0 00.061-.822c0-2.036-1.115-3.76-2.7-4.57.107-.206.187-.43.236-.666 1.868.913 3.164 2.915 3.164 5.236 0 .32-.024.632-.071.937.943.317 1.627 1.252 1.627 2.355zm-.778-.002c0 .91-.696 1.647-1.555 1.647-.86 0-1.556-.737-1.556-1.647s.696-1.647 1.556-1.647c.859 0 1.555.737 1.555 1.647zm-3.694.994c.091.22.212.424.357.605a5.2 5.2 0 01-5.77 0 2.5 2.5 0 00.357-.605c.736.495 1.605.78 2.528.78s1.792-.285 2.528-.78z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </p>
+              </div>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--padding-top-small"
+                style="--text-line-clamp: 2;"
+              >
+                Demo project
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag1
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag2:tag3
+                      </span>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-right-large"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    adminLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    collaboratorsLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+                >
+                  modules
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card projectCard projectCard bp3-popover-dismiss Card--interactive"
+          data-testid="project-card-Drone_Data_SupplierHarness"
+          tabindex="0"
+        >
+          <div
+            class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="colorBar"
+                style="background-color: rgb(230, 122, 0);"
+              />
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                Drone Data Supplier
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey700"
+                style="--text-line-clamp: 1;"
+              >
+                idLabel
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="--text-line-clamp: 1; display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="union"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 14 15"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M7 5.885c1.289 0 2.333-1.106 2.333-2.47C9.333 2.05 8.29.945 7 .945c-1.289 0-2.333 1.105-2.333 2.47 0 1.364 1.044 2.47 2.333 2.47zm0-.823c.86 0 1.556-.737 1.556-1.647S7.859 1.768 7 1.768c-.859 0-1.555.737-1.555 1.647S6.14 5.062 7 5.062zm-2.333 7.41c0 1.365-1.045 2.47-2.334 2.47-1.288 0-2.333-1.105-2.333-2.47 0-1.103.684-2.038 1.627-2.355a6.139 6.139 0 01-.071-.937c0-2.321 1.296-4.323 3.164-5.236.049.236.13.46.237.666-1.586.81-2.701 2.534-2.701 4.57 0 .28.02.555.061.822h.016c1.289 0 2.334 1.106 2.334 2.47zm-.778-.001c0 .91-.697 1.647-1.556 1.647-.859 0-1.555-.737-1.555-1.647s.696-1.647 1.555-1.647c.86 0 1.556.737 1.556 1.647zM14 12.473c0 1.364-1.045 2.47-2.333 2.47-1.289 0-2.334-1.106-2.334-2.47 0-1.365 1.045-2.471 2.334-2.471h.016a5.54 5.54 0 00.061-.822c0-2.036-1.115-3.76-2.7-4.57.107-.206.187-.43.236-.666 1.868.913 3.164 2.915 3.164 5.236 0 .32-.024.632-.071.937.943.317 1.627 1.252 1.627 2.355zm-.778-.002c0 .91-.696 1.647-1.555 1.647-.86 0-1.556-.737-1.556-1.647s.696-1.647 1.556-1.647c.859 0 1.555.737 1.555 1.647zm-3.694.994c.091.22.212.424.357.605a5.2 5.2 0 01-5.77 0 2.5 2.5 0 00.357-.605c.736.495 1.605.78 2.528.78s1.792-.285 2.528-.78z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </p>
+              </div>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--padding-top-small"
+                style="--text-line-clamp: 2;"
+              >
+                Drone
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag1
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag2:tag3
+                      </span>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-right-large"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    adminLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    collaboratorsLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+                >
+                  modules
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card projectCard projectCard bp3-popover-dismiss Card--interactive"
+          data-testid="project-card-SwaggerHarness"
+          tabindex="0"
+        >
+          <div
+            class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="colorBar"
+                style="background-color: rgb(230, 184, 0);"
+              />
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                Swagger
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey700"
+                style="--text-line-clamp: 1;"
+              >
+                idLabel
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="--text-line-clamp: 1; display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="union"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 14 15"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M7 5.885c1.289 0 2.333-1.106 2.333-2.47C9.333 2.05 8.29.945 7 .945c-1.289 0-2.333 1.105-2.333 2.47 0 1.364 1.044 2.47 2.333 2.47zm0-.823c.86 0 1.556-.737 1.556-1.647S7.859 1.768 7 1.768c-.859 0-1.555.737-1.555 1.647S6.14 5.062 7 5.062zm-2.333 7.41c0 1.365-1.045 2.47-2.334 2.47-1.288 0-2.333-1.105-2.333-2.47 0-1.103.684-2.038 1.627-2.355a6.139 6.139 0 01-.071-.937c0-2.321 1.296-4.323 3.164-5.236.049.236.13.46.237.666-1.586.81-2.701 2.534-2.701 4.57 0 .28.02.555.061.822h.016c1.289 0 2.334 1.106 2.334 2.47zm-.778-.001c0 .91-.697 1.647-1.556 1.647-.859 0-1.555-.737-1.555-1.647s.696-1.647 1.555-1.647c.86 0 1.556.737 1.556 1.647zM14 12.473c0 1.364-1.045 2.47-2.333 2.47-1.289 0-2.334-1.106-2.334-2.47 0-1.365 1.045-2.471 2.334-2.471h.016a5.54 5.54 0 00.061-.822c0-2.036-1.115-3.76-2.7-4.57.107-.206.187-.43.236-.666 1.868.913 3.164 2.915 3.164 5.236 0 .32-.024.632-.071.937.943.317 1.627 1.252 1.627 2.355zm-.778-.002c0 .91-.696 1.647-1.555 1.647-.86 0-1.556-.737-1.556-1.647s.696-1.647 1.556-1.647c.859 0 1.555.737 1.555 1.647zm-3.694.994c.091.22.212.424.357.605a5.2 5.2 0 01-5.77 0 2.5 2.5 0 00.357-.605c.736.495 1.605.78 2.528.78s1.792-.285 2.528-.78z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </p>
+              </div>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--padding-top-small"
+                style="--text-line-clamp: 2;"
+              >
+                Swagger 2.0
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag1
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag2:tag3
+                      </span>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-right-large"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    adminLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    collaboratorsLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+                >
+                  modules
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`ProjectSelector render with projects 1`] = `
 <div>
   <div
@@ -71,71 +1491,1421 @@ exports[`ProjectSelector render with projects 1`] = `
 `;
 
 exports[`ProjectSelector render with projects 2`] = `
-<div>
+<div
+  class="bp3-popover-content"
+>
   <div
-    class="Layout--vertical StyledProps--main StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--padding-top-large StyledProps--padding-bottom-small"
+    class="StyledProps--font StyledProps--main selectContainer StyledProps--padding-xlarge"
+    style="width: 600px;"
   >
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
-    >
-      projectLabel
-    </p>
     <div
-      class="projectSelector selectProjectDisplay"
+      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--padding-bottom-large"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-weight-bold StyledProps--color StyledProps--color-black"
+      >
+        selectProject
+      </p>
+      <button
+        aria-label="projectsOrgs.viewAllProjects"
+        class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          projectsOrgs.viewAllProjects
+        </span>
+      </button>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main"
     >
       <div
-        class="bp3-popover-wrapper bp3-fill"
+        class="bp3-input-group ui-search-box ExpandingSearchInput--main projectSearch  ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+        data-name=""
+      >
+        <span
+          class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+          data-icon="thinner-search"
+        >
+          <svg
+            fill="none"
+            height="14"
+            viewBox="0 0 16 16"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <input
+          class="bp3-input  ExpandingSearchInput--filter"
+          dir="auto"
+          placeholder="projectsOrgs.searchProjectPlaceHolder"
+          style="padding-right: 38px;"
+          type="search"
+          value=""
+        />
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <button
+          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main GridListToggle--gridButton StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
+          data-testid="grid-view"
+          data-tooltip-id="grid-view"
+          type="button"
+        >
+          <span
+            class="bp3-icon bp3-icon-grid-view StyledProps--main"
+            icon="grid-view"
+          >
+            <svg
+              data-icon="grid-view"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                grid-view
+              </desc>
+              <path
+                d="M0 1v6h7V0H1C.45 0 0 .45 0 1zm0 14c0 .55.45 1 1 1h6V9H0v6zM15 0H9v7h7V1c0-.55-.45-1-1-1zM9 16h6c.55 0 1-.45 1-1V9H9v7z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </button>
+        <button
+          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main GridListToggle--listUnselected GridListToggle--listButton Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          data-testid="list-view"
+          data-tooltip-id="list-view"
+          type="button"
+        >
+          <span
+            class="bp3-icon bp3-icon-list StyledProps--main"
+            icon="list"
+          >
+            <svg
+              data-icon="list"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                list
+              </desc>
+              <path
+                d="M1 3h14c.55 0 1-.45 1-1s-.45-1-1-1H1c-.55 0-1 .45-1 1s.45 1 1 1zm14 10H1c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1zm0-4H1c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1zm0-4H1c-.55 0-1 .45-1 1s.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="Layout--vertical StyledProps--main projectContainerWrapper"
+    >
+      <div
+        class="projectContainer"
       >
         <div
-          class="bp3-popover-target bp3-popover-open"
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card projectCard projectCard bp3-popover-dismiss Card--interactive"
+          data-testid="project-card-testtestOrg"
+          tabindex="0"
         >
-          <button
-            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main popoverTarget selectButton bp3-active Button--with-current-color Button--without-shadow Button--withRightIcon"
-            data-testid="project-select-button"
-            type="button"
+          <div
+            class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
           >
-            <span
-              class="bp3-button-text"
+            <div
+              class="StyledProps--font StyledProps--main"
             >
+              <div
+                class="colorBar"
+                style="background-color: rgb(230, 184, 0);"
+              />
               <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey400 StyledProps--font-size-normal StyledProps--padding-xsmall"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
               >
-                selectProject
+                test
               </p>
-            </span>
-            <span
-              class="bp3-icon bp3-icon-chevron-right StyledProps--main"
-              icon="chevron-right"
-            >
-              <svg
-                data-icon="chevron-right"
-                height="16"
-                viewBox="0 0 16 16"
-                width="16"
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey700"
+                style="--text-line-clamp: 1;"
               >
-                <desc>
-                  chevron-right
-                </desc>
-                <path
-                  d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-                  fill-rule="evenodd"
+                idLabel
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="--text-line-clamp: 1; display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="union"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 14 15"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M7 5.885c1.289 0 2.333-1.106 2.333-2.47C9.333 2.05 8.29.945 7 .945c-1.289 0-2.333 1.105-2.333 2.47 0 1.364 1.044 2.47 2.333 2.47zm0-.823c.86 0 1.556-.737 1.556-1.647S7.859 1.768 7 1.768c-.859 0-1.555.737-1.555 1.647S6.14 5.062 7 5.062zm-2.333 7.41c0 1.365-1.045 2.47-2.334 2.47-1.288 0-2.333-1.105-2.333-2.47 0-1.103.684-2.038 1.627-2.355a6.139 6.139 0 01-.071-.937c0-2.321 1.296-4.323 3.164-5.236.049.236.13.46.237.666-1.586.81-2.701 2.534-2.701 4.57 0 .28.02.555.061.822h.016c1.289 0 2.334 1.106 2.334 2.47zm-.778-.001c0 .91-.697 1.647-1.556 1.647-.859 0-1.555-.737-1.555-1.647s.696-1.647 1.555-1.647c.86 0 1.556.737 1.556 1.647zM14 12.473c0 1.364-1.045 2.47-2.333 2.47-1.289 0-2.334-1.106-2.334-2.47 0-1.365 1.045-2.471 2.334-2.471h.016a5.54 5.54 0 00.061-.822c0-2.036-1.115-3.76-2.7-4.57.107-.206.187-.43.236-.666 1.868.913 3.164 2.915 3.164 5.236 0 .32-.024.632-.071.937.943.317 1.627 1.252 1.627 2.355zm-.778-.002c0 .91-.696 1.647-1.555 1.647-.86 0-1.556-.737-1.556-1.647s.696-1.647 1.556-1.647c.859 0 1.555.737 1.555 1.647zm-3.694.994c.091.22.212.424.357.605a5.2 5.2 0 01-5.77 0 2.5 2.5 0 00.357-.605c.736.495 1.605.78 2.528.78s1.792-.285 2.528-.78z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </p>
+              </div>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--padding-top-small"
+                style="--text-line-clamp: 2;"
+              >
+                test
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag1
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag2:tag3
+                      </span>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-right-large"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    adminLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    collaboratorsLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+                >
+                  modules
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
                 />
-              </svg>
-            </span>
-          </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card projectCard projectCard bp3-popover-dismiss Card--interactive"
+          data-testid="project-card-Online_BankingCisco_Meraki"
+          tabindex="0"
+        >
+          <div
+            class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="colorBar"
+                style="background-color: rgb(28, 28, 40);"
+              />
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                Online Banking
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey700"
+                style="--text-line-clamp: 1;"
+              >
+                idLabel
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="--text-line-clamp: 1; display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="union"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 14 15"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M7 5.885c1.289 0 2.333-1.106 2.333-2.47C9.333 2.05 8.29.945 7 .945c-1.289 0-2.333 1.105-2.333 2.47 0 1.364 1.044 2.47 2.333 2.47zm0-.823c.86 0 1.556-.737 1.556-1.647S7.859 1.768 7 1.768c-.859 0-1.555.737-1.555 1.647S6.14 5.062 7 5.062zm-2.333 7.41c0 1.365-1.045 2.47-2.334 2.47-1.288 0-2.333-1.105-2.333-2.47 0-1.103.684-2.038 1.627-2.355a6.139 6.139 0 01-.071-.937c0-2.321 1.296-4.323 3.164-5.236.049.236.13.46.237.666-1.586.81-2.701 2.534-2.701 4.57 0 .28.02.555.061.822h.016c1.289 0 2.334 1.106 2.334 2.47zm-.778-.001c0 .91-.697 1.647-1.556 1.647-.859 0-1.555-.737-1.555-1.647s.696-1.647 1.555-1.647c.86 0 1.556.737 1.556 1.647zM14 12.473c0 1.364-1.045 2.47-2.333 2.47-1.289 0-2.334-1.106-2.334-2.47 0-1.365 1.045-2.471 2.334-2.471h.016a5.54 5.54 0 00.061-.822c0-2.036-1.115-3.76-2.7-4.57.107-.206.187-.43.236-.666 1.868.913 3.164 2.915 3.164 5.236 0 .32-.024.632-.071.937.943.317 1.627 1.252 1.627 2.355zm-.778-.002c0 .91-.696 1.647-1.555 1.647-.86 0-1.556-.737-1.556-1.647s.696-1.647 1.556-1.647c.859 0 1.555.737 1.555 1.647zm-3.694.994c.091.22.212.424.357.605a5.2 5.2 0 01-5.77 0 2.5 2.5 0 00.357-.605c.736.495 1.605.78 2.528.78s1.792-.285 2.528-.78z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </p>
+              </div>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--padding-top-small"
+                style="--text-line-clamp: 2;"
+              >
+                UI for the Payment
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag1
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag2:tag3
+                      </span>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-right-large"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    adminLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    collaboratorsLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+                >
+                  modules
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card projectCard projectCard bp3-popover-dismiss Card--interactive"
+          data-testid="project-card-PortalCisco_Meraki"
+          tabindex="0"
+        >
+          <div
+            class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="colorBar"
+                style="background-color: rgb(255, 136, 0);"
+              />
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                Portal
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey700"
+                style="--text-line-clamp: 1;"
+              >
+                idLabel
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="--text-line-clamp: 1; display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="union"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 14 15"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M7 5.885c1.289 0 2.333-1.106 2.333-2.47C9.333 2.05 8.29.945 7 .945c-1.289 0-2.333 1.105-2.333 2.47 0 1.364 1.044 2.47 2.333 2.47zm0-.823c.86 0 1.556-.737 1.556-1.647S7.859 1.768 7 1.768c-.859 0-1.555.737-1.555 1.647S6.14 5.062 7 5.062zm-2.333 7.41c0 1.365-1.045 2.47-2.334 2.47-1.288 0-2.333-1.105-2.333-2.47 0-1.103.684-2.038 1.627-2.355a6.139 6.139 0 01-.071-.937c0-2.321 1.296-4.323 3.164-5.236.049.236.13.46.237.666-1.586.81-2.701 2.534-2.701 4.57 0 .28.02.555.061.822h.016c1.289 0 2.334 1.106 2.334 2.47zm-.778-.001c0 .91-.697 1.647-1.556 1.647-.859 0-1.555-.737-1.555-1.647s.696-1.647 1.555-1.647c.86 0 1.556.737 1.556 1.647zM14 12.473c0 1.364-1.045 2.47-2.333 2.47-1.289 0-2.334-1.106-2.334-2.47 0-1.365 1.045-2.471 2.334-2.471h.016a5.54 5.54 0 00.061-.822c0-2.036-1.115-3.76-2.7-4.57.107-.206.187-.43.236-.666 1.868.913 3.164 2.915 3.164 5.236 0 .32-.024.632-.071.937.943.317 1.627 1.252 1.627 2.355zm-.778-.002c0 .91-.696 1.647-1.555 1.647-.86 0-1.556-.737-1.556-1.647s.696-1.647 1.556-1.647c.859 0 1.555.737 1.555 1.647zm-3.694.994c.091.22.212.424.357.605a5.2 5.2 0 01-5.77 0 2.5 2.5 0 00.357-.605c.736.495 1.605.78 2.528.78s1.792-.285 2.528-.78z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </p>
+              </div>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--padding-top-small"
+                style="--text-line-clamp: 2;"
+              >
+                Online users
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag1
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag2:tag3
+                      </span>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-right-large"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    adminLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    collaboratorsLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+                >
+                  modules
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card projectCard projectCard bp3-popover-dismiss Card--interactive"
+          data-testid="project-card-Project_1Cisco_Prime"
+          tabindex="0"
+        >
+          <div
+            class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="colorBar"
+                style="background-color: rgb(230, 184, 0);"
+              />
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                Project 1
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey700"
+                style="--text-line-clamp: 1;"
+              >
+                idLabel
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="--text-line-clamp: 1; display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="union"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 14 15"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M7 5.885c1.289 0 2.333-1.106 2.333-2.47C9.333 2.05 8.29.945 7 .945c-1.289 0-2.333 1.105-2.333 2.47 0 1.364 1.044 2.47 2.333 2.47zm0-.823c.86 0 1.556-.737 1.556-1.647S7.859 1.768 7 1.768c-.859 0-1.555.737-1.555 1.647S6.14 5.062 7 5.062zm-2.333 7.41c0 1.365-1.045 2.47-2.334 2.47-1.288 0-2.333-1.105-2.333-2.47 0-1.103.684-2.038 1.627-2.355a6.139 6.139 0 01-.071-.937c0-2.321 1.296-4.323 3.164-5.236.049.236.13.46.237.666-1.586.81-2.701 2.534-2.701 4.57 0 .28.02.555.061.822h.016c1.289 0 2.334 1.106 2.334 2.47zm-.778-.001c0 .91-.697 1.647-1.556 1.647-.859 0-1.555-.737-1.555-1.647s.696-1.647 1.555-1.647c.86 0 1.556.737 1.556 1.647zM14 12.473c0 1.364-1.045 2.47-2.333 2.47-1.289 0-2.334-1.106-2.334-2.47 0-1.365 1.045-2.471 2.334-2.471h.016a5.54 5.54 0 00.061-.822c0-2.036-1.115-3.76-2.7-4.57.107-.206.187-.43.236-.666 1.868.913 3.164 2.915 3.164 5.236 0 .32-.024.632-.071.937.943.317 1.627 1.252 1.627 2.355zm-.778-.002c0 .91-.696 1.647-1.555 1.647-.86 0-1.556-.737-1.556-1.647s.696-1.647 1.556-1.647c.859 0 1.555.737 1.555 1.647zm-3.694.994c.091.22.212.424.357.605a5.2 5.2 0 01-5.77 0 2.5 2.5 0 00.357-.605c.736.495 1.605.78 2.528.78s1.792-.285 2.528-.78z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </p>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                />
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-right-large"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    adminLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    collaboratorsLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+                >
+                  modules
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card projectCard projectCard bp3-popover-dismiss Card--interactive"
+          data-testid="project-card-Project_DemoCisco_Prime"
+          tabindex="0"
+        >
+          <div
+            class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="colorBar"
+                style="background-color: rgb(0, 79, 196);"
+              />
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                Project Demo
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey700"
+                style="--text-line-clamp: 1;"
+              >
+                idLabel
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="--text-line-clamp: 1; display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="union"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 14 15"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M7 5.885c1.289 0 2.333-1.106 2.333-2.47C9.333 2.05 8.29.945 7 .945c-1.289 0-2.333 1.105-2.333 2.47 0 1.364 1.044 2.47 2.333 2.47zm0-.823c.86 0 1.556-.737 1.556-1.647S7.859 1.768 7 1.768c-.859 0-1.555.737-1.555 1.647S6.14 5.062 7 5.062zm-2.333 7.41c0 1.365-1.045 2.47-2.334 2.47-1.288 0-2.333-1.105-2.333-2.47 0-1.103.684-2.038 1.627-2.355a6.139 6.139 0 01-.071-.937c0-2.321 1.296-4.323 3.164-5.236.049.236.13.46.237.666-1.586.81-2.701 2.534-2.701 4.57 0 .28.02.555.061.822h.016c1.289 0 2.334 1.106 2.334 2.47zm-.778-.001c0 .91-.697 1.647-1.556 1.647-.859 0-1.555-.737-1.555-1.647s.696-1.647 1.555-1.647c.86 0 1.556.737 1.556 1.647zM14 12.473c0 1.364-1.045 2.47-2.333 2.47-1.289 0-2.334-1.106-2.334-2.47 0-1.365 1.045-2.471 2.334-2.471h.016a5.54 5.54 0 00.061-.822c0-2.036-1.115-3.76-2.7-4.57.107-.206.187-.43.236-.666 1.868.913 3.164 2.915 3.164 5.236 0 .32-.024.632-.071.937.943.317 1.627 1.252 1.627 2.355zm-.778-.002c0 .91-.696 1.647-1.555 1.647-.86 0-1.556-.737-1.556-1.647s.696-1.647 1.556-1.647c.859 0 1.555.737 1.555 1.647zm-3.694.994c.091.22.212.424.357.605a5.2 5.2 0 01-5.77 0 2.5 2.5 0 00.357-.605c.736.495 1.605.78 2.528.78s1.792-.285 2.528-.78z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </p>
+              </div>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--padding-top-small"
+                style="--text-line-clamp: 2;"
+              >
+                Demo project
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag1
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag2:tag3
+                      </span>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-right-large"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    adminLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    collaboratorsLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+                >
+                  modules
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card projectCard projectCard bp3-popover-dismiss Card--interactive"
+          data-testid="project-card-Drone_Data_SupplierHarness"
+          tabindex="0"
+        >
+          <div
+            class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="colorBar"
+                style="background-color: rgb(230, 122, 0);"
+              />
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                Drone Data Supplier
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey700"
+                style="--text-line-clamp: 1;"
+              >
+                idLabel
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="--text-line-clamp: 1; display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="union"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 14 15"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M7 5.885c1.289 0 2.333-1.106 2.333-2.47C9.333 2.05 8.29.945 7 .945c-1.289 0-2.333 1.105-2.333 2.47 0 1.364 1.044 2.47 2.333 2.47zm0-.823c.86 0 1.556-.737 1.556-1.647S7.859 1.768 7 1.768c-.859 0-1.555.737-1.555 1.647S6.14 5.062 7 5.062zm-2.333 7.41c0 1.365-1.045 2.47-2.334 2.47-1.288 0-2.333-1.105-2.333-2.47 0-1.103.684-2.038 1.627-2.355a6.139 6.139 0 01-.071-.937c0-2.321 1.296-4.323 3.164-5.236.049.236.13.46.237.666-1.586.81-2.701 2.534-2.701 4.57 0 .28.02.555.061.822h.016c1.289 0 2.334 1.106 2.334 2.47zm-.778-.001c0 .91-.697 1.647-1.556 1.647-.859 0-1.555-.737-1.555-1.647s.696-1.647 1.555-1.647c.86 0 1.556.737 1.556 1.647zM14 12.473c0 1.364-1.045 2.47-2.333 2.47-1.289 0-2.334-1.106-2.334-2.47 0-1.365 1.045-2.471 2.334-2.471h.016a5.54 5.54 0 00.061-.822c0-2.036-1.115-3.76-2.7-4.57.107-.206.187-.43.236-.666 1.868.913 3.164 2.915 3.164 5.236 0 .32-.024.632-.071.937.943.317 1.627 1.252 1.627 2.355zm-.778-.002c0 .91-.696 1.647-1.555 1.647-.86 0-1.556-.737-1.556-1.647s.696-1.647 1.556-1.647c.859 0 1.555.737 1.555 1.647zm-3.694.994c.091.22.212.424.357.605a5.2 5.2 0 01-5.77 0 2.5 2.5 0 00.357-.605c.736.495 1.605.78 2.528.78s1.792-.285 2.528-.78z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </p>
+              </div>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--padding-top-small"
+                style="--text-line-clamp: 2;"
+              >
+                Drone
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag1
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag2:tag3
+                      </span>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-right-large"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    adminLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    collaboratorsLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+                >
+                  modules
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card projectCard projectCard bp3-popover-dismiss Card--interactive"
+          data-testid="project-card-SwaggerHarness"
+          tabindex="0"
+        >
+          <div
+            class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="colorBar"
+                style="background-color: rgb(230, 184, 0);"
+              />
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                Swagger
+              </p>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main projectId StyledProps--font-variation-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey700"
+                style="--text-line-clamp: 1;"
+              >
+                idLabel
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="--text-line-clamp: 1; display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="union"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 14 15"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M7 5.885c1.289 0 2.333-1.106 2.333-2.47C9.333 2.05 8.29.945 7 .945c-1.289 0-2.333 1.105-2.333 2.47 0 1.364 1.044 2.47 2.333 2.47zm0-.823c.86 0 1.556-.737 1.556-1.647S7.859 1.768 7 1.768c-.859 0-1.555.737-1.555 1.647S6.14 5.062 7 5.062zm-2.333 7.41c0 1.365-1.045 2.47-2.334 2.47-1.288 0-2.333-1.105-2.333-2.47 0-1.103.684-2.038 1.627-2.355a6.139 6.139 0 01-.071-.937c0-2.321 1.296-4.323 3.164-5.236.049.236.13.46.237.666-1.586.81-2.701 2.534-2.701 4.57 0 .28.02.555.061.822h.016c1.289 0 2.334 1.106 2.334 2.47zm-.778-.001c0 .91-.697 1.647-1.556 1.647-.859 0-1.555-.737-1.555-1.647s.696-1.647 1.555-1.647c.86 0 1.556.737 1.556 1.647zM14 12.473c0 1.364-1.045 2.47-2.333 2.47-1.289 0-2.334-1.106-2.334-2.47 0-1.365 1.045-2.471 2.334-2.471h.016a5.54 5.54 0 00.061-.822c0-2.036-1.115-3.76-2.7-4.57.107-.206.187-.43.236-.666 1.868.913 3.164 2.915 3.164 5.236 0 .32-.024.632-.071.937.943.317 1.627 1.252 1.627 2.355zm-.778-.002c0 .91-.696 1.647-1.555 1.647-.86 0-1.556-.737-1.556-1.647s.696-1.647 1.556-1.647c.859 0 1.555.737 1.555 1.647zm-3.694.994c.091.22.212.424.357.605a5.2 5.2 0 01-5.77 0 2.5 2.5 0 00.357-.605c.736.495 1.605.78 2.528.78s1.792-.285 2.528-.78z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </p>
+              </div>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--padding-top-small"
+                style="--text-line-clamp: 2;"
+              >
+                Swagger 2.0
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag1
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    class="Tag--main"
+                  >
+                    <span
+                      class="bp3-tag tagClassName"
+                      style="max-width: 75px;"
+                    >
+                      <span
+                        class="bp3-text-overflow-ellipsis bp3-fill"
+                      >
+                        tag2:tag3
+                      </span>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-right-large"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    adminLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-small"
+                  >
+                    collaboratorsLabel 
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack projectAvatarGroup"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 25px; width: 32px; height: 32px; font-size: 20px; font-weight: 200;"
+                              tabindex="0"
+                            >
+                              +
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical StyledProps--main started StyledProps--padding-top-xlarge"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--padding-bottom-xsmall"
+                >
+                  modules
+                </p>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div
-    class="pickProjectHelp"
-    style="background-image: url(test-file-stub);"
-  >
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey200 StyledProps--padding-small"
-    >
-      pickProject
-    </p>
   </div>
 </div>
 `;

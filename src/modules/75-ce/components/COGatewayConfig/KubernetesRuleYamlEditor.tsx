@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { parse } from 'yaml'
-import { Button } from '@wings-software/uicore'
+import { Button } from '@harness/uicore'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { useToaster } from '@common/exports'
@@ -49,7 +49,6 @@ const KubernetesRuleYamlEditor: React.FC<KubernetesRuleYamlEditorProps> = props 
     <div className={css.yamlEditorContainer}>
       <YAMLBuilder
         schema={getK8sYamlSchema({ isEdit: isEditFlow })}
-        showSnippetSection={false}
         fileName={props.fileName || 'harness-ccm-autostopping-connector.yaml'}
         entityType="Service"
         bind={setYamlHandler}

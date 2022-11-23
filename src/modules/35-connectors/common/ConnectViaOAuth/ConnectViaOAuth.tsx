@@ -6,8 +6,8 @@
  */
 
 import React, { useCallback } from 'react'
-import { Layout, Text, Icon, Button, ButtonVariation, IconProps, TextProps, IconName } from '@wings-software/uicore'
-import type { LayoutProps } from '@wings-software/uicore/dist/layouts/Layout'
+import { Layout, Text, Icon, Button, ButtonVariation, IconProps, TextProps, IconName } from '@harness/uicore'
+import type { LayoutProps } from '@harness/uicore/dist/layouts/Layout'
 import { Color, FontVariation, FontWeight } from '@harness/design-system'
 import { getRequestOptions } from 'framework/app/App'
 import { useStrings } from 'framework/strings'
@@ -31,6 +31,8 @@ export interface ConnectViaOAuthProps {
   oAuthSecretIntercepted?: React.MutableRefObject<boolean>
   forceFailOAuthTimeoutId?: NodeJS.Timeout
   setForceFailOAuthTimeoutId: React.Dispatch<React.SetStateAction<NodeJS.Timeout | undefined>>
+  orgIdentifier: string | undefined
+  projectIdentifier: string | undefined
 }
 
 export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
@@ -43,7 +45,9 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
     oAuthSecretIntercepted,
     setOAuthStatus,
     forceFailOAuthTimeoutId,
-    setForceFailOAuthTimeoutId
+    setForceFailOAuthTimeoutId,
+    orgIdentifier,
+    projectIdentifier
   } = props
   const { getString } = useStrings()
 
@@ -69,7 +73,9 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
     }
     try {
       const { headers } = getRequestOptions()
-      const oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${gitProviderType.toLowerCase()}&accountId=${accountId}`
+      let oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${gitProviderType.toLowerCase()}&accountId=${accountId}`
+      if (orgIdentifier) oauthRedirectEndpoint += `&orgId=${orgIdentifier}`
+      if (orgIdentifier && projectIdentifier) oauthRedirectEndpoint += `&projectId=${projectIdentifier}`
       const response = await fetch(oauthRedirectEndpoint, {
         headers
       })

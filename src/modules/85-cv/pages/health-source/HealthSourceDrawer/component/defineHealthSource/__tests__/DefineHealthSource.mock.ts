@@ -40,3 +40,23 @@ export const SourceDataMock = {
 }
 
 export const expectedResponse = {}
+
+export const workspaceMock = {
+  data: [
+    {
+      name: 'Workspace 1',
+      workspaceId: 'sjksm43455n-34x53c45vdssd-fgdfd232sdfad'
+    }
+  ]
+}
+
+export const workspaceIdqueryParamsExpected = {
+  queryParams: {
+    accountId: '1234_accountId',
+    connectorIdentifier: 'abc',
+    orgIdentifier: '1234_org',
+    projectIdentifier: 'abc',
+    region: 'region 1',
+    tracingId: expect.any(String)
+  }
+}

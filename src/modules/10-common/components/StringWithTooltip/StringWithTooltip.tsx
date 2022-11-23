@@ -7,7 +7,7 @@
 
 import React, { ReactElement } from 'react'
 import cx from 'classnames'
-import { HarnessDocTooltip } from '@wings-software/uicore'
+import { HarnessDocTooltip } from '@harness/uicore'
 import { StringKeys, useStrings } from 'framework/strings'
 import css from './StringWithTooltip.module.scss'
 

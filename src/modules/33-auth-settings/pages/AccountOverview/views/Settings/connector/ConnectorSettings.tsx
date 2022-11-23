@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Text, Checkbox, Layout, ButtonVariation, shouldShowError, useToaster, Popover } from '@wings-software/uicore'
+import { Text, Checkbox, Layout, ButtonVariation, shouldShowError, useToaster, Popover } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'

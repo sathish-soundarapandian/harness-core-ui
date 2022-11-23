@@ -1,6 +1,7 @@
 import { v4 as uuid } from 'uuid'
 import React from 'react'
-import { Color, Layout, Text } from '@harness/uicore'
+import { Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { NotificationRuleResponse } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import ImageDeleteService from '@cv/assets/delete-service.svg'

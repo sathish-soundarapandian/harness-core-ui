@@ -19,7 +19,7 @@ import {
   Container,
   Heading,
   useConfirmationDialog
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Intent } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -46,7 +46,7 @@ const BudgetDetails: () => JSX.Element | null = () => {
   const { showError, showSuccess } = useToaster()
   const history = useHistory()
 
-  useDocumentTitle([getString('ce.budgets.sideNavText'), budgetName], true)
+  useDocumentTitle([getString('ce.budgets.sideNavText'), budgetName])
 
   const { mutate: deleteBudget, loading } = useDeleteBudget({ queryParams: { accountIdentifier: accountId } })
 

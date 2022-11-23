@@ -10,7 +10,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import cronstrue from 'cronstrue'
 import qs from 'qs'
 import cx from 'classnames'
-import { Button, Container, Text, PageHeader, PageBody, Icon, useToaster } from '@wings-software/uicore'
+import { Button, Container, Text, PageHeader, PageBody, Icon, useToaster } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { Popover, PopoverInteractionKind, Position, Switch } from '@blueprintjs/core'
 import { union } from 'lodash-es'
@@ -434,7 +434,7 @@ const PerspectiveDetailsPage: React.FC = () => {
 
   const persName = perspectiveData?.name || perspectiveName
 
-  useDocumentTitle([getString('ce.perspectives.sideNavText'), persName], true)
+  useDocumentTitle([getString('ce.perspectives.sideNavText'), persName])
 
   const [openDownloadCSVModal] = useDownloadPerspectiveGridAsCsv({
     perspectiveName: persName,

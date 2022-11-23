@@ -8,7 +8,7 @@
 import React from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Container, Icon, IconName, Layout, Popover, Text, useConfirmationDialog } from '@wings-software/uicore'
+import { Container, Icon, IconName, Layout, Popover, Text, useConfirmationDialog } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { Classes, Dialog, Intent, Menu, Position } from '@blueprintjs/core'
@@ -30,6 +30,7 @@ import type { TemplateLinkConfig } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { getLocationPathName } from 'framework/utils/WindowLocation'
 import css from './TemplateBar.module.scss'
 
 interface TemplateMenuItem {
@@ -127,7 +128,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
         branch: selectedTemplate.gitDetails?.branch
       })
 
-      window.open(`${window.location.origin}${window.location.pathname}#${templateStudioPath}`, '_blank')
+      window.open(`${window.location.origin}${getLocationPathName()}#${templateStudioPath}`, '_blank')
     }
   }
 

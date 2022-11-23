@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import pick from 'lodash-es/pick'
+import { pick } from 'lodash-es'
 import { PageError, PageSpinner } from '@harness/uicore'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -40,7 +40,8 @@ export default function ChaosHomePage(): React.ReactElement {
 
   const { data, error, refetch, loading } = useGetLicensesAndSummary({
     queryParams: { moduleType },
-    accountIdentifier: accountId
+    accountIdentifier: accountId,
+    lazy: true
   })
 
   const expiryTime = data?.data?.maxExpiryTime

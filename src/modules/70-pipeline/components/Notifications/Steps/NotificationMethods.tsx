@@ -5,18 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Layout, Select, SelectOption, StepProps, Text } from '@wings-software/uicore'
+import { Layout, Select, SelectOption, StepProps, Text } from '@harness/uicore'
 import React, { useState } from 'react'
 import { Color } from '@harness/design-system'
 import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { NotificationType } from '@notifications/interfaces/Notifications'
+import { NotificationType } from '@rbac/interfaces/Notifications'
 import type { NotificationRules, PmsEmailChannel, PmsPagerDutyChannel, PmsSlackChannel } from 'services/pipeline-ng'
-import { NotificationTypeSelectOptions } from '@notifications/constants'
-import ConfigureEmailNotifications from '@notifications/modals/ConfigureNotificationsModal/views/ConfigureEmailNotifications/ConfigureEmailNotifications'
-import ConfigureSlackNotifications from '@notifications/modals/ConfigureNotificationsModal/views/ConfigureSlackNotifications/ConfigureSlackNotifications'
-import ConfigurePagerDutyNotifications from '@notifications/modals/ConfigureNotificationsModal/views/ConfigurePagerDutyNotifications/ConfigurePagerDutyNotifications'
-import ConfigureMSTeamsNotifications from '@notifications/modals/ConfigureNotificationsModal/views/ConfigureMSTeamsNotifications/ConfigureMSTeamsNotifications'
+import { NotificationTypeSelectOptions } from '@rbac/constants/NotificationConstants'
+import ConfigureEmailNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureEmailNotifications/ConfigureEmailNotifications'
+import ConfigureSlackNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureSlackNotifications/ConfigureSlackNotifications'
+import ConfigurePagerDutyNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigurePagerDutyNotifications/ConfigurePagerDutyNotifications'
+import ConfigureMSTeamsNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureMSTeamsNotifications/ConfigureMSTeamsNotifications'
 
 export type NotificationMethodsProps = StepProps<NotificationRules> & {
   typeOptions?: SelectOption[]
@@ -42,13 +42,13 @@ function NotificationMethods({
   return (
     <Layout.Vertical spacing="xxlarge" padding="small">
       <Text font="medium" color={Color.BLACK}>
-        {getString('notifications.notificationMethod')}
+        {getString('rbac.notifications.notificationMethod')}
       </Text>
 
       <Layout.Vertical height={500} width={550} spacing="large">
         <Layout.Vertical spacing="xsmall">
-          <Text tooltipProps={{ dataTooltipId: 'notifications.notificationMethod' }}>
-            {getString('notifications.notificationMethod')}
+          <Text tooltipProps={{ dataTooltipId: 'rbac.notificationMethod' }}>
+            {getString('rbac.notifications.notificationMethod')}
           </Text>
           <Select
             items={typeOptions || NotificationTypeSelectOptions}

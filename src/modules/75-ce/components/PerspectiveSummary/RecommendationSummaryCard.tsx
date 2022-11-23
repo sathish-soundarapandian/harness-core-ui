@@ -7,7 +7,7 @@
 
 import React from 'react'
 import qs from 'qs'
-import { Card, Container, Icon, Text, Layout, FlexExpander } from '@wings-software/uicore'
+import { Card, Container, Icon, Text, Layout, FlexExpander } from '@harness/uicore'
 import { useParams, useHistory } from 'react-router-dom'
 import cx from 'classnames'
 import { FontVariation, Color } from '@harness/design-system'

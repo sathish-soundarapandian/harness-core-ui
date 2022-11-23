@@ -19,7 +19,7 @@ import {
   IconName,
   Checkbox,
   PageError
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { debounce, isEmpty, isEqual } from 'lodash-es'
 import { Scope } from '@common/interfaces/SecretsInterface'

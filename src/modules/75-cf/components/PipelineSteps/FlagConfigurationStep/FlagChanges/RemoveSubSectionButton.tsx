@@ -6,7 +6,7 @@
  */
 
 import React, { FC, MouseEvent } from 'react'
-import { Button, ButtonSize, ButtonVariation } from '@wings-software/uicore'
+import { Button, ButtonSize, ButtonVariation } from '@harness/uicore'
 
 export interface RemoveSubSectionButtonProps {
   onClick: () => void

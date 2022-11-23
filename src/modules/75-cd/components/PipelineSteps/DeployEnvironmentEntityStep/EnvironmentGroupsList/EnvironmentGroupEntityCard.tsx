@@ -9,7 +9,8 @@ import React from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Divider } from '@blueprintjs/core'
 
-import { ButtonVariation, Card, Text, Color, AllowedTypes, Container, Layout, TagsPopover } from '@harness/uicore'
+import { ButtonVariation, Card, Text, AllowedTypes, Container, Layout, TagsPopover } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 

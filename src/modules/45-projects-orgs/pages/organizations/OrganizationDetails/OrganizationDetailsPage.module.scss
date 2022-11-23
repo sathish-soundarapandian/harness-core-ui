@@ -42,7 +42,10 @@
 }
 
 .freezeWindows {
-  background-color: var(--magenta-100);
+  background-color: var(--teal-50);
+  svg {
+    fill: none;
+  }
 }
 
 .projectsCard {

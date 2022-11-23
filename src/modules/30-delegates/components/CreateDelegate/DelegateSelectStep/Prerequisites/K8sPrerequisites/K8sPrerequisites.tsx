@@ -5,26 +5,34 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
+import { Layout, Text, Container, useToaster, PageSpinner } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-
-import { Layout, Text, Container } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
-import { DelegateSizeDetails, useGetDelegateSizes } from 'services/portal'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useIsImmutableDelegateEnabled } from 'services/cd-ng'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './K8sPrerequisites.module.scss'
 
 const K8sPrerequisites = () => {
   const { getString } = useStrings()
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const { data: delegateSizes } = useGetDelegateSizes({
-    queryParams: { accountId, orgId: orgIdentifier, projectId: projectIdentifier }
+  const { accountId } = useParams<AccountPathProps>()
+
+  const { showError } = useToaster()
+  const {
+    data: useImmutableDelegate,
+    error,
+    loading
+  } = useIsImmutableDelegateEnabled({
+    accountIdentifier: accountId
   })
-
-  const delegateSizeMappings: DelegateSizeDetails[] | undefined = delegateSizes?.resource || []
-
+  useEffect(() => {
+    if (error) {
+      showError(error.message)
+    }
+  }, [error])
   return (
     <>
+      {loading ? <PageSpinner /> : null}
       <Text className={css.prereq}>{getString('delegate.kubernetes.prerequisites')}</Text>
       <Container
         style={{
@@ -52,20 +60,6 @@ const K8sPrerequisites = () => {
             https://app.harness.io
           </Text>
         </Container>
-        <Text className={css.preReqContent}>{getString('delegate.kubernetes.prerequisites_info3')}</Text>
-        <Container>
-          {delegateSizeMappings.map(size => (
-            <Layout.Horizontal key={size.label}>
-              <Text inline className={css.preReqContent} icon="arrow-right" iconProps={{ size: 8 }}>
-                {getString('delegate.kubernetes.prerequisites_worload', {
-                  ...size,
-                  ram: (Number(size.ram) / 1024).toFixed(1)
-                })}
-              </Text>
-            </Layout.Horizontal>
-          ))}
-        </Container>
-        <Text className={css.preReqContent}>{getString('delegate.kubernetes.permissions_title')}</Text>
         <Container>
           <Layout.Horizontal>
             <Text className={css.preReqContent} icon="arrow-right" iconProps={{ size: 8 }}>
@@ -74,7 +68,9 @@ const K8sPrerequisites = () => {
           </Layout.Horizontal>
           <Layout.Horizontal>
             <Text className={css.preReqContent} icon="arrow-right" iconProps={{ size: 8 }}>
-              {getString('delegate.kubernetes.permissions_info2')}
+              {useImmutableDelegate?.data
+                ? getString('delegate.kubernetes.permissions_info3')
+                : getString('delegate.kubernetes.permissions_info2')}
             </Text>
           </Layout.Horizontal>
         </Container>

@@ -6,7 +6,7 @@
  */
 
 import type { FormikProps } from 'formik'
-import type { MultiSelectOption, SelectOption } from '@wings-software/uicore'
+import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import type { MonitoredServiceForm } from '../../Service.types'
 
 export function generateMonitoredServiceName(serviceIdentifier?: string, envIdentifier?: string): string {

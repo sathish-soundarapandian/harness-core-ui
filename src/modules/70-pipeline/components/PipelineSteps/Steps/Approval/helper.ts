@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { ApproverInputsSubmitCallInterface, HarnessApprovalData } from './types'
 
 const getInitialValueForMinCount = (valueFromData: string | number): string | number => {

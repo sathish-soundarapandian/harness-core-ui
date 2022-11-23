@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { get, set, isEmpty, isNil } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import type { FormikErrors } from 'formik'
@@ -106,7 +106,7 @@ export class CustomVariables extends Step<CustomVariablesData> {
       if (
         isRequired &&
         ((isEmpty(variable.value) && variable.type !== 'Number') ||
-          (variable.type === 'Number' && (typeof variable.value !== 'number' || isNaN(variable.value)))) &&
+          (variable.type === 'Number' && isNaN(variable.value))) &&
         getMultiTypeFromValue(currentVariableTemplate) === MultiTypeInputType.RUNTIME
       ) {
         set(errors, `variables[${index}].value`, getString?.('fieldRequired', { field: variable.name }))

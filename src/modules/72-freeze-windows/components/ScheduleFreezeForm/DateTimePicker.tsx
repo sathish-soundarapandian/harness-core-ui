@@ -49,6 +49,8 @@ function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<a
     ...rest
   } = restProps
 
+  const { dateProps, ...restDateInputProps } = dateInputProps || {}
+
   const formValue = get(formik?.values, name)
 
   return (
@@ -61,7 +63,7 @@ function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<a
       {...rest}
     >
       <DateInput
-        value={formValue ? moment(formValue).valueOf().toString() : ''}
+        value={formValue ? moment(formValue, DATE_PARSE_FORMAT).valueOf().toString() : ''}
         onChange={value => {
           formik?.setFieldValue(
             name,
@@ -75,7 +77,8 @@ function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<a
         dateProps={{
           timePickerProps: { useAmPm: true },
           highlightCurrentDay: true,
-          maxDate: moment().add(5, 'year').toDate()
+          maxDate: moment().add(5, 'year').toDate(),
+          ...dateProps
         }}
         popoverProps={{
           disabled,
@@ -84,7 +87,7 @@ function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<a
         dateTimeFormat="LLLL"
         autoComplete="off"
         disabled={disabled}
-        {...dateInputProps}
+        {...restDateInputProps}
         readOnly
       />
     </FormGroup>

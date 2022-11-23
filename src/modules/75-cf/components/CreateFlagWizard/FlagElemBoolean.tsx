@@ -20,7 +20,7 @@ import {
   ButtonVariation,
   ModalErrorHandler,
   FlexExpander
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { FormikEffect, FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
@@ -118,7 +118,11 @@ const FlagElemBoolean = (props: FlagElemBooleanProps): JSX.Element => {
       validationSchema={yup.object().shape({
         variations: yup.array().of(
           yup.object().shape({
-            name: yup.string().trim().required(getString('cf.creationModal.nameIsRequired'))
+            name: yup
+              .string()
+              .trim()
+              .matches(/[a-z]/gi, getString('cf.creationModal.mustContainLetter'))
+              .required(getString('cf.creationModal.nameIsRequired'))
           })
         )
       })}

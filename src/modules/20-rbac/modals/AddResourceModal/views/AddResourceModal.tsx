@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, ButtonVariation, Container, ExpandingSearchInput, Layout, Text } from '@wings-software/uicore'
+import { Button, ButtonVariation, Container, ExpandingSearchInput, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { ResourceType } from '@rbac/interfaces/ResourceType'

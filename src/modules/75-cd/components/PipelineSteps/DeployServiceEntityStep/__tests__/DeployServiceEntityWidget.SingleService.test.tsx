@@ -23,18 +23,22 @@ const allowableTypes: AllowedTypesWithRunTime[] = [
 ]
 
 jest.mock('services/cd-ng', () => ({
-  useGetServiceAccessList: jest.fn(() => ({
-    data: { data: services },
-    loading: false
-  })),
-  useGetServicesYamlAndRuntimeInputs: jest.fn().mockReturnValue({ mutate: jest.fn(() => ({ data: metadata })) }),
   useCreateServiceV2: jest.fn().mockReturnValue({
     mutate: jest
       .fn()
       .mockResolvedValue({ status: 'SUCCESS', data: { service: { identifier: 'svc_4', name: 'Service 4' } } })
   }),
+  mergeServiceInputsPromise: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' })),
   useUpdateServiceV2: jest.fn().mockReturnValue({ mutate: jest.fn().mockResolvedValue({ status: 'SUCCESS' }) }),
   useGetEntityYamlSchema: jest.fn().mockReturnValue({ data: { data: {} } })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetServiceAccessListQuery: jest.fn(() => ({
+    data: { data: services },
+    isInitialLoading: false
+  })),
+  useGetServicesYamlAndRuntimeInputsQuery: jest.fn(() => ({ data: { data: metadata }, isInitialLoading: false }))
 }))
 
 describe('DeployServiceEntityWidget - single service tests', () => {
@@ -67,24 +71,27 @@ describe('DeployServiceEntityWidget - single service tests', () => {
       userEvent.click(svc1)
     })
 
-    expect(onUpdate).toHaveBeenLastCalledWith({
-      service: {
-        serviceInputs: {
-          serviceDefinition: {
-            spec: {
-              artifacts: {
-                primary: {
-                  spec: { connectorRef: '<+input>', imagePath: '<+input>', tag: '<+input>' },
-                  type: 'DockerRegistry'
+    await waitFor(() => {
+      expect(onUpdate).toHaveBeenLastCalledWith({
+        service: {
+          serviceInputs: {
+            serviceDefinition: {
+              spec: {
+                artifacts: {
+                  primary: {
+                    spec: { connectorRef: '<+input>', imagePath: '<+input>', tag: '<+input>' },
+                    type: 'DockerRegistry'
+                  }
                 }
-              }
-            },
-            type: 'Kubernetes'
-          }
-        },
-        serviceRef: 'svc_1'
-      }
+              },
+              type: 'Kubernetes'
+            }
+          },
+          serviceRef: 'svc_1'
+        }
+      })
     })
+
     expect(container).toMatchSnapshot()
   })
 

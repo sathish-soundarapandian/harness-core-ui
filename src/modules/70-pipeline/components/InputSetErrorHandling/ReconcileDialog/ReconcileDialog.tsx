@@ -6,9 +6,8 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, Layout, PageSpinner, Text } from '@wings-software/uicore'
-import { FontVariation } from '@harness/design-system'
-import { Color } from '@wings-software/design-system'
+import { Container, Layout, PageSpinner, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get } from 'lodash-es'
 import { YamlDiffView } from '@pipeline/components/InputSetErrorHandling/YamlDiffView/YamlDiffView'

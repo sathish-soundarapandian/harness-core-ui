@@ -6,13 +6,7 @@
  */
 
 import React from 'react'
-import {
-  SelectOption,
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  AllowedTypes
-} from '@wings-software/uicore'
+import { SelectOption, FormInput, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
 
@@ -34,7 +28,8 @@ export const httpStepType: SelectOption[] = [
   { value: 'PUT', label: 'PUT' },
   { value: 'DELETE', label: 'DELETE' },
   { value: 'HEAD', label: 'HEAD' },
-  { value: 'OPTIONS', label: 'OPTIONS' }
+  { value: 'OPTIONS', label: 'OPTIONS' },
+  { value: 'PATCH', label: 'PATCH' }
 ]
 
 export default function HttpStepBase(props: {

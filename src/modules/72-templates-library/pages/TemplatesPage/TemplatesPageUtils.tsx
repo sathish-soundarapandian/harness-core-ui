@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconName } from '@wings-software/uicore'
+import type { IconName } from '@harness/uicore'
 import { get } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import { TemplateType } from '@templates-library/utils/templatesUtils'

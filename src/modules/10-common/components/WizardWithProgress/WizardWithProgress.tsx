@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 
-import { Text, Icon, IconName } from '@wings-software/uicore'
+import { Text, Icon, IconName } from '@harness/uicore'
 import { Status } from './WizardHelper'
 import WizardHeader from './WizardHeader'
 import css from './StepWizard.module.scss'

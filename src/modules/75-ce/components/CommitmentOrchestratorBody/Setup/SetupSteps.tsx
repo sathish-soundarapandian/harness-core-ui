@@ -8,7 +8,8 @@
 import React from 'react'
 import { defaultTo } from 'lodash-es'
 import cx from 'classnames'
-import { Container, FontVariation, Layout, Text } from '@harness/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import css from './Setup.module.scss'
 

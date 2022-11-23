@@ -6,15 +6,13 @@
  */
 
 import React, { useState, useEffect, useMemo } from 'react'
-import noop from 'lodash/noop'
-import { Container, Text, Layout } from '@wings-software/uicore'
+import { noop, merge } from 'lodash-es'
+import { Container, Text, Layout } from '@harness/uicore'
 import HighchartsReact from 'highcharts-react-official'
 import { FontVariation } from '@harness/design-system'
 import Highcharts from 'highcharts'
 import moment from 'moment'
-import merge from 'lodash-es/merge'
 import { Spinner } from '@blueprintjs/core'
-
 import { useParams } from 'react-router-dom'
 import type { GetDataError } from 'restful-react'
 import { useGetBuildExecution } from 'services/ci'
@@ -24,6 +22,7 @@ import { useStrings } from 'framework/strings'
 import { FailedStatus, useErrorHandler, useRefetchCall } from '@pipeline/components/Dashboards/shared'
 import type { Failure } from 'services/cd-ng'
 import NoDeployments from '@pipeline/components/Dashboards/images/NoDeployments.svg'
+import { getModuleRunType } from '@pipeline/utils/runPipelineUtils'
 import NoBuilds from '../images/NoBuilds.svg'
 import styles from './BuildExecutionsChart.module.scss'
 
@@ -105,7 +104,7 @@ export function ExecutionsChart({
       }
     })
   )
-  const { module = 'cd' } = useModuleInfo()
+  const { module } = useModuleInfo()
 
   const successful: number[] = []
   const failed: number[] = []
@@ -207,8 +206,8 @@ export function ExecutionsChart({
         (failedCount && successCount && abortedCount && expiredCount) ? (
         <Container className={styles.emptyView}>
           <Container className={styles.emptyViewCard}>
-            <img src={module === 'ci' ? NoBuilds : NoDeployments} />
-            <Text>{module === 'ci' ? getString('pipeline.noBuildsLabel') : getString('common.noDeployments')}</Text>
+            <img src={module === 'ci' ? NoBuilds : NoDeployments} height="96px" />
+            <Text> {getString('pipeline.noRunsSimpleText', { moduleRunType: getModuleRunType(module) })}</Text>
           </Container>
         </Container>
       ) : (

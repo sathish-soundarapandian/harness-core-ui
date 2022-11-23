@@ -22,7 +22,7 @@ import {
   ModalErrorHandler,
   ModalErrorHandlerBinding,
   PageSpinner
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { debounce, isEmpty, pick, defaultTo } from 'lodash-es'

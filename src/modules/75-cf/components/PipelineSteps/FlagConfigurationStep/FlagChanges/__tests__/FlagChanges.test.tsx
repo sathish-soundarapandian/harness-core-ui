@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Feature } from 'services/cf'
 import FlagChanges, { FlagChangesProps } from '../FlagChanges'

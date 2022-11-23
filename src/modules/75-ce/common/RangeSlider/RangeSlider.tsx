@@ -6,7 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import { Color, Container, Utils } from '@harness/uicore'
+import { Container, Utils } from '@harness/uicore'
+import type { Color } from '@harness/design-system'
 import css from './RangeSlider.module.scss'
 
 interface RangeProps {

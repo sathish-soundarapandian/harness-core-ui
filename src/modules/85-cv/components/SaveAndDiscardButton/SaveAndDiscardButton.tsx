@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button } from '@wings-software/uicore'
+import { Button } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'

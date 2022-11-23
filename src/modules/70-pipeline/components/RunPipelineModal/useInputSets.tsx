@@ -55,7 +55,7 @@ export interface UseInputSetsReturn {
   loading: boolean
   hasInputSets: boolean
   hasRuntimeInputs: boolean
-  isInputSetApplied: boolean
+  canApplyInputSet: boolean
   modules?: string[]
   error: GetDataError<Failure | Error> | null
   refetch(): Promise<void> | undefined
@@ -103,7 +103,7 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
     },
-    lazy: executionInputSetTemplateYaml
+    lazy: executionInputSetTemplateYaml || executionView
   })
 
   // Reason for sending repoIdentifier and pipelineRepoID both as same values
@@ -132,7 +132,7 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     }
   })
 
-  const [isInputSetApplied, setIsInputSetApplied] = useState(false)
+  const [canApplyInputSet, setCanApplyInputSet] = useState(false)
   const [invalidInputSetReferences, setInvalidInputSetReferences] = useState<Array<string>>([])
   const hasRuntimeInputs = !!inputSetYamlResponse?.data?.inputSetTemplateYaml
 
@@ -170,7 +170,7 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
 
     if (hasRuntimeInputs) {
       if (shouldFetchInputSets && inputSetData?.data?.pipelineYaml) {
-        setIsInputSetApplied(true)
+        setCanApplyInputSet(true)
         const parsedInputSets = clearRuntimeInput(memoizedParse<Pipeline>(inputSetData.data.pipelineYaml).pipeline)
 
         return mergeTemplateWithInputSetData({
@@ -223,7 +223,7 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     error: templateError || inputSetError,
     hasRuntimeInputs,
     hasInputSets: !!inputSetYamlResponse?.data?.hasInputSets,
-    isInputSetApplied,
+    canApplyInputSet,
     inputSetYamlResponse,
     refetch,
     invalidInputSetReferences,

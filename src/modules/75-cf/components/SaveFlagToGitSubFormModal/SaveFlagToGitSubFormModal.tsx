@@ -6,7 +6,7 @@
  */
 
 import React, { ReactElement } from 'react'
-import { ButtonVariation, Container, Layout, Button } from '@wings-software/uicore'
+import { ButtonVariation, Container, Layout, Button } from '@harness/uicore'
 import { Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import SaveFlagToGitSubForm from '../SaveFlagToGitSubForm/SaveFlagToGitSubForm'

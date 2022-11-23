@@ -20,6 +20,7 @@ declare const styles: {
   readonly inputWidth: string
   readonly lastRow: string
   readonly marginTop: string
+  readonly previewHostsButton: string
   readonly previewHostsLabel: string
   readonly runtimeWidth: string
   readonly showPreviewBtn: string

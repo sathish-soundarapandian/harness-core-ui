@@ -8,21 +8,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Button,
-  Color,
   Container,
-  Intent,
   Layout,
   PageSpinner,
   TableV2,
   useConfirmationDialog,
   Text,
-  useToaster
+  useToaster,
+  TagsPopover
 } from '@harness/uicore'
+import { Color, Intent } from '@harness/design-system'
+
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import type { CellProps, Column, Renderer } from 'react-table'
 import ReactTimeago from 'react-timeago'
-import { defaultTo, get, noop } from 'lodash-es'
+import { defaultTo, get, isEmpty, noop } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
 
@@ -45,6 +46,13 @@ const RenderClusterRef: Renderer<CellProps<ClusterResponse>> = ({ row }) => {
     <Layout.Vertical>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small" margin={{ bottom: 'small' }}>
         <Text color={Color.BLACK}>{data}</Text>
+        {row.original.tags && !isEmpty(row.original.tags) ? (
+          <TagsPopover
+            className={css.tagsPopover}
+            iconProps={{ size: 14, color: Color.GREY_600 }}
+            tags={row.original.tags}
+          />
+        ) : null}
       </Layout.Horizontal>
 
       <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>

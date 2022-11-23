@@ -15,7 +15,7 @@ import {
   Heading,
   ModalErrorHandler,
   ModalErrorHandlerBinding
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ConnectorInfoDTO } from 'services/cd-ng'

@@ -8,7 +8,7 @@
 import React from 'react'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
-import { Button, Container, FormikForm, Text } from '@wings-software/uicore'
+import { Button, Container, FormikForm, Text } from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'

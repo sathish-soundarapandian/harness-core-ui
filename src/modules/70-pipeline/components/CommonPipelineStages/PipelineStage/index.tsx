@@ -24,11 +24,10 @@ const getStageAttributes = (_getString: UseStringsReturn['getString']): StageAtt
 const getStageEditorImplementation = (isEnabled: boolean, _getString: UseStringsReturn['getString']): JSX.Element => (
   <PipelineStage
     icon={'chained-pipeline'}
-    name={_getString('pipeline.pipelineSteps.chainedPipeline')}
-    title={_getString('pipeline.pipelineSteps.chainedPipeline')}
+    name={_getString('common.pipeline')}
+    title={_getString('common.pipeline')}
     description={_getString('pipeline.pipelineSteps.chainedPipelineDescription')}
     type={StageType.PIPELINE}
-    isComingSoon={true}
     hoverIcon="chained-pipeline-hover"
     isDisabled={!isEnabled}
     isApproval={false}

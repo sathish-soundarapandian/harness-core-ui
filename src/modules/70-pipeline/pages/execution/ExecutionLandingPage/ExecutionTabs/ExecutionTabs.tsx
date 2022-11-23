@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { HarnessDocTooltip, Icon, Tabs } from '@wings-software/uicore'
+import { HarnessDocTooltip, Icon, Tabs } from '@harness/uicore'
 import { Switch } from '@blueprintjs/core'
 import { NavLink, useParams, useLocation, matchPath } from 'react-router-dom'
 
@@ -183,7 +183,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if (isCI) {
+  if (isCI || isCIInPipeline) {
     tabList.push({
       id: TAB_ID_MAP.ARTIFACTS,
       title: (
@@ -246,12 +246,12 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if (isCI && isErrorTrackingEnabled) {
+  if ((isCI || isCIInPipeline) && isErrorTrackingEnabled) {
     tabList.push({
       id: TAB_ID_MAP.ERROR_TRACKING,
       title: (
         <NavLink
-          to={routes.toExecutionErrorTrackingView(params) + '/events' + location.search}
+          to={routes.toExecutionErrorTrackingView(params) + '/executionViewEvents' + location.search}
           className={css.tabLink}
           activeClassName={css.activeLink}
         >

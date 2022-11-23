@@ -23,7 +23,7 @@ import {
   Text,
   PillToggle,
   Checkbox
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'

@@ -11,7 +11,7 @@ import { parse } from 'yaml'
 import type { FormikErrors } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import {
@@ -210,6 +210,8 @@ export class WinRmServiceSpec extends Step<ServiceSpec> {
   }: ValidateInputSetProps<K8SDirectServiceStep>): FormikErrors<K8SDirectServiceStep> {
     const errors: FormikErrors<K8SDirectServiceStep> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+    /* istanbul ignore next */
+
     if (
       isEmpty(data?.artifacts?.primary?.spec?.connectorRef) &&
       isRequired &&
@@ -217,6 +219,7 @@ export class WinRmServiceSpec extends Step<ServiceSpec> {
     ) {
       set(errors, 'artifacts.primary.spec.connectorRef', getString?.('fieldRequired', { field: 'Artifact Server' }))
     }
+    /* istanbul ignore next */
     if (
       isEmpty(data?.artifacts?.primary?.spec?.repository) &&
       isRequired &&
@@ -224,6 +227,7 @@ export class WinRmServiceSpec extends Step<ServiceSpec> {
     ) {
       set(errors, 'artifacts.primary.spec.repository', getString?.('fieldRequired', { field: 'Repository' }))
     }
+    /* istanbul ignore next */
     if (
       isEmpty(data?.artifacts?.primary?.spec?.artifactDirectory) &&
       isRequired &&
@@ -235,6 +239,7 @@ export class WinRmServiceSpec extends Step<ServiceSpec> {
         getString?.('fieldRequired', { field: 'Artifact Directory' })
       )
     }
+    /* istanbul ignore next */
     if (
       !tagExists(data?.artifacts?.primary?.spec?.artifactPath) &&
       isRequired &&
@@ -242,6 +247,7 @@ export class WinRmServiceSpec extends Step<ServiceSpec> {
     ) {
       set(errors, 'artifacts.primary.spec.artifactPath', getString?.('fieldRequired', { field: 'Artifact Path' }))
     }
+    /* istanbul ignore next */
     if (
       isEmpty(data?.artifacts?.primary?.spec?.artifactPathFilter) &&
       isRequired &&
@@ -256,6 +262,7 @@ export class WinRmServiceSpec extends Step<ServiceSpec> {
 
     data?.manifests?.forEach((manifest, index) => {
       const currentManifestTemplate = get(template, `manifests[${index}].manifest.spec.store.spec`, '')
+      /* istanbul ignore next */
       if (
         isEmpty(manifest?.manifest?.spec?.store?.spec?.connectorRef) &&
         isRequired &&
@@ -267,7 +274,7 @@ export class WinRmServiceSpec extends Step<ServiceSpec> {
           getString?.('fieldRequired', { field: 'connectorRef' })
         )
       }
-
+      /* istanbul ignore next */
       if (
         isEmpty(manifest?.manifest?.spec?.store?.spec?.folderPath) &&
         isRequired &&
@@ -279,6 +286,7 @@ export class WinRmServiceSpec extends Step<ServiceSpec> {
           getString?.('fieldRequired', { field: 'folderPath' })
         )
       }
+      /* istanbul ignore next */
       if (
         isEmpty(manifest?.manifest?.spec?.store?.spec?.branch) &&
         isRequired &&
@@ -290,6 +298,7 @@ export class WinRmServiceSpec extends Step<ServiceSpec> {
           getString?.('fieldRequired', { field: 'Branch' })
         )
       }
+      /* istanbul ignore next */
       if (
         isEmpty(manifest?.manifest?.spec?.store?.spec?.paths?.[0]) &&
         isRequired &&

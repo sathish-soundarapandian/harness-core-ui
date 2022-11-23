@@ -103,7 +103,7 @@ export function AzureWebAppServiceSpecVariablesForm(
           summary={
             <VariableAccordionSummary>
               <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.BLACK}>
-                {getString('pipeline.startupCommand.name')}
+                {getString('pipeline.startup.command.name')}
               </Text>
             </VariableAccordionSummary>
           }

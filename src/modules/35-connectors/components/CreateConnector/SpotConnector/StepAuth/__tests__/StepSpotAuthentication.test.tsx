@@ -34,7 +34,7 @@ describe('<StepSpotAuthentication />', () => {
 
     // Change account id
     await act(async () => {
-      fireEvent.change(container.querySelector('input[name="accountIdtextField"]')!, {
+      fireEvent.change(container.querySelector('input[name="spotAccountIdtextField"]')!, {
         target: { value: 'Dummy Acc Id' }
       })
     })
@@ -79,7 +79,7 @@ describe('<StepSpotAuthentication />', () => {
 
     // Change account id
     await act(async () => {
-      fireEvent.change(container.querySelector('input[name="accountIdtextField"]')!, {
+      fireEvent.change(container.querySelector('input[name="spotAccountIdtextField"]')!, {
         target: { value: 'Dummy Acc Id' }
       })
     })
@@ -107,12 +107,12 @@ describe('<StepSpotAuthentication />', () => {
     expect(getByText('<SpotSecretToken>')).toBeInTheDocument()
 
     expect(nextStep).toBeCalledWith({
-      accountId: {
+      spotAccountId: {
         type: 'TEXT',
         value: 'Dummy Acc Id'
       },
-      accountIdfieldType: 'TEXT',
-      accountIdtextField: 'Dummy Acc Id',
+      spotAccountIdfieldType: 'TEXT',
+      spotAccountIdtextField: 'Dummy Acc Id',
       apiTokenRef: {
         identifier: 'SpotSecretToken',
         name: 'SpotSecretToken',
@@ -127,11 +127,11 @@ describe('<StepSpotAuthentication />', () => {
       spec: {
         credential: {
           spec: {
-            accountId: null,
-            accountIdRef: 'testAccountRef',
+            spotAccountId: null,
+            spotAccountIdRef: 'testAccountRef',
             apiTokenRef: 'testTokenRef'
           },
-          type: 'ManualConfig'
+          type: 'PermanentTokenConfig'
         },
         delegateSelectors: ['account-delegate-1666016649', 'organization-delegate-1666016649'],
         executeOnDelegate: true

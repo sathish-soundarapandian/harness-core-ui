@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import YAML from 'yaml'
 import {
   Accordion,
@@ -16,7 +16,7 @@ import {
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { debounce, defaultTo, get, isEmpty, isNil, omit, set } from 'lodash-es'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
@@ -34,7 +34,8 @@ import {
   EcsInfrastructure,
   GetExecutionStrategyYamlQueryParams,
   SshWinRmAwsInfrastructure,
-  CustomDeploymentInfrastructure
+  CustomDeploymentInfrastructure,
+  ElastigroupInfrastructure
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -66,7 +67,8 @@ import {
   isAzureWebAppDeploymentType,
   ServerlessInfraTypes,
   StageType,
-  getServiceDefinitionType
+  getServiceDefinitionType,
+  isElastigroupDeploymentType
 } from '@pipeline/utils/stageHelpers'
 import type { ServerlessAwsLambdaSpec } from '@cd/components/PipelineSteps/ServerlessAWSLambda/ServerlessAwsLambdaSpec'
 import type { ServerlessGCPSpec } from '@cd/components/PipelineSteps/ServerlessGCP/ServerlessGCPSpec'
@@ -76,6 +78,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import type { ECSInfraSpec } from '@cd/components/PipelineSteps/ECSInfraSpec/ECSInfraSpec'
 import type { CustomDeploymentInfrastructureSpec } from '@cd/components/PipelineSteps/CustomDeploymentInfrastructureSpec/CustomDeploymentInfrastructureStep'
+import type { ElastigroupInfrastructureSpec } from '@cd/components/PipelineSteps/ElastigroupInfraSpec/ElastigroupInfraSpec'
 import {
   cleanUpEmptyProvisioner,
   getInfraDefinitionDetailsHeaderTooltipId,
@@ -85,6 +88,7 @@ import {
   InfrastructureGroup,
   isAzureWebAppInfrastructureType,
   isCustomDeploymentInfrastructureType,
+  isElastigroupInfrastructureType,
   isServerlessInfrastructureType
 } from '../deployInfraHelper'
 import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
@@ -106,7 +110,8 @@ export const deploymentTypeInfraTypeMap: Record<string, InfraDeploymentType> = {
   AzureFunctions: InfraDeploymentType.AzureFunctions,
   AzureWebApp: InfraDeploymentType.AzureWebApp,
   ECS: InfraDeploymentType.ECS,
-  CustomDeployment: InfraDeploymentType.CustomDeployment
+  CustomDeployment: InfraDeploymentType.CustomDeployment,
+  Elastigroup: InfraDeploymentType.Elastigroup
 }
 
 type InfraTypes =
@@ -119,6 +124,7 @@ type InfraTypes =
   | AzureWebAppInfrastructure
   | EcsInfrastructure
   | CustomDeploymentInfrastructure
+  | ElastigroupInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
@@ -360,6 +366,13 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       originalProvisioner: { ...originalProvisioner }
     }
   }
+
+  const customDeploymentStepKey = useMemo(() => {
+    const { templateRef, versionLabel } = initialInfrastructureDefinitionValues?.customDeploymentRef ?? {}
+
+    if (!templateRef || !versionLabel) return undefined
+    return `${templateRef}-${versionLabel}`
+  }, [initialInfrastructureDefinitionValues?.customDeploymentRef])
 
   const getClusterConfigurationStep = (type: string): React.ReactElement => {
     if (!stage?.stage) {
@@ -645,7 +658,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
         return (
           <StepWidget<CustomDeploymentInfrastructureSpec>
             factory={factory}
-            key={stage.stage.identifier}
+            key={customDeploymentStepKey}
             readonly={isReadonly}
             initialValues={initialInfrastructureDefinitionValues as CustomDeploymentInfrastructureSpec}
             type={StepType.CustomDeployment}
@@ -659,6 +672,29 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
                 InfraDeploymentType.CustomDeployment
+              )
+            }
+          />
+        )
+      }
+      case InfraDeploymentType.Elastigroup: {
+        return (
+          <StepWidget<ElastigroupInfrastructureSpec>
+            factory={factory}
+            key={stage.stage.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as ElastigroupInfrastructureSpec}
+            type={StepType.Elastigroup}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  configuration: value.configuration,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.Elastigroup
               )
             }
           />
@@ -728,6 +764,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       {!(
         isAzureWebAppDeploymentType(selectedDeploymentType) ||
         isAzureWebAppInfrastructureType(selectedInfrastructureType) ||
+        isElastigroupDeploymentType(selectedDeploymentType) ||
+        isElastigroupInfrastructureType(selectedInfrastructureType) ||
         isCustomDeploymentInfrastructureType(selectedInfrastructureType)
       ) && (
         <Card className={stageCss.sectionCard}>

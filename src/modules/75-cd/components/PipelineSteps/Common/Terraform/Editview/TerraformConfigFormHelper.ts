@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import * as Yup from 'yup'
+import { get, isString } from 'lodash-es'
 import { Connectors } from '@connectors/constants'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { StringKeys } from 'framework/strings'
@@ -17,14 +18,15 @@ import {
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 
 export const AllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket', 'Artifactory']
-export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Artifactory'
+export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Artifactory' | 'Harness'
 
 export const tfVarIcons: any = {
   Git: 'service-github',
   Github: 'github',
   GitLab: 'service-gotlab',
   Bitbucket: 'bitbucket',
-  Artifactory: 'service-artifactory'
+  Artifactory: 'service-artifactory',
+  Harness: 'harness'
 }
 
 export const ConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -40,50 +42,57 @@ export const ConnectorLabelMap: Record<ConnectorTypes, StringKeys> = {
   Github: 'common.repo_provider.githubLabel',
   GitLab: 'common.repo_provider.gitlabLabel',
   Bitbucket: 'pipeline.manifestType.bitBucketLabel',
-  Artifactory: 'connectors.artifactory.artifactoryLabel'
+  Artifactory: 'connectors.artifactory.artifactoryLabel',
+  Harness: 'harness'
 }
 
-export const formInputNames = (isTerraformPlan: boolean) => ({
-  connectorRef: isTerraformPlan
-    ? 'spec.configuration.configFiles.store.spec.connectorRef'
-    : 'spec.configuration.spec.configFiles.store.spec.connectorRef',
-  repoName: isTerraformPlan
-    ? 'spec.configuration.configFiles.store.spec.repoName'
-    : 'spec.configuration.spec.configFiles.store.spec.repoName',
-  gitFetchType: isTerraformPlan
-    ? 'spec.configuration.configFiles.store.spec.gitFetchType'
-    : 'spec.configuration.spec.configFiles.store.spec.gitFetchType',
-  branch: isTerraformPlan
-    ? 'spec.configuration.configFiles.store.spec.branch'
-    : 'spec.configuration.spec.configFiles.store.spec.branch',
-  commitId: isTerraformPlan
-    ? 'spec.configuration.configFiles.store.spec.commitId'
-    : 'spec.configuration.spec.configFiles.store.spec.commitId',
-  folderPath: isTerraformPlan
-    ? 'spec.configuration.configFiles.store.spec.folderPath'
-    : 'spec.configuration.spec.configFiles.store.spec.folderPath',
-  useConnectorCredentials: isTerraformPlan
-    ? 'spec.configuration.configFiles.moduleSource.useConnectorCredentials'
-    : 'spec.configuration.spec.configFiles.moduleSource.useConnectorCredentials'
+export const getPath = (isTerraformPlan: boolean, isBackendConfig?: boolean): string => {
+  if (isBackendConfig) {
+    return isTerraformPlan ? 'spec.configuration.backendConfig.spec' : 'spec.configuration.spec.backendConfig.spec'
+  } else {
+    return isTerraformPlan ? 'spec.configuration.configFiles' : 'spec.configuration.spec.configFiles'
+  }
+}
+export const getConfigFilePath = (configFile: any): string | undefined => {
+  switch (configFile?.store?.type) {
+    case Connectors.ARTIFACTORY:
+      return isString(get(configFile, 'store.spec.artifactPaths'))
+        ? get(configFile, 'store.spec.artifactPaths')
+        : configFile?.store.spec.artifactPaths[0]
+    case 'Harness':
+      if (get(configFile, 'store.spec.files')) {
+        return isString(get(configFile, 'store.spec.files'))
+          ? get(configFile, 'store.spec.files')
+          : get(configFile, 'store.spec.files[0]')
+      }
+      if (get(configFile, 'store.spec.secretFiles')) {
+        return isString(get(configFile, 'store.spec.secretFiles'))
+          ? get(configFile, 'store.spec.secretFiles')
+          : get(configFile, 'store.spec.secretFiles[0]')
+      }
+      return undefined
+    default:
+      return get(configFile, 'store.spec.folderPath')
+  }
+}
+
+export const formInputNames = (path: string) => ({
+  connectorRef: `${path}.store.spec.connectorRef`,
+  repoName: `${path}.store.spec.repoName`,
+  gitFetchType: `${path}.store.spec.gitFetchType`,
+  branch: `${path}.store.spec.branch`,
+  commitId: `${path}.store.spec.commitId`,
+  folderPath: `${path}.store.spec.folderPath`,
+  useConnectorCredentials: `${path}.moduleSource.useConnectorCredentials`
 })
 
 /* istanbul ignore next */
-export const formikOnChangeNames = (isTerraformPlan: boolean) => ({
-  repoName: isTerraformPlan
-    ? 'spec.configuration.configFiles.store.spec.repoName'
-    : 'spec.configuration.spec.configFiles.store.spec.repoName',
-  branch: isTerraformPlan
-    ? 'spec.configuration.configFiles.store.spec.branch'
-    : 'spec.configuration.spec.configFiles.store.spec.branch',
-  commitId: isTerraformPlan
-    ? 'spec.configuration.configFiles.store.spec.commitId'
-    : 'spec.configuration.spec.configFiles.spec.store.spec.commitId',
-  folderPath: isTerraformPlan
-    ? 'formik.values.spec.configuration.configFiles.store.spec.folderPath'
-    : 'formik.values.spec.configuration.spec.store.spec.folderPath',
-  useConnectorCredentials: isTerraformPlan
-    ? 'spec.configuration.configFiles.moduleSource.useConnectorCredentials'
-    : 'spec.configuration.spec.configFiles.moduleSource.useConnectorCredentials'
+export const formikOnChangeNames = (path: string) => ({
+  repoName: `${path}.store.spec.repoName`,
+  branch: `${path}.store.spec.branch`,
+  commitId: `${path}.store.spec.commitId`,
+  folderPath: `formik.values.${path}.store.spec.folderPath`,
+  useConnectorCredentials: `${path}.moduleSource.useConnectorCredentials`
 })
 
 /* istanbul ignore next */
@@ -106,41 +115,82 @@ export const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
   return () => ({})
 }
 
-export const stepTwoValidationSchema = (isTerraformPlan: boolean, getString: any) => {
-  const configSetup = {
-    configFiles: Yup.object().shape({
-      store: Yup.object().shape({
+export const stepTwoValidationSchema = (isTerraformPlan: boolean, isBackendConfig: boolean, getString: any) => {
+  if (isBackendConfig) {
+    const configSetup = {
+      backendConfig: Yup.object().shape({
         spec: Yup.object().shape({
-          gitFetchType: Yup.string().required(getString('cd.gitFetchTypeRequired')),
-          branch: Yup.string().when('gitFetchType', {
-            is: 'Branch',
-            then: Yup.string().trim().required(getString('validation.branchName'))
-          }),
-          commitId: Yup.string().when('gitFetchType', {
-            is: 'Commit',
-            then: Yup.string().trim().required(getString('validation.commitId'))
-          }),
-          folderPath: Yup.string().required(getString('pipeline.manifestType.folderPathRequired'))
-        })
-      })
-    })
-  }
-
-  return isTerraformPlan
-    ? Yup.object().shape({
-        spec: Yup.object().shape({
-          configuration: Yup.object().shape({
-            ...configSetup
-          })
-        })
-      })
-    : Yup.object().shape({
-        spec: Yup.object().shape({
-          configuration: Yup.object().shape({
+          store: Yup.object().shape({
             spec: Yup.object().shape({
-              ...configSetup
+              gitFetchType: Yup.string().required(getString('cd.gitFetchTypeRequired')),
+              branch: Yup.string().when('gitFetchType', {
+                is: 'Branch',
+                then: Yup.string().trim().required(getString('validation.branchName'))
+              }),
+              commitId: Yup.string().when('gitFetchType', {
+                is: 'Commit',
+                then: Yup.string().trim().required(getString('validation.commitId'))
+              }),
+              folderPath: Yup.string().required(getString('pipeline.manifestType.pathRequired'))
             })
           })
         })
       })
+    }
+
+    return isTerraformPlan
+      ? Yup.object().shape({
+          spec: Yup.object().shape({
+            configuration: Yup.object().shape({
+              ...configSetup
+            })
+          })
+        })
+      : Yup.object().shape({
+          spec: Yup.object().shape({
+            configuration: Yup.object().shape({
+              spec: Yup.object().shape({
+                ...configSetup
+              })
+            })
+          })
+        })
+  } else {
+    const configSetup = {
+      configFiles: Yup.object().shape({
+        store: Yup.object().shape({
+          spec: Yup.object().shape({
+            gitFetchType: Yup.string().required(getString('cd.gitFetchTypeRequired')),
+            branch: Yup.string().when('gitFetchType', {
+              is: 'Branch',
+              then: Yup.string().trim().required(getString('validation.branchName'))
+            }),
+            commitId: Yup.string().when('gitFetchType', {
+              is: 'Commit',
+              then: Yup.string().trim().required(getString('validation.commitId'))
+            }),
+            folderPath: Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+          })
+        })
+      })
+    }
+
+    return isTerraformPlan
+      ? Yup.object().shape({
+          spec: Yup.object().shape({
+            configuration: Yup.object().shape({
+              ...configSetup
+            })
+          })
+        })
+      : Yup.object().shape({
+          spec: Yup.object().shape({
+            configuration: Yup.object().shape({
+              spec: Yup.object().shape({
+                ...configSetup
+              })
+            })
+          })
+        })
+  }
 }

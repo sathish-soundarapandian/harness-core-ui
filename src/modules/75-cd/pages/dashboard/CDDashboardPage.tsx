@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, Dialog, PageHeader, PageSpinner } from '@wings-software/uicore'
+import { Container, Dialog, PageHeader, PageSpinner } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import moment from 'moment'

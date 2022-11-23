@@ -10,7 +10,7 @@
 import React, { ReactElement, ReactNode } from 'react'
 import { render, RenderResult, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Feature, FeatureState, ServingRule } from 'services/cf'
@@ -108,7 +108,7 @@ describe('TabTargeting', () => {
 
     renderComponent({ setEditing })
 
-    const editButton = screen.getByRole('button', { name: 'edit cf.featureFlags.rules.editRules' })
+    const editButton = screen.getByRole('button', { name: 'cf.featureFlags.rules.editRules' })
     expect(editButton).toBeInTheDocument()
     expect(setEditing).not.toHaveBeenCalled()
 

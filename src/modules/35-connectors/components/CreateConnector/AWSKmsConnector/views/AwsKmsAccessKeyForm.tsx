@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { FormInput, Text, SelectOption, Icon } from '@wings-software/uicore'
+import { FormInput, Text, SelectOption, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useListAwsRegions } from 'services/portal'

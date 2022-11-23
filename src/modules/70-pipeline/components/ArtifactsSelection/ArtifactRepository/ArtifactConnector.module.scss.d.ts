@@ -18,6 +18,7 @@ declare const styles: {
   readonly customArtifactContainer: string
   readonly dockerSideCard: string
   readonly existingDocker: string
+  readonly expanded: string
   readonly firstep: string
   readonly headerContainer: string
   readonly heading: string

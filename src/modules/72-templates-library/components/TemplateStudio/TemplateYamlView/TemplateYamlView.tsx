@@ -8,7 +8,7 @@
 import React from 'react'
 import { defaultTo, isEmpty, isEqual } from 'lodash-es'
 import { parse } from 'yaml'
-import { ButtonVariation, Tag } from '@wings-software/uicore'
+import { ButtonVariation, Checkbox, Container, Tag } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { useStrings } from 'framework/strings'
@@ -24,6 +24,8 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { useGetTemplateSchema } from 'services/template-ng'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { useEnableEditModes } from '@pipeline/components/PipelineStudio/hooks/useEnableEditModes'
 import css from './TemplateYamlView.module.scss'
 
 export const POLL_INTERVAL = 1 /* sec */ * 1000 /* ms */
@@ -48,6 +50,12 @@ const TemplateYamlView: React.FC = () => {
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
   const [yamlFileName, setYamlFileName] = React.useState<string>(defaultFileName)
   const { getString } = useStrings()
+  const { preference, setPreference: setYamlAlwaysEditMode } = usePreferenceStore<string | undefined>(
+    PreferenceScope.USER,
+    'TemplateYamlAlwaysEditMode'
+  )
+  const userPreferenceEditMode = React.useMemo(() => defaultTo(Boolean(preference === 'true'), false), [preference])
+  const { enableEditMode } = useEnableEditModes()
   const { expressions } = useVariablesExpression()
   const isTemplateSchemaValidationEnabled = useFeatureFlag(FeatureFlag.TEMPLATE_SCHEMA_VALIDATION)
   const expressionRef = React.useRef<string[]>([])
@@ -90,6 +98,12 @@ const TemplateYamlView: React.FC = () => {
     setYamlFileName(template.identifier + '.yaml')
   }, [template.identifier])
 
+  React.useEffect(() => {
+    if (userPreferenceEditMode) {
+      updateTemplateView({ ...templateView, isYamlEditable: true })
+    }
+  }, [userPreferenceEditMode])
+
   const { data: templateSchema } = useGetTemplateSchema({
     queryParams: {
       templateEntityType: template.type,
@@ -101,6 +115,16 @@ const TemplateYamlView: React.FC = () => {
     },
     lazy: !isTemplateSchemaValidationEnabled
   })
+
+  const onEditButtonClick = async () => {
+    try {
+      const isAlwaysEditModeEnabled = await enableEditMode()
+      updateTemplateView({ ...templateView, isYamlEditable: true })
+      setYamlAlwaysEditMode(String(isAlwaysEditModeEnabled))
+    } catch (_) {
+      // Ignore.. use cancelled enabling edit mode
+    }
+  }
 
   return (
     <div className={css.yamlBuilder}>
@@ -114,7 +138,6 @@ const TemplateYamlView: React.FC = () => {
             existingJSON={{ template }}
             existingYaml={!valid ? templateYaml : undefined}
             bind={setYamlHandler}
-            showSnippetSection={false}
             schema={templateSchema?.data}
             onExpressionTrigger={() => {
               return Promise.resolve(
@@ -125,37 +148,43 @@ const TemplateYamlView: React.FC = () => {
             height={'calc(100vh - 200px)'}
             width="calc(100vw - 400px)"
             invocationMap={factory.getInvocationMap()}
-            onEnableEditMode={() => {
-              updateTemplateView({ ...templateView, isYamlEditable: true })
-            }}
             isEditModeSupported={!isReadonly}
+            openDialogProp={onEditButtonClick}
           />
         )}
       </>
-      {isReadonly || !isYamlEditable ? (
-        <div className={css.buttonsWrapper}>
-          <Tag>{getString('common.readOnly')}</Tag>
-          <RbacButton
-            permission={{
-              resourceScope: {
-                accountIdentifier: accountId,
-                orgIdentifier,
-                projectIdentifier
-              },
-              resource: {
-                resourceType: ResourceType.TEMPLATE,
-                resourceIdentifier: template.identifier
-              },
-              permission: PermissionIdentifier.EDIT_TEMPLATE
-            }}
-            variation={ButtonVariation.SECONDARY}
-            text={getString('common.editYaml')}
-            onClick={() => {
-              updateTemplateView({ ...templateView, isYamlEditable: true })
-            }}
+      <Container className={css.buttonsWrapper}>
+        {isYamlEditable ? (
+          <Checkbox
+            className={css.editModeCheckbox}
+            onChange={e => setYamlAlwaysEditMode(String((e.target as any).checked))}
+            checked={userPreferenceEditMode}
+            large
+            label={getString('pipeline.alwaysEditModeYAML')}
           />
-        </div>
-      ) : null}
+        ) : (
+          <>
+            <Tag>{getString('common.readOnly')}</Tag>
+            <RbacButton
+              permission={{
+                resourceScope: {
+                  accountIdentifier: accountId,
+                  orgIdentifier,
+                  projectIdentifier
+                },
+                resource: {
+                  resourceType: ResourceType.TEMPLATE,
+                  resourceIdentifier: template.identifier
+                },
+                permission: PermissionIdentifier.EDIT_TEMPLATE
+              }}
+              variation={ButtonVariation.SECONDARY}
+              text={getString('common.editYaml')}
+              onClick={onEditButtonClick}
+            />
+          </>
+        )}
+      </Container>
     </div>
   )
 }

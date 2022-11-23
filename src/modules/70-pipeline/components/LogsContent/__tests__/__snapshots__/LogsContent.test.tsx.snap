@@ -260,6 +260,7 @@ exports[`<LogsContent /> tests Logs test SingleSectionLogs 1`] = `
         </div>
       </div>
       <button
+        aria-label="Bottom"
         class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main singleSectionScrollBtn Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary Button--size Button--small"
         disabled=""
         tabindex="-1"

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { act, findAllByRole, findByText, fireEvent, render, waitFor } from '@testing-library/react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import * as cvService from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import { RiskValues } from '@cv/utils/CommonUtils'
@@ -114,13 +114,13 @@ jest.mock('services/cv', () => ({
     .fn()
     .mockImplementation(
       ({ queryParams: { serviceIdentifiers, envIdentifiers, changeSourceTypes, changeCategories } }) => {
-        const contents = mockData.resource.content.filter(
-          content =>
-            serviceIdentifiers.includes(content.serviceIdentifier) &&
-            envIdentifiers.includes(content.envIdentifier) &&
-            changeCategories.includes(content.category) &&
-            changeSourceTypes.includes(content.type)
-        )
+        const contents = mockData.resource.content.filter(content => {
+          let isIncluded = true
+          isIncluded = changeCategories.includes(content.category) && changeSourceTypes.includes(content.type)
+          if (serviceIdentifiers.length) isIncluded &&= serviceIdentifiers.includes(content.serviceIdentifier)
+          if (envIdentifiers.length) isIncluded &&= envIdentifiers.includes(content.envIdentifier)
+          return isIncluded
+        })
         return {
           data: {
             ...mockData,
@@ -360,9 +360,7 @@ describe('Unit tests for CVChanges', () => {
       expect(refetch).toHaveBeenLastCalledWith({
         queryParams: expect.objectContaining({
           changeCategories: ['Deployment', 'Infrastructure', 'Alert'],
-          changeSourceTypes: ['HarnessCDNextGen', 'HarnessCD', 'K8sCluster', 'PagerDuty'],
-          envIdentifiers: ['env1', 'AppDTestEnv1'],
-          serviceIdentifiers: ['service1', 'AppDService101']
+          changeSourceTypes: ['HarnessCDNextGen', 'HarnessCD', 'K8sCluster', 'PagerDuty']
         }),
         queryParamStringifyOptions: {
           arrayFormat: 'repeat'

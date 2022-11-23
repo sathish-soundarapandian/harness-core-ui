@@ -9,7 +9,7 @@ import React from 'react'
 import * as Yup from 'yup'
 import { isEmpty } from 'lodash-es'
 import { connect, FormikErrors, yupToFormErrors } from 'formik'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -38,7 +38,7 @@ export class ServiceNowUpdate extends PipelineStep<ServiceNowUpdateData> {
   protected type = StepType.ServiceNowUpdate
   protected stepName = 'ServiceNow Update'
   protected stepIcon: IconName = 'servicenow-update'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServiceNowApproval'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServiceNowUpdate'
   // initialValues on mount
   protected defaultValues: ServiceNowUpdateData = {
     identifier: '',

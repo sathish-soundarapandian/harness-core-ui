@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, MultiSelectDropDown, MultiSelectOption, SelectOption } from '@wings-software/uicore'
+import { Container, MultiSelectDropDown, MultiSelectOption, SelectOption } from '@harness/uicore'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { ADD_NEW_VALUE } from '@cv/constants'

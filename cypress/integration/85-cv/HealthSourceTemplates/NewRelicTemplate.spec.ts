@@ -178,7 +178,7 @@ describe('Create empty monitored service', () => {
       "SELECT average(`apm.service.transaction.duration`) FROM Metric WHERE appName = 'My Application' TIMESERIES"
     )
     cy.contains('div', 'Metric values and charts').click({ force: true })
-    cy.contains('span', '$.total.results.[*].average').should('have.visible')
+    cy.contains('span', `$.['total'].['results'].[*].['average']`).should('have.visible')
     cy.contains('div', 'Assign').click({ force: true })
     cy.get('input[name="sli"]').should('be.checked')
     cy.get('input[name="continuousVerification"]').should('be.checked')

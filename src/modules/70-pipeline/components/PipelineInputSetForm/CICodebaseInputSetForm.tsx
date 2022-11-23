@@ -22,7 +22,7 @@ import {
   AllowedTypesWithRunTime,
   MultiSelectOption,
   getMultiTypeFromValue
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { connect } from 'formik'
 import { StringKeys, useStrings, UseStringsReturn } from 'framework/strings'
@@ -322,7 +322,11 @@ function CICodebaseInputSetFormInternal({
   useEffect(() => {
     if (get(formik?.values, buildPath) === RUNTIME_INPUT_VALUE) {
       setCodeBaseType(undefined)
-    } else if (viewType === StepViewType.DeploymentForm && !get(formik?.values, buildPath)) {
+    } else if (
+      viewType === StepViewType.DeploymentForm &&
+      !isEmpty(formik?.values) &&
+      !get(formik?.values, buildPath)
+    ) {
       setCodeBaseType(CodebaseTypes.BRANCH)
     }
   }, [get(formik?.values, buildPath), viewType])

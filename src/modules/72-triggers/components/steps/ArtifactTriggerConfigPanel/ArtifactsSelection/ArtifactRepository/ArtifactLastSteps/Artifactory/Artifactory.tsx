@@ -15,7 +15,7 @@ import {
   StepProps,
   Text,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
@@ -23,6 +23,9 @@ import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { repositoryFormats, RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import type { ArtifactoryRegistrySpec } from 'services/pipeline-ng'
+import ServerlessArtifactoryRepository from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/Artifactory/ServerlessArtifactoryRepository'
+import { getConnectorIdValue, getConnectorRefQueryData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import ArtifactoryArtifactPath from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/Artifactory/ArtifactoryArtifactPath'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -103,7 +106,8 @@ function Artifactory({
           })
         }}
       >
-        {({ values, setValues, setFieldValue }) => {
+        {formik => {
+          const { values, setValues, setFieldValue } = formik
           const isGenericRepositoryFormat = values.repositoryFormat === RepositoryFormatTypes.Generic
           const isDockerRepositoryFormat = values.repositoryFormat === RepositoryFormatTypes.Docker
           return (
@@ -121,13 +125,13 @@ function Artifactory({
                   />
                 </div>
                 <div className={css.imagePathContainer}>
-                  <FormInput.MultiTextInput
-                    label={getString('repository')}
-                    name="repository"
-                    placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
-                    multiTextInputProps={{
-                      allowableTypes: [MultiTypeInputType.FIXED]
-                    }}
+                  <ServerlessArtifactoryRepository
+                    connectorRef={getConnectorIdValue(prevStepData)}
+                    expressions={[]}
+                    allowableTypes={[MultiTypeInputType.FIXED]}
+                    formik={formik}
+                    repoFormat={formik.values.repositoryFormat}
+                    fieldName={'repository'}
                   />
                 </div>
                 {isGenericRepositoryFormat && (
@@ -145,11 +149,14 @@ function Artifactory({
                 {isDockerRepositoryFormat && (
                   <>
                     <div className={css.imagePathContainer}>
-                      <FormInput.MultiTextInput
-                        label={getString('pipeline.artifactImagePathLabel')}
-                        name="artifactPath"
-                        placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
-                        multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED] }}
+                      <ArtifactoryArtifactPath
+                        expressions={[]}
+                        isReadonly={false}
+                        allowableTypes={[MultiTypeInputType.FIXED]}
+                        formik={formik}
+                        connectorRef={getConnectorRefQueryData(prevStepData)}
+                        repository={formik.values.repository}
+                        fieldName={'artifactPath'}
                       />
                     </div>
                     <div className={css.imagePathContainer}>

@@ -5,9 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, delay } from 'lodash-es'
-import type { DiagramEngine } from '@projectstorm/react-diagrams-core'
-import { IconName, Utils } from '@wings-software/uicore'
+import { defaultTo } from 'lodash-es'
+import { IconName, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
 import type { CSSProperties } from 'react'
@@ -29,8 +28,6 @@ import type {
   ExecutionPipelineItem,
   ExecutionPipelineNode
 } from './ExecutionPipelineModel'
-import * as Diagram from '../Diagram'
-import type { DefaultNodeModel } from '../Diagram'
 import { ExecutionPipelineNodeType } from './ExecutionPipelineModel'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import css from './ExecutionStageDiagram.module.scss'
@@ -159,6 +156,7 @@ export const getNodeStyles = (
         style.backgroundColor = Utils.getRealCSSColor(Color.WHITE)
         break
       case ExecutionStatusEnum.Aborted:
+      case ExecutionStatusEnum.AbortedByFreeze:
         if (type === ExecutionPipelineNodeType.DIAMOND) {
           style.borderColor = 'var(--execution-pipeline-color-dark-grey2)'
           style.backgroundColor = isSelected ? 'var(--execution-pipeline-color-red)' : 'var(--red-50)'
@@ -430,92 +428,6 @@ export interface GroupState<T> {
   identifier: string
 }
 
-export const getGroupsFromData = <T>(items: Array<ExecutionPipelineNode<T>>): Map<string, GroupState<T>> => {
-  let groupState = new Map<string, GroupState<T>>()
-  items.forEach(node => {
-    if (node.parallel) {
-      const itemsGroupState = getGroupsFromData(node.parallel)
-      groupState = new Map([...groupState, ...itemsGroupState])
-    } else if (node.group) {
-      groupState.set(node.group.identifier, {
-        collapsed: false,
-        name: node.group.name,
-        status: node.group.status,
-        identifier: node.group.identifier,
-        data: node.group.data,
-        group: node.group
-      })
-      if (node.group.items.length > 0) {
-        const itemsGroupState = getGroupsFromData(node.group.items)
-        groupState = new Map([...groupState, ...itemsGroupState])
-      }
-    } else if (node.item?.showInLabel) {
-      groupState.set(node.item.identifier, {
-        collapsed: false,
-        name: node.item.name,
-        status: node.item.status,
-        identifier: node.item.identifier,
-        data: node.item.data
-      })
-    }
-  })
-  return groupState
-}
-
-export const moveStageToFocusDelayed = (engine: DiagramEngine, identifier: string, focusOnVisibility = false): void => {
-  delay(() => moveStageToFocus(engine, identifier, focusOnVisibility), 1)
-}
-
-export const moveStageToFocus = (engine: DiagramEngine, identifier: string, focusOnVisibility = false): void => {
-  const model = engine.getModel() as Diagram.DiagramModel
-  const layer = model.getGroupLayer(identifier) || model.getNodeFromId(identifier)
-  const canvas = engine.getCanvas()
-  /* istanbul ignore else */ if (layer && canvas) {
-    const rect = canvas.getBoundingClientRect()
-    const zoom = engine.getModel().getZoomLevel()
-    const s = (num: number): number => num * (1 / (100 / zoom))
-    const offsetX = engine.getModel().getOffsetX()
-    const offsetY = engine.getModel().getOffsetY()
-    let newOffsetX = engine.getModel().getOffsetX()
-    let newOffsetY = engine.getModel().getOffsetY()
-
-    const node = (engine.getModel() as Diagram.DiagramModel).getNodeFromId(identifier)
-
-    if (focusOnVisibility && node && rect.width < offsetX + s(node.getPosition().x) + s(node.width) + s(40)) {
-      newOffsetX = (rect.width - s(node.width)) * 0.8 - s(node.getPosition().x)
-    } else if (!focusOnVisibility) {
-      if (layer instanceof Diagram.StepGroupNodeLayerModel) {
-        newOffsetX = rect.width * 0.2 - s(layer.startNode.getPosition().x)
-      } else {
-        newOffsetX = rect.width * 0.2 - s(layer.getPosition().x)
-      }
-    }
-
-    if (node && rect.height < offsetY + s(node.getPosition().y) + s(node.height) + s(40)) {
-      newOffsetY = (rect.height - s(node.height)) * 0.7 - s(node.getPosition().y)
-    }
-
-    let shouldRepaint = false
-    if (newOffsetX !== offsetX || newOffsetY !== offsetY) {
-      engine.getModel().setOffset(newOffsetX, newOffsetY)
-      shouldRepaint = true
-    }
-    if (shouldRepaint) {
-      engine.repaintCanvas()
-    }
-  }
-}
-
-export const getStageFromDiagramEvent = <T>(
-  event: Diagram.DefaultNodeEvent,
-  data: ExecutionPipeline<T>
-): ExecutionPipelineItem<T> | undefined => {
-  const entity = event.entity as DefaultNodeModel
-  const id = entity.getOptions().identifier
-  const stage = getStageFromExecutionPipeline(data, id)
-  return stage
-}
-
 export const getRunningNode = <T>(data: ExecutionPipeline<T>): ExecutionPipelineItem<T> | undefined => {
   let stage: ExecutionPipelineItem<T> | undefined = undefined
   data.items?.forEach(node => {
@@ -530,28 +442,6 @@ export const getRunningNode = <T>(data: ExecutionPipeline<T>): ExecutionPipeline
     }
   })
   return stage
-}
-
-export const focusRunningNode = <T>(engine: DiagramEngine, data: ExecutionPipeline<T>): void => {
-  const runningStage = getRunningNode(data)
-  /* istanbul ignore else */ if (runningStage) {
-    const node = (engine.getModel() as Diagram.DiagramModel).getNodeFromId(runningStage.identifier)
-    const canvas = engine.getCanvas()
-    if (canvas && node) {
-      const rect = canvas.getBoundingClientRect()
-      const nodePosition = node.getPosition()
-      const nodeWidth = node.width
-      /* istanbul ignore else */ if (rect.width < nodePosition.x + nodeWidth + 40) {
-        const newOffsetX = (rect.width - node.width) * 0.8 - nodePosition.x
-        if (newOffsetX !== engine.getModel().getOffsetX()) {
-          const offsetY = engine.getModel().getOffsetY()
-          engine.getModel().setOffset(newOffsetX, offsetY)
-          //engine.getModel().setZoomLevel(100)
-          engine.repaintCanvas()
-        }
-      }
-    }
-  }
 }
 
 export const getTertiaryIconProps = <T>(stage: ExecutionPipelineItem<T>): { tertiaryIcon?: IconName } => {

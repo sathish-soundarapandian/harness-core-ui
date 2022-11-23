@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { Card, FontVariation, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Card, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { FilterProps } from './TableFilters'
 export interface FilterCardProps {

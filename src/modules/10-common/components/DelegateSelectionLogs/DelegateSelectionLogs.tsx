@@ -6,7 +6,7 @@
  */
 
 import { Dialog, IDialogProps } from '@blueprintjs/core'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import { upperFirst } from 'lodash-es'
 import React from 'react'
 import { useModalHook } from '@harness/use-modal'

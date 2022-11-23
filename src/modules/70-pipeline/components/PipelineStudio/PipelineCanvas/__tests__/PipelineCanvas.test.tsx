@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { render, act, fireEvent, waitFor } from '@testing-library/react'
+import { render, act, fireEvent, waitFor, screen } from '@testing-library/react'
+import { set } from 'lodash-es'
 import { putPipelinePromise, createPipelinePromise, PipelineInfoConfig } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useMutateAsGet } from '@common/hooks'
@@ -66,6 +67,10 @@ jest.mock('services/pipeline-ng', () => ({
   useGetTemplateFromPipeline: jest.fn()
 }))
 
+jest.mock('services/pipeline-rq', () => ({
+  useValidateTemplateInputsQuery: jest.fn(() => ({ data: null }))
+}))
+
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),
   useMutateAsGet: jest.fn()
@@ -75,8 +80,8 @@ const showError = jest.fn()
 const showSuccess = jest.fn()
 const toasterClear = jest.fn()
 
-jest.mock('@wings-software/uicore', () => ({
-  ...jest.requireActual('@wings-software/uicore'),
+jest.mock('@harness/uicore', () => ({
+  ...jest.requireActual('@harness/uicore'),
   useToaster: jest.fn(() => ({ showError, showSuccess, clear: toasterClear }))
 }))
 const mockIntersectionObserver = jest.fn()
@@ -360,6 +365,24 @@ describe('Pipeline Canvas - new pipeline', () => {
     })
     await waitFor(() => expect(contextValue.updatePipelineView).toBeCalled())
   })
+
+  test('modal title, button text when creating a new pipeline', async () => {
+    const props = getProps()
+    const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false })
+    set(contextValue, 'state.pipeline.identifier', DefaultNewPipelineId)
+
+    render(
+      <TestWrapper>
+        <PipelineContext.Provider value={contextValue}>
+          <PipelineCanvas {...props} />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    await waitFor(() => {
+      expect(screen.getByText('start')).toBeInTheDocument()
+      expect(screen.getByText('moduleRenderer.newPipeLine')).toBeInTheDocument()
+    })
+  })
 })
 
 describe('Existing pipeline', () => {
@@ -392,5 +415,22 @@ describe('Existing pipeline', () => {
       </TestWrapper>
     )
     expect(queryByText('unsavedChanges')).toBeTruthy()
+  })
+
+  test('modal title, button text when editing a pipeline', async () => {
+    const props = getProps()
+    const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false })
+    render(
+      <TestWrapper>
+        <PipelineContext.Provider value={contextValue}>
+          <PipelineCanvas {...props} />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    screen.getByLabelText('editPipeline').click()
+    await waitFor(() => {
+      expect(screen.getByText('editPipeline')).toBeInTheDocument()
+      expect(screen.getByText('continue')).toBeInTheDocument()
+    })
   })
 })

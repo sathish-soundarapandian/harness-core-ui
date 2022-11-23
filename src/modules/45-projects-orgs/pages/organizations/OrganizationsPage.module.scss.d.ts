@@ -9,6 +9,7 @@
 declare const styles: {
   readonly masonry: string
   readonly orgPage: string
+  readonly pagination: string
   readonly search: string
 }
 export default styles

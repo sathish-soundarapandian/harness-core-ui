@@ -7,23 +7,26 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import cx from 'classnames'
+import { defaultTo } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
+import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import type { CustomVariablesData } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 import type { CustomVariableInputSetExtraProps } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import azureWebAppConfigBaseFactory from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigFactory'
+import applicationConfigBaseFactory from '@cd/factory/ApplicationConfigFactory/ApplicationConfigFactory'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
+import { RuntimeApplicationConfig } from '@pipeline/components/RuntimeApplicationConfig/RuntimeApplicationConfig'
 import { KubernetesArtifacts } from '../K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
-import { ApplicationConfig } from './RuntimeAzureWebAppConfig/RuntimeAzureWebAppConfig'
-import { AzureWebAppConfigType, AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
+import { ApplicationConfigType, AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
 import PrimaryArtifactRef from '../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
+import { ConfigFiles } from '../SshServiceSpec/SshConfigFiles/ConfigFiles'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps): React.ReactElement => {
@@ -74,34 +77,43 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
       )}
 
       {!!template?.startupCommand && (
-        <ApplicationConfig
-          type={AzureWebAppConfigType.startupCommand}
+        <RuntimeApplicationConfig
+          type={ApplicationConfigType.startupCommand}
           template={template}
-          azureWebAppConfig={allValues?.startupCommand}
-          azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
+          applicationConfig={defaultTo(allValues?.startupCommand, initialValues?.startupCommand)}
+          applicationConfigBaseFactory={applicationConfigBaseFactory}
           stageIdentifier={stageIdentifier}
           {...commonProps}
         />
       )}
 
       {!!template?.applicationSettings && (
-        <ApplicationConfig
-          type={AzureWebAppConfigType.applicationSettings}
+        <RuntimeApplicationConfig
+          type={ApplicationConfigType.applicationSettings}
           template={template}
-          azureWebAppConfig={allValues?.applicationSettings}
-          azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
+          applicationConfig={defaultTo(allValues?.applicationSettings, initialValues?.applicationSettings)}
+          applicationConfigBaseFactory={applicationConfigBaseFactory}
           stageIdentifier={stageIdentifier}
           {...commonProps}
         />
       )}
 
       {!!template?.connectionStrings && (
-        <ApplicationConfig
-          type={AzureWebAppConfigType.connectionStrings}
+        <RuntimeApplicationConfig
+          type={ApplicationConfigType.connectionStrings}
           template={template}
-          azureWebAppConfig={allValues?.connectionStrings}
-          azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
+          applicationConfig={defaultTo(allValues?.connectionStrings, initialValues?.connectionStrings)}
+          applicationConfigBaseFactory={applicationConfigBaseFactory}
           stageIdentifier={stageIdentifier}
+          {...commonProps}
+        />
+      )}
+      {!!template?.configFiles?.length && (
+        <ConfigFiles
+          configFiles={defaultTo(allValues?.configFiles, initialValues?.configFiles)}
+          configFileSourceBaseFactory={configFileSourceBaseFactory}
+          stageIdentifier={stageIdentifier}
+          template={template}
           {...commonProps}
         />
       )}

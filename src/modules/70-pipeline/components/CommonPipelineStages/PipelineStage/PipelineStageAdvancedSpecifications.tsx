@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Card, Container, HarnessDocTooltip, Layout } from '@wings-software/uicore'
+import { Card, Container, HarnessDocTooltip, Layout } from '@harness/uicore'
 import React from 'react'
 import cx from 'classnames'
 import { produce } from 'immer'

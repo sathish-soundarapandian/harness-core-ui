@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { AllowedTypes, IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -43,6 +43,7 @@ export interface ACRStepSpec {
   // pull?: MultiTypePullOption
   resources?: Resources
   runAsUser?: string
+  subscriptionId?: string
 }
 
 export interface ACRStepData {
@@ -104,6 +105,7 @@ export class ACRStep extends PipelineStep<ACRStepData> {
       connectorRef: '',
       remoteCacheImage: '',
       repository: '',
+      subscriptionId: '',
       tags: []
     }
   }

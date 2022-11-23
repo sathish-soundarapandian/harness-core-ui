@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { Dialog } from '@wings-software/uicore'
+import { Dialog } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import type { IDialogProps } from '@blueprintjs/core'
 import { String } from 'framework/strings'
@@ -38,7 +38,7 @@ const getTitle = (principal: PrincipalType, isInviteOrAssignRoles: boolean): key
   if (principal === PrincipalType.USER_GROUP && isInviteOrAssignRoles) {
     return 'rbac.userGroupPage.assignRoles'
   }
-  return 'rbac.addRole'
+  return 'rbac.manageRoleBindings'
 }
 
 export const useRoleAssignmentModal = ({

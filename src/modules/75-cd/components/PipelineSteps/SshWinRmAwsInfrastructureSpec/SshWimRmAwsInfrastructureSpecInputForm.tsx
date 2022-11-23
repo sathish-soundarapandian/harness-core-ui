@@ -14,7 +14,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { useParams } from 'react-router-dom'
 import { get, defaultTo } from 'lodash-es'

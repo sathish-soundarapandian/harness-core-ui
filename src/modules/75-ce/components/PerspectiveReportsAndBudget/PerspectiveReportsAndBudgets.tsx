@@ -24,7 +24,7 @@ import {
   Link,
   getErrorInfoFromErrorObject,
   Card
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { Popover, Position, Classes, PopoverInteractionKind, Collapse } from '@blueprintjs/core'
 import { DEFAULT_GROUP_BY } from '@ce/utils/perspectiveUtils'

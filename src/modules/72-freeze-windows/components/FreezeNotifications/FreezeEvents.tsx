@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { isEmpty, noop } from 'lodash-es'
-import { Button, ButtonVariation, Formik, FormikForm, FormInput, Layout, StepProps, Text } from '@wings-software/uicore'
+import { Button, ButtonVariation, Formik, FormikForm, FormInput, Layout, StepProps, Text } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { FreezeNotificationRules, FreezeEvent } from '@freeze-windows/types'
@@ -55,7 +55,7 @@ export const FreezeEvents = ({ nextStep, prevStepData }: StepProps<FreezeNotific
   return (
     <Layout.Vertical spacing="xxlarge" padding="small">
       <Text font="medium" color={Color.BLACK}>
-        {getString('notifications.configureConditions')}
+        {getString('rbac.notifications.configureConditions')}
       </Text>
       <Formik<EventsFormData>
         initialValues={{ ...initialValues, types }}
@@ -79,7 +79,7 @@ export const FreezeEvents = ({ nextStep, prevStepData }: StepProps<FreezeNotific
               <Layout.Vertical spacing="medium" className={css.formContent}>
                 {!isEmpty(formikProps.errors) && (
                   <Text intent={Intent.DANGER} margin={{ top: 'none', bottom: 'small' }}>
-                    {getString('notifications.eventRequired')}
+                    {getString('rbac.notifications.eventRequired')}
                   </Text>
                 )}
                 {eventItems.map(event => {

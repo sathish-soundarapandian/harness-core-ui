@@ -10,7 +10,7 @@ import { Drawer, IDrawerProps, Classes } from '@blueprintjs/core'
 import { get } from 'lodash-es'
 import cx from 'classnames'
 import { MonacoDiffEditor } from 'react-monaco-editor'
-import { Layout, Container, Text, Button, useToggle, Heading, PageError } from '@wings-software/uicore'
+import { Layout, Container, Text, Button, useToggle, Heading, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import {
   CF_LOCAL_STORAGE_ENV_KEY,

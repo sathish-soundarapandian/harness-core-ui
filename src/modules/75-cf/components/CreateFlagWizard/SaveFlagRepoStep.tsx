@@ -6,7 +6,7 @@
  */
 
 import React, { ReactElement, useEffect } from 'react'
-import { FormikForm, Formik, Layout, Button, ButtonVariation } from '@wings-software/uicore'
+import { FormikForm, Formik, Layout, Button, ButtonVariation } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'

@@ -36,6 +36,7 @@ exports[`CDHomePage snapshot test should move to trial in progress page when que
           class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
         >
           <button
+            aria-label="createProject"
             class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
             style="width: 200px; height: 45px;"
             type="button"
@@ -228,6 +229,7 @@ exports[`CDHomePage snapshot test should return error page if call fails 1`] = `
         call failed
       </p>
       <button
+        aria-label="Retry"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -357,6 +359,7 @@ exports[`CDHomePage snapshot test should show an error page 1`] = `
         this is an error
       </p>
       <button
+        aria-label="Retry"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >

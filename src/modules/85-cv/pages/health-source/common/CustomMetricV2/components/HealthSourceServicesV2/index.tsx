@@ -11,7 +11,8 @@ import css from './HealthSourceServicesV2.module.scss'
 export default function HealthSourceServicesV2<T extends CommonCustomMetricPropertyType>(): JSX.Element {
   const { values: formValues } = useFormikContext<T>()
 
-  const { riskProfileResponse } = useCustomMetricV2HelperContext()
+  const { riskProfileResponse, expressions, isConnectorRuntimeOrExpression, isTemplate } =
+    useCustomMetricV2HelperContext()
 
   const { selectedCustomMetricIndex, customMetrics } = formValues
 
@@ -32,6 +33,9 @@ export default function HealthSourceServicesV2<T extends CommonCustomMetricPrope
     <Container className={css.main}>
       <SelectHealthSourceServices
         key={customMetrics?.[selectedCustomMetricIndex]?.identifier}
+        isTemplate={isTemplate}
+        expressions={expressions}
+        isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
         values={{
           sli: Boolean(isSliEnabled),
           healthScore: liveMonitoring?.enabled,
@@ -41,6 +45,7 @@ export default function HealthSourceServicesV2<T extends CommonCustomMetricPrope
         fieldNames={fieldNames}
         hideServiceIdentifier
         riskProfileResponse={riskProfileResponse}
+        hideServiceInstanceMetricPathTemplate
       />
 
       {canShowServiceInstance(customMetrics, selectedCustomMetricIndex) && <ServiceInstance />}

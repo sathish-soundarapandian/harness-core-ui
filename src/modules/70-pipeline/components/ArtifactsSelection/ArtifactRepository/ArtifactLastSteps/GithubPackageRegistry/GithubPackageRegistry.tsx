@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import {
   Formik,
   Layout,
@@ -17,12 +17,15 @@ import {
   SelectOption,
   getMultiTypeFromValue,
   FormInput,
-  FormikForm
-} from '@wings-software/uicore'
+  FormikForm,
+  RUNTIME_INPUT_VALUE
+} from '@harness/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { defaultTo, isNil } from 'lodash-es'
+import { defaultTo, isNil, memoize } from 'lodash-es'
+import { useParams } from 'react-router-dom'
+import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { getConnectorIdValue, getArtifactFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
@@ -32,13 +35,24 @@ import {
   TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import type { ConnectorConfigDTO } from 'services/cd-ng'
+import {
+  BuildDetails,
+  ConnectorConfigDTO,
+  GithubPackageDTO,
+  useGetPackagesFromGithub,
+  useGetVersionsFromPackages
+} from 'services/cd-ng'
+import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useQueryParams } from '@common/hooks'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
-import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
+import { ArtifactSourceIdentifier } from '../ArtifactIdentifier'
+import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export const packageType: SelectOption[] = [
+export const packageTypes: SelectOption[] = [
   { label: 'npm', value: 'npm' },
   { label: 'maven', value: 'maven' },
   { label: 'rubygems', value: 'rubygems' },
@@ -54,9 +68,70 @@ function FormComponent({
   previousStep,
   isReadonly = false,
   formik,
-  isMultiArtifactSource
+  isMultiArtifactSource,
+  initialValues
 }: any) {
   const { getString } = useStrings()
+  const isTemplateContext = context === ModalViewFor.Template
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const commonParams = {
+    accountIdentifier: accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch
+  }
+  const packageTypeValue = getGenuineValue(formik.values.spec.packageType || initialValues?.spec?.packageType)
+  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value)
+  const packageNameValue = getGenuineValue(formik.values.spec.packageName || initialValues?.spec?.packageName)
+  const orgValue = getGenuineValue(formik.values.spec.org)
+
+  const {
+    data: packageDetails,
+    refetch: refetchPackageDetails,
+    loading: fetchingPackages,
+    error: errorFetchingPackages
+  } = useGetPackagesFromGithub({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: defaultTo(connectorRefValue, ''),
+      packageType: defaultTo(packageTypeValue, ''),
+      org: orgValue
+    }
+  })
+
+  const {
+    data: versionDetails,
+    refetch: refetchVersionDetails,
+    loading: fetchingVersion,
+    error: errorFetchingVersion
+  } = useGetVersionsFromPackages({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      packageType: defaultTo(packageTypeValue, ''),
+      packageName: defaultTo(packageNameValue, ''),
+      connectorRef: defaultTo(connectorRefValue, ''),
+      versionRegex: '*',
+      org: orgValue
+    }
+  })
+
+  const selectPackageItems = useMemo(() => {
+    return packageDetails?.data?.githubPackageResponse?.map((packageInfo: GithubPackageDTO) => ({
+      value: defaultTo(packageInfo.packageName, ''),
+      label: defaultTo(packageInfo.packageName, '')
+    }))
+  }, [packageDetails?.data])
+
+  const selectVersionItems = useMemo(() => {
+    return versionDetails?.data?.map((packageInfo: BuildDetails) => ({
+      value: defaultTo(packageInfo.number, ''),
+      label: defaultTo(packageInfo.number, '')
+    }))
+  }, [versionDetails?.data])
 
   useEffect(() => {
     if (!isNil(formik.values?.version)) {
@@ -68,16 +143,55 @@ function FormComponent({
     }
   }, [formik.values?.version])
 
+  const getPackages = (): SelectOption[] => {
+    if (fetchingPackages) {
+      return [{ label: 'Loading Packages...', value: 'Loading Packages...' }]
+    }
+    return defaultTo(selectPackageItems, [])
+  }
+
+  const getVersions = (): SelectOption[] => {
+    if (fetchingVersion) {
+      return [{ label: 'Loading Versions...', value: 'Loading Versions...' }]
+    }
+    return defaultTo(selectVersionItems, [])
+  }
+
+  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
+    <div key={item.label.toString()}>
+      <Menu.Item
+        text={
+          <Layout.Horizontal spacing="small">
+            <Text>{item.label}</Text>
+          </Layout.Horizontal>
+        }
+        disabled={fetchingPackages}
+        onClick={handleClick}
+      />
+    </div>
+  ))
+
   return (
     <FormikForm>
       <div className={css.connectorForm}>
         {isMultiArtifactSource && <ArtifactSourceIdentifier />}
-        {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.jenkinsFieldContainer}>
           <div className={cx(stepCss.formGroup, stepCss.sm)}>
             <FormInput.Select
-              items={packageType}
+              items={packageTypes}
               name="spec.packageType"
+              disabled
+              onChange={value => {
+                formik.setValues({
+                  ...formik.values,
+                  spec: {
+                    ...formik.values?.spec,
+                    packageType: value.value,
+                    packageName: formik.values?.spec?.packageName === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : '',
+                    version: formik.values?.spec?.version === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : ''
+                  }
+                })
+              }}
               label={getString('pipeline.packageType')}
               placeholder={getString('pipeline.packageTypePlaceholder')}
             />
@@ -89,6 +203,18 @@ function FormComponent({
             label={getString('projectsOrgs.orgName')}
             placeholder={getString('pipeline.artifactsSelection.orgNamePlaceholder')}
             disabled={isReadonly}
+            isOptional={true}
+            onChange={value => {
+              formik.setValues({
+                ...formik.values,
+                spec: {
+                  ...formik.values?.spec,
+                  org: value,
+                  packageName: formik.values?.spec?.packageName === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : '',
+                  version: formik.values?.spec?.version === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : ''
+                }
+              })
+            }}
             multiTextInputProps={{
               expressions,
               allowableTypes
@@ -109,14 +235,54 @@ function FormComponent({
           )}
         </div>
         <div className={css.jenkinsFieldContainer}>
-          <FormInput.MultiTextInput
+          <FormInput.MultiTypeInput
+            selectItems={getPackages()}
+            disabled={isReadonly}
             name="spec.packageName"
             label={getString('pipeline.artifactsSelection.packageName')}
             placeholder={getString('pipeline.manifestType.packagePlaceholder')}
-            disabled={isReadonly}
-            multiTextInputProps={{
+            useValue
+            multiTypeInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              selectProps: {
+                noResults: (
+                  <NoTagResults
+                    tagError={errorFetchingPackages}
+                    isServerlessDeploymentTypeSelected={false}
+                    defaultErrorText={getString('pipeline.artifactsSelection.validation.noBuild')}
+                  />
+                ),
+                itemRenderer: itemRenderer,
+                items: getPackages(),
+                allowCreatingNewItems: true
+              },
+              onChange: (value: any) => {
+                formik.setValues({
+                  ...formik.values,
+                  spec: {
+                    ...formik.values?.spec,
+                    packageName: value?.label || value,
+                    version: formik.values?.spec?.version === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : ''
+                  }
+                })
+              },
+              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                if (
+                  e?.target?.type !== 'text' ||
+                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                ) {
+                  return
+                }
+                refetchPackageDetails({
+                  queryParams: {
+                    ...commonParams,
+                    connectorRef: defaultTo(connectorRefValue, ''),
+                    packageType: defaultTo(packageTypeValue, ''),
+                    org: orgValue
+                  }
+                })
+              }
             }}
           />
           {getMultiTypeFromValue(formik.values?.spec?.packageName) === MultiTypeInputType.RUNTIME && (
@@ -144,14 +310,37 @@ function FormComponent({
         </div>
         {formik.values?.versionType === 'value' ? (
           <div className={css.jenkinsFieldContainer}>
-            <FormInput.MultiTextInput
+            <FormInput.MultiTypeInput
+              selectItems={getVersions()}
+              disabled={isReadonly}
               name="spec.version"
               label={getString('version')}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
-              disabled={isReadonly}
-              multiTextInputProps={{
+              useValue
+              multiTypeInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                selectProps: {
+                  noResults: (
+                    <NoTagResults
+                      tagError={errorFetchingVersion}
+                      isServerlessDeploymentTypeSelected={false}
+                      defaultErrorText={getString('pipeline.artifactsSelection.validation.noVersion')}
+                    />
+                  ),
+                  itemRenderer: itemRenderer,
+                  items: getVersions(),
+                  allowCreatingNewItems: true
+                },
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
+                  }
+                  refetchVersionDetails()
+                }
               }}
             />
             {getMultiTypeFromValue(formik.values?.spec?.version) === MultiTypeInputType.RUNTIME && (
@@ -196,20 +385,22 @@ function FormComponent({
           </div>
         )}
       </div>
-      <Layout.Horizontal spacing="medium">
-        <Button
-          variation={ButtonVariation.SECONDARY}
-          text={getString('back')}
-          icon="chevron-left"
-          onClick={() => previousStep?.(prevStepData)}
-        />
-        <Button
-          variation={ButtonVariation.PRIMARY}
-          type="submit"
-          text={getString('submit')}
-          rightIcon="chevron-right"
-        />
-      </Layout.Horizontal>
+      {!isTemplateContext && (
+        <Layout.Horizontal spacing="medium">
+          <Button
+            variation={ButtonVariation.SECONDARY}
+            text={getString('back')}
+            icon="chevron-left"
+            onClick={() => previousStep?.(prevStepData)}
+          />
+          <Button
+            variation={ButtonVariation.PRIMARY}
+            type="submit"
+            text={getString('submit')}
+            rightIcon="chevron-right"
+          />
+        </Layout.Horizontal>
+      )}
     </FormikForm>
   )
 }
@@ -220,6 +411,7 @@ export function GithubPackageRegistry(
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
+  const isTemplateContext = context === ModalViewFor.Template
   const getInitialValues = (): GithubPackageRegistryInitialValuesType => {
     return getArtifactFormData(
       initialValues,
@@ -254,6 +446,17 @@ export function GithubPackageRegistry(
     })
   }
 
+  const handleValidate = (formData: GithubPackageRegistryInitialValuesType) => {
+    if (isTemplateContext) {
+      submitFormData(
+        {
+          ...formData
+        },
+        getConnectorIdValue(prevStepData)
+      )
+    }
+  }
+
   const schemaObject = {
     versionType: Yup.string().required(),
     spec: Yup.object().shape({
@@ -282,13 +485,16 @@ export function GithubPackageRegistry(
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
+      {!isTemplateContext && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         formName="imagePath"
         validationSchema={isIdentifierAllowed ? sidecarSchema : primarySchema}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData(
             {

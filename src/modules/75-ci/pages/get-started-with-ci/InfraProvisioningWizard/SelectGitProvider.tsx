@@ -6,14 +6,13 @@
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import set from 'lodash-es/set'
+import { set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FormikContextType, FormikProps } from 'formik'
 import cx from 'classnames'
 import {
   Text,
-  FontVariation,
   Layout,
   CardSelect,
   Icon,
@@ -24,10 +23,10 @@ import {
   FormInput,
   ButtonVariation,
   ButtonSize,
-  Color,
   FormError,
   PageSpinner
 } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { getRequestOptions } from 'framework/app/App'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
@@ -142,8 +141,8 @@ const SelectGitProviderRef = (
           createConnector(
             set(
               getOAuthConnectorPayload({
-                tokenRef: ACCOUNT_SCOPE_PREFIX.concat(tokenRef),
-                refreshTokenRef: refreshTokenRef ? ACCOUNT_SCOPE_PREFIX.concat(refreshTokenRef) : '',
+                tokenRef: tokenRef,
+                refreshTokenRef: refreshTokenRef ? refreshTokenRef : '',
                 gitProviderType: gitProvider.type as ConnectorInfoDTO['type']
               }),
               'connector.spec.url',
@@ -334,7 +333,7 @@ const SelectGitProviderRef = (
     if (gitProvider?.type === NonGitOption.OTHER) {
       updateFooterLabel?.(getString('ci.getStartedWithCI.createPipeline'))
     } else {
-      updateFooterLabel?.(`${getString('next')}: ${getString('ci.getStartedWithCI.selectRepo')}`)
+      updateFooterLabel?.(`${getString('next')}: ${getString('common.selectRepository')}`)
     }
   }, [gitProvider])
 

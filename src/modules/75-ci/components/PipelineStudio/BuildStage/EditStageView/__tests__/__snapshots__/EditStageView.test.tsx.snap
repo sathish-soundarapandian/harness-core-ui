@@ -251,6 +251,7 @@ exports[`EditStageView snapshot test should render properly 1`] = `
               </label>
             </div>
             <button
+              aria-label="pipelineSteps.build.create.setupStage"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-small Button--with-current-color"
               type="submit"
             >
@@ -787,6 +788,7 @@ exports[`EditStageView snapshot test should render properly without data 1`] = `
               </div>
             </div>
             <button
+              aria-label="pipelineSteps.build.create.setupStage"
               class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-small Button--with-current-color"
               type="submit"
             >

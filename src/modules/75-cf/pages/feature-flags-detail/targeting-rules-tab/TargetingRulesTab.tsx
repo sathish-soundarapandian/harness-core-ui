@@ -57,20 +57,12 @@ const TargetingRulesTab = ({
     pageSize: 100
   }
 
-  const {
-    data: targetsData,
-    loading: targetsLoading,
-    refetch: refetchTargets
-  } = useGetAllTargets({
+  const { data: targetsData, refetch: refetchTargets } = useGetAllTargets({
     queryParams: queryParams as GetAllTargetsQueryParams,
     debounce
   })
 
-  const {
-    data: segmentsData,
-    loading: segmentsLoading,
-    refetch: refetchSegments
-  } = useGetAllSegments({
+  const { data: segmentsData, refetch: refetchSegments } = useGetAllSegments({
     queryParams: queryParams as GetAllSegmentsQueryParams,
     debounce
   })
@@ -89,7 +81,7 @@ const TargetingRulesTab = ({
   })
 
   const { featureEnabled, canEdit, canToggle } = useFeatureEnabled()
-  const disabled = patchFeatureLoading || refetchFlagLoading || targetsLoading || segmentsLoading || !featureEnabled
+  const disabled = patchFeatureLoading || refetchFlagLoading || !featureEnabled
 
   const handleRefetchSegments = async (searchTerm: string): Promise<void> =>
     await refetchSegments({

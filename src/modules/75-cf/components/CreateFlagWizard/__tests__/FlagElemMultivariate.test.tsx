@@ -8,7 +8,7 @@
 import React from 'react'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { FlagTypeVariations } from '@cf/components/CreateFlagDialog/FlagDialogUtils'
 import { FeatureFlagMutivariateKind } from '@cf/utils/CFUtils'
@@ -222,5 +222,19 @@ describe('FlagElemMultivariate', () => {
     renderComponent({ nextStep: nextStepMock, totalSteps: () => 3 })
 
     expect(screen.getByText('next')).toBeInTheDocument()
+  })
+
+  test('it should validate that variation Id is not a number', async () => {
+    renderComponent()
+
+    const var1NameInput = document.getElementsByName('variations.0.name')[0]
+    expect(var1NameInput).toBeInTheDocument()
+
+    await userEvent.type(var1NameInput, '2', { allAtOnce: true })
+    var1NameInput.blur()
+
+    await waitFor(() => {
+      expect(screen.getByText('cf.creationModal.mustContainLetter')).toBeVisible()
+    })
   })
 })

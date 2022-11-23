@@ -62,7 +62,7 @@ import { SegmentDetailPage } from './pages/segment-details/SegmentDetailPage'
 import TargetGroupDetailPage from './pages/target-group-detail/TargetGroupDetailPage'
 import { OnboardingPage } from './pages/onboarding/OnboardingPage'
 import { OnboardingDetailPage } from './pages/onboarding/OnboardingDetailPage'
-import CFTrialHomePage from './pages/home/CFTrialHomePage'
+import CFTrialHomePage from './pages/home/trialPage/CFTrialHomePage'
 import FeatureFlagsLandingPage from './pages/feature-flags/FeatureFlagsLandingPage'
 import { FFGitSyncProvider } from './contexts/ff-git-sync-context/FFGitSyncContext'
 import ConfigurePath from './pages/onboarding/ConfigurePath'
@@ -126,6 +126,7 @@ RbacFactory.registerResourceCategory(ResourceCategory.FEATUREFLAG_FUNCTIONS, {
 RbacFactory.registerResourceTypeHandler(ResourceType.FEATUREFLAG, {
   icon: 'nav-cf',
   label: 'cf.rbac.featureflag.label',
+  labelSingular: 'common.moduleTitles.cf',
   category: ResourceCategory.FEATUREFLAG_FUNCTIONS,
   permissionLabels: {
     [PermissionIdentifier.TOGGLE_FF_FEATUREFLAG]: <String stringID="cf.rbac.featureflag.toggle" />,

@@ -15,7 +15,7 @@ import {
   MultiSelectOption,
   Select,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import type { Column } from 'react-table'
@@ -154,9 +154,9 @@ export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element =>
   const queryParams = useMemo(
     () => ({
       serviceIdentifier: ((prepareFilterInfo(selectedServices).length > 0 && prepareFilterInfo(selectedServices)) ||
-        prepareFilterInfo(serviceOptions)) as string[],
+        []) as string[],
       environmentIdentifier: ((prepareFilterInfo(selectedEnvs).length > 0 && prepareFilterInfo(selectedEnvs)) ||
-        prepareFilterInfo(environmentOptions)) as string[],
+        []) as string[],
       changeSourceTypes: ((prepareFilterInfo(selectedSources).length > 0 && prepareFilterInfo(selectedSources)) ||
         prepareFilterInfo(connectorOptions)) as ChangeSourceTypes[],
       changeCategories: ((prepareFilterInfo(selectedChangeTypes).length > 0 &&
@@ -174,6 +174,7 @@ export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element =>
       sourceTypes
     ]
   )
+
   return (
     <>
       <ChangesHeader height={'80px'}>

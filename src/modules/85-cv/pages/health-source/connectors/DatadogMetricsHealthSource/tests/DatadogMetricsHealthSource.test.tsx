@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import type { DatadogMetricsHealthSourceProps } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.type'

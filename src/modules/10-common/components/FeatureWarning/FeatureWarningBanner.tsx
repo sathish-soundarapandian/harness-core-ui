@@ -7,7 +7,7 @@
 
 import React, { ReactElement } from 'react'
 import cx from 'classnames'
-import { Layout, Text } from '@wings-software/uicore'
+import { Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { FeatureDescriptor } from 'framework/featureStore/FeatureDescriptor'

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+gitDiff="$(git diff --staged --diff-filter=M -- '*.ts' '*.tsx' --unified=0 | grep -w 'data-tooltip-id\|formName')"
+
+if [[ -n "$gitDiff" ]]; then
+  echo "\033[0;31;1mCannot modify formName/data-tooltip-id\033[0m"
+  echo $gitDiff
+  exit 1
+fi

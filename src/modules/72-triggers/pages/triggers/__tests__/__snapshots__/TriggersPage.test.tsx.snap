@@ -9,6 +9,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
       class="Layout--horizontal StyledProps--main PageSubHeader--container StyledProps--flex"
     >
       <button
+        aria-label="triggers.newTrigger"
         class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         disabled=""
         tabindex="-1"
@@ -2292,71 +2293,6 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                     </section>
                     <section
                       class="step"
-                      data-cy="execution.triggerType.WEBHOOK_common.repo_provider.awscodecommit"
-                    >
-                      <div
-                        class="bp3-card bp3-elevation-0 Card--card"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="service-aws-code-deploy"
-                        >
-                          <svg
-                            height="25"
-                            viewBox="0 0 12 14"
-                            width="25"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M1.9 11.8L.3 11V2.9l1.6-.8z"
-                              fill="#4b612c"
-                            />
-                            <path
-                              d="M7.8 10.2l-5.9 1.6V2.1l5.9 1.6z"
-                              fill="#759c3e"
-                            />
-                            <path
-                              d="M2.9 5.6L6 5.2l.1.1v3.3l-.1.1-3.1-.4z"
-                              fill="#4b612c"
-                            />
-                            <path
-                              d="M11.7 5l-2.8.3-6-1 3.1-1z"
-                              fill="#3c4929"
-                            />
-                            <path
-                              d="M11.7 9l-2.8-.3-6 1 3.3.8z"
-                              fill="#b7ca9d"
-                            />
-                            <path
-                              d="M2.9 12.4L6 13.9l.1-3.4-3.2-.8z"
-                              fill="#4b612c"
-                            />
-                            <path
-                              d="M11.7 11.1L6 13.9v-3.4L11.7 9z"
-                              fill="#759c3e"
-                            />
-                            <path
-                              d="M2.9 1.6L6 .1v3.4l-3.1.8z"
-                              fill="#4b612c"
-                            />
-                            <g
-                              fill="#759c3e"
-                            >
-                              <path
-                                d="M11.7 8L6 8.7V5.2l5.7.8zM11.7 5L6 3.5V.1l5.7 2.8z"
-                              />
-                            </g>
-                          </svg>
-                        </span>
-                      </div>
-                      <section
-                        class="stepName"
-                      >
-                        common.repo_provider.awscodecommit
-                      </section>
-                    </section>
-                    <section
-                      class="step"
                       data-cy="execution.triggerType.WEBHOOK_common.repo_provider.customLabel"
                     >
                       <div
@@ -2788,6 +2724,151 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                         pipeline.artifactsSelection.amazonS3Title
                       </section>
                     </section>
+                    <section
+                      class="step"
+                      data-cy="pipeline.artifactTriggerConfigPanel.artifact_pipeline.artifactsSelection.googleArtifactRegistryTitle"
+                    >
+                      <div
+                        class="bp3-card bp3-elevation-0 Card--card"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="service-gar"
+                        >
+                          <svg
+                            fill="none"
+                            height="25"
+                            viewBox="0 0 33 32"
+                            width="25"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g
+                              clip-path="url(#service-gar_svg__clip0_2445_173498)"
+                            >
+                              <path
+                                d="M7.042 28.806L.48 17.437a2.88 2.88 0 010-2.875L7.042 3.194A2.877 2.877 0 019.53 1.756h13.125c1.025 0 1.975.55 2.487 1.438l6.563 11.368a2.88 2.88 0 010 2.876l-6.563 11.368a2.877 2.877 0 01-2.487 1.438H9.53a2.877 2.877 0 01-2.488-1.438z"
+                                fill="url(#service-gar_svg__paint0_linear_2445_173498)"
+                              />
+                              <path
+                                d="M31.442 18.712l-7.337-7.343-3.075-.744-.475.488 2.368 2.368.007 3.244-4.888-4.881-3.887-.031-2.5-2.5-2.688 2.25-.9 9.056 9.956 9.95 6.444-.006 6.975-11.85z"
+                                fill="#000"
+                                opacity="0.07"
+                              />
+                              <path
+                                d="M20.542 9.306v1.775l2.05 1.181v7.476l-2.05 1.18v1.776l3.613-2.088v-9.212l-3.613-2.088zM14.092 14.156l2 1.156 2-1.156v-2.312l-2-1.156-2 1.156v2.312z"
+                                fill="#fff"
+                              />
+                              <path
+                                d="M16.717 18.656l2 1.157 2-1.157v-2.312l-2-1.157-2 1.157v2.312zM11.467 18.656l2 1.157 2-1.157v-2.312l-2-1.157-2 1.157v2.312z"
+                                fill="#fff"
+                              />
+                              <path
+                                d="M11.642 9.306v1.775l-2.05 1.181v7.476l2.05 1.18v1.776L8.03 20.606v-9.212l3.612-2.088z"
+                                fill="#fff"
+                              />
+                            </g>
+                            <defs>
+                              <lineargradient
+                                gradientUnits="userSpaceOnUse"
+                                id="service-gar_svg__paint0_linear_2445_173498"
+                                x1="16.092"
+                                x2="16.092"
+                                y1="1.758"
+                                y2="30.197"
+                              >
+                                <stop
+                                  stop-color="#4387FD"
+                                />
+                                <stop
+                                  offset="1"
+                                  stop-color="#4683EA"
+                                />
+                              </lineargradient>
+                              <clippath
+                                id="service-gar_svg__clip0_2445_173498"
+                              >
+                                <path
+                                  d="M0 0h32v32H0z"
+                                  fill="#fff"
+                                  transform="translate(.092)"
+                                />
+                              </clippath>
+                            </defs>
+                          </svg>
+                        </span>
+                      </div>
+                      <section
+                        class="stepName"
+                      >
+                        pipeline.artifactsSelection.googleArtifactRegistryTitle
+                      </section>
+                    </section>
+                    <section
+                      class="step"
+                      data-cy="pipeline.artifactTriggerConfigPanel.artifact_common.repo_provider.customLabel"
+                    >
+                      <div
+                        class="bp3-card bp3-elevation-0 Card--card"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="custom-artifact"
+                        >
+                          <svg
+                            fill="currentColor"
+                            height="25"
+                            viewBox="0 0 33 33"
+                            width="25"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M8.985 7.353h5.045l.006.001a.09.09 0 01.025.018.184.184 0 01.054.102c.101.637.338 1.582.915 2.385.604.842 1.569 1.502 2.997 1.502 1.43 0 2.396-.661 3.002-1.502.58-.803.819-1.748.923-2.385a.184.184 0 01.053-.102.088.088 0 01.025-.017l.006-.002h5.336L27.2 26.519H8.985V21.62c0-.937-.768-1.593-1.563-1.68-.529-.057-1.158-.205-1.635-.533-.432-.296-.778-.758-.778-1.61 0-.871.364-1.389.836-1.738.509-.376 1.166-.567 1.691-.658.752-.13 1.449-.774 1.449-1.662V7.353zm5.045-1.6H8.985a1.6 1.6 0 00-1.6 1.6v6.385l-.002.005a.09.09 0 01-.017.026.187.187 0 01-.103.055c-.633.11-1.572.358-2.37.948-.833.617-1.484 1.591-1.484 3.024 0 1.41.632 2.353 1.472 2.93.795.544 1.729.735 2.368.804a.196.196 0 01.114.055.097.097 0 01.02.027l.002.007v4.899a1.6 1.6 0 001.6 1.6H27.2a1.6 1.6 0 001.6-1.586l.172-19.164a1.6 1.6 0 00-1.6-1.614h-5.336c-.894 0-1.54.704-1.664 1.463-.086.531-.271 1.194-.64 1.706-.342.475-.849.838-1.705.838-.855 0-1.358-.363-1.698-.835-.367-.511-.55-1.173-.635-1.704-.121-.762-.769-1.47-1.664-1.47zm4.94 9.494a.8.8 0 00-1.545-.414l-1.657 6.182a.8.8 0 101.546.414l1.656-6.182zm1.396-.856a.8.8 0 011.13-.05l3.2 2.934a.8.8 0 01.047 1.132l-3.2 3.467a.8.8 0 01-1.176-1.085l2.656-2.877-2.608-2.391a.8.8 0 01-.05-1.13zm-7.123-.05a.8.8 0 111.081 1.18l-2.608 2.39 2.655 2.878a.8.8 0 11-1.175 1.085l-3.2-3.467a.8.8 0 01.047-1.132l3.2-2.933z"
+                              fill="#0278D5"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                      <section
+                        class="stepName"
+                      >
+                        common.repo_provider.customLabel
+                      </section>
+                    </section>
+                    <section
+                      class="step"
+                      data-cy="pipeline.artifactTriggerConfigPanel.artifact_pipeline.artifactsSelection.githubPackageRegistryTitle"
+                    >
+                      <div
+                        class="bp3-card bp3-elevation-0 Card--card"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="service-github-package"
+                        >
+                          <svg
+                            fill="none"
+                            height="25"
+                            viewBox="0 0 32 32"
+                            width="25"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M0 16.395c0-8.836 7.165-16 16-16 8.836 0 16 7.164 16 16 0 7.066-4.579 13.062-10.932 15.18-.812.158-1.068-.342-1.068-.767v-4.39c0-1.494-.524-2.467-1.097-2.963 3.562-.396 7.305-1.75 7.305-7.895 0-1.747-.62-3.175-1.647-4.295.166-.402.714-2.03-.157-4.234 0 0-1.341-.43-4.396 1.64A15.39 15.39 0 0016 8.13c-1.36.008-2.728.185-4.004.54C8.939 6.6 7.595 7.03 7.595 7.03c-.87 2.202-.322 3.83-.156 4.234-1.023 1.12-1.648 2.547-1.648 4.295 0 6.13 3.736 7.501 7.289 7.908-.459.398-.873 1.105-1.016 2.139-.913.409-3.23 1.116-4.656-1.33 0 0-.845-1.537-2.452-1.65 0 0-1.563-.02-.11.973 0 0 1.049.492 1.777 2.341 0 0 .926 2.856 5.377 1.888v2.979c0 .421-.259.917-1.057.77C4.584 29.46 0 23.463 0 16.394zm15.766-3.806a.5.5 0 01.509.002l2.63 1.565-2.922 1.717-2.888-1.713 2.67-1.57zm.716 4.15l2.906-1.707v3.052a.5.5 0 01-.249.432l-2.657 1.545V16.74zm-1 0v3.319l-2.624-1.54a.5.5 0 01-.247-.432v-3.05l2.871 1.703zm1.304-5.008a1.5 1.5 0 00-1.527-.004l-3.401 2a.5.5 0 00-.247.431v3.928a1.5 1.5 0 00.741 1.294l3.377 1.982a.5.5 0 00.505.001l3.408-1.983a1.5 1.5 0 00.746-1.296v-3.926a.5.5 0 00-.245-.43l-3.357-1.997z"
+                              fill="#000"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                      <section
+                        class="stepName"
+                      >
+                        pipeline.artifactsSelection.githubPackageRegistryTitle
+                      </section>
+                    </section>
                   </section>
                 </section>
                 <section
@@ -3019,7 +3100,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                       triggers.showAllTriggers
                        (
                     </p>
-                    15
+                    17
                     )
                   </section>
                 </section>
@@ -3038,7 +3119,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                   >
                     execution.triggerType.WEBHOOK
                      (
-                    6
+                    5
                     )
                   </section>
                   <section
@@ -3046,7 +3127,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                   >
                     pipeline.artifactTriggerConfigPanel.artifact
                      (
-                    6
+                    9
                     )
                   </section>
                   <section
@@ -3093,6 +3174,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - Shows Tr
       class="Layout--horizontal StyledProps--main PageSubHeader--container StyledProps--flex"
     >
       <button
+        aria-label="triggers.newTrigger"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >

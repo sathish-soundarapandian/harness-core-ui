@@ -135,6 +135,7 @@ describe('Environment Groups Filters', () => {
     await waitFor(() =>
       expect(buttons[4]).toMatchInlineSnapshot(`
       <button
+        aria-label="save"
         class="bp3-button Button--button StyledProps--font StyledProps--main saveFilterBtn Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
         type="submit"
       >

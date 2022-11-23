@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Checkbox, TextInput } from '@wings-software/uicore'
+import { Container, Checkbox, TextInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import MenuItemWithDivider from '@ce/common/MenuItemWithDivider/MenuItemWithDivider'
 import { COST_FILTER_KEYS, getFiltersLabelName } from '../constants'

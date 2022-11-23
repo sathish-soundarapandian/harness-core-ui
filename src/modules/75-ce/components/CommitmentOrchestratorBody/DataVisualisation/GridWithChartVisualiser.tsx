@@ -7,7 +7,8 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import cx from 'classnames'
-import { Container, FontVariation, Icon, Layout, Text } from '@harness/uicore'
+import { Container, Icon, Layout, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { Column } from 'react-table'
 import type { OptionsStackingValue } from 'highcharts'
 import Grid from '@ce/components/PerspectiveGrid/Grid'

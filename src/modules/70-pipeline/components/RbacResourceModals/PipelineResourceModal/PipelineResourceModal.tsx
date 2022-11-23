@@ -6,10 +6,11 @@
  */
 
 import React, { useState } from 'react'
-import { Container, Layout, Text, Icon } from '@wings-software/uicore'
+import { Container, Layout, Text, Icon } from '@harness/uicore'
 import type { CellProps, Renderer } from 'react-table'
 import { Color } from '@harness/design-system'
 import { Position } from '@blueprintjs/core'
+import ReactTimeago from 'react-timeago'
 import ResourceHandlerTable, {
   ResourceHandlerTableData
 } from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
@@ -17,7 +18,6 @@ import { PageSpinner, TagsPopover } from '@common/components'
 import type { RbacResourceModalProps } from '@rbac/factories/RbacFactory'
 import { useStrings } from 'framework/strings'
 import { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse, useGetPipelineList } from 'services/pipeline-ng'
-import { formatDatetoLocale } from '@common/utils/dateUtils'
 
 interface PipelineDTO extends PMSPipelineSummaryResponse {
   admin?: string
@@ -58,14 +58,13 @@ export const RenderColumnPipeline: Renderer<CellProps<PipelineDTO>> = ({ row }) 
 // eslint-disable-next-line react/function-component-definition
 export const RenderLastRunDate: Renderer<CellProps<PipelineDTO>> = ({ row }) => {
   const rowdata = row.original
+  const lastRunStartTs = rowdata.recentExecutionsInfo?.[0]?.startTs
   const { getString } = useStrings()
   return (
     <Layout.Vertical spacing="xsmall">
       <Text color={Color.GREY_800}>Last run:</Text>
       <Text color={Color.GREY_400}>
-        {rowdata.executionSummaryInfo?.lastExecutionTs
-          ? formatDatetoLocale(rowdata.executionSummaryInfo?.lastExecutionTs)
-          : getString('pipelineSteps.pullNeverLabel')}
+        {lastRunStartTs ? <ReactTimeago date={lastRunStartTs} /> : getString('pipelineSteps.pullNeverLabel')}
       </Text>
     </Layout.Vertical>
   )

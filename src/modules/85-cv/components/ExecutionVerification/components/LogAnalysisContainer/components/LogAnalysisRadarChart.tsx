@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Container, Icon, NoDataCard, Text, PageError } from '@wings-software/uicore'
+import { Container, Icon, NoDataCard, Text, PageError } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'

@@ -48,7 +48,7 @@ exports[`<CustomApprovalTab/> tests expired scenario 1`] = `
     </table>
   </div>
   <div
-    class="customApproval"
+    class="customApproval applyTopPadding"
   >
     <div
       class="collapse customApprovalCriteria"
@@ -298,7 +298,7 @@ exports[`<CustomApprovalTab/> tests failed scenario 1`] = `
     </table>
   </div>
   <div
-    class="customApproval"
+    class="customApproval applyTopPadding"
   >
     <div
       class="collapse customApprovalCriteria"
@@ -493,6 +493,42 @@ exports[`<CustomApprovalTab/> tests is in waiting state 1`] = `
         </span>
       </div>
     </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main stepDetailsContainer StyledProps--padding-top-large"
+  >
+    <table
+      class="detailsTable"
+    >
+      <tbody>
+        <tr>
+          <th>
+            startedAt:
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            endedAt:
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            pipeline.duration:
+          </th>
+          <td>
+            <div>
+              MOCK DURATION
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <div
     class="customApproval applyTopPadding"
@@ -714,7 +750,7 @@ exports[`<CustomApprovalTab/> tests not in waiting state  1`] = `
     </table>
   </div>
   <div
-    class="customApproval"
+    class="customApproval applyTopPadding"
   >
     <div
       class="collapse customApprovalCriteria"
@@ -933,7 +969,7 @@ exports[`<CustomApprovalTab/> tests rejected scenario 1`] = `
     </table>
   </div>
   <div
-    class="customApproval"
+    class="customApproval applyTopPadding"
   >
     <div
       class="collapse customApprovalCriteria"

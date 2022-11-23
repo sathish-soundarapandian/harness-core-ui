@@ -236,6 +236,7 @@ exports[`Custom remote tests initial rendering 1`] = `
                         </div>
                         <span>
                           <button
+                            aria-label="addFileText"
                             class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                             type="button"
                           >
@@ -275,6 +276,7 @@ exports[`Custom remote tests initial rendering 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
             >
               <button
+                aria-label="back"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                 type="button"
               >
@@ -304,6 +306,7 @@ exports[`Custom remote tests initial rendering 1`] = `
                 </span>
               </button>
               <button
+                aria-label="submit"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >
@@ -577,6 +580,7 @@ exports[`Custom remote tests when fields are runtime input 1`] = `
                         </div>
                         <span>
                           <button
+                            aria-label="addFileText"
                             class="bp3-button Button--button StyledProps--font StyledProps--main addFileButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                             type="button"
                           >
@@ -616,6 +620,7 @@ exports[`Custom remote tests when fields are runtime input 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
             >
               <button
+                aria-label="back"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
                 type="button"
               >
@@ -645,6 +650,7 @@ exports[`Custom remote tests when fields are runtime input 1`] = `
                 </span>
               </button>
               <button
+                aria-label="submit"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
                 type="submit"
               >

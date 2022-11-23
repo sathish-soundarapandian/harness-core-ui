@@ -6,14 +6,7 @@
  */
 
 import React from 'react'
-import {
-  AllowedTypes,
-  Formik,
-  FormInput,
-  getMultiTypeFromValue,
-  IconName,
-  MultiTypeInputType
-} from '@wings-software/uicore'
+import { AllowedTypes, Formik, FormInput, getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 
@@ -41,6 +34,7 @@ import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { TFRollbackData } from '../Common/Terraform/TerraformInterfaces'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
@@ -192,7 +186,12 @@ function TerraformRollbackWidget(
   )
 }
 
-const TerraformRollbackInputStep: React.FC<TerraformRollbackProps> = ({ inputSetData, readonly, allowableTypes }) => {
+const TerraformRollbackInputStep: React.FC<TerraformRollbackProps> = ({
+  inputSetData,
+  readonly,
+  allowableTypes,
+  stepViewType
+}) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   return (
@@ -203,7 +202,9 @@ const TerraformRollbackInputStep: React.FC<TerraformRollbackProps> = ({ inputSet
             template={inputSetData?.template}
             fieldPath={'timeout'}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -227,6 +228,9 @@ const TerraformRollbackInputStep: React.FC<TerraformRollbackProps> = ({ inputSet
               expressions,
               disabled: readonly,
               allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
           />
         </div>

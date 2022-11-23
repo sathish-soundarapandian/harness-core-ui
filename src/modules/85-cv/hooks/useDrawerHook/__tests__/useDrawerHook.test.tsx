@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Text } from '@wings-software/uicore'
+import { Button, Text } from '@harness/uicore'
 import type { IDrawerProps } from '@blueprintjs/core'
 import { fireEvent, render, act, waitFor } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'

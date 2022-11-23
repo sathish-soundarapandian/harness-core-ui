@@ -12,6 +12,26 @@ import { Get, GetProps, useGet, UseGetProps, Mutate, MutateProps, useMutate, Use
 
 import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from '../config'
 export const SPEC_VERSION = '2.0'
+export interface AMIFilter {
+  name?: string
+  value?: string
+}
+
+export type AMIRegistrySpec = ArtifactTypeSpec & {
+  connectorRef?: string
+  eventConditions?: TriggerEventDataCondition[]
+  filters?: AMIFilter[]
+  region?: string
+  tags?: AMITag[]
+  version?: string
+  versionRegex?: string
+}
+
+export interface AMITag {
+  name?: string
+  value?: string
+}
+
 export type AbortFailureActionConfig = FailureStrategyActionConfig & {
   type: 'Abort'
 }
@@ -81,6 +101,10 @@ export type AmazonS3RegistrySpec = ArtifactTypeSpec & {
   region?: string
 }
 
+export interface Ambiance {
+  [key: string]: any
+}
+
 export interface ApprovalInstanceDetailsDTO {
   [key: string]: any
 }
@@ -136,6 +160,7 @@ export type ArtifactTriggerConfig = NGTriggerSpecV2 & {
     | 'Ecr'
     | 'DockerRegistry'
     | 'Nexus3Registry'
+    | 'Nexus2Registry'
     | 'ArtifactoryRegistry'
     | 'Acr'
     | 'AmazonS3'
@@ -143,6 +168,8 @@ export type ArtifactTriggerConfig = NGTriggerSpecV2 & {
     | 'CustomArtifact'
     | 'GoogleArtifactRegistry'
     | 'GithubPackageRegistry'
+    | 'AzureArtifacts'
+    | 'AmazonMachineImage'
 }
 
 export interface ArtifactTypeSpec {
@@ -204,6 +231,17 @@ export type AwsCodeCommitPushSpec = AwsCodeCommitEventSpec & {
 export type AwsCodeCommitSpec = WebhookTriggerSpecV2 & {
   spec?: AwsCodeCommitEventSpec
   type?: 'Push'
+}
+
+export type AzureArtifactsRegistrySpec = ArtifactTypeSpec & {
+  connectorRef?: string
+  eventConditions?: TriggerEventDataCondition[]
+  feed?: string
+  packageName?: string
+  packageType?: string
+  project?: string
+  version?: string
+  versionRegex?: string
 }
 
 export interface AzureRepoEventSpec {
@@ -469,9 +507,10 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
-    | 'ELK'
+    | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Spot'
   )[]
 }
 
@@ -606,7 +645,6 @@ export type EmailStepInfo = StepSpecType & {
   body?: string
   cc?: string
   delegateSelectors?: string[]
-  metadata?: string
   subject: string
   to: string
 }
@@ -985,6 +1023,9 @@ export interface Error {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1338,6 +1379,9 @@ export interface ErrorMetadata {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   errorMessage?: string
 }
 
@@ -1350,12 +1394,6 @@ export interface ErrorNodeSummary {
   nodeInfo?: NodeInfo
   templateInfo?: TemplateInfo
   templateResponse?: TemplateResponse
-}
-
-export interface ExcludeConfig {
-  exclude?: {
-    [key: string]: string
-  }
 }
 
 export interface ExecutableResponse {
@@ -1414,6 +1452,7 @@ export interface ExecutionInfo {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -1491,6 +1530,7 @@ export interface ExecutionNode {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -1890,6 +1930,9 @@ export interface Failure {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2134,6 +2177,7 @@ export interface GraphLayoutNode {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -2506,11 +2550,6 @@ export type MarkAsSuccessFailureActionConfig = FailureStrategyActionConfig & {
   type: 'MarkAsSuccess'
 }
 
-export type MatrixConfig = MatrixConfigInterface & {
-  exclude?: ParameterFieldListExcludeConfig
-  maxConcurrency?: number
-}
-
 export interface MatrixConfigInterface {
   [key: string]: any
 }
@@ -2556,6 +2595,7 @@ export interface NGTag {
 export interface NGTriggerConfigV2 {
   description?: string
   enabled?: boolean
+  encryptedWebhookSecretIdentifier?: string
   identifier: string
   inputSetRefs?: string[]
   inputYaml?: string
@@ -2578,12 +2618,14 @@ export interface NGTriggerDetailsResponse {
   identifier?: string
   lastTriggerExecutionDetails?: LastTriggerExecutionDetails
   name?: string
+  pipelineInputOutdated?: boolean
   registrationStatus?: 'SUCCESS' | 'FAILED' | 'ERROR' | 'TIMEOUT' | 'UNAVAILABLE'
   tags?: {
     [key: string]: string
   }
   triggerStatus?: TriggerStatus
   type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled'
+  webhookCurlCommand?: string
   webhookDetails?: WebhookDetails
   webhookUrl?: string
   yaml?: string
@@ -2626,12 +2668,32 @@ export interface NGVariable {
   type?: 'String' | 'Number' | 'Secret'
 }
 
-export type NexusRegistrySpec = ArtifactTypeSpec & {
+export type Nexus2RegistrySpec = ArtifactTypeSpec & {
+  artifactId?: string
+  classifier?: string
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
-  imagePath?: string
+  extension?: string
+  groupId?: string
+  packageName?: string
   repositoryFormat?: string
   repositoryName?: string
+  repositoryUrl?: string
+  tag?: string
+}
+
+export type NexusRegistrySpec = ArtifactTypeSpec & {
+  artifactId?: string
+  classifier?: string
+  connectorRef?: string
+  eventConditions?: TriggerEventDataCondition[]
+  extension?: string
+  groupId?: string
+  imagePath?: string
+  packageName?: string
+  repository?: string
+  repositoryFormat?: string
+  repositoryUrl?: string
   tag?: string
 }
 
@@ -2728,6 +2790,14 @@ export interface OverlayInputSetResponse {
   tags?: {
     [key: string]: string
   }
+}
+
+export interface PMSPipelineListBranchesResponse {
+  branches?: string[]
+}
+
+export interface PMSPipelineListRepoResponse {
+  repositories?: string[]
 }
 
 export interface PMSPipelineResponseDTO {
@@ -2869,18 +2939,6 @@ export interface ParameterField {
   value?: { [key: string]: any }
 }
 
-export interface ParameterFieldListExcludeConfig {
-  defaultValue?: ExcludeConfig[]
-  executionInput?: boolean
-  expression?: boolean
-  expressionValue?: string
-  inputSetValidator?: InputSetValidator
-  jsonResponseField?: boolean
-  responseField?: string
-  typeString?: boolean
-  value?: ExcludeConfig[]
-}
-
 export interface ParameterFieldString {
   defaultValue?: string
   executionInput?: boolean
@@ -2969,6 +3027,7 @@ export type PipelineExecutionFilterProperties = FilterProperties & {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -3042,6 +3101,7 @@ export interface PipelineExecutionSummary {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -3065,6 +3125,7 @@ export type PipelineFilterProperties = FilterProperties & {
   name?: string
   pipelineIdentifiers?: string[]
   pipelineTags?: NGTag[]
+  repoName?: string
 }
 
 export interface PipelineHealthInfo {
@@ -3143,6 +3204,7 @@ export interface PipelinesCount {
 }
 
 export interface PlanExecution {
+  ambiance?: Ambiance
   createdAt?: number
   endTs?: number
   governanceMetadata?: GovernanceMetadata
@@ -3180,6 +3242,7 @@ export interface PlanExecution {
     | 'APPROVAL_REJECTED'
     | 'INPUT_WAITING'
     | 'WAIT_STEP_RUNNING'
+    | 'FREEZE_FAILED'
     | 'UNRECOGNIZED'
   uuid?: string
   validUntil?: string
@@ -3312,6 +3375,7 @@ export interface RecentExecutionInfoDTO {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -4061,6 +4125,9 @@ export interface ResponseMessage {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4109,6 +4176,20 @@ export interface ResponseNotificationRules {
 export interface ResponseOverlayInputSetResponse {
   correlationId?: string
   data?: OverlayInputSetResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePMSPipelineListBranchesResponse {
+  correlationId?: string
+  data?: PMSPipelineListBranchesResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePMSPipelineListRepoResponse {
+  correlationId?: string
+  data?: PMSPipelineListRepoResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4440,6 +4521,7 @@ export interface RetryStageInfo {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -4740,6 +4822,7 @@ export interface StepData {
     | 'CUSTOM_RESOURCE_GROUPS'
     | 'MAX_TOTAL_BUILDS'
     | 'MAX_BUILDS_PER_MONTH'
+    | 'MAX_BUILDS_PER_DAY'
     | 'ACTIVE_COMMITTERS'
     | 'TEST_INTELLIGENCE'
     | 'TEMPLATE_SERVICE'
@@ -4857,6 +4940,8 @@ export type TagBuildSpec = BuildSpec & {
 export type TemplateFilterProperties = FilterProperties & {
   childTypes?: string[]
   description?: string
+  listingScope?: TemplateScope
+  repoName?: string
   templateEntityTypes?: (
     | 'Step'
     | 'Stage'
@@ -4910,6 +4995,7 @@ export interface TemplateResponse {
   description?: string
   entityValidityDetails?: EntityValidityDetails
   gitDetails?: EntityGitDetails
+  icon?: string
   identifier: string
   lastUpdatedAt?: number
   name: string
@@ -4932,6 +5018,12 @@ export interface TemplateResponse {
   version?: number
   versionLabel?: string
   yaml?: string
+}
+
+export interface TemplateScope {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export interface TemplateStageNode {
@@ -5043,6 +5135,15 @@ export interface UserOpaEvaluationContext {
   name?: string
 }
 
+export type ValidatePipelineInputsResponseDTO = ErrorMetadataDTO & {
+  errorMap?: {
+    [key: string]: {
+      [key: string]: string
+    }
+  }
+  validYaml?: boolean
+}
+
 export type ValidateTemplateInputsResponseDTO = ErrorMetadataDTO & {
   errorNodeSummary?: ErrorNodeSummary
   validYaml?: boolean
@@ -5122,6 +5223,7 @@ export interface WebhookEventProcessingDetails {
   runtimeInput?: string
   status?: string
   triggerIdentifier?: string
+  warningMsg?: string
 }
 
 export interface WebhookExecutionDetails {
@@ -5209,6 +5311,7 @@ export interface ExecutionSummaryInfo {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -5683,7 +5786,7 @@ export interface GetPipelineDashboardExecutionQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   pipelineIdentifier: string
-  moduleInfo: string
+  moduleInfo?: string
   startTime: number
   endTime: number
 }
@@ -5742,7 +5845,7 @@ export interface FetchPipelineHealthQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   pipelineIdentifier: string
-  moduleInfo: string
+  moduleInfo?: string
   startTime: number
   endTime: number
 }
@@ -6142,6 +6245,7 @@ export interface GetInputSetsListForPipelineQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type GetInputSetsListForPipelineProps = Omit<
@@ -6398,6 +6502,7 @@ export interface GetMergeInputSetFromPipelineTemplateWithListInputQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type GetMergeInputSetFromPipelineTemplateWithListInputProps = Omit<
@@ -6492,6 +6597,7 @@ export interface GetMergeInputSetFromPipelineTemplateQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type GetMergeInputSetFromPipelineTemplateProps = Omit<
@@ -6672,6 +6778,7 @@ export interface GetOverlayInputSetForPipelineQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export interface GetOverlayInputSetForPipelinePathParams {
@@ -6879,6 +6986,7 @@ export interface GetTemplateFromPipelineQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type GetTemplateFromPipelineProps = Omit<
@@ -7029,6 +7137,7 @@ export interface GetInputSetForPipelineQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export interface GetInputSetForPipelinePathParams {
@@ -8098,6 +8207,7 @@ export interface StartPreflightCheckQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type StartPreflightCheckProps = Omit<
@@ -8151,7 +8261,7 @@ export interface RePostPipelineExecuteWithInputSetYamlV2QueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  moduleType: string
+  moduleType?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -8160,6 +8270,7 @@ export interface RePostPipelineExecuteWithInputSetYamlV2QueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
   useFQNIfError?: boolean
 }
 
@@ -8264,7 +8375,7 @@ export interface RePostPipelineExecuteWithInputSetYamlQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  moduleType: string
+  moduleType?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -8273,6 +8384,7 @@ export interface RePostPipelineExecuteWithInputSetYamlQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
   useFQNIfError?: boolean
 }
 
@@ -8377,7 +8489,7 @@ export interface RePostPipelineExecuteWithInputSetListQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  moduleType: string
+  moduleType?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -8386,6 +8498,7 @@ export interface RePostPipelineExecuteWithInputSetListQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
   useFQNIfError?: boolean
 }
 
@@ -8496,7 +8609,7 @@ export interface RerunStagesWithRuntimeInputYamlQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  moduleType: string
+  moduleType?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -8505,6 +8618,7 @@ export interface RerunStagesWithRuntimeInputYamlQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
   useFQNIfError?: boolean
 }
 
@@ -8615,7 +8729,7 @@ export interface RetryPipelineQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  moduleType: string
+  moduleType?: string
   planExecutionId: string
   retryStages: string[]
   runAllStages?: boolean
@@ -8773,6 +8887,7 @@ export interface GetStagesExecutionListQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type GetStagesExecutionListProps = Omit<
@@ -8828,7 +8943,7 @@ export interface PostPipelineExecuteWithInputSetYamlQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  moduleType: string
+  moduleType?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -8837,6 +8952,7 @@ export interface PostPipelineExecuteWithInputSetYamlQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
   useFQNIfError?: boolean
   notifyOnlyUser?: boolean
 }
@@ -8937,7 +9053,7 @@ export interface PostPipelineExecuteWithInputSetListQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  moduleType: string
+  moduleType?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -8946,6 +9062,7 @@ export interface PostPipelineExecuteWithInputSetListQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
   useFQNIfError?: boolean
 }
 
@@ -9046,7 +9163,7 @@ export interface RunStagesWithRuntimeInputYamlQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  moduleType: string
+  moduleType?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -9055,6 +9172,7 @@ export interface RunStagesWithRuntimeInputYamlQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
   useFQNIfError?: boolean
 }
 
@@ -9148,7 +9266,7 @@ export interface PostPipelineExecuteWithInputSetYamlv2QueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  moduleType: string
+  moduleType?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -9157,6 +9275,7 @@ export interface PostPipelineExecuteWithInputSetYamlv2QueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
   useFQNIfError?: boolean
 }
 
@@ -9266,6 +9385,7 @@ export interface GetRetryStagesQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export interface GetRetryStagesPathParams {
@@ -9335,6 +9455,7 @@ export interface CreateVariablesForPipelineExecutionQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
   planExecutionId: string
 }
 
@@ -9862,6 +9983,119 @@ export const dummyTemplateStepApiPromise = (
     signal
   )
 
+export interface GetExecutionBranchesListQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier?: string
+  repoName?: string
+}
+
+export type GetExecutionBranchesListProps = Omit<
+  GetProps<ResponsePMSPipelineListBranchesResponse, Failure | Error, GetExecutionBranchesListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets execution branches list
+ */
+export const GetExecutionBranchesList = (props: GetExecutionBranchesListProps) => (
+  <Get<ResponsePMSPipelineListBranchesResponse, Failure | Error, GetExecutionBranchesListQueryParams, void>
+    path={`/pipelines/execution/list-branches`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetExecutionBranchesListProps = Omit<
+  UseGetProps<ResponsePMSPipelineListBranchesResponse, Failure | Error, GetExecutionBranchesListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets execution branches list
+ */
+export const useGetExecutionBranchesList = (props: UseGetExecutionBranchesListProps) =>
+  useGet<ResponsePMSPipelineListBranchesResponse, Failure | Error, GetExecutionBranchesListQueryParams, void>(
+    `/pipelines/execution/list-branches`,
+    { base: getConfig('pipeline/api'), ...props }
+  )
+
+/**
+ * Gets execution branches list
+ */
+export const getExecutionBranchesListPromise = (
+  props: GetUsingFetchProps<
+    ResponsePMSPipelineListBranchesResponse,
+    Failure | Error,
+    GetExecutionBranchesListQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePMSPipelineListBranchesResponse, Failure | Error, GetExecutionBranchesListQueryParams, void>(
+    getConfig('pipeline/api'),
+    `/pipelines/execution/list-branches`,
+    props,
+    signal
+  )
+
+export interface GetExecutionRepositoriesListQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier?: string
+}
+
+export type GetExecutionRepositoriesListProps = Omit<
+  GetProps<ResponsePMSPipelineListRepoResponse, Failure | Error, GetExecutionRepositoriesListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets execution repositories list
+ */
+export const GetExecutionRepositoriesList = (props: GetExecutionRepositoriesListProps) => (
+  <Get<ResponsePMSPipelineListRepoResponse, Failure | Error, GetExecutionRepositoriesListQueryParams, void>
+    path={`/pipelines/execution/list-repositories`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetExecutionRepositoriesListProps = Omit<
+  UseGetProps<ResponsePMSPipelineListRepoResponse, Failure | Error, GetExecutionRepositoriesListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets execution repositories list
+ */
+export const useGetExecutionRepositoriesList = (props: UseGetExecutionRepositoriesListProps) =>
+  useGet<ResponsePMSPipelineListRepoResponse, Failure | Error, GetExecutionRepositoriesListQueryParams, void>(
+    `/pipelines/execution/list-repositories`,
+    { base: getConfig('pipeline/api'), ...props }
+  )
+
+/**
+ * Gets execution repositories list
+ */
+export const getExecutionRepositoriesListPromise = (
+  props: GetUsingFetchProps<
+    ResponsePMSPipelineListRepoResponse,
+    Failure | Error,
+    GetExecutionRepositoriesListQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePMSPipelineListRepoResponse, Failure | Error, GetExecutionRepositoriesListQueryParams, void>(
+    getConfig('pipeline/api'),
+    `/pipelines/execution/list-repositories`,
+    props,
+    signal
+  )
+
 export interface GetListOfExecutionsQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -9897,6 +10131,7 @@ export interface GetListOfExecutionsQueryParams {
     | 'Pausing'
     | 'ApprovalRejected'
     | 'InputWaiting'
+    | 'AbortedByFreeze'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -9912,6 +10147,7 @@ export interface GetListOfExecutionsQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type GetListOfExecutionsProps = Omit<
@@ -9980,6 +10216,92 @@ export const getListOfExecutionsPromise = (
     FilterProperties,
     void
   >('POST', getConfig('pipeline/api'), `/pipelines/execution/summary`, props, signal)
+
+export interface GetListOfExecutionsForMultiplePipelinesIdentifiersQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier?: string[]
+  page?: number
+  size?: number
+}
+
+export type GetListOfExecutionsForMultiplePipelinesIdentifiersProps = Omit<
+  MutateProps<
+    ResponsePagePipelineExecutionSummary,
+    Failure | Error,
+    GetListOfExecutionsForMultiplePipelinesIdentifiersQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Executions list for multiple pipeline filters
+ */
+export const GetListOfExecutionsForMultiplePipelinesIdentifiers = (
+  props: GetListOfExecutionsForMultiplePipelinesIdentifiersProps
+) => (
+  <Mutate<
+    ResponsePagePipelineExecutionSummary,
+    Failure | Error,
+    GetListOfExecutionsForMultiplePipelinesIdentifiersQueryParams,
+    void,
+    void
+  >
+    verb="POST"
+    path={`/pipelines/execution/v2/summary`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetListOfExecutionsForMultiplePipelinesIdentifiersProps = Omit<
+  UseMutateProps<
+    ResponsePagePipelineExecutionSummary,
+    Failure | Error,
+    GetListOfExecutionsForMultiplePipelinesIdentifiersQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Executions list for multiple pipeline filters
+ */
+export const useGetListOfExecutionsForMultiplePipelinesIdentifiers = (
+  props: UseGetListOfExecutionsForMultiplePipelinesIdentifiersProps
+) =>
+  useMutate<
+    ResponsePagePipelineExecutionSummary,
+    Failure | Error,
+    GetListOfExecutionsForMultiplePipelinesIdentifiersQueryParams,
+    void,
+    void
+  >('POST', `/pipelines/execution/v2/summary`, { base: getConfig('pipeline/api'), ...props })
+
+/**
+ * Gets Executions list for multiple pipeline filters
+ */
+export const getListOfExecutionsForMultiplePipelinesIdentifiersPromise = (
+  props: MutateUsingFetchProps<
+    ResponsePagePipelineExecutionSummary,
+    Failure | Error,
+    GetListOfExecutionsForMultiplePipelinesIdentifiersQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePagePipelineExecutionSummary,
+    Failure | Error,
+    GetListOfExecutionsForMultiplePipelinesIdentifiersQueryParams,
+    void,
+    void
+  >('POST', getConfig('pipeline/api'), `/pipelines/execution/v2/summary`, props, signal)
 
 export interface GetExecutionDetailV2QueryParams {
   accountIdentifier: string
@@ -10356,6 +10678,7 @@ export interface GetExpandedPipelineJSONQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export interface GetExpandedPipelineJSONPathParams {
@@ -10651,6 +10974,7 @@ export interface GetPipelineListQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
   getDistinctFromBranches?: boolean
 }
 
@@ -10726,6 +11050,56 @@ export const getPipelineListPromise = (
     PipelineFilterProperties,
     void
   >('POST', getConfig('pipeline/api'), `/pipelines/list`, props, signal)
+
+export interface GetRepositoryListQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetRepositoryListProps = Omit<
+  GetProps<ResponsePMSPipelineListRepoResponse, Failure | Error, GetRepositoryListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Repository list
+ */
+export const GetRepositoryList = (props: GetRepositoryListProps) => (
+  <Get<ResponsePMSPipelineListRepoResponse, Failure | Error, GetRepositoryListQueryParams, void>
+    path={`/pipelines/list-repos`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetRepositoryListProps = Omit<
+  UseGetProps<ResponsePMSPipelineListRepoResponse, Failure | Error, GetRepositoryListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Repository list
+ */
+export const useGetRepositoryList = (props: UseGetRepositoryListProps) =>
+  useGet<ResponsePMSPipelineListRepoResponse, Failure | Error, GetRepositoryListQueryParams, void>(
+    `/pipelines/list-repos`,
+    { base: getConfig('pipeline/api'), ...props }
+  )
+
+/**
+ * Gets Repository list
+ */
+export const getRepositoryListPromise = (
+  props: GetUsingFetchProps<ResponsePMSPipelineListRepoResponse, Failure | Error, GetRepositoryListQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePMSPipelineListRepoResponse, Failure | Error, GetRepositoryListQueryParams, void>(
+    getConfig('pipeline/api'),
+    `/pipelines/list-repos`,
+    props,
+    signal
+  )
 
 export type GetNotificationSchemaProps = Omit<GetProps<ResponseNotificationRules, Failure | Error, void, void>, 'path'>
 
@@ -10893,6 +11267,7 @@ export interface GetTemplateResolvedPipelineQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export interface GetTemplateResolvedPipelinePathParams {
@@ -10986,6 +11361,7 @@ export interface GetPipelineSummaryQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
   getMetadataOnly?: boolean
 }
 
@@ -11225,6 +11601,7 @@ export interface CreateVariablesV2QueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type CreateVariablesV2Props = Omit<
@@ -11531,6 +11908,7 @@ export interface CreateVariablesQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type CreateVariablesProps = Omit<
@@ -11656,6 +12034,7 @@ export interface GetPipelineQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
   getTemplatesResolvedPipeline?: boolean
 }
 
@@ -11830,12 +12209,15 @@ export interface RefreshAndUpdateTemplateInputsQueryParams {
   identifier?: string
   branch?: string
   repoIdentifier?: string
-  getDefaultFromOtherRepo?: boolean
-  parentEntityConnectorRef?: string
-  parentEntityRepoName?: string
-  parentEntityAccountIdentifier?: string
-  parentEntityOrgIdentifier?: string
-  parentEntityProjectIdentifier?: string
+  rootFolder?: string
+  filePath?: string
+  commitMsg?: string
+  lastObjectId?: string
+  resolvedConflictCommitId?: string
+  baseBranch?: string
+  connectorRef?: string
+  storeType?: 'INLINE' | 'REMOTE'
+  lastCommitId?: string
 }
 
 export type RefreshAndUpdateTemplateInputsProps = Omit<
@@ -11892,12 +12274,15 @@ export interface RefreshAllQueryParams {
   identifier?: string
   branch?: string
   repoIdentifier?: string
-  getDefaultFromOtherRepo?: boolean
-  parentEntityConnectorRef?: string
-  parentEntityRepoName?: string
-  parentEntityAccountIdentifier?: string
-  parentEntityOrgIdentifier?: string
-  parentEntityProjectIdentifier?: string
+  rootFolder?: string
+  filePath?: string
+  commitMsg?: string
+  lastObjectId?: string
+  resolvedConflictCommitId?: string
+  baseBranch?: string
+  connectorRef?: string
+  storeType?: 'INLINE' | 'REMOTE'
+  lastCommitId?: string
 }
 
 export type RefreshAllProps = Omit<
@@ -11960,6 +12345,7 @@ export interface GetYamlDiffQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type GetYamlDiffProps = Omit<
@@ -12019,6 +12405,7 @@ export interface ValidateTemplateInputsQueryParams {
   parentEntityAccountIdentifier?: string
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type ValidateTemplateInputsProps = Omit<
@@ -13828,6 +14215,9 @@ export interface GetSchemaYamlQueryParams {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
+    | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -14043,6 +14433,9 @@ export interface GetStepYamlSchemaQueryParams {
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
     | 'EcsRunTask'
+    | 'Chaos'
+    | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

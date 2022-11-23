@@ -23,7 +23,7 @@ import {
   Text,
   ButtonSize,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -60,7 +60,7 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
 
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
   const { data: awsUrlTemplateData, loading: awsUrlTemplateLoading } = useAwsaccountconnectiondetail({
-    queryParams: { accountIdentifier: accountId }
+    queryParams: { accountIdentifier: accountId, is_gov: prevStepData?.spec.isAWSGovCloudAccount }
   })
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding | undefined>()
   const [isSubmitLoading, setIsSubmitLoading] = useState<boolean>(false)
@@ -78,6 +78,7 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   const curStatus = featuresEnabled.includes(Features.BILLING)
   const visibiltyStatus = featuresEnabled.includes(Features.VISIBILITY)
   const optimizationStatus = featuresEnabled.includes(Features.OPTIMIZATION)
+  const governanceStatus = featuresEnabled.includes(Features.GOVERNANCE)
 
   const getRoleName = (roleArn: string) => {
     if (roleArn == undefined) return
@@ -91,7 +92,7 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
     const roleName = prevStepData?.isEditMode
       ? getRoleName(prevStepData?.spec.crossAccountAccess.crossAccountRoleArn)
       : `HarnessCERole-${rand}`
-    const url = `${baseurl}&param_ExternalId=${externalId}&param_BucketName=${bucketName}&param_BillingEnabled=${curStatus}&param_EventsEnabled=${visibiltyStatus}&param_OptimizationEnabled=${optimizationStatus}&param_RoleName=${roleName}`
+    const url = `${baseurl}&param_ExternalId=${externalId}&param_BucketName=${bucketName}&param_BillingEnabled=${curStatus}&param_EventsEnabled=${visibiltyStatus}&param_OptimizationEnabled=${optimizationStatus}&param_GovernanceEnabled=${governanceStatus}&param_RoleName=${roleName}`
     window.open(url)
   }
 
@@ -218,7 +219,7 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
           validationSchema={Yup.object().shape({
             crossAccountRoleArn: Yup.string()
               .matches(
-                /arn:aws:iam::[0-9]*:role\/[^$%!&*?><\s]*/,
+                /arn:aws(-us-gov)?:iam::[0-9]*:role\/[^$%!&*?><\s]*/,
                 getString('connectors.ceAws.crossAccountRoleStep2.validation.roleArnPattern')
               )
               .required(getString('connectors.ceAws.crossAccountRoleStep2.validation.roleArnRequired'))

@@ -10,7 +10,6 @@ import { act, fireEvent, render } from '@testing-library/react'
 import produce from 'immer'
 import { set } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
-import * as cdng from 'services/cd-ng'
 import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import {
@@ -38,12 +37,15 @@ import type { PipelineCardProps } from '@pipeline/components/PipelineStudio/Pipe
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { DrawerTypes } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'
 
-jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {
-  return { data: gitConfigs, refetch: jest.fn(), loading: false }
-})
-jest.spyOn(cdng, 'useGetSourceCodeManagers').mockImplementation((): any => {
-  return { data: sourceCodeManagers, refetch: jest.fn(), loading: false }
-})
+jest.mock('services/cd-ng-rq', () => ({
+  useListGitSyncQuery: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: jest.fn() }
+  }),
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
+}))
+
 jest.mock('@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook', () => ({
   useGetConnectorsListHook: jest.fn().mockReturnValue({
     loading: false,

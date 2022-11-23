@@ -40,6 +40,7 @@ exports[`Policy Set List Renderer snapshot test when no data 1`] = `
           class="NoDataCard--buttonContainer"
         >
           <button
+            aria-label="common.policiesSets.newPolicyset"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main newPolicySetBtn StyledProps--margin-bottom-small Button--with-current-color Button--without-shadow Button--withLeftIcon"
             type="button"
           >

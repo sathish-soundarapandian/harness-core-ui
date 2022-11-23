@@ -6,22 +6,13 @@
  */
 
 import React, { MouseEvent, ReactElement, useState } from 'react'
-import {
-  Text,
-  Layout,
-  Button,
-  Popover,
-  StepsProgress,
-  ButtonVariation,
-  ButtonSize,
-  IconName
-} from '@wings-software/uicore'
+import { Text, Layout, Button, Popover, StepsProgress, ButtonVariation, ButtonSize, IconName } from '@harness/uicore'
 import { Position, Intent, PopoverInteractionKind } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import type { IconProps } from '@harness/icons'
-import defaultTo from 'lodash-es/defaultTo'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import {
   useGetTestConnectionResult,

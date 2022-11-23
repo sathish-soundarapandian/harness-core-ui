@@ -6,6 +6,7 @@ exports[`CreatePipelineButton tests when supportingGitSimplification is true for
     class="SplitButton--splitButton"
   >
     <button
+      aria-label="common.createPipeline"
       class="bp3-button Button--button StyledProps--font StyledProps--main SplitButton--main border-right-0 Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
       data-testid="add-pipeline"
       type="button"

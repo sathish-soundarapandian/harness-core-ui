@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom'
-import { Container, Layout, Text, Icon, Tabs } from '@wings-software/uicore'
+import { Container, Layout, Text, Icon, Tabs } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
@@ -34,6 +34,11 @@ interface SecretDetailsProps {
   mockSecretDetails?: UseGetMockData<ResponseSecretResponseWrapper>
 }
 
+export enum SecretDetailsTabs {
+  OVERVIEW = 'overview',
+  REFERENCE = 'reference'
+}
+
 const getProjectUrl = ({ accountId, projectIdentifier, orgIdentifier, module }: OptionalIdentifiers): string => {
   if (module && orgIdentifier && projectIdentifier) {
     return routes.toProjectOverview({ orgIdentifier, projectIdentifier, accountId, module })
@@ -49,9 +54,11 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
   const { accountId, projectIdentifier, orgIdentifier, secretId, module } = useParams<
     ProjectPathProps & SecretsPathProps & ModulePathParams
   >()
-  const isReference = useRouteMatch(
+  const isReferenceTab = useRouteMatch(
     routes.toSecretDetailsReferences({ accountId, projectIdentifier, orgIdentifier, secretId, module })
-  )
+  )?.isExact
+
+  const [isReference, setIsReference] = useState(Boolean(isReferenceTab))
 
   const { selectedProject } = useAppStore()
   const history = useHistory()
@@ -125,6 +132,7 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
                 secret={data?.data?.secret || {}}
                 onSuccessfulDelete={onSuccessfulDeleteRedirect}
                 onSuccessfulEdit={refetch}
+                setIsReference={isRefereceView => setIsReference(isRefereceView)}
               />
             </div>
           )
@@ -143,15 +151,18 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
         <div className={css.secretTabs}>
           <Tabs
             id={'horizontalTabs'}
-            defaultSelectedTabId={isReference && isReference.isExact ? 'reference' : 'overview'}
+            selectedTabId={isReference ? SecretDetailsTabs.REFERENCE : SecretDetailsTabs.OVERVIEW}
+            onChange={newTabId => {
+              setIsReference(newTabId === SecretDetailsTabs.REFERENCE)
+            }}
             tabList={[
               {
-                id: 'overview',
+                id: SecretDetailsTabs.OVERVIEW,
                 title: getString('overview'),
                 panel: <SecretDetails secretData={data || undefined} refetch={refetch} />
               },
               {
-                id: 'reference',
+                id: SecretDetailsTabs.REFERENCE,
                 title: getString('common.references'),
                 panel: <SecretReferences secretData={data || undefined} />
               }

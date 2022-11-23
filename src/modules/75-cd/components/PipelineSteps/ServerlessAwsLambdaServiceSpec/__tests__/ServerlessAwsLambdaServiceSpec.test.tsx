@@ -8,7 +8,7 @@
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -38,7 +38,7 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 const fetchConnectors = (): Promise<unknown> => Promise.resolve({})
 const fetchBuildDetails = jest.fn().mockResolvedValue(mockBuildList)
 jest.mock('services/cd-ng', () => ({
-  useGetImagePathsForArtifactory: jest.fn().mockImplementation(() => {
+  useGetImagePathsForArtifactoryV2: jest.fn().mockImplementation(() => {
     return {
       data: {},
       refetch: jest.fn(),

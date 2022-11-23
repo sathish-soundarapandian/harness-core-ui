@@ -16,7 +16,7 @@ import {
   Layout,
   ButtonVariation,
   VisualYamlSelectedView as SelectedView
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { FormikErrors, FormikProps } from 'formik'
@@ -54,7 +54,7 @@ import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
-import { factory } from '../PipelineSteps/Steps/__tests__/StepTestUtil'
+import factory from '../PipelineSteps/PipelineStepFactory'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import { StepViewType } from '../AbstractSteps/Step'
 import css from './InputSetForm.module.scss'
@@ -121,7 +121,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   entityType: 'InputSets',
   width: 620,
   height: 360,
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -490,13 +489,13 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                         invocationMap={factory.getInvocationMap()}
                         height="calc(100vh - 230px)"
                         width="calc(100vw - 350px)"
-                        showSnippetSection={false}
                         isEditModeSupported={isEditable}
                         fileName={getYamlFileName({
                           isPipelineRemote,
                           filePath: get(inputSet, 'gitDetails.filePath'),
                           defaultName: yamlBuilderReadOnlyModeProps.fileName
                         })}
+                        comparableYaml={template?.data?.inputSetTemplateYaml}
                       />
                     </Layout.Vertical>
                     <Layout.Horizontal className={css.footer} padding="xlarge">

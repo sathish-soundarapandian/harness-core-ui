@@ -17,7 +17,6 @@
     },
     "paths": {
       "@common/*": ["modules/10-common/*"],
-      "@notifications/*": ["modules/15-notifications/*"],
       "@audit-trail/*": ["modules/18-audit-trail/*"],
       "@rbac/*": ["modules/20-rbac/*"],
       "@default-settings/*": ["modules/23-default-settings/*"],

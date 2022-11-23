@@ -11,13 +11,15 @@ import { useStrings } from 'framework/strings'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { SEARCH_FILES } from '@filestore/utils/constants'
 
+import css from './CurrentPathComponent.module.scss'
+
 export default function StoreView(): React.ReactElement {
   const { getString } = useStrings()
   const { currentNode } = useContext(FileStoreContext)
 
   if (currentNode.identifier === SEARCH_FILES) {
     return (
-      <Container padding={'medium'}>
+      <Container padding={'medium'} className={css.currentPathContainer}>
         <Text font={{ size: 'medium', weight: 'bold' }} color={Color.GREY_900}>
           {getString('filestore.searchResult', { count: currentNode?.children?.length || 0 })}
         </Text>
@@ -26,7 +28,7 @@ export default function StoreView(): React.ReactElement {
   }
 
   return (
-    <Container padding={'medium'} flex>
+    <Container padding={'medium'} flex className={css.currentPathContainer}>
       <Text margin={{ right: 'xsmall' }} font={{ size: 'normal', weight: 'light' }} color={Color.GREY_600}>
         {currentNode.path}
       </Text>

@@ -6,7 +6,7 @@
  */
 
 import React, { ReactElement } from 'react'
-import { Text, Popover, TextProps, Layout, IconName } from '@wings-software/uicore'
+import { Text, Popover, TextProps, Layout, IconName } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Classes, IPopoverProps, PopoverInteractionKind, Position } from '@blueprintjs/core'
 

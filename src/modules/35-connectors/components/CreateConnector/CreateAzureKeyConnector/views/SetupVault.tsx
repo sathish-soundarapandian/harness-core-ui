@@ -21,7 +21,7 @@ import {
   ModalErrorHandler,
   ButtonVariation,
   shouldShowError
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'

@@ -7,11 +7,7 @@
 
 import React from 'react'
 import { cloneDeep, isEqual, noop } from 'lodash-es'
-import {
-  AllowedTypesWithRunTime,
-  MultiTypeInputType,
-  VisualYamlSelectedView as SelectedView
-} from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import {
   PipelineContext,
   PipelineContextType
@@ -190,6 +186,7 @@ export function InfrastructurePipelineProvider({
         setSelection,
         getStagePathFromPipeline,
         setTemplateTypes: noop,
+        setTemplateIcons: noop,
         setTemplateServiceData: noop,
         setIntermittentLoading: noop
       }}

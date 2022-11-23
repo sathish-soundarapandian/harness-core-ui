@@ -10,7 +10,7 @@ import { Intent } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
 import { useParams, useLocation, useHistory } from 'react-router-dom'
 import { get, isEmpty, pickBy } from 'lodash-es'
-import { Text, Icon, PageError, PageSpinner, Layout } from '@wings-software/uicore'
+import { Text, Icon, PageError, PageSpinner, Layout } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { DeprecatedImageInfo, useGetExecutionConfig } from 'services/ci'
 import {
@@ -33,7 +33,7 @@ import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
 import { joinAsASentence } from '@common/utils/StringUtils'
 import { String, useStrings } from 'framework/strings'
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
-import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { PipelineExecutionWarning } from '@pipeline/components/PipelineExecutionWarning/PipelineExecutionWarning'
 import { logsCache } from '@pipeline/components/LogsContent/LogsState/utils'
 import { EvaluationModal } from '@governance/EvaluationModal'
@@ -155,7 +155,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   const { preference: savedExecutionView, setPreference: setSavedExecutionView } = usePreferenceStore<
     string | undefined
   >(PreferenceScope.USER, 'executionViewType')
-  const queryParams = useQueryParams<ExecutionPageQueryParams>()
+  const queryParams = useQueryParams<ExecutionPageQueryParams & GitQueryParams>()
   const initialSelectedView = savedExecutionView || 'graph'
   const { view } = queryParams
   const isLogView = view === 'log' || (!view && initialSelectedView === 'log')

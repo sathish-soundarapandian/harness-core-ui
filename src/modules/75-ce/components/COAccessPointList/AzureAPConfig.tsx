@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Heading } from '@wings-software/uicore'
+import { Heading } from '@harness/uicore'
 import { AccessPoint, useCreateAccessPoint, useEditAccessPoint } from 'services/lw'
 // import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'

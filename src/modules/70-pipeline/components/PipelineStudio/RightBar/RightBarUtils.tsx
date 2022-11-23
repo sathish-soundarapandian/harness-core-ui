@@ -7,14 +7,7 @@
 import React, { SetStateAction, Dispatch } from 'react'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import {
-  TextInput,
-  Text,
-  MultiTypeInputType,
-  Container,
-  getMultiTypeFromValue,
-  AllowedTypes
-} from '@wings-software/uicore'
+import { TextInput, Text, MultiTypeInputType, Container, getMultiTypeFromValue, AllowedTypes } from '@harness/uicore'
 import { get, set } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
 import type { ConnectorInfoDTO } from 'services/cd-ng'

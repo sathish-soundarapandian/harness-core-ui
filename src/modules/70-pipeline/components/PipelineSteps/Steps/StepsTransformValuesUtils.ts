@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { RUNTIME_INPUT_VALUE, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { get, set, isEmpty, isObjectLike, isPlainObject, isBoolean } from 'lodash-es'
 import { isRuntimeInput } from '@pipeline/utils/CIUtils'

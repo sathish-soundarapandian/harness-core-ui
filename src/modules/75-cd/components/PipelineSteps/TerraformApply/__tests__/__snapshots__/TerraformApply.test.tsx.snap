@@ -462,7 +462,7 @@ exports[`Test TerraformApply expand backend Spec config 1`] = `
                   </div>
                 </div>
                 <div
-                  class="divider"
+                  class="divider addMarginBottom"
                 />
                 <div
                   class="Layout--vertical StyledProps--main"
@@ -503,7 +503,7 @@ exports[`Test TerraformApply expand backend Spec config 1`] = `
                   class="divider"
                 />
                 <div
-                  class="formGroup alignStart addMarginTop addMarginBottom"
+                  class="formGroup addMarginBottom"
                 >
                   <div
                     class="bp3-form-group"
@@ -768,6 +768,7 @@ exports[`Test TerraformApply expand backend Spec config 1`] = `
                           </button>
                         </div>
                         <button
+                          aria-label="plusAdd"
                           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                           data-testid="add-spec.configuration.spec.targets"
                           style="padding: 0px;"
@@ -948,6 +949,7 @@ exports[`Test TerraformApply expand backend Spec config 1`] = `
                           </div>
                         </div>
                         <button
+                          aria-label="plusAdd"
                           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                           data-testid="add-spec.configuration.spec.environmentVariables"
                           style="padding: 0px;"
@@ -1824,7 +1826,7 @@ exports[`Test TerraformApply rendering more than one varfile 2`] = `
                   </div>
                 </div>
                 <div
-                  class="divider"
+                  class="divider addMarginBottom"
                 />
                 <div
                   class="Layout--vertical StyledProps--main"
@@ -1984,7 +1986,7 @@ exports[`Test TerraformApply rendering more than one varfile 2`] = `
                   class="divider"
                 />
                 <div
-                  class="formGroup alignStart addMarginTop addMarginBottom"
+                  class="formGroup addMarginBottom"
                 >
                   <div
                     class="bp3-form-group"
@@ -2247,6 +2249,7 @@ exports[`Test TerraformApply rendering more than one varfile 2`] = `
                           </button>
                         </div>
                         <button
+                          aria-label="plusAdd"
                           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                           data-testid="add-spec.configuration.spec.targets"
                           style="padding: 0px;"
@@ -2427,6 +2430,7 @@ exports[`Test TerraformApply rendering more than one varfile 2`] = `
                           </div>
                         </div>
                         <button
+                          aria-label="plusAdd"
                           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
                           data-testid="add-spec.configuration.spec.environmentVariables"
                           style="padding: 0px;"
@@ -2466,70 +2470,79 @@ exports[`Test TerraformApply should render edit view 1`] = `
           class="formGroup md"
         >
           <div
-            class="bp3-form-group"
-            data-id="test.spec.provisionerIdentifier-0"
+            class="StyledProps--font StyledProps--main"
           >
-            <label
-              class="bp3-label"
-              for="test.spec.provisionerIdentifier"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="stepTestUtilForm_test.spec.provisionerIdentifier"
-              >
-                pipelineSteps.provisionerIdentifier
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
             <div
-              class="bp3-form-content"
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
             >
               <div
-                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                class="bp3-form-group"
+                data-id="test.spec.provisionerIdentifier-0"
+                style="flex-grow: 1;"
               >
-                <div
-                  class="bp3-input-group MultiTypeInput--input"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="test.spec.provisionerIdentifier"
-                    placeholder="pipeline.terraformStep.provisionerIdentifier"
-                    type="text"
-                    value=""
-                  />
-                </div>
-                <span
-                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                <label
+                  class="bp3-label"
+                  for="test.spec.provisionerIdentifier"
                 >
                   <span
-                    class="bp3-popover-target"
+                    class="Tooltip--acenter"
+                    data-tooltip-id="stepTestUtilForm_test.spec.provisionerIdentifier"
                   >
-                    <button
-                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    pipelineSteps.provisionerIdentifier
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  >
+                    <div
+                      class="bp3-input-group MultiTypeInput--input"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="test.spec.provisionerIdentifier"
+                        placeholder="pipeline.terraformStep.provisionerIdentifier"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
                     >
                       <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="fixed-input"
+                        class="bp3-popover-target"
                       >
-                        <svg
-                          height="12"
-                          viewBox="0 0 9 9"
-                          width="12"
-                          xmlns="http://www.w3.org/2000/svg"
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
                         >
-                          <path
-                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                            fill="currentColor"
-                          />
-                        </svg>
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
                       </span>
-                    </button>
-                  </span>
-                </span>
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2545,6 +2558,7 @@ exports[`Test TerraformApply should render edit view 1`] = `
       {}
     </pre>
     <button
+      aria-label="Submit"
       class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
       type="button"
     >
@@ -4374,6 +4388,7 @@ exports[`Test TerraformApply should submit form for inline config 1`] = `
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-normal"
+            data-testid="test"
             style="--text-line-clamp: 1; width: 200px;"
           >
             /
@@ -4847,6 +4862,7 @@ exports[`Test TerraformApply should trigger validation error for expression valu
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-normal"
+            data-testid="test"
             style="--text-line-clamp: 1; width: 200px;"
           >
             /
@@ -5298,6 +5314,7 @@ exports[`Test TerraformApply should trigger validation error for fixed value 1`]
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-normal"
+            data-testid="test"
             style="--text-line-clamp: 1; width: 200px;"
           >
             /
@@ -5749,6 +5766,7 @@ exports[`Test TerraformApply should trigger validation error for invalid fixed v
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-normal"
+            data-testid="test"
             style="--text-line-clamp: 1; width: 200px;"
           >
             /

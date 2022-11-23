@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { Button, ButtonVariation, Card, Container, Heading, Layout } from '@wings-software/uicore'
+import { Button, ButtonVariation, Card, Container, Heading, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
@@ -19,32 +19,33 @@ import css from './FreezeWindowStudioConfigSection.module.scss'
 interface FreezeStudioConfigSectionProps {
   onBack: () => void
   onNext: () => void
+  isReadOnly: boolean
   resources: ResourcesInterface
   validationErrors: ValidationErrorType
 }
 
 export const FreezeStudioConfigSection = (
-  { onNext, onBack, resources, validationErrors }: FreezeStudioConfigSectionProps,
+  { onNext, onBack, resources, validationErrors, isReadOnly }: FreezeStudioConfigSectionProps,
   formikRef: unknown
 ) => {
   const { getString } = useStrings()
   const {
     state: { freezeObj },
     updateFreeze,
-    freezeWindowLevel,
-    isReadOnly
+    freezeWindowLevel
   } = React.useContext(FreezeWindowContext)
 
   const fieldsVisibility: FieldVisibility = React.useMemo(() => {
     return getFieldsVisibility(freezeWindowLevel)
   }, [freezeWindowLevel])
 
+  /* istanbul ignore next */
   const entityConfigs = freezeObj?.entityConfigs || []
 
   return (
     <Container padding={{ top: 'small', right: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge' }}>
       <Heading color={Color.BLACK} level={3} style={{ fontWeight: 600, fontSize: '16px', lineHeight: '24px' }}>
-        {getString('freezeWindows.freezeStudio.freezeConfiguration')}
+        {getString('common.coverage')}
       </Heading>
       <Card className={css.sectionCard}>
         <Heading color={Color.GREY_700} level={4} style={{ fontWeight: 600, fontSize: '14px', lineHeight: '24px' }}>

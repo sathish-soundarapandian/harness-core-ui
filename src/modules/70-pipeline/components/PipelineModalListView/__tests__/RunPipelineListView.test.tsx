@@ -23,7 +23,7 @@ const params = {
 }
 
 jest.mock('services/cd-ng', () => ({
-  useGetSourceCodeManagers: () => ({
+  useGetListOfBranchesWithStatus: () => ({
     data: []
   }),
   useCreatePR: () => ({ data: [], mutate: jest.fn() }),
@@ -34,13 +34,14 @@ jest.mock('services/cd-ng', () => ({
     refetch: jest.fn()
   }),
   useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
-  useListGitSync: () => ({
-    data: [],
-    refetch: jest.fn()
-  }),
-  useGetListOfBranchesWithStatus: () => ({
-    data: [],
-    refetch: jest.fn()
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: [], refetch: jest.fn() }
+  })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: [], refetch: jest.fn() }
   })
 }))
 
@@ -70,7 +71,7 @@ describe('PipelineModal List View', () => {
       </TestWrapper>
     )
 
-    await waitFor(() => expect(queryByText('pipeline.noDeploymentText')).toBeTruthy())
+    await waitFor(() => expect(queryByText('pipeline.noRunsText')).toBeTruthy())
   })
 
   test('CI - render empty data', async () => {
@@ -87,7 +88,7 @@ describe('PipelineModal List View', () => {
       </TestWrapper>
     )
 
-    await waitFor(() => expect(queryByText('pipeline.runModalNoPipelineText')).toBeTruthy())
+    await waitFor(() => expect(queryByText('pipeline.noRunsText')).toBeTruthy())
   })
 
   test('render data with git sync enabled', async () => {

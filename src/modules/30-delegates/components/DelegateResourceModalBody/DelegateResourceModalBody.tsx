@@ -7,7 +7,7 @@
 
 import React, { useMemo, useState, useCallback, useEffect } from 'react'
 import type { Column } from 'react-table'
-import { Container, Layout, Text, Icon, shouldShowError, useToaster } from '@wings-software/uicore'
+import { Container, Layout, Text, Icon, shouldShowError, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
 import { DelegateGroupDetails, useGetDelegateGroupsNGV2WithFilter } from 'services/portal'

@@ -10,7 +10,7 @@ import { isEmpty, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import { FormInput, Text, Container, AllowedTypes } from '@wings-software/uicore'
+import { FormInput, Text, Container, AllowedTypes } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
@@ -605,6 +605,24 @@ export const CIStep: React.FC<CIStepProps> = props => {
               disabled: readonly
             },
             fieldPath: 'spec.repository'
+          })}
+        </Container>
+      ) : null}
+      {get(enableFields, 'spec.subscriptionId') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          {renderMultiTypeTextField({
+            name: `${prefix}spec.subscriptionId`,
+            tooltipId: 'subscriptionId',
+            optional: true,
+            labelKey: 'common.subscriptionId',
+            inputProps: {
+              multiTextInputProps: {
+                expressions,
+                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+              },
+              disabled: readonly
+            },
+            fieldPath: 'spec.subscriptionId'
           })}
         </Container>
       ) : null}

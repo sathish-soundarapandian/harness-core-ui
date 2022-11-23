@@ -8,11 +8,11 @@
 import React, { useEffect } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { omit, pick } from 'lodash-es'
+import { get, omit, pick } from 'lodash-es'
 import produce from 'immer'
 import * as Yup from 'yup'
-import { Container, Formik, FormikForm, Button, ButtonVariation, Text } from '@wings-software/uicore'
-import { FontVariation } from '@wings-software/design-system'
+import { Container, Formik, FormikForm, Button, ButtonVariation, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { Divider } from '@blueprintjs/core'
 
 import { useStrings } from 'framework/strings'
@@ -33,6 +33,7 @@ import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import { errorCheck } from '@common/utils/formikHelpers'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
 import css from './PipelineCreate.module.scss'
 
@@ -63,6 +64,7 @@ export interface PipelineCreateProps {
   initialValues?: CreatePipelinesValue
   closeModal?: () => void
   gitDetails?: IGitContextFormProps
+  primaryButtonText: string
 }
 
 export default function CreatePipelines({
@@ -79,7 +81,8 @@ export default function CreatePipelines({
     connectorRef: ''
   },
   closeModal,
-  gitDetails
+  gitDetails,
+  primaryButtonText
 }: PipelineCreateProps): JSX.Element {
   const { getString } = useStrings()
   const { pipelineIdentifier } = useParams<{ pipelineIdentifier: string }>()
@@ -173,7 +176,11 @@ export default function CreatePipelines({
                 isIdentifierEditable: pipelineIdentifier === DefaultNewPipelineId
               }}
               tooltipProps={{ dataTooltipId: 'pipelineCreate' }}
-              inputGroupProps={{ className: css.zeroMargin }}
+              inputGroupProps={{
+                ...(!(errorCheck('name', formikProps) || get(formikProps, `errors.identifier`)) && {
+                  className: css.zeroMargin
+                })
+              }}
             />
             {oldGitSyncEnabled && (
               <GitSyncStoreProvider>
@@ -242,7 +249,7 @@ export default function CreatePipelines({
               <Button
                 variation={ButtonVariation.PRIMARY}
                 type="submit"
-                text={isEdit ? getString('continue') : getString('start')}
+                text={primaryButtonText}
                 disabled={gitDetails?.remoteFetchFailed}
               />
               &nbsp; &nbsp;

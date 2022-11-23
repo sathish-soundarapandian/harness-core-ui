@@ -7,7 +7,7 @@
 
 import React, { useCallback, useState } from 'react'
 import { Dialog } from '@blueprintjs/core'
-import { Button } from '@wings-software/uicore'
+import { Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
 import { pick } from 'lodash-es'

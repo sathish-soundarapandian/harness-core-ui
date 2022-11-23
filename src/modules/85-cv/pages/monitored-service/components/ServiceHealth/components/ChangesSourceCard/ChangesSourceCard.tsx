@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Text } from '@wings-software/uicore'
+import { Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -24,19 +24,26 @@ import ChangesSourceLoading from './components/ChangesSourceLoading/ChangesSourc
 import css from './ChangesSourceCard.module.scss'
 
 export default function ChangeSourceCard(props: ChangeSourceCardInterface): JSX.Element {
-  const { startTime, endTime, monitoredServiceIdentifier } = props
+  const { startTime, endTime, monitoredServiceIdentifiers, monitoredServiceIdentifier } = props
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
+
+  const monitoredServiceParams = monitoredServiceIdentifier
+    ? { monitoredServiceIdentifier: monitoredServiceIdentifier }
+    : { monitoredServiceIdentifiers }
 
   const { data, loading, error } = useGetMonitoredServiceChangeEventSummary({
     queryParams: {
       accountId,
       orgIdentifier,
       projectIdentifier,
-      monitoredServiceIdentifier,
+      ...monitoredServiceParams,
       startTime,
       endTime
+    },
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
     }
   })
 

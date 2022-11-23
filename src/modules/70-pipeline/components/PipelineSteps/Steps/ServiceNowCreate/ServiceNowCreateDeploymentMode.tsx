@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isNull, isUndefined } from 'lodash-es'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType, PageSpinner } from '@wings-software/uicore'
+import { FormInput, getMultiTypeFromValue, MultiTypeInputType, PageSpinner } from '@harness/uicore'
 import { StringKeys, useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
@@ -36,6 +36,8 @@ import {
   setServiceNowFieldAllowedValuesOptions
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/helper'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { getGenuineValue } from '../ServiceNowApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 
@@ -53,7 +55,8 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
     serviceNowTicketTypesResponse,
     refetchServiceNowMetadata,
     fetchingServiceNowMetadata,
-    serviceNowMetadataResponse
+    serviceNowMetadataResponse,
+    stepViewType
   } = formContentProps
   const template = inputSetData?.template
   const path = inputSetData?.path
@@ -158,7 +161,9 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
           label={getString('pipelineSteps.timeoutLabel')}
           className={css.deploymentViewMedium}
           multiTypeDurationProps={{
-            enableConfigureOptions: false,
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             allowableTypes,
             expressions,
             disabled: isApprovalStepFieldDisabled(readonly)
@@ -185,8 +190,15 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
             allowableTypes,
             expressions
           }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
           type={'ServiceNow'}
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+          templateProps={{
+            isTemplatizedView: true,
+            templateValue: template?.spec?.connectorRef
+          }}
         />
       ) : null}
 
@@ -228,6 +240,9 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
       ) === MultiTypeInputType.RUNTIME ? (
         <FormMultiTypeTextAreaField
           multiTypeTextArea={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             expressions,
             allowableTypes
           }}
@@ -243,6 +258,9 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
       ) === MultiTypeInputType.RUNTIME ? (
         <FormMultiTypeTextAreaField
           multiTypeTextArea={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             expressions,
             allowableTypes
           }}
@@ -254,7 +272,7 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
         />
       ) : null}
       {getMultiTypeFromValue(template?.spec?.templateName) === MultiTypeInputType.RUNTIME && (
-        <FormInput.MultiTextInput
+        <TextFieldInputSetView
           label={getString('pipeline.serviceNowCreateStep.templateName')}
           name={`${prefix}spec.templateName`}
           disabled={isApprovalStepFieldDisabled(readonly)}
@@ -262,7 +280,10 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
             placeholder: getString('pipeline.serviceNowCreateStep.templateNamePlaceholder'),
             allowableTypes: allowableTypes
           }}
+          configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType) }}
           className={css.deploymentViewMedium}
+          fieldPath={'spec.templateName'}
+          template={template}
         />
       )}
       {fetchingServiceNowMetadata ? (

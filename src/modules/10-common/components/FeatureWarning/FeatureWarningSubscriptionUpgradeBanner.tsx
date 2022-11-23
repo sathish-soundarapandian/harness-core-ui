@@ -6,7 +6,7 @@
  */
 
 import React, { ReactElement, useState } from 'react'
-import { Layout, Page, Button, ButtonVariation } from '@wings-software/uicore'
+import { Layout, Page, Button, ButtonVariation } from '@harness/uicore'
 import { UpgradeRequiredText, ManageSubscriptionBtn } from './featureWarningUtil'
 import type { FeatureInfoBannerProps } from './featureWarningUtil'
 import css from './FeatureWarning.module.scss'

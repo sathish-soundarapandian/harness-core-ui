@@ -7,7 +7,7 @@
 
 // Common helpers and types for approval forms
 import { flatMap, omit } from 'lodash-es'
-import { getMultiTypeFromValue, MultiSelectOption, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiSelectOption, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import {
   ApprovalRejectionCriteria,
   ApprovalRejectionCriteriaCondition,
@@ -34,13 +34,7 @@ export function getSanitizedflatObjectForVariablesView(object: Record<string, an
 // More params might be added in the future
 // readonly denotes RBAC
 export const isApprovalStepFieldDisabled = (readonly = false, fetching = false): boolean => {
-  if (readonly) {
-    return true
-  }
-  if (fetching) {
-    return true
-  }
-  return false
+  return readonly || fetching
 }
 
 const getApprovalRejectionConditionValuesForSubmit = (values: string | SelectOption | MultiSelectOption[]): string => {
@@ -57,7 +51,8 @@ const getApprovalRejectionConditionValuesForSubmit = (values: string | SelectOpt
   return values.value.toString()
 }
 
-const filterNonEmptyConditions = (condition: ApprovalRejectionCriteriaCondition) => condition.key && condition.value
+const filterNonEmptyConditions = (condition: ApprovalRejectionCriteriaCondition): boolean =>
+  !!(condition.key && condition.value)
 
 export const getApprovalRejectionCriteriaForSubmit = (
   criteria: ApprovalRejectionCriteria

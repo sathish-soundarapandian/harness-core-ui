@@ -16,7 +16,8 @@ import { DelegateSetupDetails, getDelegateTokensPromise, GetDelegateTokensQueryP
 import {
   validateDockerDelegatePromise,
   ValidateDockerDelegateQueryParams,
-  generateDockerDelegateYAMLPromise
+  generateDockerDelegateYAMLPromise,
+  createDelegateGroupPromise
 } from 'services/portal'
 
 import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
@@ -134,6 +135,15 @@ export const CreateDockerDelegate = ({
         } else {
           setYaml(dockerYaml)
           setLoader(false)
+          await createDelegateGroupPromise({
+            queryParams: {
+              accountId
+            },
+            body: {
+              ...createParams,
+              delegateType
+            }
+          })
           onSuccessHandler({ delegateCreated: true })
           trackEvent(CDOnboardingActions.SaveCreateOnboardingDelegate, {
             category: Category.DELEGATE,
@@ -158,13 +168,13 @@ export const CreateDockerDelegate = ({
   return (
     <>
       <Layout.Vertical>
-        <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
+        <Text font="normal" className={css.subHeading}>
           {getString('cd.instructionsDelegate')}
         </Text>
         <ul className={css.progress}>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
-              <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
+              <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.downloadYAML')}
               </Text>
               <Layout.Horizontal className={css.spacing}>
@@ -203,7 +213,6 @@ export const CreateDockerDelegate = ({
                       isEditModeSupported={false}
                       hideErrorMesageOnReadOnlyMode={true}
                       existingYaml={yaml}
-                      showSnippetSection={false}
                       height="462px"
                       theme="DARK"
                     />
@@ -215,7 +224,7 @@ export const CreateDockerDelegate = ({
           </li>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical className={css.panelLeft}>
-              <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
+              <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.installCluster')}
               </Text>
               <Layout.Horizontal>
@@ -248,7 +257,7 @@ export const CreateDockerDelegate = ({
           </li>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
-              <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
+              <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.delegateConnectionWait')}
               </Text>
               <StepProcessing name={delegateName} delegateType={delegateType} replicas={1} successRef={successRef} />

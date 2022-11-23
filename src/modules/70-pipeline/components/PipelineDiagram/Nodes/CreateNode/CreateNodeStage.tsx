@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
-import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
+import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import CreateNode from './CreateNode'
 import type { FireEventMethod } from '../../types'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
@@ -30,6 +30,7 @@ function CreateNodeStage(props: CreateNodeStageProps): React.ReactElement | null
   return (
     <div
       data-nodeid="add-parallel"
+      data-testid="create-node-stage"
       onMouseOver={() => {
         props.onMouseOver?.()
       }}

@@ -24,7 +24,7 @@ describe('NoTargetsView', () => {
   test('it should open Add new Target Groups dialog when New Target Groups button is clicked', async () => {
     renderComponent()
 
-    const btn = screen.getByRole('button', { name: 'plus cf.segments.create' })
+    const btn = screen.getByRole('button', { name: 'cf.segments.create' })
     expect(btn).toBeInTheDocument()
     expect(onNewSegmentCreated).not.toHaveBeenCalled()
 

@@ -149,8 +149,7 @@ exports[`Harness File Store with Kustomize Manifest tests initial rendering 1`] 
                         tabindex="0"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          style="align-items: center;"
+                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                         >
                           <span
                             class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
@@ -345,6 +344,7 @@ exports[`Harness File Store with Kustomize Manifest tests initial rendering 1`] 
                       </div>
                     </div>
                     <button
+                      aria-label="plusAdd"
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-xlarge StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
                       data-testid="add-files"
                       style="padding: 0px;"
@@ -518,8 +518,7 @@ exports[`Harness File Store with Kustomize Manifest tests initial rendering 1`] 
                         tabindex="0"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          style="align-items: center;"
+                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                         >
                           <span
                             class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
@@ -714,6 +713,7 @@ exports[`Harness File Store with Kustomize Manifest tests initial rendering 1`] 
                       </div>
                     </div>
                     <button
+                      aria-label="plusAdd"
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-xlarge StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
                       data-testid="add-patchesPaths"
                       style="padding: 0px;"
@@ -838,6 +838,7 @@ exports[`Harness File Store with Kustomize Manifest tests initial rendering 1`] 
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -867,6 +868,7 @@ exports[`Harness File Store with Kustomize Manifest tests initial rendering 1`] 
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >
@@ -1052,8 +1054,7 @@ exports[`Harness File Store with Kustomize Manifest tests when fields are runtim
                         tabindex="0"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          style="align-items: center;"
+                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                         >
                           <span
                             class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
@@ -1248,6 +1249,7 @@ exports[`Harness File Store with Kustomize Manifest tests when fields are runtim
                       </div>
                     </div>
                     <button
+                      aria-label="plusAdd"
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-xlarge StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
                       data-testid="add-files"
                       style="padding: 0px;"
@@ -1421,8 +1423,7 @@ exports[`Harness File Store with Kustomize Manifest tests when fields are runtim
                         tabindex="0"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          style="align-items: center;"
+                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                         >
                           <span
                             class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
@@ -1617,6 +1618,7 @@ exports[`Harness File Store with Kustomize Manifest tests when fields are runtim
                       </div>
                     </div>
                     <button
+                      aria-label="plusAdd"
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-xlarge StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
                       data-testid="add-patchesPaths"
                       style="padding: 0px;"
@@ -1741,6 +1743,7 @@ exports[`Harness File Store with Kustomize Manifest tests when fields are runtim
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
           >
             <button
+              aria-label="back"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -1770,6 +1773,7 @@ exports[`Harness File Store with Kustomize Manifest tests when fields are runtim
               </span>
             </button>
             <button
+              aria-label="submit"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
               type="submit"
             >

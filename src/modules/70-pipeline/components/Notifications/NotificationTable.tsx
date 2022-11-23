@@ -18,7 +18,7 @@ import {
   MultiSelectOption,
   ButtonVariation,
   TableV2
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Classes, Menu, PopoverInteractionKind, Position, Tag } from '@blueprintjs/core'
@@ -26,8 +26,8 @@ import { startCase } from 'lodash-es'
 import produce from 'immer'
 import { useStrings } from 'framework/strings'
 import type { NotificationRules, PipelineEvent } from 'services/pipeline-ng'
-import { getIconByNotificationMethod } from '@notifications/Utils/Utils'
-import type { NotificationType } from '@notifications/interfaces/Notifications'
+import { getIconByNotificationMethod } from '@rbac/utils/NotificationUtils'
+import type { NotificationType } from '@rbac/interfaces/Notifications'
 import { useNotificationModal } from './useNotificationModal'
 import { PipelineEventType } from './Steps/PipelineEvents'
 import { Actions } from './NotificationUtils'
@@ -249,7 +249,7 @@ function NotificationTable(props: NotificationTableProps): React.ReactElement {
         disabled: isReadonly
       },
       {
-        Header: getString('notifications.nameOftheRule').toUpperCase(),
+        Header: getString('rbac.notifications.nameOftheRule').toUpperCase(),
         id: 'name',
         className: css.notificationTableHeader,
         accessor: row => row.notificationRules.name,
@@ -260,7 +260,7 @@ function NotificationTable(props: NotificationTableProps): React.ReactElement {
       eventsColumnConfig
         ? eventsColumnConfig
         : {
-            Header: getString('notifications.pipelineEvents').toUpperCase(),
+            Header: getString('rbac.notifications.pipelineEvents').toUpperCase(),
             id: 'events',
             className: css.notificationTableHeader,
             accessor: row => row.notificationRules.pipelineEvents,
@@ -269,7 +269,7 @@ function NotificationTable(props: NotificationTableProps): React.ReactElement {
             disableSortBy: true
           },
       {
-        Header: getString('notifications.notificationMethod').toUpperCase(),
+        Header: getString('rbac.notifications.notificationMethod').toUpperCase(),
         id: 'methods',
         className: css.notificationTableHeader,
         accessor: row => row.notificationRules.notificationMethod?.type,
@@ -301,7 +301,7 @@ function NotificationTable(props: NotificationTableProps): React.ReactElement {
         <Layout.Horizontal flex className={css.headerActions}>
           <Button
             variation={ButtonVariation.PRIMARY}
-            text={getString('notifications.name')}
+            text={getString('rbac.notifications.name')}
             icon="plus"
             id="newNotificationBtn"
             onClick={() => openNotificationModal()}

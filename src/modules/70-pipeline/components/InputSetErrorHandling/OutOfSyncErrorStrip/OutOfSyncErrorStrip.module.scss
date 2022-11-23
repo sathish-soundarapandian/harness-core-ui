@@ -23,14 +23,6 @@
   min-height: 500px;
 }
 
-:global(.ConfirmationDialog--dialog) {
-  width: auto !important;
-}
-
-:global(.ConfirmationDialog--body) {
-  width: 570px !important;
-}
-
 .reconcileButtonListView {
   width: 136px;
   height: 32px !important;

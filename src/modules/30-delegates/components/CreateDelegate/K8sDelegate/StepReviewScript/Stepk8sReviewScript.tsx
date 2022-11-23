@@ -7,8 +7,8 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import set from 'lodash-es/set'
-import { Button, Layout, StepProps, Heading, Text } from '@wings-software/uicore'
+import { set } from 'lodash-es'
+import { Button, Layout, StepProps, Heading, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { useGenerateKubernetesYaml, DelegateSetupDetails, GenerateKubernetesYamlQueryParams } from 'services/portal'
@@ -94,7 +94,6 @@ const Stepk8ReviewScript: React.FC<StepProps<K8sDelegateWizardData>> = props => 
               isEditModeSupported={false}
               hideErrorMesageOnReadOnlyMode={true}
               existingYaml={generatedYaml}
-              showSnippetSection={false}
               width="568px"
               height="462px"
               theme="DARK"

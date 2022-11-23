@@ -8,8 +8,8 @@
 //
 // Common Module exports which are consumable by other Modules
 //
-export { useToaster } from '@wings-software/uicore'
-export { Page } from '@wings-software/uicore'
+export { useToaster } from '@harness/uicore'
+export { Page } from '@harness/uicore'
 import * as StringUtils from './utils/StringUtils'
 import type { DynamicPopoverHandlerBinding as _DynamicPopoverHandlerBinding } from './components/DynamicPopover/DynamicPopover'
 // YamlUtils can't be imported as it's bundled as ESM

@@ -1,6 +1,6 @@
 import React from 'react'
 import { fireEvent, act, render, screen, waitFor } from '@testing-library/react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { formikInitialValues, MockContextValues, setThresholdStateMockFn } from './IgnoreThresholdsContent.mock'
 import FailFastThresholdContent from '../FailFastThresholdsContent'
@@ -9,7 +9,7 @@ import { MetricThresholdContext } from '../../MetricThresholds.constants'
 const WrappingComponent = () => {
   return (
     <TestWrapper>
-      <Formik initialValues={formikInitialValues} onSubmit={jest.fn()} formName="appDHealthSourceform">
+      <Formik initialValues={formikInitialValues} onSubmit={jest.fn()} formName="NewRelicHealthSourceform">
         <FormikForm>
           <MetricThresholdContext.Provider value={MockContextValues}>
             <FailFastThresholdContent />
@@ -46,9 +46,8 @@ describe('FailFastThresholdContent', () => {
     expect(selectCaret).toBeInTheDocument()
 
     fireEvent.click(selectCaret!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('Performance')
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[1]).toHaveTextContent('Custom')
+    await waitFor(() => expect(screen.getByText(/Performance/)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/Custom/)).toBeInTheDocument())
   })
 
   test('should render the Group based on metricType', async () => {
@@ -61,11 +60,11 @@ describe('FailFastThresholdContent', () => {
     expect(selectCaret).toBeInTheDocument()
 
     fireEvent.click(selectCaret!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('Performance')
+    await waitFor(() => expect(screen.getByText(/Performance/)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/Custom/)).toBeInTheDocument())
 
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0])
+      fireEvent.click(screen.getByText(/Performance/))
     })
 
     expect(screen.getByPlaceholderText('cv.monitoringSources.appD.groupTransaction')).toBeInTheDocument()
@@ -75,9 +74,10 @@ describe('FailFastThresholdContent', () => {
       ?.querySelector('[data-icon="chevron-down"]')
 
     fireEvent.click(selectCaret2!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
+    await waitFor(() => expect(screen.getByText(/Performance/)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/Custom/)).toBeInTheDocument())
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
+      fireEvent.click(screen.getByText(/Custom/))
     })
     expect(screen.queryByPlaceholderText('cv.monitoringSources.appD.groupTransaction')).not.toBeInTheDocument()
 
@@ -97,19 +97,16 @@ describe('FailFastThresholdContent', () => {
       fireEvent.click(selectCaret!)
     })
 
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(3))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent(
-      'cv.monitoringSources.appD.failImmediately'
+    await waitFor(() => expect(screen.getByText(/cv.monitoringSources.appD.failImmediately/)).toBeInTheDocument())
+    await waitFor(() =>
+      expect(screen.getByText(/cv.monitoringSources.appD.failAfterMultipleOccurrences/)).toBeInTheDocument()
     )
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[1]).toHaveTextContent(
-      'cv.monitoringSources.appD.failAfterMultipleOccurrences'
-    )
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[2]).toHaveTextContent(
-      'cv.monitoringSources.appD.failAfterConsecutiveOccurrences'
+    await waitFor(() =>
+      expect(screen.getByText(/cv.monitoringSources.appD.failAfterConsecutiveOccurrences/)).toBeInTheDocument()
     )
 
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0])
+      fireEvent.click(screen.getByText(/cv.monitoringSources.appD.failImmediately/))
     })
 
     const countInput = container.querySelector(`[name="failFastThresholds.0.spec.spec.count"]`)
@@ -127,7 +124,7 @@ describe('FailFastThresholdContent', () => {
     })
 
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
+      fireEvent.click(screen.getByText(/cv.monitoringSources.appD.failAfterMultipleOccurrences/))
     })
     const countInput2 = container.querySelector(`[name="failFastThresholds.0.spec.spec.count"]`)
     expect(countInput2).not.toBeDisabled()
@@ -143,7 +140,7 @@ describe('FailFastThresholdContent', () => {
     })
 
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[2])
+      fireEvent.click(screen.getByText(/cv.monitoringSources.appD.failAfterConsecutiveOccurrences/))
     })
     const countInput3 = container.querySelector(`[name="failFastThresholds.0.spec.spec.count"]`)
     expect(countInput3).not.toBeDisabled()
@@ -158,9 +155,10 @@ describe('FailFastThresholdContent', () => {
 
     expect(selectCaretMetricType).toBeInTheDocument()
     fireEvent.click(selectCaretMetricType!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
+    await waitFor(() => expect(screen.getByText(/Performance/)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/Custom/)).toBeInTheDocument())
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
+      fireEvent.click(screen.getByText(/Custom/))
     })
 
     const selectCaretGroupName = container
@@ -169,8 +167,7 @@ describe('FailFastThresholdContent', () => {
 
     fireEvent.click(selectCaretGroupName!)
 
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('g1')
+    expect(screen.getByText(/g1/)).toBeInTheDocument()
   })
 
   test('should render the metric name dropdown as disabled if no value is selected for metric type', async () => {
@@ -184,9 +181,10 @@ describe('FailFastThresholdContent', () => {
 
     expect(selectCaretMetricType).toBeInTheDocument()
     fireEvent.click(selectCaretMetricType!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
+    await waitFor(() => expect(screen.getByText(/Performance/)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/Custom/)).toBeInTheDocument())
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
+      fireEvent.click(screen.getByText(/Custom/))
     })
 
     const selectCaretGroupName = container
@@ -195,9 +193,9 @@ describe('FailFastThresholdContent', () => {
 
     fireEvent.click(selectCaretGroupName!)
 
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
+    await waitFor(() => expect(screen.getByText(/g1/)).toBeInTheDocument())
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0])
+      fireEvent.click(screen.getByText(/g1/))
     })
     expect(container.querySelector(`[name="failFastThresholds.0.metricName"]`)).not.toBeDisabled()
 
@@ -207,8 +205,7 @@ describe('FailFastThresholdContent', () => {
 
     expect(selectCaretMetricName).toBeInTheDocument()
     fireEvent.click(selectCaretMetricName!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('appdMetric')
+    await waitFor(() => expect(screen.getByText(/appdMetric/)).toBeInTheDocument())
   })
   test('should render the criteria dropdown and other functionalities should work properly', async () => {
     const { container } = render(<WrappingComponent />)
@@ -226,40 +223,15 @@ describe('FailFastThresholdContent', () => {
     expect(selectCaretCriteriaType).toBeInTheDocument()
     fireEvent.click(selectCaretCriteriaType!)
 
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent(
-      'cv.monitoringSources.appD.absoluteValue'
-    )
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[1]).toHaveTextContent(
-      'cv.monitoringSources.appD.percentageDeviation'
-    )
+    expect(screen.getByText(/cv.monitoringSources.appD.absoluteValue/)).toBeInTheDocument()
+    expect(screen.getByText(/cv.monitoringSources.appD.percentageDeviation/)).toBeInTheDocument()
 
     act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
+      fireEvent.click(screen.getByText(/cv.monitoringSources.appD.percentageDeviation/))
     })
 
     expect(greaterThanInput).toBeInTheDocument()
     expect(lessThanInput).not.toBeInTheDocument()
-
-    const selectCaretPercentageType = container
-      .querySelector(`[name="failFastThresholds.0.criteria.criteriaPercentageType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretPercentageType).toBeInTheDocument()
-    fireEvent.click(selectCaretPercentageType!)
-
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
-    })
-
-    const greaterThanInput2 = container.querySelector(`[name="failFastThresholds.0.criteria.spec.greaterThan"]`)
-    const lessThanInput2 = container.querySelector(`[name="failFastThresholds.0.criteria.spec.lessThan"]`)
-
-    expect(greaterThanInput2).not.toBeInTheDocument()
-    expect(lessThanInput2).toBeInTheDocument()
   })
 
   test('should check whether a new row is added when Add Threshold button is clicked', () => {

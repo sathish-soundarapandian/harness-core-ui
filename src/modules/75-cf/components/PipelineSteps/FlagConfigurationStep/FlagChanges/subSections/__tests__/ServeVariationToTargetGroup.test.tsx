@@ -7,9 +7,13 @@
 
 import React from 'react'
 import { render, RenderResult, screen } from '@testing-library/react'
+import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Segment, Variation } from 'services/cf'
-import ServeVariationToTargetGroup, { ServeVariationToTargetGroupProps } from '../ServeVariationToTargetGroup'
+import ServeVariationToTargetGroup, {
+  ServeVariationToTargetGroupProps,
+  serveVariationToTargetGroupSchema
+} from '../ServeVariationToTargetGroup'
 import {
   getProfileInitials,
   mockServeVariationToTargetGroupsFieldValues as mockFieldValues,
@@ -21,15 +25,17 @@ import {
 const renderComponent = (props: Partial<ServeVariationToTargetGroupProps> = {}): RenderResult =>
   render(
     <TestWrapper>
-      <ServeVariationToTargetGroup
-        fieldValues={mockFieldValues(mockTargetGroups, mockVariations[0])}
-        variations={mockVariations}
-        targetGroups={mockTargetGroups}
-        setField={jest.fn()}
-        prefix={prefixInstructionField}
-        subSectionSelector={<span />}
-        {...props}
-      />
+      <Formik initialValues={{}} onSubmit={jest.fn()}>
+        <ServeVariationToTargetGroup
+          fieldValues={mockFieldValues(mockTargetGroups, mockVariations[0])}
+          variations={mockVariations}
+          targetGroups={mockTargetGroups}
+          setField={jest.fn()}
+          prefix={prefixInstructionField}
+          subSectionSelector={<span />}
+          {...props}
+        />
+      </Formik>
     </TestWrapper>
   )
 
@@ -52,5 +58,23 @@ describe('ServeVariationToTargetGroup', () => {
     renderComponent({ fieldValues: mockFieldValues(selectedTargetGroups, fakeVariation) })
 
     expect(screen.queryByText(fakeVariation.name as string)).not.toBeInTheDocument()
+  })
+})
+
+describe('serveVariationToTargetGroupSchema', () => {
+  const getStringMock = jest.fn().mockImplementation(str => str)
+
+  test('it should throw when segments and variation are not specified', async () => {
+    expect(() => serveVariationToTargetGroupSchema(getStringMock).validateSync({ spec: {} })).toThrow(
+      'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroup.variationTargetGroups'
+    )
+  })
+
+  test('it should not throw when segments and variation are specified', async () => {
+    expect(() =>
+      serveVariationToTargetGroupSchema(getStringMock).validateSync({
+        spec: { segments: ['abc'], variation: '123' }
+      })
+    ).not.toThrow()
   })
 })

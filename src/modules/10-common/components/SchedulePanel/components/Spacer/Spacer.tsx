@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import css from './Spacer.module.scss'
 
 interface SpacerInterface {

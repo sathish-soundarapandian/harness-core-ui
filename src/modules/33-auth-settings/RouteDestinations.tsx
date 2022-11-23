@@ -46,6 +46,7 @@ AuditTrailFactory.registerResourceHandler('NG_LOGIN_SETTINGS', {
 RbacFactory.registerResourceTypeHandler(ResourceType.ACCOUNT, {
   icon: 'nav-settings',
   label: 'common.accountSettings',
+  labelSingular: 'common.singularLabels.accountSetting',
   category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_ACCOUNT]: <String stringID="rbac.permissionLabels.view" />,
@@ -56,6 +57,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.ACCOUNT, {
 RbacFactory.registerResourceTypeHandler(ResourceType.AUTHSETTING, {
   icon: 'nav-settings',
   label: 'authSettings.authenticationSettings',
+  labelSingular: 'common.singularLabels.authenticationSetting',
   category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_AUTHSETTING]: <String stringID="rbac.permissionLabels.view" />,

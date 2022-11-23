@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiSelectOption } from '@wings-software/uicore'
-import uniqBy from 'lodash/uniqBy'
+import type { MultiSelectOption } from '@harness/uicore'
+import { uniqBy } from 'lodash-es'
 import type { IconProps } from '@harness/icons'
 import type { AuditTrailFormType, ProjectSelectOption } from '@audit-trail/components/FilterDrawer/FilterDrawer'
 import type { AuditEventDTO, AuditFilterProperties, ResourceScopeDTO } from 'services/audit'
@@ -30,6 +30,7 @@ export const actionToLabelMap: Record<AuditEventDTO['action'], StringKeys> = {
   REMOVE_MEMBERSHIP: 'auditTrail.actions.removed_membership',
   CREATE_TOKEN: 'auditTrail.actions.create_token',
   REVOKE_TOKEN: 'auditTrail.actions.revoke_token',
+  FORCE_DELETE: 'auditTrail.actions.force_deleted',
   LOGIN: 'auditTrail.actions.login',
   LOGIN2FA: 'auditTrail.actions.login2fa',
   UNSUCCESSFUL_LOGIN: 'auditTrail.actions.unsuccessfullLogin',
@@ -129,7 +130,7 @@ export const showEventTypeMap: Record<ShowEventFilterType, StringKeys> = {
 
 export const getFilterPropertiesFromForm = (formData: AuditTrailFormType, accountId: string): AuditFilterProperties => {
   const filterProperties: AuditFilterProperties = { filterType: 'Audit' }
-  const { actions, modules, users, resourceType, organizations, projects } = formData
+  const { actions, modules, users, resourceType, organizations, projects, resourceIdentifier } = formData
   if (actions) {
     filterProperties['actions'] = actions.map(action => action.value) as AuditFilterProperties['actions']
   }
@@ -148,7 +149,8 @@ export const getFilterPropertiesFromForm = (formData: AuditTrailFormType, accoun
 
   if (resourceType) {
     filterProperties['resources'] = resourceType.map(type => ({
-      type: type.value
+      type: type.value,
+      identifier: resourceIdentifier || ''
     })) as AuditFilterProperties['resources']
   }
 
@@ -231,6 +233,9 @@ export const getFormValuesFromFilterProperties = (
         value: resource.type
       }
     })
+    if (resources.length === 1 && resources[0].identifier) {
+      formData['resourceIdentifier'] = resources[0].identifier
+    }
   }
 
   return {

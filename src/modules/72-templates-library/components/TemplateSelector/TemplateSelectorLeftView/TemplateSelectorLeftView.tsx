@@ -17,13 +17,18 @@ import {
   SelectOption,
   Text,
   Views
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Breadcrumbs } from '@common/components/Breadcrumbs/Breadcrumbs'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { TemplateSummaryResponse, useGetTemplateList, useGetTemplateMetadataList } from 'services/template-ng'
+import {
+  TemplateSummaryResponse,
+  useGetRepositoryList,
+  useGetTemplateList,
+  useGetTemplateMetadataList
+} from 'services/template-ng'
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import { useMutateAsGet } from '@common/hooks'
@@ -41,6 +46,7 @@ import { getScopeOptions } from '@templates-library/components/TemplateSelector/
 import { areTemplatesSame } from '@pipeline/utils/templateUtils'
 import { useTemplateSelectorContext } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import css from './TemplateSelectorLeftView.module.scss'
 
 export interface TemplateSelectorLeftViewProps {
@@ -57,6 +63,8 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   const { getString } = useStrings()
   const [page, setPage] = useState(0)
   const [view, setView] = useState<Views>(Views.GRID)
+  const [selectedRepo, setSelectedRepo] = useState<string>()
+
   const [searchParam, setSearchParam] = useState('')
   const { module, ...params } = useParams<ProjectPathProps & ModulePathParams>()
   const { projectIdentifier, orgIdentifier, accountId } = params
@@ -93,6 +101,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     return {
       filterType: 'Template',
       templateEntityTypes: [templateType],
+      repoName: selectedRepo,
       childTypes: selectedChildType ? [selectedChildType] : childTypes,
       templateIdentifiers: selectedTemplateRefs,
       ...(!supportingTemplatesGitx
@@ -105,7 +114,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
           }
         : {})
     }
-  }, [templateType, selectedChildType, childTypes, selectedTemplateRefs])
+  }, [templateType, selectedChildType, childTypes, selectedTemplateRefs, selectedRepo])
 
   const queryParams = React.useMemo(() => {
     return {
@@ -218,9 +227,20 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                 <DropDown
                   items={scopeOptions}
                   value={selectedScope.value.toString()}
-                  onChange={item => setSelectedScope(item)}
+                  onChange={item => {
+                    setSelectedRepo(undefined)
+                    setSelectedScope(item)
+                  }}
                   filterable={false}
                 />
+                {!isGitSyncEnabled && (
+                  <RepoFilter
+                    value={selectedRepo}
+                    onChange={repoName => setSelectedRepo(repoName)}
+                    getRepoListPromise={useGetRepositoryList}
+                    selectedScope={selectedScope.value.toString()}
+                  />
+                )}
                 <ExpandingSearchInput
                   alwaysExpanded
                   className={css.searchBox}

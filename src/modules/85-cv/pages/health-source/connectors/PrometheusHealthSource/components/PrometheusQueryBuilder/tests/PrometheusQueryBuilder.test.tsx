@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { Button, Container } from '@wings-software/uicore'
+import { Button, Container } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { useGetLabelNames, useGetMetricNames } from 'services/cv'
 import { PrometheusQueryBuilder } from '../PrometheusQueryBuilder'
@@ -18,8 +18,8 @@ const MockMetricNames = ['metric1', 'metric2', 'metric3']
 
 const showErrorMock = jest.fn()
 
-jest.mock('@wings-software/uicore', () => ({
-  ...jest.requireActual('@wings-software/uicore'),
+jest.mock('@harness/uicore', () => ({
+  ...jest.requireActual('@harness/uicore'),
   useToaster: jest.fn(() => ({ showError: showErrorMock, showSuccess: jest.fn(), clear: jest.fn() }))
 }))
 

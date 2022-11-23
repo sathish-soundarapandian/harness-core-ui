@@ -8,17 +8,18 @@
 import React, { CSSProperties } from 'react'
 import cx from 'classnames'
 import { debounce, defaultTo } from 'lodash-es'
-import { Icon, Text, Button, ButtonVariation, IconName } from '@wings-software/uicore'
+import { Icon, Text, Button, ButtonVariation, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
+import { DiagramDrag, DiagramType, Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { useStrings } from 'framework/strings'
+import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import SVGMarker from '../../SVGMarker'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import { FireEventMethod, NodeType } from '../../../types'
-import { getPositionOfAddIcon } from '../../utils'
+import { getPositionOfAddIcon, attachDragImageToEventHandler, NodeEntity } from '../../utils'
 import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
 import defaultCss from '../DefaultNode.module.scss'
 
@@ -34,6 +35,7 @@ interface PipelineStageNodeProps {
   id: string
   isSelected: boolean
   icon: string
+  iconUrl?: string
   identifier: string
   name: JSX.Element | string
   defaultSelected: any
@@ -44,7 +46,7 @@ interface PipelineStageNodeProps {
   allowAdd?: boolean
   selectedNodeId?: string
   showMarkers?: boolean
-  matrixNodeName?: boolean
+  matrixNodeName?: string
   customNodeStyle?: CSSProperties
 }
 function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
@@ -184,6 +186,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             target: event.target,
             data: { ...props }
           })
+          attachDragImageToEventHandler(event, NodeEntity.STAGE)
         }}
         onDragEnd={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
           event.preventDefault()
@@ -194,12 +197,16 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
         {props?.data?.isInComplete && (
           <Icon className={defaultCss.inComplete} size={12} name={'warning-sign'} color="orange500" />
         )}
-        {props.icon && (
-          <Icon
-            size={28}
-            name={props.icon as IconName}
-            {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
-          />
+        {props.iconUrl ? (
+          <ImagePreview src={props.iconUrl} size={28} fallbackIcon={props.icon as IconName} />
+        ) : (
+          props.icon && (
+            <Icon
+              size={28}
+              name={props.icon as IconName}
+              {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
+            />
+          )
         )}
         {secondaryIcon && (
           <Icon
@@ -267,7 +274,10 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             tooltipProps={{ popoverClassName: props?.matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
             {props?.matrixNodeName ? (
-              <MatrixNodeNameLabelWrapper matrixLabel={props?.name as unknown as string} />
+              <MatrixNodeNameLabelWrapper
+                matrixNodeName={props?.matrixNodeName}
+                nodeName={props?.name as unknown as string}
+              />
             ) : (
               props.name
             )}

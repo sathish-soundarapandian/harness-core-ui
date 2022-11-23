@@ -7,11 +7,7 @@
 
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
-import {
-  AllowedTypesWithRunTime,
-  MultiTypeInputType,
-  VisualYamlSelectedView as SelectedView
-} from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 
 import produce from 'immer'
 import { cloneDeep, get, set } from 'lodash-es'
@@ -92,12 +88,15 @@ const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
 jest.spyOn(cdng, 'useGetListOfBranchesWithStatus').mockImplementation((): any => {
   return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
 })
-jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {
-  return { data: gitConfigs, refetch: getListGitSync, loading: false }
-})
-jest.spyOn(cdng, 'useGetSourceCodeManagers').mockImplementation((): any => {
-  return { data: sourceCodeManagers, refetch: jest.fn(), loading: false }
-})
+
+jest.mock('services/cd-ng-rq', () => ({
+  useListGitSyncQuery: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: getListGitSync }
+  }),
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
+}))
 
 jest.mock('services/pipeline-ng', () => ({
   useCreateVariablesV2: jest.fn().mockReturnValue({

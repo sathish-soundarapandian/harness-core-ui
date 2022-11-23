@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { FormInput } from '@wings-software/uicore'
+import { FormInput, SelectOption, useToaster } from '@harness/uicore'
 import type { FormikContextType } from 'formik'
-import type { SecretDTOV2 } from 'services/cd-ng'
+import { ConnectorInfoDTO, SecretDTOV2, useGetGcpRegions } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
 
@@ -16,6 +16,7 @@ interface VaultFormFieldsProps {
   type: SecretDTOV2['type']
   readonly?: boolean
   editing: boolean
+  secretManagerType: ConnectorInfoDTO['type']
 }
 
 interface FormikContextProps<T> {
@@ -26,9 +27,32 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
   formik,
   type,
   editing,
-  readonly
+  readonly,
+  secretManagerType
 }) => {
   const { getString } = useStrings()
+  const [regions, setRegions] = React.useState<SelectOption[]>([])
+  const { showError } = useToaster()
+
+  const { data: regionData, error, refetch } = useGetGcpRegions({ lazy: true })
+  if (error) {
+    showError(error.message)
+  }
+  const gcpSmInEditMode = () => secretManagerType === 'GcpSecretManager' && editing
+  React.useEffect(() => {
+    if (regionData?.data && regionData?.data.length) {
+      const regionValues = (regionData?.data || []).map(region => ({
+        value: region,
+        label: region
+      }))
+      setRegions(regionValues as SelectOption[])
+    }
+  }, [regionData])
+  React.useEffect(() => {
+    if (secretManagerType === 'GcpSecretManager') {
+      refetch()
+    }
+  }, [secretManagerType])
   return (
     <>
       {type === 'SecretText' ? (
@@ -36,6 +60,7 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
           <FormInput.RadioGroup
             name="valueType"
             radioGroup={{ inline: true }}
+            disabled={gcpSmInEditMode()}
             items={[
               { label: getString('secrets.secret.inlineSecret'), value: 'Inline', disabled: readonly },
               { label: getString('secrets.secret.referenceSecret'), value: 'Reference' }
@@ -64,6 +89,28 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
       {type === 'SecretFile' ? (
         <FormInput.FileInput name="file" label={getString('secrets.secret.labelSecretFile')} multiple />
       ) : null}
+      {secretManagerType === 'GcpSecretManager' &&
+        (formik?.values['valueType'] === 'Reference' ? (
+          <>
+            <FormInput.Text name="version" label={getString('version')} />
+          </>
+        ) : (
+          <>
+            <FormInput.CheckBox
+              name="configureRegions"
+              label={getString('secrets.secret.configureRegion')}
+              disabled={gcpSmInEditMode()}
+            />
+            {formik?.values['configureRegions'] ? (
+              <FormInput.MultiSelect
+                name="regions"
+                label={getString('secrets.secret.region')}
+                items={regions}
+                disabled={gcpSmInEditMode()}
+              />
+            ) : null}
+          </>
+        ))}
       <FormInput.TextArea name="description" isOptional={true} label={getString('description')} />
       <FormInput.KVTagInput name="tags" isOptional={true} label={getString('tagsLabel')} />
     </>

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon } from '@wings-software/uicore'
+import { Icon } from '@harness/uicore'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'

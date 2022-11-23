@@ -8,8 +8,8 @@
 import React from 'react'
 import { defaultTo, get } from 'lodash-es'
 import { Classes, Menu } from '@blueprintjs/core'
-
-import { Card, Text, Container, CardBody, useConfirmationDialog, Intent } from '@harness/uicore'
+import { Card, Text, Container, CardBody, useConfirmationDialog } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import type { EnvironmentResponse } from 'services/cd-ng'

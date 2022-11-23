@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Container, Tab, Tabs, Text } from '@wings-software/uicore'
+import { Container, Tab, Tabs, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { Feature } from 'services/cf'
 import { MetricsToolbar } from './MetricsToolbar'

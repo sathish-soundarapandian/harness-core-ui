@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { AllowedTypes, ButtonVariation, Container, FormInput, Layout, SelectOption, Text } from '@wings-software/uicore'
+import { AllowedTypes, ButtonVariation, Container, FormInput, Layout, SelectOption, Text } from '@harness/uicore'
 import cx from 'classnames'
 
 import type { FormikProps } from 'formik'

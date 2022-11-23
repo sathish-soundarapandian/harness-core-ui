@@ -8,7 +8,8 @@
 import React from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
-import { FormInput, Intent, MultiSelectProps, SelectOption, Text } from '@harness/uicore'
+import { FormInput, MultiSelectProps, SelectOption, Text } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 
 import type { Failure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -37,7 +38,8 @@ export const SelectConfigureOptions = (props: SelectConfigureOptionsProps): Reac
     showDefaultField,
     loading,
     error,
-    className
+    className,
+    style
   } = props
 
   const { getString } = useStrings()
@@ -95,6 +97,7 @@ export const SelectConfigureOptions = (props: SelectConfigureOptionsProps): Reac
       getAllowedValuesCustomComponent={getAllowedValuesMultiSelectComponent}
       allowedValuesType={ALLOWED_VALUES_TYPE.MULTI_SELECT}
       className={className}
+      style={style}
     />
   )
 }

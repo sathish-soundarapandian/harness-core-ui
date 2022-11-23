@@ -6,11 +6,11 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Container, FormInput, MultiSelectOption, Popover, Text, Utils, PageError } from '@wings-software/uicore'
+import { Container, FormInput, MultiSelectOption, Popover, Text, Utils, PageError } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { ITagInputProps, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import { useGetLabeValues } from 'services/cv'
+import { GetLabeValuesQueryParams, useGetLabeValues } from 'services/cv'
 import { TableFilter } from '@cv/components/TableFilter/TableFilter'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
@@ -25,12 +25,18 @@ export interface PrometheusFilterSelectorProps {
   onRemoveFilter: (index: number) => void
   connectorIdentifier: string
   isOptional?: boolean
+  dataSourceType?: string
+  region?: string
+  workspaceId?: string
 }
 
 interface ValuePopoverProps {
   closePopover: (clickedValue?: string) => void
   connectorIdentifier: string
   prometheusLabel: string
+  dataSourceType?: string
+  region?: string
+  workspaceId?: string
 }
 interface TagRendererProps {
   selectedKey?: string
@@ -39,6 +45,9 @@ interface TagRendererProps {
   onUpdateFilter: (_: MultiSelectOption) => void
   item: MultiSelectOption
   items: MultiSelectOption[]
+  dataSourceType?: string
+  region?: string
+  workspaceId?: string
 }
 
 const PopoverProps = {
@@ -49,7 +58,7 @@ const PopoverProps = {
 }
 
 function ValuePopover(props: ValuePopoverProps): JSX.Element {
-  const { closePopover, connectorIdentifier, prometheusLabel } = props
+  const { closePopover, connectorIdentifier, prometheusLabel, dataSourceType, region, workspaceId } = props
   const [itemsToRender, setItemsToRender] = useState<string[]>([])
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
@@ -59,10 +68,13 @@ function ValuePopover(props: ValuePopoverProps): JSX.Element {
       orgIdentifier,
       accountId,
       connectorIdentifier,
+      dataSourceType: dataSourceType as GetLabeValuesQueryParams['dataSourceType'],
+      region,
+      workspaceId,
       labelName: prometheusLabel,
       tracingId: Utils.randomId()
     }),
-    [prometheusLabel]
+    [prometheusLabel, dataSourceType, region, workspaceId]
   )
   const { error, data, loading, refetch } = useGetLabeValues({
     queryParams
@@ -121,7 +133,17 @@ function ValuePopover(props: ValuePopoverProps): JSX.Element {
 }
 
 function TagRenderer(props: TagRendererProps): JSX.Element {
-  const { onUpdateFilter, selectedKey, setSelectedKey, connectorIdentifier, item, items } = props
+  const {
+    onUpdateFilter,
+    selectedKey,
+    setSelectedKey,
+    connectorIdentifier,
+    item,
+    items,
+    dataSourceType,
+    region,
+    workspaceId
+  } = props
   const ref = useRef<HTMLDivElement>(null)
 
   const onClickValue = (val?: string): void => {
@@ -147,6 +169,9 @@ function TagRenderer(props: TagRendererProps): JSX.Element {
             closePopover={onClickValue}
             connectorIdentifier={connectorIdentifier}
             prometheusLabel={item.value as string}
+            dataSourceType={dataSourceType}
+            region={region}
+            workspaceId={workspaceId}
           />
         }
         defaultIsOpen={selectedKey === item.value}
@@ -164,7 +189,18 @@ function TagRenderer(props: TagRendererProps): JSX.Element {
 }
 
 export function PrometheusFilterSelector(props: PrometheusFilterSelectorProps): JSX.Element {
-  const { items, name, onUpdateFilter, label, onRemoveFilter, connectorIdentifier, isOptional } = props
+  const {
+    items,
+    name,
+    onUpdateFilter,
+    label,
+    onRemoveFilter,
+    connectorIdentifier,
+    isOptional,
+    dataSourceType,
+    region,
+    workspaceId
+  } = props
   const [currentSelectedKey, setCurrentSelectedKey] = useState<string | undefined>()
   return (
     <FormInput.MultiSelect
@@ -192,6 +228,9 @@ export function PrometheusFilterSelector(props: PrometheusFilterSelectorProps): 
               onUpdateFilter={onUpdateFilter}
               items={items}
               item={item}
+              dataSourceType={dataSourceType}
+              region={region}
+              workspaceId={workspaceId}
             />
           )
         }

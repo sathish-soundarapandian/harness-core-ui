@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, ButtonVariation, Layout, ModalDialog, MultiTypeInputType } from '@wings-software/uicore'
+import { Button, ButtonVariation, Layout, ModalDialog, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo, get, isEmpty, merge } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { TriggerFormType } from '@pipeline/factories/ArtifactTriggerInputFactory/types'
@@ -145,6 +145,10 @@ const onSubmit = ({
   } else if (!isManifest && finalArtifact?.spec?.tag) {
     finalArtifact.spec.tag = replaceTriggerDefaultBuild({
       build: finalArtifact?.spec?.tag
+    })
+  } else if (!isManifest && finalArtifact?.spec?.version) {
+    finalArtifact.spec.version = replaceTriggerDefaultBuild({
+      version: finalArtifact?.spec?.version
     })
   } else if (!isManifest && finalArtifact?.spec?.build) {
     finalArtifact.spec.build = replaceTriggerDefaultBuild({

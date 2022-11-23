@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Formik, FormikForm, Utils, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { Formik, FormikForm, Utils, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'

@@ -8,15 +8,16 @@
 import React from 'react'
 import { isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { getScopeOptions, QueueProps } from './helper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-function QueueInputStep({ inputSetData, readonly, allowableTypes }: QueueProps): React.ReactElement {
+function QueueInputStep({ inputSetData, readonly, allowableTypes, stepViewType }: QueueProps): React.ReactElement {
   const { expressions } = useVariablesExpression()
   const path = inputSetData?.path || ''
   const prefix = isEmpty(path) ? '' : `${path}.`
@@ -29,7 +30,9 @@ function QueueInputStep({ inputSetData, readonly, allowableTypes }: QueueProps):
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -48,6 +51,9 @@ function QueueInputStep({ inputSetData, readonly, allowableTypes }: QueueProps):
             label={getString('pipeline.queueStep.resourceKey')}
             name={`${prefix}spec.key`}
             multiTextInputProps={{ expressions, allowableTypes }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             placeholder={getString('pipeline.queueStep.keyPlaceholder')}
             disabled={!!readonly}
             fieldPath={'spec.key'}

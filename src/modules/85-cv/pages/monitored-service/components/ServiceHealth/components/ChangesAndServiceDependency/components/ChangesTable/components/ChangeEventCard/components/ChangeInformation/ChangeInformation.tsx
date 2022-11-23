@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Text, Container } from '@wings-software/uicore'
+import { Text, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'

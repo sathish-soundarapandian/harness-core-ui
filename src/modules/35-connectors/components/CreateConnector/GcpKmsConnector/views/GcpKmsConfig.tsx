@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import * as Yup from 'yup'
-import { StepProps, Container, Text, Formik, FormikForm, FormInput, Layout, Button } from '@wings-software/uicore'
+import { StepProps, Container, Text, Formik, FormikForm, FormInput, Layout, Button } from '@harness/uicore'
 import type {
   ConnectorDetailsProps,
   StepDetailsProps,

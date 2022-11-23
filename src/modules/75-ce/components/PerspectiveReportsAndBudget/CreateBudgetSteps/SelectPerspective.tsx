@@ -17,7 +17,7 @@ import {
   FlexExpander,
   ButtonVariation,
   StepProps
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams, useHistory } from 'react-router-dom'
 import { get } from 'lodash-es'

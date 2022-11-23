@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Label, Layout, TextInput } from '@wings-software/uicore'
+import { Text, Label, Layout, TextInput } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import css from './RunPipelineForm.module.scss'

@@ -16,7 +16,7 @@ import {
   DataTooltipInterface,
   FormikTooltipContext,
   HarnessDocTooltip
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { get, isPlainObject, pick } from 'lodash-es'
 import { FormGroup, Intent } from '@blueprintjs/core'

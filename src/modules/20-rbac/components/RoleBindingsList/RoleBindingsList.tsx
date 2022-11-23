@@ -8,7 +8,7 @@
 import React from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Tag, Popover, PopoverInteractionKind } from '@blueprintjs/core'
-import { Layout, Text } from '@wings-software/uicore'
+import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Link, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'

@@ -164,6 +164,7 @@ exports[`PipelineCreate test initializes ok edit pipeline 1`] = `
             class="StyledProps--font StyledProps--main createPipelineButtons"
           >
             <button
+              aria-label="continue"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               type="submit"
             >
@@ -175,6 +176,7 @@ exports[`PipelineCreate test initializes ok edit pipeline 1`] = `
             </button>
                
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >
@@ -389,6 +391,7 @@ exports[`PipelineCreate test initializes ok for CD module 1`] = `
             class="StyledProps--font StyledProps--main StyledProps--padding-top-large"
           >
             <button
+              aria-label="common.templateStartLabel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -435,6 +438,7 @@ exports[`PipelineCreate test initializes ok for CD module 1`] = `
             class="StyledProps--font StyledProps--main createPipelineButtons"
           >
             <button
+              aria-label="start"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               type="submit"
             >
@@ -446,6 +450,7 @@ exports[`PipelineCreate test initializes ok for CD module 1`] = `
             </button>
                
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >
@@ -660,6 +665,7 @@ exports[`PipelineCreate test initializes ok for CI module 1`] = `
             class="StyledProps--font StyledProps--main StyledProps--padding-top-large"
           >
             <button
+              aria-label="common.templateStartLabel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -706,6 +712,7 @@ exports[`PipelineCreate test initializes ok for CI module 1`] = `
             class="StyledProps--font StyledProps--main createPipelineButtons"
           >
             <button
+              aria-label="start"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               type="submit"
             >
@@ -717,6 +724,7 @@ exports[`PipelineCreate test initializes ok for CI module 1`] = `
             </button>
                
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >
@@ -923,6 +931,7 @@ exports[`PipelineCreate test initializes ok new pipeline 1`] = `
             class="StyledProps--font StyledProps--main StyledProps--padding-top-large"
           >
             <button
+              aria-label="common.templateStartLabel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
               type="button"
             >
@@ -969,6 +978,7 @@ exports[`PipelineCreate test initializes ok new pipeline 1`] = `
             class="StyledProps--font StyledProps--main createPipelineButtons"
           >
             <button
+              aria-label="start"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
               type="submit"
             >
@@ -980,6 +990,7 @@ exports[`PipelineCreate test initializes ok new pipeline 1`] = `
             </button>
                
             <button
+              aria-label="cancel"
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
               type="button"
             >

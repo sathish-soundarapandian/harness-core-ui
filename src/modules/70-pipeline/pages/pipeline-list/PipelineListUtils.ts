@@ -11,7 +11,7 @@ import type { PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import type { PipelineListPagePathParams } from './types'
 
 export const getStatusColor = (data: PMSPipelineSummaryResponse): string => {
-  switch (data.executionSummaryInfo?.lastExecutionStatus) {
+  switch (data.recentExecutionsInfo?.[0]?.status) {
     case 'Success':
       return Color.GREEN_800
     case 'Failed':

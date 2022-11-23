@@ -10,7 +10,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import cx from 'classnames'
 import {
   Text,
-  FontVariation,
   Layout,
   CardSelect,
   Icon,
@@ -22,6 +21,8 @@ import {
   useToaster,
   FormError
 } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
+
 import type { FormikContextType, FormikProps } from 'formik'
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import produce from 'immer'

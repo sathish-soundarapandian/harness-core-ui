@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { cloneDeep, defaultTo, get, isEqual } from 'lodash-es'
 
 import {
@@ -15,27 +15,39 @@ import {
   MultiSelectOption,
   MultiTypeInputType,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { SubmenuSelectOption } from '@harness/uicore/dist/components/SelectWithSubmenu/SelectWithSubmenu'
 import { PopoverInteractionKind } from '@blueprintjs/core'
+import { useMutateAsGet } from '@common/hooks'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import {
+  ConnectorReferenceDTO,
+  FormMultiTypeConnectorField
+} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import {
   BuildDetails,
   JobDetails,
   SidecarArtifact,
-  useGetArtifactPathForJenkins,
-  useGetBuildsForJenkins,
-  useGetJobDetailsForJenkins
+  useGetJobDetailsForJenkinsServiceV2,
+  useGetArtifactPathForJenkinsServiceV2,
+  useGetBuildsForJenkinsServiceV2
 } from 'services/cd-ng'
 
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
-import { isMultiTypeRuntime } from '@common/utils/utils'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-import { getDefaultQueryParam, getImagePath, isFieldfromTriggerTabDisabled, resetTags } from '../artifactSourceUtils'
+import {
+  getDefaultQueryParam,
+  getFinalQueryParamValue,
+  getFqnPath,
+  getImagePath,
+  getYamlData,
+  isFieldfromTriggerTabDisabled,
+  isNewServiceEnvEntity
+} from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
@@ -61,14 +73,15 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     fromTrigger,
     artifact,
     isSidecar,
-    artifactPath
+    artifactPath,
+    serviceIdentifier,
+    stepViewType
   } = props
 
   const { getString } = useStrings()
-  const lastOpenedJob = useRef<any>(null)
+  const [lastOpenedJob, setLastOpenedJob] = useState<string | undefined>()
   const { expressions } = useVariablesExpression()
   const [jobDetails, setJobDetails] = useState<SubmenuSelectOption[]>([])
-  const selectedJobName = useRef<string | null>(null)
   const [artifactPaths, setArtifactPaths] = useState<SelectOption[]>([])
   const [build, setJenkinsBuilds] = useState<SelectOption[]>([])
   const commonParams = {
@@ -79,67 +92,142 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     branch
   }
 
-  const connectorRefValue = getDefaultQueryParam(
-    artifact?.spec?.connectorRef,
-    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
+  const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
+  const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
+
+  const refetchingAllowedTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION] as MultiTypeInputType[]
+
+  const [connectorRefValue, setConnectorRefValue] = React.useState(
+    getFinalQueryParamValue(
+      getDefaultQueryParam(
+        artifact?.spec?.connectorRef,
+        get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
+      )
+    )
   )
 
-  const jobNameValue = getDefaultQueryParam(
-    artifact?.spec?.jobName,
-    get(initialValues?.artifacts, `${artifactPath}.spec.jobName`, '')
+  const [jobNameValue, setJobNameValue] = React.useState(
+    getFinalQueryParamValue(
+      getDefaultQueryParam(artifact?.spec?.jobName, get(initialValues?.artifacts, `${artifactPath}.spec.jobName`, ''))
+    )
   )
 
-  const artifactPathValue = getDefaultQueryParam(
-    artifact?.spec?.artifactPath,
-    get(initialValues?.artifacts, `${artifactPath}.spec.artifactPath`, '')
+  const [artifactPathValue, setArtifactPathValue] = React.useState(
+    getFinalQueryParamValue(
+      getDefaultQueryParam(
+        artifact?.spec?.artifactPath,
+        get(initialValues?.artifacts, `${artifactPath}.spec.artifactPath`, '')
+      )
+    )
   )
+
+  const getEncodedValue = (value: string): string => {
+    return encodeURIComponent(value)
+  }
 
   const {
     refetch: refetchJobs,
     data: jobsResponse,
     loading: fetchingJobs,
     error: fetchingJobsError
-  } = useGetJobDetailsForJenkins({
+  } = useMutateAsGet(useGetJobDetailsForJenkinsServiceV2, {
     lazy: true,
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue?.toString()
+      connectorRef: connectorRefValue?.toString(),
+      serviceId,
+      parentJobName: lastOpenedJob,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'jobName'
+      )
     }
   })
 
   const {
-    refetch: refetchartifactPaths,
+    refetch: refetchArtifactPaths,
     data: artifactPathsResponse,
     loading: fetchingArtifacts
-  } = useGetArtifactPathForJenkins({
+  } = useMutateAsGet(useGetArtifactPathForJenkinsServiceV2, {
+    lazy: true,
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue?.toString()
-    },
-    jobName: encodeURIComponent(encodeURIComponent(jobNameValue))
+      connectorRef: connectorRefValue?.toString(),
+      jobName: jobNameValue ? getEncodedValue(jobNameValue) : undefined,
+      serviceId,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'artifactPath'
+      )
+    }
   })
 
   const {
     refetch: refetchJenkinsBuild,
     data: jenkinsBuildResponse,
     loading: fetchingBuild
-  } = useGetBuildsForJenkins({
+  } = useMutateAsGet(useGetBuildsForJenkinsServiceV2, {
+    lazy: true,
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString(),
-      artifactPath: artifactPathValue || ''
-    },
-    jobName: encodeURIComponent(encodeURIComponent(jobNameValue))
+      artifactPath: artifactPathValue,
+      jobName: jobNameValue ? getEncodedValue(jobNameValue) : undefined,
+      serviceId,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'build'
+      )
+    }
   })
 
   useEffect(() => {
-    refetchJobs({
-      queryParams: {
-        ...commonParams,
-        connectorRef: connectorRefValue?.toString()
-      }
-    })
-  }, [])
+    if (refetchingAllowedTypes?.includes(getMultiTypeFromValue(connectorRefValue))) {
+      refetchJobs()
+    }
+  }, [connectorRefValue])
 
   useEffect(() => {
     if (artifactPathsResponse?.data) {
@@ -181,30 +269,20 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   }
 
   useEffect(() => {
-    const jobName = get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName`)
-    if (jobName?.split('/').length > 1) {
-      const parentJobName = jobName?.split('/')[0]
-      const parentJob = jobDetails?.find(job => job.label === parentJobName)
-      if (!parentJob?.submenuItems?.length) {
-        refetchJobs({
-          queryParams: {
-            ...commonParams,
-            connectorRef: connectorRefValue?.toString(),
-            parentJobName
-          }
-        })
-      }
+    if (lastOpenedJob) {
+      refetchJobs()
     }
-  }, [jobDetails])
+  }, [lastOpenedJob])
 
   useEffect(() => {
-    if (lastOpenedJob.current) {
+    if (lastOpenedJob) {
       setJobDetails((prevState: SubmenuSelectOption[]) => {
         const clonedJobDetails = cloneDeep(prevState)
-        const parentJob = clonedJobDetails.find(obj => obj.value === lastOpenedJob.current)
+        const parentJob = clonedJobDetails.find(obj => obj.label === lastOpenedJob)
         if (parentJob) {
           parentJob.submenuItems = [...getJobItems(jobsResponse?.data?.jobDetails || [])]
         }
+        setLastOpenedJob(undefined)
         return clonedJobDetails
       })
     } else {
@@ -242,25 +320,26 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     return false
   }
   const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
-  const getJobDetailsValue = (): SubmenuSelectOption | undefined => {
-    const jobName = get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName`)
-    if (jobName?.split('/').length > 1) {
-      const parentJobName = jobName?.split('/')[0]
-      const parentJob = jobDetails?.find(job => job.label === parentJobName)
-      if (parentJob?.submenuItems?.length) {
-        const targetChildJob = parentJob.submenuItems?.find(job => job.label === jobName)
-        return targetChildJob as SubmenuSelectOption
+  const getJobDetailsValue = React.useCallback((): SubmenuSelectOption | undefined => {
+    if (jobNameValue && getMultiTypeFromValue(jobNameValue) === MultiTypeInputType.FIXED) {
+      if (jobNameValue && jobNameValue?.split('/')?.length > 1) {
+        const parentJobName = jobNameValue?.split('/')[0]
+        const parentJob = jobDetails?.find(job => job.label === parentJobName)
+        if (parentJob?.submenuItems?.length) {
+          const targetChildJob = parentJob.submenuItems?.find(job => job.label === jobNameValue)
+          return targetChildJob as SubmenuSelectOption
+        }
       }
+      const existingJob = jobDetails.find(
+        job => job.label === get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName`)
+      ) as SubmenuSelectOption
+      if (existingJob) return existingJob
+      return {
+        label: jobNameValue,
+        value: jobNameValue
+      } as SubmenuSelectOption
     }
-    const existingJob = jobDetails.find(
-      job => job.label === get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName`)
-    ) as SubmenuSelectOption
-    if (existingJob) return existingJob
-    return {
-      label: jobName,
-      value: jobName
-    } as SubmenuSelectOption
-  }
+  }, [jobNameValue])
 
   return (
     <>
@@ -274,6 +353,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={''}
               accountIdentifier={accountId}
               projectIdentifier={projectIdentifier}
+              configureOptionsProps={{ className: css.connectorConfigOptions }}
               orgIdentifier={orgIdentifier}
               width={391}
               setRefValue
@@ -282,7 +362,21 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 allowableTypes,
                 expressions
               }}
-              onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
+              onChange={value => {
+                if (value) {
+                  const { record } = value as unknown as { record: ConnectorReferenceDTO }
+                  if (record) {
+                    setConnectorRefValue(record?.identifier)
+                  } else {
+                    setConnectorRefValue(value as string)
+                  }
+                } else {
+                  setConnectorRefValue(undefined)
+                }
+                setJobDetails([])
+                setArtifactPaths([])
+                setJenkinsBuilds([])
+              }}
               className={css.connectorMargin}
               type={ArtifactToConnectorMap[defaultTo(artifact?.type, '')]}
               gitScope={{
@@ -317,43 +411,39 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   items: jobDetails,
                   interactionKind: PopoverInteractionKind.CLICK,
                   allowCreatingNewItems: true,
-                  onChange: (primaryValue, secondaryValue, type) => {
-                    const newJobName =
-                      type === MultiTypeInputType.FIXED && primaryValue && secondaryValue
+                  addClearBtn: !readonly,
+                  className: css.runtimeSelectWithSubmenu,
+                  onChange: (primaryValue, secondaryValue) => {
+                    const primaryJobName = typeof primaryValue === 'string' ? primaryValue : primaryValue?.label
+
+                    const secondaryJobName =
+                      (secondaryValue as any) === 'STRING'
+                        ? undefined
+                        : typeof secondaryValue === 'string'
                         ? secondaryValue
-                        : primaryValue || ''
-                    formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.jobName`, newJobName.label)
-                    setJenkinsBuilds([])
-                    selectedJobName.current = isMultiTypeRuntime(type)
-                      ? (newJobName as unknown as string)
-                      : newJobName.label
-                    if (type === MultiTypeInputType.FIXED && newJobName?.label?.length) {
-                      refetchartifactPaths({
-                        queryParams: {
-                          ...commonParams,
-                          connectorRef: connectorRefValue?.toString()
-                        },
-                        pathParams: {
-                          jobName: encodeURIComponent(encodeURIComponent(newJobName?.label))
-                        }
-                      })
+                        : secondaryValue?.label
+
+                    formik.setFieldValue(
+                      `${path}.artifacts.${artifactPath}.spec.jobName`,
+                      secondaryJobName ? secondaryJobName : primaryJobName
+                    )
+                    if (secondaryJobName) {
+                      setJobNameValue(secondaryJobName as string)
+                    } else {
+                      setJobNameValue(primaryJobName as string)
                     }
+
+                    setArtifactPaths([])
+                    setJenkinsBuilds([])
                   },
                   onOpening: (item: SelectOption) => {
-                    lastOpenedJob.current = item.value
+                    setLastOpenedJob(item.label)
                     // TODO: To scroll the jobDetails component to its original height
                     // const indexOfParent = jobDetails.findIndex(obj => obj.value === item.value)
                     // const parentNode = document.getElementsByClassName('Select--menuItem')?.[indexOfParent]
                     // if (parentNode) {
                     //   parentJobY.current = parentNode.getBoundingClientRect()?.y
                     // }
-                    refetchJobs({
-                      queryParams: {
-                        ...commonParams,
-                        connectorRef: connectorRefValue?.toString(),
-                        parentJobName: item.label
-                      }
-                    })
                   }
                 }
               }}
@@ -375,20 +465,16 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 expressions,
                 allowableTypes,
                 onChange: (newFilePath: any) => {
+                  const artifacthPath = typeof newFilePath === 'string' ? newFilePath : newFilePath?.value
+                  setArtifactPathValue(artifacthPath)
+                  setJenkinsBuilds([])
+                },
+                onClick: () => {
                   if (
-                    getMultiTypeFromValue(selectedJobName.current as any) === MultiTypeInputType.FIXED &&
-                    getMultiTypeFromValue(newFilePath.value) === MultiTypeInputType.FIXED
+                    refetchingAllowedTypes?.includes(getMultiTypeFromValue(jobNameValue, allowableTypes)) &&
+                    refetchingAllowedTypes?.includes(getMultiTypeFromValue(connectorRefValue, allowableTypes))
                   ) {
-                    refetchJenkinsBuild({
-                      queryParams: {
-                        ...commonParams,
-                        connectorRef: connectorRefValue?.toString(),
-                        artifactPath: newFilePath.value
-                      },
-                      pathParams: {
-                        jobName: encodeURIComponent(encodeURIComponent(selectedJobName.current || ''))
-                      }
-                    })
+                    refetchArtifactPaths()
                   }
                 },
                 selectProps: {
@@ -408,6 +494,15 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               useValue
               placeholder={fetchingBuild ? getString('loading') : getString('pipeline.selectJenkinsBuildsPlaceholder')}
               multiTypeInputProps={{
+                onClick: () => {
+                  if (
+                    refetchingAllowedTypes?.includes(getMultiTypeFromValue(connectorRefValue, allowableTypes)) &&
+                    refetchingAllowedTypes?.includes(getMultiTypeFromValue(jobNameValue, allowableTypes)) &&
+                    refetchingAllowedTypes?.includes(getMultiTypeFromValue(artifactPathValue, allowableTypes))
+                  ) {
+                    refetchJenkinsBuild()
+                  }
+                },
                 onTypeChange: (type: MultiTypeInputType) =>
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.build`, type),
                 width: 400,
@@ -429,7 +524,16 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               multiTextInputProps={{
                 expressions,
                 value: TriggerDefaultFieldList.build,
-                allowableTypes
+                allowableTypes,
+                onClick: () => {
+                  if (
+                    refetchingAllowedTypes?.includes(getMultiTypeFromValue(connectorRefValue, allowableTypes)) &&
+                    refetchingAllowedTypes?.includes(getMultiTypeFromValue(jobNameValue, allowableTypes)) &&
+                    refetchingAllowedTypes?.includes(getMultiTypeFromValue(artifactPathValue, allowableTypes))
+                  ) {
+                    refetchJenkinsBuild()
+                  }
+                }
               }}
               disabled={true}
               name={`${path}.artifacts.${artifactPath}.spec.build`}

@@ -14,7 +14,7 @@ import {
   IconName,
   MultiTypeInputType,
   SelectOption
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FormikProps, yupToFormErrors } from 'formik'
 import { isEmpty } from 'lodash-es'
@@ -51,6 +51,7 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { StringsMap } from 'stringTypes'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
@@ -230,7 +231,7 @@ function BarrierWidget(props: BarrierProps, formikRef: StepFormikFowardRef<Barri
   )
 }
 
-function BarrierInputStep({ inputSetData, allowableTypes }: BarrierProps): React.ReactElement {
+function BarrierInputStep({ inputSetData, allowableTypes, stepViewType }: BarrierProps): React.ReactElement {
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
@@ -279,6 +280,9 @@ function BarrierInputStep({ inputSetData, allowableTypes }: BarrierProps): React
               disabled: inputSetData?.readonly,
               allowableTypes
             }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             disabled={loading}
           />
         </div>
@@ -290,7 +294,9 @@ function BarrierInputStep({ inputSetData, allowableTypes }: BarrierProps): React
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
             disabled={inputSetData?.readonly}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               expressions,
               disabled: inputSetData?.readonly,
               allowableTypes

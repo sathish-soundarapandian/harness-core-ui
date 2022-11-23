@@ -17,7 +17,7 @@ import {
   ModalErrorHandlerBinding,
   ModalErrorHandler,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { OrganizationCard } from '@projects-orgs/components/OrganizationCard/OrganizationCard'
 import type { Organization } from 'services/cd-ng'

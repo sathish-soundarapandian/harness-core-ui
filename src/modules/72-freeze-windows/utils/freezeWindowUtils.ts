@@ -6,12 +6,13 @@
  */
 
 import moment from 'moment'
-import type { CurrentOrUpcomingActiveWindow, FreezeDetailedResponse, FreezeSummaryResponse } from 'services/cd-ng'
+import type { FreezeDetailedResponse, FreezeSummaryResponse } from 'services/cd-ng'
+export const DATE_PARSE_FORMAT = 'YYYY-MM-DD hh:mm A'
 
-export const RECURRENCE = ['Daily', 'Weekly', 'Monthly', 'Annually'] as const
+export const RECURRENCE = ['Daily', 'Weekly', 'Monthly', 'Yearly'] as const
 export const DOES_NOT_REPEAT = 'Does not repeat'
 
-type Scope = Exclude<FreezeDetailedResponse['freezeScope'], 'unknown' | undefined>
+export type Scope = Exclude<FreezeDetailedResponse['freezeScope'], 'unknown' | undefined>
 
 export const scopeText: Record<Scope, string> = {
   account: 'Account',
@@ -25,15 +26,12 @@ export enum FreezeStatus {
   INACTIVE = 'INACTIVE'
 }
 
-export const getFreezeStatus = (
-  currentOrUpcomingActiveWindow?: CurrentOrUpcomingActiveWindow,
-  isEnabled?: boolean
-): FreezeStatus => {
-  if (!currentOrUpcomingActiveWindow) {
-    return FreezeStatus['EXPIRED']
+export const getFreezeStatus = (data?: FreezeSummaryResponse, isEnabled?: boolean): FreezeStatus => {
+  if (!data?.currentOrUpcomingWindow) {
+    return data?.windows ? FreezeStatus['EXPIRED'] : FreezeStatus['INACTIVE']
   } else if (
     isEnabled &&
-    moment().isBetween(moment(currentOrUpcomingActiveWindow.startTime), moment(currentOrUpcomingActiveWindow.endTime))
+    moment().isBetween(moment(data?.currentOrUpcomingWindow.startTime), moment(data?.currentOrUpcomingWindow.endTime))
   ) {
     return FreezeStatus['ACTIVE']
   }
@@ -43,7 +41,12 @@ export const getFreezeStatus = (
 
 export const getComputedFreezeStatusMap = (content: FreezeSummaryResponse[] = []): Record<string, FreezeStatus> => {
   return content.reduce((acc, item) => {
-    acc[item.identifier!] = getFreezeStatus(item.currentOrUpcomingActiveWindow, item.status === 'Enabled')
+    acc[item.identifier!] = getFreezeStatus(item, item.status === 'Enabled')
     return acc
   }, {} as Record<string, FreezeStatus>)
 }
+
+export const getReadableDateFromDateString = (dateTime?: string): string =>
+  dateTime ? moment(dateTime, DATE_PARSE_FORMAT).format('lll') : 'NA'
+
+export const getMomentFormat = (dateTime?: string) => (dateTime ? moment(dateTime, DATE_PARSE_FORMAT) : moment())

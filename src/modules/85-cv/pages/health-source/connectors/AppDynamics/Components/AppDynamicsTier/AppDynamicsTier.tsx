@@ -17,7 +17,7 @@ import {
   RUNTIME_INPUT_VALUE,
   AllowedTypes,
   getMultiTypeFromValue
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { getPlaceholder, setAppDynamicsTier } from '../../AppDHealthSource.utils'

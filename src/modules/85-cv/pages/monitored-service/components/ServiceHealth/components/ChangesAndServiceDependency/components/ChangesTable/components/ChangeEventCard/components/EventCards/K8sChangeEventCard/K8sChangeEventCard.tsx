@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import { Button, Card, Container, Layout, Text } from '@wings-software/uicore'
+import { Button, Card, Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { Divider, Dialog } from '@blueprintjs/core'

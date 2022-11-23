@@ -393,7 +393,7 @@ export const mockedHealthSourcePayload = {
             type: 'IgnoreThreshold'
           },
           {
-            criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 1222 }, type: 'Percentage' },
+            criteria: { spec: { greaterThan: 1222 }, type: 'Percentage' },
             metricName: 'Prometheus Metric',
             metricType: 'Custom',
             spec: { action: 'FailAfterOccurrence', spec: { count: 12 } },

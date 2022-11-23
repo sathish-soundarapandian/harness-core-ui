@@ -7,7 +7,7 @@
 
 import React, { useEffect, useMemo } from 'react'
 import { Classes } from '@blueprintjs/core'
-import { Container, FormInput, SelectOption, Text } from '@wings-software/uicore'
+import { Container, FormInput, SelectOption, Text } from '@harness/uicore'
 import { useToaster } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import type { useGetMetricPacks, useGetLabelNames } from 'services/cv'

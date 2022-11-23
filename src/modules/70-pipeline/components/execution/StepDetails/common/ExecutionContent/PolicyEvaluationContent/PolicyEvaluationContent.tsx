@@ -9,7 +9,8 @@ import React, { useState } from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
 
-import { Collapse, Color, Container, Layout, Text } from '@harness/uicore'
+import { Collapse, Container, Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ExecutionNode } from 'services/pipeline-ng'
 

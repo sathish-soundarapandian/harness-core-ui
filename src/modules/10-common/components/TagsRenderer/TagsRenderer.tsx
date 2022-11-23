@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Layout, Tag, TagsPopover, tagsType } from '@wings-software/uicore'
+import { Text, Layout, Tag, TagsPopover, tagsType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 export interface ListTagsProps {

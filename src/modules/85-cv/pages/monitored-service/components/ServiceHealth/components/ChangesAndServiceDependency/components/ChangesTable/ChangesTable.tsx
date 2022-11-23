@@ -10,7 +10,7 @@ import { defaultTo, noop } from 'lodash-es'
 import type { IDrawerProps } from '@blueprintjs/core'
 import { useParams, Link } from 'react-router-dom'
 import type { Column } from 'react-table'
-import { Icon, Container, NoDataCard, PageError, TableV2, Pagination, Layout } from '@wings-software/uicore'
+import { Icon, Container, NoDataCard, PageError, TableV2, Pagination, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useChangeEventList } from 'services/cv'
@@ -39,7 +39,8 @@ export default function ChangesTable({
   changeCategories,
   changeSourceTypes,
   recordsPerPage,
-  dataTooltipId
+  dataTooltipId,
+  monitoredServiceDetails
 }: ChangesTableInterface): JSX.Element {
   const [page, setPage] = useState(0)
   const { getString } = useStrings()
@@ -61,9 +62,13 @@ export default function ChangesTable({
     setPage(0)
   }, [startTime, endTime])
 
+  const monitoredServiceIdentifiers = monitoredServiceDetails?.map(item => item.monitoredServiceIdentifier || '')
+
   const changeEventListQueryParams = useMemo(() => {
     return {
-      ...(monitoredServiceIdentifier ? { monitoredServiceIdentifiers: [monitoredServiceIdentifier] } : {}),
+      ...(monitoredServiceIdentifier
+        ? { monitoredServiceIdentifiers: [monitoredServiceIdentifier] }
+        : { monitoredServiceIdentifiers }),
       ...(!monitoredServiceIdentifier && serviceIdentifier
         ? { serviceIdentifiers: Array.isArray(serviceIdentifier) ? serviceIdentifier : [serviceIdentifier] }
         : {}),

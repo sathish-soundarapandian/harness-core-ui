@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, FormInput, Icon, Layout, SelectOption, Text } from '@wings-software/uicore'
+import { Container, FormInput, Icon, Layout, SelectOption, Text } from '@harness/uicore'
 import { isEmpty, set } from 'lodash-es'
 import type { FormikContextType } from 'formik'
 import React from 'react'

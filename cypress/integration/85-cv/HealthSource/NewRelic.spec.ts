@@ -151,7 +151,7 @@ describe('Create empty monitored service', () => {
 
     // Delete all custom metric
     cy.get('span[data-icon="main-delete"]').click({ multiple: true })
-    cy.findByRole('button', { name: /Add Metric/i }).should('be.visible')
+    cy.contains('span', 'Add Metric').should('be.visible')
 
     cy.contains('span', 'Submit').click({ force: true })
 
@@ -291,12 +291,6 @@ describe('Create empty monitored service', () => {
 
       cy.get("input[name='ignoreThresholds.0.criteria.type']").click()
       cy.contains('p', 'Percentage Deviation').click()
-
-      cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('exist')
-      cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").should('not.exist')
-
-      cy.get("input[name='ignoreThresholds.0.criteria.criteriaPercentageType']").click()
-      cy.contains('p', 'Lesser than').click()
 
       cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('not.exist')
       cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").should('exist')

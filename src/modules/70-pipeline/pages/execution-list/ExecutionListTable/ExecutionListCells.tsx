@@ -9,15 +9,19 @@
 import { Checkbox, Classes, IconName } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
-import { get, isEmpty } from 'lodash-es'
-import defaultTo from 'lodash-es/defaultTo'
+import { get, isEmpty, defaultTo } from 'lodash-es'
 import React, { useRef, useCallback } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseExpandedRowProps } from 'react-table'
 import { Duration, TimeAgoPopover } from '@common/components'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
-import type { ExecutionPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type {
+  ExecutionPathProps,
+  GitQueryParams,
+  PipelinePathProps,
+  PipelineType
+} from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { killEvent } from '@common/utils/eventUtils'
@@ -34,16 +38,19 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
+import { useQueryParams } from '@common/hooks'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
 import { CITriggerInfo, CITriggerInfoProps } from './CITriggerInfoCell'
 import css from './ExecutionListTable.module.scss'
 
 export const getExecutionPipelineViewLink = (
   pipelineExecutionSummary: PipelineExecutionSummary,
-  pathParams: PipelineType<PipelinePathProps>
+  pathParams: PipelineType<PipelinePathProps>,
+  queryParams: GitQueryParams
 ): string => {
   const { planExecutionId, pipelineIdentifier: rowDataPipelineIdentifier } = pipelineExecutionSummary
   const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier, module } = pathParams
+  const { branch, repoIdentifier, repoName, connectorRef, storeType } = queryParams
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
 
   return routes.toExecutionPipelineView({
@@ -53,7 +60,14 @@ export const getExecutionPipelineViewLink = (
     accountId,
     module,
     executionIdentifier: planExecutionId || '-1',
-    source
+    source,
+    connectorRef: pipelineExecutionSummary.connectorRef ?? connectorRef,
+    repoName: defaultTo(
+      pipelineExecutionSummary.gitDetails?.repoName ?? repoName,
+      pipelineExecutionSummary.gitDetails?.repoIdentifier ?? repoIdentifier
+    ),
+    branch: pipelineExecutionSummary.gitDetails?.branch ?? branch,
+    storeType: pipelineExecutionSummary.storeType ?? storeType
   })
 }
 
@@ -113,7 +127,8 @@ export const PipelineNameCell: CellType = ({ row }) => {
   const data = row.original
   const { getString } = useStrings()
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
-  const toExecutionPipelineView = getExecutionPipelineViewLink(data, pathParams)
+  const queryParams = useQueryParams<GitQueryParams>()
+  const toExecutionPipelineView = getExecutionPipelineViewLink(data, pathParams, queryParams)
 
   return (
     <Layout.Vertical>
@@ -150,7 +165,7 @@ export const ExecutionCell: CellType = ({ row }) => {
   const data = row.original
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
 
-  const { module = 'cd' } = useModuleInfo()
+  const { module } = useModuleInfo()
   const { getString } = useStrings()
   const TimeAgo = module === 'cd' ? TimePopoverWithLocal : TimeAgoPopover
   const name =
@@ -283,6 +298,7 @@ export const MenuCell: CellType = ({ row, column }) => {
         canRetry={data.canRetry}
         modules={data.modules}
         menuOnlyActions
+        isExecutionListView
       />
     </div>
   )
@@ -335,7 +351,7 @@ export const TriggerInfoCell: CellType = ({ row }) => {
   const showCI = hasCIStage(data)
   const ciData = defaultTo(data?.moduleInfo?.ci, {})
   const prOrCommitTitle =
-    ciData.ciExecutionInfoDTO?.pullRequest?.title || ciData.ciExecutionInfoDTO?.branch.commits[0]?.message
+    ciData.ciExecutionInfoDTO?.pullRequest?.title || ciData.ciExecutionInfoDTO?.branch?.commits[0]?.message
 
   return showCI ? (
     <Layout.Vertical spacing="small" className={css.triggerInfoCell}>

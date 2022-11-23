@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { pick } from 'lodash-es'
-import { Layout, PageSpinner, PageError } from '@wings-software/uicore'
+import { Layout, PageSpinner, PageError } from '@harness/uicore'
 import { useToaster } from '@common/components'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, TrialActions, PlanActions } from '@common/constants/TrackingConstants'
@@ -33,9 +33,7 @@ import { ModuleLicenseType, Editions, SubscriptionTabNames } from '@common/const
 import type { FetchPlansQuery } from 'services/common/services'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useSubscribeModal } from '@auth-settings/modals/Subscription/useSubscriptionModal'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { getSavedRefererURL, getGaClientID } from '@common/utils/utils'
-import { FeatureFlag } from '@common/featureFlags'
+import { getSavedRefererURL, getGaClientID, isOnPrem } from '@common/utils/utils'
 import type { TimeType } from '@common/constants/SubscriptionTypes'
 import { getBtnProps } from './planUtils'
 import type { PlanData, PlanProp } from './planUtils'
@@ -91,7 +89,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
       accountIdentifier: accountId,
       moduleType: moduleType,
       ...(refererURL ? { referer: refererURL } : {}),
-      ...(gaClientID ? { gaClientID } : {})
+      ...(gaClientID ? { gaClientId: gaClientID } : {})
     },
     requestOptions: {
       headers: {
@@ -175,11 +173,12 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
   const {
     data,
     error,
-    refetch,
+    refetch: refetchLicense,
     loading: gettingLicense
   } = useGetLicensesAndSummary({
     queryParams: { moduleType },
-    accountIdentifier: accountId
+    accountIdentifier: accountId,
+    lazy: true
   })
 
   const licenseData = data?.data
@@ -197,8 +196,10 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
     }
   })
   const isSelfService = licenseInformation?.[moduleType]?.selfService === true
-  const isSelfServiceEnabled = useFeatureFlag(FeatureFlag.SELF_SERVICE_ENABLED) && isSelfService
-
+  const isSelfServiceEnabled = !isOnPrem() && isSelfService
+  useEffect(() => {
+    refetchLicense()
+  }, [])
   useEffect(() => {
     handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, updatedLicenseInfo)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -304,7 +305,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
   }
 
   if (error) {
-    return <PageError message={(error.data as Error)?.message} onClick={() => refetch()} />
+    return <PageError message={(error.data as Error)?.message} onClick={() => refetchLicense()} />
   }
 
   if (actionErrs) {

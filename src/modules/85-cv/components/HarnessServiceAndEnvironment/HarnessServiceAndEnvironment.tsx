@@ -6,8 +6,8 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { FormInput, SelectOption } from '@wings-software/uicore'
-import type { CustomRenderProps } from '@wings-software/uicore/dist/components/FormikForm/FormikForm'
+import { FormInput, SelectOption } from '@harness/uicore'
+import type { CustomRenderProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -31,6 +31,10 @@ import {
   EnvironmentMultiSelectOrCreate,
   EnvironmentMultiSelectOrCreateProps
 } from './components/EnvironmentMultiSelectAndEnv/EnvironmentMultiSelectAndEnv'
+import {
+  ServiceMultiSelectOrCreate,
+  ServiceMultiSelectOrCreateProps
+} from './components/ServiceMultiSelectOrCreate/ServiceMultiSelectOrCreate'
 import css from './HarnessServiceAndEnvironment.module.scss'
 
 export function useGetHarnessServices() {
@@ -117,26 +121,37 @@ export function HarnessEnvironment(props: EnvironmentSelectOrCreateProps): JSX.E
 
 export function HarnessServiceAsFormField(props: {
   customRenderProps: Omit<CustomRenderProps, 'render'>
-  serviceProps: ServiceSelectOrCreateProps
+  serviceProps: ServiceSelectOrCreateProps | ServiceMultiSelectOrCreateProps
   customLoading?: boolean
+  isMultiSelectField?: boolean
 }): JSX.Element {
-  const { customRenderProps, serviceProps, customLoading } = props
+  const { customRenderProps, serviceProps, customLoading, isMultiSelectField } = props
 
   return (
     <FormInput.CustomRender
       {...customRenderProps}
       tooltipProps={{ dataTooltipId: 'serviceSelectOrCreate' }}
-      key={typeof serviceProps.item === 'string' ? serviceProps.item : (serviceProps.item?.value as string)}
-      render={formikProps => (
-        <ServiceSelectOrCreate
-          {...serviceProps}
-          customLoading={customLoading}
-          onSelect={selectedOption => {
-            formikProps.setFieldValue(customRenderProps.name, selectedOption)
-            serviceProps.onSelect?.(selectedOption)
-          }}
-        />
-      )}
+      render={formikProps =>
+        isMultiSelectField ? (
+          <ServiceMultiSelectOrCreate
+            {...(serviceProps as ServiceMultiSelectOrCreateProps)}
+            customLoading={customLoading}
+            onSelect={selectedOption => {
+              formikProps.setFieldValue(customRenderProps.name, selectedOption)
+              ;(serviceProps as ServiceMultiSelectOrCreateProps).onSelect?.(selectedOption)
+            }}
+          />
+        ) : (
+          <ServiceSelectOrCreate
+            {...(serviceProps as ServiceSelectOrCreateProps)}
+            customLoading={customLoading}
+            onSelect={selectedOption => {
+              formikProps.setFieldValue(customRenderProps.name, selectedOption)
+              ;(serviceProps as ServiceSelectOrCreateProps).onSelect?.(selectedOption)
+            }}
+          />
+        )
+      }
     />
   )
 }

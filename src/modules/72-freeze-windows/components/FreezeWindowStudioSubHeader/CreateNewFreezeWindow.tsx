@@ -8,8 +8,8 @@
 import React from 'react'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import isEmpty from 'lodash-es/isEmpty'
-import { Button, ButtonVariation, Container, Formik, FormikForm, Layout } from '@wings-software/uicore'
+import { isEmpty } from 'lodash-es'
+import { Button, ButtonVariation, Container, Formik, FormikForm, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
@@ -28,14 +28,14 @@ export const CreateNewFreezeWindow: React.FC<CreateNewFreezeWindowProps> = ({ on
   const { getString } = useStrings()
   const { windowIdentifier } = useParams<WindowPathProps>()
   const [initialValues, setInitialValues] = React.useState(
-    isEmpty(freezeObj) ? { identifier: '' } : getInitialValues(freezeObj)
+    /* istanbul ignore next */ isEmpty(freezeObj) ? { identifier: '' } : getInitialValues(freezeObj)
   )
 
   React.useEffect(() => {
     setInitialValues(getInitialValues(freezeObj))
   }, [freezeObj.identifier, freezeObj.name, freezeObj.description, freezeObj.tags])
 
-  const onSubmit = (values: any) => {
+  const onSubmit = /* istanbul ignore next */ (values: any) => {
     updateFreeze({ ...values })
     onClose(values.identifier)
   }
@@ -70,6 +70,7 @@ export const CreateNewFreezeWindow: React.FC<CreateNewFreezeWindowProps> = ({ on
                   type="submit"
                   variation={ButtonVariation.PRIMARY}
                   text={getString(
+                    /* istanbul ignore next */
                     freezeObj?.identifier && freezeObj.identifier !== DefaultFreezeId ? 'continue' : 'start'
                   )}
                 />

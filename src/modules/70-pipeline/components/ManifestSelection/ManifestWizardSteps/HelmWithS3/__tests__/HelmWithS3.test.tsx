@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, fireEvent, waitFor } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as ngServices from 'services/cd-ng'

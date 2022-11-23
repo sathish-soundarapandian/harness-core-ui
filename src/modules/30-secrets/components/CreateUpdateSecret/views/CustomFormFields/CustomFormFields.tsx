@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormInput, ModalErrorHandlerBinding, MultiTypeInputType } from '@wings-software/uicore'
+import { FormInput, ModalErrorHandlerBinding, MultiTypeInputType } from '@harness/uicore'
 import type { FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 

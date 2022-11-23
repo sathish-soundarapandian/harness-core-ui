@@ -80,6 +80,9 @@ import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
+import { getFreezeRouteLink } from '@common/utils/freezeWindowUtils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { PreFlightCheckModal } from '../PreFlightCheckModal/PreFlightCheckModal'
 
@@ -117,7 +120,6 @@ export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & G
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   fileName: `run-pipeline.yaml`,
   entityType: 'Pipelines',
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -144,6 +146,7 @@ function RunPipelineFormBasic({
   stagesExecuted,
   executionIdentifier
 }: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
+  const isNgDeploymentFreezeEnabled = useFeatureFlag(FeatureFlag.NG_DEPLOYMENT_FREEZE)
   const [skipPreFlightCheck, setSkipPreFlightCheck] = useState<boolean>(false)
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [notifyOnlyMe, setNotifyOnlyMe] = useState<boolean>(false)
@@ -171,8 +174,9 @@ function RunPipelineFormBasic({
   const { setPipeline: updatePipelineInVaribalesContext, setSelectedInputSetsContext } = usePipelineVariables()
   const [existingProvide, setExistingProvide] = useState<'existing' | 'provide'>('existing')
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
+  const [isInputSetApplied, setIsInputSetApplied] = useState(true)
 
-  const [canEdit] = usePermission(
+  const [canSaveInputSet, canEditYaml] = usePermission(
     {
       resourceScope: {
         accountIdentifier: accountId,
@@ -183,18 +187,22 @@ function RunPipelineFormBasic({
         resourceType: ResourceType.PIPELINE,
         resourceIdentifier: pipelineIdentifier
       },
-      permissions: [PermissionIdentifier.EDIT_PIPELINE]
+      permissions: [PermissionIdentifier.EDIT_PIPELINE, PermissionIdentifier.EXECUTE_PIPELINE]
     },
     [accountId, orgIdentifier, projectIdentifier, pipelineIdentifier]
   )
 
   const stageIdentifiers = useMemo((): string[] => {
     let stageIds: string[] = []
-    stageIds = stagesExecuted?.length
-      ? stagesExecuted
-      : selectedStageData.allStagesSelected
-      ? []
-      : (selectedStageData.selectedStageItems.map(stageData => stageData.value) as string[])
+
+    if (stagesExecuted?.length) {
+      stageIds = stagesExecuted
+    } else if (selectedStageData.allStagesSelected) {
+      // do nothing
+    } else {
+      stageIds = selectedStageData.selectedStageItems.map(stageData => stageData.value) as string[]
+    }
+
     if (stageIds.includes(ALL_STAGE_VALUE)) {
       stageIds = []
     }
@@ -206,7 +214,8 @@ function RunPipelineFormBasic({
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
-    }
+    },
+    lazy: !isNgDeploymentFreezeEnabled
   })
 
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
@@ -232,7 +241,8 @@ function RunPipelineFormBasic({
       repoIdentifier,
       branch,
       getDefaultFromOtherRepo: true
-    }
+    },
+    lazy: executionView
   })
 
   const pipeline: PipelineInfoConfig | undefined = React.useMemo(
@@ -252,7 +262,7 @@ function RunPipelineFormBasic({
     hasInputSets,
     loading: loadingInputSets,
     error: inputSetsError,
-    isInputSetApplied,
+    canApplyInputSet,
     refetch: getTemplateFromPipeline,
     hasRuntimeInputs,
     invalidInputSetReferences,
@@ -354,7 +364,8 @@ function RunPipelineFormBasic({
       repoIdentifier,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
-    }
+    },
+    lazy: executionView
   })
 
   const executionStageList = useMemo((): SelectOption[] => {
@@ -395,6 +406,10 @@ function RunPipelineFormBasic({
     }
     return executionStages
   }, [stageExecutionData?.data])
+
+  useDeepCompareEffect(() => {
+    setIsInputSetApplied(false)
+  }, [selectedInputSets])
 
   useEffect(() => {
     setSelectedInputSets(inputSetSelected)
@@ -530,6 +545,10 @@ function RunPipelineFormBasic({
                 module,
                 source
               }),
+              search:
+                supportingGitSimplification && storeType === StoreType.REMOTE
+                  ? `connectorRef=${connectorRef}&repoName=${repoIdentifier}&branch=${branch}&storeType=${storeType}`
+                  : undefined,
               state: {
                 shouldShowGovernanceEvaluations:
                   governanceMetadata?.status === 'error' || governanceMetadata?.status === 'warning',
@@ -607,11 +626,12 @@ function RunPipelineFormBasic({
     if (inputSet?.pipeline && formikRef.current) {
       formikRef.current.setValues(inputSet.pipeline)
 
-      if (isInputSetApplied) {
+      if (canApplyInputSet) {
         formikRef.current.validateForm(inputSet.pipeline)
       }
     }
-  }, [inputSet, isInputSetApplied])
+    setIsInputSetApplied(true)
+  }, [inputSet, canApplyInputSet])
 
   const updateExpressionValue = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (!e.target) {
@@ -725,6 +745,7 @@ function RunPipelineFormBasic({
         branch={branch}
         connectorRef={connectorRef}
         storeType={storeType}
+        onClose={onClose}
       />
     )
   } else if (inputSetsError?.message) {
@@ -805,12 +826,11 @@ function RunPipelineFormBasic({
                       setRunClicked={setRunClicked}
                       hasInputSets={hasInputSets}
                       setSelectedInputSets={setSelectedInputSets}
-                      loading={false}
-                      loadingMergeInputSetUpdate={false}
                       selectedStageData={selectedStageData}
                       pipelineResponse={pipelineResponse}
                       invalidInputSetReferences={invalidInputSetReferences}
                       loadingInputSets={loadingInputSets}
+                      isInputSetApplied={isInputSetApplied}
                       onReconcile={onReconcile}
                       reRunInputSetYaml={inputSetYAML}
                     />
@@ -819,14 +839,14 @@ function RunPipelineFormBasic({
                       <Layout.Vertical className={css.content} padding="xlarge">
                         <YamlBuilderMemo
                           {...yamlBuilderReadOnlyModeProps}
-                          existingJSON={{ pipeline: omitBy(values, (_val, key) => key.startsWith('_')) }}
+                          existingJSON={{ pipeline: values }}
                           bind={setYamlHandler}
                           schema={{}}
                           invocationMap={factory.getInvocationMap()}
                           height="55vh"
                           width="100%"
-                          showSnippetSection={false}
-                          isEditModeSupported={canEdit}
+                          isEditModeSupported={canEditYaml}
+                          comparableYaml={inputSetYamlResponse?.data?.inputSetTemplateYaml}
                         />
                       </Layout.Vertical>
                     </div>
@@ -861,7 +881,7 @@ function RunPipelineFormBasic({
                               (!selectedInputSets || selectedInputSets.length === 0) &&
                               existingProvide === 'existing'
                             ) {
-                              setExistingProvide('provide')
+                              hasRuntimeInputs ? setExistingProvide('provide') : submitForm()
                             } else {
                               if (selectedView === SelectedView.YAML) {
                                 const parsedYaml = yamlParse<PipelineConfig>(
@@ -893,20 +913,21 @@ function RunPipelineFormBasic({
                             blockedStagesSelected ||
                             (getErrorsList(formErrors).errorCount > 0 && runClicked) ||
                             loadingShouldDisableDeployment ||
-                            shouldDisableDeploymentData?.data
+                            shouldDisableDeploymentData?.data?.shouldDisable
                           }
                           tooltip={
-                            shouldDisableDeploymentData?.data ? (
+                            shouldDisableDeploymentData?.data?.shouldDisable &&
+                            shouldDisableDeploymentData?.data?.freezeReferences?.[0] ? (
                               <Layout.Horizontal spacing="small" padding="small">
                                 <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
                                   {getString('pipeline.runDisabledOnFreeze')}
                                 </Text>
                                 <Link
-                                  to={routes.toFreezeWindows({
+                                  to={getFreezeRouteLink(shouldDisableDeploymentData?.data?.freezeReferences?.[0], {
                                     projectIdentifier,
                                     orgIdentifier,
                                     accountId,
-                                    module
+                                    module: defaultTo(module, 'cd')
                                   })}
                                 >
                                   <Text font={{ variation: FontVariation.SMALL }} color={Color.PRIMARY_7}>
@@ -938,7 +959,7 @@ function RunPipelineFormBasic({
                         currentPipeline={{ pipeline: values }}
                         values={values}
                         template={inputSetYamlResponse?.data?.inputSetTemplateYaml}
-                        canEdit={canEdit}
+                        canEdit={canSaveInputSet}
                         accountId={accountId}
                         projectIdentifier={projectIdentifier}
                         orgIdentifier={orgIdentifier}
@@ -996,9 +1017,13 @@ export function RunPipelineFormWrapper(props: RunPipelineFormWrapperProps): Reac
 export function RunPipelineForm(props: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
   return (
     <NestedAccordionProvider>
-      <PipelineVariablesContextProvider storeMetadata={props.storeMetadata}>
+      {props.executionView ? (
         <RunPipelineFormBasic {...props} />
-      </PipelineVariablesContextProvider>
+      ) : (
+        <PipelineVariablesContextProvider storeMetadata={props.storeMetadata}>
+          <RunPipelineFormBasic {...props} />
+        </PipelineVariablesContextProvider>
+      )}
     </NestedAccordionProvider>
   )
 }

@@ -6,17 +6,13 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useToaster, shouldShowError } from '@harness/uicore'
+import produce from 'immer'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
-import {
-  ServiceDefinition,
-  ServiceYaml,
-  useGetServiceAccessList,
-  useGetServicesYamlAndRuntimeInputs
-} from 'services/cd-ng'
-import { useMutateAsGet } from '@common/hooks'
+import type { JsonNode, ServiceDefinition, ServiceInputsMergedResponseDto, ServiceYaml } from 'services/cd-ng'
+import { useGetServiceAccessListQuery, useGetServicesYamlAndRuntimeInputsQuery } from 'services/cd-ng-rq'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
@@ -39,7 +35,10 @@ export interface UseGetServicesDataReturn {
   refetchServicesData(): void
   refetchListData(): void
   prependServiceToServiceList(newServiceInfo: ServiceYaml): void
+  updateServiceInputsData(serviceId: string, mergedInputResponse?: ServiceInputsMergedResponseDto): void
 }
+// react-query staleTime
+const STALE_TIME = 60 * 1000 * 15
 
 export function useGetServicesData(props: UseGetServicesDataProps): UseGetServicesDataReturn {
   const { deploymentType, gitOpsEnabled, serviceIdentifiers, deploymentTemplateIdentifier, versionLabel } = props
@@ -52,35 +51,63 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
   const {
     data: servicesListResponse,
     error,
-    loading: loadingServicesList,
+    isLoading: loadingServicesList,
     refetch: refetchListData
-  } = useGetServiceAccessList({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      type: deploymentType as ServiceDefinition['type'],
-      gitOpsEnabled,
-      deploymentTemplateIdentifier,
-      versionLabel
+  } = useGetServiceAccessListQuery(
+    {
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        type: deploymentType as ServiceDefinition['type'],
+        gitOpsEnabled,
+        deploymentTemplateIdentifier,
+        versionLabel
+      }
+    },
+    {
+      staleTime: STALE_TIME
     }
-  })
+  )
 
   const {
     data: servicesDataResponse,
-    initLoading: loadingServicesData,
-    loading: updatingData,
+    isInitialLoading: loadingServicesData,
+    isFetching: updatingData,
     refetch: refetchServicesData
-  } = useMutateAsGet(useGetServicesYamlAndRuntimeInputs, {
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
+  } = useGetServicesYamlAndRuntimeInputsQuery(
+    {
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier
+      },
+      body: { serviceIdentifiers }
     },
-    body: { serviceIdentifiers },
-    lazy: serviceIdentifiers.length === 0
-  })
+    {
+      enabled: serviceIdentifiers.length > 0,
+      staleTime: STALE_TIME
+    }
+  )
 
+  const updateServiceInputsData = useCallback(
+    (serviceId: string, mergedServiceInputsDto: ServiceInputsMergedResponseDto) => {
+      if (!isEmpty(mergedServiceInputsDto)) {
+        const { mergedServiceInputsYaml, serviceYaml } = mergedServiceInputsDto
+        const serviceInputs = yamlParse<JsonNode>(defaultTo(mergedServiceInputsYaml, ''))?.serviceInputs
+        const service = yamlParse<Pick<ServiceData, 'service'>>(defaultTo(serviceYaml, '')).service
+        service.yaml = defaultTo(serviceYaml, '')
+
+        const updatedData = produce(servicesData, draft => {
+          const serviceIndex = draft.findIndex(svc => svc.service.identifier === serviceId)
+          set(draft[serviceIndex], 'serviceInputs', serviceInputs)
+          set(draft[serviceIndex], 'service', service)
+        })
+        setServicesData(updatedData)
+      }
+    },
+    [servicesData]
+  )
   const loading = loadingServicesList || loadingServicesData
 
   const prependServiceToServiceList = useCallback((newServiceInfo: ServiceYaml) => {
@@ -134,7 +161,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
     /* istanbul ignore else */
     if (error?.message) {
       if (shouldShowError(error)) {
-        showError(getRBACErrorMessage(error))
+        showError(getRBACErrorMessage(error as any))
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -148,6 +175,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
     loadingServicesList,
     refetchServicesData,
     refetchListData,
-    prependServiceToServiceList
+    prependServiceToServiceList,
+    updateServiceInputsData
   }
 }

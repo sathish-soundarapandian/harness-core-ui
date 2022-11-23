@@ -6,7 +6,7 @@
  */
 
 import React, { FC } from 'react'
-import { Tag, Text } from '@wings-software/uicore'
+import { Tag, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { Target } from 'services/cf'
 import { useStrings } from 'framework/strings'

@@ -13,12 +13,11 @@ import {
   MultiSelectDropDown,
   MultiSelectOption,
   Text,
-  FontVariation,
-  Color,
   Page,
   Button,
   ButtonVariation
 } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'

@@ -8,7 +8,7 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { Container, Layout, Text } from '@wings-software/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
 import { String, useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'

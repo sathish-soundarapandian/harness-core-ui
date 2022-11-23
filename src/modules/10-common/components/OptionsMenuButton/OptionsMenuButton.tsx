@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Classes, Menu } from '@blueprintjs/core'
-import { Button, ButtonProps } from '@wings-software/uicore'
+import { Button, ButtonProps } from '@harness/uicore'
 
 export const MenuDivider = '-' as const
 

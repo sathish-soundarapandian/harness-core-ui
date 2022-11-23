@@ -243,8 +243,7 @@ export const mockData = {
                   type: 'Percentage',
                   spec: {
                     greaterThan: 54
-                  },
-                  criteriaPercentageType: 'greaterThan'
+                  }
                 },
                 metricType: 'Custom',
                 metricName: 'CPU Limit'
@@ -276,8 +275,7 @@ export const mockData = {
                   type: 'Percentage',
                   spec: {
                     greaterThan: 33
-                  },
-                  criteriaPercentageType: 'greaterThan'
+                  }
                 },
                 metricType: 'Custom',
                 metricName: 'CPU Limit'
@@ -357,8 +355,7 @@ export const mockData = {
                   type: 'Percentage',
                   spec: {
                     greaterThan: 87
-                  },
-                  criteriaPercentageType: 'greaterThan'
+                  }
                 },
                 metricType: 'Custom',
                 metricName: 'test1'

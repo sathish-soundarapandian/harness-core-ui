@@ -6,7 +6,7 @@
  */
 
 import React, { Dispatch, SetStateAction } from 'react'
-import { DropDown, Layout, SelectOption, Text } from '@wings-software/uicore'
+import { DropDown, Layout, SelectOption, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Sort, SortFields } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { useStrings } from 'framework/strings'

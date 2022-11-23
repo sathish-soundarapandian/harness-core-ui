@@ -6,20 +6,44 @@
  */
 
 import React from 'react'
+import { transformMatrixLabels } from './utils'
+import css from './MatrixNodeLabelWrapper.module.scss'
 
-function MatrixNodeNameLabelWrapper({ matrixLabel = '' }: { matrixLabel: string }): JSX.Element {
-  const data = (matrixLabel as unknown as string).split('\n')
+function MatrixNodeNameLabelWrapper({
+  nodeName = '',
+  matrixNodeName = ''
+}: {
+  nodeName: string
+  matrixNodeName: string
+}): JSX.Element {
   return (
-    <div>
-      {data.map((obj: string) => {
-        const [name, value] = obj.split(':')
+    <div className={css.matrixLabelWrapper}>
+      {Object.entries(matrixNodeName).map(([key, value]) => {
+        const labelsMap = transformMatrixLabels(value).split('\n')
+        const nestedValue = (): JSX.Element[] => {
+          return labelsMap.map((obj: string) => {
+            const [labelKey, labelValue] = obj.split(':')
+            return !labelValue ? (
+              <React.Fragment key={labelKey}>{labelKey}</React.Fragment>
+            ) : (
+              // matrix object
+              <div className="matrixLabelNestedWrapper" key={labelKey}>
+                <br />
+                <b>{labelKey}</b>: {labelValue}
+                <br />
+              </div>
+            )
+          })
+        }
+
         return (
-          <React.Fragment key={name}>
-            <b>{name}</b>: {value}
+          <React.Fragment key={key}>
+            <b>{key}</b>: {nestedValue()}
             <br />
           </React.Fragment>
         )
       })}
+      <b>{nodeName}</b>
     </div>
   )
 }

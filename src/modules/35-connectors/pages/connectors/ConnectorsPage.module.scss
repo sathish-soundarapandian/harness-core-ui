@@ -9,6 +9,7 @@
   padding: var(--spacing-large) var(--spacing-xlarge) !important;
   border-bottom: 1px solid var(--grey-300);
   background: var(--white) !important;
+  z-index: 1;
 }
 
 .gitFilter {

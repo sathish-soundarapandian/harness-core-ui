@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Container, Icon, Text, PageError } from '@wings-software/uicore'
+import { Container, Icon, Text, PageError } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'

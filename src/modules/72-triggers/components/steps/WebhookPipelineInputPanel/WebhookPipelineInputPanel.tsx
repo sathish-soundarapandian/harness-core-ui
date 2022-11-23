@@ -49,8 +49,8 @@ import {
   TriggerGitEvent,
   ciCodebaseBuildIssueComment
 } from '@triggers/components/Triggers/utils'
-import { eventTypes } from '@triggers/components/Triggers/WebhookTrigger/utils'
-import useGitAwareForTriggerEnabled from '@triggers/components/Triggers/useGitAwareForTriggerEnabled'
+import { getPipelineWithInjectedWithCloneCodebase } from '@triggers/components/Triggers/WebhookTrigger/utils'
+import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import css from './WebhookPipelineInputPanel.module.scss'
 
 interface WebhookPipelineInputPanelPropsInterface {
@@ -67,49 +67,6 @@ const applySelectedArtifactToPipelineObject = (pipelineObj: PipelineInfoConfig):
   return newPipelineObject
 }
 
-const getPipelineWithInjectedWithCloneCodebase = ({
-  event,
-  pipeline,
-  isPipelineFromTemplate
-}: {
-  event: string
-  pipeline: PipelineInfoConfig
-  isPipelineFromTemplate: boolean
-}): any => {
-  if (isPipelineFromTemplate) {
-    const pipelineFromTemplate = { ...(pipeline || {}) }
-    if (pipelineFromTemplate?.template?.templateInputs?.properties?.ci?.codebase?.build) {
-      pipelineFromTemplate.template.templateInputs.properties.ci.codebase.build =
-        event === eventTypes.PULL_REQUEST ? ciCodebaseBuildPullRequest : ciCodebaseBuild
-    }
-
-    return pipelineFromTemplate
-  }
-  if (event === eventTypes.PULL_REQUEST) {
-    return {
-      ...pipeline,
-      properties: {
-        ci: {
-          codebase: {
-            build: ciCodebaseBuildPullRequest
-          }
-        }
-      }
-    }
-  } else {
-    return {
-      ...pipeline,
-      properties: {
-        ci: {
-          codebase: {
-            build: ciCodebaseBuild
-          }
-        }
-      }
-    }
-  }
-}
-
 function WebhookPipelineInputPanelForm({
   formikProps,
   isEdit
@@ -119,7 +76,7 @@ function WebhookPipelineInputPanelForm({
     values
   } = formikProps
 
-  const gitAwareForTriggerEnabled = useGitAwareForTriggerEnabled()
+  const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
   const { getString } = useStrings()
   const ciCodebaseBuildValue = formikProps.values?.pipeline?.properties?.ci?.codebase?.build
@@ -154,11 +111,11 @@ function WebhookPipelineInputPanelForm({
   })
   const inputSetSelectedBranch = useMemo(() => {
     return getTriggerInputSetsBranchQueryParameter({
-      gitAwareForTriggerEnabled,
+      gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
       pipelineBranchName: formikProps?.values?.pipelineBranchName,
       branch
     })
-  }, [gitAwareForTriggerEnabled, branch, formikProps?.values?.pipelineBranchName])
+  }, [isNewGitSyncRemotePipeline, branch, formikProps?.values?.pipelineBranchName])
 
   const { mutate: mergeInputSet, error: mergeInputSetError } = useGetMergeInputSetFromPipelineTemplateWithListInput({
     queryParams: {
@@ -166,14 +123,14 @@ function WebhookPipelineInputPanelForm({
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
-      branch: gitAwareForTriggerEnabled ? inputSetSelectedBranch : branch
+      branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch
     }
   })
 
   useEffect(() => {
     const shouldInjectCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
 
-    if (!gitAwareForTriggerEnabled && !hasEverRendered && shouldInjectCloneCodebase && !isEdit) {
+    if (!isNewGitSyncRemotePipeline && !hasEverRendered && shouldInjectCloneCodebase && !isEdit) {
       const formikValues = cloneDeep(formikProps.values)
       const isPipelineFromTemplate = !!formikValues?.pipeline?.template
       const newPipelineObject = getPipelineWithInjectedWithCloneCodebase({
@@ -203,7 +160,7 @@ function WebhookPipelineInputPanelForm({
     resolvedPipeline,
     triggerIdentifier,
     isEdit,
-    gitAwareForTriggerEnabled
+    isNewGitSyncRemotePipeline
   ])
 
   const inputSetQueryParams = useMemo(
@@ -217,7 +174,7 @@ function WebhookPipelineInputPanelForm({
       repoName,
       storeType,
       branch: getTriggerInputSetsBranchQueryParameter({
-        gitAwareForTriggerEnabled,
+        gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
         pipelineBranchName: formikProps?.values?.pipelineBranchName,
         branch
       })
@@ -233,7 +190,7 @@ function WebhookPipelineInputPanelForm({
       repoName,
       storeType,
       branch,
-      gitAwareForTriggerEnabled
+      isNewGitSyncRemotePipeline
     ]
   )
 
@@ -379,12 +336,12 @@ function WebhookPipelineInputPanelForm({
 
   const showPipelineInputSetForm = useMemo(() => {
     // With GitX enabled, only show when at least one input set is selected
-    if (gitAwareForTriggerEnabled) {
+    if (isNewGitSyncRemotePipeline) {
       return showPipelineInputSetSelector && !!selectedInputSets?.length
     }
 
     return showPipelineInputSetSelector
-  }, [showPipelineInputSetSelector, gitAwareForTriggerEnabled, selectedInputSets])
+  }, [showPipelineInputSetSelector, isNewGitSyncRemotePipeline, selectedInputSets])
 
   // When Pipeline Reference Branch is changed (by typing new value), re-merge Input Sets
   const reevaluateInputSetMerge = useCallback(
@@ -445,7 +402,7 @@ function WebhookPipelineInputPanelForm({
   // Don't show spinner when fetching is triggered by typing from
   // Pipeline Reference. Giving users a better experience
   const isPipelineBranchNameInFocus = (): boolean =>
-    !!gitAwareForTriggerEnabled &&
+    !!isNewGitSyncRemotePipeline &&
     !!document.activeElement &&
     document.activeElement === document.querySelector('input[name="pipelineBranchName"]')
 
@@ -455,7 +412,7 @@ function WebhookPipelineInputPanelForm({
         <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
           <PageSpinner />
         </div>
-      ) : template?.data?.inputSetTemplateYaml || gitAwareForTriggerEnabled ? (
+      ) : template?.data?.inputSetTemplateYaml || isNewGitSyncRemotePipeline ? (
         <div className={css.inputsetGrid}>
           <div className={css.inputSetContent}>
             {showPipelineInputSetSelector ? (
@@ -471,7 +428,7 @@ function WebhookPipelineInputPanelForm({
                     onChange={value => {
                       setInputSetError('')
                       setSelectedInputSets(value)
-                      if (gitAwareForTriggerEnabled) {
+                      if (isNewGitSyncRemotePipeline) {
                         formikProps.setValues({
                           ...formikProps.values,
                           inputSetRefs: (value || []).map(v => v.value),
@@ -481,9 +438,9 @@ function WebhookPipelineInputPanelForm({
                     }}
                     value={selectedInputSets}
                     selectedValueClass={css.inputSetSelectedValue}
-                    selectedRepo={gitAwareForTriggerEnabled ? repoName : repoIdentifier}
+                    selectedRepo={isNewGitSyncRemotePipeline ? repoName : repoIdentifier}
                     selectedBranch={inputSetSelectedBranch}
-                    showNewInputSet={gitAwareForTriggerEnabled}
+                    showNewInputSet={isNewGitSyncRemotePipeline}
                     onNewInputSetClick={() => setShowNewInputSetModal(true)}
                   />
                 </GitSyncStoreProvider>
@@ -499,7 +456,7 @@ function WebhookPipelineInputPanelForm({
                 )}
               </div>
             ) : null}
-            {gitAwareForTriggerEnabled && (
+            {isNewGitSyncRemotePipeline && (
               <Container padding={{ top: 'medium' }}>
                 <Text
                   color={Color.BLACK_100}
@@ -533,8 +490,8 @@ function WebhookPipelineInputPanelForm({
                 viewType={StepViewType.InputSet}
                 maybeContainerClass={css.pipelineInputSetForm}
                 viewTypeMetadata={{ isTrigger: true }}
-                readonly={gitAwareForTriggerEnabled}
-                gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
+                readonly={isNewGitSyncRemotePipeline}
+                gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
               />
             ) : null}
           </div>

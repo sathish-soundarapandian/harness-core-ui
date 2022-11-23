@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTypeInputType } from '@harness/uicore'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { K8sOverrideValuesRuntimeFields } from '../K8sOverrideValuesRuntimeFields'
@@ -175,7 +175,7 @@ describe('OverrideYamlValues runtimefields tests', () => {
         <K8sOverrideValuesRuntimeFields
           initialValues={defaultProps.initialValues as any}
           allowableTypes={[]}
-          overrideValue={[]}
+          overrideValue={{ manifest: { identifier: '', type: 'K8sManifest', spec: {} } }}
           index={0}
         />
       </TestWrapper>

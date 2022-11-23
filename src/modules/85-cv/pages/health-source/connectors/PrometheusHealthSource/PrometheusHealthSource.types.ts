@@ -7,15 +7,9 @@
 
 import type { FailMetricThresholdSpec, MetricThreshold, MetricThresholdSpec } from 'services/cv'
 import type { CustomMappedMetric, CustomSelectedAndMappedMetrics } from '../../common/CustomMetric/CustomMetric.types'
-import type { CriteriaThresholdValues } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { MapPrometheusQueryToService } from './PrometheusHealthSource.constants'
 
-interface CriteriaPercentageType {
-  criteriaPercentageType?: CriteriaThresholdValues
-}
-
 export type PrometheusMetricThresholdType = Omit<MetricThreshold, 'groupName'> & {
-  criteria: MetricThreshold['criteria'] & CriteriaPercentageType
   metricType?: string
   spec?: MetricThresholdSpec & FailMetricThresholdSpec
 }

@@ -8,7 +8,7 @@
 import React, { useState, useMemo } from 'react'
 import moment from 'moment'
 import { useParams } from 'react-router-dom'
-import { Layout, Heading, Container, Icon, Text, CodeBlock, Button, PageError } from '@wings-software/uicore'
+import { Layout, Heading, Container, Icon, Text, CodeBlock, Button, PageError } from '@harness/uicore'
 import { Dialog, IDialogProps, Classes, Spinner } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

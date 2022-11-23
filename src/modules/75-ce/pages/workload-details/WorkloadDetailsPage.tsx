@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import { Container, Text, FlexExpander, Layout, HarnessDocTooltip } from '@wings-software/uicore'
+import { Container, Text, FlexExpander, Layout, HarnessDocTooltip } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import { noop } from 'lodash-es'
@@ -72,7 +72,7 @@ const WorkloadDetailsPage: () => JSX.Element = () => {
   const [timeRange, setTimeRange] = useQueryParamsState<TimeRangeFilterType>('timeRange', DEFAULT_TIME_RANGE)
   const [chartDataAggregation, setChartDataAggregation] = useState<Aggregation>(Aggregation.TimeWeighted)
 
-  useDocumentTitle([getString('ce.perspectives.workloadDetails.workloadDetailsText'), workloadName], true)
+  useDocumentTitle([getString('ce.perspectives.workloadDetails.workloadDetailsText'), workloadName])
 
   const isDateRangeInLast7Days = useMemo(() => {
     const last7DaysRange = DATE_RANGE_SHORTCUTS['LAST_7_DAYS']

@@ -83,8 +83,7 @@ export const updateNotificationRulesArgs = {
       value: 'Deployment'
     }
   ],
-  nextField: 'threshold',
-  nextFieldValue: undefined
+  moreFields: { threshold: { label: '', value: '' } }
 }
 
 export const updatedNotificationRulesResponse = [

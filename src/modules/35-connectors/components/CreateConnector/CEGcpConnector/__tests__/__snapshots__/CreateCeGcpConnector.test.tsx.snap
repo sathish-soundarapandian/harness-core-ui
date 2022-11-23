@@ -438,6 +438,7 @@ exports[`Create Secret Manager Wizard should render form 1`] = `
                       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                     >
                       <button
+                        aria-label="continue"
                         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                         type="submit"
                       >
@@ -741,6 +742,7 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
               class="StyledProps--font StyledProps--main"
             >
               <button
+                aria-label="connectors.ceGcp.billingExport.launchTemplate"
                 class="bp3-button Button--button StyledProps--font StyledProps--main launchTemplateBut Button--with-current-color Button--withRightIcon"
                 type="button"
               >
@@ -857,6 +859,7 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
                       class="Layout--horizontal Layout--layout-spacing-small StyledProps--main buttonPanel"
                     >
                       <button
+                        aria-label="previous"
                         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon"
                         type="button"
                       >
@@ -886,6 +889,7 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
                         </span>
                       </button>
                       <button
+                        aria-label="continue"
                         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                         type="submit"
                       >
@@ -1330,8 +1334,8 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
                             data-icon="ce-visibility"
                           >
                             <svg
-                              fill="none"
                               height="32"
+                              viewBox="0 0 32 31"
                               width="32"
                               xmlns="http://www.w3.org/2000/svg"
                             >
@@ -1341,7 +1345,7 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
                                 opacity="0.3"
                               />
                               <g
-                                clip-path="url(#ce-visibility_svg__clip0)"
+                                clip-path="url(#ce-visibility_svg__a)"
                               >
                                 <path
                                   d="M30.014 27.178l-4.198-3.895c1.008-1.409 1.598-3.096 1.598-4.91 0-4.914-4.31-8.912-9.606-8.912-5.297 0-9.606 3.998-9.606 8.912 0 4.915 4.31 8.913 9.606 8.913 1.955 0 3.773-.547 5.292-1.482l4.196 3.895c.376.348.984.348 1.359 0l1.358-1.26a.846.846 0 000-1.26zm-19.89-8.805c0-3.93 3.447-7.13 7.684-7.13s7.684 3.2 7.684 7.13c0 3.932-3.447 7.13-7.684 7.13s-7.685-3.198-7.685-7.13z"
@@ -1350,7 +1354,7 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
                               </g>
                               <defs>
                                 <clippath
-                                  id="ce-visibility_svg__clip0"
+                                  id="ce-visibility_svg__a"
                                 >
                                   <path
                                     d="M0 0h23.054v21.39H0z"
@@ -1533,8 +1537,8 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
                             data-icon="ce-visibility"
                           >
                             <svg
-                              fill="none"
                               height="32"
+                              viewBox="0 0 32 31"
                               width="32"
                               xmlns="http://www.w3.org/2000/svg"
                             >
@@ -1544,7 +1548,7 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
                                 opacity="0.3"
                               />
                               <g
-                                clip-path="url(#ce-visibility_svg__clip0)"
+                                clip-path="url(#ce-visibility_svg__a)"
                               >
                                 <path
                                   d="M30.014 27.178l-4.198-3.895c1.008-1.409 1.598-3.096 1.598-4.91 0-4.914-4.31-8.912-9.606-8.912-5.297 0-9.606 3.998-9.606 8.912 0 4.915 4.31 8.913 9.606 8.913 1.955 0 3.773-.547 5.292-1.482l4.196 3.895c.376.348.984.348 1.359 0l1.358-1.26a.846.846 0 000-1.26zm-19.89-8.805c0-3.93 3.447-7.13 7.684-7.13s7.684 3.2 7.684 7.13c0 3.932-3.447 7.13-7.684 7.13s-7.685-3.198-7.685-7.13z"
@@ -1553,7 +1557,7 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
                               </g>
                               <defs>
                                 <clippath
-                                  id="ce-visibility_svg__clip0"
+                                  id="ce-visibility_svg__a"
                                 >
                                   <path
                                     d="M0 0h23.054v21.39H0z"
@@ -1861,6 +1865,7 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main buttonPanel"
                 >
                   <button
+                    aria-label="previous"
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon"
                     type="button"
                   >
@@ -1890,6 +1895,7 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
                     </span>
                   </button>
                   <button
+                    aria-label="continue"
                     class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                     type="submit"
                   >
@@ -2203,6 +2209,7 @@ exports[`Create Secret Manager Wizard should render form 4`] = `
                     connectors.ceGcp.grantPermission.step1
                   </div>
                   <button
+                    aria-label="connectors.ceGcp.grantPermission.bigQueryButtonText"
                     class="bp3-button Button--button StyledProps--font StyledProps--main bigQueryPage Button--with-current-color Button--withRightIcon"
                     type="button"
                   >
@@ -2330,6 +2337,7 @@ exports[`Create Secret Manager Wizard should render form 4`] = `
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main buttonPanel"
             >
               <button
+                aria-label="previous"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon"
                 type="button"
               >
@@ -2359,6 +2367,7 @@ exports[`Create Secret Manager Wizard should render form 4`] = `
                 </span>
               </button>
               <button
+                aria-label="continue"
                 class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                 type="submit"
               >
@@ -2752,6 +2761,7 @@ exports[`Create Secret Manager Wizard should render form 5`] = `
               class="Layout--horizontal Layout--layout-spacing-large StyledProps--main btnWrapper"
             >
               <button
+                aria-label="finish"
                 class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--variation Button--variation-secondary"
                 disabled=""
                 tabindex="-1"
@@ -3341,6 +3351,7 @@ exports[`Create Secret Manager Wizard should throw an error when connectors alre
                       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                     >
                       <button
+                        aria-label="continue"
                         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
                         type="submit"
                       >

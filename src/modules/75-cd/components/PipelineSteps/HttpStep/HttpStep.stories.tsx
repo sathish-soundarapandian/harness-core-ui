@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { Meta, Story } from '@storybook/react'
-import { Card, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { Card, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'

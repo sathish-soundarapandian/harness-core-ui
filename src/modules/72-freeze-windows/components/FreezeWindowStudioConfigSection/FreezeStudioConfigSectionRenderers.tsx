@@ -7,7 +7,7 @@
 
 import React from 'react'
 import classnames from 'classnames'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import { FormInput, Heading } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
@@ -28,8 +28,8 @@ export const EnvironmentTypeRenderer = ({ getString, name }: EnvTypeRendererProp
   const envTypeMap = getEnvTypeMap(getString)
   const [envTypes] = React.useState<SelectOption[]>([
     { label: envTypeMap[EnvironmentType.All], value: All },
-    { label: envTypeMap[EnvironmentType.PROD], value: EnvironmentType.PROD },
-    { label: envTypeMap[EnvironmentType.NON_PROD], value: EnvironmentType.NON_PROD }
+    { label: envTypeMap[EnvironmentType.Production], value: EnvironmentType.Production },
+    { label: envTypeMap[EnvironmentType.PreProduction], value: EnvironmentType.PreProduction }
   ])
 
   return <FormInput.Select name={name} items={envTypes} label={getString('envType')} style={{ width: '400px' }} />

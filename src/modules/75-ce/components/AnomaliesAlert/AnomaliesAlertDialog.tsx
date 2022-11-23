@@ -7,7 +7,8 @@
 
 import React, { useEffect } from 'react'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
-import { StepWizard, Formik, FormikForm, useToaster, getErrorInfoFromErrorObject, Color } from '@harness/uicore'
+import { StepWizard, Formik, FormikForm, useToaster, getErrorInfoFromErrorObject } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'

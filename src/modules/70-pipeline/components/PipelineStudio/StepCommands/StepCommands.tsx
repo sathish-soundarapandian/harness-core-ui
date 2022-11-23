@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Tab, Tabs, Layout } from '@wings-software/uicore'
+import { Container, Tab, Tabs, Layout } from '@harness/uicore'
 import { Expander } from '@blueprintjs/core'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'

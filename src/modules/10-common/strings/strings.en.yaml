@@ -11,6 +11,7 @@ application: Application
 certificate: Certificate
 subscriptionId: Subscription Id
 repositoryCertificates: Repository Certificates
+selectRepository: Select Repository
 notEnabled: 'Not Enabled'
 apiStatus: 'API Status'
 gpgkey: 'GPG Key'
@@ -20,6 +21,7 @@ featureComingSoon: This feature is coming soon.
 skip: Skip
 sync: Sync
 schedule: Schedule
+coverage: Coverage
 selectService: Select Service
 selectServices: Select Services
 inputVariables: Input Variables
@@ -73,6 +75,7 @@ successfullCreate: '{{entity}} {{name}} created successfully'
 successfullUpdate: '{{entity}} {{name}} updated successfully'
 dataSubmitSuccess: 'Data has been submitted successfully'
 entityType: Entity Type
+cantDeleteEntity: Can't delete {{entity}}
 approve: Approve
 reject: Reject
 disable: Disable
@@ -203,6 +206,7 @@ validation:
   email:
     required: Email is required
     format: Please input valid email address
+    someAreInvalid: Some of the email addresses entered are invalid.
   repositoryName: Repository Name is required
   package: Package is required
   invalidYamlText: 'You have provided invalid or empty YAML. Please provide a valid YAML'
@@ -331,6 +335,7 @@ gitSync:
   harnessFolderLabel: Harness Folder
   commitDetailsLabel: Commit Details
   allRepositories: All Repositories
+  selectBranch: Select Branch
   defaultBranches: Default Branches
   repoDetails: Repo Details
   gitRepositoryDetails: Git Repository Details
@@ -429,6 +434,10 @@ errorHandler:
   communityForum: ' Harness Community Forum'
 noRefData: 'No references found'
 references: 'References'
+referenceButtonText: Go view references
+referenceTextWarning: The {{type}} [{{name}}] is being referenced in other entities. Please remove the referenced {{type}} from affected entities before deleting.
+forcedDeleteWarning: Forceful deletion might render entities referencing this {{type}} invalid and will need to be updated.
+forcedDeleteLabel: Forcefully delete this {{type}} now
 labelTestConnection: 'Connection Test'
 path: 'Path'
 enableGitSyncPipeline:
@@ -442,6 +451,7 @@ blank: ''
 totalLines: 'Total lines'
 newLines: 'New lines'
 unsavedChanges: You may have unsaved changes
+unsavedChangesLong: You have unsaved changes that will be lost. Are you sure you want to leave this page?
 readonlyPermissions: You have read-only permissions
 viewAndExecutePermissions: You have View and Execute permission only
 newVersion: There is a new version of this branch
@@ -454,6 +464,7 @@ submittingRequest: Submitting request and pushing changes to Git
 submittingRequestToGitViaDelegate: Submitting request and pushing changes to Git from Delegate
 local: Local
 subscribed: Subscribed
+usage: Usage
 overSubscribed: Oversubscribed
 unlimited: Unlimited
 billing: Billing
@@ -490,6 +501,7 @@ subscriptions:
     last30days: Last 30 days
     services: Active Services
     srvcInst: Active Service Instances
+    serviceLicenses: Service Licenses
     cdUsers: Active CD Users
     cdSITooltip: Service Instances represent the dynamic instantiation of a service you deploy via Harness. For a service representing a Docker image, Service Instances are the number of pods running with the docker image. For a service that deploys .NET web app, Service Instances are the number of VMs running the web app.
     cdServiceTooltip: A Service is an independent unit of software you deploy through Harness CD pipelines. An Active Service is a service deployed in the last 30 days.
@@ -805,6 +817,7 @@ template:
     errorWhileDeletingTemplate: Error occurred deleting Template
   createNewModal:
     versionPlaceholder: 'Ex: Version1'
+  templateIcon: Template Icon
 viewLatest: View latest
 viewUsage: View Usage
 selected: 'Selected:'
@@ -866,7 +879,7 @@ clientSecret: Client Secret
 copy: Copy
 levelUp: LEVEL UP
 overuse: OVERUSE
-scope: '{{ $.delegate.Scope }}'
+scope: '{{ $.common.scopeLabel }}'
 community: Community
 resourceCenter:
   title: 'RESOURCE CENTER'
@@ -967,6 +980,7 @@ environmentOverrides: Environment Overrides
 serviceOverrides: Service Overrides
 invalidIdentifiers: 'Identifier must not be one of the following values: {{identifiers}}'
 repositoryFormat: Repository Format
+scopeLabel: Scope
 hostLabel: Host
 useSSL: Use SSL
 moduleList:
@@ -1086,3 +1100,27 @@ schedulePanel:
 allClusters: 'All Clusters'
 all: 'All {{name}}'
 sortedByCreatedTime: List sorted by created time
+configDetails: 'Configuration Details'
+freezeActiveBannerTextPrefix: Freeze enabled on all deployments for this
+freezeActiveBannerTimeframe: from <b>{{startTime}}</b> to <b>{{endTime}}</b>
+freezeListActiveBannerText: There are {{count}} ongoing deployment freeze windows
+freezeListActiveBannerExpandedTextPrefix: On the
+resourceIdentifier: Resource Identifier
+configureNav: Or configure your nav!
+singularLabels:
+  authenticationSetting: 'Authentication Setting'
+  defaultSetting: Default Setting
+  governancePolicy: Governance Policy
+  governancePolicySet: Governance Policy Set
+  accountSetting: Account Setting
+  repositoryCertificate: Repository Certificate
+  gnupgKey: GnuPG Key
+  autoStoppingRule: 'AutoStopping Rule'
+  testTarget: Test Target
+  scan: Scan
+  issue: Issue
+pipelineExecution: Pipeline Executions
+platformServiceVersions: Platform Service Versions
+executionTab:
+  stepsCount: At least one step is required
+clickToKnowMore: 'Click to know more about'

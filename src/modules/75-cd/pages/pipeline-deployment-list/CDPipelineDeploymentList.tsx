@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { useGetPipelineSummary } from 'services/pipeline-ng'
+import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useQueryParams } from '@common/hooks'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
@@ -38,16 +38,20 @@ export default function CDPipelineDeploymentList(): React.ReactElement {
     storeType
   })
 
-  const { data: pipeline } = useGetPipelineSummary({
-    pipelineIdentifier,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      repoIdentifier,
-      branch
-    }
-  })
+  const { data: pipeline } = useGetPipelineSummaryQuery(
+    {
+      pipelineIdentifier,
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        repoIdentifier,
+        branch,
+        getMetadataOnly: true
+      }
+    },
+    { staleTime: 5 * 60 * 1000 }
+  )
 
   const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
 
@@ -56,7 +60,13 @@ export default function CDPipelineDeploymentList(): React.ReactElement {
   return (
     <>
       <HelpPanel referenceId="ExecutionHistory" type={HelpPanelType.FLOATING_CONTAINER} />
-      <ExecutionList showHealthAndExecution onRunPipeline={onRunPipeline} isPipelineInvalid={isPipelineInvalid} />
+      <ExecutionList
+        showHealthAndExecution
+        repoName={repoName}
+        showBranchFilter
+        onRunPipeline={onRunPipeline}
+        isPipelineInvalid={isPipelineInvalid}
+      />
     </>
   )
 }

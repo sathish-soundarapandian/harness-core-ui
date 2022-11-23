@@ -143,7 +143,7 @@ describe('OnboardingDetailPage', () => {
     userEvent.click(screen.getByText('ABC Flag'))
 
     // proceed to next step
-    userEvent.click(screen.getByRole('button', { name: 'next chevron-right' }))
+    userEvent.click(screen.getByRole('button', { name: 'next' }))
 
     await waitFor(() => {
       // first step Complete
@@ -155,7 +155,7 @@ describe('OnboardingDetailPage', () => {
     })
 
     // testing Previous button
-    userEvent.click(screen.getByRole('button', { name: 'chevron-left back' }))
+    userEvent.click(screen.getByRole('button', { name: 'back' }))
 
     await waitFor(() => {
       // first step still Complete
@@ -164,58 +164,24 @@ describe('OnboardingDetailPage', () => {
       // second step back In Progress, no longer completed
       expect(document.querySelector(barInProgress)).toBeInTheDocument()
       expect(document.querySelector(barCompleted)).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'next' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'next' })).not.toBeDisabled()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'next chevron-right' }))
+    userEvent.click(screen.getByRole('button', { name: 'next' }))
 
     // Second component replaces First component
-    expect(screen.getByTestId('ffOnboardingSelectedFlag')).toBeInTheDocument()
-    expect(screen.queryByRole('heading', { name: 'cf.onboarding.letsGetStarted' })).not.toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByTestId('ffOnboardingSelectedFlag')).toBeVisible()
+      expect(screen.getByText('cf.onboarding.selectEnvAndSdk')).toBeVisible()
+    })
 
     // select language and create sdk key
     userEvent.click(screen.getByRole('button', { name: 'JavaScript' }))
 
-    userEvent.click(screen.getByRole('button', { name: 'plus cf.environments.apiKeys.addKeyTitle' }))
-
-    const sdkKeyInputBox = document.querySelector('input[name=name]') as HTMLInputElement
-
-    await waitFor(() => expect(sdkKeyInputBox).toBeInTheDocument())
-
-    userEvent.type(sdkKeyInputBox, 'dummy api key name', { allAtOnce: true })
-
-    userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
-
-    await waitFor(() => expect(mutateMock).toBeCalled())
-
-    // proceed to Third step and its component to appear
-    userEvent.click(screen.getByRole('button', { name: 'next chevron-right' }))
-
-    expect(screen.queryByTestId('ffOnboardingSelectedFlag')).not.toBeInTheDocument()
-
-    expect(screen.getByRole('heading', { name: 'cf.onboarding.validatingYourFlag' })).toBeInTheDocument()
-
     await waitFor(() => {
-      // all Steps Completed
-      const allStepsCompleted = document.querySelectorAll(stepCompleted)
-      expect(allStepsCompleted.length).toEqual(3)
-
-      const barsCompleted = document.querySelectorAll(barCompleted)
-
-      // All progress bars Completed
-      expect(barsCompleted.length).toEqual(2)
-      expect(document.querySelector(barInProgress)).not.toBeInTheDocument()
-    })
-
-    userEvent.click(screen.getByRole('button', { name: 'chevron-left back' }))
-
-    await waitFor(() => {
-      const allStepsCompleted = document.querySelectorAll(stepCompleted)
-      expect(allStepsCompleted.length).toEqual(2)
-
-      const barsCompleted = document.querySelectorAll(barCompleted)
-
-      expect(barsCompleted.length).toEqual(1)
-      expect(document.querySelector(barInProgress)).toBeInTheDocument()
+      expect(screen.getByText('cf.onboarding.selectOrCreateEnvironment')).toBeVisible()
+      expect(document.getElementById('selectOrCreateEnvironmentInput')).toBeVisible()
     })
   })
 
@@ -235,7 +201,7 @@ describe('OnboardingDetailPage', () => {
           }}
           apiKey={undefined}
           setApiKey={jest.fn()}
-          setEnvironmentIdentifier={jest.fn()}
+          setSelectedEnvironment={jest.fn()}
         />
       </TestWrapper>
     )
@@ -271,7 +237,7 @@ describe('OnboardingDetailPage', () => {
           }}
           apiKey={undefined}
           setApiKey={jest.fn()}
-          setEnvironmentIdentifier={jest.fn()}
+          setSelectedEnvironment={jest.fn()}
         />
       </TestWrapper>
     )

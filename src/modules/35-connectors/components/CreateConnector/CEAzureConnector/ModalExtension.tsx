@@ -6,7 +6,7 @@
  */
 
 import React, { createContext, ReactElement, useState } from 'react'
-import { Icon } from '@wings-software/uicore'
+import { Icon } from '@harness/uicore'
 import Extension from './Steps/Billing/AzureConnectorBillingExtension'
 import css from './CreateCeAzureConnector_new.module.scss'
 

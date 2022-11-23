@@ -32,6 +32,7 @@ exports[`CVTrialHomePage snapshot test should render properly 1`] = `
           cv.learnMore
         </a>
         <button
+          aria-label="cv.cvTrialHomePage.startTrial.startBtn.description"
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
           style="width: 300px; height: 45px;"
           type="button"

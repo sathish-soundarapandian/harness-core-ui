@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { Button, IconName, SelectOption } from '@wings-software/uicore'
-import isEmpty from 'lodash-es/isEmpty'
+import { Button, IconName, SelectOption } from '@harness/uicore'
+import { isEmpty } from 'lodash-es'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { UseStringsReturn } from 'framework/strings'
 import {

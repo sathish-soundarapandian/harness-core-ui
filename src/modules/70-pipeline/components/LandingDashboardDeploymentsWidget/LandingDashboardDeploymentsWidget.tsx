@@ -21,7 +21,7 @@ import {
   renderTrend,
   IconName,
   Popover
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation, Color } from '@harness/design-system'
 import { defaultTo, isEqual } from 'lodash-es'
@@ -492,7 +492,7 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
   const summaryCardsData: SummaryCardData[] = useMemo(() => {
     return [
       {
-        title: getString('pipeline.dashboards.pipelineExecution'),
+        title: getString('common.pipelineExecution'),
         count: getFormattedNumber(response?.deploymentsStatsSummary?.countAndChangeRate?.count),
         trend:
           getFormattedNumber(

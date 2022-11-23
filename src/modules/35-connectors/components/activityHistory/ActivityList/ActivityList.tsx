@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import moment from 'moment'
 
-import { Layout, Text, Icon, IconName, Container, TableV2 } from '@wings-software/uicore'
+import { Layout, Text, Icon, IconName, Container, TableV2 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import type { CellProps, Renderer, Column } from 'react-table'

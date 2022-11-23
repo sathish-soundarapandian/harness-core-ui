@@ -41,7 +41,7 @@ export const Connectors = {
   SERVICE_NOW: 'ServiceNow',
   CUSTOM_HEALTH: 'CustomHealth',
   ERROR_TRACKING: 'ErrorTracking',
-  ELK: 'ELK'
+  ELK: 'ElasticSearch'
 }
 
 export const getConnectorIconByType = (type: string): string => {
@@ -53,7 +53,7 @@ export const getConnectorIconByType = (type: string): string => {
     case Connectors.CUSTOM_HEALTH:
       return 'service-custom-connector'
     case Connectors.ELK:
-      return 'elk'
+      return 'service-elk'
     case Connectors.SPLUNK:
       return 'service-splunk'
     case Connectors.NEW_RELIC:

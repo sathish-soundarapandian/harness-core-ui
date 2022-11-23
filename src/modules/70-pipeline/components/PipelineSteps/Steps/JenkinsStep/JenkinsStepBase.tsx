@@ -16,7 +16,7 @@ import {
   MultiTypeInputType,
   SelectOption,
   RUNTIME_INPUT_VALUE
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
 import * as Yup from 'yup'
@@ -44,6 +44,8 @@ import {
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { Connectors } from '@connectors/constants'
 import type { JenkinsStepProps } from './JenkinsStep'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JenkinsFormContentInterface, JenkinsStepData, jobParameterInterface, SubmenuSelectOption } from './types'
@@ -292,7 +294,7 @@ function FormContent({
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
         />
         {getMultiTypeFromValue(formik.values.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
+          <ConnectorConfigureOptions
             style={{ marginTop: 6 }}
             value={formik.values.spec.connectorRef as string}
             type="String"
@@ -302,6 +304,15 @@ function FormContent({
             showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
+            connectorReferenceFieldProps={{
+              accountIdentifier: accountId,
+              projectIdentifier,
+              orgIdentifier,
+              type: Connectors.JENKINS,
+              label: getString('connectors.jenkins.jenkinsConnectorLabel'),
+              disabled: readonly,
+              gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
+            }}
           />
         )}
       </div>

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Card, Layout, Text, Checkbox, Radio } from '@wings-software/uicore'
+import { Card, Layout, Text, Checkbox, Radio } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import type { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
@@ -22,6 +22,7 @@ interface ResourceTypeListProps {
   onResourceCategorySelect: (types: ResourceType[], isAdd: boolean) => void
   preSelectedResourceList: ResourceType[]
   disableAddingResources?: boolean
+  isHarnessManaged?: boolean
 }
 const ResourceTypeList: React.FC<ResourceTypeListProps> = props => {
   const {
@@ -31,7 +32,8 @@ const ResourceTypeList: React.FC<ResourceTypeListProps> = props => {
     onResourceSelectionChange,
     onResourceCategorySelect,
     preSelectedResourceList,
-    disableAddingResources
+    disableAddingResources,
+    isHarnessManaged
   } = props
 
   const { getString } = useStrings()
@@ -58,7 +60,7 @@ const ResourceTypeList: React.FC<ResourceTypeListProps> = props => {
           <Radio
             label={getString('common.all')}
             inline={true}
-            disabled={disableAddingResources}
+            disabled={isHarnessManaged}
             value={SelectionType.ALL}
             checked={selectionType === SelectionType.ALL}
             onChange={e => {
@@ -68,7 +70,7 @@ const ResourceTypeList: React.FC<ResourceTypeListProps> = props => {
           <Radio
             label={getString('common.specified')}
             inline={true}
-            disabled={disableAddingResources}
+            disabled={isHarnessManaged}
             value={SelectionType.SPECIFIED}
             checked={selectionType === SelectionType.SPECIFIED}
             onChange={e => {

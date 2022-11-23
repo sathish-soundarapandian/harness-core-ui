@@ -20,13 +20,12 @@ import {
   SelectOption,
   ButtonVariation,
   PageSpinner
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import type { FormikContextType, FormikProps } from 'formik'
 import { useHostedBuilds } from '@common/hooks/useHostedBuild'
 import { Status } from '@common/utils/Constants'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import {
   setupGithubFormData,
   GitConnectionType,
@@ -50,7 +49,6 @@ import { GitAuthTypes, GitAPIAuthTypes } from '@connectors/pages/connectors/util
 import { ConnectViaOAuth } from '@connectors/common/ConnectViaOAuth/ConnectViaOAuth'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import {
-  ConnectorSecretScope,
   getCommonConnectorsValidationSchema,
   handleOAuthEventProcessing,
   OAuthEventProcessingResponse,
@@ -275,17 +273,9 @@ const StepGitlabAuthentication: React.FC<StepProps<StepGitlabAuthenticationProps
       if (oAuthStatus === Status.SUCCESS && oAuthResponse) {
         const { accessTokenRef, refreshTokenRef } = oAuthResponse
         const formValuesCopy = { ...formikRef.current?.values }
-        let updatedFormValues = set(
-          formValuesCopy,
-          'oAuthAccessTokenRef',
-          `${ConnectorSecretScope[Scope.ACCOUNT]}${accessTokenRef}`
-        )
+        let updatedFormValues = set(formValuesCopy, 'oAuthAccessTokenRef', `${accessTokenRef}`)
         if (refreshTokenRef !== OAUTH_PLACEHOLDER_VALUE) {
-          updatedFormValues = set(
-            updatedFormValues,
-            'oAuthRefreshTokenRef',
-            `${ConnectorSecretScope[Scope.ACCOUNT]}${refreshTokenRef}`
-          )
+          updatedFormValues = set(updatedFormValues, 'oAuthRefreshTokenRef', `${refreshTokenRef}`)
         }
         formikRef.current?.setValues(updatedFormValues)
       }
@@ -471,6 +461,8 @@ const StepGitlabAuthentication: React.FC<StepProps<StepGitlabAuthenticationProps
                         oAuthSecretIntercepted={oAuthSecretIntercepted}
                         forceFailOAuthTimeoutId={forceFailOAuthTimeoutId}
                         setForceFailOAuthTimeoutId={setForceFailOAuthTimeoutId}
+                        orgIdentifier={props.orgIdentifier}
+                        projectIdentifier={props.projectIdentifier}
                       />
                     </Layout.Vertical>
                   ) : (

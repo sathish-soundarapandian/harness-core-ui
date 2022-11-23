@@ -16,7 +16,7 @@ import {
   VisualYamlToggle,
   getErrorInfoFromErrorObject,
   Container
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { defaultTo, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -46,7 +46,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   entityType: 'Service',
   width: '100%',
   height: 194,
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -233,7 +232,6 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
                     }}
                     bind={setYamlHandler}
                     schema={serviceSchema?.data}
-                    showSnippetSection={false}
                   />
                   <Layout.Horizontal spacing={'small'} padding={{ top: 'large' }}>
                     <Button

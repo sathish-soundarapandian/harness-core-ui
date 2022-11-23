@@ -6,7 +6,7 @@
  */
 
 import React, { useRef } from 'react'
-import { Card, Icon, Tag, TagsPopover, Text, Checkbox } from '@wings-software/uicore'
+import { Card, Icon, Tag, TagsPopover, Text, Checkbox } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { Popover, Position } from '@blueprintjs/core'
@@ -196,7 +196,11 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
         projectIdentifier,
         accountId,
         module,
-        source
+        source,
+        connectorRef: pipelineExecution.connectorRef,
+        repoName: defaultTo(pipelineExecution.gitDetails?.repoName, pipelineExecution.gitDetails?.repoIdentifier),
+        branch: pipelineExecution.gitDetails?.branch,
+        storeType: pipelineExecution.storeType
       })
 
       //opening in new tab is required for cards present in dashboards
@@ -329,6 +333,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                   canExecute={canExecute}
                   canRetry={pipelineExecution.canRetry}
                   modules={pipelineExecution.modules}
+                  isExecutionListView
                 />
               ) : null}
             </div>

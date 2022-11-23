@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo as _defaultTo, isEmpty as _isEmpty, values as _values } from 'lodash-es'
-import { Button, Container, Heading, Layout, Select, SelectOption, Text, useToaster } from '@wings-software/uicore'
+import { Button, Container, Heading, Layout, Select, SelectOption, Text, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
 import { useModalHook } from '@harness/use-modal'

@@ -6,7 +6,7 @@
  */
 
 import React, { RefObject, Dispatch, SetStateAction } from 'react'
-import { Layout, Button, ButtonVariation } from '@wings-software/uicore'
+import { Layout, Button, ButtonVariation } from '@harness/uicore'
 import cx from 'classnames'
 import type { FormikErrors, FormikProps } from 'formik'
 import { parse } from 'yaml'

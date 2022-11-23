@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useMemo } from 'react'
-import { Text, Layout, Icon, Button, Popover, TagsPopover, TableV2 } from '@wings-software/uicore'
+import { Text, Layout, Icon, Button, Popover, TagsPopover, TableV2 } from '@harness/uicore'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Color } from '@harness/design-system'
 import { Classes, Position } from '@blueprintjs/core'
@@ -40,7 +40,7 @@ type CustomColumn<T extends Record<string, any>> = Column<T> & {
   collaborators?: (project: Project) => void
 }
 
-const RenderColumnProject: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
+export const RenderColumnProject: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
   const project = row.original.projectResponse.project
   const { getString } = useStrings()
   return (
@@ -61,7 +61,7 @@ const RenderColumnProject: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) 
     </Layout.Horizontal>
   )
 }
-const RenderColumnOrganization: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
+export const RenderColumnOrganization: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
   const data = row.original
   return (
     <Text color={Color.BLACK} lineClamp={1} className={css.org}>

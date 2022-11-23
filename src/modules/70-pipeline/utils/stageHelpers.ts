@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty, omit, pick, set } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import type {
   GraphLayoutNode,
   PipelineExecutionSummary,
@@ -63,7 +64,8 @@ export enum ServiceDeploymentType {
   AmazonSAM = 'AwsSAM',
   AzureFunctions = 'AzureFunctions',
   AzureWebApp = 'AzureWebApp',
-  ECS = 'ECS'
+  ECS = 'ECS',
+  Elastigroup = 'Elastigroup'
 }
 
 export enum RepositoryFormatTypes {
@@ -71,13 +73,15 @@ export enum RepositoryFormatTypes {
   Docker = 'docker',
   Maven = 'maven',
   NPM = 'npm',
-  NuGet = 'nuget'
+  NuGet = 'nuget',
+  Raw = 'raw'
 }
 
 export const nexus2RepositoryFormatTypes = [
   { label: 'Maven', value: RepositoryFormatTypes.Maven },
   { label: 'NPM', value: RepositoryFormatTypes.NPM },
   { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
+  // { label: 'Raw', value: RepositoryFormatTypes.Raw }
 ]
 
 export const k8sRepositoryFormatTypes = [{ label: 'Docker', value: RepositoryFormatTypes.Docker }]
@@ -184,6 +188,9 @@ export const getHelpeTextForTags = (
     artifactId?: string
     groupId?: string
     packageName?: string
+    artifactArrayPath?: string
+    versionPath?: string
+    feed?: string
   },
   getString: (key: StringKeys) => string,
   isServerlessDeploymentTypeSelected = false
@@ -205,17 +212,35 @@ export const getHelpeTextForTags = (
     repositoryFormat,
     artifactId,
     groupId,
-    packageName
+    packageName,
+    feed,
+    artifactArrayPath,
+    versionPath
   } = fields
   const invalidFields: string[] = []
   if (!connectorRef || getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME) {
     invalidFields.push(getString('connector'))
+  }
+  if (feed !== undefined && (!feed || getMultiTypeFromValue(feed) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('pipeline.artifactsSelection.feed'))
   }
   if (
     repositoryName !== undefined &&
     (!repositoryName || getMultiTypeFromValue(repositoryName) === MultiTypeInputType.RUNTIME)
   ) {
     invalidFields.push(getString('common.repositoryName'))
+  }
+  if (
+    artifactArrayPath !== undefined &&
+    (!artifactArrayPath || getMultiTypeFromValue(artifactArrayPath) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.artifactsSelection.artifactsArrayPath'))
+  }
+  if (
+    versionPath !== undefined &&
+    (!versionPath || getMultiTypeFromValue(versionPath) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.artifactsSelection.versionPath'))
   }
   if (
     packageName !== undefined &&
@@ -318,6 +343,10 @@ export const isAzureWebAppDeploymentType = (deploymentType: string): boolean => 
   return deploymentType === ServiceDeploymentType.AzureWebApp
 }
 
+export const isElastigroupDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.Elastigroup
+}
+
 export const isCustomDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.CustomDeployment
 }
@@ -348,7 +377,8 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.AzureWebApp]: 'Web App Infrastructure Details',
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
   [ServiceDeploymentType.Pdc]: 'Infrastructure definition',
-  [ServiceDeploymentType.WinRm]: 'WinRM'
+  [ServiceDeploymentType.WinRm]: 'WinRM',
+  [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details' //todospt
 }
 
 export const getSelectedDeploymentType = (
@@ -517,17 +547,15 @@ export const isExecutionFieldPresent = (stage: DeploymentStageElementConfig): bo
   return !!(stage.spec?.execution && stage.spec?.execution.steps && stage.spec?.execution.steps?.length > 0)
 }
 
+export const isServiceDefinitionSpecDataPresent = (stage: DeploymentStageElementConfig): boolean => {
+  return !isEmpty(omit(stage.spec?.serviceConfig?.serviceDefinition?.spec, 'variables'))
+}
+
 export const doesStageContainOtherData = (stage?: DeploymentStageElementConfig): boolean => {
   if (!stage) {
     return false
   }
-  return (
-    isArtifactManifestPresent(stage) ||
-    isInfraDefinitionPresent(stage) ||
-    isExecutionFieldPresent(stage) ||
-    isConfigFilesPresent(stage) ||
-    isCustomDeploymentDataPresent(stage)
-  )
+  return isInfraDefinitionPresent(stage) || isExecutionFieldPresent(stage) || isServiceDefinitionSpecDataPresent(stage)
 }
 
 export const hasStageData = (stage?: DeploymentStageElementConfig): boolean => {
@@ -557,11 +585,12 @@ export const deleteStageData = (stage?: DeploymentStageElementConfig): void => {
 }
 export const deleteServiceData = (stage?: DeploymentStageElementConfig): void => {
   if (stage) {
-    const serviceSpec = stage?.spec?.serviceConfig?.serviceDefinition?.spec as Partial<CustomDeploymentServiceSpec>
-    delete serviceSpec?.artifacts
-    delete serviceSpec?.manifests
-    delete serviceSpec?.configFiles
-    delete serviceSpec?.customDeploymentRef
+    // delete all properties except variables
+    set(
+      stage,
+      'spec.serviceConfig.serviceDefinition.spec',
+      pick(get(stage, 'spec.serviceConfig.serviceDefinition.spec'), ['variables'])
+    )
   }
 }
 //This is to delete stage data in case of new service/ env entity
@@ -598,6 +627,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.EcsService
     case ServiceDeploymentType.CustomDeployment:
       return StepType.CustomDeploymentServiceSpec
+    case ServiceDeploymentType.Elastigroup:
+      return StepType.ElastigroupService
     default:
       return StepType.K8sServiceSpec
   }
@@ -627,4 +658,14 @@ export const isSshOrWinrmDeploymentType = (deploymentType: string): boolean => {
 
 export const withoutSideCar = (deploymentType: string): boolean => {
   return isSshOrWinrmDeploymentType(deploymentType)
+}
+
+export const getVariablesHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']) => {
+  return `${selectedDeploymentType}DeploymentTypeVariables`
+}
+
+export const getAzureNexusRepoOptions = (deploymentType: string, azureFlag?: boolean): SelectOption[] => {
+  return isSSHWinRMDeploymentType(deploymentType) || (isAzureWebAppDeploymentType(deploymentType) && azureFlag)
+    ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
+    : k8sRepositoryFormatTypes
 }

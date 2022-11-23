@@ -7,19 +7,20 @@
 
 import React, { useState } from 'react'
 import { Color } from '@harness/design-system'
-import { Layout, Text } from '@wings-software/uicore'
+import { Layout, Text } from '@harness/uicore'
 import cx from 'classnames'
+import { Spinner } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { FetchPlansQuery } from 'services/common/services'
 import type { ModuleName } from 'framework/types/ModuleName'
 import { TimeType } from '@common/constants/SubscriptionTypes'
-import PlanContainer from './PlanContainer'
 import css from './Plans.module.scss'
 
 interface PlansPanelProps {
   module: ModuleName
   plans?: NonNullable<FetchPlansQuery['pricing']>['ciSaasPlans' | 'ffPlans' | 'cdPlans' | 'ccPlans']
 }
+const PlanContainer = React.lazy(() => import('./PlanContainer'))
 
 const PlansPanel: React.FC<PlansPanelProps> = ({ plans, module }) => {
   const { getString } = useStrings()
@@ -48,11 +49,13 @@ const PlansPanel: React.FC<PlansPanelProps> = ({ plans, module }) => {
             {getString('common.monthly')}
           </Text>
         </Layout.Horizontal>
-        {timeType === TimeType.YEARLY ? (
-          <PlanContainer plans={plans} timeType={TimeType.YEARLY} moduleName={module} />
-        ) : (
-          <PlanContainer plans={plans} timeType={TimeType.MONTHLY} moduleName={module} />
-        )}
+        <React.Suspense fallback={<Spinner />}>
+          {timeType === TimeType.YEARLY ? (
+            <PlanContainer plans={plans} timeType={TimeType.YEARLY} moduleName={module} />
+          ) : (
+            <PlanContainer plans={plans} timeType={TimeType.MONTHLY} moduleName={module} />
+          )}
+        </React.Suspense>
       </Layout.Vertical>
     )
   }

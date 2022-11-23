@@ -225,6 +225,7 @@ exports[`PreflightCheck click on section title open correct section: opened conn
       class="footerInProgress"
     >
       <button
+        aria-label="pre-flight-check.skipCheckBtn"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
         type="button"
       >
@@ -370,6 +371,7 @@ exports[`PreflightCheck click on section title open correct section: opened pipe
       class="footerInProgress"
     >
       <button
+        aria-label="pre-flight-check.skipCheckBtn"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
         type="button"
       >
@@ -861,6 +863,7 @@ exports[`PreflightCheck renders property when has failed checks: after opening t
       class="footerFailure"
     >
       <button
+        aria-label="retry"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
         type="button"
       >
@@ -871,6 +874,7 @@ exports[`PreflightCheck renders property when has failed checks: after opening t
         </span>
       </button>
       <button
+        aria-label="close"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
         type="button"
       >
@@ -881,6 +885,7 @@ exports[`PreflightCheck renders property when has failed checks: after opening t
         </span>
       </button>
       <button
+        aria-label="pre-flight-check.continueToRunPipeline"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
         type="button"
       >
@@ -1325,6 +1330,7 @@ exports[`PreflightCheck renders property when has failed checks: before opening 
       class="footerFailure"
     >
       <button
+        aria-label="retry"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
         type="button"
       >
@@ -1335,6 +1341,7 @@ exports[`PreflightCheck renders property when has failed checks: before opening 
         </span>
       </button>
       <button
+        aria-label="close"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
         type="button"
       >
@@ -1345,6 +1352,7 @@ exports[`PreflightCheck renders property when has failed checks: before opening 
         </span>
       </button>
       <button
+        aria-label="pre-flight-check.continueToRunPipeline"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
         type="button"
       >
@@ -1584,6 +1592,7 @@ exports[`PreflightCheck renders property when has in progress checks 1`] = `
       class="footerInProgress"
     >
       <button
+        aria-label="pre-flight-check.skipCheckBtn"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
         type="button"
       >
@@ -1803,6 +1812,7 @@ exports[`PreflightCheck renders property when return all success checks 1`] = `
       class="footerFailure"
     >
       <button
+        aria-label="retry"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
         type="button"
       >
@@ -1813,6 +1823,7 @@ exports[`PreflightCheck renders property when return all success checks 1`] = `
         </span>
       </button>
       <button
+        aria-label="close"
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
         type="button"
       >
@@ -1823,6 +1834,7 @@ exports[`PreflightCheck renders property when return all success checks 1`] = `
         </span>
       </button>
       <button
+        aria-label="pre-flight-check.continueToRunPipeline"
         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
         type="button"
       >
@@ -1923,6 +1935,7 @@ exports[`PreflightCheck see if RETRY works: loading state after retry click 1`] 
       class="footerInProgress"
     >
       <button
+        aria-label="pre-flight-check.skipCheckBtn"
         class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main Button--with-current-color"
         disabled=""
         tabindex="-1"

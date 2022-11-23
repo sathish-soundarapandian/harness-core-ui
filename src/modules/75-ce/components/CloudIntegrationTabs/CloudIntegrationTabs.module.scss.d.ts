@@ -8,7 +8,9 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly addAutoStoppingBtn: string
+  readonly card: string
   readonly cloudProviderList: string
+  readonly continueButton: string
   readonly crossIcon: string
   readonly ctn: string
   readonly deleteConnectorModal: string
@@ -18,10 +20,15 @@ declare const styles: {
   readonly enableCloudCostsBtn: string
   readonly failure: string
   readonly features: string
+  readonly k8SCardContainer: string
+  readonly k8SCardLabel: string
   readonly lastEvent: string
   readonly main: string
+  readonly modalContainer: string
   readonly nameCell: string
   readonly permissionTag: string
+  readonly recommended: string
+  readonly selected: string
   readonly spinner: string
   readonly statusCell: string
   readonly statusError: string

@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
-import { Container, Icon, Layout, Switch, Tabs, Text } from '@wings-software/uicore'
+import { Container, Icon, Layout, Switch, Tabs, Text } from '@harness/uicore'
 import { Tab } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { Utils } from '@ce/common/Utils'

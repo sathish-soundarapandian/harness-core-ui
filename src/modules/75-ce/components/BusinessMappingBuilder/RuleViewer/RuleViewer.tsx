@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Collapse } from '@blueprintjs/core'
-import { Color, Container, FontVariation, Layout, Text } from '@harness/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import type { SharedCost, CostTarget, ViewIdCondition } from 'services/ce'
 import { useStrings } from 'framework/strings'
 import css from './RuleViewer.module.scss'

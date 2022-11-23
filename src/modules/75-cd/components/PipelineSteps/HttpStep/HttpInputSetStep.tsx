@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput, AllowedTypes } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormInput, AllowedTypes } from '@harness/uicore'
 import { isEmpty, isArray } from 'lodash-es'
 import cx from 'classnames'
 
@@ -19,6 +19,8 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { ALLOWED_VALUES_TYPE } from '@common/components/ConfigureOptions/constants'
 import type { HttpStepFormData, HttpStepData, HttpStepHeaderConfig, HttpStepOutputVariable } from './types'
 import { httpStepType } from './HttpStepBase'
 
@@ -36,7 +38,7 @@ export interface HttpInputSetStepProps {
 }
 
 export default function HttpInputSetStep(props: HttpInputSetStepProps): React.ReactElement {
-  const { template, path, readonly, allowableTypes } = props
+  const { template, path, readonly, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { expressions } = useVariablesExpression()
@@ -49,7 +51,9 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             label={getString('pipelineSteps.timeoutLabel')}
             name={`${prefix}timeout`}
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               expressions,
               disabled: readonly,
               allowableTypes
@@ -71,7 +75,10 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
               disabled: readonly,
               allowableTypes
             }}
-            disabled={readonly}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType),
+              allowedValuesType: ALLOWED_VALUES_TYPE.URL
+            }}
             fieldPath={'spec.url'}
             template={template}
           />
@@ -91,6 +98,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
               disabled: readonly,
               allowableTypes
             }}
+            configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType) }}
             disabled={readonly}
           />
         </div>
@@ -102,7 +110,9 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             placeholder={getString('pipeline.utilitiesStep.requestBody')}
             name={`${prefix}spec.requestBody`}
             multiTypeTextArea={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               expressions,
               disabled: readonly,
               allowableTypes
@@ -113,15 +123,18 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
       ) : null}
       {getMultiTypeFromValue(template?.spec?.assertion) === MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             label={getString('assertionLabel')}
             name={`${prefix}spec.assertion`}
-            disabled={readonly}
             multiTextInputProps={{
+              placeholder: getString('pipeline.utilitiesStep.url'),
               expressions,
               disabled: readonly,
               allowableTypes
             }}
+            configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType) }}
+            fieldPath={'spec.assertion'}
+            template={template}
           />
         </div>
       ) : null}

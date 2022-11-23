@@ -10,7 +10,7 @@ import React from 'react'
 import { act, fireEvent, render, waitFor, getByText as getElementByText } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { noop } from 'lodash-es'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import {
@@ -53,7 +53,7 @@ const getOverrideContextValue = (): PipelineContextInterface => {
 }
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
-jest.mock('@wings-software/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
+jest.mock('@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
   getLanguageService: jest.fn()
 }))
 

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
 import type {
   FailMetricThresholdSpec,
@@ -15,7 +15,6 @@ import type {
   TimeSeriesMetricPackDTO
 } from 'services/cv'
 import type { CustomMappedMetric, CustomSelectedAndMappedMetrics } from '../../common/CustomMetric/CustomMetric.types'
-import type { CriteriaThresholdValues } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { HealthSourceTypes } from '../../types'
 import type { BasePathData } from './Components/BasePath/BasePath.types'
 import type { MetricPathData } from './Components/MetricPath/MetricPath.types'
@@ -59,12 +58,7 @@ export interface AppDynamicsData {
   mappedServicesAndEnvs: Map<string, MapAppDynamicsMetric>
 }
 
-interface CriteriaPercentageType {
-  criteriaPercentageType?: CriteriaThresholdValues
-}
-
 export type MetricThresholdType = MetricThreshold & {
-  criteria: MetricThreshold['criteria'] & CriteriaPercentageType
   metricType?: string
   spec?: MetricThresholdSpec & FailMetricThresholdSpec
 }

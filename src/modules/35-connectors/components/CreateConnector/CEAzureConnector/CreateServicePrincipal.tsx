@@ -7,7 +7,7 @@
 
 import React from 'react'
 // import { useParams } from 'react-router-dom'
-import { Button, Container, Heading, Layout, StepProps, Text } from '@wings-software/uicore'
+import { Button, Container, Heading, Layout, StepProps, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 // import { ConnectorInfoDTO, ConnectorRequestBody, useCreateConnector } from 'services/cd-ng'
 import type { ConnectorInfoDTO } from 'services/cd-ng'

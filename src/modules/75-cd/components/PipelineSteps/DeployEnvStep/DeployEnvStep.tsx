@@ -27,7 +27,7 @@ import {
   Container,
   PageSpinner,
   AllowedTypes
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import * as Yup from 'yup'
 import { defaultTo, get, isEmpty, isNil, noop, omit, isEqual } from 'lodash-es'
@@ -100,7 +100,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   entityType: 'Environment',
   width: '100%',
   height: 220,
-  showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -327,7 +326,6 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
                       }}
                       schema={environmentSchema?.data}
                       bind={setYamlHandler}
-                      showSnippetSection={false}
                     />
 
                     <Layout.Horizontal spacing="small" padding={{ top: 'large' }}>

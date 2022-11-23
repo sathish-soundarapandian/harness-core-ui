@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Text, Layout, Card, Icon, Container, Tag, PageError } from '@wings-software/uicore'
+import { Text, Layout, Card, Icon, Container, Tag, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'

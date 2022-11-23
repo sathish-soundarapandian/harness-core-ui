@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { FontVariation, Layout, Text } from '@harness/uicore'
+import { Layout, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import CopyButton from '../CopyButton'
 import css from './CommandBlock.module.scss'
 

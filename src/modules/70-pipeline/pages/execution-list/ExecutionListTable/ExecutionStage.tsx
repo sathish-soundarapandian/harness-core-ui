@@ -33,30 +33,30 @@ export interface ExecutionStageProps {
   isMatrixStage?: boolean
 }
 
-const stageIconMap: Partial<Record<StageType, IconName>> = {
-  [StageType.BUILD]: 'ci-solid',
-  [StageType.DEPLOY]: 'cd-solid',
-  [StageType.SECURITY]: 'sto-color-filled',
-  [StageType.FEATURE]: 'ff-solid',
-  [StageType.APPROVAL]: 'approval-stage-icon',
-  [StageType.CUSTOM]: 'pipeline-custom'
+const stageIconMap: Partial<Record<StageType, { name: IconName; color?: string }>> = {
+  [StageType.BUILD]: { name: 'ci-solid' },
+  [StageType.DEPLOY]: { name: 'cd-solid' },
+  [StageType.SECURITY]: { name: 'sto-color-filled' },
+  [StageType.FEATURE]: { name: 'ff-solid' },
+  [StageType.APPROVAL]: { name: 'approval-stage-icon' },
+  [StageType.CUSTOM]: { name: 'pipeline-custom' },
+  [StageType.MATRIX]: { name: 'looping', color: Color.GREY_900 }
 }
 
 export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStage, isMatrixStage, row }) => {
   const pipelineExecution = row?.original
   const { getString } = useStrings()
-  const iconName = stageIconMap[stage.type as StageType]
+  const stageIconProps = stageIconMap[stage.type as StageType]
   const data: PipelineExecutionSummary = stage.data || {}
   const stageFailureMessage = data?.failureInfo?.message
   // TODO: others stages UX not available yet
   const cdStageInfo = (stage.data as PipelineExecutionSummary)?.moduleInfo?.cd || {}
   const stoStageInfo = (stage.data as PipelineExecutionSummary)?.moduleInfo?.sto || {}
   const stoInfo = executionFactory.getCardInfo(StageType.SECURITY)
-
   return (
     <div className={cx(css.stage, isMatrixStage && css.matrixStage)}>
       <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-        {iconName && <Icon name={iconName} size={16} />}
+        {stageIconProps && <Icon size={16} {...stageIconProps} />}
         <Text font={{ size: 'small' }} color={Color.GREY_900} lineClamp={1}>
           {stage.name}
         </Text>
@@ -108,7 +108,7 @@ export const CDExecutionStageSummary: FC<{ stageInfo: Record<string, any> }> = (
   const { getString } = useStrings()
   const serviceDisplayName = stageInfo.serviceInfo?.displayName
   const environment = stageInfo.infraExecutionSummary?.name || stageInfo.infraExecutionSummary?.identifier
-  const { imagePath, tag } = stageInfo.serviceInfo?.artifacts?.primary || {}
+  const { imagePath, tag, version, jobName, build } = stageInfo.serviceInfo?.artifacts?.primary || {}
 
   return serviceDisplayName && environment ? (
     <Layout.Horizontal>
@@ -116,15 +116,18 @@ export const CDExecutionStageSummary: FC<{ stageInfo: Record<string, any> }> = (
         interactionKind={PopoverInteractionKind.HOVER}
         className={Classes.DARK}
         content={
-          <Layout.Vertical spacing="small" padding="medium" style={{ maxWidth: 400 }}>
+          <Layout.Vertical spacing="small" padding="medium" style={{ maxWidth: 500 }}>
             <div>
               <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.WHITE}>
                 {serviceDisplayName}
               </Text>
               <Divider className={css.divider} />
             </div>
-            {imagePath && <LabeValue label="Image" value={imagePath} />}
-            {tag && <LabeValue label="Tag" value={tag} />}
+            {imagePath && <LabeValue label={getString('image')} value={imagePath} />}
+            {version && <LabeValue label={getString('version')} value={version} />}
+            {jobName && <LabeValue label={getString('connectors.jenkins.jobNameLabel')} value={jobName} />}
+            {build && <LabeValue label={getString('buildText')} value={build} />}
+            {tag && <LabeValue label={getString('common.artifactTag')} value={tag} />}
           </Layout.Vertical>
         }
       >

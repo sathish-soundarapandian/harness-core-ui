@@ -26,7 +26,7 @@ import {
   ButtonVariation,
   AllowedTypes,
   FormikForm
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'

@@ -21,7 +21,7 @@ import {
   Select,
   SelectOption,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import produce from 'immer'
 import { Classes, Divider } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
@@ -50,7 +50,16 @@ import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { parse } from '@common/utils/YamlHelperMethods'
-import { DefaultNewTemplateId, DefaultNewVersionLabel } from '../templates'
+import { toBase64 } from '@common/utils/utils'
+import LogoInput from '@common/components/LogoInput/LogoInput'
+import {
+  DefaultNewTemplateId,
+  DefaultNewVersionLabel,
+  ICON_FILE_MAX_DIMENSION,
+  ICON_FILE_MAX_SIZE,
+  ICON_FILE_MAX_SIZE_IN_KB,
+  ICON_FILE_SUPPORTED_TYPES
+} from '../templates'
 import css from './TemplateConfigModal.module.scss'
 
 export enum Fields {
@@ -97,6 +106,7 @@ export interface ModalProps {
 
 export interface TemplateConfigValues extends NGTemplateInfoConfigWithGitDetails {
   comment?: string
+  iconFile?: File
 }
 
 export interface NGTemplateInfoConfigWithGitDetails extends NGTemplateInfoConfig {
@@ -152,7 +162,6 @@ const BasicTemplateDetails = (
     supportingTemplatesGitx
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
-  const formName = `create${initialValues.type}Template`
   const [loading, setLoading] = React.useState<boolean>()
   const { isReadonly } = useContext(TemplateContext)
   const scope = getScopeFromDTO(pathParams)
@@ -219,6 +228,7 @@ const BasicTemplateDetails = (
           draft.storeType = defaultTo(storeMetadata?.storeType, GitStoreType.INLINE)
           draft.filePath = intent === Intent.SAVE ? '' : defaultTo(storeMetadata?.filePath, '')
         }
+        draft.iconFile = undefined
       }),
     [initialValues, storeMetadata, gitDetails]
   )
@@ -252,8 +262,17 @@ const BasicTemplateDetails = (
         branch: values.branch,
         filePath: values.filePath
       }
+      const updateTemplate = omit(
+        values,
+        'repo',
+        'branch',
+        'comment',
+        'connectorRef',
+        'storeType',
+        'filePath',
+        'iconFile'
+      )
 
-      const updateTemplate = omit(values, 'repo', 'branch', 'comment', 'connectorRef', 'storeType', 'filePath')
       promise(updateTemplate, {
         isEdit: intent === Intent.EDIT,
         disableCreatingNewBranch,
@@ -333,6 +352,53 @@ const BasicTemplateDetails = (
         }
       : {}
 
+  const iconFileValidationSchema = Yup.mixed()
+    .test(
+      'iconSize',
+      getString('templatesLibrary.createNewModal.iconSizeError'),
+      value => !value || value?.size <= ICON_FILE_MAX_SIZE
+    )
+    .test(
+      'iconType',
+      getString('templatesLibrary.createNewModal.iconTypeError'),
+      value => !value || ICON_FILE_SUPPORTED_TYPES.includes(value?.type)
+    )
+  // TODO: confirm dimensions and use validation
+  // .test(
+  //   'iconDimensions',
+  //   getString('templatesLibrary.createNewModal.iconDimensionsError', { dimension: ICON_FILE_MAX_DIMENSION }),
+  //   async value => {
+  //     if (!value) return true
+  //     try {
+  //       const { width, height } = await getImageDimensions(await toBase64(value))
+  //       return width <= ICON_FILE_MAX_DIMENSION && height <= ICON_FILE_MAX_DIMENSION
+  //     } catch (_) {
+  //       return false
+  //     }
+  //   }
+  // )
+
+  const onIconFileChange: React.FormEventHandler<HTMLInputElement> = async e => {
+    const file = e.currentTarget?.files?.[0]
+    if (!file) return
+
+    setLoading(true)
+    try {
+      await iconFileValidationSchema.validate(file)
+      const base64 = await toBase64(file)
+      formikRef.current?.setFieldValue('icon', base64, true)
+    } catch (error) {
+      // setting the value to 'invalid-image' shows a broken image which can be removed
+      formikRef.current?.setFieldValue('icon', 'invalid-image', true)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const onIconRemove = (): void => {
+    formikRef.current?.setValues(prev => ({ ...prev, icon: undefined, iconFile: undefined }), true)
+  }
+
   return (
     <Container
       width={'55%'}
@@ -354,7 +420,7 @@ const BasicTemplateDetails = (
         initialValues={formInitialValues}
         onSubmit={onSubmit}
         validate={setPreviewValues}
-        formName={formName}
+        formName={`create${initialValues.type}Template`}
         validationSchema={Yup.object().shape({
           name: NameSchema({
             requiredErrorMsg: getString('common.validation.fieldIsRequired', {
@@ -363,6 +429,7 @@ const BasicTemplateDetails = (
           }),
           identifier: IdentifierSchema(),
           versionLabel: TemplateVersionLabelSchema(),
+          iconFile: iconFileValidationSchema,
           ...gitxValidationSchema,
           ...gitsyncValidationSchema
         })}
@@ -377,7 +444,7 @@ const BasicTemplateDetails = (
                     <Container>
                       <Layout.Vertical>
                         <NameIdDescriptionTags
-                          tooltipProps={{ dataTooltipId: formName }}
+                          tooltipProps={{ dataTooltipId: `create${initialValues.type}Template` }}
                           formikProps={formik}
                           identifierProps={{
                             isIdentifierEditable: !disabledFields.includes(Fields.Identifier) && !isReadonly,
@@ -432,6 +499,28 @@ const BasicTemplateDetails = (
                             </Layout.Horizontal>
                           </Container>
                         )}
+                        <LogoInput
+                          label={`${getString('templatesLibrary.createNewModal.logo')} ${getString(
+                            'common.optionalLabel'
+                          )}`}
+                          name="iconFile"
+                          logo={formik.values.icon}
+                          accept={ICON_FILE_SUPPORTED_TYPES.join()}
+                          onChange={onIconFileChange}
+                          onRemove={onIconRemove}
+                          disabled={isReadonly}
+                          helperText={
+                            <Layout.Horizontal spacing={'xsmall'}>
+                              <Icon name="info" size={16} />
+                              <Text font={{ size: 'small' }} color={Color.GREY_800}>
+                                {getString('templatesLibrary.createNewModal.logoHelpText', {
+                                  size: ICON_FILE_MAX_SIZE_IN_KB,
+                                  dimension: ICON_FILE_MAX_DIMENSION
+                                })}
+                              </Text>
+                            </Layout.Horizontal>
+                          }
+                        />
                         {allowScopeChange && scope === Scope.PROJECT && (
                           <Container className={Classes.FORM_GROUP} width={160} margin={{ bottom: 'medium' }}>
                             <label className={Classes.LABEL}>

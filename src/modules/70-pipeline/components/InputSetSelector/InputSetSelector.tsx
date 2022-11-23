@@ -6,13 +6,12 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Layout, Popover, Text, TextInput, ButtonVariation, PageSpinner, Container } from '@wings-software/uicore'
+import { Layout, Popover, Text, TextInput, ButtonVariation, PageSpinner, Container, Button } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { clone, defaultTo, isEmpty, includes, isNil } from 'lodash-es'
 import cx from 'classnames'
 import { Classes, Position } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
-import { Button } from '@harness/uicore'
 import {
   EntityGitDetails,
   InputSetErrorWrapper,
@@ -49,6 +48,7 @@ export interface InputSetSelectorProps {
   isRetryPipelineForm?: boolean
   onReconcile?: (identifier: string) => void
   reRunInputSetYaml?: string
+  usePortal?: boolean
 }
 
 export function InputSetSelector({
@@ -67,7 +67,8 @@ export function InputSetSelector({
   loadingMergeInputSets,
   isRetryPipelineForm,
   onReconcile,
-  reRunInputSetYaml
+  reRunInputSetYaml,
+  usePortal
 }: InputSetSelectorProps): React.ReactElement {
   const [searchParam, setSearchParam] = React.useState('')
   const [selectedInputSets, setSelectedInputSets] = React.useState<InputSetValue[]>(value || [])
@@ -206,7 +207,7 @@ export function InputSetSelector({
   return (
     <Popover
       position={Position.BOTTOM}
-      usePortal={false}
+      usePortal={!!usePortal}
       isOpen={openInputSetsList}
       minimal={true}
       className={css.isPopoverParent}

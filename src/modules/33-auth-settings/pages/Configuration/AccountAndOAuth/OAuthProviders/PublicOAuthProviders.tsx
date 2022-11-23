@@ -7,7 +7,7 @@
 
 import React, { Dispatch, SetStateAction } from 'react'
 import { useParams } from 'react-router-dom'
-import { Collapse, Text, Container, Card, Switch, useConfirmationDialog } from '@wings-software/uicore'
+import { Collapse, Text, Container, Card, Switch, useConfirmationDialog } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'

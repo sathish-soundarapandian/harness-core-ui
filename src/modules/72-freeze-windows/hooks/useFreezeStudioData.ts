@@ -7,8 +7,8 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import debounce from 'lodash-es/debounce'
-import type { SelectOption } from '@wings-software/uicore'
+import { debounce } from 'lodash-es'
+import type { SelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useGetOrganizationAggregateDTOList, useGetProjectList, useGetServiceList } from 'services/cd-ng'
 import { FreezeWindowLevels, ResourcesInterface, ProjctsByOrgId } from '@freeze-windows/types'

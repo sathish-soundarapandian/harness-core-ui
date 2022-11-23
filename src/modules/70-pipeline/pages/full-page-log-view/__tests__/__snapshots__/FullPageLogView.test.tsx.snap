@@ -73,8 +73,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
             <span
               class=""
             >
-              Initializing..
-              <span />
+              <span>
+                Initializing..
+              </span>
             </span>
           </span>
         </div>
@@ -103,8 +104,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
             <span
               class=""
             >
-              Querying current replicas
-              <span />
+              <span>
+                Querying current replicas
+              </span>
             </span>
           </span>
         </div>
@@ -133,8 +135,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
             <span
               class=""
             >
-              Current replica count is 0
-              <span />
+              <span>
+                Current replica count is 0
+              </span>
             </span>
           </span>
         </div>
@@ -163,8 +166,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
             <span
               class=""
             >
-              Target replica count is 1
-              <span />
+              <span>
+                Target replica count is 1
+              </span>
             </span>
           </span>
         </div>
@@ -193,8 +197,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
             <span
               class=""
             >
-              Done.
-              <span />
+              <span>
+                Done.
+              </span>
             </span>
           </span>
         </div>
@@ -232,8 +237,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
             <span
               class=""
             >
-              Initializing..
-              <span />
+              <span>
+                Initializing..
+              </span>
             </span>
           </span>
         </div>
@@ -262,8 +268,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
             <span
               class=""
             >
-              Querying current replicas
-              <span />
+              <span>
+                Querying current replicas
+              </span>
             </span>
           </span>
         </div>
@@ -292,8 +299,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
             <span
               class=""
             >
-              Current replica count is 0
-              <span />
+              <span>
+                Current replica count is 0
+              </span>
             </span>
           </span>
         </div>
@@ -322,8 +330,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
             <span
               class=""
             >
-              Target replica count is 1
-              <span />
+              <span>
+                Target replica count is 1
+              </span>
             </span>
           </span>
         </div>
@@ -352,8 +361,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
             <span
               class=""
             >
-              Done.
-              <span />
+              <span>
+                Done.
+              </span>
             </span>
           </span>
         </div>
@@ -391,8 +401,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
             <span
               class=""
             >
-              Initializing..
-              <span />
+              <span>
+                Initializing..
+              </span>
             </span>
           </span>
         </div>
@@ -421,8 +432,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
             <span
               class=""
             >
-              Querying current replicas
-              <span />
+              <span>
+                Querying current replicas
+              </span>
             </span>
           </span>
         </div>
@@ -451,8 +463,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
             <span
               class=""
             >
-              Current replica count is 0
-              <span />
+              <span>
+                Current replica count is 0
+              </span>
             </span>
           </span>
         </div>
@@ -481,8 +494,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
             <span
               class=""
             >
-              Target replica count is 1
-              <span />
+              <span>
+                Target replica count is 1
+              </span>
             </span>
           </span>
         </div>
@@ -511,8 +525,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
             <span
               class=""
             >
-              Done.
-              <span />
+              <span>
+                Done.
+              </span>
             </span>
           </span>
         </div>
@@ -554,8 +569,9 @@ exports[`<FullPageLogView /> tests retry node 1`] = `
           <span
             class=""
           >
-            Initializing..
-            <span />
+            <span>
+              Initializing..
+            </span>
           </span>
         </span>
       </div>
@@ -584,8 +600,9 @@ exports[`<FullPageLogView /> tests retry node 1`] = `
           <span
             class=""
           >
-            Querying current replicas
-            <span />
+            <span>
+              Querying current replicas
+            </span>
           </span>
         </span>
       </div>
@@ -614,8 +631,9 @@ exports[`<FullPageLogView /> tests retry node 1`] = `
           <span
             class=""
           >
-            Current replica count is 0
-            <span />
+            <span>
+              Current replica count is 0
+            </span>
           </span>
         </span>
       </div>
@@ -644,8 +662,9 @@ exports[`<FullPageLogView /> tests retry node 1`] = `
           <span
             class=""
           >
-            Target replica count is 1
-            <span />
+            <span>
+              Target replica count is 1
+            </span>
           </span>
         </span>
       </div>
@@ -674,8 +693,9 @@ exports[`<FullPageLogView /> tests retry node 1`] = `
           <span
             class=""
           >
-            Done.
-            <span />
+            <span>
+              Done.
+            </span>
           </span>
         </span>
       </div>
@@ -716,8 +736,9 @@ exports[`<FullPageLogView /> tests single section data 1`] = `
           <span
             class=""
           >
-            Initializing..
-            <span />
+            <span>
+              Initializing..
+            </span>
           </span>
         </span>
       </div>
@@ -746,8 +767,9 @@ exports[`<FullPageLogView /> tests single section data 1`] = `
           <span
             class=""
           >
-            Querying current replicas
-            <span />
+            <span>
+              Querying current replicas
+            </span>
           </span>
         </span>
       </div>
@@ -776,8 +798,9 @@ exports[`<FullPageLogView /> tests single section data 1`] = `
           <span
             class=""
           >
-            Current replica count is 0
-            <span />
+            <span>
+              Current replica count is 0
+            </span>
           </span>
         </span>
       </div>
@@ -806,8 +829,9 @@ exports[`<FullPageLogView /> tests single section data 1`] = `
           <span
             class=""
           >
-            Target replica count is 1
-            <span />
+            <span>
+              Target replica count is 1
+            </span>
           </span>
         </span>
       </div>
@@ -836,8 +860,9 @@ exports[`<FullPageLogView /> tests single section data 1`] = `
           <span
             class=""
           >
-            Done.
-            <span />
+            <span>
+              Done.
+            </span>
           </span>
         </span>
       </div>

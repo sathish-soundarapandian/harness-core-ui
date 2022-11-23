@@ -18,20 +18,20 @@ import {
   useToaster,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
-import { cloneDeep, defaultTo, get, isEmpty, omit, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, omit, set } from 'lodash-es'
 import produce from 'immer'
-import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { NGServiceConfig, useCreateServiceV2, useUpdateServiceV2 } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useServiceContext } from '@cd/context/ServiceContext'
-import { useCache } from '@common/hooks/useCache'
 import { sanitize } from '@common/utils/JSONUtils'
+import { queryClient } from 'services/queryClient'
 import ServiceConfiguration from './ServiceConfiguration/ServiceConfiguration'
 import { ServiceTabs, setNameIDDescription, ServicePipelineConfig } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServiceStudio/ServiceStudio.module.scss'
@@ -44,7 +44,8 @@ interface ServiceStudioDetailsProps {
 }
 function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElement | null {
   const { getString } = useStrings()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
+
   const { tab } = useQueryParams<{ tab: string }>()
   const { updateQueryParams } = useUpdateQueryParams()
   const {
@@ -55,12 +56,10 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     isReadonly
   } = usePipelineContext()
 
-  const { isServiceEntityModalView, isServiceCreateModalView, onServiceCreate, onCloseModal, serviceCacheKey } =
-    useServiceContext()
+  const { isServiceEntityModalView, isServiceCreateModalView, onServiceCreate, onCloseModal } = useServiceContext()
   const [selectedTabId, setSelectedTabId] = useState(tab ?? ServiceTabs.SUMMARY)
   const { showSuccess, showError, clear } = useToaster()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
-  const { setCache } = useCache()
 
   const handleTabChange = useCallback(
     (nextTab: ServiceTabs): void => {
@@ -95,7 +94,8 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     clear()
 
     let updatedService
-    if (view === SelectedView.YAML) {
+    const isVisualView = view === SelectedView.VISUAL
+    if (!isVisualView) {
       const stage = get(pipeline, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
 
       updatedService = produce(props.serviceData, draft => {
@@ -105,11 +105,13 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
         }
       })
     }
-    const finalServiceData = view === SelectedView.VISUAL ? props.serviceData : updatedService
+    const finalServiceData = isVisualView ? props.serviceData : updatedService
     const body = {
       ...omit(cloneDeep(finalServiceData?.service), 'serviceDefinition', 'gitOpsEnabled'),
       projectIdentifier,
       orgIdentifier,
+      //serviceId is not present in queryParam when service is created in pipeline studio.
+      identifier: defaultTo(serviceId, finalServiceData?.service?.identifier),
       yaml: yamlStringify(sanitize({ ...finalServiceData }, { removeEmptyObject: false, removeEmptyString: false }))
     }
 
@@ -118,19 +120,12 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
       if (response.status === 'SUCCESS') {
         if (isServiceEntityModalView) {
           const serviceResponse = response.data?.service
-
-          if (!isServiceCreateModalView) {
-            if (!isEmpty(serviceResponse?.yaml) && !isEmpty(serviceCacheKey)) {
-              const parsedYaml = yamlParse<NGServiceConfig>(defaultTo(serviceResponse?.yaml, ''))
-              const serviceInfo = parsedYaml.service?.serviceDefinition
-              setCache(serviceCacheKey, serviceInfo)
-            }
-          }
           onServiceCreate?.({
             identifier: serviceResponse?.identifier as string,
             name: serviceResponse?.name as string
           })
         } else {
+          queryClient.invalidateQueries(['getServiceAccessList'])
           showSuccess(
             isServiceEntityModalView && isServiceCreateModalView
               ? getString('common.serviceCreated')

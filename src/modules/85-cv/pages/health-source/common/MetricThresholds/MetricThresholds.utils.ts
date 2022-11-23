@@ -7,7 +7,7 @@
 
 import { isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
-import type { MetricPackDTO, MetricThreshold, MetricThresholdCriteriaSpec, TimeSeriesMetricPackDTO } from 'services/cv'
+import type { MetricPackDTO, MetricThreshold, TimeSeriesMetricPackDTO } from 'services/cv'
 import type { GroupedMetric } from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
 import type { GroupedCreatedMetrics } from '../CustomMetric/CustomMetric.types'
 import {
@@ -18,16 +18,14 @@ import {
   MetricCriteriaValues,
   MetricThresholdPropertyName,
   MetricTypesForTransactionTextField,
-  MetricTypeValues,
-  PercentageCriteriaDropdownValues
+  MetricTypeValues
 } from './MetricThresholds.constants'
 import type {
   AvailableThresholdTypes,
-  CriteriaThresholdValues,
+  HandleCriteriaPercentageUpdateParams,
   MetricThresholdsState,
   MetricThresholdType,
   SelectItem,
-  ThresholdCriteriaPropsType,
   ThresholdObject,
   ThresholdsPropertyNames
 } from './MetricThresholds.types'
@@ -64,17 +62,6 @@ export function updateThresholdState(
     ...updatedThreshold
   }
 }
-
-export const getCriteriaPercentageDropdownOptions = (getString: UseStringsReturn['getString']): SelectItem[] => [
-  {
-    label: getString('cv.monitoringSources.appD.greaterThan'),
-    value: PercentageCriteriaDropdownValues.GreaterThan
-  },
-  {
-    label: getString('cv.monitoringSources.appD.lesserThan'),
-    value: PercentageCriteriaDropdownValues.LessThan
-  }
-]
 
 export function getActionItems(getString: UseStringsReturn['getString']): SelectItem[] {
   return [
@@ -135,103 +122,12 @@ export function getGroupDropdownOptions(groupedCreatedMetrics: GroupedCreatedMet
   }))
 }
 
-function isPercentageSelectedAndAPIHasGreaterThanValue(
-  isAbsoluteSelected: boolean,
-  criteriaSpecValues: MetricThresholdCriteriaSpec | undefined
-): boolean {
-  return (
-    !isAbsoluteSelected &&
-    typeof criteriaSpecValues?.greaterThan !== 'undefined' &&
-    criteriaSpecValues?.greaterThan !== null
-  )
-}
-
-function isPercentageSelectedAndAPIHasLessThanValue(
-  isAbsoluteSelected: boolean,
-  criteriaSpecValues: MetricThresholdCriteriaSpec | undefined
-): boolean {
-  return (
-    !isAbsoluteSelected && typeof criteriaSpecValues?.lessThan !== 'undefined' && criteriaSpecValues?.lessThan !== null
-  )
-}
-
-/**
- * A flag to show Greater than input or to hide it
- *
- * Conditions to show Greater than
- *
- * 1. Absolute criteria selected
- * 2. Percentage criteria is selected and Greater than criteriaPercentageType is selected
- * 3. Percentage criteria is selected and API response has greaterThan value
- *
- *
- */
-export function getIsShowGreaterThan(
-  criteriaType: ThresholdCriteriaPropsType['criteriaType'],
-  criteriaPercentageType?: CriteriaThresholdValues,
-  criteriaSpecValues?: MetricThresholdCriteriaSpec
-): boolean {
-  const isAbsoluteSelected = criteriaType === MetricCriteriaValues.Absolute
-
-  // Absolute criteria selected
-  if (isAbsoluteSelected) {
-    return true
-  }
-
-  const isGreaterThanSelected = criteriaPercentageType === PercentageCriteriaDropdownValues.GreaterThan
-
-  // Percentage criteria is selected and Greater than criteriaPercentageType is selected
-  if (!isAbsoluteSelected && isGreaterThanSelected) {
-    return true
-  }
-
-  if (isPercentageSelectedAndAPIHasGreaterThanValue(isAbsoluteSelected, criteriaSpecValues)) {
-    return true
-  }
-
-  return false
-}
-
-/**
- * A flag to show Less than input or to hide it
- *
- * 1. Absolute criteria selected
- * 2. Percentage criteria is selected and Less than criteriaPercentageType is selected
- * 3. Percentage criteria is selected and API response has lessThan value
- *
- */
-export function getIsShowLessThan(
-  criteriaType: ThresholdCriteriaPropsType['criteriaType'],
-  criteriaPercentageType?: CriteriaThresholdValues,
-  criteriaSpecValues?: MetricThresholdCriteriaSpec
-): boolean {
-  const isAbsoluteSelected = criteriaType === MetricCriteriaValues.Absolute
-
-  // Absolute criteria selected
-  if (isAbsoluteSelected) {
-    return true
-  }
-
-  const isLessThanSelected = criteriaPercentageType === PercentageCriteriaDropdownValues.LessThan
-
-  // Percentage criteria is selected and Less than criteriaPercentageType is selected
-  if (!isAbsoluteSelected && isLessThanSelected) {
-    return true
-  }
-
-  if (isPercentageSelectedAndAPIHasLessThanValue(isAbsoluteSelected, criteriaSpecValues)) {
-    return true
-  }
-
-  return false
-}
-
 function getAreAllRequiredValuesPresent(thresholdValueToCompare: MetricThresholdType): boolean {
   return [
     thresholdValueToCompare.metricType,
     thresholdValueToCompare.metricName,
     thresholdValueToCompare.spec.action,
-    thresholdValueToCompare.criteria.type
+    thresholdValueToCompare.criteria?.type
   ].every(value => Boolean(value))
 }
 
@@ -261,7 +157,7 @@ function checkForDuplicateThresholds(
       slicedThresholdValue.metricType === thresholdValueToCompare.metricType &&
       slicedThresholdValue.metricName === thresholdValueToCompare.metricName &&
       slicedThresholdValue.spec.action === thresholdValueToCompare.spec.action &&
-      slicedThresholdValue.criteria.type === thresholdValueToCompare.criteria.type
+      slicedThresholdValue.criteria?.type === thresholdValueToCompare.criteria?.type
 
     if (isValidateGroup) {
       isDuplicateFound = isDuplicateFound && slicedThresholdValue.groupName === thresholdValueToCompare.groupName
@@ -359,19 +255,40 @@ export function validateCommonFieldsForMetricThreshold(
       if (
         value.criteria?.type === MetricCriteriaValues.Percentage &&
         value?.criteria?.spec &&
-        !value?.criteria?.spec[value?.criteria?.criteriaPercentageType as CriteriaThresholdValues]
+        thresholdName === MetricThresholdPropertyName.FailFastThresholds &&
+        !(value?.criteria?.spec?.greaterThan as number)
       ) {
-        errors[`${thresholdName}.${index}.criteria.spec.${value.criteria.criteriaPercentageType}`] =
-          getString('cv.required')
+        errors[`${thresholdName}.${index}.criteria.spec.greaterThan`] = getString('cv.required')
+      }
+
+      if (
+        value.criteria?.type === MetricCriteriaValues.Percentage &&
+        value?.criteria?.spec &&
+        thresholdName === MetricThresholdPropertyName.IgnoreThreshold &&
+        !(value?.criteria?.spec?.lessThan as number)
+      ) {
+        errors[`${thresholdName}.${index}.criteria.spec.lessThan`] = getString('cv.required')
       }
 
       // Percentage value must not be greater than 100
       if (
         value.criteria?.type === MetricCriteriaValues.Percentage &&
         value?.criteria?.spec &&
-        (value?.criteria?.spec[value?.criteria?.criteriaPercentageType as CriteriaThresholdValues] as number) > 100
+        thresholdName === MetricThresholdPropertyName.FailFastThresholds &&
+        (value?.criteria?.spec?.greaterThan as number) > 100
       ) {
-        errors[`${thresholdName}.${index}.criteria.spec.${value.criteria.criteriaPercentageType}`] = getString(
+        errors[`${thresholdName}.${index}.criteria.spec.greaterThan`] = getString(
+          'cv.metricThresholds.validations.percentageValidation'
+        )
+      }
+
+      if (
+        value.criteria?.type === MetricCriteriaValues.Percentage &&
+        value?.criteria?.spec &&
+        thresholdName === MetricThresholdPropertyName.IgnoreThreshold &&
+        (value?.criteria?.spec?.lessThan as number) > 100
+      ) {
+        errors[`${thresholdName}.${index}.criteria.spec.lessThan`] = getString(
           'cv.metricThresholds.validations.percentageValidation'
         )
       }
@@ -802,4 +719,41 @@ export const getMetricThresholdsCustomFiltered = (
   }
 
   return []
+}
+
+export const handleCriteriaPercentageUpdate = ({
+  thresholds,
+  index,
+  selectedValue,
+  isIgnoreThresholdTab,
+  isFailFastThresholdTab,
+  replaceFn
+}: HandleCriteriaPercentageUpdateParams): void => {
+  if (!Array.isArray(thresholds) || !replaceFn) {
+    return void 0
+  }
+
+  const clonedThresholdValue = [...thresholds]
+
+  const updatedThresholds = { ...clonedThresholdValue[index] }
+
+  const criteriaDetails = updatedThresholds.criteria
+
+  if (criteriaDetails) {
+    criteriaDetails.type = selectedValue
+
+    if (!criteriaDetails.spec) {
+      criteriaDetails.spec = {}
+    }
+
+    if (isIgnoreThresholdTab) {
+      criteriaDetails.spec.greaterThan = undefined
+    } else if (isFailFastThresholdTab) {
+      criteriaDetails.spec.lessThan = undefined
+    }
+
+    clonedThresholdValue[index] = updatedThresholds
+
+    replaceFn(updatedThresholds)
+  }
 }

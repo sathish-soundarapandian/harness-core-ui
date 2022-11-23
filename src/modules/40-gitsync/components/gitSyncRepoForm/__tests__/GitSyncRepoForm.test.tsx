@@ -83,10 +83,6 @@ jest.mock('services/cd-ng', () => {
     getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(gitHubMock)),
     useGetListOfBranchesByConnector: jest.fn().mockImplementation(() => ({ data: branches, refetch: fetchBranches })),
     useGetTestGitRepoConnectionResult: jest.fn().mockImplementation(() => ({ mutate: jest.fn })),
-    useListGitSync: jest
-      .fn()
-      .mockImplementation(() => ({ data: gitConfigs, refetch: () => Promise.resolve(gitConfigs) })),
-
     useGetListOfBranchesWithStatus: jest.fn().mockImplementation((): any => {
       return {
         data: mockBranches,
@@ -98,11 +94,17 @@ jest.mock('services/cd-ng', () => {
         response: null
       }
     }),
-    useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
-      return { data: sourceCodeManagers, refetch: () => Promise.resolve(sourceCodeManagers) }
+    useListGitSync: jest.fn().mockImplementation(() => {
+      return { data: gitConfigs, refetch: jest.fn() }
     })
   }
 })
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
+}))
 
 const pathParams = { accountId: 'dummy', orgIdentifier: 'default', projectIdentifier: 'dummyProject' }
 

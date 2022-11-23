@@ -44,6 +44,8 @@ export interface NotificationRule {
   lookBackDuration?: string | SelectOption
   value?: string | SelectOption
   threshold?: string
+  eventStatus?: MultiSelectOption[]
+  eventType?: MultiSelectOption[]
 }
 
 export interface SRMNotification {

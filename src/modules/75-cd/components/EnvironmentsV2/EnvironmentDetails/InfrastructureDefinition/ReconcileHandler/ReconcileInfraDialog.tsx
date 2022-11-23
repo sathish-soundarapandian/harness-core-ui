@@ -6,10 +6,8 @@
  */
 
 import React, { useCallback } from 'react'
-import { Container, Layout, Text, useToaster } from '@wings-software/uicore'
-import { FontVariation } from '@harness/design-system'
-import { Color } from '@wings-software/design-system'
-import { PageSpinner } from '@harness/uicore'
+import { Container, Layout, Text, useToaster, PageSpinner } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { useStrings } from 'framework/strings'

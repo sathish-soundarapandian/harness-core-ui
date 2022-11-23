@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useContext, useMemo, useState } from 'react'
-import { Container, Formik, FormikForm } from '@wings-software/uicore'
+import { Container, Formik, FormikForm } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'

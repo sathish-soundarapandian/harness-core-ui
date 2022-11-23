@@ -6,7 +6,7 @@
  */
 
 import styled from '@emotion/styled'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 
 const HorizontalLayout = styled(Layout.Horizontal)`
   display: flex;

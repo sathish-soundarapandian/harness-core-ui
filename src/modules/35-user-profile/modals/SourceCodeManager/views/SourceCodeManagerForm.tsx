@@ -23,7 +23,7 @@ import {
   ModalErrorHandlerBinding,
   ButtonVariation,
   useToaster
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'

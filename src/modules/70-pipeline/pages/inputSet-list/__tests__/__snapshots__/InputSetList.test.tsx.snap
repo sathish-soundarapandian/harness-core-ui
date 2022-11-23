@@ -16,6 +16,7 @@ exports[`Input Set List tests render Input Set List view 1`] = `
           class="bp3-popover-target"
         >
           <button
+            aria-label="inputSets.newInputSet"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
             type="button"
           >
@@ -269,6 +270,7 @@ exports[`Input Set List tests render Input Set List view 1`] = `
               style="width: 30%;"
             >
               <button
+                aria-label="pipeline.outOfSyncErrorStrip.reconcile"
                 class="bp3-button Button--button StyledProps--font StyledProps--main reconcileButtonListView Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                 type="button"
               >
@@ -433,6 +435,7 @@ exports[`Input Set List tests render Input Set List view 1`] = `
               style="width: 30%;"
             >
               <button
+                aria-label="pipeline.outOfSyncErrorStrip.reconcile"
                 class="bp3-button Button--button StyledProps--font StyledProps--main reconcileButtonListView Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
                 type="button"
               >

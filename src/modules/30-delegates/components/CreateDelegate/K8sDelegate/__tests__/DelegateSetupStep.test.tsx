@@ -8,7 +8,6 @@
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import * as constants from '@delegates/constants'
 import DelegateSetupStep from '../DelegateSetupStep/DelegateSetupStep'
 import DelegateSizesmock from './DelegateSizesmock.json'
 import DelegateProfilesMock from './DelegateProfilesMock.json'
@@ -36,7 +35,12 @@ jest.mock('services/cd-ng', () => ({
     mutate: jest.fn().mockImplementation(() => ({
       resource: []
     }))
-  }))
+  })),
+  useIsImmutableDelegateEnabled: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  })
 }))
 describe('Create DelegateSetup Step', () => {
   test('render data', () => {
@@ -59,20 +63,6 @@ describe('Create DelegateSetup Step', () => {
       fireEvent.click(submitBtn)
     })
     await waitFor(() => expect(container.innerHTML).toContain('delegateNameRequired'))
-  })
-
-  test('submit click required installer selection', async () => {
-    jest.spyOn(constants, 'isHelmDelegateEnabled').mockImplementation(() => true)
-    const { container, getByText } = render(
-      <TestWrapper>
-        <DelegateSetupStep />
-      </TestWrapper>
-    )
-    const submitBtn = getByText('continue')
-    act(() => {
-      fireEvent.click(submitBtn)
-    })
-    await waitFor(() => expect(container.innerHTML).toContain('delegates.delegateCreation.installerSelectionRequired'))
   })
 
   test('submit click', async () => {

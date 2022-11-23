@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { Container, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import type { ResourcesInterface } from '@freeze-windows/types'
 import { FreezeWindowStudioVisualView } from './FreezeWindowStudioVisualView'
@@ -14,15 +14,11 @@ import { FreezeWindowStudioYAMLView } from './FreezeWindowStudioYAMLView'
 import css from './FreezeWindowStudioBody.module.scss'
 
 interface FreezeWindowStudioBodyProps {
-  error?: any
   resources: ResourcesInterface
 }
 
-export const FreezeWindowStudioBody = ({ error, resources }: FreezeWindowStudioBodyProps) => {
+export const FreezeWindowStudioBody = ({ resources }: FreezeWindowStudioBodyProps) => {
   const { view } = React.useContext(FreezeWindowContext)
-  if (error) {
-    return <div>Error</div>
-  }
   const isYaml = view === SelectedView.YAML
   const content = isYaml ? <FreezeWindowStudioYAMLView /> : <FreezeWindowStudioVisualView resources={resources} />
 

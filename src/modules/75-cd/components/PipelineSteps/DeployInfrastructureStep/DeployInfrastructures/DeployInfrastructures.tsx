@@ -69,6 +69,7 @@ interface DeployInfrastructuresProps {
   path?: string
   deploymentType?: ServiceDefinition['type']
   customDeploymentData?: TemplateLinkConfig
+  environmentRefType: MultiTypeInputType
 }
 
 function DeployInfrastructures({
@@ -79,7 +80,8 @@ function DeployInfrastructures({
   environmentRef,
   path,
   customDeploymentData,
-  deploymentType
+  deploymentType,
+  environmentRefType
 }: DeployInfrastructuresProps): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
@@ -125,7 +127,10 @@ function DeployInfrastructures({
       deploymentType: selectedDeploymentType,
       ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {})
     },
-    lazy: getMultiTypeFromValue(environmentIdentifier) === MultiTypeInputType.RUNTIME
+    lazy:
+      environmentRefType !== MultiTypeInputType.FIXED
+        ? true
+        : getMultiTypeFromValue(environmentIdentifier) === MultiTypeInputType.RUNTIME
   })
 
   const {
@@ -386,7 +391,7 @@ function DeployInfrastructures({
           <Spinner size={20} />
         </Container>
       )}
-      {!path && infrastructureRefType === MultiTypeInputType.FIXED && (
+      {!path && infrastructureRefType === MultiTypeInputType.FIXED && environmentRefType === MultiTypeInputType.FIXED && (
         <RbacButton
           margin={{ top: 'xlarge' }}
           size={ButtonSize.SMALL}

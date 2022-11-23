@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import isEmpty from 'lodash-es/isEmpty'
+import { isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import { Icon, Tab, Tabs } from '@wings-software/uicore'
+import { Icon, Tab, Tabs } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { ResourcesInterface, FreezeObj, ValidationErrorType } from '@freeze-windows/types'
@@ -28,7 +28,7 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
   const { getString } = useStrings()
   const { updateQueryParams } = useUpdateQueryParams<{ sectionId?: string | null }>()
   const { sectionId } = useQueryParams<{ sectionId?: string | null }>()
-  const { isReadOnly } = React.useContext(FreezeWindowContext)
+  const { isReadOnly, isActiveFreeze } = React.useContext(FreezeWindowContext)
   const formikRef = React.useRef<FormikProps<FreezeObj>>()
   const [validationErrors, setValidationErrors] = React.useState<ValidationErrorType>({})
 
@@ -66,7 +66,7 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
           id={FreezeWindowTabs.OVERVIEW}
           panel={
             <FreezeStudioOverviewSectionWithRef
-              isReadOnly={isReadOnly}
+              isReadOnly={isReadOnly || isActiveFreeze}
               onNext={() => setSelectedTabId(FreezeWindowTabs.FREEZE_CONFIG)}
               ref={formikRef}
             />
@@ -87,12 +87,13 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
               resources={resources}
               ref={formikRef}
               validationErrors={validationErrors}
+              isReadOnly={isReadOnly || isActiveFreeze}
             />
           }
           title={
             <span>
               <Icon name="services" height={20} size={20} className={css.tabIcon} />
-              {getString('freezeWindows.freezeStudio.freezeConfiguration')}
+              {getString('common.coverage')}
             </span>
           }
         />
@@ -101,7 +102,7 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
           panel={
             <FreezeWindowScheduleSection
               onBack={() => setSelectedTabId(FreezeWindowTabs.FREEZE_CONFIG)}
-              isReadOnly={isReadOnly}
+              isReadOnly={isReadOnly || isActiveFreeze}
             />
           }
           title={

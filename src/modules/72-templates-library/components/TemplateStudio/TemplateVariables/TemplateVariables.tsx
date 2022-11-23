@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { AllowedTypesWithRunTime, MultiTypeInputType, NestedAccordionProvider, PageError } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, NestedAccordionProvider, PageError } from '@harness/uicore'
 import { isEmpty, omit, set } from 'lodash-es'
 import { produce } from 'immer'
 import {
@@ -29,7 +29,11 @@ import SecretManagerCard from '@pipeline/components/PipelineStudio/PipelineVaria
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { PipelineCardPanel } from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables'
 import DeploymentTemplateCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/DeploymentTemplateCard'
-import type { DeploymentTemplateConfig } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
+import ArtifactSourceTemplateCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/ArtifactSourceTemplateCard'
+import type {
+  ArtifactSourceTemplateConfig,
+  DeploymentTemplateConfig
+} from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 import css from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 const TemplateVariables: React.FC = (): JSX.Element => {
@@ -176,6 +180,26 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                     allowableTypes={allowableTypes}
                     stepsFactory={factory}
                     updateDeploymentTemplate={onUpdate}
+                    readonly={isReadonly}
+                  />
+                )}
+                {originalTemplate.type === TemplateType.ArtifactSource && (
+                  <ArtifactSourceTemplateCard
+                    artifactSourceTemplate={variablesTemplate as ArtifactSourceTemplateConfig}
+                    unresolvedArtifactSourceTemplate={
+                      { ...template.spec, identifier: DefaultNewStageId } as ArtifactSourceTemplateConfig
+                    }
+                    originalArtifactSourceTemplate={
+                      {
+                        ...originalTemplate.spec,
+
+                        identifier: DefaultNewStageId
+                      } as ArtifactSourceTemplateConfig
+                    }
+                    metadataMap={metadataMap}
+                    path="template"
+                    allowableTypes={allowableTypes}
+                    stepsFactory={factory}
                     readonly={isReadonly}
                   />
                 )}

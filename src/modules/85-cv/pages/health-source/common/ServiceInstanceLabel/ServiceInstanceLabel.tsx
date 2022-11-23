@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Container } from '@wings-software/uicore'
+import { Text, Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import css from './ServiceInstanceLabel.module.scss'
 

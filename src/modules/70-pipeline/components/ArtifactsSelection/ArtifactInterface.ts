@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { AllowedTypes, SelectOption } from '@wings-software/uicore'
+import type { AllowedTypes, SelectOption } from '@harness/uicore'
 import type { FormikValues } from 'formik'
 import type { GetDataError } from 'restful-react'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
@@ -20,7 +20,8 @@ import type {
   Error,
   ArtifactoryBuildDetailsDTO,
   ServiceDefinition,
-  ArtifactSource
+  ArtifactSource,
+  ConnectorConfigDTO
 } from 'services/cd-ng'
 import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import type { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
@@ -93,12 +94,13 @@ export interface VariableInterface {
 export interface CustomArtifactSource {
   type?: string
   identifier?: string
+  formType?: string
   spec?: {
-    version: string
-    delegateSelectors?: SelectOption | string[] | string
+    version?: string
+    delegateSelectors?: SelectOption[] | string[] | string
     inputs?: VariableInterface[]
     timeout?: string
-    scripts: {
+    scripts?: {
       fetchAllArtifacts?: {
         artifactsArrayPath?: string
         attributes?: VariableInterface[]
@@ -137,8 +139,22 @@ export interface ImagePathProps<T> {
   isReadonly?: boolean
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
-  selectedDeploymentType: string
+  selectedDeploymentType?: string
   isMultiArtifactSource?: boolean
+  formClassName?: string
+  prevStepData?: ConnectorConfigDTO
+}
+
+export interface AzureArtifactsInitialValues {
+  identifier?: string
+  versionType?: string
+  scope: string
+  project?: string
+  feed: string
+  packageType: string
+  package: string
+  version?: string
+  versionRegex?: string
 }
 
 export interface AmazonS3ArtifactProps {
@@ -153,6 +169,7 @@ export interface AmazonS3ArtifactProps {
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
+  formClassName?: string
 }
 
 export interface GithubPackageRegistryInitialValuesType {
@@ -165,6 +182,19 @@ export interface GithubPackageRegistryInitialValuesType {
     packageName: string
     version: string
     versionRegex: string
+  }
+}
+
+export interface AmazonMachineImageInitialValuesType {
+  identifier?: string
+  versionType?: string
+  spec: {
+    connectorRef?: string
+    region?: string | SelectOption
+    filters?: VariableInterface[] | string | { [key: string]: any }
+    tags?: VariableInterface[] | string | { [key: string]: any }
+    version?: string
+    versionRegex?: string
   }
 }
 
@@ -194,6 +224,7 @@ export interface ACRArtifactProps {
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
+  formClassName?: string
 }
 
 export interface JenkinsArtifactProps {
@@ -237,6 +268,7 @@ export interface GoogleArtifactRegistryProps {
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
+  formClassName?: string
 }
 
 export interface Nexus2ArtifactProps {
@@ -251,6 +283,7 @@ export interface Nexus2ArtifactProps {
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
   isMultiArtifactSource?: boolean
+  formClassName?: string
 }
 
 export interface Nexus2InitialValuesType {
@@ -264,6 +297,7 @@ export interface Nexus2InitialValuesType {
   spec: {
     artifactId?: string
     groupId?: string
+    group?: string
     extension?: string
     classifier?: string
     packageName?: string
@@ -307,7 +341,10 @@ export interface ArtifactTagHelperText {
   repositoryFormat?: RepositoryFormatTypes
   artifactId?: string
   groupId?: string
+  artifactArrayPath?: string
+  versionPath?: string
   packageName?: string
+  feed?: string
 }
 export interface ArtifactImagePathTagViewProps {
   selectedArtifact: ArtifactType

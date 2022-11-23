@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation } from '@wings-software/uicore'
+import { Button, ButtonVariation } from '@harness/uicore'
 import type { ResponseConnectorValidationResult, ConnectorInfoDTO, EntityGitDetails } from 'services/cd-ng'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'

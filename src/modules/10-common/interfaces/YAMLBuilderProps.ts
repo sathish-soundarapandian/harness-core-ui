@@ -6,7 +6,7 @@
  */
 
 import type { CompletionItemKind } from 'vscode-languageserver-types'
-import type { YamlSnippetMetaData, GetYamlSchemaQueryParams } from 'services/cd-ng'
+import type { GetYamlSchemaQueryParams } from 'services/cd-ng'
 
 export interface YamlBuilderHandlerBinding {
   getLatestYaml: () => string
@@ -45,16 +45,12 @@ export interface YamlBuilderProps {
   theme?: Theme
   yamlSanityConfig?: YamlSanityConfig
   /* Snippet section related props */
-  showSnippetSection?: boolean
-  showIconMenu?: boolean
-  snippets?: YamlSnippetMetaData[]
-  onSnippetCopy?: (identifier: string) => Promise<void>
-  snippetFetchResponse?: SnippetFetchResponse
   onChange?: (isEditorDirty: boolean) => void
   onErrorCallback?: (error: Record<string, any>) => void
   renderCustomHeader?: () => React.ReactElement | null
   openDialogProp?: () => void
   showCopyIcon?: boolean
+  comparableYaml?: string //this is the actual Yaml that we enter at studio level and is used in Yaml builder to get the value of a field by comparing the Yaml with the given regex/yamlPath
 }
 
 export interface CompletionItemInterface {

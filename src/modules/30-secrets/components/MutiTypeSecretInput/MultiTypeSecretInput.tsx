@@ -18,8 +18,11 @@ import {
   AllowedTypes,
   HarnessDocTooltip,
   FormikTooltipContext,
-  DataTooltipInterface
-} from '@wings-software/uicore'
+  DataTooltipInterface,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  Layout
+} from '@harness/uicore'
 import { defaultTo, get, pick } from 'lodash-es'
 import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
 import useCreateSSHCredModal from '@secrets/modals/CreateSSHCredModal/useCreateSSHCredModal'
@@ -31,6 +34,7 @@ import { errorCheck } from '@common/utils/formikHelpers'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { getReference } from '@common/utils/utils'
 import { useCreateWinRmCredModal } from '@secrets/modals/CreateWinRmCredModal/useCreateWinRmCredModal'
+import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import css from './MultiTypeSecretInput.module.scss'
 
 export function getMultiTypeSecretInputType(serviceType: string): SecretResponseWrapper['secret']['type'] {
@@ -78,6 +82,8 @@ export interface MultiTypeSecretInputProps extends IFormGroupProps {
   small?: boolean
   defaultValue?: string
   tooltipProps?: DataTooltipInterface
+  enableConfigureOptions?: boolean
+  configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
 }
 
 export interface ConnectedMultiTypeSecretInputProps extends MultiTypeSecretInputProps {
@@ -97,6 +103,8 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
     secretsListMockData,
     isMultiType = true,
     defaultValue,
+    enableConfigureOptions = false,
+    configureOptionsProps,
     ...restProps
   } = props
 
@@ -167,29 +175,45 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
       label={label ? <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} /> : label}
       intent={intent}
       helperText={helperText}
+      style={{ flexGrow: 1 }}
     >
-      {isMultiType ? (
-        <ExpressionAndRuntimeType
-          name={name}
-          value={value}
-          disabled={disabled}
-          onChange={handleChange}
-          expressions={expressions}
-          allowableTypes={allowableTypes}
-          style={{ flexGrow: 1 }}
-          fixedTypeComponentProps={{ onClick: openCreateOrSelectSecretModal }}
-          fixedTypeComponent={MultiTypeSecretInputFixedTypeComponent}
-          defaultValueToReset=""
-        />
-      ) : (
-        <MultiTypeSecretInputFixedTypeComponent
-          value={value}
-          onChange={handleChange}
-          onClick={openCreateOrSelectSecretModal}
-          disabled={disabled}
-          data-testid={name}
-        />
-      )}
+      <Layout.Horizontal spacing={'medium'} flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
+        {isMultiType ? (
+          <ExpressionAndRuntimeType
+            name={name}
+            value={value}
+            disabled={disabled}
+            onChange={handleChange}
+            expressions={expressions}
+            allowableTypes={allowableTypes}
+            fixedTypeComponentProps={{ onClick: openCreateOrSelectSecretModal }}
+            fixedTypeComponent={MultiTypeSecretInputFixedTypeComponent}
+            defaultValueToReset=""
+            style={{ flexGrow: 1 }}
+          />
+        ) : (
+          <MultiTypeSecretInputFixedTypeComponent
+            value={value}
+            onChange={handleChange}
+            onClick={openCreateOrSelectSecretModal}
+            disabled={disabled}
+            data-testid={name}
+          />
+        )}
+        {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            value={value}
+            type={'String'}
+            variableName={name}
+            showRequiredField={false}
+            showDefaultField={false}
+            showAdvanced={true}
+            onChange={val => formik?.setFieldValue(name, val)}
+            {...configureOptionsProps}
+            isReadonly={disabled}
+          />
+        )}
+      </Layout.Horizontal>
     </FormGroup>
   )
 }

@@ -321,7 +321,7 @@ exports[`Context Menu test render 1`] = `
         data-testid="edit-project"
       >
         <span
-          class="bp3-icon bp3-icon-edit"
+          class="bp3-icon bp3-icon-edit StyledProps--main icon"
           icon="edit"
         >
           <svg
@@ -353,7 +353,7 @@ exports[`Context Menu test render 1`] = `
         class="bp3-menu-item bp3-popover-dismiss"
       >
         <span
-          class="bp3-icon bp3-icon-new-person"
+          class="bp3-icon bp3-icon-new-person StyledProps--main icon"
           icon="new-person"
         >
           <svg
@@ -388,7 +388,7 @@ exports[`Context Menu test render 1`] = `
         class="bp3-menu-item bp3-popover-dismiss"
       >
         <span
-          class="bp3-icon bp3-icon-trash"
+          class="bp3-icon bp3-icon-trash StyledProps--main icon"
           icon="trash"
         >
           <svg

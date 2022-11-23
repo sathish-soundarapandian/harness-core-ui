@@ -6,7 +6,8 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { Icon, Container, Text, FontVariation, Layout, CardSelect, PillToggle, Color } from '@harness/uicore'
+import { Icon, Container, Text, Layout, CardSelect, PillToggle } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import {
   Hosting,

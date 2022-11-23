@@ -1,6 +1,6 @@
 import React from 'react'
 import { fireEvent, act, render, screen, waitFor } from '@testing-library/react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 
 import { formikInitialValues, MockContextValues, setThresholdStateMockFn } from './IgnoreThresholdsContent.mock'
@@ -169,43 +169,11 @@ describe('AppDIgnoreThresholdTabContent', () => {
       fireEvent.click(screen.getByText(/cv.monitoringSources.appD.percentageDeviation/))
     })
 
-    const selectCaretPercentageType = container
-      .querySelector(`[name="ignoreThresholds.0.criteria.criteriaPercentageType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretPercentageType).toBeInTheDocument()
-    fireEvent.click(selectCaretPercentageType!)
-
-    await waitFor(() => expect(screen.getByText(/cv.monitoringSources.appD.lesserThan/)).toBeInTheDocument())
-
-    act(() => {
-      fireEvent.click(screen.getByText(/cv.monitoringSources.appD.lesserThan/))
-    })
-
-    const greaterThanInput2 = container.querySelector(`[name="ignoreThresholds.0.criteria.spec.greaterThan"]`)
-    const lessThanInput2 = container.querySelector(`[name="ignoreThresholds.0.criteria.spec.lessThan"]`)
-
-    expect(greaterThanInput2).not.toBeInTheDocument()
-    expect(lessThanInput2).toBeInTheDocument()
-
-    const selectCaretPercentageType2 = container
-      .querySelector(`[name="ignoreThresholds.0.criteria.criteriaPercentageType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretPercentageType2).toBeInTheDocument()
-    fireEvent.click(selectCaretPercentageType2!)
-
-    await waitFor(() => expect(screen.getByText(/cv.monitoringSources.appD.greaterThan/)).toBeInTheDocument())
-
-    act(() => {
-      fireEvent.click(screen.getByText(/cv.monitoringSources.appD.greaterThan/))
-    })
-
     const greaterThanInput3 = container.querySelector(`[name="ignoreThresholds.0.criteria.spec.greaterThan"]`)
     const lessThanInput3 = container.querySelector(`[name="ignoreThresholds.0.criteria.spec.lessThan"]`)
 
-    expect(greaterThanInput3).toBeInTheDocument()
-    expect(lessThanInput3).not.toBeInTheDocument()
+    expect(greaterThanInput3).not.toBeInTheDocument()
+    expect(lessThanInput3).toBeInTheDocument()
   })
 
   test('should check whether a new row is added when Add Threshold button is clicked', () => {

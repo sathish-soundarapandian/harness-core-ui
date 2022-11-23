@@ -7,8 +7,8 @@
 
 import React from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash-es'
-import { Icon } from '@wings-software/uicore'
+import { defaultTo, isEmpty } from 'lodash-es'
+import { Icon } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import { Duration } from '@common/components/Duration/Duration'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -21,7 +21,7 @@ import { String, useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
@@ -31,11 +31,19 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RetryHistory from '@pipeline/components/RetryPipeline/RetryHistory/RetryHistory'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import { useQueryParams } from '@common/hooks'
 import css from './ExecutionHeader.module.scss'
 
 export function ExecutionHeader(): React.ReactElement {
   const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
+  const {
+    branch: branchQueryParam,
+    repoIdentifier: repoIdentifierQueryParam,
+    repoName: repoNameQueryParam,
+    connectorRef: connectorRefQueryParam,
+    storeType: storeTypeQueryParam
+  } = useQueryParams<GitQueryParams>()
   const { refetch, pipelineExecutionDetail, isPipelineInvalid } = useExecutionContext()
   const { supportingGitSimplification } = useAppStore()
   const { getString } = useStrings()
@@ -65,6 +73,15 @@ export function ExecutionHeader(): React.ReactElement {
     )}`
   ])
 
+  const repoName = pipelineExecutionSummary?.gitDetails?.repoName ?? repoNameQueryParam
+  const repoIdentifier = defaultTo(
+    pipelineExecutionSummary?.gitDetails?.repoIdentifier ?? repoIdentifierQueryParam,
+    repoName
+  )
+  const connectorRef = pipelineExecutionSummary?.connectorRef ?? connectorRefQueryParam
+  const branch = pipelineExecutionSummary?.gitDetails?.branch ?? branchQueryParam
+  const storeType = (pipelineExecutionSummary?.storeType as StoreType) ?? storeTypeQueryParam
+
   return (
     <header className={css.header}>
       <div className={css.headerTopRow}>
@@ -89,11 +106,11 @@ export function ExecutionHeader(): React.ReactElement {
                       pipelineIdentifier,
                       accountId,
                       module,
-                      repoIdentifier: pipelineExecutionSummary?.gitDetails?.repoIdentifier,
-                      connectorRef: pipelineExecutionSummary?.connectorRef,
-                      repoName: pipelineExecutionSummary?.gitDetails?.repoName,
-                      branch: pipelineExecutionSummary?.gitDetails?.branch,
-                      storeType: pipelineExecutionSummary?.storeType as StoreType
+                      repoIdentifier,
+                      connectorRef,
+                      repoName,
+                      branch,
+                      storeType
                     }),
                     label: pipelineExecutionSummary.name || getString('common.pipeline')
                   }
@@ -133,15 +150,15 @@ export function ExecutionHeader(): React.ReactElement {
               pipelineIdentifier,
               accountId,
               module,
-              repoIdentifier: pipelineExecutionSummary?.gitDetails?.repoIdentifier,
-              connectorRef: pipelineExecutionSummary?.connectorRef,
-              repoName: pipelineExecutionSummary?.gitDetails?.repoName,
-              branch: pipelineExecutionSummary?.gitDetails?.branch,
-              storeType: pipelineExecutionSummary?.storeType as StoreType
+              repoIdentifier,
+              connectorRef,
+              repoName,
+              branch,
+              storeType
             })}
           >
             <Icon name="Edit" size={12} />
-            <String stringID="edit" />
+            <String stringID="editPipeline" />
           </Link>
 
           <ExecutionActions
@@ -155,12 +172,12 @@ export function ExecutionHeader(): React.ReactElement {
               accountId,
               executionIdentifier,
               module,
-              repoIdentifier: pipelineExecutionSummary?.gitDetails?.repoIdentifier,
-              connectorRef: pipelineExecutionSummary?.connectorRef,
-              repoName: pipelineExecutionSummary?.gitDetails?.repoName,
-              branch: pipelineExecutionSummary?.gitDetails?.branch,
-              stagesExecuted: pipelineExecutionSummary?.stagesExecuted,
-              storeType: pipelineExecutionSummary?.storeType as StoreType
+              repoIdentifier,
+              connectorRef,
+              repoName,
+              branch,
+              storeType,
+              stagesExecuted: pipelineExecutionSummary?.stagesExecuted
             }}
             isPipelineInvalid={isPipelineInvalid}
             canEdit={canEdit}

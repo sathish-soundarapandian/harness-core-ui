@@ -8,7 +8,7 @@
 import React from 'react'
 import { get } from 'lodash-es'
 import { Position } from '@blueprintjs/core'
-import { Popover } from '@wings-software/uicore'
+import { Popover } from '@harness/uicore'
 
 import { String as StrTemplate } from 'framework/strings'
 import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/types'

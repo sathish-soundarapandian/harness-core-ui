@@ -14,11 +14,13 @@ import {
   PageError,
   PageSpinner,
   TableV2,
-  Text
-} from '@wings-software/uicore'
+  Text,
+  FormInput,
+  SelectOption
+} from '@harness/uicore'
 
 import type { CellProps, Column, Renderer } from 'react-table'
-import { Color } from '@wings-software/design-system'
+import { Color } from '@harness/design-system'
 import ReactTimeago from 'react-timeago'
 
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
@@ -65,7 +67,11 @@ export default function ReferencedBy(): React.ReactElement {
     [referencesResponse?.data?.content]
   )
   const { getString } = useStrings()
-
+  const optionItems: SelectOption[] = [{ label: getString('entity'), value: 'Entity' }]
+  const [filter, setFilter] = useState<SelectOption>({
+    label: getString('entity'),
+    value: 'Entity'
+  })
   const RenderColumnEntity: Renderer<CellProps<EntitySetupUsageDTO>> = ({ row }) => {
     const entity = row.original.referredByEntity
 
@@ -120,7 +126,17 @@ export default function ReferencedBy(): React.ReactElement {
   return (
     <>
       <Layout.Horizontal flex className={css.header}>
-        <div style={{ width: '200px' }}>Entity</div>
+        <Container className={css.referenceByFilter}>
+          <FormInput.Select
+            value={filter}
+            items={optionItems}
+            name="filter"
+            onChange={e => {
+              setFilter(e)
+            }}
+          />
+        </Container>
+
         <ExpandingSearchInput
           alwaysExpanded
           onChange={text => {

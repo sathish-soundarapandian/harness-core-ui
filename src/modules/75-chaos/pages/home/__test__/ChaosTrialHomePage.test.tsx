@@ -41,6 +41,7 @@ describe('ChaosTrialHomePage snapshot test', () => {
   })
 
   test('it should render properly', async () => {
+    window.deploymentType = 'ON_PREM'
     const { getByText } = render(
       <TestWrapper>
         <ChaosTrialHomePage />

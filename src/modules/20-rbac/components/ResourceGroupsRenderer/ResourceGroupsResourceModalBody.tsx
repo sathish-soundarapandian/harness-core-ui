@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Container, Layout, Text, Icon } from '@wings-software/uicore'
+import { Container, Layout, Text, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { RenderColumnDetails } from '@rbac/components/ResourceGroupList/ResourceGroupListView'
 import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'

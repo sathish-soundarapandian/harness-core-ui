@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react'
 import { Color } from '@harness/design-system'
-import { Layout, Text } from '@wings-software/uicore'
+import { Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { FetchPlansQuery } from 'services/common/services'
 import type { ModuleName } from 'framework/types/ModuleName'

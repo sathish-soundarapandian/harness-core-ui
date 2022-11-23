@@ -66,7 +66,7 @@ describe('Unit tests for NotificationsContainer', () => {
   test('Verify if NotificationsContainer renders for notification type MONITORED_SERVICE', async () => {
     const newProps = { ...props, type: SRMNotificationType.MONITORED_SERVICE }
     const { container, getByText } = render(<WrapperComponent {...newProps} />)
-    expect(getByText('notifications.name')).toBeInTheDocument()
+    expect(getByText('rbac.notifications.name')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
 

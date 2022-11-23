@@ -21,14 +21,15 @@ import {
   OverlaySpinner,
   ButtonVariation,
   useToaster
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import type { FormikProps, FormikErrors } from 'formik'
 import { Menu, Classes, Position, PopoverInteractionKind, Dialog, IDialogProps } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { StringUtils } from '@common/exports'
-import { regexIdentifier, UNIQUE_ID_MAX_LENGTH } from '@common/utils/StringUtils'
+import { UNIQUE_ID_MAX_LENGTH } from '@common/utils/StringUtils'
+import { NameSchema } from '@common/utils/Validation'
 import type { FilterInterface } from '../Constants'
 
 import css from './FilterCRUD.module.scss'
@@ -423,10 +424,7 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
             }}
             formName="filterCrudForm"
             validationSchema={Yup.object().shape({
-              name: Yup.string()
-                .trim()
-                .required(getString('common.validation.nameIsRequired'))
-                .matches(regexIdentifier, getString('common.validation.namePatternIsNotValid')),
+              name: NameSchema(),
               filterVisibility: Yup.mixed()
                 .oneOf(['OnlyCreator', 'EveryOne'])
                 .required(getString('filters.visibilityRequired'))

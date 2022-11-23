@@ -20,7 +20,7 @@ import {
   HarnessDocTooltip,
   Layout,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
 import type { ManifestConfigWrapper } from 'services/cd-ng'

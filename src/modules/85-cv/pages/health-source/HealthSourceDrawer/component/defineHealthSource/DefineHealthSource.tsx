@@ -17,7 +17,7 @@ import {
   Layout,
   MultiTypeInputType,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -44,10 +44,15 @@ import {
   getFeatureOption,
   getInitialValues,
   validate,
-  validateDuplicateIdentifier,
   getConnectorTypeName,
-  getConnectorPlaceholderText
+  getConnectorPlaceholderText,
+  canShowDataSelector,
+  canShowDataInfoSelector,
+  formValidation,
+  getIsConnectorDisabled
 } from './DefineHealthSource.utils'
+import PrometheusDataSourceTypeSelector from './components/DataSourceTypeSelector/DataSourceTypeSelector'
+import DataInfoSelector from './components/DataInfoSelector/DataInfoSelector'
 import css from './DefineHealthSource.module.scss'
 
 interface DefineHealthSourceProps {
@@ -66,11 +71,11 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const { isEdit } = sourceData
 
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
-
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
   const isElkEnabled = useFeatureFlag(FeatureFlag.ELK_HEALTH_SOURCE)
-
+  const isDataSourceTypeSelectorEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_AWS_PROMETHEUS)
   const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
+  const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
 
   const disabledByFF: string[] = useMemo(() => {
     const disabledConnectorsList = []
@@ -86,11 +91,15 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
     if (!isCloudWatchEnabled) {
       disabledConnectorsList.push(HealthSourceTypes.CloudWatch)
     }
+
+    if (!isSumoLogicEnabled) {
+      disabledConnectorsList.push(HealthSourceTypes.SumoLogic)
+    }
     return disabledConnectorsList
-  }, [isErrorTrackingEnabled, isElkEnabled, isCloudWatchEnabled])
+  }, [isErrorTrackingEnabled, isElkEnabled, isCloudWatchEnabled, isSumoLogicEnabled])
 
   const initialValues = useMemo(() => {
-    return getInitialValues(sourceData, getString)
+    return getInitialValues(sourceData, getString, isDataSourceTypeSelectorEnabled)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceData?.healthSourceIdentifier])
 
@@ -109,24 +118,26 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
 
   const connectorData = useCallback(
     formik => {
+      const { connectorRef, sourceType, dataSourceType } = formik?.values || {}
+
       return isTemplate ? (
         <FormMultiTypeConnectorField
           enableConfigureOptions={false}
           name={ConnectorRefFieldName}
-          disabled={!formik?.values?.sourceType}
+          disabled={!sourceType}
           label={
             <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
               {getString('connectors.selectConnector')}
             </Text>
           }
           placeholder={getString('cv.healthSource.connectors.selectConnector', {
-            sourceType: healthSourceTypeMapping(formik?.values?.sourceType)
+            sourceType: healthSourceTypeMapping(sourceType)
           })}
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           width={400}
-          type={healthSourceTypeMapping(formik?.values?.sourceType)}
+          type={healthSourceTypeMapping(sourceType)}
           multiTypeProps={{ expressions, allowableTypes: AllMultiTypeInputTypesForStep }}
           onChange={(value: any) => {
             const connectorValue =
@@ -140,7 +151,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
         <FormConnectorReferenceField
           width={400}
           formik={formik}
-          type={healthSourceTypeMappingForReferenceField(formik?.values?.sourceType)}
+          type={healthSourceTypeMappingForReferenceField(sourceType, dataSourceType)}
           name={ConnectorRefFieldName}
           label={
             <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
@@ -151,9 +162,15 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           placeholder={getString('cv.healthSource.connectors.selectConnector', {
-            sourceType: getConnectorPlaceholderText(formik?.values?.sourceType)
+            sourceType: getConnectorPlaceholderText(sourceType, dataSourceType)
           })}
-          disabled={isEdit ? !!formik?.values?.connectorRef && isEdit : !formik?.values?.sourceType}
+          disabled={getIsConnectorDisabled({
+            isEdit,
+            connectorRef,
+            sourceType,
+            dataSourceType,
+            isDataSourceTypeSelectorEnabled
+          })}
           tooltipProps={{ dataTooltipId: 'selectHealthSourceConnector' }}
         />
       )
@@ -172,6 +189,22 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
     }
   }
 
+  const getDataSourceTypeSelector = (sourceType?: string): JSX.Element | null => {
+    if (canShowDataSelector(sourceType, isDataSourceTypeSelectorEnabled)) {
+      return <PrometheusDataSourceTypeSelector isEdit={isEdit} />
+    }
+
+    return null
+  }
+
+  const getDataInfoSelector = (sourceType?: string, dataSourceType?: string): JSX.Element | null => {
+    if (canShowDataInfoSelector(sourceType, dataSourceType, isDataSourceTypeSelectorEnabled)) {
+      return <DataInfoSelector isEdit={isEdit} />
+    }
+
+    return null
+  }
+
   return (
     <BGColorWrapper>
       <Formik
@@ -179,9 +212,12 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
         initialValues={initialValues}
         formName={'defineHealthsource'}
         validate={values => {
-          if (!isEdit) {
-            return validateDuplicateIdentifier(values)
-          }
+          return formValidation({
+            values,
+            isDataSourceTypeSelectorEnabled,
+            isEdit,
+            getString
+          })
         }}
         validationSchema={validate(getString)}
         onSubmit={values => {
@@ -229,17 +265,27 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
                                     cornerSelected={isCardSelected(connectorTypeName, formik)}
                                     className={css.squareCard}
                                     onClick={() => {
-                                      formik.setFieldValue('sourceType', connectorTypeName)
                                       const featureOptionConnectorType = getFeatureOption(
                                         connectorTypeName,
                                         getString,
                                         isSplunkMetricEnabled
                                       )
-                                      formik.setFieldValue(
-                                        'product',
-                                        featureOptionConnectorType.length === 1 ? featureOptionConnectorType[0] : ''
-                                      )
-                                      formik.setFieldValue(ConnectorRefFieldName, null)
+                                      formik.setValues((currentValues: any) => {
+                                        if (!currentValues) {
+                                          return {}
+                                        }
+
+                                        return {
+                                          ...currentValues,
+                                          sourceType: connectorTypeName,
+                                          dataSourceType: null,
+                                          product:
+                                            featureOptionConnectorType.length === 1
+                                              ? featureOptionConnectorType[0]
+                                              : '',
+                                          [ConnectorRefFieldName]: null
+                                        }
+                                      })
                                     }}
                                   >
                                     <Icon name={icon as IconName} size={26} height={26} />
@@ -283,6 +329,8 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
               </CardWithOuterTitle>
               <CardWithOuterTitle title={getString('cv.healthSource.connectHealthSource')}>
                 <>
+                  {getDataSourceTypeSelector(formik?.values?.sourceType)}
+
                   <Container margin={{ bottom: 'large' }} width={'400px'}>
                     <div className={css.connectorField}>{connectorData(formik)}</div>
                   </Container>
@@ -308,6 +356,8 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
                       onChange={product => formik.setFieldValue('product', product)}
                     />
                   </Container>
+
+                  {getDataInfoSelector(formik?.values?.sourceType, formik?.values?.dataSourceType)}
                 </>
               </CardWithOuterTitle>
               <DrawerFooter onNext={() => formik.submitForm()} />

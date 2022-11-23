@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { Container, FormInput, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { Container, FormInput, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import * as dbHook from '@cv/hooks/IndexedDBHook/IndexedDBHook'
 import { TestWrapper } from '@common/utils/testUtils'
 import { Scope } from '@common/interfaces/SecretsInterface'

@@ -7,7 +7,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Color, Container, FontVariation, Icon, Layout, PillToggle, PillToggleOption, Text } from '@harness/uicore'
+import { Container, Icon, Layout, PillToggle, PillToggleOption, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { RadioGroup, Radio } from '@blueprintjs/core'
 import { defaultTo, get } from 'lodash-es'
 import RangeSlider from '@ce/common/RangeSlider/RangeSlider'

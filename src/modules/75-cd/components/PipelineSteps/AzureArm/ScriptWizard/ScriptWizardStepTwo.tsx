@@ -17,7 +17,7 @@ import {
   ButtonVariation,
   AllowedTypes as MultiTypeAllowedTypes,
   StepProps
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
@@ -30,9 +30,10 @@ import { Connectors } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
 
+import type { ConnectorTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
+import { HarnessOption } from '@pipeline/components/StartupScriptSelection/HarnessOption'
+
 import { gitFetchTypeList, GitFetchTypes, StartupScriptDataType } from '../AzureArm.types'
-import type { ConnectorTypes } from '../../AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
-import { HarnessOption } from '../../AzureWebAppServiceSpec/HarnessOption'
 
 import css from './ScriptWizard.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -166,7 +167,7 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
             .trim()
             .required(
               getString('common.validation.fieldIsRequired', {
-                name: getString('pipeline.startupCommand.scriptFilePath')
+                name: getString('pipeline.startup.scriptFilePath')
               })
             ),
           repoName: Yup.string().test(

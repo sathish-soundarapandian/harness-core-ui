@@ -42,3 +42,21 @@ export const stepTemplateMock = {
     spec: { url: '<+input>', method: 'GET', headers: [], outputVariables: [], requestBody: '<+input>' }
   }
 }
+
+export const multipleStepsInitialView = {
+  infrastructure: {
+    variables: [],
+    fetchInstancesScript: {},
+    instanceAttributes: [
+      {
+        name: 'instancename',
+        jsonPath: '',
+        description: ''
+      }
+    ],
+    instancesListPath: ''
+  },
+  execution: {
+    stepTemplateRefs: ['http_project_level', 'shell_project_level']
+  }
+}

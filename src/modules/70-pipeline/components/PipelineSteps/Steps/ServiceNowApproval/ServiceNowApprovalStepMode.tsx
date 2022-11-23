@@ -14,7 +14,7 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
@@ -53,6 +53,8 @@ import {
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/helper'
 import { StringKeys, useStrings } from 'framework/strings'
 import { ConnectorRefSchema } from '@common/utils/Validation'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { Connectors } from '@connectors/constants'
 import { ServiceNowApprovalRejectionCriteria } from './ServiceNowApprovalRejectionCriteria'
 import { ServiceNowApprovalChangeWindow } from './ServiceNowApprovalChangeWindow'
 import css from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/ServiceNowApproval.module.scss'
@@ -204,8 +206,8 @@ function FormContent({
           gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
         />
         {getMultiTypeFromValue(formik.values.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            style={{ marginTop: 14 }}
+          <ConnectorConfigureOptions
+            style={{ marginTop: 8 }}
             value={formik.values.spec.connectorRef as string}
             type="String"
             variableName="spec.connectorRef"
@@ -214,6 +216,15 @@ function FormContent({
             showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
+            connectorReferenceFieldProps={{
+              accountIdentifier: accountId,
+              projectIdentifier,
+              orgIdentifier,
+              type: Connectors.SERVICE_NOW,
+              label: getString('pipeline.serviceNowApprovalStep.connectorRef'),
+              disabled: readonly,
+              gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
+            }}
           />
         )}
       </div>

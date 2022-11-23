@@ -20,7 +20,7 @@ exports[`CDUsageInfo CDUsageInfo 1`] = `
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
             >
-              common.subscriptions.usage.srvcInst
+              common.subscriptions.usage.serviceLicenses
             </p>
             <span
               class="bp3-popover-wrapper"
@@ -52,13 +52,13 @@ exports[`CDUsageInfo CDUsageInfo 1`] = `
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
           >
-            Last 30 Days
+            common.subscriptions.usage.last30days
           </p>
         </div>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-size-large StyledProps--font-weight-bold StyledProps--color StyledProps--color-black"
         >
-          20
+          0
         </p>
         <div
           class="StyledProps--font StyledProps--main bar StyledProps--background-grey100 StyledProps--border StyledProps--margin-bottom-small"
@@ -66,7 +66,7 @@ exports[`CDUsageInfo CDUsageInfo 1`] = `
         >
           <div
             class="StyledProps--font StyledProps--main StyledProps--background-primary6 StyledProps--border"
-            style="width: 20%; height: 100%;"
+            style="width: 0%; height: 100%;"
           />
         </div>
         <div
@@ -82,86 +82,9 @@ exports[`CDUsageInfo CDUsageInfo 1`] = `
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color"
           >
-            20
+            0
             % 
-            common.subscribed
-          </p>
-        </div>
-      </div>
-    </div>
-    <div
-      class="bp3-card bp3-elevation-0 Card--card innerCard"
-    >
-      <div
-        class="Layout--vertical StyledProps--main"
-      >
-        <div
-          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-space-between"
-        >
-          <div
-            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-            >
-              common.subscriptions.usage.services
-            </p>
-            <span
-              class="bp3-popover-wrapper"
-            >
-              <span
-                class="bp3-popover-target"
-              >
-                <span
-                  class="bp3-icon StyledProps--main"
-                  data-icon="info"
-                  tabindex="0"
-                >
-                  <svg
-                    height="15"
-                    viewBox="0 0 12 12"
-                    width="15"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      clip-rule="evenodd"
-                      d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </span>
-          </div>
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
-          >
-            Last 30 Days
-          </p>
-        </div>
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-size-large StyledProps--font-weight-bold StyledProps--color StyledProps--color-black"
-        >
-          45
-        </p>
-        <div
-          class="StyledProps--font StyledProps--main bar StyledProps--background-grey100 StyledProps--border StyledProps--margin-bottom-small"
-          style="width: 100%; height: 10px;"
-        >
-          <div
-            class="StyledProps--font StyledProps--main StyledProps--background-primary6 StyledProps--border"
-            style="width: 22.5%; height: 100%;"
-          />
-        </div>
-        <div
-          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
-          >
-            200
-             
-            total
+            common.usage
           </p>
         </div>
       </div>

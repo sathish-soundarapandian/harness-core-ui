@@ -12,6 +12,7 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { environmentPathProps, modulePathProps, projectPathProps } from '@common/utils/routeUtils'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import EnvironmentDetails from '../EnvironmentDetails'
 
 import mockEnvironmentDetail from './__mocks__/mockEnvironmentDetail.json'
@@ -68,6 +69,9 @@ jest.mock('services/cd-ng', () => ({
 
 describe('EnvironmentDetails tests', () => {
   test('initial render', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      GITOPS_ONPREM_ENABLED: true
+    })
     render(
       <TestWrapper
         path={routes.toEnvironmentDetails({
@@ -92,6 +96,9 @@ describe('EnvironmentDetails tests', () => {
   })
 
   test('is gitops tab visible', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      GITOPS_ONPREM_ENABLED: true
+    })
     render(
       <TestWrapper
         path={routes.toEnvironmentDetails({

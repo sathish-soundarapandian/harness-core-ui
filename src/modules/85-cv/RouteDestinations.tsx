@@ -54,6 +54,7 @@ import MonitoredServiceInputSetsTemplate from './pages/monitored-service/Monitor
 import { CVCodeErrors } from './pages/code-errors/CVCodeErrors'
 import { CVCodeErrorsAgents } from './pages/code-errors-agent-control/code-errors-agents/CVCodeErrorsAgents'
 import CVCodeErrorsAgentsControl from './pages/code-errors-agent-control/CVCodeErrorsAgentsControl'
+import CVCreateSLOV2 from './pages/slos/components/CVCreateSLOV2/CVCreateSLOV2'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -148,6 +149,7 @@ RbacFactory.registerResourceCategory(ResourceCategory.CHANGEINTELLIGENCE_FUNCTIO
 RbacFactory.registerResourceTypeHandler(ResourceType.MONITOREDSERVICE, {
   icon: 'cv-main',
   label: 'cv.monitoredServices.title',
+  labelSingular: 'cv.monitoredServices.heading',
   category: ResourceCategory.CHANGEINTELLIGENCE_FUNCTION,
   permissionLabels: {
     [PermissionIdentifier.VIEW_MONITORED_SERVICE]: <String stringID="rbac.permissionLabels.view" />,
@@ -310,6 +312,14 @@ export default (
       })}
     >
       <CVSLODetailsPage />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      sidebarProps={CVSideNavProps}
+      path={routes.toCVCreateCompositeSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+    >
+      <CVCreateSLOV2 isComposite />
     </RouteWithLayout>
 
     <RouteWithLayout

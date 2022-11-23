@@ -1197,7 +1197,7 @@ export interface ConnectorInfoDTO {
     | 'Jenkins'
     | 'OciHelmRepo'
     | 'CustomSecretManager'
-    | 'ELK'
+    | 'ElasticSearch'
     | 'GcpSecretManager'
 }
 
@@ -4912,6 +4912,7 @@ export const useGetCENGMicroserviceVersion = (props: UseGetCENGMicroserviceVersi
 
 export interface AwsaccountconnectiondetailQueryParams {
   accountIdentifier?: string
+  is_gov?: boolean
 }
 
 export type AwsaccountconnectiondetailProps = Omit<

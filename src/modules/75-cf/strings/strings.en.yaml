@@ -49,6 +49,7 @@ creationModal:
   defaultVariationIsRequired: Default variation is required
   mustBeNumber: Value must be a number
   mustBeValidJSON: Value must be a valid JSON object.
+  mustContainLetter: Id must contain at least one letter
   dataType: Data type
   defaultRulesTooltip: Define which variation users will see by default when the flag is ON or OFF
 
@@ -217,6 +218,17 @@ featureFlags:
     openExecution: Open Pipeline Execution
     pipelineDeleted: The Pipeline in use has been deleted from the Pipelines library
     targeting: When Flag is Enabled - Specific Targeting
+    validation:
+      setFlagSwitch:
+        state: Flag state is required
+      defaultRules:
+        onOrOffVariation: An ON or OFF variation is required
+      serveVariationToIndividualTarget:
+        variationTargets: Targets/variation is required
+      serveVariationToTargetGroup:
+        variationTargetGroups: Target Groups/variation is required
+      servePercentageRollout:
+        targetGroup: Target Group is required
 featureFlagDetail:
   variationCount: '{{ count }} variations'
   serviceDescription: Services this flag is associated with
@@ -483,7 +495,7 @@ gitSync:
   autoCommitStatusLabel: Auto-commit to selected branch
   turnOffGitAndContinue: Turn off Git and Continue
   gitErrorModalTitle: Changes can't be saved to Git
-  gitServiceApiError: To continue work you can turn off Git Syncronization. All changes will be saved to Harness. When Git Sync is re-enabled we'll attempt to push the latest changes to Git
+  gitServiceApiError: To continue work you can turn off Git Synchronization. All changes will be saved to Harness. When Git Sync is re-enabled we'll attempt to push the latest changes to Git
   tryAgain: Try Again
   goToGit: Go to Git to fix issue
   invalidYaml: 'We are unable to render your {{{ flagsYamlFilename }}} file because it is invalid. Fix the following issues on Git and try again.'
@@ -503,7 +515,7 @@ onboarding:
   simpliestFlag: Our Simplest Flag
   simpliestFlagDescription: 'You’re creating our simplest feature flag type: Boolean Flag. This flag type is commonly used as a feature toggle, which effectively shows/hides features from your targets.'
   otherTypes: Check out other flag types
-  backToStart: Complete
+  complete: Complete
   title: Feature Flags Quick Start Guide
   subTitle: Everything you need to know in less than 15 minutes.
   tryItOut: '{{ $.getStarted }}'
@@ -519,16 +531,21 @@ onboarding:
   selectOrCreateFlag: Select or Create a Flag
   youCreated: You've created
   youreUsing: You're using
-  setupLabel: Set up your application and code to communicate with our platform.
+  youveSelected: You've selected
+  selectEnvAndSdk: Select Environment and SDK
   selectLanguage: Select your language
-  selectYourEnvironment: Select your Environment
   createEnv: Create an environment
+  selectOrCreateEnvironment: Select or Create an Environment
+  environmentDescription: Environments are spaces within a project where you can independently configure Feature Flags. You can have multiple Environments and the same Flags can have a different state in each Environment.
   envCreated: Environment Created
-  sdkKeyLabel: Please create an SDK key for your environment
-  keyDescriptionServer: We generated a secret as the server-side SDK key of your new environment for you to use in your code below. This secret will be redacted once you leave the page, so make sure to copy and store your secret somewhere safe.
-  keyDescriptionClient: We generated a client-side SDK key of your new environment for you to use in your code below.
+  createSdkKey: Create an SDK Key
+  sdkKeyDescription: SDK keys are unique to each Environment and they authorize the connection between your application and the Feature Flag SDK Client.
+  keyDescriptionServer: We generated a secret as the server-side SDK key for <b>{{env}}</b> Environment for you to use in your code below. This secret will be redacted once you leave the page, so make sure to copy and store your secret somewhere safe.
+  keyDescriptionClient: We generated a client-side SDK key for <b>{{env}}</b> Environment. Use this in your code to authenticate the connection between your application and the Feature Flag SDK client.
+  keyGeneratedBelow: We generated a {{langType}} SDK key of your new environment for you to use in your code below.
   secret: SDK Secret
   clientKey: Client SDK Key
+  selectedLanguageAndEnv: <b>{{language}}</b> and <b>{{env}}</b> environment
   ios: iOS
   android: Android
   setUpYourCode: Set up your code
@@ -539,7 +556,7 @@ onboarding:
   createdAndValidated: Congrats! You have created and validated your first Flag! <br><br>Now you can define which Targets and Target Groups this Flag should be enabled for, and then see how that affects your application.
   errorReceivingEvent: We couldn't receive a Flag status from your application, check the <a target="_blank" href="https://docs.harness.io/category/eyzngtupao-sdk-overview"> SDK reference guide</a> to ensure you've set up the SDK correctly, then toggle the Flag to try again.
   furtherAssistance: '<br>If you are still having issues,'
-  toggleError: We couldn’t receive events, check possible reasons below and toggle the Flag to try again
+  toggleError: We couldn't receive events, check possible reasons below and toggle the Flag to try again
   help:
     heading1: The Importance of Your Flag Id
     text1: Your flag Id is required to reference the flag in your code.
@@ -548,86 +565,121 @@ onboarding:
     getStarted: Get started with SDKs
   readme:
     java: |
-      # Setup
+      # Quickstart
 
-      Add the following snippet to your project's `pom.xml` file (version >= 1.0.4):
+      To follow along with our test code sample, make sure you've:
 
-      ```xml
-      <dependency>
-        <groupId>io.harness.cf</groupId>
-        <artifactId>cf-client-sdk-java</artifactId>
-        <version>1.0.4</version>
-      </dependency>
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag">Created a Feature Flag on the Harness Platform</a> called 'harnessappdemodarkmode'
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key">Created a server SDK key and made a copy of it</a>
+
+      # Install
+
+      To use this SDK, make sure you have:
+      - Installed <a href="https://openjdk.java.net/install/">JDK 8</a> or a newer version
+      - Installed Maven, Gradle or an alternative build automation tool for your application
+
+      # Usage
+
+      Create a java project with a package called 'examples'.
+
+      Maven - add the following Maven dependency in your project's 'pom.xml' file:
+      ```
+      <dependencies>
+        <dependency>
+            <groupId>io.harness</groupId>
+            <artifactId>ff-java-server-sdk</artifactId>
+            <version>1.1.6</version>
+        </dependency>
+      </dependencies>
       ```
 
-      After dependency has been added, the SDK elements, primarily CfClient should be accessible in the main application.
+      Gradle
+      ```
+      implementation group: 'io.harness', name: 'ff-java-server-sdk', version: '1.1.6'
+      ```
 
-      # Initialization
+      Create a class called 'GettingStarted' in your project, copy and paste the code below into that class. 
+      After installing the SDK, enter the SDK keys that you created for your environment. 
+      The SDK keys authorize your application to connect to the FF client.
 
-      `CfClient` is a base class that provides all features of SDK.
+      ```
+      package io.harness.ff.examples;
 
-      ```java
-      /**
-      * Put the API Key here from your environment
-      */
-      String apiKey = '{{apiKey}}';
+      import io.harness.cf.client.api.*;
+      import io.harness.cf.client.dto.Target;
 
-      CfClient cfClient = new CfClient(apiKey, Config.builder().build());
+      import java.util.concurrent.Executors;
+      import java.util.concurrent.ScheduledExecutorService;
+      import java.util.concurrent.TimeUnit;
 
-      /**
-      * Define you target on which you would like to evaluate
-      * the featureFlag
-      */
-      Target target = Target.builder()
-                          .name("User1")
-                          .attributes(new HashMap<String, Object>())
-                          .identifier("user1@example.com")
+      public class GettingStarted {
+          // API Key - set this as an env variable
+          private static String apiKey = getEnvOrDefault("FF_API_KEY", "");
+
+          // Flag Identifier
+          private static String flagName = getEnvOrDefault("FF_FLAG_NAME", "harnessappdemodarkmode");
+
+          private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+          public static void main(String[] args) {
+              System.out.println("Harness SDK Getting Started");
+
+              try {
+                  //Create a Feature Flag Client
+                  CfClient cfClient = new CfClient(apiKey);
+                  cfClient.waitForInitialization();
+
+                  // Create a target (different targets can get different results based on rules.  This includes a custom attribute 'location')
+                  final Target target = Target.builder()
+                          .identifier("javasdk")
+                          .name("JavaSDK")
+                          .attribute("location", "emea")
                           .build();
+
+                  // Loop forever reporting the state of the flag
+                  scheduler.scheduleAtFixedRate(
+                          () -> {
+                              boolean result = cfClient.boolVariation(flagName, target, false);
+                              System.out.println("Boolean variation is " + result);
+                          },
+                          0,
+                          10,
+                          TimeUnit.SECONDS);
+
+              } catch (Exception e) {
+                  e.printStackTrace();
+              } finally {
+                  // Close the SDK
+                  CfClient.getInstance().close();
+              }
+          }
+
+          // Get the value from the environment or return the default
+          private static String getEnvOrDefault(String key, String defaultValue) {
+              String value = System.getenv(key);
+              if (value == null || value.isEmpty()) {
+                  return defaultValue;
+              }
+              return value;
+          }
+      }
       ```
-
-      `target` represents the desired target for which we want features to be evaluated.
-
-      Your Harness SDK is now initialized. Congratulations!
-
-      # Public API Methods
-
-      The Public API exposes a few methods that you can utilize:
-
-      ```
-      public boolean boolVariation(String key, Target target, boolean defaultValue)
-
-      public String stringVariation(String key, Target target, String defaultValue)
-
-      public double numberVariation(String key, Target target, int defaultValue)
-
-      public JsonObject jsonVariation(String key, Target target, JsonObject defaultValue)
-
-      public void destroy()
-      ```
-
-      # Fetch evaluation's value
-
-      It is possible to fetch a value for a given evaluation. Evaluation is performed based on a different type. In case there is no evaluation with provided id, the default value is returned.
-
-      Use the appropriate method to fetch the desired Evaluation of a certain type.
-
-      # Bool variation
-
-      ```java
-      boolean result = cfClient.boolVariation("sample_boolean_flag", target, false);
-      ```
-
-      # Number variation
-
-      ```java
-      boolean result = cfClient.numberVariation("sample_number_flag", target, 0);
+      # Test your application 
 
       ```
+      export FF_API_KEY=<your key here>
+      cd examples
 
-      # String variation
+      mvn clean package
+      mvn exec:java -Dexec.mainClass="io.harness.ff.examples.GettingStarted"
+      ```
 
-      ```java
-      boolean result = cfClient.stringVariation("sample_string_flag", target, "");
+      If you don't have the right version of java installed locally, or don't want to install the dependencies you can use docker to get started.
+
+      ```
+      docker run -v $(PWD)/examples:/app -v "$HOME/.m2":/root/.m2 -w /app maven:3.3-jdk-8 mvn clean package
+
+      docker run -e FF_API_KEY=$FF_API_KEY -v $(PWD)/examples:/app -v "$HOME/.m2":/root/.m2 -w /app maven:3.3-jdk-8 mvn exec:java -Dexec.mainClass="io.harness.ff.examples.GettingStarted"
       ```
 
     javascript: |
@@ -647,162 +699,145 @@ onboarding:
 
       # Usage
 
-      ```
-      import { initialize, Event } from '@harnessio/ff-javascript-client-sdk'
-      ```
-
-      Initialize SDK with api key and target information.
+      Create a file called `index.html` and add the following code below:
 
       ```
-      initialize(FeatureFlagSDKKey: string, target: Target, options?: Options)
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <title>Feature Flags</title>
+        </head>
+        <body>
+          <script type="module">
+
+            import {
+              initialize,
+              Event as SDKEvent,
+            } from "https://unpkg.com/@harnessio/ff-javascript-client-sdk@1.4.14/dist/sdk.client.js";
+
+            const target = {
+              identifier: "MyTargetID",
+              name: "MyTargetName",
+            };
+
+            const client = initialize("{{apiKey}}", target);
+
+            // Listen for events
+
+            // Event happens when connection to server is established
+            client.on(SDKEvent.READY, (flags) => {
+              console.log("READY", flags);
+            });
+
+            // Event happens when a changed event is pushed
+            client.on(SDKEvent.CHANGED, (changeInfo) => {
+              console.log("CHANGED", changeInfo);
+            });
+            
+          </script>
+        </body>
+      </html>
+
+          
       ```
+      # Test your application 
 
-      In which Target and Options are defined as:
-
-      ```
-      interface Target {
-        identifier: string
-        name?: string
-        anonymous?: boolean
-        attributes?: object
-      }
-
-      interface Options {
-        baseUrl?: string
-        debug?: boolean
-      }
-      ```
-
-      For example:
-
-      ```
-      const cf = initialize('{{apiKey}}', {
-        identifier: YOUR-TARGET-IDENTIFIER,      // Target identifier
-        name: YOUR-TARGET-NAME,                  // Optional target name
-        attributes: {                            // Optional target attributes
-          email: 'sample@sample.com'
-        }
-      })
-      ```
-
-      # Listening to events from the cf instance.
-
-      ```
-      cf.on(Event.READY, flags => {
-        // Event happens when connection to server is established
-        // flags contains all evaluations against SDK key
-      })
-
-      cf.on(Event.CHANGED, flagInfo => {
-        // Event happens when a changed event is pushed
-        // flagInfo contains information about the updated feature flag
-      })
-
-      cf.on(Event.DISCONNECTED, () => {
-        // Event happens when connection is disconnected
-      })
-
-      cf.on(Event.ERROR, () => {
-        // Event happens when connection some error has occurred
-      })
-      ```
-
-      # Getting value for a particular feature flag
-
-      ```
-      // second argument is default value when variation does not exist
-      const value = cf.variation('Dark_Theme', false)
-      ```
-
-      # Cleaning up
-
-      Remove a listener of an event by cf.off.
-
-      ```
-      cf.off(Event.ERROR, () => {
-        // Do something when an error occurs
-      })
-      ```
-
-      Remove all listeners:
-
-      ```
-      cf.off()
-      ```
-
-      On closing your application, call cf.close() to close the event stream.
-
-      ```
-      cf.close();
-      ```
-
-      # Import directly from unpkg
-
-      In case you want to import this library directly (without having to use npm or yarn):
-
-      ```html
-      <script type="module">
-        import { initialize, Event } from 'https://unpkg.com/@harnessio/ff-javascript-client-sdk@1.3.7/dist/sdk.client.js'
-      </script>
-      ```
-
-      If you need to support old browsers which don't support ES Module:
-
-      ```html
-      <script src="https://unpkg.com/@harnessio/ff-javascript-client-sdk@1.3.7/dist/sdk.client.js"></script>
-      <script>
-        var initialize = HarnessFFSDK.initialize
-        var Event = HarnessFFSDK.Event
-      </script>
-      ```
-
-      Remember to change the version 1.3.7 in the unpkg url accordingly.
+      Run your application by opening `index.html` in your browser. Open the browser dev tools and refresh the page.
 
     golang: |
       # Supported GO versions
 
-      This version of FFM has been tested with GO 1.14
+      <a href="https://go.dev/doc/install">Golang 1.16</a> or newer (go version)
+
+      # Quickstart
+
+      To follow along with our test code sample, make sure you've:
+
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag">Created a Feature Flag on the Harness Platform</a> called 'harnessappdemodarkmode'
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key">Created a server SDK key and made a copy of it</a>
 
       # Install
 
+      Install the golang SDK using go
       ```
       go get github.com/harness/ff-golang-server-sdk
       ```
 
       # Usage
 
-      First we need to import lib with harness alias 
-      ```
-      import harness "github.com/harness/ff-golang-server-sdk/client"
-      ```
+      The following is a complete code example that you can use to test the harnessappdemodarkmode Flag you created on the Harness Platform. 
 
-      Next we create client instance for interaction with api 
-      ```
-      client, err := harness.NewCfClient("{{apiKey}}")
-      ```
-
-      Target definition can be user, device, app etc.
+      Create a file called `getting_started.go` and add the following code below:
 
       ```
-      target := dto.NewTargetBuilder("{{apiKey}}").
-      Firstname("John").
-      Lastname("doe").
-      Email("johndoe@acme.com").
-      Country("USA").
-      Custom("height", 160).
-      Build()
+      package main
+
+      import (
+        "log"
+        "os"
+        "time"
+
+        harness "github.com/harness/ff-golang-server-sdk/client"
+        "github.com/harness/ff-golang-server-sdk/evaluation"
+      )
+
+      var (
+        flagName string = getEnvOrDefault("FF_FLAG_NAME", "harnessappdemodarkmode")
+        sdkKey   string = getEnvOrDefault("FF_API_KEY", "changeme")
+      )
+
+      func main() {
+        log.Println("Harness SDK Getting Started")
+
+        // Create a feature flag client instance
+        client, err := harness.NewCfClient(sdkKey)
+        if err != nil {
+          log.Fatalf("could not connect to FF servers %s\n", err)
+        }
+        defer func() { client.Close() }()
+
+        // Create a target (different targets can get different results based on rules)
+        target := evaluation.Target{
+          Identifier: "HT_1",
+          Name:       "Harness_Target_1",
+          Attributes: &map[string]interface{}{"email": "demo@harness.io"},
+        }
+
+        // Loop forever reporting the state of the flag
+        for {
+          resultBool, err := client.BoolVariation(flagName, &target, false)
+          if err != nil {
+            log.Fatal("failed to get evaluation: ", err)
+          }
+          log.Printf("Flag variation %v\n", resultBool)
+          time.Sleep(10 * time.Second)
+        }
+
+      }
+
+      func getEnvOrDefault(key, defaultStr string) string {
+        value := os.Getenv(key)
+        if value == "" {
+          return defaultStr
+        }
+        return value
+      }
+
       ```
 
-      Evaluating Feature Flag:
+      # Test your application
 
       ```
-      showFeature, err := client.BoolVariation(featureFlagKey, &target, false)
+      export FF_API_KEY=<your key here>
+      go run getting_started.go
       ```
 
-      Flush any changes and close the SDK
+      If you don't have the right version of golang installed locally, or don't want to install the dependencies you can use docker to quickly get started
       ```
-      client.close()
+      export FF_API_KEY=<your key here>
+      docker run -e FF_API_KEY=$FF_API_KEY -v $(pwd):/app -w /app golang:1.17 go run getting_started.go
       ```
+
     android: |
       # Setup
 
@@ -822,7 +857,7 @@ onboarding:
 
       # Initialization
 
-      `CfClient` is base class that provides all features of SDK. This is singleton and it is acessed with `CfClient.getInstance()`.
+      `CfClient` is base class that provides all features of SDK. This is singleton and it is accessed with `CfClient.getInstance()`.
 
       ```Kotlin
       val sdkConfiguration = CfConfiguration.builder()
@@ -1039,7 +1074,7 @@ onboarding:
 
       Within the `Carthage` folder, you will see another `Checkout` folder where the source code is located.
 
-      Next, we need to create a project for `ff-ios-client-sdk` dependency. We can do this easily by entering the following in the termial.
+      Next, we need to create a project for `ff-ios-client-sdk` dependency. We can do this easily by entering the following in the terminal.
 
       ```Swift
       //From your project's root folder
@@ -1087,13 +1122,13 @@ onboarding:
 
       # Initialization
 
-      1. Setup your configuration by calling `CfConfiguration`'s static method `builder()` and pass-in your prefered configuration settings through possible chaining methods. The chaining needs to be ended with `build()` method. (See the `build()`'s description for possible chaining methods and their default values.)
+      1. Setup your configuration by calling `CfConfiguration`'s static method `builder()` and pass-in your preferred configuration settings through possible chaining methods. The chaining needs to be ended with `build()` method. (See the `build()`'s description for possible chaining methods and their default values.)
 
-      2. Setup your target by calling `CfTarget`'s static method `builder()` and pass-in your prefered target settings through possible chaining methods. The chaining needs to be ended with `build()` method. (See the `build()`'s description for possible chaining methods and their default values). Target's `identifier` is mandatory and represents the `Account` from which you wish to receive evaluations.
+      2. Setup your target by calling `CfTarget`'s static method `builder()` and pass-in your preferred target settings through possible chaining methods. The chaining needs to be ended with `build()` method. (See the `build()`'s description for possible chaining methods and their default values). Target's `identifier` is mandatory and represents the `Account` from which you wish to receive evaluations.
 
       3. Call `CfClient.sharedInstance.initialize(apiKey:configuration:target:cache:onCompletion:)` and pass in your Harness CF `apiKey`, previously created configuration object, target and an optional cache object adopting `StorageRepositoryProtocol`.
 
-      If `cache` object is omitted, internal built-in cache will be used. You can also omitt `onCompletion` parameter if you don't need initialization/authorization information.
+      If `cache` object is omitted, internal built-in cache will be used. You can also omit `onCompletion` parameter if you don't need initialization/authorization information.
 
       **Your `ff-ios-client-sdk` is now initialized. Congratulations!!!**
 
@@ -1322,12 +1357,15 @@ onboarding:
 
       Otherwise, the default metrics endpoint URL will be used.
     nodejs: |
-      # Requirements
+      # Quickstart
 
-      To use this SDK, make sure you've: 
-        - Node.js v12 or newer 
+      To follow along with our test code sample, make sure you've:
 
-      # Install the SDK
+      - Installed Node.js v12 or a newer version
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag">Created a Feature Flag on the Harness Platform</a> called 'harnessappdemodarkmode'
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key">Created a server SDK key and made a copy of it</a>
+
+      # Install
 
       Install the SDK as a dependency in your application:
 
@@ -1342,56 +1380,35 @@ onboarding:
       yarn add @harnessio/ff-nodejs-server-sdk
       ```
 
-      # Copy the sample
+      # Usage
 
-      When you run the following sample, it will:
-        1. Connect to the Feature Flag service
-        2. Report the value of the {{flagName}} flag every 10 seconds until the connection is closed.
-        3. Listen for when the flag is enabled or disabled and return the new value
+      Create a js file called 'example.js'. Copy and paste the following complete code example into that file. 
+      You can use this to test the harnessappdemodarkmode Flag you created on the Harness Platform. 
 
       ```
-      const { Client, Event } = require('@harnessio/ff-nodejs-server-sdk');
 
-      (async () => {
-        // set apiKey to your SDK API Key
-        const apiKey = '{{apiKey}}';
+      const { Client } = require('@harnessio/ff-nodejs-server-sdk');
 
-        // set flagName to your flag identifier from the UI
-        const flagName = '{{flagName}}'; 
+      // set apiKey to your SDK API Key
+      const apiKey = '{{apiKey}}';
 
-        console.log('Harness SDK Getting Started');
+      // set flagName to your flag identifier from the UI
+      const flagName = 'harnessappdemodarkmode';
 
-        // Create Client
-        const client = new Client(apiKey);
+      // Create Client
+      const client = new Client(apiKey);
 
-        // Create a target (different targets can receive different results based on rules.
-        // Here we are including "location" as a custom attribute)
-        const target = {
-          identifier: 'nodeserversdk',
-          name: 'NodeServerSDK',
-          attributes: {
-            location: 'emea',
-          },
-        };
+      // Create a target (different targets can receive different results based on rules.
+      const target = {
+        identifier: 'nodeserversdk',
+        name: 'NodeServerSDK',
+      };
 
-        await client.waitForInitialization();
+      client.waitForInitialization()
+        .then(() => client.boolVariation(flagName, target))
+        .then(value => console.log(`${flagName} is ${value}`))
+        .finally(() => process.exit(0))
 
-        try {
-          // Log the state of the flag every 10 seconds
-          setInterval(async () => {
-            const value = await client.boolVariation(flagName, target, false);
-            console.log('Flag variation:', value);
-          }, 10000);
-
-          // We can also watch for the event when a flag changes
-          client.on(Event.CHANGED, async (flagIdentifier) => {
-            const value = await client.boolVariation(flagIdentifier, target, false);
-            console.log(`${flagIdentifier} changed: ${value}`);
-          });
-        } catch (e) {
-          console.error('Error:', e);
-        }
-      })();
       ```
 
       # Run the code sample
@@ -1504,87 +1521,58 @@ onboarding:
       ```
 
     php: |
-      # Requirements
+      # Quickstart
 
-      Installed <a href="https://www.php.net/">PHP 7.4</a> or a newer version
-      Installed <a href="https://getcomposer.org/">Composer</a>
+      To follow along with our test code sample, make sure you've:
 
-      # Setup
+      - Installed <a href="https://www.php.net/">PHP 7.4</a> or a newer version
+      - Installed <a href="https://getcomposer.org/">Composer</a>
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag">Created a Feature Flag on the Harness Platform</a> called 'harnessappdemodarkmode'
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key">Created a server SDK key and made a copy of it</a>
+
+
+      # Install
       The first step is to install the SDK as a dependency in your application using Composer.
 
-      ```
-      composer require harness/ff-server-sdk
+      ```shell
+      composer require harness/ff-server-sdk:0.1.0-beta
       ```
 
-      # Code Sample
-      The following is a complete code example that you can use to test the harnessappdemodarkmode Flag you created on the Harness Platform. 
-      When you run the code it will:
+      # Usage
 
-      Connect to the FF service.
-      Report the value of the Flag on the webpage. Every time the harnessappdemodarkmode Flag is toggled on or off on the Harness Platform, 
-      the updated value will be updated when the cache refreshes, then refresh the webpage to see the new value.
-      Close the SDK.
-      The example below can also be found in <a href="https://github.com/harness/ff-php-server-sdk/raw/main/online_example.php">online_example.php</a>.
+      Create a php file called 'example.php'. Copy and paste the following complete code example into that file. 
+      You can use this to test the harnessappdemodarkmode Flag you created on the Harness Platform. 
 
       ```php
       <?php
 
-      require_once realpath("vendor/autoload.php");
+      require_once __DIR__ . '/vendor/autoload.php';
 
       use Harness\Client;
       use OpenAPI\Client\Model\Target;
 
-      $SDK_KEY = getenv({{apiKey}}) ?: "";  // you can put your key in env variable or you can provide in the code
-      $FLAG_NAME = "harnessappdemodarkmode";
+      $SDK_KEY = '{{apiKey}}';
+      $FLAG_NAME = 'harnessappdemodarkmode';
 
-      $client = new Client($SDK_KEY, new Target(["name" => "harness", "identifier" => "harness"]));
+      $client = new Client(
+          $SDK_KEY,
+          new Target(['name' => 'harness', 'identifier' => 'harness']),
+          [
+              'base_url' => 'https://config.ff.harness.io/api/1.0/',
+              'events_url' => 'https://events.ff.harness.io/api/1.0'
+          ]
+      );
+
       $result = $client->evaluate($FLAG_NAME, false);
-
-      echo "Evaluation value for flag '".$FLAG_NAME."' with target 'harness': ".json_encode($result);
+      echo "Evaluation value for flag '$FLAG_NAME' with target 'harness': " . json_encode($result);
       ```
 
-      # Running the example
+      # Test your application 
 
-      This project contains the resources to quickly run this code example with Docker. To do this, you will need:
-      docker
-      docker-compose
-      make
-      First set up the environment configuration for both the FF Relay Proxy and the SDK.
-
-      Copy the `.online.example.env` to `.online.env`.
-      ```shell
-      cp .online.example.env .online.env
-      ```
-
-      Then edit `.online.env` and add the following values from your Harness configuration.
-      ```
-        ACCOUNT_IDENTIFIER=<Add your Account Identifier>
-        ORG_IDENTIFIER=default
-        ADMIN_SERVICE=https://app.harness.io/gateway/cf
-        # You need to generate an ADMIN_SERVICE_TOKEN yourself and add it here
-        ADMIN_SERVICE_TOKEN=<Add your Admin Service Token>
-        CLIENT_SERVICE=https://config.ff.harness.io/api/1.0
-        AUTH_SECRET=<Auth Secret string to sign JWT>
-        SDK_BASE_URL=https://config.ff.harness.io/api/1.0
-        SDK_EVENTS_URL=https://event.ff.harness.io/api/1.0
-        REDIS_ADDRESS=redis:6379
-        REDIS_PASSWORD=
-        REDIS_DB=0
-        # These two keys are the client and server SDK keys for your FF Environment
-        API_KEYS=<Add Server SDK Key>,<Add Client SDK Key>
-      ```
-
-      For More information on how to get the values for these fields, refer to: <a href="https://ngdocs.harness.io/article/rae6uk12hk-deploy-relay-proxy#configure_relay_proxy">Relay Proxy Configuration</a>
-
-      Once these are configured, start the docker containers with:
-      ```shell
-      make start
-      ```
-
-      Once the docker containers are running, open the URL in a browser window to view the Feature Flag value.
+      Open your terminal and type:
 
       ```shell
-      http://localhost/online_example.php
+      php example.php
       ```
 
     ruby: |
@@ -1656,7 +1644,7 @@ onboarding:
         export FF_API_KEY=<your key here>
 
         # Run the example
-        ruby ./example/gettting_started.rb
+        ruby ./example/getting_started.rb
       ```
 
       # Running with docker
@@ -1695,7 +1683,7 @@ onboarding:
           StreamUrl = "https://config.feature-flags.uat.harness.io/api/1.0/stream"
       };
 
-      // set selected identifer
+      // set selected identifier
       var target = new CfTargetProxy
       {
           Identifier = "target_identifier",
@@ -1829,7 +1817,7 @@ onboarding:
       For iOS Apps <a href="https://docs.flutter.dev/get-started/install/macos#install-xcode">Xcode</a>
       For Android Apps <a href="https://developer.android.com/studio?gclid=CjwKCAjwp7eUBhBeEiwAZbHwkRqdhQkk6wroJeWGu0uGWjW9Ue3hFXc4SuB6lwYU4LOZiZ-MQ4p57BoCvF0QAvD_BwE&gclsrc=aw.ds">Android Studio</a> or the <a href="https://developer.android.com/studio">Android SDK</a> for CLI only
 
-      You can use Flutter doctor to verify you have the neccessary prerequisites
+      You can use Flutter doctor to verify you have the necessary prerequisites
       ```shell
       flutter doctor
       ```
@@ -1984,7 +1972,7 @@ onboarding:
       flutter run --dart-define=FF_API_KEY=$FF_API_KEY -d <device id>
       ```
 
-      The app should show the configured flags current value. As you toggle the flag in the Harrness UI you will see the value update.
+      The app should show the configured flags current value. As you toggle the flag in the Harness UI you will see the value update.
 
     reactNative: |
       # Requirements
@@ -2107,6 +2095,22 @@ onboarding:
 
 learnMore: '{{ $.cf.homepage.learnMore }}'
 cfTrialHomePage:
+  forDevelopers:
+    title: For Developers
+    createFlag: Create your first flag in 15 minutes
+    shipCode: Ship code as soon as it's ready without merge conflicts
+    realTime: Real-time user targeting. <br>No complex manual config management
+  forDevOps:
+    title: For DevOps
+    automatedFeature: Automated feature release governance
+    avoidRollbacks: Avoid production rollbacks
+    scaleManagement: Scale feature management org-wide
+  startFreePlanBtn: Start Free Plan
+  featureFlagsDescription: Ship more features and reduce risk with Feature Flags!
+  dontCode:
+    title: Don't write code?
+    description: If writing code and installing SDK's isn't your thing, you can have an engineer on your team get you started in 15 minutes
+    inviteDeveloper: Invite a Developer
   startTrial:
     description: Take your feature release processes to the next level using our Harness Feature Flags.
     startBtn:

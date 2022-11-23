@@ -6,14 +6,7 @@
  */
 
 import React from 'react'
-import {
-  IconName,
-  Formik,
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  AllowedTypes
-} from '@wings-software/uicore'
+import { IconName, Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
@@ -31,7 +24,7 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import { getInstanceDropdownSchema } from '@common/components/InstanceDropdownField/InstanceDropdownField'
@@ -39,6 +32,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StringsMap } from 'stringTypes'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -139,6 +133,7 @@ function K8CanaryDeployWidget(
                       setFieldValue('timeout', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
                 )}
               </div>
@@ -188,7 +183,13 @@ function K8CanaryDeployWidget(
   )
 }
 
-const K8CanaryDeployInputStep: React.FC<K8sCanaryDeployProps> = ({ template, readonly, path, allowableTypes }) => {
+const K8CanaryDeployInputStep: React.FC<K8sCanaryDeployProps> = ({
+  template,
+  readonly,
+  path,
+  allowableTypes,
+  stepViewType
+}) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
@@ -198,7 +199,9 @@ const K8CanaryDeployInputStep: React.FC<K8sCanaryDeployProps> = ({ template, rea
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <FormMultiTypeDurationField
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -231,6 +234,10 @@ const K8CanaryDeployInputStep: React.FC<K8sCanaryDeployProps> = ({ template, rea
             label={getString('common.instanceLabel')}
             name={`${prefix}spec.instanceSelection`}
             allowableTypes={allowableTypes}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             disabledType
             readonly={readonly}
           />

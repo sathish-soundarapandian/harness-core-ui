@@ -20,7 +20,7 @@ import {
   IconName,
   ExpandingSearchInputHandle,
   Checkbox
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -310,7 +310,7 @@ const PerspectiveListPage: React.FC = () => {
   const [refetchPerspectives, setRefetchPerspectives] = useState(false)
   const searchRef = React.useRef<ExpandingSearchInputHandle>()
 
-  useDocumentTitle(getString('ce.perspectives.sideNavText'), true)
+  useDocumentTitle(getString('ce.perspectives.sideNavText'))
 
   const [result, executeQuery] = useFetchAllPerspectivesQuery({
     variables: {

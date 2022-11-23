@@ -8,7 +8,7 @@
 import React from 'react'
 import type { FormikErrors } from 'formik'
 import { isEmpty, set } from 'lodash-es'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 
 import type { StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'

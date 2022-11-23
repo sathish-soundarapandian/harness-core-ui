@@ -225,7 +225,7 @@ exports[`ServiceStudioDetails Service Entity Modal View check 1`] = `
           deploymentTypeText
         </div>
         <div
-          class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
+          class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
         >
           <div
             class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
@@ -323,6 +323,7 @@ exports[`ServiceStudioDetails Service Entity Modal View check 1`] = `
     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main stickyBtnContainer StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
   >
     <button
+      aria-label="save"
       class="bp3-button Button--button StyledProps--font StyledProps--main saveButton Button--with-current-color Button--variation Button--variation-primary"
       type="button"
     >
@@ -333,6 +334,7 @@ exports[`ServiceStudioDetails Service Entity Modal View check 1`] = `
       </span>
     </button>
     <button
+      aria-label="cancel"
       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
       type="button"
     >
@@ -636,7 +638,7 @@ exports[`ServiceStudioDetails discard button functionality after update event 1`
                 deploymentTypeText
               </div>
               <div
-                class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
+                class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
               >
                 <div
                   class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
@@ -825,6 +827,37 @@ exports[`ServiceStudioDetails discard button functionality after update event 1`
                 />
                 common.gitOps
               </label>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-medium StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-center"
+                style="height: 100px;"
+              >
+                <div
+                  class="bp3-spinner"
+                >
+                  <div
+                    class="bp3-spinner-animation"
+                  >
+                    <svg
+                      height="20"
+                      stroke-width="16.00"
+                      viewBox="-3.00 -3.00 106.00 106.00"
+                      width="20"
+                    >
+                      <path
+                        class="bp3-spinner-track"
+                        d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+                      />
+                      <path
+                        class="bp3-spinner-head"
+                        d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+                        pathLength="280"
+                        stroke-dasharray="280 280"
+                        stroke-dashoffset="210"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
             </div>
             <div
               class="Layout--horizontal StyledProps--main"
@@ -842,6 +875,7 @@ exports[`ServiceStudioDetails discard button functionality after update event 1`
         unsavedChanges
       </div>
       <button
+        aria-label="save"
         class="bp3-button Button--button StyledProps--font StyledProps--main saveButton Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -852,6 +886,7 @@ exports[`ServiceStudioDetails discard button functionality after update event 1`
         </span>
       </button>
       <button
+        aria-label="pipeline.discard"
         class="bp3-button Button--button StyledProps--font StyledProps--main discardBtn Button--with-current-color Button--variation Button--variation-secondary"
         type="button"
       >
@@ -1303,7 +1338,7 @@ exports[`ServiceStudioDetails save and publish functionality 1`] = `
                 deploymentTypeText
               </div>
               <div
-                class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
+                class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
               >
                 <div
                   class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
@@ -1492,6 +1527,37 @@ exports[`ServiceStudioDetails save and publish functionality 1`] = `
                 />
                 common.gitOps
               </label>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--margin-top-medium StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-center"
+                style="height: 100px;"
+              >
+                <div
+                  class="bp3-spinner"
+                >
+                  <div
+                    class="bp3-spinner-animation"
+                  >
+                    <svg
+                      height="20"
+                      stroke-width="16.00"
+                      viewBox="-3.00 -3.00 106.00 106.00"
+                      width="20"
+                    >
+                      <path
+                        class="bp3-spinner-track"
+                        d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+                      />
+                      <path
+                        class="bp3-spinner-head"
+                        d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+                        pathLength="280"
+                        stroke-dasharray="280 280"
+                        stroke-dashoffset="210"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
             </div>
             <div
               class="Layout--horizontal StyledProps--main"
@@ -1509,6 +1575,7 @@ exports[`ServiceStudioDetails save and publish functionality 1`] = `
         unsavedChanges
       </div>
       <button
+        aria-label="save"
         class="bp3-button Button--button StyledProps--font StyledProps--main saveButton Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
@@ -1519,6 +1586,7 @@ exports[`ServiceStudioDetails save and publish functionality 1`] = `
         </span>
       </button>
       <button
+        aria-label="pipeline.discard"
         class="bp3-button Button--button StyledProps--font StyledProps--main discardBtn Button--with-current-color Button--variation Button--variation-secondary"
         type="button"
       >

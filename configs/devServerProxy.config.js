@@ -61,6 +61,9 @@ module.exports = {
   '/ci': {
     target: targetLocalHost ? 'https://localhost:7171' : baseUrl
   },
+  '/sto-manager': {
+    target: targetLocalHost ? 'https://localhost:7172' : baseUrl
+  },
   '/ti-service': {
     target: targetLocalHost ? 'https://localhost:7457' : baseUrl
   },

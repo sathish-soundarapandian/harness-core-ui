@@ -9,7 +9,7 @@
 import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Formik } from '@wings-software/uicore'
+import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServices from 'services/cf'
 import type { Clause, Segment } from 'services/cf'
@@ -139,7 +139,7 @@ describe('TargetBasedOnConditions', () => {
 
     expect(screen.queryByTestId('rule-rows')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'plus cf.segmentDetail.addRule' }))
+    userEvent.click(screen.getByRole('button', { name: 'cf.segmentDetail.addRule' }))
 
     await waitFor(() => {
       expect(screen.getByTestId('rule-rows')).toBeInTheDocument()
@@ -153,7 +153,7 @@ describe('TargetBasedOnConditions', () => {
 
     expect(screen.queryAllByText('common.or')).toHaveLength(0)
 
-    const addRowBtn = screen.getByRole('button', { name: 'plus cf.segmentDetail.addRule' })
+    const addRowBtn = screen.getByRole('button', { name: 'cf.segmentDetail.addRule' })
 
     userEvent.click(addRowBtn)
     expect(screen.queryAllByText('common.or')).toHaveLength(0)

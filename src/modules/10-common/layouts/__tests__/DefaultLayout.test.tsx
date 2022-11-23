@@ -27,14 +27,6 @@ jest.mock('@common/hooks/useFeatures', () => ({
   useFeatures: jest.fn(() => ({}))
 }))
 
-jest.mock('@common/hooks/useGetUsageAndLimit', () => {
-  return {
-    useGetUsageAndLimit: () => {
-      return useGetUsageAndLimitReturnMock
-    }
-  }
-})
-
 jest.mock('services/cd-ng')
 const useGetLicensesAndSummaryMock = useGetLicensesAndSummary as jest.MockedFunction<any>
 useGetLicensesAndSummaryMock.mockImplementation(() => {
@@ -42,6 +34,16 @@ useGetLicensesAndSummaryMock.mockImplementation(() => {
     data: {}
   }
 })
+
+const useGetUsageAndLimitReturnMock = {
+  usageData: {
+    usage: {}
+  }
+}
+
+jest.mock('@common/hooks/useGetUsageAndLimit', () => ({
+  useGetUsage: () => useGetUsageAndLimitReturnMock
+}))
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
 useExtendTrialLicenseMock.mockImplementation(() => {
   return {
@@ -54,14 +56,6 @@ useSaveFeedbackMock.mockImplementation(() => {
     mutate: jest.fn()
   }
 })
-const useGetUsageAndLimitReturnMock = {
-  limitData: {
-    limit: {}
-  },
-  usageData: {
-    usage: {}
-  }
-}
 
 jest.mock('@common/hooks/useFeatureFlag', () => ({
   useFeatureFlag: jest.fn(() => true),
@@ -134,7 +128,6 @@ describe('<DefaultLayout /> tests', () => {
       const btn = screen.getByTestId(DISMISS_TEST_ID)
       fireEvent.click(btn)
       expect(() => getByText(BANNER_TEXT)).toThrow()
-
       // go to CI
       const toCI = getByText('To CI')
       fireEvent.click(toCI)

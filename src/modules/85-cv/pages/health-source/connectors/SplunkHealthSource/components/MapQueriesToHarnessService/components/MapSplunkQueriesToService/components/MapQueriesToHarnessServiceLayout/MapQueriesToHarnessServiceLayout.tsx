@@ -13,7 +13,7 @@ import {
   MultiTypeInputType,
   SelectOption,
   Utils
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { MapSplunkToServiceFieldNames } from '@cv/pages/health-source/connectors/SplunkHealthSource/components/MapQueriesToHarnessService/constants'

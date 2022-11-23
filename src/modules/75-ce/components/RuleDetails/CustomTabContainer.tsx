@@ -6,7 +6,8 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, FontVariation, Layout, Table, Text } from '@harness/uicore'
+import { Container, Layout, Table, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { Column } from 'react-table'
 import { get, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'

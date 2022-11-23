@@ -10,14 +10,7 @@ import { Link } from 'react-router-dom'
 import { pick, get, isPlainObject } from 'lodash-es'
 import { connect, FormikContextType } from 'formik'
 import { FormGroup, Intent } from '@blueprintjs/core'
-import {
-  HarnessDocTooltip,
-  Container,
-  Icon,
-  Text,
-  FormikTooltipContext,
-  DataTooltipInterface
-} from '@wings-software/uicore'
+import { HarnessDocTooltip, Container, Icon, Text, FormikTooltipContext, DataTooltipInterface } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ResponsePageSecretResponseWrapper, ConnectorInfoDTO } from 'services/cd-ng'

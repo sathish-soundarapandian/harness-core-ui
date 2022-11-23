@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm, AllowedTypes } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm, AllowedTypes } from '@harness/uicore'
 import { isEmpty, get, isArray } from 'lodash-es'
 import cx from 'classnames'
 
@@ -20,6 +20,7 @@ import { FormMultiTypeTextAreaField } from '@common/components'
 import { isApprovalStepFieldDisabled } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { scriptInputType, scriptOutputType, CustomApprovalData, CustomApprovalFormData } from './types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './CustomApproval.module.scss'
@@ -36,7 +37,7 @@ export interface CustomApprovalInputSetStepProps {
 }
 
 export default function CustomApprovalInputSetStep(props: CustomApprovalInputSetStepProps): React.ReactElement {
-  const { template, path, readonly, initialValues, allowableTypes } = props
+  const { template, path, readonly, initialValues, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const scriptType: ScriptType = get(initialValues, 'spec.shell') || 'Bash'
@@ -48,7 +49,9 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -70,6 +73,10 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
             defaultValueToReset=""
             disabled={readonly}
             allowedTypes={allowableTypes}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
             disableTypeSelection={readonly}
             skipRenderValueInExpressionLabel
             expressionRender={
@@ -100,7 +107,9 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -118,7 +127,9 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
             multiTypeDurationProps={{
-              enableConfigureOptions: false,
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
               allowableTypes,
               expressions,
               disabled: readonly
@@ -195,6 +206,9 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
           name={`${prefix}spec.approvalCriteria.spec.expression`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeTextArea={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             expressions,
             allowableTypes
           }}
@@ -262,6 +276,9 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
           name={`${prefix}spec.rejectionCriteria.spec.expression`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeTextArea={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
             expressions,
             allowableTypes
           }}

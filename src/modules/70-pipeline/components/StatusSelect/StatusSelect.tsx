@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { MultiSelectDropDown, MultiSelectOption } from '@wings-software/uicore'
+import { MultiSelectDropDown, MultiSelectOption } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { StringKeys, useStrings } from 'framework/strings'
@@ -27,6 +27,7 @@ type AllowedStatus = Exclude<
 >
 const allowedOptions = [
   ExecutionStatusEnum.Aborted,
+  ExecutionStatusEnum.AbortedByFreeze,
   ExecutionStatusEnum.Expired,
   ExecutionStatusEnum.Failed,
   ExecutionStatusEnum.Running,
@@ -41,6 +42,7 @@ const allowedOptions = [
 
 const labelMap: Record<AllowedStatus, StringKeys> = {
   Aborted: 'pipeline.executionFilters.labels.Aborted',
+  AbortedByFreeze: 'pipeline.executionFilters.labels.AbortedByFreeze',
   Expired: 'pipeline.executionFilters.labels.Expired',
   Failed: 'pipeline.executionFilters.labels.Failed',
   Running: 'pipeline.executionFilters.labels.Running',
@@ -50,8 +52,8 @@ const labelMap: Record<AllowedStatus, StringKeys> = {
   ApprovalWaiting: 'pipeline.executionFilters.labels.ApprovalWaiting',
   InterventionWaiting: 'pipeline.executionFilters.labels.InterventionWaiting',
   ResourceWaiting: 'pipeline.executionFilters.labels.Waiting',
-  InputWaiting: 'pipeline.executionFilters.labels.Waiting',
-  WaitStepRunning: 'pipeline.executionFilters.labels.Waiting'
+  WaitStepRunning: 'pipeline.executionFilters.labels.WaitStepRunning',
+  InputWaiting: 'pipeline.executionFilters.labels.InputWaiting'
 }
 
 export interface StatusSelectProps {
@@ -74,6 +76,7 @@ export default function StatusSelect(props: StatusSelectProps): React.ReactEleme
 
   return (
     <MultiSelectDropDown
+      minWidth={120}
       buttonTestId="status-select"
       value={defaultTo(
         value?.map(item => ({

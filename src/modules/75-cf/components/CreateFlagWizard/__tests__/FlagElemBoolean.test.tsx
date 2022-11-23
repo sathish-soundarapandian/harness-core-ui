@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import type { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { FlagTypeVariations } from '@cf/components/CreateFlagDialog/FlagDialogUtils'
 import { FeatureFlagMutivariateKind } from '@cf/utils/CFUtils'

@@ -6,8 +6,7 @@
  */
 
 import React from 'react'
-import { Formik, FormikForm, Container, FormInput, Layout, Button, useToggleOpen } from '@wings-software/uicore'
-import type { FormikProps } from 'formik'
+import { Formik, FormikForm, Container, FormInput, Layout, Button, useToggleOpen, Accordion } from '@harness/uicore'
 import { Drawer, FormGroup, Label } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
@@ -27,12 +26,14 @@ import type {
 } from '@chaos/interfaces/Chaos.types'
 import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { NameIdDescription } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './ChaosExperimentStepFunctionConfigs'
 import type {
   ChaosExperimentStepProps,
   ChaosExperimentStepData,
   ChaosExperimentStepDataUI
 } from './ChaosExperimentStep'
+import OptionalConfiguration from './OptionalConfiguration'
 import drawerCss from '@pipeline/components/PipelineStudio/RightDrawer/RightDrawer.module.scss'
 import css from './ChaosExperimentStep.module.scss'
 
@@ -64,7 +65,7 @@ export const ChaosExperimentStepBase = (
   const { stage: currentStage } = getStageFromPipeline<BuildStageElementConfig>(selectedStageId || '')
 
   return (
-    <Formik
+    <Formik<ChaosExperimentStepData>
       initialValues={getInitialValuesInCorrectFormat<ChaosExperimentStepData, ChaosExperimentStepDataUI>(
         initialValues,
         transformValuesFieldsConfig
@@ -96,49 +97,67 @@ export const ChaosExperimentStepBase = (
         onUpdate?.(schemaValues)
       }}
     >
-      {(formik: FormikProps<ChaosExperimentStepData>) => {
+      {formikProps => {
         // This is required
-        setFormikRef?.(formikRef, formik)
+        setFormikRef?.(formikRef, formikProps)
 
         return (
           <FormikForm className={css.chaosExperimentStep}>
             <Layout.Vertical spacing="medium" width="75%">
               {stepViewType !== StepViewType.Template && (
-                <FormInput.InputWithIdentifier
-                  inputLabel={getString('name')}
-                  isIdentifierEditable={isNewStep && !readonly}
+                <NameIdDescription
+                  className={css.nameIdDescriptionField}
+                  formikProps={formikProps}
+                  identifierProps={{
+                    isIdentifierEditable: isNewStep && !readonly
+                  }}
                   inputGroupProps={{
                     placeholder: getString('pipeline.stepNamePlaceholder'),
                     disabled: readonly
                   }}
+                  descriptionProps={{
+                    placeholder: getString('chaos.pipelineStep.description')
+                  }}
                 />
               )}
-              <FormInput.TextArea label="Description" name="description" />
               <FormGroup>
-                <Label>{getString('chaos.selectChaosExperiment')}</Label>
-                <Button
-                  minimal
-                  onClick={openExperimentDrawer}
-                  id={css.chaosExperimentReferenceField}
-                  rightIcon="chevron-down"
-                  iconProps={{ size: 12 }}
-                >
-                  {formik.values.spec.experimentRef ?? getString('chaos.selectChaosExperiment')}
-                </Button>
+                <FormGroup>
+                  <Label>{getString('chaos.selectChaosExperiment')}</Label>
+                  <Button
+                    minimal
+                    onClick={openExperimentDrawer}
+                    id={css.chaosExperimentReferenceField}
+                    rightIcon="chevron-down"
+                    iconProps={{ size: 12 }}
+                  >
+                    {formikProps.values.spec.experimentRef || getString('chaos.selectChaosExperiment')}
+                  </Button>
+                </FormGroup>
                 <FormInput.Text
-                  className={css.expectedResilienceScoreField}
-                  label="Expected Resiliency Score"
+                  label={getString('chaos.pipelineStep.expectedResilienceScoreLabel')}
                   name="spec.expectedResilienceScore"
+                  placeholder={getString('chaos.pipelineStep.expectedResilienceScorePlaceholder')}
+                  inputGroup={{ type: 'number' }}
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  onChange={(e: any) => formik.setFieldValue('spec.expectedResilienceScore', parseInt(e.target.value))}
+                  onChange={(e: any) =>
+                    formikProps.setFieldValue('spec.expectedResilienceScore', parseInt(e.target.value))
+                  }
                 />
+                <Accordion activeId="step-1">
+                  <Accordion.Panel
+                    id="optional-config"
+                    summary={getString('common.optionalConfig')}
+                    details={<OptionalConfiguration formik={formikProps} />}
+                  />
+                </Accordion>
               </FormGroup>
             </Layout.Vertical>
+
             <ChildAppMounter<ExperimentPreviewProps>
               ChildApp={ExperimentPreview}
-              experimentID={formik.values.spec.experimentRef}
+              experimentID={formikProps.values.spec.experimentRef}
             />
-            <Drawer isOpen={isExperimentDrawerOpen} enforceFocus={true} size="70%">
+            <Drawer isOpen={isExperimentDrawerOpen} enforceFocus={true} size="75%">
               <Button
                 minimal
                 className={drawerCss.almostFullScreenCloseBtn}
@@ -150,7 +169,7 @@ export const ChaosExperimentStepBase = (
                 <ChildAppMounter<PipelineExperimentSelectProps>
                   ChildApp={PipelineExperimentSelect}
                   onSelect={(experiment: ChaosExperiment) => {
-                    formik.setFieldValue('spec.experimentRef', experiment.id)
+                    formikProps.setFieldValue('spec.experimentRef', experiment.id)
                     closeExperimentDrawer()
                   }}
                   goToNewExperiment={() =>

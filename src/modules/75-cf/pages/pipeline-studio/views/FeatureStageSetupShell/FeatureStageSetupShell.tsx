@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Tabs, Tab, Button, Icon } from '@wings-software/uicore'
+import { Layout, Tabs, Tab, Button, Icon } from '@harness/uicore'
 import cx from 'classnames'
 import { set } from 'lodash-es'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'

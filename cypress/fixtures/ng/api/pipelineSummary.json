@@ -9,13 +9,118 @@
     "createdAt": 1641552750888,
     "lastUpdatedAt": 1641552750888,
     "modules": ["cd"],
-    "executionSummaryInfo": {
-      "numOfErrors": [0, 0, 0, 0, 0, 0, 0],
-      "deployments": [0, 1, 0, 0, 0, 0, 0],
-      "lastExecutionTs": 1643285292924,
-      "lastExecutionStatus": "Success",
-      "lastExecutionId": "C9mgNjxSS7-B-qQek27iuA"
-    },
+    "recentExecutionsInfo": [
+      {
+        "executorInfo": {
+          "triggerType": "MANUAL",
+          "username": "sunnykesh.shandilya@harness.io",
+          "email": "sunnykesh.shandilya@harness.io"
+        },
+        "planExecutionId": "yrfNWoyERfu6wOzdI3A3KQ",
+        "status": "Success",
+        "startTs": 1659988014599,
+        "endTs": 1659988559397
+      },
+      {
+        "executorInfo": {
+          "triggerType": "MANUAL",
+          "username": "sunnykesh.shandilya@harness.io",
+          "email": "sunnykesh.shandilya@harness.io"
+        },
+        "planExecutionId": "cCrz_JToTFimFefCLKHw1A",
+        "status": "Running",
+        "startTs": 1659955156658,
+        "endTs": 1659955600965
+      },
+      {
+        "executorInfo": {
+          "triggerType": "MANUAL",
+          "username": "Depanshu Dhiman",
+          "email": "depanshu.dhiman@harness.io"
+        },
+        "planExecutionId": "G48hXQ5oRDuqMpfVeKHeFA",
+        "status": "Success",
+        "startTs": 1659952362208,
+        "endTs": 1659952893510
+      },
+      {
+        "executorInfo": {
+          "triggerType": "MANUAL",
+          "username": "Reetika Mallavarapu",
+          "email": "mallavarapu.reetika@harness.io"
+        },
+        "planExecutionId": "4YR0JW99QIajZ2-bH3fPaw",
+        "status": "Success",
+        "startTs": 1659951988346,
+        "endTs": 1659952553514
+      },
+      {
+        "executorInfo": {
+          "triggerType": "MANUAL",
+          "username": "Reetika Mallavarapu",
+          "email": "mallavarapu.reetika@harness.io"
+        },
+        "planExecutionId": "rvrG4AtdTHqExXNPhE1gqA",
+        "status": "Failed",
+        "startTs": 1659951898452,
+        "endTs": 1659951900550
+      },
+      {
+        "executorInfo": {
+          "triggerType": "MANUAL",
+          "username": "satyam.srivastava",
+          "email": "satyam.srivastava@harness.io"
+        },
+        "planExecutionId": "DuZDxi1ATQ6L128JC9idjg",
+        "status": "Success",
+        "startTs": 1659947237533,
+        "endTs": 1659947668423
+      },
+      {
+        "executorInfo": {
+          "triggerType": "MANUAL",
+          "username": "Bhavya Sinha",
+          "email": "bhavya.sinha@harness.io"
+        },
+        "planExecutionId": "dY8nWMzZRhu3VBKY-WLvug",
+        "status": "Success",
+        "startTs": 1659933710164,
+        "endTs": 1659934123659
+      },
+      {
+        "executorInfo": {
+          "triggerType": "MANUAL",
+          "username": "Rajarshee Chatterjee",
+          "email": "rajarshee.chatterjee@harness.io"
+        },
+        "planExecutionId": "wKIvXHFST8OHdNnvz-NRBQ",
+        "status": "Success",
+        "startTs": 1659713011235,
+        "endTs": 1659713505263
+      },
+      {
+        "executorInfo": {
+          "triggerType": "MANUAL",
+          "username": "sunnykesh.shandilya@harness.io",
+          "email": "sunnykesh.shandilya@harness.io"
+        },
+        "planExecutionId": "izVPnjfGQE-E1--ivTpskA",
+        "status": "Success",
+        "startTs": 1659700476051,
+        "endTs": 1659700900068
+      },
+      {
+        "executorInfo": {
+          "triggerType": "MANUAL",
+          "username": "Yogesh Chaudhary",
+          "email": "yogesh.chaudhary@harness.io"
+        },
+        "planExecutionId": "Yxme0QePRge-rt_uUgMG5Q",
+        "status": "Success",
+        "startTs": 1659699890744,
+        "endTs": 1659700364260
+      }
+    ],
     "filters": {
       "cd": {
         "deploymentTypes": ["Kubernetes"],

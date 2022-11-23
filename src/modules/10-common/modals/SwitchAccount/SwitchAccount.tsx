@@ -17,19 +17,18 @@ import {
   useToaster,
   NoDataCard,
   Pagination
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import type { Column, Renderer, CellProps } from 'react-table'
 import { useParams, useHistory } from 'react-router-dom'
-import { get, defaultTo } from 'lodash-es'
+import { get } from 'lodash-es'
 import { Intent } from '@blueprintjs/core'
 import {
   useSetDefaultAccountForCurrentUser,
   RestResponseUser,
   useRestrictedSwitchAccount,
-  useGetUserAccounts,
-  useGetUser
+  useGetUserAccounts
 } from 'services/portal'
-import type { User, Account } from 'services/portal'
+import type { Account } from 'services/portal'
 import { PageSpinner } from '@common/components'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
@@ -39,7 +38,7 @@ import { getLoginPageURL } from 'framework/utils/SessionUtils'
 import SecureStorage from 'framework/utils/SecureStorage'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useGetCurrentUserInfo } from 'services/cd-ng'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getLocationPathName } from 'framework/utils/WindowLocation'
 import css from './SwitchAccount.module.scss'
 
 interface SwitchAccountProps {
@@ -76,27 +75,18 @@ const ReAuthenticationNote: React.FC<ReAuthenticationNoteProps> = ({ accounts, a
 const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
   const { accountId } = useParams<AccountPathProps>()
   const [page, setPage] = useState(0)
-  const [user, setUser] = useState<User>()
   const [switchAccountId, setSwitchAccountId] = useState<string | undefined>()
   const { showError } = useToaster()
   const history = useHistory()
   const { getString } = useStrings()
   const { currentUserInfo, updateAppStore } = useAppStore()
-  const { PL_ENABLE_SWITCH_ACCOUNT_PAGINATION } = useFeatureFlags()
-  const {
-    data: userData,
-    loading: userLoading,
-    error: userError,
-    refetch: userRefetch
-  } = useGetUser({ lazy: PL_ENABLE_SWITCH_ACCOUNT_PAGINATION })
 
   const { data, loading, refetch, error } = useGetUserAccounts({
     queryParams: {
       pageIndex: page,
       pageSize: 10,
       searchTerm: searchString
-    },
-    lazy: !PL_ENABLE_SWITCH_ACCOUNT_PAGINATION
+    }
   })
 
   const {
@@ -140,8 +130,10 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
           })
         } else if (response.resource) {
           SecureStorage.set('acctId', account.uuid)
+          // This may be overriden by the defaultExperience of the most recent account opened (in AppStoreContext)
+          localStorage.setItem('defaultExperience', account.defaultExperience || '')
           // this needs to be a server-redirect to support cluster isolation
-          window.location.href = window.location.pathname
+          window.location.href = getLocationPathName()
         } else {
           showError(getString('common.switchAccountError'))
         }
@@ -171,11 +163,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
         pathParams: { accountId: account.uuid }
       })
       if (resource === true) {
-        if (!PL_ENABLE_SWITCH_ACCOUNT_PAGINATION) {
-          userRefetch()
-        } else {
-          fetchCurrentUserInfo()
-        }
+        fetchCurrentUserInfo()
       } else {
         showError(get(responseMessages, '[0].message', getString('somethingWentWrong')))
       }
@@ -194,9 +182,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
       }
     })
 
-    const isDefaultAccount = !PL_ENABLE_SWITCH_ACCOUNT_PAGINATION
-      ? account.uuid === user?.defaultAccountId
-      : account.uuid === currentUserInfo?.defaultAccountId
+    const isDefaultAccount = account.uuid === currentUserInfo?.defaultAccountId
     // default account should not be actionable
     return isDefaultAccount ? (
       <Text flex={{ align: 'center-center' }}>Default</Text>
@@ -211,20 +197,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
     )
   }
 
-  useEffect(() => {
-    setUser(userData?.resource)
-  }, [userData])
-
   const getAccounts = () => {
-    if (!PL_ENABLE_SWITCH_ACCOUNT_PAGINATION) {
-      return defaultTo(
-        user?.accounts
-          ?.concat(defaultTo(user.supportAccounts, []))
-          ?.filter(account => account.accountName.toLowerCase().includes(searchString.toLowerCase())),
-        []
-      )
-    }
-
     return data?.resource?.content || []
   }
 
@@ -263,31 +236,29 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
     ],
     [accounts, currentUserInfo, switchAccountId]
   )
-  const apiError = error || userError
 
   return (
     <>
       <ReAuthenticationNote accounts={accounts} accountId={accountId} />
       <Container padding={{ left: 'large', right: 'large' }} className={css.container}>
-        {userLoading || loading || userInfoLoading || settingDefault ? <PageSpinner /> : undefined}
+        {loading || userInfoLoading || settingDefault ? <PageSpinner /> : undefined}
 
-        {apiError ? (
-          <PageError message={apiError.message || getString('somethingWentWrong')} onClick={() => refetch()} />
+        {error ? (
+          <PageError message={error.message || getString('somethingWentWrong')} onClick={() => refetch()} />
         ) : null}
-        {!settingDefault && !apiError && accounts ? (
+        {!settingDefault && !error && accounts ? (
           accounts.length ? (
             <>
               <TableV2 columns={columns} data={accounts} sortable={false} className={css.table} />
-              {PL_ENABLE_SWITCH_ACCOUNT_PAGINATION && (
-                <Pagination
-                  itemCount={data?.resource?.totalItems || 0}
-                  pageSize={data?.resource?.pageSize || 10}
-                  pageCount={data?.resource?.totalPages || 0}
-                  pageIndex={data?.resource?.pageIndex || 0}
-                  gotoPage={setPage}
-                  className={css.pagination}
-                />
-              )}
+
+              <Pagination
+                itemCount={data?.resource?.totalItems || 0}
+                pageSize={data?.resource?.pageSize || 10}
+                pageCount={data?.resource?.totalPages || 0}
+                pageIndex={data?.resource?.pageIndex || 0}
+                gotoPage={setPage}
+                className={css.pagination}
+              />
             </>
           ) : (
             <NoDataCard

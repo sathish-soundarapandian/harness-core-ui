@@ -198,6 +198,7 @@ exports[`Test ChangeSourceTable should render 1`] = `
         </div>
       </div>
       <button
+        aria-label="cv.changeSource.addChangeSource"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-top-small Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
         type="button"
       >
@@ -429,6 +430,7 @@ exports[`Test ChangeSourceTable should render 2`] = `
         </div>
       </div>
       <button
+        aria-label="cv.changeSource.addChangeSource"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-top-small Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
         type="button"
       >

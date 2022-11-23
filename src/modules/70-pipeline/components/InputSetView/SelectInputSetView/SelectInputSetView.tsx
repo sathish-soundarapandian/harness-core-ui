@@ -6,73 +6,84 @@
  */
 
 import React from 'react'
-import { defaultTo } from 'lodash-es'
-import { DataTooltipInterface, FormInput, MultiTypeInputProps, MultiTypeInputType } from '@harness/uicore'
-
-import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
+import { defaultTo, get } from 'lodash-es'
+import {
+  DataTooltipInterface,
+  MultiTypeInputType,
+  Container,
+  FormInput,
+  getMultiTypeFromValue,
+  Layout
+} from '@harness/uicore'
+import type { FormMultiTypeInputProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
+import { connect, FormikContextType } from 'formik'
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
+import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { useRenderMultiTypeInputWithAllowedValues } from '../utils/utils'
 
-interface SelectInputSetViewProps {
-  className?: string
-  name: string
-  label: string
+interface SelectInputSetViewProps extends FormMultiTypeInputProps {
+  formik?: FormikContextType<any>
   fieldPath: string
-  selectItems: SelectOption[]
   template: any
-  placeholder?: string
-  disabled?: boolean
-  helperText?: string
-  readonly?: boolean
   tooltipProps?: DataTooltipInterface
-  multiTypeInputProps?: Omit<MultiTypeInputProps, 'name'>
-  useValue?: boolean
+  enableConfigureOptions?: boolean
+  configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
 }
 
-export function SelectInputSetView(props: SelectInputSetViewProps): JSX.Element {
+export function SelectInputSet(props: SelectInputSetViewProps): JSX.Element {
   const {
-    className,
-    selectItems,
-    name,
-    label,
-    placeholder,
-    disabled,
-    helperText,
-    template,
+    formik,
     fieldPath,
-    readonly,
-    tooltipProps,
-    multiTypeInputProps,
-    useValue
+    template,
+    enableConfigureOptions = true,
+    configureOptionsProps,
+    className,
+    ...rest
   } = props
+  const { name, label, placeholder, tooltipProps, multiTypeInputProps, disabled, selectItems } = rest
+  const value = get(formik?.values, name, '')
 
   const { getMultiTypeInputWithAllowedValues } = useRenderMultiTypeInputWithAllowedValues({
-    name: name,
+    name,
     labelKey: label,
     placeholderKey: placeholder,
     fieldPath: fieldPath,
     allowedTypes: defaultTo(multiTypeInputProps?.allowableTypes, [MultiTypeInputType.FIXED]),
-    template: template,
-    readonly: readonly,
-    tooltipProps: tooltipProps
+    template,
+    readonly: disabled,
+    tooltipProps,
+    className
   })
 
-  if (shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, template)) {
-    return getMultiTypeInputWithAllowedValues()
-  }
+  const inputField = shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, template) ? (
+    getMultiTypeInputWithAllowedValues()
+  ) : (
+    <FormInput.MultiTypeInput style={{ flexGrow: 1 }} {...rest} />
+  )
 
   return (
-    <FormInput.MultiTypeInput
-      className={className}
-      selectItems={selectItems}
-      label={label}
-      placeholder={placeholder}
-      name={name}
-      disabled={disabled}
-      helperText={helperText}
-      useValue={useValue}
-      multiTypeInputProps={multiTypeInputProps}
-      tooltipProps={tooltipProps}
-    />
+    <Container className={className}>
+      <Layout.Horizontal>
+        {inputField}
+        {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
+          <SelectConfigureOptions
+            options={selectItems}
+            value={value}
+            type={'String'}
+            variableName={name}
+            showRequiredField={false}
+            showDefaultField={false}
+            showAdvanced={true}
+            onChange={val => formik?.setFieldValue(name, val)}
+            style={{ marginTop: 'var(--spacing-6)' }}
+            {...configureOptionsProps}
+            isReadonly={disabled}
+          />
+        )}
+      </Layout.Horizontal>
+    </Container>
   )
 }
+
+export const SelectInputSetView = connect(SelectInputSet)

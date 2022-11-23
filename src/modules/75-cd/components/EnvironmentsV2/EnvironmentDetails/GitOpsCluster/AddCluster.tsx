@@ -14,15 +14,15 @@ import {
   Button,
   ButtonVariation,
   Checkbox,
-  Color,
   Container,
   ExpandingSearchInput,
-  FontVariation,
   Layout,
   PageSpinner,
   Text,
   useToaster
 } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
+
 import { useStrings } from 'framework/strings'
 import { useInfiniteScroll } from '@common/hooks/useInfiniteScroll'
 

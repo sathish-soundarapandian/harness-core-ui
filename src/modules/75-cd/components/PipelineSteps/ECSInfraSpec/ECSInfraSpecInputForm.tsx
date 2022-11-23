@@ -18,7 +18,7 @@ import {
   AllowedTypes,
   SelectOption,
   RUNTIME_INPUT_VALUE
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 
 import { EcsInfrastructure, useClusters } from 'services/cd-ng'
 import { useListAwsRegions } from 'services/portal'

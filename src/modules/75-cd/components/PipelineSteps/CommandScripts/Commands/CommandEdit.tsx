@@ -34,10 +34,11 @@ interface CommandEditProps {
   readonly?: boolean
   onAddEditCommand: (commandData: CommandUnitType) => void
   onCancelClick: () => void
+  deploymentType?: string
 }
 
 export function CommandEdit(props: CommandEditProps): React.ReactElement {
-  const { isEdit, initialValues, onAddEditCommand, readonly, allowableTypes, onCancelClick } = props
+  const { isEdit, initialValues, onAddEditCommand, readonly, allowableTypes, onCancelClick, deploymentType } = props
 
   const { getString } = useStrings()
 
@@ -138,7 +139,7 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
             />
 
             {formik.values.type === CommandType.Copy && (
-              <CopyCommandEdit formik={formik} allowableTypes={allowableTypes} />
+              <CopyCommandEdit formik={formik} allowableTypes={allowableTypes} deploymentType={deploymentType} />
             )}
 
             {formik.values.type === CommandType.DownloadArtifact && (

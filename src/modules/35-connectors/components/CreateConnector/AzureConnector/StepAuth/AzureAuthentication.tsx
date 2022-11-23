@@ -19,7 +19,7 @@ import {
   FormInput,
   SelectOption,
   ButtonVariation
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'

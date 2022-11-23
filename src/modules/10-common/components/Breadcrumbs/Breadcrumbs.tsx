@@ -8,7 +8,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import cx from 'classnames'
-import { Icon } from '@wings-software/uicore'
+import { Icon } from '@harness/uicore'
 import css from './Breadcrumbs.module.scss'
 
 export interface Breadcrumb {

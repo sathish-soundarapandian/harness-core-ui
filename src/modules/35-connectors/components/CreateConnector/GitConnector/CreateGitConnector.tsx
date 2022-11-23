@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { StepWizard } from '@wings-software/uicore'
+import { StepWizard } from '@harness/uicore'
 import { pick } from 'lodash-es'
 import {
   Connectors,
@@ -18,10 +18,12 @@ import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/
 import { useStrings } from 'framework/strings'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { buildGitPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '../commonSteps/GitDetailsStep'
 import StepGitAuthentication from './StepAuth/StepGitAuthentication'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import ConnectivityModeStep from '../commonSteps/ConnectivityModeStep/ConnectivityModeStep'
 
 const CreateGitConnector = (props: CreateConnectorModalProps): JSX.Element => {
   const { getString } = useStrings()
@@ -32,7 +34,9 @@ const CreateGitConnector = (props: CreateConnectorModalProps): JSX.Element => {
     'setIsEditMode',
     'accountId',
     'orgIdentifier',
-    'projectIdentifier'
+    'projectIdentifier',
+    'connectivityMode',
+    'setConnectivityMode'
   ])
 
   return (
@@ -65,17 +69,36 @@ const CreateGitConnector = (props: CreateConnectorModalProps): JSX.Element => {
         onConnectorCreated={props.onSuccess}
         helpPanelReferenceId="gitConnectorCredentials"
       />
-      <DelegateSelectorStep
-        name={getString('delegate.DelegateselectionLabel')}
+
+      <ConnectivityModeStep
+        name={getString('connectors.selectConnectivityMode')}
+        type={Connectors.GIT}
+        gitDetails={props.gitDetails}
+        connectorInfo={props.connectorInfo}
         isEditMode={props.isEditMode}
         setIsEditMode={props.setIsEditMode}
         buildPayload={buildGitPayload}
+        connectivityMode={props.connectivityMode}
+        setConnectivityMode={props.setConnectivityMode}
         hideModal={props.onClose}
         onConnectorCreated={props.onSuccess}
-        connectorInfo={props.connectorInfo}
-        gitDetails={props.gitDetails}
-        helpPanelReferenceId="ConnectorDelegatesSetup"
+        helpPanelReferenceId="ConnectorConnectToTheProvider"
       />
+
+      {props.connectivityMode === ConnectivityModeType.Delegate ? (
+        <DelegateSelectorStep
+          name={getString('delegate.DelegateselectionLabel')}
+          isEditMode={props.isEditMode}
+          setIsEditMode={props.setIsEditMode}
+          buildPayload={buildGitPayload}
+          hideModal={props.onClose}
+          onConnectorCreated={props.onSuccess}
+          connectorInfo={props.connectorInfo}
+          gitDetails={props.gitDetails}
+          helpPanelReferenceId="ConnectorDelegatesSetup"
+        />
+      ) : null}
+
       <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}

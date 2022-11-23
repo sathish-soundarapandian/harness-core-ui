@@ -7,18 +7,8 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import cx from 'classnames'
-import {
-  Button,
-  Color,
-  Container,
-  FontVariation,
-  Layout,
-  PillToggle,
-  Select,
-  SelectOption,
-  Text,
-  TextInput
-} from '@harness/uicore'
+import { Button, Container, Layout, PillToggle, Select, SelectOption, Text, TextInput } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { debounce, defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { CustomHandlerType, HandlerKind } from '@ce/constants'
