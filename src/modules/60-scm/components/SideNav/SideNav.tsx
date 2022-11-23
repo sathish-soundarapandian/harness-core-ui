@@ -34,6 +34,7 @@ export default function SCMSideNav(): React.ReactElement {
   const isCommits = useMemo(() => routeMatch.path.includes(scmPathProps.commitRef), [routeMatch])
   const isBranches = useMemo(() => routeMatch.path.includes(scmPathProps.branch), [routeMatch])
   const isSettings = useMemo(() => routeMatch.path.endsWith('/:repoName/settings'), [routeMatch])
+  const isWebhook = useMemo(() => routeMatch.path.endsWith('/:repoName/settings/webhook/new'), [routeMatch])
 
   return (
     <Layout.Vertical spacing="small">
@@ -62,7 +63,7 @@ export default function SCMSideNav(): React.ReactElement {
               to={routes.toSCMRepository({
                 repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
               })}
-              {...(isCommits || isBranches || isSettings ? { activeClassName: '' } : {})}
+              {...(isCommits || isBranches || isSettings || isWebhook ? { activeClassName: '' } : {})}
             />
           )}
 

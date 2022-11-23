@@ -20,7 +20,8 @@ import {
   RepositoryCommits,
   RepositoryBranches,
   RepositoryFileEdit,
-  RepositorySettings
+  RepositorySettings,
+  RepositoryCreateWebhook
 } from './SCMApp'
 import SCMHomePage from './pages/home/SCMHomePage'
 
@@ -69,6 +70,22 @@ export function SCMRouteDestinations(): React.ReactElement {
         exact
       >
         <RepositorySettings />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        path={routes.toSCMCreateWebhook({
+          repoPath: [
+            scmPathProps.accountId,
+            scmPathProps.orgIdentifier,
+            scmPathProps.projectIdentifier,
+            scmPathProps.repoName
+          ].join('/')
+        })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.SCMCreateWebhook}
+        exact
+      >
+        <RepositoryCreateWebhook />
       </RouteWithLayout>
 
       <RouteWithLayout

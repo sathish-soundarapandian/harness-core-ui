@@ -207,6 +207,11 @@ declare module 'scm/RepositorySettings' {
   export default ChildApp
 }
 
+declare module 'scm/RepositoryCreateWebhook' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare type Optional<T, K extends keyof T = keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
 declare type Mutable<T> = {

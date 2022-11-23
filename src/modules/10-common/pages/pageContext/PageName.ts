@@ -129,6 +129,7 @@ export enum PAGE_NAME {
   SCMRepository = 'SCMRepository',
   SCMRepositorySettings = 'SCMRepositorySettings',
   SCMRepositoryFileEdit = 'SCMRepositoryFileEdit',
+  SCMCreateWebhook = 'SCMCreateWebhook',
   SCMRepositoryCommits = 'SCMRepositoryCommits',
   SCMRepositoryBranches = 'SCMRepositoryBranches',
   ExecutionList = 'ExecutionList',

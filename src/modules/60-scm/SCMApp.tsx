@@ -36,6 +36,8 @@ const RemoteRepositoryCommits = lazy(() => import('scm/RepositoryCommits'))
 const RemoteRepositoryBranches = lazy(() => import('scm/RepositoryBranches'))
 // eslint-disable-next-line import/no-unresolved
 const RemoteRepositorySettings = lazy(() => import('scm/RepositorySettings'))
+// eslint-disable-next-line import/no-unresolved
+const RemoteCreateWebhook = lazy(() => import('scm/RepositoryCreateWebhook'))
 
 const exportedRoutes = pick(routes, [
   'toSCM',
@@ -45,7 +47,8 @@ const exportedRoutes = pick(routes, [
   'toSCMRepositoryFileEdit',
   'toSCMRepositoryCommits',
   'toSCMRepositoryBranches',
-  'toSCMRepositorySettings'
+  'toSCMRepositorySettings',
+  'toSCMCreateWebhook'
 ])
 
 const SCMRemoteComponentMounter: React.FC<{
@@ -102,4 +105,8 @@ export const RepositoryBranches: React.FC<RemoteViewProps> = props => (
 
 export const RepositorySettings: React.FC<RemoteViewProps> = props => (
   <SCMRemoteComponentMounter component={<RemoteRepositorySettings {...props} />} />
+)
+
+export const RepositoryCreateWebhook: React.FC<RemoteViewProps> = props => (
+  <SCMRemoteComponentMounter component={<RemoteCreateWebhook {...props} />} />
 )

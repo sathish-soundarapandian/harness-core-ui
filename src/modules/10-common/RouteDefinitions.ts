@@ -1408,6 +1408,11 @@ const routes = {
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/settings`
   },
 
+  toSCMCreateWebhook: ({ repoPath }: Required<Pick<SCMProps, 'repoPath'>>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/settings/webhook/new`
+  },
+
   /********************************************************************************************************************/
   toCV: (params: Partial<ProjectPathProps>): string =>
     params.orgIdentifier && params.projectIdentifier
