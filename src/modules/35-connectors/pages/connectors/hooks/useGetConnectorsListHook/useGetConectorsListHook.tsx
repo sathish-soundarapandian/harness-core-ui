@@ -87,7 +87,7 @@ export const useGetConnectorsListHook = (
         // deprecate aws code commit
         if (catalogueEntry?.category == codeRepoCatalogue) {
           catalogueEntry.connectors = catalogueEntry?.connectors?.filter(
-            connector => connector != Connectors.AWS_CODE_COMMIT
+            connector => connector !== Connectors.AWS_CODECOMMIT
           )
         }
         const isProjectOrOrg = projectIdentifier != undefined || orgIdentifier != undefined
