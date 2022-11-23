@@ -33,7 +33,7 @@ const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
 const enableCIUI = process.env.ENABLE_CI_UI === 'true'
 const enableTIUI = process.env.ENABLE_TI_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
-const enableSCM = true //process.env.ENABLE_SCM === 'true'
+const enableCODE = process.env.ENABLE_CODE === 'true'
 const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
 
 console.log('Common build flags')
@@ -45,7 +45,7 @@ console.table({
   enableCIUI,
   enableTIUI,
   enableSTO,
-  enableSCM,
+  enableCODE,
   enableFFUI
 })
 
@@ -202,7 +202,7 @@ const config = {
         enableCCMUI,
         enableCIUI,
         enableTIUI,
-        enableSCM,
+        enableCODE,
         enableFFUI
       })
     ),
@@ -258,7 +258,7 @@ if (!enableSTO) {
 }
 
 // render a mock app when SCM MF is disabled
-if (!enableSCM) {
+if (!enableCODE) {
   const scmModules = [
     'scm/App',
     'scm/RepositoriesListing',

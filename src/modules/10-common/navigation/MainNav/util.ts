@@ -26,5 +26,5 @@ export const moduleToNavItemsMap: Record<NavModuleName, () => JSX.Element> = {
   [ModuleName.CV]: SRMNavItem,
   [ModuleName.CHAOS]: ChaosNavItem,
   [ModuleName.STO]: STONavItem,
-  [ModuleName.SCM]: SCMNavItem
+  [ModuleName.CODE]: SCMNavItem
 }

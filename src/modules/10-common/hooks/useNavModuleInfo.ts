@@ -24,10 +24,10 @@ export type NavModuleName =
   | ModuleName.CE
   | ModuleName.CHAOS
   | ModuleName.STO
-  | ModuleName.SCM
+  | ModuleName.CODE
 
 export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
-  ModuleName.SCM,
+  ModuleName.CODE,
   ModuleName.CD,
   ModuleName.CI,
   ModuleName.CF,
@@ -95,11 +95,11 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toChaos({ accountId }),
     featureFlagName: FeatureFlag.CHAOS_ENABLED
   },
-  [ModuleName.SCM]: {
+  [ModuleName.CODE]: {
     icon: 'code',
     label: 'common.purpose.scm.name',
     getHomePageUrl: (accountId: string) => routes.toSCM({ accountId }),
-    featureFlagName: FeatureFlag.SCM_ENABLED
+    featureFlagName: FeatureFlag.CODE_ENABLED
   }
 }
 

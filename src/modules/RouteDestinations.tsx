@@ -53,7 +53,7 @@ export default function RouteDestinations(): React.ReactElement {
     SECURITY,
     CHAOS_ENABLED,
     NG_SETTINGS,
-    SCM_ENABLED = localStorage.SCM_ENABLED
+    CODE_ENABLED
   } = useFeatureFlags()
 
   return (
@@ -69,7 +69,7 @@ export default function RouteDestinations(): React.ReactElement {
       {projectsOrgsRoutes.props.children}
       {DASHBOARDRoutes.props.children}
       {GovernanceRoutes.props.children}
-      {SCM_ENABLED ? SCMRouteDestinations().props.children : null}
+      {CODE_ENABLED ? SCMRouteDestinations().props.children : null}
       {connectorRoutes.props.children}
       {tempatesRoutes.props.children}
       {freezeWindowRoutes.props.children}

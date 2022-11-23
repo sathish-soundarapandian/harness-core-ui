@@ -35,7 +35,7 @@ const navModuleToClassMap: Record<NavModuleName, string> = {
   [ModuleName.CE]: css.ccm,
   [ModuleName.STO]: css.sto,
   [ModuleName.CHAOS]: css.chaos,
-  [ModuleName.SCM]: css.default
+  [ModuleName.CODE]: css.default
 }
 
 const NavModule: React.FC<NavModuleProps> = ({ module, active, onClick, checkboxProps }) => {

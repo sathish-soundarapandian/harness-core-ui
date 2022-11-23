@@ -38,7 +38,7 @@ export default function SCMSideNav(): React.ReactElement {
   return (
     <Layout.Vertical spacing="small">
       <ProjectSelector
-        moduleFilter={ModuleName.SCM as ProjectSelectorProps['moduleFilter']}
+        moduleFilter={ModuleName.CODE as ProjectSelectorProps['moduleFilter']}
         onSelect={projectSelectHandler}
       />
       {projectIdentifier && orgIdentifier && (

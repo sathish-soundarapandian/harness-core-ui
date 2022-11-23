@@ -82,7 +82,7 @@ describe('useModuleInfo tests', () => {
   })
 
   test('test SCM', () => {
-    const { result } = renderHook(() => useNavModuleInfo(ModuleName.SCM), {
+    const { result } = renderHook(() => useNavModuleInfo(ModuleName.CODE), {
       wrapper: TestWrapper
     })
 
