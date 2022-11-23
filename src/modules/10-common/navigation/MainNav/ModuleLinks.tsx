@@ -179,7 +179,7 @@ export const SCMNavItem = () => {
 
   return (
     <li className={css.navItem}>
-      <Link {...commonLinkProps} to={routes.toSCM(params)}>
+      <Link {...commonLinkProps} to={routes.toCODE(params)}>
         <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
           <Icon name="code" size={30} />
           <Text

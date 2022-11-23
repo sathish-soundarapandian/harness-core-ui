@@ -15,10 +15,12 @@ import routes from '@common/RouteDefinitions'
 import SessionToken from 'framework/utils/SessionToken'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
-import type { RemoteViewProps } from './SCMUtils'
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type RemoteViewProps = Record<string, any>
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteSCMApp = lazy(() => import('code/App'))
+const RemoteCodeApp = lazy(() => import('code/App'))
 
 // eslint-disable-next-line import/no-unresolved
 const RemoteRepositoriesListing = lazy(() => import('code/RepositoriesListing'))
@@ -34,21 +36,22 @@ const RemoteRepositoryCommits = lazy(() => import('code/RepositoryCommits'))
 
 // eslint-disable-next-line import/no-unresolved
 const RemoteRepositoryBranches = lazy(() => import('code/RepositoryBranches'))
+
 // eslint-disable-next-line import/no-unresolved
 const RemoteRepositorySettings = lazy(() => import('code/RepositorySettings'))
 
 const exportedRoutes = pick(routes, [
-  'toSCM',
-  'toSCMHome',
-  'toSCMRepositoriesListing',
-  'toSCMRepository',
-  'toSCMRepositoryFileEdit',
-  'toSCMRepositoryCommits',
-  'toSCMRepositoryBranches',
-  'toSCMRepositorySettings'
+  'toCODE',
+  'toCODEHome',
+  'toCODERepositoriesListing',
+  'toCODERepository',
+  'toCODERepositoryFileEdit',
+  'toCODERepositoryCommits',
+  'toCODERepositoryBranches',
+  'toCODERepositorySettings'
 ])
 
-const SCMRemoteComponentMounter: React.FC<{
+const CODERemoteComponentMounter: React.FC<{
   component: JSX.Element
 }> = ({ component }) => {
   const { getString } = useStrings()
@@ -63,7 +66,7 @@ const SCMRemoteComponentMounter: React.FC<{
   return (
     <Suspense fallback={<Container padding="large">{getString('loading')}</Container>}>
       <AppErrorBoundary>
-        <RemoteSCMApp
+        <RemoteCodeApp
           space={space}
           on401={() => {
             global401HandlerUtils(history)
@@ -74,32 +77,32 @@ const SCMRemoteComponentMounter: React.FC<{
           }}
         >
           {component}
-        </RemoteSCMApp>
+        </RemoteCodeApp>
       </AppErrorBoundary>
     </Suspense>
   )
 }
 
 export const RepositoriesListing: React.FC<RemoteViewProps> = props => (
-  <SCMRemoteComponentMounter component={<RemoteRepositoriesListing {...props} />} />
+  <CODERemoteComponentMounter component={<RemoteRepositoriesListing {...props} />} />
 )
 
 export const Repository: React.FC<RemoteViewProps> = props => (
-  <SCMRemoteComponentMounter component={<RemoteRepository {...props} />} />
+  <CODERemoteComponentMounter component={<RemoteRepository {...props} />} />
 )
 
 export const RepositoryFileEdit: React.FC<RemoteViewProps> = props => (
-  <SCMRemoteComponentMounter component={<RemoteRepositoryFileEdit {...props} />} />
+  <CODERemoteComponentMounter component={<RemoteRepositoryFileEdit {...props} />} />
 )
 
 export const RepositoryCommits: React.FC<RemoteViewProps> = props => (
-  <SCMRemoteComponentMounter component={<RemoteRepositoryCommits {...props} />} />
+  <CODERemoteComponentMounter component={<RemoteRepositoryCommits {...props} />} />
 )
 
 export const RepositoryBranches: React.FC<RemoteViewProps> = props => (
-  <SCMRemoteComponentMounter component={<RemoteRepositoryBranches {...props} />} />
+  <CODERemoteComponentMounter component={<RemoteRepositoryBranches {...props} />} />
 )
 
 export const RepositorySettings: React.FC<RemoteViewProps> = props => (
-  <SCMRemoteComponentMounter component={<RemoteRepositorySettings {...props} />} />
+  <CODERemoteComponentMounter component={<RemoteRepositorySettings {...props} />} />
 )

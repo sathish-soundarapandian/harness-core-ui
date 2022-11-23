@@ -162,7 +162,7 @@ export const servicePathProps: ServicePathProps = {
   serviceId: ':serviceId'
 }
 
-export const scmPathProps: Required<SCMPathProps> = {
+export const codePathProps: Required<SCMPathProps> = {
   ...projectPathProps,
   repoName: ':repoName',
   gitRef: ':gitRef*',

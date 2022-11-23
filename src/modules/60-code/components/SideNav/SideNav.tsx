@@ -15,7 +15,7 @@ import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { scmPathProps } from '@common/utils/routeUtils'
+import { codePathProps } from '@common/utils/routeUtils'
 import css from './SideNav.module.scss'
 
 export default function SCMSideNav(): React.ReactElement {
@@ -28,11 +28,11 @@ export default function SCMSideNav(): React.ReactElement {
     updateAppStore({ selectedProject: data })
 
     history.push(
-      routes.toSCMRepositoriesListing({ space: [accountId, data.orgIdentifier as string, data.identifier].join('/') })
+      routes.toCODERepositoriesListing({ space: [accountId, data.orgIdentifier as string, data.identifier].join('/') })
     )
   }
-  const isCommits = useMemo(() => routeMatch.path.includes(scmPathProps.commitRef), [routeMatch])
-  const isBranches = useMemo(() => routeMatch.path.includes(scmPathProps.branch), [routeMatch])
+  const isCommits = useMemo(() => routeMatch.path.includes(codePathProps.commitRef), [routeMatch])
+  const isBranches = useMemo(() => routeMatch.path.includes(codePathProps.branch), [routeMatch])
   const isSettings = useMemo(() => routeMatch.path.endsWith('/:repoName/settings'), [routeMatch])
 
   return (
@@ -45,7 +45,7 @@ export default function SCMSideNav(): React.ReactElement {
         <>
           <SidebarLink
             label={getString('repositories')}
-            to={routes.toSCMRepositoriesListing({ space: [accountId, orgIdentifier, projectIdentifier].join('/') })}
+            to={routes.toCODERepositoriesListing({ space: [accountId, orgIdentifier, projectIdentifier].join('/') })}
             {...(repoName ? { activeClassName: '' } : {})}
           />
 
@@ -59,7 +59,7 @@ export default function SCMSideNav(): React.ReactElement {
                 }
               }}
               label={getString('common.files')}
-              to={routes.toSCMRepository({
+              to={routes.toCODERepository({
                 repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
               })}
               {...(isCommits || isBranches || isSettings ? { activeClassName: '' } : {})}
@@ -76,7 +76,7 @@ export default function SCMSideNav(): React.ReactElement {
                 }
               }}
               label={getString('commits')}
-              to={routes.toSCMRepositoryCommits({
+              to={routes.toCODERepositoryCommits({
                 repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/'),
                 commitRef: ''
               })}
@@ -93,7 +93,7 @@ export default function SCMSideNav(): React.ReactElement {
                 }
               }}
               label={getString('code.branches')}
-              to={routes.toSCMRepositoryBranches({
+              to={routes.toCODERepositoryBranches({
                 repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/'),
                 branch: ''
               })}
@@ -110,7 +110,7 @@ export default function SCMSideNav(): React.ReactElement {
                 }
               }}
               label={getString('settingsLabel')}
-              to={routes.toSCMRepositorySettings({
+              to={routes.toCODERepositorySettings({
                 repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
               })}
             />

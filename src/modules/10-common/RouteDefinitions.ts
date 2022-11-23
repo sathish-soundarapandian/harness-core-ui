@@ -1365,13 +1365,13 @@ const routes = {
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/configurePath`
   ),
 
-  toSCM: withAccountId(() => `/code`),
-  toSCMHome: withAccountId(() => `/code/home`),
-  toSCMRepositoriesListing: ({ space }: Required<Pick<SCMProps, 'space'>>) => {
+  toCODE: withAccountId(() => `/code`),
+  toCODEHome: withAccountId(() => `/code/home`),
+  toCODERepositoriesListing: ({ space }: Required<Pick<SCMProps, 'space'>>) => {
     const [accountId, orgIdentifier, projectIdentifier] = space.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}`
   },
-  toSCMRepository: ({
+  toCODERepository: ({
     repoPath,
     gitRef,
     resourcePath
@@ -1381,7 +1381,7 @@ const routes = {
       gitRef ? '/files/' + gitRef : ''
     }${resourcePath ? '/~/' + resourcePath : ''}`
   },
-  toSCMRepositoryFileEdit: ({
+  toCODERepositoryFileEdit: ({
     repoPath,
     gitRef,
     resourcePath
@@ -1391,19 +1391,19 @@ const routes = {
       resourcePath || ''
     }`
   },
-  toSCMRepositoryCommits: ({ repoPath, commitRef }: Required<Pick<SCMProps, 'repoPath' | 'commitRef'>>) => {
+  toCODERepositoryCommits: ({ repoPath, commitRef }: Required<Pick<SCMProps, 'repoPath' | 'commitRef'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/commits${
       commitRef ? '/' + commitRef : ''
     }`
   },
-  toSCMRepositoryBranches: ({ repoPath, branch }: Required<Pick<SCMProps, 'repoPath' | 'branch'>>) => {
+  toCODERepositoryBranches: ({ repoPath, branch }: Required<Pick<SCMProps, 'repoPath' | 'branch'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/branches${
       branch ? '/' + branch : ''
     }`
   },
-  toSCMRepositorySettings: ({ repoPath }: Required<Pick<SCMProps, 'repoPath'>>) => {
+  toCODERepositorySettings: ({ repoPath }: Required<Pick<SCMProps, 'repoPath'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/settings`
   },
