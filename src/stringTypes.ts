@@ -3520,6 +3520,7 @@ export interface StringsMap {
   'pipeline.expressionsEvaluation': string
   'pipeline.expressionsReplaced': string
   'pipeline.failureStrategies.addedAllStrategies': string
+  'pipeline.failureStrategies.errorTypeLabels.ApprovalRejection': string
   'pipeline.failureStrategies.errorTypeLabels.Authentication': string
   'pipeline.failureStrategies.errorTypeLabels.Authorization': string
   'pipeline.failureStrategies.errorTypeLabels.DelegateProvisioning': string

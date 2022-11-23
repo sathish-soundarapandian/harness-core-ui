@@ -36,7 +36,8 @@ describe('Reusable Components', () => {
     isSettingEditable: true,
     name: 'abcd',
     valueType: 'String',
-    allowedValues: ['abcd', 'bcd']
+    allowedValues: ['abcd', 'bcd'],
+    allowedScopes: ['ACCOUNT']
   }
   const props: SettingRendererProps = {
     setFieldValue: jest.fn(),
