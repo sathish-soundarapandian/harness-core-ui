@@ -168,7 +168,7 @@ describe('Cloud watch health source', () => {
 
     cy.wait(100)
 
-    cy.contains('p', 'AWS Region').should('exist')
+    cy.contains('p', 'AWS Region', { timeout: 4000 }).should('exist')
 
     cy.get('input[name="customMetrics.0.groupName"]').should('have.value', 'group 1')
     cy.get('input[name="customMetrics.0.metricName"]').should('have.value', 'customMetric 1')
