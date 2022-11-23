@@ -33,13 +33,6 @@ interface SubscriptionOverviewProps {
   trialInformation: TrialInformation
   refetchGetLicense?: () => void
 }
-const {
-  mutate: loadPipelineList,
-  error: pipelineListLoadingError,
-  loading: isPipelineListLoading
-} = useGetPipelineList({
-  queryParamStringifyOptions: { arrayFormat: 'comma' }
-})
 
 const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
   const { accountName, licenseData, module, trialInformation, refetchGetLicense } = props
@@ -56,52 +49,47 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
   const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
   const sort = sortingPreference ? JSON.parse(sortingPreference) : queryParams.sort
   const { searchTerm, repoIdentifier, branch, page, size, repoName } = queryParams
-  const fetchPipelines = useCallback(async () => {
-    try {
-      const filter: PipelineFilterProperties = {
-        filterType: 'PipelineSetup',
 
-        repoName
-      }
-      const { status, data } = await loadPipelineList(filter, {
-        queryParams: {
-          accountIdentifier: accountId,
-          projectIdentifier,
-          orgIdentifier,
-          searchTerm,
-          page,
-          sort,
-          size,
-          ...(repoIdentifier &&
-            branch && {
-              repoIdentifier,
-              branch
-            })
-        }
-      })
-      if (status === 'SUCCESS') {
-        setPipelineList(data)
-      }
-    } catch (e) {
-      if (shouldShowError(e)) {
-        showError(getRBACErrorMessage(e), undefined, 'pipeline.fetch.pipeline.error')
-      }
+  const fetchPipelines = useCallback(async () => {
+    // try {
+
+    //   }
+    const filter: PipelineFilterProperties = {
+      filterType: 'PipelineSetup',
+      repoName
     }
-  }, [
-    accountId,
-    branch,
-    orgIdentifier,
-    page,
-    projectIdentifier,
-    repoIdentifier,
-    searchTerm,
-    size,
-    sort?.toString(),
-    repoName
-  ])
+    const { status, data } = await loadPipelineList(filter, {
+      queryParams: {
+        accountIdentifier: accountId,
+        projectIdentifier,
+        orgIdentifier,
+        searchTerm,
+        page,
+        sort,
+        size,
+        ...(repoIdentifier &&
+          branch && {
+            repoIdentifier,
+            branch
+          })
+      }
+    })
+    if (status === 'SUCCESS') {
+      setPipelineList(data)
+    }
+  }, [])
+
   useEffect(() => {
     fetchPipelines()
   }, [fetchPipelines])
+
+  const {
+    mutate: loadPipelineList,
+    error: pipelineListLoadingError,
+    loading: isPipelineListLoading
+  } = useGetPipelineList({
+    queryParamStringifyOptions: { arrayFormat: 'comma' }
+  })
   return (
     <Layout.Vertical spacing="large" width={'90%'}>
       <SubscriptionDetailsCard
@@ -114,7 +102,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
       {enabled && licenseData && <SubscriptionUsageCard module={module} licenseData={licenseData} />}
       <ServiceLicenseTable
         gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
-        data={pipelineList}
+        data={pipelineList || []}
         setSortBy={sortArray => {
           setSortingPreference(JSON.stringify(sortArray))
           updateQueryParams({ sort: sortArray })

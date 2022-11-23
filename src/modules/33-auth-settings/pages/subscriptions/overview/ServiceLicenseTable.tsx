@@ -7,24 +7,20 @@
 
 import React from 'react'
 import type { Column } from 'react-table'
-import { Text, TableV2, Icon, Layout } from '@harness/uicore'
+import cx from 'classnames'
+import { Text, TableV2, Icon, Layout, Card, Heading, Button } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import routes from '@common/RouteDefinitions'
 import type { PipelineListPagePathParams, SortBy } from '../../../../70-pipeline/pages/pipeline-list/types'
-import {
-  CodeSourceCell,
-  LastExecutionCell,
-  MenuCell,
-  PipelineNameCell,
-  RecentExecutionsCell,
-  LastModifiedCell
-} from '../../../../70-pipeline/pages/pipeline-list/PipelineListTable/PipelineListCells'
+import { LastModifiedCell } from './ServiceLicenseTableCells'
 import { getRouteProps } from '../../../../70-pipeline/pages/pipeline-list/PipelineListUtils'
+
 import css from '../../../../70-pipeline/pages/pipeline-list/PipelineListTable/PipelineListTable.module.scss'
+import pageCss from '../SubscriptionsPage.module.scss'
 
 export interface ServiceLicenseTableProps {
   data?: PagePMSPipelineSummaryResponse
@@ -42,13 +38,7 @@ export function ServiceLicenseTable({
   const history = useHistory()
   const { getString } = useStrings()
   const pathParams = useParams<PipelineListPagePathParams>()
-  const {
-    content = [],
-    totalElements = 0,
-    totalPages = 0,
-    number = DEFAULT_PAGE_INDEX,
-    size = DEFAULT_PAGE_SIZE
-  } = data
+  const { content = [], totalElements = 100, totalPages = 0, number = DEFAULT_PAGE_INDEX, size = 10 } = data
   const [currentSort, currentOrder] = sortBy
 
   const columns: Column<PMSPipelineSummaryResponse>[] = React.useMemo(() => {
@@ -64,80 +54,103 @@ export function ServiceLicenseTable({
     }
     return [
       {
-        Header: getString('filters.executions.pipelineName'),
+        Header: getString('common.service'),
         accessor: 'name',
-        width: '25%',
-        Cell: PipelineNameCell,
+        width: '16%',
+        Cell: LastModifiedCell,
         serverSortProps: getServerSortProps('name')
       },
       {
-        Header: getString('pipeline.codeSource'),
+        Header: getString('common.organizations'),
         accessor: 'storeType',
-        width: '12%',
+        width: '16%',
         disableSortBy: true,
-        Cell: CodeSourceCell
+        Cell: LastModifiedCell
       },
       {
-        Header: (
-          <div className={css.recentExecutionHeader}>
-            <Layout.Horizontal spacing="xsmall" className={css.latestExecutionText} flex={{ alignItems: 'center' }}>
-              <Text color={Color.GREY_400} font={{ variation: FontVariation.TINY }}>
-                {`${getString('pipeline.mostRecentDirection')} `}
-              </Text>
-              <Icon size={10} name="arrow-right" color={Color.GREY_400} />
-            </Layout.Horizontal>
-
-            {getString('pipeline.recentExecutions')}
-          </div>
-        ),
-        accessor: 'recentExecutions',
-        width: '28%',
-        Cell: RecentExecutionsCell,
-        disableSortBy: true
+        Header: getString('common.projects'),
+        accessor: 'storeType1',
+        width: '16%',
+        disableSortBy: true,
+        Cell: LastModifiedCell
       },
       {
-        Header: getString('pipeline.lastExecution'),
+        Header: getString('common.serviceId'),
         accessor: 'executionSummaryInfo.lastExecutionTs',
-        width: '20%',
-        Cell: LastExecutionCell,
+        width: '16%',
+        Cell: LastModifiedCell,
         serverSortProps: getServerSortProps('executionSummaryInfo.lastExecutionTs')
       },
       {
-        Header: getString('common.lastModified'),
-        accessor: 'lastUpdatedAt',
-        width: '12%',
+        Header: getString('common.servicesInstances'),
+        accessor: 'executionSummaryInfo.lastExecutionTs3',
+        width: '10%',
         Cell: LastModifiedCell,
-        serverSortProps: getServerSortProps('lastUpdatedAt')
+        serverSortProps: getServerSortProps('executionSummaryInfo.lastExecutionTs')
       },
       {
-        Header: '',
-        accessor: 'menu',
-        width: '3%',
-        Cell: MenuCell,
-        disableSortBy: true
+        Header: getString('common.lastDeployed'),
+        accessor: 'executionSummaryInfo.lastExecutionTs2',
+        width: '16%',
+        Cell: LastModifiedCell,
+        serverSortProps: getServerSortProps('executionSummaryInfo.lastExecutionTs')
+      },
+      {
+        Header: getString('common.licensesConsumed'),
+        accessor: 'lastUpdatedAt',
+        width: '10%',
+        Cell: LastModifiedCell,
+        serverSortProps: getServerSortProps('lastUpdatedAt')
       }
     ] as unknown as Column<PMSPipelineSummaryResponse>[]
   }, [currentOrder, currentSort])
 
   return (
-    <TableV2
-      className={css.table}
-      columns={columns}
-      data={content}
-      pagination={
-        totalElements > size
-          ? {
-              itemCount: totalElements,
-              pageSize: size,
-              pageCount: totalPages,
-              pageIndex: number,
-              gotoPage
-            }
-          : undefined
-      }
-      sortable
-      getRowClassName={() => css.tableRow}
-      onRowClick={rowDetails => history.push(routes.toPipelineStudio(getRouteProps(pathParams, rowDetails)))}
-    />
+    <Card className={pageCss.outterCard}>
+      <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
+        <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
+          <Layout.Vertical>
+            <Heading color={Color.BLACK} font={{ size: 'medium' }}>
+              {getString('common.activeServices')}
+            </Heading>
+            <p className={pageCss.activeServiceLink}>{getString('common.whoIsActiveService')}</p>
+          </Layout.Vertical>
+          <Button intent="primary" onClick={() => console.log('hello')}>
+            {getString('common.downloadCSV')}
+          </Button>
+        </Layout.Horizontal>
+        <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
+          <Layout.Vertical className={pageCss.badgesContainer}>
+            <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
+              <Text className={pageCss.badgeText}>
+                <String stringID={'pipeline.dashboardDeploymentsWidget.runningPipeline.singular'} />
+              </Text>
+            </div>
+          </Layout.Vertical>
+          <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
+            <p>Filter</p>
+          </Layout.Horizontal>
+        </Layout.Horizontal>
+        <TableV2
+          className={css.table}
+          columns={columns}
+          data={content}
+          pagination={
+            totalElements > size
+              ? {
+                  itemCount: totalElements,
+                  pageSize: size,
+                  pageCount: totalPages,
+                  pageIndex: number,
+                  gotoPage
+                }
+              : undefined
+          }
+          sortable
+          getRowClassName={() => css.tableRow}
+          onRowClick={rowDetails => history.push(routes.toPipelineStudio(getRouteProps(pathParams, rowDetails)))}
+        />
+      </Layout.Vertical>
+    </Card>
   )
 }

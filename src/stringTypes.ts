@@ -39,6 +39,7 @@ export interface StringsMap {
   'common.accountSetting.connector.saveSettingSuccess': string
   'common.accountSettings': string
   'common.accountSetup': string
+  'common.activeServices': string
   'common.addAccountName': string
   'common.addAttribute': string
   'common.addName': string
@@ -227,6 +228,7 @@ export interface StringsMap {
   'common.disable': string
   'common.discard': string
   'common.download': string
+  'common.downloadCSV': string
   'common.duplicateId': string
   'common.duration.3months': string
   'common.duration.6months': string
@@ -481,6 +483,7 @@ export interface StringsMap {
   'common.last7days': string
   'common.lastConnected': string
   'common.lastConnectedOn': string
+  'common.lastDeployed': string
   'common.lastModified': string
   'common.lastModifiedTime': string
   'common.lastUpdatedAt': string
@@ -488,6 +491,7 @@ export interface StringsMap {
   'common.launchFirstGen': string
   'common.letsGetYouStarted': string
   'common.levelUp': string
+  'common.licensesConsumed': string
   'common.link': string
   'common.loadBalancer': string
   'common.loading': string
@@ -565,6 +569,7 @@ export interface StringsMap {
   'common.org': string
   'common.orgSetup': string
   'common.orgViewer': string
+  'common.organizations': string
   'common.other': string
   'common.overSubscribed': string
   'common.override': string
@@ -624,6 +629,7 @@ export interface StringsMap {
   'common.production': string
   'common.projectSetup': string
   'common.projectViewer': string
+  'common.projects': string
   'common.provisioner': string
   'common.purpose.cd.1stGen.description': string
   'common.purpose.cd.1stGen.title': string
@@ -807,8 +813,10 @@ export interface StringsMap {
   'common.selectWorkload': string
   'common.selectYourRepo': string
   'common.selected': string
+  'common.service': string
   'common.serviceCreated': string
   'common.serviceDetails': string
+  'common.serviceId': string
   'common.serviceInputs': string
   'common.serviceName': string
   'common.serviceOverrides': string
@@ -816,6 +824,7 @@ export interface StringsMap {
   'common.serviceReliabilityManagement': string
   'common.serviceType': string
   'common.serviceUpdated': string
+  'common.servicesInstances': string
   'common.setAsDefault': string
   'common.setAsStable': string
   'common.settingCategory.general': string
@@ -1056,6 +1065,7 @@ export interface StringsMap {
   'common.warning': string
   'common.webhookURL': string
   'common.welcome': string
+  'common.whoIsActiveService': string
   'common.whose': string
   'common.with': string
   'common.without': string

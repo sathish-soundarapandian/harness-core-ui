@@ -1131,6 +1131,7 @@ platformServiceVersions: Platform Service Versions
 executionTab:
   stepsCount: At least one step is required
 clickToKnowMore: 'Click to know more about'
+<<<<<<< HEAD
 settingCategory:
   general: General
 condition: Condition
@@ -1161,3 +1162,15 @@ timeRangeLimitWarning:
 viewAll: View all
 lastUpdatedAt: Last updated at
 tryAgain: Try Again
+=======
+service: SERVICE
+organizations: ORGANIZATIONS
+projects: PROJECTS
+serviceId: 'SERVICE ID'
+servicesInstances: 'SERVICE INSTANCES'
+lastDeployed: 'LAST DEPLOYED'
+licensesConsumed: 'LICENSES CONSUMED'
+activeServices: 'Active Services'
+downloadCSV: 'Download CSV'
+whoIsActiveService: Who is an Active Service?
+>>>>>>> feat: [PLG-1565]: cahnges for license table
