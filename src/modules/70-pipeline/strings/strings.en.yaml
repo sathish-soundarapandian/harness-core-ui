@@ -370,7 +370,7 @@ manifestType:
   addVarsYAMLPath: Auto Scaling path
   autoScalerYAMLPath: AutoScaler.yaml
   addAutoScalerYAMLPath: Add AutoScaler.yaml
-  cliVersion: CLI Version
+  cfCliVersion: CLI Version
   customRemoteExtractionScript: Custom Remote Manifest Extraction Script
   customRemoteExtractedFileLocation: Extracted Manifest File Location
   customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location

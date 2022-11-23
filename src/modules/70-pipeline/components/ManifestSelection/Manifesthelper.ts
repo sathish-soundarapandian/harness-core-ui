@@ -248,9 +248,9 @@ export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> =
   { label: 'Version 3', value: 'V3' }
 ]
 
-export const cliVersions: Array<{ label: string; value: CLIVersionOptions }> = [
-  { label: 'CLI Version 7.0', value: 'V7' },
-  { label: 'CLI Version 8.0', value: 'V8' }
+export const cfCliVersions: Array<{ label: string; value: CLIVersionOptions }> = [
+  { label: 'CLI Version 6.0', value: 'V6' },
+  { label: 'CLI Version 7.0', value: 'V7' }
 ]
 
 export const ManifestIconByType: Record<ManifestStores, IconName> = {

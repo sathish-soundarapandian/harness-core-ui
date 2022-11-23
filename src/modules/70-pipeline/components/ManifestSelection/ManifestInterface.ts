@@ -13,7 +13,8 @@ import type {
   ConnectorConfigDTO,
   ManifestConfigWrapper,
   PageConnectorResponse,
-  ServiceDefinition
+  ServiceDefinition,
+  TasManifest
 } from 'services/cd-ng'
 
 export type ManifestTypes =
@@ -53,7 +54,7 @@ export type ManifestStoreTypeWithoutConnector = 'InheritFromManifest' | 'Harness
 
 export type HelmOCIVersionOptions = 'V380'
 export type HelmVersionOptions = 'V2' | 'V3'
-export type CLIVersionOptions = 'V7' | 'V8'
+export type CLIVersionOptions = 'V6' | 'V7'
 export type ManifestStoreWithoutConnector = Exclude<ManifestStores, ManifestStoreTypeWithoutConnector>
 
 export interface ManifestSelectionProps {
@@ -169,6 +170,7 @@ export interface TASManifestDataType {
   repoName?: string
   varsPaths?: any
   autoScalerPath?: any
+  cfCliVersion?: TasManifest['cfCliVersion']
 }
 export interface HelmWithGcsDataType extends HelmWithHTTPDataType {
   bucketName: SelectOption | string
@@ -267,11 +269,12 @@ export interface CustomManifestManifestDataType {
   paramsPaths?: Array<{ path: string }> | string
   varsPaths?: Array<{ path: string }> | string
   autoScalerPath?: Array<{ path: string }> | string
-  cliVersion?: CLIVersionOptions
+  cfCliVersion?: CLIVersionOptions
   skipResourceVersioning?: boolean
 }
 
 export interface TASWithHarnessStorePropTypeDataType extends Omit<HarnessFileStoreFormData, 'skipResourceVersioning'> {
   varsPaths?: string[] | string
   autoScalerPath?: string[] | string
+  cfCliVersion?: CLIVersionOptions
 }

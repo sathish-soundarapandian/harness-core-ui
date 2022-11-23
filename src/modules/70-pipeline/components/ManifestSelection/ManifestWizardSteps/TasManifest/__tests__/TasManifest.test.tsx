@@ -43,7 +43,8 @@ const initialValues = {
   commitId: undefined,
   gitFetchType: 'Branch',
   spec: {},
-  type: ManifestDataType.TasManifest
+  type: ManifestDataType.TasManifest,
+  cfCliVersion: 'V7'
 }
 
 const validateRuntimeField = async (pathInput: HTMLInputElement, regexText = '') => {
@@ -83,6 +84,7 @@ describe('Manifest Details tests', () => {
               gitFetchType: 'Branch'
             }
           },
+          cfCliVersion: 'V7',
           varsPaths: RUNTIME_INPUT_VALUE,
           autoScalerPath: RUNTIME_INPUT_VALUE
         },
@@ -164,6 +166,7 @@ describe('Manifest Details tests', () => {
               },
               type: 'Git'
             },
+            cfCliVersion: 'V7',
             varsPaths: undefined,
             autoScalerPath: undefined
           }
@@ -185,6 +188,7 @@ describe('Manifest Details tests', () => {
         identifier: 'testidentifier',
         type: ManifestDataType.TasManifest,
         spec: {
+          cfCliVersion: 'V7',
           store: {
             spec: {
               branch: 'testBranch',
@@ -231,6 +235,7 @@ describe('Manifest Details tests', () => {
         identifier: 'testidentifier',
         type: ManifestDataType.TasManifest,
         spec: {
+          cfCliVersion: 'V7',
           store: {
             spec: {
               branch: 'testBranch',
@@ -277,6 +282,7 @@ describe('Manifest Details tests', () => {
         identifier: 'testidentifier',
         type: ManifestDataType.TasManifest,
         spec: {
+          cfCliVersion: 'V7',
           store: {
             spec: {
               branch: 'testBranch',
@@ -323,6 +329,7 @@ describe('Manifest Details tests', () => {
         identifier: 'testidentifier',
         type: ManifestDataType.TasManifest,
         spec: {
+          cfCliVersion: 'V7',
           store: {
             spec: {
               branch: 'testBranch',
@@ -393,6 +400,7 @@ describe('Manifest Details tests', () => {
           identifier: 'testidentifier',
           type: 'TasManifest',
           spec: {
+            cfCliVersion: 'V7',
             store: {
               spec: {
                 connectorRef: 'testConnectorRef',
@@ -424,6 +432,7 @@ describe('Manifest Details tests', () => {
         identifier: 'testidentifier',
         type: ManifestDataType.TasManifest,
         spec: {
+          cfCliVersion: 'V7',
           store: {
             spec: {
               commitId: RUNTIME_INPUT_VALUE,
