@@ -14743,9 +14743,11 @@ export type TasInstanceInfoDTO = InstanceInfoDTO & {
 }
 
 export type TasManifest = ManifestAttributes & {
+  autoScalerPath?: string[]
+  cfCliVersion?: 'V6' | 'V7'
   metadata?: string
-  skipResourceVersioning?: ParameterFieldBoolean
   store?: StoreConfigWrapper
+  varsPaths?: string[]
 }
 
 export type TasManualDetails = TasCredentialSpec & {
@@ -51079,59 +51081,6 @@ export const getTasSpacesPromise = (
   getUsingFetch<ResponseListString, Failure | Error, GetTasSpacesQueryParams, void>(
     getConfig('ng/api'),
     `/tas/space`,
-    props,
-    signal
-  )
-
-export interface GetTasSpacesV2QueryParams {
-  connectorRef: string
-  accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
-  envId: string
-  infraDefinitionId: string
-}
-
-export type GetTasSpacesV2Props = Omit<
-  GetProps<ResponseListString, Failure | Error, GetTasSpacesV2QueryParams, void>,
-  'path'
->
-
-/**
- * Gets tas spaces V2
- */
-export const GetTasSpacesV2 = (props: GetTasSpacesV2Props) => (
-  <Get<ResponseListString, Failure | Error, GetTasSpacesV2QueryParams, void>
-    path={`/tas/v2/space`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetTasSpacesV2Props = Omit<
-  UseGetProps<ResponseListString, Failure | Error, GetTasSpacesV2QueryParams, void>,
-  'path'
->
-
-/**
- * Gets tas spaces V2
- */
-export const useGetTasSpacesV2 = (props: UseGetTasSpacesV2Props) =>
-  useGet<ResponseListString, Failure | Error, GetTasSpacesV2QueryParams, void>(`/tas/v2/space`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
-
-/**
- * Gets tas spaces V2
- */
-export const getTasSpacesV2Promise = (
-  props: GetUsingFetchProps<ResponseListString, Failure | Error, GetTasSpacesV2QueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseListString, Failure | Error, GetTasSpacesV2QueryParams, void>(
-    getConfig('ng/api'),
-    `/tas/v2/space`,
     props,
     signal
   )
