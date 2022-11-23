@@ -27,7 +27,7 @@ rules:
             - modules/40-gitsync/*
             - modules/45-dashboards/*
             - modules/45-projects-orgs/*
-            - modules/60-scm/*
+            - modules/60-code/*
             - modules/70-pipeline/*
             - modules/72-freeze-windows/*
             - modules/72-templates-library/*
