@@ -152,45 +152,47 @@ export default function ServerlessArtifactoryRepository(
   }
 
   return (
-    <SelectInputSetView
-      className={
-        getMultiTypeFromValue(get(formik.values, fieldName)) === MultiTypeInputType.RUNTIME
-          ? repositoryFieldCss.repositoryFieldContainer
-          : undefined
-      }
-      name={fieldName}
-      label={getString('repository')}
-      fieldPath={defaultTo(fieldPath, '')} // Only used for Runtime view
-      selectItems={connectorRepos}
-      template={defaultTo(template, {})} // Only used for Runtime view
-      disabled={isReadonly}
-      helperText={getFieldHelperText()}
-      useValue={true}
-      multiTypeInputProps={{
-        expressions,
-        allowableTypes,
-        selectProps: {
-          defaultSelectedItem: formik.values?.repository as SelectOption,
-          noResults: <NoRepositoryResults error={artifactRepoError} />,
-          items: connectorRepos,
-          addClearBtn: !isReadonly,
-          itemRenderer: itemRenderer,
-          allowCreatingNewItems: true
-        },
-        onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-          if (
-            e?.target?.type !== 'text' ||
-            (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
-            hasRepositoryData()
-          ) {
-            return
-          }
-          getArtifactRepos()
+    <div className={css.imagePathContainer}>
+      <SelectInputSetView
+        className={
+          getMultiTypeFromValue(get(formik.values, fieldName)) === MultiTypeInputType.RUNTIME
+            ? repositoryFieldCss.repositoryFieldContainer
+            : undefined
         }
-      }}
-      configureOptionsProps={{
-        isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-      }}
-    />
+        name={fieldName}
+        label={getString('repository')}
+        fieldPath={defaultTo(fieldPath, '')} // Only used for Runtime view
+        selectItems={connectorRepos}
+        template={defaultTo(template, {})} // Only used for Runtime view
+        disabled={isReadonly}
+        helperText={getFieldHelperText()}
+        useValue={true}
+        multiTypeInputProps={{
+          expressions,
+          allowableTypes,
+          selectProps: {
+            defaultSelectedItem: formik.values?.repository as SelectOption,
+            noResults: <NoRepositoryResults error={artifactRepoError} />,
+            items: connectorRepos,
+            addClearBtn: !isReadonly,
+            itemRenderer: itemRenderer,
+            allowCreatingNewItems: true
+          },
+          onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+            if (
+              e?.target?.type !== 'text' ||
+              (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+              hasRepositoryData()
+            ) {
+              return
+            }
+            getArtifactRepos()
+          }
+        }}
+        configureOptionsProps={{
+          isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+        }}
+      />
+    </div>
   )
 }

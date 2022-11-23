@@ -103,13 +103,13 @@ jest.mock('services/cd-ng', () => ({
   useGetServiceDefinitionTypes: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: deploymentTypes, refetch: jest.fn() })),
-  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
+  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false }),
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: getListGitSync }
+  })
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
-  useListGitSyncQuery: jest.fn().mockImplementation(() => {
-    return { data: gitConfigs, refetch: getListGitSync }
-  }),
   useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })

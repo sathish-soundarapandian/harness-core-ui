@@ -218,7 +218,7 @@ export function PipelineCanvas({
   const isYaml = view === SelectedView.YAML
   const [isYamlError, setYamlError] = React.useState(false)
   const [blockNavigation, setBlockNavigation] = React.useState(false)
-  const [selectedBranch, setSelectedBranch] = React.useState(branch || '')
+  const [selectedBranch, setSelectedBranch] = React.useState(defaultTo(branch, ''))
   const [disableVisualView, setDisableVisualView] = React.useState(entityValidityDetails?.valid === false)
   const [useTemplate, setUseTemplate] = React.useState<boolean>(false)
   const [modalMode, setModalMode] = React.useState<'edit' | 'create'>('create')
@@ -266,7 +266,7 @@ export function PipelineCanvas({
             routes.toPipelineStudio({
               projectIdentifier,
               orgIdentifier,
-              pipelineIdentifier: pipeline?.identifier || '-1',
+              pipelineIdentifier: defaultTo(pipeline?.identifier, '-1'),
               accountId,
               module,
               branch: selectedBranch,
@@ -304,7 +304,7 @@ export function PipelineCanvas({
       } catch (e) {
         clear()
         setYamlError(true)
-        showError(e.message || getString('invalidYamlText'))
+        showError(defaultTo(e.message, getString('invalidYamlText')))
         return false
       }
     }
@@ -350,7 +350,7 @@ export function PipelineCanvas({
               initialValues={merge(pipeline, {
                 repo: repoName || gitDetails.repoIdentifier || '',
                 branch: branch || gitDetails.branch || '',
-                connectorRef: connectorRef || '',
+                connectorRef: defaultTo(connectorRef, ''),
                 storeType: defaultTo(storeType, StoreType.INLINE),
                 filePath: gitDetails.filePath
               })}
@@ -507,10 +507,13 @@ export function PipelineCanvas({
       storeMetadata
     })
     const processNode = isCopied
-      ? produce(defaultTo(parse<any>(newTemplate?.yaml || '')?.template.spec, {}) as PipelineInfoConfig, draft => {
-          draft.name = defaultTo(pipeline?.name, '')
-          draft.identifier = defaultTo(pipeline?.identifier, '')
-        })
+      ? produce(
+          defaultTo(parse<any>(defaultTo(newTemplate?.yaml, ''))?.template.spec, {}) as PipelineInfoConfig,
+          draft => {
+            draft.name = defaultTo(pipeline?.name, '')
+            draft.identifier = defaultTo(pipeline?.identifier, '')
+          }
+        )
       : createTemplate(pipeline, newTemplate)
     processNode.description = pipeline.description
     processNode.tags = pipeline.tags
@@ -648,7 +651,7 @@ export function PipelineCanvas({
               projectIdentifier={projectIdentifier}
               accountId={accountId}
               module={module}
-              inputSetYAML={inputSetYaml || ''}
+              inputSetYAML={defaultTo(inputSetYaml, '')}
               inputSetSelected={getInputSetSelected()}
               connectorRef={connectorRef}
               repoIdentifier={isPipelineRemote ? repoName : repoIdentifier}
@@ -700,33 +703,38 @@ export function PipelineCanvas({
       if (isUpdated && branch !== selectedFilter.branch) {
         setBlockNavigation(true)
       } else if (branch !== selectedFilter.branch) {
-        deletePipelineCache({ repoIdentifier: selectedFilter.repo || '', branch: selectedFilter.branch || '' }).then(
-          () => {
-            history.push(
-              routes.toPipelineStudio({
-                projectIdentifier,
-                orgIdentifier,
-                pipelineIdentifier: pipelineIdentifier || '-1',
-                accountId,
-                module,
-                branch: selectedFilter.branch,
-                repoIdentifier: selectedFilter.repo,
-                ...(isPipelineRemote
-                  ? {
-                      repoIdentifier: repoName,
-                      repoName,
-                      connectorRef,
-                      storeType
-                    }
-                  : {})
-              })
-            )
-            // Avoid page reload when default branch is auto selected for GitX
-            if (!defaultSelected) {
-              location.reload()
-            }
+        deletePipelineCache({
+          repoIdentifier: defaultTo(selectedFilter.repo, ''),
+          branch: defaultTo(selectedFilter.branch, '')
+        }).then(() => {
+          history.push(
+            routes.toPipelineStudio({
+              projectIdentifier,
+              orgIdentifier,
+              pipelineIdentifier: defaultTo(pipelineIdentifier, '-1'),
+              accountId,
+              module,
+              branch: selectedFilter.branch,
+              repoIdentifier: selectedFilter.repo,
+              ...(isPipelineRemote
+                ? {
+                    repoIdentifier: repoName,
+                    repoName,
+                    connectorRef,
+                    storeType
+                  }
+                : {})
+            })
+          )
+          if (!defaultSelected) {
+            fetchPipeline({
+              forceFetch: true,
+              forceUpdate: true,
+              repoIdentifier: selectedFilter.repo,
+              branch: selectedFilter.branch
+            })
           }
-        )
+        })
       }
     },
     [
@@ -885,9 +893,9 @@ export function PipelineCanvas({
                     <GitRemoteDetails
                       connectorRef={connectorRef}
                       repoName={repoName || gitDetails.repoName || gitDetails.repoIdentifier || ''}
-                      filePath={gitDetails.filePath || ''}
-                      fileUrl={gitDetails.fileUrl || ''}
-                      branch={branch || ''}
+                      filePath={defaultTo(gitDetails.filePath, '')}
+                      fileUrl={defaultTo(gitDetails.fileUrl, '')}
+                      branch={defaultTo(branch, '')}
                       onBranchChange={onGitBranchChange}
                       flags={{
                         readOnly: pipelineIdentifier === DefaultNewPipelineId

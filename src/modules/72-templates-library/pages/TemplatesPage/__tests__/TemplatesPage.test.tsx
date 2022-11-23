@@ -88,10 +88,13 @@ jest.mock('services/template-ng', () => ({
   })
 }))
 
-jest.mock('services/cd-ng-rq', () => ({
-  useListGitSyncQuery: jest.fn().mockImplementation(() => {
+jest.mock('services/cd-ng', () => ({
+  useListGitSync: jest.fn().mockImplementation(() => {
     return { data: gitConfigs, refetch: jest.fn() }
-  }),
+  })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
   useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })

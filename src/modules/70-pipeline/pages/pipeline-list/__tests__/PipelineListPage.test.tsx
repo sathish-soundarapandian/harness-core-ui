@@ -90,13 +90,15 @@ jest.mock('services/cd-ng', () => ({
     refetch: jest.fn().mockResolvedValue(branchStatusMock),
     loading: false
   })),
+  useListGitSync: jest.fn(() => ({
+    data: gitSyncListResponse,
+    refetch: jest.fn().mockResolvedValue(gitSyncListResponse),
+    loading: false
+  })),
   useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
-  useListGitSyncQuery: jest.fn().mockImplementation(() => {
-    return { data: gitSyncListResponse, refetch: jest.fn().mockResolvedValue(gitSyncListResponse) }
-  }),
   useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })

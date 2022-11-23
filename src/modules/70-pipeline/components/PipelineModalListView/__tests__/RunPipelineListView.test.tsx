@@ -33,13 +33,13 @@ jest.mock('services/cd-ng', () => ({
     mutate: jest.fn(),
     refetch: jest.fn()
   }),
-  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
+  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: [], refetch: jest.fn() }
+  })
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
-  useListGitSyncQuery: jest.fn().mockImplementation(() => {
-    return { data: [], refetch: jest.fn() }
-  }),
   useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: [], refetch: jest.fn() }
   })

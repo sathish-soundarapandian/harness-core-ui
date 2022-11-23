@@ -101,6 +101,9 @@ jest.mock('services/cd-ng', () => ({
   useGetEnvironmentListForProject: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: environments, refetch: jest.fn() })),
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: getListGitSync }
+  }),
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
   }),
@@ -112,9 +115,6 @@ jest.mock('services/cd-ng', () => ({
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
-  useListGitSyncQuery: jest.fn().mockImplementation(() => {
-    return { data: gitConfigs, refetch: getListGitSync }
-  }),
   useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })
