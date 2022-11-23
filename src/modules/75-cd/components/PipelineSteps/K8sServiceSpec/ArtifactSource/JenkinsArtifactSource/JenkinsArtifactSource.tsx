@@ -121,6 +121,10 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     )
   )
 
+  const getEncodedValue = (value: string): string => {
+    return encodeURIComponent(value)
+  }
+
   const {
     refetch: refetchJobs,
     data: jobsResponse,
@@ -169,7 +173,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString(),
-      jobName: jobNameValue ? encodeURIComponent(encodeURIComponent(jobNameValue)) : undefined,
+      jobName: jobNameValue ? getEncodedValue(jobNameValue) : undefined,
       serviceId,
       fqnPath: getFqnPath(
         path as string,
@@ -202,7 +206,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       ...commonParams,
       connectorRef: connectorRefValue?.toString(),
       artifactPath: artifactPathValue,
-      jobName: jobNameValue ? encodeURIComponent(encodeURIComponent(jobNameValue)) : undefined,
+      jobName: jobNameValue ? getEncodedValue(jobNameValue) : undefined,
       serviceId,
       fqnPath: getFqnPath(
         path as string,
