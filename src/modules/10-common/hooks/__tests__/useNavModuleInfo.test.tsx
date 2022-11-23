@@ -81,13 +81,13 @@ describe('useModuleInfo tests', () => {
     expect(result.current.shouldVisible).toBe(false)
   })
 
-  test('test SCM', () => {
+  test('test CODE', () => {
     const { result } = renderHook(() => useNavModuleInfo(ModuleName.CODE), {
       wrapper: TestWrapper
     })
 
-    expect(result.current.icon).toBe('gitops-green')
-    expect(result.current.label).toBe('common.purpose.scm.name')
+    expect(result.current.icon).toBe('code')
+    expect(result.current.label).toBe('common.purpose.code.name')
     expect(result.current.shouldVisible).toBe(false)
   })
 
@@ -105,9 +105,9 @@ describe('useModuleInfo tests', () => {
       }
     })
 
-    expect(result.current['SCM'].icon).toBe('gitops-green')
-    expect(result.current['SCM'].label).toBe('common.purpose.scm.name')
-    expect(result.current['SCM'].shouldVisible).toBe(false)
-    expect(result.current['SCM'].licenseType).toBe('PAID')
+    expect(result.current['CODE'].icon).toBe('code')
+    expect(result.current['CODE'].label).toBe('common.purpose.code.name')
+    expect(result.current['CODE'].shouldVisible).toBe(false)
+    expect(result.current['CODE'].licenseType).toBe('PAID')
   })
 })

@@ -92,7 +92,7 @@ export default function SCMSideNav(): React.ReactElement {
                   size: 14
                 }
               }}
-              label={getString('scm.branches')}
+              label={getString('code.branches')}
               to={routes.toSCMRepositoryBranches({
                 repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/'),
                 branch: ''

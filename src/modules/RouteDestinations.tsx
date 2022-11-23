@@ -36,7 +36,7 @@ import AccountSideNav from '@common/components/AccountSideNav/AccountSideNav'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
 import DefaultSettingsRoutes from '@default-settings/RouteDestinations'
-import { SCMRouteDestinations } from '@scm/RouteDestinations'
+import { SCMRouteDestinations } from '@code/RouteDestinations'
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
   icon: 'nav-settings',

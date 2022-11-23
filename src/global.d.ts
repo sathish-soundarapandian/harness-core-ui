@@ -172,37 +172,37 @@ declare module 'stoV2/PipelineSecurityView' {
   export default ChildApp
 }
 
-declare module 'scm/App' {
+declare module 'code/App' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
 
-declare module 'scm/RepositoriesListing' {
+declare module 'code/RepositoriesListing' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
 
-declare module 'scm/Repository' {
+declare module 'code/Repository' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
 
-declare module 'scm/RepositoryFileEdit' {
+declare module 'code/RepositoryFileEdit' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
 
-declare module 'scm/RepositoryCommits' {
+declare module 'code/RepositoryCommits' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
 
-declare module 'scm/RepositoryBranches' {
+declare module 'code/RepositoryBranches' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
 
-declare module 'scm/RepositorySettings' {
+declare module 'code/RepositorySettings' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }

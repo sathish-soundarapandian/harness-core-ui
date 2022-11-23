@@ -638,6 +638,7 @@ export interface StringsMap {
   'common.purpose.ci.descriptionOnly': string
   'common.purpose.ci.integration': string
   'common.purpose.ci.subtitle': string
+  'common.purpose.code.name': string
   'common.purpose.compare': string
   'common.purpose.continuous': string
   'common.purpose.cv.continuous': string
@@ -650,7 +651,6 @@ export interface StringsMap {
   'common.purpose.errorTracking.title': string
   'common.purpose.howToProceed': string
   'common.purpose.moduleSuccess': string
-  'common.purpose.scm.name': string
   'common.purpose.selectAModule': string
   'common.purpose.service': string
   'common.purpose.setup': string
@@ -2962,9 +2962,9 @@ export interface StringsMap {
   'projectsOrgs.welcomeSecondLine': string
   'projectsOrgs.whyCreateProject': string
   'projectsOrgs.youHaveNoProjects': string
-  'scm.branches': string
-  'scm.homepageHeading': string
-  'scm.learnMore': string
+  'code.branches': string
+  'code.homepageHeading': string
+  'code.learnMore': string
   'pipeline.ACR.name': string
   'pipeline.ACR.registry': string
   'pipeline.ACR.registryError': string

@@ -18,24 +18,24 @@ import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
 import type { RemoteViewProps } from './SCMUtils'
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteSCMApp = lazy(() => import('scm/App'))
+const RemoteSCMApp = lazy(() => import('code/App'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteRepositoriesListing = lazy(() => import('scm/RepositoriesListing'))
+const RemoteRepositoriesListing = lazy(() => import('code/RepositoriesListing'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteRepository = lazy(() => import('scm/Repository'))
+const RemoteRepository = lazy(() => import('code/Repository'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteRepositoryFileEdit = lazy(() => import('scm/RepositoryFileEdit'))
+const RemoteRepositoryFileEdit = lazy(() => import('code/RepositoryFileEdit'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteRepositoryCommits = lazy(() => import('scm/RepositoryCommits'))
+const RemoteRepositoryCommits = lazy(() => import('code/RepositoryCommits'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteRepositoryBranches = lazy(() => import('scm/RepositoryBranches'))
+const RemoteRepositoryBranches = lazy(() => import('code/RepositoryBranches'))
 // eslint-disable-next-line import/no-unresolved
-const RemoteRepositorySettings = lazy(() => import('scm/RepositorySettings'))
+const RemoteRepositorySettings = lazy(() => import('code/RepositorySettings'))
 
 const exportedRoutes = pick(routes, [
   'toSCM',

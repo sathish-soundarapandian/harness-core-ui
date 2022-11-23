@@ -33,11 +33,11 @@ const SCMHomePage: React.FC = () => {
 
   return (
     <HomePageTemplate
-      title={getString('common.purpose.scm.name')}
+      title={getString('common.purpose.code.name')}
       bgImageUrl={bgImageURL}
       projectCreateSuccessHandler={projectCreateSuccessHandler}
-      subTitle={getString('scm.homepageHeading')}
-      documentText={getString('scm.learnMore')}
+      subTitle={getString('code.homepageHeading')}
+      documentText={getString('code.learnMore')}
     />
   )
 }

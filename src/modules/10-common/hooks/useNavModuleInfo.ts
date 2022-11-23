@@ -97,7 +97,7 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   },
   [ModuleName.CODE]: {
     icon: 'code',
-    label: 'common.purpose.scm.name',
+    label: 'common.purpose.code.name',
     getHomePageUrl: (accountId: string) => routes.toSCM({ accountId }),
     featureFlagName: FeatureFlag.CODE_ENABLED
   }

@@ -59,7 +59,7 @@ module.exports = ({
   }
 
   if (enableCODE) {
-    remotes.scm = "scmRemote@[window.getApiBaseUrl('scm/remoteEntry.js')]"
+    remotes.code = "codeRemote@[window.getApiBaseUrl('code/remoteEntry.js')]"
   }
 
   if (enableFFUI) {

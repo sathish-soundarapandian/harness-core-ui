@@ -188,7 +188,7 @@ export const SCMNavItem = () => {
             color={Color.WHITE}
             className={css.text}
           >
-            <String stringID="common.purpose.scm.name" />
+            <String stringID="common.purpose.code.name" />
           </Text>
         </Layout.Vertical>
       </Link>

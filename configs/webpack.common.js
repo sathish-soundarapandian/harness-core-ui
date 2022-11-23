@@ -257,18 +257,18 @@ if (!enableSTO) {
   config.resolve.alias['stoV2/PipelineSecurityView'] = ChildAppError
 }
 
-// render a mock app when SCM MF is disabled
+// render a mock app when CODE MF is disabled
 if (!enableCODE) {
-  const scmModules = [
-    'scm/App',
-    'scm/RepositoriesListing',
-    'scm/Repository',
-    'scm/RepositoryFileEdit',
-    'scm/RepositoryCommits',
-    'scm/RepositoryBranches',
-    'scm/RepositorySettings'
+  const codeModules = [
+    'code/App',
+    'code/RepositoriesListing',
+    'code/Repository',
+    'code/RepositoryFileEdit',
+    'code/RepositoryCommits',
+    'code/RepositoryBranches',
+    'code/RepositorySettings'
   ]
-  scmModules.forEach(mod => (config.resolve.alias[mod] = ChildAppError))
+  codeModules.forEach(mod => (config.resolve.alias[mod] = ChildAppError))
 }
 
 if (!enableFFUI) {

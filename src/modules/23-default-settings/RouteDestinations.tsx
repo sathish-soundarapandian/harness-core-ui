@@ -33,7 +33,7 @@ import {
 DefaultSettingsFactory.registerCategory('CORE', {
   icon: 'cog',
   label: 'common.module.core',
-  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'scm', 'sto']
+  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
 })
 DefaultSettingsFactory.registerSettingHandler(SettingType.DISABLE_HARNESS_BUILT_IN_SECRET_MANAGER, {
   label: 'common.accountSetting.connector.disableBISMHeading',
