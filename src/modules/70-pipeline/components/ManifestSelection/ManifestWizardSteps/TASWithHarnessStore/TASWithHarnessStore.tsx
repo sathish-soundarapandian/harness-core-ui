@@ -28,7 +28,7 @@ import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from '
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { FileUsage } from '@filestore/interfaces/FileStore'
-import { ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
+import { cfCliVersions, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import type { TASWithHarnessStorePropTypeDataType, ManifestTypes } from '../../ManifestInterface'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
@@ -53,8 +53,7 @@ function TASWithHarnessStore({
   previousStep,
   manifestIdsList,
   expressions
-}: // isReadonly
-StepProps<ConnectorConfigDTO> & TASWithHarnessStorePropType): React.ReactElement {
+}: StepProps<ConnectorConfigDTO> & TASWithHarnessStorePropType): React.ReactElement {
   const { getString } = useStrings()
 
   const getInitialValues = (): TASWithHarnessStorePropTypeDataType => {
@@ -65,6 +64,7 @@ StepProps<ConnectorConfigDTO> & TASWithHarnessStorePropType): React.ReactElement
       return {
         ...specValues,
         identifier: initialValues.identifier,
+        cfCliVersion: initialValues.spec?.cfCliVersion,
         varsPaths,
         autoScalerPath
       }
@@ -73,7 +73,8 @@ StepProps<ConnectorConfigDTO> & TASWithHarnessStorePropType): React.ReactElement
       identifier: '',
       files: [''],
       varsPaths: [''],
-      autoScalerPath: ['']
+      autoScalerPath: [''],
+      cfCliVersion: 'V7'
     }
   }
 
@@ -85,6 +86,7 @@ StepProps<ConnectorConfigDTO> & TASWithHarnessStorePropType): React.ReactElement
           identifier: formData.identifier,
           type: selectedManifest as ManifestTypes,
           spec: {
+            cfCliVersion: formData?.cfCliVersion,
             store: {
               type: ManifestStoreMap.Harness,
               spec: {
@@ -139,6 +141,13 @@ StepProps<ConnectorConfigDTO> & TASWithHarnessStorePropType): React.ReactElement
                       name="identifier"
                       label={getString('pipeline.manifestType.manifestIdentifier')}
                       placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
+                    />
+                  </Container>
+                  <Container className={css.halfWidth} margin={{ bottom: 'medium' }}>
+                    <FormInput.Select
+                      name="cfCliVersion"
+                      label={getString('pipeline.manifestType.cfCliVersion')}
+                      items={cfCliVersions}
                     />
                   </Container>
                   <Container className={css.halfWidth} margin={{ bottom: 'medium' }} padding={0}>

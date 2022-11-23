@@ -16,7 +16,8 @@ import {
   StepProps,
   ButtonVariation,
   AllowedTypes,
-  FormikForm
+  FormikForm,
+  FormInput
 } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -30,7 +31,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import type { ManifestTypes, TASManifestDataType } from '../../ManifestInterface'
-import { GitRepoName, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
+import { cfCliVersions, GitRepoName, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
 import { filePathWidth, getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import { ManifestDetailsCoreSection } from '../CommonManifestDetails/ManifestDetailsCoreSection'
@@ -81,6 +82,7 @@ function TasManifest({
           path,
           uuid: uuid(path, nameSpace())
         })),
+        cfCliVersion: initialValues.spec?.cfCliVersion,
         varsPaths:
           typeof initialValues.spec?.varsPaths === 'string'
             ? initialValues.spec?.varsPaths
@@ -102,6 +104,7 @@ function TasManifest({
       branch: undefined,
       commitId: undefined,
       gitFetchType: 'Branch',
+      cfCliVersion: 'V7',
       paths: [{ path: '', uuid: uuid('', nameSpace()) }],
       skipResourceVersioning: false,
       repoName: getRepositoryName(prevStepData, initialValues)
@@ -114,6 +117,7 @@ function TasManifest({
         identifier: formData.identifier,
         type: selectedManifest as ManifestTypes,
         spec: {
+          cfCliVersion: formData?.cfCliVersion,
           store: {
             type: formData?.store,
             spec: {
@@ -122,6 +126,7 @@ function TasManifest({
               paths: formData?.paths?.map((path: { path: string }) => path.path)
             }
           },
+
           varsPaths:
             typeof formData?.varsPaths === 'string'
               ? formData?.varsPaths
@@ -238,6 +243,14 @@ function TasManifest({
                     prevStepData={prevStepData}
                     isReadonly={isReadonly}
                   />
+
+                  <div className={css.halfWidth}>
+                    <FormInput.Select
+                      name="cfCliVersion"
+                      label={getString('pipeline.manifestType.cfCliVersion')}
+                      items={cfCliVersions}
+                    />
+                  </div>
 
                   {/* VARS AND AUTOSCALER */}
                   <div

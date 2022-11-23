@@ -42,7 +42,8 @@ const initialValues = {
   type: ManifestDataType.TasManifest,
   files: [],
   varsPaths: [''],
-  autoScalerPath: ['']
+  autoScalerPath: [''],
+  cfCliVersion: 'V7'
 }
 
 describe('Harness File Store with TAS Manifest tests', () => {
@@ -71,6 +72,7 @@ describe('Harness File Store with TAS Manifest tests', () => {
         identifier: 'testidentifier',
         type: ManifestDataType.TasManifest,
         spec: {
+          cfCliVersion: 'V7',
           varsPaths: ['vars path'],
           autoScalerPath: ['autoScaler path'],
           store: {
@@ -111,6 +113,7 @@ describe('Harness File Store with TAS Manifest tests', () => {
       initialValues: {
         identifier: 'test',
         spec: {
+          cfCliVersion: 'V7',
           varsPaths: RUNTIME_INPUT_VALUE,
           autoScalerPath: RUNTIME_INPUT_VALUE,
           store: {

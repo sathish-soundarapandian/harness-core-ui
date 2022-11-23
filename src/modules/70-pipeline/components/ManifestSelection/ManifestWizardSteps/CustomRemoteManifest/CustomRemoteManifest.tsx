@@ -35,7 +35,7 @@ import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextFi
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { CustomManifestManifestDataType, ManifestTypes } from '../../ManifestInterface'
-import { cliVersions, ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
+import { cfCliVersions, ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
 import { filePathWidth, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
@@ -108,7 +108,7 @@ function CustomRemoteManifest({
                 uuid: uuid(path, nameSpace())
               })),
         ...(showTASAdditionalPaths(selectedManifest as ManifestTypes) && {
-          cliVersion: get(initialValues, 'spec.cliVersion')
+          cfCliVersion: get(initialValues, 'spec.cfCliVersion')
         })
       }
     }
@@ -120,7 +120,7 @@ function CustomRemoteManifest({
       valuesPaths: [{ path: '', uuid: uuid('', nameSpace()) } as PathsInterface],
       paramsPaths: [{ path: '', uuid: uuid('', nameSpace()) } as PathsInterface],
       delegateSelectors: [],
-      ...(showTASAdditionalPaths(selectedManifest as ManifestTypes) && { cliVersion: 'V7' })
+      ...(showTASAdditionalPaths(selectedManifest as ManifestTypes) && { cfCliVersion: 'V7' })
     }
   }
 
@@ -182,7 +182,7 @@ function CustomRemoteManifest({
                 (path: { path: string }) => path.path
               )
         )
-        set(manifestObj, 'manifest.spec.cliVersion', formData?.cliVersion)
+        set(manifestObj, 'manifest.spec.cfCliVersion', formData?.cfCliVersion)
       }
 
       handleSubmit(manifestObj)
@@ -236,9 +236,9 @@ function CustomRemoteManifest({
                   {showTASAdditionalPaths(selectedManifest as ManifestTypes) && (
                     <div className={css.halfWidth}>
                       <FormInput.Select
-                        name="cliVersion"
-                        label={getString('pipeline.manifestType.cliVersion')}
-                        items={cliVersions}
+                        name="cfCliVersion"
+                        label={getString('pipeline.manifestType.cfCliVersion')}
+                        items={cfCliVersions}
                       />
                     </div>
                   )}
