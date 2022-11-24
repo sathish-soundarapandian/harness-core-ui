@@ -291,7 +291,9 @@ function RetryPipeline({
             pipelineBranch: branch,
             repoIdentifier,
             branch,
-            getDefaultFromOtherRepo: true
+            getDefaultFromOtherRepo: true,
+            parentEntityConnectorRef: connectorRef,
+            parentEntityRepoName: repoIdentifier
           }
         : {})
     }

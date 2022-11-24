@@ -176,7 +176,9 @@ function PipelineInputSetFormBasic(): React.ReactElement {
         pipelineBranch: branch,
         repoIdentifier,
         branch,
-        getDefaultFromOtherRepo: true
+        getDefaultFromOtherRepo: true,
+        parentEntityConnectorRef: connectorRef,
+        parentEntityRepoName: repoIdentifier
       }
     }
   )
