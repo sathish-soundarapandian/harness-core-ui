@@ -9,6 +9,9 @@ import type { HealthSourcesConfig } from '../CommonHealthSource.types'
 
 export const healthSourcesConfig: HealthSourcesConfig = {
   SumoLogic_METRICS: {
+    addQuery: {
+      enableDefaultGroupName: false
+    },
     customMetrics: {
       enabled: true
     },
@@ -17,12 +20,14 @@ export const healthSourcesConfig: HealthSourcesConfig = {
     }
   },
   SumoLogic_LOGS: {
+    addQuery: {
+      enableDefaultGroupName: true
+    },
     customMetrics: {
       enabled: true
     },
     sideNav: {
-      shouldBeAbleToDeleteLastMetric: true,
-      enableDefaultGroupName: true
+      shouldBeAbleToDeleteLastMetric: true
     }
   }
 }

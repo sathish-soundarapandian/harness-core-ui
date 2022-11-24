@@ -24,9 +24,11 @@ export interface HealthSourceConfig {
   customMetrics: {
     enabled: boolean
   }
+  addQuery: {
+    enableDefaultGroupName: boolean
+  }
   sideNav: {
     shouldBeAbleToDeleteLastMetric: boolean
-    enableDefaultGroupName?: boolean
   }
 }
 

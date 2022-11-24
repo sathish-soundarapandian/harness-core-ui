@@ -47,7 +47,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   } = props
 
   const { values: formValues, setValues, isValid } = useFormikContext<CommonHealthSourceFormikInterface>()
-  const enabledDefaultGroupName = !!healthSourceConfig?.sideNav?.enableDefaultGroupName
+  const enabledDefaultGroupName = !!healthSourceConfig?.addQuery?.enableDefaultGroupName
   const {
     sourceData: { existingMetricDetails }
   } = useContext(SetupSourceTabsContext)
