@@ -44,6 +44,9 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
       customMetrics: {
         enabled: true
       },
+      addQuery: {
+        enableDefaultGroupName: false
+      },
       sideNav: {
         shouldBeAbleToDeleteLastMetric: true
       }
