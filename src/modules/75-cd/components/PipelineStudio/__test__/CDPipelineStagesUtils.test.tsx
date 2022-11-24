@@ -87,7 +87,7 @@ describe('Testing Empty pipeline stages', () => {
       </TestWrapper>
     )
 
-    const deployStage = await waitFor(() => getByText(document.body, 'pipelineSteps.deploy.create.deployStageName'))
+    const deployStage = await waitFor(() => getByText(document.body, 'common.moduleTileLabel.cd'))
     expect(deployStage).toBeTruthy()
     const deployIcon = document.querySelector("span[data-icon='cd-main']") as HTMLElement
     fireEvent.click(deployIcon)
@@ -111,7 +111,7 @@ describe('Testing Empty pipeline stages', () => {
       </TestWrapper>
     )
 
-    const deployStage = await waitFor(() => getByText(document.body, 'pipelineSteps.deploy.create.deployStageName'))
+    const deployStage = await waitFor(() => getByText(document.body, 'common.moduleTileLabel.cd'))
     expect(deployStage).toBeTruthy()
     const deployIcon = document.querySelector("span[data-icon='cd-main']") as HTMLElement
     fireEvent.click(deployIcon)

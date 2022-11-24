@@ -1,13 +1,45 @@
 .container {
   box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
   border-radius: 8px;
-  border: 1px solid white;
-  //TODO: add transition
+  height: 146px;
+  width: 186px;
+  border: 1px solid transparent;
+  padding: var(--spacing-small) var(--spacing-small) var(--spacing-small) var(--spacing-large) !important;
+  position: relative;
+  user-select: none;
+  cursor: pointer;
+
   &:hover {
-    background-color: var(--primary-1) !important;
-    border: 1px solid var(--primary-2);
+    &.hoverStyle {
+      border-color: inherit !important;
+      transition: border 200ms ease-out;
+    }
+    .icon {
+      opacity: 0.4;
+    }
+    .clickToExpandText {
+      display: block;
+    }
   }
-  .loader {
-    margin: auto;
+  .icon {
+    margin-left: var(--spacing-small) !important;
+    opacity: 0.2;
   }
+  .clickToExpandText {
+    position: absolute;
+    top: var(--spacing-tiny);
+    font-size: 8px !important; // variation not present, check with UX
+    text-transform: uppercase;
+    display: none;
+  }
+  .tileBody {
+    flex: 1;
+  }
+}
+
+.expanded {
+  height: 316px;
+  width: 392px !important;
+  border-color: inherit;
+  z-index: 1;
 }

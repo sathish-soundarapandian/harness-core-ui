@@ -31,7 +31,7 @@ const OverviewDashboardPage = () => {
         >
           <Layout.Vertical className={css.left}>
             <OverviewGlanceCardsV2 />
-            <Container padding={{ top: 'large', bottom: 'large' }} className={css.border} />
+            <Container className={css.border} />
             <ModuleTiles />
           </Layout.Vertical>
           <Layout.Vertical className={css.right}>

@@ -13,7 +13,7 @@ import type { StageAttributes } from '@pipeline/components/PipelineStudio/Pipeli
 import { DeployStage } from './DeployStage'
 
 export const getStageAttributes = (getString: UseStringsReturn['getString']): StageAttributes => ({
-  name: getString('pipelineSteps.deploy.create.deployStageName'),
+  name: getString('common.moduleTileLabel.cd'),
   type: StageType.DEPLOY,
   icon: 'cd-main',
   iconColor: 'var(--pipeline-deploy-stage-color)',
@@ -26,9 +26,9 @@ export const getStageEditorImplementation = (isEnabled: boolean, getString: UseS
     icon={'cd-main'}
     hoverIcon={'deploy-stage'}
     iconsStyle={{ color: 'var(--pipeline-deploy-stage-color)' }}
-    name={getString('pipelineSteps.deploy.create.deployStageName')}
+    name={getString('common.moduleTileLabel.cd')}
     type={StageType.DEPLOY}
-    title={getString('pipelineSteps.deploy.create.deployStageName')}
+    title={getString('common.moduleTileLabel.cd')}
     description={getString('pipeline.pipelineSteps.deployStageDescription')}
     isHidden={!isEnabled}
     isDisabled={false}

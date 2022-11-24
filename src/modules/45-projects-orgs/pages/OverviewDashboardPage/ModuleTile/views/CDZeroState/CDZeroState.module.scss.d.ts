@@ -7,11 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly clickToExpandText: string
-  readonly container: string
-  readonly expanded: string
-  readonly hoverStyle: string
-  readonly icon: string
-  readonly tileBody: string
+  readonly descText: string
 }
 export default styles

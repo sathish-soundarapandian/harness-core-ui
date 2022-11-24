@@ -10,6 +10,7 @@
 
   &.active {
     &:hover {
+      cursor: pointer;
       transition: background-color 200ms ease-out;
       transition: border 200ms ease-out;
       border: 1px solid var(--primary-6);

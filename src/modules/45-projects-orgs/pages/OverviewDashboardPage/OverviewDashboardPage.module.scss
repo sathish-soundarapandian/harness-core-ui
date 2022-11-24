@@ -8,7 +8,9 @@
     width: 475px;
   }
   .border {
-    border-bottom: 1px solid var(--black);
+    height: 1px;
+    background-color: var(--black);
     opacity: 0.1;
+    margin: var(--spacing-xlarge) 0 !important;
   }
 }
