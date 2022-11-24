@@ -11,7 +11,7 @@ import { Button, Container, Layout, PageSpinner, Text, useToaster } from '@harne
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { get, isEmpty, set } from 'lodash-es'
-import { nanoid as nanoUuid } from 'nanoid'
+import { customAlphabet } from 'nanoid'
 import { StringUtils } from '@common/exports'
 import {
   DelegateType,
@@ -92,7 +92,8 @@ export const CreateK8sDelegate = ({
       showError(getString('somethingWentWrong'))
     } else {
       const delegateToken = get(delegateTokens, 'resource[0].name')
-      const delegateName1 = `del-${nanoUuid()}`
+      const nanoUuid = customAlphabet('0123456789-abcdefghijklmnopqrstuvwxyz')
+      const delegateName1 = `dl-${nanoUuid()}-spl`
       setDelegateName(delegateName1)
       delegateNameRef.current = delegateName1
       trackEvent(CDOnboardingActions.StartOnboardingDelegateCreation, {
