@@ -39,7 +39,7 @@ describe('TemplatesPageUtils tests', () => {
   })
   test('Test getTypeForTemplate method', () => {
     expect(getTypeForTemplate(getString, stepTemplateMock)).toEqual('HTTP Step')
-    expect(getTypeForTemplate(getString, stageTemplateMock)).toEqual('pipelineSteps.deploy.create.deployStageName')
+    expect(getTypeForTemplate(getString, stageTemplateMock)).toEqual('common.moduleTileLabel.cd')
     expect(getTypeForTemplate(getString, pipelineTemplateMock)).toEqual('Pipeline')
   })
 })

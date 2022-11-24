@@ -139,6 +139,7 @@ export interface StringsMap {
   'common.city': string
   'common.clearSelection': string
   'common.clickToKnowMore': string
+  'common.clickToExpand': string
   'common.clientId': string
   'common.clientSecret': string
   'common.cluster': string
@@ -516,6 +517,12 @@ export interface StringsMap {
   'common.moduleList.manageImpact': string
   'common.moduleList.optimize': string
   'common.moduleList.title': string
+  'common.moduleTileLabel.cd': string
+  'common.moduleTileLabel.ce': string
+  'common.moduleTileLabel.chaos': string
+  'common.moduleTileLabel.cv': string
+  'common.moduleTileLabel.ff': string
+  'common.moduleTileLabel.sto': string
   'common.moduleTitles.cd': string
   'common.moduleTitles.cf': string
   'common.monitoredServices': string
@@ -10149,10 +10156,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   'pipelineSteps.deleteResourcesPlaceHolder': string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  'pipelineSteps.deploy.create.deployStageName': string
   /**
    * @deprecated migrate this string to module level file
    */

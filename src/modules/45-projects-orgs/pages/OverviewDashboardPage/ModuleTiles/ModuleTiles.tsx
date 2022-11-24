@@ -1,21 +1,22 @@
 import React from 'react'
 import cx from 'classnames'
 import { Card, Container } from '@harness/uicore'
-import type { Module as ModuleName } from 'framework/types/ModuleName'
+import { ModuleName } from 'framework/types/ModuleName'
+import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
+import ModuleTile from '../ModuleTile/ModuleTile'
 import css from './ModuleTiles.module.scss'
 
 export default function ModuleTiles(): React.ReactElement {
-  const modules: ModuleName[] = ['cd', 'ci', 'cf', 'sto', 'cv', 'ce', 'chaos']
-  const moduleToCardMap: Record<ModuleName, React.ReactElement> = {
-    cd: <div>cd</div>,
-    ci: <div>ci</div>,
-    cf: <div>ff</div>,
-    sto: <div>sto</div>,
-    cv: <div>srm</div>,
-    ce: <div>ccm</div>,
-    chaos: <div>chaos</div>,
-    scm: <div>scm</div>
-  }
+  const modules: NavModuleName[] = [
+    ModuleName.CD
+    // ModuleName.CI,
+    // ModuleName.CF,
+    // ModuleName.STO,
+    // ModuleName.CV,
+    // ModuleName.CE,
+    // ModuleName.CHAOS
+  ]
+
   const [selectedModule, setSelectedModule] = React.useState<ModuleName>()
   const numOfColumns = 3
 
@@ -26,6 +27,7 @@ export default function ModuleTiles(): React.ReactElement {
         const expandOnRow = Math.floor(index / numOfColumns) + 1
         const expandOnColumn = index % 3 < numOfColumns - 1 ? (index % 3) + 1 : index % 3
 
+        return <ModuleTile key={harnessModule} module={harnessModule} />
         return (
           <Card
             className={cx(css.tile, { [css.expanded]: isExpanded })}

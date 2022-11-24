@@ -71,12 +71,14 @@ import { ServiceNowCreateUpdateView } from '@pipeline/components/execution/StepD
 import { ModuleName } from 'framework/types/ModuleName'
 import { ServiceNowImportSetView } from '@pipeline/components/execution/StepDetails/views/ServiceNowImportSetView/ServiceNowImportSetView'
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
+import OverviewDashboardPageFactory from '@projects-orgs/factories/OverviewDashboardPageFactory'
 import PipelineResourceRenderer from './components/RbacResourceModals/PipelineResourceRenderer/PipelineResourceRenderer'
 import { JiraCreateUpdateView } from './components/execution/StepDetails/views/JiraCreateUpdateView/JiraCreateUpdateView'
 import ExecutionErrorTrackingView from './pages/execution/ExecutionErrorTrackingView/ExecutionErrorTrackingView'
 import { ExecutionListPage } from './pages/execution-list-page/ExecutionListPage'
 import EnvironmentResourceRenderer from './components/RbacResourceTables/EnvironmentAttributeRenderer/EnvironmentResourceRenderer'
 import EnvironmentAttributeRenderer from './components/RbacResourceTables/EnvironmentAttributeRenderer/EnvironmentAttributeRenderer'
+import CDModuleTile from './components/CDModuleTile/CDModuleTile'
 /**
  * Register RBAC resources
  */
@@ -205,6 +207,7 @@ LandingDashboardFactory.registerModuleDashboardHandler(ModuleName.CD, {
   moduleDashboardRenderer: () => <LandingDashboardDeploymentsWidget />
 })
 
+OverviewDashboardPageFactory.registerModuleTileOverview(ModuleName.CD, CDModuleTile)
 /**
  * Register for Audit Trail
  * */

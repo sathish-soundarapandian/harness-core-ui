@@ -1127,3 +1127,11 @@ executionTab:
 clickToKnowMore: 'Click to know more about'
 viewAll: View all
 notification: Notification
+moduleTileLabel:
+  cd: Deploy
+  cv: Manage Service Level Objectives
+  ff: Manage Feature Flags
+  sto: Manage Security Tests
+  ce: Costs Saved
+  chaos: Chaos Expriments
+clickToExpand: Click to expand

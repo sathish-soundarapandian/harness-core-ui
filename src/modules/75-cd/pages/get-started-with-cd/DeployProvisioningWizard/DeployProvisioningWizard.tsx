@@ -73,9 +73,9 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       const uniquePipelineId = getUniqueEntityIdentifier(repoName)
       const payload = DEFAULT_PIPELINE_PAYLOAD
       payload.pipeline.name = `${getString('buildText')}_${StringUtils.getIdentifierFromName(repoName)}`
-      payload.pipeline.identifier = `${getString(
-        'pipelineSteps.deploy.create.deployStageName'
-      )}_${StringUtils.getIdentifierFromName(uniquePipelineId)}` // pipeline identifier cannot have spaces
+      payload.pipeline.identifier = `${getString('common.moduleTileLabel.cd')}_${StringUtils.getIdentifierFromName(
+        uniquePipelineId
+      )}` // pipeline identifier cannot have spaces
       payload.pipeline.projectIdentifier = projectIdentifier
       payload.pipeline.orgIdentifier = orgIdentifier
       payload.pipeline.stages[0].stage.spec.deploymentType = deploymentType

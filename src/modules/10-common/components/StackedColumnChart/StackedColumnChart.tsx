@@ -56,10 +56,7 @@ const getDefaultOptions = (data: DataType): Highcharts.Options => ({
   },
   plotOptions: {
     column: {
-      pointPadding: 0,
-      borderWidth: 3,
-      borderRadius: 4,
-      pointWidth: 10,
+      shadow: false,
       stacking: 'normal',
       animation: false,
       events: {
@@ -88,5 +85,13 @@ export const StackedColumnChart: React.FC<StackedColumnChartProps> = props => {
   const { data, options = {} } = props
   const defaultOptions = useMemo(() => getDefaultOptions(data), [data])
   const parsedOptions = useMemo(() => getParsedOptions(defaultOptions, options), [defaultOptions, options])
-  return <HighchartsReact highcharts={Highcharts} options={parsedOptions} />
+
+  console.log('parsedOptions', parsedOptions)
+  return (
+    <HighchartsReact
+      highcharts={Highcharts}
+      options={parsedOptions}
+      containerProps={{ style: { height: '100%', width: '70%', zIndex: 1 } }}
+    />
+  )
 }

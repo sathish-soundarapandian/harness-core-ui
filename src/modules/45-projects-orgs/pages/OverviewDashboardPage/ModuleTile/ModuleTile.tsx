@@ -1,40 +1,99 @@
-import React from 'react'
-import { Container, Icon } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import React, { useState } from 'react'
+import { Container, Icon, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
+
 import cx from 'classnames'
 import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import { ModuleName } from 'framework/types/ModuleName'
+import { StringKeys, useStrings } from 'framework/strings'
+import OverviewDashboardPageFactory from '@projects-orgs/factories/OverviewDashboardPageFactory'
+import CDZeroState from './views/CDZeroState/CDZeroState'
+import type { ModuleTileDetailsBaseProps } from './types'
 import css from './ModuleTile.module.scss'
 
 interface ModuleTileProps {
-  module?: NavModuleName
-  type?: 'small' | 'medium'
-  className?: string
-  loading?: boolean
+  module: NavModuleName
+}
+interface ModuleTileDetails {
+  label: StringKeys
+  EmptyState?: React.ComponentType<ModuleTileDetailsBaseProps> // should not be optional
 }
 
-const getHeightAndWidth = (type: ModuleTileProps['type']) => {
-  switch (type) {
-    case 'small':
-      return { height: 110, width: 110 }
-    case 'medium':
-    default:
-      return { height: 148, width: 186 }
+const moduleTileMap: Record<NavModuleName, ModuleTileDetails> = {
+  [ModuleName.CD]: {
+    label: 'common.moduleTileLabel.cd',
+    EmptyState: CDZeroState
+  },
+  [ModuleName.CI]: {
+    label: 'buildsText'
+  },
+  [ModuleName.CF]: {
+    label: 'common.moduleTileLabel.ff'
+  },
+  [ModuleName.CHAOS]: {
+    label: 'common.moduleTileLabel.chaos'
+  },
+  [ModuleName.STO]: {
+    label: 'common.moduleTileLabel.sto'
+  },
+  [ModuleName.CV]: {
+    label: 'common.moduleTileLabel.cv'
+  },
+  [ModuleName.CE]: {
+    label: 'common.moduleTileLabel.ce'
+  },
+  [ModuleName.SCM]: {
+    label: 'common.purpose.scm.name'
   }
 }
 
-const ModuleTile: React.FC<ModuleTileProps> = props => {
-  const { type, className, loading } = props
+const ModuleTile: React.FC<ModuleTileProps> = ({ module }) => {
+  const [isExpanded, setIsExpanded] = useState<boolean>(false)
+  const { getString } = useStrings()
+  const { color, icon, backgroundColor, hasLicense } = useNavModuleInfo(module)
+  const { label, EmptyState } = moduleTileMap[module]
+  const showEmptyState = !hasLicense
 
-  const { height, width } = getHeightAndWidth(type)
+  const ModuleTileOverview = OverviewDashboardPageFactory.getModuleTileOverview(module)
+
+  const renderEmptyState = () => {
+    if (!EmptyState) {
+      return null
+    }
+    return <EmptyState isExpanded={isExpanded} />
+  }
+
+  const renderOverview = () => {
+    if (!ModuleTileOverview) {
+      return renderEmptyState()
+    }
+
+    return <ModuleTileOverview isExpanded={isExpanded} />
+  }
 
   return (
-    <Container
-      background="white"
-      flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
-      style={{ height, width }}
-      className={cx(css.container, className)}
-    >
-      {loading ? <Icon name="spinner" size={24} color={Color.PRIMARY_7} className={css.loader} /> : props.children}
+    <Container style={{ borderColor: `var(${color})` }}>
+      <Layout.Vertical
+        style={{ backgroundColor: isExpanded ? `var(${backgroundColor})` : 'var(--white)' }}
+        className={cx(css.container, css.hoverStyle, { [css.expanded]: isExpanded })}
+        onClick={() => {
+          setIsExpanded(!isExpanded)
+        }}
+      >
+        <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+          <Text color={Color.GREY_900} font={{ variation: FontVariation.CARD_TITLE }}>
+            {getString(label)}
+          </Text>
+          <Icon className={css.icon} name={icon} size={32} />
+        </Layout.Horizontal>
+        <Container className={css.tileBody}>{showEmptyState ? renderEmptyState() : renderOverview()}</Container>
+        {!isExpanded && (
+          <Text className={css.clickToExpandText} color={Color.GREY_400} font={{ variation: FontVariation.TINY }}>
+            {getString('common.clickToExpand')}
+          </Text>
+        )}
+      </Layout.Vertical>
     </Container>
   )
 }

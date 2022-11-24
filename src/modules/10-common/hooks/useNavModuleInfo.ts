@@ -45,6 +45,7 @@ export interface useNavModuleInfoReturnType {
   homePageUrl: string
   hasLicense?: boolean
   color: string
+  backgroundColor: string
 }
 
 interface ModuleInfo {
@@ -53,6 +54,7 @@ interface ModuleInfo {
   getHomePageUrl: (accountId: string) => string
   featureFlagName: FeatureFlag
   color: string
+  backgroundColor: string
 }
 
 const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
@@ -61,56 +63,64 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     label: 'common.cdAndGitops',
     getHomePageUrl: (accountId: string) => routes.toCD({ accountId }),
     featureFlagName: FeatureFlag.CDNG_ENABLED,
-    color: '--cd-border'
+    color: '--cd-border',
+    backgroundColor: '--cd-background'
   },
   [ModuleName.CI]: {
     icon: 'ci-main',
     label: 'common.purpose.ci.continuous',
     getHomePageUrl: (accountId: string) => routes.toCI({ accountId }),
     featureFlagName: FeatureFlag.CING_ENABLED,
-    color: '--ci-border'
+    color: '--ci-border',
+    backgroundColor: '--cd-background'
   },
   [ModuleName.CV]: {
     icon: 'cv-main',
     label: 'common.serviceReliabilityManagement',
     getHomePageUrl: (accountId: string) => routes.toCV({ accountId }),
     featureFlagName: FeatureFlag.CVNG_ENABLED,
-    color: '--srm-border'
+    color: '--srm-border',
+    backgroundColor: '--cd-background'
   },
   [ModuleName.CF]: {
     icon: 'ff-solid',
     label: 'common.purpose.cf.continuous',
     getHomePageUrl: (accountId: string) => routes.toCF({ accountId }),
     featureFlagName: FeatureFlag.CFNG_ENABLED,
-    color: '--ff-border'
+    color: '--ff-border',
+    backgroundColor: '--cd-background'
   },
   [ModuleName.CE]: {
     icon: 'ce-main',
     label: 'common.purpose.ce.continuous',
     getHomePageUrl: (accountId: string) => routes.toCE({ accountId }),
     featureFlagName: FeatureFlag.CENG_ENABLED,
-    color: '--ccm-border'
+    color: '--ccm-border',
+    backgroundColor: '--cd-background'
   },
   [ModuleName.STO]: {
     icon: 'sto-color-filled',
     label: 'common.stoText',
     getHomePageUrl: (accountId: string) => routes.toSTO({ accountId }),
     featureFlagName: FeatureFlag.SECURITY,
-    color: '--sto-border'
+    color: '--sto-border',
+    backgroundColor: '--cd-background'
   },
   [ModuleName.CHAOS]: {
     icon: 'chaos-main',
     label: 'chaos.homepage.chaosHomePageTitle',
     getHomePageUrl: (accountId: string) => routes.toChaos({ accountId }),
     featureFlagName: FeatureFlag.CHAOS_ENABLED,
-    color: '--chaos-border'
+    color: '--chaos-border',
+    backgroundColor: '--cd-background'
   },
   [ModuleName.CODE]: {
     icon: 'code',
     label: 'common.purpose.code.name',
     getHomePageUrl: (accountId: string) => routes.toCODE({ accountId }),
     featureFlagName: FeatureFlag.CODE_ENABLED,
-    color: '--default-module-border'
+    color: '--default-module-border',
+    backgroundColor: '--cd-background'
   }
 }
 
@@ -140,7 +150,8 @@ const getModuleInfo = (
   accountId: string,
   hasLicense: boolean,
   shouldVisible: boolean,
-  color: string
+  color: string,
+  backgroundColor: string
 ) => {
   const { icon: moduleIcon, label, getHomePageUrl } = moduleInfo
   return {
@@ -149,7 +160,8 @@ const getModuleInfo = (
     homePageUrl: getHomePageUrl(accountId),
     shouldVisible: shouldVisible,
     hasLicense,
-    color
+    color,
+    backgroundColor
   }
 }
 
@@ -158,14 +170,15 @@ const useNavModuleInfo = (module: NavModuleName) => {
   const featureFlags = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
-  const { featureFlagName, color } = moduleInfoMap[module]
+  const { featureFlagName, color, backgroundColor } = moduleInfoMap[module]
 
   return getModuleInfo(
     moduleInfoMap[module],
     accountId,
     !!licenseInformation[module]?.id,
     !!featureFlags[featureFlagName],
-    color
+    color,
+    backgroundColor
   ) as useNavModuleInfoReturnType
 }
 
@@ -185,7 +198,8 @@ export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoRet
         accountId,
         !!licenseInformation[module]?.id,
         !!featureFlags[moduleInfoMap[module].featureFlagName],
-        moduleInfoMap[module].color
+        moduleInfoMap[module].color,
+        moduleInfoMap[module].backgroundColor
       )
     }
   }, {})
