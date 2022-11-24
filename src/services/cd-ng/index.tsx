@@ -403,6 +403,7 @@ export interface AccessControlCheckError {
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -1030,7 +1031,20 @@ export type AuditFilterProperties = FilterProperties & {
   )[]
   endTime?: number
   environments?: Environment[]
-  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS')[]
+  modules?: (
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+  )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
   scopes?: ResourceScopeDTO[]
@@ -1843,6 +1857,7 @@ export interface CardDTO {
 
 export interface CcmConnectorFilter {
   awsAccountId?: string
+  awsAccountIds?: string[]
   azureSubscriptionId?: string
   azureTenantId?: string
   featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
@@ -2828,6 +2843,7 @@ export interface DelegateProfileFilterProperties {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
   identifier?: string
   name?: string
   selectors?: string[]
@@ -3511,6 +3527,7 @@ export interface EntityDetail {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -3588,6 +3605,11 @@ export interface EnvIdCountPair {
   envId?: string
 }
 
+export interface EnvSwaggerObjectWrapper {
+  envFilterEntityType?: 'infrastructures' | 'gitOpsClusters' | 'environments'
+  serviceOverrideConfig?: NGServiceOverrideConfig
+}
+
 export interface Environment {
   identifier: string
   type: 'PreProduction' | 'Production'
@@ -3623,6 +3645,7 @@ export interface EnvironmentFilterProperties {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
   tags?: {
     [key: string]: string
   }
@@ -4133,6 +4156,7 @@ export interface Error {
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -4496,6 +4520,7 @@ export interface ErrorMetadata {
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   errorMessage?: string
 }
 
@@ -4910,6 +4935,7 @@ export interface Failure {
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -4999,7 +5025,6 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
-    | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
@@ -5072,7 +5097,6 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
-    | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
@@ -5081,7 +5105,19 @@ export interface FeatureRestrictionDetailRequestDTO {
 export interface FeatureRestrictionDetailsDTO {
   allowed?: boolean
   description?: string
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   name?:
     | 'TEST1'
     | 'TEST2'
@@ -5147,7 +5183,6 @@ export interface FeatureRestrictionDetailsDTO {
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
-    | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
@@ -5164,7 +5199,19 @@ export interface FeatureRestrictionDetailsDTO {
 
 export interface FeatureRestrictionMetadataDTO {
   edition?: 'COMMUNITY' | 'FREE' | 'TEAM' | 'ENTERPRISE'
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   name?:
     | 'TEST1'
     | 'TEST2'
@@ -5230,7 +5277,6 @@ export interface FeatureRestrictionMetadataDTO {
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
-    | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
@@ -5242,7 +5288,19 @@ export interface FeatureRestrictionMetadataDTO {
 export interface FeedbackFormDTO {
   accountId?: string
   email?: string
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   score?: number
   suggestion?: string
 }
@@ -5257,6 +5315,8 @@ export interface FetchAllArtifacts {
 export type FetchInstanceScriptStepInfo = StepSpecType & {
   delegateSelectors?: string[]
 }
+
+export type FetchLinkedAppsStepInfo = StepSpecType & { [key: string]: any }
 
 export interface FfSubscriptionDTO {
   accountId?: string
@@ -5358,6 +5418,7 @@ export interface FilterProperties {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
   tags?: {
     [key: string]: string
   }
@@ -5812,6 +5873,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -5820,7 +5882,19 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ElastigroupSetup'
     | 'Bitrise'
   )[]
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   searchTerm?: string
 }
 
@@ -5973,6 +6047,7 @@ export interface GitEntityFilterProperties {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -5982,7 +6057,19 @@ export interface GitEntityFilterProperties {
     | 'Bitrise'
   )[]
   gitSyncConfigIdentifiers?: string[]
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   searchTerm?: string
 }
 
@@ -6171,6 +6258,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -6340,6 +6428,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -6617,6 +6706,7 @@ export interface GitSyncEntityDTO {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -6780,6 +6870,7 @@ export interface GitSyncEntityListDTO {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -6960,6 +7051,7 @@ export interface GitSyncErrorDTO {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -6991,7 +7083,19 @@ export interface GitSyncRepoFiles {
 
 export interface GitSyncRepoFilesList {
   gitSyncRepoFilesList?: GitSyncRepoFiles[]
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
 }
 
 export interface GitSyncSettingsDTO {
@@ -8399,7 +8503,19 @@ export interface LicensesWithSummaryDTO {
   edition?: 'COMMUNITY' | 'FREE' | 'TEAM' | 'ENTERPRISE'
   licenseType?: 'TRIAL' | 'PAID'
   maxExpiryTime?: number
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
 }
 
 export type LocalConnectorDTO = ConnectorConfigDTO & {
@@ -8516,7 +8632,19 @@ export interface ModuleLicenseDTO {
   id?: string
   lastModifiedAt?: number
   licenseType?: 'TRIAL' | 'PAID'
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   premiumSupport?: boolean
   selfService?: boolean
   startTime?: number
@@ -8844,16 +8972,29 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
   edition?: 'COMMUNITY' | 'FREE' | 'TEAM' | 'ENTERPRISE'
   email?: string
   gaClientId?: string
-  intent?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  intent?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   name?: string
   referer?: string
   signupAction?: 'REGULAR' | 'TRIAL' | 'SUBSCRIBE'
@@ -8942,6 +9083,7 @@ export interface OnFailureConfig {
     | 'DelegateProvisioning'
     | 'PolicyEvaluationFailure'
     | 'InputTimeoutError'
+    | 'ApprovalRejection'
   )[]
 }
 
@@ -9538,7 +9680,19 @@ export interface ParameterFieldString {
 }
 
 export interface PartialSchemaDTO {
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -9726,7 +9880,20 @@ export interface Project {
   color?: string
   description?: string
   identifier: string
-  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS')[]
+  modules?: (
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+  )[]
   name: string
   orgIdentifier?: string
   tags?: {
@@ -9966,6 +10133,7 @@ export interface ReferencedByDTO {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -10043,7 +10211,7 @@ export interface ResourceDTO {
     | 'DELEGATE_TOKEN'
     | 'GOVERNANCE_POLICY'
     | 'GOVERNANCE_POLICY_SET'
-    | 'GOVERNANCE_POLICY_ENFORCEMENT'
+    | 'GOVERNANCE_RULE_ENFORCEMENT'
     | 'VARIABLE'
     | 'CHAOS_HUB'
     | 'MONITORED_SERVICE'
@@ -10511,6 +10679,13 @@ export interface ResponseEnvBuildIdAndInstanceCountInfoList {
 export interface ResponseEnvCount {
   correlationId?: string
   data?: EnvCount
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseEnvSwaggerObjectWrapper {
+  correlationId?: string
+  data?: EnvSwaggerObjectWrapper
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -11106,6 +11281,7 @@ export interface ResponseListEntityType {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -11774,6 +11950,7 @@ export interface ResponseMessage {
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -11786,6 +11963,7 @@ export interface ResponseMessage {
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
+    | 'APPROVAL_REJECTION'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -11815,13 +11993,6 @@ export interface ResponseNGEnvironmentConfig {
 export interface ResponseNGServiceConfig {
   correlationId?: string
   data?: NGServiceConfig
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseNGServiceOverrideConfig {
-  correlationId?: string
-  data?: NGServiceOverrideConfig
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -13434,6 +13605,7 @@ export interface ServiceAccountDTO {
 }
 
 export type ServiceAccountPrincipal = Principal & {
+  accountId?: string
   email?: string
   username?: string
 }
@@ -13779,8 +13951,21 @@ export interface ServicesYamlMetadataApiInput {
 
 export interface SettingDTO {
   allowOverrides: boolean
+  allowedScopes: ('ACCOUNT' | 'ORGANIZATION' | 'PROJECT')[]
   allowedValues?: string[]
-  category: 'CD' | 'CI' | 'CE' | 'CV' | 'CF' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  category:
+    | 'CD'
+    | 'CI'
+    | 'CE'
+    | 'CV'
+    | 'CF'
+    | 'STO'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'CHAOS'
+    | 'SCIM'
   defaultValue?: string
   groupIdentifier: string
   identifier: string
@@ -14031,7 +14216,19 @@ export interface StageWhenCondition {
 
 export interface StartTrialDTO {
   edition: 'COMMUNITY' | 'FREE' | 'TEAM' | 'ENTERPRISE'
-  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
 }
 
 export interface StartupCommandConfiguration {
@@ -14106,6 +14303,7 @@ export interface StepData {
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitopsFetchLinkedApps'
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
     | 'ElastigroupSetup'
@@ -14238,7 +14436,19 @@ export interface StripeBillingDTO {
 export interface SubscriptionDTO {
   customerId?: string
   items?: ItemParams[]
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   paymentMethodId?: string
 }
 
@@ -14250,7 +14460,19 @@ export interface SubscriptionDetailDTO {
   customerId?: string
   latestInvoice?: string
   latestInvoiceDetail?: InvoiceDetailDTO
-  moduletype?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduletype?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   pendingUpdate?: PendingUpdateDetailDTO
   status?: string
   subscriptionId?: string
@@ -15061,11 +15283,12 @@ export interface YamlSchemaMetadata {
     | 'CF'
     | 'CE'
     | 'STO'
+    | 'CHAOS'
+    | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
-    | 'CHAOS'
   )[]
   namespace?: string
   yamlGroup: YamlGroup
@@ -15075,7 +15298,19 @@ export interface YamlSchemaWithDetails {
   availableAtAccountLevel?: boolean
   availableAtOrgLevel?: boolean
   availableAtProjectLevel?: boolean
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
@@ -15170,9 +15405,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -15200,11 +15435,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
+
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -15888,6 +16123,7 @@ export interface ListActivitiesQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -16043,6 +16279,7 @@ export interface ListActivitiesQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -16302,6 +16539,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -16457,6 +16695,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -17362,7 +17601,19 @@ export interface GetProjectAggregateDTOListQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   hasModule?: boolean
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -18036,7 +18287,7 @@ export interface GetBuildDetailsForAcrArtifactWithYamlQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  pipelineIdentifier: string
+  pipelineIdentifier?: string
   fqnPath: string
   branch?: string
   repoIdentifier?: string
@@ -18608,7 +18859,7 @@ export interface GetBuildDetailsForArtifactoryArtifactWithYamlQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  pipelineIdentifier: string
+  pipelineIdentifier?: string
   fqnPath: string
   branch?: string
   repoIdentifier?: string
@@ -20498,7 +20749,7 @@ export interface GetBuildDetailsForEcrWithYamlQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  pipelineIdentifier: string
+  pipelineIdentifier?: string
   fqnPath: string
   branch?: string
   repoIdentifier?: string
@@ -21051,7 +21302,7 @@ export interface GetBuildDetailsForGoogleArtifactRegistryV2QueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  pipelineIdentifier: string
+  pipelineIdentifier?: string
   version?: string
   versionRegex?: string
   fqnPath: string
@@ -21682,9 +21933,9 @@ export interface GetLastSuccessfulVersionWithServiceV2QueryParams {
   versionRegex?: string
   org?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
-  pipelineIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
   fqnPath: string
   serviceId?: string
   branch?: string
@@ -21776,9 +22027,9 @@ export interface GetPackagesFromGithubWithServiceV2QueryParams {
   packageType?: string
   org?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
-  pipelineIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
   fqnPath: string
   serviceId?: string
   branch?: string
@@ -21872,9 +22123,9 @@ export interface GetVersionsFromPackagesWithServiceV2QueryParams {
   versionRegex?: string
   org?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
-  pipelineIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
   fqnPath: string
   serviceId?: string
   branch?: string
@@ -30558,7 +30809,6 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
-    | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
@@ -30701,7 +30951,6 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'SECURITY'
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
-      | 'JENKINS_ARTIFACT'
       | 'STRATEGY_MAX_CONCURRENT'
       | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
       | 'MAX_CHAOS_INFRASTRUCTURES'
@@ -30870,6 +31119,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -31086,6 +31336,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -32198,6 +32449,50 @@ export const updateEnvironmentV2Promise = (
     void
   >('PUT', getConfig('ng/api'), `/environmentsV2`, props, signal)
 
+export type DummyNGServiceOverrideConfigProps = Omit<
+  GetProps<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * This is dummy api to expose objects to swagger
+ */
+export const DummyNGServiceOverrideConfig = (props: DummyNGServiceOverrideConfigProps) => (
+  <Get<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>
+    path={`/environmentsV2/dummy-api-for-exposing-objects`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDummyNGServiceOverrideConfigProps = Omit<
+  UseGetProps<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * This is dummy api to expose objects to swagger
+ */
+export const useDummyNGServiceOverrideConfig = (props: UseDummyNGServiceOverrideConfigProps) =>
+  useGet<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>(
+    `/environmentsV2/dummy-api-for-exposing-objects`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * This is dummy api to expose objects to swagger
+ */
+export const dummyNGServiceOverrideConfigPromise = (
+  props: GetUsingFetchProps<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>(
+    getConfig('ng/api'),
+    `/environmentsV2/dummy-api-for-exposing-objects`,
+    props,
+    signal
+  )
+
 export type DummyNGEnvironmentConfigApiProps = Omit<
   GetProps<ResponseNGEnvironmentConfig, Failure | Error, void, void>,
   'path'
@@ -32238,50 +32533,6 @@ export const dummyNGEnvironmentConfigApiPromise = (
   getUsingFetch<ResponseNGEnvironmentConfig, Failure | Error, void, void>(
     getConfig('ng/api'),
     `/environmentsV2/dummy-env-api`,
-    props,
-    signal
-  )
-
-export type DummyNGServiceOverrideConfigProps = Omit<
-  GetProps<ResponseNGServiceOverrideConfig, Failure | Error, void, void>,
-  'path'
->
-
-/**
- * This is dummy api to expose NGServiceOverrideConfig
- */
-export const DummyNGServiceOverrideConfig = (props: DummyNGServiceOverrideConfigProps) => (
-  <Get<ResponseNGServiceOverrideConfig, Failure | Error, void, void>
-    path={`/environmentsV2/dummy-serviceoverride-api`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseDummyNGServiceOverrideConfigProps = Omit<
-  UseGetProps<ResponseNGServiceOverrideConfig, Failure | Error, void, void>,
-  'path'
->
-
-/**
- * This is dummy api to expose NGServiceOverrideConfig
- */
-export const useDummyNGServiceOverrideConfig = (props: UseDummyNGServiceOverrideConfigProps) =>
-  useGet<ResponseNGServiceOverrideConfig, Failure | Error, void, void>(`/environmentsV2/dummy-serviceoverride-api`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
-
-/**
- * This is dummy api to expose NGServiceOverrideConfig
- */
-export const dummyNGServiceOverrideConfigPromise = (
-  props: GetUsingFetchProps<ResponseNGServiceOverrideConfig, Failure | Error, void, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseNGServiceOverrideConfig, Failure | Error, void, void>(
-    getConfig('ng/api'),
-    `/environmentsV2/dummy-serviceoverride-api`,
     props,
     signal
   )
@@ -34241,6 +34492,7 @@ export interface GetReferencedByQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -34329,6 +34581,7 @@ export interface GetFilterListQueryParams {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
 }
 
 export type GetFilterListProps = Omit<
@@ -34494,6 +34747,7 @@ export interface DeleteFilterQueryParams {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
 }
 
 export type DeleteFilterProps = Omit<
@@ -34560,6 +34814,7 @@ export interface GetFilterQueryParams {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
 }
 
 export interface GetFilterPathParams {
@@ -34701,7 +34956,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -34715,7 +34970,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -34730,7 +34985,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -34744,7 +34999,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -34756,7 +35011,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -34765,7 +35020,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -35271,7 +35526,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -35285,7 +35540,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -35300,7 +35555,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -35314,7 +35569,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -35326,7 +35581,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -35335,7 +35590,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -36586,6 +36841,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -36809,6 +37065,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'ShellScriptProvision'
       | 'Freeze'
       | 'GitOpsUpdateReleaseRepo'
+      | 'GitOpsFetchLinkedApps'
       | 'EcsRunTask'
       | 'Chaos'
       | 'ElastigroupDeploy'
@@ -41401,7 +41658,19 @@ export const getAllAccountModuleLicensesPromise = (
 
 export interface GetEditionActionsQueryParams {
   accountIdentifier: string
-  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
 }
 
 export type GetEditionActionsProps = Omit<
@@ -41450,7 +41719,19 @@ export const getEditionActionsPromise = (
 
 export interface StartCommunityLicenseQueryParams {
   accountIdentifier: string
-  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
 }
 
 export type StartCommunityLicenseProps = Omit<
@@ -41565,7 +41846,19 @@ export const extendTrialLicensePromise = (
 
 export interface StartFreeLicenseQueryParams {
   accountIdentifier: string
-  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   referer?: string
   gaClientId?: string
 }
@@ -41618,7 +41911,19 @@ export const startFreeLicensePromise = (
   )
 
 export interface GetModuleLicensesByAccountAndModuleTypeQueryParams {
-  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
 }
 
 export interface GetModuleLicensesByAccountAndModuleTypePathParams {
@@ -41834,7 +42139,19 @@ export const getLastModifiedTimeForAllModuleTypesPromise = (
   >('POST', getConfig('ng/api'), `/licenses/versions`, props, signal)
 
 export interface GetLicensesAndSummaryQueryParams {
-  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
 }
 
 export interface GetLicensesAndSummaryPathParams {
@@ -42657,6 +42974,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -42940,6 +43258,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -43472,7 +43791,19 @@ export interface GetProjectListQueryParams {
   orgIdentifier?: string
   hasModule?: boolean
   identifiers?: string[]
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -43586,7 +43917,19 @@ export interface GetProjectListWithMultiOrgFilterQueryParams {
   orgIdentifiers?: string[]
   hasModule?: boolean
   identifiers?: string[]
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -46004,6 +46347,89 @@ export const getAggregatedServiceAccountPromise = (
     GetAggregatedServiceAccountPathParams
   >(getConfig('ng/api'), `/serviceaccount/aggregate/${identifier}`, props, signal)
 
+export interface GetServiceAccountInternalQueryParams {
+  accountIdentifier: string
+}
+
+export interface GetServiceAccountInternalPathParams {
+  identifier: string
+}
+
+export type GetServiceAccountInternalProps = Omit<
+  GetProps<
+    ResponseServiceAccountDTO,
+    Failure | Error,
+    GetServiceAccountInternalQueryParams,
+    GetServiceAccountInternalPathParams
+  >,
+  'path'
+> &
+  GetServiceAccountInternalPathParams
+
+/**
+ * Get service account
+ */
+export const GetServiceAccountInternal = ({ identifier, ...props }: GetServiceAccountInternalProps) => (
+  <Get<
+    ResponseServiceAccountDTO,
+    Failure | Error,
+    GetServiceAccountInternalQueryParams,
+    GetServiceAccountInternalPathParams
+  >
+    path={`/serviceaccount/internal/${identifier}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetServiceAccountInternalProps = Omit<
+  UseGetProps<
+    ResponseServiceAccountDTO,
+    Failure | Error,
+    GetServiceAccountInternalQueryParams,
+    GetServiceAccountInternalPathParams
+  >,
+  'path'
+> &
+  GetServiceAccountInternalPathParams
+
+/**
+ * Get service account
+ */
+export const useGetServiceAccountInternal = ({ identifier, ...props }: UseGetServiceAccountInternalProps) =>
+  useGet<
+    ResponseServiceAccountDTO,
+    Failure | Error,
+    GetServiceAccountInternalQueryParams,
+    GetServiceAccountInternalPathParams
+  >((paramsInPath: GetServiceAccountInternalPathParams) => `/serviceaccount/internal/${paramsInPath.identifier}`, {
+    base: getConfig('ng/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Get service account
+ */
+export const getServiceAccountInternalPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseServiceAccountDTO,
+    Failure | Error,
+    GetServiceAccountInternalQueryParams,
+    GetServiceAccountInternalPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseServiceAccountDTO,
+    Failure | Error,
+    GetServiceAccountInternalQueryParams,
+    GetServiceAccountInternalPathParams
+  >(getConfig('ng/api'), `/serviceaccount/internal/${identifier}`, props, signal)
+
 export interface DeleteServiceAccountQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -48053,7 +48479,19 @@ export interface GetSettingsListQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  category: 'CD' | 'CI' | 'CE' | 'CV' | 'CF' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  category:
+    | 'CD'
+    | 'CI'
+    | 'CE'
+    | 'CV'
+    | 'CF'
+    | 'STO'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'CHAOS'
+    | 'SCIM'
   group?: string
 }
 
@@ -49094,7 +49532,19 @@ export const updateSourceCodeManagersPromise = (
 
 export interface ListSubscriptionsQueryParams {
   accountIdentifier: string
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
 }
 
 export type ListSubscriptionsProps = Omit<
@@ -49665,7 +50115,19 @@ export const listPaymentMethodsPromise = (
 
 export interface RetrieveProductPricesQueryParams {
   accountIdentifier: string
-  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
 }
 
 export type RetrieveProductPricesProps = Omit<
@@ -53922,7 +54384,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -53932,7 +54394,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -53945,7 +54407,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -53959,7 +54421,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -53971,7 +54433,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -53980,7 +54442,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -54373,7 +54835,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -54387,7 +54849,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -54402,7 +54864,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -54416,7 +54878,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -54428,7 +54890,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -54437,7 +54899,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -54573,7 +55035,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -54588,7 +55050,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -54603,7 +55065,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -54618,7 +55080,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -54637,7 +55099,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -54646,7 +55108,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -54665,7 +55127,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -54680,7 +55142,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -54695,7 +55157,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -54710,7 +55172,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -54729,7 +55191,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -54738,7 +55200,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -55557,6 +56019,7 @@ export interface GetYamlSchemaQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
