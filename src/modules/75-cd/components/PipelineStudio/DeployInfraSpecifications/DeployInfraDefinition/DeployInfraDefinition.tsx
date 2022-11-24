@@ -35,7 +35,8 @@ import {
   GetExecutionStrategyYamlQueryParams,
   SshWinRmAwsInfrastructure,
   CustomDeploymentInfrastructure,
-  ElastigroupInfrastructure
+  ElastigroupInfrastructure,
+  TanzuApplicationServiceInfrastructure
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -79,6 +80,7 @@ import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/Commo
 import type { ECSInfraSpec } from '@cd/components/PipelineSteps/ECSInfraSpec/ECSInfraSpec'
 import type { CustomDeploymentInfrastructureSpec } from '@cd/components/PipelineSteps/CustomDeploymentInfrastructureSpec/CustomDeploymentInfrastructureStep'
 import type { ElastigroupInfrastructureSpec } from '@cd/components/PipelineSteps/ElastigroupInfraSpec/ElastigroupInfraSpec'
+import type { TASInfrastructureSpec } from '@cd/components/PipelineSteps/TASInfrastructureStep/TASInfrastructureStep'
 import {
   cleanUpEmptyProvisioner,
   getInfraDefinitionDetailsHeaderTooltipId,
@@ -126,6 +128,7 @@ type InfraTypes =
   | EcsInfrastructure
   | CustomDeploymentInfrastructure
   | ElastigroupInfrastructure
+  | TanzuApplicationServiceInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
@@ -696,6 +699,30 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
                 InfraDeploymentType.Elastigroup
+              )
+            }
+          />
+        )
+      }
+      case InfraDeploymentType.TAS: {
+        return (
+          <StepWidget<TASInfrastructureSpec>
+            factory={factory}
+            key={stage?.stage?.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as TASInfrastructureSpec}
+            type={StepType.TasInfra}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  organization: value.organization,
+                  space: value.space,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.TAS
               )
             }
           />

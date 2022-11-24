@@ -303,8 +303,14 @@ export const getInfraGroups = (
   ]
   const tasInfraGroups: InfrastructureGroup[] = [
     {
-      groupLabel: '',
-      items: []
+      groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
+      items: [
+        {
+          label: getString('pipeline.serviceDeploymentTypes.tas'),
+          icon: 'tas',
+          value: InfraDeploymentType.TAS
+        }
+      ]
     }
   ]
 

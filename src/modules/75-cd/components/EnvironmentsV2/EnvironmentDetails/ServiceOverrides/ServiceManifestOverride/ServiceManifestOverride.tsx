@@ -9,7 +9,7 @@ import React, { useCallback, useState } from 'react'
 import { AllowedTypes, Button, ButtonSize, ButtonVariation, Layout, StepProps } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
-import { get, noop } from 'lodash-es'
+import { defaultTo, get, noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -24,8 +24,10 @@ import HarnessFileStore from '@pipeline/components/ManifestSelection/ManifestWiz
 import CustomRemoteManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/CustomRemoteManifest/CustomRemoteManifest'
 import K8sValuesManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/K8sValuesManifest/K8sValuesManifest'
 import { CommonManifestDetails } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/CommonManifestDetails/CommonManifestDetails'
-import type { ManifestLastStepProps } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import type { ManifestLastStepProps, ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { getConnectorPath } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ManifestUtils'
+import TasManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/TasManifest/TasManifest'
+import TASWithHarnessStore from '@pipeline/components/ManifestSelection/ManifestWizardSteps/TASWithHarnessStore/TASWithHarnessStore'
 import {
   AllowedManifestOverrideTypes,
   OverrideManifestTypes,
@@ -47,6 +49,7 @@ interface ManifestVariableOverrideProps {
   expressions: string[]
   allowableTypes: AllowedTypes
   fromEnvConfigPage?: boolean
+  availableManifestTypes?: ManifestTypes[]
 }
 const DIALOG_PROPS: IDialogProps = {
   isOpen: true,
@@ -63,7 +66,8 @@ function ServiceManifestOverride({
   removeManifestConfig,
   isReadonly,
   expressions,
-  allowableTypes
+  allowableTypes,
+  availableManifestTypes
 }: ManifestVariableOverrideProps): React.ReactElement {
   const { getString } = useStrings()
   const [selectedManifest, setSelectedManifest] = useState<OverrideManifestTypes | null>(null)
@@ -177,13 +181,24 @@ function ServiceManifestOverride({
       ) && manifestStore === OverrideManifestStores.Harness:
         manifestDetailStep = <HarnessFileStore {...lastStepProps()} />
         break
-      case [OverrideManifests.Values, OverrideManifests.OpenshiftParam].includes(
-        selectedManifest as OverrideManifestTypes
-      ) && manifestStore === OverrideManifestStores.CustomRemote:
+      case [
+        OverrideManifests.Values,
+        OverrideManifests.OpenshiftParam,
+        OverrideManifests.TasManifest,
+        OverrideManifests.Vars,
+        OverrideManifests.AutoScaler
+      ].includes(selectedManifest as OverrideManifestTypes) && manifestStore === OverrideManifestStores.CustomRemote:
         manifestDetailStep = <CustomRemoteManifest {...lastStepProps()} />
         break
       case selectedManifest === OverrideManifests.Values && isGitTypeStores:
         manifestDetailStep = <K8sValuesManifest {...lastStepProps()} />
+        break
+      case selectedManifest === OverrideManifests.TasManifest && manifestStore === OverrideManifestStores.Harness:
+        manifestDetailStep = <TASWithHarnessStore {...lastStepProps()} />
+        break
+
+      case selectedManifest === OverrideManifests.TasManifest:
+        manifestDetailStep = <TasManifest {...lastStepProps()} />
         break
       default:
         manifestDetailStep = <CommonManifestDetails {...lastStepProps()} />
@@ -211,7 +226,7 @@ function ServiceManifestOverride({
       <Dialog onClose={onClose} {...DIALOG_PROPS}>
         <div className={css.createConnectorWizard}>
           <ManifestWizard
-            types={AllowedManifestOverrideTypes}
+            types={defaultTo(availableManifestTypes, AllowedManifestOverrideTypes)}
             manifestStoreTypes={OverrideManifestStoreMap[selectedManifest as OverrideManifestTypes]}
             labels={getLabels()}
             selectedManifest={selectedManifest}
