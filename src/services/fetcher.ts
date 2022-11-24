@@ -1,14 +1,22 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import type { IStringifyOptions } from 'qs'
 import { stringify } from 'qs'
 import SecureStorage from 'framework/utils/SecureStorage'
 
 const JSON_HEADERS = ['application/json']
 
-export interface FetcherOptions<TQueryParams = never, TBody = never> extends Omit<RequestInit, 'body'> {
+export interface FetcherOptions<TQueryParams = never, TBody = never> extends Omit<RequestInit, 'body' | 'headers'> {
   url: string
   queryParams?: TQueryParams extends never ? undefined : TQueryParams
   body?: TBody extends never ? undefined : TBody
   stringifyQueryParamsOptions?: IStringifyOptions
+  headers?: Record<string, string>
 }
 
 export async function fetcher<TResponse = unknown, TQueryParams = never, TBody = never>(
@@ -31,12 +39,16 @@ export async function fetcher<TResponse = unknown, TQueryParams = never, TBody =
 
   finalUrl += stringify(finalQueryParams, { ...stringifyQueryParamsOptions, addQueryPrefix: true })
 
+  const headersObj: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(headers ? headers : {})
+  }
+  if (!window.noAuthHeader) {
+    headersObj['Authorization'] = `Bearer ${token}`
+  }
+
   const response = await fetch(finalUrl, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...headers,
-      Authorization: `Bearer ${token}`
-    },
+    headers: headersObj,
     body: body ? JSON.stringify(body) : undefined,
     ...rest
   })
