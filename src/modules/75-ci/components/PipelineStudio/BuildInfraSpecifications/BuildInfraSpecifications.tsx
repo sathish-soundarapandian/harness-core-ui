@@ -84,6 +84,7 @@ import { k8sLabelRegex, k8sAnnotationRegex } from '@common/utils/StringUtils'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { Connectors } from '@connectors/constants'
 import { OsTypes, ArchTypes, CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import { isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { BuildTabs } from '../CIPipelineStagesUtils'
 import {
   KUBERNETES_HOSTED_INFRA_ID,
@@ -383,6 +384,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const { CIE_HOSTED_VMS, CI_DOCKER_INFRASTRUCTURE, CIE_HOSTED_VMS_MAC } = useFeatureFlags()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const [isProvisionedByHarnessDelegateHealthy, setIsProvisionedByHarnessDelegateHealthy] = useState<boolean>(false)
+  const { licenseInformation } = useLicenseStore()
+  const isFreeEdition = isFreePlan(licenseInformation, ModuleName.CI)
 
   const BuildInfraTypes: ThumbnailSelectProps['items'] = [
     ...(enabledHostedBuildsForFreeUsers && CIE_HOSTED_VMS
@@ -403,11 +406,15 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           } as Item
         ]
       : []),
-    {
-      label: getString('pipeline.serviceDeploymentTypes.kubernetes'),
-      icon: 'service-kubernetes',
-      value: CIBuildInfrastructureType.KubernetesDirect
-    },
+    ...(!isFreeEdition
+      ? [
+          {
+            label: getString('pipeline.serviceDeploymentTypes.kubernetes'),
+            icon: 'service-kubernetes',
+            value: CIBuildInfrastructureType.KubernetesDirect
+          } as Item
+        ]
+      : []),
     ...(CI_DOCKER_INFRASTRUCTURE
       ? [
           {
@@ -417,11 +424,15 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           } as Item
         ]
       : []),
-    {
-      label: getString('ci.buildInfra.vMs'),
-      icon: 'service-vm',
-      value: CIBuildInfrastructureType.VM
-    } as Item
+    ...(!isFreeEdition
+      ? [
+          {
+            label: getString('ci.buildInfra.vMs'),
+            icon: 'service-vm',
+            value: CIBuildInfrastructureType.VM
+          } as Item
+        ]
+      : [])
   ]
   const [showInfraProvisioningCarousel, setShowInfraProvisioningCarousel] = useState<boolean>(false)
 

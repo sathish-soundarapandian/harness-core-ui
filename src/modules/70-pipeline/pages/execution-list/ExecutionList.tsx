@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-import { Container, PageSpinner, Text } from '@harness/uicore'
+import { Container, ExpandingSearchInputHandle, PageSpinner, Text } from '@harness/uicore'
 
 import { Color } from '@harness/design-system'
 
@@ -23,7 +23,7 @@ import { ExecutionCompareProvider } from '@pipeline/components/ExecutionCompareY
 import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
 import { usePolling } from '@common/hooks/usePolling'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import { PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
+import { GetListOfExecutionsQueryParams, PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
 import routes from '@common/RouteDefinitions'
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
@@ -54,9 +54,8 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const { showHealthAndExecution, ...rest } = props
   const { getString } = useStrings()
   const defaultBranchSelect: string = getString('common.gitSync.selectBranch')
-  const { repoName } = useQueryParams<{ repoName?: string }>()
-  const { updateQueryParams } = useUpdateQueryParams<{ repoName?: string }>()
-
+  const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
+  const searchRef = useRef({} as ExpandingSearchInputHandle)
   const [selectedBranch, setSelectedBranch] = useState<string | undefined>(defaultBranchSelect)
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId } =
     useParams<PipelineType<PipelinePathProps>>()
@@ -72,10 +71,16 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     repoIdentifier,
     branch,
     searchTerm,
-    pipelineIdentifier: pipelineIdentifierFromQueryParam
+    pipelineIdentifier: pipelineIdentifierFromQueryParam,
+    repoName
   } = queryParams
 
   const NEW_EXECUTION_LIST_VIEW = useFeatureFlag(FeatureFlag.NEW_EXECUTION_LIST_VIEW)
+
+  const resetFilter = (): void => {
+    searchRef.current.clear()
+    replaceQueryParams({})
+  }
 
   const { module } = useModuleInfo()
   const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
@@ -176,6 +181,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
             onChangeRepo={onChangeRepo}
             repoName={repoName}
             borderless
+            ref={searchRef}
             {...rest}
           />
         )}
@@ -194,7 +200,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
             <Executions executionList={executionList} onViewCompiledYaml={setViewCompiledYaml} {...rest} />
           </>
         ) : (
-          <ExecutionListEmpty {...rest} />
+          <ExecutionListEmpty {...rest} resetFilter={resetFilter} />
         )}
       </Page.Body>
     </>

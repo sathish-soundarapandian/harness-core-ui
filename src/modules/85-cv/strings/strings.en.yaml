@@ -851,6 +851,8 @@ CompositeSLO:
     message: Updating period type will reset selected SLOs, Do you want to continue ?
   MatchingSLO: SLOs matching the time window.
   NoSloFound: There are no SLOs available for selected filter
+  compositeSloCreated: Composite SLO created successfully
+  compositeSloUpdated: Composite SLO updated successfully
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on

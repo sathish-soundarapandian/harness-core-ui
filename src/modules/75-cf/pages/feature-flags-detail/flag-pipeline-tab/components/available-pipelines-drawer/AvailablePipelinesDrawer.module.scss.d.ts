@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly description: string
   readonly drawer: string
   readonly drawerContent: string
   readonly envTag: string

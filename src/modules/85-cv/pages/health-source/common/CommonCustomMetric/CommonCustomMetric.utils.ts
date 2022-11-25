@@ -6,16 +6,13 @@
  */
 
 import { v4 as uuid } from 'uuid'
-import { cloneDeep, groupBy } from 'lodash-es'
+import { groupBy } from 'lodash-es'
 import type { SelectOption } from '@harness/uicore'
-import type { StringKeys, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings'
 import type {
   GroupedCreatedMetrics,
   GroupedMetric
 } from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
-import type { BaseHealthSourceMetricInfo } from '@cv/pages/health-source/common/utils/HealthSource.types'
-import { HealthSourceFieldNames } from '@cv/pages/health-source/common/utils/HealthSource.constants'
-import { validateAssignComponent, validateIdentifier } from '@cv/pages/health-source/common/utils/HealthSource.utils'
 import type {
   CommonRemoveMetricInterface,
   CustomSelectedAndMappedMetrics,
@@ -208,55 +205,56 @@ export function initializeSelectedMetricsMap(
   }
 }
 
-export const validateCommonCustomMetricFields = (
-  values: BaseHealthSourceMetricInfo,
-  createdMetrics: string[],
-  selectedMetricIndex: number,
-  errors: any,
-  getString: (key: StringKeys) => string,
-  mappedMetrics?: Map<string, BaseHealthSourceMetricInfo>
-): ((key: string) => string) => {
-  let errorsToReturn = cloneDeep(errors)
+// Todo this will be used later
+// export const validateCommonCustomMetricFields = (
+//   values: BaseHealthSourceMetricInfo,
+//   createdMetrics: string[],
+//   selectedMetricIndex: number,
+//   errors: any,
+//   getString: (key: StringKeys) => string,
+//   mappedMetrics?: Map<string, BaseHealthSourceMetricInfo>
+// ): ((key: string) => string) => {
+//   let errorsToReturn = cloneDeep(errors)
 
-  const commonIsAssignComponentValid =
-    [values.sli, values.continuousVerification, values.healthScore].find(i => i) || false
-  const commonisRiskCategoryValid = !!values?.riskCategory
+//   const commonIsAssignComponentValid =
+//     [values.sli, values.continuousVerification, values.healthScore].find(i => i) || false
+//   const commonisRiskCategoryValid = !!values?.riskCategory
 
-  const duplicateNames = createdMetrics?.filter((metricName, index) => {
-    if (index === selectedMetricIndex) {
-      return false
-    }
-    return metricName === values.metricName
-  })
+//   const duplicateNames = createdMetrics?.filter((metricName, index) => {
+//     if (index === selectedMetricIndex) {
+//       return false
+//     }
+//     return metricName === values.metricName
+//   })
 
-  if (!values.groupName || !values.groupName?.value) {
-    errorsToReturn[HealthSourceFieldNames.GROUP_NAME] = getString(
-      'cv.monitoringSources.prometheus.validation.groupName'
-    )
-  }
-  if (!values.metricName) {
-    errorsToReturn[HealthSourceFieldNames.METRIC_NAME] = getString('cv.monitoringSources.metricNameValidation')
-  }
+//   if (!values.groupName || !values.groupName?.value) {
+//     errorsToReturn[HealthSourceFieldNames.GROUP_NAME] = getString(
+//       'cv.monitoringSources.prometheus.validation.groupName'
+//     )
+//   }
+//   if (!values.metricName) {
+//     errorsToReturn[HealthSourceFieldNames.METRIC_NAME] = getString('cv.monitoringSources.metricNameValidation')
+//   }
 
-  errorsToReturn = validateIdentifier(
-    values,
-    createdMetrics,
-    selectedMetricIndex,
-    errorsToReturn,
-    getString,
-    mappedMetrics
-  )
+//   errorsToReturn = validateIdentifier(
+//     values,
+//     createdMetrics,
+//     selectedMetricIndex,
+//     errorsToReturn,
+//     getString,
+//     mappedMetrics
+//   )
 
-  if (values.metricName && duplicateNames.length) {
-    errorsToReturn[HealthSourceFieldNames.METRIC_NAME] = getString(
-      'cv.monitoringSources.prometheus.validation.metricNameUnique'
-    )
-  }
-  return validateAssignComponent(
-    commonIsAssignComponentValid,
-    errorsToReturn,
-    getString,
-    values,
-    commonisRiskCategoryValid
-  )
-}
+//   if (values.metricName && duplicateNames.length) {
+//     errorsToReturn[HealthSourceFieldNames.METRIC_NAME] = getString(
+//       'cv.monitoringSources.prometheus.validation.metricNameUnique'
+//     )
+//   }
+//   return validateAssignComponent(
+//     commonIsAssignComponentValid,
+//     errorsToReturn,
+//     getString,
+//     values,
+//     commonisRiskCategoryValid
+//   )
+// }

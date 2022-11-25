@@ -92,6 +92,7 @@ export enum PermissionIdentifier {
   EDIT_TEMPLATE = 'core_template_edit',
   DELETE_TEMPLATE = 'core_template_delete',
   ACCESS_TEMPLATE = 'core_template_access',
+  COPY_TEMPLATE = 'core_template_copy',
 
   // This is edit, delete, access permission
   // There is no view permission for deployment freeze

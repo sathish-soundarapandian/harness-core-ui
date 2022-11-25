@@ -7,27 +7,23 @@
 
 import { RUNTIME_INPUT_VALUE, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { FormikProps } from 'formik'
-import { cloneDeep, isEmpty, isEqual } from 'lodash-es'
 import type { GroupedCreatedMetrics } from '@cv/components/CommonMultiItemsSideNav/components/CommonSelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
-import type { AppDMetricDefinitions, AppDynamicsHealthSourceSpec } from 'services/cv'
+import type { AppDynamicsHealthSourceSpec } from 'services/cv'
 import type { StringsMap } from 'stringTypes'
 import {
   getFilteredCVDisabledMetricThresholds,
   getFilteredMetricThresholdValues,
   getMetricPacksForPayload
 } from '../../common/MetricThresholds/MetricThresholds.utils'
-import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { HealthSourceTypes } from '../../types'
 import type { NonCustomFeildsInterface } from '../AppDynamics/AppDHealthSource.types'
 import { convertMetricPackToMetricData, deriveBaseAndMetricPath } from '../AppDynamics/AppDHealthSource.utils'
-import { PATHTYPE } from '../AppDynamics/Components/AppDCustomMetricForm/AppDCustomMetricForm.constants'
 import { initCustomForm, ThresholdTypes } from './CommonHealthSource.constants'
 import type {
   HealthSourceInitialData,
   HealthSourceSetupSource,
-  CommonHealthSourceFormikInterface,
-  PersistMappedMetricsType
+  CommonHealthSourceFormikInterface
 } from './CommonHealthSource.types'
 
 // TODO - these functions has to be made in a generic way.
@@ -38,13 +34,13 @@ export const createHealthSourceData = (sourceData: any): HealthSourceInitialData
 
   const { applicationName = '', tierName = '', metricPacks } = (payload?.spec as AppDynamicsHealthSourceSpec) || {}
 
-  const appdData = {
+  const healthSourceData = {
     name: sourceData?.healthSourceName,
     identifier: sourceData?.healthSourceIdentifier,
     connectorRef: sourceData?.connectorRef,
     isEdit: sourceData?.isEdit,
     product: sourceData?.product,
-    type: HealthSourceTypes.AppDynamics,
+    type: HealthSourceTypes.SumoLogic,
     applicationName,
     tierName,
     metricPacks,
@@ -55,7 +51,7 @@ export const createHealthSourceData = (sourceData: any): HealthSourceInitialData
     if (metricDefinition?.metricName) {
       const { metricPathObj, basePathObj } = deriveBaseAndMetricPath(metricDefinition?.completeMetricPath, tierName)
 
-      appdData.mappedServicesAndEnvs.set(metricDefinition.metricName, {
+      healthSourceData.mappedServicesAndEnvs.set(metricDefinition.metricName, {
         metricPath: metricPathObj,
         basePath: basePathObj,
         completeMetricPath: metricDefinition.completeMetricPath,
@@ -75,132 +71,133 @@ export const createHealthSourceData = (sourceData: any): HealthSourceInitialData
     }
   }
 
-  return appdData
+  return healthSourceData
 }
 
-export const createHealthSourceFormData = (
-  healthSourceData: HealthSourceInitialData,
-  mappedMetrics: Map<string, CommonHealthSourceFormikInterface>,
-  selectedMetric: string,
-  nonCustomFeilds: NonCustomFeildsInterface,
-  showCustomMetric: boolean
-  // isTemplate = false
-): CommonHealthSourceFormikInterface => {
-  const mappedMetricsData = mappedMetrics.get(selectedMetric) as CommonHealthSourceFormikInterface
-  const metricIdentifier = mappedMetricsData?.identifier || selectedMetric?.split(' ').join('_')
-  // if (
-  //   isTemplate &&
-  //   serviceInstanceMetricPath === '' &&
-  //   mappedMetricsData &&
-  //   mappedMetricsData?.continuousVerification
-  // ) {
-  //   mappedMetricsData.serviceInstanceMetricPath = RUNTIME_INPUT_VALUE
-  // } else if (!mappedMetricsData?.continuousVerification && !isEmpty(mappedMetricsData?.serviceInstanceMetricPath)) {
-  //   mappedMetricsData.serviceInstanceMetricPath = ''
-  // }
+// Todo - will be used later
+// export const createHealthSourceFormData = (
+//   healthSourceData: HealthSourceInitialData,
+//   mappedMetrics: Map<string, CommonHealthSourceFormikInterface>,
+//   selectedMetric: string,
+//   nonCustomFeilds: NonCustomFeildsInterface,
+//   showCustomMetric: boolean
+//   // isTemplate = false
+// ): CommonHealthSourceFormikInterface => {
+//   const mappedMetricsData = mappedMetrics.get(selectedMetric) as CommonHealthSourceFormikInterface
+//   const metricIdentifier = mappedMetricsData?.identifier || selectedMetric?.split(' ').join('_')
+//   // if (
+//   //   isTemplate &&
+//   //   serviceInstanceMetricPath === '' &&
+//   //   mappedMetricsData &&
+//   //   mappedMetricsData?.continuousVerification
+//   // ) {
+//   //   mappedMetricsData.serviceInstanceMetricPath = RUNTIME_INPUT_VALUE
+//   // } else if (!mappedMetricsData?.continuousVerification && !isEmpty(mappedMetricsData?.serviceInstanceMetricPath)) {
+//   //   mappedMetricsData.serviceInstanceMetricPath = ''
+//   // }
 
-  // const isTierRuntimeOrExpression = getMultiTypeFromValue(nonCustomFeilds?.appDTier) !== MultiTypeInputType.FIXED
-  // const isApplicationRuntimeOrExpression =
-  //   getMultiTypeFromValue(nonCustomFeilds.appdApplication) !== MultiTypeInputType.FIXED
-  // const isConnectorRuntimeOrExpression =
-  //   getMultiTypeFromValue(healthSourceData?.connectorRef?.value) !== MultiTypeInputType.FIXED
+//   // const isTierRuntimeOrExpression = getMultiTypeFromValue(nonCustomFeilds?.appDTier) !== MultiTypeInputType.FIXED
+//   // const isApplicationRuntimeOrExpression =
+//   //   getMultiTypeFromValue(nonCustomFeilds.appdApplication) !== MultiTypeInputType.FIXED
+//   // const isConnectorRuntimeOrExpression =
+//   //   getMultiTypeFromValue(healthSourceData?.connectorRef?.value) !== MultiTypeInputType.FIXED
 
-  // const completeMetricPathForTemplates =
-  //   (isTierRuntimeOrExpression || isApplicationRuntimeOrExpression || isConnectorRuntimeOrExpression) &&
-  //   getMultiTypeFromValue(completeMetricPath) === MultiTypeInputType.FIXED
-  //     ? RUNTIME_INPUT_VALUE
-  //     : completeMetricPath
+//   // const completeMetricPathForTemplates =
+//   //   (isTierRuntimeOrExpression || isApplicationRuntimeOrExpression || isConnectorRuntimeOrExpression) &&
+//   //   getMultiTypeFromValue(completeMetricPath) === MultiTypeInputType.FIXED
+//   //     ? RUNTIME_INPUT_VALUE
+//   //     : completeMetricPath
 
-  const data = {
-    name: healthSourceData.name,
-    // identifier: healthSourceData.identifier,
-    connectorRef: healthSourceData.connectorRef,
-    isEdit: healthSourceData.isEdit,
-    product: healthSourceData.product,
-    type: healthSourceData.type,
-    // pathType: isTemplate || completeMetricPath ? PATHTYPE.CompleteMetricPath : PATHTYPE.DropdownPath,
-    mappedServicesAndEnvs: healthSourceData.mappedServicesAndEnvs,
-    ...nonCustomFeilds,
-    ...(mappedMetrics.get(selectedMetric) as CommonHealthSourceFormikInterface),
-    // completeMetricPath: isTemplate ? completeMetricPathForTemplates : completeMetricPath,
-    metricName: selectedMetric,
-    showCustomMetric,
-    metricIdentifier
-  }
+//   const data = {
+//     name: healthSourceData.name,
+//     // identifier: healthSourceData.identifier,
+//     connectorRef: healthSourceData.connectorRef,
+//     isEdit: healthSourceData.isEdit,
+//     product: healthSourceData.product,
+//     type: healthSourceData.type,
+//     // pathType: isTemplate || completeMetricPath ? PATHTYPE.CompleteMetricPath : PATHTYPE.DropdownPath,
+//     mappedServicesAndEnvs: healthSourceData.mappedServicesAndEnvs,
+//     ...nonCustomFeilds,
+//     ...(mappedMetrics.get(selectedMetric) as CommonHealthSourceFormikInterface),
+//     // completeMetricPath: isTemplate ? completeMetricPathForTemplates : completeMetricPath,
+//     metricName: selectedMetric,
+//     showCustomMetric,
+//     metricIdentifier
+//   }
 
-  return data
-}
+//   return data
+// }
 
 // TODO - these functions has to be made in a generic way.
 export const createHealthSourcePayload = (
   formData: any,
   isMetricThresholdEnabled: boolean
 ): UpdatedHealthSource | null => {
-  const specPayload = {
-    applicationName: (formData?.appdApplication?.label as string) || (formData.appdApplication as string),
-    tierName: (formData?.appDTier?.label as string) || (formData.appDTier as string),
-    metricData: formData.metricData,
-    metricDefinitions: [] as AppDMetricDefinitions[]
-  }
+  // const specPayload = {
+  //   applicationName: (formData?.appdApplication?.label as string) || (formData.appdApplication as string),
+  //   tierName: (formData?.appDTier?.label as string) || (formData.appDTier as string),
+  //   metricData: formData.metricData,
+  //   metricDefinitions: [] as AppDMetricDefinitions[]
+  // }
 
-  if (formData.showCustomMetric) {
-    for (const entry of formData.mappedServicesAndEnvs.entries()) {
-      const {
-        metricName,
-        groupName,
-        riskCategory,
-        lowerBaselineDeviation,
-        higherBaselineDeviation,
-        sli,
-        continuousVerification,
-        healthScore,
-        metricIdentifier,
-        basePath,
-        metricPath,
-        serviceInstanceMetricPath,
-        completeMetricPath
-      } = entry[1]
+  // if (formData.showCustomMetric) {
+  //   for (const entry of formData.mappedServicesAndEnvs.entries()) {
+  //     const {
+  //       metricName,
+  //       groupName,
+  //       riskCategory,
+  //       lowerBaselineDeviation,
+  //       higherBaselineDeviation,
+  //       sli,
+  //       continuousVerification,
+  //       healthScore,
+  //       metricIdentifier,
+  //       basePath,
+  //       metricPath,
+  //       serviceInstanceMetricPath,
+  //       completeMetricPath
+  //     } = entry[1]
 
-      let derivedCompleteMetricPath = completeMetricPath
-      if (formData.pathType === PATHTYPE.DropdownPath) {
-        derivedCompleteMetricPath = `${basePath[Object.keys(basePath)[Object.keys(basePath).length - 1]]?.path}|${
-          formData.appDTier
-        }|${metricPath[Object.keys(metricPath)[Object.keys(metricPath).length - 1]]?.path}`
-      }
+  //     let derivedCompleteMetricPath = completeMetricPath
+  //     if (formData.pathType === PATHTYPE.DropdownPath) {
+  //       derivedCompleteMetricPath = `${basePath[Object.keys(basePath)[Object.keys(basePath).length - 1]]?.path}|${
+  //         formData.appDTier
+  //       }|${metricPath[Object.keys(metricPath)[Object.keys(metricPath).length - 1]]?.path}`
+  //     }
 
-      const assignComponentPayload = createPayloadForAssignComponentV2({
-        sli,
-        riskCategory,
-        healthScore,
-        continuousVerification,
-        lowerBaselineDeviation,
-        higherBaselineDeviation
-      })
+  //     const assignComponentPayload = createPayloadForAssignComponentV2({
+  //       sli,
+  //       riskCategory,
+  //       healthScore,
+  //       continuousVerification,
+  //       lowerBaselineDeviation,
+  //       higherBaselineDeviation
+  //     })
 
-      let serviceInstanceMetricPathData = {}
-      if (assignComponentPayload.analysis?.deploymentVerification?.enabled) {
-        serviceInstanceMetricPathData = {
-          completeServiceInstanceMetricPath: serviceInstanceMetricPath
-        }
-      }
+  //     let serviceInstanceMetricPathData = {}
+  //     if (assignComponentPayload.analysis?.deploymentVerification?.enabled) {
+  //       serviceInstanceMetricPathData = {
+  //         completeServiceInstanceMetricPath: serviceInstanceMetricPath
+  //       }
+  //     }
 
-      specPayload?.metricDefinitions?.push({
-        identifier: metricIdentifier,
-        metricName,
-        completeMetricPath: derivedCompleteMetricPath,
-        groupName: groupName?.value as string,
-        ...serviceInstanceMetricPathData,
-        ...assignComponentPayload
-      })
-    }
-  }
+  //     specPayload?.metricDefinitions?.push({
+  //       identifier: metricIdentifier,
+  //       metricName,
+  //       completeMetricPath: derivedCompleteMetricPath,
+  //       groupName: groupName?.value as string,
+  //       ...serviceInstanceMetricPathData,
+  //       ...assignComponentPayload
+  //     })
+  //   }
+  // }
 
   return {
     name: formData.name || (formData.healthSourceName as string),
     identifier: formData.identifier || (formData.healthSourceIdentifier as string),
     type: 'AppDynamics' as any,
     spec: {
-      ...specPayload,
+      // ...specPayload,
       feature: 'Application Monitoring' as string,
       connectorRef: (formData?.connectorRef?.value as string) || (formData.connectorRef as string),
       metricPacks: getMetricPacksForPayload(formData, isMetricThresholdEnabled)
@@ -317,33 +314,34 @@ export function transformCommonHealthSourceToSetupSource(
   // return setupSource
 }
 
-export const persistCustomMetric = ({
-  mappedMetrics,
-  selectedMetric,
-  metricThresholds,
-  formikValues,
-  setMappedMetrics
-}: PersistMappedMetricsType): void => {
-  const mapValue = mappedMetrics.get(selectedMetric) as CommonHealthSourceFormikInterface
-  if (!isEmpty(mapValue)) {
-    const nonCustomValuesFromSelectedMetric = {
-      ignoreThresholds: mapValue?.ignoreThresholds,
-      failFastThresholds: mapValue?.failFastThresholds
-    }
+//TODO- this will be used going forward
+// export const persistCustomMetric = ({
+//   mappedMetrics,
+//   selectedMetric,
+//   metricThresholds,
+//   formikValues,
+//   setMappedMetrics
+// }: PersistMappedMetricsType): void => {
+//   const mapValue = mappedMetrics.get(selectedMetric) as CommonHealthSourceFormikInterface
+//   if (!isEmpty(mapValue)) {
+//     const nonCustomValuesFromSelectedMetric = {
+//       ignoreThresholds: mapValue?.ignoreThresholds,
+//       failFastThresholds: mapValue?.failFastThresholds
+//     }
 
-    if (selectedMetric === formikValues?.metricName && !isEqual(metricThresholds, nonCustomValuesFromSelectedMetric)) {
-      const clonedMappedMetrics = cloneDeep(mappedMetrics)
-      clonedMappedMetrics.forEach((data, key) => {
-        if (selectedMetric === data.metricName) {
-          clonedMappedMetrics.set(selectedMetric, { ...formikValues, ...metricThresholds })
-        } else {
-          clonedMappedMetrics.set(key, { ...data, ...metricThresholds })
-        }
-      })
-      setMappedMetrics({ selectedMetric: selectedMetric, mappedMetrics: clonedMappedMetrics })
-    }
-  }
-}
+//     if (selectedMetric === formikValues?.metricName && !isEqual(metricThresholds, nonCustomValuesFromSelectedMetric)) {
+//       const clonedMappedMetrics = cloneDeep(mappedMetrics)
+//       clonedMappedMetrics.forEach((data, key) => {
+//         if (selectedMetric === data.metricName) {
+//           clonedMappedMetrics.set(selectedMetric, { ...formikValues, ...metricThresholds })
+//         } else {
+//           clonedMappedMetrics.set(key, { ...data, ...metricThresholds })
+//         }
+//       })
+//       setMappedMetrics({ selectedMetric: selectedMetric, mappedMetrics: clonedMappedMetrics })
+//     }
+//   }
+// }
 
 export const initHealthSourceCustomForm = () => {
   return {

@@ -41,7 +41,8 @@ RbacFactory.registerResourceTypeHandler(ResourceType.TEMPLATE, {
     [PermissionIdentifier.VIEW_TEMPLATE]: <String stringID="rbac.permissionLabels.view" />,
     [PermissionIdentifier.EDIT_TEMPLATE]: <String stringID="rbac.permissionLabels.createEdit" />,
     [PermissionIdentifier.DELETE_TEMPLATE]: <String stringID="rbac.permissionLabels.delete" />,
-    [PermissionIdentifier.ACCESS_TEMPLATE]: <String stringID="rbac.permissionLabels.access" />
+    [PermissionIdentifier.ACCESS_TEMPLATE]: <String stringID="rbac.permissionLabels.access" />,
+    [PermissionIdentifier.COPY_TEMPLATE]: <String stringID="rbac.permissionLabels.copy" />
   },
   // eslint-disable-next-line react/display-name
   addResourceModalBody: props => <TemplateResourceModal {...props} />,

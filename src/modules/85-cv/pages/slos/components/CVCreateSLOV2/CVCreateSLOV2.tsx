@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useRef } from 'react'
+import { isEmpty } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 import {
   Formik,
@@ -167,12 +168,18 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
           openModal()
         } else {
           await updateSLO(sloCreateRequestPayload)
-          showSuccess(getString('cv.slos.sloUpdated'))
+          const editSuccessMessage = isEmpty(sloCreateRequestPayload.spec?.serviceLevelObjectivesDetails)
+            ? getString('cv.slos.sloUpdated')
+            : getString('cv.CompositeSLO.compositeSloUpdated')
+          showSuccess(editSuccessMessage)
           handleRedirect()
         }
       } else {
         await createSLO(sloCreateRequestPayload)
-        showSuccess(getString('cv.slos.sloCreated'))
+        const createSuccessMessage = isEmpty(sloCreateRequestPayload.spec?.serviceLevelObjectivesDetails)
+          ? getString('cv.slos.sloCreated')
+          : getString('cv.CompositeSLO.compositeSloCreated')
+        showSuccess(createSuccessMessage)
         handleRedirect()
       }
     } catch (e) {

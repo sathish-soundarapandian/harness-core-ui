@@ -1158,6 +1158,7 @@ export interface StringsMap {
   'rbac.pendingUsers': string
   'rbac.permissionLabels.access': string
   'rbac.permissionLabels.approveReject': string
+  'rbac.permissionLabels.copy': string
   'rbac.permissionLabels.create': string
   'rbac.permissionLabels.createEdit': string
   'rbac.permissionLabels.delete': string
@@ -6595,6 +6596,7 @@ export interface StringsMap {
   'cf.onboarding.readme.nodejs': string
   'cf.onboarding.readme.php': string
   'cf.onboarding.readme.python': string
+  'cf.onboarding.readme.react': string
   'cf.onboarding.readme.reactNative': string
   'cf.onboarding.readme.ruby': string
   'cf.onboarding.readme.xamarinAndroid': string
@@ -7010,6 +7012,8 @@ export interface StringsMap {
   'cv.CompositeSLO.SetTarget': string
   'cv.CompositeSLO.SetTimeWindow': string
   'cv.CompositeSLO.Weightage': string
+  'cv.CompositeSLO.compositeSloCreated': string
+  'cv.CompositeSLO.compositeSloUpdated': string
   'cv.Dependency.noData': string
   'cv.Dependency.serviceChanges': string
   'cv.Dependency.serviceList': string

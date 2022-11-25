@@ -351,7 +351,7 @@ describe('CVCreateSloV2', () => {
     userEvent.clear(sloName!)
     userEvent.type(sloName!, 'updated composite slo')
 
-    act(() => {
+    await act(() => {
       userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
     })
 
@@ -363,7 +363,7 @@ describe('CVCreateSloV2', () => {
 
     await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
 
-    act(() => {
+    await act(() => {
       userEvent.click(document.querySelector('.bp3-dialog button')!)
     })
   })
@@ -387,7 +387,7 @@ describe('CVCreateSloV2', () => {
     userEvent.clear(sloName!)
     userEvent.type(sloName!, 'updated composite slo')
 
-    act(() => {
+    await act(() => {
       userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
     })
 
@@ -399,7 +399,7 @@ describe('CVCreateSloV2', () => {
 
     await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
 
-    act(() => {
+    await act(() => {
       userEvent.click(document.querySelector('.bp3-dialog button')!)
     })
   })
@@ -547,7 +547,7 @@ describe('CVCreateSloV2', () => {
     act(() => {
       userEvent.click(screen.getByText('save'))
     })
-    await waitFor(() => expect(screen.getByText('cv.slos.sloCreated')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('cv.CompositeSLO.compositeSloCreated')).toBeInTheDocument())
   })
 
   test('should be able to update SLO weights', async () => {

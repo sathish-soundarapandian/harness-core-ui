@@ -90,7 +90,7 @@ describe('SetUpYourApplicationView', () => {
     renderComponent()
 
     expect(screen.getByText('cf.onboarding.selectLanguage')).toBeVisible()
-    expect(screen.getAllByTestId('selectLanguageBtn')).toHaveLength(13)
+    expect(screen.getAllByTestId('selectLanguageBtn')).toHaveLength(14)
 
     // should not show until environment selected
     expect(screen.queryByText('cf.onboarding.selectOrCreateEnvironment')).not.toBeInTheDocument()
@@ -111,7 +111,7 @@ describe('SetUpYourApplicationView', () => {
     renderComponent({ language: SupportPlatforms[1] })
 
     expect(screen.getByText('cf.onboarding.selectLanguage')).toBeVisible()
-    expect(screen.getAllByTestId('selectLanguageBtn')).toHaveLength(13)
+    expect(screen.getAllByTestId('selectLanguageBtn')).toHaveLength(14)
 
     expect(screen.getByText('cf.onboarding.selectOrCreateEnvironment')).toBeVisible()
     expect(document.querySelector('input[name="environmentSelectEl"]')).toBeVisible()

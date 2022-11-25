@@ -112,13 +112,18 @@ export const OnboardingDetailPage: React.FC = () => {
 
   return (
     <Layout.Vertical
-      className={css.grid}
       height="100vh"
       padding={{ top: 'huge', left: 'huge', right: 'huge', bottom: 'none' }}
-      style={{ overflowY: 'auto' }}
       background={Color.WHITE}
     >
-      <Layout.Horizontal spacing="xsmall" flex data-testid="getStartedProgressStepper" height="10px">
+      <Layout.Horizontal
+        spacing="xsmall"
+        flex
+        data-testid="getStartedProgressStepper"
+        height="10px"
+        padding={{ bottom: 'xlarge' }}
+        className={css.keepOnTop}
+      >
         <MultiStepProgressIndicator
           progressMap={
             new Map([
@@ -129,7 +134,7 @@ export const OnboardingDetailPage: React.FC = () => {
           }
         />
       </Layout.Horizontal>
-      <Container style={{ flexGrow: 1 }} padding={{ top: 'xxlarge', bottom: 'xxlarge' }}>
+      <Container className={css.scrollOverflowY} height="100vh" padding={{ top: 'xxlarge', bottom: 'xxlarge' }}>
         {selectedStep !== STEP.VALIDATE_FLAG ? (
           <>
             <Heading level={3} font={{ variation: FontVariation.H3 }} margin={{ bottom: 'large' }}>

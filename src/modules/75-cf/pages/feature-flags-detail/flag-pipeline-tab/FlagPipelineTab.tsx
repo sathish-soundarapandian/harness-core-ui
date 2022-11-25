@@ -65,11 +65,7 @@ const FlagPipelineTab: React.FC<FlagPipelineTabProps> = ({ flagIdentifier, flagV
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   if (loading && !isDrawerOpen && !isPolling) {
-    return (
-      <Container height="100%" flex={{ align: 'center-center' }}>
-        <ContainerSpinner />
-      </Container>
-    )
+    return <ContainerSpinner flex={{ align: 'center-center' }} />
   }
 
   return (

@@ -197,11 +197,11 @@ featureFlags:
     drawerTitle: Flag Pipelines
     drawerDescription: |
       You can only set Pipelines that:
-        <ul>
-          <li>Have a Flag stage configured</li>
-          <li>The Flag must be set as a runtime input</li>
-          <li>Don’t include a Build or Deploy stage</li>
-        <ul>
+      <ul>
+        <li>Have a Flag stage configured</li>
+        <li>The Flag must be set as a runtime input</li>
+        <li>Don’t include a Build or Deploy stage</li>
+      <ul>
     drawerButtonText: Set as Flag Pipeline
     envText: 'Set all Flags in {{ env }}'
     saveSuccess: Flag Pipeline updated
@@ -1973,6 +1973,80 @@ onboarding:
       ```
 
       The app should show the configured flags current value. As you toggle the flag in the Harness UI you will see the value update.
+
+    react: |
+      # Quickstart
+
+      To follow along with our test code sample, make sure you've:
+
+      - Installed Node.js v12 or a newer version
+      - Installed React.js v16.7 or a newer version
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag">Created a Feature Flag on the Harness Platform</a> called 'harnessappdemodarkmode'
+      - <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key">Created a server SDK key and made a copy of it</a>
+
+      # Install
+
+      The first step is to install the FF SDK as a dependency in your application. To install using npm, use:
+      ```
+      npm install @harnessio/ff-react-client-sdk
+      ```
+
+      Or to install with yarn, use:
+      ```
+      yarn add @harnessio/ff-react-client-sdk
+      ```
+
+      # Usage
+
+      Create a new React project with a file called 'index.js'. Copy and paste the following complete code example into that file. 
+      You can use this to test the harnessappdemodarkmode Flag you created on the Harness Platform. 
+
+      ```
+      import React from 'react'
+      import ReactDOM from 'react-dom'
+
+      import {
+        FFContextProvider,
+        useFeatureFlag,
+        useFeatureFlags
+      } from '@harnessio/ff-react-client-sdk'
+
+      ReactDOM.render(<App />, document.querySelector('#react-root'))
+
+      function App() {
+        return (
+          <FFContextProvider
+            apiKey="{{apiKey}}"
+            target={{
+              identifier: 'reactclientsdk',
+              name: 'ReactClientSDK'
+            }}
+          >
+            <SingleFeatureFlag />
+            <MultipleFeatureFlags />
+          </FFContextProvider>
+        )
+      }
+
+      function SingleFeatureFlag() {
+        const flagValue = useFeatureFlag('harnessappdemodarkmode')
+
+        return (
+          <p>The value of "harnessappdemodarkmode" is {JSON.stringify(flagValue)}</p>
+        )
+      }
+
+      function MultipleFeatureFlags() {
+        const flags = useFeatureFlags()
+
+        return (
+          <>
+            <p>Here are all our flags:</p>
+            <pre>{JSON.stringify(flags, null, 2)}</pre>
+          </>
+        )
+      }
+      ```
 
     reactNative: |
       # Requirements

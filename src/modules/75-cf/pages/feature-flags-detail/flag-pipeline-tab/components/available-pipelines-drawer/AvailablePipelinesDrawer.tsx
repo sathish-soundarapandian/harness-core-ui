@@ -5,12 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Drawer, Position } from '@blueprintjs/core'
-import { Container, Layout, Text, ExpandingSearchInput, Button, ButtonVariation, Heading } from '@harness/uicore'
-import { FontVariation, Color } from '@harness/design-system'
 import React, { useCallback, useMemo, useState } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
-import { useStrings, String } from 'framework/strings'
+import { useHistory, useParams } from 'react-router-dom'
+import { Drawer, Position } from '@blueprintjs/core'
+import { Button, ButtonVariation, Container, ExpandingSearchInput, Heading, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
+import { String, useStrings } from 'framework/strings'
 import {
   FeatureAvailablePipeline,
   FeaturePipeline,
@@ -51,6 +51,7 @@ const AvailablePipelinesDrawer: React.FC<AvailablePipelinesDrawerProps> = ({
   const { handleResponseError } = useResponseError()
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { trackEvent } = useTelemetry()
+  const [searchTerm, setSearchTerm] = useState<string>('')
 
   const PAGE_SIZE = 50
 
@@ -64,51 +65,54 @@ const AvailablePipelinesDrawer: React.FC<AvailablePipelinesDrawerProps> = ({
       environmentIdentifier,
       projectIdentifier,
       accountIdentifier,
-      orgIdentifier,
-      pageSize: PAGE_SIZE
+      orgIdentifier
     }),
     [accountIdentifier, environmentIdentifier, orgIdentifier, projectIdentifier, flagIdentifier]
   )
 
-  const {
-    data: availableFeaturePipelines,
-    loading: getAvailablePipelinesLoading,
-    refetch: refetchAvailablePipelines
-  } = useGetAvailableFeaturePipelines({
-    queryParams,
+  const { data: availableFeaturePipelines, loading: getAvailablePipelinesLoading } = useGetAvailableFeaturePipelines({
+    queryParams: {
+      ...queryParams,
+      pipelineName: searchTerm || undefined,
+      pageSize: PAGE_SIZE
+    },
     debounce: 500
   })
 
-  const { mutate: createFeaturePipeline, loading: createFeaturePiplineLoading } = useCreateFlagPipeline({
-    identifier: flagIdentifier as string,
+  const { mutate: createFeaturePipeline, loading: createFeaturePipelineLoading } = useCreateFlagPipeline({
+    identifier: flagIdentifier,
     queryParams
   })
 
-  const { mutate: updateFeaturePipeline, loading: patchFeaturePiplineLoading } = usePatchFeaturePipeline({
-    identifier: flagIdentifier as string,
+  const { mutate: updateFeaturePipeline, loading: patchFeaturePipelineLoading } = usePatchFeaturePipeline({
+    identifier: flagIdentifier,
     queryParams
   })
 
   const onSaveClick = useCallback(async () => {
-    trackEvent(FeatureActions.SavedFlagPipeline, {
-      category: Category.FEATUREFLAG
-    })
-    try {
-      if (configuredPipelineDetails) {
-        await updateFeaturePipeline({
-          pipelineIdentifier: selectedPipeline?.identifier as string,
-          pipelineName: selectedPipeline?.name as string
-        })
-      } else {
-        await createFeaturePipeline({
-          pipelineIdentifier: selectedPipeline?.identifier as string,
-          pipelineName: selectedPipeline?.name as string
-        })
+    if (selectedPipeline) {
+      trackEvent(FeatureActions.SavedFlagPipeline, {
+        category: Category.FEATUREFLAG
+      })
+
+      try {
+        if (configuredPipelineDetails) {
+          await updateFeaturePipeline({
+            pipelineIdentifier: selectedPipeline.identifier,
+            pipelineName: selectedPipeline.name
+          })
+        } else {
+          await createFeaturePipeline({
+            pipelineIdentifier: selectedPipeline.identifier,
+            pipelineName: selectedPipeline.name
+          })
+        }
+
+        refetchFeaturePipeline()
+        showToaster(getString('cf.featureFlags.flagPipeline.saveSuccess'))
+      } catch (error) {
+        handleResponseError(error)
       }
-      refetchFeaturePipeline()
-      showToaster(getString('cf.featureFlags.flagPipeline.saveSuccess'))
-    } catch (error) {
-      handleResponseError(error)
     }
   }, [
     trackEvent,
@@ -116,22 +120,18 @@ const AvailablePipelinesDrawer: React.FC<AvailablePipelinesDrawerProps> = ({
     refetchFeaturePipeline,
     getString,
     updateFeaturePipeline,
-    selectedPipeline?.identifier,
-    selectedPipeline?.name,
+    selectedPipeline,
     createFeaturePipeline,
     handleResponseError
   ])
 
-  const onSearchInputChanged = useCallback(
-    value => {
-      setSelectedPipeline(undefined)
-      refetchAvailablePipelines({ queryParams: { ...queryParams, pipelineName: value, pageNumber: 0 }, debounce: 500 })
-    },
-    [queryParams, refetchAvailablePipelines]
-  )
+  const onSearchInputChanged = useCallback(value => {
+    setSearchTerm(value)
+    setSelectedPipeline(undefined)
+  }, [])
 
   const pipelinesAvailable = !!availableFeaturePipelines?.availablePipelines.length
-  const isLoading = getAvailablePipelinesLoading || patchFeaturePiplineLoading || createFeaturePiplineLoading
+  const isLoading = getAvailablePipelinesLoading || patchFeaturePipelineLoading || createFeaturePipelineLoading
 
   return (
     <Drawer position={Position.RIGHT} isOpen={isOpen} onClose={onClose} className={css.drawer}>
@@ -149,10 +149,10 @@ const AvailablePipelinesDrawer: React.FC<AvailablePipelinesDrawerProps> = ({
             aria-label={getString('close')}
           />
         </Container>
-        <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_500} tag="div">
+        <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_500} tag="div" className={css.description}>
           <String stringID="cf.featureFlags.flagPipeline.drawerDescription" useRichText />
         </Text>
-        {pipelinesAvailable && (
+        {(pipelinesAvailable || searchTerm) && (
           <Container flex={{ justifyContent: 'space-between' }}>
             <Text font={{ variation: FontVariation.BODY2 }} className={css.envTag}>
               {getString('cf.featureFlags.flagPipeline.envText', { env: environmentIdentifier })}
@@ -170,8 +170,10 @@ const AvailablePipelinesDrawer: React.FC<AvailablePipelinesDrawerProps> = ({
                 {availableFeaturePipelines?.availablePipelines.map(pipeline => (
                   <PipelineCard
                     key={pipeline.identifier}
+                    identifier={pipeline.identifier}
                     pipelineName={pipeline.name}
                     pipelineDescription={pipeline.description}
+                    lastUpdatedAt={pipeline.lastUpdatedAt as number}
                     isSelected={selectedPipeline?.identifier === pipeline.identifier}
                     onClick={() => setSelectedPipeline(pipeline)}
                   />

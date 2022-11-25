@@ -208,6 +208,7 @@ function PipelineListView(): React.ReactElement {
   useDocumentTitle([getString('pipelines')])
 
   const resetFilter = (): void => {
+    searchRef.current.clear()
     setAppliedFilter(undefined)
     replaceQueryParams({})
   }
@@ -302,7 +303,7 @@ function PipelineListView(): React.ReactElement {
             width={200}
             placeholder={getString('search')}
             onChange={text => {
-              updateQueryParams({ searchTerm: text ?? undefined, page: DEFAULT_PAGE_INDEX })
+              updateQueryParams(text ? { searchTerm: text, page: DEFAULT_PAGE_INDEX } : { searchTerm: undefined })
             }}
             defaultValue={searchTerm}
             ref={searchRef}

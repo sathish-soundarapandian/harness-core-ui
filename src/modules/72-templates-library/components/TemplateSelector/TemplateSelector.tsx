@@ -13,6 +13,9 @@ import type { TemplateSummaryResponse } from 'services/template-ng'
 import { String, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { TemplateUsage } from '@templates-library/utils/templatesUtils'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import { TemplateSelectorLeftView } from '@templates-library/components/TemplateSelector/TemplateSelectorLeftView/TemplateSelectorLeftView'
@@ -159,10 +162,17 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
                       />
                     )}
                     {showCopyTemplate && (
-                      <Button
-                        variation={ButtonVariation.LINK}
+                      <RbacButton
                         text={getString('templatesLibrary.copyTemplateLabel')}
                         onClick={onCopyTemplateClick}
+                        data-testid="copyTemplateButton"
+                        variation={ButtonVariation.LINK}
+                        permission={{
+                          permission: PermissionIdentifier.COPY_TEMPLATE,
+                          resource: {
+                            resourceType: ResourceType.TEMPLATE
+                          }
+                        }}
                       />
                     )}
                   </Layout.Horizontal>

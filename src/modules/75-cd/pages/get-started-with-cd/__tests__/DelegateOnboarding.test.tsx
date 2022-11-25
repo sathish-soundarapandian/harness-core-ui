@@ -22,7 +22,13 @@ import {
   validateKubernetesYamlResponse
 } from './mocks'
 
-jest.mock('nanoid', () => ({ nanoid: () => 'hjhj87878' }))
+jest.mock('nanoid', () => ({
+  customAlphabet: () => {
+    const retnFn = () => 'bsadfd'
+    return retnFn
+  }
+}))
+
 jest.useFakeTimers()
 const mockGetCallFunction = jest.fn()
 jest.mock('services/cd-ng', () => ({
@@ -50,6 +56,7 @@ jest.mock('services/portal', () => ({
 }))
 global.URL.createObjectURL = jest.fn()
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
+
 describe('Test the initial flow for kubernetes delegate Creation', () => {
   test('initial render', async () => {
     const { getByText } = render(

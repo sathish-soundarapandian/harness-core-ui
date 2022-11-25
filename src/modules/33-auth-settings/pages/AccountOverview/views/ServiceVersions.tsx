@@ -94,6 +94,11 @@ const versionAPIs = [
     label: 'Template Service',
     url: 'template/api/version',
     id: 'template_service'
+  },
+  {
+    label: 'GitOps',
+    url: 'gitops/api/v1/version',
+    id: 'gitops'
   }
 ]
 

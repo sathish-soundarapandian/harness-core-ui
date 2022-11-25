@@ -95,7 +95,7 @@ export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = props => {
   }, [props.testDone, featuresData, props])
 
   return (
-    <Container height="100%" className={css.listenToEventContainer}>
+    <Container className={css.listenToEventContainer}>
       <Container
         className={css.listenToEventInfo}
         width="480px"

@@ -8,8 +8,8 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import type { PipelineType, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
-import { FilterDTO, GetListOfExecutionsQueryParams, useGetFilterList } from 'services/pipeline-ng'
-import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { FilterDTO, useGetFilterList } from 'services/pipeline-ng'
+import { useQueryParams } from '@common/hooks'
 import { StringUtils } from '@common/exports'
 import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import { DEFAULT_EXECUTION_LIST_TABLE_SORT, DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
@@ -37,7 +37,6 @@ interface ExecutionListFilterContext {
   filterList: FilterDTO[]
   isFetchingFilterList: boolean
   refetchFilterList: () => Promise<void>
-  clearFilter: () => void
   /**
    *  Response filtered due any of the applied filters, search etc
    */
@@ -58,7 +57,6 @@ export function ExecutionListFilterContextProvider({ children }: { children: Rea
   const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<PipelinePathProps>>()
   const queryParams = useQueryParams<ProcessedExecutionListPageQueryParams>(queryParamOptions)
   const { filterIdentifier, myDeployments, status, searchTerm } = queryParams
-  const { replaceQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
 
   const isAnyFilterApplied =
     myDeployments ||
@@ -80,8 +78,6 @@ export function ExecutionListFilterContextProvider({ children }: { children: Rea
     }
   })
 
-  const clearFilter = (): void => replaceQueryParams({})
-
   return (
     <ExecutionListFilterContext.Provider
       value={{
@@ -91,8 +87,7 @@ export function ExecutionListFilterContextProvider({ children }: { children: Rea
         isAnyFilterApplied,
         isSavedFilterApplied:
           !!filterIdentifier && filterIdentifier !== StringUtils.getIdentifierFromName(UNSAVED_FILTER),
-        queryParams: queryParams,
-        clearFilter
+        queryParams: queryParams
       }}
     >
       {children}

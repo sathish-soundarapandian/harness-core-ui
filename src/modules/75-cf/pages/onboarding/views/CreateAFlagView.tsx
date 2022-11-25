@@ -107,7 +107,7 @@ export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({ selectedFlag, 
   }
 
   return (
-    <Container height="100%">
+    <Container>
       <Layout.Vertical spacing="medium">
         <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
           {getString('cf.featureFlags.flagsDescription')}

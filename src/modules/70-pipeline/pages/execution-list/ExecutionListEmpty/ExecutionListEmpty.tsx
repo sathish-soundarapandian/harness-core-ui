@@ -19,10 +19,11 @@ import css from './ExecutionListEmpty.module.scss'
 
 export function ExecutionListEmpty({
   isPipelineInvalid,
-  onRunPipeline
-}: Pick<ExecutionListProps, 'isPipelineInvalid' | 'onRunPipeline'>): JSX.Element {
+  onRunPipeline,
+  resetFilter
+}: Pick<ExecutionListProps, 'isPipelineInvalid' | 'onRunPipeline'> & { resetFilter: () => void }): JSX.Element {
   const { getString } = useStrings()
-  const { isAnyFilterApplied, clearFilter } = useExecutionListFilterContext()
+  const { isAnyFilterApplied } = useExecutionListFilterContext()
   const { module } = useModuleInfo()
   const { hasNoPipelines, loading, EmptyAction } = useExecutionListEmptyAction(!!isPipelineInvalid, onRunPipeline)
   const { illustration } = getModuleRunTypeDetails(module)
@@ -42,7 +43,7 @@ export function ExecutionListEmpty({
           <Button
             text={getString('common.filters.clearFilters')}
             variation={ButtonVariation.LINK}
-            onClick={clearFilter}
+            onClick={resetFilter}
           />
         </Layout.Vertical>
       ) : (

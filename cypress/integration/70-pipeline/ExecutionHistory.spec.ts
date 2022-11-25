@@ -123,7 +123,7 @@ describe('Pipeline Execution History', () => {
   })
 
   // Executions Chart
-  it.skip('shows pipeline executions chart', () => {
+  it('shows pipeline executions chart', () => {
     // Fixtures
     cy.intercept(pipelineExecutionCall, {
       fixture: 'pipeline/api/executionHistory/pipelineExecution.json'
@@ -139,16 +139,12 @@ describe('Pipeline Execution History', () => {
       cy.findByText('Aborted').should('exist')
       cy.findByText('Expired').should('exist')
 
-      cy.get('.highcharts-series.highcharts-series-2 > [x="327.5"]').should('exist')
-      cy.get('.highcharts-series.highcharts-series-2 > [x="464.5"]').should('exist')
-      cy.get('.highcharts-series.highcharts-series-1 > [x="464.5"]').should('exist')
-      cy.get('.highcharts-series.highcharts-series-1 > [x="487.5"]').should('exist')
-      cy.get('.highcharts-series.highcharts-series-1 > [x="578.5"]').should('exist')
+      cy.get('g[class^="highcharts-series highcharts-series-0"]', { timeout: 10000 }).should('be.visible')
     })
   })
 
   // Execution List
-  it.skip('loads successful, aborted and failed pipelines', () => {
+  it('loads successful, aborted and failed pipelines', () => {
     // Fixtures
     cy.intercept('GET', pipelineSummaryCallAPI, {
       fixture: 'pipeline/api/executionHistory/executionSummary.json'
@@ -161,17 +157,19 @@ describe('Pipeline Execution History', () => {
 
     // Check various status
     // Success
-    cy.get('[class^=ExecutionList]').children().should('have.length', 3)
-    cy.get('[class^=ExecutionList] > :nth-child(1)').within(() => {
+    cy.get('[class*="ExecutionListTable-module"]').within(() => {
+      cy.get('[class^="TableV2--row"]').should('have.length', 3)
+    })
+    cy.get('div[class="TableV2--body"] > :nth-child(1)').within(() => {
       cy.findByText('SUCCESS').should('exist')
-      cy.findByText('Duration: 11s').should('exist')
-      cy.findByText('John Doe').should('exist')
+      cy.findByText('11s').should('exist')
+      cy.contains('John Doe').should('be.visible')
 
-      cy.get('[class^=ExecutionActions]').click({ force: true })
+      cy.get('span[data-icon="Options"]').click({ force: true })
     })
     cy.findByText('Retry Failed Pipeline').should('not.exist')
     cy.get('body').type('{esc}')
-    cy.get('[class^=ExecutionList] > :nth-child(1)').click()
+    cy.get('div[class="TableV2--body"]  > :nth-child(1)').click()
     cy.url().should(
       'contain',
       `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/executions/jDwNFYhgT2KTW_zVDZdhHg/pipeline`
@@ -179,16 +177,16 @@ describe('Pipeline Execution History', () => {
     cy.go('back')
 
     // Aborted
-    cy.get('[class^=ExecutionList] > :nth-child(2)').within(() => {
+    cy.get('div[class="TableV2--body"] > :nth-child(2)').within(() => {
       cy.findByText('ABORTED').should('exist')
-      cy.findByText('Duration: 8s').should('exist')
-      cy.findByText('John Doe').should('exist')
+      cy.findByText('8s').should('exist')
+      cy.contains('John Doe').should('be.visible')
 
-      cy.get('[class^=ExecutionActions]').click({ force: true })
+      cy.get('span[data-icon="Options"]').click({ force: true })
     })
     cy.findByText('Retry Failed Pipeline').should('exist')
     cy.get('body').type('{esc}')
-    cy.get('[class^=ExecutionList] > :nth-child(2)').click()
+    cy.get('div[class="TableV2--body"] > :nth-child(2)').click()
     cy.url().should(
       'contain',
       `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/executions/2BNrdFYSTCKTcVXlLnhP7Q/pipeline`
@@ -196,18 +194,16 @@ describe('Pipeline Execution History', () => {
     cy.go('back')
 
     // Failed
-    cy.get('[class^=ExecutionList] > :nth-child(3)').within(() => {
+    cy.get('div[class="TableV2--body"]  > :nth-child(3)').within(() => {
       cy.findByText('FAILED').should('exist')
-      cy.findByText('Duration: 41s').should('exist')
-      cy.findByText('John Doe').should('exist')
-      cy.findByText('Services deployed (1)').should('exist')
-      cy.findByText('Environments (1)').should('exist')
+      cy.findByText('41s').should('exist')
+      cy.contains('John Doe').should('be.visible')
 
-      cy.get('[class^=ExecutionActions]').click({ force: true })
+      cy.get('span[data-icon="Options"]').click({ force: true })
     })
     cy.findByText('Retry Failed Pipeline').should('exist')
     cy.get('body').type('{esc}')
-    cy.get('[class^=ExecutionList] > :nth-child(3)').click()
+    cy.get('div[class="TableV2--body"]  > :nth-child(3)').click()
     cy.url().should(
       'contain',
       `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/executions/og6igi2RRcWUVLPqUUeAHQ/pipeline`

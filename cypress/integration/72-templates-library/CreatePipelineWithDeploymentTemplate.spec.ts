@@ -24,7 +24,7 @@ import {
   recentDeploymentTemplatesUrl
 } from '../../support/72-templates-library/constants'
 
-describe.skip('Pipeline Template creation and assertion', () => {
+describe('Pipeline Template creation and assertion', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -73,7 +73,9 @@ describe.skip('Pipeline Template creation and assertion', () => {
 
     cy.visitPageAssertion('[class*="PipelineListPage-module_pageBody"]')
 
-    cy.contains('span', 'Create a Pipeline').eq(0).should('be.visible').click()
+    cy.get('div[class*="PageSubHeader--container"]').within(() => {
+      cy.contains('span', 'Create a Pipeline').should('be.visible').click()
+    })
     cy.contains('span', 'Start with Template').should('be.visible')
     cy.clickSubmit()
     cy.contains('span', 'Pipeline Name is a required field').should('be.visible')
@@ -113,14 +115,16 @@ describe.skip('Pipeline Template creation and assertion', () => {
     cy.contains('div', 'Pipeline Studio').should('be.visible')
     cy.contains('a', 'Pipeline Studio').should('be.visible')
     cy.contains('p', pipelineMadeFromTemplate).should('be.visible')
-    cy.contains('div', 'Unsaved changes').should('be.visible')
 
-    cy.get('input[name="service"]').click()
-    cy.contains('p', 'testService1').should('be.visible').click()
-    cy.wait(1000)
+    cy.get('input[name="service"]', { timeout: 10000 }).should('be.visible').click()
+    cy.contains('p', 'testService1').should('be.visible').click() // selecting service from service dropdown
+    cy.get('input[value="testService1"]').should('be.visible') // asserting service name inside input tag of service
+    cy.contains('p', 'testService1').should('be.visible') // asserting service name in the modal created after service selection
 
-    cy.contains('span', 'Environment').click()
-    cy.get('input[name="environment.environmentRef"]').click()
+    cy.wait(2000)
+
+    cy.contains('Continue').click({ scrollBehavior: false })
+    cy.get('input[name="environment.environmentRef"]', { timeout: 10000 }).should('be.visible').click()
     cy.contains('p', 'New testEnv').should('be.visible').click()
     cy.wait(500)
     cy.get('span[data-icon="fixed-input"]').eq(1).click({ force: true })
@@ -130,7 +134,12 @@ describe.skip('Pipeline Template creation and assertion', () => {
     cy.contains('span', 'Execution').click()
     cy.contains('p', 'Fetch Instances').should('be.visible')
 
-    cy.contains('span', 'Save').click()
+    cy.contains('div', 'Unsaved changes')
+      .should('be.visible')
+      .parent()
+      .within(() => {
+        cy.findByText('Save').click()
+      })
     cy.contains(
       'span',
       'Invalid yaml: $.pipeline.stages[0].stage.spec.execution: is missing but it is required'

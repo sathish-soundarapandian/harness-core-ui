@@ -55,6 +55,7 @@ permissionLabels:
   invite: Invite
   evaluate: Evaluate
   approveReject: Approve / Reject
+  copy: '{{$.common.copy}}'
 categoryLabels:
   sharedResources: Shared Resources
 roleBindings: Role Bindings

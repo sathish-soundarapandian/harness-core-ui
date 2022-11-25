@@ -8,7 +8,21 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import {
+  initializeCreatedMetrics,
+  initializeSelectedMetricsMap
+} from '@cv/pages/health-source/common/CommonCustomMetric/CommonCustomMetric.utils'
 import CommonHealthSourceContainer, { CommonHealthSourceContainerProps } from '../CommonHealthSource.container'
+import {
+  createHealthSourceData,
+  initHealthSourceCustomForm,
+  initializeNonCustomFields
+} from '../CommonHealthSource.utils'
+import {
+  expectedHealthSourceData,
+  expectedThresholdsInitialData,
+  healthSourceMetricValue
+} from './CommonHealthSource.mock'
 
 function WrapperComponent(props: CommonHealthSourceContainerProps): JSX.Element {
   return (
@@ -58,5 +72,37 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
   test('Ensure CommonHealthSourceContainer component loads with the button to add metric', async () => {
     const { getByText } = render(<WrapperComponent {...props} />)
     await waitFor(() => expect(getByText('cv.monitoringSources.addMetric')).toBeInTheDocument())
+  })
+
+  test('should check initializeNonCustomFields for metric thresholds', () => {
+    expect(initializeNonCustomFields(expectedHealthSourceData as any, true)).toEqual(expectedThresholdsInitialData)
+  })
+
+  test('should validate createHealthSourceData', () => {
+    const { selectedMetric, mappedMetrics } = initializeSelectedMetricsMap(
+      'defaultMetricName',
+      initHealthSourceCustomForm(),
+      expectedHealthSourceData?.mappedServicesAndEnvs
+    )
+    const mappedServicesAndEnvs = new Map()
+    mappedServicesAndEnvs.set('appdMetric', healthSourceMetricValue)
+    expect(selectedMetric).toEqual('defaultMetricName')
+    initializeCreatedMetrics('defaultMetricName', selectedMetric, mappedMetrics)
+
+    expect(createHealthSourceData(expectedHealthSourceData as any)).toEqual({
+      applicationName: '',
+      connectorRef: 'TestAppD',
+      identifier: undefined,
+      isEdit: true,
+      mappedServicesAndEnvs: new Map(),
+      metricPacks: undefined,
+      name: undefined,
+      product: {
+        label: 'Application Monitoring',
+        value: 'Application Monitoring'
+      },
+      tierName: '',
+      type: 'SumoLogic'
+    })
   })
 })

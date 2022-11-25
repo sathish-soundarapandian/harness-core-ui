@@ -25,18 +25,20 @@ export type NavModuleName =
   | ModuleName.STO
   | ModuleName.CODE
 
+// Default order of modules on side nav, please add modules to this list accordingly.
+// For any module to be visible on side nav, it has to be added in this list
 export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
-  ModuleName.CODE,
   ModuleName.CD,
   ModuleName.CI,
   ModuleName.CF,
   ModuleName.CE,
   ModuleName.CV,
   ModuleName.STO,
-  ModuleName.CHAOS
+  ModuleName.CHAOS,
+  ModuleName.CODE
 ]
 
-interface useNavModuleInfoReturnType {
+export interface useNavModuleInfoReturnType {
   shouldVisible: boolean
   label: StringKeys
   icon: IconName

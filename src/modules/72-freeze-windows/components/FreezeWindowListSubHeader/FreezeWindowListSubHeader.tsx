@@ -6,7 +6,15 @@
  */
 
 import React, { ReactElement, useMemo } from 'react'
-import { DateRangePickerButton, DropDown, ExpandingSearchInput, FlexExpander, Layout, Page } from '@harness/uicore'
+import {
+  DateRangePickerButton,
+  DropDown,
+  ExpandingSearchInput,
+  ExpandingSearchInputHandle,
+  FlexExpander,
+  Layout,
+  Page
+} from '@harness/uicore'
 import { useUpdateQueryParams } from '@common/hooks'
 import { useQueryParams } from '@common/hooks/useQueryParams'
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
@@ -17,7 +25,7 @@ import type { FreezeListUrlQueryParams } from '@freeze-windows/types'
 import { getDefaultCalenderFilter, getQueryParamOptions, STATUS_OPTIONS } from '@freeze-windows/utils/queryUtils'
 import css from './FreezeWindowListSubHeader.module.scss'
 
-export function FreezeWindowListSubHeader(): ReactElement {
+function _FreezeWindowListSubHeader(_: any, ref: React.ForwardedRef<ExpandingSearchInputHandle>): ReactElement {
   const { getString } = useStrings()
   const { updateQueryParams } = useUpdateQueryParams<Partial<FreezeListUrlQueryParams>>()
   const queryParams = useQueryParams<FreezeListUrlQueryParams>(getQueryParamOptions())
@@ -62,11 +70,14 @@ export function FreezeWindowListSubHeader(): ReactElement {
           width={200}
           placeholder={getString('search')}
           onChange={text => {
-            updateQueryParams({ searchTerm: text ? text : undefined, page: DEFAULT_PAGE_INDEX })
+            updateQueryParams(text ? { searchTerm: text, page: DEFAULT_PAGE_INDEX } : { searchTerm: undefined })
           }}
           defaultValue={searchTerm}
+          ref={ref}
         />
       </Layout.Horizontal>
     </Page.SubHeader>
   )
 }
+
+export const FreezeWindowListSubHeader = React.forwardRef(_FreezeWindowListSubHeader)

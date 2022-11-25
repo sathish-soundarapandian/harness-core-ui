@@ -248,7 +248,7 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
               data-testid={'addSloButton'}
               disabled={isDisabled}
               variation={ButtonVariation.PRIMARY}
-              text={getString('add')}
+              text={serviceLevelObjectivesDetails.length ? getString('update') : getString('add')}
               onClick={addSLos}
             />
           </Container>

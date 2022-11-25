@@ -9,8 +9,8 @@ import { render, screen, waitFor } from '@testing-library/react'
 import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import * as cfServicesMock from 'services/cf'
 import type { FeaturePipelineExecution } from 'services/cf'
+import * as cfServicesMock from 'services/cf'
 import FlagPipelineTab, { FlagPipelineTabProps } from '../FlagPipelineTab'
 import mockAvailablePipelines from './__data__/mockAvailablePipelines'
 import mockExecutionHistory from './__data__/mockExecutionHistory'
@@ -43,10 +43,10 @@ const renderComponent = (props: Partial<FlagPipelineTabProps> = {}): void => {
 }
 
 describe('FlagPipelineTab', () => {
-  const refetchAvailablePipelinesMock = jest.fn()
   const patchFeaturePipelineMock = jest.fn()
   const createFeaturePipelineMock = jest.fn()
   const deleteFeaturePipelineMock = jest.fn()
+  const useGetAvailableFeaturePipelinesMock = jest.spyOn(cfServicesMock, 'useGetAvailableFeaturePipelines')
 
   afterEach(() => {
     jest.clearAllMocks()
@@ -64,12 +64,12 @@ describe('FlagPipelineTab', () => {
       mutate: deleteFeaturePipelineMock
     } as any)
 
-    jest.spyOn(cfServicesMock, 'useGetAvailableFeaturePipelines').mockReturnValue({
+    useGetAvailableFeaturePipelinesMock.mockReturnValue({
       data: {
         availablePipelines: mockAvailablePipelines
       },
       loading: false,
-      refetch: refetchAvailablePipelinesMock
+      refetch: jest.fn()
     } as any)
   })
 
@@ -148,16 +148,13 @@ describe('FlagPipelineTab', () => {
       })
 
       // assert correct number of pipelines and pipeline content is displayed
-      await waitFor(() => {
-        const items = screen.getAllByRole('listitem')
-        expect(items).toHaveLength(mockAvailablePipelines.length)
-        expect(items[0]).toHaveTextContent('Pipeline 1Pipeline 1 description')
-      })
+      expect(screen.getAllByRole('listitem')).toHaveLength(mockAvailablePipelines.length)
+      mockAvailablePipelines.forEach(({ name }) => expect(screen.getByText(name)).toBeInTheDocument())
 
       // select a pipeline
       const itemToSelect = screen.getAllByRole('listitem')[4]
       userEvent.click(itemToSelect)
-      await waitFor(() => expect(itemToSelect).toHaveClass('cardActive'))
+      await waitFor(() => expect(itemToSelect).toHaveClass('Card--selected'))
 
       // save
       const savePipelineButton = screen.getByRole('button', { name: 'cf.featureFlags.flagPipeline.drawerButtonText' })
@@ -166,7 +163,7 @@ describe('FlagPipelineTab', () => {
       userEvent.click(savePipelineButton)
 
       await waitFor(() =>
-        expect(createFeaturePipelineMock).toBeCalledWith({
+        expect(createFeaturePipelineMock).toHaveBeenCalledWith({
           pipelineIdentifier: 'pipeline5',
           pipelineName: 'Pipeline 5'
         })
@@ -175,30 +172,23 @@ describe('FlagPipelineTab', () => {
 
     test('it should let user search for a flag pipeline', async () => {
       renderComponent()
-      const addFlagPipelineButton = screen.getByRole('button', {
-        name: 'cf.featureFlags.flagPipeline.title'
-      })
-      userEvent.click(addFlagPipelineButton)
 
-      const searchInput = screen.getByPlaceholderText('Search')
-      expect(searchInput).toBeInTheDocument()
+      userEvent.click(
+        screen.getByRole('button', {
+          name: 'cf.featureFlags.flagPipeline.title'
+        })
+      )
 
-      userEvent.type(searchInput, 'pipeline 1', { allAtOnce: true })
+      await waitFor(() => expect(screen.getByPlaceholderText('Search')).toBeInTheDocument())
+
+      useGetAvailableFeaturePipelinesMock.mockClear()
+
+      await userEvent.type(screen.getByPlaceholderText('Search'), 'pipeline 1', { allAtOnce: true })
 
       await waitFor(() =>
-        expect(refetchAvailablePipelinesMock).toBeCalledWith({
-          debounce: 500,
-          queryParams: {
-            accountIdentifier: 'dummy',
-            environmentIdentifier: '',
-            identifier: 'TEST_FLAG',
-            orgIdentifier: 'dummy',
-            pageNumber: 0,
-            pageSize: 50,
-            pipelineName: 'pipeline 1',
-            projectIdentifier: 'dummy'
-          }
-        })
+        expect(useGetAvailableFeaturePipelinesMock).toHaveBeenCalledWith(
+          expect.objectContaining({ queryParams: expect.objectContaining({ pipelineName: 'pipeline 1' }) })
+        )
       )
     })
 
@@ -295,21 +285,18 @@ describe('FlagPipelineTab', () => {
 
       // pipeline should be preselected
       const preselectedItem = screen.getAllByRole('listitem')[4]
-      await waitFor(() => expect(preselectedItem).toHaveClass('cardActive'))
+      await waitFor(() => expect(preselectedItem).toHaveClass('Card--selected'))
 
       // select another pipeline
       const newSelectedItem = screen.getAllByRole('listitem')[6]
       userEvent.click(newSelectedItem)
-      await waitFor(() => expect(newSelectedItem).toHaveClass('cardActive'))
+      await waitFor(() => expect(newSelectedItem).toHaveClass('Card--selected'))
 
       // save
-      const savePipelineButton = screen.getByRole('button', { name: 'cf.featureFlags.flagPipeline.drawerButtonText' })
-      expect(savePipelineButton).toBeInTheDocument()
-
-      userEvent.click(savePipelineButton)
+      userEvent.click(screen.getByRole('button', { name: 'cf.featureFlags.flagPipeline.drawerButtonText' }))
 
       await waitFor(() =>
-        expect(patchFeaturePipelineMock).toBeCalledWith({
+        expect(patchFeaturePipelineMock).toHaveBeenCalledWith({
           pipelineIdentifier: 'pipeline7',
           pipelineName: 'Pipeline 7'
         })
@@ -339,8 +326,8 @@ describe('FlagPipelineTab', () => {
       userEvent.click(screen.getByRole('button', { name: 'confirm' }))
 
       await waitFor(() => {
-        expect(deleteFeaturePipelineMock).toBeCalledWith()
-        expect(getFeaturePipelineRefetchMock).toBeCalledWith()
+        expect(deleteFeaturePipelineMock).toHaveBeenCalledWith()
+        expect(getFeaturePipelineRefetchMock).toHaveBeenCalledWith()
       })
     })
 
@@ -368,7 +355,7 @@ describe('FlagPipelineTab', () => {
 
       await waitFor(() => {
         expect(screen.queryByText('cf.featureFlags.flagPipeline.deleteModalTitle')).not.toBeInTheDocument()
-        expect(deleteFeaturePipelineMock).not.toBeCalledWith()
+        expect(deleteFeaturePipelineMock).not.toHaveBeenCalledWith()
       })
     })
 

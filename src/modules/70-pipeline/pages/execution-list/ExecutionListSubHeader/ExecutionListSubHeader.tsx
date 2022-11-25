@@ -7,7 +7,16 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, ButtonVariation, Checkbox, ExpandingSearchInput, Layout, SelectOption, Text } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  Checkbox,
+  ExpandingSearchInput,
+  ExpandingSearchInputHandle,
+  Layout,
+  SelectOption,
+  Text
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
@@ -56,9 +65,10 @@ interface ExecutionListSubHeaderProps {
   repoName?: string
 }
 
-export function ExecutionListSubHeader(
+function _ExecutionListSubHeader(
   props: Pick<ExecutionListProps, 'isPipelineInvalid' | 'onRunPipeline' | 'repoName' | 'showBranchFilter'> &
-    ExecutionListSubHeaderProps
+    ExecutionListSubHeaderProps,
+  ref: React.ForwardedRef<ExpandingSearchInputHandle>
 ): React.ReactElement {
   const { module, pipelineIdentifier } = useParams<Partial<PipelineType<PipelinePathProps>>>()
   const { queryParams } = useExecutionListFilterContext()
@@ -235,9 +245,12 @@ export function ExecutionListSubHeader(
           onChange={value => changeQueryParam('searchTerm', value)}
           width={200}
           className={css.expandSearch}
+          ref={ref}
         />
         <ExecutionListFilter />
       </div>
     </Page.SubHeader>
   )
 }
+
+export const ExecutionListSubHeader = React.forwardRef(_ExecutionListSubHeader)
