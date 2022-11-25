@@ -200,16 +200,7 @@ function SavePipelinePopover(
     }
     if (updatedGitDetails?.isNewBranch) {
       navigateToLocation(newPipelineId, updatedGitDetails)
-      const repoId =
-        storeMetadata?.storeType === StoreType.REMOTE
-          ? defaultTo(updatedGitDetails.repoName, repoName)
-          : defaultTo(updatedGitDetails.repoIdentifier, repoIdentifier)
-      await fetchPipeline({
-        forceFetch: true,
-        forceUpdate: true,
-        repoIdentifier: repoId,
-        branch: updatedGitDetails?.branch
-      })
+      location.reload()
     }
   }
 

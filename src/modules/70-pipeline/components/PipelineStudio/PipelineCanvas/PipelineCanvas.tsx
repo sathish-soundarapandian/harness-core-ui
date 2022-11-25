@@ -727,12 +727,7 @@ export function PipelineCanvas({
             })
           )
           if (!defaultSelected) {
-            fetchPipeline({
-              forceFetch: true,
-              forceUpdate: true,
-              repoIdentifier: selectedFilter.repo,
-              branch: selectedFilter.branch
-            })
+            location.reload()
           }
         })
       }

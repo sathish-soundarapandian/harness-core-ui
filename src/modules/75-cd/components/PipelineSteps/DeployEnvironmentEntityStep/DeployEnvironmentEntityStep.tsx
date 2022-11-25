@@ -57,6 +57,7 @@ export class DeployEnvironmentEntityStep extends Step<DeployEnvironmentEntityCon
             initialValues={initialValues}
             inputSetData={inputSetData}
             allowableTypes={allowableTypes}
+            stepViewType={stepViewType}
             {...(customStepProps as Required<DeployEnvironmentEntityCustomInputStepProps>)}
           />
         </Formik>

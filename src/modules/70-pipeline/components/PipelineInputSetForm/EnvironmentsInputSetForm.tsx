@@ -320,8 +320,7 @@ function MultiEnvironmentsInputSetForm({
 
               return (
                 deploymentType &&
-                environment.environmentRef &&
-                stageIdentifier && (
+                environment.environmentRef && (
                   <React.Fragment key={`${environment.environmentRef}_${index}`}>
                     {showEnvironmentPrefix && (
                       <Text
@@ -424,7 +423,8 @@ function MultiEnvironmentsInputSetForm({
                           customStepProps={{
                             environmentIdentifier: environment.environmentRef,
                             isMultipleCluster: true,
-                            deployToAllClusters: environmentInDeploymentStage?.deployToAll
+                            deployToAllClusters: environmentInDeploymentStage?.deployToAll,
+                            showEnvironmentsSelectionInputField
                           }}
                           onUpdate={data => {
                             const environmentAtIndex = get(formik.values, `${path}.${pathToEnvironments}[${index}]`)
@@ -452,7 +452,10 @@ function MultiEnvironmentsInputSetForm({
                             environmentIdentifier: environment.environmentRef,
                             isMultipleInfrastructure: true,
                             customDeploymentRef: deploymentStage?.customDeploymentRef,
-                            deployToAllInfrastructures: environmentInDeploymentStage?.deployToAll
+                            deployToAllInfrastructures: environmentInDeploymentStage?.deployToAll,
+                            showEnvironmentsSelectionInputField: deploymentStage?.environmentGroup?.deployToAll
+                              ? false
+                              : showEnvironmentsSelectionInputField
                           }}
                           onUpdate={data => {
                             const environmentAtIndex = get(formik.values, `${path}.${pathToEnvironments}[${index}]`)
