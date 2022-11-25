@@ -16,7 +16,8 @@ import {
   ModalErrorHandlerBinding,
   ModalErrorHandler,
   ButtonVariation,
-  MultiSelectOption
+  MultiSelectOption,
+  Popover
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
@@ -53,6 +54,7 @@ import type { InputSetSchema } from '@secrets/components/ScriptVariableRuntimeIn
 import VaultFormFields from './views/VaultFormFields'
 import LocalFormFields from './views/LocalFormFields'
 import CustomFormFields from './views/CustomFormFields/CustomFormFields'
+import css from './CreateUpdateSecret.module.scss'
 
 export type SecretFormData = Omit<SecretDTOV2, 'spec'> & SecretTextSpecDTO & SecretFileSpecDTO & TemplateInputInterface
 interface TemplateInputInterface {
@@ -499,15 +501,23 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
                   }}
                 />
               ) : null}
-              <FormInput.InputWithIdentifier
-                inputName="name"
-                inputLabel={getString('secrets.labelSecretName')}
-                idName="identifier"
-                isIdentifierEditable={!editing}
-                inputGroupProps={{
-                  disabled: isGcpSMInlineEditMode() || loading
-                }}
-              />
+              <Popover
+                interactionKind={'hover-target'}
+                position="top"
+                className={css.hoverMsg}
+                content={<Text padding="medium">{getString('secrets.gcpSecretEdit')}</Text>}
+                disabled={!isGcpSMInlineEditMode()}
+              >
+                <FormInput.InputWithIdentifier
+                  inputName="name"
+                  inputLabel={getString('secrets.labelSecretName')}
+                  idName="identifier"
+                  isIdentifierEditable={!editing}
+                  inputGroupProps={{
+                    disabled: isGcpSMInlineEditMode() || loading
+                  }}
+                />
+              </Popover>
 
               {!typeOfSelectedSecretManager ? <Text>{getString('secrets.secret.messageSelectSM')}</Text> : null}
               {typeOfSelectedSecretManager === 'CustomSecretManager' ? (

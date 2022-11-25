@@ -6,12 +6,12 @@
  */
 
 import React from 'react'
-import { FormInput, SelectOption, useToaster } from '@harness/uicore'
+import { FormInput, SelectOption, useToaster, Popover, Text } from '@harness/uicore'
 import type { FormikContextType } from 'formik'
 import { ConnectorInfoDTO, SecretDTOV2, useGetGcpRegions } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
-
+import css from '../CreateUpdateSecret.module.scss'
 interface VaultFormFieldsProps {
   type: SecretDTOV2['type']
   readonly?: boolean
@@ -57,15 +57,23 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
     <>
       {type === 'SecretText' ? (
         <>
-          <FormInput.RadioGroup
-            name="valueType"
-            radioGroup={{ inline: true }}
-            disabled={gcpSmInEditMode()}
-            items={[
-              { label: getString('secrets.secret.inlineSecret'), value: 'Inline', disabled: readonly },
-              { label: getString('secrets.secret.referenceSecret'), value: 'Reference' }
-            ]}
-          />
+          <Popover
+            interactionKind={'hover-target'}
+            position="top"
+            className={css.hoverMsg}
+            content={<Text padding="medium">{getString('secrets.gcpSecretEdit')}</Text>}
+            disabled={!gcpSmInEditMode()}
+          >
+            <FormInput.RadioGroup
+              name="valueType"
+              radioGroup={{ inline: true }}
+              disabled={gcpSmInEditMode()}
+              items={[
+                { label: getString('secrets.secret.inlineSecret'), value: 'Inline', disabled: readonly },
+                { label: getString('secrets.secret.referenceSecret'), value: 'Reference' }
+              ]}
+            />
+          </Popover>
           {formik?.values['valueType'] === 'Inline' ? (
             <FormInput.Text
               name="value"
@@ -95,21 +103,30 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
             <FormInput.Text name="version" label={getString('version')} />
           </>
         ) : (
-          <>
-            <FormInput.CheckBox
-              name="configureRegions"
-              label={getString('secrets.secret.configureRegion')}
-              disabled={gcpSmInEditMode()}
-            />
-            {formik?.values['configureRegions'] ? (
-              <FormInput.MultiSelect
-                name="regions"
-                label={getString('secrets.secret.region')}
-                items={regions}
+          <Popover
+            interactionKind={'hover-target'}
+            position="top"
+            className={css.hoverMsg}
+            content={<Text padding="medium">{getString('secrets.gcpSecretEdit')}</Text>}
+            disabled={!gcpSmInEditMode()}
+          >
+            <>
+              <FormInput.CheckBox
+                name="configureRegions"
+                label={getString('secrets.secret.configureRegion')}
                 disabled={gcpSmInEditMode()}
               />
-            ) : null}
-          </>
+
+              {formik?.values['configureRegions'] ? (
+                <FormInput.MultiSelect
+                  name="regions"
+                  label={getString('secrets.secret.region')}
+                  items={regions}
+                  disabled={gcpSmInEditMode()}
+                />
+              ) : null}
+            </>
+          </Popover>
         ))}
       <FormInput.TextArea name="description" isOptional={true} label={getString('description')} />
       <FormInput.KVTagInput name="tags" isOptional={true} label={getString('tagsLabel')} />
