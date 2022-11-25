@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, findByText } from '@testing-library/react'
 
-import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper, UseGetReturnData } from '@common/utils/testUtils'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
