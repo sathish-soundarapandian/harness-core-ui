@@ -172,13 +172,12 @@ export default function ManifestSelection({
     [listOfManifests, stage, updateStage]
   )
   const attachPathYaml = useCallback(
-    (manifestPathData: any, manifestId: string, manifestType: PrimaryManifestType, pathKey?: string): void => {
+    (manifestPathData: any, manifestId: string, manifestType: PrimaryManifestType): void => {
       const manifestData = listOfManifests?.find(
         (manifestObj: ManifestConfigWrapper) => manifestObj.manifest?.identifier === manifestId
       )
-      const manifestKeyPath = defaultTo(pathKey, ManifestToPathKeyMap[manifestType])
       if (manifestData) {
-        set(manifestData, `manifest.spec.${manifestKeyPath}`, manifestPathData)
+        set(manifestData, `manifest.spec.${ManifestToPathKeyMap[manifestType]}`, manifestPathData)
       }
       updateStageData()
     },
@@ -187,12 +186,11 @@ export default function ManifestSelection({
   )
 
   const removeValuesYaml = useCallback(
-    (valuesYamlIndex: number, manifestId: string, manifestType: PrimaryManifestType, pathKey?: string): void => {
+    (valuesYamlIndex: number, manifestId: string, manifestType: PrimaryManifestType): void => {
       const manifestData = listOfManifests?.find(
         (manifestObj: ManifestConfigWrapper) => manifestObj.manifest?.identifier === manifestId
       )
-      const manifestKeyPath = defaultTo(pathKey, ManifestToPathKeyMap[manifestType])
-      manifestData?.manifest?.spec[manifestKeyPath].splice(valuesYamlIndex, 1)
+      manifestData?.manifest?.spec[ManifestToPathKeyMap[manifestType]].splice(valuesYamlIndex, 1)
       updateStageData()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

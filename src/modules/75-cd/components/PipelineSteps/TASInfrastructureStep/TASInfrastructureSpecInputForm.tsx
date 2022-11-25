@@ -16,17 +16,14 @@ import { Connectors } from '@connectors/constants'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
-import {
-  ConnectorReferenceDTO,
-  FormMultiTypeConnectorField
-} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { useGetTasOrganizations, useGetTasSpaces } from 'services/cd-ng'
+import { getSelectedConnectorValue, SelectedConnectorType } from '@cd/utils/connectorUtils'
 import {
   TASInfrastructureSpecEditableProps,
   getValue,
@@ -118,15 +115,10 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
 
   useEffect(() => {
     setOrganizations(
-      defaultTo(
-        organizationsData?.data?.map(org => {
-          return {
-            label: org,
-            value: org
-          }
-        }),
-        []
-      )
+      (organizationsData?.data || []).map(org => ({
+        label: org,
+        value: org
+      }))
     )
   }, [organizationsData])
 
@@ -164,12 +156,12 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
   }
 
   useEffect(() => {
-    const options = spaceData?.data?.map(space => ({ label: space, value: space })) || /* istanbul ignore next */ []
+    const options = (spaceData?.data || []).map(space => ({ label: space, value: space }))
     setSpaces(options)
   }, [spaceData])
   // useEffect(() => {
   //   const options =
-  //     spaceDataV2?.data?.spaces?.map(rg => ({ label: rg.space, value: rg.space })) || /* istanbul ignore next */ []
+  //     (spaceDataV2?.data?.spaces||[]).map(space => ({ label: space, value: space }))
   //   setSpaces(options)
   // }, [spaceDataV2])
 
@@ -216,12 +208,8 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
             setRefValue
             onChange={
               /* istanbul ignore next */ (selected, _typeValue, type) => {
-                const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
                 if (type === MultiTypeInputType.FIXED) {
-                  const connectorRef =
-                    item.scope === Scope.ORG || item.scope === Scope.ACCOUNT
-                      ? `${item.scope}.${item?.record?.identifier}`
-                      : item.record?.identifier
+                  const connectorRef = getSelectedConnectorValue(selected as unknown as SelectedConnectorType)
                   if (!isEqual(connectorRef, connector)) {
                     setConnector(connectorRef)
                   }

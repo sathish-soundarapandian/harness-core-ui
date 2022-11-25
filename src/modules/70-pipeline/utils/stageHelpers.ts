@@ -619,7 +619,8 @@ export const deleteStageInfo = (stage?: DeploymentStageElementConfig): void => {
 export const infraDefinitionTypeMapping: { [key: string]: string } = {
   ServerlessAwsLambda: StepType.ServerlessAwsInfra,
   ECS: StepType.EcsInfra,
-  CustomDeployment: StepType.CustomDeployment
+  CustomDeployment: StepType.CustomDeployment,
+  TAS: StepType.TasInfra
 }
 
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {

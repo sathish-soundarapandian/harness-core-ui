@@ -12,15 +12,16 @@ import {
   ButtonVariation,
   Container,
   Formik,
+  FormikForm,
   FormInput,
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
+  SelectOption,
   StepProps,
   Text
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -29,10 +30,10 @@ import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/Co
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import { cfCliVersions, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
-import type { TASWithHarnessStorePropTypeDataType, ManifestTypes } from '../../ManifestInterface'
+import type { TASWithHarnessStorePropType, ManifestTypes } from '../../ManifestInterface'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
-interface TASWithHarnessStorePropType {
+interface TASWithHarnessStoreProps {
   stepName: string
   allowableTypes: AllowedTypes
   initialValues: ManifestConfig
@@ -53,10 +54,10 @@ function TASWithHarnessStore({
   previousStep,
   manifestIdsList,
   expressions
-}: StepProps<ConnectorConfigDTO> & TASWithHarnessStorePropType): React.ReactElement {
+}: StepProps<ConnectorConfigDTO> & TASWithHarnessStoreProps): React.ReactElement {
   const { getString } = useStrings()
 
-  const getInitialValues = (): TASWithHarnessStorePropTypeDataType => {
+  const getInitialValues = (): TASWithHarnessStorePropType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
     const varsPaths = get(initialValues, 'spec.varsPaths')
     const autoScalerPath = get(initialValues, 'spec.autoScalerPath')
@@ -78,7 +79,7 @@ function TASWithHarnessStore({
     }
   }
 
-  const submitFormData = (formData: TASWithHarnessStorePropTypeDataType & { store?: string }): void => {
+  const submitFormData = (formData: TASWithHarnessStorePropType & { store?: string }): void => {
     /* istanbul ignore else */
     if (formData) {
       const manifestObj: ManifestConfigWrapper = {
@@ -125,12 +126,12 @@ function TASWithHarnessStore({
           submitFormData({
             ...prevStepData,
             ...formData
-          } as unknown as TASWithHarnessStorePropTypeDataType)
+          } as unknown as TASWithHarnessStorePropType)
         }}
       >
         {formik => {
           return (
-            <Form>
+            <FormikForm>
               <Layout.Vertical
                 flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
                 className={css.manifestForm}
@@ -147,10 +148,10 @@ function TASWithHarnessStore({
                     <FormInput.Select
                       name="cfCliVersion"
                       label={getString('pipeline.manifestType.cfCliVersion')}
-                      items={cfCliVersions}
+                      items={cfCliVersions as SelectOption[]}
                     />
                   </Container>
-                  <Container className={css.halfWidth} margin={{ bottom: 'medium' }} padding={0}>
+                  <Container className={css.halfWidth} margin={{ bottom: 'medium' }}>
                     <MultiConfigSelectField
                       name="files"
                       allowableTypes={allowableTypes}
@@ -187,7 +188,7 @@ function TASWithHarnessStore({
                     />
                   </Container>
 
-                  <Container className={css.halfWidth}>
+                  <Container className={css.halfWidth} margin={{ bottom: 'medium' }}>
                     <MultiConfigSelectField
                       name="autoScalerPath"
                       allowableTypes={allowableTypes}
@@ -220,7 +221,7 @@ function TASWithHarnessStore({
                   />
                 </Layout.Horizontal>
               </Layout.Vertical>
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>

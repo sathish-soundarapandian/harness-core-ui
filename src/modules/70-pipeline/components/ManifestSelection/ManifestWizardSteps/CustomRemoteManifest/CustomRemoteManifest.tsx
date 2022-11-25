@@ -17,6 +17,7 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
+  SelectOption,
   StepProps,
   Text
 } from '@harness/uicore'
@@ -238,7 +239,7 @@ function CustomRemoteManifest({
                       <FormInput.Select
                         name="cfCliVersion"
                         label={getString('pipeline.manifestType.cfCliVersion')}
-                        items={cfCliVersions}
+                        items={cfCliVersions as SelectOption[]}
                       />
                     </div>
                   )}

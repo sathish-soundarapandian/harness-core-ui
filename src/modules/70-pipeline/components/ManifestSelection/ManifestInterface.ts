@@ -34,7 +34,13 @@ export type ManifestTypes =
   | 'Vars'
   | 'AutoScaler'
 
-export type PrimaryManifestType = 'K8sManifest' | 'HelmChart' | 'OpenshiftTemplate' | 'Kustomize'
+export type PrimaryManifestType =
+  | 'K8sManifest'
+  | 'HelmChart'
+  | 'OpenshiftTemplate'
+  | 'Kustomize'
+  | 'Vars'
+  | 'AutoScaler'
 
 export type ManifestStores =
   | 'Git'
@@ -54,7 +60,7 @@ export type ManifestStoreTypeWithoutConnector = 'InheritFromManifest' | 'Harness
 
 export type HelmOCIVersionOptions = 'V380'
 export type HelmVersionOptions = 'V2' | 'V3'
-export type CLIVersionOptions = 'V6' | 'V7'
+export type CLIVersionOptions = TasManifest['cfCliVersion']
 export type ManifestStoreWithoutConnector = Exclude<ManifestStores, ManifestStoreTypeWithoutConnector>
 
 export interface ManifestSelectionProps {
@@ -273,7 +279,7 @@ export interface CustomManifestManifestDataType {
   skipResourceVersioning?: boolean
 }
 
-export interface TASWithHarnessStorePropTypeDataType extends Omit<HarnessFileStoreFormData, 'skipResourceVersioning'> {
+export interface TASWithHarnessStorePropType extends Omit<HarnessFileStoreFormData, 'skipResourceVersioning'> {
   varsPaths?: string[] | string
   autoScalerPath?: string[] | string
   cfCliVersion?: CLIVersionOptions

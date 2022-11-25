@@ -50,7 +50,6 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
 import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
 import { allowedManifestTypes } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import type { ServiceData } from '@cd/components/PipelineSteps/DeployServiceEntityStep/DeployServiceEntityUtils'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ServiceVariableOverride from './ServiceVariableOverride'
@@ -336,17 +335,11 @@ export default function AddEditServiceOverride({
     }
   }
 
-  const getAllowedManifestTypesFromSelectedService = (): ManifestTypes[] => {
-    const serviceYAML = defaultTo(
-      services.find(service => service.service?.identifier === formikRef?.current?.values?.serviceRef)?.service?.yaml,
-      '{}'
-    )
-    const service = yamlParse<Pick<ServiceData, 'service'>>(serviceYAML).service
-    const selectedDeploymentType = service?.serviceDefinition?.type
-    return selectedDeploymentType === ServiceDeploymentType.TAS
-      ? allowedManifestTypes[selectedDeploymentType]
-      : AllowedManifestOverrideTypes
-  }
+  const availableManifestTypes = React.useMemo(
+    (): ManifestTypes[] =>
+      serviceType === ServiceDeploymentType.TAS ? allowedManifestTypes[serviceType] : AllowedManifestOverrideTypes,
+    [serviceType]
+  )
 
   return (
     <Formik<AddEditServiceOverrideFormProps>
@@ -430,7 +423,7 @@ export default function AddEditServiceOverride({
                               isReadonly={isReadonly}
                               expressions={expressions}
                               allowableTypes={allowableTypes}
-                              availableManifestTypes={getAllowedManifestTypesFromSelectedService()}
+                              availableManifestTypes={availableManifestTypes}
                             />
                           }
                         />

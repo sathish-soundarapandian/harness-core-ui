@@ -46,6 +46,7 @@ export const AllowedManifestOverrideTypes = [
   OverrideManifests.OpenshiftParam,
   OverrideManifests.KustomizePatches
 ]
+
 const gitStoreTypes: Array<OverrideManifestStoresTypes> = [
   OverrideManifestStores.Git,
   OverrideManifestStores.Github,
@@ -85,4 +86,15 @@ export const ManifestIcons: Record<OverrideManifestTypes, IconName> = {
   TasManifest: 'tas-manifest',
   Vars: 'list-vars',
   AutoScaler: 'autoScaler'
+}
+
+const TASOverrideManifests = [OverrideManifests.TasManifest, OverrideManifests.Vars, OverrideManifests.AutoScaler]
+
+export function getAllowedOverrideManifests({ TAS_NG = false }): OverrideManifestTypes[] {
+  let overrideManifests = [...AllowedManifestOverrideTypes]
+
+  if (TAS_NG) {
+    overrideManifests = overrideManifests.concat(TASOverrideManifests)
+  }
+  return overrideManifests
 }

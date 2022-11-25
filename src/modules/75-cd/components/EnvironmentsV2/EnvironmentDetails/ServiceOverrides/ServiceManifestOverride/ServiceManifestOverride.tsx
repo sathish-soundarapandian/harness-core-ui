@@ -11,6 +11,7 @@ import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
 import { defaultTo, get, noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -25,18 +26,21 @@ import CustomRemoteManifest from '@pipeline/components/ManifestSelection/Manifes
 import K8sValuesManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/K8sValuesManifest/K8sValuesManifest'
 import { CommonManifestDetails } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/CommonManifestDetails/CommonManifestDetails'
 import type { ManifestLastStepProps, ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
-import { getConnectorPath } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ManifestUtils'
+import {
+  getConnectorPath,
+  getListOfDisabledManifestTypes
+} from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ManifestUtils'
 import TasManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/TasManifest/TasManifest'
 import TASWithHarnessStore from '@pipeline/components/ManifestSelection/ManifestWizardSteps/TASWithHarnessStore/TASWithHarnessStore'
 import {
-  AllowedManifestOverrideTypes,
   OverrideManifestTypes,
   OverrideManifestStores,
   OverrideManifestStoreMap,
   ManifestLabels,
   ManifestIcons,
   OverrideManifests,
-  OverrideManifestStoresTypes
+  OverrideManifestStoresTypes,
+  getAllowedOverrideManifests
 } from './ServiceManifestOverrideUtils'
 import ServiceManifestOverridesList from './ServiceManifestOverridesList'
 import css from './ServiceManifestOverride.module.scss'
@@ -73,6 +77,7 @@ function ServiceManifestOverride({
   const [selectedManifest, setSelectedManifest] = useState<OverrideManifestTypes | null>(null)
   const [manifestStore, setManifestStore] = useState('')
   const [manifestIndex, setEditIndex] = useState(0)
+  const { TAS_NG } = useFeatureFlags()
 
   const createNewManifestOverride = (): void => {
     setEditIndex(manifestOverrides.length)
@@ -216,6 +221,11 @@ function ServiceManifestOverride({
       } ${getString('store')}`
     }
   }
+
+  const allowedOverrideManifestTypes = React.useMemo(() => {
+    return getAllowedOverrideManifests({ TAS_NG })
+  }, [TAS_NG])
+
   const [showModal, hideModal] = useModalHook(() => {
     const onClose = (): void => {
       hideModal()
@@ -226,7 +236,7 @@ function ServiceManifestOverride({
       <Dialog onClose={onClose} {...DIALOG_PROPS}>
         <div className={css.createConnectorWizard}>
           <ManifestWizard
-            types={defaultTo(availableManifestTypes, AllowedManifestOverrideTypes)}
+            types={defaultTo(availableManifestTypes, allowedOverrideManifestTypes)}
             manifestStoreTypes={OverrideManifestStoreMap[selectedManifest as OverrideManifestTypes]}
             labels={getLabels()}
             selectedManifest={selectedManifest}
@@ -242,6 +252,7 @@ function ServiceManifestOverride({
             }}
             isReadonly={isReadonly}
             handleConnectorViewChange={noop}
+            listOfDisabledManifestTypes={getListOfDisabledManifestTypes(manifestOverrides)}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />

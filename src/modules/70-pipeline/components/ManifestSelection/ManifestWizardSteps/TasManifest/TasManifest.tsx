@@ -17,24 +17,32 @@ import {
   ButtonVariation,
   AllowedTypes,
   FormikForm,
-  FormInput
+  FormInput,
+  SelectOption
 } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
-
 import { get, set, isEmpty } from 'lodash-es'
-
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { getConnectorReferenceValue } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/utils'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import type { ManifestTypes, TASManifestDataType } from '../../ManifestInterface'
-import { cfCliVersions, GitRepoName, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
+import {
+  cfCliVersions,
+  gitFetchTypeList,
+  GitFetchTypes,
+  GitRepoName,
+  ManifestIdentifierValidation,
+  ManifestStoreMap
+} from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
 import { filePathWidth, getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
-import { ManifestDetailsCoreSection } from '../CommonManifestDetails/ManifestDetailsCoreSection'
+import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
+import { shouldAllowOnlyOneFilePath } from '../CommonManifestDetails/utils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface TasManifestPropType {
@@ -69,6 +77,13 @@ function TasManifest({
       ? GitRepoName.Repo
       : GitRepoName.Account
 
+  const accountUrl =
+    connectionType === GitRepoName.Account
+      ? prevStepData?.connectorRef
+        ? prevStepData?.connectorRef?.connector?.spec?.url
+        : prevStepData?.url
+      : null
+
   const getInitialValues = (): TASManifestDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
 
@@ -76,12 +91,14 @@ function TasManifest({
       return {
         ...specValues,
         identifier: initialValues.identifier,
-        skipResourceVersioning: initialValues.spec?.skipResourceVersioning,
         repoName: getRepositoryName(prevStepData, initialValues),
-        paths: removeEmptyFieldsFromStringArray(specValues.paths)?.map((path: string) => ({
-          path,
-          uuid: uuid(path, nameSpace())
-        })),
+        paths:
+          typeof specValues.paths === 'string'
+            ? specValues.paths
+            : removeEmptyFieldsFromStringArray(specValues.paths)?.map((path: string) => ({
+                path,
+                uuid: uuid(path, nameSpace())
+              })),
         cfCliVersion: initialValues.spec?.cfCliVersion,
         varsPaths:
           typeof initialValues.spec?.varsPaths === 'string'
@@ -106,7 +123,6 @@ function TasManifest({
       gitFetchType: 'Branch',
       cfCliVersion: 'V7',
       paths: [{ path: '', uuid: uuid('', nameSpace()) }],
-      skipResourceVersioning: false,
       repoName: getRepositoryName(prevStepData, initialValues)
     }
   }
@@ -123,7 +139,10 @@ function TasManifest({
             spec: {
               connectorRef: formData?.connectorRef,
               gitFetchType: formData?.gitFetchType,
-              paths: formData?.paths?.map((path: { path: string }) => path.path)
+              paths:
+                typeof formData?.paths === 'string'
+                  ? formData?.paths
+                  : formData?.paths?.map((path: { path: string }) => path.path)
             }
           },
 
@@ -217,13 +236,7 @@ function TasManifest({
           submitFormData({
             ...prevStepData,
             ...formData,
-            connectorRef: prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : prevStepData?.identifier
-              ? prevStepData?.identifier
-              : ''
+            connectorRef: getConnectorReferenceValue(prevStepData as ConnectorConfigDTO)
           })
         }}
       >
@@ -235,21 +248,127 @@ function TasManifest({
                 className={css.manifestForm}
               >
                 <div className={css.manifestStepWidth}>
-                  <ManifestDetailsCoreSection
-                    formik={formik}
-                    selectedManifest={selectedManifest}
-                    expressions={expressions}
-                    allowableTypes={allowableTypes}
-                    prevStepData={prevStepData}
-                    isReadonly={isReadonly}
-                  />
-
+                  <div className={css.halfWidth}>
+                    <FormInput.Text
+                      name="identifier"
+                      label={getString('pipeline.manifestType.manifestIdentifier')}
+                      placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
+                    />
+                  </div>
                   <div className={css.halfWidth}>
                     <FormInput.Select
                       name="cfCliVersion"
                       label={getString('pipeline.manifestType.cfCliVersion')}
-                      items={cfCliVersions}
+                      items={cfCliVersions as SelectOption[]}
                     />
+                  </div>
+                  {!!(connectionType === GitRepoName.Account && accountUrl) && (
+                    <GitRepositoryName
+                      accountUrl={accountUrl}
+                      expressions={expressions}
+                      allowableTypes={allowableTypes}
+                      fieldValue={formik.values?.repoName}
+                      changeFieldValue={(value: string) => formik.setFieldValue('repoName', value)}
+                      isReadonly={isReadonly}
+                    />
+                  )}
+
+                  <Layout.Horizontal spacing="huge" margin={{ top: 'small', bottom: 'small' }}>
+                    <div className={css.halfWidth}>
+                      <FormInput.Select
+                        name="gitFetchType"
+                        label={getString('pipeline.manifestType.gitFetchTypeLabel')}
+                        items={gitFetchTypeList}
+                      />
+                    </div>
+
+                    {formik.values?.gitFetchType === GitFetchTypes.Branch && (
+                      <div
+                        className={cx(css.halfWidth, {
+                          [css.runtimeInput]:
+                            getMultiTypeFromValue(formik.values?.branch) === MultiTypeInputType.RUNTIME
+                        })}
+                      >
+                        <FormInput.MultiTextInput
+                          multiTextInputProps={{ expressions, allowableTypes }}
+                          label={getString('pipelineSteps.deploy.inputSet.branch')}
+                          placeholder={getString('pipeline.manifestType.branchPlaceholder')}
+                          name="branch"
+                        />
+
+                        {getMultiTypeFromValue(formik.values?.branch) === MultiTypeInputType.RUNTIME && (
+                          <ConfigureOptions
+                            value={formik.values?.branch as string}
+                            type="String"
+                            variableName="branch"
+                            showRequiredField={false}
+                            showDefaultField={false}
+                            showAdvanced={true}
+                            onChange={value => formik.setFieldValue('branch', value)}
+                            isReadonly={isReadonly}
+                          />
+                        )}
+                      </div>
+                    )}
+
+                    {formik.values?.gitFetchType === GitFetchTypes.Commit && (
+                      <div
+                        className={cx(css.halfWidth, {
+                          [css.runtimeInput]:
+                            getMultiTypeFromValue(formik.values?.commitId) === MultiTypeInputType.RUNTIME
+                        })}
+                      >
+                        <FormInput.MultiTextInput
+                          multiTextInputProps={{ expressions, allowableTypes }}
+                          label={getString('pipeline.manifestType.commitId')}
+                          placeholder={getString('pipeline.manifestType.commitPlaceholder')}
+                          name="commitId"
+                        />
+
+                        {getMultiTypeFromValue(formik.values?.commitId) === MultiTypeInputType.RUNTIME && (
+                          <ConfigureOptions
+                            value={formik.values?.commitId as string}
+                            type="String"
+                            variableName="commitId"
+                            showRequiredField={false}
+                            showDefaultField={false}
+                            showAdvanced={true}
+                            onChange={value => formik.setFieldValue('commitId', value)}
+                            isReadonly={isReadonly}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </Layout.Horizontal>
+
+                  <div
+                    className={cx({
+                      [css.runtimeInput]: getMultiTypeFromValue(formik.values?.paths) === MultiTypeInputType.RUNTIME
+                    })}
+                  >
+                    <DragnDropPaths
+                      formik={formik}
+                      expressions={expressions}
+                      allowableTypes={allowableTypes}
+                      fieldPath="paths"
+                      pathLabel={getString('fileFolderPathText')}
+                      placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                      defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                      dragDropFieldWidth={filePathWidth}
+                      allowOnlyOneFilePath={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
+                    />
+                    {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        value={formik.values.paths}
+                        type={getString('string')}
+                        variableName={'paths'}
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={val => formik?.setFieldValue('paths', val)}
+                        isReadonly={isReadonly}
+                      />
+                    )}
                   </div>
 
                   {/* VARS AND AUTOSCALER */}

@@ -222,14 +222,12 @@ export class TASInfrastructureSpec extends PipelineStep<TASInfrastructureSpecSte
             connectorRef: obj.spec?.connectorRef,
             organization: obj.spec?.organization
           }
-        }).then(
-          response =>
-            response?.data?.map(space => ({
-              //check
-              label: space,
-              insertText: space,
-              kind: CompletionItemKind.Field
-            })) || /* istanbul ignore next */ []
+        }).then(response =>
+          defaultTo(response?.data, [])?.map(space => ({
+            label: space,
+            insertText: space,
+            kind: CompletionItemKind.Field
+          }))
         )
       }
     }

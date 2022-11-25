@@ -22,7 +22,7 @@ import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
-import { get, intersection, isEmpty, noop } from 'lodash-es'
+import { get, isEmpty, noop } from 'lodash-es'
 import type { IconProps } from '@harness/icons'
 import { useStrings } from 'framework/strings'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
@@ -48,7 +48,6 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ManifestActions } from '@common/constants/TrackingConstants'
-import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { ManifestWizard } from '../ManifestWizard/ManifestWizard'
 import { getStatus, getConnectorNameFromValue } from '../../PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useVariablesExpression } from '../../PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -65,8 +64,7 @@ import {
   getBuildPayload,
   isGitTypeManifestStore,
   ManifestToPathMap,
-  TASManifestToPaths,
-  TASManifestTypeMetaData
+  TASManifestAllowedPaths
 } from '../Manifesthelper'
 import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
@@ -92,14 +90,13 @@ import AttachPathYamlFlow from './AttachPathYamlFlow'
 import InheritFromManifest from '../ManifestWizardSteps/InheritFromManifest/InheritFromManifest'
 import ConnectorField from './ConnectorField'
 import HelmWithOCI from '../ManifestWizardSteps/HelmWithOCI/HelmWithOCI'
-import { getConnectorPath } from '../ManifestWizardSteps/ManifestUtils'
+import { getConnectorPath, getListOfDisabledManifestTypes } from '../ManifestWizardSteps/ManifestUtils'
 import HarnessFileStore from '../ManifestWizardSteps/HarnessFileStore/HarnessFileStore'
 import KustomizeWithHarnessStore from '../ManifestWizardSteps/KustomizeWithHarnessStore/KustomizeWithHarnessStore'
 import { CommonManifestDetails } from '../ManifestWizardSteps/CommonManifestDetails/CommonManifestDetails'
 import HelmWithHarnessStore from '../ManifestWizardSteps/HelmWithHarnessStore/HelmWithHarnessStore'
 import TasManifest from '../ManifestWizardSteps/TasManifest/TasManifest'
 import TASWithHarnessStore from '../ManifestWizardSteps/TASWithHarnessStore/TASWithHarnessStore'
-import { allowedManifestForSingleAddition } from '../ManifestWizardSteps/CommonManifestDetails/utils'
 import css from '../ManifestSelection.module.scss'
 
 const DIALOG_PROPS: IDialogProps = {
@@ -458,13 +455,6 @@ function ManifestListView({
       setIsEditMode(false)
       setSelectedManifest(null)
     }
-    let listOfDisabledManifestTypes = [] as ManifestTypes[]
-    if (deploymentType === ServiceDeploymentType.TAS) {
-      const selectedManifestTypes = listOfManifests.map(
-        (item: ManifestConfigWrapper) => item.manifest?.type as ManifestTypes
-      )
-      listOfDisabledManifestTypes = intersection(selectedManifestTypes, allowedManifestForSingleAddition)
-    }
     return (
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
@@ -484,7 +474,7 @@ function ManifestListView({
             lastSteps={getLastSteps()}
             iconsProps={getIconProps()}
             isReadonly={isReadonly}
-            listOfDisabledManifestTypes={listOfDisabledManifestTypes}
+            listOfDisabledManifestTypes={getListOfDisabledManifestTypes(listOfManifests)}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
@@ -635,7 +625,7 @@ function ManifestListView({
                       />
                     )}
                     {manifest?.type === ManifestDataType.TasManifest &&
-                      TASManifestToPaths.map(type => (
+                      TASManifestAllowedPaths.map(type => (
                         <Container key={type} margin={{ bottom: 'medium' }}>
                           <AttachPathYamlFlow
                             renderConnectorField={renderConnectorField(
@@ -644,27 +634,21 @@ function ManifestListView({
                               connectorName,
                               color
                             )}
-                            manifestType={manifest?.type as PrimaryManifestType}
+                            manifestType={type as PrimaryManifestType}
                             manifestStore={manifest?.spec?.store?.type}
-                            valuesPathMetaData={TASManifestTypeMetaData[type]}
-                            valuesPaths={manifest?.spec[type]}
+                            valuesIcon={manifestTypeIcons[type]}
+                            valuesPaths={manifest?.spec[ManifestToPathKeyMap[type as PrimaryManifestType]]}
                             expressions={expressions}
                             allowableTypes={allowableTypes}
                             isReadonly={isReadonly}
                             attachPathYaml={formData =>
-                              attachPathYaml(
-                                formData,
-                                manifest?.identifier as string,
-                                manifest?.type as PrimaryManifestType,
-                                TASManifestTypeMetaData[type].pathKeyMap
-                              )
+                              attachPathYaml(formData, manifest?.identifier as string, type as PrimaryManifestType)
                             }
                             removeValuesYaml={valuesYamlIndex =>
                               removeValuesYaml(
                                 valuesYamlIndex,
                                 manifest?.identifier as string,
-                                manifest?.type as PrimaryManifestType,
-                                TASManifestTypeMetaData[type].pathKeyMap
+                                type as PrimaryManifestType
                               )
                             }
                           />

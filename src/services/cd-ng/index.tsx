@@ -14744,7 +14744,7 @@ export type TasInstanceInfoDTO = InstanceInfoDTO & {
 
 export type TasManifest = ManifestAttributes & {
   autoScalerPath?: string[]
-  cfCliVersion?: 'V6' | 'V7'
+  cfCliVersion?: 'V7'
   metadata?: string
   store?: StoreConfigWrapper
   varsPaths?: string[]

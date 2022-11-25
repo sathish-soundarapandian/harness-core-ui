@@ -86,9 +86,7 @@ describe('<TASConnector />', () => {
 
     fireEvent.click(getByText('TasToken')!)
 
-    act(() => {
-      fireEvent.click(getByText('entityReference.apply')!)
-    })
+    fireEvent.click(getByText('entityReference.apply')!)
     expect(getByText('secrets.secret.configureSecret')).toBeInTheDocument()
     expect(getByText('<TasToken>')).toBeInTheDocument()
 

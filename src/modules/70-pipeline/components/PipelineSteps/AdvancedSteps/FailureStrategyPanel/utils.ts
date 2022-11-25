@@ -10,6 +10,7 @@ import type { FormikErrors, FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
 import { Intent } from '@blueprintjs/core'
 
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type {
   RetryFailureActionConfig,
   IgnoreFailureActionConfig,
@@ -23,6 +24,7 @@ import type {
   OnFailureConfig,
   ProceedWithDefaultValuesFailureActionConfig
 } from 'services/pipeline-ng'
+import type { ConnectorConfigDTO } from 'services/cd-ng'
 
 export type AllActions =
   | RetryFailureActionConfig
@@ -89,4 +91,12 @@ export function handleChangeInStrategies({
 
 export function getTabIntent(i: number, selectedStrategyNum: number): Intent {
   return i === selectedStrategyNum ? Intent.PRIMARY : Intent.NONE
+}
+
+export const getConnectorReferenceValue = (prevStepData: ConnectorConfigDTO): string => {
+  return prevStepData?.connectorRef
+    ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+      ? prevStepData?.connectorRef
+      : prevStepData?.connectorRef?.value
+    : prevStepData?.identifier ?? ''
 }

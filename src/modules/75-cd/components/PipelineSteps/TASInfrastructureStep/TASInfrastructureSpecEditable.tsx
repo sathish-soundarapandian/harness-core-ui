@@ -323,7 +323,6 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
                             ? getString('loading')
                             : get(organizationsError, errorMessage, null) ||
                               getString('cd.steps.tasInfra.organizationError')}
-                          {/* CHECK ERROR PATH */}
                         </Text>
                       )
                     },
@@ -340,11 +339,9 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
                       showRequiredField={false}
                       showDefaultField={false}
                       showAdvanced={true}
-                      onChange={
-                        /* istanbul ignore next */ value => {
-                          formik.setFieldValue('organization', value)
-                        }
-                      }
+                      onChange={value => {
+                        formik.setFieldValue('organization', value)
+                      }}
                       isReadonly={readonly}
                       className={css.marginTop}
                       loading={loadingOrganizations}
@@ -358,11 +355,7 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
                   className={css.inputWidth}
                   selectItems={spaces}
                   disabled={readonly}
-                  placeholder={
-                    loadingSpaces
-                      ? /* istanbul ignore next */ getString('loading')
-                      : getString('cd.steps.tasInfra.spacePlaceholder')
-                  }
+                  placeholder={loadingSpaces ? getString('loading') : getString('cd.steps.tasInfra.spacePlaceholder')}
                   multiTypeInputProps={{
                     expressions,
                     disabled: readonly,

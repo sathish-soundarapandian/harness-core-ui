@@ -367,7 +367,7 @@ manifestType:
   valuesYamlPath: Values.yaml
   addValuesYamlPath: Add Values.yaml
   varsYAMLPath: Vars.yaml path
-  addVarsYAMLPath: Auto Scaling path
+  addVarsYAMLPath: Auto Vars.yaml path
   autoScalerYAMLPath: AutoScaler.yaml
   addAutoScalerYAMLPath: Add AutoScaler.yaml
   cfCliVersion: CLI Version
@@ -407,7 +407,7 @@ manifestTypeLabels:
   EcsScalableTargetDefinition: 'ECS Scalable Target'
   ReleaseRepo: Release Repo Manifest
   TASManifest: TAS Manifest
-  VarsYAML: Vars YAML
+  VarsYAML: Vars
   Autoscaler: AutoScaler
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'

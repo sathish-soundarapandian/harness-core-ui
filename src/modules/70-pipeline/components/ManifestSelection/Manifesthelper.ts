@@ -71,36 +71,31 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   AutoScaler: 'AutoScaler'
 }
 
-export type TASManifestType = 'varsPaths' | 'autoScalerPath'
-
-export type ManifestMetaData = {
-  path: string
-  pathLabel: StringKeys
-  addPathLabel: StringKeys
-  pathKeyMap: string
-  allowOnlyOneFilePath: boolean
-  icon: IconName
-}
-
-export const TASManifestToPaths: TASManifestType[] = ['varsPaths', 'autoScalerPath']
+export const TASManifestAllowedPaths = [ManifestDataType.Vars, ManifestDataType.AutoScaler]
 
 export const ManifestToPathMap: Record<PrimaryManifestType, string> = {
   K8sManifest: 'Values',
   HelmChart: 'Values',
   OpenshiftTemplate: 'OpenshiftParam',
-  Kustomize: 'KustomizePatches'
+  Kustomize: 'KustomizePatches',
+  Vars: 'Vars',
+  AutoScaler: 'AutoScaler'
 }
 export const ManifestToPathLabelMap: Record<PrimaryManifestType, StringKeys> = {
   K8sManifest: 'pipeline.manifestType.valuesYamlPath',
   HelmChart: 'pipeline.manifestType.valuesYamlPath',
   OpenshiftTemplate: 'pipeline.manifestType.paramsYamlPath',
-  Kustomize: 'pipeline.manifestTypeLabels.KustomizePatches'
+  Kustomize: 'pipeline.manifestTypeLabels.KustomizePatches',
+  Vars: 'pipeline.manifestType.addVarsYAMLPath',
+  AutoScaler: 'pipeline.manifestType.addAutoScalerYAMLPath'
 }
 export const ManifestToPathKeyMap: Record<PrimaryManifestType, string> = {
   K8sManifest: 'valuesPaths',
   HelmChart: 'valuesPaths',
   OpenshiftTemplate: 'paramsPaths',
-  Kustomize: 'patchesPaths'
+  Kustomize: 'patchesPaths',
+  Vars: 'varsPaths',
+  AutoScaler: 'autoScalerPath'
 }
 
 export const ManifestStoreMap: { [key: string]: ManifestStores } = {
@@ -206,25 +201,6 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   AutoScaler: 'autoScaler'
 }
 
-export const TASManifestTypeMetaData: Record<TASManifestType, ManifestMetaData> = {
-  varsPaths: {
-    path: 'Vars',
-    pathLabel: 'pipeline.manifestType.varsYAMLPath',
-    addPathLabel: 'pipeline.manifestType.addVarsYAMLPath',
-    pathKeyMap: 'varsPaths',
-    allowOnlyOneFilePath: false,
-    icon: manifestTypeIcons.Vars
-  },
-  autoScalerPath: {
-    path: 'AutoScaler',
-    pathLabel: 'pipeline.manifestType.autoScalerYAMLPath',
-    addPathLabel: 'pipeline.manifestType.addAutoScalerYAMLPath',
-    pathKeyMap: 'autoScalerPath',
-    allowOnlyOneFilePath: true,
-    icon: manifestTypeIcons.AutoScaler
-  }
-}
-
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
   K8sManifest: 'pipeline.manifestTypeLabels.K8sManifest',
   Values: 'pipeline.manifestTypeLabels.ValuesYaml',
@@ -249,7 +225,6 @@ export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> =
 ]
 
 export const cfCliVersions: Array<{ label: string; value: CLIVersionOptions }> = [
-  { label: 'CLI Version 6.0', value: 'V6' },
   { label: 'CLI Version 7.0', value: 'V7' }
 ]
 

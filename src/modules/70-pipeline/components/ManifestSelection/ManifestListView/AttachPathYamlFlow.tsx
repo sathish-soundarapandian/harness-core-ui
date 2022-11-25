@@ -18,11 +18,12 @@ import {
   MultiTypeInputType,
   Icon,
   AllowedTypes,
-  Heading
+  Heading,
+  FormikForm,
+  IconName
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { defaultTo } from 'lodash-es'
@@ -30,7 +31,7 @@ import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
-import { ManifestStoreMap, ManifestToPathLabelMap, ManifestToPathMap, ManifestMetaData } from '../Manifesthelper'
+import { ManifestStoreMap, ManifestToPathLabelMap, ManifestToPathMap } from '../Manifesthelper'
 import type { ManifestStores, PrimaryManifestType } from '../ManifestInterface'
 import DragnDropPaths from '../DragnDropPaths'
 import { removeEmptyFieldsFromStringArray } from '../ManifestWizardSteps/ManifestUtils'
@@ -47,7 +48,7 @@ interface AttachPathYamlFlowType {
   removeValuesYaml: (index: number) => void
   valuesPaths: string[]
   isReadonly: boolean
-  valuesPathMetaData?: ManifestMetaData
+  valuesIcon?: IconName
 }
 
 function AttachPathYamlFlow({
@@ -60,11 +61,11 @@ function AttachPathYamlFlow({
   attachPathYaml,
   removeValuesYaml,
   isReadonly,
-  valuesPathMetaData
+  valuesIcon
 }: AttachPathYamlFlowType): React.ReactElement | null {
   const { getString } = useStrings()
 
-  const allowOnlyOneFilePath = defaultTo(valuesPathMetaData?.allowOnlyOneFilePath, false)
+  const allowOnlyOneFilePath = shouldAllowOnlyOneFilePath(manifestType)
   const getValuesPathInitialValue = (): string[] | Array<{ path: string; uuid: string }> => {
     if (manifestStore === ManifestStoreMap.Harness) {
       return valuesPaths
@@ -127,11 +128,8 @@ function AttachPathYamlFlow({
           enableReinitialize={true}
         >
           {formik => {
-            const path = ManifestToPathMap[manifestType] || valuesPathMetaData?.path
-            const pathLabel = ManifestToPathLabelMap[manifestType] || valuesPathMetaData?.pathLabel
-            const allowSingleFilePathAddition = manifestType ? shouldAllowOnlyOneFilePath(manifestType) : false
             return (
-              <Form>
+              <FormikForm>
                 <Layout.Vertical>
                   <Heading
                     margin={{ bottom: 'xlarge' }}
@@ -139,21 +137,23 @@ function AttachPathYamlFlow({
                     font={{ size: 'medium', weight: 'bold' }}
                     color={Color.GREY_900}
                   >
-                    {valuesPathMetaData
-                      ? getString(valuesPathMetaData.addPathLabel)
-                      : getString('pipeline.manifestType.addValuesYamlPath')}
+                    {getString(
+                      defaultTo(ManifestToPathLabelMap[manifestType], 'pipeline.manifestType.addValuesYamlPath')
+                    )}
                   </Heading>
-                  {path && manifestStore !== ManifestStoreMap.Harness ? (
+                  {ManifestToPathMap[manifestType] && manifestStore !== ManifestStoreMap.Harness ? (
                     <DragnDropPaths
                       formik={formik}
                       expressions={expressions}
                       allowableTypes={allowableTypes}
                       fieldPath="valuesPaths"
-                      pathLabel={pathLabel && getString(pathLabel)}
+                      pathLabel={
+                        ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])
+                      }
                       placeholder={getString('pipeline.manifestType.pathPlaceholder')}
                       defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                       dragDropFieldWidth={400}
-                      allowOnlyOneFilePath={allowSingleFilePathAddition}
+                      allowOnlyOneFilePath={allowOnlyOneFilePath}
                     />
                   ) : (
                     <>
@@ -169,7 +169,7 @@ function AttachPathYamlFlow({
                           disableTypeSelection: false,
                           label: <Text>{getString('pipeline.manifestType.pathPlaceholder')}</Text>
                         }}
-                        restrictToSingleEntry={allowSingleFilePathAddition}
+                        restrictToSingleEntry={allowOnlyOneFilePath}
                       />
                     </>
                   )}
@@ -177,7 +177,7 @@ function AttachPathYamlFlow({
                     <Button variation={ButtonVariation.PRIMARY} type="submit" text={getString('submit')} />
                   </Layout.Horizontal>
                 </Layout.Vertical>
-              </Form>
+              </FormikForm>
             )
           }}
         </Formik>
@@ -185,10 +185,8 @@ function AttachPathYamlFlow({
     ),
     [valuesPaths]
   )
-  const hideAddManifest = valuesPathMetaData
-    ? allowOnlyOneFilePath && valuesPaths?.length === 1 && !isReadonly
-    : isReadonly
-  const valuesPathsIcon = defaultTo(valuesPathMetaData?.icon, 'valuesFIle')
+  const hideAddManifest = (allowOnlyOneFilePath && valuesPaths?.length === 1) || isReadonly
+  const valuesPathsIcon = defaultTo(valuesIcon, 'valuesFIle')
 
   return (
     <section className={css.valuesList}>
@@ -222,11 +220,7 @@ function AttachPathYamlFlow({
         ))
       ) : (
         <div className={css.valuesPathList}>
-          {valuesPathMetaData
-            ? `${getString(valuesPathMetaData.pathLabel)}: ${valuesPaths}`
-            : `${
-                ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])
-              }: ${valuesPaths}`}
+          {`${ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])}: ${valuesPaths}`}
         </div>
       )}
       {!hideAddManifest && (
@@ -237,7 +231,7 @@ function AttachPathYamlFlow({
           variation={ButtonVariation.LINK}
           onClick={showModal}
           text={getString('pipeline.manifestType.attachPath', {
-            manifestPath: valuesPathMetaData ? valuesPathMetaData.path : ManifestToPathMap[manifestType]
+            manifestPath: ManifestToPathMap[manifestType]
           })}
         />
       )}
