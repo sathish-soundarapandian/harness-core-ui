@@ -376,7 +376,9 @@ const getRequestOptions = (): Partial<RequestInit> => {
   const headers: RequestInit['headers'] = {}
 
   if (token && token.length > 0) {
-    headers.Authorization = `Bearer ${token}`
+    if (!window.noAuthHeader) {
+      headers.Authorization = `Bearer ${token}`
+    }
   }
 
   return { headers }

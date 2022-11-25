@@ -160,7 +160,9 @@ const getHeaders = (headers: RequestInit['headers'] = {}): RequestInit['headers'
 
   const token = SessionToken.getToken()
   if (token && token.length > 0) {
-    retHeaders.Authorization = `Bearer ${token}`
+    if (!window.noAuthHeader) {
+      retHeaders.Authorization = `Bearer ${token}`
+    }
   }
 
   // add/overwrite passed headers
