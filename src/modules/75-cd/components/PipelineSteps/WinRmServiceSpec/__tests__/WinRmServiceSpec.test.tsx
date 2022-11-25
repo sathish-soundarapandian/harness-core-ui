@@ -197,66 +197,6 @@ describe('StepWidget tests', () => {
     expect(variables).toBeDefined()
   })
 
-  test('validates input set correctly with errors', () => {
-    const response = new WinRmServiceSpec().validateInputSet({
-      data: {
-        variables: [
-          { name: 'myVar1', type: 'Number' },
-          { name: 'myVar1', type: 'String' },
-          { name: 'myVar1', type: 'Secret' }
-        ],
-        artifacts: {
-          primary: {
-            spec: {},
-            type: 'Jenkins'
-          }
-        },
-        manifests: [
-          {
-            manifest: {
-              identifier: 'testhelmmanifest',
-              spec: {
-                chartName: '<+input>',
-                chartVersion: '<+input>',
-                helmVersion: 'V2',
-                skipResourceVersioning: false
-              },
-              type: 'HelmChart'
-            }
-          }
-        ]
-      },
-      template: {
-        variables: [{ name: 'myVar1', type: 'String' }],
-        artifacts: {
-          primary: {
-            spec: {
-              connectorRef: RUNTIME_INPUT_VALUE,
-              imagePath: RUNTIME_INPUT_VALUE,
-              tag: RUNTIME_INPUT_VALUE,
-              tagRegex: RUNTIME_INPUT_VALUE
-            },
-            type: 'Jenkins'
-          }
-        }
-      },
-      getString: () => 'abc',
-      viewType: StepViewType.DeploymentForm
-    })
-
-    const errorResponse = {
-      artifacts: {
-        primary: {
-          spec: {
-            connectorRef: 'abc'
-          }
-        }
-      }
-    }
-
-    expect(response).toEqual(errorResponse)
-  })
-
   test('validates input set correctly with no errors', () => {
     const response = new WinRmServiceSpec().validateInputSet({
       data: {
