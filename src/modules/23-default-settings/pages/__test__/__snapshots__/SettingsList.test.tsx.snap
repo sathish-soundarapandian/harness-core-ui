@@ -656,7 +656,7 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                       data-testid="CI-details"
                     >
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -768,7 +768,7 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                         </p>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -872,7 +872,7 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -975,7 +975,7 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -1076,7 +1076,7 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                         </p>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -1179,7 +1179,7 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -1261,7 +1261,7 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -1739,7 +1739,7 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                       data-testid="CI-details"
                     >
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -1816,7 +1816,7 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                         </p>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -1920,7 +1920,7 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -2023,7 +2023,7 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -2124,7 +2124,7 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                         </p>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -2227,7 +2227,7 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -2309,7 +2309,7 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -2787,7 +2787,7 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                       data-testid="CI-details"
                     >
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -2864,7 +2864,7 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                         </p>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -2968,7 +2968,7 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -3071,7 +3071,7 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -3172,7 +3172,7 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                         </p>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -3275,7 +3275,7 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -3357,7 +3357,7 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -3835,7 +3835,7 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                       data-testid="CI-details"
                     >
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -3912,7 +3912,7 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                         </p>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -4016,7 +4016,7 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -4119,7 +4119,7 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -4220,7 +4220,7 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                         </p>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -4323,7 +4323,7 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
@@ -4405,7 +4405,7 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                         </div>
                       </div>
                       <div
-                        class="Layout--horizontal StyledProps--main"
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-top-small StyledProps--padding-bottom-small"
                       >
                         <div
                           class="StyledProps--font StyledProps--main settingLabelContainer StyledProps--flex StyledProps--flex-alignItems-center"
