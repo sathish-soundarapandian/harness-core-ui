@@ -10,12 +10,15 @@ import { capitalize, get, isEmpty, unset } from 'lodash-es'
 import type { IconName } from '@blueprintjs/core'
 import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import type { FormikProps } from 'formik'
+import { useFormikContext } from 'formik'
 import produce from 'immer'
 import { ArtifactTitleIdByType, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
 import type { ServiceDefinition } from 'services/cd-ng'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CDOnboardingActions } from '@common/constants/TrackingConstants'
+import { ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
 
 import type { ConfigureServiceInterface } from '../ConfigureService'
@@ -34,7 +37,6 @@ import css from '../../DeployProvisioningWizard/DeployProvisioningWizard.module.
 import moduleCss from '../ConfigureService.module.scss'
 
 interface ArtifactSelectionProps {
-  formikProps: FormikProps<ConfigureServiceInterface>
   disableNextBtn: () => void
   enableNextBtn: () => void
 }
@@ -44,15 +46,17 @@ const DefaultArtifactStepStatus = new Map<string, StepStatus>([
   ['ImagePath', StepStatus.ToDo]
 ])
 
-const ArtifactSelection = ({ formikProps, enableNextBtn, disableNextBtn }: ArtifactSelectionProps): JSX.Element => {
+const ArtifactSelection = ({ enableNextBtn, disableNextBtn }: ArtifactSelectionProps): JSX.Element => {
   const {
     state: { service: serviceData },
     saveServiceData
   } = useCDOnboardingContext()
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
+  const { values, setFieldValue } = useFormikContext<ConfigureServiceInterface>()
   const [artifactStepStatus, setArtifactStepStatus] = React.useState<Map<string, StepStatus>>(DefaultArtifactStepStatus)
   const [selectedArtifact, setSelectedArtifact] = React.useState<ArtifactType>(
-    formikProps?.values?.artifactType || ENABLED_ARTIFACT_TYPES.DockerRegistry
+    values?.artifactType || ENABLED_ARTIFACT_TYPES.DockerRegistry
   )
 
   const serviceDefinitionType =
@@ -64,13 +68,18 @@ const ArtifactSelection = ({ formikProps, enableNextBtn, disableNextBtn }: Artif
         label: getString(ArtifactTitleIdByType[artifact]),
         icon: ArtifactIconByType[artifact] as IconName,
         value: artifact,
-        disabled: ![ENABLED_ARTIFACT_TYPES.DockerRegistry].includes(artifact)
+        disabled: ![ENABLED_ARTIFACT_TYPES.DockerRegistry, ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry].includes(
+          artifact
+        )
       })),
     [artifactTypes, getString]
   )
 
   React.useEffect(() => {
-    selectedArtifact && formikProps?.setFieldValue('artifactType', selectedArtifact)
+    if (selectedArtifact) {
+      setFieldValue('artifactType', selectedArtifact)
+      setFieldValue('artifactData', {})
+    }
     // reset existing artifact Data
     if (selectedArtifact !== serviceData?.data?.artifactType) {
       const updatedContextService = produce(serviceData as ServiceDataType, draft => {
@@ -79,45 +88,50 @@ const ArtifactSelection = ({ formikProps, enableNextBtn, disableNextBtn }: Artif
 
       saveServiceData(updatedContextService)
     }
+    trackEvent(CDOnboardingActions.SelectArtifactType, { artifactType: selectedArtifact })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedArtifact])
 
   React.useEffect(() => {
-    if (formikProps?.values?.artifactToDeploy === BinaryLabels.NO) {
+    if (values?.artifactToDeploy === BinaryLabels.NO) {
       enableNextBtn()
       return
     }
     artifactStepStatus.get('ImagePath') !== StepStatus.ToDo ? enableNextBtn() : disableNextBtn()
-  }, [artifactStepStatus, disableNextBtn, enableNextBtn, formikProps?.values])
+  }, [artifactStepStatus, disableNextBtn, enableNextBtn, values])
 
   return (
     <>
       {/* ARTIFACT SELECTION */}
-      <Layout.Vertical padding={{ top: 'xxlarge' }}>
-        <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'large' }} color={Color.GREY_600}>
-          {getString('cd.getStartedWithCD.artifactToDeploy')}
-        </Text>
-        <Layout.Horizontal>
-          {BinaryOptions.map(option => {
-            return (
-              <ButtonWrapper
-                key={option.label}
-                option={option}
-                label={capitalize(option.label)}
-                onClick={(value: string) => {
-                  formikProps?.setFieldValue('artifactToDeploy', value)
-                }}
-                intent={formikProps?.values?.artifactToDeploy === option.label ? 'primary' : 'none'}
-                margin={{ bottom: 'small' }}
-                className={css.radioButton}
-              />
-            )
-          })}
-        </Layout.Horizontal>
-      </Layout.Vertical>
-      <Container className={css.borderBottomClass} padding={{ top: 'large' }} />
-      {formikProps?.values?.artifactToDeploy === BinaryLabels.YES && (
+      {values?.manifestStoreType !== ManifestStoreMap.Harness && (
+        <>
+          <Layout.Vertical padding={{ top: 'xxlarge' }}>
+            <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'large' }} color={Color.GREY_600}>
+              {getString('cd.getStartedWithCD.artifactToDeploy')}
+            </Text>
+            <Layout.Horizontal>
+              {BinaryOptions.map(option => {
+                return (
+                  <ButtonWrapper
+                    key={option.label}
+                    option={option}
+                    label={capitalize(option.label)}
+                    onClick={(value: string) => {
+                      setFieldValue('artifactToDeploy', value)
+                    }}
+                    intent={values?.artifactToDeploy === option.label ? 'primary' : 'none'}
+                    margin={{ bottom: 'small' }}
+                    className={css.radioButton}
+                  />
+                )
+              })}
+            </Layout.Horizontal>
+          </Layout.Vertical>
+          <Container className={css.borderBottomClass} padding={{ top: 'large' }} />
+        </>
+      )}
+      {values?.artifactToDeploy === BinaryLabels.YES && (
         <>
           {/* ARTIFACT TYPE SELECTION */}
           <Layout.Vertical padding={{ top: 'xxlarge' }}>
@@ -134,7 +148,7 @@ const ArtifactSelection = ({ formikProps, enableNextBtn, disableNextBtn }: Artif
                     onClick={(value: string) => {
                       setSelectedArtifact(value as ArtifactType)
                     }}
-                    intent={formikProps?.values?.artifactType === option.value ? 'primary' : 'none'}
+                    intent={values?.artifactType === option.value ? 'primary' : 'none'}
                     margin={{ bottom: 'small' }}
                     className={css.radioButton}
                   />
@@ -143,21 +157,21 @@ const ArtifactSelection = ({ formikProps, enableNextBtn, disableNextBtn }: Artif
             </Layout.Horizontal>
           </Layout.Vertical>
           <Container className={css.borderBottomClass} padding={{ top: 'large' }} />
-          {!isEmpty(formikProps?.values?.artifactType) && (
+          {!isEmpty(values?.artifactType) && (
             <Container padding="large" className={moduleCss.connectorContainer}>
               <Layout.Vertical margin={{ bottom: 'large' }}>
                 <Layout.Horizontal margin={{ bottom: 'large', top: 'large' }}>
-                  <Icon name={ArtifactIconByType[formikProps?.values?.artifactType as ArtifactType]} size={28} flex />
+                  <Icon name={ArtifactIconByType[values?.artifactType as ArtifactType]} size={28} flex />
                   <Text font={{ variation: FontVariation.H5 }} padding={{ left: 'large' }}>
                     {`${getString('cd.getStartedWithCD.connectTo')} ${getString(
-                      ArtifactTitleIdByType[formikProps?.values?.artifactType as ArtifactType]
+                      ArtifactTitleIdByType[values?.artifactType as ArtifactType]
                     )}`}
                   </Text>
                 </Layout.Horizontal>
                 <ul className={moduleCss.progress}>
                   <li className={`${moduleCss.progressItem} ${moduleCss.progressItemActive}`}>
                     <Text font={{ variation: FontVariation.H5 }} padding={{ left: 'small', bottom: 'small' }}>
-                      {getString('common.getStarted.authMethod')}
+                      {getString('cd.getStartedWithCD.selectAuthMethod')}
                     </Text>
                     <ArtifactoryAuthStep
                       onSuccess={status => {
@@ -177,7 +191,7 @@ const ArtifactSelection = ({ formikProps, enableNextBtn, disableNextBtn }: Artif
                       <Text font={{ variation: FontVariation.H5 }} padding={{ left: 'small', bottom: 'small' }}>
                         {getString('pipeline.imagePathLabel')}
                       </Text>
-                      <ArtifactImagePath formik={formikProps} />
+                      <ArtifactImagePath />
                     </li>
                   )}
                 </ul>

@@ -12,6 +12,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import produce from 'immer'
 import { capitalize, defaultTo, get, isEmpty, noop, set } from 'lodash-es'
+import { HelpPanel } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import {
   EnvironmentRequestDTO,
@@ -27,6 +28,8 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { DelegateTypes } from '@delegates/constants'
 import type { RestResponseDelegateSetupDetails } from 'services/portal'
 import { StringUtils } from '@common/exports'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { CreateK8sDelegate } from '../CreateKubernetesDelegateWizard/CreateK8sDelegate'
 import { CreateDockerDelegate } from '../CreateDockerDelegateWizard/CreateDockerDelegate'
 import { GoogleK8sService } from '../HelpTexts/GoogleK8sService'
@@ -42,8 +45,10 @@ import {
   newEnvironmentState
 } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
+import { RightDrawer } from '../ConfigureService/ManifestRepoTypes/RightDrawer/RightDrawer'
 import DelegateDetailsCard from './DelegateDetailsCard'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
+import moduleCss from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
 export interface DelegateSelectorRefInstance {
   isDelegateInstalled?: boolean
@@ -77,6 +82,7 @@ const DelegateSelectorWizardRef = (
     state: { delegate: delegateData, service: serviceData }
   } = useCDOnboardingContext()
 
+  const { trackEvent } = useTelemetry()
   const [delegateType, setDelegateType] = React.useState<string | undefined>(
     delegateData?.delegateType || DelegateTypes.KUBERNETES_CLUSTER
   )
@@ -177,7 +183,8 @@ const DelegateSelectorWizardRef = (
     isEditMode: false,
     isGitSyncEnabled: false,
     afterSuccessHandler: noop,
-    skipGoveranceCheck: true
+    skipGoveranceCheck: true,
+    hideSuccessToast: true
   })
 
   const handleSubmit = React.useCallback(
@@ -251,13 +258,14 @@ const DelegateSelectorWizardRef = (
             .catch(e => {
               throw e
             })
-          setEnvironmentEntities({
+          const envEntites = {
             connector: newEnvironmentState.connector.name,
             delegate: delegateName.current as string,
             environment: ENV_ID,
             infrastructure: INFRASTRUCTURE_ID,
             namespace: NAMESPACE
-          })
+          }
+          setEnvironmentEntities(envEntites)
 
           const updatedContextDelegate = produce(newDelegateState.delegate, draft => {
             set(draft, 'delegateType', delegateType)
@@ -269,9 +277,9 @@ const DelegateSelectorWizardRef = (
             set(draft, 'environmentEntities.namespace', NAMESPACE)
             set(draft, 'delegateYAMLResponse', yamlResponse)
           })
-
           saveInfrastructureData(updatedContextInfra)
           saveDelegateData(updatedContextDelegate)
+          trackEvent(CDOnboardingActions.EnvironmentEntitiesCreation, envEntites)
           enableNextBtn()
           return Promise.resolve()
         } else {
@@ -297,7 +305,8 @@ const DelegateSelectorWizardRef = (
       saveEnvironmentData,
       saveInfrastructureData,
       serviceData,
-      showError
+      showError,
+      trackEvent
     ]
   )
 
@@ -344,20 +353,29 @@ const DelegateSelectorWizardRef = (
       <Layout.Horizontal>
         <Layout.Vertical width={'55%'}>
           <Container>
-            <Text font={{ variation: FontVariation.H3, weight: 'semi-bold' }} data-tooltip-id="cdOnboardingEnvironment">
-              {getString('cd.getStartedWithCD.configureEnvironment')}
+            <Text
+              font={{ variation: FontVariation.H3, weight: 'semi-bold' }}
+              margin={{ bottom: 'small' }}
+              data-tooltip-id="cdOnboardingEnvironment"
+            >
+              {getString('cd.getStartedWithCD.connectHarnessEnv')}
               <HarnessDocTooltip tooltipId="cdOnboardingEnvironment" useStandAlone={true} />
+            </Text>
+            <Text font="normal" className={css.marginBottomClass}>
+              {getString('cd.getStartedWithCD.delegateDescription')}
             </Text>
             <div className={css.borderBottomClass} />
             <Text
               font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
-              className={css.marginBottomClass}
+              margin={{ bottom: 'small' }}
               data-tooltip-id="cdOnboardingInstallDelegate"
             >
               {getString('cd.runDelegate')}
               <HarnessDocTooltip tooltipId="cdOnboardingInstallDelegate" useStandAlone={true} />
             </Text>
-
+            <Text font="normal" className={css.marginBottomClass}>
+              {getString('cd.getStartedWithCD.runDelegateSubTitle')}
+            </Text>
             <Button
               onClick={() => handleDelegateTypeChange(DelegateTypes.KUBERNETES_CLUSTER)}
               className={cx(css.kubernetes, delegateType === DelegateTypes.KUBERNETES_CLUSTER ? css.active : undefined)}
@@ -409,9 +427,21 @@ const DelegateSelectorWizardRef = (
           )}
         </Layout.Vertical>
         {helpPanelVisible && (
-          <Layout.Vertical width={'45%'} padding={'large'} background={Color.PRIMARY_1} flex={{ alignItems: 'center' }}>
-            <div className={css.tabs}>
-              <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.marginBottomClass}>
+          <RightDrawer isOpen={helpPanelVisible} setIsOpen={isHelpPanelVisible}>
+            <Container
+              flex={{ alignItems: 'center', justifyContent: 'space-between' }}
+              margin={{ bottom: 'medium' }}
+              padding={'medium'}
+              className={css.troubleShootTitle}
+            >
+              <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
+                <Text lineClamp={1} color={Color.BLACK} font={{ variation: FontVariation.H4 }}>
+                  Help & Troubleshoot
+                </Text>
+              </Layout.Horizontal>
+            </Container>
+            <Container className={css.tabsContainer}>
+              <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} margin={{ bottom: 'small' }}>
                 {getString('cd.instructionsCluster')}
               </Text>
               <Tabs
@@ -428,9 +458,12 @@ const DelegateSelectorWizardRef = (
                   { id: 'minikube', title: getString('cd.minikube'), panel: <Minikube /> }
                 ]}
               />
-            </div>
-          </Layout.Vertical>
+            </Container>
+          </RightDrawer>
         )}
+        <Container className={moduleCss.helpPanelContainer}>
+          <HelpPanel referenceId="cdOnboardConnecttoEnvironment" />
+        </Container>
       </Layout.Horizontal>
     </Layout.Vertical>
   )

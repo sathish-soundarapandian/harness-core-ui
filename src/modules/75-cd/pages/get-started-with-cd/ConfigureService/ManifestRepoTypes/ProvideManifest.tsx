@@ -10,8 +10,8 @@ import { AllowedTypesWithRunTime, Layout, MultiTypeInputType, StepProps, Text } 
 
 import { FontVariation } from '@harness/design-system'
 import produce from 'immer'
-import { defaultTo, get, omit, set } from 'lodash-es'
-import type { FormikProps } from 'formik'
+import { get, omit, set } from 'lodash-es'
+import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, UserRepoResponse } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -23,11 +23,6 @@ import { useCDOnboardingContext } from '../../CDOnboardingStore'
 import type { ConfigureServiceInterface } from '../ConfigureService'
 import { getFullRepoName } from '../../DeployProvisioningWizard/Constants'
 
-interface ProvideManifestProps {
-  initialValues: ManifestConfig
-  formikProps: FormikProps<ConfigureServiceInterface>
-}
-
 export type ManifestLastTypeProps = StepProps<ConnectorConfigDTO> &
   ManifestLastStepProps & {
     isOnboardingFlow: boolean
@@ -38,7 +33,7 @@ export interface ManifestSelectionLastStepsParams {
   lastStepProps: ManifestLastTypeProps
 }
 
-export function useManifestTypeLastSteps(params: ManifestSelectionLastStepsParams) {
+export function useManifestTypeLastSteps(params: ManifestSelectionLastStepsParams): JSX.Element {
   const { selectedManifestType, lastStepProps } = params
   switch (selectedManifestType) {
     case ManifestDataType.HelmChart:
@@ -47,16 +42,17 @@ export function useManifestTypeLastSteps(params: ManifestSelectionLastStepsParam
       return <K8sValuesManifest {...lastStepProps} />
   }
 }
-const ProvideManifestRef = (props: ProvideManifestProps): React.ReactElement => {
+
+export const ProvideManifest = (): React.ReactElement => {
   const { getString } = useStrings()
-  const { formikProps } = props
+  const { values, setFieldValue } = useFormikContext<ConfigureServiceInterface>()
   const {
     state: { service: serviceData }
   } = useCDOnboardingContext()
 
   const { expressions } = useVariablesExpression()
   const connectorResponse = get(serviceData, 'data.connectorRef') as ConnectorConfigDTO
-  const connectorData = omit(connectorResponse, ['spec.url']) // omitting to nbot show repodetails from component
+  const connectorData = omit(connectorResponse, ['spec.url']) // omitting to not show repoDetails from component
   const scope = 'account'
   const prevStepData = {
     connectorRef: {
@@ -66,14 +62,23 @@ const ProvideManifestRef = (props: ProvideManifestProps): React.ReactElement => 
       scope,
       live: connectorData?.status?.status === 'SUCCESS'
     },
-    selectedManifest: formikProps?.values?.manifestData?.type,
-    store: formikProps?.values?.manifestStoreType
+    selectedManifest: values?.manifestData?.type,
+    store: values?.manifestStoreType
   }
   const allowableTypes: AllowedTypesWithRunTime[] = [
     MultiTypeInputType.FIXED,
     MultiTypeInputType.RUNTIME,
     MultiTypeInputType.EXPRESSION
   ]
+
+  const getManifestInitialValues = (): ManifestConfig => {
+    const updatedinitialValieWithUserRepo = produce(values?.manifestConfig?.manifest as ManifestConfig, draft => {
+      if (draft) {
+        values?.repository && set(draft, 'spec.store.spec.repoName', getFullRepoName(values?.repository))
+      }
+    })
+    return updatedinitialValieWithUserRepo
+  }
 
   const lastStepProps = React.useMemo((): ManifestLastTypeProps => {
     const manifestDetailsProps: ManifestLastStepProps & {
@@ -86,29 +91,24 @@ const ProvideManifestRef = (props: ProvideManifestProps): React.ReactElement => 
       expressions,
       allowableTypes,
       stepName: getString('pipeline.manifestType.manifestDetails'),
-      initialValues: defaultTo(serviceData?.serviceDefinition?.spec?.manifests?.[0]?.manifest, null) as ManifestConfig,
+      initialValues: getManifestInitialValues(),
       handleSubmit: (data: ManifestConfigWrapper) => {
         const updatedDataWithUserRepo = produce(data, draft => {
-          set(
-            draft,
-            'manifest.spec.store.spec.repoName',
-            getFullRepoName(serviceData?.data?.repoValues as UserRepoResponse)
-          )
+          set(draft, 'manifest.spec.store.spec.repoName', getFullRepoName(values?.repository as UserRepoResponse))
         })
-        formikProps?.setFieldValue('manifestConfig', updatedDataWithUserRepo)
+        setFieldValue('manifestConfig', updatedDataWithUserRepo)
       },
-      selectedManifest: formikProps?.values?.manifestData?.type as ManifestTypes,
+      selectedManifest: values?.manifestData?.type as ManifestTypes,
       manifestIdsList: [],
-      isReadonly: false, //readonly,
+      isReadonly: false,
       prevStepData: prevStepData
-      // formClassName:''
     }
-    if (formikProps?.values?.manifestData?.type === ManifestDataType.HelmChart) {
+    if (values?.manifestData?.type === ManifestDataType.HelmChart) {
       manifestDetailsProps.deploymentType = get(serviceData, 'serviceDefinition.type')
     }
     return manifestDetailsProps
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formikProps?.values])
+  }, [values])
 
   return (
     <Layout.Vertical spacing="small" padding={{ bottom: 'xxlarge' }}>
@@ -116,11 +116,9 @@ const ProvideManifestRef = (props: ProvideManifestProps): React.ReactElement => 
         {getString('cd.getStartedWithCD.provideManifest')}
       </Text>
       {useManifestTypeLastSteps({
-        selectedManifestType: formikProps?.values?.manifestData?.type,
+        selectedManifestType: values?.manifestData?.type,
         lastStepProps
       })}
     </Layout.Vertical>
   )
 }
-
-export const ProvideManifest = React.forwardRef(ProvideManifestRef)

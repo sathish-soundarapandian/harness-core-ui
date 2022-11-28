@@ -10,8 +10,8 @@ import { render, act, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { SelectRepository } from '../SelectRepository'
-import { repos } from '../../DeployProvisioningWizard/__tests__/mocks'
-import { getFullRepoName } from '../../DeployProvisioningWizard/Constants'
+import { repos } from '../../../DeployProvisioningWizard/__tests__/mocks'
+import { getFullRepoName } from '../../../DeployProvisioningWizard/Constants'
 
 jest.mock('services/cd-ng', () => ({
   useGetListOfAllReposByRefConnector: jest.fn().mockImplementation(() => {

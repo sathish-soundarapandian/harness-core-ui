@@ -1,0 +1,18 @@
+{
+  "serviceV2YamlMetadataList": [
+    {
+      "serviceIdentifier": "svc_3",
+      "serviceYaml": "service:\n  name: Service 3\n  identifier: svc_3\n  tags: {}\n  serviceDefinition:\n    spec:\n      manifests:\n        - manifest:\n            identifier: foo1\n            type: K8sManifest\n            spec:\n              store:\n                type: Git\n                spec:\n                  connectorRef: <+input>\n                  gitFetchType: Branch\n                  paths: <+input>\n                  repoName: <+input>\n                  branch: <+input>\n              skipResourceVersioning: false\n    type: Kubernetes\n  gitOpsEnabled: false\n",
+      "inputSetTemplateYaml": "serviceInputs:\n  serviceDefinition:\n    type: \"Kubernetes\"\n    spec:\n      manifests:\n      - manifest:\n          identifier: \"foo1\"\n          type: \"K8sManifest\"\n          spec:\n            store:\n              type: \"Git\"\n              spec:\n                connectorRef: \"<+input>\"\n                paths: \"<+input>\"\n                repoName: \"<+input>\"\n                branch: \"<+input>\"\n"
+    },
+    {
+      "serviceIdentifier": "svc_1",
+      "serviceYaml": "service:\n  name: Service 1\n  identifier: svc_1\n  gitOpsEnabled: false\n  serviceDefinition:\n    type: Kubernetes\n    spec:\n      artifacts:\n        primary:\n          spec:\n            connectorRef: <+input>\n            imagePath: <+input>\n            tag: <+input>\n          type: DockerRegistry\n",
+      "inputSetTemplateYaml": "serviceInputs:\n  serviceDefinition:\n    type: \"Kubernetes\"\n    spec:\n      artifacts:\n        primary:\n          type: \"DockerRegistry\"\n          spec:\n            connectorRef: \"<+input>\"\n            imagePath: \"<+input>\"\n            tag: \"<+input>\"\n"
+    },
+    {
+      "serviceIdentifier": "svc_2",
+      "serviceYaml": "service:\n  name: Service 2\n  identifier: svc_2\n  tags: {}\n  serviceDefinition:\n    spec: {}\n    type: Kubernetes\n  gitOpsEnabled: false\n"
+    }
+  ]
+}

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Container,
   Button,
@@ -16,21 +16,28 @@ import {
   useConfirmationDialog,
   Text,
   getErrorInfoFromErrorObject,
-  useToaster
+  useToaster,
+  Dialog
 } from '@harness/uicore'
-
+import cx from 'classnames'
 import { Color, Intent } from '@harness/design-system'
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
+import { useModalHook } from '@harness/use-modal'
+import { Classes, IDialogProps } from '@blueprintjs/core'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { createPipelineV2Promise, ResponsePipelineSaveResponse } from 'services/pipeline-ng'
+import { createPipelineV2Promise, ResponsePipelineSaveResponse, useGetInputsetYaml } from 'services/pipeline-ng'
 import { Status } from '@common/utils/Constants'
 import routes from '@common/RouteDefinitions'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { StringUtils } from '@common/exports'
-import type { UserRepoResponse } from 'services/cd-ng'
+import type { ServiceDefinition, UserRepoResponse } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CDOnboardingActions } from '@common/constants/TrackingConstants'
+import { useGetServicesData } from '@cd/components/PipelineSteps/DeployServiceEntityStep/useGetServicesData'
+import { RunPipelineForm } from '@pipeline/components/RunPipelineModal/RunPipelineForm'
 import { WizardStep, StepStatus, DeployProvisiongWizardStepId, DeployProvisioningWizardProps } from './Constants'
 import { SelectDeploymentType, SelectDeploymentTypeRefInstance } from '../SelectWorkload/SelectDeploymentType'
 import type { SelectInfrastructureRefInstance } from '../SelectInfrastructure/SelectInfrastructure'
@@ -40,6 +47,7 @@ import {
   DEFAULT_PIPELINE_NAME,
   DEFAULT_PIPELINE_PAYLOAD,
   DOCUMENT_URL,
+  EMPTY_STRING,
   getUniqueEntityIdentifier,
   PipelineRefPayload
 } from '../CDOnboardingUtils'
@@ -55,27 +63,51 @@ const WizardStepOrder = [
 
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
   const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.SelectDeploymentType } = props
-  const { getString } = useStrings()
-  const [disableBtn, setDisableBtn] = useState<boolean>(false)
-  const [currentWizardStepId, setCurrentWizardStepId] =
-    useState<DeployProvisiongWizardStepId>(lastConfiguredWizardStepId)
   const {
     state: { service: serviceData, selectedSectionId, infrastructure, environment },
     setSelectedSectionId
   } = useCDOnboardingContext()
 
+  const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
   const query = useQueryParams()
-
   const history = useHistory()
   const { showError } = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+
+  const [disableBtn, setDisableBtn] = React.useState<boolean>(false)
+  const [currentWizardStepId, setCurrentWizardStepId] =
+    React.useState<DeployProvisiongWizardStepId>(lastConfiguredWizardStepId)
+  const [serviceIdentifier, setServiceIdentifier] = React.useState<string>(EMPTY_STRING)
+  const [showPageLoader, setShowPageLoader] = React.useState<boolean>(false)
+  const [inputSetYaml, setInputSetYaml] = React.useState(EMPTY_STRING)
+
   const SelectDeploymentTypeRef = React.useRef<SelectDeploymentTypeRefInstance | null>(null)
   const delegateSelectorRef = React.useRef<DelegateSelectorRefInstance | null>(null)
   const configureServiceRef = React.useRef<SelectInfrastructureRefInstance | null>(null)
 
-  const [showPageLoader, setShowPageLoader] = useState<boolean>(false)
+  const { servicesData, refetchServicesData } = useGetServicesData({
+    gitOpsEnabled: false,
+    serviceIdentifiers: [serviceIdentifier],
+    deploymentType: serviceData?.serviceDefinition?.type as ServiceDefinition['type']
+  })
 
-  const [wizardStepStatus, setWizardStepStatus] = useState<Map<DeployProvisiongWizardStepId, StepStatus>>(
+  const { data: inputSetYAMLData, loading } = useGetInputsetYaml({
+    planExecutionId: EMPTY_STRING,
+    queryParams: {
+      orgIdentifier,
+      projectIdentifier,
+      accountIdentifier: accountId
+    },
+    lazy: true,
+    requestOptions: {
+      headers: {
+        'content-type': 'application/yaml'
+      }
+    }
+  })
+
+  const [wizardStepStatus, setWizardStepStatus] = React.useState<Map<DeployProvisiongWizardStepId, StepStatus>>(
     new Map<DeployProvisiongWizardStepId, StepStatus>([
       [DeployProvisiongWizardStepId.SelectDeploymentType, StepStatus.InProgress],
       [DeployProvisiongWizardStepId.DelegateSelector, StepStatus.ToDo],
@@ -95,7 +127,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   }
 
   React.useEffect(() => {
-    const sectionId = (query as any).sectionId || ''
+    const sectionId = (query as any).sectionId || EMPTY_STRING
     if (sectionId?.length && WizardStepOrder.includes(sectionId)) {
       updateStepStatusFromContextTab(sectionId)
     } else {
@@ -104,6 +136,86 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSectionId])
+
+  React.useEffect(() => {
+    refetchServicesData()
+  }, [refetchServicesData, serviceIdentifier])
+
+  const serviceInputsObj = React.useMemo(() => {
+    const service = servicesData.find(svc => svc.service.identifier === serviceIdentifier)
+
+    if (isEmpty(service?.serviceInputs)) {
+      return {
+        serviceRef: serviceIdentifier
+      }
+    } else {
+      return {
+        serviceRef: serviceIdentifier,
+        serviceInputs: { ...service?.serviceInputs }
+      }
+    }
+  }, [serviceIdentifier, servicesData])
+
+  function onCloseRunPipelineModal(): void {
+    closeRunPipelineModal()
+    setInputSetYaml(EMPTY_STRING)
+  }
+  const runModalProps: IDialogProps = {
+    isOpen: true,
+    usePortal: true,
+    autoFocus: true,
+    canEscapeKeyClose: true,
+    canOutsideClickClose: false,
+    enforceFocus: false,
+    className: cx(css.runPipelineDialog, Classes.DIALOG),
+    isCloseButtonShown: false
+  }
+
+  React.useEffect(() => {
+    if (inputSetYAMLData) {
+      ;(inputSetYAMLData as unknown as Response).text().then(str => {
+        setInputSetYaml(str)
+      })
+    }
+  }, [inputSetYAMLData])
+
+  const [pipelineIdentifier, setPipelineIdentifier] = React.useState<string>(EMPTY_STRING)
+
+  const [openRunPipelineModal, closeRunPipelineModal] = useModalHook(
+    () =>
+      loading ? (
+        <PageSpinner />
+      ) : (
+        <Dialog {...runModalProps}>
+          <Layout.Vertical>
+            <RunPipelineForm
+              pipelineIdentifier={pipelineIdentifier}
+              orgIdentifier={orgIdentifier}
+              projectIdentifier={projectIdentifier}
+              accountId={accountId}
+              module={'cd'}
+              inputSetYAML={inputSetYaml || EMPTY_STRING}
+              source="executions"
+              onClose={() => {
+                onCloseRunPipelineModal()
+              }}
+              storeType={'INLINE'}
+            />
+            <Button
+              aria-label="close modal"
+              minimal
+              icon="cross"
+              iconProps={{ size: 20 }}
+              onClick={() => {
+                onCloseRunPipelineModal()
+              }}
+              className={css.crossIcon}
+            />
+          </Layout.Vertical>
+        </Dialog>
+      ),
+    [loading, inputSetYaml, pipelineIdentifier]
+  )
 
   const deletionContentText = React.useMemo(
     () => (
@@ -140,6 +252,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     )
     updateStepStatus([DeployProvisiongWizardStepId.ConfigureService], StepStatus.InProgress)
     updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.ToDo)
+    trackEvent(CDOnboardingActions.MoveToServiceSelection, {})
   }
 
   const { openDialog: showDelegateRequiredWarning } = useConfirmationDialog({
@@ -171,29 +284,31 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       const { serviceRef, environmentRef, infraStructureRef, deploymentType } = data
 
       if (!repoName || !serviceRef || !environmentRef || !infraStructureRef) {
-        return ''
+        return EMPTY_STRING
       }
       const uniquePipelineId = getUniqueEntityIdentifier(repoName)
-      const payload = DEFAULT_PIPELINE_PAYLOAD
-      payload.pipeline.name = `${getString('buildText')}_${StringUtils.getIdentifierFromName(repoName)}`
-      payload.pipeline.identifier = `${getString(
+      const userPipelineIdentifier = `${getString(
         'pipelineSteps.deploy.create.deployStageName'
       )}_${StringUtils.getIdentifierFromName(uniquePipelineId)}` // pipeline identifier cannot have spaces
+
+      const payload = DEFAULT_PIPELINE_PAYLOAD
+      payload.pipeline.name = `${getString('buildText')}_${StringUtils.getIdentifierFromName(repoName)}`
+      payload.pipeline.identifier = userPipelineIdentifier
       payload.pipeline.projectIdentifier = projectIdentifier
       payload.pipeline.orgIdentifier = orgIdentifier
       payload.pipeline.stages[0].stage.spec.deploymentType = deploymentType
-      payload.pipeline.stages[0].stage.spec.service.serviceRef = serviceRef
+      payload.pipeline.stages[0].stage.spec.service = serviceInputsObj
       payload.pipeline.stages[0].stage.spec.environment.environmentRef = environmentRef
       payload.pipeline.stages[0].stage.spec.environment.infrastructureDefinitions[0].identifier = infraStructureRef
-
+      setPipelineIdentifier(userPipelineIdentifier)
       try {
         return yamlStringify(payload)
       } catch (e) {
         // Ignore error
-        return ''
+        return EMPTY_STRING
       }
     },
-    [getString, projectIdentifier, orgIdentifier]
+    [getString, projectIdentifier, orgIdentifier, serviceInputsObj]
   )
 
   const setupPipeline = (data: PipelineRefPayload): void => {
@@ -211,16 +326,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
         if (status === Status.SUCCESS && createPipelineResponse?.data?.identifier) {
           if (createPipelineResponse?.data?.identifier) {
             setShowPageLoader(false)
-            history.push(
-              routes.toPipelineStudio({
-                accountId: accountId,
-                module: 'cd',
-                orgIdentifier,
-                projectIdentifier,
-                pipelineIdentifier: createPipelineResponse?.data?.identifier,
-                stageId: getString('buildText')
-              })
-            )
+            openRunPipelineModal()
           }
         }
       })
@@ -232,7 +338,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   }
 
   const closeCDWizard = (): void => {
-    history.push(routes.toGetStartedWithCD({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
+    history.push(routes.toPipelines({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
   }
 
   const WizardSteps: Map<DeployProvisiongWizardStepId, WizardStep> = new Map([
@@ -250,6 +356,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
               updateStepStatus([DeployProvisiongWizardStepId.DelegateSelector], StepStatus.InProgress)
               updateStepStatus([DeployProvisiongWizardStepId.ConfigureService], StepStatus.ToDo)
               updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.ToDo)
+              trackEvent(CDOnboardingActions.MovetoConfigureEnvironment, {})
             }}
             disableNextBtn={() => setDisableBtn(true)}
             enableNextBtn={() => setDisableBtn(false)}
@@ -282,6 +389,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           setSelectedSectionId(DeployProvisiongWizardStepId.SelectDeploymentType)
           setCurrentWizardStepId(DeployProvisiongWizardStepId.SelectDeploymentType)
           updateStepStatus([DeployProvisiongWizardStepId.DelegateSelector], StepStatus.ToDo)
+          trackEvent(CDOnboardingActions.SelectDeploymentType, {})
         },
         onClickNext: async () => {
           const { isDelegateInstalled } = delegateSelectorRef.current || {}
@@ -307,7 +415,9 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
                 ],
                 StepStatus.Success
               )
+              serviceData?.identifier && setServiceIdentifier(serviceData.identifier)
               updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.InProgress)
+              trackEvent(CDOnboardingActions.MoveToPipelineSummary, {})
             }}
             ref={configureServiceRef}
             disableNextBtn={() => setDisableBtn(true)}
@@ -318,6 +428,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           setSelectedSectionId(DeployProvisiongWizardStepId.DelegateSelector)
           setCurrentWizardStepId(DeployProvisiongWizardStepId.DelegateSelector)
           updateStepStatus([DeployProvisiongWizardStepId.ConfigureService], StepStatus.ToDo)
+          trackEvent(CDOnboardingActions.MovetoConfigureEnvironment, {})
         },
         onClickNext: async () => {
           const { submitForm } = configureServiceRef.current || {}
@@ -422,7 +533,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
               ])
             }
             textClassName={css.stepWizardText}
-            barWidth={160}
+            barWidth={230}
           />
           <Button
             minimal

@@ -516,13 +516,16 @@ azureWebAppSwapSlotDescription: Azure Swap environment slot with new instance.
 getStartedWithCD:
   onboardingTitle: Start your deployments journey with Harness CD
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
-  selectDeploymentType: Select Deployment Type
+  runDelegateSubTitle: You can install the Delegate in your target environment.
+  delegateInstalled: Delegate installed successfully
+  selectDeploymentType: Select deployment type
   deployToGitops: Do you want to deploy using GitOps?
   configureEnvironment: Connect to Environment
   configureService: Configure Service
   helm: Helm
   manifestTypeSelection: Manifest type
   manifestStoreLabel: Manifest location
+  selectAuthMethod: Select an authentication method
   gitopsRedirect:
     title: Deploy with Gitops
     subtitle: You will be redirected to Gitops section. Are you sure you want to leave this page?
@@ -538,7 +541,7 @@ getStartedWithCD:
   serviceConfiguration: Service Configuration
   allSet: Your pipeline is ready to go!
   successFull: successful
-  connectTo: Connect to
+  connectTo: Connect to a
   deploymentType: Deployment type
   serviceName: Service name
   selectArtifactRepo: Select your artifact repository
@@ -575,6 +578,9 @@ getStartedWithCD:
   testConnection: Test connection
   harnessFileStore: Harness Filestore
   delegateSuccess: The delegate is installed. Next you can configure the service.
+  connectHarnessEnv: Connect Harness to your environment
+  installDelegateToTargetEnv: Install a Harness Delegate in your target environment.
+  delegateDescription: A Delegate is a service that runs on your infrastructure to execute tasks on behalf of the Harness platform.
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment
@@ -607,20 +613,20 @@ validation:
 welcomeMessage: Welcome to Harness
 welcomeToHarnessCD: Welcome to Harness Continuous Delivery!
 learnMoreDelegate: Learn more about Delegates
-runDelegate: How do you want to run the Delegate?
+runDelegate: How do you want to install the Delegate?
 installDelegate: Install Delegate
-instructionsDelegate: Install the delegate
+instructionsDelegate: Install the Delegate
 previewYAML: Preview Yaml
 installCluster: Install on your Cluster
-checkCluster: Check your connection to your cluster
-delegateInstallCommand: Install the delegate by running the following command
-delegateConnectionWait: Wait for the delegate to connect
+checkCluster: Set up and connect to your target cluster.
+delegateInstallCommand: 'Install the Delegate with the following command:'
+delegateConnectionWait: Wait for the Delegate to register
 delegateFailed: Delegate Failed to connect to Harness
 delegateFailText1: Harness Delegate Failed to connect to our Harness SaaS. Please make sure the infrastructure the delegate is installed on can reach https://app.harness.io
 delegateFailText2: The Delegate failed to come up on the cluster, please check to see if the pods are healthy or could be scheduled on the cluster
 delegateSuccess: Great! You have successfully installed the Delegate.
 pipelineCreation: Please proceed to creating your first pipeline
-instructionsCluster: Instructions to check if you have access to your cluster
+instructionsCluster: Set up and connect to your target cluster
 googleK8sService: Google K8s Service
 amazonElasticK8sService: Amazon Elastic K8s Service
 azureK8sService: Azure K8s Service
@@ -639,12 +645,12 @@ awsCli: Make sure the aws cli and eksctl and are installed
 amazonElasticCmd: eksctl utils write-kubeconfig --cluster=delegate
 azureCli: Make sure the Azure CLI is installed
 azureCliCmd: az aks install-cli
-azureCmd: az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
+azureCmd: az aks create -g myResourceGroup -n myAKSCluster --enable-managed-identity --node-count 2 --enable-addons monitoring --enable-msi-auth-for-monitoring  --generate-ssh-keys
 kubectlNodes: kubectl get nodes
 miniKube: Install Minikube
 miniKubeCmd1: curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 miniKubeCmd2: sudo install minikube-linux-amd64 /usr/local/bin/minikube
-miniKubeCmd3: minikube start
+miniKubeCmd3: minikube start --memory 4g --cpus 4
 miniKubeCmd4: kubectl get pods -A
 deploymentSteps: Deployment Steps
 useStepTemplatesForYourDeploymentType: Use step templates for your deployment type here

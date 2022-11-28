@@ -49,10 +49,11 @@ declare const styles: {
   readonly success: string
   readonly successDialog: string
   readonly successPadding: string
-  readonly tabs: string
+  readonly tabsContainer: string
   readonly textPadding: string
   readonly titleYamlVerification: string
   readonly troubleShoot: string
+  readonly troubleShootTitle: string
   readonly verificationField: string
   readonly verificationFieldWrapper: string
 }

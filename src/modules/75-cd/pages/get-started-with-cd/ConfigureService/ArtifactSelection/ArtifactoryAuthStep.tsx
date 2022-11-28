@@ -11,6 +11,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { get, isEmpty, noop, set, unset } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import produce from 'immer'
+import { useFormikContext } from 'formik'
 import {
   DockerProviderType,
   buildDockerPayload,
@@ -41,6 +42,7 @@ import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/Artif
 import { ArtifactoryGenericFormInterface, getUniqueEntityIdentifier, ServiceDataType } from '../../CDOnboardingUtils'
 import { StepStatus } from '../../DeployProvisioningWizard/Constants'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
+import type { ConfigureServiceInterface } from '../ConfigureService'
 import moduleCss from './DockerArtifactory.module.scss'
 import css from '../../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
@@ -134,7 +136,7 @@ const ArtifactoryAuthStep = ({
 }): JSX.Element => {
   const { getString } = useStrings()
   const [artifactAuthData, setArtifactAuthData] = React.useState<any>()
-
+  const { values } = useFormikContext<ConfigureServiceInterface>()
   const {
     state: { service: serviceData },
     saveServiceData
@@ -210,7 +212,8 @@ const ArtifactoryAuthStep = ({
     isGitSyncEnabled: false,
     afterSuccessHandler: noop,
     onErrorHandler,
-    skipGoveranceCheck: true
+    skipGoveranceCheck: true,
+    hideSuccessToast: true
   })
 
   useEffect(() => {
@@ -268,16 +271,16 @@ const ArtifactoryAuthStep = ({
 
   const getArtifactInitialValues = React.useCallback(
     (artifactSelected: ArtifactType): DockerFormInterface => {
-      const contextArtifactData = get(serviceData, 'data.artifactData')
-      const initialVal = getInitialValues(artifactSelected)
+      const contextArtifactData = values?.artifactData
+      const initialVal = getInitialValues(artifactSelected) as any
       return isEmpty(contextArtifactData)
         ? {
             ...initialVal,
             identifier: getUniqueEntityIdentifier(initialVal.name)
           }
-        : contextArtifactData
+        : { ...contextArtifactData, ...(!editMode && { identifier: getUniqueEntityIdentifier(initialVal.name) }) }
     },
-    [serviceData]
+    [editMode, values?.artifactData]
   )
   const resetContextConnectorData = (): void => {
     const updatedContextService = produce(serviceData as ServiceDataType, draft => {
@@ -287,6 +290,14 @@ const ArtifactoryAuthStep = ({
     setTestConnectionStatus(TestStatus.NOT_INITIATED)
     onSuccess(StepStatus.ToDo)
   }
+
+  useEffect(() => {
+    resetContextConnectorData()
+    setIsEditMode(false)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedArtifact])
+
   const authenticationStepProps = React.useMemo(() => {
     const prevStepData = getArtifactInitialValues(selectedArtifact)
     setArtifactAuthData(prevStepData)
@@ -300,7 +311,6 @@ const ArtifactoryAuthStep = ({
       connectorInfo: undefined,
       prevStepData,
       nextStep: (data: any) => {
-        //StepDockerAuthenticationProps
         setTestConnectionErrors([])
         setArtifactAuthData(data)
         // on field change, reset Test Connection

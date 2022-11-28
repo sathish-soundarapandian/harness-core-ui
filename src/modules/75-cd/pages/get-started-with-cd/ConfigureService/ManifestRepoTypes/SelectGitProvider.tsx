@@ -18,7 +18,7 @@ import {
   Container,
   Button,
   Formik,
-  FormikForm as Form,
+  FormikForm,
   FormInput,
   ButtonVariation,
   ButtonSize,
@@ -797,7 +797,7 @@ const SelectGitProviderRef = (
           {formikProps => {
             formikRef.current = formikProps
             return (
-              <Form>
+              <FormikForm>
                 {gitProvider ? (
                   <Layout.Vertical>
                     <Container padding={{ bottom: 'large' }}>
@@ -938,7 +938,7 @@ const SelectGitProviderRef = (
                     )}
                   </Layout.Vertical>
                 ) : null}
-              </Form>
+              </FormikForm>
             )
           }}
         </Formik>

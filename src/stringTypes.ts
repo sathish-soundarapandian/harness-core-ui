@@ -4861,9 +4861,12 @@ export interface StringsMap {
   'cd.getStartedWithCD.configureEnvironment': string
   'cd.getStartedWithCD.configureRepo': string
   'cd.getStartedWithCD.configureService': string
+  'cd.getStartedWithCD.connectHarnessEnv': string
   'cd.getStartedWithCD.connectTo': string
+  'cd.getStartedWithCD.delegateDescription': string
   'cd.getStartedWithCD.delegateInfo1': string
   'cd.getStartedWithCD.delegateInfo2': string
+  'cd.getStartedWithCD.delegateInstalled': string
   'cd.getStartedWithCD.delegateNotConnected': string
   'cd.getStartedWithCD.delegateRequiredWarning': string
   'cd.getStartedWithCD.delegateRunAs': string
@@ -4884,6 +4887,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.inManifest': string
   'cd.getStartedWithCD.inManifestContent': string
   'cd.getStartedWithCD.infraName': string
+  'cd.getStartedWithCD.installDelegateToTargetEnv': string
   'cd.getStartedWithCD.manifestFile': string
   'cd.getStartedWithCD.manifestStorage': string
   'cd.getStartedWithCD.manifestStoreLabel': string
@@ -4892,7 +4896,9 @@ export interface StringsMap {
   'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.provideManifest': string
   'cd.getStartedWithCD.reposubheading': string
+  'cd.getStartedWithCD.runDelegateSubTitle': string
   'cd.getStartedWithCD.selectArtifactRepo': string
+  'cd.getStartedWithCD.selectAuthMethod': string
   'cd.getStartedWithCD.selectDeploymentType': string
   'cd.getStartedWithCD.serverless': string
   'cd.getStartedWithCD.serviceConfiguration': string

@@ -6,20 +6,30 @@
  */
 
 import React from 'react'
-import { Text, Icon, Layout, Button, ButtonVariation, Container, ButtonSize } from '@harness/uicore'
+import { Text, Icon, Layout, ButtonVariation, Container, ButtonSize } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CDOnboardingActions } from '@common/constants/TrackingConstants'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import cdOnboardingSteps from '../home/images/cd-onboarding-steps.svg'
 import css from './GetStartedWithCD.module.scss'
 
 export default function GetStartedWithCD(): React.ReactElement {
   const { getString } = useStrings()
   const history = useHistory()
+  const { trackEvent } = useTelemetry()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ServicePathProps>()
 
+  const getStartedClickHandler = (): void => {
+    trackEvent(CDOnboardingActions.GetStartedClicked, {})
+    history.push(routes.toCDOnboardingWizard({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
+  }
   return (
     <Layout.Vertical flex>
       <Container className={css.topPage}>
@@ -39,15 +49,17 @@ export default function GetStartedWithCD(): React.ReactElement {
               />
             </Container>
             <Container className={css.buttonRow}>
-              <Button
+              <RbacButton
                 variation={ButtonVariation.PRIMARY}
                 size={ButtonSize.LARGE}
                 text={getString('getStarted')}
                 rightIcon="chevron-right"
-                onClick={() => {
-                  history.push(
-                    routes.toCDOnboardingWizard({ accountId, orgIdentifier, projectIdentifier, module: 'cd' })
-                  )
+                onClick={getStartedClickHandler}
+                permission={{
+                  permission: PermissionIdentifier.EDIT_PIPELINE,
+                  resource: {
+                    resourceType: ResourceType.PIPELINE
+                  }
                 }}
               />
             </Container>

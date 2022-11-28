@@ -9,7 +9,7 @@ import React from 'react'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { get, set } from 'lodash-es'
 import produce from 'immer'
-import type { FormikProps } from 'formik'
+import { useFormikContext } from 'formik'
 import { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import {
   ArtifactLastStepProps,
@@ -30,8 +30,8 @@ const ALLOWABLE_TYPES = [
   MultiTypeInputType.RUNTIME
 ] as AllowedTypesWithRunTime[]
 
-export default function ArtifactImagePath({ formik }: { formik: FormikProps<ConfigureServiceInterface> }): JSX.Element {
-  const { values: formValues, setFieldValue } = formik
+export default function ArtifactImagePath(): JSX.Element {
+  const { values: formValues, setFieldValue } = useFormikContext<ConfigureServiceInterface>()
   const { NG_ARTIFACT_SOURCES } = useFeatureFlags()
   const {
     state: { service: serviceData },

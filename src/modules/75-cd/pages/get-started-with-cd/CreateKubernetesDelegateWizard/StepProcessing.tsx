@@ -7,7 +7,7 @@
 
 import React, { useState, FC } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, Icon, Text, useToaster } from '@harness/uicore'
+import { Layout, Icon, Text, useToaster, Button, ButtonVariation } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 
@@ -106,7 +106,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
           <Icon size={10} color={Color.RED_400} name="circle-cross" className={css.checkIcon} />
           <Text font={{ weight: 'bold' }}>{getString('delegate.successVerification.heartbeatReceived')}</Text>
           <Icon size={10} color={Color.GREY_200} name="command-artifact-check" className={css.checkIcon} />
-          <Text font={{ weight: 'bold' }}>{getString('delegate.successVerification.delegateInstalled')}</Text>
+          <Text font={{ weight: 'bold' }}>{getString('cd.getStartedWithCD.delegateInstalled')}</Text>
         </Layout.Horizontal>
         <div className={css.spacing} />
 
@@ -121,14 +121,24 @@ const StepProcessing: FC<StepDelegateData> = props => {
             <Layout.Vertical width={'83%'}>
               <Text className={css.textPadding}>{getString('cd.delegateFailText1')}</Text>
               <Text className={css.textPadding}>{getString('cd.delegateFailText2')}</Text>
-              <Text
-                className={css.textPadding}
-                onClick={() => setTroubleShootVisible(!isTroubleShootVisible)}
-                color={Color.BLUE_700}
-                style={{ cursor: 'pointer', width: 'fit-content' }}
-              >
-                {getString('delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot')}
-              </Text>
+              <Layout.Horizontal className={css.textPadding}>
+                <Button
+                  variation={ButtonVariation.SECONDARY}
+                  onClick={() => {
+                    verifyHeartBeat()
+                    setShowError(false)
+                  }}
+                >
+                  {`${getString('retry')} ${getString('connection')}`}
+                </Button>
+                <Button
+                  variation={ButtonVariation.LINK}
+                  padding={{ left: 'small' }}
+                  onClick={() => setTroubleShootVisible(!isTroubleShootVisible)}
+                >
+                  {getString('delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot')}
+                </Button>
+              </Layout.Horizontal>
             </Layout.Vertical>
             <img className={css.buildImg} title={getString('common.getStarted.buildPipeline')} src={delegateErrorURL} />
           </Layout.Horizontal>

@@ -43,6 +43,7 @@ interface UseCreateEditConnector {
   gitDetails?: EntityGitDetails
   onErrorHandler?: (data: ResponseMessage) => void
   skipGoveranceCheck?: boolean
+  hideSuccessToast?: boolean
 }
 interface OnInitiateConnectorCreateEditProps<T> {
   buildPayload: (data: T & BuildPayloadProps) => Connector
@@ -56,7 +57,7 @@ export default function useCreateEditConnector<T>(props: UseCreateEditConnector)
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
 
-  const { skipGoveranceCheck = false } = props
+  const { skipGoveranceCheck = false, hideSuccessToast = false } = props
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal({
     ...connectorGovernanceModalProps(),
     skipGoveranceCheck
@@ -176,9 +177,11 @@ export default function useCreateEditConnector<T>(props: UseCreateEditConnector)
             handleCreateOrEdit(connectorFormData, { payload: payload }) /* Handling non-git flow */
               .then(res => {
                 if (res.status === 'SUCCESS') {
-                  props.isEditMode
-                    ? showSuccess(getString('connectors.updatedSuccessfully'))
-                    : showSuccess(getString('connectors.createdSuccessfully'))
+                  if (!hideSuccessToast) {
+                    props.isEditMode
+                      ? showSuccess(getString('connectors.updatedSuccessfully'))
+                      : showSuccess(getString('connectors.createdSuccessfully'))
+                  }
                   res.nextCallback?.()
                 }
               })

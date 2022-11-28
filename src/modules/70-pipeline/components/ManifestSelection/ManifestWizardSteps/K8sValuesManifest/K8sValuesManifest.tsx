@@ -152,7 +152,7 @@ function K8sValuesManifest({
     }
     handleSubmit(manifestObj)
   }
-  const handleValidate = (formData: CommonManifestDataType) => {
+  const handleValidate = (formData: CommonManifestDataType): void => {
     if (isOnboardingFlow) {
       submitFormData({
         ...prevStepData,

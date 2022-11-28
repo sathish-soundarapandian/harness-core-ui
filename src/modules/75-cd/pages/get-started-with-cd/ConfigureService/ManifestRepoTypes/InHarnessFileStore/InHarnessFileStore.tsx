@@ -13,7 +13,13 @@ import { get, isEmpty, set } from 'lodash-es'
 import produce from 'immer'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
-import { ManifestConfigWrapper, ResponseFileDTO, useCreate, useGetFolderNodes } from 'services/cd-ng'
+import {
+  ManifestConfigWrapper,
+  ResponseFileDTO,
+  useCreate,
+  useGetFolderNodes,
+  useListFilesAndFolders
+} from 'services/cd-ng'
 import { StringUtils } from '@common/exports'
 import FileIcon from '@filestore/images/file-.svg'
 import { FileStoreNodeTypes, FileUsage } from '@filestore/interfaces/FileStore'
@@ -55,6 +61,13 @@ const InHarnessFileStore = ({
 
   const { mutate: createFolder, loading: createLoading } = useCreate({
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+  })
+  const {
+    data: folderList,
+    loading: searchingFolder,
+    refetch: getSampleOnboardingFolder
+  } = useListFilesAndFolders({
+    lazy: true
   })
   const { mutate: createNode, loading: fileCreationLoading } = useCreate({
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
@@ -102,8 +115,7 @@ const InHarnessFileStore = ({
             }
           },
           valuesPaths: paths.valuesPaths,
-          skipResourceVersioning: false,
-          ...(manifestType === 'HelmChart' && { helmVersion: 'V2' })
+          skipResourceVersioning: false
         }
       }
     }
@@ -115,6 +127,7 @@ const InHarnessFileStore = ({
       set(draft, 'data.fileNodesData', fileNodesData)
     })
     saveServiceData(updatedContextService)
+    onSuccess()
   }
 
   // fetch all files from onBoarding sample folder
@@ -190,12 +203,29 @@ const InHarnessFileStore = ({
   }, [folderIdentifier, createFolder, getPromisedForManifestFiles, getListOfAllFiles])
 
   React.useEffect(() => {
-    // register folder/files - if not present in context
-    isEmpty(childNodes) ? registerSampleManifestFolder() : saveConstructManifestObj(childNodes)
+    if (isEmpty(childNodes)) {
+      getSampleOnboardingFolder({
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier,
+          searchTerm: SAMPLE_MANIFEST_FOLDER
+        }
+      })
+    } else {
+      saveConstructManifestObj(childNodes)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [childNodes])
+  }, [accountId, childNodes, getSampleOnboardingFolder, orgIdentifier, projectIdentifier])
 
-  if (createLoading || fileCreationLoading || fileFetching) {
+  React.useEffect(() => {
+    if (folderList?.data) {
+      folderList?.data?.totalElements === 0 ? registerSampleManifestFolder() : getListOfAllFiles()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [folderList])
+
+  if (createLoading || fileCreationLoading || fileFetching || searchingFolder) {
     return <PageSpinner />
   }
 

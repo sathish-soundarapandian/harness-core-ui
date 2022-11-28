@@ -6,6 +6,7 @@
  */
 
 import { set } from 'lodash-es'
+import { customAlphabet } from 'nanoid'
 import type { IconName } from '@harness/icons'
 import { Connectors } from '@connectors/constants'
 import { gitStoreTypes } from '@pipeline/components/ManifestSelection/Manifesthelper'
@@ -23,6 +24,7 @@ import type {
   ServiceDefinition,
   ServiceRequestDTO,
   ServiceSpec,
+  ServiceYamlV2,
   UserRepoResponse
 } from 'services/cd-ng'
 import type { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
@@ -51,15 +53,28 @@ export interface DelegateSuccessHandler {
   delegateYamlResponse?: RestResponseDelegateSetupDetails
 }
 
-export const DefaultNewStageName = 'Stage Name'
-export const DefaultNewStageId = 'stage_id'
-export const DefaultNewServiceId = '-1'
+export enum BinaryLabels {
+  YES = 'yes',
+  NO = 'no'
+}
+
+export enum DrawerMode {
+  Edit = 'EDIT',
+  Preview = 'PREVIEW'
+}
+
+// FILE STORE
+export const SAMPLE_MANIFEST_FOLDER = 'Sample Manifest Onboarding'
 export const DEFAULT_PIPELINE_NAME = 'Sample Pipeline'
-export const DEFAULT_DELEGATE_NAME = 'sample_delegate'
+export const EMPTY_STRING = ''
 
 const DEFAULT_STAGE_ID = 'Stage'
 const DEFAULT_STAGE_TYPE = 'Deployment'
 
+export const BinaryOptions = [
+  { label: BinaryLabels.YES, value: BinaryLabels.YES },
+  { label: BinaryLabels.NO, value: BinaryLabels.NO }
+]
 export interface ServiceData {
   workloadType: string
   artifactType: string
@@ -93,6 +108,44 @@ export type InfrastructureDataType = InfrastructureRequestDTO & {
   data?: SelectAuthenticationMethodInterface
 }
 
+export const defaultManifestConfig = {
+  manifest: {
+    identifier: 'sample_manifest',
+    spec: {
+      store: {
+        spec: {
+          gitFetchType: 'Branch'
+        }
+      }
+    },
+    type: 'K8sManifest'
+  }
+}
+
+export const defaultArtifactConfig = {
+  primary: {
+    identifier: 'sample_artifact',
+    type: undefined,
+    primaryArtifactRef: '<+input>',
+    sources: [
+      {
+        identifier: 'sample_artifact',
+        type: undefined,
+        spec: {
+          connectorRef: undefined,
+          imagePath: 'harness/todolist-sample',
+          tag: 'latest'
+        }
+      }
+    ],
+    spec: {
+      connectorRef: undefined,
+      imagePath: 'harness/todolist-sample',
+      tag: 'latest'
+    }
+  }
+} as ArtifactListConfig
+
 export const newServiceState = {
   name: 'sample_service',
   identifier: '',
@@ -102,30 +155,8 @@ export const newServiceState = {
   serviceDefinition: {
     type: 'Kubernetes' as ServiceDefinition['type'],
     spec: {
-      manifests: [{ manifest: { identifier: 'sample_manifest', spec: {}, type: 'K8sManifest' } }],
-      artifacts: {
-        primary: {
-          identifier: 'sample_artifact',
-          type: undefined,
-          primaryArtifactRef: '<+input>',
-          sources: [
-            {
-              identifier: 'sample_artifact',
-              type: undefined,
-              spec: {
-                connectorRef: undefined,
-                imagePath: 'harness/todolist-sample',
-                tag: 'latest'
-              }
-            }
-          ],
-          spec: {
-            connectorRef: undefined,
-            imagePath: 'harness/todolist-sample',
-            tag: 'latest'
-          }
-        }
-      } as ArtifactListConfig
+      manifests: [defaultManifestConfig],
+      artifacts: defaultArtifactConfig
     } as ServiceSpec
   },
   data: {} as ServiceData
@@ -220,7 +251,7 @@ export const DEFAULT_PIPELINE_PAYLOAD = {
           type: DEFAULT_STAGE_TYPE,
           spec: {
             deploymentType: '',
-            service: { serviceRef: '' },
+            service: { serviceRef: '' } as ServiceYamlV2,
             environment: {
               environmentRef: '',
               deployToAll: false,
@@ -311,9 +342,9 @@ export const getUniqueEntityIdentifier = (entity = ''): string => {
 }
 
 export const generateDelegateName = (): string => {
-  const UNIQUE_ENTITY_ID = new Date().getTime().toString()
-  const newEntity = StringUtils.getIdentifierFromName(DEFAULT_DELEGATE_NAME)
-  return `${newEntity}-${UNIQUE_ENTITY_ID}-ng`.replace(/_/g, '-')
+  // should be lowercase and can include only dash(-) between letters and cannot start or end with a number
+  const nanoUuid = customAlphabet('0123456789-abcdefghijklmnopqrstuvwxyz')
+  return `dl-${nanoUuid()}-spl`
 }
 
 export const getStoreType = (gitProviderType?: ConnectorInfoDTO['type']): ManifestStores | undefined => {
@@ -407,22 +438,4 @@ export const ArtifactIconByType: Record<string, IconName> = {
   ArtifactoryRegistry: 'service-artifactory',
   Ecr: 'ecr-step',
   Acr: 'service-azure'
-}
-
-export enum BinaryLabels {
-  YES = 'yes',
-  NO = 'no'
-}
-
-export const BinaryOptions = [
-  { label: BinaryLabels.YES, value: BinaryLabels.YES },
-  { label: BinaryLabels.NO, value: BinaryLabels.NO }
-]
-
-// FILE STORE
-export const SAMPLE_MANIFEST_FOLDER = 'Sample Manifest Onboarding'
-
-export enum DrawerMode {
-  Edit = 'EDIT',
-  Preview = 'PREVIEW'
 }

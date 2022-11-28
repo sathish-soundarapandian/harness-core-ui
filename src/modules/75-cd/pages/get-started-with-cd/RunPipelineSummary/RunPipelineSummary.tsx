@@ -9,7 +9,7 @@ import React from 'react'
 import { Button, ButtonSize, ButtonVariation, Container, Icon, Layout, Text } from '@harness/uicore'
 
 import { Color, FontVariation } from '@harness/design-system'
-import { capitalize } from 'lodash-es'
+import { capitalize, defaultTo } from 'lodash-es'
 import { StringKeys, useStrings } from 'framework/strings'
 import successSetup from '../../home/images/success_setup.svg'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
@@ -41,8 +41,10 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
       ?.type as string,
     'cd.getStartedWithCD.manifestStorage': service?.serviceDefinition?.spec?.manifests?.[0]?.manifest?.spec?.store
       ?.type as string,
-    'cd.getStartedWithCD.artifactStorage': service?.serviceDefinition?.spec?.artifacts?.primary?.sources?.[0]
-      ?.type as string
+    'cd.getStartedWithCD.artifactStorage': defaultTo(
+      service?.serviceDefinition?.spec?.artifacts?.primary?.sources?.[0]?.type,
+      '-'
+    )
   }
   const successsFullConfiguration = React.useCallback((): JSX.Element => {
     return (

@@ -19,17 +19,22 @@ declare const styles: {
   readonly authTitle: string
   readonly borderBottom: string
   readonly borderBottomClass: string
+  readonly bp3DialogHeader: string
   readonly containerPadding: string
   readonly credentialsButton: string
+  readonly crossIcon: string
   readonly delegateOverviewWrapper: string
   readonly disable: string
   readonly dropdownPopover: string
   readonly footer: string
   readonly formInput: string
   readonly header: string
+  readonly helpPanelContainer: string
   readonly icons: string
   readonly learnMore: string
   readonly main: string
+  readonly modalCard: string
+  readonly modalContent: string
   readonly noDelegateWarning: string
   readonly provisioningFailed: string
   readonly provisioningSuccessful: string
@@ -40,6 +45,7 @@ declare const styles: {
   readonly repositoryRow: string
   readonly repositorySearch: string
   readonly repositoryTable: string
+  readonly runPipelineDialog: string
   readonly selectedCard: string
   readonly serviceDeploymentTypeCard: string
   readonly serviceDeploymentTypeIcon: string

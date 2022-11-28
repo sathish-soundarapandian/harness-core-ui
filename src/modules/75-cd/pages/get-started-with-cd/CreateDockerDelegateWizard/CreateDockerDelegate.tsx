@@ -258,7 +258,7 @@ export const CreateDockerDelegate = ({
               </Layout.Horizontal>
               <Layout.Horizontal className={css.descriptionVerificationWrapper}>
                 <Text font="normal" width={408}>
-                  {getString('delegates.delegateCreation.docker.verifyDesc2')}
+                  {getString('cd.delegateInstallCommand')}
                 </Text>
               </Layout.Horizontal>
               <Layout.Horizontal className={css.verificationFieldWrapper}>

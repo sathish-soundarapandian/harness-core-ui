@@ -12,13 +12,13 @@ import {
   Layout,
   Container,
   Formik,
-  FormikForm as Form,
   useToaster,
   FormInput,
   Button,
   RadioButtonGroup,
   IconName,
-  Icon
+  Icon,
+  FormikForm
 } from '@harness/uicore'
 
 import { FontVariation, Color } from '@harness/design-system'
@@ -27,6 +27,7 @@ import { cloneDeep, cloneDeepWith, defaultTo, get, isEmpty, isEqual, omit, set, 
 import produce from 'immer'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
+import { HelpPanel } from '@harness/help-panel'
 import { StringKeys, useStrings } from 'framework/strings'
 import {
   ArtifactConfig,
@@ -46,13 +47,21 @@ import { TestStatus } from '@common/components/TestConnectionWidget/TestConnecti
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import type { ManifestStores, ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
-import { ManifestStoreMap, manifestTypeIcons } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import {
+  ManifestDataType,
+  ManifestStoreMap,
+  manifestTypeIcons
+} from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { Connectors } from '@connectors/constants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import {
   BinaryLabels,
   cleanServiceDataUtil,
+  defaultManifestConfig,
   getUniqueEntityIdentifier,
   newServiceState,
   ServiceDataType
@@ -61,7 +70,7 @@ import { useCDOnboardingContext } from '../CDOnboardingStore'
 import InHarnessFileStore from './ManifestRepoTypes/InHarnessFileStore/InHarnessFileStore'
 import { SelectGitProvider, SelectGitProviderRefInstance } from './ManifestRepoTypes/SelectGitProvider'
 import { AllSaaSGitProviders, StepStatus } from '../DeployProvisioningWizard/Constants'
-import { SelectRepository } from '../SelectArtifact/SelectRepository'
+import { SelectRepository } from './ManifestRepoTypes/SelectRepository'
 import { ProvideManifest } from './ManifestRepoTypes/ProvideManifest'
 import ArtifactSelection from './ArtifactSelection/ArtifactSelection'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
@@ -93,7 +102,7 @@ export type ConfigureServiceForwardRef =
   | React.MutableRefObject<ConfigureServiceRefInstance | null>
   | null
 
-const allowableManifestTypes = ['K8sManifest', 'HelmChart'] as ManifestTypes[]
+const allowableManifestTypes = [ManifestDataType.K8sManifest, ManifestDataType.HelmChart] as ManifestTypes[]
 const manifestTypeLabels: Record<string, StringKeys> = {
   K8sManifest: 'kubernetesText',
   HelmChart: 'cd.getStartedWithCD.helm'
@@ -109,6 +118,7 @@ const ConfigureServiceRef = (
   forwardRef: ConfigureServiceForwardRef
 ): React.ReactElement => {
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -138,6 +148,16 @@ const ConfigureServiceRef = (
     }
   })
 
+  const updateManifestStepStatus = React.useCallback((stepIds: string[], status: StepStatus) => {
+    if (Array.isArray(stepIds)) {
+      setManifestStepStatus((prevState: Map<string, StepStatus>) => {
+        const clonedState = new Map(prevState)
+        stepIds.forEach((item: string) => clonedState.set(item, status))
+        return clonedState
+      })
+    }
+  }, [])
+
   const formikRef = useRef<FormikContextType<ConfigureServiceInterface>>()
   const selectGitProviderRef = React.useRef<SelectGitProviderRefInstance | null>(null)
 
@@ -153,7 +173,7 @@ const ConfigureServiceRef = (
     const serviceRef = formikRef?.current?.values?.serviceRef
     const isServiceNameUpdated = isEmpty(get(serviceData, 'identifier'))
 
-    if (isServiceNameUpdated && !isEmpty(delegateData?.environmentEntities)) {
+    if (isServiceNameUpdated && !isEmpty(delegateData?.environmentEntities?.infrastructure)) {
       const serviceRefIdentifier = getUniqueEntityIdentifier(serviceRef)
       setServiceIdentifier(serviceRefIdentifier)
       const updatedContextService = produce(serviceData, draft => {
@@ -183,6 +203,7 @@ const ConfigureServiceRef = (
   React.useEffect(() => {
     // initial service creation from onboarding
     createServiceOnLoad()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleSubmit = async (): Promise<ConfigureServiceInterface> => {
@@ -194,11 +215,14 @@ const ConfigureServiceRef = (
         if (draft) {
           if (NG_ARTIFACT_SOURCES) {
             set(draft, 'primary.sources[0].type', formikRef?.current?.values?.artifactType)
-            set(draft, 'primary.primaryArtifactRef', artifactObj?.primary?.sources?.[0]?.identifier)
+            set(draft, 'primary.sources[0].spec', formikRef?.current?.values?.artifactConfig?.spec)
+            set(draft, 'primary.primaryArtifactRef', formikRef?.current?.values?.artifactConfig?.identifier)
             unset(draft, 'primary.spec')
             unset(draft, 'primary.identifier')
           } else {
             set(draft, 'primary.type', formikRef?.current?.values?.artifactType)
+            set(draft, 'primary.spec', formikRef?.current?.values?.artifactConfig?.spec)
+            set(draft, 'primary.identifier', formikRef?.current?.values?.artifactConfig?.identifier)
             unset(draft, 'primary.primaryArtifactRef')
             unset(draft, 'primary.sources')
           }
@@ -259,8 +283,6 @@ const ConfigureServiceRef = (
       set(draft, 'data.artifactToDeploy', formikRef?.current?.values?.artifactToDeploy)
       set(draft, 'data.manifestData', formikRef?.current?.values?.manifestData)
       set(draft, 'data.gitConnectionStatus', gitTestConnectionStatus)
-      set(draft, 'data.gitConnectionStatus', gitTestConnectionStatus)
-      set(draft, 'data.gitConnectionStatus', gitTestConnectionStatus)
     })
     saveServiceData(updatedContextService)
 
@@ -302,6 +324,18 @@ const ConfigureServiceRef = (
     }
   }, [formikRef?.current?.values, forwardRef])
 
+  useEffect(() => {
+    if (!isEmpty(serviceData?.data?.gitValues?.gitAuthenticationMethod)) {
+      updateManifestStepStatus(['Connector'], StepStatus.Success)
+      if (!isEmpty(serviceData?.data?.repoValues)) {
+        updateManifestStepStatus(['Repository'], StepStatus.Success)
+        updateManifestStepStatus(['ManifestDetails'], StepStatus.InProgress)
+      }
+    } else {
+      setManifestStepStatus(DefaultManifestStepStatus)
+    }
+  }, [serviceData, updateManifestStepStatus])
+
   const supportedManifestTypes = React.useMemo(
     () =>
       allowableManifestTypes?.map(manifest => ({
@@ -311,6 +345,17 @@ const ConfigureServiceRef = (
       })),
     [getString]
   )
+
+  const isSelectedManifestTypeHelm = (): boolean =>
+    formikRef?.current?.values?.manifestData?.type === ManifestDataType.HelmChart
+
+  const onManifestTypeSelection = (type: ManifestTypes): void => {
+    formikRef?.current?.setFieldValue('manifestData.type', type)
+    if (type === ManifestDataType.HelmChart && formikRef?.current?.values?.manifestStoreType === 'Harness') {
+      formikRef?.current?.setFieldValue('manifestStoreType', Connectors.GITHUB)
+      trackEvent(CDOnboardingActions.SelectManifestType, { manifestType: type })
+    }
+  }
 
   const specifyManifestType = (formikProps: FormikProps<ConfigureServiceInterface>): JSX.Element | null => {
     return (
@@ -324,7 +369,7 @@ const ConfigureServiceRef = (
             inline={true}
             selectedValue={formikProps?.values?.manifestData?.type}
             onChange={(e: FormEvent<HTMLInputElement>) => {
-              formikProps?.setFieldValue('manifestData.type', e.currentTarget.value)
+              onManifestTypeSelection(e.currentTarget.value as ManifestTypes)
             }}
             options={supportedManifestTypes}
             margin={{ bottom: 'small' }}
@@ -339,6 +384,7 @@ const ConfigureServiceRef = (
 
   const onManifestStoreSelection = (type: ManifestStores | ConnectorInfoDTO['type']): void => {
     formikRef?.current?.setFieldValue('manifestStoreType', type)
+    trackEvent(CDOnboardingActions.SelectManifestStore, { manifestStore: type })
     // reset connector details, artifact details
     setManifestStepStatus(DefaultManifestStepStatus)
     selectGitProviderRef.current = null
@@ -348,9 +394,9 @@ const ConfigureServiceRef = (
       unset(draft, 'data.repovalues')
       unset(draft, 'data.gitConnectionStatus')
       unset(draft, 'data.connectorRef')
-      set(draft, 'serviceDefinition.spec.manifest', newServiceState.serviceDefinition.spec.manifests)
       set(draft, 'serviceDefinition.spec.artifacts', newServiceState.serviceDefinition.spec.artifacts)
     })
+    formikRef?.current?.setFieldValue('manifestConfig', defaultManifestConfig)
     formikRef?.current?.setFieldValue('repository', undefined)
     formikRef?.current?.setFieldValue(
       'gitProvider',
@@ -372,9 +418,11 @@ const ConfigureServiceRef = (
             text={getString('cd.getStartedWithCD.harnessFileStore')}
             onClick={() => {
               onManifestStoreSelection(ManifestStoreMap.Harness)
+              formikProps?.setFieldValue('artifactToDeploy', BinaryLabels.YES)
             }}
             padding="large"
             intent={formikProps?.values?.manifestStoreType === ManifestStoreMap.Harness ? 'primary' : 'none'}
+            disabled={isSelectedManifestTypeHelm()}
           />
 
           <Container className={css.verticalSeparation} margin={{ left: 'medium' }} />
@@ -388,6 +436,7 @@ const ConfigureServiceRef = (
                 text={getString(manifestStore.label)}
                 onClick={() => {
                   onManifestStoreSelection(manifestStore.type)
+                  accessNextBtnOnStoreChange()
                 }}
                 intent={formikProps?.values?.manifestStoreType === manifestStore.type ? 'primary' : 'none'}
               />
@@ -396,6 +445,12 @@ const ConfigureServiceRef = (
         </Layout.Horizontal>
       </Layout.Vertical>
     )
+  }
+
+  const accessNextBtnOnStoreChange = (): void => {
+    if (formikRef?.current?.values?.manifestStoreType !== ManifestStoreMap.Harness) {
+      isEmpty(formikRef?.current?.values?.repository) ? disableNextBtn() : enableNextBtn()
+    }
   }
 
   const onRepositoryChange = async (repository: UserRepoResponse | undefined): Promise<void> => {
@@ -412,16 +467,6 @@ const ConfigureServiceRef = (
       updateManifestStepStatus(['ManifestDetails'], StepStatus.ToDo)
     }
   }
-
-  const updateManifestStepStatus = React.useCallback((stepIds: string[], status: StepStatus) => {
-    if (Array.isArray(stepIds)) {
-      setManifestStepStatus((prevState: Map<string, StepStatus>) => {
-        const clonedState = new Map(prevState)
-        stepIds.forEach((item: string) => clonedState.set(item, status))
-        return clonedState
-      })
-    }
-  }, [])
 
   const onConnectorSuccess = (connectionStatus: number, conectorResponse: any): void => {
     const { validate } = selectGitProviderRef.current || {}
@@ -445,7 +490,7 @@ const ConfigureServiceRef = (
   const getInitialValues = React.useCallback((): ConfigureServiceInterface => {
     const initialRepoValue = get(serviceData, 'data.repoValues')
     const manifestStoreType = get(serviceData, 'data.manifestStoreType', ManifestStoreMap.Harness)
-    const manifestConfig = get(serviceData, 'serviceDefinition.spec.manifests[0]')
+    const manifestConfig = get(serviceData, 'serviceDefinition.spec.manifests[0]', defaultManifestConfig)
     const manifestData = get(serviceData, 'data.manifestData')
     const artifactConfig = get(serviceData, 'serviceDefinition.spec.artifacts.primary.sources[0].spec')
     const artifactData = get(serviceData, 'data.artifactData')
@@ -463,143 +508,134 @@ const ConfigureServiceRef = (
       artifactType: defaultTo(artifactType, 'DockerRegistry'),
       fileNodesData: defaultTo(get(serviceData, 'data.fileNodesData'), [])
     }
-  }, [get(serviceData, 'serviceDefinition.spec.manifests[0].manifest', {})])
+  }, [serviceData])
 
   const onFileStoreSuccess = (): void => {
     updateManifestStepStatus(['Repository'], StepStatus.Success)
     updateManifestStepStatus(['ManifestDetails'], StepStatus.Success)
+    enableNextBtn()
   }
-
-  useEffect(() => {
-    if (!isEmpty(serviceData?.data?.gitValues)) {
-      updateManifestStepStatus(['Connector'], StepStatus.Success)
-    }
-    if (!isEmpty(serviceData?.data?.repoValues)) {
-      updateManifestStepStatus(['Repository'], StepStatus.Success)
-      updateManifestStepStatus(['ManifestDetails'], StepStatus.InProgress)
-    }
-  }, [serviceData, updateManifestStepStatus])
 
   return createLoading ? (
     <ContainerSpinner />
   ) : (
-    <Layout.Vertical width="70%">
-      <Formik<ConfigureServiceInterface>
-        initialValues={getInitialValues()}
-        formName="cdWorkload-provider"
-        onSubmit={handleSubmit}
-        validationSchema={validationSchema}
-      >
-        {formikProps => {
-          formikRef.current = formikProps
-          return (
-            <Form>
-              <Layout.Vertical width="70%">
-                <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_600}>
-                    {getString('cd.getStartedWithCD.configureService')}
-                  </Text>
-                  <Layout.Horizontal flex={{ alignItems: 'center' }}>
-                    {editService ? (
-                      <FormInput.Text name="serviceRef" className={css.formInput} style={{ marginBottom: 0 }} />
-                    ) : (
-                      <Text>{formikProps?.values?.serviceRef}</Text>
-                    )}
+    <Container flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
+      <Layout.Vertical width="70%">
+        <Formik<ConfigureServiceInterface>
+          initialValues={getInitialValues()}
+          formName="cdWorkload-provider"
+          onSubmit={handleSubmit}
+          validationSchema={validationSchema}
+        >
+          {formikProps => {
+            formikRef.current = formikProps
+            return (
+              <FormikForm>
+                <Layout.Vertical width="70%">
+                  <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_600}>
+                      {getString('cd.getStartedWithCD.configureService')}
+                    </Text>
+                    <Layout.Horizontal flex={{ alignItems: 'center' }}>
+                      {editService ? (
+                        <FormInput.Text name="serviceRef" className={css.formInput} style={{ marginBottom: 0 }} />
+                      ) : (
+                        <Text>{formikProps?.values?.serviceRef}</Text>
+                      )}
 
-                    <Button
-                      icon={editService ? 'cross' : 'Edit'}
-                      data-testid="edit-service-name"
-                      // disabled={readonly}
-                      onClick={() => setEditService(!editService)}
-                      minimal
-                    />
+                      <Button
+                        icon={editService ? 'cross' : 'Edit'}
+                        data-testid="edit-service-name"
+                        onClick={() => setEditService(!editService)}
+                        minimal
+                      />
+                    </Layout.Horizontal>
                   </Layout.Horizontal>
-                </Layout.Horizontal>
-                <Container className={css.borderBottomClass} padding={{ top: 'large' }} />
-
-                {specifyManifestType(formikProps)}
-                {formikProps?.values?.manifestData?.type && selectManifestStore(formikProps)}
-                {formikProps?.values?.manifestStoreType && (
-                  <Container padding="xxlarge" className={moduleCss.connectorContainer}>
-                    {formikProps?.values?.manifestStoreType === ManifestStoreMap.Harness ? (
-                      <InHarnessFileStore onSuccess={onFileStoreSuccess} formikProps={formikProps} />
-                    ) : (
-                      <Layout.Vertical>
-                        <Layout.Horizontal
-                          margin={{ bottom: 'large' }}
-                          flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-                        >
-                          <Icon
-                            name={
-                              AllSaaSGitProviders.find(
-                                provider => formikProps?.values?.manifestStoreType === provider.type
-                              )?.icon || 'github'
-                            }
-                            size={28}
-                            flex
-                          />
-                          <Text font={{ variation: FontVariation.H5 }} padding={{ left: 'large' }}>
-                            {`${getString('cd.getStartedWithCD.connectTo')} ${getString(
-                              AllSaaSGitProviders.find(
-                                provider => formikProps?.values?.manifestStoreType === provider.type
-                              )?.label || 'common.repo_provider.githubLabel'
-                            )}`}
-                          </Text>
-                        </Layout.Horizontal>
-                        <ul className={moduleCss.progress}>
-                          <li className={`${moduleCss.progressItem} ${moduleCss.progressItemActive}`}>
-                            <SelectGitProvider
-                              ref={selectGitProviderRef}
-                              gitValues={get(serviceData, 'data.gitValues', {})}
-                              selectedGitProvider={
-                                AllSaaSGitProviders.find(
-                                  store => store.type === formikProps?.values?.manifestStoreType
-                                ) || undefined
-                              }
-                              connectionStatus={get(serviceData, 'data.gitConnectionStatus', TestStatus.NOT_INITIATED)}
-                              onSuccess={onConnectorSuccess}
-                            />
-                          </li>
-                          {manifestStepStatus.get('Repository') !== StepStatus.ToDo && (
-                            <li className={`${moduleCss.progressItem} ${moduleCss.progressItemActive}`}>
-                              <SelectRepository
-                                selectedRepository={formikProps.values?.repository}
-                                validatedConnectorRef={
-                                  get(serviceData, 'data.gitValues.gitProvider.type') ||
-                                  selectGitProviderRef.current?.values?.gitProvider?.type
-                                }
-                                onChange={onRepositoryChange}
-                              />
-                            </li>
-                          )}
-                          {manifestStepStatus.get('ManifestDetails') !== StepStatus.ToDo && (
-                            <li className={`${moduleCss.progressItem} ${moduleCss.progressItemActive}`}>
-                              <ProvideManifest
-                                formikProps={formikProps}
-                                initialValues={get(serviceData, 'serviceDefinition.spec.manifests[0].manifest', {})}
-                              />
-                            </li>
-                          )}
-                        </ul>
-                      </Layout.Vertical>
-                    )}
-                  </Container>
-                )}
-                <>
                   <Container className={css.borderBottomClass} padding={{ top: 'large' }} />
-                  {/* ARTIFACT SELECTION */}
-                  <ArtifactSelection
-                    formikProps={formikProps}
-                    enableNextBtn={enableNextBtn}
-                    disableNextBtn={disableNextBtn}
-                  />
-                </>
-              </Layout.Vertical>
-            </Form>
-          )
-        }}
-      </Formik>
-    </Layout.Vertical>
+
+                  {specifyManifestType(formikProps)}
+                  {formikProps?.values?.manifestData?.type && selectManifestStore(formikProps)}
+                  {formikProps?.values?.manifestStoreType && (
+                    <Container padding="xxlarge" className={moduleCss.connectorContainer}>
+                      {formikProps?.values?.manifestStoreType === ManifestStoreMap.Harness ? (
+                        <InHarnessFileStore onSuccess={onFileStoreSuccess} formikProps={formikProps} />
+                      ) : (
+                        <Layout.Vertical>
+                          <Layout.Horizontal
+                            margin={{ bottom: 'large' }}
+                            flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+                          >
+                            <Icon
+                              name={
+                                AllSaaSGitProviders.find(
+                                  provider => formikProps?.values?.manifestStoreType === provider.type
+                                )?.icon || 'github'
+                              }
+                              size={28}
+                              flex
+                            />
+                            <Text font={{ variation: FontVariation.H5 }} padding={{ left: 'large' }}>
+                              {`${getString('cd.getStartedWithCD.connectTo')} ${getString(
+                                AllSaaSGitProviders.find(
+                                  provider => formikProps?.values?.manifestStoreType === provider.type
+                                )?.label || 'common.repo_provider.githubLabel'
+                              )}`}
+                            </Text>
+                          </Layout.Horizontal>
+                          <ul className={moduleCss.progress}>
+                            <li className={`${moduleCss.progressItem} ${moduleCss.progressItemActive}`}>
+                              <SelectGitProvider
+                                ref={selectGitProviderRef}
+                                gitValues={get(serviceData, 'data.gitValues', {})}
+                                selectedGitProvider={
+                                  AllSaaSGitProviders.find(
+                                    store => store.type === formikProps?.values?.manifestStoreType
+                                  ) || undefined
+                                }
+                                connectionStatus={get(
+                                  serviceData,
+                                  'data.gitConnectionStatus',
+                                  TestStatus.NOT_INITIATED
+                                )}
+                                onSuccess={onConnectorSuccess}
+                              />
+                            </li>
+                            {manifestStepStatus.get('Repository') !== StepStatus.ToDo && (
+                              <li className={`${moduleCss.progressItem} ${moduleCss.progressItemActive}`}>
+                                <SelectRepository
+                                  selectedRepository={formikProps.values?.repository}
+                                  validatedConnectorRef={
+                                    get(serviceData, 'data.gitValues.gitProvider.type') ||
+                                    selectGitProviderRef.current?.values?.gitProvider?.type
+                                  }
+                                  onChange={onRepositoryChange}
+                                />
+                              </li>
+                            )}
+                            {manifestStepStatus.get('ManifestDetails') !== StepStatus.ToDo && (
+                              <li className={`${moduleCss.progressItem} ${moduleCss.progressItemActive}`}>
+                                <ProvideManifest />
+                              </li>
+                            )}
+                          </ul>
+                        </Layout.Vertical>
+                      )}
+                    </Container>
+                  )}
+                  <>
+                    <Container className={css.borderBottomClass} padding={{ top: 'large' }} />
+                    <ArtifactSelection enableNextBtn={enableNextBtn} disableNextBtn={disableNextBtn} />
+                  </>
+                </Layout.Vertical>
+              </FormikForm>
+            )
+          }}
+        </Formik>
+      </Layout.Vertical>
+      <Container className={css.helpPanelContainer}>
+        <HelpPanel referenceId="cdOnboardConfigureService" />
+      </Container>
+    </Container>
   )
 }
 

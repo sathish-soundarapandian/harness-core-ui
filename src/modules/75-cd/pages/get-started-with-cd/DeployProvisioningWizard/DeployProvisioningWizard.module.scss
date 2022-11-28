@@ -97,8 +97,14 @@
 }
 
 .radioButton {
-  :global(.RadioButton--pillChecked) {
-    background-color: var(--primary-7) !important;
+  :global {
+    .RadioButton--pillChecked {
+      background-color: var(--primary-7) !important;
+    }
+    .RadioButton--asPill {
+      border: 1px solid var(--grey-100) !important;
+      box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
+    }
   }
 }
 
@@ -258,4 +264,41 @@
 }
 .disable {
   cursor: not-allowed !important;
+}
+
+.modal-card {
+  max-height: fit-content;
+  min-height: 150px;
+  height: calc(100% - 48px);
+
+  &.bp3-dialog-header {
+    color: var(--grey-700);
+  }
+
+  .modal-content {
+    width: 100%;
+    padding: var(--spacing-large);
+  }
+}
+
+.runPipelineDialog {
+  padding: 0 !important;
+  width: 872px;
+  height: 'fit-content';
+  overflow: 'auto';
+}
+
+.crossIcon {
+  position: absolute;
+  right: var(--spacing-small);
+  top: 12px;
+}
+
+.helpPanelContainer {
+  position: absolute;
+  bottom: var(--spacing-xxlarge);
+  right: var(--spacing-xxlarge);
+  min-width: 400px;
+  height: 560px;
+  z-index: 1;
 }
