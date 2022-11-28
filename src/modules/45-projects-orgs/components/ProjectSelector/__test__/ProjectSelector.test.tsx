@@ -25,7 +25,7 @@ describe('ProjectSelector', () => {
 
     const { container, getByText, getByTestId } = render(
       <TestWrapper path="/account/:accountId/cd/home" pathParams={{ accountId: 'dummy' }} projects={projects as any}>
-        <ProjectSelector onSelect={handleSelect} moduleFilter="CD" />
+        <ProjectSelector onSelect={handleSelect} />
       </TestWrapper>
     )
 

@@ -23,7 +23,6 @@ import type {
   UserPathProps
 } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
-import { ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
@@ -111,7 +110,6 @@ export default function CDSideNav(): React.ReactElement {
   return (
     <Layout.Vertical spacing="small">
       <ProjectSelector
-        moduleFilter={ModuleName.CD}
         onSelect={data => {
           updateAppStore({ selectedProject: data })
           if (connectorId) {

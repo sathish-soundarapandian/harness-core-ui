@@ -42,7 +42,6 @@ import css from './ProjectSelector.module.scss'
 
 export interface ProjectSelectorProps {
   onSelect: (project: Project) => void
-  moduleFilter?: Required<Project>['modules'][0]
 }
 
 const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
@@ -220,17 +219,9 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
     </Popover>
   )
 }
-export const ProjectSelector: React.FC<ProjectSelectorProps> = ({ onSelect, moduleFilter }) => {
-  const { selectedProject, updateAppStore } = useAppStore()
+export const ProjectSelector: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
+  const { selectedProject } = useAppStore()
   const { getString } = useStrings()
-
-  useEffect(() => {
-    // deselect current project if user switches module
-    // and the new module isn't added on selected project
-    if (moduleFilter && !selectedProject?.modules?.includes(moduleFilter)) {
-      updateAppStore({ selectedProject: undefined })
-    }
-  }, [moduleFilter])
 
   return (
     <>

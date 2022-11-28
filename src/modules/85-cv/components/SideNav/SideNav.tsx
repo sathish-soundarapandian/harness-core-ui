@@ -16,7 +16,6 @@ import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { ModuleName } from 'framework/types/ModuleName'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
@@ -32,7 +31,6 @@ export default function CVSideNav(): React.ReactElement {
   return (
     <Layout.Vertical spacing="small">
       <ProjectSelector
-        moduleFilter={ModuleName.CV}
         onSelect={data => {
           updateAppStore({ selectedProject: data })
           // if a user is on a pipeline related page, redirect them to project dashboard

@@ -24,7 +24,6 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useStrings } from 'framework/strings'
-import { ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -111,7 +110,6 @@ export default function CISideNav(): React.ReactElement {
   return (
     <Layout.Vertical spacing="small">
       <ProjectSelector
-        moduleFilter={ModuleName.CI}
         onSelect={data => {
           setShowGetStartedTabInMainMenu(false)
           updateAppStore({ selectedProject: data })
