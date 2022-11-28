@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import cx from 'classnames'
+import { isEmpty } from 'lodash-es'
 import {
   Container,
   Layout,
@@ -103,10 +104,11 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
               <Layout.Vertical spacing="medium" padding="medium">
                 <Formik
                   initialValues={existingPluginValues}
+                  enableReinitialize={true}
                   formName="configureOptionsForm"
                   onSubmit={data => {
                     try {
-                      onPluginAdd(data)
+                      onPluginAdd({ ...data, shouldInsertYAML: true })
                     } catch (e) {
                       //ignore error
                     }
@@ -129,6 +131,9 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                     )
                   }}
                 </Formik>
+                {!isEmpty(existingPluginValues) && !existingPluginValues.shouldInsertYAML ? (
+                  <Text>Value received from YAML view!</Text>
+                ) : null}
               </Layout.Vertical>
             ) : (
               <Layout.Vertical>

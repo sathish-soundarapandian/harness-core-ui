@@ -14,7 +14,19 @@ import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
 import { IKeyboardEvent, IPosition, languages, Range } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { Diagnostic } from 'vscode-languageserver-types'
-import { debounce, isEmpty, throttle, defaultTo, attempt, every, isEqualWith, isNil, isUndefined, get } from 'lodash-es'
+import {
+  debounce,
+  isEmpty,
+  throttle,
+  defaultTo,
+  attempt,
+  every,
+  isEqualWith,
+  isNil,
+  isUndefined,
+  get,
+  omit
+} from 'lodash-es'
 import { Layout, Text, Collapse } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import {} from 'lodash-es'
@@ -781,7 +793,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const addCodeLens = useCallback(
     (fromLine: number, toLineNum: number) => {
-      const commandId = editorRef.current?.editor?.addCommand(0, () => {}, '')
+      const commandId = editorRef.current?.editor?.addCommand(
+        0,
+        () => setPluginInput({ command: 'default', pathToProjects: 'default', arguments: 'default' }),
+        ''
+      )
       const registrationId = monaco.languages.registerCodeLensProvider('yaml', {
         provideCodeLenses: function (_model: unknown, _token: unknown) {
           return {
@@ -862,9 +878,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   )
 
   useEffect(() => {
-    if (!isEmpty(pluginInput)) {
+    if (!isEmpty(pluginInput) && pluginInput.shouldInsertYAML) {
       try {
-        addTextAtCurrentCursorPosition(yamlStringify(pluginInput)?.slice(0, -1))
+        addTextAtCurrentCursorPosition(yamlStringify(omit(pluginInput, 'shouldInsertYAML'))?.slice(0, -1))
       } catch (e) {
         // ignore error
       }
