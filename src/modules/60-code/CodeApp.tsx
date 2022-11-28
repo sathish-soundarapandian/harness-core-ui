@@ -51,7 +51,8 @@ const exportedRoutes = pick(routes, [
   'toCODERepositoryFileEdit',
   'toCODERepositoryCommits',
   'toCODERepositoryBranches',
-  'toCODERepositorySettings'
+  'toCODERepositorySettings',
+  'toCODECreateWebhook'
 ])
 
 const CODERemoteComponentMounter: React.FC<{

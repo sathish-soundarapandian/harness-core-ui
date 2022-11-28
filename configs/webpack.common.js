@@ -266,7 +266,8 @@ if (!enableCODE) {
     'code/RepositoryFileEdit',
     'code/RepositoryCommits',
     'code/RepositoryBranches',
-    'code/RepositorySettings'
+    'code/RepositorySettings',
+    'code/RepositoryCreateWebhook'
   ]
   codeModules.forEach(mod => (config.resolve.alias[mod] = ChildAppError))
 }
