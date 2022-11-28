@@ -99,7 +99,7 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
     updateSettingChangedVia('UPDATE')
   }
   return (
-    <Layout.Horizontal>
+    <Layout.Horizontal padding={{ top: 'small', bottom: 'small' }}>
       <Container flex={{ alignItems: 'center' }} className={css.settingLabelContainer}>
         <Container flex={{ alignItems: 'center' }} className={cx(isSubCategory && css.subCategoryLabel)}>
           <Text
