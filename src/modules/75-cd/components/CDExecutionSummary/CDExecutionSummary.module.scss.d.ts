@@ -7,9 +7,11 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly appIcon: string
   readonly count: string
   readonly envIcon: string
   readonly environments: string
+  readonly gitOpsApps: string
   readonly main: string
   readonly serviceName: string
   readonly serviceWrapper: string

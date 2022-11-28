@@ -6,6 +6,7 @@
  */
 
 import qs from 'qs'
+import { omit as _omit } from 'lodash-es'
 import { getEnvServiceRoute, getScopeBasedRoute, withAccountId } from '@common/utils/routeUtils'
 import type {
   OrgPathProps,
@@ -14,6 +15,8 @@ import type {
   DelegatePathProps,
   DelegateConfigProps,
   ProjectPathProps,
+  GitOpsAppPathProps,
+  GitOpsAppQueryParams,
   PipelinePathProps,
   TriggerPathProps,
   ExecutionPathProps,
@@ -799,6 +802,22 @@ const routes = {
   toGitOps: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops`
+  ),
+  toGitOpsApplication: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      applicationId,
+      ...rest
+    }: GitOpsAppPathProps & ModulePathParams & GitOpsAppQueryParams) => {
+      const queryString = qs.stringify(_omit(rest, 'accountId'), { skipNulls: true })
+      if (queryString.length > 0) {
+        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops/applications/${applicationId}?${queryString}`
+      } else {
+        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops/applications/${applicationId}`
+      }
+    }
   ),
   toAccountResourcesGitOps: withAccountId(({ entity }: AccountLevelGitOpsPathProps) => {
     const path = `resources/gitops/${entity}`

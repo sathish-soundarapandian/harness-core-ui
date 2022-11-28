@@ -10,28 +10,37 @@ import { Layout } from '@harness/uicore'
 import { identity, uniqBy } from 'lodash-es'
 import { String } from 'framework/strings'
 import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
-import type { CDPipelineModuleInfo, CDStageModuleInfo, ServiceExecutionSummary } from 'services/cd-ng'
+import type { CDPipelineModuleInfo, CDStageModuleInfo, ServiceExecutionSummary, Application } from 'services/cd-ng'
 import { getPipelineStagesMap } from '@pipeline/utils/executionUtils'
 import { ServicesList } from '../CDExecutionSummary/ServicesList'
 import { EnvironmentsList } from '../CDExecutionSummary/EnvironmentsList'
+import { GitOpsApplicationsList } from '../CDExecutionSummary/GitOpsApplicationsList'
 import css from './CDExecutionCardSummary.module.scss'
 
 const SERVICES_LIMIT = 3
 const ENV_LIMIT = 3
+const GITOPS_APPS_LIMIT = 3
 
 export function CDExecutionCardSummary(props: ExecutionCardInfoProps): React.ReactElement {
   const { data, nodeMap, startingNodeId } = props
   const serviceIdentifiers: string[] = ((data as CDPipelineModuleInfo)?.serviceIdentifiers as string[]) || []
 
-  const { servicesMap, environments } = React.useMemo(() => {
+  const { servicesMap, environments, gitOpsApps } = React.useMemo(() => {
     const stagesMap = getPipelineStagesMap(nodeMap, startingNodeId)
     const serviceMapObj: ServiceExecutionSummary[] = []
     const environmentsList: string[] = []
+    const _gitOpsApps: Application[] = []
     stagesMap.forEach(stage => {
       const stageInfo = stage.moduleInfo?.cd || ({} as CDStageModuleInfo)
       const serviceInfo = stageInfo?.serviceInfo
+      const gitOpsApplications = stageInfo?.gitOpsAppSummary?.applications || []
       if (stageInfo.infraExecutionSummary?.name || stageInfo.infraExecutionSummary?.identifier) {
         environmentsList.push(stageInfo.infraExecutionSummary.name || stageInfo.infraExecutionSummary.identifier)
+      }
+      if (gitOpsApplications.length) {
+        gitOpsApplications.forEach((app: Application) => {
+          _gitOpsApps.push(app)
+        })
       }
       // istanbul ignore else
       if (serviceInfo?.identifier) {
@@ -39,7 +48,11 @@ export function CDExecutionCardSummary(props: ExecutionCardInfoProps): React.Rea
       }
     })
 
-    return { servicesMap: uniqBy(serviceMapObj, s => s.identifier), environments: uniqBy(environmentsList, identity) }
+    return {
+      servicesMap: uniqBy(serviceMapObj, s => s.identifier),
+      environments: uniqBy(environmentsList, identity),
+      gitOpsApps: _gitOpsApps
+    }
   }, [nodeMap, startingNodeId])
 
   return (
@@ -62,6 +75,17 @@ export function CDExecutionCardSummary(props: ExecutionCardInfoProps): React.Rea
         />
         <EnvironmentsList className={css.environment} environments={environments} limit={ENV_LIMIT} />
       </div>
+      {gitOpsApps.length ? (
+        <div className={css.cardSummary}>
+          <String
+            tagName="div"
+            className={css.heading}
+            stringID="pipeline.executionList.applicationsText"
+            vars={{ size: gitOpsApps.length }}
+          />
+          <GitOpsApplicationsList className={css.environment} applications={gitOpsApps} limit={GITOPS_APPS_LIMIT} />
+        </div>
+      ) : null}
     </Layout.Horizontal>
   )
 }

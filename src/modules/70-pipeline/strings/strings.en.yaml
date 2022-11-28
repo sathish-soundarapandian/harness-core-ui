@@ -1208,6 +1208,7 @@ executionList:
   servicesDeployed: 'Services deployed'
   artifactDeployedText: 'Artifacts deployed ({{size}})'
   EnvironmentsText: 'Environments ({{size}})'
+  applicationsText: 'Applications ({{size}})'
 artifactImageTag: 'Artifact (Image: Tag)'
 replacedExpressions: Replaced Expressions
 expressionRequired: Expression value is required.

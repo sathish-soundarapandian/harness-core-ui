@@ -56,6 +56,19 @@
       font-size: var(--font-size-small) !important;
     }
   }
+
+  .gitOpsApps {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-size-small);
+    .appIcon {
+      margin-right: var(--spacing-3) !important;
+    }
+    p {
+      color: var(--grey-800) !important;
+      font-size: var(--font-size-small) !important;
+    }
+  }
 }
 
 .servicesTable {

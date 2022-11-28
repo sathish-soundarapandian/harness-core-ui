@@ -57,6 +57,14 @@ export interface PipelinePathProps extends ProjectPathProps {
   pipelineIdentifier: string
 }
 
+export interface GitOpsAppPathProps extends ProjectPathProps {
+  applicationId: string
+}
+
+export interface GitOpsAppQueryParams {
+  agentId?: string // this is query param
+}
+
 export interface PipelineLogsPathProps extends ExecutionPathProps {
   stageIdentifier: string
   stepIndentifier: string

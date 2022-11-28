@@ -3470,6 +3470,7 @@ export interface StringsMap {
   'pipeline.executionFrequency': string
   'pipeline.executionId': string
   'pipeline.executionList.EnvironmentsText': string
+  'pipeline.executionList.applicationsText': string
   'pipeline.executionList.artifactDeployedText': string
   'pipeline.executionList.servicesDeployed': string
   'pipeline.executionList.servicesDeployedText': string
