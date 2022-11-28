@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Position, PopoverInteractionKind, Classes } from '@blueprintjs/core'
 import { useParams, useHistory } from 'react-router-dom'
 import cx from 'classnames'
