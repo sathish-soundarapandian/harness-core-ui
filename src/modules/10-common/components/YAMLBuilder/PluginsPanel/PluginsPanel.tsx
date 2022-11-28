@@ -10,7 +10,10 @@ import {
   IconName,
   Icon,
   IconProps,
-  Button
+  Button,
+  Formik,
+  FormikForm,
+  FormInput
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -20,15 +23,14 @@ import { Plugins } from './plugins'
 import css from './PluginsPanel.module.scss'
 
 interface PluginsPanelInterface {
-  existingPluginValues: string
-  onPluginAdd: (pluginInput: string) => void
+  existingPluginValues: Record<string, any>
+  onPluginAdd: (pluginInput: Record<string, any>) => void
   height?: React.CSSProperties['height']
 }
 
 export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   const { height, onPluginAdd, existingPluginValues } = props
   const { getString } = useStrings()
-  const [textarea, setTextarea] = useState<string>('')
   const [selectedPlugin, setSelectedPlugin] = useState<string>('')
 
   const renderPlugin = useCallback((plugin: PluginInterface): JSX.Element => {
@@ -81,15 +83,6 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     )
   }, [])
 
-  const onChangeInput = (e: any) => {
-    setTextarea((e.target as any).value)
-  }
-
-  const onAddText = () => {
-    onPluginAdd(textarea)
-    setTextarea('')
-  }
-
   return (
     <Container className={css.tabs}>
       <Tabs id={'pluginsPanel'} defaultSelectedTabId={'plugins'}>
@@ -108,11 +101,34 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
           panel={
             selectedPlugin ? (
               <Layout.Vertical spacing="medium" padding="medium">
-                <textarea style={{ height: '100px', width: '300px' }} value={textarea} onChange={onChangeInput} />
-                <Button style={{ height: '40px', width: '100px' }} onClick={onAddText}>
-                  {getString('add')}
-                </Button>
-                <Text>{existingPluginValues}</Text>
+                <Formik
+                  initialValues={existingPluginValues}
+                  formName="configureOptionsForm"
+                  onSubmit={data => {
+                    try {
+                      onPluginAdd(data)
+                    } catch (e) {
+                      //ignore error
+                    }
+                  }}
+                >
+                  {_formik => {
+                    return (
+                      <FormikForm>
+                        <FormInput.Text name="command" placeholder={'Enter a command'} label={'Command'} />
+                        <FormInput.TextArea
+                          name="pathToProjects"
+                          placeholder={'Enter path to projects'}
+                          label={'Path to projects'}
+                        />
+                        <FormInput.Text name="arguments" placeholder={'Enter arguments'} label={'Arguments'} />
+                        <Button style={{ height: '40px', width: '100px' }} type="submit">
+                          {getString('add')}
+                        </Button>
+                      </FormikForm>
+                    )
+                  }}
+                </Formik>
               </Layout.Vertical>
             ) : (
               <Layout.Vertical>

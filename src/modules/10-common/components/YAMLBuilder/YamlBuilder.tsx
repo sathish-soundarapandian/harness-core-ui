@@ -151,7 +151,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const editorVersionRef = useRef<number>()
   const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
   const [schemaValidationErrors, setSchemaValidationErrors] = useState<Diagnostic[]>()
-  const [pluginInput, setPluginInput] = useState<string>('')
+  const [pluginInput, setPluginInput] = useState<Record<string, any>>({})
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -862,8 +862,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   )
 
   useEffect(() => {
-    if (pluginInput) {
-      addTextAtCurrentCursorPosition(pluginInput)
+    if (!isEmpty(pluginInput)) {
+      try {
+        addTextAtCurrentCursorPosition(yamlStringify(pluginInput)?.slice(0, -1))
+      } catch (e) {
+        // ignore error
+      }
     }
   }, [pluginInput])
 
