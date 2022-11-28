@@ -5,20 +5,23 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom'
-import { Container, Layout, Text, Icon, Tabs } from '@harness/uicore'
+import { Container, Layout, Text, Icon, Tabs, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import type { Module, ModulePathParams, ProjectPathProps, SecretsPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { ResponseSecretResponseWrapper, SecretDTOV2, useGetSecretV2 } from 'services/cd-ng'
+import { Error, ResponseSecretResponseWrapper, SecretDTOV2, useGetSecretV2, useGetSettingValue } from 'services/cd-ng'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { SettingType } from '@default-settings/interfaces/SettingType.types'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import SecretDetails from '../secretDetails/SecretDetails'
 import SecretReferences from '../secretReferences/SecretReferences'
 import { SecretMenuItem } from '../secrets/views/SecretsListView/SecretsList'
@@ -59,8 +62,23 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
   )?.isExact
 
   const [isReference, setIsReference] = useState(Boolean(isReferenceTab))
-
+  const { showError } = useToaster()
   const { selectedProject } = useAppStore()
+  const { getRBACErrorMessage } = useRBACError()
+  const { PL_FORCE_DELETE_CONNECTOR_SECRET, NG_SETTINGS } = useFeatureFlags()
+  const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
+    identifier: SettingType.ENABLE_FORCE_DELETE,
+    queryParams: { accountIdentifier: accountId },
+    lazy: !NG_SETTINGS
+  })
+
+  useEffect(() => {
+    if (forceDeleteSettingsError) {
+      showError(getRBACErrorMessage(forceDeleteSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forceDeleteSettingsError])
+
   const history = useHistory()
   const { loading, data, error, refetch } = useGetSecretV2({
     identifier: secretId,
@@ -133,6 +151,7 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
                 onSuccessfulDelete={onSuccessfulDeleteRedirect}
                 onSuccessfulEdit={refetch}
                 setIsReference={isRefereceView => setIsReference(isRefereceView)}
+                forceDeleteSupported={PL_FORCE_DELETE_CONNECTOR_SECRET && forceDeleteSettings?.data?.value === 'true'}
               />
             </div>
           )

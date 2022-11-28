@@ -97,7 +97,7 @@ describe('useEntityDeleteErrorHandlerDialog test', () => {
     )
 
     expect(queryByText('delete')).not.toBeInTheDocument()
-    const viewReferenceButton = queryByText('common.referenceButtonText') as HTMLElement
+    const viewReferenceButton = queryByText('common.viewReferences') as HTMLElement
     act(() => {
       fireEvent.click(viewReferenceButton)
     })

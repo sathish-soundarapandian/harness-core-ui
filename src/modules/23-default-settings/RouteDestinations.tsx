@@ -23,6 +23,8 @@ import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import { String } from 'framework/strings'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import DefaultSettingsFactory from './factories/DefaultSettingsFactory'
 import { SettingType } from './interfaces/SettingType.types'
 import {
@@ -82,6 +84,17 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.WEBHOOK_GITHUB_TRIGGER
 })
 
 export default function DefaultSettingsRoutes(): React.ReactElement {
+  const isForceDeleteSupported = useFeatureFlag(FeatureFlag.PL_FORCE_DELETE_CONNECTOR_SECRET)
+  // Register  Category Factory only when Feature Flag is enabled
+  if (isForceDeleteSupported) {
+    DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_FORCE_DELETE, {
+      label: 'defaultSettings.enableForceDelete',
+      settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
+      yupValidation: Yup.boolean(),
+      settingCategory: 'CORE'
+    })
+  }
+
   return (
     <>
       <RouteWithLayout

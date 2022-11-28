@@ -5,3 +5,4 @@ harnessDefault: Harness Default
 inheritedFrom: Inherited from {{source}}
 mandateWebhookSecretsGithubTriggers: Mandate Webhook Secrets for Github Triggers
 mandateAuthorizationForCustomWebhookTriggers: Mandate Authorization for Custom Webhook Triggers
+enableForceDelete: Enable Force Delete of Harness Resources

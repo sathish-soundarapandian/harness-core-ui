@@ -87,7 +87,7 @@ export const CustomButtonContainer = (props: CustomButtonContainerProps): JSX.El
       <Container>
         <Button
           margin={{ right: 'small' }}
-          text={getString('common.referenceButtonText')}
+          text={getString('common.viewReferences')}
           variation={ButtonVariation.PRIMARY}
           onClick={() => redirectToReferencedBy()}
         />

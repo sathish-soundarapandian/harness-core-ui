@@ -37,7 +37,8 @@ import {
   ResponseConnectorStatistics,
   GetConnectorListV2QueryParams,
   Failure,
-  ConnectorInfoDTO
+  ConnectorInfoDTO,
+  useGetSettingValue
 } from 'services/cd-ng'
 import type { ConnectorFilterProperties } from 'services/cd-ng'
 import type { UseGetMockData } from '@common/utils/testUtils'
@@ -75,6 +76,8 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CE_CONNECTOR_CLICK, CONNECTORS_PAGE } from '@connectors/trackingConstants'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { resourceAttributeMap } from '@rbac/pages/ResourceGroupDetails/utils'
+import { SettingType } from '@default-settings/interfaces/SettingType.types'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ConnectorsListView from './views/ConnectorsListView'
 import {
   createRequestBodyPayload,
@@ -133,6 +136,19 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   const history = useHistory()
   useDocumentTitle(getString('connectorsLabel'))
   const { trackEvent } = useTelemetry()
+  const { PL_FORCE_DELETE_CONNECTOR_SECRET, NG_SETTINGS } = useFeatureFlags()
+  const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
+    identifier: SettingType.ENABLE_FORCE_DELETE,
+    queryParams: { accountIdentifier: accountId },
+    lazy: !NG_SETTINGS
+  })
+
+  useEffect(() => {
+    if (forceDeleteSettingsError) {
+      showError(getRBACErrorMessage(forceDeleteSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forceDeleteSettingsError])
 
   /* #region Connector CRUD section */
 
@@ -716,6 +732,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
               reload={refetchAllConnectorsWithStats}
               openConnectorModal={openConnectorModal}
               gotoPage={pageNumber => setPage(pageNumber)}
+              forceDeleteSupported={PL_FORCE_DELETE_CONNECTOR_SECRET && forceDeleteSettings?.data?.value === 'true'}
             />
           ) : (
             <Page.NoDataCard
