@@ -133,6 +133,7 @@ export enum PAGE_NAME {
   CODERepositoryFileEdit = 'CODERepositoryFileEdit',
   CODERepositoryCommits = 'CODERepositoryCommits',
   CODERepositoryBranches = 'CODERepositoryBranches',
+  CODECreateWebhook = 'CODECreateWebhook',
   ExecutionList = 'ExecutionList',
   CFConfigurePath = 'CFConfigurePath'
 }

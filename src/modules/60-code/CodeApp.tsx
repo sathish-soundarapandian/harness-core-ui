@@ -40,6 +40,9 @@ const RemoteRepositoryBranches = lazy(() => import('code/RepositoryBranches'))
 // eslint-disable-next-line import/no-unresolved
 const RemoteRepositorySettings = lazy(() => import('code/RepositorySettings'))
 
+// eslint-disable-next-line import/no-unresolved
+const RemoteCreateWebhook = lazy(() => import('code/RepositoryCreateWebhook'))
+
 const exportedRoutes = pick(routes, [
   'toCODE',
   'toCODEHome',
@@ -105,4 +108,8 @@ export const RepositoryBranches: React.FC<RemoteViewProps> = props => (
 
 export const RepositorySettings: React.FC<RemoteViewProps> = props => (
   <CODERemoteComponentMounter component={<RemoteRepositorySettings {...props} />} />
+)
+
+export const RepositoryCreateWebhook: React.FC<RemoteViewProps> = props => (
+  <CODERemoteComponentMounter component={<RemoteCreateWebhook {...props} />} />
 )

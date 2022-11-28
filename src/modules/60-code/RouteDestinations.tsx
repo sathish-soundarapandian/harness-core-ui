@@ -20,7 +20,8 @@ import {
   RepositoryCommits,
   RepositoryBranches,
   RepositoryFileEdit,
-  RepositorySettings
+  RepositorySettings,
+  RepositoryCreateWebhook
 } from './CodeApp'
 import CODEHomePage from './pages/home/CODEHomePage'
 
@@ -69,6 +70,22 @@ export function CODERouteDestinations(): React.ReactElement {
         exact
       >
         <RepositorySettings />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        path={routes.toCODECreateWebhook({
+          repoPath: [
+            codePathProps.accountId,
+            codePathProps.orgIdentifier,
+            codePathProps.projectIdentifier,
+            codePathProps.repoName
+          ].join('/')
+        })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.CODECreateWebhook}
+        exact
+      >
+        <RepositoryCreateWebhook />
       </RouteWithLayout>
 
       <RouteWithLayout
