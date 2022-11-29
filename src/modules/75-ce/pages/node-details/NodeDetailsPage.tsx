@@ -26,7 +26,7 @@ import routes from '@common/RouteDefinitions'
 import { getViewFilterForId, getTimeFilters, GROUP_BY_POD, getTimeRangeFilter } from '@ce/utils/perspectiveUtils'
 import CloudCostInsightChart from '@ce/components/CloudCostInsightChart/CloudCostInsightChart'
 import { CCM_CHART_TYPES } from '@ce/constants'
-import TimeRangePicker from '@ce/common/TimeRangePicker/TimeRangePicker'
+import TimeRangePicker from '@common/components/TimeRangePicker/TimeRangePicker'
 import { DAYS_FOR_TICK_INTERVAL } from '@ce/components/CloudCostInsightChart/Chart'
 import {
   CE_DATE_FORMAT_INTERNAL,
@@ -34,8 +34,8 @@ import {
   getGMTEndDateTime,
   getGMTStartDateTime,
   DEFAULT_TIME_RANGE
-} from '@ce/utils/momentUtils'
-import { CCM_PAGE_TYPE, TimeRangeFilterType } from '@ce/types'
+} from '@common/utils/momentUtils'
+import { CCM_PAGE_TYPE } from '@ce/types'
 import PerspectiveGrid from '@ce/components/PerspectiveGrid/PerspectiveGrid'
 import { Page } from '@common/exports'
 import WorkloadSummary from '@ce/components/WorkloadSummary/WorkloadSummary'
@@ -43,6 +43,7 @@ import EmptyView from '@ce/images/empty-state.svg'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import type { TimeRangeFilterType } from '@common/types'
 import { Aggregation, AggregationFunctionMapping } from './constants'
 import css from './NodeDetailsPage.module.scss'
 

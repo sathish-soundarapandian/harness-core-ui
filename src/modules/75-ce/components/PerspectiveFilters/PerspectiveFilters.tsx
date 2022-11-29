@@ -17,7 +17,7 @@ import { QlceViewFieldIdentifierData, useFetchViewFieldsQuery, QlceViewFilterWra
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import { perspectiveDefaultTimeRangeMapper } from '@ce/utils/perspectiveUtils'
-import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS } from '@ce/utils/momentUtils'
+import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS } from '@common/utils/momentUtils'
 import PerspectiveBuilderFilters from '../PerspectiveBuilderFilters/PerspectiveBuilderFilters'
 import type { PillData } from '../PerspectiveBuilderFilters/PerspectiveBuilderFilter'
 import css from './PerspectiveFilters.module.scss'

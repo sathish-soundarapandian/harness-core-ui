@@ -11,6 +11,8 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import routes from '@common/RouteDefinitions'
 import type { StringKeys, StringsMap } from 'framework/strings/StringsContext'
 import { ModuleName } from 'framework/types/ModuleName'
+import type { TimeRangeFilterType } from '@common/types'
+import { DATE_RANGE_SHORTCUTS, getDiffInDays, getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 
 interface RoleOption extends SelectOption {
   managed: boolean
@@ -129,4 +131,24 @@ export const getModuleFullLengthTitle = (module: ModuleName): keyof StringsMap =
     default:
       return 'common.purpose.cd.continuous'
   }
+}
+
+export enum GROUP_BY {
+  'HOUR' = 'HOUR',
+  'DAY' = 'DAY',
+  'MONTH' = 'MONTH'
+}
+
+export const getGroupByFromTimeRange = (timeRange: TimeRangeFilterType): GROUP_BY => {
+  const difference = getDiffInDays(timeRange.from, timeRange.to)
+
+  if (difference <= 2) {
+    return GROUP_BY.DAY
+  }
+
+  if (difference <= 31) {
+    return GROUP_BY.DAY
+  }
+
+  return GROUP_BY.MONTH
 }

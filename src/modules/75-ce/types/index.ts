@@ -8,8 +8,8 @@
 import type { Point } from 'highcharts'
 import type { SelectOption } from '@harness/uicore'
 import type { CCM_CHART_TYPES } from '@ce/constants'
-import type { QlceViewTimeGroupType, QlceViewFilterInput, QlceViewFieldInputInput } from 'services/ce/services'
 import type { CostTarget, SharedCost } from 'services/ce'
+import type { NodepoolTimeRangeType, TimeRangeType } from '@common/types'
 
 export interface ResourceDetails {
   cpu?: string
@@ -60,11 +60,6 @@ export enum TimeRange {
   'LAST_30' = 'LAST 30 DAYS'
 }
 
-export enum TimeRangeType {
-  'LAST_7' = 'LAST_7',
-  'LAST_30' = 'LAST_30'
-}
-
 export type NodepoolTimeRangeValue = {
   label: NodepoolTimeRange
   value: NodepoolTimeRangeType
@@ -74,12 +69,6 @@ export enum NodepoolTimeRange {
   'LAST_DAY' = 'LAST DAY',
   'LAST_7' = 'LAST 7 DAYS',
   'LAST_30' = 'LAST 30 DAYS'
-}
-
-export enum NodepoolTimeRangeType {
-  'LAST_DAY' = 'LAST_DAY',
-  'LAST_7' = 'LAST_7',
-  'LAST_30' = 'LAST_30'
 }
 
 export enum CCM_PAGE_TYPE {
@@ -99,16 +88,6 @@ export enum QualityOfService {
   BURSTABLE = 'BURSTABLE',
   GUARANTEED = 'GUARANTEED'
 }
-
-export interface TimeRangeFilterType {
-  to: string
-  from: string
-}
-
-export type setFiltersFn = (newFilters: QlceViewFilterInput[]) => void
-export type setAggregationFn = (newAgg: QlceViewTimeGroupType) => void
-export type setGroupByFn = (groupBy: QlceViewFieldInputInput) => void
-export type setTimeRangeFn = (timeRange: TimeRangeFilterType) => void
 export type setChartTypeFn = (chartType: CCM_CHART_TYPES) => void
 
 export interface PerspectiveQueryParams {

@@ -6,7 +6,7 @@
  */
 
 import moment from 'moment'
-import { TimeRangeFilterType, TimeRangeType, NodepoolTimeRangeType } from '@ce/types'
+import { TimeRangeFilterType, TimeRangeType, NodepoolTimeRangeType } from '@common/types'
 
 export const todayInUTC = () => moment.utc()
 export const yesterdayInUTC = () => moment().utc().subtract(1, 'days')

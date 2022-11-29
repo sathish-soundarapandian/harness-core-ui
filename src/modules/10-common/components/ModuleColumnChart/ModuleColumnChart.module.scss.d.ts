@@ -7,6 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly descText: string
+  readonly deltaContainer: string
 }
 export default styles

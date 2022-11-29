@@ -26,7 +26,7 @@ import { Position, Menu, MenuItem } from '@blueprintjs/core'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { TimeRangeValue, TimeRange, TimeRangeType } from '@ce/types'
+import { TimeRangeValue, TimeRange } from '@ce/types'
 import { ViewTimeRange } from '@ce/components/RecommendationDetails/constants'
 import {
   ResourceType,
@@ -34,7 +34,7 @@ import {
   RecommendationOverviewStats,
   LaunchType
 } from 'services/ce/services'
-import { GET_DATE_RANGE } from '@ce/utils/momentUtils'
+import { GET_DATE_RANGE } from '@common/utils/momentUtils'
 import routes from '@common/RouteDefinitions'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
@@ -44,6 +44,7 @@ import ECSRecommendationDetails, {
 import TuneECSRecommendationCard from '@ce/components/ECSRecommendationDetails/TuneECSRecommendationCard'
 import CustomizeRecommendationsImg from '@ce/pages/recommendationDetails/images/custom-recommendations.gif'
 
+import { TimeRangeType } from '@common/types'
 import css from './ECSRecommendationDetailsPage.module.scss'
 
 const ECSRecommendationDetailsPage: React.FC = () => {

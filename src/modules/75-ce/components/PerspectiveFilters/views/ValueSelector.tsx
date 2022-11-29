@@ -19,7 +19,7 @@ import {
   QlceViewFilterWrapperInput
 } from 'services/ce/services'
 import { getTimeFilters, getViewFilterForId } from '@ce/utils/perspectiveUtils'
-import { getGMTStartDateTime, getGMTEndDateTime } from '@ce/utils/momentUtils'
+import { getGMTStartDateTime, getGMTEndDateTime } from '@common/utils/momentUtils'
 import type { ProviderType } from '../FilterPill'
 import css from './views.module.scss'
 

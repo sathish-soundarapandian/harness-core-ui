@@ -9,7 +9,6 @@
 declare const styles: {
   readonly active: string
   readonly container: string
-  readonly deltaContainer: string
   readonly viewAll: string
 }
 export default styles

@@ -15,7 +15,7 @@ import {
   getGenericTimeZoneName,
   getStaticSchedulePeriodTime,
   getTimePeriodString
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
 import type { RefreshFunction } from '@ce/types'
 import css from './COGatewayList.module.scss'
 

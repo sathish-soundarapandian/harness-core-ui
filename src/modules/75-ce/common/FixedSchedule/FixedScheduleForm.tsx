@@ -35,7 +35,7 @@ import {
   getStaticSchedulePeriodString,
   getStaticSchedulePeriodTime,
   getUserTimeZone
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
 import type { FixedScheduleClient, ScheduleTime } from '@ce/components/COCreateGateway/models'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useValidateStaticScheduleList } from 'services/lw'

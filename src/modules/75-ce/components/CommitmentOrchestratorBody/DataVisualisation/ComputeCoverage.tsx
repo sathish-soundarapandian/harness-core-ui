@@ -17,7 +17,7 @@ import {
   RenderPercentageCell,
   RenderTextCell
 } from '@ce/components/PerspectiveGrid/Columns'
-import { getStaticSchedulePeriodTime } from '@ce/utils/momentUtils'
+import { getStaticSchedulePeriodTime } from '@common/utils/momentUtils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFetchComputeCoverage } from 'services/lw-co'
 import GridWithChartVisualiser from './GridWithChartVisualiser'

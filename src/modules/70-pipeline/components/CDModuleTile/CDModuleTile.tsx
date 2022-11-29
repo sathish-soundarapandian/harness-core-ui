@@ -1,55 +1,37 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { Color, Container, Icon } from '@harness/uicore'
-import { useParams } from 'react-router'
+import React, { useMemo } from 'react'
+import { Container, Icon } from '@harness/uicore'
+import { Color } from '@harness/design-system'
+import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import type { ModuleTileDetailsBaseProps } from '@projects-orgs/pages/OverviewDashboardPage/ModuleTile/types'
-import { StackedColumnChart } from '@common/components/StackedColumnChart/StackedColumnChart'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import {
-  DeploymentsOverview,
   useGetDeploymentStatsOverview,
-  GetDeploymentStatsOverviewQueryParams,
-  PipelineExecutionInfo,
-  TimeBasedStats
+  TimeBasedStats,
+  GetDeploymentStatsOverviewQueryParams
 } from 'services/dashboard-service'
-import { TimeRangeToDays, useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
-
-// response.deploymentsStatsSummary.deploymentStats.forEach(val => {
-//   successData.push(defaultTo(val.countWithSuccessFailureDetails?.successCount, 0))
-//   failureData.push(defaultTo(val.countWithSuccessFailureDetails?.failureCount, 0))
-//   custom.push(val)
-// })
-
-export enum TimeRangeGroupByMapping {
-  '30Days' = 'DAY',
-  '60Days' = 'WEEK',
-  '90Days' = 'WEEK',
-  '1Year' = 'MONTH'
-}
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
+import { getGroupByFromTimeRange } from '@projects-orgs/utils/utils'
+import ModuleColumnChart from '@common/components/ModuleColumnChart/ModuleColumnChart'
 
 export default function CDModuleTile(props: ModuleTileDetailsBaseProps): React.ReactElement {
-  const { selectedTimeRange } = useLandingDashboardContext()
-
-  const [range, setRange] = useState([0, 0])
-  const [sortByValue, setSortByValue] = useState<GetDeploymentStatsOverviewQueryParams['sortBy']>('DEPLOYMENTS')
-  const [groupByValue, setGroupByValues] = useState(TimeRangeGroupByMapping[selectedTimeRange])
+  const { selectedRange } = props
   const { isExpanded } = props
   const { accountId } = useParams<AccountPathProps>()
 
-  const { data, error, refetch, loading } = useGetDeploymentStatsOverview({
+  const { data, loading } = useGetDeploymentStatsOverview({
     queryParams: {
       accountIdentifier: accountId,
-      startTime: range[0],
-      endTime: range[1],
-      groupBy: groupByValue,
-      sortBy: sortByValue
-    },
-    lazy: true
+      startTime: getGMTStartDateTime(selectedRange?.from),
+      endTime: getGMTEndDateTime(selectedRange?.to),
+      groupBy: getGroupByFromTimeRange(selectedRange) as GetDeploymentStatsOverviewQueryParams['groupBy'],
+      sortBy: 'DEPLOYMENTS'
+    }
   })
 
   const response = data?.data?.response
 
-  let deploymentStatsData = useMemo(() => {
+  const deploymentStatsData = useMemo(() => {
     const successData: number[] = []
     const failureData: number[] = []
     const custom: TimeBasedStats[] = []
@@ -77,37 +59,24 @@ export default function CDModuleTile(props: ModuleTileDetailsBaseProps): React.R
     return [successArr, failureArr]
   }, [response?.deploymentsStatsSummary?.deploymentStats])
 
-  deploymentStatsData = deploymentStatsData.slice(0, 9)
-
-  useEffect(() => {
-    setRange([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 70000, Date.now()])
-    setGroupByValues(TimeRangeGroupByMapping[selectedTimeRange])
-  }, [selectedTimeRange])
-
-  useEffect(() => {
-    if (!range[0]) {
-      return
-    }
-    refetch()
-  }, [refetch, range, groupByValue, sortByValue])
-
   if (loading) {
     return (
       <Container flex={{ justifyContent: 'center' }}>
-        <Icon name="spinner" size={24} color={Color.PRIMARY_7} />{' '}
+        <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
       </Container>
     )
   }
 
   return (
     <>
-      <StackedColumnChart
-        data={deploymentStatsData.slice(0, 8) || []}
-        options={{
-          xAxis: { visible: false },
-          chart: { type: 'column', spacing: [1, 1, 1, 1] },
-          yAxis: { visible: false },
-          legend: { enabled: false }
+      <ModuleColumnChart
+        detailedView={isExpanded}
+        data={deploymentStatsData || []}
+        groupBy="DAY"
+        count={10}
+        countChangeInfo={{
+          countChange: response?.deploymentsStatsSummary?.deploymentRateAndChangeRate?.rate,
+          countChangeRate: response?.deploymentsStatsSummary?.deploymentRateAndChangeRate?.rateChangeRate
         }}
       />
     </>

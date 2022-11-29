@@ -10,13 +10,13 @@ import { Container, Text, Button, Icon, FlexExpander } from '@harness/uicore'
 import cx from 'classnames'
 import { Menu, MenuItem, Popover, Position } from '@blueprintjs/core'
 import { QlceViewTimeGroupType, QlceViewFilterInput } from 'services/ce/services'
-import TimeRangePicker from '@ce/common/TimeRangePicker/TimeRangePicker'
+import TimeRangePicker from '@common/components/TimeRangePicker/TimeRangePicker'
 import {
   CE_DATE_FORMAT_INTERNAL,
   DATE_RANGE_SHORTCUTS,
   getGMTEndDateTime,
   getGMTStartDateTime
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { setAggregationFn, setFiltersFn, setTimeRangeFn } from '@ce/types'
 import ExplorerFilters from './ExplorerFilters'

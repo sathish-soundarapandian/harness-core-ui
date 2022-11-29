@@ -18,7 +18,7 @@ import {
   useFetchOverviewTimeSeriesQuery
 } from 'services/ce/services'
 import { useStrings } from 'framework/strings'
-import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { ChartConfigType, transformTimeSeriesData } from '../CloudCostInsightChart/chartUtils'
 import CEChart from '../CEChart/CEChart'
 import { ChartTypes, Loader } from './OverviewPageLayout'

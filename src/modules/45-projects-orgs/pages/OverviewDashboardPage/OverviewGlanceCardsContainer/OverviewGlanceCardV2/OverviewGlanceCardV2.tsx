@@ -7,6 +7,7 @@ import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import type { CountChangeAndCountChangeRateInfo } from 'services/dashboard-service'
 import { numberFormatter } from '@common/utils/utils'
+import { Delta } from '@common/components/ModuleColumnChart/ModuleColumnChart'
 import css from './OverviewGlanceCardV2.module.scss'
 
 export interface OverviewGlanceCardV2Props {
@@ -17,38 +18,6 @@ export interface OverviewGlanceCardV2Props {
   className?: string
   countChangeInfo?: CountChangeAndCountChangeRateInfo
   redirectUrl?: string
-}
-
-interface DeltaProps {
-  countChangeInfo: CountChangeAndCountChangeRateInfo
-}
-
-export const Delta: React.FC<DeltaProps> = ({ countChangeInfo }) => {
-  const countChange = countChangeInfo?.countChange
-
-  if (!countChange) {
-    return null
-  }
-
-  const rateColor = countChange > 0 ? 'var(--green-800)' : 'var(--red-700)'
-  const backgroundColor = countChange > 0 ? 'var(--green-50)' : 'var(--red-50)'
-
-  return (
-    <Layout.Horizontal className={css.deltaContainer} flex style={{ backgroundColor }}>
-      <Text font={{ variation: FontVariation.TINY_SEMI }} style={{ color: rateColor }} margin={{ right: 'xsmall' }}>
-        {countChange > 0 ? '+' : '-'}
-      </Text>
-      <Text font={{ variation: FontVariation.TINY_SEMI }} style={{ color: rateColor }}>
-        {new Intl.NumberFormat('default', {
-          notation: 'compact',
-          compactDisplay: 'short',
-          unitDisplay: 'long',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 2
-        }).format(countChange)}
-      </Text>
-    </Layout.Horizontal>
-  )
 }
 
 const OverviewGlanceCardV2: React.FC<OverviewGlanceCardV2Props> = props => {

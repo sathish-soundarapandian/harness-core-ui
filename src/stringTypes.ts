@@ -138,8 +138,8 @@ export interface StringsMap {
   'common.chaosText': string
   'common.city': string
   'common.clearSelection': string
-  'common.clickToKnowMore': string
   'common.clickToExpand': string
+  'common.clickToKnowMore': string
   'common.clientId': string
   'common.clientSecret': string
   'common.cluster': string
@@ -178,6 +178,7 @@ export interface StringsMap {
   'common.configureOptions.values': string
   'common.confirmAction': string
   'common.confirmText': string
+  'common.connectRepo': string
   'common.connectThroughDelegate': string
   'common.connectThroughDelegateInfo': string
   'common.connectThroughPlatform': string
@@ -190,6 +191,7 @@ export interface StringsMap {
   'common.copyVariableName': string
   'common.countryOrRegion': string
   'common.coverage': string
+  'common.createFlag': string
   'common.createPipeline': string
   'common.creating': string
   'common.current': string
@@ -481,6 +483,7 @@ export interface StringsMap {
   'common.lastModifiedTime': string
   'common.latest': string
   'common.launchFirstGen': string
+  'common.learnMore': string
   'common.letsGetYouStarted': string
   'common.levelUp': string
   'common.link': string
@@ -511,6 +514,22 @@ export interface StringsMap {
   'common.moduleConfig.restoreDefault': string
   'common.moduleConfig.selectModules': string
   'common.moduleConfig.your': string
+  'common.moduleDetails.cd.collapsed.title': string
+  'common.moduleDetails.cd.expanded.list.four': string
+  'common.moduleDetails.cd.expanded.list.one': string
+  'common.moduleDetails.cd.expanded.list.three': string
+  'common.moduleDetails.cd.expanded.list.two': string
+  'common.moduleDetails.cd.expanded.title': string
+  'common.moduleDetails.ci.collapsed.title': string
+  'common.moduleDetails.ci.expanded.list.one': string
+  'common.moduleDetails.ci.expanded.list.three': string
+  'common.moduleDetails.ci.expanded.list.two': string
+  'common.moduleDetails.ci.expanded.title': string
+  'common.moduleDetails.ff.collapsed.title': string
+  'common.moduleDetails.ff.expanded.list.one': string
+  'common.moduleDetails.ff.expanded.list.three': string
+  'common.moduleDetails.ff.expanded.list.two': string
+  'common.moduleDetails.ff.expanded.title': string
   'common.moduleLabel': string
   'common.moduleList.buildAndTest': string
   'common.moduleList.deployChanges': string
@@ -958,6 +977,22 @@ export interface StringsMap {
   'common.test.connectionSuccessful': string
   'common.test.inProgress': string
   'common.test.retest': string
+  'common.timeRange.calendarMonths': string
+  'common.timeRange.recommended': string
+  'common.timeRange.relativeDates': string
+  'common.timeRange.selectCustomRange': string
+  'common.timeRangeConstants.last12Months': string
+  'common.timeRangeConstants.last3Months': string
+  'common.timeRangeConstants.last6Months': string
+  'common.timeRangeConstants.last7Days': string
+  'common.timeRangeConstants.lastMonth': string
+  'common.timeRangeConstants.lastQuarter': string
+  'common.timeRangeConstants.lastYear': string
+  'common.timeRangeConstants.thisMonth': string
+  'common.timeRangeConstants.thisQuarter': string
+  'common.timeRangeConstants.thisYear': string
+  'common.timeRangeLimitWarning.currentPlanOffer': string
+  'common.timeRangeLimitWarning.upgradeOffer': string
   'common.timeframe': string
   'common.tokens': string
   'common.totalLines': string
@@ -6140,22 +6175,6 @@ export interface StringsMap {
   'ce.perspectives.timeAggregation.daily': string
   'ce.perspectives.timeAggregation.hourly': string
   'ce.perspectives.timeAggregation.monthly': string
-  'ce.perspectives.timeRange.calendarMonths': string
-  'ce.perspectives.timeRange.recommended': string
-  'ce.perspectives.timeRange.relativeDates': string
-  'ce.perspectives.timeRange.selectCustomRange': string
-  'ce.perspectives.timeRangeConstants.last12Months': string
-  'ce.perspectives.timeRangeConstants.last3Months': string
-  'ce.perspectives.timeRangeConstants.last6Months': string
-  'ce.perspectives.timeRangeConstants.last7Days': string
-  'ce.perspectives.timeRangeConstants.lastMonth': string
-  'ce.perspectives.timeRangeConstants.lastQuarter': string
-  'ce.perspectives.timeRangeConstants.lastYear': string
-  'ce.perspectives.timeRangeConstants.thisMonth': string
-  'ce.perspectives.timeRangeConstants.thisQuarter': string
-  'ce.perspectives.timeRangeConstants.thisYear': string
-  'ce.perspectives.timeRangeLimitWarning.currentPlanOffer': string
-  'ce.perspectives.timeRangeLimitWarning.upgradeOffer': string
   'ce.perspectives.top12GroupBy': string
   'ce.perspectives.validations.emailRequired': string
   'ce.perspectives.validations.invalidEmails': string
@@ -6575,7 +6594,6 @@ export interface StringsMap {
   'cf.onboarding.android': string
   'cf.onboarding.clientKey': string
   'cf.onboarding.complete': string
-  'cf.onboarding.createAFlag': string
   'cf.onboarding.createEnv': string
   'cf.onboarding.createEnvAndSdk': string
   'cf.onboarding.createFlag': string
@@ -6624,7 +6642,6 @@ export interface StringsMap {
   'cf.onboarding.selectedLanguageAndEnv': string
   'cf.onboarding.setUpApp': string
   'cf.onboarding.setUpYourCode': string
-  'cf.onboarding.setupCode': string
   'cf.onboarding.simpliestFlag': string
   'cf.onboarding.simpliestFlagDescription': string
   'cf.onboarding.subTitle': string
@@ -6902,7 +6919,6 @@ export interface StringsMap {
   'ci.getStartedWithCI.configurationOption': string
   'ci.getStartedWithCI.configurePipeline': string
   'ci.getStartedWithCI.configureYourPipeline': string
-  'ci.getStartedWithCI.connectRepo': string
   'ci.getStartedWithCI.createPipeline': string
   'ci.getStartedWithCI.createPipelineWithOtherOption': string
   'ci.getStartedWithCI.devFriendly': string

@@ -40,7 +40,7 @@ import {
   FORMAT_12_HOUR,
   getStaticSchedulePeriodTime,
   getTimePeriodString
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
 import RuleStatusToggleSwitch from '@ce/components/RuleDetails/RuleStatusToggleSwitch'
 import RulesDetailsBody from '@ce/components/RuleDetails/RuleDetailsBody'
 import useDeleteServiceHook from '@ce/common/useDeleteService'
