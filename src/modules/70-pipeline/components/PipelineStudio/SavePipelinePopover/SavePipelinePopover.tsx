@@ -284,7 +284,10 @@ function SavePipelinePopover(
                 storeMetadata
               )
             },
-            isEdit
+            isEdit,
+            onRefreshEntity: () => {
+              fetchPipeline({ forceFetch: true, forceUpdate: true })
+            }
           })
         } else {
           showError(

@@ -210,7 +210,10 @@ function SaveTemplatePopover(
             updatedGitDetails: gitDetails
           })
         },
-        isEdit
+        isEdit,
+        onRefreshEntity: () => {
+          fetchTemplate({ forceFetch: true, forceUpdate: true })
+        }
       })
     } else {
       clear()

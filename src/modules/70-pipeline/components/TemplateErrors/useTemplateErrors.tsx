@@ -18,6 +18,7 @@ interface OpenTemplateErrorsModalProps {
   originalYaml: string
   onSave: (refreshedYaml: string) => Promise<void>
   isEdit: boolean
+  onRefreshEntity?: () => void
 }
 
 interface UseTemplateErrorsReturnType {
@@ -39,6 +40,7 @@ export default function useTemplateErrors({ entity }: TemplateErrors): UseTempla
             errorNodeSummary={modalProps.error}
             entity={entity}
             isEdit={modalProps.isEdit}
+            onRefreshEntity={modalProps.onRefreshEntity}
             originalEntityYaml={modalProps.originalYaml}
             updateRootEntity={async (refreshedYaml: string) => {
               hideReconcileDialog()
@@ -51,12 +53,13 @@ export default function useTemplateErrors({ entity }: TemplateErrors): UseTempla
   }, [entity, modalProps])
 
   const openTemplateErrorsModal = React.useCallback(
-    ({ error, originalYaml, onSave, isEdit }) => {
+    ({ error, originalYaml, onSave, isEdit, onRefreshEntity }) => {
       setModalPros({
         error,
         originalYaml,
         onSave,
-        isEdit
+        isEdit,
+        onRefreshEntity
       })
       showReconcileDialog()
     },
