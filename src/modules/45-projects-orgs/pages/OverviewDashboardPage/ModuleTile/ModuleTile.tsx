@@ -59,9 +59,10 @@ const ModuleTile: React.FC<ModuleTileProps> = ({ module, selectedRange }) => {
   const { getString } = useStrings()
   const { color, icon, backgroundColor, hasLicense, pipelineIcon } = useNavModuleInfo(module)
   const { label, ZeroState } = moduleTileMap[module]
-  const showEmptyState = !hasLicense
 
   const ModuleTileOverview = OverviewDashboardPageFactory.getModuleTileOverview(module)
+
+  const showEmptyState = !hasLicense || !ModuleTileOverview
 
   const renderEmptyState = () => {
     if (!ZeroState) {
@@ -84,7 +85,12 @@ const ModuleTile: React.FC<ModuleTileProps> = ({ module, selectedRange }) => {
       style={{ borderColor: `var(${color})`, backgroundColor: `var(${backgroundColor})` }}
     >
       <Layout.Vertical
-        className={cx(css.container, { [css.hoverStyle]: !isExpanded }, { [css.expanded]: isExpanded })}
+        className={cx(
+          css.container,
+          { [css.hoverStyle]: !isExpanded },
+          { [css.expanded]: isExpanded },
+          { [css.emptyState]: showEmptyState }
+        )}
         onClick={() => {
           setIsExpanded(!isExpanded)
         }}

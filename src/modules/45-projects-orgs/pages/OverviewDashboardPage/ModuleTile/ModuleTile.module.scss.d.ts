@@ -10,6 +10,7 @@ declare const styles: {
   readonly backgroundIcon: string
   readonly clickToExpandText: string
   readonly container: string
+  readonly emptyState: string
   readonly expanded: string
   readonly hoverStyle: string
   readonly icon: string

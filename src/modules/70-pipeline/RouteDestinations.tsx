@@ -207,7 +207,7 @@ LandingDashboardFactory.registerModuleDashboardHandler(ModuleName.CD, {
   moduleDashboardRenderer: () => <LandingDashboardDeploymentsWidget />
 })
 
-// OverviewDashboardPageFactory.registerModuleTileOverview(ModuleName.CD, CDModuleTile)
+OverviewDashboardPageFactory.registerModuleTileOverview(ModuleName.CD, CDModuleTile)
 /**
  * Register for Audit Trail
  * */
