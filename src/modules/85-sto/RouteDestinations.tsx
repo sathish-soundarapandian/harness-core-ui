@@ -20,8 +20,7 @@ import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import { UserLabel } from '@common/components'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
@@ -139,10 +138,10 @@ const RedirectToProjectOverviewPage = (): React.ReactElement => {
   }
 }
 
+const RemoteSTOApp = lazy(() => import(`stoV2/App`))
+
 const RouteDestinations: React.FC = () => {
-  const isV2 = useFeatureFlag(FeatureFlag.STO_API_V2)
   const { NG_SETTINGS } = useFeatureFlags()
-  const RemoteSTOApp = lazy(() => (isV2 ? import(`stoV2/App`) : import(`sto/App`)))
 
   return (
     <>
