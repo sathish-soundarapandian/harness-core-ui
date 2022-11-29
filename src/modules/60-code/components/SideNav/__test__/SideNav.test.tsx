@@ -70,4 +70,25 @@ describe('Code Sidenav', () => {
 
     expect(container).toMatchSnapshot()
   })
+
+  test('Nav should render createwebhook link', async () => {
+    const Subject2: React.FC<{ path?: string }> = ({
+      path = '/account/:accountId/code/orgs/:orgIdentifier/projects/:projectIdentifier/:repoName/settings/webhook/new'
+    }) => (
+      <TestWrapper
+        path={path}
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy', repoName: 'test' }}
+      >
+        <SideNav />
+      </TestWrapper>
+    )
+    const { container } = render(<Subject2 />)
+    // expect(screen.queryByText('Settings')).toBeInTheDocument()
+
+    // await act(async () => {
+    //   fireEvent.click(getByTestId('project-select-button'))
+    // })
+
+    expect(container).toMatchSnapshot()
+  })
 })
