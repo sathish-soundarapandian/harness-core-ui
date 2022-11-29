@@ -6,11 +6,14 @@
  */
 
 import { Editions } from '@common/constants/SubscriptionTypes'
+import { isOnPrem } from '@common/utils/utils'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useModuleInfo } from './useModuleInfo'
 
 export function useAnyEnterpriseLicense(): boolean {
   const { licenseInformation } = useLicenseStore()
+
+  if (isOnPrem()) return true
 
   const anyEntitlement = Object.values(licenseInformation).find(license => license?.edition === Editions.ENTERPRISE)
   return !!anyEntitlement
@@ -19,6 +22,8 @@ export function useAnyEnterpriseLicense(): boolean {
 export function useCurrentEnterpriseLicense(): boolean {
   const { licenseInformation } = useLicenseStore()
   const module = useModuleInfo().module
+
+  if (isOnPrem()) return true
 
   const moduleEntitlement = module
     ? licenseInformation?.[module?.toUpperCase()]
