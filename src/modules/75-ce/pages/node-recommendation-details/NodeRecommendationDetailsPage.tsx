@@ -12,8 +12,8 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Position, Menu, MenuItem } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'
 
-import { NodepoolTimeRange, NodepoolTimeRangeType, NodepoolTimeRangeValue } from '@ce/types'
-import { GET_NODEPOOL_DATE_RANGE } from '@ce/utils/momentUtils'
+import { NodepoolTimeRange, NodepoolTimeRangeValue } from '@ce/types'
+import { GET_NODEPOOL_DATE_RANGE } from '@common/utils/momentUtils'
 import { Page } from '@common/exports'
 import {
   NodeRecommendationDto,
@@ -32,6 +32,7 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ViewNodepoolTimeRange } from '@ce/components/RecommendationDetails/constants'
 import NodeRecommendationDetails from '@ce/components/NodeRecommendation/NodeRecommendation'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
+import { NodepoolTimeRangeType } from '@common/types'
 import css from './NodeRecommendationDetailsPage.module.scss'
 
 interface Params {

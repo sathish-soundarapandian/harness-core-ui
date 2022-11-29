@@ -16,7 +16,7 @@ import {
   FORMAT_12_HOUR,
   get24HourTimeIn12HourFormat,
   getTimePeriodString
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
 import { DaysOfWeek } from '@ce/constants'
 import { Utils } from '@ce/common/Utils'
 import css from './FixedScheduleList.module.scss'

@@ -18,7 +18,7 @@ import {
   ViewFieldIdentifier
 } from 'services/ce/services'
 import { useStrings } from 'framework/strings'
-import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { CE_COLOR_CONST } from '../CEChart/CEChartOptions'
 import { HorizontalLayout, LEGEND_LIMIT, ListType, Loader, Stats, TableList } from './OverviewPageLayout'
 import css from './OverviewPage.module.scss'

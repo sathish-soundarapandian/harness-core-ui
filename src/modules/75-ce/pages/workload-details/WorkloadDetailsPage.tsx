@@ -27,7 +27,7 @@ import routes from '@common/RouteDefinitions'
 import { getViewFilterForId, getTimeFilters, GROUP_BY_POD, getTimeRangeFilter } from '@ce/utils/perspectiveUtils'
 import CloudCostInsightChart from '@ce/components/CloudCostInsightChart/CloudCostInsightChart'
 import { CCM_CHART_TYPES } from '@ce/constants'
-import TimeRangePicker from '@ce/common/TimeRangePicker/TimeRangePicker'
+import TimeRangePicker from '@common/components/TimeRangePicker/TimeRangePicker'
 import { DAYS_FOR_TICK_INTERVAL } from '@ce/components/CloudCostInsightChart/Chart'
 import {
   CE_DATE_FORMAT_INTERNAL,
@@ -35,7 +35,7 @@ import {
   DEFAULT_TIME_RANGE,
   getGMTEndDateTime,
   getGMTStartDateTime
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
 import { CCM_PAGE_TYPE, TimeRangeFilterType } from '@ce/types'
 import PerspectiveGrid from '@ce/components/PerspectiveGrid/PerspectiveGrid'
 import { Page } from '@common/exports'

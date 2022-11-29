@@ -22,8 +22,8 @@ import {
   useSavingsOfService
 } from 'services/lw'
 import type { RefreshFunction, TimeRangeFilterType } from '@ce/types'
-import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS, getStaticSchedulePeriodTime } from '@ce/utils/momentUtils'
-import TimeRangePicker from '@ce/common/TimeRangePicker/TimeRangePicker'
+import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS, getStaticSchedulePeriodTime } from '@common/utils/momentUtils'
+import TimeRangePicker from '@common/components/TimeRangePicker/TimeRangePicker'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import formatCost from '@ce/utils/formatCost'
 import type { ConnectorInfoDTO } from 'services/cd-ng'

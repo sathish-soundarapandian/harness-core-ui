@@ -21,7 +21,7 @@ import {
 } from 'services/ce/services'
 import { getTimeFilters } from '@ce/utils/perspectiveUtils'
 
-import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import type { TimeRangeFilterType } from '@ce/types'
 
 import BusinessMappingBuilder from '@ce/components/BusinessMappingBuilder/BusinessMappingBuilder'

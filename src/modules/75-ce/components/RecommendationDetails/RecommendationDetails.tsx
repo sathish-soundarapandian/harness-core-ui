@@ -25,7 +25,7 @@ import { RecommendationItem, TimeRangeValue, ResourceObject, QualityOfService, C
 import type { RecommendationOverviewStats } from 'services/ce/services'
 
 import formatCost from '@ce/utils/formatCost'
-import { DATE_RANGE_SHORTCUTS, getTimePeriodString } from '@ce/utils/momentUtils'
+import { DATE_RANGE_SHORTCUTS, getTimePeriodString } from '@common/utils/momentUtils'
 import { addBufferToValue, addBufferWithoutPrecision, calculateSavingsPercentage } from '@ce/utils/recommendationUtils'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { RecommendationType, ChartColors, PercentileValues } from './constants'

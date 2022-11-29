@@ -1,6 +1,9 @@
+.parentContainer {
+  border-radius: 8px;
+  height: fit-content;
+}
 .container {
   box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
-  border-radius: 8px;
   height: 146px;
   width: 186px;
   border: 1px solid transparent;
@@ -8,15 +11,23 @@
   position: relative;
   user-select: none;
   cursor: pointer;
+  border-radius: inherit;
+  background-color: var(--white) !important;
 
   &:hover {
     &.hoverStyle {
       border-color: inherit !important;
+      background-color: inherit !important;
       transition: border 200ms ease-out;
+      transition: background-color 200ms ease-out;
+      .icon {
+        opacity: 0.4;
+      }
+      .backgroundIcon {
+        opacity: 0.4;
+      }
     }
-    .icon {
-      opacity: 0.4;
-    }
+
     .clickToExpandText {
       display: block;
     }
@@ -24,6 +35,9 @@
   .icon {
     margin-left: var(--spacing-small) !important;
     opacity: 0.2;
+    position: absolute;
+    top: var(--spacing-small);
+    right: var(--spacing-small);
   }
   .clickToExpandText {
     position: absolute;
@@ -35,6 +49,17 @@
   .tileBody {
     flex: 1;
   }
+  .backgroundIcon {
+    position: absolute;
+    bottom: var(--spacing-medium);
+    margin: auto;
+    opacity: 0.2;
+    right: var(--spacing-small);
+    svg {
+      height: 67px;
+      width: 170px;
+    }
+  }
 }
 
 .expanded {
@@ -42,4 +67,9 @@
   width: 392px !important;
   border-color: inherit;
   z-index: 1;
+
+  .icon {
+    top: var(--spacing-medium);
+    right: var(--spacing-medium);
+  }
 }

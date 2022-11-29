@@ -19,7 +19,7 @@ import {
   useFetchperspectiveGridQuery,
   ViewFieldIdentifier
 } from 'services/ce/services'
-import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import type { TimeRange } from '@ce/pages/overview/OverviewPage'
 import routes from '@common/RouteDefinitions'
 import { getTimeFilters } from '@ce/utils/perspectiveUtils'

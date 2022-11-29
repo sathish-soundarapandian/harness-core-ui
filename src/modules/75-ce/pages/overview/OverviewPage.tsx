@@ -21,7 +21,7 @@ import {
   DATE_RANGE_SHORTCUTS,
   getGMTEndDateTime,
   getGMTStartDateTime
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
 import { AGGREGATE_FUNCTION } from '@ce/components/PerspectiveGrid/Columns'
 import OverviewClusterCostBreakdown from '@ce/components/OverviewPage/OverviewClusterCostBreakdown'
 import OverviewCloudCost, { OverviewLayout } from '@ce/components/OverviewPage/OverviewCloudCost'
@@ -29,7 +29,7 @@ import OverviewSummary from '@ce/components/OverviewPage/OverviewSummary'
 import OverviewTopCluster from '@ce/components/OverviewPage/OverviewTopClusters'
 import OverviewTopRecommendations from '@ce/components/OverviewPage/OverviewTopRecommendations'
 import OverviewCostByProviders from '@ce/components/OverviewPage/OverviewCostByProviders'
-import TimeRangePicker from '@ce/common/TimeRangePicker/TimeRangePicker'
+import TimeRangePicker from '@common/components/TimeRangePicker/TimeRangePicker'
 import { PageSpinner } from '@common/components'
 import OverviewAddCluster from '@ce/components/OverviewPage/OverviewAddCluster'
 import { Utils } from '@ce/common/Utils'

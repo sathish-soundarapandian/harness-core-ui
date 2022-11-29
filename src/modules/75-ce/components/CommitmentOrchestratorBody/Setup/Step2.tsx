@@ -24,7 +24,7 @@ import {
 import type { Column } from 'react-table'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS } from '@ce/utils/momentUtils'
+import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS } from '@common/utils/momentUtils'
 import {
   FiltersResponse,
   SetupInstanceType,

@@ -27,7 +27,7 @@ import {
   DATE_RANGE_SHORTCUTS,
   getGMTEndDateTime,
   getGMTStartDateTime
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
 import type { orderType, sortType } from '@common/components/Table/react-table-config'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import type { TimeRangeFilterType } from '@ce/types'

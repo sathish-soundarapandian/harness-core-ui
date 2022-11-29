@@ -16,7 +16,7 @@ import {
   RenderNameCell,
   RenderPercentageCell
 } from '@ce/components/PerspectiveGrid/Columns'
-import { getStaticSchedulePeriodTime } from '@ce/utils/momentUtils'
+import { getStaticSchedulePeriodTime } from '@common/utils/momentUtils'
 import { CCM_CHART_TYPES } from '@ce/constants'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetCommitmentUtilisation } from 'services/lw-co'

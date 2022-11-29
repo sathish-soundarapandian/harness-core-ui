@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { TimeRange, TimeRangeType, NodepoolTimeRange, NodepoolTimeRangeType } from '@ce/types'
+import { TimeRange, NodepoolTimeRange } from '@ce/types'
+import { NodepoolTimeRangeType, TimeRangeType } from '@common/types'
 
 export const ViewTimeRange = [
   {

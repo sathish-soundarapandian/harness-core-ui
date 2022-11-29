@@ -800,29 +800,10 @@ perspectives:
     emailRequired: Please provide at least 1 recipient's email address
     reportNameRequired: '{{ $.common.reportNameRequired }}'
   searchPerspectives: Search perspectives
-  timeRangeConstants:
-    last7Days: 'Last 7 Days'
-    thisMonth: '{{ $.common.feature.levelUp.limitMessage.thisMonth }}'
-    thisQuarter: 'This Quarter'
-    thisYear: 'This Year'
-    lastMonth: '{{$.common.datePickerShortcuts.LastMonth}}'
-    lastQuarter: 'Last Quarter'
-    lastYear: 'Last Year'
-    last3Months: 'Last 3 Months'
-    last6Months: 'Last 6 Months'
-    last12Months: 'Last 12 Months'
-  timeRange:
-    relativeDates: 'Relative dates'
-    calendarMonths: 'Calendar months'
-    recommended: '{{$.common.recommended}}'
-    selectCustomRange: 'Select custom range'
   timeAggregation:
     daily: '{{$.common.daily}}'
     monthly: '{{$.common.monthly}}'
     hourly: '{{$.common.hourly}}'
-  timeRangeLimitWarning:
-    currentPlanOffer: Free plan provides data for the last one month.
-    upgradeOffer: now for data retention upto 5 years.
   createPerspective:
     title: 'Perspective Builder'
     budgetsReportsAlerts: Budgets, Reports and Alerts

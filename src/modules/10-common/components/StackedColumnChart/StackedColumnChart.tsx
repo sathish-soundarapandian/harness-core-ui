@@ -15,6 +15,7 @@ type DataType = Omit<SeriesColumnOptions, 'type'>[]
 export interface StackedColumnChartProps {
   data: DataType
   options?: Highcharts.Options
+  containerProps?: HighchartsReact.Props['containerProps']
 }
 
 const getDefaultOptions = (data: DataType): Highcharts.Options => ({
@@ -56,7 +57,10 @@ const getDefaultOptions = (data: DataType): Highcharts.Options => ({
   },
   plotOptions: {
     column: {
-      shadow: false,
+      pointPadding: 0,
+      borderWidth: 3,
+      borderRadius: 4,
+      pointWidth: 10,
       stacking: 'normal',
       animation: false,
       events: {
@@ -82,16 +86,9 @@ const getParsedOptions = (defaultOptions: Highcharts.Options, options: Highchart
   merge(defaultOptions, options)
 
 export const StackedColumnChart: React.FC<StackedColumnChartProps> = props => {
-  const { data, options = {} } = props
+  const { data, options = {}, containerProps } = props
   const defaultOptions = useMemo(() => getDefaultOptions(data), [data])
   const parsedOptions = useMemo(() => getParsedOptions(defaultOptions, options), [defaultOptions, options])
 
-  console.log('parsedOptions', parsedOptions)
-  return (
-    <HighchartsReact
-      highcharts={Highcharts}
-      options={parsedOptions}
-      containerProps={{ style: { height: '100%', width: '70%', zIndex: 1 } }}
-    />
-  )
+  return <HighchartsReact highcharts={Highcharts} options={parsedOptions} containerProps={containerProps} />
 }

@@ -8,28 +8,34 @@ import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { ModuleName } from 'framework/types/ModuleName'
 import { StringKeys, useStrings } from 'framework/strings'
 import OverviewDashboardPageFactory from '@projects-orgs/factories/OverviewDashboardPageFactory'
-import CDZeroState from './views/CDZeroState/CDZeroState'
+import type { TimeRangeFilterType } from '@common/types'
+import CDZeroState from './views/CDEmptyState'
 import type { ModuleTileDetailsBaseProps } from './types'
+import CIEmptyState from './views/CIEmptyState'
+import FFEmptyState from './views/FFEmptyState'
 import css from './ModuleTile.module.scss'
 
 interface ModuleTileProps {
   module: NavModuleName
+  selectedRange: TimeRangeFilterType
 }
 interface ModuleTileDetails {
   label: StringKeys
-  EmptyState?: React.ComponentType<ModuleTileDetailsBaseProps> // should not be optional
+  ZeroState?: React.ComponentType<ModuleTileDetailsBaseProps> // should not be optional
 }
 
 const moduleTileMap: Record<NavModuleName, ModuleTileDetails> = {
   [ModuleName.CD]: {
     label: 'common.moduleTileLabel.cd',
-    EmptyState: CDZeroState
+    ZeroState: CDZeroState
   },
   [ModuleName.CI]: {
-    label: 'buildsText'
+    label: 'buildsText',
+    ZeroState: CIEmptyState
   },
   [ModuleName.CF]: {
-    label: 'common.moduleTileLabel.ff'
+    label: 'common.moduleTileLabel.ff',
+    ZeroState: FFEmptyState
   },
   [ModuleName.CHAOS]: {
     label: 'common.moduleTileLabel.chaos'
@@ -43,25 +49,25 @@ const moduleTileMap: Record<NavModuleName, ModuleTileDetails> = {
   [ModuleName.CE]: {
     label: 'common.moduleTileLabel.ce'
   },
-  [ModuleName.SCM]: {
-    label: 'common.purpose.scm.name'
+  [ModuleName.CODE]: {
+    label: 'common.purpose.code.name'
   }
 }
 
-const ModuleTile: React.FC<ModuleTileProps> = ({ module }) => {
+const ModuleTile: React.FC<ModuleTileProps> = ({ module, selectedRange }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
   const { getString } = useStrings()
-  const { color, icon, backgroundColor, hasLicense } = useNavModuleInfo(module)
-  const { label, EmptyState } = moduleTileMap[module]
+  const { color, icon, backgroundColor, hasLicense, pipelineIcon } = useNavModuleInfo(module)
+  const { label, ZeroState } = moduleTileMap[module]
   const showEmptyState = !hasLicense
 
   const ModuleTileOverview = OverviewDashboardPageFactory.getModuleTileOverview(module)
 
   const renderEmptyState = () => {
-    if (!EmptyState) {
+    if (!ZeroState) {
       return null
     }
-    return <EmptyState isExpanded={isExpanded} />
+    return <ZeroState isExpanded={isExpanded} selectedRange={selectedRange} />
   }
 
   const renderOverview = () => {
@@ -69,23 +75,25 @@ const ModuleTile: React.FC<ModuleTileProps> = ({ module }) => {
       return renderEmptyState()
     }
 
-    return <ModuleTileOverview isExpanded={isExpanded} />
+    return <ModuleTileOverview isExpanded={isExpanded} selectedRange={selectedRange} />
   }
 
   return (
-    <Container style={{ borderColor: `var(${color})` }}>
+    <Container
+      className={css.parentContainer}
+      style={{ borderColor: `var(${color})`, backgroundColor: `var(${backgroundColor})` }}
+    >
       <Layout.Vertical
-        style={{ backgroundColor: isExpanded ? `var(${backgroundColor})` : 'var(--white)' }}
-        className={cx(css.container, css.hoverStyle, { [css.expanded]: isExpanded })}
+        className={cx(css.container, { [css.hoverStyle]: !isExpanded }, { [css.expanded]: isExpanded })}
         onClick={() => {
           setIsExpanded(!isExpanded)
         }}
       >
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-          <Text color={Color.GREY_900} font={{ variation: FontVariation.CARD_TITLE }}>
+          <Text width="70%" color={Color.GREY_900} font={{ variation: FontVariation.CARD_TITLE }}>
             {getString(label)}
           </Text>
-          <Icon className={css.icon} name={icon} size={32} />
+          <Icon className={css.icon} name={icon} size={isExpanded ? 68 : 32} />
         </Layout.Horizontal>
         <Container className={css.tileBody}>{showEmptyState ? renderEmptyState() : renderOverview()}</Container>
         {!isExpanded && (
@@ -93,6 +101,7 @@ const ModuleTile: React.FC<ModuleTileProps> = ({ module }) => {
             {getString('common.clickToExpand')}
           </Text>
         )}
+        <Icon name={pipelineIcon} size={170} className={css.backgroundIcon} />
       </Layout.Vertical>
     </Container>
   )

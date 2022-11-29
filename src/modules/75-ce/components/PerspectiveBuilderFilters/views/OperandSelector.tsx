@@ -21,7 +21,7 @@ import { FIELD_TO_ICON_MAPPING } from '@ce/components/PerspectiveFilters/constan
 import { useStrings } from 'framework/strings'
 import type { TimeRangeFilterType } from '@ce/types'
 import { getRuleFilters, getTimeFilters, normalizeViewRules } from '@ce/utils/perspectiveUtils'
-import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'

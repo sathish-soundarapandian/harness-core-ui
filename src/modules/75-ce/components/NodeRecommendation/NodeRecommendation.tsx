@@ -25,7 +25,7 @@ import pDebounce from 'p-debounce'
 import { useToaster } from '@common/exports'
 import useDidMountEffect from '@ce/common/useDidMountEffect'
 import type { NodepoolTimeRangeValue } from '@ce/types'
-import { DATE_RANGE_SHORTCUTS, getTimePeriodString } from '@ce/utils/momentUtils'
+import { DATE_RANGE_SHORTCUTS, getTimePeriodString } from '@common/utils/momentUtils'
 import type {
   NodeRecommendationDto,
   RecommendationItemDto,
