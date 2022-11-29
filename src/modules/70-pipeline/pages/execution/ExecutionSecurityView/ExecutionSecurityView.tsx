@@ -7,23 +7,17 @@
 
 import React, { lazy } from 'react'
 import { Container } from '@harness/uicore'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { STOAppCustomProps } from '@pipeline/interfaces/STOApp'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { UserLabel } from '@common/exports'
 
+const RemoteSTOApp = lazy(() => import(`stoV2/App`))
+const RemotePipelineSecurityView = lazy(() => import(`stoV2/PipelineSecurityView`))
+
 export default function ExecutionSecurityView(): React.ReactElement | null {
   const context = useExecutionContext()
   const pipelineExecutionDetail = context?.pipelineExecutionDetail
-
-  const isV2 = useFeatureFlag(FeatureFlag.STO_API_V2)
-  const RemoteSTOApp = lazy(() => (isV2 ? import(`stoV2/App`) : import(`sto/App`)))
-  /* istanbul ignore next */
-  const RemotePipelineSecurityView = lazy(() =>
-    isV2 ? import(`stoV2/PipelineSecurityView`) : import(`sto/PipelineSecurityView`)
-  )
 
   if (!pipelineExecutionDetail || !pipelineExecutionDetail.pipelineExecutionSummary) {
     return null
