@@ -44,7 +44,9 @@ const RenderColumnUser: Renderer<CellProps<UserInfo>> = ({ row }) => {
   return (
     <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
       <Avatar name={data.name || data.email} email={data.email} hoverCard={false} />
-      <Text>{data.name}</Text>
+      <Text lineClamp={1} margin={{ right: 'small' }}>
+        {data.name}
+      </Text>
     </Layout.Horizontal>
   )
 }
@@ -52,7 +54,7 @@ const RenderColumnUser: Renderer<CellProps<UserInfo>> = ({ row }) => {
 const RenderColumnEmail: Renderer<CellProps<UserInfo>> = ({ row }) => {
   const data = row.original
 
-  return <Text>{data.email}</Text>
+  return <Text lineClamp={1}>{data.email}</Text>
 }
 
 const RenderColumnMenu: Renderer<CellProps<UserInfo>> = ({ row, column }) => {
