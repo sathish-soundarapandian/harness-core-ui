@@ -230,6 +230,10 @@ const ActivityGraph: React.FC<ActivityGraphProps> = props => {
     }
   }, [props.dateRange])
 
+  if (activitySummary?.data?.content?.length === 0 && !loading) {
+    return null
+  }
+
   return (
     <Container padding={{ bottom: 'large', top: 'small', left: 'small', right: 'small' }}>
       {!loading ? <HighchartsReact highcharts={Highcharts} options={chartConfig} /> : <PageSpinner />}
