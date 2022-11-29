@@ -64,7 +64,8 @@ import {
   getBuildPayload,
   isGitTypeManifestStore,
   ManifestToPathMap,
-  TASManifestAllowedPaths
+  TASManifestAllowedPaths,
+  TASManifestTypes
 } from '../Manifesthelper'
 import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
@@ -594,36 +595,37 @@ function ManifestListView({
                         </span>
                       )}
                     </section>
-                    {ManifestToPathMap[manifest?.type as PrimaryManifestType] && (
-                      <AttachPathYamlFlow
-                        renderConnectorField={renderConnectorField(
-                          manifest?.spec?.store.type,
-                          manifest?.spec?.store?.spec.connectorRef,
-                          connectorName,
-                          color
-                        )}
-                        manifestType={manifest?.type as PrimaryManifestType}
-                        manifestStore={manifest?.spec?.store?.type}
-                        valuesPaths={manifest?.spec[ManifestToPathKeyMap[manifest?.type as PrimaryManifestType]]}
-                        expressions={expressions}
-                        allowableTypes={allowableTypes}
-                        isReadonly={isReadonly}
-                        attachPathYaml={formData =>
-                          attachPathYaml(
-                            formData,
-                            manifest?.identifier as string,
-                            manifest?.type as PrimaryManifestType
-                          )
-                        }
-                        removeValuesYaml={valuesYamlIndex =>
-                          removeValuesYaml(
-                            valuesYamlIndex,
-                            manifest?.identifier as string,
-                            manifest?.type as PrimaryManifestType
-                          )
-                        }
-                      />
-                    )}
+                    {ManifestToPathMap[manifest?.type as PrimaryManifestType] &&
+                      !TASManifestTypes.includes(manifest?.type as PrimaryManifestType) && (
+                        <AttachPathYamlFlow
+                          renderConnectorField={renderConnectorField(
+                            manifest?.spec?.store.type,
+                            manifest?.spec?.store?.spec.connectorRef,
+                            connectorName,
+                            color
+                          )}
+                          manifestType={manifest?.type as PrimaryManifestType}
+                          manifestStore={manifest?.spec?.store?.type}
+                          valuesPaths={manifest?.spec[ManifestToPathKeyMap[manifest?.type as PrimaryManifestType]]}
+                          expressions={expressions}
+                          allowableTypes={allowableTypes}
+                          isReadonly={isReadonly}
+                          attachPathYaml={formData =>
+                            attachPathYaml(
+                              formData,
+                              manifest?.identifier as string,
+                              manifest?.type as PrimaryManifestType
+                            )
+                          }
+                          removeValuesYaml={valuesYamlIndex =>
+                            removeValuesYaml(
+                              valuesYamlIndex,
+                              manifest?.identifier as string,
+                              manifest?.type as PrimaryManifestType
+                            )
+                          }
+                        />
+                      )}
                     {manifest?.type === ManifestDataType.TasManifest &&
                       TASManifestAllowedPaths.map(type => (
                         <Container key={type} margin={{ bottom: 'medium' }}>

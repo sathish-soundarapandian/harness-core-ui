@@ -71,6 +71,7 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   AutoScaler: 'AutoScaler'
 }
 
+export const TASManifestTypes = [ManifestDataType.TasManifest, ManifestDataType.Vars, ManifestDataType.AutoScaler]
 export const TASManifestAllowedPaths = [ManifestDataType.Vars, ManifestDataType.AutoScaler]
 
 export const ManifestToPathMap: Record<PrimaryManifestType, string> = {
@@ -135,7 +136,7 @@ export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
     ManifestDataType.EcsScalableTargetDefinition
   ],
   CustomDeployment: [],
-  TAS: [ManifestDataType.TasManifest, ManifestDataType.Vars, ManifestDataType.AutoScaler]
+  TAS: TASManifestTypes
 }
 
 export const gitStoreTypes: Array<ManifestStores> = [
