@@ -53,8 +53,8 @@ export const convertServiceLevelIndicatorToSLIFormData = (serviceLevelIndicator:
     SLIType,
     SLIMetricType,
     eventType,
-    validRequestMetric: metric1,
-    goodRequestMetric: metric2,
+    validRequestMetric: metric2,
+    goodRequestMetric: metric1,
     objectiveValue: thresholdValue,
     objectiveComparator: thresholdType,
     SLIMissingDataType: sliMissingDataType
@@ -394,8 +394,8 @@ export const convertSLOFormDataToServiceLevelIndicatorDTO = (values: SLOForm): S
       type: values.SLIMetricType,
       spec: {
         eventType: values.SLIMetricType === SLIMetricTypes.RATIO ? values.eventType : undefined,
-        metric2: values.SLIMetricType === SLIMetricTypes.RATIO ? values.goodRequestMetric : undefined,
-        metric1: values.validRequestMetric,
+        metric1: values.SLIMetricType === SLIMetricTypes.RATIO ? values.goodRequestMetric : undefined,
+        metric2: values.validRequestMetric,
         thresholdValue: values.objectiveValue,
         thresholdType: values.objectiveComparator
       } as ThresholdSLIMetricSpec & RatioSLIMetricSpec

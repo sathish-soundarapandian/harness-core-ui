@@ -39,7 +39,7 @@ describe('Utils', () => {
         spec: {
           ...serviceLevelIndicator.spec.spec,
           eventType: undefined,
-          metric2: undefined
+          metric1: undefined
         }
       }
     })
