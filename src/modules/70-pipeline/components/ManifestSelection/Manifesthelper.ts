@@ -64,7 +64,8 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   EcsTaskDefinition: 'EcsTaskDefinition',
   EcsServiceDefinition: 'EcsServiceDefinition',
   EcsScalingPolicyDefinition: 'EcsScalingPolicyDefinition',
-  EcsScalableTargetDefinition: 'EcsScalableTargetDefinition'
+  EcsScalableTargetDefinition: 'EcsScalableTargetDefinition',
+  AsgLaunchTemplate: 'AsgLaunchTemplate'
 }
 
 export const ManifestToPathMap: Record<PrimaryManifestType, string> = {
@@ -164,7 +165,8 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   EcsTaskDefinition: gitStoreTypesWithHarnessStoreType,
   EcsServiceDefinition: gitStoreTypesWithHarnessStoreType,
   EcsScalingPolicyDefinition: gitStoreTypesWithHarnessStoreType,
-  EcsScalableTargetDefinition: gitStoreTypesWithHarnessStoreType
+  EcsScalableTargetDefinition: gitStoreTypesWithHarnessStoreType,
+  AsgLaunchTemplate: gitStoreTypesWithHarnessStoreType
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
@@ -179,7 +181,8 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   EcsTaskDefinition: 'service-amazon-ecs',
   EcsServiceDefinition: 'service-amazon-ecs',
   EcsScalingPolicyDefinition: 'service-amazon-ecs',
-  EcsScalableTargetDefinition: 'service-amazon-ecs'
+  EcsScalableTargetDefinition: 'service-amazon-ecs',
+  AsgLaunchTemplate: 'functions'
 }
 
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
@@ -194,7 +197,8 @@ export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
   EcsTaskDefinition: 'pipeline.manifestTypeLabels.EcsTaskDefinition',
   EcsServiceDefinition: 'pipeline.manifestTypeLabels.EcsServiceDefinition',
   EcsScalingPolicyDefinition: 'pipeline.manifestTypeLabels.EcsScalingPolicyDefinition',
-  EcsScalableTargetDefinition: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition'
+  EcsScalableTargetDefinition: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition',
+  AsgLaunchTemplate: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition'
 }
 
 export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> = [

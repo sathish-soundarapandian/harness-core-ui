@@ -8652,6 +8652,7 @@ export interface ManifestConfig {
     | 'EcsServiceDefinition'
     | 'EcsScalableTargetDefinition'
     | 'EcsScalingPolicyDefinition'
+    | 'AsgLaunchTemplate'
 }
 
 export interface ManifestConfigWrapper {
