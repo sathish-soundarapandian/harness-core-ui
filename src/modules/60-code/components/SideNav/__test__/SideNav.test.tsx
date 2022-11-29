@@ -43,4 +43,31 @@ describe('Code Sidenav', () => {
 
     expect(container).toMatchSnapshot()
   })
+
+  test('Nav should render Settings link', async () => {
+    const Subject2: React.FC<{ path?: string }> = ({
+      path = '/account/:accountId/code/orgs/:orgIdentifier/projects/:projectIdentifier/:repoName/settings'
+    }) => (
+      <TestWrapper
+        path={path}
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy', repoName: 'test' }}
+      >
+        <SideNav />
+      </TestWrapper>
+    )
+    const { container, getByText } = render(<Subject2 />)
+    // expect(screen.queryByText('Settings')).toBeInTheDocument()
+
+    // await act(async () => {
+    //   fireEvent.click(getByTestId('project-select-button'))
+    // })
+
+    expect(container).toMatchSnapshot()
+
+    act(() => {
+      fireEvent.click(getByText('settingsLabel'))
+    })
+
+    expect(container).toMatchSnapshot()
+  })
 })
