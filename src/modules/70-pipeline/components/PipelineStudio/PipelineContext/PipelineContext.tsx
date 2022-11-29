@@ -111,7 +111,8 @@ export const getPipelineByIdentifier = (
         ...(params.branch ? { branch: params.branch } : {}),
         ...(params.repoIdentifier ? { repoIdentifier: params.repoIdentifier } : {}),
         parentEntityConnectorRef: params.connectorRef,
-        parentEntityRepoName: params.repoName
+        parentEntityRepoName: params.repoName,
+        ...(params?.storeType === StoreType.REMOTE && !params.branch ? { loadFromFallbackBranch: true } : {})
       },
       requestOptions: {
         headers: {

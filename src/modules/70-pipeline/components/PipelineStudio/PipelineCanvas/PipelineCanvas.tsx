@@ -184,6 +184,12 @@ export function PipelineCanvas({
     yamlSchemaErrorWrapper
   } = state
 
+  //For remote pipeline queryParam will always as branch as selected branch except coming from list view
+  // While opeining studio from list view, selected branch can be any branch as in pipeline response
+  if (storeType === StoreType.REMOTE && !branch && gitDetails?.branch) {
+    updateQueryParams({ branch: gitDetails?.branch })
+  }
+
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier, module } = useParams<
     PipelineType<{
