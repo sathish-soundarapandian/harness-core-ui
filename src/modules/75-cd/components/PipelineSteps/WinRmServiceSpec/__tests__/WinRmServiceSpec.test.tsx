@@ -198,48 +198,59 @@ describe('StepWidget tests', () => {
   })
 
   test('validates input set correctly with errors', () => {
-    const response = new WinRmServiceSpec().validateInputSet({
-      data: {
-        variables: [
-          { name: 'myVar1', type: 'Number' },
-          { name: 'myVar1', type: 'String' },
-          { name: 'myVar1', type: 'Secret' }
-        ],
-        artifacts: {
-          primary: {
-            spec: {},
-            type: 'Jenkins'
-          }
-        },
-        manifests: [
-          {
-            manifest: {
-              identifier: 'testhelmmanifest',
-              spec: {
-                chartName: '<+input>',
-                chartVersion: '<+input>',
-                helmVersion: 'V2',
-                skipResourceVersioning: false
-              },
-              type: 'HelmChart'
-            }
-          }
-        ]
-      },
-      template: {
-        variables: [{ name: 'myVar1', type: 'String' }],
-        artifacts: {
-          primary: {
-            spec: {
-              connectorRef: RUNTIME_INPUT_VALUE,
-              imagePath: RUNTIME_INPUT_VALUE,
-              tag: RUNTIME_INPUT_VALUE,
-              tagRegex: RUNTIME_INPUT_VALUE
-            },
-            type: 'Jenkins'
-          }
+    const initialValues = {
+      variables: [
+        { name: 'myVar1', type: 'Number' },
+        { name: 'myVar1', type: 'String' },
+        { name: 'myVar1', type: 'Secret' }
+      ],
+      artifacts: {
+        primary: {
+          spec: {},
+          type: 'Jenkins'
         }
       },
+      manifests: [
+        {
+          manifest: {
+            identifier: 'testhelmmanifest',
+            spec: {
+              chartName: '<+input>',
+              chartVersion: '<+input>',
+              helmVersion: 'V2',
+              skipResourceVersioning: false
+            },
+            type: 'HelmChart'
+          }
+        }
+      ]
+    }
+
+    const winRmServiceTemplate = {
+      variables: [{ name: 'myVar1', type: 'String' }],
+      artifacts: {
+        primary: {
+          spec: {
+            connectorRef: RUNTIME_INPUT_VALUE,
+            imagePath: RUNTIME_INPUT_VALUE,
+            tag: RUNTIME_INPUT_VALUE,
+            tagRegex: RUNTIME_INPUT_VALUE
+          },
+          type: 'Jenkins'
+        }
+      }
+    }
+
+    const winRmServiceSpecInst = new WinRmServiceSpec() as any
+    winRmServiceSpecInst.renderStep({
+      initialValues,
+      inputSetData: {
+        template: winRmServiceTemplate
+      }
+    })
+    const response = winRmServiceSpecInst.validateInputSet({
+      data: initialValues,
+      template: winRmServiceTemplate,
       getString: () => 'abc',
       viewType: StepViewType.DeploymentForm
     })

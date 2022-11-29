@@ -10,7 +10,7 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
-import type { StringsMap } from 'framework/strings/StringsContext'
+import type { StringsMap } from 'stringTypes'
 import { queryByNameAttribute } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
@@ -228,9 +228,15 @@ describe('ECSInfraSpec tests', () => {
     }
 
     const step = new ECSServiceSpec() as any
+
+    step.renderStep({
+      initialValues,
+      inputSetData: {
+        template: ecsManifestTemplate
+      }
+    })
     const errors = await step.validateInputSet({
       data: initialValues,
-      template: ecsManifestTemplate,
       getString,
       viewType: StepViewType.DeploymentForm
     })
@@ -269,9 +275,14 @@ describe('ECSInfraSpec tests', () => {
     }
 
     const step = new ECSServiceSpec() as any
+    step.renderStep({
+      initialValues,
+      inputSetData: {
+        template: primaryArtifactTemplate
+      }
+    })
     const errors = await step.validateInputSet({
       data: initialValues,
-      template: primaryArtifactTemplate,
       getString,
       viewType: StepViewType.DeploymentForm
     })
@@ -281,6 +292,60 @@ describe('ECSInfraSpec tests', () => {
     expect(errors.artifacts.primary.spec.tagRegex).toBe('fieldRequired')
   })
 
+  test('check primary artifact sources form errors when artifact type is S3', async () => {
+    const initialValues = {
+      artifacts: {
+        primary: {
+          type: ENABLED_ARTIFACT_TYPES.S3,
+          sources: [
+            {
+              spec: {
+                connectorRef: '',
+                imagePath: '',
+                tag: '',
+                tagRegex: ''
+              }
+            }
+          ]
+        }
+      }
+    }
+
+    const primaryArtifactSourceTemplate = {
+      artifacts: {
+        primary: {
+          type: ENABLED_ARTIFACT_TYPES.DockerRegistry,
+          sources: [
+            {
+              spec: {
+                connectorRef: RUNTIME_INPUT_VALUE,
+                imagePath: RUNTIME_INPUT_VALUE,
+                tag: RUNTIME_INPUT_VALUE,
+                tagRegex: RUNTIME_INPUT_VALUE
+              }
+            }
+          ]
+        }
+      }
+    }
+
+    const step = new ECSServiceSpec() as any
+    step.renderStep({
+      initialValues,
+      inputSetData: {
+        template: primaryArtifactSourceTemplate
+      }
+    })
+    const errors = await step.validateInputSet({
+      data: initialValues,
+      getString,
+      viewType: StepViewType.DeploymentForm
+    })
+    expect(errors.artifacts.primary.sources[0].spec.connectorRef).toBe('fieldRequired')
+    expect(errors.artifacts.primary.sources[0].spec.imagePath).toBe('fieldRequired')
+    expect(errors.artifacts.primary.sources[0].spec.tag).toBe('fieldRequired')
+    expect(errors.artifacts.primary.sources[0].spec.tagRegex).toBe('fieldRequired')
+  })
   test('check sidecar artifact form errors', async () => {
     const initialValues = {
       artifacts: {
@@ -321,9 +386,14 @@ describe('ECSInfraSpec tests', () => {
     }
 
     const step = new ECSServiceSpec() as any
+    step.renderStep({
+      initialValues,
+      inputSetData: {
+        template: sidecarArtifactTemplate
+      }
+    })
     const errors = await step.validateInputSet({
       data: initialValues,
-      template: sidecarArtifactTemplate,
       getString,
       viewType: StepViewType.DeploymentForm
     })

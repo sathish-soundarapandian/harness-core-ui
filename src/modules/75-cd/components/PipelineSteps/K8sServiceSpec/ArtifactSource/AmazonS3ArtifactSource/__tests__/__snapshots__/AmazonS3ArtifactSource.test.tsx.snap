@@ -282,7 +282,7 @@ exports[`AmazonS3ArtifactSource tests renders fine for all Runtime values when f
               <div
                 class="bp3-form-helper-text"
               >
-                pipeline.dependencyRequired
+                pipeline.bucketNameHelperText
               </div>
             </div>
           </div>
@@ -360,7 +360,7 @@ exports[`AmazonS3ArtifactSource tests renders fine for all Runtime values when f
               <div
                 class="bp3-form-helper-text"
               >
-                pipeline.dependencyRequired
+                pipeline.filePathHelperText
               </div>
             </div>
           </div>
@@ -653,7 +653,7 @@ exports[`AmazonS3ArtifactSource tests renders fine for all Runtime values when f
               <div
                 class="bp3-form-helper-text"
               >
-                pipeline.dependencyRequired
+                pipeline.bucketNameHelperText
               </div>
             </div>
           </div>

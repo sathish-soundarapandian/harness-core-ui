@@ -381,6 +381,29 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     </div>
   ))
 
+  const getBucketNameHelperText = () => {
+    if (
+      getMultiTypeFromValue(get(formik.values, `${path}.artifacts.${artifactPath}.spec.bucketName`)) ===
+        MultiTypeInputType.FIXED &&
+      (getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME || fixedConnectorValue.length === 0)
+    ) {
+      return getString('pipeline.bucketNameHelperText')
+    }
+  }
+
+  const getFilePathHelperText = () => {
+    if (
+      (getMultiTypeFromValue(get(formik.values, `${path}.artifacts.${artifactPath}.spec.filePath`)) ===
+        MultiTypeInputType.FIXED &&
+        (getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME ||
+          fixedConnectorValue.length === 0)) ||
+      getMultiTypeFromValue(fixedBucketValue) === MultiTypeInputType.RUNTIME ||
+      fixedBucketValue.length === 0
+    ) {
+      return getString('pipeline.filePathHelperText')
+    }
+  }
+
   return (
     <>
       {isRuntime && (
@@ -457,11 +480,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               placeholder={loading ? getString('loading') : getString('pipeline.manifestType.bucketPlaceHolder')}
               name={`${path}.artifacts.${artifactPath}.spec.bucketName`}
               disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`, true, false)}
-              helperText={
-                !get(formik, `values.${path}.artifacts.${artifactPath}.spec.connectorRef`)?.length &&
-                getMultiTypeFromValue(artifact?.spec?.connectorRef) === MultiTypeInputType.RUNTIME &&
-                getString('pipeline.dependencyRequired')
-              }
+              helperText={getBucketNameHelperText()}
               useValue
               multiTypeInputProps={{
                 expressions,
@@ -504,11 +523,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               placeholder={loading ? getString('loading') : getString('pipeline.manifestType.pathPlaceholder')}
               name={`${path}.artifacts.${artifactPath}.spec.filePath`}
               disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.filePath`, false, true)}
-              helperText={
-                !get(formik, `values.${path}.artifacts.${artifactPath}.spec.connectorRef`)?.length &&
-                getMultiTypeFromValue(artifact?.spec?.connectorRef) === MultiTypeInputType.RUNTIME &&
-                getString('pipeline.dependencyRequired')
-              }
+              helperText={getFilePathHelperText()}
               useValue
               multiTypeInputProps={{
                 expressions,

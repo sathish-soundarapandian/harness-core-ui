@@ -3230,6 +3230,7 @@ export interface StringsMap {
   'pipeline.barriers.tooltips.barrierWaiting': string
   'pipeline.barriers.tooltips.timeout': string
   'pipeline.barriers.validation.barrierNamerequired': string
+  'pipeline.bucketNameHelperText': string
   'pipeline.buildInfra.addCapabilities': string
   'pipeline.buildInfra.allowPrivilegeEscalation': string
   'pipeline.buildInfra.automountServiceAccountToken': string
@@ -3382,7 +3383,6 @@ export interface StringsMap {
   'pipeline.dashboards.totalExecutions': string
   'pipeline.dashboards.workloads': string
   'pipeline.delegate.DelegateSelectorOptional': string
-  'pipeline.dependencyRequired': string
   'pipeline.deploymentFrequency': string
   'pipeline.deploymentRepo': string
   'pipeline.deploymentRepoStore': string
@@ -3592,6 +3592,7 @@ export interface StringsMap {
   'pipeline.fieldLabels.commandType': string
   'pipeline.fieldPlaceholders.commandType': string
   'pipeline.fileDetails': string
+  'pipeline.filePathHelperText': string
   'pipeline.fileSource': string
   'pipeline.filters.builtTypePlaceholder': string
   'pipeline.filters.deploymentTypePlaceholder': string

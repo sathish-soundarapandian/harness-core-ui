@@ -145,7 +145,7 @@ export default function ServerlessArtifactoryRepository(
   const getFieldHelperText = () => {
     if (
       getMultiTypeFromValue(formik.values.repository as string) === MultiTypeInputType.FIXED &&
-      getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME
+      (getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME || connectorRef?.length === 0)
     ) {
       return getString('pipeline.artifactRepositoryDependencyRequired')
     }

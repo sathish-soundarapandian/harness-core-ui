@@ -344,7 +344,7 @@ manifestType:
   osTemplatePathPlaceHolder: Enter Template File Path
   osTemplatePathRequired: Template File Path is required
   bucketNamePlaceholder: Enter Bucket Name
-  bucketPlaceHolder: Select or Add bucket name
+  bucketPlaceHolder: Select or Add Bucket Name
   pathPlaceholder: Enter File Path
   folderPathPlaceholder: Enter Folder Path
   chartPathPlaceholder: Enter Chart Path
@@ -1017,7 +1017,8 @@ gitCloneStep:
 tagDependencyRequired: required to fetch the tags
 artifactPathDependencyRequired: required to fetch the artifact paths
 artifactRepositoryDependencyRequired: 'Artifactory Connector is required to fetch repositories. You can make this field Runtime input otherwise.'
-dependencyRequired: 'Connector is required to fetch buckets'
+bucketNameHelperText: 'Connector is required to fetch buckets'
+filePathHelperText: 'Connector and Bucket Name are required to fetch file paths'
 myDeploymentsText: My Deployments
 myBuildsText: My Builds
 mySecurityTestsText: My Security Tests

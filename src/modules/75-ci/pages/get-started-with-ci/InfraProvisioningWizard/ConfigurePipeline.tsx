@@ -297,7 +297,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
 
   return (
     <Layout.Horizontal spacing="huge">
-      <Layout.Vertical width="45%" spacing="small">
+      <Layout.Vertical width="30%" spacing="small">
         <Container>
           <Layout.Vertical spacing="small" width="100%">
             <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xsmall' }}>
@@ -318,10 +318,10 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
         <Container>
           <Layout.Vertical>
             <Container flex>
-              <Text font={{ variation: FontVariation.H6 }} padding={{ bottom: 'xsmall' }}>
+              <Text font={{ variation: FontVariation.H6 }} padding={{ bottom: 'xsmall' }} lineClamp={1}>
                 {getString('ci.getStartedWithCI.chooseStarterConfig')} ({starterTemplates.length})
               </Text>
-              <Container width="58%">
+              <Container padding={{ left: 'xsmall' }} width="40%">
                 <Separator topSeparation={22} />
               </Container>
             </Container>
@@ -329,25 +329,30 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
           </Layout.Vertical>
         </Container>
       </Layout.Vertical>
-      {selectedConfigOption &&
-        ![PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.ChooseExistingYAML].includes(
-          StarterConfigIdToOptionMap[selectedConfigOption.id]
-        ) &&
-        pipelineYAML && (
-          <Container margin={{ top: 'xxxlarge' }}>
+      <Layout.Vertical width="65%" spacing="huge">
+        {selectedConfigOption &&
+          ![PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.ChooseExistingYAML].includes(
+            StarterConfigIdToOptionMap[selectedConfigOption.id]
+          ) &&
+          pipelineYAML && (
             <YAMLBuilder
               entityType="Pipelines"
-              fileName={''}
+              fileName={selectedConfigOption.label || selectedConfigOption.name}
               isReadOnlyMode={true}
               isEditModeSupported={false}
               existingYaml={pipelineYAML}
-              width={'75%'}
-              height={'calc(100vh - 330px)'}
+              height={'calc(100vh - 100px)'}
               showCopyIcon={false}
               hideErrorMesageOnReadOnlyMode={true}
+              renderCustomHeader={() => (
+                <div className={css.header}>
+                  <span>{pipelineName}</span>
+                </div>
+              )}
+              displayBorder={false}
             />
-          </Container>
-        )}
+          )}
+      </Layout.Vertical>
     </Layout.Horizontal>
   )
 }

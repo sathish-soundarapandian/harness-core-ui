@@ -53,7 +53,7 @@ describe('AmazonS3 Trigger', () => {
     cy.get('.TableV2--cells').eq(0).click()
     cy.contains('span', 'Select').click()
     cy.wait(1000)
-    cy.findByPlaceholderText('Select or Add bucket name').click()
+    cy.findByPlaceholderText('Select or Add Bucket Name').click()
     cy.wait('@s3bucketData')
     cy.contains('p', 'testBucket').click()
     cy.get(
@@ -94,7 +94,7 @@ describe('AmazonS3 Trigger', () => {
     cy.get('.TableV2--cells').eq(0).click()
     cy.contains('span', 'Select').click()
     cy.wait(1000)
-    cy.findByPlaceholderText('Select or Add bucket name').click()
+    cy.findByPlaceholderText('Select or Add Bucket Name').click()
     cy.wait('@s3bucketData')
     cy.contains('p', 'testBucket').click()
     cy.get('input[disabled]').should('be.visible')

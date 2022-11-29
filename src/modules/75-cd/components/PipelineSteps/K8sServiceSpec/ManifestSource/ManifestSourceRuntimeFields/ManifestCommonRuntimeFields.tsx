@@ -11,6 +11,8 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
 import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
+import { shouldAllowOnlyOneFilePath } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/CommonManifestDetails/utils'
+import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
@@ -55,6 +57,7 @@ const ManifestCommonRuntimeFields = ({
             isNameOfArrayType
             type={SELECT_FILES_TYPE.FILE_STORE}
             formik={formik}
+            allowOnlyOne={shouldAllowOnlyOneFilePath(manifest?.type as ManifestTypes)}
           />
         </div>
       )}

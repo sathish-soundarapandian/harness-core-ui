@@ -169,6 +169,11 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                           </span>
                         </span>
                       </div>
+                      <div
+                        class="bp3-form-helper-text"
+                      >
+                        pipeline.artifactRepositoryDependencyRequired
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -756,6 +761,11 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                             </button>
                           </span>
                         </span>
+                      </div>
+                      <div
+                        class="bp3-form-helper-text"
+                      >
+                        pipeline.artifactRepositoryDependencyRequired
                       </div>
                     </div>
                   </div>

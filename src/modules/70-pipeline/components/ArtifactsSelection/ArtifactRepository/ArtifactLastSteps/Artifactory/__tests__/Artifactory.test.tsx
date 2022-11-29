@@ -106,8 +106,11 @@ describe('Nexus Artifact tests', () => {
     const submitBtn = container.querySelector('button[type="submit"]')!
     fireEvent.click(submitBtn)
 
-    const repositoryRequiredErr = await findByText(container, 'common.git.validation.repoRequired')
-    expect(repositoryRequiredErr).toBeDefined()
+    const repositoryParentFieldsRequiredErr = await findByText(
+      container,
+      'pipeline.artifactRepositoryDependencyRequired'
+    )
+    expect(repositoryParentFieldsRequiredErr).toBeInTheDocument()
 
     const imagePahRequiredErr = await findByText(container, 'pipeline.artifactsSelection.validation.artifactPath')
     expect(imagePahRequiredErr).toBeDefined()
