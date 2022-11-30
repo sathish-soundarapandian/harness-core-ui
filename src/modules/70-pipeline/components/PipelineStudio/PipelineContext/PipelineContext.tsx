@@ -96,6 +96,11 @@ interface FetchError {
 const logger = loggerFor(ModuleName.CD)
 const DBNotFoundErrorMessage = 'There was no DB found'
 
+const remoteFetchErrorGitDetails = (remoteFetchError: ResponsePMSPipelineResponseDTO): Partial<EntityGitDetails> => {
+  const branch = remoteFetchError?.metaData?.branch
+  return branch ? { branch } : {}
+}
+
 export const getPipelineByIdentifier = (
   params: GetPipelineQueryParams & GitQueryParams,
   identifier: string,
@@ -477,7 +482,10 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
         PipelineContextActions.error({
           remoteFetchError: pipelineById.remoteFetchError,
           pipeline: { ...pick(pipelineMetaData?.data, ['name', 'identifier', 'description', 'tags']) },
-          gitDetails: pipelineMetaData?.data?.gitDetails ?? {}
+          gitDetails: {
+            ...pipelineMetaData?.data?.gitDetails,
+            ...remoteFetchErrorGitDetails(pipelineById.remoteFetchError)
+          }
         })
       )
       return
