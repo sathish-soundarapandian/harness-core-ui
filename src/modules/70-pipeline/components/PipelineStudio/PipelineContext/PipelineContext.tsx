@@ -490,8 +490,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       defaultTo(queryParams.orgIdentifier, ''),
       defaultTo(queryParams.projectIdentifier, ''),
       pipelineId,
-      defaultTo(gitDetails.repoIdentifier, getRepoIdentifierName(pipelineWithGitDetails?.gitDetails)),
-      defaultTo(gitDetails.branch, defaultTo(pipelineWithGitDetails?.gitDetails?.branch, ''))
+      defaultTo(getRepoIdentifierName(pipelineWithGitDetails?.gitDetails), gitDetails.repoIdentifier),
+      defaultTo(pipelineWithGitDetails?.gitDetails?.branch, defaultTo(gitDetails.branch, ''))
     )
 
     try {
@@ -592,6 +592,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       dispatch(
         PipelineContextActions.success({
           error: '',
+          remoteFetchError: undefined,
           pipeline,
           originalPipeline: cloneDeep(pipeline),
           isBEPipelineUpdated: false,
@@ -612,6 +613,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
     dispatch(
       PipelineContextActions.success({
         error: '',
+        remoteFetchError: undefined,
         pipeline: defaultTo(data?.pipeline, {
           ...DefaultPipeline,
           projectIdentifier: queryParams.projectIdentifier,

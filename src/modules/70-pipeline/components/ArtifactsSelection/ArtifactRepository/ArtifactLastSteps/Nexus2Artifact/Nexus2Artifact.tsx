@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useMemo } from 'react'
 import cx from 'classnames'
 import {
   Formik,
@@ -21,13 +21,19 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { merge, defaultTo } from 'lodash-es'
+import { merge, defaultTo, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useQueryParams } from '@common/hooks'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
 
-import { ConnectorConfigDTO, DockerBuildDetailsDTO, useGetBuildDetailsForNexusArtifact } from 'services/cd-ng'
+import {
+  ConnectorConfigDTO,
+  DockerBuildDetailsDTO,
+  useGetBuildDetailsForNexusArtifact,
+  useGetRepositories
+} from 'services/cd-ng'
 import {
   checkIfQueryParamsisNotEmpty,
   getConnectorIdValue,
@@ -41,10 +47,11 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { nexus2RepositoryFormatTypes, RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
-import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
+import ArtifactImagePathTagView, { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import type { queryInterface } from '../NexusArtifact/NexusArtifact'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -71,11 +78,11 @@ export function Nexus2Artifact({
   const isTemplateContext = context === ModalViewFor.Template
 
   const schemaObject = {
-    tagRegex: Yup.string().when('spec.tagType', {
+    tagRegex: Yup.string().when('tagType', {
       is: 'regex',
       then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.tagRegex'))
     }),
-    tag: Yup.mixed().when('spec.tagType', {
+    tag: Yup.mixed().when('tagType', {
       is: 'value',
       then: Yup.mixed().required(getString('pipeline.artifactsSelection.validation.tag'))
     }),
@@ -111,6 +118,52 @@ export function Nexus2Artifact({
 
   const getConnectorRefQueryData = (): string => {
     return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
+  }
+
+  const commonParams = {
+    accountIdentifier: accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch
+  }
+
+  const {
+    data: repositoryDetails,
+    refetch: refetchRepositoryDetails,
+    loading: fetchingRepository,
+    error: errorFetchingRepository
+  } = useMutateAsGet(useGetRepositories, {
+    lazy: true,
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      ...commonParams,
+      connectorRef: getConnectorRefQueryData(),
+      repositoryFormat: ''
+    }
+  })
+
+  const selectRepositoryItems = useMemo(() => {
+    return repositoryDetails?.data?.map(repository => ({
+      value: defaultTo(repository.repositoryName, ''),
+      label: defaultTo(repository.repositoryName, '')
+    }))
+  }, [repositoryDetails?.data])
+
+  const getRepository = (): { label: string; value: string }[] => {
+    if (fetchingRepository) {
+      return [
+        {
+          label: getString('pipeline.artifactsSelection.loadingRepository'),
+          value: getString('pipeline.artifactsSelection.loadingRepository')
+        }
+      ]
+    }
+    return defaultTo(selectRepositoryItems, [])
   }
 
   const {
@@ -274,6 +327,19 @@ export function Nexus2Artifact({
       })
     }
   }
+  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
+    <div key={item.label.toString()}>
+      <Menu.Item
+        text={
+          <Layout.Horizontal spacing="small">
+            <Text>{item.label}</Text>
+          </Layout.Horizontal>
+        }
+        disabled={fetchingRepository}
+        onClick={handleClick}
+      />
+    </div>
+  ))
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
@@ -287,12 +353,34 @@ export function Nexus2Artifact({
         formName="imagePath"
         validationSchema={isMultiArtifactSource ? sidecarSchema : primarySchema}
         validate={handleValidate}
-        onSubmit={formData => {
-          submitFormData({
-            ...prevStepData,
-            ...formData,
-            connectorId: getConnectorIdValue(prevStepData)
-          })
+        onSubmit={(formData, formikhelper) => {
+          let hasError = false
+          if (formData?.repositoryFormat === RepositoryFormatTypes.Maven) {
+            if (!formData?.spec?.artifactId) {
+              formikhelper.setFieldError(
+                'spec.artifactId',
+                getString('pipeline.artifactsSelection.validation.artifactId')
+              )
+              hasError = true
+            }
+            if (!formData?.spec?.groupId) {
+              formikhelper.setFieldError('spec.groupId', getString('pipeline.artifactsSelection.validation.groupId'))
+              hasError = true
+            }
+          } else if (
+            formData?.repositoryFormat === RepositoryFormatTypes.NPM ||
+            formData?.repositoryFormat === RepositoryFormatTypes.NuGet
+          ) {
+            if (!formData?.spec?.packageName) {
+              formikhelper.setFieldError(
+                'spec.packageName',
+                getString('pipeline.artifactsSelection.validation.packageName')
+              )
+              hasError = true
+            }
+          }
+          if (!hasError)
+            submitFormData?.({ ...prevStepData, ...formData, connectorId: getConnectorIdValue(prevStepData) })
         }}
       >
         {formik => (
@@ -332,16 +420,46 @@ export function Nexus2Artifact({
                 />
               </div>
               <div className={css.imagePathContainer}>
-                <FormInput.MultiTextInput
+                <FormInput.MultiTypeInput
+                  selectItems={getRepository()}
+                  disabled={isReadonly}
                   label={getString('repository')}
                   name="repository"
                   placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
-                  multiTextInputProps={{
+                  useValue
+                  multiTypeInputProps={{
                     expressions,
-                    allowableTypes
+                    allowableTypes,
+                    selectProps: {
+                      noResults: (
+                        <NoTagResults
+                          tagError={errorFetchingRepository}
+                          isServerlessDeploymentTypeSelected={false}
+                          defaultErrorText={getString('pipeline.artifactsSelection.errors.noRepositories')}
+                        />
+                      ),
+                      itemRenderer: itemRenderer,
+                      items: getRepository(),
+                      allowCreatingNewItems: true
+                    },
+                    onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                      if (
+                        e?.target?.type !== 'text' ||
+                        (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                        getMultiTypeFromValue(formik.values?.repositoryFormat) === MultiTypeInputType.RUNTIME
+                      ) {
+                        return
+                      }
+                      refetchRepositoryDetails({
+                        queryParams: {
+                          ...commonParams,
+                          connectorRef: getConnectorRefQueryData(),
+                          repositoryFormat: formik.values?.repositoryFormat
+                        }
+                      })
+                    }
                   }}
                 />
-
                 {getMultiTypeFromValue(formik.values?.repository) === MultiTypeInputType.RUNTIME && (
                   <div className={css.configureOptions}>
                     <ConfigureOptions

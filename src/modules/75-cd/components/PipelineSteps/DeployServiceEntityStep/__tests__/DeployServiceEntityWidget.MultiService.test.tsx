@@ -15,6 +15,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import DeployServiceEntityWidget from '../DeployServiceEntityWidget'
 import services from './services.json'
 import metadata from './servicesMetadata.json'
+import { setupMode } from '../../PipelineStepsUtil'
 
 const allowableTypes: AllowedTypesWithRunTime[] = [
   MultiTypeInputType.FIXED,
@@ -53,6 +54,7 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
           readonly={false}
           stageIdentifier=""
           onUpdate={onUpdate}
+          setupModeType={setupMode.DIFFERENT}
         />
       </TestWrapper>
     )
@@ -116,6 +118,7 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
           readonly={false}
           stageIdentifier=""
           onUpdate={onUpdate}
+          setupModeType={setupMode.DIFFERENT}
         />
       </TestWrapper>
     )
@@ -172,6 +175,7 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
           readonly={false}
           stageIdentifier=""
           onUpdate={onUpdate}
+          setupModeType={setupMode.DIFFERENT}
         />
       </TestWrapper>
     )
@@ -221,6 +225,7 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
           readonly={false}
           stageIdentifier=""
           onUpdate={onUpdate}
+          setupModeType={setupMode.DIFFERENT}
         />
       </TestWrapper>
     )

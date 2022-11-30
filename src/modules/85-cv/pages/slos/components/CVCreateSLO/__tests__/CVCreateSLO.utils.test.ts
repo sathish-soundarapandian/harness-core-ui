@@ -58,7 +58,7 @@ describe('Utils', () => {
 
     expect(SLORequestPayload.serviceLevelIndicators[0].spec.spec.eventType).toEqual(serviceLevelObjective.eventType)
     expect(SLORequestPayload.serviceLevelIndicators[0].spec.spec.metric2).toEqual(
-      serviceLevelObjective.goodRequestMetric
+      serviceLevelObjective.validRequestMetric
     )
   })
 

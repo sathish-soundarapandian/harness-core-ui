@@ -184,6 +184,11 @@ function SavePipelinePopover(
   }
 
   const publishPipeline = async (newPipelineId: string, updatedGitDetails?: SaveToGitFormInterface) => {
+    const repoId =
+      storeMetadata?.storeType === StoreType.REMOTE
+        ? defaultTo(updatedGitDetails?.repoName, repoName)
+        : defaultTo(updatedGitDetails?.repoIdentifier, repoIdentifier)
+
     if (pipelineIdentifier === DefaultNewPipelineId) {
       await deletePipelineCache(gitDetails)
 
@@ -192,15 +197,25 @@ function SavePipelinePopover(
         showSuccess(getString('pipelines-studio.publishPipeline'))
       }
 
-      navigateToLocation(newPipelineId, updatedGitDetails)
-      // note: without setTimeout does not redirect properly after save
-      await fetchPipeline({ forceFetch: true, forceUpdate: true, newPipelineId })
+      // if updatedGitDetails is not there or isNewBranch is false - For Inline or default branch new pipelines
+      if (!updatedGitDetails?.isNewBranch) {
+        navigateToLocation(newPipelineId, updatedGitDetails)
+        await fetchPipeline({ forceFetch: true, forceUpdate: true, newPipelineId })
+      }
     } else if (!updatedGitDetails || updatedGitDetails?.isNewBranch === false) {
       await fetchPipeline({ forceFetch: true, forceUpdate: true })
     }
+
+    // Only for Git Synced pipelines when isNewBranch is true
     if (updatedGitDetails?.isNewBranch) {
       navigateToLocation(newPipelineId, updatedGitDetails)
-      location.reload()
+      await fetchPipeline({
+        forceFetch: true,
+        forceUpdate: true,
+        newPipelineId,
+        repoIdentifier: repoId,
+        branch: updatedGitDetails?.branch
+      })
     }
   }
 

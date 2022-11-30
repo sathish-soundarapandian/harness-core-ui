@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { defaultTo, get, isArray, memoize } from 'lodash-es'
 import cx from 'classnames'
-import { FormInput, Layout, Text } from '@harness/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import { FieldArray } from 'formik'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
@@ -99,6 +99,10 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
     get(formik, `values.${path}.artifacts.${artifactPath}.spec.inputs`),
     artifact?.spec?.inputs
   )
+  const delegateSelectorsValue = defaultTo(
+    get(formik, `values.${path}.artifacts.${artifactPath}.spec.delegateSelectors`),
+    artifact?.spec?.delegateSelectors
+  )
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
 
@@ -112,7 +116,9 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
     body: {
       script: scriptValue,
       inputs: inputValue,
-      runtimeInputYaml: getYamlData(formik?.values, stepViewType as StepViewType, path as string)
+      runtimeInputYaml: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
+      delegateSelector:
+        getMultiTypeFromValue(delegateSelectorsValue) === MultiTypeInputType.FIXED && delegateSelectorsValue
     },
     requestOptions: {
       headers: {

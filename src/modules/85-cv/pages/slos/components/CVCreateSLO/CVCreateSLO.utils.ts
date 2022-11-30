@@ -81,8 +81,8 @@ export const getSLOInitialFormData = (
       SLIType: serviceLevelIndicator?.type,
       SLIMetricType: serviceLevelIndicator?.spec.type,
       eventType: SLIMetricSpec?.eventType,
-      validRequestMetric: SLIMetricSpec?.metric1 ?? '',
-      goodRequestMetric: SLIMetricSpec?.metric2,
+      validRequestMetric: SLIMetricSpec?.metric2 ?? '',
+      goodRequestMetric: SLIMetricSpec?.metric1 ?? '',
       objectiveValue: SLIMetricSpec?.thresholdValue,
       objectiveComparator: SLIMetricSpec?.thresholdType,
       SLIMissingDataType: serviceLevelIndicator?.sliMissingDataType,
@@ -123,8 +123,8 @@ export const createSLORequestPayload = (
           type: values.SLIMetricType,
           spec: {
             eventType: values.SLIMetricType === SLIMetricTypes.RATIO ? values.eventType : undefined,
-            metric1: values.validRequestMetric,
-            metric2: values.SLIMetricType === SLIMetricTypes.RATIO ? values.goodRequestMetric : undefined,
+            metric1: values.goodRequestMetric,
+            metric2: values.SLIMetricType === SLIMetricTypes.RATIO ? values.validRequestMetric : undefined,
             thresholdValue: values.objectiveValue,
             thresholdType: values.objectiveComparator
           } as ThresholdSLIMetricSpec | RatioSLIMetricSpec

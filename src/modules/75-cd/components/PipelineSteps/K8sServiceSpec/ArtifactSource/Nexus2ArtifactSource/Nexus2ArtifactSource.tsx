@@ -5,14 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
-import { defaultTo, get } from 'lodash-es'
+import React, { useEffect, useMemo, useState } from 'react'
+import { defaultTo, get, memoize } from 'lodash-es'
 
-import { FormInput, Layout } from '@harness/uicore'
+import { FormInput, Layout, Text } from '@harness/uicore'
+import { Menu } from '@blueprintjs/core'
 import { useMutateAsGet } from '@common/hooks'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { SidecarArtifact, useGetBuildDetailsForNexusArtifactWithYaml } from 'services/cd-ng'
+import { SidecarArtifact, useGetBuildDetailsForNexusArtifactWithYaml, useGetRepositories } from 'services/cd-ng'
 
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
@@ -22,6 +23,8 @@ import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import { checkIfQueryParamsisNotEmpty } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { queryInterface } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
+import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import {
   getDefaultQueryParam,
@@ -71,6 +74,14 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   })
   const { expressions } = useVariablesExpression()
 
+  const commonParams = {
+    accountIdentifier: accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch
+  }
+
   const connectorRefValue = getDefaultQueryParam(
     artifact?.spec?.connectorRef,
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
@@ -111,6 +122,58 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     artifact?.spec?.spec?.packageName,
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.packageName`, '')
   )
+
+  const {
+    data: repositoryDetails,
+    refetch: refetchRepositoryDetails,
+    loading: fetchingRepository,
+    error: errorFetchingRepository
+  } = useMutateAsGet(useGetRepositories, {
+    lazy: true,
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      ...commonParams,
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      repositoryFormat: repositoryFormatValue,
+      pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'repository'
+      )
+    }
+  })
+
+  const selectRepositoryItems = useMemo(() => {
+    return repositoryDetails?.data?.map(repository => ({
+      value: defaultTo(repository.repositoryName, ''),
+      label: defaultTo(repository.repositoryName, '')
+    }))
+  }, [repositoryDetails?.data])
+
+  const getRepository = (): { label: string; value: string }[] => {
+    if (fetchingRepository) {
+      return [
+        {
+          label: getString('pipeline.artifactsSelection.loadingRepository'),
+          value: getString('pipeline.artifactsSelection.loadingRepository')
+        }
+      ]
+    }
+    return defaultTo(selectRepositoryItems, [])
+  }
 
   const {
     data,
@@ -212,6 +275,20 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     return false
   }
 
+  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
+    <div key={item.label.toString()}>
+      <Menu.Item
+        text={
+          <Layout.Horizontal spacing="small">
+            <Text>{item.label}</Text>
+          </Layout.Horizontal>
+        }
+        disabled={fetchingRepository}
+        onClick={handleClick}
+      />
+    </div>
+  ))
+
   const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
@@ -244,50 +321,38 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               }}
             />
           )}
-          {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) && (
-            <FormInput.MultiTextInput
-              label={getString('tagLabel')}
-              multiTextInputProps={{
-                expressions,
-                value: TriggerDefaultFieldList.build,
-                allowableTypes
-              }}
-              disabled={true}
-              name={`${path}.artifacts.${artifactPath}.spec.tag`}
-            />
-          )}
-
-          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) && (
-            <ArtifactTagRuntimeField
-              {...props}
-              isFieldDisabled={() => isFieldDisabled(`artifacts.${artifactPath}.spec.tag`, true)}
-              fetchingTags={nexusBuildDetailsLoading}
-              buildDetailsList={data?.data?.buildDetailsList}
-              fetchTagsError={nexusTagError}
-              fetchTags={fetchTags}
-              expressions={expressions}
-              stageIdentifier={stageIdentifier}
-            />
-          )}
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
-            <FormInput.MultiTextInput
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              label={getString('tagRegex')}
-              name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
-            />
-          )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.repository`, template) && (
-            <FormInput.MultiTextInput
+            <FormInput.MultiTypeInput
+              selectItems={getRepository()}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repository`)}
               label={getString('repository')}
               name={`${path}.artifacts.${artifactPath}.spec.repository`}
               placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
-              multiTextInputProps={{
+              useValue
+              multiTypeInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                selectProps: {
+                  noResults: (
+                    <NoTagResults
+                      tagError={errorFetchingRepository}
+                      isServerlessDeploymentTypeSelected={false}
+                      defaultErrorText={getString('pipeline.artifactsSelection.errors.noRepositories')}
+                    />
+                  ),
+                  itemRenderer: itemRenderer,
+                  items: getRepository(),
+                  allowCreatingNewItems: true
+                },
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
+                  }
+                  refetchRepositoryDetails()
+                }
               }}
             />
           )}
@@ -345,6 +410,42 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 expressions,
                 allowableTypes
               }}
+            />
+          )}
+          {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) && (
+            <FormInput.MultiTextInput
+              label={getString('tagLabel')}
+              multiTextInputProps={{
+                expressions,
+                value: TriggerDefaultFieldList.build,
+                allowableTypes
+              }}
+              disabled={true}
+              name={`${path}.artifacts.${artifactPath}.spec.tag`}
+            />
+          )}
+
+          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) && (
+            <ArtifactTagRuntimeField
+              {...props}
+              isFieldDisabled={() => isFieldDisabled(`artifacts.${artifactPath}.spec.tag`, true)}
+              fetchingTags={nexusBuildDetailsLoading}
+              buildDetailsList={data?.data?.buildDetailsList}
+              fetchTagsError={nexusTagError}
+              fetchTags={fetchTags}
+              expressions={expressions}
+              stageIdentifier={stageIdentifier}
+            />
+          )}
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
+            <FormInput.MultiTextInput
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              label={getString('tagRegex')}
+              name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
             />
           )}
         </Layout.Vertical>

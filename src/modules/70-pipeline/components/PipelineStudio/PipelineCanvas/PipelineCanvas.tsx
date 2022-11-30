@@ -186,7 +186,7 @@ export function PipelineCanvas({
 
   //For remote pipeline queryParam will always as branch as selected branch except coming from list view
   // While opeining studio from list view, selected branch can be any branch as in pipeline response
-  if (storeType === StoreType.REMOTE && !branch && gitDetails?.branch) {
+  if (originalPipeline?.identifier !== '-1' && storeType === StoreType.REMOTE && !branch && gitDetails?.branch) {
     updateQueryParams({ branch: gitDetails?.branch })
   }
 
@@ -758,7 +758,12 @@ export function PipelineCanvas({
             })
           )
           if (!defaultSelected) {
-            location.reload()
+            fetchPipeline({
+              forceFetch: true,
+              forceUpdate: true,
+              repoIdentifier: selectedFilter.repo,
+              branch: selectedFilter.branch
+            })
           }
         })
       }
