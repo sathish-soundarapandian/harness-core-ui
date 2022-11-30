@@ -8653,6 +8653,9 @@ export interface ManifestConfig {
     | 'EcsScalableTargetDefinition'
     | 'EcsScalingPolicyDefinition'
     | 'AsgLaunchTemplate'
+    | 'AsgScheduledUpdateGroupAction'
+    | 'AsgScalingPolicy'
+    | 'AsgConfiguration'
 }
 
 export interface ManifestConfigWrapper {

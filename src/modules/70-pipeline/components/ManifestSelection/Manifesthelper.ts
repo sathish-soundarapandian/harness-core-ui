@@ -65,7 +65,10 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   EcsServiceDefinition: 'EcsServiceDefinition',
   EcsScalingPolicyDefinition: 'EcsScalingPolicyDefinition',
   EcsScalableTargetDefinition: 'EcsScalableTargetDefinition',
-  AsgLaunchTemplate: 'AsgLaunchTemplate'
+  AsgLaunchTemplate: 'AsgLaunchTemplate',
+  AsgScalingPolicy: 'AsgScalingPolicy',
+  AsgConfiguration: 'AsgConfiguration',
+  AsgScheduledUpdateGroupAction: 'AsgScheduledUpdateGroupAction'
 }
 
 export const ManifestToPathMap: Record<PrimaryManifestType, string> = {
@@ -166,7 +169,10 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   EcsServiceDefinition: gitStoreTypesWithHarnessStoreType,
   EcsScalingPolicyDefinition: gitStoreTypesWithHarnessStoreType,
   EcsScalableTargetDefinition: gitStoreTypesWithHarnessStoreType,
-  AsgLaunchTemplate: gitStoreTypesWithHarnessStoreType
+  AsgLaunchTemplate: gitStoreTypesWithHarnessStoreType,
+  AsgConfiguration: gitStoreTypesWithHarnessStoreType,
+  AsgScalingPolicy: gitStoreTypesWithHarnessStoreType,
+  AsgScheduledUpdateGroupAction: gitStoreTypesWithHarnessStoreType
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
@@ -182,7 +188,10 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   EcsServiceDefinition: 'service-amazon-ecs',
   EcsScalingPolicyDefinition: 'service-amazon-ecs',
   EcsScalableTargetDefinition: 'service-amazon-ecs',
-  AsgLaunchTemplate: 'functions'
+  AsgLaunchTemplate: 'functions',
+  AsgConfiguration: 'functions',
+  AsgScalingPolicy: 'functions',
+  AsgScheduledUpdateGroupAction: 'functions'
 }
 
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
@@ -198,7 +207,10 @@ export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
   EcsServiceDefinition: 'pipeline.manifestTypeLabels.EcsServiceDefinition',
   EcsScalingPolicyDefinition: 'pipeline.manifestTypeLabels.EcsScalingPolicyDefinition',
   EcsScalableTargetDefinition: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition',
-  AsgLaunchTemplate: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition'
+  AsgLaunchTemplate: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition',
+  AsgConfiguration: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition',
+  AsgScalingPolicy: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition',
+  AsgScheduledUpdateGroupAction: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition'
 }
 
 export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> = [

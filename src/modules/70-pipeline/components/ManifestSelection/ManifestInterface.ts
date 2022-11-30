@@ -30,6 +30,9 @@ export type ManifestTypes =
   | 'EcsScalableTargetDefinition'
   | 'EcsScalingPolicyDefinition'
   | 'AsgLaunchTemplate'
+  | 'AsgScheduledUpdateGroupAction'
+  | 'AsgScalingPolicy'
+  | 'AsgConfiguration'
 
 export type PrimaryManifestType = 'K8sManifest' | 'HelmChart' | 'OpenshiftTemplate' | 'Kustomize'
 
