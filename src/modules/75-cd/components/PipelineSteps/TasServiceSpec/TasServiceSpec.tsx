@@ -54,7 +54,7 @@ export class TasServiceSpec extends Step<ServiceSpec> {
   protected defaultValues: ServiceSpec = {}
 
   protected stepIcon: IconName = 'tas'
-  protected stepName = 'Specify Tanzu Application Services'
+  protected stepName = 'Specify Tanzu Application Service'
   protected stepPaletteVisible = false
   protected _hasStepVariables = true
   protected invocationMap: Map<

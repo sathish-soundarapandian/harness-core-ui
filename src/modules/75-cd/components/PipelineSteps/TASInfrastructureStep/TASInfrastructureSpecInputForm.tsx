@@ -7,22 +7,17 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { Text, Layout, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get, defaultTo, isEqual, set, isUndefined } from 'lodash-es'
-
 import { Connectors } from '@connectors/constants'
-
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
-import { useGetTasOrganizations, useGetTasSpaces } from 'services/cd-ng'
+import { useGetTasOrganizations, useGetTasSpaces, useGetTasSpacesV2 } from 'services/cd-ng'
 import { getSelectedConnectorValue, SelectedConnectorType } from '@cd/utils/connectorUtils'
 import {
   TASInfrastructureSpecEditableProps,
@@ -50,8 +45,6 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
     accountId: string
   }>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const [organizations, setOrganizations] = useState<SelectOption[]>([])
-  const [spaces, setSpaces] = useState<SelectOption[]>([])
   const [connector, setConnector] = useState<string | undefined>(
     defaultTo(initialValues.connectorRef, allValues?.connectorRef)
   )
@@ -59,6 +52,7 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
     defaultTo(initialValues.organization, allValues?.organization)
   )
   const [spaceValue, setSpaceValue] = useState<string | undefined>(defaultTo(initialValues.space, allValues?.space))
+
   const environmentRef = useMemo(
     () => defaultTo(initialValues.environmentRef, allValues?.environmentRef),
     [initialValues.environmentRef, allValues?.environmentRef]
@@ -113,14 +107,12 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
     lazy: true
   })
 
-  useEffect(() => {
-    setOrganizations(
-      (organizationsData?.data || []).map(org => ({
-        label: org,
-        value: org
-      }))
-    )
-  }, [organizationsData])
+  const organizations: SelectOption[] = React.useMemo(() => {
+    return defaultTo(organizationsData?.data, []).map(org => ({
+      value: org,
+      label: org
+    }))
+  }, [organizationsData?.data])
 
   const {
     data: spaceData,
@@ -134,15 +126,15 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
     },
     lazy: true
   })
-  // const {
-  //   data: spaceDataV2,
-  //   refetch: refetchSpacesV2,
-  //   loading: loadingSpacesV2,
-  //   error: spacesErrorV2
-  // } = useGetTasSpacesV2({
-  //   queryParams,
-  //   lazy: true
-  // })
+  const {
+    data: spaceDataV2,
+    refetch: refetchSpacesV2,
+    loading: loadingSpacesV2,
+    error: spacesErrorV2
+  } = useGetTasSpacesV2({
+    queryParams,
+    lazy: true
+  })
 
   const fetchSpaceUsingEnvId = (): boolean => {
     return (
@@ -155,15 +147,13 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
     )
   }
 
-  useEffect(() => {
-    const options = (spaceData?.data || []).map(space => ({ label: space, value: space }))
-    setSpaces(options)
-  }, [spaceData])
-  // useEffect(() => {
-  //   const options =
-  //     (spaceDataV2?.data?.spaces||[]).map(space => ({ label: space, value: space }))
-  //   setSpaces(options)
-  // }, [spaceDataV2])
+  const spaces: SelectOption[] = React.useMemo(() => {
+    const spacesListData = defaultTo(spaceData?.data, spaceDataV2?.data)
+    return defaultTo(spacesListData, []).map(space => ({
+      value: space,
+      label: space
+    }))
+  }, [spaceData?.data, spaceDataV2?.data])
 
   useEffect(() => {
     resetForm('connectorRef')
@@ -216,8 +206,6 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
                 } else if (type === MultiTypeInputType.EXPRESSION) {
                   setConnector(selected?.toString())
                 }
-                setOrganizations([])
-                setSpaces([])
               }
             }
             gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
@@ -253,7 +241,6 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
                 } else if (type === MultiTypeInputType.EXPRESSION) {
                   setOrganization(value?.toString())
                 }
-                setSpaces([])
               },
               onFocus: () => {
                 if (getMultiTypeFromValue(connector) !== MultiTypeInputType.RUNTIME) {
@@ -294,9 +281,8 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
             }}
             disabled={readonly}
             placeholder={
-              loadingSpaces
-                ? // || loadingSpacesV2
-                  /* istanbul ignore next */ getString('loading')
+              loadingSpaces || loadingSpacesV2
+                ? /* istanbul ignore next */ getString('loading')
                 : getString('cd.steps.tasInfra.spacePlaceholder')
             }
             useValue
@@ -322,17 +308,16 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
                     }
                   })
                 } else if (fetchSpaceUsingEnvId()) {
-                  // refetchSpacesV2({
-                  //   queryParams: {
-                  //     connectorRef: connector as string,
-                  //     accountIdentifier: accountId,
-                  //     orgIdentifier,
-                  //     projectIdentifier,
-                  //     envId: environmentRef,
-                  //     infraDefinitionId: infrastructureRef,
-                  //     organization: organization
-                  //   }
-                  // })
+                  refetchSpacesV2({
+                    queryParams: {
+                      connectorRef: connector as string,
+                      accountIdentifier: accountId,
+                      orgIdentifier,
+                      projectIdentifier,
+                      envId: environmentRef,
+                      infraDefinitionId: infrastructureRef
+                    }
+                  })
                 }
               },
 
@@ -348,8 +333,7 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
                       : defaultTo(
                           defaultTo(
                             get(spacesError, errorMessage, spacesError?.message),
-                            // get(spacesErrorV2, errorMessage, spacesErrorV2?.message)
-                            undefined
+                            get(spacesErrorV2, errorMessage, spacesErrorV2?.message)
                           ),
                           getString('cd.steps.tasInfra.spacesError')
                         )}

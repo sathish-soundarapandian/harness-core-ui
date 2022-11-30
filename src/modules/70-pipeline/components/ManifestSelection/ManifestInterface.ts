@@ -31,16 +31,16 @@ export type ManifestTypes =
   | 'EcsScalableTargetDefinition'
   | 'EcsScalingPolicyDefinition'
   | 'TasManifest'
-  | 'Vars'
-  | 'AutoScaler'
+  | 'TasVars'
+  | 'TasAutoScaler'
 
 export type PrimaryManifestType =
   | 'K8sManifest'
   | 'HelmChart'
   | 'OpenshiftTemplate'
   | 'Kustomize'
-  | 'Vars'
-  | 'AutoScaler'
+  | 'TasVars'
+  | 'TasAutoScaler'
 
 export type ManifestStores =
   | 'Git'

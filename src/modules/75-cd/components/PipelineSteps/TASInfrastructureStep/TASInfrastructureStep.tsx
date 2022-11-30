@@ -82,7 +82,7 @@ export class TASInfrastructureSpec extends PipelineStep<TASInfrastructureSpecSte
   }
 
   protected stepIcon: IconName = 'tas'
-  protected stepName = 'Specify your Tanzu Application Services Connector'
+  protected stepName = 'Specify your Tanzu Application Service Connector'
   protected stepPaletteVisible = false
   protected invocationMap: Map<
     RegExp,

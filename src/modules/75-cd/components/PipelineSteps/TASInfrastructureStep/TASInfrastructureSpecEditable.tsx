@@ -58,8 +58,6 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
     accountId: string
   }>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const [organizations, setOrganizations] = React.useState<SelectOption[]>([])
-  const [spaces, setSpaces] = React.useState<SelectOption[]>([])
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { expressions } = useVariablesExpression()
   const [renderCount, setRenderCount] = React.useState<boolean>(true)
@@ -82,14 +80,13 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
     queryParams,
     lazy: true
   })
-  React.useEffect(() => {
-    const organizationValues = [] as SelectOption[]
-    defaultTo(organizationsData?.data, []).map(organization =>
-      organizationValues.push({ label: organization, value: organization })
-    )
 
-    setOrganizations(organizationValues as SelectOption[])
-  }, [organizationsData])
+  const organizations: SelectOption[] = React.useMemo(() => {
+    return defaultTo(organizationsData?.data, []).map(organization => ({
+      value: organization,
+      label: organization
+    }))
+  }, [organizationsData?.data])
 
   const {
     data: spacesData,
@@ -104,10 +101,12 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
     lazy: true
   })
 
-  React.useEffect(() => {
-    const options = spacesData?.data?.map(space => ({ label: space, value: space })) || /* istanbul ignore next */ []
-    setSpaces(options)
-  }, [spacesData])
+  const spaces: SelectOption[] = React.useMemo(() => {
+    return defaultTo(spacesData?.data, []).map(space => ({
+      value: space,
+      label: space
+    }))
+  }, [spacesData?.data])
 
   const getOrganization = (values: TASInfrastructureUI): SelectOption | undefined => {
     const value = values.organization ? values.organization : formikRef?.current?.values?.organization?.value
@@ -273,7 +272,6 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
                       orgIdentifier,
                       type: Connectors.TAS,
                       label: getString('connectors.title.tas'),
-
                       disabled: readonly,
                       gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
                     }}
@@ -295,8 +293,6 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
                     onChange: /* istanbul ignore next */ () => {
                       getMultiTypeFromValue(formik.values?.space) !== MultiTypeInputType.RUNTIME &&
                         formik.setFieldValue('space', '')
-
-                      setSpaces([])
                     },
                     expressions,
                     disabled: readonly,

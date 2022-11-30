@@ -387,7 +387,7 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details', //todospt
   [ServiceDeploymentType.SshWinRmAws]: 'Amazon Web Services Details',
   [ServiceDeploymentType.SshWinRmAzure]: 'Azure Infrastructure details',
-  [ServiceDeploymentType.TAS]: 'Tanzu Application Services Details' //CHECK NAME INFRA
+  [ServiceDeploymentType.TAS]: 'Tanzu Application Service Infrastructure Details'
 }
 
 export const getSelectedDeploymentType = (

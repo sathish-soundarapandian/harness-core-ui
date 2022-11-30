@@ -149,6 +149,7 @@ function TASWithHarnessStore({
                       name="cfCliVersion"
                       label={getString('pipeline.manifestType.cfCliVersion')}
                       items={cfCliVersions as SelectOption[]}
+                      disabled
                     />
                   </Container>
                   <Container className={css.halfWidth} margin={{ bottom: 'medium' }}>

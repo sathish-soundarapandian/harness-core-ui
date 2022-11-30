@@ -190,8 +190,8 @@ function ServiceManifestOverride({
         OverrideManifests.Values,
         OverrideManifests.OpenshiftParam,
         OverrideManifests.TasManifest,
-        OverrideManifests.Vars,
-        OverrideManifests.AutoScaler
+        OverrideManifests.TasVars,
+        OverrideManifests.TasAutoScaler
       ].includes(selectedManifest as OverrideManifestTypes) && manifestStore === OverrideManifestStores.CustomRemote:
         manifestDetailStep = <CustomRemoteManifest {...lastStepProps()} />
         break

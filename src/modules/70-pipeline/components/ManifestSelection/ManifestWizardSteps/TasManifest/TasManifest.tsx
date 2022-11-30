@@ -260,6 +260,7 @@ function TasManifest({
                       name="cfCliVersion"
                       label={getString('pipeline.manifestType.cfCliVersion')}
                       items={cfCliVersions as SelectOption[]}
+                      disabled
                     />
                   </div>
                   {!!(connectionType === GitRepoName.Account && accountUrl) && (

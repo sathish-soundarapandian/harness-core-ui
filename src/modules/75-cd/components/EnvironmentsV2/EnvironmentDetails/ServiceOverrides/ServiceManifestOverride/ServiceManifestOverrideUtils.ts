@@ -13,8 +13,8 @@ export type OverrideManifestTypes =
   | 'OpenshiftParam'
   | 'KustomizePatches'
   | 'TasManifest'
-  | 'Vars'
-  | 'AutoScaler'
+  | 'TasVars'
+  | 'TasAutoScaler'
 export type OverrideManifestStoresTypes =
   | 'Git'
   | 'Github'
@@ -29,8 +29,8 @@ export const OverrideManifests: Record<OverrideManifestTypes, OverrideManifestTy
   OpenshiftParam: 'OpenshiftParam',
   KustomizePatches: 'KustomizePatches',
   TasManifest: 'TasManifest',
-  Vars: 'Vars',
-  AutoScaler: 'AutoScaler'
+  TasVars: 'TasVars',
+  TasAutoScaler: 'TasAutoScaler'
 }
 export const OverrideManifestStores: Record<OverrideManifestStoresTypes, OverrideManifestStoresTypes> = {
   Git: 'Git',
@@ -68,27 +68,27 @@ export const OverrideManifestStoreMap: Record<OverrideManifestTypes, OverrideMan
   ],
   KustomizePatches: [...gitStoreTypes, OverrideManifestStores.InheritFromManifest, OverrideManifestStores.Harness],
   TasManifest: [...gitStoreTypes, OverrideManifestStores.Harness, OverrideManifestStores.CustomRemote],
-  Vars: [...gitStoreTypes, OverrideManifestStores.Harness, OverrideManifestStores.CustomRemote],
-  AutoScaler: [...gitStoreTypes, OverrideManifestStores.Harness, OverrideManifestStores.CustomRemote]
+  TasVars: [...gitStoreTypes, OverrideManifestStores.Harness, OverrideManifestStores.CustomRemote],
+  TasAutoScaler: [...gitStoreTypes, OverrideManifestStores.Harness, OverrideManifestStores.CustomRemote]
 }
 export const ManifestLabels: Record<OverrideManifestTypes, StringKeys> = {
   Values: 'pipeline.manifestTypeLabels.ValuesYaml',
   OpenshiftParam: 'pipeline.manifestTypeLabels.OpenshiftParam',
   KustomizePatches: 'pipeline.manifestTypeLabels.KustomizePatches',
   TasManifest: 'pipeline.manifestTypeLabels.TASManifest',
-  Vars: 'pipeline.manifestTypeLabels.VarsYAML',
-  AutoScaler: 'pipeline.manifestTypeLabels.Autoscaler'
+  TasVars: 'pipeline.manifestTypeLabels.VarsYAML',
+  TasAutoScaler: 'pipeline.manifestTypeLabels.Autoscaler'
 }
 export const ManifestIcons: Record<OverrideManifestTypes, IconName> = {
   Values: 'functions',
   OpenshiftParam: 'openshift-params',
   KustomizePatches: 'kustomizeparam',
   TasManifest: 'tas-manifest',
-  Vars: 'list-vars',
-  AutoScaler: 'autoScaler'
+  TasVars: 'list-vars',
+  TasAutoScaler: 'autoScaler'
 }
 
-const TASOverrideManifests = [OverrideManifests.TasManifest, OverrideManifests.Vars, OverrideManifests.AutoScaler]
+const TASOverrideManifests = [OverrideManifests.TasManifest, OverrideManifests.TasVars, OverrideManifests.TasAutoScaler]
 
 export function getAllowedOverrideManifests({ TAS_NG = false }): OverrideManifestTypes[] {
   let overrideManifests = [...AllowedManifestOverrideTypes]

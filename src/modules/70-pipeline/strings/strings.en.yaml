@@ -1281,7 +1281,7 @@ serviceDeploymentTypes:
   awsCodeDeploy: CodeDeploy
   winrm: WinRM
   awsLambda: AWS Lambda
-  tas: TAS
+  tas: Tanzu Application Services
   ssh: Secure Shell
   deployDifferentLabel: Deploy different service
   serverlessAwsLambda: Serverless Lambda

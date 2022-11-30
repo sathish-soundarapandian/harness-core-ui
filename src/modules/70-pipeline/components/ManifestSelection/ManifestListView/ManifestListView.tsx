@@ -261,8 +261,8 @@ function ManifestListView({
       [
         ManifestDataType.HelmChart,
         ManifestDataType.TasManifest,
-        ManifestDataType.Vars,
-        ManifestDataType.AutoScaler
+        ManifestDataType.TasVars,
+        ManifestDataType.TasAutoScaler
       ].includes(selectedManifest)
     ) {
       iconProps.color = Color.WHITE
@@ -330,8 +330,8 @@ function ManifestListView({
         ManifestDataType.OpenshiftTemplate,
         ManifestDataType.OpenshiftParam,
         ManifestDataType.TasManifest,
-        ManifestDataType.Vars,
-        ManifestDataType.AutoScaler
+        ManifestDataType.TasVars,
+        ManifestDataType.TasAutoScaler
       ].includes(selectedManifest as ManifestTypes) && manifestStore === ManifestStoreMap.CustomRemote:
         manifestDetailStep = <CustomRemoteManifest {...lastStepProps()} />
         break

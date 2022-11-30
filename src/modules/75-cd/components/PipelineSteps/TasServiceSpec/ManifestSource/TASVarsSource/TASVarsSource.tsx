@@ -11,7 +11,7 @@ import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifes
 import { ManifestContent } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ManifestSourceRuntimeFields/ManifestContent'
 
 export class TASVarsSource extends ManifestSourceBase<ManifestSourceRenderProps> {
-  protected manifestType = ManifestDataType.Vars
+  protected manifestType = ManifestDataType.TasVars
 
   renderContent(props: ManifestSourceRenderProps): JSX.Element | null {
     return <ManifestContent {...props} pathFieldlabel="pipeline.manifestType.varsYAMLPath" />

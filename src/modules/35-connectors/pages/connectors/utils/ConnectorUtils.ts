@@ -2353,7 +2353,7 @@ export const getConnectorDisplayName = (type: string): string => {
     case Connectors.AZURE_ARTIFACTS:
       return 'Azure Artifacts'
     case Connectors.TAS:
-      return 'TAS'
+      return 'Tanzu Application Service'
     default:
       return ''
   }
