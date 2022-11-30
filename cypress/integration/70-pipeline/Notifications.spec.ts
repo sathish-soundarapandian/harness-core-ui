@@ -41,13 +41,6 @@ describe('PIPELINE NOTIFICATIONS FLOW', () => {
     cy.get('input[name="types.AllEvents"]').click({ force: true })
     cy.clickSubmit()
 
-    //check validation
-    cy.contains('Event is required').should('be.visible')
-    cy.get('input[name="types.AllEvents"]').click({ force: true })
-    cy.get('input[name="types.PipelineStart"]').click({ force: true })
-
-    cy.clickSubmit()
-
     cy.get('.StepWizard--stepDetails').contains('p', 'Notification Method').should('be.visible')
 
     cy.get('.StepWizard--stepDetails').find('input[placeholder="- Select -"]').click({ force: true })
@@ -66,7 +59,7 @@ describe('PIPELINE NOTIFICATIONS FLOW', () => {
     cy.wait(1000)
 
     cy.contains('p', 'cypress notification').should('be.visible')
-    cy.contains('span', 'Pipeline Start').should('be.visible')
+    cy.contains('span', 'All Events').should('be.visible')
     cy.contains('p', 'Email').should('be.visible')
   })
 })

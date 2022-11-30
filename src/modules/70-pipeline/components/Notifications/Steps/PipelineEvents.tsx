@@ -167,37 +167,38 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                 })
               }
 
-              if (
-                val.types[PipelineEventType.StageStart] &&
-                (!val[PipelineEventType.StageStart] || !val[PipelineEventType.StageStart].length)
-              ) {
-                return this.createError({
-                  path: PipelineEventType.StageStart,
-                  message: getString('rbac.notifications.stageRequired')
-                })
-              } else if (
-                val.types[PipelineEventType.StageFailed] &&
-                (!val[PipelineEventType.StageFailed] || !val[PipelineEventType.StageFailed].length)
-              ) {
-                return this.createError({
-                  path: PipelineEventType.StageFailed,
-                  message: getString('rbac.notifications.stageRequired')
-                })
-              } else if (
-                val.types[PipelineEventType.StageSuccess] &&
-                (!val[PipelineEventType.StageSuccess] || !val[PipelineEventType.StageSuccess].length)
-              ) {
-                return this.createError({
-                  path: PipelineEventType.StageSuccess,
-                  message: getString('rbac.notifications.stageRequired')
-                })
+              if (!val.types?.[PipelineEventType.ALL_EVENTS]) {
+                if (
+                  val.types[PipelineEventType.StageStart] &&
+                  (!val[PipelineEventType.StageStart] || !val[PipelineEventType.StageStart].length)
+                ) {
+                  return this.createError({
+                    path: PipelineEventType.StageStart,
+                    message: getString('rbac.notifications.stageRequired')
+                  })
+                } else if (
+                  val.types[PipelineEventType.StageFailed] &&
+                  (!val[PipelineEventType.StageFailed] || !val[PipelineEventType.StageFailed].length)
+                ) {
+                  return this.createError({
+                    path: PipelineEventType.StageFailed,
+                    message: getString('rbac.notifications.stageRequired')
+                  })
+                } else if (
+                  val.types[PipelineEventType.StageSuccess] &&
+                  (!val[PipelineEventType.StageSuccess] || !val[PipelineEventType.StageSuccess].length)
+                ) {
+                  return this.createError({
+                    path: PipelineEventType.StageSuccess,
+                    message: getString('rbac.notifications.stageRequired')
+                  })
+                }
               }
 
               return true
             }
           })
           .required()}
-        validateOnChange={false}
         onSubmit={values => {
           const pipelineEvents: PipelineEvent[] = Object.keys(values.types)
             .filter(function (k) {
@@ -240,7 +241,6 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                             if (e.currentTarget.checked) {
                               if (isAll_Event(event.value)) {
                                 formikProps.setValues({
-                                  ...formikProps.values,
                                   ...setAllEventStatus(true)
                                 })
                               } else {
@@ -252,14 +252,18 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                                   }
                                 } as PipelineEventsFormData
 
-                                formikProps.setValues({
-                                  ...formikProps.values,
-                                  types: {
-                                    ...formikProps.values.types,
-                                    [PipelineEventType.ALL_EVENTS]: allEventsStatus(finalUpdatedValue)[0],
-                                    [event?.value]: true
-                                  }
-                                })
+                                formikProps.setValues(
+                                  allEventsStatus(finalUpdatedValue)[0]
+                                    ? finalUpdatedValue
+                                    : {
+                                        ...formikProps.values,
+                                        types: {
+                                          ...formikProps.values.types,
+                                          [PipelineEventType.ALL_EVENTS]: false,
+                                          [event?.value]: true
+                                        }
+                                      }
+                                )
                               }
                             } else if (isAll_Event(event.value)) {
                               formikProps.setValues(setAllEventStatus(false))
@@ -280,7 +284,10 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                           event.value === PipelineEventType.StageFailed ||
                           event.value === PipelineEventType.StageStart) && (
                           <FormInput.MultiSelect
-                            disabled={!formikProps.values.types[event.value]}
+                            disabled={
+                              !formikProps.values.types[event.value] ||
+                              formikProps.values.types?.[PipelineEventType.ALL_EVENTS]
+                            }
                             className={css.stagesMultiSelect}
                             items={stagesOptions || []}
                             name={event.value}
