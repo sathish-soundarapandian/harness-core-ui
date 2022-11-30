@@ -30,7 +30,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { BannerType } from '@common/layouts/Constants'
 import { FEATURE_USAGE_WARNING_LIMIT } from '@common/layouts/FeatureBanner'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+// import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
 import RbacFactory from '@rbac/factories/RbacFactory'
@@ -677,8 +677,8 @@ const CENonMFERoutes = (
 
 const CERoutes: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
-  const { CCM_MICRO_FRONTEND } = useFeatureFlags()
-  const enableMicroFrontend = CCM_MICRO_FRONTEND
+  // const { CCM_MICRO_FRONTEND } = useFeatureFlags()
+  const enableMicroFrontend = true
 
   const urqlClient = React.useMemo(() => {
     const url = getConfig(`ccm/api/graphql?accountIdentifier=${accountId}&routingId=${accountId}`)
