@@ -31,7 +31,8 @@ const getRepoNameBasedonScope = (initialValues: ManifestConfig, prevStepData: an
   const connectorScope = getScopeFromValue(initialValues?.spec.store?.spec.connectorRef)
   switch (connectorScope) {
     case Scope.ACCOUNT:
-      return initialValues?.spec.store.spec.connectorRef === `account.${prevStepData.connectorRef.connector.identifier}`
+      return initialValues?.spec.store?.spec.connectorRef ===
+        `account.${prevStepData?.connectorRef?.connector?.identifier}`
         ? initialValues?.spec.store?.spec.repoName
         : ''
 
@@ -41,8 +42,8 @@ const getRepoNameBasedonScope = (initialValues: ManifestConfig, prevStepData: an
         : ''
 
     case Scope.ORG:
-      return `${prevStepData.connectorRef.scope}.${prevStepData.connectorRef.connector.identifier}` ===
-        initialValues?.spec.store.spec.connectorRef
+      return `${prevStepData?.connectorRef?.scope}.${prevStepData?.connectorRef?.connector?.identifier}` ===
+        initialValues?.spec.store?.spec.connectorRef
         ? initialValues?.spec.store?.spec.repoName
         : ''
 
