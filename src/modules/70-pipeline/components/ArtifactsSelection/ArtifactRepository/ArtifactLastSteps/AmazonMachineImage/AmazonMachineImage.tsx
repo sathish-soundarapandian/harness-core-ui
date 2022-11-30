@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import cx from 'classnames'
 import {
   Formik,
@@ -22,12 +22,13 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { cloneDeep, defaultTo, get, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isNil, memoize, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
-import { ConnectorConfigDTO, useTags } from 'services/cd-ng'
+import { BuildDetails, ConnectorConfigDTO, useListVersionsForAMIArtifact, useTags } from 'services/cd-ng'
 import {
   getConnectorIdValue,
   getArtifactFormData,
@@ -45,8 +46,11 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { useListAwsRegions } from 'services/portal'
 import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
+import { useMutateAsGet } from '@common/hooks'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
+import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
 
 function FormComponent({
@@ -91,6 +95,56 @@ function FormComponent({
     lazy: true
   })
 
+  const {
+    data: versionDetails,
+    loading: isVersionLoading,
+    refetch: refetchVersion,
+    error: versionError
+  } = useMutateAsGet(useListVersionsForAMIArtifact, {
+    body: {
+      tags: getInSelectOptionForm(get(formik, 'values.spec.tags')),
+      filters: getInSelectOptionForm(get(formik, 'values.spec.filters'))
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      region: get(formik, 'values.spec.region'),
+      connectorRef: connectorRefValue || '',
+      versionRegex: '*'
+    },
+    lazy: true
+  })
+
+  const selectVersionItems = useMemo(() => {
+    return versionDetails?.data?.map((packageInfo: BuildDetails) => ({
+      value: defaultTo(packageInfo.number, ''),
+      label: defaultTo(packageInfo.number, '')
+    }))
+  }, [versionDetails?.data])
+
+  useEffect(() => {
+    if (!isNil(formik.values?.version)) {
+      if (getMultiTypeFromValue(formik.values?.version) !== MultiTypeInputType.FIXED) {
+        formik.setFieldValue('versionRegex', formik.values?.version)
+      } else {
+        formik.setFieldValue('versionRegex', '')
+      }
+    }
+  }, [formik.values?.version])
+
+  const getVersions = (): SelectOption[] => {
+    if (isVersionLoading) {
+      return [{ label: 'Loading Versions...', value: 'Loading Versions...' }]
+    }
+    return defaultTo(selectVersionItems, [])
+  }
+
   useEffect(() => {
     const tagOption = get(tagsData, 'data', []).map((tagItem: string) => ({
       value: tagItem,
@@ -115,6 +169,20 @@ function FormComponent({
     }))
     setRegions(regionValues as SelectOption[])
   }, [regionData?.resource])
+
+  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
+    <div key={item.label.toString()}>
+      <Menu.Item
+        text={
+          <Layout.Horizontal spacing="small">
+            <Text>{item.label}</Text>
+          </Layout.Horizontal>
+        }
+        disabled={isVersionLoading}
+        onClick={handleClick}
+      />
+    </div>
+  ))
 
   return (
     <FormikForm>
@@ -162,7 +230,7 @@ function FormComponent({
             tags={tags}
             label={'AMI Tags'}
             isLoadingTags={isTagsLoading}
-            initialTags={formik?.initialValues?.spec?.tags}
+            initialTags={formik?.initialValues?.spec?.tags || {}}
             errorMessage={get(tagsError, 'data.message', '')}
           />
           {getMultiTypeFromValue(formik.values?.spec?.tags) === MultiTypeInputType.RUNTIME && (
@@ -191,7 +259,7 @@ function FormComponent({
             allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
             tags={amiFilters}
             label={'AMI Filters'}
-            initialTags={formik?.initialValues?.spec?.filters}
+            initialTags={formik?.initialValues?.spec?.filters || {}}
             errorMessage={get(tagsError, 'data.message', '')}
           />
           {getMultiTypeFromValue(formik.values?.spec?.filters) === MultiTypeInputType.RUNTIME && (
@@ -223,14 +291,37 @@ function FormComponent({
         </div>
         {formik.values.versionType === 'value' ? (
           <div className={css.jenkinsFieldContainer}>
-            <FormInput.MultiTextInput
+            <FormInput.MultiTypeInput
+              selectItems={getVersions()}
+              disabled={isReadonly}
+              name="spec.version"
               label={getString('version')}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
-              name="spec.version"
-              disabled={isReadonly}
-              multiTextInputProps={{
+              useValue
+              multiTypeInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                selectProps: {
+                  noResults: (
+                    <NoTagResults
+                      tagError={versionError}
+                      isServerlessDeploymentTypeSelected={false}
+                      defaultErrorText={getString('pipeline.artifactsSelection.validation.noVersion')}
+                    />
+                  ),
+                  itemRenderer: itemRenderer,
+                  items: getVersions(),
+                  allowCreatingNewItems: true
+                },
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
+                  }
+                  refetchVersion()
+                }
               }}
             />
             {getMultiTypeFromValue(formik.values.spec?.version) === MultiTypeInputType.RUNTIME && (
@@ -348,8 +439,8 @@ export function AmazonMachineImage(
       spec: {
         connectorRef: connectorId,
         region: formData.spec?.region,
-        tags: getInSelectOptionForm(formData.spec?.tags || ''),
-        filters: getInSelectOptionForm(formData.spec?.filters || ''),
+        tags: getInSelectOptionForm(formData.spec.tags as { [key: string]: any }),
+        filters: getInSelectOptionForm(formData.spec?.filters as { [key: string]: any }),
         ...versionData
       }
     })

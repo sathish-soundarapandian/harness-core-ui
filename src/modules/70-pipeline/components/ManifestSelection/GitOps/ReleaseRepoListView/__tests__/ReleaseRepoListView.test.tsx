@@ -10,6 +10,7 @@ import React from 'react'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { findByText, fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
 import ReleaseRepoListView from '../ReleaseRepoListView'
 
@@ -50,7 +51,7 @@ const props = {
         }
       }
     }
-  },
+  } as StageElementWrapper,
   connectors: {
     totalPages: 0,
     totalItems: 0,
@@ -205,5 +206,84 @@ describe('Release repo list view ', () => {
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
     expect(portal.querySelector('.createConnectorWizard')).toBeDefined()
+  })
+
+  test('deployment Repo Manifest - should show addDeploymenteRepo button', () => {
+    const { container, getByText } = render(
+      <TestWrapper defaultFeatureFlagValues={{ GITOPS_FETCH_LINKED_APPS: true }}>
+        <ReleaseRepoListView {...props} listOfManifests={[]} />
+      </TestWrapper>
+    )
+    expect(getByText('pipeline.addReleaseRepo')).toBeInTheDocument()
+    expect(getByText('pipeline.addDeploymenteRepo')).toBeInTheDocument()
+    expect(container).toMatchSnapshot('deployment Repo Manifest')
+  })
+  test('deployment Repo Manifest - should not show addDeploymenteRepo button when deploymentRepo manifest is present', () => {
+    const { queryByText, container } = render(
+      <TestWrapper defaultFeatureFlagValues={{ GITOPS_FETCH_LINKED_APPS: true }}>
+        <ReleaseRepoListView
+          {...props}
+          listOfManifests={[
+            {
+              manifest: {
+                identifier: 'deploymentTypeRepo',
+                type: 'DeploymentRepo',
+                spec: {
+                  store: {
+                    type: 'Git',
+                    spec: {
+                      connectorRef: '<+input>',
+                      gitFetchType: 'Branch',
+                      paths: ['sdas'],
+                      branch: 'sadsa'
+                    }
+                  }
+                }
+              }
+            }
+          ]}
+        />
+      </TestWrapper>
+    )
+    expect(queryByText('deploymentTypeRepo')).toBeInTheDocument()
+    expect(queryByText('pipeline.deploymentRepo')).toBeInTheDocument()
+    expect(queryByText('pipeline.releaseRepo')).not.toBeInTheDocument()
+    expect(queryByText('pipeline.addReleaseRepo')).toBeInTheDocument()
+    expect(queryByText('pipeline.addDeploymenteRepo')).not.toBeInTheDocument()
+    expect(container).toMatchSnapshot('deployment Repo Manifest - no button')
+  })
+  test('release Repo Manifest - should not show addReleaseRepo button when releaseRepo manifest is present', () => {
+    const { queryByText, container } = render(
+      <TestWrapper defaultFeatureFlagValues={{ GITOPS_FETCH_LINKED_APPS: true }}>
+        <ReleaseRepoListView
+          {...props}
+          listOfManifests={[
+            {
+              manifest: {
+                identifier: 'sadsa',
+                type: 'ReleaseRepo',
+                spec: {
+                  store: {
+                    type: 'Git',
+                    spec: {
+                      connectorRef: '<+input>',
+                      gitFetchType: 'Branch',
+                      paths: ['sdas'],
+                      branch: 'sadsa'
+                    }
+                  }
+                }
+              }
+            }
+          ]}
+        />
+      </TestWrapper>
+    )
+    expect(queryByText('sadsa')).toBeInTheDocument()
+    expect(queryByText('pipeline.releaseRepo')).toBeInTheDocument()
+    expect(queryByText('pipeline.deploymentRepo')).not.toBeInTheDocument()
+    expect(queryByText('pipeline.addReleaseRepo')).not.toBeInTheDocument()
+    expect(queryByText('pipeline.addDeploymenteRepo')).toBeInTheDocument()
+    expect(container).toMatchSnapshot('release Repo Manifest - no button')
   })
 })

@@ -5,22 +5,33 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
-import { defaultTo, get } from 'lodash-es'
+import React, { useEffect, useMemo, useState } from 'react'
+import { defaultTo, get, isNil, memoize } from 'lodash-es'
 
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { useTags } from 'services/cd-ng'
+import { BuildDetails, useListVersionsForAMIArtifact, useTags } from 'services/cd-ng'
 import { useListAwsRegions } from 'services/portal'
 import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
-import { amiFilters } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { amiFilters, getInSelectOptionForm } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { useMutateAsGet } from '@common/hooks'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import {
+  getDefaultQueryParam,
+  getFinalQueryParamValue,
+  getFqnPath,
+  getYamlData,
+  isNewServiceEnvEntity
+} from '../artifactSourceUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-import { getDefaultQueryParam } from '../artifactSourceUtils'
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
 }
@@ -40,7 +51,12 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     orgIdentifier,
     artifact,
     repoIdentifier,
-    branch
+    branch,
+    stepViewType,
+    pipelineIdentifier,
+    serviceIdentifier,
+    stageIdentifier,
+    isSidecar
   } = props
 
   const { getString } = useStrings()
@@ -57,11 +73,88 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     get(initialValues?.artifacts, `${artifactPath}.spec.region`, '')
   )
 
+  const tagsValue = getDefaultQueryParam(
+    artifact?.spec?.tags,
+    get(initialValues?.artifacts, `${artifactPath}.spec.tags`, '')
+  )
+
+  const filterValue = getDefaultQueryParam(
+    artifact?.spec?.filter,
+    get(initialValues?.artifacts, `${artifactPath}.spec.filters`, '')
+  )
+
   const { data: regionData } = useListAwsRegions({
     queryParams: {
       accountId
     }
   })
+
+  const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
+
+  const {
+    data: versionDetails,
+    loading: isVersionLoading,
+    refetch: refetchVersion,
+    error: versionError
+  } = useMutateAsGet(useListVersionsForAMIArtifact, {
+    body: {
+      tags: getInSelectOptionForm(tagsValue),
+      filter: getInSelectOptionForm(filterValue),
+      runtimeInputYaml: getYamlData(formik?.values, stepViewType as StepViewType, path as string)
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      region: getFinalQueryParamValue(regionValue),
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      versionRegex: '*',
+      pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'version'
+      )
+    },
+    lazy: true
+  })
+
+  const selectVersionItems = useMemo(() => {
+    return versionDetails?.data?.map((packageInfo: BuildDetails) => ({
+      value: defaultTo(packageInfo.number, ''),
+      label: defaultTo(packageInfo.number, '')
+    }))
+  }, [versionDetails?.data])
+
+  useEffect(() => {
+    if (!isNil(formik.values?.version)) {
+      if (getMultiTypeFromValue(formik.values?.version) !== MultiTypeInputType.FIXED) {
+        formik.setFieldValue('versionRegex', formik.values?.version)
+      } else {
+        formik.setFieldValue('versionRegex', '')
+      }
+    }
+  }, [formik.values?.version])
+
+  const getVersions = (): SelectOption[] => {
+    if (isVersionLoading) {
+      return [{ label: 'Loading Versions...', value: 'Loading Versions...' }]
+    }
+    return defaultTo(selectVersionItems, [])
+  }
 
   const {
     data: tagsData,
@@ -100,6 +193,20 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     }))
     setRegions(regionValues as SelectOption[])
   }, [regionData?.resource])
+
+  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
+    <div key={item.label.toString()}>
+      <Menu.Item
+        text={
+          <Layout.Horizontal spacing="small">
+            <Text>{item.label}</Text>
+          </Layout.Horizontal>
+        }
+        disabled={isVersionLoading}
+        onClick={handleClick}
+      />
+    </div>
+  ))
 
   const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
@@ -152,15 +259,38 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
-            <FormInput.MultiTextInput
+            <FormInput.MultiTypeInput
               name={`${path}.artifacts.${artifactPath}.spec.version`}
               label={getString('version')}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               disabled={readonly}
-              multiTextInputProps={{
-                width: 391,
+              selectItems={getVersions()}
+              useValue
+              multiTypeInputProps={{
                 expressions,
-                allowableTypes
+                width: 391,
+                allowableTypes,
+                selectProps: {
+                  noResults: (
+                    <NoTagResults
+                      tagError={versionError}
+                      isServerlessDeploymentTypeSelected={false}
+                      defaultErrorText={getString('pipeline.artifactsSelection.validation.noVersion')}
+                    />
+                  ),
+                  itemRenderer: itemRenderer,
+                  items: getVersions(),
+                  allowCreatingNewItems: true
+                },
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
+                  }
+                  refetchVersion()
+                }
               }}
             />
           )}
