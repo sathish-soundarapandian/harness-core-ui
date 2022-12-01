@@ -7,11 +7,8 @@
 
 import React, { useEffect } from 'react'
 import { Route, useHistory, useParams } from 'react-router-dom'
-import routes from '@common/RouteDefinitions'
-import { codePathProps } from '@common/utils/routeUtils'
 import { RouteWithLayout } from '@common/router'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
-import type { CODEPathProps } from '@common/interfaces/RouteInterfaces'
 import SideNav from '@code/components/SideNav/SideNav'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import {
@@ -25,6 +22,7 @@ import {
   PullRequestsCompare,
   CreateWebhook
 } from './CodeApp'
+import routes, { CODEPathProps, codePathProps } from './RouteDefinitions'
 import CODEHomePage from './pages/home/CODEHomePage'
 
 export const sidebarProps: SidebarContext = {

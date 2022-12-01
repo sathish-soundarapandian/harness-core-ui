@@ -246,23 +246,6 @@ export interface GovernancePathProps
   evaluationId?: string
 }
 
-export interface CODEProps {
-  space?: string
-  repoPath?: string
-  repoName?: string
-  gitRef?: string
-  resourcePath?: string
-  commitRef?: string
-  branch?: string
-  diffRefs?: string // comparing diff refs, i.e: main...v1.0.1
-}
-
-export type CODEPathProps = RequireField<
-  Partial<Pick<ProjectPathProps, 'accountId' | 'orgIdentifier' | 'projectIdentifier'>>,
-  'accountId' | 'orgIdentifier' | 'projectIdentifier'
-> &
-  Omit<CODEProps, 'space' | 'repoPath'>
-
 export interface AccountLevelGitOpsPathProps {
   entity: string
 }

@@ -49,8 +49,6 @@ import type {
   EnvironmentQueryParams,
   AccountLevelGitOpsPathProps,
   TemplateType,
-  CODEProps,
-  RequireField,
   AccountRoutePlacement
 } from '@common/interfaces/RouteInterfaces'
 
@@ -1451,58 +1449,6 @@ const routes = {
 
   toCODE: withAccountId(() => `/code`),
   toCODEHome: withAccountId(() => `/code/home`),
-  toCODERepositories: ({ space }: Required<Pick<CODEProps, 'space'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier] = space.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}`
-  },
-  toCODERepository: ({
-    repoPath,
-    gitRef,
-    resourcePath
-  }: RequireField<Pick<CODEProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath'>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}${
-      gitRef ? '/files/' + gitRef : ''
-    }${resourcePath ? '/~/' + resourcePath : ''}`
-  },
-  toCODEFileEdit: ({
-    repoPath,
-    gitRef,
-    resourcePath
-  }: RequireField<Pick<CODEProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath' | 'gitRef'>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/edit/${gitRef}/~/${
-      resourcePath || ''
-    }`
-  },
-  toCODECommits: ({ repoPath, commitRef }: Required<Pick<CODEProps, 'repoPath' | 'commitRef'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/commits${
-      commitRef ? '/' + commitRef : ''
-    }`
-  },
-  toCODEBranches: ({ repoPath, branch }: Required<Pick<CODEProps, 'repoPath' | 'branch'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/branches${
-      branch ? '/' + branch : ''
-    }`
-  },
-  toCODEPullRequests: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/pulls`
-  },
-  toCODEPullRequestsCompare: ({ repoPath, diffRefs }: Required<Pick<CODEProps, 'repoPath' | 'diffRefs'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/pulls/compare/${diffRefs}`
-  },
-  toCODESettings: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/settings`
-  },
-  toCODECreateWebhook: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/settings/webhook/new`
-  },
 
   /********************************************************************************************************************/
   toCV: (params: Partial<ProjectPathProps>): string =>

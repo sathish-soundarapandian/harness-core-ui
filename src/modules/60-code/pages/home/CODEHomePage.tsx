@@ -10,8 +10,8 @@ import { useHistory, useParams } from 'react-router-dom'
 import { HomePageTemplate } from '@projects-orgs/pages/HomePageTemplate/HomePageTemplate'
 import { useStrings } from 'framework/strings'
 import type { Project } from 'services/cd-ng'
-import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import routes from '../../RouteDefinitions'
 import bgImageURL from './assets/CODELandingPage.svg'
 
 const CODEHomePage: React.FC = () => {

@@ -8,13 +8,13 @@
 import React, { Suspense, lazy, useMemo } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom'
 import { Container } from '@harness/uicore'
-import { pick } from 'lodash-es'
+import { omit } from 'lodash-es'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { useStrings } from 'framework/strings'
-import routes from '@common/RouteDefinitions'
 import SessionToken from 'framework/utils/SessionToken'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
+import routes from './RouteDefinitions'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type RemoteViewProps = Record<string, any>
@@ -49,18 +49,6 @@ const RemotePullRequests = lazy(() => import('code/PullRequests'))
 // eslint-disable-next-line import/no-unresolved
 const RemotePullRequestsCompare = lazy(() => import('code/PullRequestsCompare'))
 
-const exportedRoutes = pick(routes, [
-  'toCODERepositories',
-  'toCODERepository',
-  'toCODEFileEdit',
-  'toCODECommits',
-  'toCODEBranches',
-  'toCODEPullRequests',
-  'toCODEPullRequestsCompare',
-  'toCODESettings',
-  'toCODECreateWebhook'
-])
-
 const CODERemoteComponentMounter: React.FC<{
   component: JSX.Element
 }> = ({ component }) => {
@@ -81,7 +69,7 @@ const CODERemoteComponentMounter: React.FC<{
           on401={() => {
             global401HandlerUtils(history)
           }}
-          routes={exportedRoutes}
+          routes={omit(routes, ['toCODE', 'toCODEHome'])}
           hooks={{
             useGetToken
           }}
