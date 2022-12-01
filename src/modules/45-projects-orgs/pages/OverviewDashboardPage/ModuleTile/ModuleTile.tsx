@@ -13,6 +13,10 @@ import CDZeroState from './views/CDEmptyState'
 import type { ModuleTileDetailsBaseProps } from './types'
 import CIEmptyState from './views/CIEmptyState'
 import FFEmptyState from './views/FFEmptyState'
+import STOEmptyState from './views/STOEmptyState'
+import ChaosEmptyState from './views/ChaosEmptyState'
+import CEEmptyState from './views/CEEmptyState'
+import SLOEmptyState from './views/SLOEmptyState'
 import css from './ModuleTile.module.scss'
 
 interface ModuleTileProps {
@@ -38,16 +42,20 @@ const moduleTileMap: Record<NavModuleName, ModuleTileDetails> = {
     ZeroState: FFEmptyState
   },
   [ModuleName.CHAOS]: {
-    label: 'common.moduleTileLabel.chaos'
+    label: 'common.moduleTileLabel.chaos',
+    ZeroState: ChaosEmptyState
   },
   [ModuleName.STO]: {
-    label: 'common.moduleTileLabel.sto'
+    label: 'common.moduleTileLabel.sto',
+    ZeroState: STOEmptyState
   },
   [ModuleName.CV]: {
-    label: 'common.moduleTileLabel.cv'
+    label: 'common.moduleTileLabel.cv',
+    ZeroState: SLOEmptyState
   },
   [ModuleName.CE]: {
-    label: 'common.moduleTileLabel.ce'
+    label: 'common.moduleTileLabel.ce',
+    ZeroState: CEEmptyState
   },
   [ModuleName.CODE]: {
     label: 'common.purpose.code.name'

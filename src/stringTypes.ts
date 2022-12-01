@@ -520,6 +520,13 @@ export interface StringsMap {
   'common.moduleDetails.cd.expanded.list.three': string
   'common.moduleDetails.cd.expanded.list.two': string
   'common.moduleDetails.cd.expanded.title': string
+  'common.moduleDetails.ce.collapsed.title': string
+  'common.moduleDetails.ce.expanded.title': string
+  'common.moduleDetails.chaos.collapsed.title': string
+  'common.moduleDetails.chaos.expanded.list.one': string
+  'common.moduleDetails.chaos.expanded.list.three': string
+  'common.moduleDetails.chaos.expanded.list.two': string
+  'common.moduleDetails.chaos.expanded.title': string
   'common.moduleDetails.ci.collapsed.title': string
   'common.moduleDetails.ci.expanded.list.one': string
   'common.moduleDetails.ci.expanded.list.three': string
@@ -530,6 +537,16 @@ export interface StringsMap {
   'common.moduleDetails.ff.expanded.list.three': string
   'common.moduleDetails.ff.expanded.list.two': string
   'common.moduleDetails.ff.expanded.title': string
+  'common.moduleDetails.slo.collapsed.title': string
+  'common.moduleDetails.slo.expanded.description': string
+  'common.moduleDetails.slo.expanded.title': string
+  'common.moduleDetails.sto.collapsed.title': string
+  'common.moduleDetails.sto.expanded.list.five': string
+  'common.moduleDetails.sto.expanded.list.four': string
+  'common.moduleDetails.sto.expanded.list.one': string
+  'common.moduleDetails.sto.expanded.list.three': string
+  'common.moduleDetails.sto.expanded.list.two': string
+  'common.moduleDetails.sto.expanded.title': string
   'common.moduleLabel': string
   'common.moduleList.buildAndTest': string
   'common.moduleList.deployChanges': string
@@ -859,6 +876,7 @@ export interface StringsMap {
   'common.singularLabels.testTarget': string
   'common.skip': string
   'common.slack': string
+  'common.sloNoData': string
   'common.smtp.configured': string
   'common.smtp.conifg': string
   'common.smtp.deleteInProgress': string
@@ -7835,7 +7853,6 @@ export interface StringsMap {
   'cv.slos.latencySLI': string
   'cv.slos.monitoredService': string
   'cv.slos.monitoredServiceText': string
-  'cv.slos.noData': string
   'cv.slos.noDataMS': string
   'cv.slos.noMatchingData': string
   'cv.slos.noMatchingDataForSearch': string

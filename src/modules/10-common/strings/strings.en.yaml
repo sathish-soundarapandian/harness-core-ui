@@ -1157,6 +1157,7 @@ timeRangeLimitWarning:
 connectRepo: Connect to Git Repository
 createFlag: Create a Flag
 learnMore: Learn more
+sloNoData: You don’t have any SLO created yet
 moduleDetails:
   cd:
     collapsed:
@@ -1186,3 +1187,34 @@ moduleDetails:
         one: '{{$.common.createFlag}}'
         two: Set Up Your Application
         three: 'Test Your Flag'
+  sto:
+    collapsed:
+      title: Rapid Delivery of Secure ...
+    expanded:
+      title: Let’s get you started with Security Test!
+      list:
+        one: '{{$.common.getStarted.selectInfra}}'
+        two: '{{$.common.getStarted.buildPipeline}}'
+        three: Select Target to scan
+        four: Select Scanners
+        five: Define baseline for Diff
+  chaos:
+    collapsed:
+      title: Run controlled 'chaos' experiments to understand ...
+    expanded:
+      title: Create more reliable applications and infrastructure in 3 steps.
+      list:
+        one: Setup the target environment
+        two: Run Chaos experiments
+        three: Get resilience insights
+  ce:
+    collapsed:
+      title: Gain complete cloud control ...
+    expanded:
+      title: Let’s get you started with Cloud Cost Management!
+  slo:
+    collapsed:
+      title: Deploy Faster With Better Reliability
+    expanded:
+      title: '{{$.common.sloNoData}}'
+      description: A Service Level Objective (SLO) is the sum of a collection of performance metrics (Service Level Indicator or SLI) such as uptime, response time, and error rate that are used to measure the services performance. To create SLO, you’ll need at least one Monitored Service, Health Source and a Metric.

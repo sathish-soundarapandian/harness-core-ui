@@ -5,23 +5,22 @@ import type { ModuleTileDetailsBaseProps } from '../types'
 import EmptyStateExpandedView from './EmptyStateExpandedView'
 import EmptyStateCollapsedView from './EmptyStateCollapsedView'
 
-const CDEmptyState: React.FC<ModuleTileDetailsBaseProps> = ({ isExpanded }) => {
+const ChaosEmptyState: React.FC<ModuleTileDetailsBaseProps> = ({ isExpanded }) => {
   const { getString } = useStrings()
   if (isExpanded) {
     return (
       <EmptyStateExpandedView
-        title={getString('common.moduleTile.cd.expanded.title')}
+        title={getString('common.moduleDetails.chaos.expanded.title')}
         description={[
-          getString('common.moduleTile.cd.expanded.list.one'),
-          getString('common.moduleTile.cd.expanded.list.two'),
-          getString('common.moduleTile.cd.expanded.list.three'),
-          getString('common.moduleTile.cd.expanded.list.four')
+          getString('common.moduleDetails.chaos.expanded.list.one'),
+          getString('common.moduleDetails.chaos.expanded.list.two'),
+          getString('common.moduleDetails.chaos.expanded.list.three')
         ]}
         footer={
           <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ bottom: 'small' }}>
-            <Button variation={ButtonVariation.PRIMARY}>Get Started</Button>
+            <Button variation={ButtonVariation.PRIMARY}>{getString('getStarted')}</Button>
             <Button variation={ButtonVariation.LINK} rightIcon="launch">
-              Learn more
+              {getString('common.learnMore')}
             </Button>
           </Layout.Horizontal>
         }
@@ -29,7 +28,7 @@ const CDEmptyState: React.FC<ModuleTileDetailsBaseProps> = ({ isExpanded }) => {
     )
   }
 
-  return <EmptyStateCollapsedView description={getString('common.moduleTile.cd.collapsed.title')} />
+  return <EmptyStateCollapsedView description={getString('common.moduleDetails.chaos.collapsed.title')} />
 }
 
-export default CDEmptyState
+export default ChaosEmptyState

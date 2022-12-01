@@ -5,7 +5,7 @@ import css from './EmptyState.module.scss'
 
 interface EmptyStateExpandedViewProps {
   title: string
-  description: string | string[]
+  description?: string | string[]
   footer?: React.ReactElement
 }
 
@@ -25,7 +25,7 @@ const EmptyStateExpandedView: React.FC<EmptyStateExpandedViewProps> = ({ title, 
             ))}
           </ul>
         ) : (
-          description
+          <Text margin={{ top: 'medium' }}>{description}</Text>
         )}
       </Text>
       <Container width="100%" padding={{ top: 'medium', bottom: 'medium' }}>
