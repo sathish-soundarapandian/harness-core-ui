@@ -45,5 +45,10 @@ then
   sed -i "s|\"static\/styles\.\(.*\)\.css\"|\"//static.harness.io/ng-static/styles.\1.css\"|" index.html
 fi
 
+if [ "$DEPLOYMENT_TYPE" != "ON_PREM" ]
+then
+  sed -i "s|<\!-- externalFontsForSaaS -->|<link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap' rel='stylesheet' /><link href='https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;700&display=swap' rel='stylesheet' /><link href='https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap' rel='stylesheet' />|" index.html
+fi
+
 echo "Using $NGINX_CONFIG_FILE for nginx"
 nginx -c $NGINX_CONFIG_FILE -g 'daemon off;'
