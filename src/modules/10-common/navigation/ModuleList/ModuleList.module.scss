@@ -9,7 +9,7 @@
   --main-nav-width: 88px;
   background: var(--theme-light-nav-panel-bg);
   padding: var(--spacing-xxlarge) var(--spacing-medium) var(--spacing-xxlarge) var(--spacing-xxlarge);
-  margin-left: var(--main-nav-width);
+  margin-left: var(--main-nav-width) !important;
 
   .modulesListContainer {
     height: 100%;
@@ -41,6 +41,12 @@
   }
   .infoTooltipText {
     line-height: 20px;
+  }
+
+  :global {
+    .bp3-overlay-exit-active {
+      transform: translateX(calc(-1 * 100% - var(--main-nav-width))) !important;
+    }
   }
 }
 
