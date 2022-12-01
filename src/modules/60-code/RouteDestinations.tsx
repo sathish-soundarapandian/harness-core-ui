@@ -43,7 +43,7 @@ const RedirectToDefaultSCMRoute: React.FC = () => {
   return null
 }
 
-export function CODERouteDestinations(): React.ReactElement {
+export default function CODERouteDestinations(): React.ReactElement {
   return (
     <Route path={routes.toCODE(codePathProps)}>
       <Route path={routes.toCODE(codePathProps)} exact>

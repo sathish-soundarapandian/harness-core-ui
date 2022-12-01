@@ -261,12 +261,14 @@ if (!enableSTO) {
 if (!enableCODE) {
   const codeModules = [
     'code/App',
-    'code/RepositoriesListing',
+    'code/Repositories',
     'code/Repository',
-    'code/RepositoryFileEdit',
-    'code/RepositoryCommits',
-    'code/RepositoryBranches',
-    'code/RepositorySettings'
+    'code/FileEdit',
+    'code/Commits',
+    'code/Branches',
+    'code/PullRequests',
+    'code/PullRequestsCompare',
+    'code/Settings'
   ]
   codeModules.forEach(mod => (config.resolve.alias[mod] = ChildAppError))
 }
