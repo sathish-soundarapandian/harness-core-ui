@@ -1,6 +1,6 @@
 import React from 'react'
 import { defaultTo } from 'lodash-es'
-import { SelectOption, FormInput, MultiTypeInputType, FormError, MultiTypeInput, Text } from '@wings-software/uicore'
+import { SelectOption, FormInput, MultiTypeInputType, FormError, MultiTypeInput, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 // eslint-disable-next-line import/no-unresolved
 //import { getTypeOfInput } from '../../../../AppAppDHealthSource.utils'
