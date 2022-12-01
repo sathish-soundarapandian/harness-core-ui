@@ -84,24 +84,13 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     }
   })
 
-  const originalEntityYaml = React.useMemo(
-    () =>
-      yamlStringify({
-        pipeline: {
-          name: pipeline.name,
-          identifier: pipeline.identifier,
-          orgIdentifier: pipeline.orgIdentifier,
-          projectIdentifier: pipeline.projectIdentifier,
-          tags: pipeline.tags,
-          template: {
-            templateRef,
-            versionLabel: templateVersionLabel,
-            templateInputs
-          }
-        }
-      }),
-    [pipeline, templateRef, templateVersionLabel, templateInputs]
-  )
+  const originalEntityYaml = React.useMemo(() => {
+    const updatedPipelineWithOriginalInputs = produce(pipeline, draft => {
+      set(draft, 'template.templateInputs', templateInputs)
+    })
+
+    return yamlStringify({ pipeline: updatedPipelineWithOriginalInputs })
+  }, [pipeline, templateInputs])
 
   const {
     data: pipelineResponse,
