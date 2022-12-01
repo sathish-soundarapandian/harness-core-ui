@@ -1451,7 +1451,7 @@ const routes = {
 
   toCODE: withAccountId(() => `/code`),
   toCODEHome: withAccountId(() => `/code/home`),
-  toCODERepositoriesListing: ({ space }: Required<Pick<CODEProps, 'space'>>) => {
+  toCODERepositories: ({ space }: Required<Pick<CODEProps, 'space'>>) => {
     const [accountId, orgIdentifier, projectIdentifier] = space.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}`
   },
@@ -1465,7 +1465,7 @@ const routes = {
       gitRef ? '/files/' + gitRef : ''
     }${resourcePath ? '/~/' + resourcePath : ''}`
   },
-  toCODERepositoryFileEdit: ({
+  toCODEFileEdit: ({
     repoPath,
     gitRef,
     resourcePath
@@ -1475,19 +1475,27 @@ const routes = {
       resourcePath || ''
     }`
   },
-  toCODERepositoryCommits: ({ repoPath, commitRef }: Required<Pick<CODEProps, 'repoPath' | 'commitRef'>>) => {
+  toCODECommits: ({ repoPath, commitRef }: Required<Pick<CODEProps, 'repoPath' | 'commitRef'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/commits${
       commitRef ? '/' + commitRef : ''
     }`
   },
-  toCODERepositoryBranches: ({ repoPath, branch }: Required<Pick<CODEProps, 'repoPath' | 'branch'>>) => {
+  toCODEBranches: ({ repoPath, branch }: Required<Pick<CODEProps, 'repoPath' | 'branch'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/branches${
       branch ? '/' + branch : ''
     }`
   },
-  toCODERepositorySettings: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
+  toCODEPullRequests: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/pulls`
+  },
+  toCODEPullRequestsCompare: ({ repoPath, diffRefs }: Required<Pick<CODEProps, 'repoPath' | 'diffRefs'>>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/pulls/compare/${diffRefs}`
+  },
+  toCODESettings: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/settings`
   },

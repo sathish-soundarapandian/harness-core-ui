@@ -3032,6 +3032,7 @@ export interface StringsMap {
   'code.branches': string
   'code.homepageHeading': string
   'code.learnMore': string
+  'code.pullRequests': string
   'pipeline.ACR.name': string
   'pipeline.ACR.registry': string
   'pipeline.ACR.registryError': string

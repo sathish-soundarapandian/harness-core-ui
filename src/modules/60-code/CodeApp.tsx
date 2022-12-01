@@ -23,32 +23,38 @@ type RemoteViewProps = Record<string, any>
 const RemoteCodeApp = lazy(() => import('code/App'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteRepositoriesListing = lazy(() => import('code/RepositoriesListing'))
+const RemoteRepositories = lazy(() => import('code/Repositories'))
 
 // eslint-disable-next-line import/no-unresolved
 const RemoteRepository = lazy(() => import('code/Repository'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteRepositoryFileEdit = lazy(() => import('code/RepositoryFileEdit'))
+const RemoteFileEdit = lazy(() => import('code/FileEdit'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteRepositoryCommits = lazy(() => import('code/RepositoryCommits'))
+const RemoteCommits = lazy(() => import('code/Commits'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteRepositoryBranches = lazy(() => import('code/RepositoryBranches'))
+const RemoteBranches = lazy(() => import('code/Branches'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteRepositorySettings = lazy(() => import('code/RepositorySettings'))
+const RemoteSettings = lazy(() => import('code/Settings'))
+
+// eslint-disable-next-line import/no-unresolved
+const RemotePullRequests = lazy(() => import('code/PullRequests'))
+
+// eslint-disable-next-line import/no-unresolved
+const RemotePullRequestsCompare = lazy(() => import('code/PullRequestsCompare'))
 
 const exportedRoutes = pick(routes, [
-  'toCODE',
-  'toCODEHome',
-  'toCODERepositoriesListing',
+  'toCODERepositories',
   'toCODERepository',
-  'toCODERepositoryFileEdit',
-  'toCODERepositoryCommits',
-  'toCODERepositoryBranches',
-  'toCODERepositorySettings'
+  'toCODEFileEdit',
+  'toCODECommits',
+  'toCODEBranches',
+  'toCODEPullRequests',
+  'toCODEPullRequestsCompare',
+  'toCODESettings'
 ])
 
 const CODERemoteComponentMounter: React.FC<{
@@ -83,26 +89,34 @@ const CODERemoteComponentMounter: React.FC<{
   )
 }
 
-export const RepositoriesListing: React.FC<RemoteViewProps> = props => (
-  <CODERemoteComponentMounter component={<RemoteRepositoriesListing {...props} />} />
+export const Repositories: React.FC<RemoteViewProps> = props => (
+  <CODERemoteComponentMounter component={<RemoteRepositories {...props} />} />
 )
 
 export const Repository: React.FC<RemoteViewProps> = props => (
   <CODERemoteComponentMounter component={<RemoteRepository {...props} />} />
 )
 
-export const RepositoryFileEdit: React.FC<RemoteViewProps> = props => (
-  <CODERemoteComponentMounter component={<RemoteRepositoryFileEdit {...props} />} />
+export const FileEdit: React.FC<RemoteViewProps> = props => (
+  <CODERemoteComponentMounter component={<RemoteFileEdit {...props} />} />
 )
 
-export const RepositoryCommits: React.FC<RemoteViewProps> = props => (
-  <CODERemoteComponentMounter component={<RemoteRepositoryCommits {...props} />} />
+export const Commits: React.FC<RemoteViewProps> = props => (
+  <CODERemoteComponentMounter component={<RemoteCommits {...props} />} />
 )
 
-export const RepositoryBranches: React.FC<RemoteViewProps> = props => (
-  <CODERemoteComponentMounter component={<RemoteRepositoryBranches {...props} />} />
+export const Branches: React.FC<RemoteViewProps> = props => (
+  <CODERemoteComponentMounter component={<RemoteBranches {...props} />} />
 )
 
-export const RepositorySettings: React.FC<RemoteViewProps> = props => (
-  <CODERemoteComponentMounter component={<RemoteRepositorySettings {...props} />} />
+export const Settings: React.FC<RemoteViewProps> = props => (
+  <CODERemoteComponentMounter component={<RemoteSettings {...props} />} />
+)
+
+export const PullRequests: React.FC<RemoteViewProps> = props => (
+  <CODERemoteComponentMounter component={<RemotePullRequests {...props} />} />
+)
+
+export const PullRequestsCompare: React.FC<RemoteViewProps> = props => (
+  <CODERemoteComponentMounter component={<RemotePullRequestsCompare {...props} />} />
 )

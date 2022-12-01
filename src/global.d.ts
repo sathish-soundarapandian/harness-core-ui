@@ -179,41 +179,6 @@ declare module 'stoV2/PipelineSecurityView' {
   export default ChildApp
 }
 
-declare module 'code/App' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'code/RepositoriesListing' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'code/Repository' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'code/RepositoryFileEdit' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'code/RepositoryCommits' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'code/RepositoryBranches' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'code/RepositorySettings' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
 declare type Optional<T, K extends keyof T = keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
 declare type Mutable<T> = {

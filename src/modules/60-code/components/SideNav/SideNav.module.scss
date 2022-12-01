@@ -10,7 +10,7 @@
   margin-left: var(--spacing-xxlarge);
 
   > p {
-    > span {
+    > span:not([data-icon='code-file-light']) {
       color: var(--white) !important;
       padding-right: var(--spacing-small) !important;
 

@@ -254,6 +254,7 @@ export interface CODEProps {
   resourcePath?: string
   commitRef?: string
   branch?: string
+  diffRefs?: string // comparing diff refs, i.e: main...v1.0.1
 }
 
 export type CODEPathProps = RequireField<

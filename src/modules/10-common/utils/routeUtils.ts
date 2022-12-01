@@ -170,7 +170,8 @@ export const codePathProps: Required<CODEPathProps> = {
   gitRef: ':gitRef*',
   resourcePath: ':resourcePath*',
   commitRef: ':commitRef*',
-  branch: ':branch*'
+  branch: ':branch*',
+  diffRefs: ':diffRefs*'
 }
 
 export function withAccountId<T>(fn: (args: T) => string) {

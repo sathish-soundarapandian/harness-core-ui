@@ -22,7 +22,7 @@ const CODEHomePage: React.FC = () => {
   const projectCreateSuccessHandler = (project?: Project): void => {
     if (project) {
       history.push(
-        routes.toCODERepositoriesListing({ space: [accountId, project.orgIdentifier, project.identifier].join('/') })
+        routes.toCODERepositories({ space: [accountId, project.orgIdentifier, project.identifier].join('/') })
       )
     }
   }

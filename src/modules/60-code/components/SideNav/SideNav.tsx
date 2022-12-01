@@ -28,12 +28,16 @@ export default function SCMSideNav(): React.ReactElement {
     updateAppStore({ selectedProject: data })
 
     history.push(
-      routes.toCODERepositoriesListing({ space: [accountId, data.orgIdentifier as string, data.identifier].join('/') })
+      routes.toCODERepositories({ space: [accountId, data.orgIdentifier as string, data.identifier].join('/') })
     )
   }
   const isCommits = useMemo(() => routeMatch.path.includes(codePathProps.commitRef), [routeMatch])
   const isBranches = useMemo(() => routeMatch.path.includes(codePathProps.branch), [routeMatch])
   const isSettings = useMemo(() => routeMatch.path.endsWith('/:repoName/settings'), [routeMatch])
+  const isPullRequests = useMemo(
+    () => routeMatch.path.endsWith('/:repoName/pulls') || routeMatch.path.includes(codePathProps.diffRefs),
+    [routeMatch]
+  )
 
   return (
     <Layout.Vertical spacing="small">
@@ -45,38 +49,38 @@ export default function SCMSideNav(): React.ReactElement {
         <>
           <SidebarLink
             label={getString('repositories')}
-            to={routes.toCODERepositoriesListing({ space: [accountId, orgIdentifier, projectIdentifier].join('/') })}
+            to={routes.toCODERepositories({ space: [accountId, orgIdentifier, projectIdentifier].join('/') })}
             {...(repoName ? { activeClassName: '' } : {})}
           />
 
           {repoName && (
             <SidebarLink
               className={css.subNav}
-              icon="file"
+              icon="code-file-light"
               textProps={{
                 iconProps: {
-                  size: 14
+                  size: 16
                 }
               }}
               label={getString('common.files')}
               to={routes.toCODERepository({
                 repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
               })}
-              {...(isCommits || isBranches || isSettings ? { activeClassName: '' } : {})}
+              {...(isCommits || isBranches || isPullRequests || isSettings ? { activeClassName: '' } : {})}
             />
           )}
 
           {repoName && (
             <SidebarLink
               className={css.subNav}
-              icon="git-branch-existing"
+              icon="git-commit"
               textProps={{
                 iconProps: {
-                  size: 14
+                  size: 16
                 }
               }}
               label={getString('commits')}
-              to={routes.toCODERepositoryCommits({
+              to={routes.toCODECommits({
                 repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/'),
                 commitRef: ''
               })}
@@ -93,9 +97,25 @@ export default function SCMSideNav(): React.ReactElement {
                 }
               }}
               label={getString('code.branches')}
-              to={routes.toCODERepositoryBranches({
+              to={routes.toCODEBranches({
                 repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/'),
                 branch: ''
+              })}
+            />
+          )}
+
+          {repoName && (
+            <SidebarLink
+              className={css.subNav}
+              icon="git-pull"
+              textProps={{
+                iconProps: {
+                  size: 14
+                }
+              }}
+              label={getString('code.pullRequests')}
+              to={routes.toCODEPullRequests({
+                repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
               })}
             />
           )}
@@ -110,7 +130,7 @@ export default function SCMSideNav(): React.ReactElement {
                 }
               }}
               label={getString('settingsLabel')}
-              to={routes.toCODERepositorySettings({
+              to={routes.toCODESettings({
                 repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
               })}
             />
