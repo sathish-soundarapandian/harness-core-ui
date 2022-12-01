@@ -11,13 +11,12 @@ import { Accordion, Container, PageSpinner, TableV2 } from '@harness/uicore'
 import type { Column } from 'react-table'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
-import { getLocationPathName } from 'framework/utils/WindowLocation'
 import css from '../AccountOverview.module.scss'
 
 const versionAPIs = [
   {
     label: 'Access Control',
-    url: 'gateway/authz/api/version',
+    url: 'authz/api/version',
     id: 'access_control'
   },
   {
@@ -102,8 +101,6 @@ const versionAPIs = [
   }
 ]
 
-const BASE_URL = getLocationPathName().replace(/\/ng\/?/, '/')
-
 interface ServiceData {
   label?: string
   version?: string
@@ -118,7 +115,9 @@ const ServiceVersions = () => {
   const fetchServices = () => {
     const servicesLength = data.length
     if (servicesLength <= 0) {
-      const promiseArr = versionAPIs.map(row => fetch(row.url.startsWith('http') ? row.url : BASE_URL + row.url))
+      const promiseArr = versionAPIs.map(row =>
+        fetch(row.url.startsWith('http') ? row.url : window.getApiBaseUrl(row.url))
+      )
 
       setLoading(true)
       Promise.allSettled(promiseArr)

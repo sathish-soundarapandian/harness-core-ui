@@ -10,6 +10,14 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import ServiceVersions from '../views/ServiceVersions'
 
+window.getApiBaseUrl = jest.fn().mockImplementation(str => {
+  let url = window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+  if (window.browserRouterEnabled) {
+    url = `${window.apiUrl || ''}/${str}`
+  }
+  return url.includes('remoteEntry.js') ? `${url}?timestamp=${Date.now()}` : url
+})
+
 global.fetch = jest.fn().mockImplementation(url => {
   const versionObj: any = {}
 
