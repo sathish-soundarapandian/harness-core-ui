@@ -35,7 +35,8 @@ import {
   GetExecutionStrategyYamlQueryParams,
   SshWinRmAwsInfrastructure,
   CustomDeploymentInfrastructure,
-  ElastigroupInfrastructure
+  ElastigroupInfrastructure,
+  AsgInfrastructure
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -79,6 +80,7 @@ import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/Commo
 import type { ECSInfraSpec } from '@cd/components/PipelineSteps/ECSInfraSpec/ECSInfraSpec'
 import type { CustomDeploymentInfrastructureSpec } from '@cd/components/PipelineSteps/CustomDeploymentInfrastructureSpec/CustomDeploymentInfrastructureStep'
 import type { ElastigroupInfrastructureSpec } from '@cd/components/PipelineSteps/ElastigroupInfraSpec/ElastigroupInfraSpec'
+import type { AsgInfraSpec } from '@cd/components/PipelineSteps/AsgInfraSpec/AsgInfraSpec'
 import {
   cleanUpEmptyProvisioner,
   getInfraDefinitionDetailsHeaderTooltipId,
@@ -110,6 +112,7 @@ export const deploymentTypeInfraTypeMap: Record<string, InfraDeploymentType> = {
   AzureFunctions: InfraDeploymentType.AzureFunctions,
   AzureWebApp: InfraDeploymentType.AzureWebApp,
   ECS: InfraDeploymentType.ECS,
+  Asg: InfraDeploymentType.Asg,
   CustomDeployment: InfraDeploymentType.CustomDeployment,
   Elastigroup: InfraDeploymentType.Elastigroup
 }
@@ -125,6 +128,7 @@ type InfraTypes =
   | EcsInfrastructure
   | CustomDeploymentInfrastructure
   | ElastigroupInfrastructure
+  | AsgInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
@@ -649,6 +653,29 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
                 InfraDeploymentType.ECS
+              )
+            }
+          />
+        )
+      }
+      case InfraDeploymentType.Asg: {
+        return (
+          <StepWidget<AsgInfraSpec>
+            factory={factory}
+            key={stage.stage.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as AsgInfraSpec}
+            type={StepType.AsgInfraSpec}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  region: value.region,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.Asg
               )
             }
           />

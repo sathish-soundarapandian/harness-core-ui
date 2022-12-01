@@ -67,7 +67,8 @@ export enum ServiceDeploymentType {
   ECS = 'ECS',
   Elastigroup = 'Elastigroup',
   SshWinRmAws = 'SshWinRmAws',
-  SshWinRmAzure = 'SshWinRmAzure'
+  SshWinRmAzure = 'SshWinRmAzure',
+  ASG = 'Asg'
 }
 
 export enum RepositoryFormatTypes {

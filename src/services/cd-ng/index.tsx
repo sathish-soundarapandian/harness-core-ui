@@ -3230,6 +3230,11 @@ export type EcsInfrastructure = Infrastructure & {
   metadata?: string
   region: string
 }
+export type AsgInfrastructure = Infrastructure & {
+  connectorRef: string
+  metadata?: string
+  region: string
+}
 
 export type EcsInfrastructureDetails = InfrastructureDetails & {
   cluster?: string
@@ -13765,6 +13770,7 @@ export interface ServiceDefinition {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
 }
 
 export interface ServiceDeployment {

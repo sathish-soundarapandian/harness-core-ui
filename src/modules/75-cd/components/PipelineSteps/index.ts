@@ -62,6 +62,7 @@ import { AzureTrafficShift } from './AzureTrafficShift/AzureTrafficShift'
 import { AzureSwapSlot } from './AzureWebAppSwapSlot/AzureWebAppSwapSlot'
 import { AzureWebAppServiceSpec } from './AzureWebAppServiceSpec/AzureWebAppServiceSpec'
 import { ECSInfraSpec } from './ECSInfraSpec/ECSInfraSpec'
+import { AsgInfraSpec } from './AsgInfraSpec/AsgInfraSpec'
 import { ECSServiceSpec } from './ECSServiceSpec/ECSServiceSpec'
 import { ECSRollingDeployStep } from './ECSRollingDeployStep/ECSRollingDeployStep'
 import { ECSRollingRollbackStep } from './ECSRollingRollbackStep/ECSRollingRollbackStep'
@@ -144,6 +145,7 @@ factory.registerStep(new AzureSlotDeployment())
 factory.registerStep(new AzureTrafficShift())
 factory.registerStep(new AzureSwapSlot())
 factory.registerStep(new ECSInfraSpec())
+factory.registerStep(new AsgInfraSpec())
 factory.registerStep(new ECSServiceSpec())
 factory.registerStep(new ECSRollingDeployStep())
 factory.registerStep(new ECSRollingRollbackStep())
