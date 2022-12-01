@@ -57,6 +57,6 @@
     }
   },
   "types": ["cypress"],
-  "include": ["src/"],
+  "include": ["src/", "src/modules/**/index.d.ts"],
   "exclude": ["node_modules"]
 }
