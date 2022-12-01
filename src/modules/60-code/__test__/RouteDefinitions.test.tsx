@@ -23,14 +23,33 @@ describe('RouteDefinitions', () => {
           })}
         </p>
         <p>
+          {routes.toCODERepository({
+            repoPath: 'harness/default/test/repo1',
+            gitRef: 'main'
+          })}
+        </p>
+        <p>
+          {routes.toCODERepository({
+            repoPath: 'harness/default/test/repo1',
+            resourcePath: 'src/components/Test.tsx'
+          })}
+        </p>
+        <p>
           {routes.toCODEFileEdit({
             repoPath: 'harness/default/test/repo1',
             gitRef: 'main',
             resourcePath: 'src/components/Test.tsx'
           })}
         </p>
+        <p>
+          {routes.toCODEFileEdit({
+            repoPath: 'harness/default/test/repo1',
+            gitRef: 'main'
+          })}
+        </p>
         <p>{routes.toCODECommits({ repoPath: 'harness/default/test/repo1', commitRef: 'main' })}</p>
-        <p>{routes.toCODEBranches({ repoPath: 'harness/default/test/repo1', branch: 'develop' })}</p>
+        <p>{routes.toCODECommits({ repoPath: 'harness/default/test/repo1' })}</p>
+        <p>{routes.toCODEBranches({ repoPath: 'harness/default/test/repo1' })}</p>
         <p>{routes.toCODEPullRequests({ repoPath: 'harness/default/test/repo1' })}</p>
         <p>{routes.toCODECompare({ repoPath: 'harness/default/test/repo1', diffRefs: 'main...develop' })}</p>
         <p>{routes.toCODESettings({ repoPath: 'harness/default/test/repo1' })}</p>

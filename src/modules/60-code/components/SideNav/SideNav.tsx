@@ -30,7 +30,7 @@ export default function SCMSideNav(): React.ReactElement {
     )
   }
   const isCommits = useMemo(() => routeMatch.path.includes(codePathProps.commitRef), [routeMatch])
-  const isBranches = useMemo(() => routeMatch.path.includes(codePathProps.branch), [routeMatch])
+  const isBranches = useMemo(() => routeMatch.path.endsWith('/:repoName/branches'), [routeMatch])
   const isSettings = useMemo(
     () =>
       routeMatch.path.endsWith('/:repoName/settings') || routeMatch.path.endsWith('/:repoName/settings/webhook/new'),
@@ -100,8 +100,7 @@ export default function SCMSideNav(): React.ReactElement {
               }}
               label={getString('code.branches')}
               to={routes.toCODEBranches({
-                repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/'),
-                branch: ''
+                repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
               })}
             />
           )}

@@ -234,10 +234,10 @@ export interface TemplateStudioQueryParams extends GitQueryParams {
   versionLabel?: string
 }
 
-export type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>
+export type RequiredField<T, K extends keyof T> = T & Required<Pick<T, K>>
 
 export interface GovernancePathProps
-  extends RequireField<
+  extends RequiredField<
     Partial<Pick<ProjectPathProps, 'accountId' | 'orgIdentifier' | 'projectIdentifier'> & ModulePathParams>,
     'accountId'
   > {

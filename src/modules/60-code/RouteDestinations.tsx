@@ -152,11 +152,11 @@ export default function CODERouteDestinations(): React.ReactElement {
             codePathProps.orgIdentifier,
             codePathProps.projectIdentifier,
             codePathProps.repoName
-          ].join('/'),
-          branch: codePathProps.branch
+          ].join('/')
         })}
         sidebarProps={sidebarProps}
         pageName={PAGE_NAME.CODEBranches}
+        exact
       >
         <Branches />
       </RouteWithLayout>

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { ProjectPathProps, RequireField } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps, RequiredField } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { projectPathProps } from '@common/utils/routeUtils'
 
@@ -30,7 +30,7 @@ export const codePathProps: Required<CODEPathProps> = {
   diffRefs: ':diffRefs*'
 }
 
-export type CODEPathProps = RequireField<
+export type CODEPathProps = RequiredField<
   Partial<Pick<ProjectPathProps, 'accountId' | 'orgIdentifier' | 'projectIdentifier'>>,
   'accountId' | 'orgIdentifier' | 'projectIdentifier'
 > &
@@ -47,7 +47,7 @@ export default {
     repoPath,
     gitRef,
     resourcePath
-  }: RequireField<Pick<CODEProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath'>) => {
+  }: RequiredField<Pick<CODEProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath'>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}${
       gitRef ? '/files/' + gitRef : ''
@@ -57,23 +57,21 @@ export default {
     repoPath,
     gitRef,
     resourcePath
-  }: RequireField<Pick<CODEProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath' | 'gitRef'>) => {
+  }: RequiredField<Pick<CODEProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath' | 'gitRef'>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/edit/${gitRef}/~/${
       resourcePath || ''
     }`
   },
-  toCODECommits: ({ repoPath, commitRef }: Required<Pick<CODEProps, 'repoPath' | 'commitRef'>>) => {
+  toCODECommits: ({ repoPath, commitRef }: RequiredField<Pick<CODEProps, 'repoPath' | 'commitRef'>, 'repoPath'>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/commits${
       commitRef ? '/' + commitRef : ''
     }`
   },
-  toCODEBranches: ({ repoPath, branch }: Required<Pick<CODEProps, 'repoPath' | 'branch'>>) => {
+  toCODEBranches: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/branches${
-      branch ? '/' + branch : ''
-    }`
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/branches`
   },
   toCODEPullRequests: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')

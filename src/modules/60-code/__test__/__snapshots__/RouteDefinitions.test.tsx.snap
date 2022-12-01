@@ -16,13 +16,25 @@ exports[`RouteDefinitions routes should render links correctly 1`] = `
       /account/harness/code/default/test/repo1/files/main/~/src/components/Test.tsx
     </p>
     <p>
+      /account/harness/code/default/test/repo1/files/main
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/~/src/components/Test.tsx
+    </p>
+    <p>
       /account/harness/code/default/test/repo1/edit/main/~/src/components/Test.tsx
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/edit/main/~/
     </p>
     <p>
       /account/harness/code/default/test/repo1/commits/main
     </p>
     <p>
-      /account/harness/code/default/test/repo1/branches/develop
+      /account/harness/code/default/test/repo1/commits
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/branches
     </p>
     <p>
       /account/harness/code/default/test/repo1/pulls
