@@ -59,42 +59,37 @@ export const getSummaryViewTableData = (
 ): TableRowData[] => {
   const tableData: TableRowData[] = []
   InstanceGroupedByInfraList?.forEach(infra => {
-    let infraName: string | undefined
     let pipelineExecution: string | undefined
     let pipelineExecutionId: string | undefined
     let totalInstances = 0
     let lastDeployedAt = 0
-    if ((infra.infraIdentifier && infra.infraName) || infra.clusterIdentifier) {
-      infraName ??= infra.infraName || infra.clusterIdentifier
-      if (infra.instanceGroupedByPipelineExecutionList) {
-        infra.instanceGroupedByPipelineExecutionList.forEach(infraDetail => {
-          totalInstances += defaultTo(infraDetail.count, 0)
-          if (lastDeployedAt && lastDeployedAt < defaultTo(infraDetail.lastDeployedAt, 0)) {
-            lastDeployedAt = defaultTo(infraDetail.lastDeployedAt, 0)
-            pipelineExecutionId = defaultTo(infraDetail.lastPipelineExecutionId, '')
-            pipelineExecution = defaultTo(infraDetail.lastPipelineExecutionName, '')
-          } else if (!lastDeployedAt) {
-            lastDeployedAt = defaultTo(infraDetail.lastDeployedAt, 0)
-            pipelineExecutionId = defaultTo(infraDetail.lastPipelineExecutionId, '')
-            pipelineExecution = defaultTo(infraDetail.lastPipelineExecutionName, '')
-          }
-        })
-      }
-    }
-    if (infraName) {
-      tableData.push({
-        infraName: infraName,
-        totalInstanceCount: totalInstances,
-        showInfra: true,
-        lastDeployedAt: lastDeployedAt,
-        envId: defaultTo(envFilter, ''),
-        serviceFilter: defaultTo(serviceFilter, ''),
-        artifactVersion: defaultTo(artifactFilter, ''),
-        lastPipelineExecutionId: defaultTo(pipelineExecutionId, ''),
-        lastPipelineExecutionName: defaultTo(pipelineExecution, ''),
-        tableType: tableView
+    const infraName = infra.infraName || infra.clusterIdentifier
+    if (infra.instanceGroupedByPipelineExecutionList) {
+      infra.instanceGroupedByPipelineExecutionList.forEach(infraDetail => {
+        totalInstances += defaultTo(infraDetail.count, 0)
+        if (lastDeployedAt && lastDeployedAt < defaultTo(infraDetail.lastDeployedAt, 0)) {
+          lastDeployedAt = defaultTo(infraDetail.lastDeployedAt, 0)
+          pipelineExecutionId = defaultTo(infraDetail.lastPipelineExecutionId, '')
+          pipelineExecution = defaultTo(infraDetail.lastPipelineExecutionName, '')
+        } else if (!lastDeployedAt) {
+          lastDeployedAt = defaultTo(infraDetail.lastDeployedAt, 0)
+          pipelineExecutionId = defaultTo(infraDetail.lastPipelineExecutionId, '')
+          pipelineExecution = defaultTo(infraDetail.lastPipelineExecutionName, '')
+        }
       })
     }
+    tableData.push({
+      infraName: defaultTo(infraName, ''),
+      totalInstanceCount: totalInstances,
+      showInfra: true,
+      lastDeployedAt: lastDeployedAt,
+      envId: defaultTo(envFilter, ''),
+      serviceFilter: defaultTo(serviceFilter, ''),
+      artifactVersion: defaultTo(artifactFilter, ''),
+      lastPipelineExecutionId: defaultTo(pipelineExecutionId, ''),
+      lastPipelineExecutionName: defaultTo(pipelineExecution, ''),
+      tableType: tableView
+    })
   })
   return tableData
 }
@@ -108,43 +103,38 @@ export const getFullViewTableData = (
 ): TableRowData[] => {
   const tableData: TableRowData[] = []
   InstanceGroupedByInfraList?.forEach(infra => {
-    let infraName: string | undefined
-    if ((infra.infraIdentifier && infra.infraName) || infra.clusterIdentifier) {
-      infraName ??= infra.infraName || infra.clusterIdentifier
-      let showInfra = true
-      if (infra.instanceGroupedByPipelineExecutionList) {
-        infra.instanceGroupedByPipelineExecutionList.forEach(infraDetail => {
-          let pipelineExecution: string | undefined
-          let pipelineExecutionId: string | undefined
-          let totalInstances = 0
-          let lastDeployedAt = 0
-          totalInstances += defaultTo(infraDetail.count, 0)
-          if (lastDeployedAt && lastDeployedAt < defaultTo(infraDetail.lastDeployedAt, 0)) {
-            lastDeployedAt = defaultTo(infraDetail.lastDeployedAt, 0)
-            pipelineExecutionId = defaultTo(infraDetail.lastPipelineExecutionId, '')
-            pipelineExecution = defaultTo(infraDetail.lastPipelineExecutionName, '')
-          } else if (!lastDeployedAt) {
-            lastDeployedAt = defaultTo(infraDetail.lastDeployedAt, 0)
-            pipelineExecutionId = defaultTo(infraDetail.lastPipelineExecutionId, '')
-            pipelineExecution = defaultTo(infraDetail.lastPipelineExecutionName, '')
-          }
-          if (infraName) {
-            tableData.push({
-              showInfra: showInfra,
-              totalInstanceCount: totalInstances,
-              lastDeployedAt: lastDeployedAt,
-              infraName: infraName,
-              envId: defaultTo(envFilter, ''),
-              serviceFilter: defaultTo(serviceFilter, ''),
-              artifactVersion: defaultTo(artifactFilter, ''),
-              lastPipelineExecutionId: defaultTo(pipelineExecutionId, ''),
-              lastPipelineExecutionName: defaultTo(pipelineExecution, ''),
-              tableType: tableView
-            })
-            showInfra = false
-          }
+    const infraName = infra.infraName || infra.clusterIdentifier
+    let showInfra = true
+    if (infra.instanceGroupedByPipelineExecutionList) {
+      infra.instanceGroupedByPipelineExecutionList.forEach(infraDetail => {
+        let pipelineExecution: string | undefined
+        let pipelineExecutionId: string | undefined
+        let totalInstances = 0
+        let lastDeployedAt = 0
+        totalInstances += defaultTo(infraDetail.count, 0)
+        if (lastDeployedAt && lastDeployedAt < defaultTo(infraDetail.lastDeployedAt, 0)) {
+          lastDeployedAt = defaultTo(infraDetail.lastDeployedAt, 0)
+          pipelineExecutionId = defaultTo(infraDetail.lastPipelineExecutionId, '')
+          pipelineExecution = defaultTo(infraDetail.lastPipelineExecutionName, '')
+        } else if (!lastDeployedAt) {
+          lastDeployedAt = defaultTo(infraDetail.lastDeployedAt, 0)
+          pipelineExecutionId = defaultTo(infraDetail.lastPipelineExecutionId, '')
+          pipelineExecution = defaultTo(infraDetail.lastPipelineExecutionName, '')
+        }
+        tableData.push({
+          showInfra: showInfra,
+          totalInstanceCount: totalInstances,
+          lastDeployedAt: lastDeployedAt,
+          infraName: defaultTo(infraName, ''),
+          envId: defaultTo(envFilter, ''),
+          serviceFilter: defaultTo(serviceFilter, ''),
+          artifactVersion: defaultTo(artifactFilter, ''),
+          lastPipelineExecutionId: defaultTo(pipelineExecutionId, ''),
+          lastPipelineExecutionName: defaultTo(pipelineExecution, ''),
+          tableType: tableView
         })
-      }
+        showInfra = false
+      })
     }
   })
   return tableData
@@ -155,17 +145,13 @@ export const RenderInfra: Renderer<CellProps<TableRowData>> = ({
     original: { infraName, showInfra }
   }
 }) => {
-  return infraName ? (
-    showInfra ? (
-      <Container className={css.infraContainer}>
-        <Text font={{ size: 'small' }} lineClamp={1} color={Color.GREY_800} tooltipProps={{ isDark: true }}>
-          {infraName}
-        </Text>
-      </Container>
-    ) : null
-  ) : (
-    <>{'-'}</>
-  )
+  return showInfra ? (
+    <Container className={css.paddedInfraContainer}>
+      <Text font={{ size: 'small' }} lineClamp={1} tooltipProps={{ isDark: true }}>
+        {infraName ? infraName : '-'}
+      </Text>
+    </Container>
+  ) : null
 }
 
 const RenderInstances: Renderer<CellProps<TableRowData>> = ({

@@ -18,7 +18,7 @@ interface EnvironmentDetailInfraViewProps {
   artifactFilter: string
   serviceFilter: string
   envFilter: string
-  data: InstanceGroupedByInfrastructureV2[]
+  data: InstanceGroupedByInfrastructureV2[][]
 }
 
 export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfraViewProps): React.ReactElement {
@@ -69,7 +69,7 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
       <Container>
         <div className="separator" style={{ marginTop: '14px', borderTop: '1px solid var(--grey-100)' }} />
         {headers}
-        <Container style={{ overflowY: 'auto' }}>
+        <Container style={{ overflowY: 'auto', maxHeight: '615px' }}>
           {dataInfra.map((infra, index) => {
             return (
               <Collapse
@@ -80,7 +80,7 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
                   <EnvironmentDetailInfraTable
                     tableType={InfraViewTableType.SUMMARY}
                     tableStyle={css.infraViewTableStyle}
-                    data={[infra]}
+                    data={infra}
                     artifactFilter={artifactFilter}
                     envFilter={envFilter}
                     serviceFilter={serviceFilter}
@@ -94,7 +94,7 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
                   <EnvironmentDetailInfraTable
                     tableType={InfraViewTableType.FULL}
                     tableStyle={css.infraViewTableStyle}
-                    data={[infra]}
+                    data={infra}
                     artifactFilter={artifactFilter}
                     envFilter={envFilter}
                     serviceFilter={serviceFilter}

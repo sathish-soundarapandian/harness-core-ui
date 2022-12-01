@@ -19,7 +19,6 @@ import {
   ResponseInstanceGroupedByServiceList,
   useGetActiveServiceInstancesForEnvironment
 } from 'services/cd-ng'
-import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
 import EnvironmentDetailInstanceDialog from './EnvironmentDetailInstanceDialog'
 import { EnvironmentDetailTable, TableType } from './EnvironmentDetailTable'
 
@@ -69,26 +68,19 @@ export function EnvironmentDetailInstances(props: EnvironmentDetailInstancesProp
     const serviceId = service?.serviceId
     const serviceName = service?.serviceName
     if (isUndefined(serviceId)) {
-      if (activeSlide === 1) {
-        return (
-          <Card className={css.serviceCards}>
-            <Layout.Vertical height="200px" flex={{ align: 'center-center' }} data-test="ActiveServiceInstancesEmpty">
-              <Container margin={{ bottom: 'medium' }}>
-                <img width="50" height="50" src={MostActiveServicesEmptyState} style={{ alignSelf: 'center' }} />
-              </Container>
-              <Text color={Color.GREY_400}>{'No more services to show'}</Text>
-            </Layout.Vertical>
-          </Card>
-        )
-      }
       return <></>
     }
     return (
       <Card
         className={cx(css.serviceCards, css.cursor)}
         onClick={() => {
-          setSelectedService(serviceId)
-          setServiceId(serviceId)
+          if (selectedService === serviceId) {
+            setSelectedService(undefined)
+            setServiceId(undefined)
+          } else {
+            setSelectedService(serviceId)
+            setServiceId(serviceId)
+          }
         }}
         selected={selectedService === serviceId}
       >
@@ -209,10 +201,10 @@ export function EnvironmentDetailInstances(props: EnvironmentDetailInstancesProp
         {renderCards.map((item, idx) => {
           return (
             <Layout.Horizontal key={idx} className={css.cardGrid}>
-              {serviceInfoPreview(item[0])}
-              {serviceInfoPreview(item[1])}
-              {serviceInfoPreview(item[2])}
-              {serviceInfoPreview(item[3])}
+              {item[0] && serviceInfoPreview(item[0])}
+              {item[1] && serviceInfoPreview(item[1])}
+              {item[2] && serviceInfoPreview(item[2])}
+              {item[3] && serviceInfoPreview(item[3])}
             </Layout.Horizontal>
           )
         })}

@@ -15,7 +15,6 @@ declare const styles: {
   readonly dialogBase: string
   readonly dialogWrap: string
   readonly fullViewTableStyle: string
-  readonly fullViewText: string
   readonly hex: string
   readonly hexContainer: string
   readonly infraContainer: string
@@ -31,6 +30,7 @@ declare const styles: {
   readonly nextButton: string
   readonly overflow: string
   readonly paddedContainer: string
+  readonly paddedInfraContainer: string
   readonly plusMore: string
   readonly prevButton: string
   readonly searchIconStyle: string

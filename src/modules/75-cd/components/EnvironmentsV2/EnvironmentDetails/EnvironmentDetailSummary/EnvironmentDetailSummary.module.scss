@@ -91,6 +91,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  background: var(--grey-0) !important;
 
   img {
     display: block;
@@ -170,10 +171,6 @@
   grid-template-columns: 1fr 0.25fr;
 }
 
-.fullViewText {
-  width: 125px !important;
-}
-
 .overflow {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -181,6 +178,20 @@
 
 .infraContainer {
   display: flex;
+  margin-right: 8px !important;
+}
+
+.paddedInfraContainer {
+  display: flex;
+  background: var(--green-50) !important;
+  padding: 8px !important;
+  border-radius: 8px;
+  width: fit-content;
+  margin-right: 8px !important;
+  p {
+    font-weight: 700 !important;
+    color: var(--green-900) !important;
+  }
 }
 
 .plusMore {
@@ -188,6 +199,7 @@
   white-space: nowrap !important;
   margin-left: var(--spacing-2) !important;
   color: var(--grey-800) !important;
+  margin-right: 4px !important;
 }
 
 .latestArtifact {
@@ -220,6 +232,16 @@
     }
     > :nth-child(odd) {
       background: rgba(243, 243, 250, 0.7);
+    }
+
+    div[class*='TableV2--cells'] {
+      height: 24px;
+
+      div[class*='TableV2--cell']:nth-child(2) {
+        span[class*='bp3-popover'] {
+          width: 100%;
+        }
+      }
     }
   }
 

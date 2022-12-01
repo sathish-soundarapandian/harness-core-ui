@@ -92,7 +92,8 @@ export const getFullViewTableData = (
                       }
                     })
                   })
-                } else if (env.instanceGroupedByClusterList?.length) {
+                }
+                if (env.instanceGroupedByClusterList?.length) {
                   env.instanceGroupedByClusterList?.forEach(cluster => {
                     if (cluster.clusterIdentifier) {
                       infraList.push(cluster.clusterIdentifier)
@@ -181,13 +182,13 @@ export const RenderArtifactVersion: Renderer<CellProps<TableRowData>> = ({
   return artifactVersion ? (
     <Popover
       interactionKind="hover"
-      modifiers={{ preventOverflow: { escapeWithReference: true } }}
-      position={Position.RIGHT}
+      position={Position.LEFT}
+      modifiers={{
+        flip: { boundariesElement: 'viewport' },
+        preventOverflow: { boundariesElement: 'viewport' }
+      }}
     >
-      <Layout.Horizontal
-        flex={{ alignItems: 'center' }}
-        className={cx({ [css.latestBadgeStyle]: latest, [css.fullViewText]: tableType === TableType.FULL })}
-      >
+      <Layout.Horizontal flex={{ alignItems: 'center' }} className={cx({ [css.latestBadgeStyle]: latest })}>
         <Text
           style={{
             maxWidth: tableType === TableType.SUMMARY ? (latest ? '62px' : '70px') : '125px',
@@ -292,16 +293,11 @@ export const EnvironmentDetailTable = (
   }>
 ): React.ReactElement => {
   const { tableType, loading = false, data, error, refetch, serviceFilter, tableStyle, setRowClickFilter } = props
-  const [selectedRow, setSelectedRow] = React.useState<TableRowData>()
+  const [selectedIndex, setSelectedIndex] = React.useState<number>()
 
   const { getString } = useStrings()
   const tableData: TableRowData[] = useMemo(() => {
-    switch (tableType) {
-      case TableType.SUMMARY:
-        return getFullViewTableData(data, tableType, serviceFilter)
-      case TableType.FULL:
-        return getFullViewTableData(data, tableType, serviceFilter)
-    }
+    return getFullViewTableData(data, tableType, serviceFilter)
   }, [data, serviceFilter, tableType])
 
   const columns: Column<TableRowData>[] = useMemo(() => {
@@ -385,16 +381,24 @@ export const EnvironmentDetailTable = (
       sortable={tableType === TableType.FULL}
       onRowClick={
         tableType === TableType.FULL
-          ? row => {
-              setRowClickFilter({
-                artifactFilter: defaultTo(row.artifactVersion, ''),
-                serviceFilter: defaultTo(row.serviceId, '')
-              })
-              setSelectedRow(row)
+          ? (row, index) => {
+              if (index === selectedIndex) {
+                setRowClickFilter({
+                  artifactFilter: '',
+                  serviceFilter: ''
+                })
+                setSelectedIndex(undefined)
+              } else {
+                setRowClickFilter({
+                  artifactFilter: defaultTo(row.artifactVersion, ''),
+                  serviceFilter: defaultTo(row.serviceId, '')
+                })
+                setSelectedIndex(index)
+              }
             }
           : undefined
       }
-      getRowClassName={row => (isEqual(row.original, selectedRow) ? css.selected : '')}
+      getRowClassName={row => (isEqual(row.index, selectedIndex) ? css.selected : '')}
     />
   )
 }

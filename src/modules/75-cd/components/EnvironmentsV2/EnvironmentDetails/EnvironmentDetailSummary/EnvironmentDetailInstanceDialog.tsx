@@ -76,8 +76,9 @@ export default function EnvironmentDetailInstanceDialog(
     setSearchTerm(val.trim())
   }, [])
 
-  const dataInfra = useMemo((): InstanceGroupedByInfrastructureV2[] => {
-    let newArray = [] as InstanceGroupedByInfrastructureV2[]
+  const dataInfra = useMemo((): InstanceGroupedByInfrastructureV2[][] => {
+    const finalArray = [] as InstanceGroupedByInfrastructureV2[][]
+
     dataMock?.forEach(service => {
       if (rowClickFilter.serviceFilter && service.serviceId === rowClickFilter.serviceFilter) {
         if (service.instanceGroupedByArtifactList) {
@@ -87,9 +88,10 @@ export default function EnvironmentDetailInstanceDialog(
                 artifact.instanceGroupedByEnvironmentList.forEach(env => {
                   if (envFilter && env.envId === envFilter) {
                     if (env.instanceGroupedByInfraList?.length) {
-                      newArray = env.instanceGroupedByInfraList
-                    } else if (env.instanceGroupedByClusterList?.length) {
-                      newArray = env.instanceGroupedByClusterList
+                      finalArray.push(env.instanceGroupedByInfraList)
+                    }
+                    if (env.instanceGroupedByClusterList?.length) {
+                      finalArray.push(env.instanceGroupedByClusterList)
                     }
                   }
                 })
@@ -99,7 +101,7 @@ export default function EnvironmentDetailInstanceDialog(
         }
       }
     })
-    return newArray
+    return finalArray
   }, [envFilter, rowClickFilter.artifactFilter, rowClickFilter.serviceFilter])
 
   const infraDetailView = useMemo(() => {
@@ -110,14 +112,14 @@ export default function EnvironmentDetailInstanceDialog(
           <ExpandingSearchInput
             placeholder={getString('search')}
             throttle={200}
-            onChange={onSearch}
+            onChange={onSearch} //todo
             className={css.searchIconStyle}
             alwaysExpanded
           />
         </Container>
         <EnvironmentDetailInfraView
           artifactFilter={rowClickFilter.artifactFilter}
-          envFilter="BasicEnv"
+          envFilter={envFilter}
           serviceFilter={rowClickFilter.serviceFilter}
           data={dataInfra}
         />
