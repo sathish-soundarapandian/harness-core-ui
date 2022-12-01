@@ -11,7 +11,9 @@ import {
   convertServiceLevelIndicatorToSLIFormData,
   convertSLOFormDataToServiceLevelIndicatorDTO,
   getSLOInitialFormData,
-  createSLORequestPayload
+  createSLORequestPayload,
+  getMetricValuesBySLIMetricType,
+  getMetricFormValuesBySLIMetricType
 } from '../CVCreateSLO.utils'
 import { serviceLevelIndicator, SLIFormData, serviceLevelObjective, SLOResponse, pathParams } from './CVCreateSLO.mock'
 
@@ -39,7 +41,8 @@ describe('Utils', () => {
         spec: {
           ...serviceLevelIndicator.spec.spec,
           eventType: undefined,
-          metric1: undefined
+          metric1: 'metric2',
+          metric2: undefined
         }
       }
     })
@@ -58,7 +61,7 @@ describe('Utils', () => {
 
     expect(SLORequestPayload.serviceLevelIndicators[0].spec.spec.eventType).toEqual(serviceLevelObjective.eventType)
     expect(SLORequestPayload.serviceLevelIndicators[0].spec.spec.metric2).toEqual(
-      serviceLevelObjective.goodRequestMetric
+      serviceLevelObjective.validRequestMetric
     )
   })
 
@@ -129,5 +132,42 @@ describe('Utils', () => {
     expect(SLORequestPayload.target.spec.periodLength).toBeUndefined()
     expect(SLORequestPayload.target.spec.spec.dayOfWeek).toBeUndefined()
     expect(SLORequestPayload.target.spec.spec.dayOfMonth).toBeUndefined()
+  })
+
+  test('validate getMetricValuesBySLIMetricType', () => {
+    const props = {
+      sliMetricType: 'Ratio',
+      goodRequestMetric: 'metric1',
+      validRequestMetric: 'metric2'
+    }
+    expect(getMetricValuesBySLIMetricType({})).toEqual({ metric1: '', metric2: undefined })
+    expect(getMetricValuesBySLIMetricType({ ...props })).toEqual({
+      metric1: 'metric1',
+      metric2: 'metric2'
+    })
+    expect(getMetricValuesBySLIMetricType({ ...props, sliMetricType: 'Threshold' })).toEqual({
+      metric1: 'metric2',
+      metric2: undefined
+    })
+  })
+
+  test('validate getMetricFormValuesBySLIMetricType', () => {
+    const props = {
+      sliMetricType: 'Ratio',
+      metric1: 'metric1',
+      metric2: 'metric2'
+    }
+    expect(getMetricFormValuesBySLIMetricType({})).toEqual({
+      goodRequestMetric: undefined,
+      validRequestMetric: ''
+    })
+    expect(getMetricFormValuesBySLIMetricType({ ...props })).toEqual({
+      goodRequestMetric: 'metric1',
+      validRequestMetric: 'metric2'
+    })
+    expect(getMetricFormValuesBySLIMetricType({ ...props, sliMetricType: 'Threshold' })).toEqual({
+      goodRequestMetric: undefined,
+      validRequestMetric: 'metric1'
+    })
   })
 })
