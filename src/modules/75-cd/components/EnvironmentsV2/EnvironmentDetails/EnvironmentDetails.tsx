@@ -55,6 +55,8 @@ import { ServiceOverrides } from './ServiceOverrides/ServiceOverrides'
 import InfrastructureDefinition from './InfrastructureDefinition/InfrastructureDefinition'
 import { EnvironmentDetailsTab } from '../utils'
 import GitOpsCluster from './GitOpsCluster/GitOpsCluster'
+import EnvironmentDetailSummary from './EnvironmentDetailSummary/EnvironmentDetailSummary'
+
 import css from './EnvironmentDetails.module.scss'
 
 export default function EnvironmentDetails(): React.ReactElement {
@@ -227,6 +229,11 @@ export default function EnvironmentDetails(): React.ReactElement {
                     selectedTabId={selectedTabId}
                     data-tabId={selectedTabId}
                     tabList={[
+                      {
+                        id: EnvironmentDetailsTab.SUMMARY,
+                        title: getString('summary'),
+                        panel: <EnvironmentDetailSummary environmentIdentifiers={environmentIdentifier} />
+                      },
                       {
                         id: EnvironmentDetailsTab.CONFIGURATION,
                         title: getString('configuration'),
