@@ -302,13 +302,13 @@ function FormComponent(
         <div className={css.tagGroup}>
           <FormInput.RadioGroup
             label={getString('pipeline.artifactsSelection.versionDetails')}
-            name="versionType"
+            name="spec.versionType"
             radioGroup={{ inline: true }}
             items={tagOptions}
             className={css.radioGroup}
           />
         </div>
-        {formik.values.versionType === 'value' ? (
+        {formik.values?.spec?.versionType === 'value' ? (
           <div className={css.jenkinsFieldContainer}>
             <FormInput.MultiTypeInput
               selectItems={getBuilds()}
@@ -442,7 +442,7 @@ export function GoogleArtifactRegistry(
 
   const submitFormData = (formData: GoogleArtifactRegistryInitialValuesType, connectorId?: string): void => {
     const versionData =
-      formData.versionType === TagTypes.Value
+      formData.spec?.versionType === TagTypes.Value
         ? {
             version: defaultTo(formData.spec.version, '')
           }
@@ -480,8 +480,8 @@ export function GoogleArtifactRegistry(
   }
 
   const schemaObject = {
-    versionType: Yup.string().required(),
     spec: Yup.object().shape({
+      versionType: Yup.string().required(),
       repositoryType: Yup.string().required(getString('pipeline.artifactsSelection.validation.repositoryType')),
       project: Yup.string().required(getString('common.validation.projectIsRequired')),
       region: Yup.string().required(getString('validation.regionRequired')),

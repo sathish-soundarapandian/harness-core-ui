@@ -283,13 +283,13 @@ function FormComponent({
         <div className={css.tagGroup}>
           <FormInput.RadioGroup
             label={getString('pipeline.artifactsSelection.versionDetails')}
-            name="versionType"
+            name="spec.versionType"
             radioGroup={{ inline: true }}
             items={tagOptions}
             className={css.radioGroup}
           />
         </div>
-        {formik.values.versionType === 'value' ? (
+        {formik.values?.spec?.versionType === 'value' ? (
           <div className={css.jenkinsFieldContainer}>
             <FormInput.MultiTypeInput
               selectItems={getVersions()}
@@ -426,7 +426,7 @@ export function AmazonMachineImage(
 
   const submitFormData = (formData: AmazonMachineImageInitialValuesType, connectorId?: string): void => {
     const versionData =
-      formData.versionType === TagTypes.Value
+      formData.spec?.versionType === TagTypes.Value
         ? {
             version: defaultTo(formData.spec?.version, '')
           }
@@ -475,10 +475,10 @@ export function AmazonMachineImage(
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         onSubmit={(formData, formikhelper) => {
           let hasError = false
-          if (formData?.versionType === 'value' && !formData?.spec?.version?.length) {
+          if (formData?.spec?.versionType === 'value' && !formData?.spec?.version?.length) {
             formikhelper.setFieldError('spec.version', getString('validation.nexusVersion'))
             hasError = true
-          } else if (formData?.versionType === 'regex' && !formData?.spec?.versionRegex?.length) {
+          } else if (formData?.spec?.versionType === 'regex' && !formData?.spec?.versionRegex?.length) {
             formikhelper.setFieldError(
               'spec.versionRegex',
               getString('pipeline.artifactsSelection.validation.versionRegex')

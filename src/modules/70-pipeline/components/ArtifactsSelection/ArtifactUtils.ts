@@ -335,9 +335,9 @@ const getVersionValues = (
   GoogleArtifactRegistryInitialValuesType &
   AmazonMachineImageInitialValuesType => {
   const formikInitialValues = {
-    versionType: specValues?.version ? TagTypes.Value : TagTypes.Regex,
     spec: {
       ...specValues,
+      versionType: specValues?.version ? TagTypes.Value : TagTypes.Regex,
       version: specValues?.version,
       versionRegex: specValues?.versionRegex
     }
@@ -420,8 +420,8 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
       return {
         identifier: '',
-        versionType: TagTypes.Value,
         spec: {
+          versionType: TagTypes.Value,
           connectorRef: '',
           repositoryType: 'docker',
           project: '',
@@ -434,8 +434,8 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
     case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
       return {
         identifier: '',
-        versionType: TagTypes.Value,
         spec: {
+          versionType: TagTypes.Value,
           version: '',
           versionRegex: '',
           tags: null,
@@ -493,8 +493,8 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
     case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
       return {
         identifier: '',
-        versionType: TagTypes.Value,
         spec: {
+          versionType: TagTypes.Value,
           connectorRef: '',
           packageType: 'container',
           org: '',

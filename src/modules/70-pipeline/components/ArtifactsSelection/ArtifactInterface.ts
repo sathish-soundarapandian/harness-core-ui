@@ -174,8 +174,8 @@ export interface AmazonS3ArtifactProps {
 
 export interface GithubPackageRegistryInitialValuesType {
   identifier?: string
-  versionType?: TagTypes
   spec: {
+    versionType?: TagTypes
     connectorRef: string
     packageType: string
     org: string
@@ -187,8 +187,8 @@ export interface GithubPackageRegistryInitialValuesType {
 
 export interface AmazonMachineImageInitialValuesType {
   identifier?: string
-  versionType?: string
   spec: {
+    versionType?: string
     connectorRef?: string
     region?: string | SelectOption
     filters?: VariableInterface[] | string | { [key: string]: any }
@@ -243,8 +243,8 @@ export interface JenkinsArtifactProps {
 
 export interface GoogleArtifactRegistryInitialValuesType {
   identifier?: string
-  versionType?: TagTypes
   spec: {
+    versionType?: TagTypes
     connectorRef: string
     repositoryType: string
     package: string

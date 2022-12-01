@@ -302,13 +302,13 @@ function FormComponent({
         <div className={css.tagGroup}>
           <FormInput.RadioGroup
             label={getString('pipeline.artifactsSelection.versionDetails')}
-            name="versionType"
+            name="spec.versionType"
             radioGroup={{ inline: true }}
             items={tagOptions}
             className={css.radioGroup}
           />
         </div>
-        {formik.values?.versionType === 'value' ? (
+        {formik.values?.spec?.versionType === 'value' ? (
           <div className={css.jenkinsFieldContainer}>
             <FormInput.MultiTypeInput
               selectItems={getVersions()}
@@ -422,7 +422,7 @@ export function GithubPackageRegistry(
 
   const submitFormData = (formData: GithubPackageRegistryInitialValuesType, connectorId?: string): void => {
     const versionData =
-      (formData as any).versionType === TagTypes.Value
+      (formData as any).spec?.versionType === TagTypes.Value
         ? {
             version: defaultTo(formData.spec?.version, '')
           }
@@ -458,8 +458,8 @@ export function GithubPackageRegistry(
   }
 
   const schemaObject = {
-    versionType: Yup.string().required(),
     spec: Yup.object().shape({
+      versionType: Yup.string().required(),
       packageType: Yup.string().required(getString('pipeline.artifactsSelection.validation.packageType')),
       packageName: Yup.string().required(getString('pipeline.artifactsSelection.validation.packageName')),
       versionRegex: Yup.string().when('versionType', {
