@@ -37,8 +37,48 @@ import {
   SLOFormFields,
   SLIMetricTypes,
   Comparators,
-  ErrorBudgetInterface
+  ErrorBudgetInterface,
+  GetMetricRequestValuesBySLIMetricTypeProps,
+  GetMetricFormValueBySLIMetricTypeProps
 } from './CVCreateSLO.types'
+
+export const getMetricValuesBySLIMetricType = ({
+  sliMetricType = '',
+  validRequestMetric = '',
+  goodRequestMetric
+}: GetMetricRequestValuesBySLIMetricTypeProps): {
+  metric1: string
+  metric2?: string
+} => {
+  return sliMetricType === SLIMetricTypes.RATIO
+    ? {
+        metric1: goodRequestMetric ?? '',
+        metric2: validRequestMetric
+      }
+    : {
+        metric1: validRequestMetric,
+        metric2: undefined
+      }
+}
+
+export const getMetricFormValuesBySLIMetricType = ({
+  sliMetricType = '',
+  metric1 = '',
+  metric2
+}: GetMetricFormValueBySLIMetricTypeProps): {
+  validRequestMetric: string
+  goodRequestMetric?: string
+} => {
+  return sliMetricType === SLIMetricTypes.RATIO
+    ? {
+        validRequestMetric: metric2 ?? '',
+        goodRequestMetric: metric1
+      }
+    : {
+        validRequestMetric: metric1,
+        goodRequestMetric: undefined
+      }
+}
 
 export const convertServiceLevelIndicatorToSLIFormData = (serviceLevelIndicator: ServiceLevelIndicatorDTO): SLIForm => {
   const { type: SLIType, name, identifier, healthSourceRef, sliMissingDataType, spec } = serviceLevelIndicator
@@ -53,8 +93,7 @@ export const convertServiceLevelIndicatorToSLIFormData = (serviceLevelIndicator:
     SLIType,
     SLIMetricType,
     eventType,
-    validRequestMetric: metric2,
-    goodRequestMetric: metric1,
+    ...getMetricFormValuesBySLIMetricType({ sliMetricType: SLIMetricType, metric1, metric2 }),
     objectiveValue: thresholdValue,
     objectiveComparator: thresholdType,
     SLIMissingDataType: sliMissingDataType
@@ -81,8 +120,11 @@ export const getSLOInitialFormData = (
       SLIType: serviceLevelIndicator?.type,
       SLIMetricType: serviceLevelIndicator?.spec.type,
       eventType: SLIMetricSpec?.eventType,
-      validRequestMetric: SLIMetricSpec?.metric1 ?? '',
-      goodRequestMetric: SLIMetricSpec?.metric2,
+      ...getMetricFormValuesBySLIMetricType({
+        sliMetricType: serviceLevelIndicator?.spec.type,
+        metric1: SLIMetricSpec?.metric1,
+        metric2: SLIMetricSpec?.metric2
+      }),
       objectiveValue: SLIMetricSpec?.thresholdValue,
       objectiveComparator: SLIMetricSpec?.thresholdType,
       SLIMissingDataType: serviceLevelIndicator?.sliMissingDataType,
@@ -123,8 +165,11 @@ export const createSLORequestPayload = (
           type: values.SLIMetricType,
           spec: {
             eventType: values.SLIMetricType === SLIMetricTypes.RATIO ? values.eventType : undefined,
-            metric1: values.validRequestMetric,
-            metric2: values.SLIMetricType === SLIMetricTypes.RATIO ? values.goodRequestMetric : undefined,
+            ...getMetricValuesBySLIMetricType({
+              sliMetricType: values.SLIMetricType,
+              goodRequestMetric: values.goodRequestMetric,
+              validRequestMetric: values.validRequestMetric
+            }),
             thresholdValue: values.objectiveValue,
             thresholdType: values.objectiveComparator
           } as ThresholdSLIMetricSpec | RatioSLIMetricSpec
@@ -394,8 +439,11 @@ export const convertSLOFormDataToServiceLevelIndicatorDTO = (values: SLOForm): S
       type: values.SLIMetricType,
       spec: {
         eventType: values.SLIMetricType === SLIMetricTypes.RATIO ? values.eventType : undefined,
-        metric1: values.SLIMetricType === SLIMetricTypes.RATIO ? values.goodRequestMetric : undefined,
-        metric2: values.validRequestMetric,
+        ...getMetricValuesBySLIMetricType({
+          sliMetricType: values.SLIMetricType,
+          goodRequestMetric: values.goodRequestMetric,
+          validRequestMetric: values.validRequestMetric
+        }),
         thresholdValue: values.objectiveValue,
         thresholdType: values.objectiveComparator
       } as ThresholdSLIMetricSpec & RatioSLIMetricSpec
