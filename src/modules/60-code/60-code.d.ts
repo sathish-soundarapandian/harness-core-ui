@@ -49,3 +49,8 @@ declare module 'code/PullRequestsCompare' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
+
+declare module 'code/CreateWebhook' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}

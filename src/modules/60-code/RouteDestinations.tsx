@@ -22,7 +22,8 @@ import {
   FileEdit,
   Settings,
   PullRequests,
-  PullRequestsCompare
+  PullRequestsCompare,
+  CreateWebhook
 } from './CodeApp'
 import CODEHomePage from './pages/home/CODEHomePage'
 
@@ -87,6 +88,22 @@ export default function CODERouteDestinations(): React.ReactElement {
         exact
       >
         <PullRequests />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        path={routes.toCODECreateWebhook({
+          repoPath: [
+            codePathProps.accountId,
+            codePathProps.orgIdentifier,
+            codePathProps.projectIdentifier,
+            codePathProps.repoName
+          ].join('/')
+        })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.CODECreateWebhook}
+        exact
+      >
+        <CreateWebhook />
       </RouteWithLayout>
 
       <RouteWithLayout

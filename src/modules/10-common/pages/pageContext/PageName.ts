@@ -130,6 +130,7 @@ export enum PAGE_NAME {
   CODERepositories = 'CODERepositories',
   CODERepository = 'CODERepository',
   CODESettings = 'CODESettings',
+  CODECreateWebhook = 'CODECreateWebhook',
   CODEPullRequests = 'CODEPullRequests',
   CODEPullRequestsCompare = 'CODEPullRequestsCompare',
   CODEFileEdit = 'CODEFileEdit',

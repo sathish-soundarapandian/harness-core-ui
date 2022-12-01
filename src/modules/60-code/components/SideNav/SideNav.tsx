@@ -33,7 +33,11 @@ export default function SCMSideNav(): React.ReactElement {
   }
   const isCommits = useMemo(() => routeMatch.path.includes(codePathProps.commitRef), [routeMatch])
   const isBranches = useMemo(() => routeMatch.path.includes(codePathProps.branch), [routeMatch])
-  const isSettings = useMemo(() => routeMatch.path.endsWith('/:repoName/settings'), [routeMatch])
+  const isSettings = useMemo(
+    () =>
+      routeMatch.path.endsWith('/:repoName/settings') || routeMatch.path.endsWith('/:repoName/settings/webhook/new'),
+    [routeMatch]
+  )
   const isPullRequests = useMemo(
     () => routeMatch.path.endsWith('/:repoName/pulls') || routeMatch.path.includes(codePathProps.diffRefs),
     [routeMatch]
