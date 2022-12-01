@@ -7,16 +7,20 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import { Card, Layout, Tab, Tabs, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import {
   GetEnvArtifactDetailsByServiceIdQueryParams,
   GetEnvBuildInstanceCountQueryParams,
+  NGServiceConfig,
   useGetActiveServiceDeployments,
   useGetActiveServiceInstances
 } from 'services/cd-ng'
+import { yamlParse } from '@common/utils/YamlHelperMethods'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
+import { useServiceContext } from '@cd/context/ServiceContext'
 import { ActiveServiceInstancesHeader } from './ActiveServiceInstancesHeader'
 import { ActiveServiceInstancesContentV2, TableType } from './ActiveServiceInstancesContentV2'
 import { DeploymentsV2 } from '../DeploymentView/DeploymentViewV2'
@@ -31,6 +35,13 @@ export enum ServiceDetailTabs {
 export const ActiveServiceInstancesV2: React.FC = () => {
   const { getString } = useStrings()
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState<boolean>(false)
+
+  const { serviceResponse } = useServiceContext()
+  const serviceDataParse = React.useMemo(
+    () => yamlParse<NGServiceConfig>(defaultTo(serviceResponse?.yaml, '')),
+    [serviceResponse?.yaml]
+  )
+  const gitopsEnabled = serviceDataParse?.service?.gitOpsEnabled
 
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const queryParams: GetEnvBuildInstanceCountQueryParams = {
@@ -67,6 +78,7 @@ export const ActiveServiceInstancesV2: React.FC = () => {
     return Boolean(
       activeInstanceData &&
         deploymentData &&
+        !gitopsEnabled &&
         !(activeInstanceData?.data?.instanceGroupedByArtifactList || []).length &&
         (deploymentData?.data?.instanceGroupedByArtifactList || []).length
     )
@@ -143,22 +155,24 @@ export const ActiveServiceInstancesV2: React.FC = () => {
               </>
             }
           />
-          <Tab
-            id={ServiceDetailTabs.DEPLOYMENT}
-            title={getString('cd.serviceDashboard.recentDeployments')}
-            panel={
-              <>
-                {moreDetails()}
-                <DeploymentsV2
-                  tableType={TableType.PREVIEW}
-                  loading={deploymentLoading}
-                  data={deploymentData?.data?.instanceGroupedByArtifactList}
-                  error={deploymentError}
-                  refetch={deploymentRefetch}
-                />
-              </>
-            }
-          />
+          {gitopsEnabled ? null : (
+            <Tab
+              id={ServiceDetailTabs.DEPLOYMENT}
+              title={getString('cd.serviceDashboard.recentDeployments')}
+              panel={
+                <>
+                  {moreDetails()}
+                  <DeploymentsV2
+                    tableType={TableType.PREVIEW}
+                    loading={deploymentLoading}
+                    data={deploymentData?.data?.instanceGroupedByArtifactList}
+                    error={deploymentError}
+                    refetch={deploymentRefetch}
+                  />
+                </>
+              }
+            />
+          )}
         </Tabs>
       </Layout.Vertical>
     </Card>
