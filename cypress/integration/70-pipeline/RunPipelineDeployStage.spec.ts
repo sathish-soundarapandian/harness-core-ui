@@ -29,6 +29,10 @@ describe('RUN PIPELINE MODAL - deploy stage', () => {
 
     cy.clickSubmit()
 
+    cy.intercept('GET', cdFailureStrategiesYaml, { fixture: 'pipeline/api/pipelines/failureStrategiesYaml' }).as(
+      'cdFailureStrategiesYaml'
+    )
+
     switch (Cypress.currentTest.title) {
       case 'error validations on pipeline save from API':
         break
@@ -36,10 +40,6 @@ describe('RUN PIPELINE MODAL - deploy stage', () => {
         cy.createDeploymentStage()
         break
     }
-
-    cy.intercept('GET', cdFailureStrategiesYaml, { fixture: 'pipeline/api/pipelines/failureStrategiesYaml' }).as(
-      'cdFailureStrategiesYaml'
-    )
   })
 
   it('should display the delete pipeline stage modal', () => {

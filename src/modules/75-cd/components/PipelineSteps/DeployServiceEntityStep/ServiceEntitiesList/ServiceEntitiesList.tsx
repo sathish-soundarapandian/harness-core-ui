@@ -43,6 +43,7 @@ export interface ServiceEntitiesListProps {
   stageIdentifier?: string
   allowableTypes: AllowedTypes
   onServiceEntityUpdate: (val: ServiceYaml) => void
+  isPropogateFromStage: boolean
   isMultiSvc?: boolean
 }
 
@@ -57,6 +58,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
     stageIdentifier,
     onServiceEntityUpdate,
     allowableTypes,
+    isPropogateFromStage,
     isMultiSvc
   } = props
   const { getString } = useStrings()
@@ -97,7 +99,6 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
   if (loading) {
     return <Spinner />
   }
-
   return (
     <>
       <div className={css.cardsContainer}>
@@ -114,6 +115,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
               readonly={readonly}
               deploymentType={selectedDeploymentType}
               defaultExpanded={!isMultiSvc}
+              isPropogateFromStage={isPropogateFromStage}
               cardClassName={servicesData.length - 1 !== index ? css.marginBottom : ''}
             />
           )

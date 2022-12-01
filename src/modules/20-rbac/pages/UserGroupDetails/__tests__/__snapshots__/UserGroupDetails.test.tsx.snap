@@ -238,7 +238,8 @@ exports[`UserGroupDetails Test render data 1`] = `
                       </span>
                     </div>
                     <p
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-right-small"
+                      style="--text-line-clamp: 1;"
                     >
                       rbac1
                     </p>
@@ -250,7 +251,8 @@ exports[`UserGroupDetails Test render data 1`] = `
                   style="width: 50%;"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main"
+                    class="StyledProps--font Text--lineclamp StyledProps--main"
+                    style="--text-line-clamp: 1;"
                   >
                     rbac1@harness.io
                   </p>
@@ -344,7 +346,8 @@ exports[`UserGroupDetails Test render data 1`] = `
                       </span>
                     </div>
                     <p
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-right-small"
+                      style="--text-line-clamp: 1;"
                     >
                       rbac2
                     </p>
@@ -356,7 +359,8 @@ exports[`UserGroupDetails Test render data 1`] = `
                   style="width: 50%;"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main"
+                    class="StyledProps--font Text--lineclamp StyledProps--main"
+                    style="--text-line-clamp: 1;"
                   >
                     rbac2@harness.io
                   </p>
@@ -961,7 +965,8 @@ exports[`UserGroupDetails Test render data for community editiion 1`] = `
                       </span>
                     </div>
                     <p
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-right-small"
+                      style="--text-line-clamp: 1;"
                     >
                       rbac1
                     </p>
@@ -973,7 +978,8 @@ exports[`UserGroupDetails Test render data for community editiion 1`] = `
                   style="width: 50%;"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main"
+                    class="StyledProps--font Text--lineclamp StyledProps--main"
+                    style="--text-line-clamp: 1;"
                   >
                     rbac1@harness.io
                   </p>
@@ -1067,7 +1073,8 @@ exports[`UserGroupDetails Test render data for community editiion 1`] = `
                       </span>
                     </div>
                     <p
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-right-small"
+                      style="--text-line-clamp: 1;"
                     >
                       rbac2
                     </p>
@@ -1079,7 +1086,8 @@ exports[`UserGroupDetails Test render data for community editiion 1`] = `
                   style="width: 50%;"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main"
+                    class="StyledProps--font Text--lineclamp StyledProps--main"
+                    style="--text-line-clamp: 1;"
                   >
                     rbac2@harness.io
                   </p>

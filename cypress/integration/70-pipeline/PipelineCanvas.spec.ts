@@ -70,7 +70,7 @@ describe('GIT SYNC DISABLED', () => {
     cy.contains('span', 'Create a Pipeline').should('be.visible')
   })
 
-  it('should display the error returned by pipeline save API', () => {
+  it.skip('should display the error returned by pipeline save API', () => {
     cy.intercept('POST', pipelineSaveCallWithStoreType, { fixture: 'pipeline/api/pipelines.post' }).as(
       'pipelineSaveCallWithStoreType'
     )

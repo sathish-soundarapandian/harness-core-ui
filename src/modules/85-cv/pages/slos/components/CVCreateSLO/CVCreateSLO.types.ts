@@ -170,3 +170,14 @@ export interface ErrorBudgetInterface {
   periodLengthType: SLOForm['periodLengthType']
   SLOTargetPercentage: SLOForm['SLOTargetPercentage']
 }
+export interface GetMetricRequestValuesBySLIMetricTypeProps {
+  sliMetricType?: string
+  validRequestMetric?: string
+  goodRequestMetric?: string
+}
+
+export interface GetMetricFormValueBySLIMetricTypeProps {
+  sliMetricType?: string
+  metric1?: string
+  metric2?: string
+}

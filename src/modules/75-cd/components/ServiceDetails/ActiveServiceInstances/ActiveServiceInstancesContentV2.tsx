@@ -389,7 +389,7 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
         .fill(null)
         .map((_, index) => (
           <Popover
-            interactionKind={PopoverInteractionKind.CLICK}
+            interactionKind={PopoverInteractionKind.HOVER}
             key={index}
             modifiers={{ preventOverflow: { escapeWithReference: true } }}
           >

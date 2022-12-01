@@ -55,6 +55,7 @@ export interface DeployServiceEntityCustomProps {
   gitOpsEnabled?: boolean
   allValues?: DeployServiceEntityData
   customDeploymentData?: TemplateLinkConfig
+  setupModeType: string
 }
 
 export function isEditService(data: DeployServiceEntityData): boolean {

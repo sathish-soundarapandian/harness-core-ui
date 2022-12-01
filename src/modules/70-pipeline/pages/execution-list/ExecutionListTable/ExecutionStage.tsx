@@ -24,6 +24,7 @@ import { LabeValue } from '@pipeline/pages/pipeline-list/PipelineListTable/Pipel
 import executionFactory from '@pipeline/factories/ExecutionFactory'
 import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
 import { CardVariant } from '@pipeline/utils/constants'
+import GitOpsExecutionSummary from './GitOpsExecutionSummary'
 import css from './ExecutionListTable.module.scss'
 
 export interface ExecutionStageProps {
@@ -66,6 +67,7 @@ export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStag
 
       <div className={css.stageInfo}>
         <CDExecutionStageSummary stageInfo={cdStageInfo} />
+        <GitOpsExecutionSummary stageInfo={cdStageInfo} limit={1} />
 
         {stage.type === StageType.SECURITY &&
           !isEmpty(stoStageInfo) &&

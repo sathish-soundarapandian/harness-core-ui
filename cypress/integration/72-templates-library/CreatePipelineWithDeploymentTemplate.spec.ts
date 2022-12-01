@@ -5,7 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { gitSyncEnabledCall, pipelinesRoute, featureFlagsCall } from '../../support/70-pipeline/constants'
+import {
+  gitSyncEnabledCall,
+  pipelinesRoute,
+  featureFlagsCall,
+  cdFailureStrategiesYaml
+} from '../../support/70-pipeline/constants'
 import {
   useTemplateCall,
   selectedDeploymentTemplateDetailsCall,
@@ -24,7 +29,7 @@ import {
   recentDeploymentTemplatesUrl
 } from '../../support/72-templates-library/constants'
 
-describe('Pipeline Template creation and assertion', () => {
+describe.skip('Pipeline Template creation and assertion', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -56,7 +61,11 @@ describe('Pipeline Template creation and assertion', () => {
         timeout: 30000
       })
     })
+    cy.intercept('GET', cdFailureStrategiesYaml, { fixture: 'pipeline/api/pipelines/failureStrategiesYaml' }).as(
+      'cdFailureStrategiesYaml'
+    )
   })
+
   it('Pipeline With Deployment Template', () => {
     cy.intercept('POST', recentDeploymentTemplatesUrl, {
       fixture: '/ng/api/deploymentTemplate/recentDeploymentTemplates'

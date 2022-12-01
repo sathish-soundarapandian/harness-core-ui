@@ -319,7 +319,7 @@ serviceDashboard:
   taskDefinitionArn: Task Definition ARN
   taskArn: Task ARN
   awsRegion: AWS Region
-  containerList: containerList
+  containerList: Container List
 noEnvironment:
   title: No Environments Available
   message: Create an environment and let’s start configuring the deployment

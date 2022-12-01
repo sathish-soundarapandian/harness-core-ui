@@ -53,3 +53,37 @@ exports[`<CDStageDetails /> tests snapshot test 1`] = `
   </div>
 </div>
 `;
+
+exports[`<CDStageDetails /> tests test gitops apps 1`] = `
+<div
+  data-test-id="GitopsApplications"
+>
+  <div
+    class="title"
+  >
+    applications
+  </div>
+  <ul
+    class="values"
+  >
+    <li>
+      NAME_1
+      <span
+        class="bp3-popover-wrapper serviceWrapper"
+      >
+        <span
+          class="bp3-popover-target"
+        >
+          <span
+            class=""
+            tabindex="0"
+          >
+            , +
+            2
+          </span>
+        </span>
+      </span>
+    </li>
+  </ul>
+</div>
+`;

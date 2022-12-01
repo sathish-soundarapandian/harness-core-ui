@@ -25,7 +25,7 @@ import {
   getMockFor_useGetPipeline
 } from '@pipeline/components/RunPipelineModal/__tests__/mocks'
 import RetryPipeline from '../RetryPipeline'
-import { mockInputsetYamlV2, mockPostRetryPipeline, mockRetryStages } from './mocks'
+import { mockInputsetYamlV2, mockPostRetryPipeline, mockRetryStages, templateResponse } from './mocks'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -52,6 +52,7 @@ window.IntersectionObserver = jest.fn().mockImplementation(() => ({
 
 jest.mock('services/pipeline-ng', () => ({
   useGetPipeline: jest.fn(() => getMockFor_useGetPipeline()),
+  useGetTemplateFromPipeline: jest.fn(() => templateResponse),
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => ({ mutate: jest.fn() })),
   useGetInputSetsListForPipeline: jest.fn(() => getMockFor_useGetInputSetsListForPipeline()),
   useCreateInputSetForPipeline: jest.fn(() => ({ mutate: mockCreateInputSet })),
@@ -74,14 +75,14 @@ describe('Retry Pipeline tests', () => {
   })
 
   test('toggle between visual and yaml mode', async () => {
-    const { container, getByText, queryAllByText } = render(
+    const { getByText, queryAllByText } = render(
       <TestWrapper>
         <RetryPipeline {...commonProps} />
       </TestWrapper>
     )
     fireEvent.click(getByText('YAML'))
-    const editorDiv = container.querySelector('.editor')
-    await waitFor(() => expect(editorDiv).toBeTruthy())
+    const noExecutionText = getByText('pipeline.inputSets.noRuntimeInputsWhileExecution')
+    expect(noExecutionText).toBeDefined()
 
     fireEvent.click(getByText('VISUAL'))
     await waitFor(() => expect(queryAllByText('pipeline.retryPipeline')[0]).toBeInTheDocument())
@@ -173,14 +174,26 @@ describe('Retry Pipeline tests', () => {
   })
 
   test('should not allow submit if form is incomplete', async () => {
-    const { container, getByText, queryByText } = render(
+    const { container, getByText } = render(
       <TestWrapper>
         <RetryPipeline {...commonProps} />
       </TestWrapper>
     )
-    // Navigate to 'Provide Values'
-    fireEvent.click(getByText('pipeline.pipelineInputPanel.provide'))
-    await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
+    const retryStageInfo = await findByText(container, 'pipeline.stagetoRetryFrom')
+    expect(retryStageInfo).toBeDefined()
+
+    await waitFor(() => expect(container.querySelector('.bp3-popover-target')).toBeTruthy())
+    await fillAtForm([
+      {
+        container,
+        type: InputTypes.SELECT,
+        fieldId: 'selectRetryStage',
+        value: 'stage1'
+      }
+    ])
+
+    await waitFor(() => expect(getByText('stage1')).toBeTruthy())
+    fireEvent.click(getByText('stage1'))
 
     // Submit the incomplete form
     const runButton = container.querySelector('button[type="submit"]')

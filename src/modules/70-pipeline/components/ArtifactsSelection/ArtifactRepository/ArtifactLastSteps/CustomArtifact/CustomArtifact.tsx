@@ -120,6 +120,7 @@ function FormContent({
   const versionPathValue = getGenuineValue(get(formik, `values.spec.scripts.fetchAllArtifacts.versionPath`))
   const scriptValue = get(formik, `values.spec.scripts.fetchAllArtifacts.spec.source.spec.script`)
   const inputValue = get(formik, `values.spec.inputs`)
+  const delegateSelectorsValue = get(formik, `values.spec.delegateSelectors`)
 
   const artifactArrayPathValue = getGenuineValue(
     get(formik, `values.spec.scripts.fetchAllArtifacts.artifactsArrayPath`)
@@ -134,7 +135,10 @@ function FormContent({
     lazy: true,
     body: {
       script: scriptValue,
-      inputs: inputValue
+      inputs: inputValue,
+      delegateSelector:
+        getMultiTypeFromValue(delegateSelectorsValue) === MultiTypeInputType.FIXED &&
+        (delegateSelectorsValue as SelectOption[])?.map((item: SelectOption) => item.value)
     },
     queryParams: {
       ...commonParams,

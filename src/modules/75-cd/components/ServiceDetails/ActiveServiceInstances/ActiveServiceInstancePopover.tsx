@@ -9,6 +9,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Card, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { capitalize } from 'lodash-es'
 import {
   AzureWebAppInstanceInfoDTO,
   CustomDeploymentInstanceInfoDTO,
@@ -62,6 +63,8 @@ const Section: React.FC<{ data: SectionProps[] }> = props => {
                         font={{ weight: 'semi-bold', size: 'small' }}
                         color={Color.GREY_500}
                         margin={{ right: 'medium', bottom: 'xsmall' }}
+                        width={90}
+                        lineClamp={1}
                       >
                         {`${itemValue.label}:`}
                       </Text>
@@ -69,6 +72,8 @@ const Section: React.FC<{ data: SectionProps[] }> = props => {
                         font={{ weight: 'semi-bold', size: 'small' }}
                         color={Color.GREY_800}
                         className={css.sectionValue}
+                        width={206}
+                        lineClamp={1}
                       >
                         {itemValue.value}
                       </Text>
@@ -116,12 +121,12 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     {
       label:
         instanceData.instanceInfoDTO?.type === ServiceDeploymentType.ServerlessAwsLambda
-          ? getString('cd.serviceDashboard.function')
-          : getString('cd.serviceDashboard.pod'),
+          ? capitalize(getString('cd.serviceDashboard.function'))
+          : capitalize(getString('cd.serviceDashboard.pod')),
       value: instanceData.podName || ''
     },
     {
-      label: getString('cd.serviceDashboard.artifact'),
+      label: capitalize(getString('cd.serviceDashboard.artifact')),
       value: instanceData.artifactName || ''
     }
   ]
@@ -218,7 +223,7 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
         ]
       default:
         return Object.keys(instanceData.infrastructureDetails || {}).map(infrastructureDetailsKey => ({
-          label: infrastructureDetailsKey,
+          label: capitalize(infrastructureDetailsKey),
           value: instanceData.infrastructureDetails?.[infrastructureDetailsKey]
         }))
     }

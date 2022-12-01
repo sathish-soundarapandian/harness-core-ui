@@ -23,12 +23,14 @@ exports[`ActiveServiceInstancePopover should render ActiveServiceInstancePopover
             class="Layout--horizontal StyledProps--main"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey500 StyledProps--margin-right-medium StyledProps--margin-bottom-xsmall"
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey500 StyledProps--margin-right-medium StyledProps--margin-bottom-xsmall"
+              style="--text-line-clamp: 1; width: 90px;"
             >
-              cd.serviceDashboard.pod:
+              Cd.servicedashboard.pod:
             </p>
             <p
-              class="StyledProps--font StyledProps--main sectionValue StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+              class="StyledProps--font Text--lineclamp StyledProps--main sectionValue StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+              style="--text-line-clamp: 1; width: 206px;"
             >
               release-893b57260532de1e28c01603f3ec71620b7eadfb-todolist-llk7p
             </p>
@@ -50,12 +52,14 @@ exports[`ActiveServiceInstancePopover should render ActiveServiceInstancePopover
             class="Layout--horizontal StyledProps--main"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey500 StyledProps--margin-right-medium StyledProps--margin-bottom-xsmall"
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey500 StyledProps--margin-right-medium StyledProps--margin-bottom-xsmall"
+              style="--text-line-clamp: 1; width: 90px;"
             >
-              namespace:
+              Namespace:
             </p>
             <p
-              class="StyledProps--font StyledProps--main sectionValue StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+              class="StyledProps--font Text--lineclamp StyledProps--main sectionValue StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+              style="--text-line-clamp: 1; width: 206px;"
             >
               default
             </p>
@@ -64,12 +68,14 @@ exports[`ActiveServiceInstancePopover should render ActiveServiceInstancePopover
             class="Layout--horizontal StyledProps--main"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey500 StyledProps--margin-right-medium StyledProps--margin-bottom-xsmall"
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey500 StyledProps--margin-right-medium StyledProps--margin-bottom-xsmall"
+              style="--text-line-clamp: 1; width: 90px;"
             >
-              releaseName:
+              Releasename:
             </p>
             <p
-              class="StyledProps--font StyledProps--main sectionValue StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+              class="StyledProps--font Text--lineclamp StyledProps--main sectionValue StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+              style="--text-line-clamp: 1; width: 206px;"
             >
               release-893b57260532de1e28c01603f3ec71620b7eadfb
             </p>
@@ -91,12 +97,14 @@ exports[`ActiveServiceInstancePopover should render ActiveServiceInstancePopover
             class="Layout--horizontal StyledProps--main"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey500 StyledProps--margin-right-medium StyledProps--margin-bottom-xsmall"
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey500 StyledProps--margin-right-medium StyledProps--margin-bottom-xsmall"
+              style="--text-line-clamp: 1; width: 90px;"
             >
               cd.serviceDashboard.deployedAt:
             </p>
             <p
-              class="StyledProps--font StyledProps--main sectionValue StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+              class="StyledProps--font Text--lineclamp StyledProps--main sectionValue StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+              style="--text-line-clamp: 1; width: 206px;"
             >
               Jan 24, 2022 12:26 pm
             </p>
@@ -105,12 +113,14 @@ exports[`ActiveServiceInstancePopover should render ActiveServiceInstancePopover
             class="Layout--horizontal StyledProps--main"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey500 StyledProps--margin-right-medium StyledProps--margin-bottom-xsmall"
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey500 StyledProps--margin-right-medium StyledProps--margin-bottom-xsmall"
+              style="--text-line-clamp: 1; width: 90px;"
             >
               cd.serviceDashboard.deployedBy:
             </p>
             <p
-              class="StyledProps--font StyledProps--main sectionValue StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+              class="StyledProps--font Text--lineclamp StyledProps--main sectionValue StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+              style="--text-line-clamp: 1; width: 206px;"
             >
               AUTO_SCALED
             </p>
@@ -119,12 +129,14 @@ exports[`ActiveServiceInstancePopover should render ActiveServiceInstancePopover
             class="Layout--horizontal StyledProps--main"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey500 StyledProps--margin-right-medium StyledProps--margin-bottom-xsmall"
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey500 StyledProps--margin-right-medium StyledProps--margin-bottom-xsmall"
+              style="--text-line-clamp: 1; width: 90px;"
             >
               common.pipeline:
             </p>
             <p
-              class="StyledProps--font StyledProps--main sectionValue StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+              class="StyledProps--font Text--lineclamp StyledProps--main sectionValue StyledProps--font-weight-semi-bold StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+              style="--text-line-clamp: 1; width: 206px;"
             >
               AUTO_SCALED
             </p>

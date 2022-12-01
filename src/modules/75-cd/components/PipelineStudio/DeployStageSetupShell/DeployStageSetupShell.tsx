@@ -252,7 +252,7 @@ export default function DeployStageSetupShell(): JSX.Element {
     if (!loading && selectedStage?.stage && isEmpty(selectedStage?.stage?.spec?.execution)) {
       if (!stageYamlSnippet?.data) {
         // fetch data on first load of new stage
-        setTimeout(() => refetch(), 20000)
+        refetch()
       } else {
         // update the new stage with the fetched data
         updateStage(

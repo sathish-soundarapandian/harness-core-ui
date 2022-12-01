@@ -401,8 +401,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                     if (
                       e?.target?.type !== 'text' ||
-                      (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
-                      getMultiTypeFromValue(formik.values?.repositoryFormat) === MultiTypeInputType.RUNTIME
+                      (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
                     ) {
                       return
                     }

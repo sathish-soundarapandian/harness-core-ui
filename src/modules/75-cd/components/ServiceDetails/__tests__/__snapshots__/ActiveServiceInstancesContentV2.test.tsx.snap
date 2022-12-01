@@ -278,6 +278,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -290,6 +291,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -302,6 +304,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -314,6 +317,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -326,6 +330,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -338,6 +343,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -350,6 +356,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -450,6 +457,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -462,6 +470,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -576,6 +585,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -671,6 +681,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -683,6 +694,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -871,6 +883,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -966,6 +979,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -978,6 +992,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -1092,6 +1107,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -1187,6 +1203,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -1199,6 +1216,7 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                                 <div
                                   class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                   style="width: 18px; height: 18px;"
+                                  tabindex="0"
                                 />
                               </span>
                             </span>
@@ -1512,6 +1530,7 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                               <div
                                 class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                 style="width: 18px; height: 18px;"
+                                tabindex="0"
                               />
                             </span>
                           </span>
@@ -1524,6 +1543,7 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                               <div
                                 class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                 style="width: 18px; height: 18px;"
+                                tabindex="0"
                               />
                             </span>
                           </span>
@@ -1536,6 +1556,7 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                               <div
                                 class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                 style="width: 18px; height: 18px;"
+                                tabindex="0"
                               />
                             </span>
                           </span>
@@ -1548,6 +1569,7 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                               <div
                                 class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                 style="width: 18px; height: 18px;"
+                                tabindex="0"
                               />
                             </span>
                           </span>
@@ -1560,6 +1582,7 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                               <div
                                 class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                 style="width: 18px; height: 18px;"
+                                tabindex="0"
                               />
                             </span>
                           </span>
@@ -1572,6 +1595,7 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                               <div
                                 class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                 style="width: 18px; height: 18px;"
+                                tabindex="0"
                               />
                             </span>
                           </span>
@@ -1584,6 +1608,7 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                               <div
                                 class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                 style="width: 18px; height: 18px;"
+                                tabindex="0"
                               />
                             </span>
                           </span>
@@ -1787,6 +1812,7 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                               <div
                                 class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                 style="width: 18px; height: 18px;"
+                                tabindex="0"
                               />
                             </span>
                           </span>
@@ -1799,6 +1825,7 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                               <div
                                 class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                 style="width: 18px; height: 18px;"
+                                tabindex="0"
                               />
                             </span>
                           </span>
@@ -1811,6 +1838,7 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                               <div
                                 class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                 style="width: 18px; height: 18px;"
+                                tabindex="0"
                               />
                             </span>
                           </span>
@@ -1823,6 +1851,7 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                               <div
                                 class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                 style="width: 18px; height: 18px;"
+                                tabindex="0"
                               />
                             </span>
                           </span>
@@ -1835,6 +1864,7 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                               <div
                                 class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                 style="width: 18px; height: 18px;"
+                                tabindex="0"
                               />
                             </span>
                           </span>
@@ -1847,6 +1877,7 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                               <div
                                 class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                                 style="width: 18px; height: 18px;"
+                                tabindex="0"
                               />
                             </span>
                           </span>
@@ -2317,6 +2348,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                             <div
                               class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                               style="width: 18px; height: 18px;"
+                              tabindex="0"
                             />
                           </span>
                         </span>
@@ -2329,6 +2361,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                             <div
                               class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                               style="width: 18px; height: 18px;"
+                              tabindex="0"
                             />
                           </span>
                         </span>
@@ -2341,6 +2374,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                             <div
                               class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                               style="width: 18px; height: 18px;"
+                              tabindex="0"
                             />
                           </span>
                         </span>
@@ -2353,6 +2387,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                             <div
                               class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                               style="width: 18px; height: 18px;"
+                              tabindex="0"
                             />
                           </span>
                         </span>
@@ -2448,6 +2483,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                             <div
                               class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                               style="width: 18px; height: 18px;"
+                              tabindex="0"
                             />
                           </span>
                         </span>
@@ -2460,6 +2496,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                             <div
                               class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                               style="width: 18px; height: 18px;"
+                              tabindex="0"
                             />
                           </span>
                         </span>
@@ -2472,6 +2509,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                             <div
                               class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                               style="width: 18px; height: 18px;"
+                              tabindex="0"
                             />
                           </span>
                         </span>
@@ -2578,6 +2616,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                             <div
                               class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                               style="width: 18px; height: 18px;"
+                              tabindex="0"
                             />
                           </span>
                         </span>
@@ -2590,6 +2629,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                             <div
                               class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                               style="width: 18px; height: 18px;"
+                              tabindex="0"
                             />
                           </span>
                         </span>
@@ -2602,6 +2642,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                             <div
                               class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                               style="width: 18px; height: 18px;"
+                              tabindex="0"
                             />
                           </span>
                         </span>
@@ -2692,6 +2733,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                             <div
                               class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                               style="width: 18px; height: 18px;"
+                              tabindex="0"
                             />
                           </span>
                         </span>
@@ -2704,6 +2746,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                             <div
                               class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                               style="width: 18px; height: 18px;"
+                              tabindex="0"
                             />
                           </span>
                         </span>
@@ -2716,6 +2759,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                             <div
                               class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
                               style="width: 18px; height: 18px;"
+                              tabindex="0"
                             />
                           </span>
                         </span>

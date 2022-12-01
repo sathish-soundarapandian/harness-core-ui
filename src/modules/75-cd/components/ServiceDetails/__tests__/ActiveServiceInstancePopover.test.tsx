@@ -58,7 +58,7 @@ describe('ActiveServiceInstancePopover', () => {
       </TestWrapper>
     )
 
-    expect(getByText('cd.serviceDashboard.function:')).toBeDefined()
+    expect(getByText('Cd.servicedashboard.function:')).toBeDefined()
   })
 
   test('should display cluster when clusterIdentifier field is present', () => {

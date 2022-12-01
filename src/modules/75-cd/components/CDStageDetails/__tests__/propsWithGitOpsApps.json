@@ -1,0 +1,47 @@
+{
+  "stage": {
+    "nodeType": "Deployment",
+    "nodeGroup": "STAGE",
+    "nodeIdentifier": "Deploy_to_Production",
+    "name": "Deploy to Production",
+    "nodeUuid": "gN8xk-dfS3SsqWpmrWTlNQ",
+    "status": "Expired",
+    "module": "cd",
+    "moduleInfo": {
+      "cd": {
+        "serviceInfo": {
+          "identifier": "Order",
+          "displayName": "Order",
+          "deploymentType": "Kubernetes",
+          "artifacts": {
+            "primary": {
+              "imagePath": "library/nginx",
+              "tag": "stable-perl"
+            },
+            "sidecars": []
+          }
+        },
+        "infraExecutionSummary": {
+          "identifier": "Production",
+          "name": "Production",
+          "type": "Production"
+        },
+        "gitOpsAppSummary": {
+          "applications": [
+            { "agentIdentifier": "AGENT_1", "identifier": "ID_1", "name": "NAME_1" },
+            { "agentIdentifier": "AGENT_2", "identifier": "ID_2", "name": "NAME_2" },
+            { "agentIdentifier": "AGENT_3", "identifier": "ID_3", "name": "NAME_3" }
+          ]
+        }
+      }
+    },
+    "startTs": 1625089767832,
+    "endTs": 1625090483832,
+    "edgeLayoutList": { "currentNodeChildren": [], "nextIds": [] },
+    "nodeRunInfo": {
+      "whenCondition": "<+OnPipelineSuccess>",
+      "evaluatedCondition": true,
+      "expressions": [{ "expression": "OnPipelineSuccess", "expressionValue": "true", "count": 1 }]
+    }
+  }
+}

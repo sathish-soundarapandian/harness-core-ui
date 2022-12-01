@@ -7,15 +7,19 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import { Card, Layout, Tab, Tabs } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ActiveServiceInstancesHeader } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancesHeader'
 import {
   GetEnvArtifactDetailsByServiceIdQueryParams,
   GetEnvBuildInstanceCountQueryParams,
+  NGServiceConfig,
   useGetEnvArtifactDetailsByServiceId,
   useGetEnvBuildInstanceCount
 } from 'services/cd-ng'
+import { yamlParse } from '@common/utils/YamlHelperMethods'
+import { useServiceContext } from '@cd/context/ServiceContext'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { ActiveServiceInstancesContent } from './ActiveServiceInstancesContent'
 import { Deployments } from '../DeploymentView/DeploymentView'
@@ -28,6 +32,12 @@ export enum ServiceDetailTabs {
 
 export const ActiveServiceInstances: React.FC = () => {
   const { getString } = useStrings()
+  const { serviceResponse } = useServiceContext()
+  const serviceDataParse = React.useMemo(
+    () => yamlParse<NGServiceConfig>(defaultTo(serviceResponse?.yaml, '')),
+    [serviceResponse?.yaml]
+  )
+  const gitopsEnabled = serviceDataParse?.service?.gitOpsEnabled
 
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const queryParams: GetEnvBuildInstanceCountQueryParams = {
@@ -59,6 +69,7 @@ export const ActiveServiceInstances: React.FC = () => {
     return Boolean(
       activeInstanceData &&
         deploymentData &&
+        !gitopsEnabled &&
         !(activeInstanceData?.data?.envBuildIdAndInstanceCountInfoList || []).length &&
         (deploymentData?.data?.environmentInfoByServiceId || []).length
     )
@@ -97,11 +108,15 @@ export const ActiveServiceInstances: React.FC = () => {
               </>
             }
           />
-          <Tab
-            id={ServiceDetailTabs.DEPLOYMENT}
-            title={getString('cd.serviceDashboard.recentDeployments')}
-            panel={<Deployments />}
-          />
+          {gitopsEnabled ? (
+            <></>
+          ) : (
+            <Tab
+              id={ServiceDetailTabs.DEPLOYMENT}
+              title={getString('cd.serviceDashboard.recentDeployments')}
+              panel={<Deployments />}
+            />
+          )}
         </Tabs>
       </Layout.Vertical>
     </Card>

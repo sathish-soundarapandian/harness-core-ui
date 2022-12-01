@@ -11,6 +11,7 @@ import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { CDStageDetails } from '../CDStageDetails'
 import props from './props.json'
+import propsWithGitOpsApps from './propsWithGitOpsApps.json'
 
 describe('<CDStageDetails /> tests', () => {
   test('snapshot test', () => {
@@ -20,5 +21,15 @@ describe('<CDStageDetails /> tests', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+  test('test gitops apps', () => {
+    const { container } = render(
+      <TestWrapper>
+        <CDStageDetails {...(propsWithGitOpsApps as any)} />
+      </TestWrapper>
+    )
+
+    const gitOpsAppsNode = container.querySelector('[data-test-id="GitopsApplications"]')
+    expect(gitOpsAppsNode).toMatchSnapshot()
   })
 })

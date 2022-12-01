@@ -57,6 +57,7 @@ import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { queryClient } from 'services/queryClient'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
+import { useDeepCompareEffect } from '@common/hooks'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
@@ -68,6 +69,7 @@ import {
 } from './DeployServiceEntityUtils'
 import { ServiceEntitiesList } from './ServiceEntitiesList/ServiceEntitiesList'
 import { useGetServicesData } from './useGetServicesData'
+import { setupMode } from '../PipelineStepsUtil'
 import css from './DeployServiceEntityStep.module.scss'
 
 export interface DeployServiceEntityWidgetProps extends DeployServiceEntityCustomProps {
@@ -132,7 +134,8 @@ export default function DeployServiceEntityWidget({
   serviceLabel,
   deploymentType,
   gitOpsEnabled,
-  stageIdentifier
+  stageIdentifier,
+  setupModeType
 }: DeployServiceEntityWidgetProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -152,7 +155,9 @@ export default function DeployServiceEntityWidget({
     open: openSwitchToSingleSvcDialog,
     close: closeSwitchToSingleSvcDialog
   } = useToggleOpen()
-  const [allServices, setAllServices] = useState(getAllFixedServices(initialValues))
+  const [allServices, setAllServices] = useState(
+    setupModeType === setupMode.DIFFERENT ? getAllFixedServices(initialValues) : ['']
+  )
   const { MULTI_SERVICE_INFRA, GLOBAL_SERVICE_ENV } = useFeatureFlags()
   const {
     state: {
@@ -189,6 +194,12 @@ export default function DeployServiceEntityWidget({
     return () => unSubscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useDeepCompareEffect(() => {
+    if (setupModeType === setupMode.PROPAGATE) {
+      setAllServices(getAllFixedServices(initialValues))
+    }
+  }, [initialValues, setupModeType])
 
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */
@@ -343,6 +354,9 @@ export default function DeployServiceEntityWidget({
   }
 
   function handleUpdate(values: FormState): void {
+    if (setupModeType === setupMode.PROPAGATE) {
+      return
+    }
     /* istanbul ignore else */
     if (!isNil(values.services)) {
       onUpdate?.({
@@ -476,155 +490,169 @@ export default function DeployServiceEntityWidget({
           return (
             <>
               <FormikForm>
-                <Layout.Horizontal
-                  className={css.formRow}
-                  spacing="medium"
-                  margin={{ bottom: 'medium' }}
-                  flex={{ alignItems: 'flex-start', justifyContent: 'space-between' }}
-                >
-                  <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+                {setupModeType === setupMode.DIFFERENT && (
+                  <>
+                    <Layout.Horizontal
+                      className={css.formRow}
+                      spacing="medium"
+                      margin={{ bottom: 'medium' }}
+                      flex={{ alignItems: 'flex-start', justifyContent: 'space-between' }}
+                    >
+                      <Layout.Horizontal
+                        spacing="medium"
+                        flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
+                      >
+                        {isMultiSvc ? (
+                          <>
+                            {!GLOBAL_SERVICE_ENV ? (
+                              <FormMultiTypeMultiSelectDropDown
+                                tooltipProps={{ dataTooltipId: 'specifyYourService' }}
+                                label={defaultTo(
+                                  serviceLabel,
+                                  getString('cd.pipelineSteps.serviceTab.specifyYourServices')
+                                )}
+                                name="services"
+                                disabled={readonly || (isFixed && loading)}
+                                onChange={handleMultiSelectChange}
+                                dropdownProps={{
+                                  items: selectOptions,
+                                  placeholder: placeHolderForServices,
+                                  disabled: loading || readonly
+                                }}
+                                multiTypeProps={{
+                                  width: 300,
+                                  expressions,
+                                  allowableTypes
+                                }}
+                                enableConfigureOptions
+                              />
+                            ) : (
+                              <MultiTypeServiceField
+                                name="services"
+                                label={defaultTo(
+                                  serviceLabel,
+                                  getString('cd.pipelineSteps.serviceTab.specifyYourServices')
+                                )}
+                                deploymentType={deploymentType as ServiceDeploymentType}
+                                gitOpsEnabled={gitOpsEnabled}
+                                disabled={readonly || (isFixed && loading)}
+                                placeholder={placeHolderForServices}
+                                openAddNewModal={openAddNewModal}
+                                isMultiSelect={true}
+                                onMultiSelectChange={handleMultiSelectChange}
+                                width={300}
+                                multiTypeProps={{
+                                  expressions,
+                                  allowableTypes,
+                                  onTypeChange: setServiceInputType
+                                }}
+                              />
+                            )}
+                          </>
+                        ) : (
+                          <div className={css.inputFieldLayout}>
+                            {GLOBAL_SERVICE_ENV ? (
+                              <MultiTypeServiceField
+                                name="service"
+                                label={defaultTo(
+                                  serviceLabel,
+                                  getString('cd.pipelineSteps.serviceTab.specifyYourService')
+                                )}
+                                deploymentType={deploymentType as ServiceDeploymentType}
+                                gitOpsEnabled={gitOpsEnabled}
+                                placeholder={placeHolderForService}
+                                setRefValue={true}
+                                disabled={readonly || (isFixed && loading)}
+                                openAddNewModal={openAddNewModal}
+                                onChange={handleSingleSelectChange}
+                                width={300}
+                                multiTypeProps={{
+                                  expressions,
+                                  allowableTypes,
+                                  defaultValueToReset: '',
+                                  onTypeChange: setServiceInputType
+                                }}
+                              />
+                            ) : (
+                              <FormInput.MultiTypeInput
+                                tooltipProps={{ dataTooltipId: 'specifyYourService' }}
+                                label={defaultTo(
+                                  serviceLabel,
+                                  getString('cd.pipelineSteps.serviceTab.specifyYourService')
+                                )}
+                                name="service"
+                                useValue
+                                disabled={readonly || (isFixed && loading)}
+                                placeholder={placeHolderForService}
+                                multiTypeInputProps={{
+                                  width: 300,
+                                  expressions,
+                                  selectProps: { items: selectOptions },
+                                  allowableTypes,
+                                  defaultValueToReset: '',
+                                  onTypeChange: setServiceInputType,
+                                  onChange: handleSingleSelectChange
+                                }}
+                                selectItems={selectOptions}
+                              />
+                            )}
+                            {getMultiTypeFromValue(formik?.values.service) === MultiTypeInputType.RUNTIME && (
+                              <ConfigureOptions
+                                className={css.configureOptions}
+                                style={{ alignSelf: 'center' }}
+                                value={defaultTo(formik?.values.service, '')}
+                                type="String"
+                                variableName="service"
+                                showRequiredField={false}
+                                showDefaultField={true}
+                                showAdvanced={true}
+                                onChange={value => {
+                                  formik.setFieldValue('service', value)
+                                }}
+                              />
+                            )}
+                          </div>
+                        )}
+                        {isFixed ? (
+                          <RbacButton
+                            size={ButtonSize.SMALL}
+                            icon={'plus'}
+                            text={getString('cd.addService')}
+                            variation={ButtonVariation.LINK}
+                            data-testid="add-new-service"
+                            disabled={readonly}
+                            className={css.serviceActionWrapper}
+                            permission={{
+                              permission: PermissionIdentifier.EDIT_SERVICE,
+                              resource: {
+                                resourceType: ResourceType.SERVICE
+                              }
+                            }}
+                            onClick={openAddNewModal}
+                          />
+                        ) : null}
+                      </Layout.Horizontal>
+                      {MULTI_SERVICE_INFRA ? (
+                        <Toggle
+                          className={css.serviceActionWrapper}
+                          checked={isMultiSvc}
+                          onToggle={getMultiSvcToggleHandler(values)}
+                          label={getString('cd.pipelineSteps.serviceTab.multiServicesText')}
+                          tooltipId={'multiServiceToggle'}
+                        />
+                      ) : null}
+                    </Layout.Horizontal>
+
                     {isMultiSvc ? (
-                      <>
-                        {!GLOBAL_SERVICE_ENV ? (
-                          <FormMultiTypeMultiSelectDropDown
-                            tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-                            label={defaultTo(
-                              serviceLabel,
-                              getString('cd.pipelineSteps.serviceTab.specifyYourServices')
-                            )}
-                            name="services"
-                            disabled={readonly || (isFixed && loading)}
-                            onChange={handleMultiSelectChange}
-                            dropdownProps={{
-                              items: selectOptions,
-                              placeholder: placeHolderForServices,
-                              disabled: loading || readonly
-                            }}
-                            multiTypeProps={{
-                              width: 300,
-                              expressions,
-                              allowableTypes
-                            }}
-                            enableConfigureOptions
-                          />
-                        ) : (
-                          <MultiTypeServiceField
-                            name="services"
-                            label={defaultTo(
-                              serviceLabel,
-                              getString('cd.pipelineSteps.serviceTab.specifyYourServices')
-                            )}
-                            deploymentType={deploymentType as ServiceDeploymentType}
-                            gitOpsEnabled={gitOpsEnabled}
-                            disabled={readonly || (isFixed && loading)}
-                            placeholder={placeHolderForServices}
-                            openAddNewModal={openAddNewModal}
-                            isMultiSelect={true}
-                            onMultiSelectChange={handleMultiSelectChange}
-                            width={300}
-                            multiTypeProps={{
-                              expressions,
-                              allowableTypes,
-                              onTypeChange: setServiceInputType
-                            }}
-                          />
-                        )}
-                      </>
-                    ) : (
-                      <div className={css.inputFieldLayout}>
-                        {GLOBAL_SERVICE_ENV ? (
-                          <MultiTypeServiceField
-                            name="service"
-                            label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourService'))}
-                            deploymentType={deploymentType as ServiceDeploymentType}
-                            gitOpsEnabled={gitOpsEnabled}
-                            placeholder={placeHolderForService}
-                            setRefValue={true}
-                            disabled={readonly || (isFixed && loading)}
-                            openAddNewModal={openAddNewModal}
-                            onChange={handleSingleSelectChange}
-                            width={300}
-                            multiTypeProps={{
-                              expressions,
-                              allowableTypes,
-                              defaultValueToReset: '',
-                              onTypeChange: setServiceInputType
-                            }}
-                          />
-                        ) : (
-                          <FormInput.MultiTypeInput
-                            tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-                            label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourService'))}
-                            name="service"
-                            useValue
-                            disabled={readonly || (isFixed && loading)}
-                            placeholder={placeHolderForService}
-                            multiTypeInputProps={{
-                              width: 300,
-                              expressions,
-                              selectProps: { items: selectOptions },
-                              allowableTypes,
-                              defaultValueToReset: '',
-                              onTypeChange: setServiceInputType,
-                              onChange: handleSingleSelectChange
-                            }}
-                            selectItems={selectOptions}
-                          />
-                        )}
-                        {getMultiTypeFromValue(formik?.values.service) === MultiTypeInputType.RUNTIME && (
-                          <ConfigureOptions
-                            className={css.configureOptions}
-                            style={{ alignSelf: 'center' }}
-                            value={defaultTo(formik?.values.service, '')}
-                            type="String"
-                            variableName="service"
-                            showRequiredField={false}
-                            showDefaultField={true}
-                            showAdvanced={true}
-                            onChange={value => {
-                              formik.setFieldValue('service', value)
-                            }}
-                          />
-                        )}
-                      </div>
-                    )}
-                    {isFixed ? (
-                      <RbacButton
-                        size={ButtonSize.SMALL}
-                        icon={'plus'}
-                        text={getString('cd.addService')}
-                        variation={ButtonVariation.LINK}
-                        data-testid="add-new-service"
-                        disabled={readonly}
-                        className={css.serviceActionWrapper}
-                        permission={{
-                          permission: PermissionIdentifier.EDIT_SERVICE,
-                          resource: {
-                            resourceType: ResourceType.SERVICE
-                          }
-                        }}
-                        onClick={openAddNewModal}
+                      <FormInput.CheckBox
+                        label={getString('cd.pipelineSteps.serviceTab.multiServicesParallelDeployLabel')}
+                        name="parallel"
                       />
                     ) : null}
-                  </Layout.Horizontal>
-                  {MULTI_SERVICE_INFRA ? (
-                    <Toggle
-                      className={css.serviceActionWrapper}
-                      checked={isMultiSvc}
-                      onToggle={getMultiSvcToggleHandler(values)}
-                      label={getString('cd.pipelineSteps.serviceTab.multiServicesText')}
-                      tooltipId={'multiServiceToggle'}
-                    />
-                  ) : null}
-                </Layout.Horizontal>
-                {isMultiSvc ? (
-                  <FormInput.CheckBox
-                    label={getString('cd.pipelineSteps.serviceTab.multiServicesParallelDeployLabel')}
-                    name="parallel"
-                  />
-                ) : null}
+                  </>
+                )}
 
-                {isFixed ? (
+                {isFixed || setupModeType === setupMode.PROPAGATE ? (
                   <ServiceEntitiesList
                     loading={loading || updatingData}
                     servicesData={allServices.length > 0 ? servicesData : []}
@@ -636,6 +664,7 @@ export default function DeployServiceEntityWidget({
                     allowableTypes={allowableTypes}
                     onServiceEntityUpdate={onServiceEntityUpdate}
                     isMultiSvc={isMultiSvc}
+                    isPropogateFromStage={setupModeType === setupMode.PROPAGATE}
                   />
                 ) : null}
               </FormikForm>

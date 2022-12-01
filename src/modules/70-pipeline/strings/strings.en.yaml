@@ -833,6 +833,7 @@ artifactImagePathLabel: Artifact/Image Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
 artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
+  loadingRepository: Loading Repository...
   artifactId: Artifact ID
   customArtifactManualFill: Manually Enter an artifact version
   customArtifactScriptFill: Provide a script to dynamically pull the artifact location.
