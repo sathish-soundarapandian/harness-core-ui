@@ -47,7 +47,7 @@ const RemoteSettings = lazy(() => import('code/Settings'))
 const RemotePullRequests = lazy(() => import('code/PullRequests'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemotePullRequestsCompare = lazy(() => import('code/PullRequestsCompare'))
+const RemoteCompare = lazy(() => import('code/Compare'))
 
 const CODERemoteComponentMounter: React.FC<{
   component: JSX.Element
@@ -105,8 +105,8 @@ export const PullRequests: React.FC<RemoteViewProps> = props => (
   <CODERemoteComponentMounter component={<RemotePullRequests {...props} />} />
 )
 
-export const PullRequestsCompare: React.FC<RemoteViewProps> = props => (
-  <CODERemoteComponentMounter component={<RemotePullRequestsCompare {...props} />} />
+export const Compare: React.FC<RemoteViewProps> = props => (
+  <CODERemoteComponentMounter component={<RemoteCompare {...props} />} />
 )
 
 export const CreateWebhook: React.FC<RemoteViewProps> = props => (

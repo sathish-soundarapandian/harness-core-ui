@@ -79,7 +79,7 @@ export default {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/pulls`
   },
-  toCODEPullRequestsCompare: ({ repoPath, diffRefs }: Required<Pick<CODEProps, 'repoPath' | 'diffRefs'>>) => {
+  toCODECompare: ({ repoPath, diffRefs }: Required<Pick<CODEProps, 'repoPath' | 'diffRefs'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/pulls/compare/${diffRefs}`
   },

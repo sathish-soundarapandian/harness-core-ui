@@ -45,12 +45,27 @@ declare module 'code/PullRequests' {
   export default ChildApp
 }
 
-declare module 'code/PullRequestsCompare' {
+declare module 'code/Compare' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'code/PullRequest' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'code/Webhooks' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
 
 declare module 'code/CreateWebhook' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'code/EditWebhook' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }

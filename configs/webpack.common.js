@@ -267,8 +267,12 @@ if (!enableCODE) {
     'code/Commits',
     'code/Branches',
     'code/PullRequests',
-    'code/PullRequestsCompare',
-    'code/Settings'
+    'code/Compare',
+    'code/PullRequest',
+    'code/Settings',
+    'code/Webhooks',
+    'code/CreateWebhook',
+    'code/EditWebhook'
   ]
   codeModules.forEach(mod => (config.resolve.alias[mod] = ChildAppError))
 }

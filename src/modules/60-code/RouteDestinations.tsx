@@ -19,7 +19,7 @@ import {
   FileEdit,
   Settings,
   PullRequests,
-  PullRequestsCompare,
+  Compare,
   CreateWebhook
 } from './CodeApp'
 import routes, { CODEPathProps, codePathProps } from './RouteDefinitions'
@@ -57,7 +57,7 @@ export default function CODERouteDestinations(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
-        path={routes.toCODEPullRequestsCompare({
+        path={routes.toCODECompare({
           repoPath: [
             codePathProps.accountId,
             codePathProps.orgIdentifier,
@@ -69,7 +69,7 @@ export default function CODERouteDestinations(): React.ReactElement {
         sidebarProps={sidebarProps}
         pageName={PAGE_NAME.CODEPullRequestsCompare}
       >
-        <PullRequestsCompare />
+        <Compare />
       </RouteWithLayout>
 
       <RouteWithLayout
