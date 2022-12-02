@@ -183,7 +183,7 @@ exports[`test cases for perspective list view should be able to render list view
             <p
               class="StyledProps--font StyledProps--main"
             >
-              ce.perspectives.timeRangeConstants.last7Days
+              common.timeRangeConstants.last7Days
             </p>
           </div>
           <div
@@ -351,7 +351,7 @@ exports[`test cases for perspective list view should be able to render list view
             <p
               class="StyledProps--font StyledProps--main"
             >
-              ce.perspectives.timeRangeConstants.last7Days
+              common.timeRangeConstants.last7Days
             </p>
           </div>
           <div
@@ -506,7 +506,7 @@ exports[`test cases for perspective list view should be able to render list view
             <p
               class="StyledProps--font StyledProps--main"
             >
-              ce.perspectives.timeRangeConstants.last7Days
+              common.timeRangeConstants.last7Days
             </p>
           </div>
           <div
@@ -693,7 +693,7 @@ exports[`test cases for perspective list view should be able to render list view
             <p
               class="StyledProps--font StyledProps--main"
             >
-              ce.perspectives.timeRangeConstants.last7Days
+              common.timeRangeConstants.last7Days
             </p>
           </div>
           <div

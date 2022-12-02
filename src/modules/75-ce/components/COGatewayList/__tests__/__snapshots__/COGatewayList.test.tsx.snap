@@ -7,7 +7,6 @@ exports[`Test COGatewayList able to search through the list 1`] = `
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
-      data-testid="page-header"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -280,7 +279,6 @@ exports[`Test COGatewayList able to search through the list 1`] = `
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody pageContainer"
       data-name="page-body"
-      data-testid="page-body"
     >
       <div
         class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center StyledProps--padding-medium"
@@ -360,7 +358,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                   class="bp3-popover-target"
                 >
                   <button
-                    aria-label="projectsOrgs.landingDashboard.last30Days"
+                    aria-label="common.subscriptions.usage.last30days"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
                     type="button"
                   >
@@ -386,7 +384,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                     <span
                       class="bp3-button-text"
                     >
-                      projectsOrgs.landingDashboard.last30Days
+                      common.subscriptions.usage.last30days
                     </span>
                     <span
                       class="bp3-icon bp3-icon-caret-down StyledProps--main"
@@ -2037,7 +2035,6 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
-      data-testid="page-header"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -2285,7 +2282,6 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody pageContainer"
       data-name="page-body"
-      data-testid="page-body"
     >
       <div
         class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center StyledProps--padding-medium"
@@ -2365,7 +2361,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                   class="bp3-popover-target"
                 >
                   <button
-                    aria-label="projectsOrgs.landingDashboard.last30Days"
+                    aria-label="common.subscriptions.usage.last30days"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
                     type="button"
                   >
@@ -2391,7 +2387,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                     <span
                       class="bp3-button-text"
                     >
-                      projectsOrgs.landingDashboard.last30Days
+                      common.subscriptions.usage.last30days
                     </span>
                     <span
                       class="bp3-icon bp3-icon-caret-down StyledProps--main"

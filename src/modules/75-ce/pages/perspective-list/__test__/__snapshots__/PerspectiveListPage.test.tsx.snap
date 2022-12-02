@@ -26,7 +26,6 @@ exports[`test cases for Perspective details Page should be able to render and sw
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
-    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -104,7 +103,6 @@ exports[`test cases for Perspective details Page should be able to render and sw
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody pageContainer"
     data-name="page-body"
-    data-testid="page-body"
   >
     <div
       class="Layout--horizontal StyledProps--main bodyWrapper"
@@ -1239,7 +1237,7 @@ exports[`test cases for Perspective details Page should be able to render and sw
                     <p
                       class="StyledProps--font StyledProps--main"
                     >
-                      ce.perspectives.timeRangeConstants.lastMonth
+                      common.timeRangeConstants.lastMonth
                     </p>
                   </div>
                   <div
@@ -1407,7 +1405,7 @@ exports[`test cases for Perspective details Page should be able to render and sw
                     <p
                       class="StyledProps--font StyledProps--main"
                     >
-                      ce.perspectives.timeRangeConstants.last7Days
+                      common.timeRangeConstants.last7Days
                     </p>
                   </div>
                   <div
@@ -1523,7 +1521,7 @@ exports[`test cases for Perspective details Page should be able to render and sw
                     <p
                       class="StyledProps--font StyledProps--main"
                     >
-                      ce.perspectives.timeRangeConstants.last7Days
+                      common.timeRangeConstants.last7Days
                     </p>
                   </div>
                   <div
@@ -1600,7 +1598,6 @@ exports[`test cases for Perspective details Page should be able to render the de
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
-    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -1678,7 +1675,6 @@ exports[`test cases for Perspective details Page should be able to render the de
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody pageContainer"
     data-name="page-body"
-    data-testid="page-body"
   >
     <div
       class="Layout--horizontal StyledProps--main bodyWrapper"
@@ -2687,7 +2683,7 @@ exports[`test cases for Perspective details Page should be able to render the de
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-small StyledProps--color StyledProps--color-grey400"
                 >
-                  ce.perspectives.timeRangeConstants.lastMonth
+                  common.timeRangeConstants.lastMonth
                 </p>
                 <span
                   style="flex-grow: 1;"
@@ -2759,7 +2755,7 @@ exports[`test cases for Perspective details Page should be able to render the de
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-small StyledProps--color StyledProps--color-grey400"
                 >
-                  ce.perspectives.timeRangeConstants.last7Days
+                  common.timeRangeConstants.last7Days
                 </p>
                 <span
                   style="flex-grow: 1;"
@@ -2896,7 +2892,7 @@ exports[`test cases for Perspective details Page should be able to render the de
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-small StyledProps--color StyledProps--color-grey400"
                 >
-                  ce.perspectives.timeRangeConstants.last7Days
+                  common.timeRangeConstants.last7Days
                 </p>
                 <span
                   style="flex-grow: 1;"
