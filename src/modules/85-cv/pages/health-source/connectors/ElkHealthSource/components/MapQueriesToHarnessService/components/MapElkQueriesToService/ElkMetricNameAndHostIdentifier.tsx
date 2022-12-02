@@ -86,9 +86,7 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
             : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
         }
         label={getString('cv.monitoringSources.elk.logIndexesInputLabel')}
-        applicationOptions={getIndexItems}
-        applicationLoading={indicesLoading}
-        applicationError={formikProps?.errors?.logIndexes ? formikProps.errors.logIndexes : ''}
+        applicationError={(formikProps?.errors?.logIndexes ? formikProps.errors.logIndexes : '') as string | string[]}
         connectorIdentifier={connectorIdentifier}
         formikAppDynamicsValue={logIndexes}
         appdMultiType={logIdxMultitype}
@@ -154,8 +152,9 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         }
         label={getString('cv.monitoringSources.elk.timeStampFormatInputLabel')}
         options={getTimeFormatItems}
-        applicationError={formikProps?.errors?.timeStampFormat ? formikProps.errors.timeStampFormat : ''}
-        applicationLoading={false}
+        applicationError={
+          (formikProps?.errors?.timeStampFormat ? formikProps.errors.timeStampFormat : '') as string | string[]
+        }
         connectorIdentifier={connectorIdentifier}
         formikAppDynamicsValue={timeStampFormat}
         appdMultiType={timeStampMultitype}

@@ -2,14 +2,9 @@ import React from 'react'
 import { defaultTo } from 'lodash-es'
 import { SelectOption, FormInput, MultiTypeInputType, FormError, MultiTypeInput, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-// eslint-disable-next-line import/no-unresolved
-//import { getTypeOfInput } from '../../../../AppAppDHealthSource.utils'
-// eslint-disable-next-line aliased-module-imports
 import { getTypeOfInput } from '@cv/pages/health-source/connectors/AppDynamics/AppDHealthSource.utils'
-// eslint-disable-next-line aliased-module-imports
 import { setLogIndexes } from '@cv/pages/health-source/connectors/ElkHealthSource/ElkHealthSource.utils'
-// eslint-disable-next-line aliased-module-imports
-
+import type { MultiTextOrSelectInputProps } from './MapQueriesToHarnessServiceLayout.types'
 import styles from './MapQueriesToHarnessServiceLayout.module.scss'
 
 export default function MultiTextOrSelectInput({
@@ -25,17 +20,17 @@ export default function MultiTextOrSelectInput({
   setAppdMultiType: setInputType,
   areOptionsLoading,
   handleSelectChange,
-  logIndexes,
+  value,
   label,
   placeholder,
   name
-}: any): JSX.Element {
+}: MultiTextOrSelectInputProps): JSX.Element {
   React.useEffect(() => {
     if (
-      getTypeOfInput(connectorIdentifier) !== MultiTypeInputType.FIXED &&
-      getTypeOfInput(formikAppDynamicsValue) !== MultiTypeInputType.FIXED
+      getTypeOfInput(connectorIdentifier as string) !== MultiTypeInputType.FIXED &&
+      getTypeOfInput(formikAppDynamicsValue as string) !== MultiTypeInputType.FIXED
     ) {
-      setInputType(getTypeOfInput(formikAppDynamicsValue))
+      setInputType(getTypeOfInput(formikAppDynamicsValue as string))
     }
   }, [formikAppDynamicsValue])
 
@@ -58,7 +53,7 @@ export default function MultiTextOrSelectInput({
         }}
         multitypeInputValue={inputType}
         allowableTypes={allowedTypes}
-        value={setLogIndexes(formikAppDynamicsValue, options, inputType)}
+        value={setLogIndexes(formikAppDynamicsValue as string, options, inputType)}
         style={{ marginBottom: !applicationError ? '20px' : '' }}
         expressions={expressions}
         onChange={(item, _valueType, multiType) => {
@@ -84,7 +79,7 @@ export default function MultiTextOrSelectInput({
       placeholder={placeholder}
       items={options}
       onChange={handleSelectChange}
-      value={logIndexes ? { label: logIndexes, value: logIndexes } : undefined}
+      value={value}
     />
   )
 }

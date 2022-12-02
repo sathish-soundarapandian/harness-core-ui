@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { AllowedTypes, MultiTypeInputType } from '@harness/uicore'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 
 export interface MapQueriesToHarnessServiceLayoutProps {
@@ -14,4 +15,23 @@ export interface MapQueriesToHarnessServiceLayoutProps {
   isTemplate?: boolean
   expressions?: string[]
   isConnectorRuntimeOrExpression?: boolean
+}
+
+export interface MultiTextOrSelectInputProps {
+  options: SelectOption[]
+  connectorIdentifier?: string
+  formikAppDynamicsValue?: string
+  setFieldValue: (field: string, value: string) => void
+  isTemplate?: boolean
+  expressions?: string[]
+  allowedTypes: AllowedTypes
+  applicationError?: string | string[]
+  appdMultiType: MultiTypeInputType
+  setAppdMultiType: React.Dispatch<React.SetStateAction<MultiTypeInputType>>
+  areOptionsLoading?: boolean
+  handleSelectChange: () => void
+  value?: SelectOption
+  label: string
+  placeholder: string
+  name: string
 }

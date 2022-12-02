@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { HealthSourceTypes } from '../../types'
 import type {
   ElkHealthSourcePayload,
@@ -14,8 +16,6 @@ import type {
 } from './components/MapQueriesToHarnessService/ElkQueryBuilder.types'
 import type { ElkHealthSourceInfo } from './ElkHealthSource.types'
 import { ElkProduct } from '../../HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
-import { MultiTypeInputType, SelectOption } from '@harness/uicore'
-import { isMultiTypeRuntime } from '@common/utils/utils'
 
 export function createElkHealthSourcePayload(setupSource: ElkHealthSourceInfo): ElkHealthSourcePayload {
   const ElkHealthSourcePayload: ElkHealthSourcePayload = {

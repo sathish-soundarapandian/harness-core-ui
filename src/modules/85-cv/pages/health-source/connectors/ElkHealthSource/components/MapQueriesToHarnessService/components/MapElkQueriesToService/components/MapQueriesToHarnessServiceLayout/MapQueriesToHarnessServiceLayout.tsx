@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import { Accordion, Layout, Utils, useToaster } from '@harness/uicore'
+import { Accordion, Layout, Utils, useToaster, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { MapElkToServiceFieldNames } from '@cv/pages/health-source/connectors/ElkHealthSource/components/MapQueriesToHarnessService/constants'
@@ -28,6 +28,9 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
   const values = formikProps?.values
   const { serviceInstance, identifyTimestamp, messageIdentifier, logIndexes, timeStampFormat } = values || {}
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
+
+  const isQueryRuntimeOrExpression = getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
+
   const queryParams = useMemo(
     () => ({
       accountId,
