@@ -26,6 +26,7 @@ exports[`test cases for Perspective details Page should be able to render and sw
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -103,6 +104,7 @@ exports[`test cases for Perspective details Page should be able to render and sw
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody pageContainer"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--horizontal StyledProps--main bodyWrapper"
@@ -1598,6 +1600,7 @@ exports[`test cases for Perspective details Page should be able to render the de
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -1675,6 +1678,7 @@ exports[`test cases for Perspective details Page should be able to render the de
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody pageContainer"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--horizontal StyledProps--main bodyWrapper"

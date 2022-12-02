@@ -7,6 +7,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+      data-testid="page-header"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -279,6 +280,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody pageContainer"
       data-name="page-body"
+      data-testid="page-body"
     >
       <div
         class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center StyledProps--padding-medium"
@@ -2035,6 +2037,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+      data-testid="page-header"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -2282,6 +2285,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody pageContainer"
       data-name="page-body"
+      data-testid="page-body"
     >
       <div
         class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center StyledProps--padding-medium"
