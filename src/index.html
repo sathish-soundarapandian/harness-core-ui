@@ -34,7 +34,7 @@
     </style>
     <!-- apiurl -->
     <script type="text/javascript">
-      window.browserRouterEnabled = window.location.href.toString().includes('browserRouterEnabled=true')
+      window.browserRouterEnabled = true
       window.getApiBaseUrl = str => {
         let url = window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
 
