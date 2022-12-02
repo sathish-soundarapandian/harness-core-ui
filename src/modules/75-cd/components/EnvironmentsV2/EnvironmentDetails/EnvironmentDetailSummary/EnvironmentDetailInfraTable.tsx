@@ -38,6 +38,7 @@ export interface TableRowData {
   serviceFilter?: string
   artifactVersion?: string
   infraIdentifier?: string
+  clusterId?: string
   infraName?: string
   instanceCount?: number
   lastPipelineExecutionId?: string
@@ -64,6 +65,8 @@ export const getSummaryViewTableData = (
     let totalInstances = 0
     let lastDeployedAt = 0
     const infraName = infra.infraName || infra.clusterIdentifier
+    const clusterIdentifier = infra.clusterIdentifier
+    const infraIdentifier = infra.infraIdentifier
     if (infra.instanceGroupedByPipelineExecutionList) {
       infra.instanceGroupedByPipelineExecutionList.forEach(infraDetail => {
         totalInstances += defaultTo(infraDetail.count, 0)
@@ -82,6 +85,8 @@ export const getSummaryViewTableData = (
       infraName: defaultTo(infraName, ''),
       totalInstanceCount: totalInstances,
       showInfra: true,
+      infraIdentifier: infraIdentifier,
+      clusterId: clusterIdentifier,
       lastDeployedAt: lastDeployedAt,
       envId: defaultTo(envFilter, ''),
       serviceFilter: defaultTo(serviceFilter, ''),
@@ -125,6 +130,8 @@ export const getFullViewTableData = (
           showInfra: showInfra,
           totalInstanceCount: totalInstances,
           lastDeployedAt: lastDeployedAt,
+          infraIdentifier: infra.infraIdentifier,
+          clusterId: infra.clusterIdentifier,
           infraName: defaultTo(infraName, ''),
           envId: defaultTo(envFilter, ''),
           serviceFilter: defaultTo(serviceFilter, ''),
@@ -156,7 +163,16 @@ export const RenderInfra: Renderer<CellProps<TableRowData>> = ({
 
 const RenderInstances: Renderer<CellProps<TableRowData>> = ({
   row: {
-    original: { envId, artifactVersion: buildId, totalInstanceCount, tableType, serviceFilter }
+    original: {
+      envId,
+      artifactVersion: buildId,
+      totalInstanceCount,
+      tableType,
+      serviceFilter,
+      infraIdentifier,
+      clusterId,
+      lastPipelineExecutionId
+    }
   }
 }) => {
   TOTAL_VISIBLE_INSTANCES = tableType === InfraViewTableType.SUMMARY ? 4 : 7
@@ -169,6 +185,7 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
             interactionKind={PopoverInteractionKind.CLICK}
             key={index}
             modifiers={{ preventOverflow: { escapeWithReference: true } }}
+            disabled={tableType === InfraViewTableType.SUMMARY}
           >
             <Container
               className={css.hex}
@@ -182,6 +199,10 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
               envId={envId}
               instanceNum={index}
               serviceId={serviceFilter}
+              clusterId={clusterId}
+              isEnvDetail={true}
+              infraIdentifier={infraIdentifier}
+              pipelineExecutionId={lastPipelineExecutionId}
             />
           </Popover>
         ))}

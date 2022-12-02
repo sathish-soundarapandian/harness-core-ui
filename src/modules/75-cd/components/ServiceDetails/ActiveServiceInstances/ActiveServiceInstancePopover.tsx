@@ -15,12 +15,14 @@ import {
   CustomDeploymentInstanceInfoDTO,
   EcsInstanceInfoDTO,
   GetActiveInstancesByServiceIdEnvIdAndBuildIdsQueryParams,
+  GetInstancesDetailsQueryParams,
   GitOpsInstanceInfoDTO,
   InstanceDetailsDTO,
   K8sInstanceInfoDTO,
   NativeHelmInstanceInfoDTO,
   ServiceDefinition,
-  useGetActiveInstancesByServiceIdEnvIdAndBuildIds
+  useGetActiveInstancesByServiceIdEnvIdAndBuildIds,
+  useGetInstancesDetails
 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { getReadableDateTime } from '@common/utils/dateUtils'
@@ -35,6 +37,10 @@ export interface ActiveServiceInstancePopoverProps {
   envId?: string
   instanceNum?: number
   serviceId?: string
+  isEnvDetail?: boolean
+  infraIdentifier?: string
+  clusterId?: string
+  pipelineExecutionId?: string
 }
 
 interface SectionProps {
@@ -93,7 +99,16 @@ const Section: React.FC<{ data: SectionProps[] }> = props => {
 }
 
 export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopoverProps> = props => {
-  const { buildId = '', envId = '', instanceNum = 0, serviceId: serviceIdentifier = '' } = props
+  const {
+    buildId = '',
+    envId = '',
+    instanceNum = 0,
+    serviceId: serviceIdentifier = '',
+    isEnvDetail = false,
+    pipelineExecutionId = '',
+    infraIdentifier,
+    clusterId
+  } = props
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { getString } = useStrings()
 
@@ -105,18 +120,48 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     envId,
     buildIds: [buildId]
   }
+
+  const queryParamsEnv: GetInstancesDetailsQueryParams = {
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    serviceId: serviceId || serviceIdentifier,
+    envId,
+    infraIdentifier,
+    clusterIdentifier: clusterId,
+    pipelineExecutionId,
+    buildId: buildId
+  }
+
   const { loading, data, error } = useGetActiveInstancesByServiceIdEnvIdAndBuildIds({
     queryParams,
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
     }
   })
+  const {
+    loading: envLoading,
+    data: envData,
+    error: envError
+  } = useGetInstancesDetails({
+    queryParams: queryParamsEnv,
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
+    }
+  })
 
-  if (loading || error || !data?.data?.instancesByBuildIdList?.[0]?.instances?.length) {
+  if (
+    (!isEnvDetail && (loading || error || !data?.data?.instancesByBuildIdList?.[0]?.instances?.length)) ||
+    (isEnvDetail && (envLoading || envError || !envData?.data?.instances?.length))
+  ) {
     return <></>
   }
 
-  const instanceData = data?.data?.instancesByBuildIdList?.[0]?.instances[instanceNum] || {}
+  const instanceData =
+    (isEnvDetail
+      ? envData?.data?.instances?.[instanceNum]
+      : data?.data?.instancesByBuildIdList?.[0]?.instances?.[instanceNum]) || {}
+
   const instanceInfoDTOProperties = (instanceData?.instanceInfoDTO as CustomDeploymentInstanceInfoDTO)?.properties || {}
   const defaultInstanceInfoData = [
     {
