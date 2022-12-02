@@ -624,3 +624,10 @@ artifactVersion: 'Version :'
 artifactPath: 'Path :'
 logoOfName: 'Logo of {{name}}'
 deploymentTemplates: 'Deployment Templates'
+environmentDetailPage:
+  infraSlashCluster: Infra / GitOps Cluster
+  selectInfraMsg: 'Select an Infrastructure to view instance details'
+  noInstancesToShow: No Instances to show
+  seeFull: See full
+  viewInTable: 'View in table'
+  noServiceArtifactMsg: 'There is no service and artifact details present'

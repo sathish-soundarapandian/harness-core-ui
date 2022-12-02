@@ -8,7 +8,6 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
 import { Button, Card, Carousel, Icon, Layout, Text, Container, PageError } from '@harness/uicore'
-import { Spinner } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isUndefined, noop } from 'lodash-es'
@@ -20,6 +19,7 @@ import {
   useGetActiveServiceInstancesForEnvironment
 } from 'services/cd-ng'
 import EnvironmentDetailInstanceDialog from './EnvironmentDetailInstanceDialog'
+import { DialogEmptyState } from './EnvironmentDetailCommonUtils'
 import { EnvironmentDetailTable, TableType } from './EnvironmentDetailTable'
 
 import css from './EnvironmentDetailSummary.module.scss'
@@ -32,7 +32,6 @@ interface ServiceListProp {
   serviceId: string | undefined
   serviceName: string | undefined
 }
-;[]
 
 function createGroups(arr: ServiceListProp[] | undefined): ServiceListProp[][] {
   if (isUndefined(arr)) {
@@ -60,7 +59,6 @@ export function EnvironmentDetailInstances(props: EnvironmentDetailInstancesProp
     projectIdentifier
   }
 
-  //todo handle loading, error, refetch states here
   const { data, loading, error, refetch } = useGetActiveServiceInstancesForEnvironment({ queryParams })
   const dataMock = defaultTo(data, [] as ResponseInstanceGroupedByServiceList)
 
@@ -108,7 +106,7 @@ export function EnvironmentDetailInstances(props: EnvironmentDetailInstancesProp
           }}
           className={css.cursor}
         >
-          {'See full'}
+          {getString('cd.environmentDetailPage.seeFull')}
         </Text>
       </Card>
     )
@@ -118,25 +116,26 @@ export function EnvironmentDetailInstances(props: EnvironmentDetailInstancesProp
     return { serviceId: item.serviceId, serviceName: item.serviceName }
   })
 
-  //todo handle empty renderCards
   const renderCards = createGroups(serviceList)
 
-  if (loading || error || !(dataMock?.data?.instanceGroupedByServiceList || []).length) {
+  const noDataState = loading || error || !(dataMock?.data?.instanceGroupedByServiceList || []).length
+  const renderState = React.useMemo(() => {
     if (loading) {
       return (
-        <Container data-test="ActiveServiceInstancesLoader" height="334px" flex={{ justifyContent: 'center' }}>
-          <Spinner />
+        <Container className={css.loadingContainer} height={335}>
+          <Icon name="spinner" color={Color.BLUE_500} size={30} />
         </Container>
       )
     }
     if (error) {
       return (
-        <Container data-test="ActiveServiceInstancesError" height="334px" flex={{ justifyContent: 'center' }}>
+        <Container data-test="ActiveServiceInstancesError" height={335} flex={{ justifyContent: 'center' }}>
           <PageError onClick={() => refetch?.()} />
         </Container>
       )
     }
-  }
+    return DialogEmptyState()
+  }, [error, loading, refetch])
 
   return (
     <Container>
@@ -144,16 +143,18 @@ export function EnvironmentDetailInstances(props: EnvironmentDetailInstancesProp
         <Text color={Color.GREY_800} font={{ weight: 'bold' }}>
           {getString('services')}
         </Text>
-        <div
-          className={cx(css.viewTable, css.cursor)}
-          onClick={() => {
-            setSvc('')
-            setIsDetailsDialogOpen(true)
-          }}
-        >
-          <Icon name="panel-table" />
-          <Text>{'View in table'}</Text>
-        </div>
+        {!noDataState && (
+          <div
+            className={cx(css.viewTable, css.cursor)}
+            onClick={() => {
+              setSvc('')
+              setIsDetailsDialogOpen(true)
+            }}
+          >
+            <Icon name="panel-table" />
+            <Text>{getString('cd.environmentDetailPage.viewInTable')}</Text>
+          </div>
+        )}
       </div>
       <EnvironmentDetailInstanceDialog
         isOpen={isDetailsDialogOpen}
@@ -161,54 +162,58 @@ export function EnvironmentDetailInstances(props: EnvironmentDetailInstancesProp
         serviceFilter={svc}
         data={dataMock?.data?.instanceGroupedByServiceList}
       />
-      <Carousel
-        previousElement={
-          activeSlide > 1 ? (
-            <Button
-              intent="primary"
-              className={css.prevButton}
-              icon="double-chevron-left"
-              minimal
-              iconProps={{
-                size: 22,
-                color: Color.PRIMARY_7
-              }}
-            />
-          ) : (
-            <span />
-          )
-        }
-        nextElement={
-          activeSlide < Math.ceil(defaultTo(serviceList, []).length / 4) ? (
-            <Button
-              intent="primary"
-              className={css.nextButton}
-              icon="double-chevron-right"
-              minimal
-              iconProps={{
-                size: 22,
-                color: Color.PRIMARY_7
-              }}
-            />
-          ) : (
-            <span />
-          )
-        }
-        hideIndicators={true}
-        onChange={setActiveSlide}
-        slideClassName={css.slideStyle}
-      >
-        {renderCards.map((item, idx) => {
-          return (
-            <Layout.Horizontal key={idx} className={css.cardGrid}>
-              {item[0] && serviceInfoPreview(item[0])}
-              {item[1] && serviceInfoPreview(item[1])}
-              {item[2] && serviceInfoPreview(item[2])}
-              {item[3] && serviceInfoPreview(item[3])}
-            </Layout.Horizontal>
-          )
-        })}
-      </Carousel>
+      {noDataState ? (
+        renderState
+      ) : (
+        <Carousel
+          previousElement={
+            activeSlide > 1 ? (
+              <Button
+                intent="primary"
+                className={css.prevButton}
+                icon="double-chevron-left"
+                minimal
+                iconProps={{
+                  size: 22,
+                  color: Color.PRIMARY_7
+                }}
+              />
+            ) : (
+              <span />
+            )
+          }
+          nextElement={
+            activeSlide < Math.ceil(defaultTo(serviceList, []).length / 4) ? (
+              <Button
+                intent="primary"
+                className={css.nextButton}
+                icon="double-chevron-right"
+                minimal
+                iconProps={{
+                  size: 22,
+                  color: Color.PRIMARY_7
+                }}
+              />
+            ) : (
+              <span />
+            )
+          }
+          hideIndicators={true}
+          onChange={setActiveSlide}
+          slideClassName={css.slideStyle}
+        >
+          {renderCards.map((item, idx) => {
+            return (
+              <Layout.Horizontal key={idx} className={css.cardGrid}>
+                {item[0] && serviceInfoPreview(item[0])}
+                {item[1] && serviceInfoPreview(item[1])}
+                {item[2] && serviceInfoPreview(item[2])}
+                {item[3] && serviceInfoPreview(item[3])}
+              </Layout.Horizontal>
+            )
+          })}
+        </Carousel>
+      )}
     </Container>
   )
 }

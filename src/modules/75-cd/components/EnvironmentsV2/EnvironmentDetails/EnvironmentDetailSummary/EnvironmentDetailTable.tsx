@@ -318,7 +318,7 @@ export const EnvironmentDetailTable = (
       {
         Header: (
           <Text lineClamp={1} color={Color.GREY_600}>
-            {'INFRA/GITOPS CLUSTER'}
+            {getString('cd.environmentDetailPage.infraSlashCluster')}
           </Text>
         ),
         id: 'infra',
@@ -359,14 +359,14 @@ export const EnvironmentDetailTable = (
       return tableType === TableType.FULL ? (
         <Container className={css.instanceEmptyState}>
           <img src={emptyInstanceDetail} />
-          <Text>{'Select an Infrastructure to view instance details'}</Text>
+          <Text>{getString('cd.environmentDetailPage.noServiceArtifactMsg')}</Text>
         </Container>
       ) : (
         <Layout.Vertical height={'165px'} flex={{ align: 'center-center' }} data-test="ActiveServiceInstancesEmpty">
           <Container margin={{ bottom: 'medium' }}>
             <img width="50" height="50" src={MostActiveServicesEmptyState} style={{ alignSelf: 'center' }} />
           </Container>
-          <Text color={Color.GREY_400}>{'No Instances to show'}</Text>
+          <Text color={Color.GREY_400}>{getString('cd.environmentDetailPage.noInstancesToShow')}</Text>
         </Layout.Vertical>
       )
     })()

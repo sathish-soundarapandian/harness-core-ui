@@ -9,11 +9,13 @@ import React, { useRef } from 'react'
 import {
   Button,
   ButtonVariation,
+  Container,
   ExpandingSearchInput,
   ExpandingSearchInputHandle,
+  Icon,
   Layout,
   Page,
-  PageSpinner,
+  PageError,
   Text
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -80,8 +82,8 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
     data,
     loading,
     initLoading,
-    refetch: fetchExecutions
-    // error
+    refetch: fetchExecutions,
+    error
   } = useMutateAsGet(useGetListOfExecutions, {
     queryParams: {
       accountIdentifier: accountId,
@@ -89,7 +91,7 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
       orgIdentifier,
       page,
       size,
-      sort: sort.join(','), // TODO: this is temporary until BE supports common format for all. Currently BE supports status in  arrayFormat: 'repeat' and sort in  arrayFormat: 'comma'
+      sort: sort.join(','),
       myDeployments,
       status,
       repoName,
@@ -122,7 +124,7 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
     if (value) {
       updateQueryParams({ [key]: value, page: DEFAULT_PAGE_INDEX })
     } else {
-      updateQueryParams({ [key]: undefined }) // removes the specific param
+      updateQueryParams({ [key]: undefined })
     }
   }
 
@@ -177,13 +179,20 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
         />
       </div>
       {showSpinner ? (
-        <PageSpinner />
+        <Container className={css.loadingContainer}>
+          <Icon name="spinner" color={Color.BLUE_500} size={30} />
+        </Container>
+      ) : error ? (
+        <Container data-test="EnvironmentDetailExecutionListError" height="350px" flex={{ justifyContent: 'center' }}>
+          <PageError onClick={() => fetchExecutions()} />
+        </Container>
       ) : executionList && hasExecutions ? (
         <MemoisedExecutionListTable executionList={executionList} onViewCompiledYaml={setViewCompiledYaml} />
       ) : (
-        //todo check empty screen
-        //make error screen also like: error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}
-        <ExecutionListEmpty onRunPipeline={noop} resetFilter={resetFilter} />
+        //currently a placeholder here
+        <Container className={css.loadingContainer}>
+          <ExecutionListEmpty onRunPipeline={noop} resetFilter={resetFilter} />
+        </Container>
       )}
     </div>
   )

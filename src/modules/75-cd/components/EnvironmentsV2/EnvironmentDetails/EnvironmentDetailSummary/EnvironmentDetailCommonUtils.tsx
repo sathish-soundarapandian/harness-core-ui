@@ -7,15 +7,17 @@
 
 import React from 'react'
 import { Container, Text } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
 import emptyInstanceDetail from './EmptyStateSvgs/emptyInstanceDetail.svg'
 
 import css from './EnvironmentDetailSummary.module.scss'
 
 export function DialogEmptyState(): JSX.Element {
+  const { getString } = useStrings()
   return (
     <Container className={css.instanceEmptyState}>
       <img src={emptyInstanceDetail} />
-      <Text>{'Select an Infrastructure to view instance details'}</Text>
+      <Text>{getString('cd.environmentDetailPage.selectInfraMsg')}</Text>
     </Container>
   )
 }

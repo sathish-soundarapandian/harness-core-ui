@@ -24,13 +24,11 @@ interface EnvironmentDetailInfraViewProps {
 export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfraViewProps): React.ReactElement {
   const { artifactFilter, envFilter, serviceFilter, data: dataInfra } = props
   const { getString } = useStrings()
-  //todo cluster
-  const isCluster = false
 
   const headers = React.useMemo(() => {
     const headersArray = [
       {
-        label: isCluster ? getString('common.cluster') : getString('cd.serviceDashboard.headers.infrastructures'),
+        label: getString('cd.environmentDetailPage.infraSlashCluster'),
         flexGrow: 20
       },
       {

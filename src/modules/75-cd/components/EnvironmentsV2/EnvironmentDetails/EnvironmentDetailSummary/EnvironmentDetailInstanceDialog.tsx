@@ -38,7 +38,6 @@ export default function EnvironmentDetailInstanceDialog(
 
   const { environmentIdentifier: envFilter } = useParams<ProjectPathProps & EnvironmentPathProps>()
 
-  // const data = defaultTo(data, [])
   const data = defaultTo(dataMock, [])
 
   //filter by serviceName, artifactVersion and infraName

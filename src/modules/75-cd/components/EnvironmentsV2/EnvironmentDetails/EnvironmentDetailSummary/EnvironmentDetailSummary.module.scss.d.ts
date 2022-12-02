@@ -26,6 +26,7 @@ declare const styles: {
   readonly lastDeploymentText: string
   readonly latestArtifact: string
   readonly latestBadgeStyle: string
+  readonly loadingContainer: string
   readonly main: string
   readonly nextButton: string
   readonly overflow: string

@@ -15,7 +15,7 @@
 
 .titleStyle {
   padding: var(--spacing-large) var(--spacing-large) 0;
-  padding-right: 48px;
+  padding-right: var(--spacing-10);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -35,7 +35,7 @@
   min-width: 290px;
   height: 240px;
   margin: var(--spacing-6) !important;
-  padding: 16px !important;
+  padding: var(--spacing-5) !important;
 
   .serviceCardTitle {
     display: flex;
@@ -66,28 +66,28 @@
 
 .detailSummaryView {
   min-height: 800px;
-  padding: 24px !important;
+  padding: var(--spacing-7) !important;
   z-index: 1;
-  box-shadow: 0px 0px 1px rgb(40 41 61 / 4%), 0px 2px 4px rgb(96 97 112 / 16%);
+  box-shadow: 0px 0px 1px rgb(40 41 61 / 4%), 0px var(--spacing-1) var(--spacing-2) rgb(96 97 112 / 16%);
 }
 
 .instanceDetailView {
   min-height: 800px;
   background-color: var(--primary-bg) !important;
-  padding: 40px 18px 40px 24px !important;
+  padding: var(--spacing-9) 18px var(--spacing-9) var(--spacing-7) !important;
 
   .instanceDetailTitle {
     font-weight: 600 !important;
-    font-size: 14px;
+    font-size: var(--font-size-normal);
     color: var(--grey-1000) !important;
   }
 }
 
 .instanceEmptyState {
-  margin-top: 24px !important;
+  margin-top: var(--spacing-7) !important;
   height: 660px;
   border: 0.7px solid var(--grey-300);
-  border-radius: 4px;
+  border-radius: var(--spacing-2);
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -99,7 +99,7 @@
   }
 
   p {
-    margin-top: 24px !important;
+    margin-top: var(--spacing-7) !important;
   }
 }
 
@@ -141,23 +141,23 @@
   div[class*='TableV2--body'] {
     overflow: auto;
     max-height: 120px;
-    padding-top: 8px;
+    padding-top: var(--spacing-3);
 
     div[role='row'] {
       box-shadow: none;
       border: 0;
       padding: 0;
-      padding: 0 16px 6px 0;
+      padding: 0 var(--spacing-5) 6px 0;
       margin: 0 0 var(--spacing-2) 0;
       background: inherit;
     }
   }
 
   div[class*='TableV2--header'] {
-    padding-left: 2px;
-    padding-top: 12px;
+    padding-left: var(--spacing-1);
+    padding-top: var(--spacing-4);
     border-bottom: 1px solid var(--grey-200);
-    padding-bottom: 8px;
+    padding-bottom: var(--spacing-3);
 
     p {
       color: var(--grey-600) !important;
@@ -178,16 +178,16 @@
 
 .infraContainer {
   display: flex;
-  margin-right: 8px !important;
+  margin-right: var(--spacing-3) !important;
 }
 
 .paddedInfraContainer {
   display: flex;
   background: var(--green-50) !important;
-  padding: 8px !important;
-  border-radius: 8px;
+  padding: var(--spacing-3) !important;
+  border-radius: var(--spacing-3);
   width: fit-content;
-  margin-right: 8px !important;
+  margin-right: var(--spacing-3) !important;
   p {
     font-weight: 700 !important;
     color: var(--green-900) !important;
@@ -199,35 +199,35 @@
   white-space: nowrap !important;
   margin-left: var(--spacing-2) !important;
   color: var(--grey-800) !important;
-  margin-right: 4px !important;
+  margin-right: var(--spacing-2) !important;
 }
 
 .latestArtifact {
-  width: 8px;
-  height: 8px;
+  width: var(--spacing-3);
+  height: var(--spacing-3);
   background: var(--green-600) !important;
   border-radius: 5px;
-  margin-right: 4px !important;
+  margin-right: var(--spacing-2) !important;
 }
 
 .fullViewTableStyle {
   width: 100%;
-  padding-top: 12px;
+  padding-top: var(--spacing-4);
   max-height: 730px;
 
   div[class*='TableV2--body'] {
     overflow: auto;
     max-height: 670px;
-    padding-top: 8px;
+    padding-top: var(--spacing-3);
 
     p {
-      font-size: 12px;
+      font-size: var(--font-size-small);
     }
 
     div[role='row'] {
       box-shadow: none;
       padding: 0;
-      padding: 6px 16px 6px 0;
+      padding: 6px var(--spacing-5) 6px 0;
       margin: 0 0 var(--spacing-2) 0;
     }
     > :nth-child(odd) {
@@ -235,7 +235,7 @@
     }
 
     div[class*='TableV2--cells'] {
-      height: 24px;
+      height: var(--spacing-7);
 
       div[class*='TableV2--cell']:nth-child(2) {
         span[class*='bp3-popover'] {
@@ -246,13 +246,13 @@
   }
 
   div[class*='TableV2--header'] {
-    padding-left: 2px;
-    padding-top: 12px;
+    padding-left: var(--spacing-1);
+    padding-top: var(--spacing-4);
     border-bottom: 1px solid var(--grey-200);
-    padding-bottom: 8px;
+    padding-bottom: var(--spacing-3);
 
     p {
-      font-size: 12px !important;
+      font-size: var(--font-size-small) !important;
       color: var(--grey-600) !important;
     }
   }
@@ -261,12 +261,12 @@
 .serviceColumnStyle {
   font-size: var(--font-size-small) !important;
   color: var(--grey-800) !important;
-  margin-right: 8px !important;
+  margin-right: var(--spacing-3) !important;
   padding-left: var(--spacing-1) !important;
 }
 
 .searchIconStyle {
-  height: 32px;
+  height: var(--spacing-8);
   & > input:focus {
     width: 200px !important;
   }
@@ -295,12 +295,12 @@
 .collapseBody {
   width: calc(100% - 4px);
   min-height: 55px;
-  margin-bottom: 8px !important;
-  box-shadow: 0px 0px 1px rgb(40 41 61 / 8%), 0px 0.5px 2px rgb(96 97 112 / 16%);
+  margin-bottom: var(--spacing-3) !important;
+  box-shadow: 0px 0px 1px rgb(40 41 61 / 8%), 0px 0.5px var(--spacing-1) rgb(96 97 112 / 16%);
   border-top: 0px;
   background: var(--white);
-  padding: 12px;
-  border-radius: 4px;
+  padding: var(--spacing-4);
+  border-radius: var(--spacing-2);
 
   :global(.TableV2--table) {
     margin-top: -40px;
@@ -326,7 +326,7 @@
 
 .infraViewTableStyle {
   width: 100%;
-  padding-top: 12px;
+  padding-top: var(--spacing-4);
   max-height: 730px;
 
   div[class*='TableV2--body'] {
@@ -335,7 +335,7 @@
   }
 
   div[class*='TableV2--header'] {
-    margin-right: 8px !important;
+    margin-right: var(--spacing-3) !important;
   }
 
   div[role='row'] {
@@ -350,10 +350,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 12px;
+  padding-top: var(--spacing-4);
 }
 
 .selected {
   border: 1px solid var(--primary-7) !important;
   background: var(--primary-1) !important;
+}
+
+.loadingContainer {
+  height: 350px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
