@@ -331,7 +331,7 @@ export const getInfraGroups = (
     case isSSHWinRMDeploymentType(deploymentType):
       return sshWinRMInfraGroups
     case deploymentType === ServiceDeploymentType.ECS:
-      return ecsInfraGroups
+      return asgInfraGroups
     case deploymentType === ServiceDeploymentType.ASG:
       return asgInfraGroups
     case isElastigroupDeploymentType(deploymentType):
