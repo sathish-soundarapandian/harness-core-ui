@@ -962,6 +962,22 @@ export interface StringsMap {
   'common.test.connectionSuccessful': string
   'common.test.inProgress': string
   'common.test.retest': string
+  'common.timeRange.calendarMonths': string
+  'common.timeRange.recommended': string
+  'common.timeRange.relativeDates': string
+  'common.timeRange.selectCustomRange': string
+  'common.timeRangeConstants.last12Months': string
+  'common.timeRangeConstants.last3Months': string
+  'common.timeRangeConstants.last6Months': string
+  'common.timeRangeConstants.last7Days': string
+  'common.timeRangeConstants.lastMonth': string
+  'common.timeRangeConstants.lastQuarter': string
+  'common.timeRangeConstants.lastYear': string
+  'common.timeRangeConstants.thisMonth': string
+  'common.timeRangeConstants.thisQuarter': string
+  'common.timeRangeConstants.thisYear': string
+  'common.timeRangeLimitWarning.currentPlanOffer': string
+  'common.timeRangeLimitWarning.upgradeOffer': string
   'common.timeframe': string
   'common.tokens': string
   'common.totalLines': string
@@ -1028,6 +1044,7 @@ export interface StringsMap {
   'common.variables': string
   'common.versionLabel': string
   'common.videoNotSupportedError': string
+  'common.viewAll': string
   'common.viewAndExecutePermissions': string
   'common.viewContent': string
   'common.viewLatest': string
@@ -6181,22 +6198,6 @@ export interface StringsMap {
   'ce.perspectives.timeAggregation.daily': string
   'ce.perspectives.timeAggregation.hourly': string
   'ce.perspectives.timeAggregation.monthly': string
-  'ce.perspectives.timeRange.calendarMonths': string
-  'ce.perspectives.timeRange.recommended': string
-  'ce.perspectives.timeRange.relativeDates': string
-  'ce.perspectives.timeRange.selectCustomRange': string
-  'ce.perspectives.timeRangeConstants.last12Months': string
-  'ce.perspectives.timeRangeConstants.last3Months': string
-  'ce.perspectives.timeRangeConstants.last6Months': string
-  'ce.perspectives.timeRangeConstants.last7Days': string
-  'ce.perspectives.timeRangeConstants.lastMonth': string
-  'ce.perspectives.timeRangeConstants.lastQuarter': string
-  'ce.perspectives.timeRangeConstants.lastYear': string
-  'ce.perspectives.timeRangeConstants.thisMonth': string
-  'ce.perspectives.timeRangeConstants.thisQuarter': string
-  'ce.perspectives.timeRangeConstants.thisYear': string
-  'ce.perspectives.timeRangeLimitWarning.currentPlanOffer': string
-  'ce.perspectives.timeRangeLimitWarning.upgradeOffer': string
   'ce.perspectives.top12GroupBy': string
   'ce.perspectives.validations.emailRequired': string
   'ce.perspectives.validations.invalidEmails': string

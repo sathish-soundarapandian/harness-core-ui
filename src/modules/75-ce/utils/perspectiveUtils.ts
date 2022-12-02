@@ -238,10 +238,10 @@ export const clusterInfoUtil: (dataSources?: string[]) => { isClusterOnly: boole
 
 export const perspectiveDateLabelToDisplayText: (getString: UseStringsReturn['getString']) => Record<string, string> =
   getString => ({
-    [ViewTimeRangeType.Last_7]: getString('ce.perspectives.timeRangeConstants.last7Days'),
+    [ViewTimeRangeType.Last_7]: getString('common.timeRangeConstants.last7Days'),
     [ViewTimeRangeType.Last_30]: getString('projectsOrgs.landingDashboard.last30Days'),
-    [ViewTimeRangeType.LastMonth]: getString('ce.perspectives.timeRangeConstants.lastMonth'),
-    [ViewTimeRangeType.CurrentMonth]: getString('ce.perspectives.timeRangeConstants.thisMonth')
+    [ViewTimeRangeType.LastMonth]: getString('common.timeRangeConstants.lastMonth'),
+    [ViewTimeRangeType.CurrentMonth]: getString('common.timeRangeConstants.thisMonth')
   })
 
 export const getQueryFiltersFromPerspectiveResponse: (

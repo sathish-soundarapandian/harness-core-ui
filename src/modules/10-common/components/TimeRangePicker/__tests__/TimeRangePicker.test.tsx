@@ -27,6 +27,6 @@ describe('Tests for Perspective Time Range Picker', () => {
       fireEvent.click(getByText('2022-04-01 - 2022-04-07'))
     })
 
-    expect('ce.perspectives.timeRange.recommended').toBeDefined()
+    expect('common.timeRange.recommended').toBeDefined()
   })
 })

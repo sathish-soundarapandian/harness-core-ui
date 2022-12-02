@@ -10,7 +10,7 @@ import { Container, Text, Button, Icon, FlexExpander } from '@harness/uicore'
 import cx from 'classnames'
 import { Menu, MenuItem, Popover, Position } from '@blueprintjs/core'
 import { QlceViewTimeGroupType, QlceViewFilterInput } from 'services/ce/services'
-import TimeRangePicker from '@ce/common/TimeRangePicker/TimeRangePicker'
+import TimeRangePicker from '@common/components/TimeRangePicker/TimeRangePicker'
 import {
   CE_DATE_FORMAT_INTERNAL,
   DATE_RANGE_SHORTCUTS,
