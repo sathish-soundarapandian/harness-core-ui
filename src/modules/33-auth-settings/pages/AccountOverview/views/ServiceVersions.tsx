@@ -19,11 +19,11 @@ const versionAPIs = [
     url: 'authz/api/version',
     id: 'access_control'
   },
-  {
-    url: 'auth/version.json',
-    label: 'Auth UI',
-    id: 'ng_auth_ui'
-  },
+  // {
+  //   url: 'auth/version.json',
+  //   label: 'Auth UI',
+  //   id: 'ng_auth_ui'
+  // },
   {
     label: 'Cloud Cost Management',
     url: 'ccm/api/version',
