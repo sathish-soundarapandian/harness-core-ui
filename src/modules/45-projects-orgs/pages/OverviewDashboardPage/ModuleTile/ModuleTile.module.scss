@@ -17,7 +17,6 @@
   &:hover {
     &.hoverStyle {
       border-color: inherit !important;
-      background-color: inherit !important;
       transition: border 200ms ease-out;
       transition: background-color 200ms ease-out;
       .icon {
@@ -26,8 +25,10 @@
       .backgroundIcon {
         opacity: 0.4;
       }
+      &.emptyState {
+        background-color: inherit !important;
+      }
     }
-
     .clickToExpandText {
       display: block;
     }
@@ -60,26 +61,25 @@
       width: 170px;
     }
   }
-}
+  &.expanded {
+    height: 316px;
+    width: 392px !important;
+    border-color: inherit;
+    background-color: white !important;
+    z-index: 1;
 
-.expanded {
-  height: 316px;
-  width: 392px !important;
-  border-color: inherit;
-  background-color: white !important;
-  z-index: 1;
-
-  .backgroundIcon {
-    svg {
-      width: 100%;
-      height: 159px;
+    .backgroundIcon {
+      svg {
+        width: 100%;
+        height: 159px;
+      }
     }
-  }
-  .icon {
-    top: var(--spacing-medium);
-    right: var(--spacing-medium);
-  }
-  &.emptyState {
-    background-color: inherit !important;
+    .icon {
+      top: var(--spacing-medium);
+      right: var(--spacing-medium);
+    }
+    &.emptyState {
+      background-color: inherit !important;
+    }
   }
 }

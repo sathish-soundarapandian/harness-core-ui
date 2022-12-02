@@ -1,9 +1,9 @@
 import { Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import type { SeriesColumnOptions } from 'highcharts'
+import Highcharts, { SeriesColumnOptions } from 'highcharts'
 import React from 'react'
+import HighchartsReact from 'highcharts-react-official'
 import type { CountChangeAndCountChangeRateInfo } from 'services/dashboard-service'
-import { StackedColumnChart } from '../StackedColumnChart/StackedColumnChart'
 import css from './ModuleColumnChart.module.scss'
 
 interface ModuleColumnChartProps {
@@ -18,6 +18,59 @@ interface ModuleColumnChartProps {
 interface DeltaProps {
   countChangeInfo: CountChangeAndCountChangeRateInfo
 }
+
+type DataType = Omit<SeriesColumnOptions, 'type'>[]
+
+const getConfig = (data: DataType): Highcharts.Options => ({
+  chart: {
+    type: 'column',
+    spacing: [1, 1, 1, 1],
+    backgroundColor: 'transparent',
+    animation: false
+  },
+  title: {
+    text: ''
+  },
+  credits: {
+    enabled: false
+  },
+  xAxis: {
+    labels: {
+      formatter: function () {
+        return `${this.pos + 1}`
+      },
+
+      style: {
+        fontSize: 'var(--font-size-xsmall)',
+        color: 'var(--grey-400)'
+      }
+    },
+    tickInterval: 1
+  },
+  plotOptions: {
+    column: {
+      pointPadding: 0,
+      borderRadius: 2,
+      stacking: 'normal',
+      animation: false,
+      events: {
+        legendItemClick: function () {
+          return false
+        }
+      }
+    }
+  },
+  legend: {
+    maxHeight: 80,
+    itemStyle: {
+      color: 'var(--grey-500)',
+      fontSize: 'var(--font-size-small)',
+      fontWeight: '500',
+      textOverflow: 'ellipsis'
+    }
+  },
+  series: data as SeriesColumnOptions[]
+})
 
 export const Delta: React.FC<DeltaProps> = ({ countChangeInfo }) => {
   const countChange = countChangeInfo?.countChange
@@ -61,20 +114,30 @@ const ModuleColumnChart: React.FC<ModuleColumnChartProps> = props => {
         </Text>
         {countChangeInfo ? <Delta countChangeInfo={countChangeInfo} /> : undefined}
       </Layout.Horizontal>
-      <StackedColumnChart
-        data={data}
-        containerProps={{ style: { height: '90%', zIndex: 1, marginTop: 'var(--spacing-small)' } }}
+      <HighchartsReact
+        highcharts={Highcharts}
         options={{
-          xAxis: { visible: detailedView, lineWidth: 0 },
+          ...getConfig(data),
+          xAxis: {
+            visible: true,
+            minorTickLength: 0,
+            tickLength: 0,
+            labels: { enabled: detailedView }
+          },
           chart: { type: 'column', spacing: [1, 1, 1, 1] },
-          yAxis: { visible: detailedView },
+          yAxis: {
+            visible: detailedView,
+            startOnTick: false,
+            endOnTick: false
+          },
           legend: { enabled: detailedView },
+          tooltip: {
+            enabled: detailedView
+          },
           plotOptions: {
             column: {
-              pointPadding: undefined,
-              borderWidth: undefined,
-              borderRadius: undefined,
-              pointWidth: undefined,
+              pointPadding: 0,
+              borderRadius: 2,
               stacking: 'normal',
               animation: false,
               events: {
@@ -85,6 +148,7 @@ const ModuleColumnChart: React.FC<ModuleColumnChartProps> = props => {
             }
           }
         }}
+        containerProps={{ style: { height: '90%', zIndex: 1, marginTop: 'var(--spacing-small)' } }}
       />
     </Layout.Vertical>
   )
