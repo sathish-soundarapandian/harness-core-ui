@@ -131,6 +131,34 @@ exports[`Gitops Fetch Linked App Step - Input Set it should render input set: In
 </div>
 `;
 
+exports[`Gitops Fetch Linked App Step - Input Set should render variable view: variable view 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <p
+      class="StyledProps--font StyledProps--main"
+    >
+      Errors
+    </p>
+    <pre>
+      {}
+    </pre>
+    <button
+      aria-label="Submit"
+      class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+      type="button"
+    >
+      <span
+        class="bp3-button-text"
+      >
+        Submit
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
 exports[`Gitops Fetch Linked App Step it should render as new step - stepViewType Edit: Create Case 1`] = `
 <div>
   <div
