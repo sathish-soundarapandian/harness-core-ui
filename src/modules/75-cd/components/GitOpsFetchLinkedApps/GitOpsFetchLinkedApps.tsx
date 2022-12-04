@@ -26,6 +26,7 @@ export class GitOpsFetchLinkedApps extends PipelineStep<StepElementConfig> {
   constructor() {
     super()
     // this._hasStepVariables = false
+    this._hasDelegateSelectionVisible = true
   }
   renderStep(
     props: StepProps<StepElementConfig, { variablesData: any; metadataMap: Record<string, VariableResponseMapValue> }>
