@@ -11,9 +11,9 @@ import { HelpPanelContextProvider, HelpPanelEnvironment } from '@harness/help-pa
 const HelpPanelProvider: React.FC = props => {
   return (
     <HelpPanelContextProvider
-      accessToken={window.helpPanelAccessToken}
-      space={window.helpPanelSpace}
-      environment={window.helpPanelEnvironment as HelpPanelEnvironment}
+      accessToken="iMDhj0H7-zbCwnAe4avVNNFBni6-dZr4vLcaRNi5UUY"
+      space="jj62blws1bo9"
+      environment={'production' as HelpPanelEnvironment}
     >
       {props.children}
     </HelpPanelContextProvider>
