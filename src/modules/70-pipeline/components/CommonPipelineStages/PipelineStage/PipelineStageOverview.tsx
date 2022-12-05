@@ -62,7 +62,7 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
     <div className={css.pipelineStageOverviewWrapper}>
       <ErrorsStripBinded domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
       <div className={css.content} ref={scrollRef}>
-        <Container id="stageOverview" className={css.basicOverviewDetails}>
+        <Container id="stageOverview">
           <Formik
             enableReinitialize
             initialValues={{

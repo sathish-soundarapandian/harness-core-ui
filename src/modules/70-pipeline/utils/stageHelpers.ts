@@ -160,12 +160,15 @@ export function hasSTOStage(pipelineExecution?: PipelineExecutionSummary): boole
 export const getHelperTextString = (
   invalidFields: string[],
   getString: (key: StringKeys) => string,
-  isServerlessDeploymentTypeSelected = false
+  isServerlessDeploymentTypeSelected = false,
+  defaultErrorMessage = ''
 ): string => {
   return `${invalidFields.length > 1 ? invalidFields.join(', ') : invalidFields[0]} ${
     invalidFields.length > 1 ? ' are ' : ' is '
   } ${
-    isServerlessDeploymentTypeSelected
+    defaultErrorMessage
+      ? defaultErrorMessage
+      : isServerlessDeploymentTypeSelected
       ? getString('pipeline.artifactPathDependencyRequired')
       : getString('pipeline.tagDependencyRequired')
   }`
@@ -195,7 +198,8 @@ export const getHelpeTextForTags = (
     feed?: string
   },
   getString: (key: StringKeys) => string,
-  isServerlessDeploymentTypeSelected = false
+  isServerlessDeploymentTypeSelected = false,
+  defaultErrorMessage = ''
 ): string => {
   const {
     connectorRef,
@@ -319,7 +323,12 @@ export const getHelpeTextForTags = (
     invalidFields.push(getString('pipeline.ACR.subscription'))
   }
 
-  const helpText = getHelperTextString(invalidFields, getString, isServerlessDeploymentTypeSelected)
+  const helpText = getHelperTextString(
+    invalidFields,
+    getString,
+    isServerlessDeploymentTypeSelected,
+    defaultErrorMessage
+  )
 
   return invalidFields.length > 0 ? helpText : ''
 }

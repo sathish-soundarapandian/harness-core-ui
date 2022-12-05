@@ -81,7 +81,7 @@ const Step = ({
         className={cx(css.alignContainerRight, (index !== stepList.length - 1 || isLastStep) && css.borderLeft)}
       >
         {isPreviewVisible && (
-          <Container data-testid={`preview_${id}`}>
+          <Container data-testid={`preview_${id}`} width={500}>
             <>{preview}</>
           </Container>
         )}

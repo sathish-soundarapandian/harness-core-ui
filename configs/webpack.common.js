@@ -18,6 +18,7 @@ const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 
 const GenerateStringTypesPlugin = require('../scripts/webpack/GenerateStringTypesPlugin').GenerateStringTypesPlugin
 const moduleFederationConfig = require('./modulefederation.config')
+const CodeModules = require('../src/modules/60-code/modules')
 const {
   container: { ModuleFederationPlugin }
 } = webpack
@@ -259,16 +260,7 @@ if (!enableSTO) {
 
 // render a mock app when CODE MF is disabled
 if (!enableCODE) {
-  const codeModules = [
-    'code/App',
-    'code/RepositoriesListing',
-    'code/Repository',
-    'code/RepositoryFileEdit',
-    'code/RepositoryCommits',
-    'code/RepositoryBranches',
-    'code/RepositorySettings'
-  ]
-  codeModules.forEach(mod => (config.resolve.alias[mod] = ChildAppError))
+  CodeModules.forEach(mod => (config.resolve.alias[mod] = ChildAppError))
 }
 
 if (!enableFFUI) {

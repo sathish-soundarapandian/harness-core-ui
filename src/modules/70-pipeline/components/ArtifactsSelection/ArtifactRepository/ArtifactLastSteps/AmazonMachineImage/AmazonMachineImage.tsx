@@ -77,7 +77,7 @@ function FormComponent({
     }
   })
 
-  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value)
+  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
 
   const {
     data: tagsData,

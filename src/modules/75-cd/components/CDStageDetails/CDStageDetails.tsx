@@ -7,11 +7,12 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { get } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { Popover } from '@harness/uicore'
+import { Popover, Text } from '@harness/uicore'
+
 import { String as StrTemplate } from 'framework/strings'
-import type { Application } from 'services/cd-ng'
+import type { Application, GitOpsExecutionSummary } from 'services/cd-ng'
 import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { ServicePopoverCard } from '@cd/components/ServicePopoverCard/ServicePopoverCard'
 import serviceCardCSS from '@cd/components/ServicePopoverCard/ServicePopoverCard.module.scss'
@@ -51,6 +52,13 @@ const GitopsApplications = ({ gitOpsApps }: { gitOpsApps: Application[] }): Reac
 export function CDStageDetails(props: StageDetailProps): React.ReactElement {
   const { stage } = props
   const gitOpsApps = get(stage, 'moduleInfo.cd.gitOpsAppSummary.applications') || []
+
+  const gitOpsEnvironments = Array.isArray(get(stage, 'moduleInfo.cd.gitopsExecutionSummary.environments'))
+    ? (get(stage, 'moduleInfo.cd.gitopsExecutionSummary') as Required<GitOpsExecutionSummary>).environments.map(
+        envForGitOps => defaultTo(envForGitOps.name, '')
+      )
+    : []
+
   return (
     <div className={css.container}>
       <div className={cx(css.main, { [css.threeSections]: !!gitOpsApps.length })}>
@@ -74,7 +82,13 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
         <div>
           <StrTemplate className={css.title} tagName="div" stringID="environmentOrEnvironments" />
           <ul className={css.values}>
-            <li>{get(stage, 'moduleInfo.cd.infraExecutionSummary.name', null)}</li>
+            {gitOpsEnvironments.length ? (
+              <Text lineClamp={2} className={css.gitOpsEnvText}>
+                {gitOpsEnvironments.join(', ')}
+              </Text>
+            ) : (
+              <li>{get(stage, 'moduleInfo.cd.infraExecutionSummary.name', null)}</li>
+            )}
           </ul>
         </div>
         <GitopsApplications gitOpsApps={gitOpsApps} />

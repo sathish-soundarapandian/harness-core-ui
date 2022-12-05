@@ -247,6 +247,7 @@ const EnvironmentsPage: React.FC = () => {
             setPage(index)
             refetch({ queryParams: { ...queryParams, page: index } })
           }}
+          showPagination
         />
       }
       error={error}

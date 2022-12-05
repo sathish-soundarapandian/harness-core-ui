@@ -216,6 +216,7 @@ export const FlagSettings: React.FC<FlagSettingsProps> = ({ target, gitSync }) =
                   pageIndex={pageNumber}
                   gotoPage={setPageNumber}
                   breakAt={1660}
+                  showPagination
                 />
               </Container>
             )}

@@ -6,7 +6,8 @@
  */
 
 import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from '../../types'
-import { processSingleEnvironmentInitialValues, processSingleEnvironmentFormValues } from '../../utils'
+import { processSingleEnvironmentInitialValues } from '../processInitialValuesUtils'
+import { processSingleEnvironmentFormValues } from '../processFormValuesUtils'
 
 // eslint-disable-next-line jest/no-disabled-tests
 describe('process single environment initial values', () => {

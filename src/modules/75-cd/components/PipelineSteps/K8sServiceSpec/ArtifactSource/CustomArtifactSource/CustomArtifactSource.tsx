@@ -11,7 +11,6 @@ import cx from 'classnames'
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import { FieldArray } from 'formik'
 import { useParams } from 'react-router-dom'
-import { Color } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import MultiTypeFieldScriptSelector, {
@@ -25,12 +24,12 @@ import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScri
 import { scriptInputType } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
 import { BuildDetails, SidecarArtifact, useGetJobDetailsForCustom } from 'services/cd-ng'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-import DelegateSelectors from '@common/components/DelegateSelectors/DelegateSelectors'
 import { TriggerDefaultFieldList } from '@triggers/components/Triggers/utils'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
 import { getFqnPath, getYamlData, isFieldfromTriggerTabDisabled, isNewServiceEnvEntity } from '../artifactSourceUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import css from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactConnector.module.scss'
@@ -38,8 +37,6 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 interface CustomArtifactRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
 }
-
-const DELEGATE_POLLING_INTERVAL_IN_MS = 5000
 
 const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
   const {
@@ -66,7 +63,6 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
   const { expressions } = useVariablesExpression()
   const scriptType: ScriptType = get(template, `artifacts.${artifactPath}.spec.source.spec.script`) || 'Bash'
   const { projectIdentifier, orgIdentifier } = useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
-  const scope = { projectIdentifier, orgIdentifier }
   const isFieldDisabled = (fieldName: string): boolean => {
     /* instanbul ignore else */
     if (
@@ -118,7 +114,7 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
       inputs: inputValue,
       runtimeInputYaml: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
       delegateSelector:
-        getMultiTypeFromValue(delegateSelectorsValue) === MultiTypeInputType.FIXED && delegateSelectorsValue
+        getMultiTypeFromValue(delegateSelectorsValue) === MultiTypeInputType.FIXED ? delegateSelectorsValue : undefined
     },
     requestOptions: {
       headers: {
@@ -435,19 +431,11 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.delegateSelectors`, template) && (
             <div className={cx(css.customArtifactContainer)}>
-              <Text color={Color.GREY_800} margin={{ top: 'xlarge', bottom: 'small' }}>
-                {getString('common.defineDelegateSelector')}
-              </Text>
-              <DelegateSelectors
-                allowNewTag={false}
-                placeholder={getString('pipeline.artifactsSelection.delegateselectionPlaceholder')}
-                selectedItems={get(formik, `values.${path}.artifacts.${artifactPath}.spec.delegateSelectors`)}
-                onChange={selectors => {
-                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.delegateSelectors`, selectors)
-                }}
-                pollingInterval={DELEGATE_POLLING_INTERVAL_IN_MS}
-                {...scope}
-              ></DelegateSelectors>
+              <DelegateSelectorPanel
+                isReadonly={readonly}
+                allowableTypes={allowableTypes}
+                name={`${path}.artifacts.${artifactPath}.spec.delegateSelectors`}
+              />
             </div>
           )}
         </Layout.Vertical>

@@ -36,7 +36,9 @@ import AccountSideNav from '@common/components/AccountSideNav/AccountSideNav'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
 import DefaultSettingsRoutes from '@default-settings/RouteDestinations'
-import { CODERouteDestinations } from '@code/RouteDestinations'
+import CODERouteDestinations from '@code/RouteDestinations'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
   icon: 'nav-settings',
@@ -50,11 +52,11 @@ export default function RouteDestinations(): React.ReactElement {
     CING_ENABLED,
     CENG_ENABLED,
     CFNG_ENABLED,
-    SECURITY,
     CHAOS_ENABLED,
     NG_SETTINGS,
     CODE_ENABLED
   } = useFeatureFlags()
+  const { licenseInformation } = useLicenseStore()
 
   return (
     <Switch>
@@ -79,7 +81,7 @@ export default function RouteDestinations(): React.ReactElement {
       {CDNG_ENABLED ? CDRoutes.props.children : null}
       {CVNG_ENABLED ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
-      {SECURITY ? (
+      {licenseInformation['STO']?.status === 'ACTIVE' ? (
         <Route path="/account/:accountId/:module(sto)">
           <STORoutes />
         </Route>

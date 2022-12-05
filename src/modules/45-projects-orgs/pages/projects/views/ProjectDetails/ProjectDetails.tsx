@@ -24,6 +24,7 @@ import { useCollaboratorModal } from '@projects-orgs/modals/ProjectModal/useColl
 import ContextMenu from '@projects-orgs/components/Menu/ContextMenu'
 import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -52,8 +53,9 @@ const ProjectDetails: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const { selectedTimeRange } = useLandingDashboardContext()
   const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SECURITY, NEW_LEFT_NAVBAR_SETTINGS } =
+  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, NEW_LEFT_NAVBAR_SETTINGS } =
     useFeatureFlags()
+  const { licenseInformation } = useLicenseStore()
   const invitePermission = {
     resourceScope: {
       accountIdentifier: accountId,
@@ -129,7 +131,8 @@ const ProjectDetails: React.FC = () => {
     if (CFNG_ENABLED && projectData.modules.includes(ModuleName.CF)) infoCards.push(ModuleName.CF)
     if (CENG_ENABLED && projectData.modules.includes(ModuleName.CE)) infoCards.push(ModuleName.CE)
     if (CVNG_ENABLED && projectData.modules.includes(ModuleName.CV)) infoCards.push(ModuleName.CV)
-    if (SECURITY && projectData.modules.includes(ModuleName.STO)) infoCards.push(ModuleName.STO)
+    if (licenseInformation['STO']?.status === 'ACTIVE' && projectData.modules.includes(ModuleName.STO))
+      infoCards.push(ModuleName.STO)
 
     return infoCards.map(module => (
       <ModuleListCard

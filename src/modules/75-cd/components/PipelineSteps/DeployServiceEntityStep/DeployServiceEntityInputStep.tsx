@@ -150,6 +150,9 @@ export function DeployServiceEntityInputStep({
       }
     })
 
+    if (!servicesData.length) {
+      return
+    }
     // updated values based on selected services
     const newServicesValues: ServiceYamlV2[] = serviceIdentifiers.map(svcId => {
       const svcTemplate = servicesData.find(svcTpl => svcTpl.service.identifier === svcId)?.serviceInputs
@@ -161,7 +164,7 @@ export function DeployServiceEntityInputStep({
       if (!serviceInputs || isValueRuntimeInput(serviceInputs)) {
         serviceInputs = svcTemplate ? clearRuntimeInput(svcTemplate) : undefined
       } else {
-        serviceInputs = merge(svcTemplate ? clearRuntimeInput(svcTemplate) : undefined, serviceInputs)
+        serviceInputs = !isEmpty(svcTemplate) ? merge(clearRuntimeInput(svcTemplate), serviceInputs) : svcTemplate
       }
 
       return {

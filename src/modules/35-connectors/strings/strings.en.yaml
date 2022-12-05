@@ -120,6 +120,7 @@ title:
   azure: 'Azure Cloud Provider'
   harnessImageConnectorRef: 'Override Image Connector'
   spot: 'Spot Cloud Provider'
+  tas: 'Tanzu Application Service'
 placeholder:
   harnessImageConnectorRef: 'Select Image Connector'
 name_labels:
@@ -143,6 +144,7 @@ name_labels:
   AppDynamics: 'AppDynamics Connector Name'
   Splunk: 'Splunk Connector Name'
   Spot: 'Spot Connector Name'
+  TAS: 'Tanzu Application Service Connector Name'
 testConnectionStep:
   errorDetails: Click to view error details
   noDelegate: Unable to get Delegate information
@@ -162,6 +164,7 @@ testConnectionStep:
     bitbucket: 'URL : '
     gcr: 'GCR URL : '
     spot: 'SPOT URL : '
+    tas: 'Tanzu Application Service URL : '
   validationText:
     k8s: Validating the reachability of provided URL
     docker: Validating Docker Registry authentication and permissions
@@ -191,10 +194,12 @@ testConnectionStep:
     testingURLReachability: Testing reachability to the URL
     customSM: Validating Custom Secret Manager authentication and permissions
     spot: Validating the Spot connector authentication and permissions
+    tas: Validating the Tanzu Application Service Cloud Provider details
 validation:
   serviceNowUrl: 'ServiceNow URL is required.'
   personalAccessToken: Personal Access Token is required
   connectorIsRequired: Connector is required.
+  endpointUrl: Endpoint URL is required
 httpHelm:
   httpHelmRepoUrl: 'Helm Repo URL'
 ociHelm:

@@ -86,7 +86,7 @@ function FormComponent({
     branch
   }
 
-  const connectorRefValue = defaultTo(getGenuineValue(prevStepData?.connectorId?.value), '')
+  const connectorRefValue = defaultTo(getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier), '')
   const projectValue = defaultTo(getGenuineValue(formik.values.project), '')
   const feedValue = defaultTo(getGenuineValue(formik.values.feed), '')
   const packageValue = defaultTo(getGenuineValue(formik.values.package), '')

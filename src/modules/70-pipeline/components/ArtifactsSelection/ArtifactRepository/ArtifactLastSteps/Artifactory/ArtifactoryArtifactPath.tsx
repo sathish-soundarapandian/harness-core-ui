@@ -9,22 +9,15 @@ import React, { useEffect, useState } from 'react'
 import { defaultTo, get, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
-import { Menu } from '@blueprintjs/core'
-import {
-  AllowedTypes,
-  FormInput,
-  getMultiTypeFromValue,
-  Layout,
-  MultiTypeInputType,
-  SelectOption,
-  Text
-} from '@harness/uicore'
+import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ImagePathTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
-import { ArtifactoryImagePath, Failure, useGetImagePathsForArtifactory } from 'services/cd-ng'
+import { ArtifactoryImagePath, Failure, Error, useGetImagePathsForArtifactory } from 'services/cd-ng'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -101,19 +94,14 @@ export default function ArtifactoryArtifactPath(props: ArtifactoryArtifactPathPr
     )
   }
 
-  const imagePathItemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        disabled={imagePathLoading}
-        onClick={handleClick}
-      />
-    </div>
-  ))
+  const imagePathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => {
+    const isDisabled =
+      imagePathLoading ||
+      (imagePathError?.data as Error)?.status === 'ERROR' ||
+      (imagePathError?.data as Failure)?.status === 'FAILURE'
+    return <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={isDisabled} />
+  })
+
   const fieldValue = get(formik.values, fieldName, '')
   return (
     <div className={css.imagePathContainer}>

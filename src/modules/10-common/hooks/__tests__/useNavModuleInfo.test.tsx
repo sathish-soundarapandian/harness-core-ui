@@ -67,7 +67,7 @@ describe('useModuleInfo tests', () => {
     })
 
     expect(result.current.icon).toBe('sto-color-filled')
-    expect(result.current.label).toBe('common.stoText')
+    expect(result.current.label).toBe('common.purpose.sto.continuous')
     expect(result.current.shouldVisible).toBe(false)
   })
 

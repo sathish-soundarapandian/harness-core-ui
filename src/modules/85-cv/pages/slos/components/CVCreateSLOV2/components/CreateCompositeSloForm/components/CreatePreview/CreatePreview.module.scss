@@ -6,9 +6,9 @@
  */
 
 .previewRows {
-  width: 15% !important;
   border-bottom: 1px solid var(--grey-200);
-  padding-left: var(--spacing-small) !important;
+  padding: 0 var(--spacing-medium) !important;
+  justify-content: space-between;
 
   p {
     margin-bottom: var(--spacing-2) !important;
@@ -16,10 +16,4 @@
     white-space: nowrap;
     overflow: hidden;
   }
-}
-
-.gridLableValue {
-  display: grid;
-  align-items: center;
-  grid-template-columns: 150px auto;
 }

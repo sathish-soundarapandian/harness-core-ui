@@ -128,10 +128,15 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
             <Button
               text={getString('common.ok')}
               onClick={async () => {
-                await updateSLO(sloPayloadRef.current as ServiceLevelObjectiveV2DTO)
-                sloPayloadRef.current = null
-                showSuccess(getString('cv.slos.sloUpdated'))
-                history.push(routes.toCVSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }))
+                try {
+                  await updateSLO(sloPayloadRef.current as ServiceLevelObjectiveV2DTO)
+                  sloPayloadRef.current = null
+                  showSuccess(getString('cv.slos.sloUpdated'))
+                  history.push(routes.toCVSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }))
+                } catch (error) {
+                  showError(getErrorMessage(error))
+                  closeModal()
+                }
               }}
               intent="primary"
             />

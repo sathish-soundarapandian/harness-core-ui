@@ -8,10 +8,11 @@
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { IconName } from '@harness/uicore'
-import { upperCase } from 'lodash-es'
+import { upperCase, throttle } from 'lodash-es'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import routes from '@common/RouteDefinitions'
 import {
+  ModuleLicenseDTO,
   ResponseModuleLicenseDTO,
   StartFreeLicenseQueryParams,
   useStartFreeLicense,
@@ -20,10 +21,17 @@ import {
 import { useStrings } from 'framework/strings'
 import { Experiences } from '@common/constants/Utils'
 import { useToaster } from '@common/components'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { Category, PurposeActions } from '@common/constants/TrackingConstants'
-import type { Module, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps, Module as RouteModule } from '@common/interfaces/RouteInterfaces'
+import {
+  getLicenseStateNameByModuleType,
+  getModuleToDefaultURLMap,
+  LICENSE_STATE_VALUES
+} from 'framework/LicenseStore/licenseStoreUtil'
 import { getGaClientID, getSavedRefererURL } from '@common/utils/utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { Module, moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import ModuleCard from './ModuleCard'
 import css from './WelcomePage.module.scss'
 
@@ -31,7 +39,7 @@ interface ModuleProps {
   enabled: boolean
   titleIcon: IconName
   bodyIcon: IconName
-  module: Module
+  module: RouteModule
   description: string
 }
 
@@ -40,34 +48,10 @@ interface SelectModuleListProps {
   moduleList: ModuleProps[]
 }
 
-const DEFAULT_PROJECT_ID = 'default_project'
-const DEFAULT_ORG = 'default'
-const getModuleToDefaultURLMap = (accountId: string, module: Module): { [key: string]: string } => ({
-  ci: routes.toGetStartedWithCI({
-    accountId,
-    module,
-    projectIdentifier: DEFAULT_PROJECT_ID,
-    orgIdentifier: DEFAULT_ORG
-  }),
-  cd: routes.toGetStartedWithCD({
-    accountId,
-    module,
-    projectIdentifier: DEFAULT_PROJECT_ID,
-    orgIdentifier: DEFAULT_ORG
-  }),
-  cf: routes.toCFOnboarding({
-    accountId,
-    projectIdentifier: DEFAULT_PROJECT_ID,
-    orgIdentifier: DEFAULT_ORG
-  }),
-  ce: routes.toCEOverview({
-    accountId
-  })
-})
-
 const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, moduleList }) => {
   const [selected, setSelected] = useState<Module>()
   const { CREATE_DEFAULT_PROJECT, AUTO_FREE_MODULE_LICENSE } = useFeatureFlags()
+  const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { getString } = useStrings()
   const { accountId } = useParams<ProjectPathProps>()
   const { trackEvent } = useTelemetry()
@@ -85,9 +69,9 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
       }
     }
   })
-  const handleModuleSelection = (module: Module): void => {
-    setSelected(module)
-    onModuleClick(module)
+  const handleModuleSelection = (module: RouteModule): void => {
+    setSelected(module as Module)
+    onModuleClick(module as Module)
   }
 
   const history = useHistory()
@@ -97,7 +81,7 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
     return mutate(undefined, {
       queryParams: {
         accountIdentifier: accountId,
-        moduleType: upperCase(selected) as StartFreeLicenseQueryParams['moduleType'],
+        moduleType: moduleToModuleNameMapping[selected as Module] as StartFreeLicenseQueryParams['moduleType'],
         ...(refererURL ? { referer: refererURL } : {}),
         ...(gaClientID ? { gaClientId: gaClientID } : {})
       }
@@ -106,34 +90,6 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
   const getButtonProps = (buttonType: string): { clickHandle?: () => Promise<void>; disabled?: boolean } => {
     switch (buttonType) {
       case 'ci':
-        return {
-          clickHandle: async (): Promise<void> => {
-            trackEvent(PurposeActions.ModuleContinue, { category: Category.SIGNUP, module: buttonType })
-            try {
-              // if (AUTO_FREE_MODULE_LICENSE) {
-              //   await updateDefaultExperience({
-              //     defaultExperience: Experiences.NG
-              //   })
-
-              //   await startFreeLicense()
-              //   const defaultURL = getModuleToDefaultURLMap(accountId, selected as Module)[selected as string]
-
-              //   CREATE_DEFAULT_PROJECT
-              //     ? history.push(defaultURL)
-              //     : history.push(routes.toModuleTrialHome({ accountId, module: buttonType }))
-              // } else {
-              updateDefaultExperience({
-                defaultExperience: Experiences.NG
-              }).then(() => {
-                history.push(routes.toModuleTrialHome({ accountId, module: buttonType }))
-              })
-              // }
-            } catch (error) {
-              showError(error.data?.message || getString('somethingWentWrong'))
-            }
-          },
-          disabled: updatingDefaultExperience
-        }
       case 'cd':
       case 'ce':
       case 'cv':
@@ -146,10 +102,20 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
                 await updateDefaultExperience({
                   defaultExperience: Experiences.NG
                 })
+                const licenseStateName = getLicenseStateNameByModuleType(selected as Module)
+                const hasFreeLicense = licenseInformation[upperCase(selected)]?.edition === 'FREE'
+                if (!hasFreeLicense) {
+                  const licenseResponse = await startFreeLicense()
 
-                await startFreeLicense()
-                const defaultURL = getModuleToDefaultURLMap(accountId, selected as Module)[selected as string]
-
+                  updateLicenseStore({
+                    licenseInformation: {
+                      ...licenseInformation,
+                      [moduleToModuleNameMapping[selected as Module]]: licenseResponse.data as ModuleLicenseDTO
+                    } as { [key: string]: ModuleLicenseDTO },
+                    [licenseStateName]: LICENSE_STATE_VALUES.ACTIVE
+                  })
+                }
+                const defaultURL = getModuleToDefaultURLMap(accountId, selected as Module)[selected as Module]
                 CREATE_DEFAULT_PROJECT
                   ? history.push(defaultURL)
                   : history.push(routes.toModuleHome({ accountId, module: buttonType, source: 'purpose' }))
@@ -188,14 +154,14 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
   })
 
   useLayoutEffect(() => {
-    const resize = () => {
+    const resize = throttle((): void => {
       setDimensions({ width: window.innerWidth, height: window.innerHeight })
-    }
+    }, 200)
     window.addEventListener('resize', resize)
     resize()
-    const removeListner = () => window.removeEventListener('resize', resize)
+    const removeListener = (): void => window.removeEventListener('resize', resize)
 
-    return removeListner
+    return removeListener
   }, [])
 
   const wWI = dimensions.width

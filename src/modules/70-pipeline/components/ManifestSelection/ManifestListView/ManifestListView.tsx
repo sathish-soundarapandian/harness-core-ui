@@ -86,6 +86,7 @@ import KustomizeWithHarnessStore from '../ManifestWizardSteps/KustomizeWithHarne
 import { CommonManifestDetails } from '../ManifestWizardSteps/CommonManifestDetails/CommonManifestDetails'
 import HelmWithHarnessStore from '../ManifestWizardSteps/HelmWithHarnessStore/HelmWithHarnessStore'
 import { ECSWithS3 } from '../ManifestWizardSteps/ECSWithS3/ECSWithS3'
+import { ServerlessLambdaWithS3 } from '../ManifestWizardSteps/ServerlessLambdaWithS3/ServerlessLambdaWithS3'
 import css from '../ManifestSelection.module.scss'
 
 const DIALOG_PROPS: IDialogProps = {
@@ -292,8 +293,11 @@ function ManifestListView({
       case selectedManifest === ManifestDataType.KustomizePatches && isGitTypeStores:
         manifestDetailStep = <KustomizePatchDetails {...lastStepProps()} />
         break
-      case selectedManifest === ManifestDataType.ServerlessAwsLambda:
+      case selectedManifest === ManifestDataType.ServerlessAwsLambda && isGitTypeStores:
         manifestDetailStep = <ServerlessAwsLambdaManifest {...lastStepProps()} />
+        break
+      case selectedManifest === ManifestDataType.ServerlessAwsLambda && manifestStore === ManifestStoreMap.S3:
+        manifestDetailStep = <ServerlessLambdaWithS3 {...lastStepProps()} />
         break
       case [ManifestDataType.Values, ManifestDataType.OpenshiftParam, ManifestDataType.KustomizePatches].includes(
         selectedManifest as ManifestTypes

@@ -55,6 +55,20 @@
         "createdAt": 1619563751222,
         "lastModifiedAt": 1624954619316,
         "numberOfCommitters": 10
+      },
+      "STO": {
+        "id": "62a8bbe3f1f6f40e17d93435",
+        "accountIdentifier": "accountId",
+        "moduleType": "STO",
+        "edition": "ENTERPRISE",
+        "licenseType": "TRIAL",
+        "status": "ACTIVE",
+        "startTime": 1664582400000,
+        "expiryTime": 1820361600000,
+        "createdAt": 1664582400000,
+        "lastModifiedAt": 1664582400000,
+        "numberOfUsers": 200,
+        "numberOfClientMAUs": 200
       }
     },
     "allModuleLicenses": {
@@ -117,6 +131,22 @@
           "createdAt": 1619563751222,
           "lastModifiedAt": 1624954619316,
           "numberOfCommitters": 10
+        }
+      ],
+      "STO": [
+        {
+          "id": "62a8bbe3f1f6f40e17d93435",
+          "accountIdentifier": "accountId",
+          "moduleType": "STO",
+          "edition": "ENTERPRISE",
+          "licenseType": "TRIAL",
+          "status": "ACTIVE",
+          "startTime": 1664582400000,
+          "expiryTime": 1820361600000,
+          "createdAt": 1664582400000,
+          "lastModifiedAt": 1664582400000,
+          "numberOfUsers": 200,
+          "numberOfClientMAUs": 200
         }
       ]
     }

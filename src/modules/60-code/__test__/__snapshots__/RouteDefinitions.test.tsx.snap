@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RouteDefinitions routes should render links correctly 1`] = `
+<div>
+  <div>
+    <p>
+      /account/test-accountId/code
+    </p>
+    <p>
+      /account/test-accountId/code/home
+    </p>
+    <p>
+      /account//code/harness/default
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/files/main/~/src/components/Test.tsx
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/files/main
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/~/src/components/Test.tsx
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/edit/main/~/src/components/Test.tsx
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/edit/main/~/
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/commits/main
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/commits
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/branches
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/pulls
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/pulls/1001
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/pulls/compare/main...develop
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/settings
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/settings/webhook/new
+    </p>
+  </div>
+</div>
+`;

@@ -7,21 +7,23 @@
 
 import React, { useEffect } from 'react'
 import { Route, useHistory, useParams } from 'react-router-dom'
-import routes from '@common/RouteDefinitions'
-import { codePathProps } from '@common/utils/routeUtils'
 import { RouteWithLayout } from '@common/router'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
-import type { CODEPathProps } from '@common/interfaces/RouteInterfaces'
 import SideNav from '@code/components/SideNav/SideNav'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import {
   Repository,
-  RepositoriesListing,
-  RepositoryCommits,
-  RepositoryBranches,
-  RepositoryFileEdit,
-  RepositorySettings
+  Repositories,
+  Commits,
+  Branches,
+  FileEdit,
+  Settings,
+  PullRequests,
+  PullRequest,
+  Compare,
+  CreateWebhook
 } from './CodeApp'
+import routes, { CODEPathProps, codePathProps } from './RouteDefinitions'
 import CODEHomePage from './pages/home/CODEHomePage'
 
 export const sidebarProps: SidebarContext = {
@@ -41,7 +43,7 @@ const RedirectToDefaultSCMRoute: React.FC = () => {
   return null
 }
 
-export function CODERouteDestinations(): React.ReactElement {
+export default function CODERouteDestinations(): React.ReactElement {
   return (
     <Route path={routes.toCODE(codePathProps)}>
       <Route path={routes.toCODE(codePathProps)} exact>
@@ -56,7 +58,40 @@ export function CODERouteDestinations(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
-        path={routes.toCODERepositorySettings({
+        path={routes.toCODECompare({
+          repoPath: [
+            codePathProps.accountId,
+            codePathProps.orgIdentifier,
+            codePathProps.projectIdentifier,
+            codePathProps.repoName
+          ].join('/'),
+          diffRefs: codePathProps.diffRefs
+        })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.CODEPullRequestsCompare}
+      >
+        <Compare />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        path={routes.toCODEPullRequest({
+          repoPath: [
+            codePathProps.accountId,
+            codePathProps.orgIdentifier,
+            codePathProps.projectIdentifier,
+            codePathProps.repoName
+          ].join('/'),
+          pullRequestId: codePathProps.pullRequestId
+        })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.CODEPullRequests}
+        exact
+      >
+        <PullRequest />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        path={routes.toCODEPullRequests({
           repoPath: [
             codePathProps.accountId,
             codePathProps.orgIdentifier,
@@ -65,24 +100,56 @@ export function CODERouteDestinations(): React.ReactElement {
           ].join('/')
         })}
         sidebarProps={sidebarProps}
-        pageName={PAGE_NAME.CODERepositorySettings}
+        pageName={PAGE_NAME.CODEPullRequests}
         exact
       >
-        <RepositorySettings />
+        <PullRequests />
       </RouteWithLayout>
 
       <RouteWithLayout
-        path={routes.toCODERepositoriesListing({
+        path={routes.toCODECreateWebhook({
+          repoPath: [
+            codePathProps.accountId,
+            codePathProps.orgIdentifier,
+            codePathProps.projectIdentifier,
+            codePathProps.repoName
+          ].join('/')
+        })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.CODECreateWebhook}
+        exact
+      >
+        <CreateWebhook />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        path={routes.toCODESettings({
+          repoPath: [
+            codePathProps.accountId,
+            codePathProps.orgIdentifier,
+            codePathProps.projectIdentifier,
+            codePathProps.repoName
+          ].join('/')
+        })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.CODESettings}
+        exact
+      >
+        <Settings />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        path={routes.toCODERepositories({
           space: [codePathProps.accountId, codePathProps.orgIdentifier, codePathProps.projectIdentifier].join('/')
         })}
         sidebarProps={sidebarProps}
-        pageName={PAGE_NAME.CODERepositoriesListing}
+        pageName={PAGE_NAME.CODERepositories}
         exact
       >
-        <RepositoriesListing />
+        <Repositories />
       </RouteWithLayout>
       <RouteWithLayout
-        path={routes.toCODERepositoryCommits({
+        path={routes.toCODECommits({
           repoPath: [
             codePathProps.accountId,
             codePathProps.orgIdentifier,
@@ -92,27 +159,27 @@ export function CODERouteDestinations(): React.ReactElement {
           commitRef: codePathProps.commitRef
         })}
         sidebarProps={sidebarProps}
-        pageName={PAGE_NAME.CODERepositoryCommits}
+        pageName={PAGE_NAME.CODECommits}
       >
-        <RepositoryCommits />
+        <Commits />
       </RouteWithLayout>
       <RouteWithLayout
-        path={routes.toCODERepositoryBranches({
+        path={routes.toCODEBranches({
           repoPath: [
             codePathProps.accountId,
             codePathProps.orgIdentifier,
             codePathProps.projectIdentifier,
             codePathProps.repoName
-          ].join('/'),
-          branch: codePathProps.branch
+          ].join('/')
         })}
         sidebarProps={sidebarProps}
-        pageName={PAGE_NAME.CODERepositoryBranches}
+        pageName={PAGE_NAME.CODEBranches}
+        exact
       >
-        <RepositoryBranches />
+        <Branches />
       </RouteWithLayout>
       <RouteWithLayout
-        path={routes.toCODERepositoryFileEdit({
+        path={routes.toCODEFileEdit({
           repoPath: [
             codePathProps.accountId,
             codePathProps.orgIdentifier,
@@ -123,9 +190,9 @@ export function CODERouteDestinations(): React.ReactElement {
           resourcePath: codePathProps.resourcePath
         })}
         sidebarProps={sidebarProps}
-        pageName={PAGE_NAME.CODERepositoryFileEdit}
+        pageName={PAGE_NAME.CODEFileEdit}
       >
-        <RepositoryFileEdit />
+        <FileEdit />
       </RouteWithLayout>
       <RouteWithLayout
         path={[

@@ -9,7 +9,7 @@ import React from 'react'
 import { defaultTo, get, isNil } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikValues } from 'formik'
-import { getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
 
 import { StringKeys, useStrings } from 'framework/strings'
 import { NameValuePair, useListAwsRegions } from 'services/portal'
@@ -347,6 +347,18 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
             expressions={expressions}
             isNameOfArrayType
             allowOnlyOne={shouldAllowOnlyOneFilePath(manifest?.type as ManifestTypes)}
+          />
+        </div>
+      )}
+
+      {isFieldRuntime(`${manifestPath}.spec.configOverridePath`, template) && (
+        <div className={css.verticalSpacingInput}>
+          <FormInput.MultiTextInput
+            disabled={isFieldDisabled(`${manifestPath}.spec.configOverridePath`)}
+            multiTextInputProps={{ expressions, allowableTypes: props.allowableTypes }}
+            label={getString('pipeline.manifestType.serverlessConfigFilePath')}
+            placeholder={getString('pipeline.manifestType.serverlessConfigFilePathPlaceholder')}
+            name={`${path}.${manifestPath}.spec.configOverridePath`}
           />
         </div>
       )}

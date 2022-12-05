@@ -49,8 +49,6 @@ import type {
   EnvironmentQueryParams,
   AccountLevelGitOpsPathProps,
   TemplateType,
-  CODEProps,
-  RequireField,
   AccountRoutePlacement
 } from '@common/interfaces/RouteInterfaces'
 
@@ -1451,46 +1449,6 @@ const routes = {
 
   toCODE: withAccountId(() => `/code`),
   toCODEHome: withAccountId(() => `/code/home`),
-  toCODERepositoriesListing: ({ space }: Required<Pick<CODEProps, 'space'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier] = space.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}`
-  },
-  toCODERepository: ({
-    repoPath,
-    gitRef,
-    resourcePath
-  }: RequireField<Pick<CODEProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath'>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}${
-      gitRef ? '/files/' + gitRef : ''
-    }${resourcePath ? '/~/' + resourcePath : ''}`
-  },
-  toCODERepositoryFileEdit: ({
-    repoPath,
-    gitRef,
-    resourcePath
-  }: RequireField<Pick<CODEProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath' | 'gitRef'>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/edit/${gitRef}/~/${
-      resourcePath || ''
-    }`
-  },
-  toCODERepositoryCommits: ({ repoPath, commitRef }: Required<Pick<CODEProps, 'repoPath' | 'commitRef'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/commits${
-      commitRef ? '/' + commitRef : ''
-    }`
-  },
-  toCODERepositoryBranches: ({ repoPath, branch }: Required<Pick<CODEProps, 'repoPath' | 'branch'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/branches${
-      branch ? '/' + branch : ''
-    }`
-  },
-  toCODERepositorySettings: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/settings`
-  },
 
   /********************************************************************************************************************/
   toCV: (params: Partial<ProjectPathProps>): string =>

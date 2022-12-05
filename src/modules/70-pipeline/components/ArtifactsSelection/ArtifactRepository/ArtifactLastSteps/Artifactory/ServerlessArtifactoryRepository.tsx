@@ -159,6 +159,7 @@ export default function ServerlessArtifactoryRepository(
             ? repositoryFieldCss.repositoryFieldContainer
             : undefined
         }
+        enableConfigureOptions={false}
         name={fieldName}
         label={getString('repository')}
         fieldPath={defaultTo(fieldPath, '')} // Only used for Runtime view

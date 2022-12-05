@@ -26,6 +26,7 @@ import { FontVariation } from '@harness/design-system'
 import { defaultTo, isNil, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import { getConnectorIdValue, getArtifactFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
@@ -47,7 +48,7 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
-import { ArtifactSourceIdentifier } from '../ArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -157,26 +158,29 @@ function FormComponent({
     return defaultTo(selectVersionItems, [])
   }
 
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        disabled={fetchingPackages}
-        onClick={handleClick}
-      />
-    </div>
-  ))
+  const getItemRenderer = memoize((item: SelectOption, { handleClick }: IItemRendererProps, disabled: boolean) => {
+    return (
+      <div key={item.label.toString()}>
+        <Menu.Item
+          text={
+            <Layout.Horizontal spacing="small">
+              <Text>{item.label}</Text>
+            </Layout.Horizontal>
+          }
+          disabled={disabled}
+          onClick={handleClick}
+        />
+      </div>
+    )
+  })
 
   return (
     <FormikForm>
       <div className={css.connectorForm}>
-        {isMultiArtifactSource && <ArtifactSourceIdentifier />}
+        {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
+        {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.jenkinsFieldContainer}>
-          <div className={cx(stepCss.formGroup, stepCss.sm)}>
+          <div className={cx(stepCss.formGroup, stepCss.xxlg)}>
             <FormInput.Select
               items={packageTypes}
               name="spec.packageType"
@@ -253,7 +257,7 @@ function FormComponent({
                     defaultErrorText={getString('pipeline.artifactsSelection.validation.noBuild')}
                   />
                 ),
-                itemRenderer: itemRenderer,
+                itemRenderer: (item, props) => getItemRenderer(item, props, fetchingPackages),
                 items: getPackages(),
                 allowCreatingNewItems: true
               },
@@ -328,7 +332,7 @@ function FormComponent({
                       defaultErrorText={getString('pipeline.artifactsSelection.validation.noVersion')}
                     />
                   ),
-                  itemRenderer: itemRenderer,
+                  itemRenderer: (item, props) => getItemRenderer(item, props, fetchingVersion),
                   items: getVersions(),
                   allowCreatingNewItems: true
                 },

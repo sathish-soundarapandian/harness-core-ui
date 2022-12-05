@@ -36,6 +36,7 @@ import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getFinalQueryParamValue,
   getFqnPath,
+  getValidInitialValuePath,
   getYamlData,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
@@ -72,7 +73,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     artifactPath,
     pipelineIdentifier,
     serviceIdentifier,
-    stepViewType
+    stepViewType,
+    artifacts
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -82,19 +84,19 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const fixedConnectorValue = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`),
-    artifact?.spec?.connectorRef
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef)
   )
   const fixedRegionValue = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.region`),
-    artifact?.spec?.region
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.region`, ''), artifact?.spec?.region)
   )
   const fixedBucketValue = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.bucketName`),
-    artifact?.spec?.bucketName
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.bucketName`, ''), artifact?.spec?.bucketName)
   )
   const fixedFilePathRegexValue = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.filePathRegex`),
-    artifact?.spec?.filePathRegex
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.filePathRegex`, ''), artifact?.spec?.filePathRegex)
   )
 
   const [regions, setRegions] = React.useState<SelectOption[]>([])

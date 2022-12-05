@@ -10,7 +10,7 @@ import type { CellProps, Renderer } from 'react-table'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { Container, Layout, Popover, Text, PageError } from '@harness/uicore'
-import { PopoverInteractionKind } from '@blueprintjs/core'
+import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
 import { PageSpinner, Table } from '@common/components'
 import type { EnvBuildIdAndInstanceCountInfo } from 'services/cd-ng'
@@ -189,6 +189,7 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
           <Popover
             interactionKind={PopoverInteractionKind.HOVER}
             key={index}
+            position={Position.TOP}
             modifiers={{ preventOverflow: { escapeWithReference: true } }}
           >
             <Container

@@ -77,17 +77,13 @@ export function PipelineList({
       className={css.table}
       columns={columns()}
       data={content}
-      pagination={
-        totalElements > size
-          ? {
-              itemCount: totalElements,
-              pageSize: size,
-              pageCount: totalPages,
-              pageIndex: number,
-              gotoPage
-            }
-          : undefined
-      }
+      pagination={{
+        itemCount: totalElements,
+        pageSize: size,
+        pageCount: totalPages,
+        pageIndex: number,
+        gotoPage
+      }}
       getRowClassName={row =>
         cx(css.tableRow, {
           [css.selectedItem]: selectedRow?.identifier === row.original.identifier

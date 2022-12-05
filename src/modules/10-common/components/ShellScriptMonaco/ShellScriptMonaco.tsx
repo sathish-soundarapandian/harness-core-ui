@@ -47,7 +47,7 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
   const [isFullScreen, setFullScreen] = useState(false)
   const [lineCount, setLineCount] = useState(0)
   const { getString } = useStrings()
-  const value = get(formik.values, name) || ''
+  const value = get(formik.values, name)?.toString() || ''
 
   useDeepCompareEffect(() => {
     const disposables: IDisposable[] = []

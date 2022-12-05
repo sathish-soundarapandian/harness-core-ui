@@ -34,7 +34,7 @@ import {
 
 DefaultSettingsFactory.registerCategory('CORE', {
   icon: 'cog',
-  label: 'common.module.core',
+  label: 'common.settingCategory.general',
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
 })
 

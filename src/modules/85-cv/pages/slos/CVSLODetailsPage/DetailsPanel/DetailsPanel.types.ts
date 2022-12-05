@@ -46,4 +46,5 @@ export interface TabToolbarProps {
   >
   refetchSLODetails: () => Promise<void>
   onTabChange: (nextTab: SLODetailsPageTabIds) => void
+  isCompositeSLO?: boolean
 }

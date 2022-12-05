@@ -109,29 +109,6 @@ exports[`Service versions open accordion 1`] = `
                         role="cell"
                         style="width: 30%;"
                       >
-                        Auth UI
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 30%;"
-                      >
-                        NA
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="TableV2--row TableV2--card"
-                    role="row"
-                  >
-                    <div
-                      class="TableV2--cells"
-                    >
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 30%;"
-                      >
                         Cloud Cost Management
                       </div>
                       <div

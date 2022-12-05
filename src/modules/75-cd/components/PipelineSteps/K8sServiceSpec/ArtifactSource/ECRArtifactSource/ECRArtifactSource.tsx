@@ -32,7 +32,8 @@ import {
   isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource,
-  isExecutionTimeFieldDisabled
+  isExecutionTimeFieldDisabled,
+  getValidInitialValuePath
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
@@ -64,7 +65,8 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     artifact,
     isSidecar,
     artifactPath,
-    stepViewType
+    stepViewType,
+    artifacts
   } = props
 
   const { getString } = useStrings()
@@ -72,15 +74,15 @@ const Content = (props: ECRRenderContent): JSX.Element => {
   const { expressions } = useVariablesExpression()
   const [lastQueryData, setLastQueryData] = React.useState({ connectorRef: '', imagePath: '', region: '' })
   const imagePathValue = getImagePath(
-    artifact?.spec?.imagePath,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.imagePath`, ''), artifact?.spec?.imagePath),
     get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
   )
   const connectorRefValue = getDefaultQueryParam(
-    artifact?.spec?.connectorRef,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
   const regionValue = getDefaultQueryParam(
-    artifact?.spec?.region,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.region`, ''), artifact?.spec?.region),
     get(initialValues?.artifacts, `${artifactPath}.spec.region`, '')
   )
 

@@ -8,8 +8,8 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly actionButtons: string
-  readonly basicOverviewDetails: string
   readonly content: string
+  readonly outputPanel: string
   readonly pipelineStageOverviewWrapper: string
   readonly sectionCard: string
 }

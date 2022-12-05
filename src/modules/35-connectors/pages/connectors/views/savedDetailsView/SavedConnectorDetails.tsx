@@ -107,6 +107,8 @@ const getLabelByType = (type: string): string => {
       return 'connectors.name_labels.SecretManager'
     case Connectors.SPOT:
       return 'connectors.name_labels.Spot'
+    case Connectors.TAS:
+      return 'connectors.name_labels.TAS'
     default:
       return 'connector'
   }
@@ -357,6 +359,23 @@ const getSpotSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInt
     {
       label: 'connectors.apiToken',
       value: connector?.spec?.credential?.spec?.apiTokenRef
+    }
+  ]
+}
+
+const getTasSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'connectors.k8.masterUrlLabel',
+      value: connector?.spec?.credential?.spec?.endpointUrl
+    },
+    {
+      label: 'username',
+      value: connector?.spec?.authentication?.spec?.username || connector?.spec?.authentication?.spec?.usernameRef
+    },
+    {
+      label: 'password',
+      value: connector?.spec?.authentication?.spec?.spec?.passwordRef
     }
   ]
 }
@@ -911,6 +930,8 @@ const getSchemaByType = (
       return getGcpSMSchema(connector)
     case Connectors.SPOT:
       return getSpotSchema(connector)
+    case Connectors.TAS:
+      return getTasSchema(connector)
     default:
       return []
   }

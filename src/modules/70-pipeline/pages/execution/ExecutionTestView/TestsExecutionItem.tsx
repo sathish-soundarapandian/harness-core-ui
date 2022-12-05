@@ -622,23 +622,19 @@ export function TestsExecutionItem({
                       }
                     : undefined
                 }
-                pagination={
-                  (data?.data?.totalItems || 0) > PAGE_SIZE
-                    ? {
-                        itemCount: data?.data?.totalItems || 0,
-                        pageSize: data?.data?.pageSize || 0,
-                        pageCount: data?.data?.totalPages || 0,
-                        pageIndex,
-                        gotoPage: pageIdx => {
-                          setPageIndex(pageIdx)
-                          refetchData({
-                            ...queryParams,
-                            pageIndex: pageIdx
-                          })
-                        }
-                      }
-                    : undefined
-                }
+                pagination={{
+                  itemCount: data?.data?.totalItems || 0,
+                  pageSize: data?.data?.pageSize || 0,
+                  pageCount: data?.data?.totalPages || 0,
+                  pageIndex,
+                  gotoPage: pageIdx => {
+                    setPageIndex(pageIdx)
+                    refetchData({
+                      ...queryParams,
+                      pageIndex: pageIdx
+                    })
+                  }
+                }}
               />
             </Container>
           )}

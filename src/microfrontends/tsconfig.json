@@ -5,5 +5,5 @@
     "declaration": true,
     "declarationDir": "dist"
   },
-  "include": ["index.ts", "../global.d.ts"]
+  "include": ["index.ts", "../global.d.ts", "../modules/**/index.d.ts"]
 }

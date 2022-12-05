@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ItemRendererWithMenuItem Render active menu item 1`] = `
+<div>
+  <div>
+    <li
+      class=""
+    >
+      <a
+        class="bp3-menu-item bp3-popover-dismiss"
+      >
+        <div
+          class="bp3-text-overflow-ellipsis bp3-fill"
+        >
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              Test
+            </p>
+          </div>
+        </div>
+      </a>
+    </li>
+  </div>
+</div>
+`;
+
+exports[`ItemRendererWithMenuItem Render disabled menu item 1`] = `
+<div>
+  <div>
+    <li
+      class=""
+    >
+      <a
+        class="bp3-menu-item bp3-disabled"
+        tabindex="-1"
+      >
+        <div
+          class="bp3-text-overflow-ellipsis bp3-fill"
+        >
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              Test
+            </p>
+          </div>
+        </div>
+      </a>
+    </li>
+  </div>
+</div>
+`;

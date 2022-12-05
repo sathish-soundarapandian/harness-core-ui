@@ -138,7 +138,7 @@ describe('<WaitStepDetailsTab /> tests', () => {
     const step = data(ExecutionStatusEnum.WaitStepRunning, undefined, undefined, details)
     const { container } = render(
       <TestWrapper>
-        <WaitStepDetailsTab step={step as any} />
+        <WaitStepDetailsTab step={step as any} loading={false} executionDetails={mockDetailResponse.data} />
       </TestWrapper>
     )
 
@@ -150,7 +150,7 @@ describe('<WaitStepDetailsTab /> tests', () => {
     const step = data(ExecutionStatusEnum.Success, undefined, undefined, details)
     const { container } = render(
       <TestWrapper>
-        <WaitStepDetailsTab step={step as any} />
+        <WaitStepDetailsTab step={step as any} loading={false} executionDetails={mockDetailResponse.data} />
       </TestWrapper>
     )
 
@@ -161,7 +161,7 @@ describe('<WaitStepDetailsTab /> tests', () => {
     const step = data(ExecutionStatusEnum.WaitStepRunning, undefined, undefined, details)
     const { container } = render(
       <TestWrapper>
-        <WaitStepDetailsTab step={step as any} />
+        <WaitStepDetailsTab step={step as any} loading={false} executionDetails={mockDetailResponse.data} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -172,7 +172,7 @@ describe('<WaitStepDetailsTab /> tests', () => {
     const step = data(ExecutionStatusEnum.WaitStepRunning, undefined, undefined, details)
     const { container } = render(
       <TestWrapper>
-        <WaitStepDetailsTab step={step as any} />
+        <WaitStepDetailsTab step={step as any} loading={false} executionDetails={mockDetailResponse.data} />
       </TestWrapper>
     )
 
@@ -184,7 +184,7 @@ describe('<WaitStepDetailsTab /> tests', () => {
     const step = data(ExecutionStatusEnum.WaitStepRunning, 0, undefined, details)
     const { container } = render(
       <TestWrapper>
-        <WaitStepDetailsTab step={step as any} />
+        <WaitStepDetailsTab step={step as any} loading={false} executionDetails={mockDetailResponse.data} />
       </TestWrapper>
     )
 

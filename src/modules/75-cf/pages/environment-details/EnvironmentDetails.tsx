@@ -119,6 +119,7 @@ const EnvironmentDetails: React.FC = () => {
                 gotoPage={(index: number) => {
                   setPage(index)
                 }}
+                showPagination
               />
             )
           }

@@ -29,22 +29,16 @@
   }
 
   .action-row {
-    display: grid;
-    grid-template-columns: 100px 100px;
-    place-items: center;
     margin: var(--spacing-medium);
-    padding: var(--spacing-medium) 0;
+    padding: 0 var(--spacing-medium);
+    display: grid;
+    grid-template-columns: repeat(2, 72px);
+    gap: var(--spacing-medium);
 
     .thumbnail {
-      cursor: pointer;
-
       :global(.bp3-icon) {
         --intent-color: var(--primary-7);
       }
-    }
-
-    &:not(:last-child) {
-      border-bottom: 1px solid var(--grey-200);
     }
   }
 }

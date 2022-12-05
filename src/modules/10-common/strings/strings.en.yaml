@@ -489,6 +489,8 @@ subscriptions:
     mau: '{{ maus }} Monthly Active users'
   ci:
     developers: '{{ developers }} Developers'
+  sto:
+    developers: '{{ developers }} Developers'
   expiryCountdown: expires in {{ days }} days
   expired: expired {{ days }} days ago
   banner:
@@ -510,6 +512,10 @@ subscriptions:
     ffActiveUserTootip: Monthly Active Users (MAUs) are only applicable to client-side applications and are defined as unique end users evaluating flags from client-side SDKs (JavaScript, iOS, Android, C/C++, React, etc) over a 30-day period.
     ffDeveloperTooltip: Developers are Harness Feature Flag users actually engaged with the product to create/edit/delete Feature Flags and/or Targets/Segments.
     ffFFTooltip: Total number of Feature Flags currently
+    stoScans: Security Scans
+    stoDevelopers: Active Security Developers
+    stoDevelopersTooltip: A Security Developer is an active STO module user engaged in creating or editing STO pipeline, applying STO policies, governance or exemptions, and consuming custom reports.
+    stoScansTooltip: A Security Scan is a pipeline execution that involves a security step.
     monthlyUsers: Monthly Active Users
     activeDevelopers: Active Developers
     developers: Developers
@@ -1125,3 +1131,11 @@ platformServiceVersions: Platform Service Versions
 executionTab:
   stepsCount: At least one step is required
 clickToKnowMore: 'Click to know more about'
+settingCategory:
+  general: General
+condition: Condition
+any: Any
+filterOnName: Filter on {{name}}
+deployToEntity: Deploy to {{entity}}
+deployToFilteredList: Deploy to filtered list
+selectNameManually: 'Select {{ name }} manually'

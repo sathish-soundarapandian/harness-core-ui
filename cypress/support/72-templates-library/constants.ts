@@ -33,7 +33,7 @@ export const deploymentTemplateInputsCall =
 export const afterUseTemplateServiceV2Call =
   '/ng/api/servicesV2/list/access?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&type=CustomDeployment&gitOpsEnabled=false&deploymentTemplateIdentifier=dep_temp_test&versionLabel=1'
 export const failureCall =
-  '/ng/api/pipelines/configuration/strategies/yaml-snippets?routingId=accountId&serviceDefinitionType=CustomDeployment&strategyType=Default'
+  '/ng/api/pipelines/configuration/strategies/yaml-snippets?routingId=accountId&accountIdentifier=accountId&serviceDefinitionType=CustomDeployment&strategyType=Default'
 export const serviceYamlDataCall =
   '/ng/api/servicesV2/servicesYamlMetadata?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
 export const environmentListCall =

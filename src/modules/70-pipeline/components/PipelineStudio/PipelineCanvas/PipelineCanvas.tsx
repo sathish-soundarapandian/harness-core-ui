@@ -457,6 +457,11 @@ export function PipelineCanvas({
   }, [pipeline?.name])
 
   const onCloseCreate = React.useCallback(() => {
+    delete (pipeline as PipelineWithGitContextFormProps).repo
+    delete (pipeline as PipelineWithGitContextFormProps).branch
+    delete (pipeline as PipelineWithGitContextFormProps).connectorRef
+    delete (pipeline as PipelineWithGitContextFormProps).filePath
+    delete (pipeline as PipelineWithGitContextFormProps).storeType
     if (pipelineIdentifier === DefaultNewPipelineId || getOtherModal) {
       deletePipelineCache(gitDetails)
       history.push(toPipelineList({ orgIdentifier, projectIdentifier, accountId, module }))

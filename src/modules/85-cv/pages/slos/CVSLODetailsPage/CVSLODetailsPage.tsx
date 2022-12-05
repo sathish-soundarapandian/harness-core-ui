@@ -175,6 +175,7 @@ const CVSLODetailsPage: React.FC = () => {
               deleteSLO={isCompositeSLO ? deleteSLOV2 : deleteSLO}
               refetchSLODetails={refetch}
               onTabChange={onTabChange}
+              isCompositeSLO={isCompositeSLO}
             />
           )}
         </Tabs>

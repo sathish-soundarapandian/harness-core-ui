@@ -16,7 +16,7 @@ import {
   CloudCostsNavItem,
   DeploymentsNavItem,
   FeatureFlagsNavItem,
-  SCMNavItem,
+  CODENavItem,
   SRMNavItem,
   STONavItem
 } from '../ModuleLinks'
@@ -75,7 +75,7 @@ describe('module links test', () => {
   test('render CodeNavItem', () => {
     const { container, getByText } = render(
       <TestWrapper path={routes.toConnectorDetails({ accountId: 'testId' })}>
-        <SCMNavItem />
+        <CODENavItem />
       </TestWrapper>
     )
     expect(getByText('common.purpose.code.name')).toBeDefined()

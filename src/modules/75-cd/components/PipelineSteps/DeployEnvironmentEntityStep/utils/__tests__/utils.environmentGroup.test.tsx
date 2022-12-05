@@ -7,7 +7,8 @@
 
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from '../../types'
-import { processEnvironmentGroupFormValues, processEnvironmentGroupInitialValues } from '../../utils'
+import { processEnvironmentGroupInitialValues } from '../processInitialValuesUtils'
+import { processEnvironmentGroupFormValues } from '../processFormValuesUtils'
 
 describe('process environment group initial values', () => {
   test('env group is fixed, environments are selected', () => {

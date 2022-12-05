@@ -15,9 +15,9 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
   const jiraProjectsCall =
     '/ng/api/jira/projects?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=Jira_cloud'
   const jiraIssueTypesCall =
-    'ng/api/jira/createMetadata?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=Jira_cloud&projectKey=ART'
+    'ng/api/jira/createMetadata?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&expand=projects.issuetypes&connectorRef=Jira_cloud&projectKey=ART'
   const jiraIssueTypeMetadataCall =
-    'ng/api/jira/createMetadata?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=Jira_cloud&projectKey=ART&issueType=Bug'
+    'ng/api/jira/createMetadata?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&expand=projects.issuetypes.fields&connectorRef=Jira_cloud&projectKey=ART&issueType=Bug'
   const jiraStatusesCall =
     '/ng/api/jira/statuses?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=Jira_cloud'
   const accountLicense = 'ng/api/licenses/account?routingId=accountId&accountIdentifier=accountId'

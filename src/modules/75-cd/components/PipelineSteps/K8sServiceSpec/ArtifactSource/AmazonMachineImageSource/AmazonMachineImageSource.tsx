@@ -28,6 +28,7 @@ import {
   getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
+  getValidInitialValuePath,
   getYamlData,
   isNewServiceEnvEntity
 } from '../artifactSourceUtils'
@@ -56,7 +57,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     pipelineIdentifier,
     serviceIdentifier,
     stageIdentifier,
-    isSidecar
+    isSidecar,
+    artifacts
   } = props
 
   const { getString } = useStrings()
@@ -65,21 +67,22 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   const { expressions } = useVariablesExpression()
 
   const connectorRefValue = getDefaultQueryParam(
-    artifact?.spec?.connectorRef,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
+
   const regionValue = getDefaultQueryParam(
-    artifact?.spec?.region,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.region`, ''), artifact?.spec?.region),
     get(initialValues?.artifacts, `${artifactPath}.spec.region`, '')
   )
 
   const tagsValue = getDefaultQueryParam(
-    artifact?.spec?.tags,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tags`, ''), artifact?.spec?.tags),
     get(initialValues?.artifacts, `${artifactPath}.spec.tags`, '')
   )
 
   const filterValue = getDefaultQueryParam(
-    artifact?.spec?.filter,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.filter`, ''), artifact?.spec?.filter),
     get(initialValues?.artifacts, `${artifactPath}.spec.filters`, '')
   )
 

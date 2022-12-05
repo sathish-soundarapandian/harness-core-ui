@@ -39,7 +39,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import type { DeployEnvironmentEntityCustomStepProps, DeployEnvironmentEntityFormState } from './types'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
 import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
-import { getValidationSchema } from './utils'
+import { getValidationSchema } from './utils/utils'
 
 import css from './DeployEnvironmentEntityStep.module.scss'
 

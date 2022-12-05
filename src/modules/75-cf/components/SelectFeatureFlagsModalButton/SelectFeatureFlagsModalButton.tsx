@@ -250,6 +250,7 @@ export const SelectFeatureFlagsModalButton: React.FC<SelectFeatureFlagsModalButt
                 pageSize={CF_DEFAULT_PAGE_SIZE}
                 gotoPage={setPageNumber}
                 hidePageNumbers={!!data?.pageCount && data?.pageCount > 3}
+                showPagination
               />
             )}
           </Container>

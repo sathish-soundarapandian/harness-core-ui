@@ -96,7 +96,7 @@ function FormComponent(
     repoIdentifier,
     branch
   }
-  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value)
+  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
   const packageValue = getGenuineValue(formik.values.spec.package || initialValues?.spec?.package)
   const projectValue = getGenuineValue(formik.values.spec.project || initialValues?.spec?.project)
   const regionValue = getGenuineValue(formik.values.spec.region || initialValues?.spec?.region)

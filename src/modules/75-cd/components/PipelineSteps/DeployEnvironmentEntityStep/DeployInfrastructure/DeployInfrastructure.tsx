@@ -20,6 +20,7 @@ import {
   Layout,
   ModalDialog,
   MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
   SelectOption,
   useToggleOpen
 } from '@harness/uicore'
@@ -29,6 +30,7 @@ import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext
 
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
+import { isValueRuntimeInput } from '@common/utils/utils'
 
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -243,7 +245,13 @@ export default function DeployInfrastructure({
           getMultiTypeFromValue(values.infrastructures?.[environmentIdentifier]) === MultiTypeInputType.RUNTIME
             ? values.infrastructures?.[environmentIdentifier]
             : [SELECT_ALL_OPTION]
-        setFieldValue(`${uniquePathForInfrastructures.current}`, infraIdentifierValue)
+
+        // This if condition is used to show runtime value for the infrastructure when it is shown for filtering
+        if (readonly && isValueRuntimeInput(initialValues.environments)) {
+          setFieldValue(`${uniquePathForInfrastructures.current}`, RUNTIME_INPUT_VALUE)
+        } else {
+          setFieldValue(`${uniquePathForInfrastructures.current}`, infraIdentifierValue)
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

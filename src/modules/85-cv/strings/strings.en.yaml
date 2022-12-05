@@ -577,7 +577,7 @@ notifications:
   serviceHealth: Changes and Service Health
   serviceHealthDescription: Focuses on changes to a service's code, configuration, behaviour, deployment and infrastructure.
   sloDescription: Focuses on SLO target and error budget changes on a given SLO.
-  condition: Condition
+  condition: '{{$.common.condition}}'
   changeType: Change Type
   healthScoreBelow: Health score is below
   thresholdBelow: Threshold is below
@@ -853,6 +853,7 @@ CompositeSLO:
   NoSloFound: There are no SLOs available for selected filter
   compositeSloCreated: Composite SLO created successfully
   compositeSloUpdated: Composite SLO updated successfully
+  SLIMetricRatio: SLI = (SLO1*weightage1 + SLO2*weightage2... + SLON*weightageN)/n*100
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on

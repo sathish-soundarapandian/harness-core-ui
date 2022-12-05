@@ -226,6 +226,8 @@ function MultiEnvironmentsInputSetForm({
       (Array.isArray(get(deploymentStageTemplate, pathToEnvironments)) &&
         deploymentStage?.environmentGroup?.deployToAll !== false))
 
+  const areFiltersAdded = !isEmpty(get(deploymentStage, `${entityType}.filters`))
+
   return (
     <>
       {showEnvironmentsSelectionInputField && (
@@ -249,7 +251,8 @@ function MultiEnvironmentsInputSetForm({
             /** This takes care of hiding the field in case deployToAll is true
              * If the question arises why another condition for this scenario?
              * Because we need to repeat the same selection steps without the field*/
-            deployToAllEnvironments: deploymentStage?.environmentGroup?.deployToAll
+            deployToAllEnvironments: deploymentStage?.environmentGroup?.deployToAll,
+            areFiltersAdded
           }}
           onUpdate={data => {
             unstable_batchedUpdates(() => {
@@ -317,6 +320,8 @@ function MultiEnvironmentsInputSetForm({
                 showClustersSelectionInputField ||
                 showInfrastructuresSelectionInputField ||
                 showInfrastructuresInputSetForm
+
+              const areEnvironmentFiltersAdded = !isEmpty((environmentInDeploymentStage as any).filters)
 
               return (
                 deploymentType &&
@@ -455,7 +460,8 @@ function MultiEnvironmentsInputSetForm({
                             deployToAllInfrastructures: environmentInDeploymentStage?.deployToAll,
                             showEnvironmentsSelectionInputField: deploymentStage?.environmentGroup?.deployToAll
                               ? false
-                              : showEnvironmentsSelectionInputField
+                              : showEnvironmentsSelectionInputField,
+                            areEnvironmentFiltersAdded
                           }}
                           onUpdate={data => {
                             const environmentAtIndex = get(formik.values, `${path}.${pathToEnvironments}[${index}]`)

@@ -125,8 +125,12 @@ export interface JiraCreateDeploymentModeProps {
 export interface JiraCreateDeploymentModeFormContentInterface extends JiraCreateDeploymentModeProps {
   refetchProjects: (props: UseGetJiraProjectsProps) => Promise<void>
   refetchProjectMetadata: (props: UseGetJiraIssueCreateMetadataProps) => Promise<void>
+  refetchIssueMetadata: (props: UseGetJiraIssueCreateMetadataProps) => Promise<void>
   fetchingProjects: boolean
   fetchingProjectMetadata: boolean
+  fetchingIssueMetadata: boolean
+  issueMetadataFetchError?: GetDataError<Failure | Error> | null
+  issueMetaResponse: ResponseJiraIssueCreateMetadataNG | null
   projectsResponse: ResponseListJiraProjectBasicNG | null
   projectMetaResponse: ResponseJiraIssueCreateMetadataNG | null
   projectsFetchError?: GetDataError<Failure | Error> | null

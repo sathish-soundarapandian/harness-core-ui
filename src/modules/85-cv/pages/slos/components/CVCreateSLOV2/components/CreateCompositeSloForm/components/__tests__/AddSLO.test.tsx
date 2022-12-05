@@ -129,8 +129,8 @@ describe('Validate  AddSLO', () => {
     act(() => {
       fireEvent.click(addSloButton!)
     })
-    expect(getByText('SLO3')).toBeInTheDocument()
-    expect(getByText('SLO4')).toBeInTheDocument()
+    expect(getByText('SLO-3')).toBeInTheDocument()
+    expect(getByText('SLO-4')).toBeInTheDocument()
   })
 
   test('should render AddSLOs with existing values values', () => {

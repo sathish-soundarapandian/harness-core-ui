@@ -20,11 +20,12 @@ import { StageType } from '@pipeline/utils/stageHelpers'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
+import type { GitOpsExecutionSummary } from 'services/cd-ng'
 import { LabeValue } from '@pipeline/pages/pipeline-list/PipelineListTable/PipelineListCells'
 import executionFactory from '@pipeline/factories/ExecutionFactory'
 import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
 import { CardVariant } from '@pipeline/utils/constants'
-import GitOpsExecutionSummary from './GitOpsExecutionSummary'
+import GitOpsExecutionSummaryInfo from './GitOpsExecutionSummary'
 import css from './ExecutionListTable.module.scss'
 
 export interface ExecutionStageProps {
@@ -67,7 +68,7 @@ export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStag
 
       <div className={css.stageInfo}>
         <CDExecutionStageSummary stageInfo={cdStageInfo} />
-        <GitOpsExecutionSummary stageInfo={cdStageInfo} limit={1} />
+        <GitOpsExecutionSummaryInfo stageInfo={cdStageInfo} limit={1} />
 
         {stage.type === StageType.SECURITY &&
           !isEmpty(stoStageInfo) &&
@@ -109,7 +110,17 @@ export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStag
 export const CDExecutionStageSummary: FC<{ stageInfo: Record<string, any> }> = ({ stageInfo }) => {
   const { getString } = useStrings()
   const serviceDisplayName = stageInfo.serviceInfo?.displayName
-  const environment = stageInfo.infraExecutionSummary?.name || stageInfo.infraExecutionSummary?.identifier
+
+  // This will removed with the multi service env list view effort
+  const gitOpsEnvironments = Array.isArray(stageInfo.gitopsExecutionSummary?.environments)
+    ? (stageInfo.gitopsExecutionSummary as Required<GitOpsExecutionSummary>).environments.map(envForGitOps =>
+        defaultTo(envForGitOps.name, '')
+      )
+    : []
+
+  const environment = gitOpsEnvironments.length
+    ? gitOpsEnvironments.join(', ')
+    : stageInfo.infraExecutionSummary?.name || stageInfo.infraExecutionSummary?.identifier
   const { imagePath, tag, version, jobName, build } = stageInfo.serviceInfo?.artifacts?.primary || {}
 
   return serviceDisplayName && environment ? (
@@ -149,7 +160,7 @@ export const CDExecutionStageSummary: FC<{ stageInfo: Record<string, any> }> = (
         <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
           {getString('environment')}:
         </Text>
-        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_800}>
+        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_800} lineClamp={1} width={200}>
           {environment}
         </Text>
       </Layout.Horizontal>

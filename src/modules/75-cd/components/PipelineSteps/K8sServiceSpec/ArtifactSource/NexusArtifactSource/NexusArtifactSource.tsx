@@ -38,7 +38,8 @@ import {
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
   resetTags,
-  isExecutionTimeFieldDisabled
+  isExecutionTimeFieldDisabled,
+  getValidInitialValuePath
 } from '../artifactSourceUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
@@ -69,7 +70,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     isSidecar,
     artifactPath,
     serviceIdentifier,
-    stepViewType
+    stepViewType,
+    artifacts
   } = props
 
   const { getString } = useStrings()
@@ -89,60 +91,84 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   }
 
   const connectorRefValue = getDefaultQueryParam(
-    artifact?.spec?.connectorRef,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
 
   const repositoryValue = getDefaultQueryParam(
-    artifact?.spec?.repository,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.repository`, ''), artifact?.spec?.repository),
     get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
   )
 
   const repositoryFormatValue = getDefaultQueryParam(
-    artifact?.spec?.repositoryFormat,
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.repositoryFormat`, ''),
+      artifact?.spec?.repositoryFormat
+    ),
     get(initialValues?.artifacts, `${artifactPath}.spec.repositoryFormat`, '')
   )
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
 
   const artifactIdValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.artifactId,
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.spec.artifactId`, ''),
+      artifact?.spec?.spec?.artifactId
+    ),
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.artifactId`, '')
   )
 
   const groupIdValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.groupId,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.spec.groupId`, ''), artifact?.spec?.spec?.groupId),
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.groupId`, '')
   )
 
   const groupValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.group,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.group`, ''), artifact?.spec?.group),
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.group`, '')
   )
 
   const extensionValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.extension,
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.spec.extension`, ''),
+      artifact?.spec?.spec?.extension
+    ),
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.extension`, '')
   )
 
   const classifierValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.classifier,
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.spec.classifier`, ''),
+      artifact?.spec?.spec?.classifier
+    ),
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.classifier`, '')
   )
 
   const packageNameValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.packageName,
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.spec.packageName`, ''),
+      artifact?.spec?.spec?.packageName
+    ),
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.packageName`, '')
   )
   const repositoryPortValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.repositoryPort,
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.spec.repositoryPort`, ''),
+      artifact?.spec?.spec?.repositoryPort
+    ),
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.repositoryPort`, '')
   )
   const repositoryUrlValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.repositoryUrl,
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.spec.repositoryUrl`, ''),
+      artifact?.spec?.spec?.repositoryUrl
+    ),
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.repositoryUrl`, '')
   )
   const artifactPathValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.artifactPath,
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.spec.artifactPath`, ''),
+      artifact?.spec?.spec?.artifactPath
+    ),
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.artifactPath`, '')
   )
 

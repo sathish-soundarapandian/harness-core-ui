@@ -10,10 +10,9 @@ import type { EnvironmentYamlV2 } from 'services/cd-ng'
 import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from '../../types'
 import {
   getEnvironmentsFormStateFromInitialValues,
-  getEnvironmentsFormValuesFromFormState,
-  processMultiEnvironmentFormValues,
   processMultiEnvironmentInitialValues
-} from '../../utils'
+} from '../processInitialValuesUtils'
+import { getEnvironmentsFormValuesFromFormState, processMultiEnvironmentFormValues } from '../processFormValuesUtils'
 
 describe('process multi environment initial values', () => {
   test('parallel defaults to true', () => {

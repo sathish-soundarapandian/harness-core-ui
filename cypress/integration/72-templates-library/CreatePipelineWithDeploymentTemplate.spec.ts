@@ -9,7 +9,8 @@ import {
   gitSyncEnabledCall,
   pipelinesRoute,
   featureFlagsCall,
-  cdFailureStrategiesYaml
+  cdFailureStrategiesYaml,
+  pipelineVariablesCall
 } from '../../support/70-pipeline/constants'
 import {
   useTemplateCall,
@@ -29,7 +30,7 @@ import {
   recentDeploymentTemplatesUrl
 } from '../../support/72-templates-library/constants'
 
-describe.skip('Pipeline Template creation and assertion', () => {
+describe('Pipeline Template creation and assertion', { scrollBehavior: false }, () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -125,15 +126,25 @@ describe.skip('Pipeline Template creation and assertion', () => {
     cy.contains('a', 'Pipeline Studio').should('be.visible')
     cy.contains('p', pipelineMadeFromTemplate).should('be.visible')
 
+    cy.get('div[class="bp3-spinner"]', { timeout: 6000 }).should('not.exist')
+
     cy.get('input[name="service"]', { timeout: 10000 }).should('be.visible').click()
     cy.contains('p', 'testService1').should('be.visible').click() // selecting service from service dropdown
     cy.get('input[value="testService1"]').should('be.visible') // asserting service name inside input tag of service
     cy.contains('p', 'testService1').should('be.visible') // asserting service name in the modal created after service selection
+    cy.intercept(pipelineVariablesCall).as('pipelineVariables')
+    cy.wait('@pipelineVariables', { timeout: 6000 })
+    cy.get('div[role="tablist"]').within(() => {
+      cy.contains('span', 'Service', { timeout: 4000 }).should('be.visible').and('have.attr', 'data-completed', 'true')
+    })
+    cy.contains('Continue').click()
+    cy.get('input[name="environment.environmentRef"]', { timeout: 10000 }).should(
+      'not.have.attr',
+      'placeholder',
+      'Loading...'
+    )
 
-    cy.wait(2000)
-
-    cy.contains('Continue').click({ scrollBehavior: false })
-    cy.get('input[name="environment.environmentRef"]', { timeout: 10000 }).should('be.visible').click()
+    cy.get('input[name="environment.environmentRef"]').click()
     cy.contains('p', 'New testEnv').should('be.visible').click()
     cy.wait(500)
     cy.get('span[data-icon="fixed-input"]').eq(1).click({ force: true })
@@ -147,7 +158,7 @@ describe.skip('Pipeline Template creation and assertion', () => {
       .should('be.visible')
       .parent()
       .within(() => {
-        cy.findByText('Save').click()
+        cy.findByText('Save').click({ force: true })
       })
     cy.contains(
       'span',

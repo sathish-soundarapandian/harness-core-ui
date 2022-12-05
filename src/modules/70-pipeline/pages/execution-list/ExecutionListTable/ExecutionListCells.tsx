@@ -6,11 +6,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Checkbox, Classes, IconName } from '@blueprintjs/core'
+import { Checkbox, Classes } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
 import { get, isEmpty, defaultTo } from 'lodash-es'
-import React, { useRef, useCallback } from 'react'
+import React, { useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseExpandedRowProps } from 'react-table'
 import { Duration, TimeAgoPopover } from '@common/components'
@@ -23,7 +23,6 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-import { getReadableDateTime } from '@common/utils/dateUtils'
 import { killEvent } from '@common/utils/eventUtils'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
 import { TimePopoverWithLocal } from '@pipeline/components/ExecutionCard/TimePopoverWithLocal'
@@ -32,7 +31,7 @@ import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/Exec
 import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
-import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
+import { mapTriggerTypeToIconAndExecutionText, mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -305,67 +304,31 @@ export const MenuCell: CellType = ({ row, column }) => {
 }
 
 export const TriggerInfoCell: CellType = ({ row }) => {
+  const { getString } = useStrings()
   const data = row.original
-  const triggers = ['SCHEDULER_CRON', 'WEBHOOK_CUSTOM', 'MANUAL'] as const
-
-  const triggerType = data.executionTriggerInfo?.triggerType
-
-  const triggerMap: Record<typeof triggers[number], any> = {
-    SCHEDULER_CRON: {
-      icon: 'stopwatch',
-      getText: (startTs: number, triggeredBy: string) =>
-        `Triggered on ${getReadableDateTime(startTs)} by cron ${triggeredBy}`
-    },
-    WEBHOOK_CUSTOM: {
-      icon: 'trigger-execution',
-      getText: () => `Triggered by a third party system`
-    },
-    MANUAL: {
-      icon: 'person',
-      getText: () => `This execution was triggered manually`
-    }
-  }
-
-  const renderDetails = useCallback(
-    ({ iconName, label }: { iconName: IconName; label: string }): React.ReactElement => {
-      return (
-        <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-          <Icon name={iconName} size={12} />
-          <Text font={{ size: 'small' }} color={Color.GREY_800} lineClamp={1}>
-            {label}
-          </Text>
-        </Layout.Horizontal>
-      )
-    },
-    []
-  )
-
-  if (triggerType && ['SCHEDULER_CRON', 'WEBHOOK_CUSTOM'].includes(triggerType)) {
-    const { icon, getText } = triggerMap[triggerType as typeof triggers[number]]
-    return renderDetails({
-      iconName: icon,
-      label: getText(data.startTs, data?.executionTriggerInfo?.triggeredBy?.identifier)
-    })
-  }
+  const triggerType = get(data, 'executionTriggerInfo.triggerType', 'MANUAL')
+  const { iconName, getText } = mapTriggerTypeToIconAndExecutionText(triggerType, getString) ?? {}
 
   const showCI = hasCIStage(data)
   const ciData = defaultTo(data?.moduleInfo?.ci, {})
   const prOrCommitTitle =
     ciData.ciExecutionInfoDTO?.pullRequest?.title || ciData.ciExecutionInfoDTO?.branch?.commits[0]?.message
 
-  return showCI ? (
+  return showCI && prOrCommitTitle && ciData ? (
     <Layout.Vertical spacing="small" className={css.triggerInfoCell}>
       <CITriggerInfo {...(ciData as unknown as CITriggerInfoProps)} />
-      {prOrCommitTitle && (
-        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800} lineClamp={1}>
-          {prOrCommitTitle}
-        </Text>
-      )}
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800} lineClamp={1}>
+        {prOrCommitTitle}
+      </Text>
     </Layout.Vertical>
   ) : (
-    renderDetails({
-      iconName: triggerMap.MANUAL.icon,
-      label: triggerMap.MANUAL.getText()
-    })
+    <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+      {iconName && <Icon name={iconName} size={12} />}
+      {typeof getText === 'function' && (
+        <Text font={{ size: 'small' }} color={Color.GREY_800} lineClamp={1}>
+          {getText(data?.startTs, data?.executionTriggerInfo?.triggeredBy?.identifier)}
+        </Text>
+      )}
+    </Layout.Horizontal>
   )
 }

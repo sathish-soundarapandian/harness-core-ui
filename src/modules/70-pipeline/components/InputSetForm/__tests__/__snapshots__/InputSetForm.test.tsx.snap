@@ -850,7 +850,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
                       </div>
                     </div>
                     <div
-                      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+                      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
                     >
                       <div
                         class="Layout--vertical StyledProps--main"
@@ -1663,7 +1663,7 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
                       </div>
                     </div>
                     <div
-                      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+                      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
                     >
                       <div
                         class="Layout--vertical StyledProps--main"

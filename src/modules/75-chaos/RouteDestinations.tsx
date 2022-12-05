@@ -80,11 +80,11 @@ import { RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { Duration } from '@common/exports'
 import { DefaultConsoleViewStepDetails, logsRenderer } from '@pipeline/components/LogsContent/LogsContent'
 import ChaosHomePage from './pages/home/ChaosHomePage'
-import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
 import ChaosTrialHomePage from './pages/home/ChaosTrialHomePage'
 import { ChaosExperimentStep } from './components/PipelineSteps/ChaosExperimentStep/ChaosExperimentStep'
 import ChaosExperimentExecView from './components/PipelineSteps/ChaosExperimentExecutionView/ChaosExperimentExecView'
+import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 
 // eslint-disable-next-line import/no-unresolved
 const ChaosMicroFrontend = React.lazy(() => import('chaos/MicroFrontendApp'))

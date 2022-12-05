@@ -41,9 +41,10 @@ ul.values {
   margin: 0;
   list-style-type: none;
 
-  li {
-    font-size: var(--font-size-small);
+  li,
+  .git-ops-env-text {
+    font-size: var(--font-size-small) !important;
     color: var(--primary-9);
-    line-height: 1.33;
+    line-height: 1.33 !important;
   }
 }

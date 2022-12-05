@@ -144,6 +144,7 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
   return (
     <Formik<FreezeWindowFormData>
       enableReinitialize
+      validateOnMount
       validate={values => onChange?.(processFormData(values))}
       onSubmit={values => onSubmit?.(processFormData(values))}
       formName="freezeWindowSchedule"

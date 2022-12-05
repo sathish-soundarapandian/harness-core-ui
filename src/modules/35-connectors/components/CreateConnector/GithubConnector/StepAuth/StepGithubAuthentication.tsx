@@ -59,7 +59,7 @@ interface StepGithubAuthenticationProps extends ConnectorInfoDTO {
 }
 
 interface GithubAuthenticationProps {
-  onConnectorCreated: (data?: ConnectorRequestBody) => void | Promise<void>
+  onConnectorCreated?: (data?: ConnectorRequestBody) => void | Promise<void>
   isEditMode: boolean
   setIsEditMode: (val: boolean) => void
   setFormData?: (formData: ConnectorConfigDTO) => void

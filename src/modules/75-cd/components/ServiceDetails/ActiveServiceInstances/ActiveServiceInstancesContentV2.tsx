@@ -41,6 +41,7 @@ export interface TableRowData {
   showEnv?: boolean
   totalEnvs?: number
   totalInfras?: number
+  rowNum?: number
   tableType?: TableType
 }
 
@@ -85,6 +86,7 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
               lastDeployedAt: defaultTo(entity.lastDeployedAt, ''),
               envId: defaultTo(env.envId, ''),
               envName: defaultTo(env.envName, ''),
+              rowNum: index,
               tableType: TableType.FULL
             }
           }
@@ -108,6 +110,7 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
               lastPipelineExecutionId: '',
               lastPipelineExecutionName: '',
               lastDeployedAt: '',
+              rowNum: 0,
               tableType: TableType.FULL
             })
           }
@@ -379,7 +382,7 @@ const RenderInstanceCount: Renderer<CellProps<TableRowData>> = ({
 
 const RenderInstances: Renderer<CellProps<TableRowData>> = ({
   row: {
-    original: { envId, artifactVersion: buildId, instanceCount, tableType }
+    original: { envId, artifactVersion: buildId, instanceCount, tableType, rowNum }
   }
 }) => {
   TOTAL_VISIBLE_INSTANCES = tableType === TableType.PREVIEW ? 4 : 7
@@ -390,7 +393,9 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
         .map((_, index) => (
           <Popover
             interactionKind={PopoverInteractionKind.HOVER}
+            disabled={tableType === TableType.SUMMARY}
             key={index}
+            position={Position.TOP}
             modifiers={{ preventOverflow: { escapeWithReference: true } }}
           >
             <Container
@@ -400,7 +405,7 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
               background={Color.PRIMARY_3}
               margin={{ left: 'xsmall', right: 'xsmall', top: 'xsmall', bottom: 'xsmall' }}
             />
-            <ActiveServiceInstancePopover buildId={buildId} envId={envId} instanceNum={index} />
+            <ActiveServiceInstancePopover buildId={buildId} envId={envId} instanceNum={defaultTo(rowNum, 0) + index} />
           </Popover>
         ))}
       {instanceCount > TOTAL_VISIBLE_INSTANCES ? (

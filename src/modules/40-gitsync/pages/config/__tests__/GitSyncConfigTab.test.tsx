@@ -11,7 +11,6 @@ import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
 import routes from '@common/RouteDefinitions'
 import GitSyncConfigTab from '../GitSyncConfigTab'
 import mockFullSyncFiles from './mockFullSyncFiles.json'
-const pageItemCount = mockFullSyncFiles.data.pageItemCount
 
 const fetchFullSyncEntities = jest.fn().mockReturnValue(Promise.resolve(mockFullSyncFiles))
 const mockReSync = jest.fn().mockResolvedValue({
@@ -54,7 +53,6 @@ describe('Git Sync - Config tab', () => {
     })
 
     await waitFor(() => expect(queryByText('entity one')).toBeInTheDocument())
-    expect(queryByText(`${pageItemCount} of ${pageItemCount}`)).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
 })

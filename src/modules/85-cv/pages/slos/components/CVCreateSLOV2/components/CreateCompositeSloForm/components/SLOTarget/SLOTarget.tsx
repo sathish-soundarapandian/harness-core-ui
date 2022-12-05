@@ -59,17 +59,17 @@ const SLOTarget = ({ formikProps, dataPoints }: SLOTargetProps): JSX.Element => 
         />
       </Container>
       <Layout.Horizontal spacing="xxxlarge" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-        <Container width={450}>
+        <Container width={500}>
           <SLOTargetChart
             bottomLabel={
               <Text
                 color={Color.GREY_500}
                 font={{ variation: FontVariation.SMALL_SEMI }}
-                margin={{ top: 'large', left: 'xxxlarge' }}
+                margin={{ left: 'xxxlarge' }}
                 icon="symbol-square"
                 iconProps={{ color: Color.PRIMARY_4 }}
               >
-                {getString('cv.SLIMetricRatio')}
+                {getString('cv.CompositeSLO.SLIMetricRatio')}
               </Text>
             }
             customChartOptions={getCustomOptionsForSLOTargetChart(formikProps.values?.SLOTargetPercentage)}

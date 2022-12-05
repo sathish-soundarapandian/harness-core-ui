@@ -7,7 +7,7 @@
 
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from '../../types'
-import { processInitialValues, processFormValues } from '../../utils'
+import { processInitialValues, processFormValues } from '../utils'
 
 describe('process initial values', () => {
   test('clean slate', () => {

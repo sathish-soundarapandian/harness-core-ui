@@ -165,6 +165,7 @@ export default function MetricsDashboardList<T>(props: MetricsDashboardListProps
                   pageIndex: pageIndex,
                   pageCount: totalPages,
                   itemCount: pageItemCount,
+                  showPagination: true,
                   gotoPage: newPageIndex => {
                     setFilterAndPageOffset({ pageOffset: newPageIndex, filter: filter })
                   }

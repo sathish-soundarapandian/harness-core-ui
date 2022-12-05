@@ -38,14 +38,14 @@ export const StepTitle = ({
       >
         {isCurrent ? (
           <Icon
-            name={isErrorOrSuccess ? icon : 'edit'}
-            size={20}
+            name={isErrorOrSuccess ? icon : 'Edit'}
+            size={isErrorOrSuccess ? 20 : 16}
             margin="small"
             color={iconColor}
-            className={cx(!isErrorOrSuccess && css.editIcon)}
+            className={cx(css.iconNoBorder, !isErrorOrSuccess && css.editIcon)}
           />
         ) : (
-          <Icon name={icon} size={20} margin="small" color={iconColor} />
+          <Icon name={icon} size={20} margin="small" color={iconColor} className={css.iconNoBorder} />
         )}
         <Text font={{ variation: FontVariation.H5 }} color={labelColor}>
           {step.title} {isOptional && getString('titleOptional')}

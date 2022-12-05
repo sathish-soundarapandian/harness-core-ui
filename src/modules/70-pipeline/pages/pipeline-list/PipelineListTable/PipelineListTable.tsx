@@ -133,17 +133,13 @@ export function PipelineListTable({
       className={css.table}
       columns={columns}
       data={content}
-      pagination={
-        totalElements > size
-          ? {
-              itemCount: totalElements,
-              pageSize: size,
-              pageCount: totalPages,
-              pageIndex: number,
-              gotoPage
-            }
-          : undefined
-      }
+      pagination={{
+        itemCount: totalElements,
+        pageSize: size,
+        pageCount: totalPages,
+        pageIndex: number,
+        gotoPage
+      }}
       sortable
       getRowClassName={() => css.tableRow}
       onRowClick={rowDetails => history.push(routes.toPipelineStudio(getRouteProps(pathParams, rowDetails)))}

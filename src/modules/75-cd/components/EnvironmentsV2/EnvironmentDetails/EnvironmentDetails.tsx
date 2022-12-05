@@ -55,6 +55,8 @@ import { ServiceOverrides } from './ServiceOverrides/ServiceOverrides'
 import InfrastructureDefinition from './InfrastructureDefinition/InfrastructureDefinition'
 import { EnvironmentDetailsTab } from '../utils'
 import GitOpsCluster from './GitOpsCluster/GitOpsCluster'
+import EnvironmentDetailSummary from './EnvironmentDetailSummary/EnvironmentDetailSummary'
+
 import css from './EnvironmentDetails.module.scss'
 
 export default function EnvironmentDetails(): React.ReactElement {
@@ -66,8 +68,9 @@ export default function EnvironmentDetails(): React.ReactElement {
 
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
-  const { GITOPS_ONPREM_ENABLED } = useFeatureFlags()
+  const { GITOPS_ONPREM_ENABLED, CDC_ENVIRONMENT_DASHBOARD_NG } = useFeatureFlags()
   const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
+  const environmentSummaryEnabled = CDC_ENVIRONMENT_DASHBOARD_NG
 
   const formikRef = useRef<FormikProps<NGEnvironmentInfoConfig>>()
 
@@ -227,6 +230,12 @@ export default function EnvironmentDetails(): React.ReactElement {
                     selectedTabId={selectedTabId}
                     data-tabId={selectedTabId}
                     tabList={[
+                      {
+                        id: EnvironmentDetailsTab.SUMMARY,
+                        title: getString('summary'),
+                        panel: <EnvironmentDetailSummary environmentIdentifiers={environmentIdentifier} />,
+                        hidden: !environmentSummaryEnabled
+                      },
                       {
                         id: EnvironmentDetailsTab.CONFIGURATION,
                         title: getString('configuration'),

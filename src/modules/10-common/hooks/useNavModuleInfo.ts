@@ -14,6 +14,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import type { ModuleLicenseDTO } from '../../../services/cd-ng'
 
 export type NavModuleName =
   | ModuleName.CD
@@ -28,14 +29,14 @@ export type NavModuleName =
 // Default order of modules on side nav, please add modules to this list accordingly.
 // For any module to be visible on side nav, it has to be added in this list
 export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
+  ModuleName.CODE,
   ModuleName.CD,
   ModuleName.CI,
   ModuleName.CF,
   ModuleName.CE,
   ModuleName.CV,
   ModuleName.STO,
-  ModuleName.CHAOS,
-  ModuleName.CODE
+  ModuleName.CHAOS
 ]
 
 export interface useNavModuleInfoReturnType {
@@ -51,7 +52,7 @@ interface ModuleInfo {
   icon: IconName
   label: StringKeys
   getHomePageUrl: (accountId: string) => string
-  featureFlagName: FeatureFlag
+  featureFlagName?: FeatureFlag
   color: string
 }
 
@@ -93,9 +94,8 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   },
   [ModuleName.STO]: {
     icon: 'sto-color-filled',
-    label: 'common.stoText',
+    label: 'common.purpose.sto.continuous',
     getHomePageUrl: (accountId: string) => routes.toSTO({ accountId }),
-    featureFlagName: FeatureFlag.SECURITY,
     color: '--sto-border'
   },
   [ModuleName.CHAOS]: {
@@ -153,18 +153,29 @@ const getModuleInfo = (
   }
 }
 
+const shouldBeVisible = (
+  module: NavModuleName,
+  featureFlags: Partial<Record<FeatureFlag, boolean>>,
+  licenseInformation: { [key: string]: ModuleLicenseDTO } | Record<string, undefined>
+) => {
+  const featureFlagName = moduleInfoMap[module]?.featureFlagName
+  return featureFlagName !== undefined
+    ? !!featureFlags[featureFlagName]
+    : licenseInformation[module]?.status === 'ACTIVE'
+}
+
 const useNavModuleInfo = (module: NavModuleName) => {
   const { accountId } = useParams<AccountPathProps>()
   const featureFlags = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
-  const { featureFlagName, color } = moduleInfoMap[module]
+  const { color } = moduleInfoMap[module]
 
   return getModuleInfo(
     moduleInfoMap[module],
     accountId,
     !!licenseInformation[module]?.id,
-    !!featureFlags[featureFlagName],
+    shouldBeVisible(module, featureFlags, licenseInformation),
     color
   ) as useNavModuleInfoReturnType
 }
@@ -184,14 +195,12 @@ export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoRet
         moduleInfoMap[module],
         accountId,
         !!licenseInformation[module]?.id,
-        !!featureFlags[moduleInfoMap[module].featureFlagName],
+        shouldBeVisible(module, featureFlags, licenseInformation),
         moduleInfoMap[module].color
       )
     }
   }, {})
 
-  // eslint-disable-next-line
-  // @ts-ignore
   return infoMap as Record<NavModuleName, useNavModuleInfoReturnType>
 }
 

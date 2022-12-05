@@ -95,9 +95,12 @@ export function StackedCircleContainer<T>({
 
 export const makeStackedCircleShortName = (name: string): string => {
   const shortName = name
+    .trim()
     .split(/\s/)
-    .map((token, index) => (index <= 1 ? token[0] : ''))
-    .reduce((obj, item) => obj + item, '')
+    .filter(token => !!token)
+    .map(token => token[0])
+    .slice(0, 2)
+    .join('')
 
-  return (shortName.length === 1 ? name.substring(0, 2) : shortName).toLocaleUpperCase()
+  return (shortName.length === 1 ? name.trim().substring(0, 2) : shortName).toLocaleUpperCase()
 }

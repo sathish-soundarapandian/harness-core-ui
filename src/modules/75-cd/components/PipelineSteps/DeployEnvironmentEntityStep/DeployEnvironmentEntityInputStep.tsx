@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
-import { defaultTo, get, isBoolean, isEmpty, isEqual, isNil, merge, set } from 'lodash-es'
+import { defaultTo, get, isBoolean, isEmpty, isEqual, isNil, merge, pick, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { Spinner } from '@blueprintjs/core'
 import { v4 as uuid } from 'uuid'
@@ -59,7 +59,8 @@ export default function DeployEnvironmentEntityInputStep({
   isMultiEnvironment,
   deployToAllEnvironments,
   gitOpsEnabled,
-  stepViewType
+  stepViewType,
+  areFiltersAdded
 }: DeployEnvironmentEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
   const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
@@ -266,8 +267,15 @@ export default function DeployEnvironmentEntityInputStep({
     })
 
     if (isMultiEnvironment) {
-      updateStageFormTemplate(newEnvironmentsTemplate, fullPath)
-      formik.setFieldValue(pathToEnvironments, newEnvironmentsValues)
+      if (areFiltersAdded) {
+        formik.setFieldValue(
+          pathToEnvironments,
+          newEnvironmentsValues.map(envValue => pick(envValue, 'environmentRef'))
+        )
+      } else {
+        updateStageFormTemplate(newEnvironmentsTemplate, fullPath)
+        formik.setFieldValue(pathToEnvironments, newEnvironmentsValues)
+      }
     } else {
       const stageTemplate = getStageFormTemplate<DeployEnvironmentEntityConfig>(`${pathPrefix}environment`)
 

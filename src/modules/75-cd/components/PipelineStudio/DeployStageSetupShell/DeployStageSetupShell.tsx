@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
+import { useParams } from 'react-router-dom'
 import { Layout, Tabs, Tab, Button, Icon, ButtonVariation, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import cx from 'classnames'
 import { Expander, IconName } from '@blueprintjs/core'
@@ -13,6 +14,7 @@ import { defaultTo, get, isEmpty, set, debounce } from 'lodash-es'
 import type { ValidationError } from 'yup'
 import YAML from 'yaml'
 import produce from 'immer'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import {
   GetExecutionStrategyYamlQueryParams,
@@ -95,6 +97,7 @@ export default function DeployStageSetupShell(): JSX.Element {
   } = pipelineContext
 
   const query = useQueryParams()
+  const { accountId } = useParams<AccountPathProps>()
   const [incompleteTabs, setIncompleteTabs] = React.useState<{ [key in DeployTabs]?: boolean }>({})
   const [selectedTabId, setSelectedTabId] = React.useState<DeployTabs>(
     selectedStepId ? DeployTabs.EXECUTION : DeployTabs.SERVICE
@@ -212,6 +215,7 @@ export default function DeployStageSetupShell(): JSX.Element {
 
   const { data: yamlSnippet, refetch: refetchYamlSnippet } = useGetExecutionStrategyYaml({
     queryParams: {
+      accountIdentifier: accountId,
       serviceDefinitionType: selectedDeploymentType as GetExecutionStrategyYamlQueryParams['serviceDefinitionType'],
       strategyType
     },

@@ -8,7 +8,7 @@
 import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { isEmpty, set, get, isArray } from 'lodash-es'
+import { isEmpty, set, get, isArray, defaultTo } from 'lodash-es'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
 import { v4 as uuid } from 'uuid'
@@ -165,11 +165,12 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
       }
     }
 
+    const scriptValue = defaultTo(data?.spec?.source?.spec?.script, '').toString()
     /* istanbul ignore else */
     if (
       getMultiTypeFromValue(template?.spec?.source?.spec?.script) === MultiTypeInputType.RUNTIME &&
       isRequired &&
-      isEmpty(data?.spec?.source?.spec?.script)
+      isEmpty(scriptValue)
     ) {
       set(errors, 'spec.source.spec.script', getString?.('fieldRequired', { field: 'Script' }))
     }

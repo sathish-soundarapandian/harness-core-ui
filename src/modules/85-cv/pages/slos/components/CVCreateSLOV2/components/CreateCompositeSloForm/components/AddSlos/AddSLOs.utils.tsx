@@ -10,7 +10,7 @@ import { cloneDeep } from 'lodash-es'
 import { Text } from '@harness/uicore'
 import type { Renderer, CellProps } from 'react-table'
 import { PeriodTypes, PeriodLengthTypes } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
-import type { ServiceLevelObjectiveDetailsDTO, SLODashboardApiFilter, SLOTargetFilterDTO } from 'services/cv'
+import type { SLODashboardApiFilter, SLOTargetFilterDTO } from 'services/cv'
 import type { SLOObjective, SLOV2Form } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { SLOType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import type {
@@ -88,8 +88,8 @@ export const getDistribution = ({
   return clonedArr
 }
 
-export const RenderName: Renderer<CellProps<ServiceLevelObjectiveDetailsDTO>> = ({ row }) => {
-  return <Text>{row.original.serviceLevelObjectiveRef}</Text>
+export const RenderName: Renderer<CellProps<SLOObjective>> = ({ row }) => {
+  return <Text>{row.original.name || row.original.serviceLevelObjectiveRef}</Text>
 }
 
 export const createRequestBodyForSLOHealthListViewV2 = ({ values }: { values: SLOV2Form }): SLODashboardApiFilter => {

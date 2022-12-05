@@ -20,6 +20,7 @@ import { PipelineStageOverview } from './PipelineStageOverview'
 import { PipelineStageAdvancedSpecifications } from './PipelineStageAdvancedSpecifications'
 import { PipelineStageInputSection } from './PipelineStageInputSection'
 import { PipelineStageTabs, TabsHeadingOrder } from './utils'
+import { PipelineStageOutputSection } from './PipelineStageOutputSection/PipelineStageOutputSection'
 import approvalStepCss from '../ApprovalStage/ApprovalStageSetupShellMode.module.scss'
 
 export function PipelineStageSetupShellMode(): React.ReactElement {
@@ -115,12 +116,32 @@ export function PipelineStageSetupShellMode(): React.ReactElement {
           id={PipelineStageTabs.INPUTS}
           title={
             <span className={approvalStepCss.tab}>
-              <Icon name="deployment-success-legacy" height={20} size={20} />
+              <Icon name="template-inputs" height={20} size={20} />
               {getString('inputs')}
             </span>
           }
           panel={<PipelineStageInputSection storeMetadata={storeMetadata}>{actionBtns}</PipelineStageInputSection>}
           data-testid={PipelineStageTabs.INPUTS}
+          className={cx(approvalStepCss.fullHeight, approvalStepCss.stepGroup)}
+        />
+        <Icon
+          name="chevron-right"
+          height={20}
+          size={20}
+          margin={{ right: 'small', left: 'small' }}
+          color={'grey400'}
+          style={{ alignSelf: 'center' }}
+        />
+        <Tab
+          id={PipelineStageTabs.OUTPUTS}
+          title={
+            <span className={approvalStepCss.tab}>
+              <Icon name="template-inputs" height={20} size={20} color={'black'} />
+              {getString('connectors.ceAws.crossAccountRoleExtention.step3.p2')}
+            </span>
+          }
+          panel={<PipelineStageOutputSection>{actionBtns}</PipelineStageOutputSection>}
+          data-testid={PipelineStageTabs.OUTPUTS}
           className={cx(approvalStepCss.fullHeight, approvalStepCss.stepGroup)}
         />
         <Icon

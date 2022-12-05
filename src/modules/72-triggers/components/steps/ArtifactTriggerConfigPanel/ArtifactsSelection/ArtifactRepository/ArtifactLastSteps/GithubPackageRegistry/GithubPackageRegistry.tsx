@@ -67,7 +67,7 @@ function FormComponent({
     branch
   }
   const packageTypeValue = getGenuineValue(formik.values.packageType || initialValues?.packageType)
-  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value)
+  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
   const orgValue = getGenuineValue(formik.values.org)
 
   const {

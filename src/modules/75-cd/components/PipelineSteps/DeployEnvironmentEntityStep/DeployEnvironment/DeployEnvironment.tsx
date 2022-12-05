@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
+import { unstable_batchedUpdates } from 'react-dom'
 import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
@@ -21,6 +22,7 @@ import {
   Layout,
   ModalDialog,
   MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
   SelectOption,
   useToggleOpen
 } from '@harness/uicore'
@@ -30,7 +32,7 @@ import { useStrings } from 'framework/strings'
 
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
-import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
+import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -51,6 +53,12 @@ import AddEditEnvironmentModal from '../../DeployInfrastructureStep/AddEditEnvir
 import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
 import DeployCluster from '../DeployCluster/DeployCluster'
 
+import InlineEntityFilters from '../components/InlineEntityFilters/InlineEntityFilters'
+import {
+  EntityFilterType,
+  EntityType,
+  InlineEntityFiltersRadioType
+} from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
 import css from './DeployEnvironment.module.scss'
 
 interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomStepProps> {
@@ -113,9 +121,10 @@ export default function DeployEnvironment({
   )
 
   // Constants
-  const isFixed = environmentsType === MultiTypeInputType.FIXED
-
-  const isExpression = environmentsType === MultiTypeInputType.EXPRESSION
+  const isFixed = isMultiTypeFixed(environmentsType)
+  const isRuntime = isMultiTypeRuntime(environmentsType)
+  const isExpression = isMultiTypeExpression(environmentsType)
+  const filterPrefix = 'environmentFilters.runtime'
 
   // API
   const {
@@ -242,8 +251,8 @@ export default function DeployEnvironment({
         // set value of unique path to All in case no environments are selected or runtime if environments is set to runtime
         // This is specifically used for on load
         const envIdentifierValue =
-          getMultiTypeFromValue(values.environments) === MultiTypeInputType.RUNTIME
-            ? values.environments
+          getMultiTypeFromValue(initialValues.environments) === MultiTypeInputType.RUNTIME
+            ? initialValues.environments
             : [SELECT_ALL_OPTION]
 
         setFieldValue(`${uniquePathForEnvironments.current}`, envIdentifierValue)
@@ -349,6 +358,15 @@ export default function DeployEnvironment({
     updateFormikAndLocalState(newFormValues)
   }
 
+  const handleFilterRadio = (selectedRadioValue: InlineEntityFiltersRadioType): void => {
+    if (selectedRadioValue === InlineEntityFiltersRadioType.MANUAL) {
+      unstable_batchedUpdates(() => {
+        setFieldValue(gitOpsEnabled ? 'clusters' : 'infrastructures', RUNTIME_INPUT_VALUE)
+        setFieldValue(filterPrefix, undefined)
+      })
+    }
+  }
+
   return (
     <>
       <Layout.Horizontal
@@ -376,7 +394,12 @@ export default function DeployEnvironment({
                 setFieldValue(`environments`, undefined)
                 setSelectedEnvironments([])
               } else {
-                setFieldValue(`environments`, items)
+                unstable_batchedUpdates(() => {
+                  setFieldValue(`environments`, items)
+                  if (isValueRuntimeInput(items)) {
+                    setFieldValue(gitOpsEnabled ? 'clusters' : 'infrastructures', RUNTIME_INPUT_VALUE)
+                  }
+                })
                 setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
               }
             }}
@@ -475,6 +498,57 @@ export default function DeployEnvironment({
               </>
             )}
           </>
+        )}
+
+        {/* This component is specifically for filters */}
+        {isRuntime && !readonly && gitOpsEnabled && (
+          <InlineEntityFilters
+            filterPrefix={filterPrefix}
+            entityStringKey={gitOpsEnabled ? 'common.clusters' : 'common.infrastructures'}
+            onRadioValueChange={handleFilterRadio}
+            readonly={readonly}
+            showCard
+            hasTopMargin
+            baseComponent={
+              <>
+                {gitOpsEnabled ? (
+                  <DeployCluster
+                    initialValues={{
+                      environments: RUNTIME_INPUT_VALUE as any
+                    }}
+                    readonly
+                    allowableTypes={allowableTypes}
+                    isMultiCluster
+                    environmentIdentifier={''}
+                    lazyCluster
+                  />
+                ) : (
+                  <DeployInfrastructure
+                    initialValues={{
+                      environments: RUNTIME_INPUT_VALUE as any
+                    }}
+                    readonly
+                    allowableTypes={allowableTypes}
+                    environmentIdentifier={''}
+                    isMultiInfrastructure
+                    deploymentType={deploymentType}
+                    customDeploymentRef={customDeploymentRef}
+                    lazyInfrastructure
+                  />
+                )}
+              </>
+            }
+            entityFilterListProps={{
+              entities: [gitOpsEnabled ? EntityType.CLUSTERS : EntityType.INFRASTRUCTURES],
+              filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
+              placeholderProps: {
+                entity: getString('common.filterOnName', {
+                  name: getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
+                }),
+                tags: getString('common.filterOnName', { name: getString('typeLabel') })
+              }
+            }}
+          />
         )}
 
         <ModalDialog

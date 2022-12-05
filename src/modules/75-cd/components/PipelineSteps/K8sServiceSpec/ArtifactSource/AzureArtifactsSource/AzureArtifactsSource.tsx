@@ -34,7 +34,6 @@ import {
   getFqnPath,
   getImagePath,
   getYamlData,
-  isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
   resetTags
@@ -86,8 +85,6 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
     artifact?.spec?.connectorRef,
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
-
-  const scopeValue = defaultTo(get(initialValues?.artifacts, `${artifactPath}.spec.scope`), artifact?.spec?.scope)
 
   const projectValue = defaultTo(get(initialValues?.artifacts, `${artifactPath}.spec.project`), artifact?.spec?.project)
 
@@ -320,7 +317,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
     return false
   }
 
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
       {isRuntime && (
@@ -351,7 +348,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
               }}
             />
           )}
-          {scopeValue === 'project' && isFieldRuntime(`artifacts.${artifactPath}.spec.project`, template) && (
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.project`, template) && (
             <FormInput.MultiTypeInput
               selectItems={getItems(fetchingProjects, 'Projects', projectItems)}
               // disabled={isFeedDisabled()}

@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
-import { defaultTo, get, isBoolean, isEmpty, isEqual, isNil, merge, set, unset } from 'lodash-es'
+import { defaultTo, get, isBoolean, isEmpty, isEqual, isNil, merge, pick, set, unset } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { Spinner } from '@blueprintjs/core'
 import { v4 as uuid } from 'uuid'
@@ -63,7 +63,8 @@ export default function DeployInfrastructureEntityInputStep({
   isMultipleInfrastructure,
   deployToAllInfrastructures,
   showEnvironmentsSelectionInputField,
-  stepViewType
+  stepViewType,
+  areEnvironmentFiltersAdded
 }: DeployInfrastructureEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
   const formik = useFormikContext<DeployEnvironmentEntityConfig>()
@@ -248,8 +249,15 @@ export default function DeployInfrastructureEntityInputStep({
     })
 
     if (isMultipleInfrastructure) {
-      updateStageFormTemplate(newInfrastructuresTemplate, `${fullPathPrefix}infrastructureDefinitions`)
-      formik.setFieldValue(localPath, newInfrastructuresValues)
+      if (areEnvironmentFiltersAdded) {
+        formik.setFieldValue(
+          localPath,
+          newInfrastructuresValues.map(infraValue => pick(infraValue, 'identifier'))
+        )
+      } else {
+        updateStageFormTemplate(newInfrastructuresTemplate, `${fullPathPrefix}infrastructureDefinitions`)
+        formik.setFieldValue(localPath, newInfrastructuresValues)
+      }
     } else {
       updateStageFormTemplate(newInfrastructuresTemplate[0], `infrastructureDefinitions[0]`)
 

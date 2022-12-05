@@ -361,6 +361,7 @@ export const TargetsPage: React.FC = () => {
               setPageNumber(index)
               refetchTargets({ queryParams: { ...queryParams, pageNumber: index } })
             }}
+            showPagination
           />
         )
       }
