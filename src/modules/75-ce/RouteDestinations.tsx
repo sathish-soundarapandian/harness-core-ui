@@ -688,7 +688,7 @@ const CENonMFERoutes = (
 const CERoutes: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const { CCM_MICRO_FRONTEND } = useFeatureFlags()
-  const enableMicroFrontend = CCM_MICRO_FRONTEND
+  const enableMicroFrontend = CCM_MICRO_FRONTEND || true
 
   const urqlClient = React.useMemo(() => {
     const url = getConfig(`ccm/api/graphql?accountIdentifier=${accountId}&routingId=${accountId}`)
