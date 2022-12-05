@@ -131,7 +131,16 @@ export enum StepType {
   TasService = 'TasService',
   TasInfra = 'TAS',
   Asg = 'ASGServiceSpec',
-  AsgInfraSpec = 'AsgInfraSpec'
+  AsgInfraSpec = 'AsgInfraSpec',
+  TASRollback = 'TasRollbackStep',
+  TasAppResize = 'TasAppResize',
+  TasRollback = 'TasRollback',
+  TasSwapRoutes = 'TasSwapRoutes',
+  TasSwapRollback = 'SwapRollback',
+  TanzuCommand = 'TanzuCommand'
+  // TasBasicAppSetup = 'TasBasicAppSetup'
+  // TasCanaryAppSetup='TasCanaryAppSetup',
+  // TasBGAppSetup='TasBGAppSetup',
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

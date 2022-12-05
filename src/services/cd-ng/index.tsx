@@ -3617,6 +3617,14 @@ export interface EntityDetail {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
 }
 
 export interface EntityDetailProtoDTO {
@@ -6010,6 +6018,14 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
   )[]
   moduleType?:
     | 'CD'
@@ -6193,6 +6209,14 @@ export interface GitEntityFilterProperties {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6413,6 +6437,14 @@ export interface GitFullSyncEntityInfoDTO {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6591,6 +6623,14 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -6890,6 +6930,14 @@ export interface GitSyncEntityDTO {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7062,6 +7110,14 @@ export interface GitSyncEntityListDTO {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7251,6 +7307,14 @@ export interface GitSyncErrorDTO {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -10427,6 +10491,14 @@ export interface ReferencedByDTO {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
 }
 
 export interface RefreshResponse {
@@ -11607,6 +11679,14 @@ export interface ResponseListEntityType {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -13531,7 +13611,6 @@ export type SamlSettings = SSOSettings & {
   entityIdentifier?: string
   groupMembershipAttr?: string
   logoutUrl?: string
-  metaDataFile?: string
   origin: string
   samlProviderType?: 'AZURE' | 'OKTA' | 'ONELOGIN' | 'OTHER'
   settingType?:
@@ -14088,8 +14167,6 @@ export type ServiceNowConnector = ConnectorConfigDTO & {
   delegateSelectors?: string[]
   passwordRef?: string
   serviceNowUrl: string
-  username?: string
-  usernameRef?: string
 }
 
 export interface ServiceNowFieldAllowedValueNG {
@@ -14665,6 +14742,8 @@ export interface StepData {
     | 'TerraformApply'
     | 'TerragruntDestroy'
     | 'TerragruntRollback'
+    | 'SwapRollback'
+    | 'TanzuCommand'
 }
 
 export interface StepElementConfig {
@@ -14915,6 +14994,49 @@ export type TanzuApplicationServiceInfrastructure = Infrastructure & {
 
 export type TanzuApplicationServiceSpec = ServiceSpec & {}
 
+export type TasAppResizeStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  newAppInstances: TasInstanceSelectionWrapper
+  oldAppInstances?: TasInstanceSelectionWrapper
+}
+
+export type TasBGAppSetupStepInfo = StepSpecType & {
+  additionalRoutes?: string[]
+  delegateSelectors?: string[]
+  existingVersionToKeep?: number
+  instanceCount: 'FromManifest' | 'MatchRunningInstances'
+  tempRoutes?: string[]
+}
+
+export type TasBasicAppSetupStepInfo = StepSpecType & {
+  additionalRoutes?: string[]
+  delegateSelectors?: string[]
+  existingVersionToKeep?: number
+  instanceCount: 'FromManifest' | 'MatchRunningInstances'
+}
+
+export type TasCanaryAppSetupStepInfo = StepSpecType & {
+  additionalRoutes?: string[]
+  delegateSelectors?: string[]
+  existingVersionToKeep?: number
+  instanceCount: 'FromManifest' | 'MatchRunningInstances'
+  resizeStrategy?: 'UpScaleNewFirst' | 'DownScaleOldFirst'
+}
+
+export interface TasCommandScript {
+  store: TasCommandScriptStore
+}
+
+export interface TasCommandScriptStore {
+  spec?: StoreConfig
+  type: string
+}
+
+export type TasCommandStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  script: TasCommandScript
+}
+
 export type TasConnector = ConnectorConfigDTO & {
   credential: TasCredential
   delegateSelectors?: string[]
@@ -14945,6 +15067,11 @@ export type TasInstanceInfoDTO = InstanceInfoDTO & {
   tasApplicationName: string
 }
 
+export interface TasInstanceSelectionWrapper {
+  type?: 'Percentage' | 'Count'
+  value?: string //TODO:: CEHCK
+}
+
 export type TasManifest = ManifestAttributes & {
   autoScalerPath?: string[]
   cfCliVersion?: 'V7'
@@ -14958,6 +15085,20 @@ export type TasManualDetails = TasCredentialSpec & {
   passwordRef: string
   username?: string
   usernameRef?: string
+}
+
+export type TasRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type TasSwapRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  upsizeInActiveApp?: boolean
+}
+
+export type TasSwapRoutesStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  downSizeOldApplication: boolean
 }
 
 export interface TaskSelectorYaml {
@@ -16705,6 +16846,14 @@ export interface ListActivitiesQueryParams {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -16869,6 +17018,14 @@ export interface ListActivitiesQueryParams {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -17137,6 +17294,14 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17301,6 +17466,14 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -31888,6 +32061,14 @@ export interface ListReferredByEntitiesQueryParams {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -32113,6 +32294,14 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
   searchTerm?: string
 }
 
@@ -35347,6 +35536,14 @@ export interface GetReferencedByQueryParams {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
   searchTerm?: string
 }
 
@@ -37704,6 +37901,14 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -37936,6 +38141,14 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'IACMStep'
       | 'IACM'
       | 'Container'
+      | 'TasCanaryAppSetup'
+      | 'TasBGAppSetup'
+      | 'TasBasicAppSetupStep'
+      | 'TasAppResizeStep'
+      | 'TasRollbackStep'
+      | 'TasSwapRoutesStep'
+      | 'SwapRollback'
+      | 'TanzuCommand'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -43860,6 +44073,14 @@ export interface GetStepYamlSchemaQueryParams {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
   yamlGroup?: string
 }
 
@@ -44152,6 +44373,14 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -57330,6 +57559,14 @@ export interface GetYamlSchemaQueryParams {
     | 'IACMStep'
     | 'IACM'
     | 'Container'
+    | 'TasCanaryAppSetup'
+    | 'TasBGAppSetup'
+    | 'TasBasicAppSetupStep'
+    | 'TasAppResizeStep'
+    | 'TasRollbackStep'
+    | 'TasSwapRoutesStep'
+    | 'SwapRollback'
+    | 'TanzuCommand'
   subtype?:
     | 'K8sCluster'
     | 'Git'

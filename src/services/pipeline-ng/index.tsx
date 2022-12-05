@@ -773,6 +773,11 @@ export interface Capabilities {
   drop?: string[]
 }
 
+export interface Capabilities {
+  add?: string[]
+  drop?: string[]
+}
+
 export interface CcmConnectorFilter {
   awsAccountId?: string
   awsAccountIds?: string[]
