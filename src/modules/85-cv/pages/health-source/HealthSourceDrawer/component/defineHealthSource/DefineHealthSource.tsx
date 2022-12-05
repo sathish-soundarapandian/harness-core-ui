@@ -75,7 +75,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const isElkEnabled = useFeatureFlag(FeatureFlag.ELK_HEALTH_SOURCE)
   const isDataSourceTypeSelectorEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_AWS_PROMETHEUS)
   const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
-  const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
+  const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO) || true
 
   const disabledByFF: string[] = useMemo(() => {
     const disabledConnectorsList = []

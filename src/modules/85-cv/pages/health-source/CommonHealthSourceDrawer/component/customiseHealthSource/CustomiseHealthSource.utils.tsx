@@ -30,9 +30,9 @@ import ElkHealthSource from '@cv/pages/health-source/connectors/ElkHealthSource/
 import CloudWatch from '@cv/pages/health-source/connectors/CloudWatch/CloudWatch'
 import CommonHealthSourceContainer from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.container'
 import { healthSourcesConfig } from '@cv/pages/health-source/connectors/CommonHealthSource/HealthSourceConfigs/HealthSourceConfigs'
-import type { SourceDataInterface, UpdatedHealthSource } from '../../HealthSourceDrawerContent.types'
-import { SplunkProduct } from '../defineHealthSource/DefineHealthSource.constant'
+import type { SourceDataInterface, UpdatedHealthSource } from '../../CommonHealthSourceDrawer.types'
 import { CustomHealthMetric } from './CustomiseHealthSource.constant'
+import { SplunkProduct } from '../CommonDefineHealthSource/CommonDefineHealthSource.constant'
 
 const shouldRenderCustomHealthMetric = (data: SourceDataInterface): boolean => {
   return (

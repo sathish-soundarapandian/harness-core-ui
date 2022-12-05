@@ -1,0 +1,149 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Validate HealthSourceDrawerHeader should render 1`] = `
+<div>
+  <p
+    class="StyledProps--font StyledProps--main breadCrumbLink StyledProps--color StyledProps--color-primary7"
+    style="cursor: pointer; display: flex; align-items: center;"
+  >
+    <span
+      class="bp3-icon bp3-icon-arrow-left StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-small"
+      icon="arrow-left"
+    >
+      <svg
+        data-icon="arrow-left"
+        height="16"
+        viewBox="0 0 16 16"
+        width="16"
+      >
+        <desc>
+          arrow-left
+        </desc>
+        <path
+          d="M13.99 6.99H4.41L7.7 3.7a1.003 1.003 0 00-1.42-1.42l-5 5a1.014 1.014 0 000 1.42l5 5a1.003 1.003 0 001.42-1.42L4.41 8.99H14c.55 0 1-.45 1-1s-.46-1-1.01-1z"
+          fill-rule="evenodd"
+        />
+      </svg>
+    </span>
+    Test title
+  </p>
+  <div
+    class="ng-tooltip-native"
+  >
+    <p>
+      cv.healthSource.addHealthSource
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Validate HealthSourceDrawerHeader should render in cv 1`] = `
+<div>
+  <p
+    class="StyledProps--font StyledProps--main breadCrumbLink StyledProps--color StyledProps--color-primary7"
+    style="cursor: pointer; display: flex; align-items: center;"
+  >
+    <span
+      class="bp3-icon bp3-icon-arrow-left StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-small"
+      icon="arrow-left"
+    >
+      <svg
+        data-icon="arrow-left"
+        height="16"
+        viewBox="0 0 16 16"
+        width="16"
+      >
+        <desc>
+          arrow-left
+        </desc>
+        <path
+          d="M13.99 6.99H4.41L7.7 3.7a1.003 1.003 0 00-1.42-1.42l-5 5a1.014 1.014 0 000 1.42l5 5a1.003 1.003 0 001.42-1.42L4.41 8.99H14c.55 0 1-.45 1-1s-.46-1-1.01-1z"
+          fill-rule="evenodd"
+        />
+      </svg>
+    </span>
+    cv.healthSource.backtoMonitoredService
+  </p>
+  <div
+    class="ng-tooltip-native"
+  >
+    <p>
+      cv.healthSource.addHealthSource
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Validate HealthSourceDrawerHeader should render in cv when isEdit is true 1`] = `
+<div>
+  <p
+    class="StyledProps--font StyledProps--main breadCrumbLink StyledProps--color StyledProps--color-primary7"
+    style="cursor: pointer; display: flex; align-items: center;"
+  >
+    <span
+      class="bp3-icon bp3-icon-arrow-left StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-small"
+      icon="arrow-left"
+    >
+      <svg
+        data-icon="arrow-left"
+        height="16"
+        viewBox="0 0 16 16"
+        width="16"
+      >
+        <desc>
+          arrow-left
+        </desc>
+        <path
+          d="M13.99 6.99H4.41L7.7 3.7a1.003 1.003 0 00-1.42-1.42l-5 5a1.014 1.014 0 000 1.42l5 5a1.003 1.003 0 001.42-1.42L4.41 8.99H14c.55 0 1-.45 1-1s-.46-1-1.01-1z"
+          fill-rule="evenodd"
+        />
+      </svg>
+    </span>
+    cv.healthSource.backtoMonitoredService
+  </p>
+  <div
+    class="ng-tooltip-native"
+  >
+    <p>
+      cv.healthSource.editHealthSource
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Validate HealthSourceDrawerHeader should render with shouldRenderAtVerifyStep true 1`] = `
+<div>
+  <p
+    class="StyledProps--font StyledProps--main breadCrumbLink StyledProps--color StyledProps--color-primary7"
+    style="cursor: pointer; display: flex; align-items: center;"
+  >
+    <span
+      class="bp3-icon bp3-icon-arrow-left StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-small"
+      icon="arrow-left"
+    >
+      <svg
+        data-icon="arrow-left"
+        height="16"
+        viewBox="0 0 16 16"
+        width="16"
+      >
+        <desc>
+          arrow-left
+        </desc>
+        <path
+          d="M13.99 6.99H4.41L7.7 3.7a1.003 1.003 0 00-1.42-1.42l-5 5a1.014 1.014 0 000 1.42l5 5a1.003 1.003 0 001.42-1.42L4.41 8.99H14c.55 0 1-.45 1-1s-.46-1-1.01-1z"
+          fill-rule="evenodd"
+        />
+      </svg>
+    </span>
+    Test title
+  </p>
+  <div
+    class="ng-tooltip-native"
+  >
+    <p>
+      cv.healthSource.addHealthSource
+    </p>
+  </div>
+</div>
+`;

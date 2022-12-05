@@ -19,8 +19,11 @@ import type {
   UpdatedHealthSource
 } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 
-import type { MonitoredServiceForm } from '../../Service.types'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import CommonHealthSourceDrawerContent from '@cv/pages/health-source/CommonHealthSourceDrawer/CommonHealthSourceDrawerContent'
 import { createOpenHealthSourceTableProps, getIsNotDeleteOrCreate } from './HealthSourceTableContainer.utils'
+import type { MonitoredServiceForm } from '../../Service.types'
 
 export default function HealthSourceTableContainer({
   serviceFormFormik,
@@ -35,15 +38,20 @@ export default function HealthSourceTableContainer({
   expressions?: string[]
   onSave: (data: any) => void | Promise<void>
 }): JSX.Element {
+  const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO) || true
   const {
     showDrawer: showHealthSourceDrawer,
     hideDrawer: hideHealthSourceDrawer,
     setDrawerHeaderProps
   } = useDrawer({
     createHeader: props => <HealthSourceDrawerHeader {...props} />,
-    createDrawerContent: props => (
-      <HealthSourceDrawerContent {...props} isTemplate={isTemplate} expressions={expressions} />
-    )
+    createDrawerContent: props => {
+      if (isSumoLogicEnabled) {
+        return <CommonHealthSourceDrawerContent {...props} isTemplate={isTemplate} expressions={expressions} />
+      } else {
+        return <HealthSourceDrawerContent {...props} isTemplate={isTemplate} expressions={expressions} />
+      }
+    }
   })
 
   const updateHealthSource = useCallback(
