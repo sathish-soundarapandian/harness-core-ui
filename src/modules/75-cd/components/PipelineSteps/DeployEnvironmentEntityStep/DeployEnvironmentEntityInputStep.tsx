@@ -33,6 +33,8 @@ import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
 import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityCustomInputStepProps } from './types'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import { useGetEnvironmentsData } from './DeployEnvironment/useGetEnvironmentsData'
@@ -77,6 +79,8 @@ export default function DeployEnvironmentEntityInputStep({
 
   const environmentValue = get(initialValues, `environment.environmentRef`)
   const environmentValues: EnvironmentYamlV2[] = get(initialValues, pathToEnvironments)
+
+  const { GLOBAL_SERVICE_ENV } = useFeatureFlags()
 
   const getEnvironmentIdentifiers = useCallback(() => {
     if (environmentValue) {
@@ -382,54 +386,88 @@ export default function DeployEnvironmentEntityInputStep({
     ? getString('environments')
     : getString('cd.pipelineSteps.environmentTab.selectEnvironments')
 
+  const commonProps = {
+    name: isMultiEnvironment ? uniquePath.current : `${pathPrefix}environment.environmentRef`,
+    tooltipProps: isMultiEnvironment
+      ? { dataTooltipId: 'specifyYourEnvironments' }
+      : { dataTooltipId: 'specifyYourEnvironment' },
+    label: isMultiEnvironment
+      ? getString('cd.pipelineSteps.environmentTab.specifyYourEnvironments')
+      : getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment'),
+    disabled: disabled
+  }
+
   return (
     <>
       <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
         {getMultiTypeFromValue(inputSetData?.template?.environment?.environmentRef) === MultiTypeInputType.RUNTIME ? (
-          <ExperimentalInput
-            tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
-            name={`${pathPrefix}environment.environmentRef`}
-            placeholder={placeHolderForEnvironment}
-            selectItems={selectOptions}
-            useValue
-            multiTypeInputProps={{
-              allowableTypes: allowableTypes,
-              selectProps: {
-                addClearBtn: !disabled,
-                items: selectOptions
-              },
-              onChange: onEnvironmentRefChange
-            }}
-            disabled={disabled}
-            className={css.inputWidth}
-            formik={formik}
-          />
+          GLOBAL_SERVICE_ENV ? (
+            <MultiTypeEnvironmentField
+              {...commonProps}
+              placeholder={placeHolderForEnvironment}
+              setRefValue={true}
+              onChange={onEnvironmentRefChange}
+              isNewConnectorLabelVisible={false}
+              width={300}
+              multiTypeProps={{
+                allowableTypes: allowableTypes,
+                defaultValueToReset: ''
+              }}
+            />
+          ) : (
+            <ExperimentalInput
+              {...commonProps}
+              placeholder={placeHolderForEnvironment}
+              selectItems={selectOptions}
+              useValue
+              multiTypeInputProps={{
+                allowableTypes: allowableTypes,
+                selectProps: {
+                  addClearBtn: !disabled,
+                  items: selectOptions
+                },
+                onChange: onEnvironmentRefChange
+              }}
+              className={css.inputWidth}
+              formik={formik}
+            />
+          )
         ) : null}
 
         {/* If we have multiple environments to select individually or under env group, 
           and we are deploying to all environments from pipeline studio.
           Then we should hide this field and just update the formik values */}
         {isMultiEnvironment && deployToAllEnvironments !== true ? (
-          <FormMultiTypeMultiSelectDropDown
-            tooltipProps={{ dataTooltipId: 'specifyYourEnvironments' }}
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironments')}
-            name={uniquePath.current}
-            disabled={disabled}
-            dropdownProps={{
-              items: selectOptions,
-              placeholder: placeHolderForEnvironments,
-              disabled,
-              // checking for a non-boolean value as it is undefined in case of multi environments
-              isAllSelectionSupported: !!envGroupIdentifier
-            }}
-            onChange={handleEnvironmentsChange}
-            multiTypeProps={{
-              width: 300,
-              height: 32,
-              allowableTypes
-            }}
-          />
+          GLOBAL_SERVICE_ENV ? (
+            <MultiTypeEnvironmentField
+              {...commonProps}
+              placeholder={placeHolderForEnvironments}
+              isMultiSelect
+              onMultiSelectChange={handleEnvironmentsChange}
+              isNewConnectorLabelVisible={false}
+              width={300}
+              multiTypeProps={{
+                allowableTypes: allowableTypes
+              }}
+            />
+          ) : (
+            <FormMultiTypeMultiSelectDropDown
+              {...commonProps}
+              dropdownProps={{
+                items: selectOptions,
+                placeholder: placeHolderForEnvironments,
+                disabled,
+                // checking for a non-boolean value as it is undefined in case of multi environments
+                isAllSelectionSupported: !!envGroupIdentifier
+              }}
+              onChange={handleEnvironmentsChange}
+              multiTypeProps={{
+                width: 300,
+                height: 32,
+                allowableTypes
+              }}
+            />
+          )
         ) : null}
 
         {loading ? <Spinner className={css.inputSetSpinner} size={16} /> : null}

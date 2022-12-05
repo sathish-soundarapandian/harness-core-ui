@@ -54,6 +54,8 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
 import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { isEditEnvironment } from '../utils'
 
@@ -90,6 +92,7 @@ function DeployEnvironment({
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
 
+  const { GLOBAL_SERVICE_ENV } = useFeatureFlags()
   const [environments, setEnvironments] = useState<EnvironmentResponseDTO[]>()
   const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO>()
   const [environmentsSelectOptions, setEnvironmentsSelectOptions] = useState<SelectOption[]>()
@@ -397,41 +400,68 @@ function DeployEnvironment({
     )
   }, [environments, updateEnvironmentsList])
 
+  const commonProps = {
+    name: 'environment.environmentRef',
+    tooltipProps: { dataTooltipId: 'specifyYourEnvironment' },
+    label: getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment'),
+    disabled: readonly || (environmentRefType === MultiTypeInputType.FIXED && environmentsLoading)
+  }
+
   return (
     <Layout.Horizontal
       className={css.formRow}
       spacing="medium"
       flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
     >
-      <FormInput.MultiTypeInput
-        label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
-        tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
-        name={'environment.environmentRef'}
-        useValue
-        disabled={readonly || (environmentRefType === MultiTypeInputType.FIXED && environmentsLoading)}
-        placeholder={
-          environmentsLoading ? getString('loading') : getString('cd.pipelineSteps.environmentTab.selectEnvironment')
-        }
-        multiTypeInputProps={{
-          onTypeChange: setEnvironmentRefType,
-          width: 280,
-          onChange: item => {
-            setSelectedEnvironment(
-              environments?.find(environment => environment.identifier === (item as SelectOption)?.value)
-            )
+      {GLOBAL_SERVICE_ENV ? (
+        <MultiTypeEnvironmentField
+          {...commonProps}
+          placeholder={
+            environmentsLoading ? getString('loading') : getString('cd.pipelineSteps.environmentTab.selectEnvironment')
+          }
+          setRefValue={true}
+          isNewConnectorLabelVisible={false}
+          onChange={item => {
+            setSelectedEnvironment(environments?.find(environment => environment.identifier === item))
             if (formik?.values['infrastructureRef'] && item !== RUNTIME_INPUT_VALUE) {
               formik?.setFieldValue('infrastructureRef', '')
             }
-          },
-          selectProps: {
-            addClearBtn: !readonly,
-            items: defaultTo(environmentsSelectOptions, [])
-          },
-          allowableTypes,
-          expressions
-        }}
-        selectItems={defaultTo(environmentsSelectOptions, [])}
-      />
+          }}
+          width={300}
+          multiTypeProps={{
+            allowableTypes: allowableTypes,
+            defaultValueToReset: '',
+            onTypeChange: setEnvironmentRefType
+          }}
+        />
+      ) : (
+        <FormInput.MultiTypeInput
+          {...commonProps}
+          useValue
+          placeholder={
+            environmentsLoading ? getString('loading') : getString('cd.pipelineSteps.environmentTab.selectEnvironment')
+          }
+          multiTypeInputProps={{
+            onTypeChange: setEnvironmentRefType,
+            width: 280,
+            onChange: item => {
+              setSelectedEnvironment(
+                environments?.find(environment => environment.identifier === (item as SelectOption)?.value)
+              )
+              if (formik?.values['infrastructureRef'] && item !== RUNTIME_INPUT_VALUE) {
+                formik?.setFieldValue('infrastructureRef', '')
+              }
+            },
+            selectProps: {
+              addClearBtn: !readonly,
+              items: defaultTo(environmentsSelectOptions, [])
+            },
+            allowableTypes,
+            expressions
+          }}
+          selectItems={defaultTo(environmentsSelectOptions, [])}
+        />
+      )}
       {(environmentInputsLoading || serviceOverrideInputsLoading) && (
         <Container margin={{ top: 'xlarge' }}>
           <Spinner size={20} />
