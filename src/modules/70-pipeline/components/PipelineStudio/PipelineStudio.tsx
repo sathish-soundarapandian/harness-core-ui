@@ -83,7 +83,6 @@ export default function PipelineStudio(): React.ReactElement {
   const { licenseInformation } = useLicenseStore()
   const isCFEnabled = useFeatureFlag(FeatureFlag.CFNG_ENABLED)
   const isCIEnabled = useFeatureFlag(FeatureFlag.CING_ENABLED)
-  const isCDEnabled = useFeatureFlag(FeatureFlag.CDNG_ENABLED)
   const isPipelineChainingEnabled = useFeatureFlag(FeatureFlag.PIPELINE_CHAINING)
   const { getString } = useStrings()
 
@@ -107,7 +106,7 @@ export default function PipelineStudio(): React.ReactElement {
           getString,
           module,
           isCIEnabled: licenseInformation['CI'] && isCIEnabled,
-          isCDEnabled: licenseInformation['CD'] && isCDEnabled,
+          isCDEnabled: licenseInformation['CD'] && true,
           isCFEnabled: licenseInformation['CF'] && isCFEnabled,
           isSTOEnabled: licenseInformation['STO']?.status === 'ACTIVE',
           isApprovalStageEnabled: true,

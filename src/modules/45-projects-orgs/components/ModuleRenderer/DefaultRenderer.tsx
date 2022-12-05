@@ -14,7 +14,7 @@ import css from './ModuleRenderer.module.scss'
 
 const DefaultRenderer: React.FC = () => {
   const { getString } = useStrings()
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
   return (
@@ -23,7 +23,7 @@ const DefaultRenderer: React.FC = () => {
         {getString('modules')}
       </Text>
       <Layout.Horizontal spacing="small">
-        {CDNG_ENABLED ? <Icon name="cd-main" size={20} /> : null}
+        {<Icon name="cd-main" size={20} />}
         {CING_ENABLED ? <Icon name="ci-main" size={20} /> : null}
         {CFNG_ENABLED ? <Icon name="cf-main" size={20} /> : null}
         {CENG_ENABLED ? <Icon name="ce-main" size={20} /> : null}

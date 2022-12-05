@@ -171,7 +171,6 @@ const getCardKey = ({ key1, key2 }: { key1?: string; key2?: string }): string =>
 const ModuleInfoCards: React.FC<ModuleInfoCardsProps> = props => {
   const { module, selectedInfoCard, setSelectedInfoCard, style } = props
   const { getString } = useStrings()
-  const { CDNG_ENABLED } = useFeatureFlags()
 
   const { accountId } = useParams<{
     accountId: string
@@ -235,7 +234,7 @@ const ModuleInfoCards: React.FC<ModuleInfoCardsProps> = props => {
     )
   }
 
-  const infoCardProps = getInfoCardsProps(accountId, CDNG_ENABLED)[module]
+  const infoCardProps = getInfoCardsProps(accountId, true)[module]
 
   const infoCardStyle = INFO_CARD_STYLES[module]
 

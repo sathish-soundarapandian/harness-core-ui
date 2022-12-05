@@ -236,7 +236,7 @@ export const useModuleSelectModal = ({
   const [selectedModuleName, setSelectedModuleName] = React.useState<ModuleName>()
   const [projectData, setProjectData] = React.useState<Project>()
 
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
   const modalProps: IDialogProps = {
     isOpen: true,
@@ -251,11 +251,10 @@ export const useModuleSelectModal = ({
   }
   const infoCards: InfoCards[] = []
 
-  if (CDNG_ENABLED) {
-    infoCards.push({
-      name: ModuleName.CD
-    })
-  }
+  infoCards.push({
+    name: ModuleName.CD
+  })
+
   if (CING_ENABLED) {
     infoCards.push({
       name: ModuleName.CI

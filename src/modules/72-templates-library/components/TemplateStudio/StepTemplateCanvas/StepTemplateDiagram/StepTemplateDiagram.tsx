@@ -36,7 +36,7 @@ export const StepTemplateDiagram = (): JSX.Element => {
   const { templateIdentifier } = useParams<TemplateStudioPathProps>()
   const [stepPaletteModuleInfos, setStepPaletteModuleInfos] = React.useState<StepPalleteModuleInfo[]>([])
   const { module } = useParams<ModulePathParams>()
-  const { CDNG_ENABLED, CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const [isStepSelectorOpen, setIsStepSelectorOpen] = React.useState<boolean>()
 
   const openStepSelector = React.useCallback(() => {
@@ -77,14 +77,14 @@ export const StepTemplateDiagram = (): JSX.Element => {
     } else if (module === 'cf') {
       setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.FEATURE))
     } else {
-      if (CDNG_ENABLED && CING_ENABLED && CFNG_ENABLED) {
+      if (CING_ENABLED && CFNG_ENABLED) {
         setStepPaletteModuleInfos(getAllStepPaletteModuleInfos())
-      } else if (CDNG_ENABLED) {
-        setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.DEPLOY))
       } else if (CING_ENABLED) {
         setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.BUILD))
       } else if (CFNG_ENABLED) {
         setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.FEATURE))
+      } else {
+        setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.DEPLOY))
       }
     }
   }, [module])

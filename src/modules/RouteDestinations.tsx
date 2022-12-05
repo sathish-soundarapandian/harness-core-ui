@@ -46,16 +46,8 @@ export const AccountSideNavProps: SidebarContext = {
 }
 
 export default function RouteDestinations(): React.ReactElement {
-  const {
-    CDNG_ENABLED,
-    CVNG_ENABLED,
-    CING_ENABLED,
-    CENG_ENABLED,
-    CFNG_ENABLED,
-    CHAOS_ENABLED,
-    NG_SETTINGS,
-    CODE_ENABLED
-  } = useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED, NG_SETTINGS, CODE_ENABLED } =
+    useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
   return (
@@ -78,7 +70,7 @@ export default function RouteDestinations(): React.ReactElement {
       {userProfileRoutes.props.children}
       {CHAOS_ENABLED ? ChaosRoutes().props.children : null}
       {CING_ENABLED ? CIRoutes.props.children : null}
-      {CDNG_ENABLED ? CDRoutes.props.children : null}
+      {CDRoutes.props.children}
       {CVNG_ENABLED ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
       {licenseInformation['STO']?.status === 'ACTIVE' ? (

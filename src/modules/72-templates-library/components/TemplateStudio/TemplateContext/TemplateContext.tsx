@@ -879,7 +879,7 @@ export const TemplateProvider: React.FC<{
   const { repoIdentifier, branch } = queryParams
   const { supportingTemplatesGitx } = useAppStore()
   const { licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, CDNG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const isMounted = React.useRef(false)
@@ -1009,7 +1009,7 @@ export const TemplateProvider: React.FC<{
       getString,
       module,
       isCIEnabled: licenseInformation['CI'] && CING_ENABLED,
-      isCDEnabled: licenseInformation['CD'] && CDNG_ENABLED,
+      isCDEnabled: licenseInformation['CD'] && true,
       isCFEnabled: licenseInformation['CF'] && CFNG_ENABLED,
       isSTOEnabled: licenseInformation['STO']?.status === 'ACTIVE',
       isApprovalStageEnabled: true

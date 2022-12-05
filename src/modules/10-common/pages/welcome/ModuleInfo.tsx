@@ -122,13 +122,13 @@ const ModuleInfo: React.FC<ModuleProps> = ({ module = 'cd' }) => {
   }
 
   useEffect(() => {
-    const infoCardProps = getInfoCardsProps(accountId, CDNG_ENABLED)[module]
+    const infoCardProps = getInfoCardsProps(accountId, true)[module]
 
     // Automatically select the first info card if none are selected
     if (!selectedInfoCard && infoCardProps) {
       setSelectedInfoCard(infoCardProps[0])
     }
-  }, [module, selectedInfoCard, accountId, CDNG_ENABLED])
+  }, [module, selectedInfoCard, accountId])
 
   return (
     <Layout.Horizontal className={css.moduleInfo}>

@@ -91,12 +91,12 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
 const SubscribedModules: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
 
   function isModuleEnabled(moduleType: ModuleLicenseDTO['moduleType']): boolean | undefined {
     switch (moduleType) {
       case ModuleName.CD: {
-        return CDNG_ENABLED
+        return true
       }
       case ModuleName.CE: {
         return CENG_ENABLED
