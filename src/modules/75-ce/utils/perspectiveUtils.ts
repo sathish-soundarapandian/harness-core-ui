@@ -24,7 +24,7 @@ import {
 } from 'services/ce/services'
 import type { PerspectiveQueryParams } from '@ce/types'
 import { CCM_CHART_TYPES } from '@ce/constants'
-import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS } from './momentUtils'
+import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS } from '@common/utils/momentUtils'
 
 const startTimeLabel = 'startTime'
 

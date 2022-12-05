@@ -15,7 +15,7 @@ import { Ticker, TickerVerticalAlignment } from '@common/components/Ticker/Ticke
 import { useToaster } from '@common/components'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useGetMonitoredServiceChangeEventSummary } from 'services/cv'
-import { numberFormatter } from '@cd/components/Services/common'
+import { numberFormatter } from '@common/utils/utils'
 import type { ChangeSourceCardData, ChangeSourceCardInterface } from './ChangesSourceCard.types'
 import TickerValue from './components/TickerValue/TickerValue'
 import { calculateChangePercentage, getTickerColor } from './ChangesSourceCard.utils'
