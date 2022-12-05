@@ -29,9 +29,9 @@ import type {
   MultiTypeMapValue
 } from '@pipeline/components/StartupScriptSelection/MultiConfigSelectField'
 
-import css from './ShellScriptProvision.module.scss'
+import css from './ScriptFileConfig.module.scss'
 
-export function ShellScriptProvisionConfig(props: MultiTypeMapProps): React.ReactElement {
+export function ScriptFileConfig(props: MultiTypeMapProps): React.ReactElement {
   const { name, configureOptionsProps, formik, expressions, multiTypeFieldSelectorProps } = props
 
   const value = get(formik?.values, name, '') as MultiTypeMapValue
@@ -107,4 +107,4 @@ export function ShellScriptProvisionConfig(props: MultiTypeMapProps): React.Reac
   )
 }
 
-export default connect(ShellScriptProvisionConfig)
+export default connect(ScriptFileConfig)

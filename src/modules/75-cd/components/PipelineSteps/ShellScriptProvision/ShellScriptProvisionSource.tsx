@@ -20,8 +20,8 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
-import ShellScriptProvisionConfig from './ShellScriptProvisionConfig'
 import type { ShellScriptProvisionFileStore, ShellScriptProvisionFormData, ShellScriptProvisionInline } from './types'
+import { ScriptFileConfig } from '../Common/ScriptFileConfig/ScriptFileConfig'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScriptProvision.module.scss'
 
@@ -167,7 +167,7 @@ export default function ShellScriptProvisionSource(props: {
         </div>
       )}
       {locationType === LocationType.HARNESS && (
-        <ShellScriptProvisionConfig
+        <ScriptFileConfig
           name="spec.source.spec.file"
           fileType={'fileStore'}
           formik={formik}

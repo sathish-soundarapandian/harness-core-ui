@@ -84,6 +84,11 @@ import { ElastigroupInfrastructureSpec } from './ElastigroupInfraSpec/Elastigrou
 import { ElastigroupServiceSpec } from './ElastigroupServiceSpec/ElastigroupServiceSpec'
 import { EmailStep } from './EmailStep/EmailStep'
 import { ElastigroupRollbackStep } from './ElastigroupRollbackStep/ElastigroupRollbackStep'
+import { SwapRouteStep } from './SwapRouteStep/SwapRouteStep'
+import { SwapRollbackStep } from './SwapRollbackStep/SwapRollback'
+import { AppResizeStep } from './AppResizeStep/AppResizeStep'
+import { TanzuCommandStep } from './TanzuCommandStep/TanzuCommand'
+import { TASRollbackStep } from './TasRollbackStep/TasRollbackStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -162,3 +167,8 @@ factory.registerStep(new ShellScriptProvisionStep())
 factory.registerStep(new ElastigroupInfrastructureSpec())
 factory.registerStep(new ElastigroupServiceSpec())
 factory.registerStep(new ElastigroupRollbackStep())
+factory.registerStep(new AppResizeStep())
+factory.registerStep(new TASRollbackStep())
+factory.registerStep(new SwapRouteStep())
+factory.registerStep(new SwapRollbackStep())
+factory.registerStep(new TanzuCommandStep())

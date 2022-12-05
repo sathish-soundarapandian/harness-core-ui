@@ -7,11 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly addButton: string
-  readonly environmentVarHeader: string
-  readonly label: string
-  readonly minConfigBtn: string
-  readonly panel: string
-  readonly scriptField: string
+  readonly alignStyles: string
+  readonly fieldWrapper: string
+  readonly formStyle: string
 }
 export default styles

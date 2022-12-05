@@ -100,7 +100,21 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
     })
 
     if (toShow) {
-      setStepsCategories(toShow)
+      // setStepsCategories(toShow)
+      setStepsCategories([
+        {
+          name: 'Tanzu',
+          stepCategories: [],
+          stepsData: [
+            { name: 'SwapRoute', type: 'TasSwapRoutesStep' },
+            { name: 'SwapRollback', type: 'SwapRollback' },
+            { name: 'AppResize', type: 'TasAppResizeStep' },
+            { name: 'TanzuCommand', type: 'TanzuCommand' },
+            { name: 'TASRollback', type: 'TasRollbackStep' }
+          ]
+        },
+        ...toShow
+      ])
       setOriginalCategories(toShow)
     }
   }, [stepsData?.data?.stepCategories])

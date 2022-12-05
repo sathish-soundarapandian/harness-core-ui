@@ -126,7 +126,12 @@ export enum StepType {
   ChaosExperiment = 'Chaos',
   Elastigroup = 'Elastigroup',
   ElastigroupService = 'ElastigroupService',
-  ElastigroupRollback = 'ElastigroupRollback'
+  ElastigroupRollback = 'ElastigroupRollback',
+  TasAppResize = 'TasAppResizeStep',
+  TASRollback = 'TasRollbackStep',
+  TasSwapRoutes = 'TasSwapRoutesStep',
+  TasSwapRollback = 'SwapRollback',
+  TanzuCommand = 'TanzuCommand'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

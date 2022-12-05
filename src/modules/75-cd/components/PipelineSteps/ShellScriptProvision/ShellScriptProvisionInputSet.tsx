@@ -20,7 +20,6 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import ShellScriptProvisionConfig from './ShellScriptProvisionConfig'
 
 import {
   scriptInputType,
@@ -29,6 +28,7 @@ import {
   ShellScriptProvisionFormData,
   ShellScriptProvisionInline
 } from './types'
+import { ScriptFileConfig } from '../Common/ScriptFileConfig/ScriptFileConfig'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScriptProvision.module.scss'
 
@@ -114,7 +114,7 @@ export default function ShellScriptProvisionInputSetStep(
       {getMultiTypeFromValue((template?.spec?.source?.spec as ShellScriptProvisionFileStore)?.file) ===
       MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
-          <ShellScriptProvisionConfig
+          <ScriptFileConfig
             name={`${prefix}spec.source.spec.file`}
             fileType={'fileStore'}
             formik={formikRef}

@@ -4130,6 +4130,7 @@ export interface StringsMap {
   'pipeline.stepConfigContent': string
   'pipeline.stepConfigHasChanges': string
   'pipeline.stepDescription.ACR': string
+  'pipeline.stepDescription.AppResize': string
   'pipeline.stepDescription.AzureSlotDeployment': string
   'pipeline.stepDescription.AzureTrafficShift': string
   'pipeline.stepDescription.Background': string
@@ -4188,6 +4189,10 @@ export interface StringsMap {
   'pipeline.stepDescription.ServiceNowImportSet': string
   'pipeline.stepDescription.ServiceNowUpdate': string
   'pipeline.stepDescription.ShellScriptProvision': string
+  'pipeline.stepDescription.SwapRollback': string
+  'pipeline.stepDescription.SwapRoute': string
+  'pipeline.stepDescription.TASRollback': string
+  'pipeline.stepDescription.TanzuCommandScript': string
   'pipeline.stepDescription.TerraformApply': string
   'pipeline.stepDescription.TerraformDestroy': string
   'pipeline.stepDescription.TerraformPlan': string
@@ -5147,6 +5152,12 @@ export interface StringsMap {
   'cd.steps.pdcStep.title': string
   'cd.steps.serverless.regionPlaceholder': string
   'cd.steps.serverless.stagePlaceholder': string
+  'cd.steps.tas.enableDownSizeOldApplication': string
+  'cd.steps.tas.enableUpsizeInActiveApp': string
+  'cd.steps.tas.newAppInstance': string
+  'cd.steps.tas.oldAppInstance': string
+  'cd.steps.tas.oldAppInstances': string
+  'cd.steps.tas.totalInstances': string
   'cd.successfullyLinkedClusters': string
   'cd.terraformVarFiles': string
   'cd.testConnectionStepName': string

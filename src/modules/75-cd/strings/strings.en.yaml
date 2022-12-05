@@ -120,6 +120,13 @@ steps:
     elastigroupConfigReq: Elastigroup Configuration is required
     elastigroupTitle: Elastigroup Configuration Source
     elastigroupConfigDetails: '{{$.common.configDetails}}'
+  tas:
+    enableDownSizeOldApplication: Downsize Old Applications
+    enableUpsizeInActiveApp: Upsize Applications in Active App
+    totalInstances: Total Instances
+    oldAppInstances: Desired Instances - Old Version
+    newAppInstance: New App Instance
+    oldAppInstance: Old App Instance
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'

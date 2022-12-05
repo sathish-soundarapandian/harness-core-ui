@@ -5,9 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.fieldWrapper {
-  width: 340px;
-}
 .scriptField {
   :global {
     input,
@@ -48,17 +45,4 @@
 
 .addButton {
   padding-left: 0 !important;
-}
-
-.alignStyles {
-  .formStyle {
-    display: flex !important;
-    align-items: flex-start !important;
-    margin-top: var(--spacing-4);
-    margin-right: var(--spacing-3);
-
-    > div[class*='bp3-disabled'] {
-      margin: 0;
-    }
-  }
 }
