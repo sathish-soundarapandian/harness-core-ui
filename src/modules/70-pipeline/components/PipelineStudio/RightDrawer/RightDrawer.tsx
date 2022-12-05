@@ -663,6 +663,7 @@ export function RightDrawer(): React.ReactElement {
     confirmButtonText: getString('applyChanges'),
     customButtons: customButtonContainer,
     intent: Intent.WARNING,
+    showCloseButton: false,
     onCloseDialog: isConfirmed => {
       if (isConfirmed) {
         applyChanges(formikRef, data, getString, updatePipelineView, pipelineView, setSelectedStepId, trackEvent)

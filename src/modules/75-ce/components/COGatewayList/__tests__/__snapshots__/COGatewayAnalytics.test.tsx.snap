@@ -575,6 +575,7 @@ exports[`Autostopping rule analytics drawer render analytics drawer 1`] = `
           <div
             class="StyledProps--font StyledProps--main PageBody--pageBody pageContainer"
             data-name="page-body"
+            data-testid="page-body"
           >
             <p
               class="StyledProps--font StyledProps--main"
@@ -1184,6 +1185,7 @@ exports[`Autostopping rule analytics drawer render k8s rule analytics drawer 1`]
           <div
             class="StyledProps--font StyledProps--main PageBody--pageBody pageContainer"
             data-name="page-body"
+            data-testid="page-body"
           >
             <p
               class="StyledProps--font StyledProps--main"

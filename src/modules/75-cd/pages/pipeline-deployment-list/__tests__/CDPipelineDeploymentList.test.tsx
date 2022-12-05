@@ -28,7 +28,18 @@ window.IntersectionObserver = jest.fn().mockImplementation(() => ({
   observe: () => null,
   unobserve: () => null
 }))
+const mockRepositories = {
+  status: 'SUCCESS',
+  data: {
+    repositories: ['main', 'main-patch', 'main-patch1', 'main-patch2']
+  },
+  metaData: null,
+  correlationId: 'cc779876-d3af-44e5-8991-916dfecb4548'
+}
 
+const fetchRepositories = jest.fn(() => {
+  return Object.create(mockRepositories)
+})
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/utils/YamlUtils', () => ({}))
 
@@ -45,6 +56,9 @@ jest.mock('services/pipeline-ng', () => ({
   useGetPipelineList: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
     return { mutate: jest.fn(() => Promise.resolve(pipelineList)), cancel: jest.fn(), loading: false }
+  }),
+  useGetExecutionRepositoriesList: jest.fn().mockImplementation(() => {
+    return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
   }),
   useGetExecutionBranchesList: jest.fn().mockImplementation(() => {
     return { data: jest.fn(), refetch: jest.fn() }
@@ -101,6 +115,9 @@ jest.mock('services/cd-ng', () => ({
   useGetEnvironmentListForProject: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: environments, refetch: jest.fn() })),
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: getListGitSync }
+  }),
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
   }),
@@ -112,9 +129,6 @@ jest.mock('services/cd-ng', () => ({
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
-  useListGitSyncQuery: jest.fn().mockImplementation(() => {
-    return { data: gitConfigs, refetch: getListGitSync }
-  }),
   useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })

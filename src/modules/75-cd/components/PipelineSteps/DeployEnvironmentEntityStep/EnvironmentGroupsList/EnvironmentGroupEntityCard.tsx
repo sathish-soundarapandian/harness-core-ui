@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { useFormikContext } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Divider } from '@blueprintjs/core'
 
@@ -25,6 +26,12 @@ import type {
 } from '../types'
 
 import DeployEnvironment from '../DeployEnvironment/DeployEnvironment'
+import InlineEntityFilters from '../components/InlineEntityFilters/InlineEntityFilters'
+import {
+  EntityFilterType,
+  EntityType,
+  InlineEntityFiltersRadioType
+} from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
 
 import css from './EnvironmentGroupsList.module.scss'
 
@@ -51,7 +58,15 @@ export function EnvironmentGroupCard({
   gitOpsEnabled
 }: EnvironmentGroupCardProps): React.ReactElement {
   const { getString } = useStrings()
+  const { setFieldValue } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { name, identifier, tags } = envGroup || {}
+  const filterPrefix = 'environmentGroupFilters'
+
+  const handleFilterRadio = (selectedRadioValue: InlineEntityFiltersRadioType): void => {
+    if (selectedRadioValue === InlineEntityFiltersRadioType.MANUAL) {
+      setFieldValue(filterPrefix, undefined)
+    }
+  }
 
   return (
     <Card className={css.card}>
@@ -109,18 +124,35 @@ export function EnvironmentGroupCard({
         <Container margin={{ top: 'medium', bottom: 'medium' }}>
           <Divider />
         </Container>
-
-        <DeployEnvironment
-          initialValues={initialValues}
+        <InlineEntityFilters
+          filterPrefix={filterPrefix}
+          entityStringKey="environments"
+          onRadioValueChange={handleFilterRadio}
           readonly={readonly}
-          allowableTypes={allowableTypes}
-          isMultiEnvironment
-          isUnderEnvGroup
-          stageIdentifier={stageIdentifier}
-          deploymentType={deploymentType}
-          customDeploymentRef={customDeploymentRef}
-          gitOpsEnabled={gitOpsEnabled}
-          envGroupIdentifier={identifier}
+          baseComponent={
+            <DeployEnvironment
+              initialValues={initialValues}
+              readonly={readonly}
+              allowableTypes={allowableTypes}
+              isMultiEnvironment
+              isUnderEnvGroup
+              stageIdentifier={stageIdentifier}
+              deploymentType={deploymentType}
+              customDeploymentRef={customDeploymentRef}
+              gitOpsEnabled={gitOpsEnabled}
+              envGroupIdentifier={identifier}
+            />
+          }
+          entityFilterListProps={{
+            entities: [EntityType.ENVIRONMENTS, gitOpsEnabled ? EntityType.CLUSTERS : EntityType.INFRASTRUCTURES],
+            filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
+            placeholderProps: {
+              entity: getString('common.filterOnName', {
+                name: 'environments or' + getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
+              }),
+              tags: getString('common.filterOnName', { name: getString('typeLabel') })
+            }
+          }}
         />
       </>
     </Card>

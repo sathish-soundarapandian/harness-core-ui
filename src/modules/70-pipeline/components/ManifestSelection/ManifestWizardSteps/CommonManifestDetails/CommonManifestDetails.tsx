@@ -27,7 +27,13 @@ import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import type { CommonManifestDataType, ManifestTypes } from '../../ManifestInterface'
-import { GitRepoName, ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
+import {
+  getConnectorRefOrConnectorId,
+  GitRepoName,
+  ManifestDataType,
+  ManifestIdentifierValidation,
+  ManifestStoreMap
+} from '../../Manifesthelper'
 import { getRepositoryName } from '../ManifestUtils'
 import { ManifestDetailsCoreSection } from './ManifestDetailsCoreSection'
 import { ManifestDetailsAdvancedSection } from './ManifestDetailsAdvancedSection'
@@ -47,20 +53,6 @@ interface CommonManifestDetailsProps {
 
 const showAdvancedSection = (selectedManifest: ManifestTypes | null): boolean => {
   return !!(selectedManifest && [ManifestDataType.K8sManifest].includes(selectedManifest))
-}
-
-const getConnectorRef = (prevStepData: ConnectorConfigDTO): string => {
-  return getMultiTypeFromValue(prevStepData.connectorRef) !== MultiTypeInputType.FIXED
-    ? prevStepData.connectorRef
-    : prevStepData.connectorRef?.value
-}
-
-const getConnectorId = (prevStepData?: ConnectorConfigDTO): string => {
-  return prevStepData?.identifier ? prevStepData?.identifier : ''
-}
-
-const getConnectorRefOrConnectorId = (prevStepData?: ConnectorConfigDTO): string => {
-  return prevStepData?.connectorRef ? getConnectorRef(prevStepData) : getConnectorId(prevStepData)
 }
 
 export function CommonManifestDetails({

@@ -9,6 +9,7 @@
   background-color: var(--primary-bg);
   max-height: 100vh;
   overflow-y: scroll;
+  width: min(700px, 100vw) !important;
 }
 
 .drawer-content {
@@ -27,9 +28,8 @@
 
 .pipeline-cards-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-auto-rows: 250px;
-  gap: var(--spacing-xxlarge);
+  grid-template-columns: repeat(auto-fill, 198px);
+  gap: var(--spacing-large);
 }
 
 .no-data-container {
@@ -40,5 +40,9 @@
 
 .env-tag {
   background: var(--primary-2) !important;
-  padding: var(--spacing-xsmall) !important;
+  padding: var(--spacing-xsmall) var(--spacing-small) !important;
+}
+
+.description ul {
+  padding-left: var(--spacing-medium);
 }

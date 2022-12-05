@@ -26,6 +26,7 @@ export default function ProjectsSideNav(): React.ReactElement {
   const history = useHistory()
   const { selectedProject, updateAppStore } = useAppStore()
   const { NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
+
   const { getString } = useStrings()
 
   const projectDetailsParams = {
@@ -74,18 +75,20 @@ export default function ProjectsSideNav(): React.ReactElement {
           </Container>
           <SidebarLink label={getString('overview')} to={routes.toProjectDetails(projectDetailsParams)} />
           {NEW_LEFT_NAVBAR_SETTINGS && (
-            <SidebarLink
-              className={css.sidebarlink}
-              label={getString('common.pipelineExecution')}
-              to={routes.toDeployments(projectDetailsParams)}
-            />
-          )}
-          {NEW_LEFT_NAVBAR_SETTINGS && (
-            <SidebarLink
-              className={css.sidebarlink}
-              label={getString('pipelines')}
-              to={routes.toPipelines(projectDetailsParams)}
-            />
+            <>
+              <SidebarLink
+                className={css.sidebarlink}
+                label={getString('common.pipelineExecution')}
+                to={routes.toDeployments(projectDetailsParams)}
+              />
+              <SidebarLink
+                className={css.sidebarlink}
+                label={getString('pipelines')}
+                to={routes.toPipelines(projectDetailsParams)}
+              />
+              <SidebarLink label={getString('services')} to={routes.toServices(projectDetailsParams)} />
+              <SidebarLink label={getString('environments')} to={routes.toEnvironment(projectDetailsParams)} />
+            </>
           )}
           <ProjectSetupMenu defaultExpanded={NEW_LEFT_NAVBAR_SETTINGS} />
         </Container>

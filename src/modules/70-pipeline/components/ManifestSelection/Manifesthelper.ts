@@ -6,14 +6,15 @@
  */
 
 import type { Schema } from 'yup'
-import type { IconName } from '@harness/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import { Connectors } from '@connectors/constants'
-import type { ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { StringKeys } from 'framework/strings'
 import { NameSchema } from '@common/utils/Validation'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import {
+  buildAzureRepoPayload,
   buildBitbucketPayload,
   buildGithubPayload,
   buildGitlabPayload,
@@ -98,7 +99,8 @@ export const ManifestStoreMap: { [key: string]: ManifestStores } = {
   InheritFromManifest: 'InheritFromManifest',
   Inline: 'Inline',
   Harness: 'Harness',
-  CustomRemote: 'CustomRemote'
+  CustomRemote: 'CustomRemote',
+  AzureRepo: 'AzureRepo'
 }
 
 export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
@@ -129,7 +131,8 @@ export const gitStoreTypes: Array<ManifestStores> = [
   ManifestStoreMap.Git,
   ManifestStoreMap.Github,
   ManifestStoreMap.GitLab,
-  ManifestStoreMap.Bitbucket
+  ManifestStoreMap.Bitbucket,
+  ManifestStoreMap.AzureRepo
 ]
 
 export const gitStoreTypesWithHarnessStoreType: Array<ManifestStores> = [...gitStoreTypes, ManifestStoreMap.Harness]
@@ -160,11 +163,11 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   ],
   Kustomize: gitStoreTypesWithHarnessStoreType,
   KustomizePatches: [...gitStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.Harness],
-  ServerlessAwsLambda: gitStoreTypes,
-  EcsTaskDefinition: gitStoreTypesWithHarnessStoreType,
-  EcsServiceDefinition: gitStoreTypesWithHarnessStoreType,
-  EcsScalingPolicyDefinition: gitStoreTypesWithHarnessStoreType,
-  EcsScalableTargetDefinition: gitStoreTypesWithHarnessStoreType
+  ServerlessAwsLambda: [...gitStoreTypes, ManifestStoreMap.S3],
+  EcsTaskDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],
+  EcsServiceDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],
+  EcsScalingPolicyDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],
+  EcsScalableTargetDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3]
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
@@ -214,7 +217,8 @@ export const ManifestIconByType: Record<ManifestStores, IconName> = {
   InheritFromManifest: 'custom-artifact',
   Inline: 'custom-artifact',
   Harness: 'harness',
-  CustomRemote: 'custom-remote-manifest'
+  CustomRemote: 'custom-remote-manifest',
+  AzureRepo: 'service-azure'
 }
 
 export const ManifestStoreTitle: Record<ManifestStores, StringKeys> = {
@@ -229,7 +233,8 @@ export const ManifestStoreTitle: Record<ManifestStores, StringKeys> = {
   InheritFromManifest: 'pipeline.manifestType.InheritFromManifest',
   Inline: 'inline',
   Harness: 'harness',
-  CustomRemote: 'pipeline.manifestType.customRemote'
+  CustomRemote: 'pipeline.manifestType.customRemote',
+  AzureRepo: 'pipeline.manifestType.azureRepoConnectorLabel'
 }
 
 export const ManifestToConnectorMap: Record<ManifestStores | string, ConnectorInfoDTO['type']> = {
@@ -240,7 +245,8 @@ export const ManifestToConnectorMap: Record<ManifestStores | string, ConnectorIn
   Http: Connectors.HttpHelmRepo,
   OciHelmChart: Connectors.OciHelmRepo,
   S3: Connectors.AWS,
-  Gcs: Connectors.GCP
+  Gcs: Connectors.GCP,
+  AzureRepo: Connectors.AZURE_REPO
 }
 
 export const ManifestToConnectorLabelMap: Record<ManifestStoreWithoutConnector, StringKeys> = {
@@ -251,7 +257,8 @@ export const ManifestToConnectorLabelMap: Record<ManifestStoreWithoutConnector, 
   Http: 'connectors.title.helmConnector',
   OciHelmChart: 'connectors.title.ociHelmConnector',
   S3: 'pipeline.manifestToConnectorLabelMap.AWSLabel',
-  Gcs: 'common.gcp'
+  Gcs: 'common.gcp',
+  AzureRepo: 'pipeline.manifestType.azureRepoConnectorLabel'
 }
 
 export enum GitRepoName {
@@ -298,9 +305,20 @@ export function isConnectorStoreType(): boolean {
   ManifestStoreMap.CustomRemote)
 }
 export const isGitTypeManifestStore = (manifestStore: ManifestStores): boolean =>
-  [ManifestStoreMap.Git, ManifestStoreMap.Github, ManifestStoreMap.GitLab, ManifestStoreMap.Bitbucket].includes(
-    manifestStore
-  )
+  [
+    ManifestStoreMap.Git,
+    ManifestStoreMap.Github,
+    ManifestStoreMap.GitLab,
+    ManifestStoreMap.Bitbucket,
+    ManifestStoreMap.AzureRepo
+  ].includes(manifestStore)
+export const isECSTypeManifest = (selectedManifest: ManifestTypes): boolean =>
+  [
+    ManifestDataType.EcsTaskDefinition,
+    ManifestDataType.EcsServiceDefinition,
+    ManifestDataType.EcsScalingPolicyDefinition,
+    ManifestDataType.EcsScalableTargetDefinition
+  ].includes(selectedManifest)
 export function getManifestLocation(manifestType: ManifestTypes, manifestStore: ManifestStores): string {
   switch (true) {
     case manifestStore === ManifestStoreMap.Harness:
@@ -340,6 +358,8 @@ export const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
       return buildBitbucketPayload
     case Connectors.GITLAB:
       return buildGitlabPayload
+    case Connectors.AZURE_REPO:
+      return buildAzureRepoPayload
     default:
       return () => ({})
   }
@@ -347,4 +367,18 @@ export const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
 
 export const getManifestsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
   return `${selectedDeploymentType}DeploymentTypeManifests`
+}
+
+const getConnectorRef = (prevStepData: ConnectorConfigDTO): string => {
+  return getMultiTypeFromValue(prevStepData.connectorRef) !== MultiTypeInputType.FIXED
+    ? prevStepData.connectorRef
+    : prevStepData.connectorRef?.value
+}
+
+const getConnectorId = (prevStepData?: ConnectorConfigDTO): string => {
+  return prevStepData?.identifier ? prevStepData?.identifier : ''
+}
+
+export const getConnectorRefOrConnectorId = (prevStepData?: ConnectorConfigDTO): string => {
+  return prevStepData?.connectorRef ? getConnectorRef(prevStepData) : getConnectorId(prevStepData)
 }

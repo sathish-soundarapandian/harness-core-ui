@@ -209,6 +209,12 @@ monitoringSources:
   addMetric: Add Metric
   addQuery: Add Query
   totalMappedQueries: '{{total}} {{query}} mapped'
+  commonHealthSource:
+    metric: HealthSource Metric
+    addMetric: Add metric
+    metricName: Metric name
+    addGroupName: Add group Name
+    confirmDeleteMetric: 'Are you sure you want to delete metric {{name}}'
   appD:
     advancedOptional: Advanced (Optional)
     ignoreThresholds: Ignore Thresholds
@@ -571,7 +577,7 @@ notifications:
   serviceHealth: Changes and Service Health
   serviceHealthDescription: Focuses on changes to a service's code, configuration, behaviour, deployment and infrastructure.
   sloDescription: Focuses on SLO target and error budget changes on a given SLO.
-  condition: Condition
+  condition: '{{$.common.condition}}'
   changeType: Change Type
   healthScoreBelow: Health score is below
   thresholdBelow: Threshold is below
@@ -832,11 +838,22 @@ CompositeSLO:
   SetTarget: Set SLO Target
   ErrorBudgetPolicy: Error Budget Policy
   Weightage: Weightage
+  NoData: You don’t have any matching SLOs
+  NoDataSuggestion: Try changing the time window or clearing your search input.
+  Consumption:
+    title: SLO consumption breakdown for the period
+    AssignedWeightage: Assigned Weightage
+    ActualSlo: Actual SLO
+    ErrorBudgetBurned: Error Budget Burned
+    ContributedErrorBudgetBurned: Contributed Error Budget Burned
   PeriodChangeWarning:
     title: Review Period Type Change
     message: Updating period type will reset selected SLOs, Do you want to continue ?
   MatchingSLO: SLOs matching the time window.
   NoSloFound: There are no SLOs available for selected filter
+  compositeSloCreated: Composite SLO created successfully
+  compositeSloUpdated: Composite SLO updated successfully
+  SLIMetricRatio: SLI = (SLO1*weightage1 + SLO2*weightage2... + SLON*weightageN)/n*100
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on

@@ -88,6 +88,12 @@ export const SupportPlatforms = [
     readmeStringId: 'cf.onboarding.readme.reactNative'
   },
   {
+    name: 'React',
+    icon: reactNative,
+    type: PlatformEntryType.CLIENT,
+    readmeStringId: 'cf.onboarding.readme.react'
+  },
+  {
     name: '.NET',
     icon: dotnet,
     type: PlatformEntryType.SERVER,

@@ -6,16 +6,12 @@
  */
 
 import React, { useEffect, useCallback, ReactNode } from 'react'
-import { useParams } from 'react-router-dom'
-
 import { noop } from 'lodash-es'
+import { useParams } from 'react-router-dom'
 import { PageSpinner } from '@harness/uicore'
-import {
-  GitSyncConfig,
-  SourceCodeManagerDto,
-  useGetSourceCodeManagersQuery,
-  useListGitSyncQuery
-} from 'services/cd-ng-rq'
+
+import { useListGitSync } from 'services/cd-ng'
+import { GitSyncConfig, SourceCodeManagerDto, useGetSourceCodeManagersQuery } from 'services/cd-ng-rq'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
@@ -50,24 +46,18 @@ export const GitSyncStoreProvider: React.FC<Pick<GitSyncStoreProps, 'spinner'>> 
   //Note: right now we support git-sync only at project level
   const {
     data: dataAllGitSync,
-    isFetching: loadingRepos,
+    loading: loadingRepos,
     refetch
-  } = useListGitSyncQuery(
-    {
-      queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
-    },
-    {
-      enabled: isGitSyncEnabled && !!projectIdentifier,
-      staleTime: Infinity
-    }
-  )
+  } = useListGitSync({
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
+    lazy: true
+  })
 
   const { data: codeManagers, isFetching: loadingCodeManagers } = useGetSourceCodeManagersQuery(
     {
       queryParams: { accountIdentifier: accountId }
     },
     {
-      enabled: isGitSyncEnabled,
       staleTime: Infinity
     }
   )
@@ -104,6 +94,7 @@ export const GitSyncStoreProvider: React.FC<Pick<GitSyncStoreProps, 'spinner'>> 
 
   useEffect(() => {
     if (projectIdentifier) {
+      refetch()
       setStoreData(prevStateData => ({
         ...prevStateData,
         loadingRepos: true

@@ -7,7 +7,7 @@
 
 import React from 'react'
 
-import { render, waitFor, getByText as getByTextBody, fireEvent } from '@testing-library/react'
+import { render, waitFor, getByText as getByTextBody, fireEvent, screen } from '@testing-library/react'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import * as servicePortal from 'services/portal'
 import * as serviceCDNG from 'services/cd-ng'
@@ -22,7 +22,13 @@ import {
   validateKubernetesYamlResponse
 } from './mocks'
 
-jest.mock('nanoid', () => ({ nanoid: () => 'hjhj87878' }))
+jest.mock('nanoid', () => ({
+  customAlphabet: () => {
+    const retnFn = () => 'bsadfd'
+    return retnFn
+  }
+}))
+
 jest.useFakeTimers()
 const mockGetCallFunction = jest.fn()
 jest.mock('services/cd-ng', () => ({
@@ -50,6 +56,7 @@ jest.mock('services/portal', () => ({
 }))
 global.URL.createObjectURL = jest.fn()
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
+
 describe('Test the initial flow for kubernetes delegate Creation', () => {
   test('initial render', async () => {
     const { getByText } = render(
@@ -143,7 +150,7 @@ describe('Test the initial flow for kubernetes delegate Creation', () => {
     const kubernetesBtn = getByText('kubernetesText') as HTMLElement
     expect(kubernetesBtn).toBeInTheDocument()
     kubernetesBtn.click()
-    await waitFor(() => expect(getByText('somethingWentWrong')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('Something Went Wrong')).toBeInTheDocument())
   })
 })
 

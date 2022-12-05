@@ -86,7 +86,7 @@ function FormComponent({
     branch
   }
 
-  const connectorRefValue = defaultTo(getGenuineValue(prevStepData?.connectorId?.value), '')
+  const connectorRefValue = defaultTo(getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier), '')
   const projectValue = defaultTo(getGenuineValue(formik.values.project), '')
   const feedValue = defaultTo(getGenuineValue(formik.values.feed), '')
   const packageValue = defaultTo(getGenuineValue(formik.values.package), '')
@@ -581,9 +581,9 @@ export function AzureArtifacts(
       is: val => val === 'project',
       then: Yup.string().trim().required(getString('common.validation.projectIsRequired'))
     }),
-    feed: Yup.string().required('pipeline.artifactsSelection.validation.feed'),
+    feed: Yup.string().required(getString('pipeline.artifactsSelection.validation.feed')),
     packageType: Yup.string(),
-    package: Yup.string().required('pipeline.artifactsSelection.validation.packageName'),
+    package: Yup.string().required(getString('pipeline.artifactsSelection.validation.packageName')),
     versionType: Yup.string(),
     versionRegex: Yup.string().when('versionType', {
       is: 'regex',

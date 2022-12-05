@@ -28,7 +28,7 @@ export default function StoreExplorer({ fileStore }: StoreExplorerProps): React.
   }, [currentNode])
 
   return (
-    <Layout.Vertical style={{ height: isModalView ? 530 : '100%' }}>
+    <Layout.Vertical style={{ height: isModalView ? 'calc(50vh - 70px)' : '100%' }}>
       <Container background={Color.GREY_0} padding={{ top: 'medium', left: 'medium' }} className={css.explorer}>
         {NewButton}
         <RootNodesList rootStore={fileStore} />

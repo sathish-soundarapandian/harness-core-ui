@@ -11,7 +11,7 @@ exports[`Test cloudformation tags should render open remote modal 1`] = `
       <select
         class="templateDropdown"
         data-testid="tagsOptions"
-        name="spec.configuration.templateFile.type"
+        name="spec.configuration.tags.type"
       >
         <option
           data-testid="inline"
@@ -97,7 +97,7 @@ exports[`Test cloudformation tags should render open remote modal 2`] = `
       <select
         class="templateDropdown"
         data-testid="tagsOptions"
-        name="spec.configuration.templateFile.type"
+        name="spec.configuration.tags.type"
       >
         <option
           data-testid="inline"
@@ -183,7 +183,7 @@ exports[`Test cloudformation tags should render tags data 1`] = `
       <select
         class="templateDropdown"
         data-testid="tagsOptions"
-        name="spec.configuration.templateFile.type"
+        name="spec.configuration.tags.type"
       >
         <option
           data-testid="inline"
@@ -269,7 +269,7 @@ exports[`Test cloudformation tags should render with no initial data 1`] = `
       <select
         class="templateDropdown"
         data-testid="tagsOptions"
-        name="spec.configuration.templateFile.type"
+        name="spec.configuration.tags.type"
       >
         <option
           data-testid="inline"

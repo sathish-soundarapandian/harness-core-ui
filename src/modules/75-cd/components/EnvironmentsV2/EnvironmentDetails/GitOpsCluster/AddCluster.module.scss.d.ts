@@ -20,6 +20,7 @@ declare const styles: {
   readonly clusterId: string
   readonly clusterList: string
   readonly clusterName: string
+  readonly clusterTitle: string
   readonly contentContainer: string
   readonly crossIcon: string
   readonly dialogStyles: string
@@ -48,6 +49,7 @@ declare const styles: {
   readonly tabTitle: string
   readonly tabTitleContainer: string
   readonly tag: string
+  readonly tagsPopover: string
   readonly unlinkedCount: string
 }
 export default styles

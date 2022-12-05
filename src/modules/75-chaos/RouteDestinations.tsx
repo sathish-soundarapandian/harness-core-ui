@@ -83,7 +83,7 @@ import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
 import ChaosTrialHomePage from './pages/home/ChaosTrialHomePage'
 import { ChaosExperimentStep } from './components/PipelineSteps/ChaosExperimentStep/ChaosExperimentStep'
-import { ChaosExperimentExecView } from './components/PipelineSteps/ChaosExperimentExecutionView/ChaosExperimentExecView'
+import ChaosExperimentExecView from './components/PipelineSteps/ChaosExperimentExecutionView/ChaosExperimentExecView'
 
 // eslint-disable-next-line import/no-unresolved
 const ChaosMicroFrontend = React.lazy(() => import('chaos/MicroFrontendApp'))

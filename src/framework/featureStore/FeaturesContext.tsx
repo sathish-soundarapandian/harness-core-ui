@@ -289,7 +289,8 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
         })
       })
     } catch (ex) {
-      showError(ex.data?.message || getString('somethingWentWrong'))
+      // TODO: disabled error toast as part of https://harness.atlassian.net/browse/PLG-1736 to be enabled once root cause is fixed
+      // showError(ex.data?.message || getString('somethingWentWrong'))
       // remove the request from queque
       pendingLimitRequests = pendingLimitRequests.filter(request => request !== featureRequest)
       setFeatureDetailMap(oldMap => {

@@ -118,6 +118,7 @@ function ArtifactWizard({
         return <StepJenkinsAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.Ecr:
       case ENABLED_ARTIFACT_TYPES.AmazonS3:
+      case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
         return <StepAWSAuthentication name={getString('credentials')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
       case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
@@ -161,6 +162,7 @@ function ArtifactWizard({
         return buildGcpPayload
       case ENABLED_ARTIFACT_TYPES.Ecr:
       case ENABLED_ARTIFACT_TYPES.AmazonS3:
+      case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
         return buildAWSPayload
       case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
       case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
@@ -186,6 +188,7 @@ function ArtifactWizard({
       case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
       case ENABLED_ARTIFACT_TYPES.Ecr:
       case ENABLED_ARTIFACT_TYPES.AmazonS3:
+      case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
       case ENABLED_ARTIFACT_TYPES.Acr:
       case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
         return true

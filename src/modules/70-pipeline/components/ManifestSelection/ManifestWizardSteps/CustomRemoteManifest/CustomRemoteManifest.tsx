@@ -204,7 +204,12 @@ function CustomRemoteManifest({
                       placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                     />
                   </div>
-                  <div className={css.halfWidth}>
+                  <div
+                    className={cx(css.halfWidth, {
+                      [css.runtimeInput]:
+                        getMultiTypeFromValue(formik.values?.extractionScript) === MultiTypeInputType.RUNTIME
+                    })}
+                  >
                     <MultiTypeFieldSelector
                       name={'extractionScript'}
                       label={getString('pipeline.manifestType.customRemoteExtractionScript')}
@@ -230,8 +235,24 @@ function CustomRemoteManifest({
                         fullScreenTitle={getString('pipeline.manifestType.customRemoteExtractionScript')}
                       />
                     </MultiTypeFieldSelector>
+                    {getMultiTypeFromValue(get(formik, 'values.extractionScript')) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        value={get(formik, 'values.extractionScript') as string}
+                        type="String"
+                        variableName="extractionScript"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={/* istanbul ignore next */ value => formik.setFieldValue('filePath', value)}
+                        isReadonly={isReadonly}
+                      />
+                    )}
                   </div>
-                  <div className={css.halfWidth}>
+                  <div
+                    className={cx(css.halfWidth, {
+                      [css.runtimeInput]: getMultiTypeFromValue(formik.values?.filePath) === MultiTypeInputType.RUNTIME
+                    })}
+                  >
                     <FormInput.MultiTextInput
                       multiTextInputProps={{ expressions, allowableTypes }}
                       label={getString('pipeline.manifestType.customRemoteExtractedFileLocation')}

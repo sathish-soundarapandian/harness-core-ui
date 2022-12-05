@@ -43,7 +43,8 @@ const DialogFooter: FC<DialogFooterProps> = ({ flags, state, setPageNumber, onCa
           itemCount={flags.itemCount}
           pageIndex={flags.pageIndex}
           gotoPage={setPageNumber}
-          hidePageNumbers={true}
+          hidePageNumbers
+          showPagination
         />
       )}
       <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>

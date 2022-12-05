@@ -4,6 +4,7 @@ exports[`Resource Groups Page render data 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--xlarge StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -155,6 +156,7 @@ exports[`Resource Groups Page render data 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody resourceGroupDetails"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="bp3-card bp3-elevation-0 Card--card subHeader"

@@ -16,7 +16,7 @@ import {
   CloudCostsNavItem,
   DeploymentsNavItem,
   FeatureFlagsNavItem,
-  SCMNavItem,
+  CODENavItem,
   SRMNavItem,
   STONavItem
 } from '../ModuleLinks'
@@ -72,14 +72,14 @@ describe('module links test', () => {
     expect(container.querySelector('[data-icon="cf-main"]')).toBeDefined()
   })
 
-  test('render SCMNavItem', () => {
+  test('render CodeNavItem', () => {
     const { container, getByText } = render(
       <TestWrapper path={routes.toConnectorDetails({ accountId: 'testId' })}>
-        <SCMNavItem />
+        <CODENavItem />
       </TestWrapper>
     )
-    expect(getByText('common.purpose.scm.name')).toBeDefined()
-    expect(container.querySelector('[data-icon="gitops-green"]')).toBeDefined()
+    expect(getByText('common.purpose.code.name')).toBeDefined()
+    expect(container.querySelector('[data-icon="code"]')).toBeDefined()
   })
 
   test('render SRMNavItem', () => {

@@ -59,7 +59,7 @@ interface UseSaveTemplateReturnType {
 
 export interface TemplateContextMetadata {
   onSuccessCallback: (
-    latestTemplate: NGTemplateInfoConfig,
+    latestTemplate: TemplateSummaryResponse,
     updatedGitDetails?: SaveToGitFormInterface,
     updatedStoreMetadata?: StoreMetadata
   ) => Promise<void>
@@ -154,15 +154,16 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
         requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
       })
       if (response && response.status === 'SUCCESS') {
+        const createdTemplate = response.data?.templateResponseDTO as TemplateSummaryResponse
         const isInlineTemplate = isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE
         if (isInlineTemplate) {
-          onSuccessCallback(latestTemplate, updatedGitDetails, storeMetadata)
+          onSuccessCallback(createdTemplate, updatedGitDetails, storeMetadata)
         }
 
         return {
           status: response.status,
           nextCallback: () => {
-            onSuccessCallback(latestTemplate, updatedGitDetails, storeMetadata)
+            onSuccessCallback(createdTemplate, updatedGitDetails, storeMetadata)
           }
         }
       } else {

@@ -15,7 +15,8 @@ export enum ExtensionType {
   BASH = 'sh',
   POWER_SHELL = 'ps',
   YML = 'yml',
-  TPL = 'tpl'
+  TPL = 'tpl',
+  PY = 'py'
 }
 
 export enum LanguageType {

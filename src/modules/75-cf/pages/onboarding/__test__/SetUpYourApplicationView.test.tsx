@@ -25,6 +25,21 @@ const renderComponent = (props?: Partial<SetUpYourApplicationViewProps>): Render
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
       <SetUpYourApplicationView
+        flagInfo={{
+          project: 'dummy',
+          createdAt: 1662647079713,
+          name: 'hello world',
+          identifier: 'hello_world',
+          kind: 'boolean',
+          archived: false,
+          variations: [
+            { identifier: 'true', name: 'True', value: 'true' },
+            { identifier: 'false', name: 'False', value: 'false' }
+          ],
+          defaultOnVariation: 'true',
+          defaultOffVariation: 'false',
+          permanent: false
+        }}
         language={undefined}
         setLanguage={setLanguage}
         apiKey={{
@@ -75,7 +90,7 @@ describe('SetUpYourApplicationView', () => {
     renderComponent()
 
     expect(screen.getByText('cf.onboarding.selectLanguage')).toBeVisible()
-    expect(screen.getAllByTestId('selectLanguageBtn')).toHaveLength(13)
+    expect(screen.getAllByTestId('selectLanguageBtn')).toHaveLength(14)
 
     // should not show until environment selected
     expect(screen.queryByText('cf.onboarding.selectOrCreateEnvironment')).not.toBeInTheDocument()
@@ -96,7 +111,7 @@ describe('SetUpYourApplicationView', () => {
     renderComponent({ language: SupportPlatforms[1] })
 
     expect(screen.getByText('cf.onboarding.selectLanguage')).toBeVisible()
-    expect(screen.getAllByTestId('selectLanguageBtn')).toHaveLength(13)
+    expect(screen.getAllByTestId('selectLanguageBtn')).toHaveLength(14)
 
     expect(screen.getByText('cf.onboarding.selectOrCreateEnvironment')).toBeVisible()
     expect(document.querySelector('input[name="environmentSelectEl"]')).toBeVisible()
@@ -142,5 +157,12 @@ describe('SetUpYourApplicationView', () => {
       version: 0
     })
     expect(document.querySelector('input[name="environmentSelectEl"]')).toHaveValue('QB')
+  })
+
+  test('It should render the readme when environment, language & api key are set', () => {
+    const javaLang = SupportPlatforms.find(lang => lang.name === 'Java') as any
+    renderComponent({ language: javaLang, selectedEnvironment: { identifier: 'foobar' } })
+
+    expect(screen.getByText('cf.onboarding.setUpYourCode')).toBeVisible()
   })
 })

@@ -6,8 +6,8 @@
  */
 
 import React, { useState, useEffect } from 'react'
+import { isNumber } from 'highcharts'
 import type QueryString from 'qs'
-import { isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { Row } from 'react-table'
 import {
@@ -24,7 +24,8 @@ import {
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useMutateAsGet } from '@common/hooks'
-import { SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import noServiceAvailableImage from '@cv/assets/noMonitoredServices.svg'
+import { SLOObjective, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   useGetSLOHealthListViewV2,
@@ -55,7 +56,7 @@ interface SLOListProps {
   hideDrawer: () => void
   filter: SLODashboardApiFilter
   onAddSLO: (key: string, value: ServiceLevelObjectiveDetailsDTO[]) => void
-  serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
+  serviceLevelObjectivesDetails: SLOObjective[]
 }
 
 export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDetails }: SLOListProps): JSX.Element => {
@@ -63,6 +64,7 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
   const { getString } = useStrings()
   const [pageNumber, setPageNumber] = useState(0)
   const [searchTerm, setSearchTerm] = useState('')
+  const [initializedPageNumbers, setInitializedPageNumbers] = useState<number[]>([])
   const [selectedSlos, setSelectedSlos] = useState<SLOHealthListView[]>([])
 
   const sloDashboardWidgetsParams: SLODashboardWidgetsParams = {
@@ -87,10 +89,24 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
   useEffect(() => {
     // load selected SLOs when we get data from API
     if (dashboardWidgetsResponse?.data?.content) {
-      const filteredList = dashboardWidgetsResponse?.data?.content.filter(item =>
-        serviceLevelObjectivesDetails.map(details => details.serviceLevelObjectiveRef).includes(item.sloIdentifier)
-      )
-      setSelectedSlos(filteredList)
+      if (isNumber(pageIndex) && !initializedPageNumbers.includes(pageIndex) && serviceLevelObjectivesDetails.length) {
+        const selectedSlosOnPage =
+          content?.filter(item =>
+            serviceLevelObjectivesDetails?.map(details => details.serviceLevelObjectiveRef).includes(item.sloIdentifier)
+          ) || []
+        const selectedSlosNotOnPage = serviceLevelObjectivesDetails.filter(
+          item => !selectedSlosOnPage.map(slos => slos.sloIdentifier).includes(item.sloIdentifier || '')
+        )
+        setSelectedSlos([...selectedSlosOnPage, ...selectedSlosNotOnPage] as SLOHealthListView[])
+        setInitializedPageNumbers(prv => [...prv, pageIndex])
+      } else {
+        setSelectedSlos(prvSelected => {
+          const listOfSloIdsOnPage = content?.map(item => item.sloIdentifier)
+          const selectedSlosNotOnPage = prvSelected.filter(item => !listOfSloIdsOnPage?.includes(item.sloIdentifier))
+          const selectedSlosOnPage = prvSelected.filter(item => listOfSloIdsOnPage?.includes(item.sloIdentifier))
+          return [...selectedSlosNotOnPage, ...selectedSlosOnPage]
+        })
+      }
     }
   }, [dashboardWidgetsResponse?.data?.content])
 
@@ -101,19 +117,21 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
   }
 
   const isSelectAllChecked = () => {
-    const l1 = selectedSlos.map(item => item.sloIdentifier)
-    const l2 = dashboardWidgetsResponse?.data?.content?.map(item => item.sloIdentifier)
-    return isEqual(l1.sort(), l2?.sort())
+    const listOfSloIdsOnPage = dashboardWidgetsResponse?.data?.content?.map(item => item.sloIdentifier)
+    const selectedSlosOnPage = selectedSlos.filter(item => listOfSloIdsOnPage?.includes(item.sloIdentifier))
+    return listOfSloIdsOnPage?.length === selectedSlosOnPage.length
   }
 
   const onSelectAll = (checked: boolean) => {
-    let clonedSelectedSlos = [...selectedSlos]
-    if (checked) {
-      clonedSelectedSlos = dashboardWidgetsResponse?.data?.content || []
-    } else {
-      clonedSelectedSlos = []
-    }
-    setSelectedSlos(clonedSelectedSlos)
+    setSelectedSlos(prvSelected => {
+      const listOfSloIdsOnPage = dashboardWidgetsResponse?.data?.content?.map(item => item.sloIdentifier)
+      const prevSelectedSlosNotOnPage = prvSelected.filter(item => !listOfSloIdsOnPage?.includes(item.sloIdentifier))
+      if (checked) {
+        return [...prevSelectedSlosNotOnPage, ...(dashboardWidgetsResponse?.data?.content || [])]
+      } else {
+        return prevSelectedSlosNotOnPage
+      }
+    })
   }
 
   return (
@@ -165,21 +183,25 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
                   }
                 },
                 {
+                  accessor: 'name',
                   Header: getString('cv.slos.sloName').toUpperCase(),
                   width: '20%',
                   Cell: RenderSLOName
                 },
                 {
+                  accessor: 'serviceName',
                   Header: getString('cv.slos.monitoredService').toUpperCase(),
                   width: '20%',
                   Cell: RenderMonitoredService
                 },
                 {
+                  accessor: 'userJourneyName',
                   Header: getString('cv.slos.userJourney').toUpperCase(),
                   width: '20%',
                   Cell: RenderUserJourney
                 },
                 {
+                  accessor: 'tags',
                   Header: getString('tagsLabel').toUpperCase(),
                   width: '20%',
                   Cell: RenderTags
@@ -190,6 +212,7 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
                   Cell: RenderSLIType
                 },
                 {
+                  accessor: 'sliType',
                   Header: getString('cv.slos.target').toUpperCase(),
                   width: '20%',
                   Cell: RenderTarget
@@ -207,16 +230,28 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
               }}
             />
           ) : (
-            <NoDataCard icon={'join-table'} message={getString('cv.CompositeSLO.NoSloFound')} />
+            <NoDataCard
+              image={noServiceAvailableImage}
+              message={
+                <>
+                  <Text font={{ variation: FontVariation.H6 }}>{getString('cv.CompositeSLO.NoData')}</Text>
+                  <Text font={{ variation: FontVariation.FORM_LABEL, weight: 'light' }}>
+                    {getString('cv.CompositeSLO.NoDataSuggestion')}
+                  </Text>
+                </>
+              }
+            />
           )}
-          <Button
-            width={150}
-            data-testid={'addSloButton'}
-            disabled={isDisabled}
-            variation={ButtonVariation.PRIMARY}
-            text={getString('add')}
-            onClick={addSLos}
-          />
+          <Container border={{ top: true }} padding={{ top: 'medium' }}>
+            <Button
+              width={150}
+              data-testid={'addSloButton'}
+              disabled={isDisabled}
+              variation={ButtonVariation.PRIMARY}
+              text={serviceLevelObjectivesDetails.length ? getString('update') : getString('add')}
+              onClick={addSLos}
+            />
+          </Container>
         </Page.Body>
       </Container>
     </>

@@ -191,8 +191,8 @@ export interface AmazonMachineImageInitialValuesType {
   spec: {
     connectorRef?: string
     region?: string | SelectOption
-    amiFilters?: VariableInterface[]
-    amiTags?: VariableInterface[]
+    filters?: VariableInterface[] | string | { [key: string]: any }
+    tags?: VariableInterface[] | string | { [key: string]: any }
     version?: string
     versionRegex?: string
   }

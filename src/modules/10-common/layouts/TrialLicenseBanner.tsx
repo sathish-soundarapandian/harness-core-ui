@@ -239,10 +239,12 @@ export const TrialLicenseBanner: React.FC = () => {
   } = useGetLicensesAndSummary({
     queryParams: { moduleType: module?.toUpperCase() as GetLicensesAndSummaryQueryParams['moduleType'] },
     accountIdentifier: accountId,
-    lazy: module === undefined || isBannerDismissed[module]
+    lazy: true
   })
-  const { maxExpiryTime, edition, licenseType } = data?.data || {}
   const [extendingTrial, setExtendingTrial] = useState<boolean>(false)
+  const maxExpiryTime = (module && licenseInformation?.[module.toUpperCase()]?.expiryTime) || 0
+  const edition = (module && licenseInformation?.[module.toUpperCase()]?.edition) || ''
+  const licenseType = (module && licenseInformation?.[module.toUpperCase()]?.licenseType) || ''
   const updatedLicenseInfo = data?.data &&
     module && {
       ...licenseInformation?.[module.toUpperCase()],

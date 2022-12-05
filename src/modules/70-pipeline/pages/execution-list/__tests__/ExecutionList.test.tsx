@@ -117,13 +117,13 @@ jest.mock('services/cd-ng', () => ({
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
   }),
-  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
+  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false }),
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: getListGitSync }
+  })
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
-  useListGitSyncQuery: jest.fn().mockImplementation(() => {
-    return { data: gitConfigs, refetch: getListGitSync }
-  }),
   useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })
@@ -169,7 +169,7 @@ const renderExecutionPage = (module = 'cd'): RenderResult =>
       defaultAppStoreValues={defaultAppStoreValues}
       queryParams={{ listview: true }}
     >
-      <ExecutionList onRunPipeline={jest.fn()} />
+      <ExecutionList onRunPipeline={jest.fn()} showBranchFilter={true} />
     </TestWrapper>
   )
 
@@ -366,5 +366,18 @@ describe('Execution List', () => {
       'href',
       routes.toPipelineStudio({ ...getModuleParams(), pipelineIdentifier: 'MultipleStage' } as any)
     )
+  })
+
+  test('should call API with branch when branch is selected', async () => {
+    renderExecutionPage()
+    const select = await waitFor(() => screen.getByTestId('branch-filter'))
+    userEvent.click(select)
+    const BranchSelect = findPopoverContainer() as HTMLElement
+    const branch1 = within(BranchSelect).getByText('main')
+    userEvent.click(branch1)
+
+    const request = commonRequest()
+    request.queryParams.branch = 'main'
+    expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
   })
 })

@@ -133,7 +133,7 @@ const SideNavItems = () => {
   const { accountId } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
-  const { CLOUD_COST_GOVERNANCE_UI, CCM_COMMORCH: showCO } = useFeatureFlags()
+  const { CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI, CCM_COMMORCH: showCO } = useFeatureFlags()
 
   return (
     <Layout.Vertical spacing="small">
@@ -200,7 +200,7 @@ const SideNavItems = () => {
             trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.BI_DASHBOARD_FEATURE })
           }}
         />
-        {CLOUD_COST_GOVERNANCE_UI && (
+        {CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI && (
           <SidebarLink
             label={getString('ce.governance.sideNavText')}
             to={routes.toCEGovernance({ accountId })}

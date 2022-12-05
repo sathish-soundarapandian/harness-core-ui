@@ -12,71 +12,6 @@ import { Get, GetProps, useGet, UseGetProps, Mutate, MutateProps, useMutate, Use
 
 import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from '../config'
 export const SPEC_VERSION = '1.0'
-export interface Activity {
-  accountId: string
-  activityEndTime?: number
-  activityName?: string
-  activitySourceId?: string
-  activityStartTime: number
-  analysisStatus?:
-    | 'IGNORED'
-    | 'NOT_STARTED'
-    | 'VERIFICATION_PASSED'
-    | 'VERIFICATION_FAILED'
-    | 'ERROR'
-    | 'ABORTED'
-    | 'IN_PROGRESS'
-  changeSourceIdentifier?: string
-  createdAt?: number
-  eventTime?: number
-  lastUpdatedAt?: number
-  monitoredServiceIdentifier?: string
-  orgIdentifier: string
-  projectIdentifier: string
-  tags?: string[]
-  type: 'DEPLOYMENT' | 'CONFIG' | 'KUBERNETES' | 'HARNESS_CD' | 'PAGER_DUTY' | 'HARNESS_CD_CURRENT_GEN'
-  uuid?: string
-  validUntil?: string
-  verificationIteration?: number
-  verificationJobInstanceIds?: string[]
-  verificationJobRuntimeDetails?: VerificationJobRuntimeDetails[]
-  verificationJobs?: VerificationJob[]
-  verificationSummary?: ActivityVerificationSummary
-}
-
-export interface ActivityVerificationSummary {
-  aborted?: number
-  aggregatedStatus?:
-    | 'IGNORED'
-    | 'NOT_STARTED'
-    | 'VERIFICATION_PASSED'
-    | 'VERIFICATION_FAILED'
-    | 'ERROR'
-    | 'ABORTED'
-    | 'IN_PROGRESS'
-  durationMs?: number
-  errors?: number
-  failed?: number
-  notStarted?: number
-  passed?: number
-  progress?: number
-  progressPercentage?: number
-  remainingTimeMs?: number
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
-  startTime?: number
-  total?: number
-  verficationStatusMap?: {
-    [key: string]:
-      | 'IGNORED'
-      | 'NOT_STARTED'
-      | 'VERIFICATION_PASSED'
-      | 'VERIFICATION_FAILED'
-      | 'ERROR'
-      | 'ABORTED'
-      | 'IN_PROGRESS'
-  }
-}
-
 export interface AdditionalInfo {
   type?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO'
 }
@@ -87,94 +22,12 @@ export interface AnalysisDTO {
   riskProfile?: RiskProfile
 }
 
-export interface AnalysisInput {
-  controlHosts?: string[]
-  endTime?: number
-  learningEngineTaskType?:
-    | 'SERVICE_GUARD_TIME_SERIES'
-    | 'LOG_CLUSTER'
-    | 'SERVICE_GUARD_LOG_ANALYSIS'
-    | 'CANARY_LOG_ANALYSIS'
-    | 'TEST_LOG_ANALYSIS'
-    | 'TIME_SERIES_CANARY'
-    | 'CANARY_DEPLOYMENT_TIME_SERIES'
-    | 'BEFORE_AFTER_DEPLOYMENT_TIME_SERIES'
-    | 'SERVICE_GUARD_FEEDBACK_ANALYSIS'
-    | 'TIME_SERIES_LOAD_TEST'
-  startTime?: number
-  testHosts?: string[]
-  timeRange?: TimeRange
-  verificationJobInstanceId?: string
-  verificationTaskId?: string
-}
-
 export interface AnalysisResult {
   count?: number
   label?: number
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
   riskScore?: number
   tag?: 'KNOWN' | 'UNEXPECTED' | 'UNKNOWN'
-}
-
-export interface AnalysisState {
-  inputs?: AnalysisInput
-  retryCount?: number
-  status?:
-    | 'CREATED'
-    | 'RUNNING'
-    | 'SUCCESS'
-    | 'RETRY'
-    | 'TRANSITION'
-    | 'IGNORED'
-    | 'TIMEOUT'
-    | 'FAILED'
-    | 'COMPLETED'
-    | 'TERMINATED'
-  type?:
-    | 'HOST_SAMPLING_STATE'
-    | 'CANARY_TIME_SERIES'
-    | 'DEPLOYMENT_LOG_ANALYSIS'
-    | 'SERVICE_GUARD_LOG_ANALYSIS'
-    | 'SERVICE_GUARD_TIME_SERIES'
-    | 'TEST_TIME_SERIES'
-    | 'DEPLOYMENT_LOG_CLUSTER'
-    | 'PRE_DEPLOYMENT_LOG_CLUSTER'
-    | 'SERVICE_GUARD_LOG_CLUSTER'
-    | 'SERVICE_GUARD_TREND_ANALYSIS'
-    | 'SLI_METRIC_ANALYSIS'
-    | 'DEPLOYMENT_TIME_SERIES_ANALYSIS_STATE'
-    | 'COMPOSOITE_SLO_METRIC_ANALYSIS'
-}
-
-export interface AnalysisStateMachine {
-  accountId?: string
-  analysisEndTime?: number
-  analysisStartTime?: number
-  completedStates?: AnalysisState[]
-  createdAt?: number
-  currentState?: AnalysisState
-  endTime?: number
-  lastUpdatedAt?: number
-  logLevel?: 'INFO' | 'WARN' | 'ERROR'
-  nextAttemptTime?: number
-  startTime?: number
-  stateMachineIgnoreMinutes: number
-  status?:
-    | 'CREATED'
-    | 'RUNNING'
-    | 'SUCCESS'
-    | 'RETRY'
-    | 'TRANSITION'
-    | 'IGNORED'
-    | 'TIMEOUT'
-    | 'FAILED'
-    | 'COMPLETED'
-    | 'TERMINATED'
-  totalRetryCount?: number
-  totalRetryCountToBePropagated?: number
-  uuid?: string
-  validUntil?: string
-  verificationTaskId?: string
 }
 
 export interface AnalyzedLogDataDTO {
@@ -650,83 +503,32 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   awsAccountId?: string
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
   isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
   billingExportSpec?: BillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
   subscriptionId: string
   tenantId: string
 }
 
 export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
   connectorRef: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
 }
 
-export interface CVConfig {
-  accountId: string
-  category: 'Performance' | 'Errors' | 'Infrastructure'
-  connectorIdentifier: string
-  createNextTaskIteration?: number
-  createdAt?: number
-  demo?: boolean
-  deploymentVerificationEnabled?: boolean
-  eligibleForDemo?: boolean
-  enabled?: boolean
-  firstTimeDataCollectionTimeRange?: TimeRange
-  fullyQualifiedIdentifier?: string
-  identifier: string
-  lastUpdatedAt?: number
-  liveMonitoringEnabled?: boolean
-  monitoredServiceIdentifier?: string
-  monitoringSourceName: string
-  orgIdentifier: string
-  productName?: string
-  projectIdentifier: string
-  slienabled?: boolean
-  type?:
-    | 'APP_DYNAMICS'
-    | 'SPLUNK'
-    | 'SPLUNK_METRIC'
-    | 'STACKDRIVER'
-    | 'STACKDRIVER_LOG'
-    | 'KUBERNETES'
-    | 'NEW_RELIC'
-    | 'PROMETHEUS'
-    | 'DATADOG_METRICS'
-    | 'DATADOG_LOG'
-    | 'ERROR_TRACKING'
-    | 'DYNATRACE'
-    | 'CUSTOM_HEALTH_METRIC'
-    | 'CUSTOM_HEALTH_LOG'
-    | 'ELASTICSEARCH'
-    | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
-  uuid?: string
-  verificationTaskTags?: {
-    [key: string]: string
-  }
-  verificationType: 'TIME_SERIES' | 'LOG'
+export interface CVLicenseUsageDTO {
+  accountIdentifier?: string
+  activeServices?: UsageDataDTO
+  module?: string
+  timestamp?: number
 }
 
 export type CVNGEmailChannelSpec = CVNGNotificationChannelSpec & {
   recipients?: string[]
   userGroups?: string[]
-}
-
-export interface CVNGLog {
-  accountId?: string
-  endTime?: number
-  lastUpdatedAt?: number
-  logRecords?: CVNGLogRecord[]
-  logType?: 'ApiCallLog' | 'ExecutionLog'
-  startTime?: number
-  traceableId?: string
-  traceableType?: 'ONBOARDING' | 'VERIFICATION_TASK'
-  uuid?: string
 }
 
 export interface CVNGLogDTO {
@@ -738,12 +540,6 @@ export interface CVNGLogDTO {
   traceableId?: string
   traceableType?: 'ONBOARDING' | 'VERIFICATION_TASK'
   type?: 'ApiCallLog' | 'ExecutionLog'
-}
-
-export interface CVNGLogRecord {
-  createdAt?: number
-  errorLog?: boolean
-  tags?: CVNGLogTag[]
 }
 
 export interface CVNGLogTag {
@@ -774,26 +570,6 @@ export type CVNGPagerDutyChannelSpec = CVNGNotificationChannelSpec & {
 export type CVNGSlackChannelSpec = CVNGNotificationChannelSpec & {
   userGroups?: string[]
   webhookUrl?: string
-}
-
-export interface CVNGStepTask {
-  accountId?: string
-  activityId?: string
-  asyncTaskIteration?: number
-  callbackId?: string
-  createdAt?: number
-  deploymentStartTime?: number
-  deploymentTag?: string
-  environmentIdentifier?: string
-  lastUpdatedAt?: number
-  orgIdentifier?: string
-  projectIdentifier?: string
-  serviceIdentifier?: string
-  skip?: boolean
-  status?: 'IN_PROGRESS' | 'DONE'
-  uuid?: string
-  validUntil?: string
-  verificationJobInstanceId?: string
 }
 
 export type CalenderSLOTargetSpec = SLOTargetSpec & {
@@ -1133,28 +909,6 @@ export interface DataCollectionRequest {
     | 'CLOUDWATCH_METRIC_DATA_REQUEST'
     | 'CLOUDWATCH_METRICS_METADATA_REQUEST'
     | 'AWS_GENERIC_DATA_COLLECTION_REQUEST'
-}
-
-export interface DataCollectionTask {
-  accountId?: string
-  createdAt?: number
-  dataCollectionInfo?: DataCollectionInfo
-  dataCollectionWorkerId?: string
-  endTime?: number
-  exception?: string
-  lastPickedAt?: number
-  lastUpdatedAt?: number
-  logLevel?: 'INFO' | 'WARN' | 'ERROR'
-  nextTaskId?: string
-  retryCount?: number
-  stacktrace?: string
-  startTime?: number
-  status?: 'FAILED' | 'QUEUED' | 'RUNNING' | 'WAITING' | 'EXPIRED' | 'SUCCESS' | 'ABORTED'
-  type?: 'SERVICE_GUARD' | 'DEPLOYMENT' | 'SLI'
-  uuid?: string
-  validAfter?: number
-  verificationTaskId?: string
-  workerStatusIteration?: number
 }
 
 export interface DataCollectionTaskDTO {
@@ -1772,6 +1526,9 @@ export interface Error {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'NO_ELIGIBLE_DELEGATES'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1800,11 +1557,6 @@ export type ErrorBudgetRemainingPercentageConditionSpec = NotificationRuleCondit
 
 export interface ErrorMetadataDTO {
   type?: string
-}
-
-export type ErrorTrackingConditionSpec = NotificationRuleConditionSpec & {
-  errorTrackingEventStatus?: 'NewEvents'[]
-  errorTrackingEventTypes?: ('Exceptions' | 'LogErrors' | 'HttpErrors' | 'CustomErrors' | 'TimeoutErrors')[]
 }
 
 export type ErrorTrackingConnectorDTO = ConnectorConfigDTO & {
@@ -2194,6 +1946,9 @@ export interface Failure {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'NO_ELIGIBLE_DELEGATES'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2218,7 +1973,7 @@ export interface GcpBillingExportSpec {
 
 export type GcpCloudCostConnector = ConnectorConfigDTO & {
   billingExportSpec?: GcpBillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
   projectId: string
   serviceAccountEmail: string
 }
@@ -2793,13 +2548,6 @@ export type LocalConnectorDTO = ConnectorConfigDTO & {
   default?: boolean
 }
 
-export interface LocalTime {
-  hour?: number
-  minute?: number
-  nano?: number
-  second?: number
-}
-
 export interface LogAnalysisCluster {
   accountId?: string
   analysisEndTime?: number
@@ -3168,6 +2916,17 @@ export interface MonitoredServiceDTO {
   type: 'Application' | 'Infrastructure'
 }
 
+export interface MonitoredServiceDetail {
+  environmentIdentifier?: string
+  environmentName?: string
+  healthSourceIdentifier?: string
+  healthSourceName?: string
+  monitoredServiceIdentifier?: string
+  monitoredServiceName?: string
+  serviceIdentifier?: string
+  serviceName?: string
+}
+
 export interface MonitoredServiceListItemDTO {
   changeSummary?: ChangeSummaryDTO
   currentHealthScore?: RiskData
@@ -3203,11 +2962,6 @@ export interface MonitoredServiceWithHealthSources {
 
 export type MonthlyCalenderSpec = CalenderSpec & {
   dayOfMonth: number
-}
-
-export interface NGTag {
-  key: string
-  value: string
 }
 
 export interface NameValuePairWithDefault {
@@ -3291,7 +3045,6 @@ export interface NotificationRuleCondition {
     | 'ChangeImpact'
     | 'HealthScore'
     | 'ChangeObserved'
-    | 'CodeErrors'
 }
 
 export interface NotificationRuleConditionSpec {
@@ -3306,12 +3059,6 @@ export interface NotificationRuleDTO {
   orgIdentifier: string
   projectIdentifier: string
   type: 'MonitoredService' | 'ServiceLevelObjective'
-}
-
-export interface NotificationRuleRef {
-  enabled: boolean
-  lastSuccessFullNotificationSent: number
-  notificationRuleRef: string
 }
 
 export interface NotificationRuleRefDTO {
@@ -3505,6 +3252,16 @@ export interface PageNotificationRuleResponse {
   totalPages?: number
 }
 
+export interface PageSLOConsumptionBreakdown {
+  content?: SLOConsumptionBreakdown[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageSLOHealthListView {
   content?: SLOHealthListView[]
   empty?: boolean
@@ -3644,7 +3401,19 @@ export interface PagerDutyWebhookEventDTO {
 }
 
 export interface PartialSchemaDTO {
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -3673,12 +3442,6 @@ export interface ProgressLog {
   timeTakenToFinish?: Duration
   verificationJobExecutionStatus?: 'QUEUED' | 'RUNNING' | 'FAILED' | 'SUCCESS' | 'TIMEOUT' | 'ABORTED'
   verificationTaskId?: string
-}
-
-export interface ProjectParams {
-  accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
 }
 
 export type PrometheusConnectorDTO = ConnectorConfigDTO & {
@@ -3743,6 +3506,15 @@ export type RatioSLIMetricSpec = SLIMetricSpec & {
   thresholdValue: number
 }
 
+export interface ReferenceDTO {
+  accountIdentifier?: string
+  count?: number
+  identifier?: string
+  name?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
 export interface Response {
   correlationId?: string
   data?: { [key: string]: any }
@@ -3760,6 +3532,13 @@ export interface ResponseAppdynamicsMetricDataResponse {
 export interface ResponseBoolean {
   correlationId?: string
   data?: boolean
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseCVLicenseUsageDTO {
+  correlationId?: string
+  data?: CVLicenseUsageDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4265,6 +4044,9 @@ export interface ResponseMessage {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'NO_ELIGIBLE_DELEGATES'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4277,6 +4059,7 @@ export interface ResponseMessage {
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
+    | 'APPROVAL_REJECTION'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -4362,6 +4145,13 @@ export interface ResponsePageMonitoredServiceResponse {
 export interface ResponsePageNotificationRuleResponse {
   correlationId?: string
   data?: PageNotificationRuleResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageSLOConsumptionBreakdown {
+  correlationId?: string
+  data?: PageSLOConsumptionBreakdown
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4510,14 +4300,6 @@ export interface RestResponseChangeTimeline {
     [key: string]: { [key: string]: any }
   }
   resource?: ChangeTimeline
-  responseMessages?: ResponseMessage[]
-}
-
-export interface RestResponseDataCollectionTask {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: DataCollectionTask
   responseMessages?: ResponseMessage[]
 }
 
@@ -4887,14 +4669,6 @@ export interface RestResponseSLIOnboardingGraphs {
   responseMessages?: ResponseMessage[]
 }
 
-export interface RestResponseSLODebugResponse {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: SLODebugResponse
-  responseMessages?: ResponseMessage[]
-}
-
 export interface RestResponseSLOErrorBudgetResetDTO {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -5007,14 +4781,6 @@ export interface RestResponseUserJourneyResponse {
   responseMessages?: ResponseMessage[]
 }
 
-export interface RestResponseVerifyStepDebugResponse {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: VerifyStepDebugResponse
-  responseMessages?: ResponseMessage[]
-}
-
 export interface RestResponseVoid {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -5069,11 +4835,6 @@ export type RollingSLOTargetSpec = SLOTargetSpec & {
   periodLength: string
 }
 
-export interface RuntimeParameter {
-  runtimeParam?: boolean
-  value?: string
-}
-
 export interface Slidto {
   enabled?: boolean
 }
@@ -5089,20 +4850,18 @@ export interface SLIOnboardingGraphs {
   sliGraph?: TimeGraphResponse
 }
 
-export interface SLIRecord {
-  createdAt?: number
-  epochMinute?: number
-  lastUpdatedAt?: number
-  runningBadCount?: number
-  runningGoodCount?: number
-  sliId?: string
-  sliState?: 'NO_DATA' | 'GOOD' | 'BAD'
-  sliVersion?: number
-  timestamp?: number
-  uuid?: string
-  validUntil?: string
-  verificationTaskId?: string
-  version?: number
+export interface SLOConsumptionBreakdown {
+  contributedErrorBudgetBurned: number
+  environmentIdentifier: string
+  errorBudgetBurned: number
+  monitoredServiceIdentifier: string
+  serviceName: string
+  sliStatusPercentage: number
+  sliType: 'Availability' | 'Latency'
+  sloIdentifier: string
+  sloName: string
+  sloTargetPercentage: number
+  weightagePercentage: number
 }
 
 export interface SLODashboardApiFilter {
@@ -5131,49 +4890,32 @@ export interface SLODashboardWidget {
   currentPeriodEndTime: number
   currentPeriodLengthDays: number
   currentPeriodStartTime: number
-  environmentIdentifier: string
-  environmentName: string
+  environmentIdentifier?: string
+  environmentName?: string
   errorBudgetBurndown: Point[]
   errorBudgetRemaining: number
   errorBudgetRemainingPercentage: number
   errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
-  healthSourceIdentifier: string
-  healthSourceName: string
-  monitoredServiceIdentifier: string
-  monitoredServiceName: string
+  healthSourceIdentifier?: string
+  healthSourceName?: string
+  monitoredServiceDetails?: MonitoredServiceDetail[]
+  monitoredServiceIdentifier?: string
+  monitoredServiceName?: string
   recalculatingSLI?: boolean
-  serviceIdentifier: string
-  serviceName: string
+  serviceIdentifier?: string
+  serviceName?: string
   sloIdentifier: string
   sloPerformanceTrend: Point[]
   sloTargetPercentage: number
   sloTargetType: 'Rolling' | 'Calender'
+  sloType: 'Simple' | 'Composite'
   tags?: {
     [key: string]: string
   }
   timeRemainingDays: number
   title: string
   totalErrorBudget: number
-  type: 'Availability' | 'Latency'
-}
-
-export interface SLODebugResponse {
-  projectParams?: ProjectParams
-  serviceLevelIndicatorList?: ServiceLevelIndicator[]
-  serviceLevelObjective?: ServiceLevelObjective
-  sliIdentifierToAnalysisStateMachineMap?: {
-    [key: string]: AnalysisStateMachine
-  }
-  sliIdentifierToDataCollectionTaskMap?: {
-    [key: string]: DataCollectionTask[]
-  }
-  sliIdentifierToSLIRecordMap?: {
-    [key: string]: SLIRecord[]
-  }
-  sliIdentifierToVerificationTaskMap?: {
-    [key: string]: VerificationTask
-  }
-  sloHealthIndicator?: SLOHealthIndicator
+  type?: 'Availability' | 'Latency'
 }
 
 export interface SLOErrorBudgetResetDTO {
@@ -5185,22 +4927,6 @@ export interface SLOErrorBudgetResetDTO {
   remainingErrorBudgetAtReset?: number
   serviceLevelObjectiveIdentifier?: string
   validUntil?: number
-}
-
-export interface SLOHealthIndicator {
-  accountId?: string
-  createdAt?: number
-  errorBudgetBurnRate?: number
-  errorBudgetRemainingMinutes?: number
-  errorBudgetRemainingPercentage?: number
-  errorBudgetRisk?: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
-  lastComputedAt?: number
-  lastUpdatedAt?: number
-  monitoredServiceIdentifier?: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  serviceLevelObjectiveIdentifier?: string
-  uuid?: string
 }
 
 export interface SLOHealthListView {
@@ -5235,11 +4961,6 @@ export interface SLOHealthListView {
 export interface SLORiskCountResponse {
   riskCounts?: RiskCount[]
   totalCount?: number
-}
-
-export interface SLOTarget {
-  timeRangeFilters?: TimeRangeFilter[]
-  type?: 'Rolling' | 'Calender'
 }
 
 export interface SLOTargetDTO {
@@ -5306,30 +5027,6 @@ export interface ServiceGuardTxnMetricAnalysisDataDTO {
   shortTermHistory?: number[]
 }
 
-export interface ServiceLevelIndicator {
-  accountId?: string
-  createNextTaskIteration?: number
-  createdAt?: number
-  enabled?: boolean
-  firstTimeDataCollectionTimeRange?: TimeRange
-  healthSourceIdentifier?: string
-  identifier?: string
-  lastUpdatedAt?: number
-  metricNames?: string[]
-  monitoredServiceIdentifier?: string
-  name?: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  sliMissingDataType?: 'Good' | 'Bad' | 'Ignore'
-  slimetricType?: 'Threshold' | 'Ratio'
-  type?: 'Availability' | 'Latency'
-  uuid?: string
-  verificationTaskTags?: {
-    [key: string]: string
-  }
-  version?: number
-}
-
 export interface ServiceLevelIndicatorDTO {
   healthSourceRef?: string
   identifier?: string
@@ -5342,31 +5039,6 @@ export interface ServiceLevelIndicatorDTO {
 export interface ServiceLevelIndicatorSpec {
   spec: SLIMetricSpec
   type?: 'Threshold' | 'Ratio'
-}
-
-export interface ServiceLevelObjective {
-  accountId?: string
-  createdAt?: number
-  desc?: string
-  enabled?: boolean
-  healthSourceIdentifier?: string
-  identifier?: string
-  lastUpdatedAt?: number
-  monitoredServiceIdentifier?: string
-  name?: string
-  nextNotificationIteration?: number
-  notificationRuleRefs?: NotificationRuleRef[]
-  orgIdentifier?: string
-  projectIdentifier?: string
-  serviceLevelIndicators?: string[]
-  sloTarget?: SLOTarget
-  sloTargetPercentage?: number
-  tags: NGTag[]
-  timeRangeFilters?: TimeRangeFilter[]
-  type?: 'Availability' | 'Latency'
-  userJourneyIdentifier?: string
-  uuid?: string
-  zoneOffset?: ZoneOffset
 }
 
 export interface ServiceLevelObjectiveDTO {
@@ -5389,8 +5061,8 @@ export interface ServiceLevelObjectiveDTO {
 
 export interface ServiceLevelObjectiveDetailsDTO {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   serviceLevelObjectiveRef: string
   weightagePercentage: number
 }
@@ -5427,10 +5099,26 @@ export interface ServiceLevelObjectiveV2Response {
   serviceLevelObjectiveV2: ServiceLevelObjectiveV2DTO
 }
 
+export interface ServiceNowAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface ServiceNowAuthenticationDTO {
+  spec: ServiceNowAuthCredentialsDTO
+  type: 'UsernamePassword'
+}
+
 export type ServiceNowConnector = ConnectorConfigDTO & {
+  auth?: ServiceNowAuthenticationDTO
   delegateSelectors?: string[]
   passwordRef: string
   serviceNowUrl: string
+  username?: string
+  usernameRef?: string
+}
+
+export type ServiceNowUserNamePasswordDTO = ServiceNowAuthCredentialsDTO & {
+  passwordRef: string
   username?: string
   usernameRef?: string
 }
@@ -5551,6 +5239,7 @@ export interface StackdriverDefinition {
   identifier: string
   isManualQuery?: boolean
   jsonMetricDefinition?: { [key: string]: any }
+  jsonMetricDefinitionString?: string
   metricName: string
   metricTags?: string[]
   riskProfile?: RiskProfile
@@ -5573,10 +5262,6 @@ export type SumoLogicConnectorDTO = ConnectorConfigDTO & {
   accessKeyRef: string
   delegateSelectors?: string[]
   url: string
-}
-
-export interface TaskInfo {
-  taskType?: 'LIVE_MONITORING' | 'DEPLOYMENT' | 'SLI' | 'COMPOSITE_SLO'
 }
 
 export interface TemplateDTO {
@@ -5956,6 +5641,12 @@ export interface TransactionMetricSums {
   transactionName?: string
 }
 
+export interface UsageDataDTO {
+  count?: number
+  displayName?: string
+  references?: ReferenceDTO[]
+}
+
 export interface UserJourneyDTO {
   identifier: string
   name: string
@@ -6000,120 +5691,6 @@ export type VaultConnectorDTO = ConnectorConfigDTO & {
   xvaultAwsIamServerId?: string
 }
 
-export interface VerificationJob {
-  accountId: string
-  activitySourceIdentifier?: string
-  allMonitoringSourcesEnabled?: boolean
-  createdAt?: number
-  cvConfigs?: CVConfig[]
-  dataSources?: (
-    | 'APP_DYNAMICS'
-    | 'SPLUNK'
-    | 'SPLUNK_METRIC'
-    | 'STACKDRIVER'
-    | 'STACKDRIVER_LOG'
-    | 'KUBERNETES'
-    | 'NEW_RELIC'
-    | 'PROMETHEUS'
-    | 'DATADOG_METRICS'
-    | 'DATADOG_LOG'
-    | 'ERROR_TRACKING'
-    | 'DYNATRACE'
-    | 'CUSTOM_HEALTH_METRIC'
-    | 'CUSTOM_HEALTH_LOG'
-    | 'ELASTICSEARCH'
-    | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
-  )[]
-  defaultJob?: boolean
-  duration?: Duration
-  envIdentifier: string
-  executionDuration?: Duration
-  failOnNoAnalysis?: RuntimeParameter
-  identifier: string
-  jobName: string
-  lastUpdatedAt?: number
-  monitoredServiceIdentifier?: string
-  monitoringSources?: string[]
-  orgIdentifier?: string
-  projectIdentifier?: string
-  serviceIdentifier: string
-  type?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO'
-  uuid?: string
-  verificationJobUrl?: string
-}
-
-export interface VerificationJobInstance {
-  accountId: string
-  createdAt?: number
-  cvConfigMap?: {
-    [key: string]: CVConfig
-  }
-  dataCollectionDelay?: Duration
-  dataCollectionTaskIteration?: number
-  deploymentStartTime?: number
-  endTime?: number
-  executionStatus?: 'QUEUED' | 'RUNNING' | 'FAILED' | 'SUCCESS' | 'TIMEOUT' | 'ABORTED'
-  lastUpdatedAt?: number
-  name?: string
-  newHostsTrafficSplitPercentage?: number
-  newVersionHosts?: string[]
-  oldVersionHosts?: string[]
-  progressLogs?: ProgressLog[]
-  progressPercentage?: number
-  resolvedJob?: VerificationJob
-  startTime?: number
-  timeoutTaskIteration?: number
-  uuid?: string
-  validUntil?: string
-  verificationStatus?:
-    | 'IGNORED'
-    | 'NOT_STARTED'
-    | 'VERIFICATION_PASSED'
-    | 'VERIFICATION_FAILED'
-    | 'ERROR'
-    | 'ABORTED'
-    | 'IN_PROGRESS'
-}
-
-export interface VerificationJobRuntimeDetails {
-  runtimeValues?: {
-    [key: string]: string
-  }
-  verificationJobIdentifier?: string
-}
-
-export interface VerificationTask {
-  accountId?: string
-  createdAt?: number
-  tags?: {
-    [key: string]: string
-  }
-  taskInfo?: TaskInfo
-  uuid?: string
-  validUntil?: string
-}
-
-export interface VerifyStepDebugResponse {
-  activity?: Activity
-  cvngStepTask?: CVNGStepTask
-  projectParams?: ProjectParams
-  verificationJobInstance?: VerificationJobInstance
-  verificationTaskIdToAnalysisStateMachineMap?: {
-    [key: string]: AnalysisStateMachine
-  }
-  verificationTaskIdToCVNGApiLogMap?: {
-    [key: string]: CVNGLog[]
-  }
-  verificationTaskIdToCVNGExecutionLogMap?: {
-    [key: string]: CVNGLog[]
-  }
-  verificationTaskIdToDataCollectionTaskMap?: {
-    [key: string]: DataCollectionTask[]
-  }
-  verificationTaskList?: VerificationTask[]
-}
-
 export interface VerifyStepSummary {
   name?: string
   verificationStatus?:
@@ -6152,11 +5729,12 @@ export interface YamlSchemaMetadata {
     | 'CF'
     | 'CE'
     | 'STO'
+    | 'CHAOS'
+    | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
-    | 'CHAOS'
   )[]
   namespace?: string
   yamlGroup: YamlGroup
@@ -6166,57 +5744,22 @@ export interface YamlSchemaWithDetails {
   availableAtAccountLevel?: boolean
   availableAtOrgLevel?: boolean
   availableAtProjectLevel?: boolean
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
-}
-
-export interface ZoneOffset {
-  id?: string
-  rules?: ZoneRules
-  totalSeconds?: number
-}
-
-export interface ZoneOffsetTransition {
-  dateTimeAfter?: string
-  dateTimeBefore?: string
-  duration?: Duration
-  gap?: boolean
-  instant?: number
-  offsetAfter?: ZoneOffset
-  offsetBefore?: ZoneOffset
-  overlap?: boolean
-}
-
-export interface ZoneOffsetTransitionRule {
-  dayOfMonthIndicator?: number
-  dayOfWeek?: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
-  localTime?: LocalTime
-  midnightEndOfDay?: boolean
-  month?:
-    | 'JANUARY'
-    | 'FEBRUARY'
-    | 'MARCH'
-    | 'APRIL'
-    | 'MAY'
-    | 'JUNE'
-    | 'JULY'
-    | 'AUGUST'
-    | 'SEPTEMBER'
-    | 'OCTOBER'
-    | 'NOVEMBER'
-    | 'DECEMBER'
-  offsetAfter?: ZoneOffset
-  offsetBefore?: ZoneOffset
-  standardOffset?: ZoneOffset
-  timeDefinition?: 'UTC' | 'WALL' | 'STANDARD'
-}
-
-export interface ZoneRules {
-  fixedOffset?: boolean
-  transitionRules?: ZoneOffsetTransitionRule[]
-  transitions?: ZoneOffsetTransition[]
 }
 
 export type ChangeEventDTORequestBody = ChangeEventDTO
@@ -7127,6 +6670,7 @@ export interface GetMonitoredServiceChangeEventSummaryQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   monitoredServiceIdentifier?: string
+  monitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert')[]
   changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD')[]
   startTime: number
@@ -11135,6 +10679,7 @@ export interface GetNotificationRuleDataQueryParams {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  notificationRuleIdentifiers?: string[]
   pageNumber: number
   pageSize: number
 }
@@ -11411,6 +10956,7 @@ export interface GetServicesFromPagerDutyQueryParams {
   projectIdentifier: string
   connectorIdentifier?: string
   requestGuid: string
+  query?: string
 }
 
 export type GetServicesFromPagerDutyProps = Omit<
@@ -12232,6 +11778,93 @@ export const getSLODetailsPromise = (
     signal
   )
 
+export interface GetSloConsumptionBreakdownViewQueryParams {
+  startTime?: number
+  endTime?: number
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface GetSloConsumptionBreakdownViewPathParams {
+  identifier: string
+}
+
+export type GetSloConsumptionBreakdownViewProps = Omit<
+  GetProps<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >,
+  'path'
+> &
+  GetSloConsumptionBreakdownViewPathParams
+
+/**
+ * get SLO consumption breakdown
+ */
+export const GetSloConsumptionBreakdownView = ({ identifier, ...props }: GetSloConsumptionBreakdownViewProps) => (
+  <Get<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >
+    path={`/slo-dashboard/widget/${identifier}/consumption`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSloConsumptionBreakdownViewProps = Omit<
+  UseGetProps<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >,
+  'path'
+> &
+  GetSloConsumptionBreakdownViewPathParams
+
+/**
+ * get SLO consumption breakdown
+ */
+export const useGetSloConsumptionBreakdownView = ({ identifier, ...props }: UseGetSloConsumptionBreakdownViewProps) =>
+  useGet<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >(
+    (paramsInPath: GetSloConsumptionBreakdownViewPathParams) =>
+      `/slo-dashboard/widget/${paramsInPath.identifier}/consumption`,
+    { base: getConfig('cv/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * get SLO consumption breakdown
+ */
+export const getSloConsumptionBreakdownViewPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >(getConfig('cv/api'), `/slo-dashboard/widget/${identifier}/consumption`, props, signal)
+
 export interface GetSLOHealthListViewQueryParams {
   accountId: string
   orgIdentifier: string
@@ -12495,6 +12128,85 @@ export const saveSLOV2DataPromise = (
     ServiceLevelObjectiveV2DTORequestBody,
     void
   >('POST', getConfig('cv/api'), `/slo/v2`, props, signal)
+
+export interface GetOnboardingGraphQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetOnboardingGraphProps = Omit<
+  MutateProps<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get onboarding graph for composite slo
+ */
+export const GetOnboardingGraph = (props: GetOnboardingGraphProps) => (
+  <Mutate<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >
+    verb="POST"
+    path={`/slo/v2/composite-slo/onboarding-graph`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetOnboardingGraphProps = Omit<
+  UseMutateProps<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get onboarding graph for composite slo
+ */
+export const useGetOnboardingGraph = (props: UseGetOnboardingGraphProps) =>
+  useMutate<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >('POST', `/slo/v2/composite-slo/onboarding-graph`, { base: getConfig('cv/api'), ...props })
+
+/**
+ * Get onboarding graph for composite slo
+ */
+export const getOnboardingGraphPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >('POST', getConfig('cv/api'), `/slo/v2/composite-slo/onboarding-graph`, props, signal)
 
 export interface DeleteSLOV2DataQueryParams {
   accountId: string

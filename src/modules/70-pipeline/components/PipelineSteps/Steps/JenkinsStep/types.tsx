@@ -7,7 +7,7 @@
 
 import type { FormikProps } from 'formik'
 import type { GetDataError } from 'restful-react'
-import type { AllowedTypes, SelectOption } from '@harness/uicore'
+import type { AllowedTypes, SelectOption, SelectWithSubmenuOption } from '@harness/uicore'
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { Failure } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -25,7 +25,7 @@ export interface jobParameterInterface {
 
 export interface JenkinsStepSpec {
   connectorRef: string
-  jobName: SubmenuSelectOption | string
+  jobName: SelectWithSubmenuOption | string
   jobParameter: jobParameterInterface[] | string
   delegateSelectors: string[]
   unstableStatusAsSuccess?: boolean

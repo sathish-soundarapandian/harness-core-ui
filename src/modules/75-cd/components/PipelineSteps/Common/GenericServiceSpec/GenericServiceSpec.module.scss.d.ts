@@ -31,6 +31,7 @@ declare const styles: {
   readonly nopadLeft: string
   readonly notwide: string
   readonly padSmall: string
+  readonly runtimeSelectWithSubmenu: string
   readonly sectionCard: string
   readonly sectionHeader: string
   readonly selectPopover: string

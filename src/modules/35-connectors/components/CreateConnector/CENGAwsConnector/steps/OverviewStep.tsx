@@ -88,7 +88,7 @@ const OverviewStep: React.FC<OverviewProps> = props => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [featureText, setFeatureText] = useState<string>('')
   const [isGovCloudAccount, setIsGovCloudAccount] = useState(
-    defaultTo(get(prevStepData, 'spec.isAWSGovCloudAccount'), false)
+    defaultTo(get(prevStepData, 'spec.isAWSGovCloudAccount') || get(connectorInfo, 'spec.isAWSGovCloudAccount'), false)
   )
 
   const defaultQueryParams: GetConnectorListV2QueryParams = {

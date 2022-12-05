@@ -32,6 +32,7 @@ const ServicesFooter: FC<ServicesFooterProps> = ({ loading, onSave, onClose, pag
           pageCount={paginationProps.pageCount}
           pageIndex={paginationProps.pageIndex}
           gotoPage={paginationProps.gotoPage}
+          showPagination
         />
       )}
 

@@ -74,9 +74,7 @@ describe('ServicesList', () => {
     await fireEvent.click(row!)
     await waitFor(() => getByTestId('location'))
 
-    expect(getByTestId('location')).toHaveTextContent(
-      '/account/dummy/undefined/orgs/dummy/projects/dummy/services/asdfasdf'
-    )
+    expect(getByTestId('location')).toHaveTextContent('/account/dummy/home/orgs/dummy/projects/dummy/services/asdfasdf')
   })
 
   test('should go to latest execution after click', async () => {
@@ -114,7 +112,7 @@ describe('Menu render', () => {
 
     expect(launchBtn?.closest('a')).toHaveAttribute(
       'href',
-      '/account/dummy/undefined/orgs/dummy/projects/dummy/services/asdfasdf'
+      '/account/dummy/home/orgs/dummy/projects/dummy/services/asdfasdf'
     )
   })
 

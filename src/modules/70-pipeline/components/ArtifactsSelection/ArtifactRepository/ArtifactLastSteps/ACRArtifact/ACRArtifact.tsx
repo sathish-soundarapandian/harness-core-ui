@@ -51,7 +51,7 @@ import {
   getFinalArtifactObj,
   helperTextData,
   resetTag,
-  shouldFetchTags
+  shouldFetchFieldOptions
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ACRArtifactType,
@@ -371,7 +371,7 @@ export function ACRArtifact({
         (lastQueryData?.subscriptionId !== subscriptionId ||
           lastQueryData?.registry !== registry ||
           lastQueryData?.repository !== repository) &&
-        shouldFetchTags(prevStepData, [subscriptionId, registry, repository])
+        shouldFetchFieldOptions(prevStepData, [subscriptionId, registry, repository])
       ),
     [lastQueryData, prevStepData]
   )

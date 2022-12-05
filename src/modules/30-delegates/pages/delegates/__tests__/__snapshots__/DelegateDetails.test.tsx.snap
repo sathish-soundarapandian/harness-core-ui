@@ -155,6 +155,7 @@ exports[`Delegates Details Page render data 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody main"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--vertical StyledProps--main"

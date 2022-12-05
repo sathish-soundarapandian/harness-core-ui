@@ -274,7 +274,9 @@ export function OverlayInputSetForm({
         pipelineRepoID: repoIdentifier,
         pipelineBranch: branch,
         repoIdentifier,
-        branch
+        branch,
+        parentEntityConnectorRef: connectorRef,
+        parentEntityRepoName: repoIdentifier
       }
     })
 

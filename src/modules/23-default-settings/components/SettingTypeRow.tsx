@@ -51,6 +51,18 @@ const getCurrentScope = ({ orgIdentifier, projectIdentifier }: ProjectPathProps)
   }
   return 'ACCOUNT'
 }
+
+const getLowestAvailableScope = (allowedScopes: SettingDTO['allowedScopes'] | undefined) => {
+  const allowedScopesSet = new Set(allowedScopes)
+  if (allowedScopesSet.has('PROJECT')) {
+    return 'PROJECT'
+  } else if (allowedScopesSet.has('ORGANIZATION')) {
+    return 'ORG'
+  } else {
+    return 'ACCOUNT'
+  }
+}
+
 type SettingChangedViaType = 'RESTORE' | 'UPDATE' | undefined
 const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
   settingTypeHandler,
@@ -112,7 +124,8 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
 
       <Container flex={{ alignItems: 'center' }} className={css.settingOverrideRestore}>
         <Layout.Horizontal flex={{ alignItems: 'center' }} spacing="large">
-          {!settingValue?.isSettingEditable ? (
+          {getLowestAvailableScope(settingValue?.allowedScopes) ==
+            getCurrentScope({ projectIdentifier, orgIdentifier, accountId }) || !settingValue?.isSettingEditable ? (
             <span className={css.emptyCheckBoxSpace} />
           ) : (
             <Checkbox

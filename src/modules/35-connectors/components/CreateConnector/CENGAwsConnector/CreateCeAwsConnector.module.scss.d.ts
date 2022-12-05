@@ -16,6 +16,7 @@ declare const styles: {
   readonly emptyState: string
   readonly existingCurTable: string
   readonly existingReportsWrapper: string
+  readonly exitingReportWarning: string
   readonly extention: string
   readonly featureCard: string
   readonly featureDetailsCtn: string
@@ -35,5 +36,6 @@ declare const styles: {
   readonly noAccountLink: string
   readonly stepContainer: string
   readonly submitBtn: string
+  readonly warningIcon: string
 }
 export default styles

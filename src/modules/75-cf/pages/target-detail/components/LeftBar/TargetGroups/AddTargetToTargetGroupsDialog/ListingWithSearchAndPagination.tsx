@@ -86,6 +86,7 @@ const ListingWithSearchAndPagination: FC<ListingWithSearchAndPaginationProps> = 
           pageIndex={targetGroups.pageIndex}
           gotoPage={setPageNumber}
           hidePageNumbers={targetGroups.pageCount > 4}
+          showPagination
         />
       )}
     </div>

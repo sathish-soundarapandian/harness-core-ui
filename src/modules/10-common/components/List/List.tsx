@@ -41,7 +41,7 @@ const showAddTrashButtons = (disabled = false, allowOnlyOne = false): boolean =>
   return !disabled && !allowOnlyOne
 }
 
-export const List = (props: ListProps): React.ReactElement => {
+const List = (props: ListProps): React.ReactElement => {
   const {
     name,
     label,

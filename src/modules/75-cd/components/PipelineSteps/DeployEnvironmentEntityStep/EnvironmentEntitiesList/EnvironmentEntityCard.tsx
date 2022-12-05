@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Collapse, Divider } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
@@ -41,6 +41,12 @@ import type {
 } from '../types'
 import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
 import DeployCluster from '../DeployCluster/DeployCluster'
+import InlineEntityFilters from '../components/InlineEntityFilters/InlineEntityFilters'
+import {
+  EntityFilterType,
+  EntityType,
+  InlineEntityFiltersRadioType
+} from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
 
 import css from './EnvironmentEntitiesList.module.scss'
 
@@ -66,8 +72,15 @@ export function EnvironmentEntityCard({
   gitOpsEnabled
 }: EnvironmentEntityCardProps): React.ReactElement {
   const { getString } = useStrings()
-  const { values } = useFormikContext<DeployEnvironmentEntityFormState>()
+  const { values, setFieldValue } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { name, identifier, tags } = environment
+  const filterPrefix = useMemo(() => `environmentFilters.${identifier}`, [identifier])
+
+  const handleFilterRadio = (selectedRadioValue: InlineEntityFiltersRadioType): void => {
+    if (selectedRadioValue === InlineEntityFiltersRadioType.MANUAL) {
+      setFieldValue(filterPrefix, undefined)
+    }
+  }
 
   const [showInputs, setShowInputs] = useState(false)
 
@@ -194,25 +207,45 @@ export function EnvironmentEntityCard({
           <Container margin={{ top: 'medium', bottom: 'medium' }}>
             <Divider />
           </Container>
-          {gitOpsEnabled ? (
-            <DeployCluster
-              initialValues={initialValues}
-              readonly={readonly}
-              allowableTypes={allowableTypes}
-              environmentIdentifier={identifier}
-              isMultiCluster
-            />
-          ) : (
-            <DeployInfrastructure
-              initialValues={initialValues}
-              readonly={readonly}
-              allowableTypes={allowableTypes}
-              environmentIdentifier={identifier}
-              isMultiInfrastructure
-              deploymentType={deploymentType}
-              customDeploymentRef={customDeploymentRef}
-            />
-          )}
+          <InlineEntityFilters
+            filterPrefix={filterPrefix}
+            entityStringKey={gitOpsEnabled ? 'common.clusters' : 'common.infrastructures'}
+            onRadioValueChange={handleFilterRadio}
+            readonly={readonly}
+            baseComponent={
+              <>
+                {gitOpsEnabled ? (
+                  <DeployCluster
+                    initialValues={initialValues}
+                    readonly={readonly}
+                    allowableTypes={allowableTypes}
+                    environmentIdentifier={identifier}
+                    isMultiCluster
+                  />
+                ) : (
+                  <DeployInfrastructure
+                    initialValues={initialValues}
+                    readonly={readonly}
+                    allowableTypes={allowableTypes}
+                    environmentIdentifier={identifier}
+                    isMultiInfrastructure
+                    deploymentType={deploymentType}
+                    customDeploymentRef={customDeploymentRef}
+                  />
+                )}
+              </>
+            }
+            entityFilterListProps={{
+              entities: [gitOpsEnabled ? EntityType.CLUSTERS : EntityType.INFRASTRUCTURES],
+              filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
+              placeholderProps: {
+                entity: getString('common.filterOnName', {
+                  name: getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
+                }),
+                tags: getString('common.filterOnName', { name: getString('typeLabel') })
+              }
+            }}
+          />
         </>
       )}
     </Card>

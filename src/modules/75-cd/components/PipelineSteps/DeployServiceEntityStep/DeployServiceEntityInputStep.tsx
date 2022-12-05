@@ -113,20 +113,26 @@ export function DeployServiceEntityInputStep({
     // if this is a multi service template, then set up a dummy field,
     // so that services can be updated in this dummy field
     if (isMultiSvcTemplate) {
-      formik.setFieldValue(
-        uniquePath.current,
-        serviceIdentifiers.map(svcId => ({
-          label: defaultTo(servicesList.find(s => s.identifier === svcId)?.name, svcId),
-          value: svcId
-        }))
-      )
+      if (isValueRuntimeInput(get(formik.values, `${localPathPrefix}values`))) {
+        formik.setFieldValue(uniquePath.current, RUNTIME_INPUT_VALUE)
+      } else {
+        formik.setFieldValue(
+          uniquePath.current,
+          serviceIdentifiers.map(svcId => ({
+            label: defaultTo(servicesList.find(s => s.identifier === svcId)?.name, svcId),
+            value: svcId
+          }))
+        )
+      }
     }
   }, [servicesList])
 
   useDeepCompareEffect(() => {
     // if no value is selected, clear the inputs and template
     if (serviceIdentifiers.length === 0) {
-      if (isMultiSvcTemplate) {
+      if (isValueRuntimeInput(servicesValue as unknown as string)) {
+        return
+      } else if (isMultiSvcTemplate) {
         updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${fullPathPrefix}values`)
         formik.setFieldValue(`${localPathPrefix}values`, [])
       } else {
@@ -144,6 +150,9 @@ export function DeployServiceEntityInputStep({
       }
     })
 
+    if (!servicesData.length) {
+      return
+    }
     // updated values based on selected services
     const newServicesValues: ServiceYamlV2[] = serviceIdentifiers.map(svcId => {
       const svcTemplate = servicesData.find(svcTpl => svcTpl.service.identifier === svcId)?.serviceInputs
@@ -155,7 +164,7 @@ export function DeployServiceEntityInputStep({
       if (!serviceInputs || isValueRuntimeInput(serviceInputs)) {
         serviceInputs = svcTemplate ? clearRuntimeInput(svcTemplate) : undefined
       } else {
-        serviceInputs = merge(svcTemplate ? clearRuntimeInput(svcTemplate) : undefined, serviceInputs)
+        serviceInputs = !isEmpty(svcTemplate) ? merge(clearRuntimeInput(svcTemplate), serviceInputs) : svcTemplate
       }
 
       return {
@@ -191,19 +200,24 @@ export function DeployServiceEntityInputStep({
   }, [servicesData, serviceIdentifiers])
 
   function handleServicesChange(values: SelectOption[]): void {
-    const newValues = values.map(val => ({
-      serviceRef: val.value as string,
-      serviceInputs: RUNTIME_INPUT_VALUE
-    }))
+    if (isValueRuntimeInput(values)) {
+      updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${fullPathPrefix}values`)
+      formik.setFieldValue(`${localPathPrefix}values`, RUNTIME_INPUT_VALUE)
+    } else {
+      const newValues = values.map(val => ({
+        serviceRef: val.value as string,
+        serviceInputs: RUNTIME_INPUT_VALUE
+      }))
 
-    formik.setFieldValue(`${localPathPrefix}values`, newValues)
+      formik.setFieldValue(`${localPathPrefix}values`, newValues)
+    }
   }
 
   const loading = loadingServicesList || loadingServicesData || updatingData
 
   return (
     <>
-      <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
+      <Layout.Horizontal style={{ alignItems: 'flex-end' }}>
         <div className={css.inputFieldLayout}>
           {getMultiTypeFromValue(serviceTemplate) === MultiTypeInputType.RUNTIME ? (
             <ExperimentalInput
@@ -258,6 +272,7 @@ export function DeployServiceEntityInputStep({
             onChange={handleServicesChange}
             multiTypeProps={{
               width: 300,
+              height: 32,
               expressions,
               allowableTypes
             }}

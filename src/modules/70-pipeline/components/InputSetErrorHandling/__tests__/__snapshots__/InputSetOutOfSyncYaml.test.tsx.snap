@@ -4,6 +4,7 @@ exports[`Inline Input Set Error Exp should open yaml view and render out of sync
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard pageHeaderStyles StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -217,6 +218,7 @@ exports[`Inline Input Set Error Exp should open yaml view and render out of sync
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main inputSetForm"
@@ -322,6 +324,7 @@ exports[`Old Git Sync Input Set Error Exp should open yaml view and render out o
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard pageHeaderStyles StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -535,6 +538,7 @@ exports[`Old Git Sync Input Set Error Exp should open yaml view and render out o
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main inputSetForm"
@@ -640,6 +644,7 @@ exports[`Remote Git Sync Input Set Error Exp should open yaml view and render ou
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard pageHeaderStyles StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -853,6 +858,7 @@ exports[`Remote Git Sync Input Set Error Exp should open yaml view and render ou
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main inputSetForm"

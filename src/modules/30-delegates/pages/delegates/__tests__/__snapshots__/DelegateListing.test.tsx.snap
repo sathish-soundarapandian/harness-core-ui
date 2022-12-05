@@ -11,6 +11,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
     >
       <div
         class="StyledProps--font StyledProps--main PageSpinner--spinner StyledProps--flex StyledProps--flex-align-center-center"
+        data-testid="page-spinner"
       >
         <div
           class="Layout--vertical Layout--layout-spacing-medium StyledProps--main PageSpinner--content"
@@ -100,6 +101,7 @@ exports[`Delegates Listing without tags render data 1`] = `
     >
       <div
         class="StyledProps--font StyledProps--main PageSpinner--spinner StyledProps--flex StyledProps--flex-align-center-center"
+        data-testid="page-spinner"
       >
         <div
           class="Layout--vertical Layout--layout-spacing-medium StyledProps--main PageSpinner--content"

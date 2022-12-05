@@ -52,6 +52,7 @@ interface ReleaseRepoProps {
   manifest: any
   handleSubmit: (data: ReleaseRepoManifest) => void
   isReadonly?: boolean
+  isDeploymentRepoType?: boolean
 }
 
 function RepoDetailsFooter({
@@ -151,7 +152,8 @@ function RepoDetails({
   manifest,
   allowableTypes,
   isReadonly = false,
-  initialValues
+  initialValues,
+  isDeploymentRepoType
 }: StepProps<ConnectorConfigDTO> & ReleaseRepoProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -191,7 +193,7 @@ function RepoDetails({
     const manifestObj: ReleaseRepoManifest = {
       manifest: {
         identifier: formData.identifier,
-        type: 'ReleaseRepo',
+        type: isDeploymentRepoType ? 'DeploymentRepo' : 'ReleaseRepo',
         spec: {
           store: {
             type: formData.store,

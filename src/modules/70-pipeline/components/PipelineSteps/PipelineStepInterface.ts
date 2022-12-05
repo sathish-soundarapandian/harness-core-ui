@@ -13,6 +13,7 @@ export enum StepType {
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',
   GitOpsUpdateReleaseRepo = 'GitOpsUpdateReleaseRepo',
+  GitOpsFetchLinkedApps = 'GitOpsFetchLinkedApps',
   Command = 'Command',
   Email = 'Email',
   CustomApproval = 'CustomApproval',

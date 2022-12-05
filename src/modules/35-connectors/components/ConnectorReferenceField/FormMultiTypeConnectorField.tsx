@@ -26,6 +26,8 @@ import { get, isEmpty } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import useCreateConnectorMultiTypeModal from '@connectors/modals/ConnectorModal/useCreateConnectorMultiTypeModal'
+import { useGetSecretsManagerConnectorsHook } from '@connectors/pages/connectors/hooks/useGetSecretsManagerConnectors/useGetSecretsManagerConnectors'
+
 import {
   ConnectorConfigDTO,
   ConnectorInfoDTO,
@@ -158,6 +160,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
 
   const [isConnectorEdited, setIsConnectorEdited] = useState(false)
   const { showError } = useToaster()
+
   const getConnectorStatus = (): void => {
     if (typeof selected !== 'string') {
       setConnectorStatusCheckInProgress(true)
@@ -177,6 +180,10 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
         })
     }
   }
+  const isSecretManagerCategory = React.useMemo(() => {
+    return category === 'SECRET_MANAGER'
+  }, [category])
+
   const {
     data: connectorData,
     loading,
@@ -306,6 +313,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
       return { ...prevState, inlineModalClosed: true }
     })
   }
+  const { secretsManager } = useGetSecretsManagerConnectorsHook()
 
   const { openConnectorModal } = useCreateConnectorModal({
     onSuccess: onConnectorCreateSuccess,
@@ -313,7 +321,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
   })
 
   const { openConnectorMultiTypeModal } = useCreateConnectorMultiTypeModal({
-    types: Array.isArray(type) ? type : [type],
+    types: isSecretManagerCategory ? secretsManager : Array.isArray(type) ? type : [type],
     onSuccess: onConnectorCreateSuccess,
     onClose: onModalClose
   })
@@ -337,6 +345,10 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
       })
     }
   } else if (Array.isArray(type) && !category) {
+    optionalReferenceSelectProps.createNewHandler = () => {
+      openConnectorMultiTypeModal()
+    }
+  } else if (isSecretManagerCategory) {
     optionalReferenceSelectProps.createNewHandler = () => {
       openConnectorMultiTypeModal()
     }

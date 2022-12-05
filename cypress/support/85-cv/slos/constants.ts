@@ -14,7 +14,7 @@ const accountId = 'accountId'
 
 export const getUserJourneysCall = `/cv/api/user-journey?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&offset=0&pageSize=100`
 export const getUserJourneysCallForNewerProject = `/cv/api/user-journey?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}&offset=0&pageSize=100`
-export const listSLOsCall = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&filter=`
+export const listSLOsCall = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10*`
 export const listSLOsCallForNewerProject = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}&pageNumber=0&pageSize=10&filter=`
 export const listSLOsCallWithUserJourneyNewOne = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&userJourneyIdentifiers=newone&filter=`
 export const listSLOsCallWithUserJourneySecondJourney = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&userJourneyIdentifiers=Second_Journey&filter=`
@@ -32,6 +32,7 @@ export const listMonitoredServicesForNewerProject = `/cv/api/monitored-service/a
 export const getSLOMetrics = `/cv/api/monitored-service/cvng_prod/health-source/${healthSource}/slo-metrics?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getSliGraph = `/cv/api/monitored-service/cvng_prod/sli/onboarding-graph?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getServiceLevelObjective = `/cv/api/slo/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
+export const getServiceLevelObjectiveV2 = `cv/api/slo/v2/Composite_SLO_1?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1`
 export const getSLODetails = `/cv/api/slo-dashboard/widget/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getServiceLevelObjectiveForNewerProject = `/cv/api/slo/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}`
 export const getSLORiskCount = `/cv/api/slo-dashboard/risk-count?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1`
@@ -171,6 +172,98 @@ export const listRiskCountDataEmptyResponse = {
   correlationId: 'eaada616-a1d7-4246-9c18-1e25cf9ca6be'
 }
 
+export const sloListPostResponseRolling7Days = {
+  status: 'SUCCESS',
+  data: {
+    totalPages: 1,
+    totalItems: 3,
+    pageItemCount: 3,
+    pageSize: 10,
+    content: [
+      {
+        sloIdentifier: 'SLO1',
+        name: 'SLO1',
+        monitoredServiceIdentifier: 'service_appd_env_appd',
+        monitoredServiceName: 'service_appd_env_appd',
+        healthSourceIdentifier: 'appd',
+        healthSourceName: 'appd',
+        serviceIdentifier: 'service_appd',
+        serviceName: 'service_appd',
+        environmentIdentifier: 'env_appd',
+        environmentName: 'env_appd',
+        tags: {},
+        description: 'SLO which tracks uptime.',
+        userJourneyName: 'journey-1',
+        userJourneys: [{ identifier: 'journey1', name: 'journey-1' }],
+        burnRate: 0.0,
+        errorBudgetRemainingPercentage: 100.0,
+        errorBudgetRemaining: 14,
+        totalErrorBudget: 14,
+        sloTargetType: 'Rolling',
+        sliType: 'Latency',
+        sloType: 'Simple',
+        sloTargetPercentage: 99.0,
+        noOfActiveAlerts: 0,
+        errorBudgetRisk: 'HEALTHY'
+      },
+      {
+        sloIdentifier: 'SLO4',
+        name: 'SLO-4',
+        monitoredServiceIdentifier: 'service_appd_env_appd',
+        monitoredServiceName: 'service_appd_env_appd',
+        healthSourceIdentifier: 'appd',
+        healthSourceName: 'appd',
+        serviceIdentifier: 'service_appd',
+        serviceName: 'service_appd',
+        environmentIdentifier: 'env_appd',
+        environmentName: 'env_appd',
+        tags: {},
+        description: 'Tracks SLO error rate',
+        userJourneyName: 'Journey-3',
+        userJourneys: [{ identifier: 'Journey3', name: 'Journey-3' }],
+        burnRate: 0.0,
+        errorBudgetRemainingPercentage: 100.0,
+        errorBudgetRemaining: 43,
+        totalErrorBudget: 43,
+        sloTargetType: 'Rolling',
+        sliType: 'Latency',
+        sloType: 'Simple',
+        sloTargetPercentage: 97.0,
+        noOfActiveAlerts: 0,
+        errorBudgetRisk: 'HEALTHY'
+      },
+      {
+        sloIdentifier: 'SLO3',
+        name: 'SLO-3',
+        monitoredServiceIdentifier: 'service_appd_env_appd',
+        monitoredServiceName: 'service_appd_env_appd',
+        healthSourceIdentifier: 'appd',
+        healthSourceName: 'appd',
+        serviceIdentifier: 'service_appd',
+        serviceName: 'service_appd',
+        environmentIdentifier: 'env_appd',
+        environmentName: 'env_appd',
+        tags: {},
+        description: 'SLO which measures valid calls.',
+        userJourneyName: 'Journey-2',
+        userJourneys: [{ identifier: 'Journey2', name: 'Journey-2' }],
+        burnRate: 0.0,
+        errorBudgetRemainingPercentage: 100.0,
+        errorBudgetRemaining: 14,
+        totalErrorBudget: 14,
+        sloTargetType: 'Rolling',
+        sliType: 'Latency',
+        sloType: 'Simple',
+        sloTargetPercentage: 99.0,
+        noOfActiveAlerts: 1,
+        errorBudgetRisk: 'HEALTHY'
+      }
+    ],
+    pageIndex: 0,
+    empty: false
+  },
+  correlationId: '8b3dd7c5-0673-4cf0-b04a-baca17cf33d1'
+}
 export const updatedListSLOsCallResponse = {
   status: 'SUCCESS',
   data: {
@@ -220,6 +313,32 @@ export const updatedListSLOsCallResponse = {
   },
   metaData: null,
   correlationId: '584fe11b-9f97-481e-82b3-e67b6c73a734'
+}
+
+export const sloListCallResponseWithCompositeSLO = {
+  ...updatedListSLOsCallResponse,
+  data: {
+    ...updatedListSLOsCallResponse.data,
+    content: [
+      {
+        sloIdentifier: 'Composite_SLO_1',
+        name: 'Rolling PL 1',
+        tags: {},
+        description: 'Rolling with PeriodLength 1',
+        userJourneyName: 'Journey-4',
+        userJourneys: [{ identifier: 'Journey4', name: 'Journey-4' }],
+        burnRate: 0.0,
+        errorBudgetRemainingPercentage: 100.0,
+        errorBudgetRemaining: 173,
+        totalErrorBudget: 173,
+        sloTargetType: 'Rolling',
+        sloType: 'Composite',
+        sloTargetPercentage: 88.0,
+        noOfActiveAlerts: 1,
+        errorBudgetRisk: 'HEALTHY'
+      }
+    ]
+  }
 }
 
 export const updatedListSLOsCallResponseCalenderType = {
@@ -385,6 +504,52 @@ export const getTwoSLOsRiskCountResponse = {
       }
     ]
   }
+}
+
+export const getServiceLevelObjectiveV2Response = {
+  metaData: {},
+  resource: {
+    serviceLevelObjectiveV2: {
+      orgIdentifier: 'cvng',
+      projectIdentifier: 'templatetesting',
+      identifier: 'dasdasd',
+      name: 'Rolling PL 1',
+      description: 'Rolling with PeriodLength 1',
+      tags: {},
+      userJourneyRefs: ['newone'],
+      sloTarget: { type: 'Rolling', sloTargetPercentage: 88.0, spec: { periodLength: '1d' } },
+      type: 'Composite',
+      spec: {
+        serviceLevelObjectivesDetails: [
+          {
+            accountId: '-k53qRQAQ1O7DBLb9ACnjQ',
+            orgIdentifier: 'cvng',
+            projectIdentifier: 'templatetesting',
+            serviceLevelObjectiveRef: 'SLO1',
+            weightagePercentage: 20.0
+          },
+          {
+            accountId: '-k53qRQAQ1O7DBLb9ACnjQ',
+            orgIdentifier: 'cvng',
+            projectIdentifier: 'templatetesting',
+            serviceLevelObjectiveRef: 'SLO4',
+            weightagePercentage: 40.0
+          },
+          {
+            accountId: '-k53qRQAQ1O7DBLb9ACnjQ',
+            orgIdentifier: 'cvng',
+            projectIdentifier: 'templatetesting',
+            serviceLevelObjectiveRef: 'SLO3',
+            weightagePercentage: 40.0
+          }
+        ]
+      },
+      notificationRuleRefs: [{ notificationRuleRef: 'notification_1', enabled: false }]
+    },
+    createdAt: 1667565847263,
+    lastModifiedAt: 1668759883868
+  },
+  responseMessages: []
 }
 
 export const getServiceLevelObjectiveResponse = {

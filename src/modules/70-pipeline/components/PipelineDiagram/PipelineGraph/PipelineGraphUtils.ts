@@ -463,7 +463,7 @@ const getPipelineGraphData = ({
       isNestedGroup
     })
 
-    if (Array.isArray(serviceDependencies) && serviceDependencies.length > 0) {
+    if (Array.isArray(serviceDependencies)) {
       //CI module
       const dependencyStepGroup = getDefaultBuildDependencies(serviceDependencies)
       graphState.unshift(dependencyStepGroup)

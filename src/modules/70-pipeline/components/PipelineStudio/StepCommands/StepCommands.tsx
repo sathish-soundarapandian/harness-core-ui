@@ -167,9 +167,10 @@ export function StepCommands(
     }
   }))
 
-  const getStepWidgetWithFormikRef = () => {
+  const getStepWidgetWithFormikRef = (): JSX.Element => {
     return (
       <StepWidgetWithFormikRef
+        key={step.identifier}
         factory={stepsFactory}
         initialValues={step}
         readonly={isReadonly}

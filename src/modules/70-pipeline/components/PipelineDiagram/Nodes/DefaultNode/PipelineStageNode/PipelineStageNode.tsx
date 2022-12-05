@@ -46,7 +46,7 @@ interface PipelineStageNodeProps {
   allowAdd?: boolean
   selectedNodeId?: string
   showMarkers?: boolean
-  matrixNodeName?: boolean
+  matrixNodeName?: string
   customNodeStyle?: CSSProperties
 }
 function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
@@ -54,7 +54,19 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   const allowAdd = defaultTo(props.allowAdd, false)
   const [showAddNode, setVisibilityOfAdd] = React.useState(false)
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
+  const onDropEvent = (event: React.DragEvent): void => {
+    event.stopPropagation()
 
+    props?.fireEvent?.({
+      type: Event.DropNodeEvent,
+      target: event.target,
+      data: {
+        entityType: DiagramType.Default,
+        node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
+        destination: props
+      }
+    })
+  }
   const showMarkers = defaultTo(props?.showMarkers, true)
   const stageStatus = defaultTo(props?.status, props?.data?.stage?.status as ExecutionStatus)
   const { secondaryIconProps, secondaryIcon, secondaryIconStyle } = getStatusProps(
@@ -274,7 +286,10 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             tooltipProps={{ popoverClassName: props?.matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
             {props?.matrixNodeName ? (
-              <MatrixNodeNameLabelWrapper matrixLabel={props?.name as unknown as string} />
+              <MatrixNodeNameLabelWrapper
+                matrixNodeName={props?.matrixNodeName}
+                nodeName={props?.name as unknown as string}
+              />
             ) : (
               props.name
             )}
@@ -309,9 +324,11 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
           </Text>
         </div>
       )}
-      {allowAdd && CreateNode && !props.readonly && showAddNode && (
+      {allowAdd && CreateNode && !props.readonly && (
         <CreateNode
           onMouseOver={() => setAddVisibility(true)}
+          onDragOver={() => setAddVisibility(true)}
+          onDrop={onDropEvent}
           onMouseLeave={debounceHideVisibility}
           onDragLeave={debounceHideVisibility}
           onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {

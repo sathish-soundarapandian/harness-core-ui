@@ -7,6 +7,7 @@ exports[`test cases for Overview Page should be able to render the overview dash
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+      data-testid="page-header"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -83,6 +84,7 @@ exports[`test cases for Overview Page should be able to render the overview dash
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody"
       data-name="page-body"
+      data-testid="page-body"
     >
       <div
         class="StyledProps--font StyledProps--main StyledProps--padding-top-medium StyledProps--padding-right-xlarge StyledProps--padding-bottom-medium StyledProps--padding-left-xlarge"

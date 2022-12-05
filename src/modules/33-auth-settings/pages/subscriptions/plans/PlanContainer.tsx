@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { pick } from 'lodash-es'
 import { Layout, PageSpinner, PageError } from '@harness/uicore'
@@ -26,8 +26,6 @@ import {
 import { useContactSalesMktoModal } from '@common/modals/ContactSales/useContactSalesMktoModal'
 import routes from '@common/RouteDefinitions'
 import type { Module } from '@common/interfaces/RouteInterfaces'
-import { setUpCI, StartFreeLicenseAndSetupProjectCallback } from '@common/utils/GetStartedWithCIUtil'
-import { useHostedBuilds } from '@common/hooks/useHostedBuild'
 import { ModuleName, Module as ModuleType } from 'framework/types/ModuleName'
 import { ModuleLicenseType, Editions, SubscriptionTabNames } from '@common/constants/SubscriptionTypes'
 import type { FetchPlansQuery } from 'services/common/services'
@@ -72,8 +70,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
   const history = useHistory()
   const moduleType = moduleName as StartTrialDTO['moduleType']
   const module = moduleName.toLowerCase() as Module
-  const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
-  const [settingUpCI, setSettingUpCI] = useState<boolean>(false)
+
   const { accountId } = useParams<{
     accountId: string
   }>()
@@ -173,11 +170,12 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
   const {
     data,
     error,
-    refetch,
+    refetch: refetchLicense,
     loading: gettingLicense
   } = useGetLicensesAndSummary({
     queryParams: { moduleType },
-    accountIdentifier: accountId
+    accountIdentifier: accountId,
+    lazy: true
   })
 
   const licenseData = data?.data
@@ -196,7 +194,9 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
   })
   const isSelfService = licenseInformation?.[moduleType]?.selfService === true
   const isSelfServiceEnabled = !isOnPrem() && isSelfService
-
+  useEffect(() => {
+    refetchLicense()
+  }, [])
   useEffect(() => {
     handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, updatedLicenseInfo)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -217,7 +217,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
         isTrial = true
         break
     }
-    const btnLoading = extendingTrial || startingTrial || startingFreePlan || settingUpCI
+    const btnLoading = extendingTrial || startingTrial || startingFreePlan
 
     const handleExtendTrial = async (edition: Editions): Promise<void> => {
       try {
@@ -235,35 +235,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
       plan,
       getString,
       handleStartPlan: (edition: Editions) => {
-        if (moduleName === ModuleName.CI && enabledHostedBuildsForFreeUsers) {
-          setSettingUpCI(true)
-          setUpCI({
-            accountId,
-            edition,
-            onSetUpSuccessCallback: ({ orgId, projectId }: StartFreeLicenseAndSetupProjectCallback) => {
-              setSettingUpCI(false)
-
-              trackEvent(edition === Editions.FREE ? PlanActions.StartFreeClick : TrialActions.StartTrialClick, {
-                category: Category.SIGNUP,
-                module,
-                plan: edition
-              })
-
-              history.push(
-                routes.toGetStartedWithCI({
-                  accountId,
-                  module: 'ci',
-                  orgIdentifier: orgId,
-                  projectIdentifier: projectId
-                })
-              )
-            },
-            licenseInformation,
-            updateLicenseStore
-          })
-        } else {
-          handleStartPlan(edition)
-        }
+        handleStartPlan(edition)
       },
       handleContactSales: openMarketoContactSales,
       handleExtendTrial,
@@ -302,7 +274,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
   }
 
   if (error) {
-    return <PageError message={(error.data as Error)?.message} onClick={() => refetch()} />
+    return <PageError message={(error.data as Error)?.message} onClick={() => refetchLicense()} />
   }
 
   if (actionErrs) {

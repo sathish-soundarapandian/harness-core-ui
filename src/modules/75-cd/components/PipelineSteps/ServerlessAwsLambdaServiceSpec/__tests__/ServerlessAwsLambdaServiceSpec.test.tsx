@@ -9,17 +9,22 @@ import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType } from '@harness/uicore'
-import { TestWrapper } from '@common/utils/testUtils'
+
+import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
+import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
+import type { ModulePathParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
+import { useMutateAsGet } from '@common/hooks'
+import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-
-import { mockBuildList, mockManifestConnector } from './mocks'
 import type { K8SDirectServiceStep } from '../../K8sServiceSpec/K8sServiceSpecInterface'
 import { ServerlessAwsLambdaServiceSpec } from '../ServerlessAwsLambdaServiceSpec'
+import { mockConnectorResponse, mockCreateConnectorResponse } from '../../Common/mocks/connector'
+import { bucketNameList } from '../../ECSServiceSpec/ManifestSource/__tests__/helpers/mock'
 import {
   getDummyPipelineCanvasContextValue,
   getInvalidYaml,
@@ -31,12 +36,15 @@ import {
   initialValues,
   getParams
 } from './ServerlessAwsLambdaServiceSpecHelper'
-import { mockConnectorResponse, mockCreateConnectorResponse } from '../../Common/mocks/connector'
+import { awsRegionsData, bucketListData, mockBuildList, mockManifestConnector } from './helpers/mocks'
+import { serverlessLambdaManifestTemplateS3Store, initialValuesServerlessLambdaManifestS3Store } from './helpers/helper'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 const fetchConnectors = (): Promise<unknown> => Promise.resolve({})
 const fetchBuildDetails = jest.fn().mockResolvedValue(mockBuildList)
+const fetchBuckets = jest.fn().mockReturnValue(bucketNameList)
+
 jest.mock('services/cd-ng', () => ({
   useGetImagePathsForArtifactoryV2: jest.fn().mockImplementation(() => {
     return {
@@ -94,6 +102,28 @@ jest.mock('services/cd-ng', () => ({
   )
 }))
 
+jest.mock('services/portal', () => ({
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: awsRegionsData, refetch: jest.fn(), error: null, loading: false }
+  })
+}))
+
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(() => {
+    return { data: bucketListData, refetch: fetchBuckets, error: null, loading: false }
+  })
+}))
+
+const TEST_PATH = routes.toPipelineStudio({ ...projectPathProps, ...modulePathProps, ...pipelinePathProps })
+const TEST_PATH_PARAMS: ModulePathParams & PipelinePathProps = {
+  accountId: 'testAccountId',
+  orgIdentifier: 'testOrg',
+  projectIdentifier: 'testProject',
+  pipelineIdentifier: 'Pipeline_1',
+  module: 'cd'
+}
+
 factory.registerStep(new ServerlessAwsLambdaServiceSpec())
 
 describe('ServerlessAwsLambdaServiceSpec tests', () => {
@@ -143,6 +173,9 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
     })
 
     test('when artifactPath is runtime input', async () => {
+      ;(useMutateAsGet as any).mockImplementation(() => {
+        return { data: mockBuildList, refetch: fetchBuildDetails, error: null, loading: false }
+      })
       const { container } = render(
         <TestStepWidget
           initialValues={serverlessPipelineContext.state}
@@ -162,9 +195,7 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
       expect(artifactPathInput).toBeInTheDocument()
 
       const dropdownIcon = container.querySelector('[data-icon="chevron-down"]')?.parentElement as HTMLInputElement
-      act(() => {
-        fireEvent.click(dropdownIcon)
-      })
+      userEvent.click(dropdownIcon)
 
       await waitFor(() => {
         expect(fetchBuildDetails).toHaveBeenCalled()
@@ -208,6 +239,48 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
       )
       userEvent.click(getByText('Submit'))
       expect(onUpdateHandler).not.toBeCalled()
+    })
+
+    test('check Input Set view for manifest when manifestStore is S3', async () => {
+      const { container, getByText } = render(
+        <TestStepWidget
+          testWrapperProps={{
+            path: TEST_PATH,
+            pathParams: TEST_PATH_PARAMS as unknown as Record<string, string>
+          }}
+          initialValues={initialValuesServerlessLambdaManifestS3Store}
+          allValues={serverlessLambdaManifestTemplateS3Store}
+          readonly={false}
+          type={StepType.ServerlessAwsLambda}
+          stepViewType={StepViewType.InputSet}
+          template={serverlessLambdaManifestTemplateS3Store}
+          path={'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition'}
+        />
+      )
+
+      const regionInput = queryByNameAttribute(
+        'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[0].manifest.spec.store.spec.region',
+        container
+      )
+      expect(regionInput).toBeInTheDocument()
+      const bucketNameInput = queryByNameAttribute(
+        'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[0].manifest.spec.store.spec.bucketName',
+        container
+      )
+      expect(bucketNameInput).toBeInTheDocument()
+      const pathInput = queryByNameAttribute(
+        'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[0].manifest.spec.store.spec.paths[0]',
+        container
+      )
+      expect(pathInput).toBeInTheDocument()
+      const configOverridePathInput = queryByNameAttribute(
+        'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[0].manifest.spec.configOverridePath',
+        container
+      )
+      expect(configOverridePathInput).toBeInTheDocument()
+
+      const submitBtn = getByText('Submit')
+      userEvent.click(submitBtn)
     })
   })
 

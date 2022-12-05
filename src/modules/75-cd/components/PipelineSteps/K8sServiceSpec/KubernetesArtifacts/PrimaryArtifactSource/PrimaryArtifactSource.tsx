@@ -9,8 +9,6 @@ import React, { useEffect } from 'react'
 import { get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Text } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -54,7 +52,6 @@ const ArtifactInputField = (props: KubernetesArtifactsProps): React.ReactElement
   }
   return (
     <div key={(props.artifact as SidecarArtifact).identifier}>
-      <Text className={css.inputheader}>{get(props.artifact, 'identifier', '')}</Text>
       {artifactSource &&
         artifactSource.renderContent({
           ...props,
@@ -74,7 +71,6 @@ const ArtifactInputField = (props: KubernetesArtifactsProps): React.ReactElement
 }
 
 export const PrimaryArtifactSource = (props: KubernetesArtifactsProps): React.ReactElement | null => {
-  const { getString } = useStrings()
   const primaryArtifactSource = props.template?.artifacts?.primary?.sources
   return (
     <div
@@ -83,7 +79,6 @@ export const PrimaryArtifactSource = (props: KubernetesArtifactsProps): React.Re
     >
       {Array.isArray(primaryArtifactSource) && !!primaryArtifactSource?.length && (
         <>
-          <Text className={css.inputheader}>{getString('primaryArtifactText')}</Text>
           {props.template?.artifacts?.primary?.sources?.map((primarySource, index) => {
             if (!primarySource) {
               return null

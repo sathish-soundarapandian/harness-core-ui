@@ -81,18 +81,20 @@ const Item: React.FC<ItemProps> = ({ data, tooltipProps, onModuleClick }) => {
           interactionKind={PopoverInteractionKind.HOVER}
           position={Position.TOP}
         >
-          <Icon
-            name="tooltip-icon"
-            padding={'small'}
-            style={{ color: tooltipProps.activeModule === data ? `var(${color})` : undefined }}
-            size={12}
-            className={css.clickable}
-            onClick={e => {
-              e.stopPropagation()
-              e.preventDefault()
-              tooltipProps.handleClick(data)
-            }}
-          />
+          <Container style={{ color: `var(${color})` }}>
+            <Icon
+              name="tooltip-icon"
+              padding={'small'}
+              style={{ color: tooltipProps.activeModule === data ? `var(${color})` : undefined }}
+              size={12}
+              className={cx(css.clickable, css.tooltipIcon)}
+              onClick={e => {
+                e.stopPropagation()
+                e.preventDefault()
+                tooltipProps.handleClick(data)
+              }}
+            />
+          </Container>
         </Popover>
       </Layout.Horizontal>
     </Link>
@@ -161,7 +163,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
                 >
                   <Icon
                     name="customize"
-                    size={24}
+                    size={32}
                     className={cx(css.blue, css.clickable)}
                     padding={'small'}
                     onClick={() => {

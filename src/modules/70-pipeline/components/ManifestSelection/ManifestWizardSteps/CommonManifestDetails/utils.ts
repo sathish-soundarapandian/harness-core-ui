@@ -10,6 +10,7 @@ import type { ManifestTypes } from '../../ManifestInterface'
 
 export const shouldAllowOnlyOneFilePath = (selectedManifest: ManifestTypes): boolean => {
   return [
+    ManifestDataType.ServerlessAwsLambda,
     ManifestDataType.EcsTaskDefinition,
     ManifestDataType.EcsServiceDefinition,
     ManifestDataType.EcsScalableTargetDefinition,

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, act, fireEvent } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper, findPopoverContainer } from '@common/utils/testUtils'
 import { ProjectSelector } from '../ProjectSelector'
 
 import projects from './projects.json'
@@ -35,13 +35,41 @@ describe('ProjectSelector', () => {
       fireEvent.click(getByTestId('project-select-button'))
     })
 
-    expect(container).toMatchSnapshot()
+    const popover = findPopoverContainer()
+    expect(popover).toBeDefined()
+    expect(popover).toMatchSnapshot()
+
+    expect(getByText('Online Banking')).toBeDefined()
 
     act(() => {
       fireEvent.click(getByText('Online Banking'))
     })
 
-    expect(getByText('Online Banking')).toBeDefined()
     expect(handleSelect).toHaveBeenCalled()
+  })
+
+  test('render list view', async () => {
+    const handleSelect = jest.fn()
+
+    const { getByTestId, getByText } = render(
+      <TestWrapper path="/account/:accountId/cd/home" pathParams={{ accountId: 'dummy' }} projects={projects as any}>
+        <ProjectSelector onSelect={handleSelect} />
+      </TestWrapper>
+    )
+
+    await act(async () => {
+      fireEvent.click(getByTestId('project-select-button'))
+    })
+
+    const popover = findPopoverContainer()
+
+    expect(popover).toBeDefined()
+    expect(getByText('Online Banking')).toBeDefined()
+
+    await act(async () => {
+      fireEvent.click(popover!, getByTestId('list-view'))
+    })
+
+    expect(popover).toMatchSnapshot()
   })
 })

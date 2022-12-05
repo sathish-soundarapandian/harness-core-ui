@@ -14,11 +14,10 @@ declare const styles: {
   readonly projectCard: string
   readonly projectContainer: string
   readonly projectContainerWrapper: string
-  readonly projectSelector: string
+  readonly projectSearch: string
   readonly projectText: string
   readonly selectButton: string
   readonly selectContainer: string
-  readonly selectProjectDisplay: string
   readonly selectedProject: string
 }
 export default styles

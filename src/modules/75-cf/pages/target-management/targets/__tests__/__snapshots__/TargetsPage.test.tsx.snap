@@ -7,6 +7,7 @@ exports[`TargetsPage TargetsPage should render data correctly 1`] = `
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard header StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+      data-testid="page-header"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -152,6 +153,7 @@ exports[`TargetsPage TargetsPage should render data correctly 1`] = `
     </div>
     <div
       class="Layout--horizontal StyledProps--main PageSubHeader--container toolbar StyledProps--flex"
+      data-testid="page-subheader"
     >
       <div
         class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"

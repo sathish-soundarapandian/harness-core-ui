@@ -93,7 +93,8 @@ function HomePageByModule({ moduleName, bgImageURL, useTrialModal }: HomePageMod
     loading: gettingLicense
   } = useGetLicensesAndSummary({
     queryParams: { moduleType: moduleName as GetLicensesAndSummaryQueryParams['moduleType'] },
-    accountIdentifier: accountId
+    accountIdentifier: accountId,
+    lazy: true
   })
   const { experience, modal } = useQueryParams<{ experience?: ModuleLicenseType; modal?: ModuleLicenseType }>()
 

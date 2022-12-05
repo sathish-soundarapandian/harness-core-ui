@@ -17,8 +17,6 @@ import { UserLabel, Duration, TimeAgoPopover } from '@common/exports'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
 import { String, useStrings } from 'framework/strings'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, PipelinePathProps, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { StoreType } from '@common/constants/GitSyncTypes'
@@ -42,6 +40,7 @@ import { CardVariant } from '@pipeline/utils/constants'
 import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
 
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import type { EnvironmentDeploymentsInfo, ServiceDeploymentInfo } from 'services/cd-ng'
 import { DashboardSelected, ServiceExecutionsCard } from '../ServiceExecutionsCard/ServiceExecutionsCard'
@@ -154,7 +153,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
     useParams<PipelineType<PipelinePathProps>>()
   const history = useHistory()
   const { getString } = useStrings()
-  const SECURITY = useFeatureFlag(FeatureFlag.SECURITY)
+  const { licenseInformation } = useLicenseStore()
   const HAS_CD = hasCDStage(pipelineExecution)
   const IS_SERVICEDETAIL = hasServiceDetail(pipelineExecution)
   const IS_OVERVIEWPAGE = hasOverviewDetail(pipelineExecution)
@@ -381,7 +380,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                   />
                 </div>
               ) : null}
-              {SECURITY && HAS_STO && stoInfo ? (
+              {licenseInformation['STO']?.status === 'ACTIVE' && HAS_STO && stoInfo ? (
                 <div className={css.moduleData}>
                   <Icon name={stoInfo.icon} size={20} className={css.moduleIcon} />
                   {React.createElement<ExecutionCardInfoProps<PipelineExecutionSummary>>(stoInfo.component, {

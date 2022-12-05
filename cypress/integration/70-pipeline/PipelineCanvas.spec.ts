@@ -70,7 +70,7 @@ describe('GIT SYNC DISABLED', () => {
     cy.contains('span', 'Create a Pipeline').should('be.visible')
   })
 
-  it('should display the error returned by pipeline save API', () => {
+  it.skip('should display the error returned by pipeline save API', () => {
     cy.intercept('POST', pipelineSaveCallWithStoreType, { fixture: 'pipeline/api/pipelines.post' }).as(
       'pipelineSaveCallWithStoreType'
     )
@@ -573,7 +573,6 @@ describe('Input Sets', () => {
   it('Input Set Creation & Deletion', () => {
     cy.visitPageAssertion()
     cy.wait('@emptyInputSetList')
-    cy.wait('@pipelineYAML')
     cy.wait('@pipelineMetadata')
     cy.wait(1000)
     cy.contains('span', '+ New Input Set').should('be.visible')
@@ -686,7 +685,7 @@ describe('Add stage view with disabled licences', () => {
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
 
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
-      const disabledLicenses = ['SECURITY_STAGE', 'CING_ENABLED']
+      const disabledLicenses = ['CING_ENABLED']
 
       const updatedFeatureFlagsList = featureFlagsData.resource.reduce((acc, currentFlagData) => {
         if (disabledLicenses.includes(currentFlagData.name)) {
@@ -724,8 +723,8 @@ describe('Add stage view with disabled licences', () => {
     cy.findByTestId('stage-Deployment').should('be.visible')
     cy.findByTestId('stage-Approval').should('be.visible')
     cy.findByTestId('stage-Custom').should('be.visible')
+    cy.findByTestId('stage-SecurityTests').should('be.visible')
 
     cy.findByTestId('stage-CI').should('not.exist')
-    cy.findByTestId('stage-SecurityTests').should('not.exist')
   })
 })

@@ -43,9 +43,10 @@ exports[`Jenkins step tests Basic snapshot - deploymentform mode 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="width: 391px;"
                   >
                     <div
-                      class="bp3-popover-wrapper Select--main bp3-fill"
+                      class="bp3-popover-wrapper SelectWithSubmenu--main bp3-fill"
                     >
                       <div
                         class="bp3-popover-target"
@@ -58,33 +59,9 @@ exports[`Jenkins step tests Basic snapshot - deploymentform mode 1`] = `
                             class="bp3-input"
                             name="spec.jobName"
                             placeholder="select"
-                            style="padding-right: 0px;"
                             type="text"
                             value=""
                           />
-                          <span
-                            class="bp3-input-action"
-                          >
-                            <span
-                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                              icon="chevron-down"
-                            >
-                              <svg
-                                data-icon="chevron-down"
-                                height="14"
-                                viewBox="0 0 16 16"
-                                width="14"
-                              >
-                                <desc>
-                                  chevron-down
-                                </desc>
-                                <path
-                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                  fill-rule="evenodd"
-                                />
-                              </svg>
-                            </span>
-                          </span>
                         </div>
                       </div>
                     </div>
@@ -283,9 +260,10 @@ exports[`Jenkins step tests Basic snapshot - inputset mode 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="width: 391px;"
                   >
                     <div
-                      class="bp3-popover-wrapper Select--main bp3-fill"
+                      class="bp3-popover-wrapper SelectWithSubmenu--main bp3-fill"
                     >
                       <div
                         class="bp3-popover-target"
@@ -298,33 +276,9 @@ exports[`Jenkins step tests Basic snapshot - inputset mode 1`] = `
                             class="bp3-input"
                             name="spec.jobName"
                             placeholder="select"
-                            style="padding-right: 0px;"
                             type="text"
                             value=""
                           />
-                          <span
-                            class="bp3-input-action"
-                          >
-                            <span
-                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                              icon="chevron-down"
-                            >
-                              <svg
-                                data-icon="chevron-down"
-                                height="14"
-                                viewBox="0 0 16 16"
-                                width="14"
-                              >
-                                <desc>
-                                  chevron-down
-                                </desc>
-                                <path
-                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                  fill-rule="evenodd"
-                                />
-                              </svg>
-                            </span>
-                          </span>
                         </div>
                       </div>
                     </div>
@@ -550,9 +504,10 @@ exports[`Jenkins step tests Basic snapshot - inputset mode but no runtime values
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="width: 391px;"
                   >
                     <div
-                      class="bp3-popover-wrapper Select--main bp3-fill"
+                      class="bp3-popover-wrapper SelectWithSubmenu--main bp3-fill"
                     >
                       <div
                         class="bp3-popover-target"
@@ -565,33 +520,9 @@ exports[`Jenkins step tests Basic snapshot - inputset mode but no runtime values
                             class="bp3-input"
                             name="spec.jobName"
                             placeholder="select"
-                            style="padding-right: 0px;"
                             type="text"
                             value=""
                           />
-                          <span
-                            class="bp3-input-action"
-                          >
-                            <span
-                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                              icon="chevron-down"
-                            >
-                              <svg
-                                data-icon="chevron-down"
-                                height="14"
-                                viewBox="0 0 16 16"
-                                width="14"
-                              >
-                                <desc>
-                                  chevron-down
-                                </desc>
-                                <path
-                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                  fill-rule="evenodd"
-                                />
-                              </svg>
-                            </span>
-                          </span>
                         </div>
                       </div>
                     </div>
@@ -1094,7 +1025,7 @@ exports[`Jenkins step tests Edit stage - readonly: edit stage view readonly 1`] 
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
               >
                 <div
-                  class="bp3-popover-wrapper Select--main bp3-fill"
+                  class="bp3-popover-wrapper SelectWithSubmenu--main bp3-fill"
                 >
                   <div
                     class="bp3-popover-target"
@@ -1107,33 +1038,9 @@ exports[`Jenkins step tests Edit stage - readonly: edit stage view readonly 1`] 
                         class="bp3-input"
                         name="spec.jobName"
                         placeholder="select"
-                        style="padding-right: 0px;"
                         type="text"
                         value=""
                       />
-                      <span
-                        class="bp3-input-action"
-                      >
-                        <span
-                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                          icon="chevron-down"
-                        >
-                          <svg
-                            data-icon="chevron-down"
-                            height="14"
-                            viewBox="0 0 16 16"
-                            width="14"
-                          >
-                            <desc>
-                              chevron-down
-                            </desc>
-                            <path
-                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                      </span>
                     </div>
                   </div>
                 </div>
@@ -1406,9 +1313,10 @@ exports[`Jenkins step tests deploymentform mode - readonly 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="width: 391px;"
                   >
                     <div
-                      class="bp3-popover-wrapper Select--main bp3-fill"
+                      class="bp3-popover-wrapper SelectWithSubmenu--main bp3-fill"
                     >
                       <div
                         class="bp3-popover-target"
@@ -1421,33 +1329,9 @@ exports[`Jenkins step tests deploymentform mode - readonly 1`] = `
                             class="bp3-input"
                             name="spec.jobName"
                             placeholder="select"
-                            style="padding-right: 0px;"
                             type="text"
                             value=""
                           />
-                          <span
-                            class="bp3-input-action"
-                          >
-                            <span
-                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                              icon="chevron-down"
-                            >
-                              <svg
-                                data-icon="chevron-down"
-                                height="14"
-                                viewBox="0 0 16 16"
-                                width="14"
-                              >
-                                <desc>
-                                  chevron-down
-                                </desc>
-                                <path
-                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                  fill-rule="evenodd"
-                                />
-                              </svg>
-                            </span>
-                          </span>
                         </div>
                       </div>
                     </div>
@@ -1960,7 +1844,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
               >
                 <div
-                  class="bp3-popover-wrapper Select--main bp3-fill"
+                  class="bp3-popover-wrapper SelectWithSubmenu--main bp3-fill"
                 >
                   <div
                     class="bp3-popover-target"
@@ -1973,33 +1857,9 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
                         class="bp3-input"
                         name="spec.jobName"
                         placeholder="select"
-                        style="padding-right: 0px;"
                         type="text"
                         value=""
                       />
-                      <span
-                        class="bp3-input-action"
-                      >
-                        <span
-                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                          icon="chevron-down"
-                        >
-                          <svg
-                            data-icon="chevron-down"
-                            height="14"
-                            viewBox="0 0 16 16"
-                            width="14"
-                          >
-                            <desc>
-                              chevron-down
-                            </desc>
-                            <path
-                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                      </span>
                     </div>
                   </div>
                 </div>

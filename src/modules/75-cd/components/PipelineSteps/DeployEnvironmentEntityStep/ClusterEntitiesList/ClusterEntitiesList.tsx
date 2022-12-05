@@ -8,14 +8,12 @@
 import React, { useEffect } from 'react'
 import { Intent, Spinner } from '@blueprintjs/core'
 
-import { ConfirmationDialog, Container, useToggleOpen } from '@harness/uicore'
+import { ConfirmationDialog, Layout, useToggleOpen } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 
 import type { ClusterData } from '../types'
 import { ClusterEntityCard } from './ClusterEntityCard'
-
-import css from './ClusterEntitiesList.module.scss'
 
 export interface ClusterEntitiesListProps {
   loading: boolean
@@ -61,7 +59,7 @@ export default function ClusterEntitiesList({
 
   return (
     <>
-      <Container className={css.clusterEntitiesList}>
+      <Layout.Vertical spacing={'medium'} margin={{ top: 'medium' }}>
         {clustersData.map(row => {
           return (
             <ClusterEntityCard
@@ -73,7 +71,7 @@ export default function ClusterEntitiesList({
             />
           )
         })}
-      </Container>
+      </Layout.Vertical>
 
       <ConfirmationDialog
         isOpen={isDeleteConfirmationOpen}

@@ -28,7 +28,7 @@ module.exports = ({
   enableSTO,
   enableChaosUI,
   enableCCMUI,
-  enableSCM,
+  enableCODE,
   enableFFUI,
   enableCIUI,
   enableTIUI
@@ -58,8 +58,8 @@ module.exports = ({
     remotes.chaos = "chaos@[window.getApiBaseUrl('chaos/remoteEntry.js')]"
   }
 
-  if (enableSCM) {
-    remotes.scm = "scm@[window.getApiBaseUrl('scm/remoteEntry.js')]"
+  if (enableCODE) {
+    remotes.code = "codeRemote@[window.getApiBaseUrl('code/remoteEntry.js')]"
   }
 
   if (enableFFUI) {

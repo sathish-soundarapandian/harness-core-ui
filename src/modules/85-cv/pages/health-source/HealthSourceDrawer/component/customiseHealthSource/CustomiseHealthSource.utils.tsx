@@ -28,6 +28,8 @@ import { CustomHealthProduct } from '@cv/pages/health-source/connectors/CustomHe
 import { SplunkMetricsHealthSource } from '@cv/pages/health-source/connectors/SplunkMetricsHealthSourceV2/SplunkMetricsHealthSource'
 import ElkHealthSource from '@cv/pages/health-source/connectors/ElkHealthSource/ElkHealthSource'
 import CloudWatch from '@cv/pages/health-source/connectors/CloudWatch/CloudWatch'
+import CommonHealthSourceContainer from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.container'
+import { healthSourcesConfig } from '@cv/pages/health-source/connectors/CommonHealthSource/HealthSourceConfigs/HealthSourceConfigs'
 import type { SourceDataInterface, UpdatedHealthSource } from '../../HealthSourceDrawerContent.types'
 import { SplunkProduct } from '../defineHealthSource/DefineHealthSource.constant'
 import { CustomHealthMetric } from './CustomiseHealthSource.constant'
@@ -55,6 +57,9 @@ export const LoadSourceByType = ({
 }): JSX.Element | null => {
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
   const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
+  const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
+  const healthSourceConfig = healthSourcesConfig[`${type}_${data?.product?.value}`]
+
   switch (type) {
     case HealthSourceTypes.AppDynamics:
       return (
@@ -156,8 +161,21 @@ export const LoadSourceByType = ({
       }
       return <CloudWatch data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
 
+    case HealthSourceTypes.SumoLogic:
+      if (!isSumoLogicEnabled) {
+        return null
+      }
+      return (
+        <CommonHealthSourceContainer
+          data={data}
+          healthSourceConfig={healthSourceConfig}
+          isTemplate={isTemplate}
+          expressions={expressions}
+          onSubmit={onSubmit}
+        />
+      )
     default:
-      return <></>
+      return null
   }
 }
 

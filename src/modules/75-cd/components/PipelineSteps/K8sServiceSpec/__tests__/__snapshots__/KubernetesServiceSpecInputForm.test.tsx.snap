@@ -3,7 +3,7 @@
 exports[`DOCKER renders the primary artifact form if all the attributes are runtime: primary artifact runtime form 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
   >
     <div
       class="nopadLeft accordionSummary"
@@ -356,7 +356,7 @@ exports[`DOCKER renders the primary artifact form if all the attributes are runt
 exports[`DOCKER renders the primary artifact form in readonly mode: primary artifact runtime form readonly 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
   >
     <div
       class="nopadLeft accordionSummary"
@@ -692,7 +692,7 @@ exports[`DOCKER renders the primary artifact form in readonly mode: primary arti
 exports[`DOCKER renders the tag component if other values are fixed: fetch tags docker 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
   >
     <div
       class="nopadLeft accordionSummary"
@@ -830,7 +830,7 @@ exports[`DOCKER renders the tag component if other values are fixed: fetch tags 
 exports[`DOCKER renders the tag component if other values is expression: fetch tags docker if dependent fields are expression 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
   >
     <div
       class="nopadLeft accordionSummary"
@@ -968,7 +968,7 @@ exports[`DOCKER renders the tag component if other values is expression: fetch t
 exports[`ECR renders the primary artifact form if all the attributes are runtime: ecr - primary artifact runtime form 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
   >
     <div
       class="nopadLeft accordionSummary"
@@ -1419,7 +1419,7 @@ exports[`ECR renders the primary artifact form if all the attributes are runtime
 exports[`ECR renders the primary artifact form in readonly mode: ecr - primary artifact runtime form readonly 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
   >
     <div
       class="nopadLeft accordionSummary"
@@ -1847,7 +1847,7 @@ exports[`ECR renders the primary artifact form in readonly mode: ecr - primary a
 exports[`ECR renders the tag component if other values are expression: fetch tags ecr if dependent fields are expression 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
   >
     <div
       class="nopadLeft accordionSummary"
@@ -1988,7 +1988,7 @@ exports[`ECR renders the tag component if other values are expression: fetch tag
 exports[`ECR renders the tag component if other values are fixed: fetch tags ecr 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
   >
     <div
       class="nopadLeft accordionSummary"
@@ -2129,7 +2129,7 @@ exports[`ECR renders the tag component if other values are fixed: fetch tags ecr
 exports[`GCR renders the primary artifact form if all the attributes are runtime: ecr - primary artifact runtime form 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
   >
     <div
       class="nopadLeft accordionSummary"
@@ -2580,7 +2580,7 @@ exports[`GCR renders the primary artifact form if all the attributes are runtime
 exports[`GCR renders the primary artifact form in readonly mode: ecr - primary artifact runtime form readonly 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
   >
     <div
       class="nopadLeft accordionSummary"
@@ -3008,7 +3008,7 @@ exports[`GCR renders the primary artifact form in readonly mode: ecr - primary a
 exports[`GCR renders the tag component if other values are fixed: fetch tags gcr 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
   >
     <div
       class="nopadLeft accordionSummary"
@@ -3149,7 +3149,7 @@ exports[`GCR renders the tag component if other values are fixed: fetch tags gcr
 exports[`GCR renders the tag component if other values are fixed: fetch tags gcr if dependent fields are expression 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
   >
     <div
       class="nopadLeft accordionSummary"
@@ -3392,7 +3392,7 @@ exports[`INPUT VARIABLE VIEW renders the input variable view: input variabe mode
 exports[`MANIFEST renders the K8 manifest: manifest form skeleton 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
   >
     <div
       class="nopadLeft accordionSummary"
@@ -3444,7 +3444,7 @@ exports[`VARIABLES renders the service variables form: variables with default va
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
     >
       <div
         class="nopadLeft accordionSummary"

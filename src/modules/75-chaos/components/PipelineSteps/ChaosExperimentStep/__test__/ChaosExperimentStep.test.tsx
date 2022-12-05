@@ -1,5 +1,12 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
-import { render, act } from '@testing-library/react'
+import { render, act, fireEvent, queryByAttribute } from '@testing-library/react'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { UseGetReturnData } from '@common/utils/testUtils'
@@ -8,6 +15,11 @@ import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Step
 import { ChaosExperimentStep } from '../ChaosExperimentStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
+
+// eslint-disable-next-line react/display-name
+jest.mock('microfrontends/ChildAppMounter', () => () => {
+  return <div data-testid="error-tracking-child-mounter">mounted</div>
+})
 
 export const ConnectorResponse: UseGetReturnData<ResponseConnectorResponse> = {
   loading: false,
@@ -64,13 +76,14 @@ describe('ChaosExperiment Step', () => {
         identifier: 'step1',
         spec: {
           experimentRef: '001167e9-7b03-48d7-97f3-c1b328065f5d',
-          expectedResilienceScore: 12
+          expectedResilienceScore: 50,
+          assertion: 'faultsPassed > 1'
         },
         description: 'desc'
       }
       const onUpdate = jest.fn()
       const ref = React.createRef<StepFormikRef<unknown>>()
-      const { container } = render(
+      const { container, getByText, getByTestId } = render(
         <TestStepWidget
           initialValues={initialValues}
           type={StepType.ChaosExperiment}
@@ -80,15 +93,35 @@ describe('ChaosExperiment Step', () => {
         />
       )
 
+      const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+
+      fireEvent.change(queryByNameAttribute('spec.expectedResilienceScore')!, { target: { value: 90 } })
+      fireEvent.click(getByText('common.optionalConfig'))
+      fireEvent.change(queryByNameAttribute('spec.assertion')!, { target: { value: 'faultsPassed > 2' } })
+
       expect(container).toMatchSnapshot()
 
+      act(() => {
+        fireEvent.click(getByTestId('chaosExperimentReferenceField'))
+      })
+      expect(container).toMatchSnapshot()
+
+      act(() => {
+        fireEvent.click(getByTestId('experimentReferenceFieldCloseBtn'))
+      })
+
+      expect(container).toMatchSnapshot()
       await act(() => ref.current?.submitForm()!)
 
       expect(onUpdate).toHaveBeenCalledWith({
         description: 'desc',
         identifier: 'step1',
         name: 'step1',
-        spec: { expectedResilienceScore: 12, experimentRef: '001167e9-7b03-48d7-97f3-c1b328065f5d' }
+        spec: {
+          expectedResilienceScore: 90,
+          experimentRef: '001167e9-7b03-48d7-97f3-c1b328065f5d',
+          assertion: 'faultsPassed > 2'
+        }
       })
     })
   })

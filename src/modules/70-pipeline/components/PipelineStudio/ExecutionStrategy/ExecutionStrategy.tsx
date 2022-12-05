@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react'
+import { useParams } from 'react-router-dom'
 import { Switch } from '@blueprintjs/core'
 import { Text, Icon, Layout, Button, Card, IconName, ButtonVariation, Container, PageError } from '@harness/uicore'
 import { defaultTo, isEmpty, set, startCase } from 'lodash-es'
@@ -22,6 +23,7 @@ import type { StageElementConfig, StageElementWrapperConfig } from 'services/pip
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { PageSpinner } from '@common/components'
 import {
   getServiceDefinitionType,
@@ -108,6 +110,7 @@ function ExecutionStrategyRef(
   } = usePipelineContext()
   const { getString } = useStrings()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const { accountId } = useParams<AccountPathProps>()
 
   const [strategiesByDeploymentType, setStrategies] = useState([])
   const [isSubmitDisabled, disableSubmit] = useState(false)
@@ -212,6 +215,7 @@ function ExecutionStrategyRef(
     refetch: refetchStrategyYaml
   } = useGetExecutionStrategyYaml({
     queryParams: {
+      accountIdentifier: accountId,
       serviceDefinitionType: serviceDefinitionType(),
       strategyType: selectedStrategy !== 'BlankCanvas' ? selectedStrategy : 'Rolling',
       ...(isVerifyEnabled && !isDefaultStrategySelected(selectedStrategy) && { includeVerify: true })

@@ -13,7 +13,7 @@ import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { InstanceGroupedByArtifact } from 'services/cd-ng'
 import { DeploymentsV2 } from '../../DeploymentView/DeploymentViewV2'
-import { ActiveServiceInstancesContentV2, TableType } from '../ActiveServiceInstancesContentV2'
+import { ActiveServiceInstancesContentV2, isClusterData, TableType } from '../ActiveServiceInstancesContentV2'
 import css from './InstancesDetailsDialog.module.scss'
 
 export interface InstancesDetailsDialogProps {
@@ -25,6 +25,7 @@ export interface InstancesDetailsDialogProps {
 
 export default function InstancesDetailsDialog(props: InstancesDetailsDialogProps): React.ReactElement {
   const { isOpen, setIsOpen, data, isActiveInstance } = props
+  const isCluster = isClusterData(defaultTo(data, []))
   const { getString } = useStrings()
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -78,7 +79,7 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
         flexGrow: 16
       },
       {
-        label: getString('cd.serviceDashboard.headers.infrastructures'),
+        label: isCluster ? getString('common.cluster') : getString('cd.serviceDashboard.headers.infrastructures'),
         flexGrow: 16
       },
       {
@@ -108,7 +109,7 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
       </Layout.Horizontal>
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isCluster])
 
   const list = React.useMemo(() => {
     return (

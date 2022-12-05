@@ -67,7 +67,7 @@ describe('useModuleInfo tests', () => {
     })
 
     expect(result.current.icon).toBe('sto-color-filled')
-    expect(result.current.label).toBe('common.stoText')
+    expect(result.current.label).toBe('common.purpose.sto.continuous')
     expect(result.current.shouldVisible).toBe(false)
   })
 
@@ -81,13 +81,13 @@ describe('useModuleInfo tests', () => {
     expect(result.current.shouldVisible).toBe(false)
   })
 
-  test('test SCM', () => {
-    const { result } = renderHook(() => useNavModuleInfo(ModuleName.SCM), {
+  test('test CODE', () => {
+    const { result } = renderHook(() => useNavModuleInfo(ModuleName.CODE), {
       wrapper: TestWrapper
     })
 
-    expect(result.current.icon).toBe('gitops-green')
-    expect(result.current.label).toBe('common.purpose.scm.name')
+    expect(result.current.icon).toBe('code')
+    expect(result.current.label).toBe('common.purpose.code.name')
     expect(result.current.shouldVisible).toBe(false)
   })
 
@@ -97,7 +97,7 @@ describe('useModuleInfo tests', () => {
       initialProps: {
         defaultLicenseStoreValues: {
           licenseInformation: {
-            SCM: {
+            CODE: {
               licenseType: 'PAID',
               id: '1212'
             }
@@ -106,9 +106,9 @@ describe('useModuleInfo tests', () => {
       }
     })
 
-    expect(result.current['SCM'].icon).toBe('gitops-green')
-    expect(result.current['SCM'].label).toBe('common.purpose.scm.name')
-    expect(result.current['SCM'].shouldVisible).toBe(false)
-    expect(result.current['SCM'].hasLicense).toBe(true)
+    expect(result.current['CODE'].icon).toBe('code')
+    expect(result.current['CODE'].label).toBe('common.purpose.code.name')
+    expect(result.current['CODE'].shouldVisible).toBe(false)
+    expect(result.current['CODE'].hasLicense).toBe(true)
   })
 })

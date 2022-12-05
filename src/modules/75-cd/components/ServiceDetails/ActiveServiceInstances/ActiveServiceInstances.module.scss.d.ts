@@ -17,6 +17,7 @@ declare const styles: {
   readonly deploymentsEmpty: string
   readonly envContainer: string
   readonly environmentRow: string
+  readonly errorText: string
   readonly hex: string
   readonly hexContainer: string
   readonly hover: string
@@ -34,6 +35,7 @@ declare const styles: {
   readonly plusMore: string
   readonly sectionValue: string
   readonly seeMore: string
+  readonly spinner: string
   readonly tabsStyle: string
   readonly textStyle: string
 }

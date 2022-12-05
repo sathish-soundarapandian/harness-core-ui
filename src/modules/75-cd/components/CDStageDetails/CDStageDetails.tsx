@@ -6,22 +6,62 @@
  */
 
 import React from 'react'
-import { get } from 'lodash-es'
-import { Position } from '@blueprintjs/core'
-import { Popover } from '@harness/uicore'
+import cx from 'classnames'
+import { defaultTo, get } from 'lodash-es'
+import { PopoverInteractionKind, Position } from '@blueprintjs/core'
+import { Popover, Text } from '@harness/uicore'
 
 import { String as StrTemplate } from 'framework/strings'
+import type { Application, GitOpsExecutionSummary } from 'services/cd-ng'
 import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { ServicePopoverCard } from '@cd/components/ServicePopoverCard/ServicePopoverCard'
-
+import serviceCardCSS from '@cd/components/ServicePopoverCard/ServicePopoverCard.module.scss'
 import css from './CDStageDetails.module.scss'
+
+const GitopsApplications = ({ gitOpsApps }: { gitOpsApps: Application[] }): React.ReactElement | null => {
+  if (gitOpsApps.length === 0) return null
+
+  return (
+    <div data-test-id="GitopsApplications">
+      <StrTemplate className={css.title} tagName="div" stringID="applications" />
+      <ul className={css.values}>
+        <li>
+          {gitOpsApps[0].name}
+          {gitOpsApps.length > 1 ? (
+            <Popover
+              interactionKind={PopoverInteractionKind.HOVER}
+              className={css.serviceWrapper}
+              position={Position.BOTTOM_RIGHT}
+            >
+              <span>,&nbsp;+{Math.abs(gitOpsApps.length - 1)}</span>
+              <div className={serviceCardCSS.main}>
+                <ul className={css.values}>
+                  {gitOpsApps.slice(1).map((app: Application, index: number) => {
+                    return <li key={app.identifier || index}>{app.name}</li>
+                  })}
+                </ul>
+              </div>
+            </Popover>
+          ) : null}
+        </li>
+      </ul>
+    </div>
+  )
+}
 
 export function CDStageDetails(props: StageDetailProps): React.ReactElement {
   const { stage } = props
+  const gitOpsApps = get(stage, 'moduleInfo.cd.gitOpsAppSummary.applications') || []
+
+  const gitOpsEnvironments = Array.isArray(get(stage, 'moduleInfo.cd.gitopsExecutionSummary.environments'))
+    ? (get(stage, 'moduleInfo.cd.gitopsExecutionSummary') as Required<GitOpsExecutionSummary>).environments.map(
+        envForGitOps => defaultTo(envForGitOps.name, '')
+      )
+    : []
 
   return (
     <div className={css.container}>
-      <div className={css.main}>
+      <div className={cx(css.main, { [css.threeSections]: !!gitOpsApps.length })}>
         <div>
           <StrTemplate className={css.title} tagName="div" stringID="serviceOrServices" />
           <ul className={css.values}>
@@ -42,9 +82,16 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
         <div>
           <StrTemplate className={css.title} tagName="div" stringID="environmentOrEnvironments" />
           <ul className={css.values}>
-            <li>{get(stage, 'moduleInfo.cd.infraExecutionSummary.name', null)}</li>
+            {gitOpsEnvironments.length ? (
+              <Text lineClamp={2} className={css.gitOpsEnvText}>
+                {gitOpsEnvironments.join(', ')}
+              </Text>
+            ) : (
+              <li>{get(stage, 'moduleInfo.cd.infraExecutionSummary.name', null)}</li>
+            )}
           </ul>
         </div>
+        <GitopsApplications gitOpsApps={gitOpsApps} />
       </div>
     </div>
   )

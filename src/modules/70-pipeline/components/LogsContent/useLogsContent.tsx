@@ -150,7 +150,7 @@ export function useLogsContent(): UseLogsContentReturn {
       },
       headers: {
         'X-Harness-Token': logsTokenRef.current,
-        Authorization: SessionToken.getToken()
+        Authorization: `Bearer ${SessionToken.getToken()}`
       },
       key: logKey
     })

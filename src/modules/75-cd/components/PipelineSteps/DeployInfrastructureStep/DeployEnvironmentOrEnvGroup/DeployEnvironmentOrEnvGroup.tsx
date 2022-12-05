@@ -336,7 +336,7 @@ function DeployEnvironmentOrEnvGroup({
         flex={{ alignItems: flexStart, justifyContent: flexStart }}
         margin={{ ...(isMultiTypeRuntime(environmentOrEnvGroupRefType) && { bottom: 'large' }) }}
       >
-        <FormInput.SelectWithSubmenuTypeInput
+        <FormInput.SelectWithSubmenuTypeInputV2
           label={getString('cd.pipelineSteps.environmentTab.specifyEnvironmentOrGroup')}
           name="environmentOrEnvGroupRef"
           disabled={environmentsLoading || environmentGroupsLoading}

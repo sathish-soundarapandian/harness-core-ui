@@ -32,7 +32,8 @@ const TabToolbar: React.FC<TabToolbarProps> = ({
   resetErrorBudget,
   deleteSLO,
   refetchSLODetails,
-  onTabChange
+  onTabChange,
+  isCompositeSLO
 }) => {
   const history = useHistory()
   const { getString } = useStrings()
@@ -182,23 +183,25 @@ const TabToolbar: React.FC<TabToolbarProps> = ({
           }
         }}
       />
-      <RbacButton
-        icon="api-docs"
-        withoutCurrentColor
-        size={ButtonSize.SMALL}
-        text={getString('cv.externalAPICalls')}
-        iconProps={{ color: Color.GREY_700, size: 18 }}
-        onClick={() => openLogContentHook(LogTypes.ApiCallLog)}
-        variation={ButtonVariation.LINK}
-        className={css.tabLink}
-        permission={{
-          permission: PermissionIdentifier.VIEW_SLO_SERVICE,
-          resource: {
-            resourceType: ResourceType.SLO,
-            resourceIdentifier: projectIdentifier
-          }
-        }}
-      />
+      {!isCompositeSLO && (
+        <RbacButton
+          icon="api-docs"
+          withoutCurrentColor
+          size={ButtonSize.SMALL}
+          text={getString('cv.externalAPICalls')}
+          iconProps={{ color: Color.GREY_700, size: 18 }}
+          onClick={() => openLogContentHook(LogTypes.ApiCallLog)}
+          variation={ButtonVariation.LINK}
+          className={css.tabLink}
+          permission={{
+            permission: PermissionIdentifier.VIEW_SLO_SERVICE,
+            resource: {
+              resourceType: ResourceType.SLO,
+              resourceIdentifier: projectIdentifier
+            }
+          }}
+        />
+      )}
       <RbacButton
         icon="trash"
         withoutCurrentColor

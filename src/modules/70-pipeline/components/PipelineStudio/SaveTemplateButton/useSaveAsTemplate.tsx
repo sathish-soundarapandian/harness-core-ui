@@ -30,7 +30,7 @@ import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateErrors'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
-import type { NGTemplateInfoConfig } from 'services/template-ng'
+import type { NGTemplateInfoConfig, TemplateSummaryResponse } from 'services/template-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
@@ -77,7 +77,7 @@ export function useSaveAsTemplate({
 
   const { saveAndPublish } = useSaveTemplate({
     onSuccessCallback: async (
-      latestTemplate: NGTemplateInfoConfig,
+      latestTemplate: TemplateSummaryResponse,
       updatedGitDetails?: SaveToGitFormInterface,
       updatedStoreMetadata?: StoreMetadata
     ) => {

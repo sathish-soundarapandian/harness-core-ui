@@ -124,6 +124,7 @@ export const ChaosExperimentStepBase = (
                 <FormGroup>
                   <Label>{getString('chaos.selectChaosExperiment')}</Label>
                   <Button
+                    data-testid="chaosExperimentReferenceField"
                     minimal
                     onClick={openExperimentDrawer}
                     id={css.chaosExperimentReferenceField}
@@ -159,6 +160,7 @@ export const ChaosExperimentStepBase = (
             />
             <Drawer isOpen={isExperimentDrawerOpen} enforceFocus={true} size="75%">
               <Button
+                data-testid="experimentReferenceFieldCloseBtn"
                 minimal
                 className={drawerCss.almostFullScreenCloseBtn}
                 icon="cross"

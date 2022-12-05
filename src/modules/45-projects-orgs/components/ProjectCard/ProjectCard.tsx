@@ -34,6 +34,7 @@ export interface ProjectCardProps {
   reloadProjects?: () => Promise<void>
   editProject?: (project: Project) => void
   handleInviteCollaborators?: (project: Project) => void
+  avatarClassName?: string
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = props => {
@@ -45,7 +46,8 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
     handleInviteCollaborators,
     minimal,
     selected,
-    onClick
+    onClick,
+    avatarClassName
   } = props
   const [menuOpen, setMenuOpen] = useState(false)
   const {
@@ -166,6 +168,7 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
               )} ${adminList?.length ? `(${adminList?.length})` : ``}`}</Text>
               <RbacAvatarGroup
                 className={css.projectAvatarGroup}
+                avatarClassName={avatarClassName}
                 avatars={adminList?.length ? adminList : [{}]}
                 onAdd={event => {
                   event.stopPropagation()
@@ -186,6 +189,7 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
               )} ${collaboratorsList?.length ? `(${collaboratorsList?.length})` : ``}`}</Text>
               <RbacAvatarGroup
                 className={css.projectAvatarGroup}
+                avatarClassName={avatarClassName}
                 avatars={collaboratorsList?.length ? collaboratorsList : [{}]}
                 onAdd={event => {
                   event.stopPropagation()

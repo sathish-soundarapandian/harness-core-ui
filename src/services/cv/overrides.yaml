@@ -173,6 +173,8 @@ allowpaths:
   - /slo/v2/{identifier}/notification-rules
   - /aws/prometheus/workspaces
   - /aws/regions
+  - /slo-dashboard/widget/{identifier}/consumption
+  - /slo/v2/composite-slo/onboarding-graph
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

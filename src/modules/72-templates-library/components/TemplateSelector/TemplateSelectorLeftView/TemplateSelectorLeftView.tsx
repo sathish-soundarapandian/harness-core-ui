@@ -19,7 +19,7 @@ import {
   Views
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Breadcrumbs } from '@common/components/Breadcrumbs/Breadcrumbs'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -135,6 +135,33 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     }
   }, [accountId, orgId, projectId, searchParam, page, repoIdentifier, branch, selectedScope, isGitSyncEnabled])
 
+  const queryParamsForListingRepos = React.useMemo(() => {
+    switch (selectedScope.value) {
+      case 'all':
+        return {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier,
+          includeAllTemplatesAvailableAtScope: true
+        }
+      case Scope.ACCOUNT:
+        return {
+          accountIdentifier: accountId
+        }
+      case Scope.ORG:
+        return {
+          accountIdentifier: accountId,
+          orgIdentifier
+        }
+      case Scope.PROJECT:
+        return {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier
+        }
+    }
+  }, [selectedScope, accountId, orgIdentifier, projectIdentifier])
+
   const reset = React.useCallback((): void => {
     if (searchParam) {
       searchRef.current.clear()
@@ -180,6 +207,22 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     queryParamStringifyOptions: { arrayFormat: 'comma' },
     debounce: true
   })
+
+  const {
+    data: repoListData,
+    error: errorOfRepoForTemplates,
+    loading: isLoadingRepos,
+    refetch
+  } = useGetRepositoryList({
+    queryParams: queryParamsForListingRepos,
+    lazy: isGitSyncEnabled
+  })
+
+  const repositories = repoListData?.data?.repositories
+
+  const onRefetch = React.useCallback((): void => {
+    refetch()
+  }, [refetch])
 
   useEffect(() => {
     if (areTemplatesSame(selectedTemplate, defaultTemplate)) {
@@ -237,8 +280,10 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                   <RepoFilter
                     value={selectedRepo}
                     onChange={repoName => setSelectedRepo(repoName)}
-                    getRepoListPromise={useGetRepositoryList}
-                    selectedScope={selectedScope.value.toString()}
+                    repositories={repositories}
+                    isError={!isEmpty(errorOfRepoForTemplates)}
+                    isLoadingRepos={isLoadingRepos}
+                    onRefetch={onRefetch}
                   />
                 )}
                 <ExpandingSearchInput

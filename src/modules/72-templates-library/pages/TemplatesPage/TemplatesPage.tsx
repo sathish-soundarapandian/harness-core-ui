@@ -18,6 +18,7 @@ import {
 import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams } from 'react-router-dom'
 import { Dialog } from '@blueprintjs/core'
+import { isEmpty } from 'lodash-es'
 import { TemplateSettingsModal } from '@templates-library/components/TemplateSettingsModal/TemplateSettingsModal'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
@@ -121,6 +122,26 @@ export default function TemplatesPage(): React.ReactElement {
     queryParamStringifyOptions: { arrayFormat: 'comma' },
     lazy: !templateFeatureEnabled
   })
+
+  const {
+    data: repoListData,
+    error: errorOfRepoForTemplates,
+    loading: isLoadingRepos,
+    refetch
+  } = useGetRepositoryList({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: isGitSyncEnabled
+  })
+
+  const repositories = repoListData?.data?.repositories
+
+  const onRefetch = React.useCallback((): void => {
+    refetch()
+  }, [refetch])
 
   const reset = React.useCallback((): void => {
     searchRef.current.clear()
@@ -234,7 +255,14 @@ export default function TemplatesPage(): React.ReactElement {
               />
             </GitSyncStoreProvider>
           ) : (
-            <RepoFilter onChange={onChangeRepo} value={repoName} getRepoListPromise={useGetRepositoryList} />
+            <RepoFilter
+              onChange={onChangeRepo}
+              value={repoName}
+              repositories={repositories}
+              isError={!isEmpty(errorOfRepoForTemplates)}
+              onRefetch={onRefetch}
+              isLoadingRepos={isLoadingRepos}
+            />
           )}
         </Layout.Horizontal>
         <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>

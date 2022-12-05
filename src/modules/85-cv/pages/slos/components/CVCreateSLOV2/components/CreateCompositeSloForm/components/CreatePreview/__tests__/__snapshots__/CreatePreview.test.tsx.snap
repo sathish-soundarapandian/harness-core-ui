@@ -50,6 +50,7 @@ exports[`CreatePreview should render LabelAndValue with empty values 1`] = `
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
       style="width: 100px;"
+      title=""
     >
       
     </p>

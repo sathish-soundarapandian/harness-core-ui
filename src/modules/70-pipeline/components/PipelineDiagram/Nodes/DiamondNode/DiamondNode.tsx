@@ -249,7 +249,11 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             lineClamp={2}
             tooltipProps={{ popoverClassName: matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
-            {matrixNodeName ? <MatrixNodeNameLabelWrapper matrixLabel={props?.name as string} /> : props.name}
+            {matrixNodeName ? (
+              <MatrixNodeNameLabelWrapper nodeName={props?.name as string} matrixNodeName={matrixNodeName} />
+            ) : (
+              props.name
+            )}
           </Text>
         </div>
       )}

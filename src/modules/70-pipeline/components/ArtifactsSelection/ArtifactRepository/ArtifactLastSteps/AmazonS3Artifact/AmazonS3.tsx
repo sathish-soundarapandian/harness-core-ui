@@ -7,7 +7,7 @@
 
 import React, { useCallback } from 'react'
 import cx from 'classnames'
-import type { FormikProps } from 'formik'
+import type { FormikProps, FormikValues } from 'formik'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, memoize, merge, omit } from 'lodash-es'
 import * as Yup from 'yup'
@@ -28,9 +28,16 @@ import {
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useListAwsRegions } from 'services/portal'
-import { BucketResponse, ConnectorConfigDTO, useGetV2BucketListForS3 } from 'services/cd-ng'
+import {
+  BucketResponse,
+  ConnectorConfigDTO,
+  FilePaths,
+  useGetFilePathsForS3,
+  useGetV2BucketListForS3
+} from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import {
   AmazonS3ArtifactProps,
@@ -46,11 +53,18 @@ import {
   checkIfQueryParamsisNotEmpty,
   defaultArtifactInitialValues,
   getConnectorIdValue,
-  shouldFetchTags
+  shouldFetchFieldOptions
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
+
+export const resetFieldValue = (formik: FormikValues, fieldPath: string): void => {
+  const fieldValue = get(formik.values, fieldPath, '')
+  if (fieldValue?.length && getMultiTypeFromValue(fieldValue) === MultiTypeInputType.FIXED) {
+    formik.setFieldValue(fieldPath, '')
+  }
+}
 
 export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3ArtifactProps): React.ReactElement {
   const {
@@ -75,9 +89,11 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const isTemplateContext = context === ModalViewFor.Template
 
   const [regions, setRegions] = React.useState<SelectOption[]>([])
-  const [lastQueryData, setLastQueryData] = React.useState({ region: undefined })
+  const [lastQueryData, setLastQueryData] = React.useState({ region: undefined, bucketName: '' })
   const [bucketList, setBucketList] = React.useState<BucketResponse[] | undefined>([])
+  const [filePathList, setFilePathList] = React.useState<FilePaths[] | undefined>([])
 
+  // Region related code
   const {
     data: regionData,
     loading: loadingRegions,
@@ -101,6 +117,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     return prevStepData?.connectorId?.value || prevStepData?.connectorId?.connector?.value || prevStepData?.identifier
   }
 
+  // Bucket related code
   const {
     data: bucketData,
     error,
@@ -118,7 +135,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   })
 
   React.useEffect(() => {
-    if (checkIfQueryParamsisNotEmpty(Object.values(omit(lastQueryData, ['region'])))) {
+    if (checkIfQueryParamsisNotEmpty(Object.values(omit(lastQueryData, ['region', 'bucketName'])))) {
       refetchBuckets()
     }
   }, [lastQueryData, refetchBuckets])
@@ -133,7 +150,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
 
   const canFetchBuckets = useCallback(
     (region: string): boolean => {
-      return !!(lastQueryData.region !== region && shouldFetchTags(prevStepData, []))
+      return !!(lastQueryData.region !== region && shouldFetchFieldOptions(prevStepData, []))
     },
     [lastQueryData, prevStepData]
   )
@@ -141,10 +158,10 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const fetchBuckets = useCallback(
     (region = ''): void => {
       if (canFetchBuckets(region)) {
-        setLastQueryData({ region })
+        setLastQueryData({ region, bucketName: lastQueryData.bucketName })
       }
     },
-    [canFetchBuckets]
+    [canFetchBuckets, lastQueryData]
   )
 
   const isBucketNameDisabled = (): boolean => {
@@ -164,6 +181,79 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     }
     return defaultTo(selectItems, [])
   }, [loading, selectItems])
+
+  // File Path related code
+  const {
+    data: filePathData,
+    error: filePathError,
+    loading: fetchingFilePaths,
+    refetch: refetchFilePaths
+  } = useGetFilePathsForS3({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      connectorRef: getConnectorRefQueryData(),
+      region: lastQueryData.region,
+      bucketName: lastQueryData.bucketName,
+      filePathRegex: '*'
+    },
+    lazy: true
+  })
+
+  React.useEffect(() => {
+    if (checkIfQueryParamsisNotEmpty(Object.values(omit(lastQueryData, ['region'])))) {
+      refetchFilePaths()
+    }
+  }, [lastQueryData, refetchFilePaths])
+
+  React.useEffect(() => {
+    if (filePathError) {
+      setFilePathList([])
+    } else if (Array.isArray(filePathData?.data)) {
+      setFilePathList(filePathData?.data)
+    }
+  }, [filePathData?.data, filePathError])
+
+  const canFetchFilePaths = useCallback(
+    (region: string, bucketName: string): boolean => {
+      return (
+        !!(lastQueryData.region !== region && shouldFetchFieldOptions(prevStepData, [])) ||
+        !!(lastQueryData.bucketName !== bucketName && shouldFetchFieldOptions(prevStepData, [bucketName]))
+      )
+    },
+    [lastQueryData, prevStepData]
+  )
+
+  const fetchFilePaths = useCallback(
+    (region = '', bucketName = ''): void => {
+      if (canFetchFilePaths(region, bucketName)) {
+        setLastQueryData({ region, bucketName })
+      }
+    },
+    [canFetchFilePaths]
+  )
+
+  const isFilePathDisabled = (): boolean => {
+    return !checkIfQueryParamsisNotEmpty([getConnectorRefQueryData()])
+  }
+
+  const filePathSelectItems = React.useMemo(() => {
+    return filePathList?.map(currFilePath => ({
+      label: currFilePath.buildDetails?.number as string,
+      value: currFilePath.buildDetails?.number as string
+    }))
+  }, [filePathList])
+
+  const filePaths = React.useMemo((): { label: string; value: string }[] => {
+    if (fetchingFilePaths) {
+      const loadingFilePathOptionsText = getString('common.loadingFieldOptions', {
+        fieldName: getString('common.git.filePath')
+      })
+      return [{ label: loadingFilePathOptionsText, value: loadingFilePathOptionsText }]
+    }
+    return defaultTo(filePathSelectItems, [])
+  }, [fetchingFilePaths, filePathSelectItems])
 
   const schemaObject = {
     region: Yup.string(),
@@ -228,13 +318,13 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     }
 
     // Merge filePath or filePathRegex field value with initial data depending upon tagType selection
-    const filePathData =
+    const initialFilePathData =
       formData?.tagType === TagTypes.Value ? { filePath: formData.filePath } : { filePathRegex: formData.filePathRegex }
 
     artifactObj = {
       spec: {
         ...artifactObj.spec,
-        ...filePathData
+        ...initialFilePathData
       }
     }
 
@@ -263,7 +353,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             <Text>{item.label}</Text>
           </Layout.Horizontal>
         }
-        disabled={loading}
+        disabled={loading || fetchingFilePaths}
         onClick={handleClick}
       />
     </div>
@@ -312,6 +402,11 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
           multiTypeInputProps={{
             expressions,
             allowableTypes,
+            onChange: selected => {
+              if (formik.values.bucketName !== (selected as unknown as any).value) {
+                resetFieldValue(formik, 'filePath')
+              }
+            },
             selectProps: {
               noResults: (
                 <Text lineClamp={1} width={500} height={100} padding="small">
@@ -355,6 +450,102 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     )
   }
 
+  const renderS3FilePathField = (formik: FormikProps<AmazonS3InitialValuesType>): JSX.Element => {
+    if (
+      getMultiTypeFromValue(prevStepData?.connectorId) !== MultiTypeInputType.FIXED ||
+      getMultiTypeFromValue(formik.values.region) !== MultiTypeInputType.FIXED ||
+      getMultiTypeFromValue(formik.values.bucketName) !== MultiTypeInputType.FIXED
+    ) {
+      return (
+        <div className={css.imagePathContainer}>
+          <FormInput.MultiTextInput
+            key={'filePath'}
+            label={getString('common.git.filePath')}
+            name="filePath"
+            placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+          />
+          {getMultiTypeFromValue(formik.values.filePath) === MultiTypeInputType.RUNTIME && (
+            <div className={css.configureOptions}>
+              <ConfigureOptions
+                style={{ alignSelf: 'center' }}
+                value={formik.values?.filePath as string}
+                type={getString('string')}
+                variableName="filePath"
+                showRequiredField={false}
+                showDefaultField={false}
+                showAdvanced={true}
+                onChange={value => {
+                  formik.setFieldValue('filePath', value)
+                }}
+                isReadonly={isReadonly}
+              />
+            </div>
+          )}
+        </div>
+      )
+    }
+    return (
+      <div className={css.imagePathContainer}>
+        <FormInput.MultiTypeInput
+          selectItems={filePaths}
+          disabled={isFilePathDisabled()}
+          label={getString('common.git.filePath')}
+          placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+          name="filePath"
+          useValue
+          multiTypeInputProps={{
+            expressions,
+            allowableTypes,
+            selectProps: {
+              noResults: (
+                <Text lineClamp={1} width={500} height={100} padding="small">
+                  {getRBACErrorMessage(filePathError as RBACError) || getString('pipeline.noFilePathsFound')}
+                </Text>
+              ),
+              itemRenderer: itemRenderer,
+              items: filePaths,
+              allowCreatingNewItems: true,
+              addClearBtn: true
+            },
+            onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+              if (
+                e?.target?.type !== 'text' ||
+                (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+              ) {
+                return
+              }
+              if (!fetchingFilePaths) {
+                fetchFilePaths(formik.values.region, formik.values.bucketName)
+              }
+            }
+          }}
+        />
+        {getMultiTypeFromValue(formik.values?.bucketName) === MultiTypeInputType.RUNTIME && (
+          <div className={css.configureOptions}>
+            <SelectConfigureOptions
+              options={filePaths}
+              style={{ alignSelf: 'center' }}
+              value={formik.values?.filePath as string}
+              type={getString('string')}
+              variableName="filePath"
+              showRequiredField={false}
+              showDefaultField={false}
+              showAdvanced={true}
+              onChange={value => {
+                formik.setFieldValue('filePath', value)
+              }}
+              isReadonly={isReadonly}
+            />
+          </div>
+        )}
+      </div>
+    )
+  }
+
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       {!isTemplateContext && (
@@ -386,10 +577,11 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                   selectItems={regions}
                   useValue
                   multiTypeInputProps={{
-                    onChange: () => {
-                      formik.values?.bucketName &&
-                        getMultiTypeFromValue(formik.values?.bucketName) === MultiTypeInputType.FIXED &&
-                        formik.setFieldValue('bucketName', '')
+                    onChange: selected => {
+                      if (formik.values.region !== (selected as unknown as any).value) {
+                        resetFieldValue(formik, 'bucketName')
+                        resetFieldValue(formik, 'filePath')
+                      }
                     },
                     selectProps: {
                       items: regions,
@@ -450,35 +642,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
               </div>
 
               {formik.values?.tagType === TagTypes.Value ? (
-                <div className={css.imagePathContainer}>
-                  <FormInput.MultiTextInput
-                    key={'filePath'}
-                    label={getString('common.git.filePath')}
-                    name="filePath"
-                    placeholder={getString('pipeline.manifestType.pathPlaceholder')}
-                    multiTextInputProps={{
-                      expressions,
-                      allowableTypes
-                    }}
-                  />
-                  {getMultiTypeFromValue(formik.values.filePath) === MultiTypeInputType.RUNTIME && (
-                    <div className={css.configureOptions}>
-                      <ConfigureOptions
-                        style={{ alignSelf: 'center' }}
-                        value={formik.values?.filePath as string}
-                        type={getString('string')}
-                        variableName="filePath"
-                        showRequiredField={false}
-                        showDefaultField={false}
-                        showAdvanced={true}
-                        onChange={value => {
-                          formik.setFieldValue('filePath', value)
-                        }}
-                        isReadonly={isReadonly}
-                      />
-                    </div>
-                  )}
-                </div>
+                renderS3FilePathField(formik)
               ) : (
                 <div className={css.imagePathContainer}>
                   <FormInput.MultiTextInput

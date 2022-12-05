@@ -226,6 +226,8 @@ function MultiEnvironmentsInputSetForm({
       (Array.isArray(get(deploymentStageTemplate, pathToEnvironments)) &&
         deploymentStage?.environmentGroup?.deployToAll !== false))
 
+  const areFiltersAdded = !isEmpty(get(deploymentStage, `${entityType}.filters`))
+
   return (
     <>
       {showEnvironmentsSelectionInputField && (
@@ -249,7 +251,8 @@ function MultiEnvironmentsInputSetForm({
             /** This takes care of hiding the field in case deployToAll is true
              * If the question arises why another condition for this scenario?
              * Because we need to repeat the same selection steps without the field*/
-            deployToAllEnvironments: deploymentStage?.environmentGroup?.deployToAll
+            deployToAllEnvironments: deploymentStage?.environmentGroup?.deployToAll,
+            areFiltersAdded
           }}
           onUpdate={data => {
             unstable_batchedUpdates(() => {
@@ -318,10 +321,11 @@ function MultiEnvironmentsInputSetForm({
                 showInfrastructuresSelectionInputField ||
                 showInfrastructuresInputSetForm
 
+              const areEnvironmentFiltersAdded = !isEmpty((environmentInDeploymentStage as any).filters)
+
               return (
                 deploymentType &&
-                environment.environmentRef &&
-                stageIdentifier && (
+                environment.environmentRef && (
                   <React.Fragment key={`${environment.environmentRef}_${index}`}>
                     {showEnvironmentPrefix && (
                       <Text
@@ -424,7 +428,8 @@ function MultiEnvironmentsInputSetForm({
                           customStepProps={{
                             environmentIdentifier: environment.environmentRef,
                             isMultipleCluster: true,
-                            deployToAllClusters: environmentInDeploymentStage?.deployToAll
+                            deployToAllClusters: environmentInDeploymentStage?.deployToAll,
+                            showEnvironmentsSelectionInputField
                           }}
                           onUpdate={data => {
                             const environmentAtIndex = get(formik.values, `${path}.${pathToEnvironments}[${index}]`)
@@ -452,7 +457,11 @@ function MultiEnvironmentsInputSetForm({
                             environmentIdentifier: environment.environmentRef,
                             isMultipleInfrastructure: true,
                             customDeploymentRef: deploymentStage?.customDeploymentRef,
-                            deployToAllInfrastructures: environmentInDeploymentStage?.deployToAll
+                            deployToAllInfrastructures: environmentInDeploymentStage?.deployToAll,
+                            showEnvironmentsSelectionInputField: deploymentStage?.environmentGroup?.deployToAll
+                              ? false
+                              : showEnvironmentsSelectionInputField,
+                            areEnvironmentFiltersAdded
                           }}
                           onUpdate={data => {
                             const environmentAtIndex = get(formik.values, `${path}.${pathToEnvironments}[${index}]`)

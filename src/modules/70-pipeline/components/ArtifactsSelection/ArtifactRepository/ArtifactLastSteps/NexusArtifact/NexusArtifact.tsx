@@ -38,7 +38,7 @@ import {
   checkIfQueryParamsisNotEmpty,
   getArtifactFormData,
   getConnectorIdValue,
-  shouldFetchTags
+  shouldFetchFieldOptions
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   ArtifactType,
@@ -46,12 +46,8 @@ import {
   Nexus2InitialValuesType,
   RepositoryPortOrServer
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import {
-  isSSHWinRMDeploymentType,
-  k8sRepositoryFormatTypes,
-  nexus2RepositoryFormatTypes,
-  RepositoryFormatTypes
-} from '@pipeline/utils/stageHelpers'
+import { RepositoryFormatTypes, getAzureNexusRepoOptions } from '@pipeline/utils/stageHelpers'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ArtifactIdentifierValidation, ModalViewFor, repositoryPortOrServer } from '../../../ArtifactHelper'
@@ -98,6 +94,7 @@ export function Nexus3Artifact({
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { AZURE_WEB_APP_NG_NEXUS_PACKAGE } = useFeatureFlags()
   const isTemplateContext = context === ModalViewFor.Template
   const commonParams = {
     accountIdentifier: accountId,
@@ -255,7 +252,7 @@ export function Nexus3Artifact({
           lastQueryData.groupId !== formikValues.spec.groupId ||
           lastQueryData.extension !== formikValues.spec.extension ||
           lastQueryData.classifier !== formikValues.spec.classifier ||
-          shouldFetchTags(prevStepData, [
+          shouldFetchFieldOptions(prevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.artifactId || '',
@@ -269,7 +266,7 @@ export function Nexus3Artifact({
           lastQueryData.artifactPath !== formikValues.spec.artifactPath ||
           lastQueryData.repositoryUrl !== formikValues.spec.repositoryUrl ||
           lastQueryData.repositoryPort !== formikValues.spec.repositoryPort ||
-          shouldFetchTags(prevStepData, [
+          shouldFetchFieldOptions(prevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.artifactPath || '',
@@ -280,7 +277,7 @@ export function Nexus3Artifact({
         ? lastQueryData.repositoryFormat !== formikValues.repositoryFormat ||
           lastQueryData.repository !== formikValues.repository ||
           lastQueryData.group !== formikValues.spec.group ||
-          shouldFetchTags(prevStepData, [
+          shouldFetchFieldOptions(prevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.group || ''
@@ -288,7 +285,7 @@ export function Nexus3Artifact({
         : lastQueryData.repositoryFormat !== formikValues.repositoryFormat ||
           lastQueryData.repository !== formikValues.repository ||
           lastQueryData.packageName !== formikValues.spec.packageName ||
-          shouldFetchTags(prevStepData, [
+          shouldFetchFieldOptions(prevStepData, [
             formikValues.repositoryFormat,
             formikValues.repository,
             formikValues.spec.packageName || ''
@@ -466,11 +463,7 @@ export function Nexus3Artifact({
                 <FormInput.Select
                   name="repositoryFormat"
                   label={getString('common.repositoryFormat')}
-                  items={
-                    isSSHWinRMDeploymentType(selectedDeploymentType)
-                      ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
-                      : k8sRepositoryFormatTypes
-                  }
+                  items={getAzureNexusRepoOptions(selectedDeploymentType, AZURE_WEB_APP_NG_NEXUS_PACKAGE)}
                   onChange={value => {
                     if (value.value === RepositoryFormatTypes.Maven) {
                       const optionalValues: { extension?: string; classifier?: string } = {}

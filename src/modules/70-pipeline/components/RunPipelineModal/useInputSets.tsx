@@ -128,7 +128,9 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
       pipelineBranch: branch,
       repoIdentifier,
       branch,
-      getDefaultFromOtherRepo: true
+      getDefaultFromOtherRepo: true,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     }
   })
 

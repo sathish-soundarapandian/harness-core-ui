@@ -24,7 +24,7 @@ import {
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { get, isEmpty } from 'lodash-es'
+import { get, isEmpty, remove } from 'lodash-es'
 import { Classes } from '@blueprintjs/core'
 import {
   OrganizationResponse,
@@ -32,7 +32,7 @@ import {
   useGetOrganizationList,
   useGetProjectAggregateDTOList
 } from 'services/cd-ng'
-import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import {
@@ -67,7 +67,8 @@ const queryParamOptions = {
 
 export function PipelineStageMinimalMode(props: any): React.ReactElement {
   const { getString } = useStrings()
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
+  const { accountId, orgIdentifier, projectIdentifier, pipelineIdentifier } =
+    useParams<PipelineType<PipelinePathProps>>()
   const { selectedOrg: currentOrg, selectedProject: currentProject } = useAppStore()
   const { repoIdentifier, branch, page, size } = useQueryParams<PartialPipelineListPageQueryParams>(queryParamOptions)
   const { getRBACErrorMessage } = useRBACError()
@@ -134,6 +135,11 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
         }
       )
       if (status === 'SUCCESS') {
+        if (data?.content)
+          // Parent pipeline should not be displayed in the child pipeline selection list.
+          remove(data.content, (pipelineObj: PMSPipelineSummaryResponse) => {
+            return pipelineObj?.identifier === pipelineIdentifier
+          })
         setPipelineListData(data)
       }
     } catch (e) {
@@ -198,7 +204,7 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
         }
       >
         <Container className={css.mainContainer}>
-          <Layout.Horizontal padding={{ top: 'large' }} spacing="medium">
+          <Layout.Horizontal padding={{ top: 'xsmall' }} spacing="medium" flex={{ alignItems: 'flex-end' }}>
             <div className={css.searchBox}>
               <TextInput
                 wrapperClassName={css.search}
@@ -210,9 +216,15 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
               />
             </div>
             <div className={css.selectInput}>
+              <Text margin={{ bottom: 'small' }} font={{ variation: FontVariation.H6 }} color={Color.GREY_800}>
+                {getString('orgLabel')}
+              </Text>
               <Select items={organizations} onChange={handleOrgChange} value={selectedOrg} />
             </div>
             <div className={css.selectInput}>
+              <Text margin={{ bottom: 'small' }} font={{ variation: FontVariation.H6 }} color={Color.GREY_800}>
+                {getString('projectLabel')}
+              </Text>
               <Select
                 items={projects}
                 onQueryChange={setProjectsQuery}

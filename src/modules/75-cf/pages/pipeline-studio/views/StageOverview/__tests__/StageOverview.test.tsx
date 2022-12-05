@@ -58,8 +58,11 @@ jest.mock('services/pipeline-ng', () => ({
   useCreateVariablesV2: jest.fn(() => ({ mutate: jest.fn(() => Promise.resolve({ data: { yaml: '' } })) })),
   useGetSchemaYaml: jest.fn(() => ({})),
   useGetStepYamlSchema: jest.fn(() => ({})),
-  useGetInputsetYaml: jest.fn(() => ({ data: null })),
-  useValidateTemplateInputs: jest.fn(() => ({ data: null }))
+  useGetInputsetYaml: jest.fn(() => ({ data: null }))
+}))
+
+jest.mock('services/pipeline-rq', () => ({
+  useValidateTemplateInputsQuery: jest.fn(() => ({ data: null }))
 }))
 
 jest.mock('@common/hooks', () => ({

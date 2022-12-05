@@ -22,7 +22,7 @@ import {
   getArtifactFormData,
   getConnectorIdValue,
   getFinalArtifactObj,
-  shouldFetchTags
+  shouldFetchFieldOptions
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
@@ -117,7 +117,7 @@ export function DockerRegistryArtifact({
 
   const canFetchTags = useCallback(
     (imagePath: string): boolean => {
-      return !!(lastImagePath !== imagePath && shouldFetchTags(prevStepData, [imagePath]))
+      return !!(lastImagePath !== imagePath && shouldFetchFieldOptions(prevStepData, [imagePath]))
     },
     [lastImagePath, prevStepData]
   )

@@ -332,6 +332,7 @@ exports[`FlagConfigurationStepWidget it should render the form 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main PageSpinner--spinner StyledProps--flex StyledProps--flex-align-center-center"
+              data-testid="page-spinner"
             >
               <div
                 class="Layout--vertical Layout--layout-spacing-medium StyledProps--main PageSpinner--content"

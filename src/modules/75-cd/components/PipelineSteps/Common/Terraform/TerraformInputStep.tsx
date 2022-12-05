@@ -134,7 +134,13 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
 
       {getMultiTypeFromValue(get(inputSetData?.template, 'spec.configuration.spec.backendConfig.spec.content')) ===
         MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
+        <div
+          className={cx(stepCss.formGroup, stepCss.md)}
+          // needed to prevent the run pipeline to get triggered on pressing enter within TFMonaco editor
+          onKeyDown={e => {
+            e.stopPropagation()
+          }}
+        >
           <MultiTypeFieldSelector
             name={`${path}.spec.configuration.backendConfig.spec.content`}
             label={getString('cd.backEndConfig')}

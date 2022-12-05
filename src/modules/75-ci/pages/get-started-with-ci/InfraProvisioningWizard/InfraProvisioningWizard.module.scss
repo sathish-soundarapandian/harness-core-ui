@@ -228,3 +228,20 @@
   height: 32px !important;
   padding-bottom: var(--spacing-huge);
 }
+
+.header {
+  display: flex;
+  align-items: center;
+  height: 70px;
+  border-bottom: 1px var(--grey-100) solid;
+  padding-left: var(--spacing-large);
+  font-weight: bolder;
+  font-size: var(--font-size-normal);
+  color: var(--black);
+  background-color: var(--white);
+}
+
+.startConfigHeader {
+  white-space: nowrap;
+  padding-bottom: var(--spacing-xsmall);
+}

@@ -64,8 +64,11 @@ jest.mock('services/pipeline-ng', () => ({
   putPipelinePromise: jest.fn(),
   createPipelinePromise: jest.fn(),
   useGetInputsetYaml: () => jest.fn(),
-  useGetTemplateFromPipeline: jest.fn(),
-  useValidateTemplateInputs: jest.fn(() => ({ data: null }))
+  useGetTemplateFromPipeline: jest.fn()
+}))
+
+jest.mock('services/pipeline-rq', () => ({
+  useValidateTemplateInputsQuery: jest.fn(() => ({ data: null }))
 }))
 
 jest.mock('@common/hooks', () => ({
@@ -417,13 +420,20 @@ describe('Existing pipeline', () => {
   test('modal title, button text when editing a pipeline', async () => {
     const props = getProps()
     const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false })
-    render(
+    const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={contextValue}>
           <PipelineCanvas {...props} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
+
+    //check tags and description icon in pipeline studio
+    const tagsIcon = container.querySelector('[data-icon="main-tags"]')
+    expect(tagsIcon).toBeInTheDocument()
+    const descriptionIcon = container.querySelector('[data-icon="description"]')
+    expect(descriptionIcon).toBeInTheDocument()
+
     screen.getByLabelText('editPipeline').click()
     await waitFor(() => {
       expect(screen.getByText('editPipeline')).toBeInTheDocument()

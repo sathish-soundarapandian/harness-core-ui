@@ -113,10 +113,26 @@
     width: 100%;
     flex-shrink: unset;
     min-height: 360px;
+    justify-content: center;
 
     .emptyState {
       align-items: center;
       margin: auto;
+    }
+  }
+
+  .exitingReportWarning {
+    background-color: var(--yellow-50);
+    padding: var(--spacing-medium) var(--spacing-4);
+    margin-top: var(--spacing-medium);
+    margin-bottom: var(--spacing-large);
+
+    .warningIcon {
+      align-self: center;
+
+      > svg {
+        stroke: var(--yellow-900);
+      }
     }
   }
 

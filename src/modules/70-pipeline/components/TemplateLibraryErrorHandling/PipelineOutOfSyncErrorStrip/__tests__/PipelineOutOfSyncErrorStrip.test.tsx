@@ -5,7 +5,7 @@ import {
   PipelineOutOfSyncErrorStrip,
   PipelineOutOfSyncErrorStripProps
 } from '@pipeline/components/TemplateLibraryErrorHandling/PipelineOutOfSyncErrorStrip/PipelineOutOfSyncErrorStrip'
-import * as pipelineService from 'services/pipeline-ng'
+import { useValidateTemplateInputsQuery } from 'services/pipeline-rq'
 import * as OutOfSyncErrorStrip from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 
 const errorNodeSummaryDummmyResponse = {
@@ -19,16 +19,17 @@ const errorNodeSummaryDummmyResponse = {
   childrenErrorNodes: []
 }
 
-const useValidateTemplateInputsMock = jest.spyOn(pipelineService, 'useValidateTemplateInputs').mockReturnValue({
-  data: {
+jest.mock('services/pipeline-rq', () => ({
+  useValidateTemplateInputsQuery: jest.fn(() => ({
     data: {
-      type: 'TemplateInputsErrorMetadataV2',
-      validYaml: false,
-      errorNodeSummary: errorNodeSummaryDummmyResponse
+      data: {
+        type: 'TemplateInputsErrorMetadataV2',
+        validYaml: false,
+        errorNodeSummary: errorNodeSummaryDummmyResponse
+      }
     }
-  },
-  loading: false
-} as any)
+  }))
+}))
 
 const OutOfSyncErrorStripMock = jest.spyOn(OutOfSyncErrorStrip, 'OutOfSyncErrorStrip')
 
@@ -57,7 +58,7 @@ describe('<PipelineOutOfSyncErrorStrip /> tests', () => {
   })
 
   test('should not call OutOfSyncErrorStrip when no error', () => {
-    useValidateTemplateInputsMock.mockReturnValue({ data: null } as any)
+    ;(useValidateTemplateInputsQuery as jest.Mock).mockReturnValue({ data: null } as any)
     render(
       <TestWrapper>
         <PipelineOutOfSyncErrorStrip {...baseProps} />

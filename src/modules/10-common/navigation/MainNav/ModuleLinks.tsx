@@ -175,21 +175,21 @@ export const STONavItem = () => {
   )
 }
 
-export const SCMNavItem = () => {
+export const CODENavItem = () => {
   const params = useParams<ProjectPathProps>()
 
   return (
     <li className={css.navItem}>
-      <Link {...commonLinkProps} to={routes.toSCM(params)}>
+      <Link {...commonLinkProps} to={routes.toCODE(params)}>
         <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-          <Icon name="gitops-green" size={30} />
+          <Icon name="code" size={30} />
           <Text
             font={{ weight: 'semi-bold', align: 'center' }}
             padding={{ bottom: 'xsmall' }}
             color={Color.WHITE}
             className={css.text}
           >
-            <String stringID="common.purpose.scm.name" />
+            <String stringID="common.purpose.code.name" />
           </Text>
         </Layout.Vertical>
       </Link>

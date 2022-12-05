@@ -32,7 +32,7 @@ export default function ExecutionInputsView(props: ExecutionInputsViewInterface)
 
   const { pipelineExecutionDetail } = useExecutionContext()
 
-  const { data, loading } = useGetInputsetYamlV2({
+  const { data, loading, error } = useGetInputsetYamlV2({
     planExecutionId: executionIdentifier,
     queryParams: {
       orgIdentifier,
@@ -89,6 +89,7 @@ export default function ExecutionInputsView(props: ExecutionInputsViewInterface)
         connectorRef={pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef}
         mockData={props.mockData}
         executionInputSetTemplateYaml={inputSetTemplateYaml}
+        executionInputSetTemplateYamlError={error}
         storeType={pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType}
         storeMetadata={storeMetadata}
       />

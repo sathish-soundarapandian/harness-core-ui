@@ -348,3 +348,13 @@
   right: var(--spacing-small);
   top: 12px;
 }
+
+.customButtons {
+  display: flex;
+  justify-content: space-between;
+  width: 70%;
+}
+
+.paddingTop8 {
+  padding-top: var(--spacing-xxlarge) !important;
+}

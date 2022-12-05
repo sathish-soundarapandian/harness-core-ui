@@ -43,8 +43,11 @@ jest.mock('services/pipeline-ng', () => ({
     mutate: jest.fn(() => Promise.resolve({ data: { yaml: '' } })),
     loading: false,
     cancel: jest.fn()
-  })),
-  useValidateTemplateInputs: jest.fn(() => ({ data: null }))
+  }))
+}))
+
+jest.mock('services/pipeline-rq', () => ({
+  useValidateTemplateInputsQuery: jest.fn(() => ({ data: null }))
 }))
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
@@ -61,13 +64,13 @@ jest.mock('services/cd-ng', () => ({
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
   }),
-  getListOfBranchesWithStatusPromise: jest.fn().mockImplementation(() => Promise.resolve(branchStatusMock))
+  getListOfBranchesWithStatusPromise: jest.fn().mockImplementation(() => Promise.resolve(branchStatusMock)),
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: gitSyncListResponse, refetch: getListGitSync }
+  })
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
-  useListGitSyncQuery: jest.fn().mockImplementation(() => {
-    return { data: gitSyncListResponse, refetch: getListGitSync }
-  }),
   useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })

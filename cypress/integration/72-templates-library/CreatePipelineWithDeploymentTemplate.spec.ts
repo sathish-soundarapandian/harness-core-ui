@@ -5,7 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { gitSyncEnabledCall, pipelinesRoute, featureFlagsCall } from '../../support/70-pipeline/constants'
+import {
+  gitSyncEnabledCall,
+  pipelinesRoute,
+  featureFlagsCall,
+  cdFailureStrategiesYaml,
+  pipelineVariablesCall
+} from '../../support/70-pipeline/constants'
 import {
   useTemplateCall,
   selectedDeploymentTemplateDetailsCall,
@@ -24,7 +30,7 @@ import {
   recentDeploymentTemplatesUrl
 } from '../../support/72-templates-library/constants'
 
-describe.skip('Pipeline Template creation and assertion', () => {
+describe('Pipeline Template creation and assertion', { scrollBehavior: false }, () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -56,7 +62,11 @@ describe.skip('Pipeline Template creation and assertion', () => {
         timeout: 30000
       })
     })
+    cy.intercept('GET', cdFailureStrategiesYaml, { fixture: 'pipeline/api/pipelines/failureStrategiesYaml' }).as(
+      'cdFailureStrategiesYaml'
+    )
   })
+
   it('Pipeline With Deployment Template', () => {
     cy.intercept('POST', recentDeploymentTemplatesUrl, {
       fixture: '/ng/api/deploymentTemplate/recentDeploymentTemplates'
@@ -73,7 +83,9 @@ describe.skip('Pipeline Template creation and assertion', () => {
 
     cy.visitPageAssertion('[class*="PipelineListPage-module_pageBody"]')
 
-    cy.contains('span', 'Create a Pipeline').eq(0).should('be.visible').click()
+    cy.get('div[class*="PageSubHeader--container"]').within(() => {
+      cy.contains('span', 'Create a Pipeline').should('be.visible').click()
+    })
     cy.contains('span', 'Start with Template').should('be.visible')
     cy.clickSubmit()
     cy.contains('span', 'Pipeline Name is a required field').should('be.visible')
@@ -113,13 +125,25 @@ describe.skip('Pipeline Template creation and assertion', () => {
     cy.contains('div', 'Pipeline Studio').should('be.visible')
     cy.contains('a', 'Pipeline Studio').should('be.visible')
     cy.contains('p', pipelineMadeFromTemplate).should('be.visible')
-    cy.contains('div', 'Unsaved changes').should('be.visible')
 
-    cy.get('input[name="service"]').click()
-    cy.contains('p', 'testService1').should('be.visible').click()
-    cy.wait(1000)
+    cy.get('div[class="bp3-spinner"]', { timeout: 6000 }).should('not.exist')
 
-    cy.contains('span', 'Environment').click()
+    cy.get('input[name="service"]', { timeout: 10000 }).should('be.visible').click()
+    cy.contains('p', 'testService1').should('be.visible').click() // selecting service from service dropdown
+    cy.get('input[value="testService1"]').should('be.visible') // asserting service name inside input tag of service
+    cy.contains('p', 'testService1').should('be.visible') // asserting service name in the modal created after service selection
+    cy.intercept(pipelineVariablesCall).as('pipelineVariables')
+    cy.wait('@pipelineVariables', { timeout: 6000 })
+    cy.get('div[role="tablist"]').within(() => {
+      cy.contains('span', 'Service', { timeout: 4000 }).should('be.visible').and('have.attr', 'data-completed', 'true')
+    })
+    cy.contains('Continue').click()
+    cy.get('input[name="environment.environmentRef"]', { timeout: 10000 }).should(
+      'not.have.attr',
+      'placeholder',
+      'Loading...'
+    )
+
     cy.get('input[name="environment.environmentRef"]').click()
     cy.contains('p', 'New testEnv').should('be.visible').click()
     cy.wait(500)
@@ -130,7 +154,12 @@ describe.skip('Pipeline Template creation and assertion', () => {
     cy.contains('span', 'Execution').click()
     cy.contains('p', 'Fetch Instances').should('be.visible')
 
-    cy.contains('span', 'Save').click()
+    cy.contains('div', 'Unsaved changes')
+      .should('be.visible')
+      .parent()
+      .within(() => {
+        cy.findByText('Save').click({ force: true })
+      })
     cy.contains(
       'span',
       'Invalid yaml: $.pipeline.stages[0].stage.spec.execution: is missing but it is required'

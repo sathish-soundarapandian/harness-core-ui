@@ -37,7 +37,7 @@
   display: grid;
   grid-column-gap: var(--spacing-small);
   grid-auto-flow: column;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(5, minmax(150px, 1fr));
 }
 
 .center {

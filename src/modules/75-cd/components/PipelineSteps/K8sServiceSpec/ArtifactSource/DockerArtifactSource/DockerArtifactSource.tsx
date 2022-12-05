@@ -31,7 +31,8 @@ import {
   isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource,
-  isExecutionTimeFieldDisabled
+  isExecutionTimeFieldDisabled,
+  getValidInitialValuePath
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
@@ -62,7 +63,8 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     fromTrigger,
     artifact,
     isSidecar,
-    artifactPath
+    artifactPath,
+    artifacts
   } = props
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
@@ -71,11 +73,14 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', imagePath: '' })
 
   const imagePathValue = getImagePath(
-    artifact?.spec?.imagePath,
+    // When the runtime value is provided some fixed value in templateusage view, that field becomes part of the pipeline yaml, and the fixed data comes from the pipelines api for service v2.
+    // In this scenario, we take the default value from the allvalues(artifacts) field instead of artifact path
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.imagePath`, ''), artifact?.spec?.imagePath),
     get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
   )
+
   const connectorRefValue = getDefaultQueryParam(
-    artifact?.spec?.connectorRef,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
 

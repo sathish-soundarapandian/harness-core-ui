@@ -71,8 +71,8 @@ export const getPipelineContextMockData = (
     pipeline: {
       name: 'Pipeline',
       identifier: 'Pipeline',
-      description: null,
-      tags: null,
+      description: 'test',
+      tags: { tags1: '' },
       stages: [
         {
           stage: {
@@ -88,8 +88,8 @@ export const getPipelineContextMockData = (
     originalPipeline: {
       name: 'Pipeline',
       identifier: 'Pipeline',
-      description: null,
-      tags: null,
+      description: 'test',
+      tags: { tags1: '' },
       stages: [
         {
           stage: {

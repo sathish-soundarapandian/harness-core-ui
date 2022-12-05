@@ -25,10 +25,10 @@ describe('Services', () => {
   test('should render Services', () => {
     const { container } = render(
       <TestWrapper
-        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+        path="account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy', module: 'cd' }}
       >
-        <Services />
+        <Services showServicesDashboard />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

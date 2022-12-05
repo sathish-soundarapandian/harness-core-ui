@@ -182,6 +182,7 @@ function FormContent({
       refetchProjectMetadata({
         queryParams: {
           ...commonParams,
+          expand: 'projects.issuetypes',
           connectorRef: connectorRefFixedValue.toString(),
           projectKey: projectKeyFixedValue.toString()
         }
@@ -204,6 +205,7 @@ function FormContent({
       refetchIssueMetadata({
         queryParams: {
           ...commonParams,
+          expand: 'projects.issuetypes.fields',
           connectorRef: connectorRefFixedValue.toString(),
           projectKey: projectKeyFixedValue.toString(),
           issueType: issueTypeFixedValue.toString()
@@ -683,6 +685,7 @@ function JiraCreateStepMode(props: JiraCreateStepModeProps, formikRef: StepFormi
     lazy: true,
     queryParams: {
       ...commonParams,
+      expand: '',
       connectorRef: '',
       projectKey: ''
     }
@@ -696,6 +699,7 @@ function JiraCreateStepMode(props: JiraCreateStepModeProps, formikRef: StepFormi
     lazy: true,
     queryParams: {
       ...commonParams,
+      expand: '',
       connectorRef: '',
       projectKey: '',
       issueType: ''

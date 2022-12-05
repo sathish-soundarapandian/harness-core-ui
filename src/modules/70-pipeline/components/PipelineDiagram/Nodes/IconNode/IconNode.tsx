@@ -21,7 +21,7 @@ import css from './IconNode.module.scss'
 interface IconNodeProps extends BaseReactComponentProps {
   isInComplete?: boolean
   graphType?: PipelineGraphType
-  matrixNodeName?: boolean
+  matrixNodeName?: string
 }
 export function IconNode(props: IconNodeProps): React.ReactElement {
   const allowAdd = props.allowAdd ?? false
@@ -177,7 +177,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
             tooltipProps={{ popoverClassName: matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
             {defaultTo(matrixNodeName, props?.data?.matrixNodeName) ? (
-              <MatrixNodeNameLabelWrapper matrixLabel={props?.name as string} />
+              <MatrixNodeNameLabelWrapper matrixNodeName={matrixNodeName} nodeName={props?.name as unknown as string} />
             ) : (
               props.name
             )}

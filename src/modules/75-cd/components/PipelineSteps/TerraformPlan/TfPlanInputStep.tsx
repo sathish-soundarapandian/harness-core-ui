@@ -120,7 +120,13 @@ export default function TfPlanInputStep(
         getMultiTypeFromValue(
           (inputSetData?.template?.spec?.configuration?.backendConfig?.spec as TerraformBackendConfigSpec)?.content
         ) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <div
+            className={cx(stepCss.formGroup, stepCss.md)}
+            // needed to prevent the run pipeline to get triggered on pressing enter within TFMonaco editor
+            onKeyDown={e => {
+              e.stopPropagation()
+            }}
+          >
             <MultiTypeFieldSelector
               name={`${
                 isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`

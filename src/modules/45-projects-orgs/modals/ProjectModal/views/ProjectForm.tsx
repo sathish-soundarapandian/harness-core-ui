@@ -147,6 +147,7 @@ const ProjectForm: React.FC<StepProps<Project> & ProjectModalData> = props => {
                         ]
                       }}
                       isPreview={true}
+                      avatarClassName={css.avatarGroupAdd}
                     />
                   ) : (
                     <Layout.Vertical width="100%" padding="huge" flex={{ align: 'center-center' }}>

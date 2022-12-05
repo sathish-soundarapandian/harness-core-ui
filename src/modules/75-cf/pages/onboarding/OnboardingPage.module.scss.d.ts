@@ -7,6 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly leftSide: string
   readonly mainContentContainer: string
+  readonly onboardingImg: string
 }
 export default styles

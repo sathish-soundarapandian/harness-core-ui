@@ -57,7 +57,7 @@ export default defineConfig({
       plugins: [
         reactQueryPlugin({
           customFetcher: 'services/fetcher',
-          allowedOperationIds: ['getPipelineSummary']
+          allowedOperationIds: ['getPipelineSummary', 'validateTemplateInputs']
         })
       ]
     }

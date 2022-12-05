@@ -19,7 +19,7 @@ import {
 } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Editions } from '@common/constants/SubscriptionTypes'
-import { getSavedRefererURL, isOnPrem } from '@common/utils/utils'
+import { getGaClientID, getSavedRefererURL, isOnPrem } from '@common/utils/utils'
 import bgImageURL from '../ff.svg'
 import CFTrialPanel from './CFTrialPanel'
 import css from './CFTrialPage.module.scss'
@@ -29,6 +29,7 @@ const CFTrialHomePage: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const isFreeEnabled = !isOnPrem()
   const refererURL = getSavedRefererURL()
+  const gaClientID = getGaClientID()
 
   const startTrialRequestBody: StartTrialDTORequestBody = {
     moduleType: 'CF',
@@ -41,11 +42,12 @@ const CFTrialHomePage: React.FC = () => {
       ...(refererURL ? { referer: refererURL } : {})
     }
   })
-
   const { mutate: startFreePlan, loading: startingFree } = useStartFreeLicense({
     queryParams: {
       accountIdentifier: accountId,
-      moduleType: 'CF' as StartFreeLicenseQueryParams['moduleType']
+      moduleType: 'CF' as StartFreeLicenseQueryParams['moduleType'],
+      ...(refererURL ? { referer: refererURL } : {}),
+      ...(gaClientID ? { gaClientId: gaClientID } : {})
     },
     requestOptions: {
       headers: {

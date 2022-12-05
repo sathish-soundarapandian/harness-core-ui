@@ -25,6 +25,7 @@ import cx from 'classnames'
 import { Link, useHistory } from 'react-router-dom'
 import { isEmpty, defaultTo, keyBy, omitBy } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
+import type { GetDataError } from 'restful-react'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   PipelineConfig,
@@ -37,7 +38,8 @@ import {
   useRunStagesWithRuntimeInputYaml,
   useRerunStagesWithRuntimeInputYaml,
   useGetStagesExecutionList,
-  useValidateTemplateInputs
+  useValidateTemplateInputs,
+  Failure
 } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -111,6 +113,7 @@ export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & G
   executionView?: boolean
   mockData?: ResponseJsonNode
   executionInputSetTemplateYaml?: string
+  executionInputSetTemplateYamlError?: GetDataError<Failure | Error> | null
   stagesExecuted?: string[]
   executionIdentifier?: string
   source: ExecutionPathProps['source']
@@ -143,6 +146,7 @@ function RunPipelineFormBasic({
   connectorRef,
   storeType,
   executionInputSetTemplateYaml = '',
+  executionInputSetTemplateYamlError,
   stagesExecuted,
   executionIdentifier
 }: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
@@ -818,6 +822,7 @@ function RunPipelineFormBasic({
                       pipelineIdentifier={pipelineIdentifier}
                       executionIdentifier={pipelineExecutionId}
                       template={defaultTo(inputSetTemplate?.pipeline, {} as PipelineInfoConfig)}
+                      templateError={executionInputSetTemplateYamlError}
                       pipeline={pipeline}
                       currentPipeline={{ pipeline: values }}
                       getTemplateError={inputSetsError}

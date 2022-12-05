@@ -17,7 +17,7 @@ import css from '@filestore/components/FileView/FileView.module.scss'
 
 export default function FileView(): React.ReactElement {
   const { getString } = useStrings()
-  const { activeTab, setActiveTab, isModalView, currentNode } = useContext(FileStoreContext)
+  const { activeTab, setActiveTab, isModalView, currentNode, isCachedNode } = useContext(FileStoreContext)
   const [error, setError] = React.useState('')
 
   React.useEffect(() => {
@@ -27,7 +27,7 @@ export default function FileView(): React.ReactElement {
   return (
     <Container
       background={Color.WHITE}
-      style={{ width: '100%', height: isModalView ? 590 : 'calc(100vh - 120px)' }}
+      style={{ width: '100%', height: isModalView ? 530 : 'calc(100vh - 120px)' }}
       className={css.mainFileView}
     >
       {error ? (
@@ -52,7 +52,7 @@ export default function FileView(): React.ReactElement {
             {
               id: FILE_VIEW_TAB.REFERENCED_BY,
               title: getString('referencedBy'),
-              panel: <ReferencedBy />
+              panel: !isCachedNode(currentNode.identifier) ? <ReferencedBy /> : <div />
             },
             { id: FILE_VIEW_TAB.ACTIVITY_LOG, title: getString('activityLog'), panel: <div /> }
           ]}
@@ -77,7 +77,7 @@ export default function FileView(): React.ReactElement {
             {
               id: FILE_VIEW_TAB.REFERENCED_BY,
               title: getString('referencedBy'),
-              panel: <ReferencedBy />
+              panel: !isCachedNode(currentNode.identifier) ? <ReferencedBy /> : <div />
             }
           ]}
         />

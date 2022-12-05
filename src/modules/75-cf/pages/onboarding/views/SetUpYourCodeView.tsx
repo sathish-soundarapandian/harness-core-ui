@@ -6,24 +6,21 @@
  */
 
 import React, { useState } from 'react'
-import { Container, Layout, Text, RadioButtonGroup, Heading } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import { Container, Layout, RadioButtonGroup, Heading } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { Divider } from '@blueprintjs/core'
-import { String, useStrings } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import type { ApiKey } from 'services/cf'
 import type { PlatformEntry } from '@cf/components/LanguageSelection/LanguageSelection'
-import { IdentifierText } from '@cf/components/IdentifierText/IdentifierText'
 import { MarkdownViewer } from '@common/components/MarkdownViewer/MarkdownViewer'
 import type { StringKeys } from 'framework/strings'
-import type { EnvironmentResponseDTO } from 'services/cd-ng'
 export interface SetUpYourCodeViewProps {
   language: PlatformEntry
   apiKey: ApiKey
   flagName: string
-  environment: EnvironmentResponseDTO
 }
 
-export const SetUpYourCodeView: React.FC<SetUpYourCodeViewProps> = ({ language, apiKey, flagName, environment }) => {
+export const SetUpYourCodeView: React.FC<SetUpYourCodeViewProps> = ({ language, apiKey, flagName }) => {
   const { getString } = useStrings()
   const [currentReadme, setCurrentReadme] = useState<StringKeys>(language.readmeStringId)
   const [xamarinOption, setXamarinOption] = useState<StringKeys | undefined>(
@@ -31,36 +28,8 @@ export const SetUpYourCodeView: React.FC<SetUpYourCodeViewProps> = ({ language, 
   )
 
   return (
-    <Container margin={{ top: 'large' }}>
-      <Layout.Vertical margin={{ top: 'medium', bottom: 'medium' }} spacing="medium">
-        <Heading level={4} font={{ variation: FontVariation.H4 }} margin={{ bottom: 'large' }}>
-          {getString('cf.onboarding.selectEnvAndSdk')}
-        </Heading>
-
-        <Layout.Horizontal spacing="xsmall">
-          <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
-            {getString('cf.onboarding.youveSelected')}
-          </Text>
-          {language?.icon && <img src={language.icon} width="20px" height="20px" />}
-          <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
-            <String
-              useRichText
-              stringID="cf.onboarding.selectedLanguageAndEnv"
-              vars={{ language: language.name, env: environment.name }}
-              color={Color.GREY_600}
-              tagName="div"
-            />
-          </Text>
-        </Layout.Horizontal>
-        <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
-          <String
-            useRichText
-            stringID="cf.onboarding.keyGeneratedBelow"
-            vars={{ langType: language.type }}
-            color={Color.GREY_600}
-          />
-        </Text>
-        <IdentifierText identifier={apiKey.apiKey} allowCopy lineClamp={1} hideLabel />
+    <Container margin={{ top: 'small' }}>
+      <Layout.Vertical margin={{ top: 'small', bottom: 'small' }} spacing="medium">
         <Divider />
       </Layout.Vertical>
       <Layout.Vertical spacing="xsmall">

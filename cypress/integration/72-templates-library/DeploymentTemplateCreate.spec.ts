@@ -22,6 +22,7 @@ describe('Deployment Template creation and assertion', () => {
     '/template/api/templates/templateInputs/testStepTemplate_Cypress?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&versionLabel=212&getDefaultFromOtherRepo=true'
   const connectorsListCall =
     '/ng/api/connectors/listV2?accountIdentifier=accountId&searchTerm=&projectIdentifier=project1&orgIdentifier=default&pageIndex=0&pageSize=10'
+  const accountLicense = 'ng/api/licenses/account?routingId=accountId&accountIdentifier=accountId'
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -29,6 +30,7 @@ describe('Deployment Template creation and assertion', () => {
       return false
     })
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
+    cy.intercept('GET', accountLicense, { fixture: 'pipeline/api/approvals/accountLicense' })
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
       cy.intercept('GET', featureFlagsCall, {
         ...featureFlagsData,
@@ -66,7 +68,6 @@ describe('Deployment Template creation and assertion', () => {
     )
     cy.intercept('POST', connectorsListCall, { fixture: 'ng/api/connectors' })
     cy.visitPageAssertion('[class*=TemplatesPage-module_templatesPageBody]')
-
     cy.contains('span', 'New Template').click()
     cy.get('.bp3-menu').within(() => {
       cy.contains('p', 'Deployment').click({ force: true })
@@ -92,7 +93,7 @@ describe('Deployment Template creation and assertion', () => {
     cy.get('input[name="name"]').clear().type('var1')
     cy.get('button[data-testid="addVariableSave"]').click()
 
-    cy.get('span[data-icon="fixed-input"]').click()
+    cy.get('span[data-icon="fixed-input"]').eq(0).click()
     cy.contains('span', 'Fixed value').should('be.visible')
     cy.contains('span', 'Runtime input').should('be.visible')
     cy.contains('span', 'Runtime input').click()

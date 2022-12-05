@@ -6,7 +6,7 @@
  */
 
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { ManifestDataType, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 
 export const updateStageArgEcsTaskDefinition = {
   name: 'Stage 1',
@@ -683,7 +683,7 @@ export const mockBuildList = {
   }
 }
 
-export const initialManifestRuntimeValues = {
+export const initialManifestRuntimeValuesGitStore = {
   manifests: [
     {
       manifest: {
@@ -691,7 +691,7 @@ export const initialManifestRuntimeValues = {
         type: ManifestDataType.EcsTaskDefinition,
         spec: {
           store: {
-            type: 'Git',
+            type: ManifestStoreMap.Git,
             spec: {
               connectorRef: '',
               branch: '',
@@ -707,7 +707,7 @@ export const initialManifestRuntimeValues = {
         type: ManifestDataType.EcsServiceDefinition,
         spec: {
           store: {
-            type: 'Git',
+            type: ManifestStoreMap.Git,
             spec: {
               connectorRef: '',
               branch: '',
@@ -723,7 +723,7 @@ export const initialManifestRuntimeValues = {
         type: ManifestDataType.EcsScalingPolicyDefinition,
         spec: {
           store: {
-            type: 'Git',
+            type: ManifestStoreMap.Git,
             spec: {
               connectorRef: '',
               branch: '',
@@ -739,7 +739,7 @@ export const initialManifestRuntimeValues = {
         type: ManifestDataType.EcsScalableTargetDefinition,
         spec: {
           store: {
-            type: 'Git',
+            type: ManifestStoreMap.Git,
             spec: {
               connectorRef: '',
               branch: '',
@@ -752,7 +752,7 @@ export const initialManifestRuntimeValues = {
   ]
 }
 
-export const ecsManifestTemplate = {
+export const ecsManifestTemplateGitStore = {
   manifests: [
     {
       manifest: {
@@ -812,6 +812,144 @@ export const ecsManifestTemplate = {
             spec: {
               connectorRef: RUNTIME_INPUT_VALUE,
               branch: RUNTIME_INPUT_VALUE,
+              paths: RUNTIME_INPUT_VALUE
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+
+export const initialManifestRuntimeValuesS3Store = {
+  manifests: [
+    {
+      manifest: {
+        identifier: 'TaskDefinition_Manifest',
+        type: ManifestDataType.EcsTaskDefinition,
+        spec: {
+          store: {
+            type: ManifestStoreMap.S3,
+            spec: {
+              region: '',
+              bucketName: '',
+              paths: ''
+            }
+          }
+        }
+      }
+    },
+    {
+      manifest: {
+        identifier: 'ServiceDefinition_Manifest',
+        type: ManifestDataType.EcsServiceDefinition,
+        spec: {
+          store: {
+            type: ManifestStoreMap.S3,
+            spec: {
+              region: '',
+              bucketName: '',
+              paths: ''
+            }
+          }
+        }
+      }
+    },
+    {
+      manifest: {
+        identifier: 'ScallingPolicy_Manifest',
+        type: ManifestDataType.EcsScalingPolicyDefinition,
+        spec: {
+          store: {
+            type: ManifestStoreMap.S3,
+            spec: {
+              region: '',
+              bucketName: '',
+              paths: ''
+            }
+          }
+        }
+      }
+    },
+    {
+      manifest: {
+        identifier: 'ScalableTarget_Manifest',
+        type: ManifestDataType.EcsScalableTargetDefinition,
+        spec: {
+          store: {
+            type: ManifestStoreMap.S3,
+            spec: {
+              region: '',
+              bucketName: '',
+              paths: ''
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+
+export const ecsManifestTemplateS3Store = {
+  manifests: [
+    {
+      manifest: {
+        identifier: 'TaskDefinition_Manifest',
+        type: ManifestDataType.EcsTaskDefinition,
+        spec: {
+          store: {
+            type: ManifestStoreMap.S3,
+            spec: {
+              region: RUNTIME_INPUT_VALUE,
+              bucketName: RUNTIME_INPUT_VALUE,
+              paths: RUNTIME_INPUT_VALUE
+            }
+          }
+        }
+      }
+    },
+    {
+      manifest: {
+        identifier: 'ServiceDefinition_Manifest',
+        type: ManifestDataType.EcsServiceDefinition,
+        spec: {
+          store: {
+            type: ManifestStoreMap.S3,
+            spec: {
+              region: RUNTIME_INPUT_VALUE,
+              bucketName: RUNTIME_INPUT_VALUE,
+              paths: RUNTIME_INPUT_VALUE
+            }
+          }
+        }
+      }
+    },
+    {
+      manifest: {
+        identifier: 'ScallingPolicy_Manifest',
+        type: ManifestDataType.EcsScalingPolicyDefinition,
+        spec: {
+          store: {
+            type: ManifestStoreMap.S3,
+            spec: {
+              region: RUNTIME_INPUT_VALUE,
+              bucketName: RUNTIME_INPUT_VALUE,
+              paths: RUNTIME_INPUT_VALUE
+            }
+          }
+        }
+      }
+    },
+    {
+      manifest: {
+        identifier: 'ScalableTarget_Manifest',
+        type: ManifestDataType.EcsScalableTargetDefinition,
+        spec: {
+          store: {
+            type: ManifestStoreMap.S3,
+            spec: {
+              region: RUNTIME_INPUT_VALUE,
+              bucketName: RUNTIME_INPUT_VALUE,
               paths: RUNTIME_INPUT_VALUE
             }
           }

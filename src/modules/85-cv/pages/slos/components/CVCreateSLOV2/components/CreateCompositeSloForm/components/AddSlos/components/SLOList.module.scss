@@ -10,3 +10,10 @@
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
+
+.selectedSLOs {
+  border: none;
+  font-weight: bold;
+  color: var(--black);
+  border-bottom: 1px dashed var(--primary);
+}

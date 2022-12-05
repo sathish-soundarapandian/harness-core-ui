@@ -234,6 +234,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard pageHeaderStyles StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -412,6 +413,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main inputSetForm"
@@ -501,6 +503,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard pageHeaderStyles StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -679,6 +682,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main inputSetForm"
@@ -846,7 +850,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
                       </div>
                     </div>
                     <div
-                      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+                      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
                     >
                       <div
                         class="Layout--vertical StyledProps--main"
@@ -1285,6 +1289,7 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard pageHeaderStyles StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -1463,6 +1468,7 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main inputSetForm"
@@ -1657,7 +1663,7 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
                       </div>
                     </div>
                     <div
-                      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+                      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
                     >
                       <div
                         class="Layout--vertical StyledProps--main"
@@ -2172,6 +2178,7 @@ exports[`Render Forms - Snapshot Testing render NewInputSetModal 1`] = `
         </div>
         <div
           class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard pageHeaderStyles StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+          data-testid="page-header"
         >
           <div
             class="Layout--vertical StyledProps--main"
@@ -2350,6 +2357,7 @@ exports[`Render Forms - Snapshot Testing render NewInputSetModal 1`] = `
         <div
           class="StyledProps--font StyledProps--main PageBody--pageBody"
           data-name="page-body"
+          data-testid="page-body"
         >
           <div
             class="StyledProps--font StyledProps--main inputSetForm formInModal"
@@ -2595,6 +2603,7 @@ exports[`Render Forms - Snapshot Testing render inputset with no inputSetRespons
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard pageHeaderStyles StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -2773,6 +2782,7 @@ exports[`Render Forms - Snapshot Testing render inputset with no inputSetRespons
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main inputSetForm"

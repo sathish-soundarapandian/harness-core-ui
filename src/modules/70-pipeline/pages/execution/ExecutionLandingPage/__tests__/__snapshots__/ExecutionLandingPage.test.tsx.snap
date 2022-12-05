@@ -4,6 +4,7 @@ exports[`<ExecutionLandingPage /> tests for CI loading state - snapshot test for
 <div>
   <div
     class="StyledProps--font StyledProps--main PageSpinner--spinner StyledProps--flex StyledProps--flex-align-center-center"
+    data-testid="page-spinner"
   >
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main PageSpinner--content"
@@ -621,6 +622,7 @@ exports[`<ExecutionLandingPage /> tests loading state - snapshot test 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main PageSpinner--spinner StyledProps--flex StyledProps--flex-align-center-center"
+    data-testid="page-spinner"
   >
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main PageSpinner--content"

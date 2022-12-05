@@ -119,7 +119,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     renderCustomHeader,
     openDialogProp,
     showCopyIcon = true,
-    comparableYaml
+    comparableYaml,
+    displayBorder = true
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
 
@@ -659,7 +660,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }, [])
 
   return (
-    <div className={cx(css.main, { [css.darkBg]: theme === 'DARK' })}>
+    <div className={cx(displayBorder ? css.main : null, { [css.darkBg]: theme === 'DARK' })}>
       <div className={css.editor}>
         {defaultTo(renderCustomHeader, renderHeader)()}
         {renderEditor()}

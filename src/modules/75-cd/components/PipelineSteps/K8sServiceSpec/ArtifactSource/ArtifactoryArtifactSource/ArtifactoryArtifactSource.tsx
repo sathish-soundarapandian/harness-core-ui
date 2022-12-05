@@ -16,10 +16,9 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  SelectOption,
-  Text
+  SelectOption
 } from '@harness/uicore'
-import { Menu } from '@blueprintjs/core'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -27,6 +26,7 @@ import {
   ArtifactoryImagePath,
   DeploymentStageConfig,
   Failure,
+  Error,
   PrimaryArtifact,
   ResponseArtifactoryResponseDTO,
   ServiceSpec,
@@ -42,6 +42,7 @@ import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/Triggers
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
+  getHelpeTextForTags,
   isAzureWebAppGenericDeploymentType,
   isServerlessDeploymentType,
   ServiceDeploymentType
@@ -55,6 +56,7 @@ import type { StageElementWrapperConfig } from 'services/pipeline-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getConnectorRefFqnPath,
@@ -67,7 +69,8 @@ import {
   isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource,
-  isExecutionTimeFieldDisabled
+  isExecutionTimeFieldDisabled,
+  getValidInitialValuePath
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
@@ -201,7 +204,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     artifact,
     isSidecar,
     artifactPath,
-    stepViewType
+    stepViewType,
+    artifacts
   } = props
 
   const { getString } = useStrings()
@@ -272,11 +276,12 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     return isServerlessOrSshOrWinRmSelected || isAzureWebAppGenericSelected
   }, [isServerlessOrSshOrWinRmSelected, isAzureWebAppGenericSelected])
 
-  const connectorRef =
-    get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '') || artifact?.spec?.connectorRef
-
+  const connectorRef = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
+    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
+  )
   const repositoryValue = getDefaultQueryParam(
-    artifact?.spec?.repository,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.repository`, ''), artifact?.spec?.repository),
     get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
   )
 
@@ -345,14 +350,20 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   // Initial values
   const artifactPathValue = isGenericArtifactory
     ? getDefaultQueryParam(
-        artifact?.spec?.artifactDirectory,
+        getValidInitialValuePath(
+          get(artifacts, `${artifactPath}.spec.artifactDirectory`, ''),
+          artifact?.spec?.artifactDirectory
+        ),
         get(initialValues?.artifacts, `${artifactPath}.spec.artifactDirectory`, '')
       )
     : getImagePath(artifact?.spec?.artifactPath, get(initialValues, `artifacts.${artifactPath}.spec.artifactPath`, ''))
   const connectorRefValue = getDefaultQueryParam(
-    artifact?.spec?.connectorRef,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
+  const isArtifactDisabled = () => {
+    return repositoryValue?.toString()?.length === 0 || connectorRefValue?.toString()?.length === 0
+  }
 
   const artifactoryTagsDataCallMetadataQueryParams = React.useMemo(() => {
     if (isGenericArtifactory) {
@@ -360,7 +371,10 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
         // API is expecting artifacthPath query param to have artifactDirectory field value for generic artifactory
         artifactPath: getFinalQueryParamValue(
           getDefaultQueryParam(
-            artifact?.spec?.artifactDirectory,
+            getValidInitialValuePath(
+              get(artifacts, `${artifactPath}.spec.artifactDirectory`, ''),
+              artifact?.spec?.artifactDirectory
+            ),
             get(initialValues?.artifacts, `${artifactPath}.spec.artifactDirectory`, '')
           )
         ),
@@ -491,19 +505,13 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     return false
   }
 
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        disabled={imagePathLoading}
-        onClick={handleClick}
-      />
-    </div>
-  ))
+  const artifactPathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => {
+    const isDisabled =
+      imagePathLoading ||
+      (imagePathError?.data as Error)?.status === 'ERROR' ||
+      (imagePathError?.data as Failure)?.status === 'FAILURE'
+    return <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={isDisabled} />
+  })
 
   const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
@@ -543,6 +551,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               <FormInput.MultiTextInput
                 label={getString('repositoryUrlLabel')}
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repositoryUrl`)}
+                isOptional
                 multiTextInputProps={{
                   expressions,
                   allowableTypes
@@ -625,12 +634,21 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                 name={`${path}.artifacts.${artifactPath}.spec.artifactPath`}
                 placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
                 useValue
+                helperText={getHelpeTextForTags(
+                  {
+                    repository: repositoryValue as string,
+                    connectorRef: connectorRefValue
+                  },
+                  getString,
+                  isGenericArtifactory,
+                  getString('pipeline.artifactOrImagePathDependencyRequired')
+                )}
                 multiTypeInputProps={{
                   expressions,
                   allowableTypes,
                   selectProps: {
                     noResults: <NoTagResults tagError={imagePathError} isServerlessDeploymentTypeSelected={false} />,
-                    itemRenderer: itemRenderer,
+                    itemRenderer: artifactPathItemRenderer,
                     items: artifactPaths,
                     allowCreatingNewItems: true
                   },
@@ -638,7 +656,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                   onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                     if (
                       e?.target?.type !== 'text' ||
-                      (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                      (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                      isArtifactDisabled()
                     ) {
                       return
                     }

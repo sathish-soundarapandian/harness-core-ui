@@ -3,9 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Language" content="en" />
+    <!-- externalFontsForSaaS -->
+    <% if (__DEV__) { %>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet" />
+    <% } %>
     <title>Harness</title>
     <link rel="icon" type="image/x-icon" href="https://static.harness.io/ng-static/images/favicon.ico" />
     <link rel="icon" type="image/png" href="https://static.harness.io/ng-static/images/favicon.png" />
@@ -31,8 +34,15 @@
     </style>
     <!-- apiurl -->
     <script type="text/javascript">
+      window.browserRouterEnabled = window.location.href.toString().includes('browserRouterEnabled=true')
       window.getApiBaseUrl = str => {
-        return window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+        let url = window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+
+        if (window.browserRouterEnabled) {
+          url = `${window.apiUrl || ''}/${str}`
+        }
+
+        return url.includes('remoteEntry.js') ? `${url}?timestamp=${Date.now()}` : url
       }
     </script>
     <!-- segmentToken -->
@@ -48,10 +58,11 @@
     <!-- newNavContentfulAccessToken -->
     <!-- newNavContetfulSpace -->
     <!-- newNavContentfulEnvironment -->
-
+    <!-- harnessNameSpacePlaceHolder -->
     <!-- adding bugsnag for SAAS build -->
     <% if (!__DEV__) { %>
     <script>
+      window.NON_CDN_BASE_PATH = `${window.harnessNameSpace}/ng/static/`
       if (window.deploymentType === 'SAAS') {
         var e = document.createElement('script')
         e.setAttribute('type', 'text/javascript')
@@ -64,26 +75,27 @@
       }
     </script>
     <% } %>
+
     <script>
       window.HARNESS_ENABLE_NG_AUTH_UI = 'HARNESS_ENABLE_NG_AUTH_UI_PLACEHOLDER' === 'true'
       window.HARNESS_ENABLE_APPDY_EUM = 'HARNESS_ENABLE_APPDY_EUM_PLACEHOLDER' === 'true'
       window.HARNESS_ENABLE_CDN = 'HARNESS_ENABLE_CDN_PLACEHOLDER' === 'true'
       window.HARNESS_ENABLE_SABER = 'HARNESS_ENABLE_SABER_PLACEHOLDER' === 'true'
     </script>
+
     <% if (__DEV__) { %>
     <script>
       window.deploymentType = 'SAAS'
       window.helpPanelAccessToken = '<%= HELP_PANEL_ACCESS_TOKEN_DEV %>'
       window.helpPanelSpace = '<%= HELP_PANEL_SPACE_DEV %>'
       window.helpPanelEnvironment = '<%= HELP_PANEL_ENVIRONMENT_DEV %>'
+      window.NON_CDN_BASE_PATH = '/'
       window.newNavContentfulAccessToken = '<%= NEW_NAV_CONTENTFUL_ACCESS_TOKEN_DEV %>'
       window.newNavContetfulSpace = '<%= NEW_NAV_CONTENTFUL_SPACE_DEV %>'
       window.newNavContentfulEnvironment = '<%= NEW_NAV_CONTENTFUL_ENVIRONMENT_DEV %>'
+      window.harnessNameSpace = ''
     </script>
-    <% } %>
-    <!-- Enabling ng-auth-ui -->
-    <!-- dev only flag -->
-    <% if (HARNESS_ENABLE_NG_AUTH_UI) { %>
+    <% } %> <% if (HARNESS_ENABLE_NG_AUTH_UI) { %>
     <script>
       window.HARNESS_ENABLE_NG_AUTH_UI = true
     </script>
@@ -110,9 +122,7 @@
       }
     </script>
     <script>
-      window.resourceBasePath = window.HARNESS_ENABLE_CDN
-        ? '//static.harness.io/ng-static/'
-        : '<%= __NON_CDN_BASE_PATH__ %>'
+      window.resourceBasePath = window.HARNESS_ENABLE_CDN ? '//static.harness.io/ng-static/' : window.NON_CDN_BASE_PATH
     </script>
 
     <!-- saberToken -->

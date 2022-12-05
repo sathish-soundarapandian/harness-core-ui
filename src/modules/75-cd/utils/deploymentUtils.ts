@@ -11,7 +11,7 @@ import type { IconName } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
-export const deploymentIconMap: Record<ServiceDeploymentType, IconName> = {
+export const deploymentIconMap: Record<string, IconName> = {
   [ServiceDeploymentType.AmazonSAM]: 'service-aws-sam',
   [ServiceDeploymentType.AzureFunctions]: 'service-azure-functions',
   [ServiceDeploymentType.AzureWebApp]: 'azurewebapp',
@@ -27,7 +27,7 @@ export const deploymentIconMap: Record<ServiceDeploymentType, IconName> = {
   [ServiceDeploymentType.amazonAmi]: 'main-service-ami',
   [ServiceDeploymentType.awsCodeDeploy]: 'app-aws-code-deploy',
   [ServiceDeploymentType.awsLambda]: 'service-aws-lamda',
-  [ServiceDeploymentType.pcf]: 'service-pivotal',
+  [ServiceDeploymentType.TAS]: 'tas',
   [ServiceDeploymentType.CustomDeployment]: 'CustomDeployment',
   [ServiceDeploymentType.Elastigroup]: 'elastigroup'
 }
@@ -131,9 +131,9 @@ export function getCgSupportedDeploymentTypes(props: GetCgSupportedDeploymentTyp
       value: ServiceDeploymentType.awsLambda
     },
     {
-      label: 'pipeline.serviceDeploymentTypes.pcf',
-      icon: deploymentIconMap[ServiceDeploymentType.pcf],
-      value: ServiceDeploymentType.pcf
+      label: 'pipeline.serviceDeploymentTypes.tas',
+      icon: deploymentIconMap[ServiceDeploymentType.TAS],
+      value: ServiceDeploymentType.TAS
     }
   ]
 

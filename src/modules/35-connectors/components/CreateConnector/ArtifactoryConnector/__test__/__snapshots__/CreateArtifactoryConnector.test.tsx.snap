@@ -1745,7 +1745,7 @@ exports[`Create Artifactory connector Wizard Should render form 2`] = `
               class="StyledProps--font StyledProps--main formWrapper"
             >
               <div
-                class="bp3-form-group"
+                class="bp3-form-group bp3-intent-danger"
               >
                 <div
                   class="bp3-form-content"
@@ -1839,6 +1839,11 @@ exports[`Create Artifactory connector Wizard Should render form 2`] = `
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div
+                    class="bp3-form-helper-text"
+                  >
+                    validation.username
                   </div>
                 </div>
               </div>

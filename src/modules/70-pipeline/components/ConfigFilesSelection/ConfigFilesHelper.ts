@@ -44,7 +44,8 @@ export const allowedConfigFilesTypes: Record<ServiceDefinition['type'], Array<Co
   WinRm: [ConfigFilesMap.Harness],
   ECS: [ConfigFilesMap.Harness],
   CustomDeployment: [ConfigFilesMap.Harness],
-  Elastigroup: [ConfigFilesMap.Harness]
+  Elastigroup: [ConfigFilesMap.Harness],
+  TAS: [ConfigFilesMap.Harness]
 }
 
 export const ConfigFilesToConnectorLabelMap: Record<ConfigFileType, StringKeys> = {

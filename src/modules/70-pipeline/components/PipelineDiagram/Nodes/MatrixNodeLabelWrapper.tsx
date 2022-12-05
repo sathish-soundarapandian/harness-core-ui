@@ -32,7 +32,7 @@ export default function MatrixNodeLabelWrapper({
       })}
     >
       <Icon size={16} name="looping" style={{ marginRight: '5px' }} color={Color.WHITE} />
-      <Text color={Color.WHITE} font="small" style={{ paddingRight: '5px' }}>
+      <Text color={Color.WHITE} font="small" style={{ paddingRight: '5px' }} lineClamp={1}>
         {nodeType}
       </Text>
     </Layout.Horizontal>

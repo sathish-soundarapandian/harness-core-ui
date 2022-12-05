@@ -204,6 +204,7 @@ exports[`Test Trigger Details Page Test should test snapshot view 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody main"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--horizontal StyledProps--main panel"

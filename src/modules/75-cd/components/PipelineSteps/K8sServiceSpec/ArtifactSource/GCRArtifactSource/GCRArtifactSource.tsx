@@ -32,7 +32,8 @@ import {
   isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource,
-  isExecutionTimeFieldDisabled
+  isExecutionTimeFieldDisabled,
+  getValidInitialValuePath
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
@@ -63,7 +64,8 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     artifact,
     isSidecar,
     artifactPath,
-    stepViewType
+    stepViewType,
+    artifacts
   } = props
 
   const { getString } = useStrings()
@@ -71,15 +73,19 @@ const Content = (props: GCRRenderContent): JSX.Element => {
   const { expressions } = useVariablesExpression()
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', imagePath: '', registryHostname: '' })
   const imagePathValue = getImagePath(
-    artifact?.spec?.imagePath,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.imagePath`, ''), artifact?.spec?.imagePath),
     get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
   )
+
   const connectorRefValue = getDefaultQueryParam(
-    artifact?.spec?.connectorRef,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
   const registryHostnameValue = getDefaultQueryParam(
-    artifact?.spec?.registryHostname,
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.registryHostname`, ''),
+      artifact?.spec?.registryHostname
+    ),
     get(initialValues, `artifacts.${artifactPath}.spec.registryHostname`, '')
   )
 

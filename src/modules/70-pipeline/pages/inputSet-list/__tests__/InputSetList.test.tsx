@@ -29,10 +29,7 @@ import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@comm
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { GetYamlDiffDelResponse } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
-import {
-  PipelineResponse as PipelineDetailsMockResponse,
-  PipelineDetailsResponse
-} from '../../pipeline-details/__tests__/PipelineDetailsMocks'
+import { PipelineDetailsResponse } from '../../pipeline-details/__tests__/PipelineDetailsMocks'
 import InputSetList from '../InputSetList'
 import {
   TemplateResponse,
@@ -78,21 +75,23 @@ jest.mock('services/cd-ng', () => ({
   useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: jest.fn(), loading: false }
+  }),
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: jest.fn() }
   })
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
-  useListGitSyncQuery: jest.fn().mockImplementation(() => {
-    return { data: gitConfigs, refetch: jest.fn() }
-  }),
   useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })
 }))
 
+jest.mock('services/pipeline-rq', () => ({
+  useGetPipelineSummaryQuery: jest.fn(() => PipelineDetailsResponse)
+}))
 jest.mock('services/pipeline-ng', () => ({
   useGetPipeline: jest.fn(() => PipelineDetailsResponse),
-  useGetPipelineSummary: jest.fn(() => PipelineDetailsMockResponse),
   useGetTemplateFromPipeline: jest.fn(() => TemplateResponse),
   useGetStagesExecutionList: jest.fn(() => ({})),
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => MergeInputSetResponse),

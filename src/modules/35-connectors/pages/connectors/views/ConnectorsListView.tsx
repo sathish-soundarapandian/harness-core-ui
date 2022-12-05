@@ -44,8 +44,6 @@ import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInt
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import routes from '@common/RouteDefinitions'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { getIconByType, isSMConnector } from '../utils/ConnectorUtils'
 import { getConnectorDisplaySummary } from '../utils/ConnectorListViewUtils'
 import ConnectivityStatus from './connectivityStatus/ConnectivityStatus'
@@ -57,10 +55,12 @@ interface ConnectorListViewProps {
   reload?: () => Promise<void>
   gotoPage: (pageNumber: number) => void
   openConnectorModal: UseCreateConnectorModalReturn['openConnectorModal']
+  forceDeleteSupported?: boolean
 }
 
 type CustomColumn = Column<ConnectorResponse> & {
   reload?: () => Promise<void>
+  forceDeleteSupported?: boolean
 }
 
 export type ErrorMessage = ConnectorValidationResult & { useErrorHandler?: boolean }
@@ -187,7 +187,6 @@ const RenderColumnStatus: Renderer<CellProps<ConnectorResponse>> = ({ row }) => 
 const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column }) => {
   const history = useHistory()
   const params = useParams<PipelineType<ProjectPathProps>>()
-  const isForceDeleteSupported = useFeatureFlag(FeatureFlag.PL_FORCE_DELETE_CONNECTOR_SECRET)
   const data = row.original
   const gitDetails = data?.gitDetails ?? {}
   const isHarnessManaged = data.harnessManaged
@@ -198,6 +197,7 @@ const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column 
   const [menuOpen, setMenuOpen] = useState(false)
   const { showSuccess, showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+
   const { getString } = useStrings()
   const [commitMsg, setCommitMsg] = useState<string>(
     `${getString('connectors.confirmDeleteTitle')} ${data.connector?.name}`
@@ -281,7 +281,7 @@ const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column 
       name: defaultTo(data.connector?.name, '')
     },
     redirectToReferencedBy: redirectToReferencedBy,
-    forceDeleteCallback: isForceDeleteSupported ? () => deleteHandler(true) : undefined
+    forceDeleteCallback: (column as CustomColumn).forceDeleteSupported ? () => deleteHandler(true) : undefined
   })
 
   const handleConnectorDeleteError = (code: string, message: string): void => {
@@ -370,7 +370,7 @@ const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column 
 }
 
 const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
-  const { data, reload, gotoPage } = props
+  const { data, reload, gotoPage, forceDeleteSupported = false } = props
   const params = useParams<PipelineType<ProjectPathProps>>()
   const history = useHistory()
   const { getString } = useStrings()
@@ -429,7 +429,8 @@ const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
         Cell: RenderColumnMenu,
         openConnectorModal: props.openConnectorModal,
         reload: reload,
-        disableSortBy: true
+        disableSortBy: true,
+        forceDeleteSupported: forceDeleteSupported
       }
     ],
     [props.openConnectorModal, reload, isGitSyncEnabled]

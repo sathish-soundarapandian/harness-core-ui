@@ -235,3 +235,9 @@
     top: 22px;
   }
 }
+
+.runtimeSelectWithSubmenu {
+  span [data-icon='main-delete'] {
+    padding-right: var(--spacing-3) !important;
+  }
+}

@@ -21,6 +21,7 @@ declare const styles: {
   readonly gitProviderCard: string
   readonly githubIcon: string
   readonly gitlabIcon: string
+  readonly header: string
   readonly hostingToggle: string
   readonly icons: string
   readonly infoIcon: string
@@ -38,6 +39,7 @@ declare const styles: {
   readonly repositoryTable: string
   readonly selectedCard: string
   readonly separator: string
+  readonly startConfigHeader: string
   readonly testConnectionBtn: string
   readonly wizard: string
   readonly yamlPathField: string

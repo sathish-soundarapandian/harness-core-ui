@@ -16,4 +16,5 @@ export interface DeployClusterEntityCustomStepProps {
 
 export interface DeployClusterEntityCustomInputStepProps extends DeployClusterEntityCustomStepProps {
   deployToAllClusters?: boolean
+  showEnvironmentsSelectionInputField?: boolean
 }

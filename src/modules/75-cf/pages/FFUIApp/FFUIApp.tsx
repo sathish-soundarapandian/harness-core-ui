@@ -21,12 +21,11 @@ import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { Description } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import routes from '@common/RouteDefinitions'
-import SectionNoData from '@cf/components/NoData/SectionNoData/SectionNoData'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
-import { EnvironmentSDKKeyType } from '@cf/utils/CFUtils'
 import * as trackingConstants from '@common/constants/TrackingConstants'
 
 // eslint-disable-next-line import/no-unresolved
@@ -43,10 +42,10 @@ const FFUIApp: FC = () => (
       useCDCreateEnvironment
     }}
     customHooks={{ useConfirmAction, useActiveEnvironment, useLicenseStore, useSyncedEnvironment }}
-    customComponents={{ RbacOptionsMenuButton, ContainerSpinner, SectionNoData }}
+    customComponents={{ RbacOptionsMenuButton, ContainerSpinner, Description }}
     customRoutes={routes}
     customUtils={{ NameSchema, getIdentifierFromName, IdentifierSchema }}
-    customEnums={{ EnvironmentSDKKeyType, FeatureIdentifier, trackingConstants }}
+    customEnums={{ FeatureIdentifier, trackingConstants }}
   />
 )
 

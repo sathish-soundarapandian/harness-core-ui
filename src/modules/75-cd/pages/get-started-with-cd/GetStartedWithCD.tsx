@@ -6,11 +6,14 @@
  */
 
 import React, { useState } from 'react'
-import { Text, Icon, Layout, Button, ButtonVariation, Container, ButtonSize } from '@harness/uicore'
+import { Text, Icon, Layout, ButtonVariation, Container, ButtonSize } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import bgImageURL from '../home/images/cd.svg'
 import delegateImageURL from '../home/images/cd-delegates-banner.svg'
 import { DelegateSelectorWizard } from './DelegateSelectorWizard/DelegateSelectorWizard'
@@ -62,7 +65,7 @@ export default function GetStartedWithCI(): React.ReactElement {
                     src={delegateImageURL}
                   />
                   <Layout.Horizontal className={css.buttonRow}>
-                    <Button
+                    <RbacButton
                       variation={ButtonVariation.PRIMARY}
                       size={ButtonSize.LARGE}
                       text={getString('getStarted')}
@@ -72,6 +75,12 @@ export default function GetStartedWithCI(): React.ReactElement {
                         trackEvent(CDOnboardingActions.delegateInstallWizardStart, {
                           category: Category.DELEGATE
                         })
+                      }}
+                      permission={{
+                        permission: PermissionIdentifier.EDIT_PIPELINE,
+                        resource: {
+                          resourceType: ResourceType.PIPELINE
+                        }
                       }}
                     />
                     <a

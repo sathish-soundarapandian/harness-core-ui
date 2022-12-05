@@ -44,7 +44,6 @@ import {
   ciCodebaseBuild,
   ciCodebaseBuildPullRequest,
   TriggerTypes,
-  eventTypes,
   getTriggerInputSetsBranchQueryParameter,
   getErrorMessage,
   TriggerGitEventTypes,
@@ -52,54 +51,12 @@ import {
   ciCodebaseBuildIssueComment
 } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
+import { getPipelineWithInjectedWithCloneCodebase } from '@triggers/components/Triggers/WebhookTrigger/utils'
 import css from '@triggers/pages/triggers/views/WebhookPipelineInputPanel.module.scss'
 
 interface ManifestTriggerInputPanelFormProps {
   formikProps?: any
   isEdit?: boolean
-}
-
-const getPipelineWithInjectedWithCloneCodebase = ({
-  event,
-  pipeline,
-  isPipelineFromTemplate
-}: {
-  event: string
-  pipeline: PipelineInfoConfig
-  isPipelineFromTemplate: boolean
-}): any => {
-  if (isPipelineFromTemplate) {
-    const pipelineFromTemplate = { ...(pipeline || {}) }
-    if (pipelineFromTemplate?.template?.templateInputs?.properties?.ci?.codebase?.build) {
-      pipelineFromTemplate.template.templateInputs.properties.ci.codebase.build =
-        event === eventTypes.PULL_REQUEST ? ciCodebaseBuildPullRequest : ciCodebaseBuild
-    }
-
-    return pipelineFromTemplate
-  }
-  if (event === eventTypes.PULL_REQUEST) {
-    return {
-      ...pipeline,
-      properties: {
-        ci: {
-          codebase: {
-            build: ciCodebaseBuildPullRequest
-          }
-        }
-      }
-    }
-  } else {
-    return {
-      ...pipeline,
-      properties: {
-        ci: {
-          codebase: {
-            build: ciCodebaseBuild
-          }
-        }
-      }
-    }
-  }
 }
 
 function ManifestTriggerInputPanelForm({

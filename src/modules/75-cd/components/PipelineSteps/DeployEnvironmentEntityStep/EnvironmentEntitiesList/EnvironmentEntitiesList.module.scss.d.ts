@@ -9,6 +9,5 @@
 declare const styles: {
   readonly card: string
   readonly dialogStyles: string
-  readonly environmentEntitiesList: string
 }
 export default styles

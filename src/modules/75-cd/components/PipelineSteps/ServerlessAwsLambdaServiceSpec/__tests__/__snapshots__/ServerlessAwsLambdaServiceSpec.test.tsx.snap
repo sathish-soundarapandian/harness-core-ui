@@ -191,7 +191,7 @@ exports[`ServerlessAwsLambdaServiceSpec tests When stepViewType is Edit render p
 exports[`ServerlessAwsLambdaServiceSpec tests When stepViewType is InputSet render properly when stepViewType is InputSet 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
   />
 </div>
 `;

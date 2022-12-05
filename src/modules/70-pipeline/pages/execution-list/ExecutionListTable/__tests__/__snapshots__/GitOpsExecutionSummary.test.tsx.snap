@@ -1,0 +1,112 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GitOpsExecutionSummary render with multiple applications 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main"
+  >
+    <div
+      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+      style="align-items: center;"
+    >
+      <span
+        class="bp3-icon StyledProps--main"
+        data-icon="gitops-application"
+      >
+        <svg
+          fill="none"
+          height="14"
+          viewBox="0 0 24 24"
+          width="14"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            clip-rule="evenodd"
+            d="M12.913 4.947c0 .322-.278.583-.621.583-.343 0-.622-.261-.622-.583 0-.323.279-.584.622-.584.343 0 .621.261.621.584zm.4 1.798c-.05.026-.102.05-.155.07v4.596c.767.314 1.304 1.033 1.304 1.87 0 1.125-.972 2.038-2.17 2.038s-2.17-.913-2.17-2.039c0-.902.624-1.667 1.488-1.935V6.882c-.864-.268-1.488-1.034-1.488-1.935 0-1.126.972-2.039 2.17-2.039s2.17.913 2.17 2.039c0 .245-.046.48-.13.698l1.493 1.403c.3-.148.643-.232 1.006-.232 1.198 0 2.17.912 2.17 2.038s-.972 2.039-2.17 2.039-2.17-.913-2.17-2.039c0-.25.049-.491.137-.714l-1.485-1.395zm7.118 6.552L16.1 11.871l-.512 1.373 2.35.774-6.298 2.291-5.648-2.266 2.38-.8-.521-1.37-4.24 1.426a.731.731 0 00-.513.684v3.223c0 .567.35 1.082.898 1.32l7.305 3.175a.82.82 0 00.625.01L20 18.53c.575-.227.95-.756.95-1.342v-3.204a.732.732 0 00-.519-.686zM12.4 17.592l7.002-2.547v2.143l-7.002 2.76v-2.356zm-1.548-.018v2.33l-6.206-2.698v-2.121l6.206 2.49zm1.44-3.71c.344 0 .622-.261.622-.584 0-.322-.278-.583-.621-.583-.343 0-.622.26-.622.583 0 .323.279.584.622.584zm5.162-5.01c0 .323-.279.584-.622.584-.343 0-.621-.261-.621-.584 0-.322.278-.584.621-.584.343 0 .622.262.622.584z"
+            fill="#4F5162"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
+      >
+        applications
+        :
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+        >
+          NAME_1
+        </p>
+      </p>
+      <span
+        class="bp3-popover-wrapper bp3-dark"
+      >
+        <span
+          class="bp3-popover-target"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+            tabindex="0"
+          >
+            , +
+            2
+          </p>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`GitOpsExecutionSummary render with one application 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main"
+  >
+    <div
+      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+      style="align-items: center;"
+    >
+      <span
+        class="bp3-icon StyledProps--main"
+        data-icon="gitops-application"
+      >
+        <svg
+          fill="none"
+          height="14"
+          viewBox="0 0 24 24"
+          width="14"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            clip-rule="evenodd"
+            d="M12.913 4.947c0 .322-.278.583-.621.583-.343 0-.622-.261-.622-.583 0-.323.279-.584.622-.584.343 0 .621.261.621.584zm.4 1.798c-.05.026-.102.05-.155.07v4.596c.767.314 1.304 1.033 1.304 1.87 0 1.125-.972 2.038-2.17 2.038s-2.17-.913-2.17-2.039c0-.902.624-1.667 1.488-1.935V6.882c-.864-.268-1.488-1.034-1.488-1.935 0-1.126.972-2.039 2.17-2.039s2.17.913 2.17 2.039c0 .245-.046.48-.13.698l1.493 1.403c.3-.148.643-.232 1.006-.232 1.198 0 2.17.912 2.17 2.038s-.972 2.039-2.17 2.039-2.17-.913-2.17-2.039c0-.25.049-.491.137-.714l-1.485-1.395zm7.118 6.552L16.1 11.871l-.512 1.373 2.35.774-6.298 2.291-5.648-2.266 2.38-.8-.521-1.37-4.24 1.426a.731.731 0 00-.513.684v3.223c0 .567.35 1.082.898 1.32l7.305 3.175a.82.82 0 00.625.01L20 18.53c.575-.227.95-.756.95-1.342v-3.204a.732.732 0 00-.519-.686zM12.4 17.592l7.002-2.547v2.143l-7.002 2.76v-2.356zm-1.548-.018v2.33l-6.206-2.698v-2.121l6.206 2.49zm1.44-3.71c.344 0 .622-.261.622-.584 0-.322-.278-.583-.621-.583-.343 0-.622.26-.622.583 0 .323.279.584.622.584zm5.162-5.01c0 .323-.279.584-.622.584-.343 0-.621-.261-.621-.584 0-.322.278-.584.621-.584.343 0 .622.262.622.584z"
+            fill="#4F5162"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
+      >
+        applications
+        :
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+        >
+          NAME_1
+        </p>
+      </p>
+    </div>
+  </div>
+</div>
+`;

@@ -5,6 +5,7 @@ exports[`Landing Dashboard Page Render Welcome Page when Lading Page api is succ
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody getStartedMainContainer"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--vertical Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex"
@@ -99,6 +100,7 @@ exports[`Landing Dashboard Page render landing page and welcome page by swtich 1
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -125,6 +127,7 @@ exports[`Landing Dashboard Page render landing page and welcome page by swtich 1
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--padding-xlarge"
@@ -912,6 +915,7 @@ exports[`Landing Dashboard Page render landing page and welcome page by swtich 2
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody getStartedMainContainer"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--vertical Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex"

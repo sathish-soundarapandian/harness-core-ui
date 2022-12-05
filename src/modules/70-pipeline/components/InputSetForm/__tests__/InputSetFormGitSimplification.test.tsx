@@ -76,17 +76,18 @@ jest.mock('services/cd-ng', () => ({
   }),
   useCreatePR: jest.fn(() => noop),
   useCreatePRV2: jest.fn(() => noop),
+  useGetSettingValue: jest.fn(() => noop),
   useGetFileContent: jest.fn(() => noop),
   useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
+  }),
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: gitSyncListResponse, refetch: getListGitSync }
   })
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
-  useListGitSyncQuery: jest.fn().mockImplementation(() => {
-    return { data: gitSyncListResponse, refetch: getListGitSync }
-  }),
   useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })

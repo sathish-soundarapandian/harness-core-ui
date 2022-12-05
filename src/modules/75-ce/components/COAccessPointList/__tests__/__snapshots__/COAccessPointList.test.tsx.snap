@@ -7,6 +7,7 @@ exports[`Test Access Point List Renders without errors 1`] = `
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard header StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+      data-testid="page-header"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -133,6 +134,7 @@ exports[`Test Access Point List Renders without errors 1`] = `
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody pageContainer"
       data-name="page-body"
+      data-testid="page-body"
     >
       <div
         class="TableV2--table table"

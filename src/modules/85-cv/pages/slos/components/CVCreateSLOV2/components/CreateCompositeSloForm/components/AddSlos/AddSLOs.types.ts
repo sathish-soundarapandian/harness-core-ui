@@ -21,3 +21,10 @@ export interface UpdateWeightPercentageForCurrentSLOProps {
   sloList: SLOObjective[]
   isReset?: boolean
 }
+export interface ResetOnDeleteProps {
+  serviceLevelObjectivesDetails: SLOObjective[]
+  serviceLevelObjectiveRef: string
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}

@@ -45,6 +45,7 @@ export type ManifestStores =
   | 'Inline'
   | 'Harness'
   | 'CustomRemote'
+  | 'AzureRepo'
 
 export type ManifestStoreTypeWithoutConnector = 'InheritFromManifest' | 'Harness' | 'Inline' | 'CustomRemote'
 
@@ -246,4 +247,19 @@ export interface CustomManifestManifestDataType {
   valuesPaths?: Array<{ path: string }> | string
   paramsPaths?: Array<{ path: string }> | string
   skipResourceVersioning?: boolean
+}
+
+export interface ECSWithS3DataType {
+  identifier: string
+  region: SelectOption | string
+  bucketName: SelectOption | string
+  paths: any
+}
+
+export interface ServerlessLambdaWithS3DataType {
+  identifier: string
+  region: SelectOption | string
+  bucketName: SelectOption | string
+  paths: any
+  configOverridePath?: string
 }

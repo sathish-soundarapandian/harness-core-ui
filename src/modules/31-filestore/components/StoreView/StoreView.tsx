@@ -39,7 +39,7 @@ export default function StoreView(): React.ReactElement {
   }
 
   return (
-    <Container className={css.storeView} height={!isModalView ? 'calc(100vh - 75px)' : 'auto'}>
+    <Container className={css.storeView} height={!isModalView ? 'calc(100vh - 75px)' : 'calc(50vh - 70px)'}>
       <CurrentPathComponent />
       {currentNode?.type === FileStoreNodeTypes.FOLDER ? <NodesList /> : <FileView />}
     </Container>

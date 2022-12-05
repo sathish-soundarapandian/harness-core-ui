@@ -547,7 +547,7 @@ const GcpInfrastructureSpecInputForm: React.FC<GcpInfrastructureSpecEditableProp
   ))
 
   return (
-    <Layout.Vertical spacing="small">
+    <Layout.Vertical padding={{ top: 'medium', right: 'medium', bottom: 'small' }} spacing="small">
       {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField

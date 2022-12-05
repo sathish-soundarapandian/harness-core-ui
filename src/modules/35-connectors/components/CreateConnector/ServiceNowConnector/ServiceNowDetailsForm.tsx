@@ -16,7 +16,9 @@ import {
   ModalErrorHandlerBinding,
   StepProps,
   ButtonVariation,
-  PageSpinner
+  PageSpinner,
+  Container,
+  SelectOption
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -31,10 +33,13 @@ import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 
+import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './ServiceNowConnector.module.scss'
 
 interface ServiceNowFormData {
   serviceNowUrl: string
+  authType: string
   username: TextReferenceInterface | void
   password: SecretReferenceInterface | void
 }
@@ -56,6 +61,7 @@ interface ServiceNowFormProps extends ConnectorInfoDTO {
 
 const defaultInitialFormData: ServiceNowFormData = {
   serviceNowUrl: '',
+  authType: AuthTypes.USER_PASSWORD,
   username: undefined,
   password: undefined
 }
@@ -67,8 +73,18 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
   const [loadConnector] = React.useState(false)
 
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = React.useState(true && props.isEditMode)
-
   const { getString } = useStrings()
+
+  const authOptions: SelectOption[] = React.useMemo(
+    () => [
+      {
+        label: getString('usernamePassword'),
+        value: AuthTypes.USER_PASSWORD
+      }
+      // ADFS will be added as a second option for authentication support.
+    ],
+    []
+  )
 
   React.useEffect(() => {
     if (loadingConnectorSecrets) {
@@ -108,9 +124,21 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
         }}
         formName="serviceNowDetailsForm"
         validationSchema={Yup.object().shape({
-          serviceNowUrl: Yup.string().trim().required(getString('connectors.validation.serviceNowUrl')),
-          username: Yup.string().required(getString('validation.username')),
-          passwordRef: Yup.object().required(getString('validation.password'))
+          serviceNowUrl: Yup.string()
+            .trim()
+            .required(getString('connectors.validation.serviceNowUrl'))
+            .url(getString('validation.urlIsNotValid')),
+          authType: Yup.string().trim().required(getString('validation.authType')),
+          username: Yup.string().when('authType', {
+            is: val => val === AuthTypes.USER_PASSWORD,
+            then: Yup.string().trim().required(getString('validation.username')),
+            otherwise: Yup.string().nullable()
+          }),
+          passwordRef: Yup.object().when('authType', {
+            is: val => val === AuthTypes.USER_PASSWORD,
+            then: Yup.object().required(getString('validation.password')),
+            otherwise: Yup.object().nullable()
+          })
         })}
         onSubmit={stepData => {
           trackEvent(ConnectorActions.DetailsStepSubmit, {
@@ -128,15 +156,29 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
                 <FormInput.Text
                   name="serviceNowUrl"
                   placeholder={getString('UrlLabel')}
-                  label={getString('UrlLabel')}
+                  label={getString('connectors.serviceNow.serviceNowUrl')}
                 />
-
-                <TextReference
-                  name="username"
-                  stringId="username"
-                  type={formik.values.username ? formik.values.username?.type : ValueType.TEXT}
-                />
-                <SecretInput name={'passwordRef'} label={getString('connectors.apiKeyOrPassword')} />
+                <Container className={css.authContainer}>
+                  <Text font={{ variation: FontVariation.H6 }} inline margin={{ bottom: 'small', right: 'small' }}>
+                    {getString('authentication')}
+                  </Text>
+                  <FormInput.Select
+                    name="authType"
+                    items={authOptions}
+                    disabled={false}
+                    className={commonStyles.authTypeSelectLarge}
+                  />
+                </Container>
+                {formik.values.authType === AuthTypes.USER_PASSWORD ? (
+                  <>
+                    <TextReference
+                      name="username"
+                      stringId="username"
+                      type={formik.values.username ? formik.values.username?.type : ValueType.TEXT}
+                    />
+                    <SecretInput name={'passwordRef'} label={getString('connectors.apiKeyOrPassword')} />
+                  </>
+                ) : null}
               </Layout.Vertical>
 
               <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">

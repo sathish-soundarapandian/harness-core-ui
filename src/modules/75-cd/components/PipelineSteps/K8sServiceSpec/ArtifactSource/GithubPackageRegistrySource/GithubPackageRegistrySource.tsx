@@ -139,6 +139,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       packageName: defaultTo(packageNameValue, ''),
       connectorRef: defaultTo(connectorRefValue, ''),
       versionRegex: '*',
+      org: orgValue,
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
       fqnPath: getFqnPath(

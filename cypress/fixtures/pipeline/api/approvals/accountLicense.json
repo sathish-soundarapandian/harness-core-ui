@@ -1,0 +1,126 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "accountId": "accountId",
+    "moduleLicenses": {
+      "CE": {
+        "id": "60aef62e15eed279aadfb122",
+        "accountIdentifier": "accountId",
+        "moduleType": "CE",
+        "edition": "ENTERPRISE",
+        "licenseType": "TRIAL",
+        "status": "EXPIRED",
+        "startTime": 1622079022085,
+        "expiryTime": 1819990200000,
+        "createdAt": 1622079022231,
+        "lastModifiedAt": 1624954619339,
+        "spendLimit": 250000
+      },
+      "CF": {
+        "id": "60900bf1d99866016b0ed945",
+        "accountIdentifier": "accountId",
+        "moduleType": "CF",
+        "edition": "ENTERPRISE",
+        "licenseType": "TRIAL",
+        "status": "EXPIRED",
+        "startTime": 1620052977,
+        "expiryTime": 1819990200000,
+        "createdAt": 1620052977243,
+        "lastModifiedAt": 1624954619328,
+        "numberOfUsers": 2,
+        "numberOfClientMAUs": 5000
+      },
+      "CI": {
+        "id": "608894e722eae532c9e4cb1e",
+        "accountIdentifier": "accountId",
+        "moduleType": "CI",
+        "edition": "ENTERPRISE",
+        "licenseType": "TRIAL",
+        "status": "EXPIRED",
+        "startTime": 1619563751,
+        "expiryTime": 1819990200000,
+        "createdAt": 1619563751222,
+        "lastModifiedAt": 1624954619316,
+        "numberOfCommitters": 10
+      },
+      "CD": {
+        "id": "608894e722eae532c9e4cb1e",
+        "accountIdentifier": "accountId",
+        "moduleType": "CD",
+        "edition": "ENTERPRISE",
+        "licenseType": "",
+        "status": "ACTIVE",
+        "startTime": 1619563751,
+        "expiryTime": 1819990200000,
+        "createdAt": 1619563751222,
+        "lastModifiedAt": 1624954619316,
+        "numberOfCommitters": 10
+      }
+    },
+    "allModuleLicenses": {
+      "CE": [
+        {
+          "id": "60aef62e15eed279aadfb122",
+          "accountIdentifier": "accountId",
+          "moduleType": "CE",
+          "edition": "ENTERPRISE",
+          "licenseType": "TRIAL",
+          "status": "EXPIRED",
+          "startTime": 1622079022085,
+          "expiryTime": 1819990200000,
+          "createdAt": 1622079022231,
+          "lastModifiedAt": 1624954619339,
+          "spendLimit": 250000
+        }
+      ],
+      "CF": [
+        {
+          "id": "60900bf1d99866016b0ed945",
+          "accountIdentifier": "accountId",
+          "moduleType": "CF",
+          "edition": "ENTERPRISE",
+          "licenseType": "TRIAL",
+          "status": "EXPIRED",
+          "startTime": 1620052977,
+          "expiryTime": 1819990200000,
+          "createdAt": 1620052977243,
+          "lastModifiedAt": 1624954619328,
+          "numberOfUsers": 2,
+          "numberOfClientMAUs": 5000
+        }
+      ],
+      "CI": [
+        {
+          "id": "608894e722eae532c9e4cb1e",
+          "accountIdentifier": "accountId",
+          "moduleType": "CI",
+          "edition": "ENTERPRISE",
+          "licenseType": "TRIAL",
+          "status": "EXPIRED",
+          "startTime": 1619563751,
+          "expiryTime": 1819990200000,
+          "createdAt": 1619563751222,
+          "lastModifiedAt": 1624954619316,
+          "numberOfCommitters": 10
+        }
+      ],
+      "CD": [
+        {
+          "id": "608894e722eae532c9e4cb1e",
+          "accountIdentifier": "accountId",
+          "moduleType": "CD",
+          "edition": "ENTERPRISE",
+          "licenseType": "",
+          "status": "ACTIVE",
+          "startTime": 1619563751,
+          "expiryTime": 1819990200000,
+          "createdAt": 1619563751222,
+          "lastModifiedAt": 1624954619316,
+          "numberOfCommitters": 10
+        }
+      ]
+    }
+  },
+  "metaData": null,
+  "correlationId": "48d5653a-204b-4d75-a91d-d7b6e5f564bb"
+}

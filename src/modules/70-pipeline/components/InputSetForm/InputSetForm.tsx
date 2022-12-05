@@ -224,7 +224,9 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
       pipelineRepoID: repoIdentifier,
       pipelineBranch: branch,
       repoIdentifier: isGitSyncEnabled ? inputSetRepoIdentifier : repoName,
-      branch: isGitSyncEnabled ? inputSetBranch : branch
+      branch: isGitSyncEnabled ? inputSetBranch : branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     }
   })
 

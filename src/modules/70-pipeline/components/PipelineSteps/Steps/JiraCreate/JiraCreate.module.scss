@@ -76,11 +76,11 @@
 }
 
 .headerRow {
+  width: 420px;
   display: grid;
   grid-template-columns: 1fr 1.5fr 30px;
   column-gap: var(--spacing-small);
   margin-bottom: var(--spacing-small);
-  align-items: center;
 
   :global(.bp3-form-group) {
     margin: 0;
@@ -107,8 +107,28 @@
 }
 
 .marginTop {
-  margin-top: -10px !important;
+  margin-top: -8px !important;
+  margin-bottom: var(--spacing-3);
 }
 .tooltip {
   max-width: 420px;
+}
+
+.btnPosition {
+  :global {
+    .bp3-input {
+      margin: 0 0 15px;
+    }
+    .MultiTypeInput--btn {
+      position: inherit !important;
+    }
+  }
+}
+
+.formError {
+  :global {
+    .bp3-input {
+      border-color: var(--red-500) !important;
+    }
+  }
 }

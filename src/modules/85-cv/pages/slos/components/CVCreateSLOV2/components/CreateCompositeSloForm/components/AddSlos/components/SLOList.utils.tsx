@@ -27,8 +27,8 @@ export const getUpdatedSLOObjectives = (
       orgIdentifier,
       projectIdentifier,
       serviceLevelObjectiveRef: item?.sloIdentifier,
-      weightagePercentage: index === selectedSlosLength - 1 ? Number(lastWeight) : Number(weight),
-      ...item
+      ...item,
+      weightagePercentage: index === selectedSlosLength - 1 ? Number(lastWeight) : Number(weight)
     }
   })
   return updatedSLOObjective

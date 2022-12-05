@@ -59,6 +59,7 @@ export interface ReferenceSelectProps<T extends MinimalObject>
   name: string
   placeholder: string
   selectAnReferenceLabel: string
+  placeholderClass?: string
   selected?: string | Item
   createNewLabel?: string
   createNewBtnComponent?: JSX.Element
@@ -134,6 +135,7 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
     isMultiSelect,
     selectedReferences,
     onMultiSelectChange,
+    placeholderClass,
     ...referenceProps
   } = props
   const [isOpen, setOpen] = useState(false)
@@ -169,6 +171,7 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
             setOpen(true)
           }}
           selected={selectedRecords}
+          placeholderClass={placeholderClass}
         />
       )
     }
@@ -286,6 +289,7 @@ export interface MultiReferenceSelectPlaceholderProps {
   selected: ScopeAndIdentifier[]
   onClear: () => void
   onClick: (arg?: Scope) => void
+  placeholderClass?: string
 }
 
 export const MultiReferenceSelectPlaceholder: FC<MultiReferenceSelectPlaceholderProps> = ({
@@ -293,7 +297,8 @@ export const MultiReferenceSelectPlaceholder: FC<MultiReferenceSelectPlaceholder
   placeholder,
   selected,
   onClear,
-  onClick
+  onClick,
+  placeholderClass
 }) => {
   const groupedReferences = useMemo(() => {
     return Object.values(
@@ -309,7 +314,7 @@ export const MultiReferenceSelectPlaceholder: FC<MultiReferenceSelectPlaceholder
     <Container
       border
       padding="xsmall"
-      className={cx('bp3-input', disabled ? 'bp3-disabled' : '', css.placeholderContainer)}
+      className={cx('bp3-input', disabled ? 'bp3-disabled' : '', css.placeholderContainer, placeholderClass)}
     >
       {groupedReferences?.length ? (
         <Layout.Horizontal

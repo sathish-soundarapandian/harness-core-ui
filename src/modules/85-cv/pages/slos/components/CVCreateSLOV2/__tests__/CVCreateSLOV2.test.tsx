@@ -61,6 +61,9 @@ jest.mock('services/cv', () => ({
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
   useUpdateNotificationRuleData: jest
     .fn()
+    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
+  useGetNotificationRuleData: jest
+    .fn()
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() }))
 }))
 
@@ -380,7 +383,7 @@ describe('CVCreateSloV2', () => {
     )
 
     const sloName = container.querySelector('input[name ="name"]')
-    await waitFor(() => expect(sloName).toBeInTheDocument())
+    waitFor(() => expect(sloName).toBeInTheDocument())
     userEvent.clear(sloName!)
     userEvent.type(sloName!, 'updated composite slo')
 
@@ -390,11 +393,11 @@ describe('CVCreateSloV2', () => {
 
     fireEvent.change(container.querySelector('[name="SLOTargetPercentage"]')!, { target: { value: 99 } })
 
-    await act(() => {
+    act(() => {
       userEvent.click(screen.getByText('cancel'))
     })
 
-    await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
+    waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
 
     act(() => {
       userEvent.click(document.querySelector('.bp3-dialog button')!)
@@ -544,7 +547,7 @@ describe('CVCreateSloV2', () => {
     act(() => {
       userEvent.click(screen.getByText('save'))
     })
-    await waitFor(() => expect(screen.getByText('cv.slos.sloCreated')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('cv.CompositeSLO.compositeSloCreated')).toBeInTheDocument())
   })
 
   test('should be able to update SLO weights', async () => {

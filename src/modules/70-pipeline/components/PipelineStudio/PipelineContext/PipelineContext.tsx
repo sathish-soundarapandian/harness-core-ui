@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
-import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge, map } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge, map, uniq } from 'lodash-es'
 import {
   AllowedTypes,
   AllowedTypesWithRunTime,
@@ -96,6 +96,11 @@ interface FetchError {
 const logger = loggerFor(ModuleName.CD)
 const DBNotFoundErrorMessage = 'There was no DB found'
 
+const remoteFetchErrorGitDetails = (remoteFetchError: ResponsePMSPipelineResponseDTO): Partial<EntityGitDetails> => {
+  const branch = remoteFetchError?.metaData?.branch
+  return branch ? { branch } : {}
+}
+
 export const getPipelineByIdentifier = (
   params: GetPipelineQueryParams & GitQueryParams,
   identifier: string,
@@ -111,7 +116,8 @@ export const getPipelineByIdentifier = (
         ...(params.branch ? { branch: params.branch } : {}),
         ...(params.repoIdentifier ? { repoIdentifier: params.repoIdentifier } : {}),
         parentEntityConnectorRef: params.connectorRef,
-        parentEntityRepoName: params.repoName
+        parentEntityRepoName: params.repoName,
+        ...(params?.storeType === StoreType.REMOTE && !params.branch ? { loadFromFallbackBranch: true } : {})
       },
       requestOptions: {
         headers: {
@@ -360,7 +366,7 @@ const getResolvedCustomDeploymentDetailsMap = (
   pipeline: PipelineInfoConfig,
   queryParams: GetPipelineQueryParams
 ): ReturnType<typeof getResolvedCustomDeploymentDetailsByRef> => {
-  const templateRefs = map(findAllByKey('customDeploymentRef', pipeline), 'templateRef')
+  const templateRefs = uniq(map(findAllByKey('customDeploymentRef', pipeline), 'templateRef'))
   return getResolvedCustomDeploymentDetailsByRef(
     {
       accountIdentifier: queryParams.accountIdentifier,
@@ -381,7 +387,7 @@ const getTemplateType = (
   storeMetadata?: StoreMetadata,
   supportingTemplatesGitx?: boolean
 ): ReturnType<typeof getTemplateTypesByRef> => {
-  const templateRefs = findAllByKey('templateRef', pipeline)
+  const templateRefs = uniq(findAllByKey('templateRef', pipeline))
   return getTemplateTypesByRef(
     {
       accountIdentifier: queryParams.accountIdentifier,
@@ -476,7 +482,10 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
         PipelineContextActions.error({
           remoteFetchError: pipelineById.remoteFetchError,
           pipeline: { ...pick(pipelineMetaData?.data, ['name', 'identifier', 'description', 'tags']) },
-          gitDetails: pipelineMetaData?.data?.gitDetails ?? {}
+          gitDetails: {
+            ...pipelineMetaData?.data?.gitDetails,
+            ...remoteFetchErrorGitDetails(pipelineById.remoteFetchError)
+          }
         })
       )
       return
@@ -489,8 +498,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       defaultTo(queryParams.orgIdentifier, ''),
       defaultTo(queryParams.projectIdentifier, ''),
       pipelineId,
-      defaultTo(gitDetails.repoIdentifier, getRepoIdentifierName(pipelineWithGitDetails?.gitDetails)),
-      defaultTo(gitDetails.branch, defaultTo(pipelineWithGitDetails?.gitDetails?.branch, ''))
+      defaultTo(getRepoIdentifierName(pipelineWithGitDetails?.gitDetails), gitDetails.repoIdentifier),
+      defaultTo(pipelineWithGitDetails?.gitDetails?.branch, defaultTo(gitDetails.branch, ''))
     )
 
     try {
@@ -591,6 +600,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       dispatch(
         PipelineContextActions.success({
           error: '',
+          remoteFetchError: undefined,
           pipeline,
           originalPipeline: cloneDeep(pipeline),
           isBEPipelineUpdated: false,
@@ -611,6 +621,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
     dispatch(
       PipelineContextActions.success({
         error: '',
+        remoteFetchError: undefined,
         pipeline: defaultTo(data?.pipeline, {
           ...DefaultPipeline,
           projectIdentifier: queryParams.projectIdentifier,
@@ -1289,8 +1300,10 @@ export function PipelineProvider({
   })
 
   React.useEffect(() => {
-    abortControllerRef.current = new AbortController()
-    fetchPipeline({ forceFetch: true, signal: abortControllerRef.current?.signal })
+    if (state.isDBInitialized) {
+      abortControllerRef.current = new AbortController()
+      fetchPipeline({ forceFetch: true, signal: abortControllerRef.current?.signal })
+    }
 
     return () => {
       if (abortControllerRef.current) {

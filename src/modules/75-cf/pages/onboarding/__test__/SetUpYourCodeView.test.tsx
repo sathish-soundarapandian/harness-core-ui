@@ -28,7 +28,6 @@ const renderComponent = (props?: Partial<SetUpYourCodeViewProps>): RenderResult 
           type: 'server'
         }}
         flagName="foobar"
-        environment={{ identifier: 'foobar_env', name: 'foobar env' }}
         {...props}
       />
     </TestWrapper>

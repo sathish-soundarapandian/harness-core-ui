@@ -41,6 +41,8 @@ interface ReleaseRepoStepProps {
   onClose: () => void
   manifest?: ReleaseRepoManifest | null
   handleSubmit: (values: any) => void
+  stepName?: string
+  isDeploymentRepoType?: boolean
 }
 
 function ReleaseRepoWizard({
@@ -54,7 +56,9 @@ function ReleaseRepoWizard({
   manifest,
   allowableTypes,
   isReadonly,
-  expressions
+  expressions,
+  stepName,
+  isDeploymentRepoType
 }: ReleaseRepoStepProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -73,8 +77,8 @@ function ReleaseRepoWizard({
   return (
     <StepWizard className={css.manifestWizard} onCompleteWizard={onClose} onStepChange={onStepChange}>
       <RepoStore
-        stepName={getString('pipeline.releaseRepoStore')}
-        name={getString('pipeline.releaseRepoStore')}
+        stepName={stepName || getString('pipeline.releaseRepoStore')}
+        name={stepName || getString('pipeline.releaseRepoStore')}
         expressions={expressions}
         allowableTypes={allowableTypes}
         isReadonly={isReadonly}
@@ -109,6 +113,7 @@ function ReleaseRepoWizard({
           }
         }
         isReadonly={isReadonly}
+        isDeploymentRepoType={isDeploymentRepoType}
       />
     </StepWizard>
   )

@@ -6,7 +6,6 @@
  */
 
 import React, { Dispatch, SetStateAction, useState } from 'react'
-import cx from 'classnames'
 import {
   Heading,
   HarnessDocTooltip,
@@ -172,7 +171,7 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
             placeholder={
               localSelectedStagesData.allStagesSelected ? getString('pipeline.allStages') : getString('stages')
             }
-            className={cx({ [css.stagesDropdown]: isGitSyncEnabled })}
+            className={css.stagesDropdown}
           />
           <HarnessDocTooltip tooltipId={stageExecutionDisabledTooltip} useStandAlone={true} />
         </div>

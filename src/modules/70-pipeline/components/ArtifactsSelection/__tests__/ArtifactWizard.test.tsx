@@ -26,10 +26,15 @@ import { DockerRegistryArtifact } from '../ArtifactRepository/ArtifactLastSteps/
 import connectorsData from './connectors_mock.json'
 import { GCRImagePath } from '../ArtifactRepository/ArtifactLastSteps/GCRImagePath/GCRImagePath'
 import { AmazonS3 } from '../ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
-import { awsRegionsData, bucketListData } from '../ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/__tests__/mock'
+import {
+  awsRegionsData,
+  bucketListData,
+  filePathListData
+} from '../ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/__tests__/mock'
 
 const fetchConnector = jest.fn().mockReturnValue({ data: connectorsData.data?.content?.[1] })
 const fetchBuckets = jest.fn().mockReturnValue(bucketListData)
+const fetchFilePaths = jest.fn().mockReturnValue(filePathListData)
 jest.mock('services/cd-ng', () => ({
   getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnector: jest.fn().mockImplementation(() => {
@@ -43,6 +48,9 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetV2BucketListForS3: jest.fn().mockImplementation(() => {
     return { data: bucketListData, refetch: fetchBuckets, error: null, loading: false }
+  }),
+  useGetFilePathsForS3: jest.fn().mockImplementation(() => {
+    return { data: filePathListData, refetch: fetchFilePaths, error: null, loading: false }
   })
 }))
 
@@ -425,8 +433,8 @@ describe('Artifact WizardStep tests', () => {
     // region and bucketName both should be dropdown
     const lastStepTitle = await findByText(container, 'pipeline.artifactsSelection.artifactDetails')
     await waitFor(() => expect(lastStepTitle).toBeInTheDocument())
-    const bucketNameDropDownButtons = container.querySelectorAll('[data-icon="chevron-down"]')
-    await waitFor(() => expect(bucketNameDropDownButtons.length).toBe(2))
+    const dropDownButtons = container.querySelectorAll('[data-icon="chevron-down"]')
+    await waitFor(() => expect(dropDownButtons.length).toBe(3))
     const regionInput = queryByNameAttribute('region', container)
     expect(regionInput).toBeInTheDocument()
     const bucketNameInput = queryByNameAttribute('bucketName', container)

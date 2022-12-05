@@ -8,8 +8,9 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty, map, get } from 'lodash-es'
+import cx from 'classnames'
 import type { FormikContextType } from 'formik'
-import { Text, Container, SelectOption, Layout, MultiSelectOption, useToaster } from '@harness/uicore'
+import { Text, Container, SelectOption, MultiSelectOption, useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -206,29 +207,27 @@ export const ScopeInputStep = (
   }, [subscriptionsError, resourceGroupsError, locationsError, managementGroupsError])
 
   const dropDown = (name: string, label: keyof StringsMap, items: SelectOption[], loading: boolean): JSX.Element => (
-    <Layout.Vertical>
-      <Layout.Horizontal className={stepCss.formGroup}>
-        <SelectInputSetView
-          label={getString(label)}
-          name={`${path}.${name}`}
-          disabled={readonly}
-          useValue
-          multiTypeInputProps={{
-            selectProps: {
-              allowCreatingNewItems: true,
-              items: items
-            },
-            expressions,
-            allowableTypes,
-            width: 300
-          }}
-          selectItems={items}
-          placeholder={loading ? getString('loading') : getString('select')}
-          fieldPath={name}
-          template={{}}
-        />
-      </Layout.Horizontal>
-    </Layout.Vertical>
+    <div className={cx(stepCss.formGroup, stepCss.md)}>
+      <SelectInputSetView
+        label={getString(label)}
+        name={`${path}.${name}`}
+        disabled={readonly}
+        useValue
+        multiTypeInputProps={{
+          selectProps: {
+            allowCreatingNewItems: true,
+            items: items
+          },
+          expressions,
+          allowableTypes,
+          width: 300
+        }}
+        selectItems={items}
+        placeholder={loading ? getString('loading') : getString('select')}
+        fieldPath={name}
+        template={inputSetData?.template}
+      />
+    </div>
   )
 
   return (

@@ -52,6 +52,27 @@ exports[`<HarnessApprovalTab /> tests Non-Waiting Status form is not shown 1`] =
           </div>
         </td>
       </tr>
+      <tr>
+        <th>
+          common.userGroups:
+        </th>
+        <td>
+          <div>
+            <a
+              href="/account/OgiB4-xETamKNVAz-wQRjw/settings/access-control/user-groups/ug1?parentScope=account"
+            >
+              ug1
+            </a>
+          </div>
+          <div>
+            <a
+              href="/account/OgiB4-xETamKNVAz-wQRjw/settings/access-control/user-groups/ug2?parentScope=account"
+            >
+              ug2
+            </a>
+          </div>
+        </td>
+      </tr>
     </tbody>
   </table>
   <div
@@ -299,6 +320,27 @@ exports[`<HarnessApprovalTab /> tests Waiting Status does not shows form if user
         <td>
           <div>
             MOCK DURATION
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th>
+          common.userGroups:
+        </th>
+        <td>
+          <div>
+            <a
+              href="/account/OgiB4-xETamKNVAz-wQRjw/settings/access-control/user-groups/ug1?parentScope=account"
+            >
+              ug1
+            </a>
+          </div>
+          <div>
+            <a
+              href="/account/OgiB4-xETamKNVAz-wQRjw/settings/access-control/user-groups/ug2?parentScope=account"
+            >
+              ug2
+            </a>
           </div>
         </td>
       </tr>
@@ -558,6 +600,27 @@ exports[`<HarnessApprovalTab /> tests Waiting Status shows form if user is autho
         <td>
           <div>
             MOCK DURATION
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th>
+          common.userGroups:
+        </th>
+        <td>
+          <div>
+            <a
+              href="/account/OgiB4-xETamKNVAz-wQRjw/settings/access-control/user-groups/ug1?parentScope=account"
+            >
+              ug1
+            </a>
+          </div>
+          <div>
+            <a
+              href="/account/OgiB4-xETamKNVAz-wQRjw/settings/access-control/user-groups/ug2?parentScope=account"
+            >
+              ug2
+            </a>
           </div>
         </td>
       </tr>

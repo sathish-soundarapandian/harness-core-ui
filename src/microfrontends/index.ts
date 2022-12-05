@@ -43,6 +43,7 @@ import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
 import type { TIUIAppCustomProps } from '@pipeline/pages/execution/ExecutionTestView/interfaces/TIUIApp.types'
 import type { ChaosCustomMicroFrontendProps } from '@chaos/interfaces/Chaos.types'
 import type { FFCustomMicroFrontendProps } from '@cf/FFCustomMicroFrontendProps.types'
+import type { getLocationPathName } from 'framework/utils/WindowLocation'
 
 export interface Scope {
   accountId?: string
@@ -71,6 +72,9 @@ export interface Hooks {
   useFeature?: typeof useFeature
 }
 
+export interface Utils {
+  getLocationPathName?: typeof getLocationPathName
+}
 /**
  * Parent contexts which consists of all the context used in the parent app
  */
@@ -88,6 +92,7 @@ export interface ChildAppProps {
   scope: Scope
   components: CommonComponents
   hooks: Hooks
+  utils?: Utils
   on401?: () => void
   children?: React.ReactNode
 }

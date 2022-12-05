@@ -7,6 +7,7 @@ exports[`<TemplateVariables /> tests should render error 1`] = `
   >
     <div
       class="StyledProps--font StyledProps--main PageError--pageError StyledProps--flex StyledProps--flex-align-center-center"
+      data-testid="page-error"
       style="width: 100%; height: 100%;"
     >
       <div
@@ -47,6 +48,7 @@ exports[`<TemplateVariables /> tests should render loader 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main PageSpinner--spinner StyledProps--flex StyledProps--flex-align-center-center"
+    data-testid="page-spinner"
   >
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main PageSpinner--content"

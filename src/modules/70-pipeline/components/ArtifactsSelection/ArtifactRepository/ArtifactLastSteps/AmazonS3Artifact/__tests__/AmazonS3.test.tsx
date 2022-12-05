@@ -30,12 +30,16 @@ import {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { AmazonS3 } from '../AmazonS3'
-import { awsRegionsData, bucketListData } from './mock'
+import { awsRegionsData, bucketListData, filePathListData } from './mock'
 
 const fetchBuckets = jest.fn().mockReturnValue(bucketListData)
+const fetchFilePaths = jest.fn().mockReturnValue(filePathListData)
 jest.mock('services/cd-ng', () => ({
   useGetV2BucketListForS3: jest.fn().mockImplementation(() => {
     return { data: bucketListData, refetch: fetchBuckets, error: null, loading: false }
+  }),
+  useGetFilePathsForS3: jest.fn().mockImplementation(() => {
+    return { data: filePathListData, refetch: fetchFilePaths, error: null, loading: false }
   })
 }))
 jest.mock('services/portal', () => ({
@@ -124,7 +128,7 @@ describe('AmazonS3 tests', () => {
         identifier: '',
         bucketName: 'cdng-terraform-state',
         tagType: TagTypes.Value,
-        filePath: 'test_file_path'
+        filePath: 'folderName/filePath1.yaml'
       },
       type: 'AmazonS3'
     }
@@ -148,7 +152,7 @@ describe('AmazonS3 tests', () => {
         spec: {
           connectorRef: 'testConnector',
           bucketName: 'cdng-terraform-state',
-          filePath: 'test_file_path'
+          filePath: 'folderName/filePath1.yaml'
         }
       })
     })
@@ -307,7 +311,7 @@ describe('AmazonS3 tests', () => {
         identifier: '',
         bucketName: RUNTIME_INPUT_VALUE,
         tagType: TagTypes.Value,
-        filePath: 'test_file_path'
+        filePath: 'folderName/filePath1.yaml'
       },
       type: 'AmazonS3'
     }
@@ -589,7 +593,7 @@ describe('AmazonS3 tests', () => {
         region: RUNTIME_INPUT_VALUE,
         bucketName: 'cdng-terraform-state',
         tagType: TagTypes.Value,
-        filePath: 'test_file_1'
+        filePath: 'folderName/filePath1.yaml'
       },
       type: 'AmazonS3'
     }
@@ -622,33 +626,38 @@ describe('AmazonS3 tests', () => {
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
 
     const submitBtn = getByText('submit')
-    fireEvent.click(submitBtn)
+    userEvent.click(submitBtn)
     const bucketNameRequiredErr = await findByText(container, 'pipeline.manifestType.bucketNameRequired')
     expect(bucketNameRequiredErr).toBeDefined()
     const filePathRegexRequiredErr = await findByText(container, 'pipeline.manifestType.pathRequired')
     expect(filePathRegexRequiredErr).toBeDefined()
 
-    const portalDivs = document.getElementsByClassName('bp3-portal')
-    expect(portalDivs.length).toBe(0)
+    const popoverDivs = document.getElementsByClassName('bp3-popover')
+    expect(popoverDivs.length).toBe(0)
 
     // Select bucketName from dropdown
     const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
-    fireEvent.click(bucketNameDropDownButton!)
-    expect(portalDivs.length).toBe(1)
-    const dropdownPortalDiv = portalDivs[0]
-    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
-    const selectItem = await findByText(selectListMenu as HTMLElement, 'prod-bucket-339')
-    act(() => {
-      fireEvent.click(selectItem)
-    })
+    userEvent.click(bucketNameDropDownButton!)
+    await waitFor(() => expect(popoverDivs.length).toBe(1))
+    const bucketNameDropdownDialogDiv = popoverDivs[0]
+    const bucketNameSelectListMenu = bucketNameDropdownDialogDiv.querySelector('.bp3-menu')
+    const bucketItem = await findByText(bucketNameSelectListMenu as HTMLElement, 'prod-bucket-339')
+    userEvent.click(bucketItem)
     const bucketNameSelect = queryByNameAttribute('bucketName') as HTMLInputElement
     expect(bucketNameSelect.value).toBe('prod-bucket-339')
+    await waitFor(() => expect(popoverDivs.length).toBe(0))
 
-    // change value of filePath
-    act(() => {
-      fireEvent.change(queryByNameAttribute('filePath')!, { target: { value: 'file_path' } })
-    })
-    await waitFor(() => expect(container.querySelector('input[name="filePath"]')).toHaveValue('file_path'))
+    // Select filePath from dropdown
+    const filePathDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[2]
+    userEvent.click(filePathDropDownButton!)
+    await waitFor(() => expect(popoverDivs.length).toBe(1))
+    const filePathDropdownDialogDiv = popoverDivs[0]
+    const filePathSelectListMenu = filePathDropdownDialogDiv.querySelector('.bp3-menu')
+    const filePathItem = await findByText(filePathSelectListMenu as HTMLElement, 'folderName/filePath2.yaml')
+    userEvent.click(filePathItem)
+    const filePathSelect = queryByNameAttribute('filePath') as HTMLInputElement
+    expect(filePathSelect.value).toBe('folderName/filePath2.yaml')
+    await waitFor(() => expect(popoverDivs.length).toBe(0))
 
     // Submit the form
     fireEvent.click(submitBtn)
@@ -658,7 +667,7 @@ describe('AmazonS3 tests', () => {
         spec: {
           connectorRef: 'testConnector',
           bucketName: 'prod-bucket-339',
-          filePath: 'file_path'
+          filePath: 'folderName/filePath2.yaml'
         }
       })
     })
@@ -747,7 +756,7 @@ describe('AmazonS3 tests', () => {
         identifier: '',
         bucketName: 'cdng-terraform-state',
         tagType: TagTypes.Value,
-        filePath: 'test_file_1'
+        filePath: 'folderName/filePath1.yaml'
       },
       type: 'AmazonS3'
     }
@@ -759,51 +768,61 @@ describe('AmazonS3 tests', () => {
 
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
 
-    const submitBtn = getByText('submit')
-    fireEvent.click(submitBtn)
-
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
 
     const bucketNameSelect = queryByNameAttribute('bucketName') as HTMLInputElement
     expect(bucketNameSelect.value).toBe('cdng-terraform-state')
+    const filePathSelect = queryByNameAttribute('filePath') as HTMLInputElement
+    expect(filePathSelect.value).toBe('folderName/filePath1.yaml')
+
+    // Three dropdown fields should be rendered
+    const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
+    expect(dropdownIcons.length).toBe(3)
 
     // Select region from dropdown
-    const regionDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[0]
+    const regionDropDownButton = dropdownIcons[0]
     fireEvent.click(regionDropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDivRegion = portalDivs[0]
     const selectListMenuRegion = dropdownPortalDivRegion.querySelector('.bp3-menu')
     const selectItemRegion = await findByText(selectListMenuRegion as HTMLElement, 'GovCloud (US-West)')
-    act(() => {
-      fireEvent.click(selectItemRegion)
-    })
+    userEvent.click(selectItemRegion)
     const regionSelect = queryByNameAttribute('region') as HTMLInputElement
     expect(regionSelect.value).toBe('GovCloud (US-West)')
     await waitFor(() => expect(bucketNameSelect.value).toBe(''))
 
     // Select bucketName from dropdown
-    const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
-    fireEvent.click(bucketNameDropDownButton!)
+    const bucketNameDropDownButton = dropdownIcons[1]
+    userEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(2)
-    const dropdownPortalDiv = portalDivs[1]
-    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
-    const selectItem = await findByText(selectListMenu as HTMLElement, 'prod-bucket-339')
-    act(() => {
-      fireEvent.click(selectItem)
-    })
-    expect(bucketNameSelect.value).toBe('prod-bucket-339')
+    const bucketNameDropdownPortalDiv = portalDivs[1]
+    const bucketNameSelectListMenu = bucketNameDropdownPortalDiv.querySelector('.bp3-menu')
+    const bucketNameSelectItem = await findByText(bucketNameSelectListMenu as HTMLElement, 'prod-bucket-339')
+    userEvent.click(bucketNameSelectItem)
+    await waitFor(() => expect(bucketNameSelect.value).toBe('prod-bucket-339'))
+
+    // Select bucketName from dropdown
+    const filePathDropDownButton = dropdownIcons[2]
+    userEvent.click(filePathDropDownButton!)
+    expect(portalDivs.length).toBe(3)
+    const filePathDropdownPortalDiv = portalDivs[2]
+    const filePathSelectListMenu = filePathDropdownPortalDiv.querySelector('.bp3-menu')
+    const filePathSelectItem = await findByText(filePathSelectListMenu as HTMLElement, 'folderName/filePath3.yaml')
+    userEvent.click(filePathSelectItem)
+    await waitFor(() => expect(filePathSelect.value).toBe('folderName/filePath3.yaml'))
 
     // Submit the form
-    fireEvent.click(submitBtn)
+    const submitBtn = getByText('submit')
+    userEvent.click(submitBtn)
     await waitFor(() => {
       expect(props.handleSubmit).toBeCalled()
-      expect(props.handleSubmit).toHaveBeenCalledWith({
+      expect(props.handleSubmit).toHaveBeenLastCalledWith({
         spec: {
           connectorRef: 'testConnector',
           region: 'us-gov-west-1',
           bucketName: 'prod-bucket-339',
-          filePath: 'test_file_1'
+          filePath: 'folderName/filePath3.yaml'
         }
       })
     })

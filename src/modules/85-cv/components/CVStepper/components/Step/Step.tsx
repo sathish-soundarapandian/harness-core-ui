@@ -8,6 +8,7 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import cx from 'classnames'
 import { Container, Card, Text } from '@harness/uicore'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import type { StepPropsInterface, StepStatusType } from './Step.types'
 import { StepTitle } from './components/StepTitle/StepTitle'
@@ -32,6 +33,7 @@ const Step = ({
   const [stepStatus, setStepStatus] = useState<StepStatusType>(StepStatus.INCONCLUSIVE)
   const isLastStep = selectedStepIndex === stepList.length - 1
   const isCurrentStep = selectedStepIndex === index
+  const { id, panel, preview, helpPanelReferenceId } = step
 
   const onTitleClick = useCallback(
     (titleIndex: number): void => {
@@ -75,12 +77,12 @@ const Step = ({
         isOptional={isOptional}
       />
       <Container
-        data-testid={`preview_${step.id}`}
+        data-testid={`preview_${id}`}
         className={cx(css.alignContainerRight, (index !== stepList.length - 1 || isLastStep) && css.borderLeft)}
       >
         {isPreviewVisible && (
-          <Container data-testid={`preview_${step.id}`}>
-            <>{step.preview}</>
+          <Container data-testid={`preview_${id}`} width={500}>
+            <>{preview}</>
           </Container>
         )}
         {(isCurrentStep || isErrorMessageVisible) && (
@@ -92,8 +94,8 @@ const Step = ({
             )}
             {isCurrentStep && (
               <>
-                <Card data-testid={`panel_${step.id}`} className={css.card}>
-                  {step.panel}
+                <Card data-testid={`panel_${id}`} className={css.card}>
+                  {panel}
                 </Card>
                 <StepNavButtons index={index} onContinue={onContinue} isLastStep={isLastStep} />
               </>
@@ -101,6 +103,9 @@ const Step = ({
           </Container>
         )}
       </Container>
+      {isCurrentStep && helpPanelReferenceId && (
+        <HelpPanel referenceId={helpPanelReferenceId} type={HelpPanelType.FLOATING_CONTAINER} />
+      )}
     </Container>
   )
 }

@@ -26,6 +26,10 @@ export interface SelectItem {
   value: string
 }
 
+export interface CriteriaPercentageType {
+  criteriaPercentageType?: CriteriaThresholdValues
+}
+
 export type MetricThresholdType = MetricThreshold & {
   metricType?: string
   spec?: MetricThresholdSpec & FailMetricThresholdSpec

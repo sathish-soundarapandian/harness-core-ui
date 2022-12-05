@@ -90,6 +90,7 @@ exports[`Validate HealthSourceInputset should render HealthSourceInputset in err
     </p>
     <div
       class="StyledProps--font StyledProps--main PageError--pageError StyledProps--flex StyledProps--flex-align-center-center"
+      data-testid="page-error"
       style="width: 100%; height: 100%;"
     >
       <div

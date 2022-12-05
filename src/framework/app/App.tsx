@@ -217,6 +217,14 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
 }
 
 export function AppWithoutAuthentication(props: AppProps): React.ReactElement {
+  const { pathname, hash } = window.location
+  const { browserRouterEnabled } = window
+  // Redirect from `/#/account/...` to `/account/...`
+  if (browserRouterEnabled && hash && (pathname === '/' || pathname.endsWith('/ng') || pathname.endsWith('/ng/'))) {
+    const targetUrl = window.location.href.replace('/#/', '/')
+    window.location.href = targetUrl
+  }
+
   return (
     <RestfulProvider base="/">
       <QueryClientProvider client={queryClient}>

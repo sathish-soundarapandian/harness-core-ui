@@ -49,7 +49,7 @@ import {
   TriggerGitEvent,
   ciCodebaseBuildIssueComment
 } from '@triggers/components/Triggers/utils'
-import { eventTypes } from '@triggers/components/Triggers/WebhookTrigger/utils'
+import { getPipelineWithInjectedWithCloneCodebase } from '@triggers/components/Triggers/WebhookTrigger/utils'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import css from './WebhookPipelineInputPanel.module.scss'
 
@@ -65,49 +65,6 @@ const applySelectedArtifactToPipelineObject = (pipelineObj: PipelineInfoConfig):
   }
 
   return newPipelineObject
-}
-
-const getPipelineWithInjectedWithCloneCodebase = ({
-  event,
-  pipeline,
-  isPipelineFromTemplate
-}: {
-  event: string
-  pipeline: PipelineInfoConfig
-  isPipelineFromTemplate: boolean
-}): any => {
-  if (isPipelineFromTemplate) {
-    const pipelineFromTemplate = { ...(pipeline || {}) }
-    if (pipelineFromTemplate?.template?.templateInputs?.properties?.ci?.codebase?.build) {
-      pipelineFromTemplate.template.templateInputs.properties.ci.codebase.build =
-        event === eventTypes.PULL_REQUEST ? ciCodebaseBuildPullRequest : ciCodebaseBuild
-    }
-
-    return pipelineFromTemplate
-  }
-  if (event === eventTypes.PULL_REQUEST) {
-    return {
-      ...pipeline,
-      properties: {
-        ci: {
-          codebase: {
-            build: ciCodebaseBuildPullRequest
-          }
-        }
-      }
-    }
-  } else {
-    return {
-      ...pipeline,
-      properties: {
-        ci: {
-          codebase: {
-            build: ciCodebaseBuild
-          }
-        }
-      }
-    }
-  }
 }
 
 function WebhookPipelineInputPanelForm({

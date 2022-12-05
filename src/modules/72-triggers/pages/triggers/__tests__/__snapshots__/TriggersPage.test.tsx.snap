@@ -7,6 +7,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
     Help Panel
     <div
       class="Layout--horizontal StyledProps--main PageSubHeader--container StyledProps--flex"
+      data-testid="page-subheader"
     >
       <button
         aria-label="triggers.newTrigger"
@@ -85,6 +86,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody"
       data-name="page-body"
+      data-testid="page-body"
     >
       <div
         class="TableV2--table table"
@@ -3172,6 +3174,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - Shows Tr
     Help Panel
     <div
       class="Layout--horizontal StyledProps--main PageSubHeader--container StyledProps--flex"
+      data-testid="page-subheader"
     >
       <button
         aria-label="triggers.newTrigger"
@@ -3222,6 +3225,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - Shows Tr
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody"
       data-name="page-body"
+      data-testid="page-body"
     >
       <div
         class="TableV2--table table"

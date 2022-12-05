@@ -208,6 +208,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
       {SRM_COMPOSITE_SLO && (
         <RbacButton
           icon="plus"
+          data-testid="createCompositeSLO"
           text={getString('cv.slos.createCompositeSLO')}
           variation={ButtonVariation.PRIMARY}
           onClick={() => {
@@ -275,7 +276,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     const slo = row?.original
     const { serviceName = '', environmentIdentifier = '', monitoredServiceIdentifier: identifier = '' } = slo || {}
 
-    return (
+    return identifier ? (
       <Layout.Vertical padding={{ left: 'small' }}>
         <Link
           to={routes.toCVAddMonitoringServicesEdit({
@@ -309,6 +310,8 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           </Text>
         </Link>
       </Layout.Vertical>
+    ) : (
+      <Layout.Vertical padding={{ left: 'small' }}>NA</Layout.Vertical>
     )
   }
 

@@ -852,7 +852,7 @@ exports[`About Project test create project  2`] = `
                           style="--avatar-over-lap: -13px;"
                         >
                           <div
-                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                            class="AvatarGroup--stackAvatar avatarGroupAdd Avatar--Avatar Avatar--contentStyle"
                           >
                             <span
                               class="bp3-popover-wrapper Avatar--avatarPopOver"
@@ -889,7 +889,7 @@ exports[`About Project test create project  2`] = `
                           style="--avatar-over-lap: -13px;"
                         >
                           <div
-                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                            class="AvatarGroup--stackAvatar avatarGroupAdd Avatar--Avatar Avatar--contentStyle"
                           >
                             <span
                               class="bp3-popover-wrapper Avatar--avatarPopOver"

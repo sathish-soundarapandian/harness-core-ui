@@ -21,7 +21,12 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import List from '@common/components/List/List'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { NameValuePair, useListAwsRegions } from 'services/portal'
-import { GitConfigDTO, useGetBucketListForS3, useGetGCSBucketList, useGetHelmChartVersionDetails } from 'services/cd-ng'
+import {
+  GitConfigDTO,
+  useGetBucketsInManifests,
+  useGetGCSBucketList,
+  useGetHelmChartVersionDetails
+} from 'services/cd-ng'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
@@ -29,12 +34,14 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
 import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   getDefaultQueryParam,
   getFinalQueryParamData,
   getFqnPath,
   getFqnPathForChart,
+  getManifestFieldFqnPath,
   isFieldfromTriggerTabDisabled,
   shouldDisplayRepositoryName
 } from '../ManifestSourceUtils'
@@ -42,7 +49,11 @@ import { isFieldFixedType, isFieldRuntime } from '../../K8sServiceSpecHelper'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import CustomRemoteManifestRuntimeFields from '../ManifestSourceRuntimeFields/CustomRemoteManifestRuntimeFields'
 import ManifestCommonRuntimeFields from '../ManifestSourceRuntimeFields/ManifestCommonRuntimeFields'
-import { isExecutionTimeFieldDisabled, isNewServiceEnvEntity } from '../../ArtifactSource/artifactSourceUtils'
+import {
+  getYamlData,
+  isExecutionTimeFieldDisabled,
+  isNewServiceEnvEntity
+} from '../../ArtifactSource/artifactSourceUtils'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
@@ -63,7 +74,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     branch,
     stageIdentifier,
     serviceIdentifier,
-    stepViewType
+    stepViewType,
+    pipelineIdentifier
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -108,7 +120,12 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     lazy: true
   })
 
-  const commonQueryParam = {
+  const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
+  const fqnPathManifestPath = defaultTo(
+    manifestPath?.split('[')[0].concat(`.${get(initialValues, `${manifestPath}.identifier`)}`),
+    ''
+  )
+  const bucketListAPIQueryParams = {
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
@@ -118,23 +135,30 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
         get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
       )
     ),
+    pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
     serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
-    fqnPath: isNewServiceEnvEntity(path as string) ? getFqnPath(stageIdentifier, manifestPath as string) : undefined
+    fqnPath: getManifestFieldFqnPath(
+      path as string,
+      !!isPropagatedStage,
+      stageIdentifier,
+      fqnPathManifestPath,
+      'bucketName'
+    )
   }
 
   const {
     data: s3BucketList,
-    loading: s3bucketdataLoading,
+    loading: s3BucketDataLoading,
     refetch: refetchS3Buckets
-  } = useGetBucketListForS3({
+  } = useMutateAsGet(useGetBucketsInManifests, {
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
     queryParams: {
-      ...commonQueryParam,
-      region: getFinalQueryParamData(
-        getDefaultQueryParam(
-          manifest?.spec?.store?.spec.region,
-          get(initialValues, `${manifestPath}.spec.store.spec.region`, '')
-        )
-      )
+      ...bucketListAPIQueryParams
     },
     lazy: true
   })
@@ -149,12 +173,28 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     label: chartVersion
   }))
 
-  const s3BucketOptions = Object.keys(s3BucketList || {}).map(item => ({
-    label: item,
-    value: item
-  }))
+  const s3BucketOptions = React.useMemo(() => {
+    return Object.keys(s3BucketList?.data || {}).map(item => ({
+      label: item,
+      value: item
+    }))
+  }, [s3BucketList?.data])
 
   /*-------------------------Gcs Store related code --------------------------*/
+  const commonQueryParam = {
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    connectorRef: getFinalQueryParamData(
+      getDefaultQueryParam(
+        manifest?.spec?.store?.spec.connectorRef,
+        get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
+      )
+    ),
+    serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+    fqnPath: isNewServiceEnvEntity(path as string) ? getFqnPath(stageIdentifier, manifestPath as string) : undefined
+  }
+
   const {
     data: gcsBucketData,
     loading: gcsBucketLoading,
@@ -199,7 +239,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
                 if (
                   !s3BucketList?.data &&
                   getDefaultQueryParam(
-                    manifest?.spec?.spec.connectorRef,
+                    manifest?.spec?.store.spec.connectorRef,
                     get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
                   ) &&
                   getDefaultQueryParam(
@@ -213,7 +253,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               selectProps: {
                 usePortal: true,
                 addClearBtn: !readonly,
-                items: s3bucketdataLoading
+                items: s3BucketDataLoading
                   ? [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
                   : s3BucketOptions,
 

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Container, Layout, Popover, useToaster } from '@harness/uicore'
+import { Button, ButtonVariation, Container, Popover, useToaster } from '@harness/uicore'
 import { chunk } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
@@ -39,8 +39,6 @@ export interface ActionButtonProps {
   step: ExecutionNode
   allowedStrategies: StrategyType[]
   isManualInterruption: boolean
-  expIdentifier: string
-  expRunIdentifier: string
 }
 
 export function ActionButtons(props: ActionButtonProps): React.ReactElement {
@@ -58,7 +56,6 @@ export function ActionButtons(props: ActionButtonProps): React.ReactElement {
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
-  const history = useHistory()
 
   function handleChange(strategy: StrategyType): void {
     const interruptType = strategy as HandleManualInterventionInterruptQueryParams['interruptType']
@@ -83,7 +80,7 @@ export function ActionButtons(props: ActionButtonProps): React.ReactElement {
   }, [error])
 
   return (
-    <Layout.Horizontal spacing={'small'} className={cx({ [css.loading]: loading })}>
+    <div className={cx({ [css.loading]: loading })}>
       {isManualInterruption ? (
         <Popover
           minimal={true}
@@ -96,6 +93,7 @@ export function ActionButtons(props: ActionButtonProps): React.ReactElement {
                     {layer.map((strategy, j) => (
                       <Menu.Item
                         key={j}
+                        data-testid={strategy}
                         icon={strategyIconMap[strategy] as IconName}
                         text={getString(stringsMap[strategy])}
                         textClassName={css.performActionStyle}
@@ -117,58 +115,49 @@ export function ActionButtons(props: ActionButtonProps): React.ReactElement {
             />
           </div>
         </Popover>
-      ) : null}
-
-      {props.expRunIdentifier && (
-        <Button
-          text={getString('chaos.viewDetailedExecution')}
-          variation={ButtonVariation.SECONDARY}
-          onClick={() =>
-            history.push(
-              routes.toChaosExperimentRun({
-                accountId: accountId,
-                orgIdentifier: orgIdentifier,
-                projectIdentifier: projectIdentifier,
-                expIdentifier: props.expIdentifier,
-                expRunIdentifier: props.expRunIdentifier
-              })
-            )
-          }
-        />
+      ) : (
+        <></>
       )}
-    </Layout.Horizontal>
+    </div>
   )
 }
 
-export function ChaosExperimentExecView(props: StepDetailProps): React.ReactElement {
+export default function ChaosExperimentExecView(props: StepDetailProps): React.ReactElement {
+  const history = useHistory()
   const { step, stageType = StageType.DEPLOY } = props
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
   const failureStrategies = allowedStrategiesAsPerStep(stageType)[StepMode.STEP].filter(
     st => st !== Strategy.ManualIntervention
   )
+  const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<ExecutionPathProps>>()
 
   return (
-    <div>
-      <Container padding="medium">
-        {
-          <ChildAppMounter<ChaosStepExecutionProps>
-            ChildApp={ChaosStepExecution}
-            notifyID={step.executableResponses?.[0]?.async?.callbackIds?.[0] ?? ''}
-            expectedResilienceScore={step.stepParameters?.spec?.expectedResilienceScore ?? 50}
-            actionButtons={
-              <ActionButtons
-                step={step}
-                allowedStrategies={failureStrategies}
-                isManualInterruption={isManualInterruption}
-                expIdentifier={step.stepParameters?.spec.experimentRef}
-                expRunIdentifier={(step.outcomes?.output?.experimentRunId as unknown as string) ?? ''}
-              />
-            }
-            status={step.status as string}
+    <Container padding="medium">
+      <ChildAppMounter<ChaosStepExecutionProps>
+        ChildApp={ChaosStepExecution}
+        notifyID={step.executableResponses?.[0]?.async?.callbackIds?.[0] ?? ''}
+        expectedResilienceScore={step.stepParameters?.spec?.expectedResilienceScore ?? 50}
+        actionButtons={
+          <ActionButtons
+            step={step}
+            allowedStrategies={failureStrategies}
             isManualInterruption={isManualInterruption}
           />
         }
-      </Container>
-    </div>
+        onViewExecutionClick={expRunIdentifier =>
+          history.push(
+            routes.toChaosExperimentRun({
+              accountId: accountId,
+              orgIdentifier: orgIdentifier,
+              projectIdentifier: projectIdentifier,
+              expIdentifier: step.stepParameters?.spec.experimentRef,
+              expRunIdentifier: expRunIdentifier
+            })
+          )
+        }
+        status={step.status as string}
+        isManualInterruption={isManualInterruption}
+      />
+    </Container>
   )
 }

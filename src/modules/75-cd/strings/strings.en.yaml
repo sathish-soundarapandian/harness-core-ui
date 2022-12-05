@@ -261,7 +261,10 @@ pipelineSteps:
     stageIsRequired: Stage is required
 cdLaunchText: Launch CD First Generation
 serviceDashboard:
+  instanceDataEmpty: Instance data is empty.
   activeServiceInstancesLabel: '{{$.common.subscriptions.usage.srvcInst}}'
+  runningServiceInstancesLabel: 'Running Service Instances (Current)'
+  recentDeployments: 'Recent Deployments'
   servicesInLast: 'Services added in {{period}}'
   serviceInstancesInLast: 'Active service instance trend in {{period}}'
   serviceInstances: 'Service Instances'
@@ -317,7 +320,7 @@ serviceDashboard:
   taskDefinitionArn: Task Definition ARN
   taskArn: Task ARN
   awsRegion: AWS Region
-  containerList: containerList
+  containerList: Container List
 noEnvironment:
   title: No Environments Available
   message: Create an environment and let’s start configuring the deployment
@@ -622,3 +625,13 @@ artifactVersion: 'Version :'
 artifactPath: 'Path :'
 logoOfName: 'Logo of {{name}}'
 deploymentTemplates: 'Deployment Templates'
+environmentDetailPage:
+  infraSlashCluster: Infra / GitOps Cluster
+  selectInfraMsg: 'Select an Infrastructure to view instance details'
+  noInstancesToShow: No Instances to show
+  seeFull: See full
+  viewInTable: 'View in table'
+  noServiceArtifactMsg: 'There is no service and artifact details present'
+  emptyInstanceDetailMsg: 'Empty instance detail'
+  emptyServiceDetailMsg: 'There are no services in this environment.'
+  emptyExecutionListMsg: 'There are no executions for this given criteria.'

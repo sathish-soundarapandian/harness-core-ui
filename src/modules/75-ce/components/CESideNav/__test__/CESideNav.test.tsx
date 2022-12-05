@@ -12,7 +12,7 @@ import CESideNav, { ProjectLevelFeedback } from '../CESideNav'
 
 jest.mock('@common/hooks/useFeatureFlag', () => ({
   useFeatureFlags: jest.fn(() => ({
-    CLOUD_COST_GOVERNANCE_UI: true,
+    CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI: true,
     CCM_COMMORCH: true
   }))
 }))

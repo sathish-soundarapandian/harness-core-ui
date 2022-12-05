@@ -13,6 +13,7 @@ import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelp
 import type { K8SDirectServiceStep } from '@pipeline/factories/ArtifactTriggerInputFactory/types'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import type { ManifestAttributes } from 'services/cd-ng'
+import { isNewServiceEnvEntity } from '../ArtifactSource/artifactSourceUtils'
 
 export const DefaultParam = 'defaultParam'
 export const fromPipelineInputTriggerTab = (formik: FormikValues, fromTrigger = false): boolean => {
@@ -117,4 +118,21 @@ export function getFqnPath(stageIdentifier: string, manifestPath: string): strin
 
 export function getFqnPathForChart(stageIdentifier: string, manifestIdentifier: string): string {
   return `pipeline.stages.${stageIdentifier}.spec.service.serviceInputs.serviceDefinition.spec.manifests.${manifestIdentifier}`
+}
+
+export function getManifestFieldFqnPath(
+  path: string,
+  isPropagatedStage: boolean,
+  stageIdentifier: string,
+  manifestPath: string,
+  fieldName: string
+): string {
+  if (isNewServiceEnvEntity(path)) {
+    return `pipeline.stages.${stageIdentifier}.spec.service.serviceInputs.serviceDefinition.spec.${manifestPath}.spec.store.spec.${fieldName}`
+  } else {
+    if (isPropagatedStage) {
+      return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.${manifestPath}.spec.store.spec.${fieldName}`
+    }
+    return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.${manifestPath}.spec.store.spec.${fieldName}`
+  }
 }

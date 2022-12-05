@@ -47,6 +47,7 @@ export const responseSLODashboardDetail: ResponseSLODashboardDetail = {
   status: 'SUCCESS',
   data: {
     sloDashboardWidget: {
+      sloType: 'Simple',
       sloIdentifier: 'Server_Error_Rate',
       title: 'Server Error Rate',
       monitoredServiceIdentifier: 'Service_1_Environment_1',
@@ -88,6 +89,7 @@ export const responseSLODashboardDetail2: ResponseSLODashboardDetail = {
   status: 'SUCCESS',
   data: {
     sloDashboardWidget: {
+      sloType: 'Simple',
       sloIdentifier: 'Server_Error_Rate',
       title: 'Server Error Rate',
       monitoredServiceIdentifier: 'Service_1_Environment_1',

@@ -5,9 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, ButtonVariation, Layout, Page, PageSpinner, Text, useToaster } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  ExpandingSearchInputHandle,
+  Layout,
+  Page,
+  PageSpinner,
+  Text,
+  useToaster
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
@@ -51,8 +60,13 @@ function _FreezeWindowsPage(): React.ReactElement {
   const queryParams = useQueryParams<FreezeListUrlQueryParams>(getQueryParamOptions())
   const { searchTerm, page, size, sort, freezeStatus, startTime, endTime } = queryParams
   const { selectedItems, toggleAllSelect } = useFreezeWindowListContext()
+  const searchRef = useRef({} as ExpandingSearchInputHandle)
 
-  const resetFilter = () => replaceQueryParams({})
+  const resetFilter = (): void => {
+    searchRef.current.clear()
+    replaceQueryParams({})
+  }
+
   useDocumentTitle([getString('common.freezeWindows')])
 
   const {
@@ -138,7 +152,7 @@ function _FreezeWindowsPage(): React.ReactElement {
         freezeListLoading={freezeListLoading}
         refreshGlobalFreezeBanner={refreshGlobalFreezeBanner}
       />
-      <FreezeWindowListSubHeader />
+      <FreezeWindowListSubHeader ref={searchRef} />
       <GlobalFreezeBanner globalFreezes={globalFreezes} />
 
       <Page.Body

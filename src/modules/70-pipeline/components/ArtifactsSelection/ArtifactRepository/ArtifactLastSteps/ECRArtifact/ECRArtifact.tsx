@@ -37,7 +37,7 @@ import {
   getConnectorIdValue,
   getFinalArtifactObj,
   resetTag,
-  shouldFetchTags
+  shouldFetchFieldOptions
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
@@ -158,7 +158,7 @@ export function ECRArtifact({
     (imagePath: string, region: string): boolean =>
       !!(
         (lastQueryData.imagePath !== imagePath || lastQueryData.region !== region) &&
-        shouldFetchTags(prevStepData, [imagePath, region])
+        shouldFetchFieldOptions(prevStepData, [imagePath, region])
       ),
     [lastQueryData, prevStepData]
   )

@@ -175,7 +175,6 @@ describe('Input Sets', () => {
 
   it('INPUT SET: Show all runtime inputs in Visual view with correct full-page styling', () => {
     cy.visitPageAssertion()
-    cy.wait('@pipelineYAML')
     cy.wait('@pipelineMetadata')
     cy.wait('@emptyInputSetList')
     cy.wait(1000)

@@ -359,6 +359,9 @@ export function processInputSetInitialValues(
         initialValues.environment?.infrastructureDefinitions ||
         '') as string
     }),
+    service: {
+      ...initialValues.service
+    },
 
     ...(customStepProps?.gitOpsEnabled && {
       clusterRef:

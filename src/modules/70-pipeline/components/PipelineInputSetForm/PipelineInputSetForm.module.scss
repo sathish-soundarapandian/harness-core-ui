@@ -6,7 +6,7 @@
  */
 
 .container {
-  --pipeline-form-blue: #89b1cc;
+  --pipeline-form-blue: rgb(137, 177, 204);
   max-width: 1000px;
 
   :global(.bp3-icon) {
@@ -57,7 +57,7 @@
     top: 12px;
     width: 13px;
     height: 13px;
-    background: linear-gradient(147.14deg, #73dfe7 6.95%, #0063f7 93.05%);
+    background: linear-gradient(147.14deg, rgb(115, 223, 231) 6.95%, var(--teal-300) 93.05%);
     opacity: 0.6;
     border-radius: 3px;
   }
@@ -74,7 +74,7 @@
     left: 18px;
     width: 13px;
     height: 13px;
-    background: linear-gradient(147.14deg, #73dfe7 6.95%, #0063f7 93.05%);
+    background: linear-gradient(147.14deg, rgb(115, 223, 231) 6.95%, var(--teal-300) 93.05%);
     opacity: 0.6;
     border-radius: 100px;
   }
@@ -126,4 +126,9 @@
     padding: var(--spacing-5);
     background: var(--white);
   }
+}
+
+.pipelineStageForm {
+  padding-top: 0px !important;
+  margin-left: calc(var(--spacing-huge) - 20px) !important;
 }

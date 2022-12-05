@@ -16,14 +16,14 @@ import css from '../AccountOverview.module.scss'
 const versionAPIs = [
   {
     label: 'Access Control',
-    url: 'gateway/authz/api/version',
+    url: 'authz/api/version',
     id: 'access_control'
   },
-  {
-    url: 'auth/version.json',
-    label: 'Auth UI',
-    id: 'ng_auth_ui'
-  },
+  // {
+  //   url: 'auth/version.json',
+  //   label: 'Auth UI',
+  //   id: 'ng_auth_ui'
+  // },
   {
     label: 'Cloud Cost Management',
     url: 'ccm/api/version',
@@ -93,10 +93,13 @@ const versionAPIs = [
     label: 'Template Service',
     url: 'template/api/version',
     id: 'template_service'
+  },
+  {
+    label: 'GitOps',
+    url: 'gitops/api/v1/version',
+    id: 'gitops'
   }
 ]
-
-const BASE_URL = window.location.pathname.replace(/\/ng\/?/, '/')
 
 interface ServiceData {
   label?: string
@@ -112,7 +115,9 @@ const ServiceVersions = () => {
   const fetchServices = () => {
     const servicesLength = data.length
     if (servicesLength <= 0) {
-      const promiseArr = versionAPIs.map(row => fetch(row.url.startsWith('http') ? row.url : BASE_URL + row.url))
+      const promiseArr = versionAPIs.map(row =>
+        fetch(row.url.startsWith('http') ? row.url : window.getApiBaseUrl(row.url))
+      )
 
       setLoading(true)
       Promise.allSettled(promiseArr)

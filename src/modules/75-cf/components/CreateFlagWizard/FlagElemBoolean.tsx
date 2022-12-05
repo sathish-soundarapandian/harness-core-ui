@@ -219,7 +219,7 @@ const FlagElemBoolean = (props: FlagElemBooleanProps): JSX.Element => {
                     />
                   </Container>
                 </Layout.Horizontal>
-                <Container margin={{ bottom: 'xlarge' }}>
+                <Container margin={{ bottom: 'large' }}>
                   <Text color={Color.BLACK} margin={{ top: 'medium' }}>
                     {getString('cf.creationModal.defaultRules')}
                   </Text>

@@ -18,5 +18,6 @@ declare const styles: {
   readonly popover: string
   readonly secondaryText: string
   readonly secondaryTextContainer: string
+  readonly tooltipIcon: string
 }
 export default styles

@@ -168,7 +168,6 @@ export interface AccessControlCheckError {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -262,6 +261,7 @@ export interface AccessControlCheckError {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -344,6 +344,22 @@ export interface AccessControlCheckError {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -363,12 +379,18 @@ export type AddCollaboratorAuditEventData = AuditEventData & {
   source: Source
 }
 
+export interface AttributeFilter {
+  attributeName?: string
+  attributeValues?: string[]
+}
+
 export interface AuditEventDTO {
   action:
     | 'CREATE'
     | 'UPDATE'
     | 'RESTORE'
     | 'DELETE'
+    | 'FORCE_DELETE'
     | 'UPSERT'
     | 'INVITE'
     | 'RESEND_INVITE'
@@ -417,6 +439,7 @@ export interface AuditFilterProperties {
     | 'UPDATE'
     | 'RESTORE'
     | 'DELETE'
+    | 'FORCE_DELETE'
     | 'UPSERT'
     | 'INVITE'
     | 'RESEND_INVITE'
@@ -474,15 +497,26 @@ export type ChaosAuditEventData = AuditEventData & {
   eventModule?: string
 }
 
+export interface DelegateMetaInfo {
+  host_name?: string
+  id?: string
+}
+
 export type DynamicResourceSelector = ResourceSelector & {
   includeChildScopes?: boolean
   resourceType: string
 }
 
-export type EmailSettingDTO = NotificationSettingDTO & {
+export interface EmailDTO {
+  accountId: string
   body: string
+  ccRecipients: string[]
+  notificationId: string
   subject: string
+  toRecipients: string[]
 }
+
+export type EmailSettingDTO = NotificationSettingDTO & {}
 
 export interface Environment {
   identifier: string
@@ -645,7 +679,6 @@ export interface Error {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -739,6 +772,7 @@ export interface Error {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -821,6 +855,22 @@ export interface Error {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -989,7 +1039,6 @@ export interface Failure {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -1083,6 +1132,7 @@ export interface Failure {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -1165,6 +1215,22 @@ export interface Failure {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1217,11 +1283,22 @@ export interface NotificationDTO {
   team?: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'UNRECOGNIZED'
 }
 
+export interface NotificationProcessingResponse {
+  result?: boolean[]
+  shouldRetry?: boolean
+}
+
 export interface NotificationSettingDTO {
   accountId: string
   notificationId: string
   recipient: string
   type?: 'EMAIL' | 'SLACK' | 'PAGERDUTY' | 'MSTEAMS'
+}
+
+export interface NotificationTaskResponse {
+  delegateMetaInfo?: DelegateMetaInfo
+  errorMessage?: string
+  processingResponse?: NotificationProcessingResponse
 }
 
 export type OpaAuditEventData = AuditEventData & {
@@ -1270,6 +1347,16 @@ export interface PageNotificationDTO {
 
 export interface PageResourceGroupResponse {
   content?: ResourceGroupResponse[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageResourceGroupV2Response {
+  content?: ResourceGroupV2Response[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -1330,18 +1417,18 @@ export interface ResourceDTO {
     | 'GOVERNANCE_POLICY'
     | 'GOVERNANCE_POLICY_SET'
     | 'VARIABLE'
-    | 'MONITORED_SERVICE'
     | 'CHAOS_HUB'
+    | 'MONITORED_SERVICE'
     | 'CHAOS_INFRASTRUCTURE'
     | 'CHAOS_EXPERIMENT'
     | 'CHAOS_GAMEDAY'
+    | 'STO_TARGET'
+    | 'STO_EXEMPTION'
     | 'SERVICE_LEVEL_OBJECTIVE'
     | 'PERSPECTIVE'
     | 'PERSPECTIVE_BUDGET'
     | 'PERSPECTIVE_REPORT'
     | 'COST_CATEGORY'
-    | 'STO_TARGET'
-    | 'STO_EXEMPTION'
     | 'SMTP'
     | 'PERSPECTIVE_FOLDER'
     | 'AUTOSTOPPING_RULE'
@@ -1349,6 +1436,11 @@ export interface ResourceDTO {
     | 'AUTOSTOPPING_STARTSTOP'
     | 'SETTING'
     | 'NG_LOGIN_SETTINGS'
+}
+
+export interface ResourceFilter {
+  includeAllResources?: boolean
+  resources?: ResourceSelectorV2[]
 }
 
 export interface ResourceGroupDTO {
@@ -1389,6 +1481,33 @@ export interface ResourceGroupResponse {
   resourceGroup: ResourceGroupDTO
 }
 
+export interface ResourceGroupV2 {
+  accountIdentifier: string
+  allowedScopeLevels?: string[]
+  color?: string
+  description?: string
+  identifier: string
+  includedScopes?: ScopeSelector[]
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  resourceFilter?: ResourceFilter
+  tags?: {
+    [key: string]: string
+  }
+}
+
+export interface ResourceGroupV2Request {
+  resourceGroup: ResourceGroupV2
+}
+
+export interface ResourceGroupV2Response {
+  createdAt?: number
+  harnessManaged?: boolean
+  lastModifiedAt?: number
+  resourceGroup: ResourceGroupV2
+}
+
 export interface ResourceScope {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -1418,9 +1537,21 @@ export interface ResourceSelectorFilter {
   resourceType: string
 }
 
+export interface ResourceSelectorV2 {
+  attributeFilter?: AttributeFilter
+  identifiers?: string[]
+  resourceType: string
+}
+
 export interface ResourceType {
   name?: string
-  validatorTypes?: ('BY_RESOURCE_IDENTIFIER' | 'BY_RESOURCE_TYPE' | 'BY_RESOURCE_TYPE_INCLUDING_CHILD_SCOPES')[]
+  validatorTypes?: (
+    | 'BY_RESOURCE_IDENTIFIER'
+    | 'BY_RESOURCE_TYPE'
+    | 'BY_RESOURCE_TYPE_INCLUDING_CHILD_SCOPES'
+    | 'BY_ATTRIBUTE_INCLUDING_CHILD_SCOPES'
+    | 'BY_ATTRIBUTE'
+  )[]
 }
 
 export interface ResourceTypeDTO {
@@ -1618,7 +1749,6 @@ export interface ResponseMessage {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -1712,6 +1842,7 @@ export interface ResponseMessage {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -1794,6 +1925,22 @@ export interface ResponseMessage {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -1805,6 +1952,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
+    | 'INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -1813,6 +1961,13 @@ export interface ResponseMessage {
 export interface ResponseNotificationDTO {
   correlationId?: string
   data?: NotificationDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseNotificationTaskResponse {
+  correlationId?: string
+  data?: NotificationTaskResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -1852,9 +2007,23 @@ export interface ResponsePageResourceGroupResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponsePageResourceGroupV2Response {
+  correlationId?: string
+  data?: PageResourceGroupV2Response
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseResourceGroupResponse {
   correlationId?: string
   data?: ResourceGroupResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseResourceGroupV2Response {
+  correlationId?: string
+  data?: ResourceGroupV2Response
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -1887,6 +2056,13 @@ export interface RoleBinding {
 
 export interface Scope {
   accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface ScopeSelector {
+  accountIdentifier?: string
+  filter: 'EXCLUDING_CHILD_SCOPES' | 'INCLUDING_CHILD_SCOPES'
   orgIdentifier?: string
   projectIdentifier?: string
 }
@@ -1969,7 +2145,11 @@ export interface YamlDiffRecordDTO {
 
 export type FilterDTORequestBody = FilterDTO
 
+export type ResourceGroupFilterDTORequestBody = ResourceGroupFilterDTO
+
 export type ResourceGroupRequestRequestBody = ResourceGroupRequest
+
+export type ResourceGroupV2RequestRequestBody = ResourceGroupV2Request
 
 export type InsertOrUpdateTemplateRequestBody = void
 
@@ -2418,6 +2598,52 @@ export const getAuditEventListPromise = (
     void
   >('POST', getConfig('audit/api'), `/audits/list`, props, signal)
 
+export type SendEmailProps = Omit<
+  MutateProps<ResponseNotificationTaskResponse, Failure | Error, void, EmailDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Send email
+ */
+export const SendEmail = (props: SendEmailProps) => (
+  <Mutate<ResponseNotificationTaskResponse, Failure | Error, void, EmailDTO, void>
+    verb="POST"
+    path={`/channels/email`}
+    base={getConfig('audit/api')}
+    {...props}
+  />
+)
+
+export type UseSendEmailProps = Omit<
+  UseMutateProps<ResponseNotificationTaskResponse, Failure | Error, void, EmailDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Send email
+ */
+export const useSendEmail = (props: UseSendEmailProps) =>
+  useMutate<ResponseNotificationTaskResponse, Failure | Error, void, EmailDTO, void>('POST', `/channels/email`, {
+    base: getConfig('audit/api'),
+    ...props
+  })
+
+/**
+ * Send email
+ */
+export const sendEmailPromise = (
+  props: MutateUsingFetchProps<ResponseNotificationTaskResponse, Failure | Error, void, EmailDTO, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseNotificationTaskResponse, Failure | Error, void, EmailDTO, void>(
+    'POST',
+    getConfig('audit/api'),
+    `/channels/email`,
+    props,
+    signal
+  )
+
 export type TestNotificationSettingProps = Omit<
   MutateProps<ResponseBoolean, Failure | Error, void, NotificationSettingDTO, void>,
   'path' | 'verb'
@@ -2735,7 +2961,7 @@ export type GetFilterResourceGroupListProps = Omit<
     ResponsePageResourceGroupResponse,
     Failure | AccessControlCheckError | Error,
     GetFilterResourceGroupListQueryParams,
-    ResourceGroupFilterDTO,
+    ResourceGroupFilterDTORequestBody,
     void
   >,
   'path' | 'verb'
@@ -2749,7 +2975,7 @@ export const GetFilterResourceGroupList = (props: GetFilterResourceGroupListProp
     ResponsePageResourceGroupResponse,
     Failure | AccessControlCheckError | Error,
     GetFilterResourceGroupListQueryParams,
-    ResourceGroupFilterDTO,
+    ResourceGroupFilterDTORequestBody,
     void
   >
     verb="POST"
@@ -2764,7 +2990,7 @@ export type UseGetFilterResourceGroupListProps = Omit<
     ResponsePageResourceGroupResponse,
     Failure | AccessControlCheckError | Error,
     GetFilterResourceGroupListQueryParams,
-    ResourceGroupFilterDTO,
+    ResourceGroupFilterDTORequestBody,
     void
   >,
   'path' | 'verb'
@@ -2778,7 +3004,7 @@ export const useGetFilterResourceGroupList = (props: UseGetFilterResourceGroupLi
     ResponsePageResourceGroupResponse,
     Failure | AccessControlCheckError | Error,
     GetFilterResourceGroupListQueryParams,
-    ResourceGroupFilterDTO,
+    ResourceGroupFilterDTORequestBody,
     void
   >('POST', `/resourcegroup/filter`, { base: getConfig('audit/api'), ...props })
 
@@ -2790,7 +3016,7 @@ export const getFilterResourceGroupListPromise = (
     ResponsePageResourceGroupResponse,
     Failure | AccessControlCheckError | Error,
     GetFilterResourceGroupListQueryParams,
-    ResourceGroupFilterDTO,
+    ResourceGroupFilterDTORequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -2799,7 +3025,7 @@ export const getFilterResourceGroupListPromise = (
     ResponsePageResourceGroupResponse,
     Failure | AccessControlCheckError | Error,
     GetFilterResourceGroupListQueryParams,
-    ResourceGroupFilterDTO,
+    ResourceGroupFilterDTORequestBody,
     void
   >('POST', getConfig('audit/api'), `/resourcegroup/filter`, props, signal)
 
@@ -3597,3 +3823,486 @@ export const putTemplatePromise = (
     InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   >('PUT', getConfig('audit/api'), `/templates/${identifier}`, props, signal)
+
+export interface GetResourceGroupListV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  searchTerm?: string
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+}
+
+export type GetResourceGroupListV2Props = Omit<
+  GetProps<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupListV2QueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get list of resource groups
+ */
+export const GetResourceGroupListV2 = (props: GetResourceGroupListV2Props) => (
+  <Get<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupListV2QueryParams,
+    void
+  >
+    path={`/v2/resourcegroup`}
+    base={getConfig('audit/api')}
+    {...props}
+  />
+)
+
+export type UseGetResourceGroupListV2Props = Omit<
+  UseGetProps<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupListV2QueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get list of resource groups
+ */
+export const useGetResourceGroupListV2 = (props: UseGetResourceGroupListV2Props) =>
+  useGet<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupListV2QueryParams,
+    void
+  >(`/v2/resourcegroup`, { base: getConfig('audit/api'), ...props })
+
+/**
+ * Get list of resource groups
+ */
+export const getResourceGroupListV2Promise = (
+  props: GetUsingFetchProps<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupListV2QueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupListV2QueryParams,
+    void
+  >(getConfig('audit/api'), `/v2/resourcegroup`, props, signal)
+
+export interface CreateResourceGroupV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type CreateResourceGroupV2Props = Omit<
+  MutateProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    CreateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Create a resource group
+ */
+export const CreateResourceGroupV2 = (props: CreateResourceGroupV2Props) => (
+  <Mutate<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    CreateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/v2/resourcegroup`}
+    base={getConfig('audit/api')}
+    {...props}
+  />
+)
+
+export type UseCreateResourceGroupV2Props = Omit<
+  UseMutateProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    CreateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Create a resource group
+ */
+export const useCreateResourceGroupV2 = (props: UseCreateResourceGroupV2Props) =>
+  useMutate<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    CreateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    void
+  >('POST', `/v2/resourcegroup`, { base: getConfig('audit/api'), ...props })
+
+/**
+ * Create a resource group
+ */
+export const createResourceGroupV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    CreateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    CreateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    void
+  >('POST', getConfig('audit/api'), `/v2/resourcegroup`, props, signal)
+
+export interface GetFilterResourceGroupListV2QueryParams {
+  accountIdentifier: string
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+}
+
+export type GetFilterResourceGroupListV2Props = Omit<
+  MutateProps<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetFilterResourceGroupListV2QueryParams,
+    ResourceGroupFilterDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get filtered resource group list
+ */
+export const GetFilterResourceGroupListV2 = (props: GetFilterResourceGroupListV2Props) => (
+  <Mutate<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetFilterResourceGroupListV2QueryParams,
+    ResourceGroupFilterDTORequestBody,
+    void
+  >
+    verb="POST"
+    path={`/v2/resourcegroup/filter`}
+    base={getConfig('audit/api')}
+    {...props}
+  />
+)
+
+export type UseGetFilterResourceGroupListV2Props = Omit<
+  UseMutateProps<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetFilterResourceGroupListV2QueryParams,
+    ResourceGroupFilterDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get filtered resource group list
+ */
+export const useGetFilterResourceGroupListV2 = (props: UseGetFilterResourceGroupListV2Props) =>
+  useMutate<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetFilterResourceGroupListV2QueryParams,
+    ResourceGroupFilterDTORequestBody,
+    void
+  >('POST', `/v2/resourcegroup/filter`, { base: getConfig('audit/api'), ...props })
+
+/**
+ * Get filtered resource group list
+ */
+export const getFilterResourceGroupListV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetFilterResourceGroupListV2QueryParams,
+    ResourceGroupFilterDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetFilterResourceGroupListV2QueryParams,
+    ResourceGroupFilterDTORequestBody,
+    void
+  >('POST', getConfig('audit/api'), `/v2/resourcegroup/filter`, props, signal)
+
+export interface DeleteResourceGroupV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type DeleteResourceGroupV2Props = Omit<
+  MutateProps<
+    ResponseBoolean,
+    Failure | AccessControlCheckError | Error,
+    DeleteResourceGroupV2QueryParams,
+    string,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Delete a resource group
+ */
+export const DeleteResourceGroupV2 = (props: DeleteResourceGroupV2Props) => (
+  <Mutate<ResponseBoolean, Failure | AccessControlCheckError | Error, DeleteResourceGroupV2QueryParams, string, void>
+    verb="DELETE"
+    path={`/v2/resourcegroup`}
+    base={getConfig('audit/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteResourceGroupV2Props = Omit<
+  UseMutateProps<
+    ResponseBoolean,
+    Failure | AccessControlCheckError | Error,
+    DeleteResourceGroupV2QueryParams,
+    string,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Delete a resource group
+ */
+export const useDeleteResourceGroupV2 = (props: UseDeleteResourceGroupV2Props) =>
+  useMutate<ResponseBoolean, Failure | AccessControlCheckError | Error, DeleteResourceGroupV2QueryParams, string, void>(
+    'DELETE',
+    `/v2/resourcegroup`,
+    { base: getConfig('audit/api'), ...props }
+  )
+
+/**
+ * Delete a resource group
+ */
+export const deleteResourceGroupV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseBoolean,
+    Failure | AccessControlCheckError | Error,
+    DeleteResourceGroupV2QueryParams,
+    string,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseBoolean,
+    Failure | AccessControlCheckError | Error,
+    DeleteResourceGroupV2QueryParams,
+    string,
+    void
+  >('DELETE', getConfig('audit/api'), `/v2/resourcegroup`, props, signal)
+
+export interface GetResourceGroupV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetResourceGroupV2PathParams {
+  identifier: string
+}
+
+export type GetResourceGroupV2Props = Omit<
+  GetProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupV2QueryParams,
+    GetResourceGroupV2PathParams
+  >,
+  'path'
+> &
+  GetResourceGroupV2PathParams
+
+/**
+ * Get a resource group by Identifier
+ */
+export const GetResourceGroupV2 = ({ identifier, ...props }: GetResourceGroupV2Props) => (
+  <Get<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupV2QueryParams,
+    GetResourceGroupV2PathParams
+  >
+    path={`/v2/resourcegroup/${identifier}`}
+    base={getConfig('audit/api')}
+    {...props}
+  />
+)
+
+export type UseGetResourceGroupV2Props = Omit<
+  UseGetProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupV2QueryParams,
+    GetResourceGroupV2PathParams
+  >,
+  'path'
+> &
+  GetResourceGroupV2PathParams
+
+/**
+ * Get a resource group by Identifier
+ */
+export const useGetResourceGroupV2 = ({ identifier, ...props }: UseGetResourceGroupV2Props) =>
+  useGet<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupV2QueryParams,
+    GetResourceGroupV2PathParams
+  >((paramsInPath: GetResourceGroupV2PathParams) => `/v2/resourcegroup/${paramsInPath.identifier}`, {
+    base: getConfig('audit/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Get a resource group by Identifier
+ */
+export const getResourceGroupV2Promise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupV2QueryParams,
+    GetResourceGroupV2PathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupV2QueryParams,
+    GetResourceGroupV2PathParams
+  >(getConfig('audit/api'), `/v2/resourcegroup/${identifier}`, props, signal)
+
+export interface UpdateResourceGroupV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface UpdateResourceGroupV2PathParams {
+  identifier: string
+}
+
+export type UpdateResourceGroupV2Props = Omit<
+  MutateProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    UpdateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    UpdateResourceGroupV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateResourceGroupV2PathParams
+
+/**
+ * Update a resource group
+ */
+export const UpdateResourceGroupV2 = ({ identifier, ...props }: UpdateResourceGroupV2Props) => (
+  <Mutate<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    UpdateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    UpdateResourceGroupV2PathParams
+  >
+    verb="PUT"
+    path={`/v2/resourcegroup/${identifier}`}
+    base={getConfig('audit/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateResourceGroupV2Props = Omit<
+  UseMutateProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    UpdateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    UpdateResourceGroupV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateResourceGroupV2PathParams
+
+/**
+ * Update a resource group
+ */
+export const useUpdateResourceGroupV2 = ({ identifier, ...props }: UseUpdateResourceGroupV2Props) =>
+  useMutate<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    UpdateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    UpdateResourceGroupV2PathParams
+  >('PUT', (paramsInPath: UpdateResourceGroupV2PathParams) => `/v2/resourcegroup/${paramsInPath.identifier}`, {
+    base: getConfig('audit/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Update a resource group
+ */
+export const updateResourceGroupV2Promise = (
+  {
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    UpdateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    UpdateResourceGroupV2PathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    UpdateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    UpdateResourceGroupV2PathParams
+  >('PUT', getConfig('audit/api'), `/v2/resourcegroup/${identifier}`, props, signal)

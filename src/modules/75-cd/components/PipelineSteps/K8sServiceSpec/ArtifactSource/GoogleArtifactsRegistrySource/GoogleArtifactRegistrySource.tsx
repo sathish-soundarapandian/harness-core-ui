@@ -32,6 +32,7 @@ import {
   getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
+  getValidInitialValuePath,
   getYamlData,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity
@@ -61,7 +62,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     isSidecar,
     serviceIdentifier,
     stepViewType,
-    pipelineIdentifier
+    pipelineIdentifier,
+    artifacts
   } = props
 
   const { getString } = useStrings()
@@ -78,23 +80,23 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
 
   const connectorRefValue = getDefaultQueryParam(
-    artifact?.spec?.connectorRef,
-    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`)
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
+    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
   const packageValue = getDefaultQueryParam(
-    artifact?.spec?.package,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.package`, ''), artifact?.spec?.package),
     get(initialValues?.artifacts, `${artifactPath}.spec.package`)
   )
   const projectValue = getDefaultQueryParam(
-    artifact?.spec?.project,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.project`, ''), artifact?.spec?.project),
     get(initialValues?.artifacts, `${artifactPath}.spec.project`)
   )
   const regionValue = getDefaultQueryParam(
-    artifact?.spec?.region,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.region`, ''), artifact?.spec?.region),
     get(initialValues?.artifacts, `${artifactPath}.spec.region`)
   )
   const repositoryNameValue = getDefaultQueryParam(
-    artifact?.spec?.repositoryName,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.repositoryName`, ''), artifact?.spec?.repositoryName),
     get(initialValues?.artifacts, `${artifactPath}.spec.repositoryName`)
   )
 

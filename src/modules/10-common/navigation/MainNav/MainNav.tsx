@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useLayoutEffect } from 'react'
+import React, { useLayoutEffect } from 'react'
 import cx from 'classnames'
 import { NavLink as Link, useParams } from 'react-router-dom'
 import type { NavLinkProps } from 'react-router-dom'
@@ -20,13 +20,7 @@ import paths from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
-import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-
 import { DEFAULT_MODULES_ORDER, useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
-import {
-  MODULES_CONFIG_PREFERENCE_STORE_KEY,
-  ModulesPreferenceStoreData
-} from '../ModuleConfigurationScreen/ModuleSortableList/ModuleSortableList'
 import ModuleList from '../ModuleList/ModuleList'
 import ModuleConfigurationScreen from '../ModuleConfigurationScreen/ModuleConfigurationScreen'
 
@@ -47,8 +41,6 @@ export default function L1Nav(): React.ReactElement {
 
   const { currentUserInfo: user } = useAppStore()
   const moduleMap = useNavModuleInfoMap()
-  const { preference: modulesPreferenceData, setPreference: setModuleConfigPreference } =
-    usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
 
   useLayoutEffect(() => {
     // main nav consists of two UL sections with classname "css.navList"
@@ -65,38 +57,6 @@ export default function L1Nav(): React.ReactElement {
     NEW_LEFT_NAVBAR_SETTINGS &&
       document.getElementsByClassName(css.active)[0]?.scrollIntoView({ inline: 'nearest', block: 'nearest' })
   })
-
-  useEffect(() => {
-    if (NEW_LEFT_NAVBAR_SETTINGS) {
-      let selectedModules = modulesPreferenceData?.selectedModules
-      let orderedModules = modulesPreferenceData?.orderedModules
-
-      if (modulesPreferenceData?.selectedModules?.length) {
-        // Remove modules from the selected modules if the feature flag of that module gets turned off
-        selectedModules = modulesPreferenceData?.selectedModules.filter(module => moduleMap[module].shouldVisible)
-      }
-
-      // if the modules order is not present in preference store data :
-      // - User should see the default order
-      // - Modules with licenses should be default selected
-      if (!modulesPreferenceData?.orderedModules.length) {
-        const modulesWithLicense = DEFAULT_MODULES_ORDER.filter(m => !!moduleMap[m].hasLicense)
-        selectedModules = modulesWithLicense
-        orderedModules = DEFAULT_MODULES_ORDER
-      } else if (modulesPreferenceData?.orderedModules.length < DEFAULT_MODULES_ORDER.length) {
-        // This will be executed when a new module is introduced.
-        // Adding new module to the last
-        const newModules = DEFAULT_MODULES_ORDER.filter(
-          module => !modulesPreferenceData.orderedModules.includes(module)
-        )
-        orderedModules = [...(modulesPreferenceData?.orderedModules || []), ...newModules]
-      }
-      setModuleConfigPreference({
-        orderedModules,
-        selectedModules
-      })
-    }
-  }, [])
 
   return (
     <>

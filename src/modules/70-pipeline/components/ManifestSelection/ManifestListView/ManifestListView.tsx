@@ -53,7 +53,8 @@ import {
   showAddManifestBtn,
   getBuildPayload,
   isGitTypeManifestStore,
-  ManifestToPathMap
+  ManifestToPathMap,
+  isECSTypeManifest
 } from '../Manifesthelper'
 import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
@@ -84,6 +85,8 @@ import HarnessFileStore from '../ManifestWizardSteps/HarnessFileStore/HarnessFil
 import KustomizeWithHarnessStore from '../ManifestWizardSteps/KustomizeWithHarnessStore/KustomizeWithHarnessStore'
 import { CommonManifestDetails } from '../ManifestWizardSteps/CommonManifestDetails/CommonManifestDetails'
 import HelmWithHarnessStore from '../ManifestWizardSteps/HelmWithHarnessStore/HelmWithHarnessStore'
+import { ECSWithS3 } from '../ManifestWizardSteps/ECSWithS3/ECSWithS3'
+import { ServerlessLambdaWithS3 } from '../ManifestWizardSteps/ServerlessLambdaWithS3/ServerlessLambdaWithS3'
 import css from '../ManifestSelection.module.scss'
 
 const DIALOG_PROPS: IDialogProps = {
@@ -266,6 +269,9 @@ function ManifestListView({
       case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.S3:
         manifestDetailStep = <HelmWithS3 {...lastStepProps()} />
         break
+      case isECSTypeManifest(selectedManifest as ManifestTypes) && manifestStore === ManifestStoreMap.S3:
+        manifestDetailStep = <ECSWithS3 {...lastStepProps()} />
+        break
       case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.Gcs:
         manifestDetailStep = <HelmWithGcs {...lastStepProps()} />
         break
@@ -287,8 +293,11 @@ function ManifestListView({
       case selectedManifest === ManifestDataType.KustomizePatches && isGitTypeStores:
         manifestDetailStep = <KustomizePatchDetails {...lastStepProps()} />
         break
-      case selectedManifest === ManifestDataType.ServerlessAwsLambda:
+      case selectedManifest === ManifestDataType.ServerlessAwsLambda && isGitTypeStores:
         manifestDetailStep = <ServerlessAwsLambdaManifest {...lastStepProps()} />
+        break
+      case selectedManifest === ManifestDataType.ServerlessAwsLambda && manifestStore === ManifestStoreMap.S3:
+        manifestDetailStep = <ServerlessLambdaWithS3 {...lastStepProps()} />
         break
       case [ManifestDataType.Values, ManifestDataType.OpenshiftParam, ManifestDataType.KustomizePatches].includes(
         selectedManifest as ManifestTypes

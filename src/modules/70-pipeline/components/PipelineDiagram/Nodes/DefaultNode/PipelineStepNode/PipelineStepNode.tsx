@@ -30,7 +30,7 @@ const TEMPLATE_ICON: IconName = 'template-library'
 interface PipelineStepNodeProps extends BaseReactComponentProps {
   status: string
   isNodeCollapsed?: boolean
-  matrixNodeName?: boolean
+  matrixNodeName?: string
 }
 
 function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
@@ -309,7 +309,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
             tooltipProps={{ popoverClassName: matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
             {defaultTo(matrixNodeName, props?.data?.matrixNodeName) ? (
-              <MatrixNodeNameLabelWrapper matrixLabel={props?.name as string} />
+              <MatrixNodeNameLabelWrapper nodeName={props?.name as string} matrixNodeName={matrixNodeName} />
             ) : (
               props.name
             )}

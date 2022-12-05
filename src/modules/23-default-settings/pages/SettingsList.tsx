@@ -63,7 +63,7 @@ const SettingsList = () => {
     settingType: SettingType,
     settingDTO: SettingDTO,
     updateType: SettingRequestDTO['updateType']
-  ) => {
+  ): void => {
     if (disableSave) {
       updateDisableSave(false)
     }

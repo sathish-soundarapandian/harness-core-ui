@@ -10,14 +10,14 @@ exports[`useEntityDeleteErrorHandlerDialog test CustomButtons: forceDeleteCallba
       class="StyledProps--font StyledProps--main"
     >
       <button
-        aria-label="common.referenceButtonText"
+        aria-label="common.viewReferences"
         class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--variation Button--variation-primary"
         type="button"
       >
         <span
           class="bp3-button-text"
         >
-          common.referenceButtonText
+          common.viewReferences
         </span>
       </button>
       <button

@@ -44,6 +44,7 @@ import {
   getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
+  getValidInitialValuePath,
   getYamlData,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
@@ -80,7 +81,8 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     artifact,
     isSidecar,
     artifactPath,
-    stepViewType
+    stepViewType,
+    artifacts
   } = props
 
   const { getString } = useStrings()
@@ -117,19 +119,19 @@ const Content = (props: ACRRenderContent): JSX.Element => {
   )
 
   const connectorRefValue = getDefaultQueryParam(
-    artifact?.spec?.connectorRef,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
   const subscriptionIdValue = getDefaultQueryParam(
-    artifact?.spec?.subscriptionId,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.subscriptionId`, ''), artifact?.spec?.subscriptionId),
     get(initialValues?.artifacts, `${artifactPath}.spec.subscriptionId`, '')
   )
   const registryValue = getDefaultQueryParam(
-    artifact?.spec?.registry,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.registry`, ''), artifact?.spec?.registry),
     get(initialValues?.artifacts, `${artifactPath}.spec.registry`, '')
   )
   const repositoryValue = getDefaultQueryParam(
-    artifact?.spec?.repository,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.repository`, ''), artifact?.spec?.repository),
     get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
   )
 

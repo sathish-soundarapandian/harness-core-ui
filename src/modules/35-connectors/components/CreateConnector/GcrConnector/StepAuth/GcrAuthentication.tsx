@@ -15,7 +15,8 @@ import {
   StepProps,
   Container,
   PageSpinner,
-  ThumbnailSelect
+  ThumbnailSelect,
+  ButtonVariation
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -133,7 +134,20 @@ const GcrAuthentication: React.FC<StepProps<StepConfigureProps> & GcrAuthenticat
                 <SecretInput name={'password'} label={getString('encryptedKeyLabel')} type={'SecretFile'} />
               ) : null}
             </Container>
-            <Button type="submit" intent="primary" text={getString('continue')} rightIcon="chevron-right" />
+            <Layout.Horizontal spacing="medium">
+              <Button
+                text={getString('back')}
+                icon="chevron-left"
+                onClick={() => props?.previousStep?.(props?.prevStepData)}
+                variation={ButtonVariation.SECONDARY}
+              />
+              <Button
+                type="submit"
+                variation={ButtonVariation.PRIMARY}
+                text={getString('continue')}
+                rightIcon="chevron-right"
+              />
+            </Layout.Horizontal>
           </Form>
         )}
       </Formik>

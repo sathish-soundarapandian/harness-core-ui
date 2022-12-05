@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { Dialog } from '@blueprintjs/core'
-import { Button, Container, Text, Icon } from '@harness/uicore'
+import { Button, ButtonVariation, Container, Icon, Text } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -119,6 +119,7 @@ const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment, isLinkVari
         <Button
           minimal
           icon="small-cross"
+          variation={ButtonVariation.ICON}
           iconProps={{ size: 25 }}
           onClick={() => {
             setFlagTypeClicked(false)

@@ -68,15 +68,17 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
           </Container>
         )}
 
-        <KeyValuePair
-          label={getString('cv.slos.sliType')}
-          value={getString(
-            sloDashboardWidget.type === SLITypeEnum.AVAILABILITY
-              ? 'cv.slos.slis.type.availability'
-              : 'cv.slos.slis.type.latency'
-          )}
-        />
         {!isCompositeSLO && (
+          <KeyValuePair
+            label={getString('cv.slos.sliType')}
+            value={getString(
+              sloDashboardWidget.type === SLITypeEnum.AVAILABILITY
+                ? 'cv.slos.slis.type.availability'
+                : 'cv.slos.slis.type.latency'
+            )}
+          />
+        )}
+        {!isCompositeSLO && sloDashboardWidget?.healthSourceName && (
           <KeyValuePair
             label={getString('pipeline.verification.healthSourceLabel')}
             value={sloDashboardWidget.healthSourceName}

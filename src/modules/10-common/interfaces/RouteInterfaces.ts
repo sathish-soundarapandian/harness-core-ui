@@ -165,7 +165,7 @@ export interface EnvironmentPathProps {
 }
 
 export interface EnvironmentQueryParams {
-  sectionId?: 'CONFIGURATION' | 'INFRASTRUCTURE' | 'SERVICE_OVERRIDES' | 'GITOPS'
+  sectionId?: 'CONFIGURATION' | 'INFRASTRUCTURE' | 'SERVICE_OVERRIDES' | 'GITOPS' | 'SUMMARY'
 }
 
 export interface EnvironmentGroupPathProps {
@@ -234,10 +234,10 @@ export interface TemplateStudioQueryParams extends GitQueryParams {
   versionLabel?: string
 }
 
-export type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>
+export type RequiredField<T, K extends keyof T> = T & Required<Pick<T, K>>
 
 export interface GovernancePathProps
-  extends RequireField<
+  extends RequiredField<
     Partial<Pick<ProjectPathProps, 'accountId' | 'orgIdentifier' | 'projectIdentifier'> & ModulePathParams>,
     'accountId'
   > {
@@ -246,18 +246,12 @@ export interface GovernancePathProps
   evaluationId?: string
 }
 
-export interface SCMPathProps
-  extends RequireField<
-    Partial<Pick<ProjectPathProps, 'accountId' | 'orgIdentifier' | 'projectIdentifier'>>,
-    'accountId' | 'orgIdentifier' | 'projectIdentifier'
-  > {
-  repoName?: string
-  branchName?: string
-  filePath?: string
-  pullRequestId?: string
-  commitId?: string
-}
-
 export interface AccountLevelGitOpsPathProps {
   entity: string
 }
+
+/**
+ * At Account level we have two places for nav links
+ * At home dashboard level or account resources(settings) level
+ */
+export type AccountRoutePlacement = 'settings' | 'dashboard'

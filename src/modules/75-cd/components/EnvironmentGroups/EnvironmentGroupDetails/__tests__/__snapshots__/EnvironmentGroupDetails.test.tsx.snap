@@ -4,6 +4,7 @@ exports[`Environment Group Details Page loads configuration and update of name a
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--large environmentGroupDetailsHeader StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -214,6 +215,7 @@ exports[`Environment Group Details Page loads configuration and update of name a
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="OverlaySpinner--overlaySpinner"

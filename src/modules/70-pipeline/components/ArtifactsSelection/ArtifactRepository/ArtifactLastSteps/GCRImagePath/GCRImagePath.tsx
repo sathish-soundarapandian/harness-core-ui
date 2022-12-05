@@ -38,7 +38,7 @@ import {
   getFinalArtifactObj,
   RegistryHostNames,
   resetTag,
-  shouldFetchTags
+  shouldFetchFieldOptions
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
@@ -146,7 +146,7 @@ export function GCRImagePath({
   const canFetchTags = (imagePath: string, registryHostname: string): boolean =>
     !!(
       (lastQueryData.imagePath !== imagePath || lastQueryData.registryHostname !== registryHostname) &&
-      shouldFetchTags(prevStepData, [imagePath, registryHostname])
+      shouldFetchFieldOptions(prevStepData, [imagePath, registryHostname])
     )
 
   const isTagDisabled = useCallback((formikValue): boolean => {

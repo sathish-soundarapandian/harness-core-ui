@@ -6,6 +6,7 @@
  */
 
 import React, { useMemo, useState } from 'react'
+import { unstable_batchedUpdates } from 'react-dom'
 import { defaultTo, isEmpty, isNil } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
@@ -19,6 +20,7 @@ import {
   Layout,
   ModalDialog,
   MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
   SelectOption,
   useToggleOpen
 } from '@harness/uicore'
@@ -27,6 +29,7 @@ import { useStrings } from 'framework/strings'
 import type { EnvironmentGroupResponseDTO } from 'services/cd-ng'
 
 import type { Scope } from '@common/interfaces/SecretsInterface'
+import { isValueRuntimeInput } from '@common/utils/utils'
 
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -43,6 +46,16 @@ import type {
 } from '../types'
 import { useGetEnvironmentGroupsData } from './useGetEnvironmentGroupsData'
 import EnvironmentGroupsList from '../EnvironmentGroupsList/EnvironmentGroupsList'
+
+import DeployEnvironment from '../DeployEnvironment/DeployEnvironment'
+import DeployCluster from '../DeployCluster/DeployCluster'
+import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
+import InlineEntityFilters from '../components/InlineEntityFilters/InlineEntityFilters'
+import {
+  EntityFilterType,
+  EntityType,
+  InlineEntityFiltersRadioType
+} from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
 
 import css from './DeployEnvironmentGroup.module.scss'
 
@@ -79,7 +92,7 @@ export default function DeployEnvironmentGroup({
   gitOpsEnabled,
   scope
 }: DeployEnvironmentGroupProps): JSX.Element {
-  const { values, setValues } = useFormikContext<DeployEnvironmentEntityFormState>()
+  const { values, setValues, setFieldValue } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
 
@@ -90,6 +103,8 @@ export default function DeployEnvironmentGroup({
 
   // Constants
   const isFixed = getMultiTypeFromValue(values.environmentGroup) === MultiTypeInputType.FIXED
+  const isRuntime = getMultiTypeFromValue(values.environmentGroup) === MultiTypeInputType.RUNTIME
+  const filterPrefix = 'environmentGroupFilters'
 
   // API
   const {
@@ -161,6 +176,23 @@ export default function DeployEnvironmentGroup({
     updateFormikAndLocalState(newFormValues)
   }
 
+  const handleFilterRadio = (selectedRadioValue: InlineEntityFiltersRadioType): void => {
+    if (selectedRadioValue === InlineEntityFiltersRadioType.MANUAL) {
+      unstable_batchedUpdates(() => {
+        setFieldValue('environments', RUNTIME_INPUT_VALUE)
+        setFieldValue(filterPrefix, undefined)
+      })
+    } else {
+      setFieldValue('infraClusterFilters', undefined)
+    }
+  }
+
+  const handleInfraClustersFilterRadio = (selectedRadioValue: InlineEntityFiltersRadioType): void => {
+    if (selectedRadioValue === InlineEntityFiltersRadioType.MANUAL) {
+      setFieldValue('infraClusterFilters', undefined)
+    }
+  }
+
   return (
     <>
       <Layout.Horizontal
@@ -182,6 +214,9 @@ export default function DeployEnvironmentGroup({
             defaultValueToReset: '',
             onChange: item => {
               setSelectedEnvironmentGroups(getSelectedEnvironmentGroupsFromOptions([item as SelectOption]))
+              if (isValueRuntimeInput(item)) {
+                setFieldValue('environments', RUNTIME_INPUT_VALUE)
+              }
             }
           }}
           selectItems={selectOptions}
@@ -222,6 +257,90 @@ export default function DeployEnvironmentGroup({
             customDeploymentRef={customDeploymentRef}
             gitOpsEnabled={gitOpsEnabled}
           />
+        )}
+
+        {/* This component is specifically for filters */}
+        {isRuntime && !readonly && (
+          <InlineEntityFilters
+            filterPrefix={filterPrefix}
+            entityStringKey="environments"
+            onRadioValueChange={handleFilterRadio}
+            readonly={readonly}
+            showCard
+            baseComponent={
+              <DeployEnvironment
+                initialValues={{
+                  environments: RUNTIME_INPUT_VALUE as any
+                }}
+                readonly
+                allowableTypes={allowableTypes}
+                isMultiEnvironment
+                isUnderEnvGroup
+                stageIdentifier={stageIdentifier}
+                deploymentType={deploymentType}
+                customDeploymentRef={customDeploymentRef}
+                gitOpsEnabled={gitOpsEnabled}
+              />
+            }
+            entityFilterListProps={{
+              entities: [EntityType.ENVIRONMENTS, gitOpsEnabled ? EntityType.CLUSTERS : EntityType.INFRASTRUCTURES],
+              filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
+              placeholderProps: {
+                entity: getString('common.filterOnName', {
+                  name: 'environments or' + getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
+                }),
+                tags: getString('common.filterOnName', { name: getString('typeLabel') })
+              }
+            }}
+          >
+            <InlineEntityFilters
+              filterPrefix={'infraClusterFilters'}
+              entityStringKey={gitOpsEnabled ? 'common.clusters' : 'common.infrastructures'}
+              onRadioValueChange={handleInfraClustersFilterRadio}
+              readonly={readonly}
+              showCard
+              hasTopMargin
+              baseComponent={
+                <>
+                  {gitOpsEnabled ? (
+                    <DeployCluster
+                      initialValues={{
+                        environments: RUNTIME_INPUT_VALUE as any
+                      }}
+                      readonly
+                      allowableTypes={allowableTypes}
+                      isMultiCluster
+                      environmentIdentifier={''}
+                      lazyCluster
+                    />
+                  ) : (
+                    <DeployInfrastructure
+                      initialValues={{
+                        environments: RUNTIME_INPUT_VALUE as any
+                      }}
+                      readonly
+                      allowableTypes={allowableTypes}
+                      environmentIdentifier={''}
+                      isMultiInfrastructure
+                      deploymentType={deploymentType}
+                      customDeploymentRef={customDeploymentRef}
+                      lazyInfrastructure
+                    />
+                  )}
+                </>
+              }
+              entityFilterListProps={{
+                entities: [gitOpsEnabled ? EntityType.CLUSTERS : EntityType.INFRASTRUCTURES],
+                filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
+                placeholderProps: {
+                  entity: getString('common.filterOnName', {
+                    name: getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
+                  }),
+                  tags: getString('common.filterOnName', { name: getString('typeLabel') })
+                }
+              }}
+            />
+          </InlineEntityFilters>
         )}
 
         <ModalDialog

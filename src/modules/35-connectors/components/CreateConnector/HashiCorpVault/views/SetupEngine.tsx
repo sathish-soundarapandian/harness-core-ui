@@ -20,7 +20,8 @@ import {
   ModalErrorHandler,
   ModalErrorHandlerBinding,
   ButtonVariation,
-  shouldShowError
+  shouldShowError,
+  getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import type { IOptionProps } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
@@ -218,7 +219,7 @@ const SetupEngine: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps>
         }
       } catch (err) {
         /* istanbul ignore next */
-        modalErrorHandler?.showDanger(err?.data?.message)
+        modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(err))
       } finally {
         setSavingDataInProgress(false)
       }
@@ -231,97 +232,105 @@ const SetupEngine: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps>
     category: Category.CONNECTOR
   })
 
-  return loadingFormData || savingDataInProgress ? (
-    <PageSpinner message={savingDataInProgress ? getString('connectors.hashiCorpVault.saveInProgress') : undefined} />
-  ) : (
-    <Container padding={{ top: 'medium' }}>
-      <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'xlarge' }} color={Color.BLACK}>
-        {getString('connectors.hashiCorpVault.setupEngine')}
-      </Text>
-      <ModalErrorHandler bind={setModalErrorHandler} />
-      <Formik<SetupEngineFormData>
-        enableReinitialize
-        initialValues={initialValues}
-        formName="vaultConfigForm"
-        validationSchema={Yup.object().shape({
-          secretEngineName: Yup.string().when('engineType', {
-            is: 'manual',
-            then: Yup.string().trim().required(getString('validation.secretEngineName'))
-          }),
-          secretEngineVersion: Yup.number().when('engineType', {
-            is: 'manual',
-            then: Yup.number()
-              .positive(getString('validation.engineVersionNumber'))
-              .required(getString('validation.engineVersion'))
-          }),
-          secretEngine: Yup.string().when('engineType', {
-            is: 'fetch',
-            then: Yup.string().trim().required(getString('validation.secretEngine'))
-          })
-        })}
-        onSubmit={formData => {
-          trackEvent(ConnectorActions.SetupEngineSubmit, {
-            category: Category.CONNECTOR
-          })
-          handleCreateOrEdit(formData)
-        }}
-      >
-        {formik => {
-          return (
-            <FormikForm>
-              <Container height={490}>
-                <FormInput.RadioGroup
-                  name="engineType"
-                  label={getString('connectors.hashiCorpVault.secretEngine')}
-                  radioGroup={{ inline: true }}
-                  items={engineTypeOptions}
-                />
-                {formik.values['engineType'] === 'fetch' ? (
-                  <Layout.Horizontal spacing="medium">
-                    <FormInput.Select
-                      name="secretEngine"
-                      items={secretEngineOptions}
-                      disabled={secretEngineOptions.length === 0 || loading}
-                    />
-                    <Button
-                      intent="primary"
-                      text={getString('connectors.hashiCorpVault.fetchEngines')}
-                      onClick={() => handleFetchEngines(prevStepData as ConnectorConfigDTO)}
-                      disabled={loading}
-                      loading={loading}
-                    />
-                  </Layout.Horizontal>
-                ) : null}
-                {formik.values['engineType'] === 'manual' ? (
-                  <Layout.Horizontal spacing="medium">
-                    <FormInput.Text name="secretEngineName" label={getString('connectors.hashiCorpVault.engineName')} />
-                    <FormInput.Text
-                      name="secretEngineVersion"
-                      label={getString('connectors.hashiCorpVault.engineVersion')}
-                    />
-                  </Layout.Horizontal>
-                ) : null}
-              </Container>
-              <Layout.Horizontal spacing="medium">
-                <Button
-                  variation={ButtonVariation.SECONDARY}
-                  icon="chevron-left"
-                  text={getString('back')}
-                  onClick={() => previousStep?.(prevStepData)}
-                />
-                <Button
-                  type="submit"
-                  intent="primary"
-                  rightIcon="chevron-right"
-                  text={getString('saveAndContinue')}
-                  disabled={creating || updating}
-                />
-              </Layout.Horizontal>
-            </FormikForm>
-          )
-        }}
-      </Formik>
-    </Container>
+  return (
+    <>
+      {loadingFormData || savingDataInProgress ? (
+        <PageSpinner
+          message={savingDataInProgress ? getString('connectors.hashiCorpVault.saveInProgress') : undefined}
+        />
+      ) : null}
+      <Container padding={{ top: 'medium' }}>
+        <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'xlarge' }} color={Color.BLACK}>
+          {getString('connectors.hashiCorpVault.setupEngine')}
+        </Text>
+        <ModalErrorHandler bind={setModalErrorHandler} />
+        <Formik<SetupEngineFormData>
+          enableReinitialize
+          initialValues={initialValues}
+          formName="vaultConfigForm"
+          validationSchema={Yup.object().shape({
+            secretEngineName: Yup.string().when('engineType', {
+              is: 'manual',
+              then: Yup.string().trim().required(getString('validation.secretEngineName'))
+            }),
+            secretEngineVersion: Yup.number().when('engineType', {
+              is: 'manual',
+              then: Yup.number()
+                .positive(getString('validation.engineVersionNumber'))
+                .required(getString('validation.engineVersion'))
+            }),
+            secretEngine: Yup.string().when('engineType', {
+              is: 'fetch',
+              then: Yup.string().trim().required(getString('validation.secretEngine'))
+            })
+          })}
+          onSubmit={formData => {
+            trackEvent(ConnectorActions.SetupEngineSubmit, {
+              category: Category.CONNECTOR
+            })
+            handleCreateOrEdit(formData)
+          }}
+        >
+          {formik => {
+            return (
+              <FormikForm>
+                <Container height={490}>
+                  <FormInput.RadioGroup
+                    name="engineType"
+                    label={getString('connectors.hashiCorpVault.secretEngine')}
+                    radioGroup={{ inline: true }}
+                    items={engineTypeOptions}
+                  />
+                  {formik.values['engineType'] === 'fetch' ? (
+                    <Layout.Horizontal spacing="medium">
+                      <FormInput.Select
+                        name="secretEngine"
+                        items={secretEngineOptions}
+                        disabled={secretEngineOptions.length === 0 || loading}
+                      />
+                      <Button
+                        intent="primary"
+                        text={getString('connectors.hashiCorpVault.fetchEngines')}
+                        onClick={() => handleFetchEngines(prevStepData as ConnectorConfigDTO)}
+                        disabled={loading}
+                        loading={loading}
+                      />
+                    </Layout.Horizontal>
+                  ) : null}
+                  {formik.values['engineType'] === 'manual' ? (
+                    <Layout.Horizontal spacing="medium">
+                      <FormInput.Text
+                        name="secretEngineName"
+                        label={getString('connectors.hashiCorpVault.engineName')}
+                      />
+                      <FormInput.Text
+                        name="secretEngineVersion"
+                        label={getString('connectors.hashiCorpVault.engineVersion')}
+                      />
+                    </Layout.Horizontal>
+                  ) : null}
+                </Container>
+                <Layout.Horizontal spacing="medium">
+                  <Button
+                    variation={ButtonVariation.SECONDARY}
+                    icon="chevron-left"
+                    text={getString('back')}
+                    onClick={() => previousStep?.(prevStepData)}
+                  />
+                  <Button
+                    type="submit"
+                    intent="primary"
+                    rightIcon="chevron-right"
+                    text={getString('saveAndContinue')}
+                    disabled={creating || updating}
+                  />
+                </Layout.Horizontal>
+              </FormikForm>
+            )
+          }}
+        </Formik>
+      </Container>
+    </>
   )
 }
 

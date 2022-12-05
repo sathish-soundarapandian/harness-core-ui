@@ -16,10 +16,24 @@ import type {
   TemplateLinkConfig
 } from 'services/cd-ng'
 
+export interface FilterSpec {
+  [key: string]: any
+}
+
+export interface FilterYaml {
+  entities: ('infrastructures' | 'gitOpsClusters' | 'environments')[]
+  spec: FilterSpec
+  type: 'tags' | 'all'
+}
+
 export interface DeployEnvironmentEntityConfig extends Omit<DeploymentStageConfig, 'execution'> {
   environment?: DeploymentStageConfig['environment']
   environments?: DeploymentStageConfig['environments']
   environmentGroup?: DeploymentStageConfig['environmentGroup']
+}
+
+interface Filter extends Omit<FilterYaml, 'entities'> {
+  entities: SelectOption[]
 }
 
 export interface DeployEnvironmentEntityFormState {
@@ -37,6 +51,9 @@ export interface DeployEnvironmentEntityFormState {
   environmentGroup?: string
   /** category is required to handle runtime input to fixed changes as well as cleaner identification during validation */
   category?: 'single' | 'multi' | 'group'
+  environmentGroupFilters?: Filter[]
+  environmentFilters?: Record<string, Filter[]>
+  infraClusterFilters?: Filter[]
 }
 
 export interface DeployEnvironmentEntityCustomStepProps {
@@ -51,6 +68,7 @@ export interface DeployEnvironmentEntityCustomInputStepProps extends DeployEnvir
   envGroupIdentifier?: string
   isMultiEnvironment?: boolean
   deployToAllEnvironments?: boolean
+  areFiltersAdded?: boolean
 }
 
 // Environments

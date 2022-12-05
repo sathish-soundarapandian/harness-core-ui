@@ -238,7 +238,13 @@ const CloudIntegrationPage: React.FC = () => {
         {ccmMetaDataLoading ? (
           <ContainerSpinner className={css.spinner} />
         ) : !Utils.accountHasConnectors(ccmMetaData) && !k8sClusters?.content?.length ? (
-          <NoConnectors handleConnectorCreation={handleConnectorCreation} />
+          <NoConnectors
+            setK8sSelected={setK8sSelected}
+            k8sSelected={k8sSelected}
+            handleConnectorCreation={handleConnectorCreation}
+            openAdvancedK8sModal={() => openConnectorModal(false, Connectors.KUBERNETES_CLUSTER)}
+            openQuicK8sCreateModal={openQuicK8sCreateModal}
+          />
         ) : (
           <>
             <Layout.Horizontal className={css.container}>

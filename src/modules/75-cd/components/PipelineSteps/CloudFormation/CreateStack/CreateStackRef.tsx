@@ -27,7 +27,7 @@ import {
   AllowedTypes
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { map, get, isEmpty, defaultTo } from 'lodash-es'
+import { map, get, isEmpty, defaultTo, set } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -241,6 +241,13 @@ export const CreateStack = (
       onSubmit={values => {
         const payload = {
           ...values
+        }
+
+        if (
+          !get(values, 'spec.configuration.tags.spec.content') &&
+          !get(values, 'spec.configuration.tags.spec.store.spec.connectorRef')
+        ) {
+          set(values, 'spec.configuration.tags', undefined)
         }
         /* istanbul ignore next */
         onUpdate?.(payload)

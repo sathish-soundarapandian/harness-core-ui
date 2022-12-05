@@ -43,7 +43,7 @@ interface CardData {
 const useSelectedCards = (featuresEnabled: Features[]) => {
   const { getString } = useStrings()
 
-  const isGovernanceEnabled = useFeatureFlag(FeatureFlag.CLOUD_COST_GOVERNANCE_UI)
+  const isGovernanceEnabled = useFeatureFlag(FeatureFlag.CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI)
 
   const FeatureCards = useMemo(() => {
     const cards = [
@@ -204,7 +204,12 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   useStepLoadTelemetry(CE_AWS_CONNECTOR_CREATION_EVENTS.LOAD_CHOOSE_REQUIREMENTS)
 
   const handleSubmit = () => {
-    const features: Features[] = selectedCards.map(card => card.value)
+    let features: Features[] = selectedCards.map(card => card.value)
+
+    if (!prevStepData?.includeBilling) {
+      features = features.filter(item => item !== Features.BILLING)
+    }
+
     const newspec = {
       crossAccountAccess: { crossAccountRoleArn: '' },
       ...prevStepData?.spec,
@@ -244,6 +249,8 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   })
 
   const [featureDetails, setFeatureDetails] = useState<CardData>()
+
+  const showExistingCurWarning = !isGovCloudAccount && !prevStepData?.includeBilling
 
   return (
     <Layout.Vertical className={css.stepContainer}>
@@ -287,7 +294,28 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
             )}
           </Layout.Vertical>
         </Layout.Horizontal>
-        <Layout.Horizontal className={css.buttonPanel} spacing="small">
+        {showExistingCurWarning ? (
+          <Layout.Horizontal spacing="small" className={css.exitingReportWarning}>
+            <Icon size={20} name="warning-outline" className={css.warningIcon} />
+            <Container>
+              <Text font={{ variation: FontVariation.SMALL_SEMI, italic: true }} inline>
+                {getString('connectors.costVisibility')}
+              </Text>{' '}
+              <Text font={{ variation: FontVariation.SMALL_BOLD }} inline>
+                {getString('connectors.ceAws.crossAccountRoleStep1.existingCurWarning1', {
+                  masterAccountName: 'masterAccountName'
+                })}
+              </Text>{' '}
+              <Text font={{ variation: FontVariation.SMALL_SEMI, italic: true }} inline>
+                {getString('connectors.costVisibility')}
+              </Text>{' '}
+              <Text font={{ variation: FontVariation.SMALL_BOLD }} inline>
+                {getString('connectors.ceAws.crossAccountRoleStep1.existingCurWarning2')}
+              </Text>
+            </Container>
+          </Layout.Horizontal>
+        ) : null}
+        <Layout.Horizontal spacing="small">
           <Button text={getString('previous')} icon="chevron-left" onClick={handleprev}></Button>
           <Button
             type="submit"
@@ -295,7 +323,10 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
             text={getString('continue')}
             rightIcon="chevron-right"
             onClick={handleSubmit}
-            disabled={!prevStepData?.includeBilling && selectedCards.length == 0}
+            disabled={
+              (!prevStepData?.includeBilling && selectedCards.length == 0) ||
+              (showExistingCurWarning && selectedCards.length == 1)
+            }
           />
         </Layout.Horizontal>
       </Container>

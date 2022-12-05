@@ -20,7 +20,6 @@ import {
   getMatrixHeight,
   getPositionOfAddIcon,
   LayoutStyles,
-  matrixNodeNameToJSON,
   MAX_ALLOWED_MATRIX_COLLAPSED_NODES
 } from '../utils'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
@@ -275,9 +274,6 @@ export function MatrixStepNode(props: any): JSX.Element {
                         defaultNode
                       ) as React.FC<BaseReactComponentProps>
                       const matrixNodeName = defaultTo(node?.matrixNodeName, node?.data?.matrixNodeName)
-                      const formattedMatrixName = matrixNodeName
-                        ? `${matrixNodeNameToJSON(matrixNodeName)} ${node.name}`
-                        : node?.name
                       return (
                         <React.Fragment key={node.data?.identifier}>
                           {index < (showAllNodes ? stepGroupData?.length : COLLAPSED_MATRIX_NODE_LENGTH) ? (
@@ -307,7 +303,8 @@ export function MatrixStepNode(props: any): JSX.Element {
                               readonly={props.readonly}
                               selectedNodeId={props?.selectedNodeId}
                               showMarkers={false}
-                              name={formattedMatrixName}
+                              name={node.name}
+                              matrixNodeName={matrixNodeName}
                               isParentMatrix={true}
                             />
                           ) : null}

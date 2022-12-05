@@ -21,11 +21,11 @@ import {
 } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
-import { Menu } from '@blueprintjs/core'
 import type { FormikProps, FormikValues } from 'formik'
 import * as Yup from 'yup'
 import { defaultTo, memoize, merge } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -35,6 +35,7 @@ import {
   ConnectorConfigDTO,
   DockerBuildDetailsDTO,
   Failure,
+  Error,
   useGetBuildDetailsForArtifactoryArtifact,
   useGetImagePathsForArtifactory
 } from 'services/cd-ng'
@@ -46,7 +47,7 @@ import {
   getConnectorIdValue,
   getFinalArtifactFormObj,
   resetTag,
-  shouldFetchTags,
+  shouldFetchFieldOptions,
   helperTextData,
   getConnectorRefQueryData
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
@@ -68,6 +69,7 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults, selectItemsMapper } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
@@ -169,7 +171,8 @@ function Artifactory({
     tag: Yup.mixed().when('tagType', {
       is: 'value',
       then: Yup.mixed().required(getString('pipeline.artifactsSelection.validation.tag'))
-    })
+    }),
+    repositoryUrl: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryUrl'))
   }
 
   const serverlessArtifactorySchema = {
@@ -213,7 +216,11 @@ function Artifactory({
   })
 
   const isArtifactDisabled = (formik: FormikProps<ImagePathTypes>) => {
-    if (getMultiTypeFromValue(formik?.values?.repository) === MultiTypeInputType.RUNTIME) return true
+    if (
+      getMultiTypeFromValue(formik?.values?.repository) === MultiTypeInputType.RUNTIME ||
+      getMultiTypeFromValue(prevStepData?.connectorId) === MultiTypeInputType.RUNTIME
+    )
+      return true
     return !(
       (formik.values?.repository as SelectOption)?.value?.toString()?.length ||
       formik.values?.repository?.toString()?.length
@@ -301,7 +308,7 @@ function Artifactory({
     (artifactPath: string, repository: string): boolean => {
       return !!(
         (lastQueryData.artifactPath !== artifactPath || lastQueryData.repository !== repository) &&
-        shouldFetchTags(prevStepData, [artifactPath, repository])
+        shouldFetchFieldOptions(prevStepData, [artifactPath, repository])
       )
     },
     [lastQueryData, prevStepData]
@@ -396,33 +403,17 @@ function Artifactory({
     ? [{ label: loadingPlaceholderText, value: loadingPlaceholderText }]
     : getSelectItems()
 
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        disabled={artifactoryBuildDetailsLoading}
-        onClick={handleClick}
-      />
-    </div>
+  const itemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={artifactoryBuildDetailsLoading} />
   ))
 
-  const imagePathItemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        disabled={imagePathLoading}
-        onClick={handleClick}
-      />
-    </div>
-  ))
+  const imagePathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => {
+    const isDisabled =
+      imagePathLoading ||
+      (imagePathError?.data as Error)?.status === 'ERROR' ||
+      (imagePathError?.data as Failure)?.status === 'FAILURE'
+    return <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={isDisabled} />
+  })
 
   const onTagInputFocus = (e: React.FocusEvent<HTMLInputElement>, formik: FormikValues): void => {
     if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
@@ -538,6 +529,18 @@ function Artifactory({
                   <div className={css.imagePathContainer}>
                     <FormInput.MultiTypeInput
                       selectItems={artifactPaths}
+                      helperText={
+                        getMultiTypeFromValue(formik?.values?.artifactPath) === MultiTypeInputType.FIXED &&
+                        getHelpeTextForTags(
+                          {
+                            repository: formik.values?.repository as string,
+                            connectorRef: getConnectorIdValue(prevStepData)
+                          },
+                          getString,
+                          isGenericArtifactory,
+                          getString('pipeline.artifactOrImagePathDependencyRequired')
+                        )
+                      }
                       multiTypeInputProps={{
                         onChange: () => {
                           onChangeImageArtifactPath()
@@ -545,12 +548,6 @@ function Artifactory({
                         expressions,
                         allowableTypes,
                         selectProps: {
-                          noResults: (
-                            <NoTagResults
-                              tagError={imagePathError}
-                              isServerlessDeploymentTypeSelected={isGenericArtifactory}
-                            />
-                          ),
                           items: artifactPaths,
                           addClearBtn: true,
                           itemRenderer: imagePathItemRenderer,
@@ -605,7 +602,6 @@ function Artifactory({
                     <FormInput.MultiTextInput
                       label={getString('repositoryUrlLabel')}
                       name="repositoryUrl"
-                      isOptional
                       placeholder={getString('pipeline.repositoryUrlPlaceholder')}
                       multiTextInputProps={{
                         expressions,

@@ -7,9 +7,9 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { isEmpty } from 'lodash-es'
+import { isArray, isEmpty, isObject, set } from 'lodash-es'
 import { connect, FormikErrors, yupToFormErrors } from 'formik'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -93,6 +93,28 @@ export class JiraCreate extends PipelineStep<JiraCreateData> {
         ...errors.spec,
         issueType: getString?.('pipeline.jiraApprovalStep.validations.issueType')
       }
+    }
+
+    if (template?.spec?.fields && template?.spec?.fields.length > 0) {
+      template.spec.fields.forEach((field, index) => {
+        const dataFieldsVal = data?.spec?.fields?.[index]?.value
+        const isDataFieldsValueEmpty =
+          (isArray(dataFieldsVal) && isEmpty(dataFieldsVal[0].value)) ||
+          (isObject(dataFieldsVal) && isEmpty((dataFieldsVal as SelectOption).value))
+
+        if (
+          typeof field?.value === 'string' &&
+          isRequired &&
+          getMultiTypeFromValue(field?.value) === MultiTypeInputType.RUNTIME &&
+          (isEmpty(dataFieldsVal) || isDataFieldsValueEmpty)
+        ) {
+          set(
+            errors,
+            `spec.fields.[${index}].value`,
+            getString?.('pipeline.jiraApprovalStep.validations.requiredField')
+          )
+        }
+      })
     }
 
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {

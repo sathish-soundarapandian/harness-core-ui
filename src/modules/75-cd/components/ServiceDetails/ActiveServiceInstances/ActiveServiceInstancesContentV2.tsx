@@ -41,6 +41,7 @@ export interface TableRowData {
   showEnv?: boolean
   totalEnvs?: number
   totalInfras?: number
+  rowNum?: number
   tableType?: TableType
 }
 
@@ -48,6 +49,18 @@ export enum TableType {
   PREVIEW = 'preview', // for card (headers visible, no Pipeline column, Clusters as count)
   SUMMARY = 'summary', // for details popup collapsed row, assuming single entry in 'data' (headers hidden)
   FULL = 'full' // for details popup expanded row (headers hidden)
+}
+
+export const isClusterData = (data: InstanceGroupedByArtifact[]): boolean => {
+  let isCluster = false
+  data.forEach(artifact => {
+    artifact.instanceGroupedByEnvironmentList?.forEach(env => {
+      if (env.instanceGroupedByClusterList?.length) {
+        isCluster = true
+      }
+    })
+  })
+  return isCluster
 }
 
 // full table is the expanded table in the dialog
@@ -73,6 +86,7 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
               lastDeployedAt: defaultTo(entity.lastDeployedAt, ''),
               envId: defaultTo(env.envId, ''),
               envName: defaultTo(env.envName, ''),
+              rowNum: index,
               tableType: TableType.FULL
             }
           }
@@ -96,6 +110,7 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
               lastPipelineExecutionId: '',
               lastPipelineExecutionName: '',
               lastDeployedAt: '',
+              rowNum: 0,
               tableType: TableType.FULL
             })
           }
@@ -177,7 +192,7 @@ export const getSummaryTableData = (instanceGroupedByArtifact?: InstanceGroupedB
             }
           })
           env.instanceGroupedByClusterList?.forEach(cluster => {
-            infraName ??= cluster.infraName
+            infraName ??= cluster.clusterIdentifier
             totalInfras++
             totalInstances += cluster.count || 0
             if (cluster.lastDeployedAt) {
@@ -367,7 +382,7 @@ const RenderInstanceCount: Renderer<CellProps<TableRowData>> = ({
 
 const RenderInstances: Renderer<CellProps<TableRowData>> = ({
   row: {
-    original: { envId, artifactVersion: buildId, instanceCount, tableType }
+    original: { envId, artifactVersion: buildId, instanceCount, tableType, rowNum }
   }
 }) => {
   TOTAL_VISIBLE_INSTANCES = tableType === TableType.PREVIEW ? 4 : 7
@@ -377,8 +392,10 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
         .fill(null)
         .map((_, index) => (
           <Popover
-            interactionKind={PopoverInteractionKind.CLICK}
+            interactionKind={PopoverInteractionKind.HOVER}
+            disabled={tableType === TableType.SUMMARY}
             key={index}
+            position={Position.TOP}
             modifiers={{ preventOverflow: { escapeWithReference: true } }}
           >
             <Container
@@ -388,7 +405,7 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
               background={Color.PRIMARY_3}
               margin={{ left: 'xsmall', right: 'xsmall', top: 'xsmall', bottom: 'xsmall' }}
             />
-            <ActiveServiceInstancePopover buildId={buildId} envId={envId} instanceNum={index} />
+            <ActiveServiceInstancePopover buildId={buildId} envId={envId} instanceNum={defaultTo(rowNum, 0) + index} />
           </Popover>
         ))}
       {instanceCount > TOTAL_VISIBLE_INSTANCES ? (
@@ -524,8 +541,8 @@ export const ActiveServiceInstancesContentV2 = (
   }>
 ): React.ReactElement => {
   const { tableType, loading = false, data, error, refetch } = props
+  const isCluster = isClusterData(defaultTo(data, []))
   const { getString } = useStrings()
-
   const tableData: TableRowData[] = useMemo(() => {
     switch (tableType) {
       case TableType.SUMMARY:
@@ -554,7 +571,9 @@ export const ActiveServiceInstancesContentV2 = (
       {
         Header: (
           <Text lineClamp={1} color={Color.GREY_900}>
-            {getString('cd.serviceDashboard.headers.infrastructures').toLocaleUpperCase()}
+            {isCluster
+              ? getString('common.cluster')
+              : getString('cd.serviceDashboard.headers.infrastructures').toLocaleUpperCase()}
           </Text>
         ),
         id: 'infra',
@@ -586,7 +605,7 @@ export const ActiveServiceInstancesContentV2 = (
 
     return columnsArray
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isCluster])
 
   if (loading || error || !(data || []).length || (tableType === TableType.PREVIEW && !tableData.length)) {
     const component = (() => {

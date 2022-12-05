@@ -19,21 +19,22 @@ export interface AnserJsonWithLink extends AnserJsonEntry {
   isLink: boolean
 }
 
-export interface GetTextWithSearchMarkersProps {
+export interface TextWithSearchMarkersProps {
   txt?: string
   searchText?: string
   searchIndices?: number[]
   currentSearchIndex: number
+  className?: string
 }
 
-export function getTextWithSearchMarkers(props: GetTextWithSearchMarkersProps): string {
-  const { searchText, txt, searchIndices, currentSearchIndex } = props
+export function TextWithSearchMarkers(props: TextWithSearchMarkersProps): React.ReactElement {
+  const { searchText, txt, searchIndices, currentSearchIndex, className } = props
   if (!searchText) {
-    return defaultTo(txt, '')
+    return <span className={className}>{defaultTo(txt, '')}</span>
   }
 
   if (!txt) {
-    return ''
+    return <span className={className} />
   }
 
   const searchRegex = getRegexForSearch(searchText)
@@ -75,14 +76,14 @@ export function getTextWithSearchMarkers(props: GetTextWithSearchMarkersProps): 
     highlightedString = closeMarkTags
   })
 
-  return highlightedString
+  return <span className={className} dangerouslySetInnerHTML={{ __html: highlightedString }} />
 }
 
-export function getTextWithSearchMarkersAndLinks(props: GetTextWithSearchMarkersProps): string {
-  const { txt, searchText } = props
+export function TextWithSearchMarkersAndLinks(props: TextWithSearchMarkersProps): React.ReactElement {
+  const { searchText, txt, searchIndices, currentSearchIndex, className } = props
 
   if (!txt) {
-    return ''
+    return <span className={className} />
   }
 
   const searchRegex = getRegexForSearch(defaultTo(searchText, ''))
@@ -98,26 +99,39 @@ export function getTextWithSearchMarkersAndLinks(props: GetTextWithSearchMarkers
     }))
   })
 
-  return tokens
-    .map(token => {
-      let content = token.content
-      const matches = searchText ? defaultTo(content.match(searchRegex), []) : []
+  return (
+    <span className={className}>
+      {tokens.map((token, i) => {
+        let content: React.ReactChild = token.content
+        const matches = searchText ? defaultTo(content.match(searchRegex), []) : []
 
-      content = getTextWithSearchMarkers({
-        ...props,
-        txt: content,
-        searchIndices: props.searchIndices?.slice(offset)
-      })
+        content = (
+          <TextWithSearchMarkers
+            searchText={searchText}
+            currentSearchIndex={currentSearchIndex}
+            txt={content}
+            searchIndices={searchIndices?.slice(offset)}
+          />
+        )
 
-      offset += matches.length
+        offset += matches.length
 
-      if (token.isLink) {
-        content = `<a href="${token.content}" class="ansi-decoration-link" target="_blank" rel="noreferrer">${content}</a>`
-      }
+        if (token.isLink) {
+          content = (
+            <a href={token.content} className="ansi-decoration-link" target="_blank" rel="noreferrer">
+              {content}
+            </a>
+          )
+        }
 
-      return `<span class="${getAnserClasses(token)}">${content}<span>`
-    })
-    .join('')
+        return (
+          <span key={i} className={getAnserClasses(token)}>
+            {content}
+          </span>
+        )
+      })}
+    </span>
+  )
 }
 
 export interface MultiLogLineProps extends LogLineData {
@@ -136,39 +150,29 @@ export function MultiLogLine(props: MultiLogLineProps): React.ReactElement {
   return (
     <div className={css.logLine} style={{ '--char-size': `${limit.toString().length}ch` } as any}>
       <span className={css.lineNumber}>{lineNumber + 1}</span>
-      <span
+      <TextWithSearchMarkers
         className={css.level}
-        dangerouslySetInnerHTML={{
-          __html: getTextWithSearchMarkers({
-            txt: text.level,
-            searchText,
-            searchIndices: searchIndices?.level,
-            currentSearchIndex
-          })
-        }}
+        txt={text.level}
+        searchText={searchText}
+        searchIndices={searchIndices?.level}
+        currentSearchIndex={currentSearchIndex}
       />
-      <span
+      <TextWithSearchMarkers
         className={css.time}
-        dangerouslySetInnerHTML={{
-          __html: getTextWithSearchMarkers({
-            txt: text.time,
-            searchText,
-            searchIndices: searchIndices?.time,
-            currentSearchIndex
-          })
-        }}
+        txt={text.time}
+        searchText={searchText}
+        searchIndices={searchIndices?.time}
+        currentSearchIndex={currentSearchIndex}
       />
-      <span
+      <TextWithSearchMarkersAndLinks
         className={css.out}
-        dangerouslySetInnerHTML={{
-          __html: getTextWithSearchMarkersAndLinks({
-            txt: text.out,
-            searchText,
-            searchIndices: searchIndices?.out,
-            currentSearchIndex
-          })
-        }}
+        txt={text.out}
+        searchText={searchText}
+        searchIndices={searchIndices?.out}
+        currentSearchIndex={currentSearchIndex}
       />
     </div>
   )
 }
+
+export const MultiLogLineMemo = React.memo(MultiLogLine)

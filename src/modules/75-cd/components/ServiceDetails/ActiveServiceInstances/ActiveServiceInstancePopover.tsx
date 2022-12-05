@@ -7,19 +7,26 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Card, Layout, Text } from '@harness/uicore'
+import type { GetDataError } from 'restful-react'
+import cx from 'classnames'
+import { Card, getErrorInfoFromErrorObject, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { Spinner } from '@blueprintjs/core'
+import { capitalize } from 'lodash-es'
 import {
   AzureWebAppInstanceInfoDTO,
   CustomDeploymentInstanceInfoDTO,
   EcsInstanceInfoDTO,
+  Failure,
   GetActiveInstancesByServiceIdEnvIdAndBuildIdsQueryParams,
+  GetInstancesDetailsQueryParams,
   GitOpsInstanceInfoDTO,
   InstanceDetailsDTO,
   K8sInstanceInfoDTO,
   NativeHelmInstanceInfoDTO,
   ServiceDefinition,
-  useGetActiveInstancesByServiceIdEnvIdAndBuildIds
+  useGetActiveInstancesByServiceIdEnvIdAndBuildIds,
+  useGetInstancesDetails
 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { getReadableDateTime } from '@common/utils/dateUtils'
@@ -33,6 +40,11 @@ export interface ActiveServiceInstancePopoverProps {
   buildId?: string
   envId?: string
   instanceNum?: number
+  serviceIdentifier?: string
+  isEnvDetail?: boolean
+  infraIdentifier?: string
+  clusterId?: string
+  pipelineExecutionId?: string
 }
 
 interface SectionProps {
@@ -62,6 +74,8 @@ const Section: React.FC<{ data: SectionProps[] }> = props => {
                         font={{ weight: 'semi-bold', size: 'small' }}
                         color={Color.GREY_500}
                         margin={{ right: 'medium', bottom: 'xsmall' }}
+                        width={90}
+                        lineClamp={1}
                       >
                         {`${itemValue.label}:`}
                       </Text>
@@ -69,6 +83,8 @@ const Section: React.FC<{ data: SectionProps[] }> = props => {
                         font={{ weight: 'semi-bold', size: 'small' }}
                         color={Color.GREY_800}
                         className={css.sectionValue}
+                        width={206}
+                        lineClamp={1}
                       >
                         {itemValue.value}
                       </Text>
@@ -87,7 +103,16 @@ const Section: React.FC<{ data: SectionProps[] }> = props => {
 }
 
 export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopoverProps> = props => {
-  const { buildId = '', envId = '', instanceNum = 0 } = props
+  const {
+    buildId = '',
+    envId = '',
+    instanceNum = 0,
+    serviceIdentifier = '',
+    isEnvDetail = false,
+    pipelineExecutionId = '',
+    infraIdentifier,
+    clusterId
+  } = props
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { getString } = useStrings()
 
@@ -95,33 +120,87 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
-    serviceId,
+    serviceId: serviceId || serviceIdentifier,
     envId,
     buildIds: [buildId]
   }
+
+  const queryParamsEnv: GetInstancesDetailsQueryParams = {
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    serviceId: serviceId || serviceIdentifier,
+    envId,
+    infraIdentifier,
+    clusterIdentifier: clusterId,
+    pipelineExecutionId,
+    buildId: buildId
+  }
+
   const { loading, data, error } = useGetActiveInstancesByServiceIdEnvIdAndBuildIds({
     queryParams,
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
-    }
+    },
+    lazy: isEnvDetail
   })
 
-  if (loading || error || !data?.data?.instancesByBuildIdList?.[0]?.instances?.length) {
-    return <></>
+  const {
+    loading: envLoading,
+    data: envData,
+    error: envError
+  } = useGetInstancesDetails({
+    queryParams: queryParamsEnv,
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
+    },
+    lazy: !isEnvDetail
+  })
+
+  if ((!isEnvDetail && loading) || (isEnvDetail && envLoading)) {
+    return (
+      <Card className={cx(css.activeServiceInstancePopover, css.spinner)}>
+        <Spinner />
+      </Card>
+    )
   }
 
-  const instanceData = data?.data?.instancesByBuildIdList?.[0]?.instances[instanceNum] || {}
+  if ((!isEnvDetail && error) || (isEnvDetail && envError)) {
+    const errorObj = isEnvDetail ? envError : error
+    return (
+      <Card className={cx(css.activeServiceInstancePopover, css.spinner)}>
+        <Text className={css.errorText}>{getErrorInfoFromErrorObject(errorObj as GetDataError<Failure | Error>)}</Text>
+      </Card>
+    )
+  }
+
+  if (
+    (!isEnvDetail && !data?.data?.instancesByBuildIdList?.[0]?.instances?.length) ||
+    (isEnvDetail && !envData?.data?.instances?.length)
+  ) {
+    return (
+      <Card className={cx(css.activeServiceInstancePopover, css.spinner)}>
+        <Text>{getString('cd.serviceDashboard.instanceDataEmpty')}</Text>
+      </Card>
+    )
+  }
+
+  const instanceData =
+    (isEnvDetail
+      ? envData?.data?.instances?.[instanceNum]
+      : data?.data?.instancesByBuildIdList?.[0]?.instances?.[instanceNum]) || {}
+
   const instanceInfoDTOProperties = (instanceData?.instanceInfoDTO as CustomDeploymentInstanceInfoDTO)?.properties || {}
   const defaultInstanceInfoData = [
     {
       label:
         instanceData.instanceInfoDTO?.type === ServiceDeploymentType.ServerlessAwsLambda
-          ? getString('cd.serviceDashboard.function')
-          : getString('cd.serviceDashboard.pod'),
+          ? capitalize(getString('cd.serviceDashboard.function'))
+          : capitalize(getString('cd.serviceDashboard.pod')),
       value: instanceData.podName || ''
     },
     {
-      label: getString('cd.serviceDashboard.artifact'),
+      label: capitalize(getString('cd.serviceDashboard.artifact')),
       value: instanceData.artifactName || ''
     }
   ]
@@ -218,7 +297,7 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
         ]
       default:
         return Object.keys(instanceData.infrastructureDetails || {}).map(infrastructureDetailsKey => ({
-          label: infrastructureDetailsKey,
+          label: capitalize(infrastructureDetailsKey),
           value: instanceData.infrastructureDetails?.[infrastructureDetailsKey]
         }))
     }

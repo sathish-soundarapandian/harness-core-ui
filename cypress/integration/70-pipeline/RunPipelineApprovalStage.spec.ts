@@ -16,6 +16,7 @@ describe('RUN PIPELINE MODAL - approval stage', () => {
   const yamlSnippetCall = '/pipeline/api/approvals/stage-yaml-snippet?routingId=accountId&approvalType=HarnessApproval'
   const userGroupCall = 'ng/api/aggregate/acl/usergroups?accountIdentifier=accountId&orgIdentifier=default&searchTerm='
   const stepsCall = '/pipeline/api/pipelines/v2/steps?routingId=accountId&accountId=accountId'
+  const accountLicense = 'ng/api/licenses/account?routingId=accountId&accountIdentifier=accountId'
 
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
@@ -26,6 +27,7 @@ describe('RUN PIPELINE MODAL - approval stage', () => {
     cy.intercept('GET', gitSyncCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('GET', yamlSnippetCall, { fixture: 'pipeline/api/approvals/stageYamlSnippet' })
     cy.intercept('GET', userGroupCall, { fixture: 'pipeline/api/approvals/userGroup' })
+    cy.intercept('GET', accountLicense, { fixture: 'pipeline/api/approvals/accountLicense' })
     cy.intercept('POST', stepsCall, { fixture: 'pipeline/api/approvals/steps' })
     cy.login('test', 'test')
 

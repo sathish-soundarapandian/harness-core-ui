@@ -14,15 +14,6 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
       >
         <div>
           <div
-            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-bottom-medium"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
-            >
-              
-            </p>
-          </div>
-          <div
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
           >
             <div
@@ -713,15 +704,6 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
         class="FormikForm--main"
       >
         <div>
-          <div
-            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-bottom-medium"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
-            >
-              
-            </p>
-          </div>
           <div
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
           >
@@ -2608,15 +2590,6 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with em
       >
         <div>
           <div
-            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-bottom-medium"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
-            >
-              
-            </p>
-          </div>
-          <div
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
           >
             <div
@@ -3162,15 +3135,6 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
         class="FormikForm--main"
       >
         <div>
-          <div
-            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-bottom-medium"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
-            >
-              
-            </p>
-          </div>
           <div
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
           >
@@ -3737,15 +3701,6 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with va
         class="FormikForm--main"
       >
         <div>
-          <div
-            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-bottom-medium"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
-            >
-              
-            </p>
-          </div>
           <div
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
           >

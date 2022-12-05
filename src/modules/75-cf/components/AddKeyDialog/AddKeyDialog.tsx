@@ -166,7 +166,13 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
 
   const [openModal, hideModal] = useModalHook(() => {
     return (
-      <Dialog isOpen enforceFocus={false} onClose={hideModal} title={getString('cf.environments.apiKeys.addKeyTitle')}>
+      <Dialog
+        className={css.dialog}
+        isOpen
+        enforceFocus={false}
+        onClose={hideModal}
+        title={getString('cf.environments.apiKeys.addKeyTitle')}
+      >
         <Formik
           initialValues={initialValues}
           formName="addKeyDialog"

@@ -7,8 +7,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { defaultTo, isEmpty, pickBy, set } from 'lodash-es'
+import { getMultiTypeFromValue, MultiTypeInputType, PageSpinner } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
@@ -19,14 +19,26 @@ import type {
 import { useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { JiraProjectBasicNG, JiraProjectNG, useGetJiraIssueCreateMetadata, useGetJiraProjects } from 'services/cd-ng'
+import {
+  JiraFieldNG,
+  JiraProjectBasicNG,
+  JiraProjectNG,
+  useGetJiraIssueCreateMetadata,
+  useGetJiraProjects
+} from 'services/cd-ng'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { getGenuineValue, setIssueTypeOptions } from '../JiraApproval/helper'
+import { getInitialValueForSelectedField } from './helper'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
-import type { JiraCreateDeploymentModeProps, JiraCreateDeploymentModeFormContentInterface } from './types'
+import type {
+  JiraCreateDeploymentModeProps,
+  JiraCreateDeploymentModeFormContentInterface,
+  JiraFieldNGWithValue
+} from './types'
+import { JiraFieldsRenderer } from './JiraFieldsRenderer'
 import css from './JiraCreate.module.scss'
 
 function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterface) {
@@ -38,11 +50,14 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
     projectsResponse,
     refetchProjects,
     refetchProjectMetadata,
+    refetchIssueMetadata,
     fetchingProjectMetadata,
+    fetchingIssueMetadata,
     fetchingProjects,
     projectMetadataFetchError,
     projectsFetchError,
-    stepViewType
+    stepViewType,
+    issueMetaResponse
   } = formContentProps
   const template = inputSetData?.template
   const path = inputSetData?.path
@@ -63,6 +78,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
   const [projectOptions, setProjectOptions] = useState<JiraProjectSelectOption[]>([])
   const [projectMetadata, setProjectMetadata] = useState<JiraProjectNG>()
 
+  const [issueMetadata, setIssueMetadata] = useState<JiraProjectNG>()
   const [selectedProjectValue, setSelectedProjectValue] = useState<JiraProjectSelectOption>()
   const [selectedIssueTypeValue, setSelectedIssueTypeValue] = useState<JiraProjectSelectOption>()
 
@@ -71,6 +87,8 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
   )
   const projectKeyFixedValue = initialValues.spec?.projectKey || inputSetData?.allValues?.spec?.projectKey
 
+  const issueTypeFixedValue = initialValues.spec?.issueType || inputSetData?.allValues?.spec?.issueType
+  const [fields, setFields] = useState<JiraFieldNGWithValue[]>([])
   useEffect(() => {
     // If connector value changes in form, fetch projects
     if (connectorRefFixedValue) {
@@ -89,6 +107,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
       refetchProjectMetadata({
         queryParams: {
           ...commonParams,
+          expand: 'projects.issuetypes',
           connectorRef: connectorRefFixedValue.toString(),
           projectKey: projectKeyFixedValue.toString()
         }
@@ -97,13 +116,27 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
   }, [projectKeyFixedValue])
 
   useEffect(() => {
+    if (connectorRefFixedValue && projectKeyFixedValue && issueTypeFixedValue) {
+      refetchIssueMetadata({
+        queryParams: {
+          ...commonParams,
+          expand: 'projects.issuetypes.fields',
+          connectorRef: connectorRefFixedValue.toString(),
+          projectKey: projectKeyFixedValue.toString(),
+          issueType: issueTypeFixedValue.toString()
+        }
+      })
+    }
+  }, [issueTypeFixedValue])
+
+  useEffect(() => {
     let options: JiraProjectSelectOption[] = []
     const projectResponseList: JiraProjectBasicNG[] = projectsResponse?.data || []
     options =
       projectResponseList.map((project: JiraProjectBasicNG) => ({
-        label: project.name || '',
-        value: project.key || '',
-        key: project.key || ''
+        label: defaultTo(project.name, ''),
+        value: defaultTo(project.key, ''),
+        key: defaultTo(project.key, '')
       })) || []
 
     setProjectOptions(options)
@@ -125,6 +158,44 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
       }
     }
   }, [projectMetaResponse?.data])
+
+  useEffect(() => {
+    // If issuetype changes in form, set field list
+    if (issueTypeFixedValue && issueMetadata?.issuetypes[issueTypeFixedValue as string]?.fields) {
+      const issueTypeData = issueMetadata?.issuetypes[issueTypeFixedValue as string]
+      const selectedFieldsValue = initialValues.spec?.fields || inputSetData?.allValues?.spec?.fields
+
+      //Mapped fields with BE 'issueTypeData?.fields' data to get details for runtime fields and append it in a single object
+      const fetchRuntimeFields: any = selectedFieldsValue.map((fieldValueObj, _index) => {
+        const fieldName = fieldValueObj.name
+        let matchedField = {} as JiraFieldNG
+        pickBy(issueTypeData?.fields, function (value, key) {
+          if (key === fieldName) {
+            matchedField = value
+            const savedValueForThisField = getInitialValueForSelectedField(selectedFieldsValue, matchedField)
+            if (matchedField) {
+              set(
+                formContentProps?.formik?.initialValues,
+                `${prefix}spec.fields[${_index}].value`,
+                !isEmpty(matchedField.allowedValues) && !savedValueForThisField ? [] : savedValueForThisField
+              )
+            }
+          }
+        })
+        return matchedField
+      })
+
+      setFields(fetchRuntimeFields)
+    }
+  }, [issueTypeFixedValue, issueMetadata])
+
+  useEffect(() => {
+    if (projectKeyFixedValue && issueTypeFixedValue && issueMetaResponse?.data?.projects) {
+      const issuesMD: JiraProjectNG = issueMetaResponse?.data?.projects[projectKeyFixedValue as string]
+      setIssueMetadata(issuesMD)
+    }
+  }, [issueMetaResponse?.data, projectKeyFixedValue, issueTypeFixedValue])
+
   return (
     <React.Fragment>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
@@ -230,6 +301,20 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
           template={template}
         />
       ) : null}
+
+      {fetchingIssueMetadata ? (
+        <PageSpinner message={getString('pipeline.jiraCreateStep.fetchingFields')} className={css.fetching} />
+      ) : (
+        <JiraFieldsRenderer
+          fieldPrefix={prefix}
+          deploymentMode
+          selectedFields={fields}
+          readonly={readonly}
+          formik={formContentProps?.formik}
+          connectorRef={connectorRefFixedValue?.toString()}
+          template={template}
+        />
+      )}
     </React.Fragment>
   )
 }
@@ -269,8 +354,25 @@ export default function JiraCreateDeploymentMode(props: JiraCreateDeploymentMode
     lazy: true,
     queryParams: {
       ...commonParams,
+      expand: '',
       connectorRef: '',
       projectKey: ''
+    }
+  })
+
+  const {
+    refetch: refetchIssueMetadata,
+    data: issueMetaResponse,
+    error: issueMetadataFetchError,
+    loading: fetchingIssueMetadata
+  } = useGetJiraIssueCreateMetadata({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      expand: '',
+      connectorRef: '',
+      projectKey: '',
+      issueType: ''
     }
   })
 
@@ -285,6 +387,10 @@ export default function JiraCreateDeploymentMode(props: JiraCreateDeploymentMode
       projectMetaResponse={projectMetaResponse}
       projectMetadataFetchError={projectMetadataFetchError}
       fetchingProjectMetadata={fetchingProjectMetadata}
+      fetchingIssueMetadata={fetchingIssueMetadata}
+      refetchIssueMetadata={refetchIssueMetadata}
+      issueMetaResponse={issueMetaResponse}
+      issueMetadataFetchError={issueMetadataFetchError}
     />
   )
 }

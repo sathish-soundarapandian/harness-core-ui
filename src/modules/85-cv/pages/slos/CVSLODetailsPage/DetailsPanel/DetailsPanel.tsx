@@ -11,12 +11,15 @@ import { Card, Container, Heading, Page, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useGetSLODetails } from 'services/cv'
+import { useQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ChangesSourceCard from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesSourceCard/ChangesSourceCard'
 import ChangesTable from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable'
 import ServiceDetails from './views/ServiceDetails'
 import type { DetailsPanelProps } from './DetailsPanel.types'
 import SLOCardContent from '../../SLOCard/SLOCardContent'
+import CompositeSLOConsumption from './views/CompositeSLOConsumption/CompositeSLOConsumption'
+import { SLOType } from '../../components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import css from './DetailsPanel.module.scss'
 
 const DetailsPanel: React.FC<DetailsPanelProps> = ({
@@ -30,12 +33,17 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
   const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<
     ProjectPathProps & { identifier: string }
   >()
+  const { sloType } = useQueryParams<{ sloType?: string }>()
+  const isCompositeSLO = sloType === SLOType.COMPOSITE
 
-  const { currentPeriodStartTime = 0, currentPeriodEndTime = 0 } = sloDashboardWidget ?? {}
+  const { currentPeriodStartTime = 0, currentPeriodEndTime = 0, monitoredServiceDetails } = sloDashboardWidget ?? {}
   const [chartTimeRange, setChartTimeRange] = useState<{ startTime: number; endTime: number }>()
   const [sliderTimeRange, setSliderTimeRange] = useState<{ startTime: number; endTime: number }>()
 
   const { startTime = currentPeriodStartTime, endTime = currentPeriodEndTime } = sliderTimeRange ?? chartTimeRange ?? {}
+
+  const consumptionStartTime = startTime === endTime ? currentPeriodStartTime : startTime
+  const consumptionEndTime = startTime === endTime ? currentPeriodEndTime : endTime
 
   const { data } = useGetSLODetails({
     identifier,
@@ -71,9 +79,13 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
             timeRangeFilters={timeRangeFilters}
             showUserHint
           />
-
           <Container padding={{ bottom: 'xlarge' }} />
-
+          {isCompositeSLO && (
+            <>
+              <CompositeSLOConsumption startTime={consumptionStartTime} endTime={consumptionEndTime} />
+              <Container padding={{ bottom: 'xlarge' }} />
+            </>
+          )}
           <Card className={css.changesCard}>
             <Heading
               level={2}
@@ -83,13 +95,16 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
             >
               {getString('changes')}
             </Heading>
-            {sloDashboardWidget?.monitoredServiceIdentifier && (
-              <ChangesSourceCard
-                startTime={startTime}
-                endTime={endTime}
-                monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
-              />
-            )}
+            <ChangesSourceCard
+              startTime={startTime}
+              endTime={endTime}
+              monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
+              monitoredServiceIdentifiers={
+                sloDashboardWidget?.monitoredServiceDetails?.map(
+                  serviceDetails => serviceDetails.monitoredServiceIdentifier || ''
+                ) || []
+              }
+            />
             <Text
               icon="info"
               color={Color.GREY_600}
@@ -105,6 +120,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
               startTime={startTime}
               endTime={endTime}
               monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
+              monitoredServiceDetails={monitoredServiceDetails || []}
             />
           </Card>
         </Container>
