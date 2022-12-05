@@ -11,7 +11,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import copy from 'copy-to-clipboard'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import cx from 'classnames'
-import { DATE_RANGE_SHORTCUTS, getTimePeriodString } from '@ce/utils/momentUtils'
+import { DATE_RANGE_SHORTCUTS, getTimePeriodString } from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 
 import { convertNumberToFixedDecimalPlaces } from '@ce/utils/convertNumberToFixedDecimalPlaces'

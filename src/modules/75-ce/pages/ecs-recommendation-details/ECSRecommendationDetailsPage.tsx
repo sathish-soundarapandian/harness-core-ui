@@ -34,7 +34,7 @@ import {
   RecommendationOverviewStats,
   LaunchType
 } from 'services/ce/services'
-import { GET_DATE_RANGE } from '@ce/utils/momentUtils'
+import { GET_DATE_RANGE } from '@common/utils/momentUtils'
 import routes from '@common/RouteDefinitions'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'

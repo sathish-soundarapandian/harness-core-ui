@@ -9,7 +9,7 @@ import React, { useMemo } from 'react'
 import { Container, Text, Layout } from '@harness/uicore'
 import { Link, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
-import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import routes from '@common/RouteDefinitions'
 import {
   Maybe,

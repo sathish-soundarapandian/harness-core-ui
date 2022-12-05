@@ -11,7 +11,7 @@ import { Container, Text, Layout, FlexExpander, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { Menu, MenuItem, Popover, Position, Drawer } from '@blueprintjs/core'
-import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 import {
   useFetchViewFieldsQuery,

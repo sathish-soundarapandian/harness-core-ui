@@ -16,7 +16,7 @@ import {
   DATE_RANGE_SHORTCUTS,
   getGMTEndDateTime,
   getGMTStartDateTime
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { CcmMetaData, QlceViewTimeFilterOperator, useFetchCcmMetaDataQuery } from 'services/ce/services'

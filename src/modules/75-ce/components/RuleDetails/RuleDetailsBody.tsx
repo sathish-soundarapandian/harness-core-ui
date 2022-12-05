@@ -11,7 +11,7 @@ import cx from 'classnames'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { Container, Icon, Layout, PageBody, Tab, Tabs, Text, Utils } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS, getStaticSchedulePeriodTime } from '@ce/utils/momentUtils'
+import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS, getStaticSchedulePeriodTime } from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 import {
   Service,

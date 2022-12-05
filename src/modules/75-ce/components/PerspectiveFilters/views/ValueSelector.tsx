@@ -11,7 +11,7 @@ import { Container, Layout, Text, Icon, TextInput, ExpandingSearchInput } from '
 import { Color } from '@harness/design-system'
 import { RadioGroup, Radio } from '@blueprintjs/core'
 import cx from 'classnames'
-import { getGMTStartDateTime, getGMTEndDateTime } from '@ce/utils/momentUtils'
+import { getGMTStartDateTime, getGMTEndDateTime } from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 import MultiValueSelectorComponent from '@ce/components/MultiValueSelectorComponent/MultiValueSelectorComponent'
 import {

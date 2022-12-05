@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Icon, Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
-import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import type { CEView } from 'services/ce'
 import {
   QlceViewFieldIdentifierData,

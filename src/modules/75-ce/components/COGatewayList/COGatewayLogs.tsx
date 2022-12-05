@@ -13,7 +13,7 @@ import {
   getGenericTimeZoneName,
   getStaticSchedulePeriodTime,
   getTimePeriodString
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
 import { Service, ServiceLog, useLogsOfService } from 'services/lw'
 import { SimpleLogViewer } from '@common/components/LogViewer/SimpleLogViewer'
 import type { RefreshFunction } from '@ce/types'

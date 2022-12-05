@@ -17,7 +17,7 @@ import {
   getGMTEndDateTime,
   getGMTStartDateTime,
   DEFAULT_TIME_RANGE
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
 import {
   useFetchWorkloadTimeSeriesQuery,
   useFetchWorkloadGridQuery,

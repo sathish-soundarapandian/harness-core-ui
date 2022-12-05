@@ -14,7 +14,7 @@ import {
   DATE_RANGE_SHORTCUTS,
   getGMTEndDateTime,
   getGMTStartDateTime
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
 import {
   CcmMetaData,
   StatsInfo,

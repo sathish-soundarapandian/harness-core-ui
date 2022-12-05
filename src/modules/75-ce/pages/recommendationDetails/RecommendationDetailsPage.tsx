@@ -23,7 +23,7 @@ import {
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Position, Menu, MenuItem, Slider } from '@blueprintjs/core'
-import { GET_DATE_RANGE } from '@ce/utils/momentUtils'
+import { GET_DATE_RANGE } from '@common/utils/momentUtils'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'

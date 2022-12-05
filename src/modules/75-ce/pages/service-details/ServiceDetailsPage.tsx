@@ -35,7 +35,7 @@ import {
   DEFAULT_TIME_RANGE,
   getGMTEndDateTime,
   getGMTStartDateTime
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
 import { CCM_PAGE_TYPE, TimeRangeFilterType } from '@ce/types'
 import PerspectiveGrid from '@ce/components/PerspectiveGrid/PerspectiveGrid'
 import { Page } from '@common/exports'

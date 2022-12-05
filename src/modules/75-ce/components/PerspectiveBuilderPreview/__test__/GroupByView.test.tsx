@@ -10,7 +10,7 @@ import { fireEvent, queryByAttribute, render, act, queryByText } from '@testing-
 import { Provider } from 'urql'
 import { fromValue } from 'wonka'
 import type { DocumentNode } from 'graphql'
-import { DEFAULT_TIME_RANGE } from '@ce/utils/momentUtils'
+import { DEFAULT_TIME_RANGE } from '@common/utils/momentUtils'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   FetchPerspectiveTimeSeriesDocument,

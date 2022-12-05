@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 import type { Column as TableColumn } from 'react-table'
 import { Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { getStaticSchedulePeriodTime } from '@ce/utils/momentUtils'
+import { getStaticSchedulePeriodTime } from '@common/utils/momentUtils'
 import {
   Column,
   getFixedDecimalData,

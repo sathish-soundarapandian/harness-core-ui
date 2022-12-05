@@ -14,7 +14,7 @@ import {
   DATE_RANGE_SHORTCUTS,
   getGMTEndDateTime,
   getGMTStartDateTime
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
 import { QlceViewTimeGroupType, QlceViewFilterInput } from 'services/ce/services'
 import TimeRangePicker from '@common/components/TimeRangePicker/TimeRangePicker'
 import { useStrings, UseStringsReturn } from 'framework/strings'

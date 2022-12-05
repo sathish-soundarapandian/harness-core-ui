@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { defaultTo } from 'lodash-es'
 import { Container } from '@harness/uicore'
-import { getStaticSchedulePeriodTime } from '@ce/utils/momentUtils'
+import { getStaticSchedulePeriodTime } from '@common/utils/momentUtils'
 import {
   Column as GridColumn,
   RenderCostCell,

@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Container, Text, Layout } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { noop } from 'lodash-es'
-import { CE_DATE_FORMAT_INTERNAL, getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
+import { CE_DATE_FORMAT_INTERNAL, getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 import type { CEView } from 'services/ce'
 import {

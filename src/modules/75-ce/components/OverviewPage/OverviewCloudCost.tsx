@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Text } from '@harness/uicore'
-import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 import {
   QlceViewAggregateOperation,

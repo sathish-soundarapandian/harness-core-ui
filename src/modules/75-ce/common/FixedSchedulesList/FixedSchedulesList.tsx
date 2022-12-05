@@ -14,7 +14,7 @@ import {
   FORMAT_12_HOUR,
   get24HourTimeIn12HourFormat,
   getTimePeriodString
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 import type { FixedScheduleClient } from '@ce/components/COCreateGateway/models'
 import { DaysOfWeek } from '@ce/constants'
