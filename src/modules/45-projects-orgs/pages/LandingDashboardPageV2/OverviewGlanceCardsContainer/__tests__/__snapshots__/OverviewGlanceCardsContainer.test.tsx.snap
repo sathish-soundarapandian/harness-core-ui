@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`landing dashboard page tests test with data 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main container"
+  >
+    Overview glance v2
+    Overview glance v2
+    Overview glance v2
+    Overview glance v2
+  </div>
+</div>
+`;
