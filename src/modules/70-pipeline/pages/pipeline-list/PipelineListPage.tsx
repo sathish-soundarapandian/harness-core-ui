@@ -18,7 +18,7 @@ import {
   useToggleOpen
 } from '@harness/uicore'
 import { defaultTo, isEmpty, pick } from 'lodash-es'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -100,7 +100,9 @@ function PipelineListView(): React.ReactElement {
     'PipelineSortingPreference'
   )
 
-  const sort = sortingPreference ? JSON.parse(sortingPreference) : queryParams.sort
+  const sort = useMemo(() => {
+    return sortingPreference ? JSON.parse(sortingPreference) : queryParams.sort
+  }, [queryParams.sort, sortingPreference])
 
   const handleRepoChange = (filter: GitFilterScope): void => {
     updateQueryParams({
@@ -180,7 +182,7 @@ function PipelineListView(): React.ReactElement {
     orgIdentifier,
     searchTerm,
     page,
-    sort,
+    sort.toString(),
     size,
     repoIdentifier,
     branch
