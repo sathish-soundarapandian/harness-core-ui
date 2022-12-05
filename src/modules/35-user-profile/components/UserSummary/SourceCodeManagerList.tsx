@@ -108,7 +108,10 @@ const RenderColumnDelete: Renderer<CellProps<SourceCodeManagerDTO>> = ({ row, co
 const SourceCodeManagerList: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { data, loading, refetch } = useGetSourceCodeManagers({ queryParams: { accountIdentifier: accountId } })
+  const { data, loading, refetch } = useGetSourceCodeManagers({
+    queryParams: { accountIdentifier: accountId },
+    lazy: true
+  })
 
   const { openSourceCodeModal } = useSourceCodeModal({ onSuccess: refetch })
 

@@ -93,7 +93,7 @@ export const GitSyncStoreProvider: React.FC<Pick<GitSyncStoreProps, 'spinner'>> 
   }, [loadingRepos])
 
   useEffect(() => {
-    if (projectIdentifier) {
+    if (projectIdentifier && isGitSyncEnabled) {
       refetch()
       setStoreData(prevStateData => ({
         ...prevStateData,
