@@ -184,12 +184,6 @@ export function PipelineCanvas({
     yamlSchemaErrorWrapper
   } = state
 
-  //For remote pipeline queryParam will always as branch as selected branch except coming from list view
-  // While opeining studio from list view, selected branch can be any branch as in pipeline response
-  if (originalPipeline?.identifier !== '-1' && storeType === StoreType.REMOTE && !branch && gitDetails?.branch) {
-    updateQueryParams({ branch: gitDetails?.branch })
-  }
-
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier, module } = useParams<
     PipelineType<{
@@ -200,6 +194,24 @@ export function PipelineCanvas({
     }> &
       GitQueryParams
   >()
+  const history = useHistory()
+
+  // For remote pipeline queryParam will always as branch as selected branch except coming from list view
+  // While opeining studio from list view, selected branch can be any branch as in pipeline response
+  // We also have to discard Transition url which was without branch
+
+  React.useEffect(() => {
+    if (
+      originalPipeline?.identifier !== DefaultNewPipelineId &&
+      storeType === StoreType.REMOTE &&
+      !branch &&
+      gitDetails?.branch
+    ) {
+      history.replace(toPipelineList({ orgIdentifier, projectIdentifier, accountId, module }))
+      updateQueryParams({ branch: gitDetails?.branch })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [branch, gitDetails?.branch, module, originalPipeline?.identifier, projectIdentifier])
 
   const { showError, clear } = useToaster()
 
@@ -220,7 +232,6 @@ export function PipelineCanvas({
     }
   })
 
-  const history = useHistory()
   const { supportingGitSimplification } = useAppStore()
   const { openPipelineErrorsModal } = usePipelineErrors()
   const isYaml = view === SelectedView.YAML
