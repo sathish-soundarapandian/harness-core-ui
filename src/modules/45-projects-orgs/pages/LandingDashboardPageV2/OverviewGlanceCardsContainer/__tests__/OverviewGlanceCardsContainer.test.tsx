@@ -9,6 +9,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useGetCounts } from 'services/dashboard-service'
+import { DEFAULT_TIME_RANGE } from '@common/utils/momentUtils'
 import OverviewGlanceCardsContainer from '../OverviewGlanceCardsContainer'
 
 jest.mock('services/dashboard-service')
@@ -26,7 +27,7 @@ describe('landing dashboard page tests', () => {
   test('render', () => {
     const { queryByText } = render(
       <TestWrapper>
-        <OverviewGlanceCardsContainer />
+        <OverviewGlanceCardsContainer timeRange={DEFAULT_TIME_RANGE} />
       </TestWrapper>
     )
 
@@ -45,7 +46,7 @@ describe('landing dashboard page tests', () => {
     })
     const { container } = render(
       <TestWrapper>
-        <OverviewGlanceCardsContainer />
+        <OverviewGlanceCardsContainer timeRange={DEFAULT_TIME_RANGE} />
       </TestWrapper>
     )
 
@@ -73,7 +74,7 @@ describe('landing dashboard page tests', () => {
     })
     const { container } = render(
       <TestWrapper>
-        <OverviewGlanceCardsContainer />
+        <OverviewGlanceCardsContainer timeRange={DEFAULT_TIME_RANGE} />
       </TestWrapper>
     )
 
