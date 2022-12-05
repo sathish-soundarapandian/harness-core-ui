@@ -136,7 +136,7 @@ const SideNavItems = () => {
   const {
     CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI,
     CCM_COMMORCH: showCO,
-    CCM_CURRENCY_PREFERENCES: currencyPreferencesEnabled
+    CCM_CURRENCY_PREFERENCES: currencyPreferencesEnabled = true
   } = useFeatureFlags()
 
   return (
