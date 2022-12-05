@@ -24,7 +24,6 @@ import { useCollaboratorModal } from '@projects-orgs/modals/ProjectModal/useColl
 import ContextMenu from '@projects-orgs/components/Menu/ContextMenu'
 import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -125,7 +124,8 @@ const ProjectDetails: React.FC = () => {
 
     const infoCards = []
 
-    if (projectData.modules.includes(ModuleName.CD)) infoCards.push(ModuleName.CD)
+    if (projectData.modules.includes(ModuleName.CD))
+      infoCards.push(ModuleName.CD)
     if (CING_ENABLED && projectData.modules.includes(ModuleName.CI)) infoCards.push(ModuleName.CI)
     if (CFNG_ENABLED && projectData.modules.includes(ModuleName.CF)) infoCards.push(ModuleName.CF)
     if (CENG_ENABLED && projectData.modules.includes(ModuleName.CE)) infoCards.push(ModuleName.CE)

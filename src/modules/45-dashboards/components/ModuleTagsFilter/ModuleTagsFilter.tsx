@@ -49,7 +49,12 @@ const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, set
       {renderTagsFilter(DashboardTags.HARNESS, moduleTagCss.harnessTag, 'dashboards.modules.harness', true)}
       {renderTagsFilter(DashboardTags.CE, moduleTagCss.ceTag, 'common.purpose.ce.cloudCost', CENG_ENABLED)}
       {renderTagsFilter(DashboardTags.CI, moduleTagCss.ciTag, 'buildsText', CING_ENABLED || CI_TI_DASHBOARDS_ENABLED)}
-      {renderTagsFilter(DashboardTags.CD, moduleTagCss.cdTag, 'deploymentsText', CUSTOM_DASHBOARD_V2)}
+      {renderTagsFilter(
+        DashboardTags.CD,
+        moduleTagCss.cdTag,
+        'deploymentsText',
+        licenseInformation['CD']?.status === 'ACTIVE' || CUSTOM_DASHBOARD_V2
+      )}
       {renderTagsFilter(DashboardTags.CF, moduleTagCss.cfTag, 'common.purpose.cf.continuous', CFNG_ENABLED)}
       {renderTagsFilter(
         DashboardTags.STO,

@@ -23,8 +23,7 @@ import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepPalette } from '@pipeline/components/PipelineStudio/StepPalette/StepPalette'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { getAllStepPaletteModuleInfos, getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import css from './StepTemplateDiagram.module.scss'
 
 export const StepTemplateDiagram = (): JSX.Element => {
@@ -36,7 +35,6 @@ export const StepTemplateDiagram = (): JSX.Element => {
   const { templateIdentifier } = useParams<TemplateStudioPathProps>()
   const [stepPaletteModuleInfos, setStepPaletteModuleInfos] = React.useState<StepPalleteModuleInfo[]>([])
   const { module } = useParams<ModulePathParams>()
-  const { CDNG_ENABLED, CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const [isStepSelectorOpen, setIsStepSelectorOpen] = React.useState<boolean>()
 
   const openStepSelector = React.useCallback(() => {

@@ -13,7 +13,6 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import type { StringsMap } from 'stringTypes'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './ModuleInfoCards.module.scss'
 interface InfoCards {
   [key: string]: Array<ModuleInfoCard>

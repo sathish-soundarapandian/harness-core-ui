@@ -22,10 +22,10 @@ import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectListView.module.scss'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 
 interface ProjectListViewProps {
   data: ResponsePageProjectAggregateDTO | null
@@ -41,7 +41,7 @@ type CustomColumn<T extends Record<string, any>> = Column<T> & {
   collaborators?: (project: Project) => void
 }
 
-export const RenderColumnProject: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
+const RenderColumnProject: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
   const project = row.original.projectResponse.project
   const { getString } = useStrings()
   return (
@@ -62,7 +62,7 @@ export const RenderColumnProject: Renderer<CellProps<ProjectAggregateDTO>> = ({ 
     </Layout.Horizontal>
   )
 }
-export const RenderColumnOrganization: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
+const RenderColumnOrganization: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
   const data = row.original
   return (
     <Text color={Color.BLACK} lineClamp={1} className={css.org}>
@@ -73,9 +73,8 @@ export const RenderColumnOrganization: Renderer<CellProps<ProjectAggregateDTO>> 
 
 const RenderColumnModules: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
   const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
-  const { licenseInformation } = useLicenseStore()
   const data = row.original
-
+  const { licenseInformation } = useLicenseStore()
   const shouldShowModules = data.projectResponse.project.modules?.length
 
   function getModuleIcons(project: Project): React.ReactElement[] {
