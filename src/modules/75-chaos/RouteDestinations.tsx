@@ -78,6 +78,7 @@ import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStor
 import { ModuleName } from 'framework/types/ModuleName'
 import { RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { Duration } from '@common/exports'
+import { DefaultConsoleViewStepDetails, logsRenderer } from '@pipeline/components/LogsContent/LogsContent'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
@@ -672,9 +673,10 @@ export default function ChaosRoutes(): React.ReactElement {
             ConnectorReferenceField,
             OverviewChartsWithToggle,
             Duration,
-            NavigationCheck
+            NavigationCheck,
+            DefaultConsoleViewStepDetails
           }}
-          customFunctions={{ validateYAMLWithSchema }}
+          customFunctions={{ validateYAMLWithSchema, logsRenderer }}
           customHooks={{ useCreateConnectorModal }}
         />
       </RouteWithLayout>

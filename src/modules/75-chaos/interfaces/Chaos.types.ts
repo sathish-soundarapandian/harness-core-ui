@@ -15,6 +15,7 @@ import type {
   UseCreateConnectorModalReturn
 } from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import type { DurationProps } from '@common/exports'
+import type { ConsoleViewStepDetailProps, RenderLogsInterface } from '@pipeline/factories/ExecutionFactory/types'
 
 export interface ChaosCustomMicroFrontendProps {
   customComponents: {
@@ -22,12 +23,14 @@ export interface ChaosCustomMicroFrontendProps {
     OverviewChartsWithToggle: React.ComponentType<OverviewChartsWithToggleProps>
     Duration: React.ComponentType<DurationProps>
     NavigationCheck: React.ComponentType<NavigationCheckProps>
+    DefaultConsoleViewStepDetails: React.ComponentType<ConsoleViewStepDetailProps>
   }
   customHooks: {
     useCreateConnectorModal: (props: UseCreateConnectorModalProps) => UseCreateConnectorModalReturn
   }
   customFunctions: {
     validateYAMLWithSchema: (yamlString: string, schema: Record<string, any>) => Promise<Diagnostic[]>
+    logsRenderer: ({ hasLogs, isSingleSectionLogs, virtuosoRef, state, actions }: RenderLogsInterface) => JSX.Element
   }
 }
 
