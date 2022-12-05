@@ -155,7 +155,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     queryParams: {
       ...commonParams,
       connectorRef: getFinalQueryParamValue(connectorRefValue),
-      repositoryFormat: repositoryFormatValue,
+      repositoryFormat: getFinalQueryParamValue(repositoryFormatValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
       fqnPath: getFqnPath(
@@ -222,7 +222,18 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       branch,
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
-      fqnPath: getFqnPath(path as string, !!isPropagatedStage, stageIdentifier, defaultTo(artifactPath, ''), 'tag')
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'tag'
+      )
     },
     lazy: true
   })
