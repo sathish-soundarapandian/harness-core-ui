@@ -32,7 +32,7 @@ const LandingDashboardPageV2 = () => {
           flex={{ justifyContent: 'center', alignItems: 'flex-start' }}
         >
           <Layout.Vertical className={css.left}>
-            <OverviewGlanceCardsV2 />
+            <OverviewGlanceCardsV2 timeRange={timeRange} />
           </Layout.Vertical>
         </Layout.Horizontal>
       </PageBody>

@@ -6,7 +6,7 @@
  */
 
 import { Layout } from '@harness/uicore'
-import React, { useState } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetCounts } from 'services/dashboard-service'
@@ -14,6 +14,8 @@ import { OverviewGalanceCard } from '@projects-orgs/components/OverviewGlanceCar
 import type { CountChangeAndCountChangeRateInfo } from 'services/dashboard-service'
 import routes from '@common/RouteDefinitions'
 import type { StringKeys } from 'framework/strings'
+import type { TimeRangeFilterType } from '@common/types'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import OverviewGlanceCardV2 from './OverviewGlanceCardV2/OverviewGlanceCardV2'
 import css from './OverviewGlanceCardsContainer.module.scss'
 
@@ -25,15 +27,18 @@ interface GlanceCard {
   url?: string
 }
 
-const OverviewGlanceCardsV2 = () => {
+interface OverviewGlanceCardsV2Props {
+  timeRange: TimeRangeFilterType
+}
+
+const OverviewGlanceCardsV2: React.FC<OverviewGlanceCardsV2Props> = ({ timeRange }) => {
   const { accountId } = useParams<AccountPathProps>()
-  const [range] = useState([Date.now() - 30 * 24 * 60 * 60000, Date.now()])
 
   const { data: countResponse, loading } = useGetCounts({
     queryParams: {
       accountIdentifier: accountId,
-      startTime: range[0],
-      endTime: range[1]
+      startTime: getGMTStartDateTime(timeRange.from),
+      endTime: getGMTEndDateTime(timeRange.to)
     }
   })
 

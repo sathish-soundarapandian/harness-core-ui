@@ -6,8 +6,8 @@
  */
 
 import { createContext, useContext } from 'react'
-import type { TimeRangeFilterType } from '@ce/types'
 import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS } from '@ce/utils/momentUtils'
+import type { TimeRangeFilterType } from '@ce/types'
 import type { SummaryRequest } from 'services/lw-co'
 
 export interface FilterOptions {
