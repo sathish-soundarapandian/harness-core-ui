@@ -22,6 +22,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import { KubernetesArtifacts } from '@cd/components/PipelineSteps/K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 import type { CustomDeploymentServiceStep } from './CustomDeploymentServiceSpecInterface'
+import PrimaryArtifactRef from '../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
 import css from './CustomDeploymentServiceSpec.module.scss'
 
 export interface CustomDeploymentInputSetProps {
@@ -56,22 +57,33 @@ const CustomDeploymentServiceSpecInputSetModeFormikForm = (
     allowableTypes
   } = props
   const { getString } = useStrings()
+  const commonProps = {
+    stepViewType,
+    formik,
+    path,
+    initialValues,
+    readonly,
+    allowableTypes,
+    serviceIdentifier
+  }
   return (
     <Layout.Vertical spacing="medium">
-      {!!(template?.artifacts?.primary?.type || template?.artifacts?.sidecars?.length) && (
+      {!!template?.artifacts?.primary?.primaryArtifactRef && (
+        <PrimaryArtifactRef primaryArtifact={allValues?.artifacts?.primary} template={template} {...commonProps} />
+      )}
+
+      {!!(
+        template?.artifacts?.primary?.type ||
+        (Array.isArray(template?.artifacts?.primary?.sources) && template?.artifacts?.primary?.sources?.length) ||
+        template?.artifacts?.sidecars?.length
+      ) && (
         <KubernetesArtifacts
           type={template?.artifacts?.primary?.type || ''}
-          template={template}
           artifacts={allValues?.artifacts}
           artifactSourceBaseFactory={artifactSourceBaseFactory}
-          stepViewType={stepViewType}
           stageIdentifier={stageIdentifier}
-          serviceIdentifier={serviceIdentifier}
-          formik={formik}
-          path={path}
-          initialValues={initialValues}
-          readonly={readonly}
-          allowableTypes={allowableTypes}
+          template={template as ServiceSpec}
+          {...commonProps}
         />
       )}
 
