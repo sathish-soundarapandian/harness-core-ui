@@ -8,7 +8,7 @@
 import React, { CSSProperties } from 'react'
 import cx from 'classnames'
 import { debounce, defaultTo } from 'lodash-es'
-import { Icon, Text, Button, ButtonVariation, IconName } from '@harness/uicore'
+import { Icon, Text, Button, ButtonVariation, IconName, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
@@ -143,133 +143,140 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
           <SVGMarker />
         </div>
       )}
-      <div
+      <Container
         id={props.id}
         data-nodeid={props.id}
-        draggable={!props.readonly}
-        className={cx(defaultCss.defaultCard, {
-          [defaultCss.selected]: isSelectedNode(),
-          [defaultCss.failed]: stageStatus === ExecutionStatusEnum.Failed,
-          [defaultCss.runningNode]: stageStatus === ExecutionStatusEnum.Running,
-          [defaultCss.skipped]: stageStatus === ExecutionStatusEnum.Skipped,
-          [defaultCss.notStarted]: stageStatus === ExecutionStatusEnum.NotStarted
-        })}
         style={{
-          width: 90,
-          height: 40,
-          ...props.customNodeStyle
+          height: 64
         }}
-        onMouseOver={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-          e.stopPropagation()
-          setAddVisibility(true)
-        }}
-        onMouseEnter={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-          event.stopPropagation()
-          props?.fireEvent?.({
-            type: Event.MouseEnterNode,
-            target: event.target,
-            data: {
-              identifier: props?.identifier as string,
-              node: props,
-              id: props.id
-            }
-          })
-        }}
-        onMouseLeave={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-          debounceHideVisibility()
-          event.stopPropagation()
-          props?.fireEvent?.({
-            type: Event.MouseLeaveNode,
-            target: event.target,
-            data: { ...props }
-          })
-        }}
-        onDragStart={event => {
-          event.stopPropagation()
-          event.dataTransfer.setData(DiagramDrag.NodeDrag, JSON.stringify(props))
-          // NOTE: onDragOver we cannot access dataTransfer data
-          // in order to detect if we can drop, we are setting and using "keys" and then
-          // checking in onDragOver if this type (AllowDropOnLink/AllowDropOnNode) exist we allow drop
-          event.dataTransfer.setData(DiagramDrag.AllowDropOnLink, '1')
-          event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
-          event.dataTransfer.dropEffect = 'move'
-          props?.fireEvent?.({
-            type: Event.DragStart,
-            target: event.target,
-            data: { ...props }
-          })
-          attachDragImageToEventHandler(event, NodeEntity.STAGE)
-        }}
-        onDragEnd={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-          event.preventDefault()
-          event.stopPropagation()
-        }}
+        flex={{ justifyContent: 'center', alignItems: 'center' }}
       >
-        <div className="execution-running-animation" />
-        {props?.data?.isInComplete && (
-          <Icon className={defaultCss.inComplete} size={12} name={'warning-sign'} color="orange500" />
-        )}
-        {props.iconUrl ? (
-          <ImagePreview src={props.iconUrl} size={28} fallbackIcon={props.icon as IconName} />
-        ) : (
-          props.icon && (
-            <Icon
-              size={28}
-              name={props.icon as IconName}
-              {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
-            />
-          )
-        )}
-        {secondaryIcon && (
-          <Icon
-            name={secondaryIcon}
-            style={secondaryIconStyle}
-            size={13}
-            className={defaultCss.secondaryIcon}
-            {...secondaryIconProps}
-          />
-        )}
-        {props?.data?.tertiaryIcon && (
-          <Icon name={props?.data?.tertiaryIcon} size={13} className={defaultCss.tertiaryIcon} />
-        )}
-        {isTemplateNode && (
-          <Icon
-            {...(isSelectedNode()
-              ? { color: Color.WHITE, className: cx(defaultCss.primaryIcon, defaultCss.templateIcon), inverse: true }
-              : { className: defaultCss.templateIcon })}
-            size={8}
-            name={TEMPLATE_ICON}
-          />
-        )}
-        {CODE_ICON && (
-          <Icon
-            {...(isSelectedNode()
-              ? { color: Color.WHITE, className: cx(defaultCss.primaryIcon, defaultCss.codeIcon), inverse: true }
-              : { className: defaultCss.codeIcon })}
-            size={8}
-            name={CODE_ICON}
-          />
-        )}
-        <Button
-          className={cx(defaultCss.closeNode, { [defaultCss.readonly]: props.readonly })}
-          minimal
-          icon="cross"
-          variation={ButtonVariation.PRIMARY}
-          iconProps={{ size: 10 }}
-          onMouseDown={e => {
+        <div
+          draggable={!props.readonly}
+          className={cx(defaultCss.defaultCard, {
+            [defaultCss.selected]: isSelectedNode(),
+            [defaultCss.failed]: stageStatus === ExecutionStatusEnum.Failed,
+            [defaultCss.runningNode]: stageStatus === ExecutionStatusEnum.Running,
+            [defaultCss.skipped]: stageStatus === ExecutionStatusEnum.Skipped,
+            [defaultCss.notStarted]: stageStatus === ExecutionStatusEnum.NotStarted
+          })}
+          style={{
+            width: 90,
+            height: 40,
+            ...props.customNodeStyle
+          }}
+          onMouseOver={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             e.stopPropagation()
+            setAddVisibility(true)
+          }}
+          onMouseEnter={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            event.stopPropagation()
             props?.fireEvent?.({
-              type: Event.RemoveNode,
-              target: e.target,
+              type: Event.MouseEnterNode,
+              target: event.target,
               data: {
                 identifier: props?.identifier as string,
-                node: props
+                node: props,
+                id: props.id
               }
             })
           }}
-          withoutCurrentColor={true}
-        />
-      </div>
+          onMouseLeave={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            debounceHideVisibility()
+            event.stopPropagation()
+            props?.fireEvent?.({
+              type: Event.MouseLeaveNode,
+              target: event.target,
+              data: { ...props }
+            })
+          }}
+          onDragStart={event => {
+            event.stopPropagation()
+            event.dataTransfer.setData(DiagramDrag.NodeDrag, JSON.stringify(props))
+            // NOTE: onDragOver we cannot access dataTransfer data
+            // in order to detect if we can drop, we are setting and using "keys" and then
+            // checking in onDragOver if this type (AllowDropOnLink/AllowDropOnNode) exist we allow drop
+            event.dataTransfer.setData(DiagramDrag.AllowDropOnLink, '1')
+            event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
+            event.dataTransfer.dropEffect = 'move'
+            props?.fireEvent?.({
+              type: Event.DragStart,
+              target: event.target,
+              data: { ...props }
+            })
+            attachDragImageToEventHandler(event, NodeEntity.STAGE)
+          }}
+          onDragEnd={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            event.preventDefault()
+            event.stopPropagation()
+          }}
+        >
+          <div className="execution-running-animation" />
+          {props?.data?.isInComplete && (
+            <Icon className={defaultCss.inComplete} size={12} name={'warning-sign'} color="orange500" />
+          )}
+          {props.iconUrl ? (
+            <ImagePreview src={props.iconUrl} size={28} fallbackIcon={props.icon as IconName} />
+          ) : (
+            props.icon && (
+              <Icon
+                size={28}
+                name={props.icon as IconName}
+                {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
+              />
+            )
+          )}
+          {secondaryIcon && (
+            <Icon
+              name={secondaryIcon}
+              style={secondaryIconStyle}
+              size={13}
+              className={defaultCss.secondaryIcon}
+              {...secondaryIconProps}
+            />
+          )}
+          {props?.data?.tertiaryIcon && (
+            <Icon name={props?.data?.tertiaryIcon} size={13} className={defaultCss.tertiaryIcon} />
+          )}
+          {isTemplateNode && (
+            <Icon
+              {...(isSelectedNode()
+                ? { color: Color.WHITE, className: cx(defaultCss.primaryIcon, defaultCss.templateIcon), inverse: true }
+                : { className: defaultCss.templateIcon })}
+              size={8}
+              name={TEMPLATE_ICON}
+            />
+          )}
+          {CODE_ICON && (
+            <Icon
+              {...(isSelectedNode()
+                ? { color: Color.WHITE, className: cx(defaultCss.primaryIcon, defaultCss.codeIcon), inverse: true }
+                : { className: defaultCss.codeIcon })}
+              size={8}
+              name={CODE_ICON}
+            />
+          )}
+          <Button
+            className={cx(defaultCss.closeNode, { [defaultCss.readonly]: props.readonly })}
+            minimal
+            icon="cross"
+            variation={ButtonVariation.PRIMARY}
+            iconProps={{ size: 10 }}
+            onMouseDown={e => {
+              e.stopPropagation()
+              props?.fireEvent?.({
+                type: Event.RemoveNode,
+                target: e.target,
+                data: {
+                  identifier: props?.identifier as string,
+                  node: props
+                }
+              })
+            }}
+            withoutCurrentColor={true}
+          />
+        </div>
+      </Container>
       {showMarkers && (
         <div className={cx(defaultCss.markerEnd, defaultCss.stageMarkerRight)}>
           <SVGMarker />

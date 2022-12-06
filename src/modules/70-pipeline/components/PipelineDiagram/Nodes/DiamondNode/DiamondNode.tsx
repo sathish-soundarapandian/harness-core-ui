@@ -63,18 +63,13 @@ export function DiamondNodeWidget(props: any): JSX.Element {
       onMouseDown={e => e.stopPropagation()}
     >
       <div
-        className={cx(
-          cssDefault.defaultCard,
-          css.diamond,
-          {
-            [cssDefault.selected]: isSelected,
-            [cssDefault.failed]: stepStatus === ExecutionStatusEnum.Failed,
-            [cssDefault.runningNode]: stepStatus === ExecutionStatusEnum.Running,
-            [cssDefault.skipped]: stepStatus === ExecutionStatusEnum.Skipped,
-            [cssDefault.notStarted]: stepStatus === ExecutionStatusEnum.NotStarted
-          },
-          { [css.top]: props?.data?.graphType === PipelineGraphType.STAGE_GRAPH }
-        )}
+        className={cx(cssDefault.defaultCard, css.diamond, {
+          [cssDefault.selected]: isSelected,
+          [cssDefault.failed]: stepStatus === ExecutionStatusEnum.Failed,
+          [cssDefault.runningNode]: stepStatus === ExecutionStatusEnum.Running,
+          [cssDefault.skipped]: stepStatus === ExecutionStatusEnum.Skipped,
+          [cssDefault.notStarted]: stepStatus === ExecutionStatusEnum.NotStarted
+        })}
         style={{
           ...props?.customNodeStyle
         }}
@@ -98,7 +93,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           id={props.id}
           data-nodeid={props.id}
           className={css.horizontalBar}
-          style={{ height: props.data?.graphType === PipelineGraphType.STAGE_GRAPH ? 40 : 64 }}
+          style={{ height: 64 }}
           onMouseEnter={event => {
             event.stopPropagation()
 
