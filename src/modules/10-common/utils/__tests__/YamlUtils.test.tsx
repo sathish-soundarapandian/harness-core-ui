@@ -11,7 +11,13 @@ import schema from './mocks/schema.json'
 import pipeline from './mocks/pipeline.json'
 import pipelineSchema from './mocks/pipeline-schema.json'
 
-import { validateYAMLWithSchema, validateYAML, validateJSONWithSchema, findLeafToParentPath } from '../YamlUtils'
+import {
+  validateYAMLWithSchema,
+  validateYAML,
+  validateJSONWithSchema,
+  findLeafToParentPath,
+  findAllValuesAtJSONPath
+} from '../YamlUtils'
 import { yamlStringify } from '../YamlHelperMethods'
 
 jest.mock('@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
@@ -47,5 +53,11 @@ describe('Test YamlUtils', () => {
   test('Test findLeafToParentPath method for custom delimiter', async () => {
     const path = findLeafToParentPath(pipeline as Record<string, any>, 'qualifier', '/')
     expect(path).toEqual('DEFAULT_YAML_PATH')
+  })
+
+  test.only("Test findAllValuesAtJSONPath method for '*' and strict match", async () => {
+    expect((findAllValuesAtJSONPath('pipeline.stages.*.stage.spec.execution') as string[]).length).toBe(2)
+    expect(findAllValuesAtJSONPath('pipeline.stages.0.stage.spec.execution')).not.toBe(undefined)
+    expect(findAllValuesAtJSONPath('pipeline.stages.3.stage.spec.execution')).toBe(undefined)
   })
 })

@@ -160,11 +160,183 @@ const getSchemaWithLanguageSettings = (schema: Record<string, any>): Record<stri
   }
 }
 
+const payload = {
+  pipeline: {
+    name: 'test324',
+    identifier: 'test324',
+    projectIdentifier: 'CI_Sanity',
+    orgIdentifier: 'default',
+    tags: {},
+    description: 'update',
+    stages: [
+      {
+        stage: {
+          name: 'stage1',
+          identifier: 'stage1',
+          type: 'CI',
+          spec: {
+            cloneCodebase: false,
+            infrastructure: {
+              type: 'KubernetesDirect',
+              spec: {
+                connectorRef: 'cidelplay',
+                namespace: 'ci-prod-delegate',
+                initTimeout: '30m',
+                automountServiceAccountToken: true,
+                nodeSelector: {},
+                os: 'Linux'
+              }
+            },
+            execution: {
+              steps: [
+                {
+                  step: {
+                    type: 'Run',
+                    name: 'run_step',
+                    identifier: 'blah',
+                    spec: {
+                      connectorRef: 'account.harnessImage',
+                      image: 'maven:3.8-jdk-11',
+                      shell: 'Sh',
+                      command:
+                        'touch harnessDockerfile\necho "FROM bewithaman/minio:trial" >> Dockerfile\ncat Dockerfile\npwd'
+                    },
+                    timeout: '5m'
+                  }
+                },
+                {
+                  step: {
+                    type: 'BuildAndPushDockerRegistry',
+                    name: 'docker_step',
+                    identifier: 'ewf',
+                    spec: {
+                      connectorRef: 'testaman',
+                      repo: 'bewithaman/minio',
+                      tags: ['local']
+                    },
+                    when: {
+                      stageStatus: 'Failure'
+                    },
+                    failureStrategies: []
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        stage: {
+          name: 'stage2',
+          identifier: 'stage2',
+          type: 'CI',
+          spec: {
+            cloneCodebase: false,
+            infrastructure: {
+              type: 'KubernetesDirect',
+              spec: {
+                connectorRef: 'cidelplay',
+                namespace: 'ci-prod-delegate',
+                initTimeout: '30m',
+                automountServiceAccountToken: true,
+                nodeSelector: {},
+                os: 'Linux'
+              }
+            },
+            execution: {
+              steps: [
+                {
+                  step: {
+                    type: 'Run',
+                    name: 'run_step',
+                    identifier: 'blah',
+                    spec: {
+                      connectorRef: 'account.harnessImage',
+                      image: 'maven:3.8-jdk-11',
+                      shell: 'Sh',
+                      command:
+                        'touch harnessDockerfile\necho "FROM bewithaman/minio:trial" >> Dockerfile\ncat Dockerfile\npwd'
+                    },
+                    timeout: '5m'
+                  }
+                },
+                {
+                  step: {
+                    type: 'BuildAndPushDockerRegistry',
+                    name: 'docker_step',
+                    identifier: 'ewf',
+                    spec: {
+                      connectorRef: 'testaman',
+                      repo: 'bewithaman/minio',
+                      tags: ['local']
+                    },
+                    when: {
+                      stageStatus: 'Failure'
+                    },
+                    failureStrategies: []
+                  }
+                }
+              ]
+            }
+          },
+          variables: [
+            {
+              name: 'PLUGIN_CONFIG',
+              type: 'Secret',
+              description: 'true',
+              value: 'amandockerccfg'
+            },
+            {
+              name: 'PLUGIN_USERNAME__',
+              type: 'String',
+              description: '',
+              value: 'bewithaman'
+            },
+            {
+              name: 'PLUGIN_PASSWORD__',
+              type: 'String',
+              description: '',
+              value: 'aman.3291'
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
+const findAllValuesAtJSONPath = (jsonPath: string): string | string[] => {
+  const tokens: string[] = jsonPath.split('.')
+  let value: string
+  for (let i = 0; i < tokens.length; i++) {
+    const currentToken = tokens[i]
+    //'*' wildcard match could endup with multiple matches in the json
+    if (currentToken === '*' && Array.isArray(value)) {
+      const ops: string[] = []
+      for (let j = 0; j < value.length; j++) {
+        ops.push(findAllValuesAtJSONPath(`pipeline.stages.${j}.stage.spec.execution`) as string)
+      }
+      return ops
+    } else {
+      if (i === 0) {
+        value = payload[currentToken]
+      } else {
+        value = value[currentToken]
+      }
+      if (!value) {
+        break
+      }
+    }
+  }
+  return value
+}
+
 export {
   validateYAML,
   validateYAMLWithSchema,
   validateJSONWithSchema,
   getSchemaWithLanguageSettings,
   DEFAULT_YAML_PATH,
-  findLeafToParentPath
+  findLeafToParentPath,
+  findAllValuesAtJSONPath
 }
