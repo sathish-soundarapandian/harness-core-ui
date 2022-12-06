@@ -13,12 +13,12 @@ import { Container, Icon, Layout, Text, Popover } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
-import useNavModuleInfo, {
+import useGetModuleInfo, {
   GroupConfig,
   moduleGroupConfig,
   NavModuleName,
   useNavModuleInfoMap
-} from '@common/hooks/useNavModuleInfo'
+} from '@common/hooks/useGetModuleInfo'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import NavModule from './NavModule/NavModule'
@@ -54,7 +54,7 @@ interface GroupProps {
 }
 
 const Item: React.FC<ItemProps> = ({ data, tooltipProps, onModuleClick }) => {
-  const { homePageUrl, shouldVisible, color, label } = useNavModuleInfo(data)
+  const { homePageUrl, shouldVisible, color, label } = useGetModuleInfo(data)
   const { module } = useModuleInfo()
   const { getString } = useStrings()
   const currentModule = module ? moduleToModuleNameMapping[module] : undefined

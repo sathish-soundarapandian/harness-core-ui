@@ -30,6 +30,7 @@ import ModuleSelectionFactory from '@projects-orgs/factories/ModuleSelectionFact
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import routes from '@common/RouteDefinitions'
+import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
 import css from './useModuleSelect.module.scss'
 
 export interface UseModuleSelectModalProps {
@@ -250,10 +251,12 @@ export const useModuleSelectModal = ({
     }
   }
   const infoCards: InfoCards[] = []
-
-  infoCards.push({
-    name: ModuleName.CD
-  })
+  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
+  if (shouldVisible) {
+    infoCards.push({
+      name: ModuleName.CD
+    })
+  }
 
   if (CING_ENABLED) {
     infoCards.push({

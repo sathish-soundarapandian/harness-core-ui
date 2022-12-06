@@ -10,20 +10,22 @@ import { Layout, Icon, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { ModuleName } from 'framework/types/ModuleName'
+import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
 import css from './ModuleRenderer.module.scss'
 
 const DefaultRenderer: React.FC = () => {
   const { getString } = useStrings()
   const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
-
+  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
   return (
     <Layout.Vertical padding={{ top: 'xlarge' }} className={css.started}>
       <Text font={{ size: 'small', weight: 'semi-bold' }} padding={{ bottom: 'xsmall' }}>
         {getString('modules')}
       </Text>
       <Layout.Horizontal spacing="small">
-        {<Icon name="cd-main" size={20} />}
+        {shouldVisible ? <Icon name="cd-main" size={20} /> : null}
         {CING_ENABLED ? <Icon name="ci-main" size={20} /> : null}
         {CFNG_ENABLED ? <Icon name="cf-main" size={20} /> : null}
         {CENG_ENABLED ? <Icon name="ce-main" size={20} /> : null}

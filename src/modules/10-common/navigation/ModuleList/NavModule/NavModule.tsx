@@ -12,7 +12,7 @@ import { Color } from '@harness/design-system'
 import { Checkbox, Layout, Text, Container } from '@harness/uicore'
 import { ModuleName } from 'framework/types/ModuleName'
 import { String } from 'framework/strings'
-import useNavModuleInfo, { NavModuleName } from '@common/hooks/useNavModuleInfo'
+import useGetModuleInfo, { NavModuleName } from '@common/hooks/useGetModuleInfo'
 import css from './NavModule.module.scss'
 
 interface CheckboxProps {
@@ -39,7 +39,7 @@ const navModuleToClassMap: Record<NavModuleName, string> = {
 }
 
 const NavModule: React.FC<NavModuleProps> = ({ module, active, onClick, checkboxProps }) => {
-  const { icon, label } = useNavModuleInfo(module)
+  const { icon, label } = useGetModuleInfo(module)
 
   return (
     <Container

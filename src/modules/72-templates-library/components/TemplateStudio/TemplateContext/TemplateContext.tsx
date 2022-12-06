@@ -51,6 +51,7 @@ import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import { initialState, TemplateReducer, TemplateReducerState, TemplateViewData } from './TemplateReducer'
 import { ActionReturnType, TemplateContextActions } from './TemplateActions'
+import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
 
 const logger = loggerFor(ModuleName.TEMPLATES)
 
@@ -1002,14 +1003,14 @@ export const TemplateProvider: React.FC<{
   const setIntermittentLoading = React.useCallback((isIntermittentLoading: boolean) => {
     dispatch(TemplateContextActions.setIntermittentLoading({ isIntermittentLoading }))
   }, [])
-
+  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
   const renderPipelineStage = (args: Omit<PipelineStagesProps, 'children'>) =>
     getPipelineStages({
       args,
       getString,
       module,
       isCIEnabled: licenseInformation['CI'] && CING_ENABLED,
-      isCDEnabled: licenseInformation['CD'] && true,
+      isCDEnabled: shouldVisible,
       isCFEnabled: licenseInformation['CF'] && CFNG_ENABLED,
       isSTOEnabled: licenseInformation['STO']?.status === 'ACTIVE',
       isApprovalStageEnabled: true

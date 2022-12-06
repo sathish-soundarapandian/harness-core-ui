@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { act } from 'react-dom/test-utils'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -49,6 +49,7 @@ describe('Modules containter test', () => {
         <ModulesContainer />
       </TestWrapper>
     )
+
     // checking length of nav items
     expect(container.querySelectorAll('[class*="navItem"]').length).toBe(3)
     // selected modules should be defined

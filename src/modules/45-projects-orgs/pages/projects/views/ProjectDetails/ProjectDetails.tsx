@@ -44,6 +44,8 @@ import {
 } from '@common/factories/LandingDashboardContext'
 import TimeRangeSelect from '@projects-orgs/components/TimeRangeSelect/TimeRangeSelect'
 import useDeleteProjectDialog from '../../DeleteProject'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
 import css from './ProjectDetails.module.scss'
 
 const ProjectDetails: React.FC = () => {
@@ -121,11 +123,10 @@ const ProjectDetails: React.FC = () => {
         </Layout.Vertical>
       )
     }
-
+    const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
     const infoCards = []
 
-    if (projectData.modules.includes(ModuleName.CD))
-      infoCards.push(ModuleName.CD)
+    if (shouldVisible && projectData.modules.includes(ModuleName.CD)) infoCards.push(ModuleName.CD)
     if (CING_ENABLED && projectData.modules.includes(ModuleName.CI)) infoCards.push(ModuleName.CI)
     if (CFNG_ENABLED && projectData.modules.includes(ModuleName.CF)) infoCards.push(ModuleName.CF)
     if (CENG_ENABLED && projectData.modules.includes(ModuleName.CE)) infoCards.push(ModuleName.CE)

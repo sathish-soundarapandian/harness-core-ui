@@ -32,6 +32,7 @@ import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStor
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetCommunity } from '@common/utils/utils'
 import SubscriptionTab from './SubscriptionTab'
+import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
 import css from './SubscriptionsPage.module.scss'
 
 export interface TrialInformation {
@@ -90,9 +91,11 @@ const SubscriptionsPage: React.FC = () => {
       const { module } = card
 
       switch (module) {
-        case ModuleName.CD:
-          accumulator.push(card)
+        case ModuleName.CD: {
+          const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
+          shouldVisible && accumulator.push(card)
           return accumulator
+        }
         case ModuleName.CV:
           CVNG_ENABLED && SRM_LICENSE_ENABLED && accumulator.push(card)
           return accumulator

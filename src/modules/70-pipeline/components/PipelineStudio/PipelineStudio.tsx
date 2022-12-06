@@ -29,6 +29,8 @@ import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { getCDTrialDialog } from './CDTrial/useCDTrialModal'
 import { getCITrialDialog } from './CITrial/useCITrialModal'
 import { getPipelineStages } from './PipelineStagesUtils'
+import { ModuleName } from 'framework/types/ModuleName'
+import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
 import css from './PipelineStudio.module.scss'
 
 export default function PipelineStudio(): React.ReactElement {
@@ -85,7 +87,7 @@ export default function PipelineStudio(): React.ReactElement {
   const isCIEnabled = useFeatureFlag(FeatureFlag.CING_ENABLED)
   const isPipelineChainingEnabled = useFeatureFlag(FeatureFlag.PIPELINE_CHAINING)
   const { getString } = useStrings()
-
+  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
   return (
     <PipelineProvider
       stagesMap={stagesCollection.getAllStagesAttributes(getString)}
@@ -106,7 +108,7 @@ export default function PipelineStudio(): React.ReactElement {
           getString,
           module,
           isCIEnabled: licenseInformation['CI'] && isCIEnabled,
-          isCDEnabled: licenseInformation['CD'] && true,
+          isCDEnabled: shouldVisible,
           isCFEnabled: licenseInformation['CF'] && isCFEnabled,
           isSTOEnabled: licenseInformation['STO']?.status === 'ACTIVE',
           isApprovalStageEnabled: true,

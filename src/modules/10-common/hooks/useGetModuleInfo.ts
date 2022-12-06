@@ -163,7 +163,7 @@ const shouldBeVisible = (
     : licenseInformation[module]?.status === 'ACTIVE'
 }
 
-const useNavModuleInfo = (module: NavModuleName) => {
+const useGetModuleInfo = (module: NavModuleName) => {
   const { accountId } = useParams<AccountPathProps>()
   const featureFlags = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
@@ -203,4 +203,4 @@ export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoRet
   return infoMap as Record<NavModuleName, useNavModuleInfoReturnType>
 }
 
-export default useNavModuleInfo
+export default useGetModuleInfo
