@@ -305,7 +305,7 @@ const payload = {
   }
 }
 
-const findAllValuesAtJSONPath = (jsonPath: string): string | string[] => {
+const findAllValuesForJSONPath = (jsonPath: string): string | string[] => {
   const tokens: string[] = jsonPath.split('.')
   let value: string
   for (let i = 0; i < tokens.length; i++) {
@@ -314,7 +314,7 @@ const findAllValuesAtJSONPath = (jsonPath: string): string | string[] => {
     if (currentToken === '*' && Array.isArray(value)) {
       const matchingValues: string[] = []
       for (let j = 0; j < value.length; j++) {
-        matchingValues.push(findAllValuesAtJSONPath(`pipeline.stages.${j}.stage.spec.execution`) as string)
+        matchingValues.push(findAllValuesForJSONPath(`pipeline.stages.${j}.stage.spec.execution`) as string)
       }
       return matchingValues
     } else {
@@ -338,5 +338,5 @@ export {
   getSchemaWithLanguageSettings,
   DEFAULT_YAML_PATH,
   findLeafToParentPath,
-  findAllValuesAtJSONPath
+  findAllValuesForJSONPath as findAllValuesAtJSONPath
 }
