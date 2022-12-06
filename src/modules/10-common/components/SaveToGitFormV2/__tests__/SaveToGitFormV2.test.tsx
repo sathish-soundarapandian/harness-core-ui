@@ -9,7 +9,6 @@ import React from 'react'
 import { act, findByText, fireEvent, render, waitFor, queryByAttribute } from '@testing-library/react'
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
-import { useGetSettingValue } from 'services/cd-ng'
 import SaveToGitFormV2 from '../SaveToGitFormV2'
 
 const mockBranches = {
@@ -34,11 +33,6 @@ jest.mock('services/cd-ng', () => ({
     return { data: { data: { value: 'false' } } }
   })
 }))
-
-const useGetSettingValueMock = useGetSettingValue as jest.MockedFunction<any>
-const fetchSettingEnabled = jest.fn(() => {
-  return { data: { data: { value: 'true' } } }
-})
 
 describe('SaveToGitFormV2 test', () => {
   afterEach(() => {
@@ -174,36 +168,5 @@ describe('SaveToGitFormV2 test', () => {
         baseBranch: 'branch1'
       })
     })
-  })
-
-  test('Creating PR should be disabled if not allowed in setting', async () => {
-    useGetSettingValueMock.mockImplementation(fetchSettingEnabled)
-    const { container } = render(
-      <TestWrapper
-        path="/account/:accountId/ci/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/-1/pipeline-studio/"
-        pathParams={pathParams}
-        defaultFeatureFlagValues={{ NG_SETTINGS: true }}
-      >
-        <SaveToGitFormV2
-          {...pathParams}
-          isEditing={false}
-          disableCreatingNewBranch={false}
-          resource={{
-            type: 'Pipelines',
-            name: 'testPipeline',
-            identifier: 'testPipeline',
-            gitDetails: { branch: 'testBranch' }
-          }}
-          onSuccess={saveToGitFormV2Handler}
-        />
-      </TestWrapper>
-    )
-
-    await waitFor(() => {
-      expect(fetchSettingEnabled).toBeCalledTimes(1)
-    })
-    // Create PR should be disbled as gitCommand setting is enabled
-    const prCheckbox = queryByAttribute('name', container, 'createPr')
-    expect(prCheckbox).toBeDisabled()
   })
 })
