@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -6,6 +13,14 @@ import type { SavedProjectDetails } from 'framework/AppStore/AppStoreContext'
 import PreferencesCard from '../PreferencesCard'
 
 jest.mock('framework/PreferenceStore/PreferenceStoreContext')
+;(usePreferenceStore as jest.Mock).mockImplementation(() => {
+  return {
+    preference: [
+      { projectIdentifier: 'dummyProjectIdentifier', orgIdentifier: 'dummyOrgIdentifier', name: 'dummyProjectName' }
+    ] as SavedProjectDetails[],
+    clearPreference: jest.fn
+  }
+})
 
 describe('Preference card test', () => {
   test('click on favorites', () => {
@@ -20,23 +35,27 @@ describe('Preference card test', () => {
     expect(queryByText('common.comingSoon')).not.toBeNull()
   })
 
-  test('click on favorites', () => {
-    ;(usePreferenceStore as jest.Mock).mockImplementation(() => {
-      return {
-        preference: [
-          { projectIdentifier: 'dummyProjectIdentifier', orgIdentifier: 'dummyOrgIdentifier', name: 'projectName' }
-        ] as SavedProjectDetails[],
-        clearPreference: jest.fn
-      }
-    })
-    const { container, queryByText } = render(
+  test('check if project is rendered', () => {
+    const { queryByText } = render(
       <TestWrapper>
         <PreferencesCard />
       </TestWrapper>
     )
-    const favortiesTab = container.querySelector('[data-tab-id="favorites"]')
-    fireEvent.click(favortiesTab!)
+    expect(queryByText('dummyProjectName')).not.toBeNull()
+  })
 
-    expect(queryByText('common.comingSoon')).not.toBeNull()
+  test('with no recent projects', () => {
+    ;(usePreferenceStore as jest.Mock).mockImplementation(() => {
+      return {
+        preference: undefined,
+        clearPreference: jest.fn
+      }
+    })
+    const { queryByText } = render(
+      <TestWrapper>
+        <PreferencesCard />
+      </TestWrapper>
+    )
+    expect(queryByText('dummyProjectName')).toBeNull()
   })
 })
