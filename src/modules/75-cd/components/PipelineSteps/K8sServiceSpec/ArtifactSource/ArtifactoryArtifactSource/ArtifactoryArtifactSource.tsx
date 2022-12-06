@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react'
-import { defaultTo, get, memoize } from 'lodash-es'
+import { defaultTo, get, memoize, pick } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 
 import { parse } from 'yaml'
@@ -33,7 +33,9 @@ import {
   SidecarArtifact,
   useGetBuildDetailsForArtifactoryArtifactWithYaml,
   useGetImagePathsForArtifactoryV2,
-  useGetService
+  useGetService,
+  useGetBuildDetailsForArtifactoryArtifact,
+  useGetImagePathsForArtifactory
 } from 'services/cd-ng'
 
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
@@ -205,7 +207,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     isSidecar,
     artifactPath,
     stepViewType,
-    artifacts
+    artifacts,
+    useArtifactV1Data = false
   } = props
 
   const { getString } = useStrings()
@@ -285,11 +288,30 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
   )
 
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
-    data: imagePathData,
-    loading: imagePathLoading,
-    refetch: refetchImagePathData,
-    error: imagePathError
+    data: imagePathV1Data,
+    loading: imagePathV1Loading,
+    refetch: refetchV1ImagePathData,
+    error: imagePathV1Error
+  } = useGetImagePathsForArtifactory({
+    queryParams: {
+      repository: defaultTo(getFinalQueryParamValue(repositoryValue), ''),
+      connectorRef,
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: true,
+    debounce: 300
+  })
+
+  const {
+    data: imagePathV2Data,
+    loading: imagePathV2Loading,
+    refetch: refetchV2ImagePathData,
+    error: imagePathV2Error
   } = useMutateAsGet(useGetImagePathsForArtifactoryV2, {
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
@@ -320,6 +342,20 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     },
     lazy: true
   })
+
+  const { imagePathData, imagePathLoading, refetchImagePathData, imagePathError } = useArtifactV1Data
+    ? {
+        imagePathData: imagePathV1Data,
+        imagePathLoading: imagePathV1Loading,
+        refetchImagePathData: refetchV1ImagePathData,
+        imagePathError: imagePathV1Error
+      }
+    : {
+        imagePathData: imagePathV2Data,
+        imagePathLoading: imagePathV2Loading,
+        refetchImagePathData: refetchV2ImagePathData,
+        imagePathError: imagePathV2Error
+      }
 
   useEffect(() => {
     if (imagePathLoading) {
@@ -440,11 +476,37 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   ])
 
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', artifactPaths: '', repository: '' })
+
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
-    data: artifactoryTagsData,
-    loading: fetchingTags,
-    refetch: refetchTags,
-    error: fetchTagsError
+    data: artifactoryTagsV1Data,
+    loading: fetchingV1Tags,
+    refetch: refetchV1Tags,
+    error: fetchTagsV1Error
+  } = useGetBuildDetailsForArtifactoryArtifact({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      repoIdentifier,
+      branch,
+      ...pick(artifactoryTagsDataCallMetadataQueryParams, [
+        'artifactPath',
+        'repository',
+        'repositoryFormat',
+        'connectorRef'
+      ])
+    },
+    lazy: true,
+    debounce: 300
+  })
+
+  const {
+    data: artifactoryTagsV2Data,
+    loading: fetchingV2Tags,
+    refetch: refetchV2Tags,
+    error: fetchTagsV2Error
   } = useMutateAsGet(useGetBuildDetailsForArtifactoryArtifactWithYaml, {
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
@@ -462,6 +524,20 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     },
     lazy: true
   })
+
+  const { artifactoryTagsData, fetchingTags, refetchTags, fetchTagsError } = useArtifactV1Data
+    ? {
+        artifactoryTagsData: artifactoryTagsV1Data,
+        fetchingTags: fetchingV1Tags,
+        refetchTags: refetchV1Tags,
+        fetchTagsError: fetchTagsV1Error
+      }
+    : {
+        artifactoryTagsData: artifactoryTagsV2Data,
+        fetchingTags: fetchingV2Tags,
+        refetchTags: refetchV2Tags,
+        fetchTagsError: fetchTagsV2Error
+      }
 
   const canFetchTags = (): boolean => {
     return !!(

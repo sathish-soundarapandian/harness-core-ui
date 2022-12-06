@@ -144,7 +144,7 @@ export default function ServerlessArtifactoryRepository(
 
   const getFieldHelperText = () => {
     if (
-      getMultiTypeFromValue(formik.values.repository as string) === MultiTypeInputType.FIXED &&
+      getMultiTypeFromValue(formik?.values.repository as string) === MultiTypeInputType.FIXED &&
       (getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME || connectorRef?.length === 0)
     ) {
       return getString('pipeline.artifactRepositoryDependencyRequired')
@@ -155,7 +155,7 @@ export default function ServerlessArtifactoryRepository(
     <div className={css.imagePathContainer}>
       <SelectInputSetView
         className={
-          getMultiTypeFromValue(get(formik.values, fieldName)) === MultiTypeInputType.RUNTIME
+          getMultiTypeFromValue(get(formik?.values, fieldName)) === MultiTypeInputType.RUNTIME
             ? repositoryFieldCss.repositoryFieldContainer
             : undefined
         }
@@ -172,7 +172,7 @@ export default function ServerlessArtifactoryRepository(
           expressions,
           allowableTypes,
           selectProps: {
-            defaultSelectedItem: formik.values?.repository as SelectOption,
+            defaultSelectedItem: formik?.values?.repository as SelectOption,
             noResults: <NoRepositoryResults error={artifactRepoError} />,
             items: connectorRepos,
             addClearBtn: !isReadonly,
