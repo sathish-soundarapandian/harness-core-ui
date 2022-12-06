@@ -153,6 +153,9 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
           disabled={disabled}
           referenceSelectProps={
             {
+              onDeselect: () => {
+                formik?.setFieldValue(name, undefined)
+              },
               ...getReferenceFieldPropsValues,
               isNewConnectorLabelVisible: isNewConnectorLabelVisible,
               placeholderClass: css.placeholderClass,

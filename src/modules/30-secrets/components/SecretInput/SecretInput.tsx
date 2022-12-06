@@ -15,7 +15,8 @@ import {
   Text,
   DataTooltipInterface,
   FormikTooltipContext,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  Button
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { get, isPlainObject, pick } from 'lodash-es'
@@ -33,6 +34,7 @@ import { useStrings } from 'framework/strings'
 import { getReference } from '@common/utils/utils'
 import { getScopeFromDTO, ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import css from './SecretInput.module.scss'
+import { BUTTON } from '@blueprintjs/core/lib/esm/common/classes'
 
 export interface SecretInputProps {
   name: string
@@ -156,31 +158,41 @@ const SecretInput: React.FC<FormikSecretInput> = props => {
             </Text>
           </Link>
           {secretReference ? (
-            <RbacButton
-              minimal
-              className={css.containerEditBtn}
-              data-testid={`${name}-edit`}
-              onClick={() =>
-                openCreateSecretModal(secretReference.type || type, {
-                  identifier: secretReference?.['identifier'],
-                  projectIdentifier: secretReference?.['projectIdentifier'],
-                  orgIdentifier: secretReference?.['orgIdentifier']
-                } as SecretIdentifiers)
-              }
-              permission={{
-                permission: PermissionIdentifier.UPDATE_SECRET,
-                resource: {
-                  resourceType: ResourceType.SECRET,
-                  resourceIdentifier: secretReference?.['identifier']
-                },
-                resourceScope: {
-                  accountIdentifier: accountId,
-                  projectIdentifier: secretReference?.['projectIdentifier'],
-                  orgIdentifier: secretReference?.['orgIdentifier']
+            <>
+              <RbacButton
+                minimal
+                className={css.containerEditBtn}
+                data-testid={`${name}-edit`}
+                onClick={() =>
+                  openCreateSecretModal(secretReference.type || type, {
+                    identifier: secretReference?.['identifier'],
+                    projectIdentifier: secretReference?.['projectIdentifier'],
+                    orgIdentifier: secretReference?.['orgIdentifier']
+                  } as SecretIdentifiers)
                 }
-              }}
-              text={<Icon size={16} name={'edit'} color={Color.PRIMARY_7} />}
-            />
+                permission={{
+                  permission: PermissionIdentifier.UPDATE_SECRET,
+                  resource: {
+                    resourceType: ResourceType.SECRET,
+                    resourceIdentifier: secretReference?.['identifier']
+                  },
+                  resourceScope: {
+                    accountIdentifier: accountId,
+                    projectIdentifier: secretReference?.['projectIdentifier'],
+                    orgIdentifier: secretReference?.['orgIdentifier']
+                  }
+                }}
+                text={<Icon size={16} name={'edit'} color={Color.PRIMARY_7} />}
+              />
+              {get(formik.values, name) && (
+                <Button
+                  icon="main-delete"
+                  onClick={() => {
+                    formik.setFieldValue(name, undefined)
+                  }}
+                />
+              )}
+            </>
           ) : null}
         </Container>
       </Layout.Vertical>

@@ -160,6 +160,9 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
           disabled={disabled}
           referenceSelectProps={
             {
+              onDeselect: () => {
+                formik?.setFieldValue(name, undefined)
+              },
               ...getReferenceFieldPropsValues,
               isNewConnectorLabelVisible: isNewConnectorLabelVisible,
               placeholderClass: css.placeholderClass,

@@ -142,6 +142,9 @@ export const ConnectorSection: React.FC<ConnectorSectionInterface> = ({ formikPr
         accountIdentifier={accountId}
         projectIdentifier={projectIdentifier}
         orgIdentifier={orgIdentifier}
+        onDeselect={() => {
+          formikProps.setFieldValue('connectorRef', undefined)
+        }}
         onChange={(value, scope) => {
           setSelectedConnector(value, scope)
           formikProps.validateForm()

@@ -146,6 +146,9 @@ export const ConnectorSection: React.FC<ConnectorSectionInterface> = ({ formikPr
           setSelectedConnector(value, scope)
           formikProps.validateForm()
         }}
+        onDeselect={() => {
+          formikProps.setFieldValue('connectorRef', undefined)
+        }}
         gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
       />
       <Text

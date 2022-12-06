@@ -93,6 +93,9 @@ const COGatewayBasics: React.FC<COGatewayBasicsProps> = props => {
     <div>
       <Layout.Vertical spacing="large">
         <ConnectorReferenceField
+          onDeselect={() => {
+            setSelectedConnector(null)
+          }}
           name="cloudAccount"
           selected={props.gatewayDetails.cloudAccount.id || selectedConnector?.identifier}
           label={[

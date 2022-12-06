@@ -9,7 +9,7 @@ import React from 'react'
 import { connect, FormikContextType } from 'formik'
 import { Link } from 'react-router-dom'
 
-import { Layout, Icon, Text, FormError } from '@harness/uicore'
+import { Layout, Icon, Text, FormError, Button } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { get, isPlainObject } from 'lodash-es'
 import { FormGroup, Intent } from '@blueprintjs/core'
@@ -123,6 +123,14 @@ function EncryptedFileSelectField(props: SelectEncryptedProps): React.ReactEleme
             {data.identifier ? <div>{data.identifier}</div> : <div>{getString('secrets.secret.configureSecret')}</div>}
           </Text>
         </Link>
+        {get(formik.values, name) && (
+          <Button
+            icon="main-delete"
+            onClick={() => {
+              formik.setFieldValue(name, undefined)
+            }}
+          />
+        )}
       </Layout.Vertical>
     </FormGroup>
   )

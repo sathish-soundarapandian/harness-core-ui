@@ -424,6 +424,9 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
         name={name}
         disabled={isDisabled}
         referenceSelectProps={{
+          onDeselect: () => {
+            formik?.setFieldValue(name, undefined)
+          },
           ...getReferenceFieldPropsValues,
           // Only Github will have collapse view and not others.
           // Other connectors will need to onboard this and add details in collapsed view.

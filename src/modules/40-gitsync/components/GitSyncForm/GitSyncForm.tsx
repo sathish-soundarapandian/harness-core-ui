@@ -141,6 +141,11 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
             accountIdentifier={accountId}
             {...(entityScope === Scope.ACCOUNT ? {} : { orgIdentifier })}
             {...(entityScope === Scope.PROJECT ? { projectIdentifier } : {})}
+            onDeselect={() => {
+              formikProps.setFieldValue('connectorRef', undefined)
+              formikProps.setFieldValue?.('repo', undefined)
+              formikProps.setFieldValue?.('branch', undefined)
+            }}
             onChange={(value, scope) => {
               const connectorRefWithScope = getConnectorIdentifierWithScope(scope, value?.identifier)
 

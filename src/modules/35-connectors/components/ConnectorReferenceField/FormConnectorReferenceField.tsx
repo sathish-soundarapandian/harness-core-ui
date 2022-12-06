@@ -31,11 +31,16 @@ const FormConnectorReference = (props: FormConnectorFieldProps): React.ReactElem
       name={name}
       placeholder={placeholder}
       selected={Array.isArray(selected) ? '' : selected}
+      onDeselect={() => formik?.setFieldValue(name, undefined)}
       onChange={(record, scope) => {
-        formik?.setFieldValue(
-          name,
-          scope === Scope.ORG || scope === Scope.ACCOUNT ? `${scope}.${record?.identifier}` : record?.identifier
-        )
+        if (!record && !scope) {
+          formik?.setFieldValue(name, undefined)
+        } else {
+          formik?.setFieldValue(
+            name,
+            scope === Scope.ORG || scope === Scope.ACCOUNT ? `${scope}.${record?.identifier}` : record?.identifier
+          )
+        }
       }}
       error={error as string}
       disabled={disabled}

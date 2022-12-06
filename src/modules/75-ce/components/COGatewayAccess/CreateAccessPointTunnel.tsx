@@ -290,6 +290,9 @@ const CreateTunnelStep: React.FC<StepProps<any> & Props> = props => {
               {!props.isRuleCreationMode ? (
                 <ConnectorReferenceField
                   name="cloudConnector"
+                  onDeselect={() => {
+                    formik.setFieldValue('cloudConnector', undefined)
+                  }}
                   placeholder={getString('ce.co.accessPoint.select.account')}
                   selected={accessPoint.cloud_account_id as ConnectorReferenceFieldProps['selected']} // eslint-disable-line
                   onChange={(record, scope) => {

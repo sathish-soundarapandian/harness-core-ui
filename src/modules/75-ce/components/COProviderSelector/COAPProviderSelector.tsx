@@ -81,6 +81,9 @@ const COAPProviderSelector: React.FC<COAPProviderSelectorProps> = props => {
         {selectedCard && (
           <ConnectorReferenceField
             name="cloudConnector"
+            onDeselect={() => {
+              setConnectorDetails(undefined)
+            }}
             placeholder={getString('ce.co.accessPoint.select.account')}
             selected={connectorDetails}
             onChange={record => {

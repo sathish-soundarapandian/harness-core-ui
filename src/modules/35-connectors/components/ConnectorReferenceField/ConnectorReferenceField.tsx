@@ -116,6 +116,7 @@ export interface ConnectorReferenceFieldProps extends Omit<IFormGroupProps, 'lab
   projectIdentifier?: string
   selected?: ConnectorSelectedValue | string
   onChange?: (connector: ConnectorReferenceDTO, scope: Scope) => void
+  onDeselect?: () => void
   orgIdentifier?: string
   gitScope?: GitFilterScope
   defaultScope?: Scope
@@ -241,7 +242,7 @@ export function getSelectedRenderer(
   )
 }
 
-interface GetReferenceFieldMethodProps extends ConnectorReferenceFieldProps {
+interface GetReferenceFieldMethodProps extends Omit<ConnectorReferenceFieldProps, 'onDeselect'> {
   getString(key: string, vars?: Record<string, any>): string
   openConnectorModal: UseCreateConnectorModalReturn['openConnectorModal']
   type: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
@@ -447,7 +448,7 @@ export function getReferenceFieldProps({
   selectedConnectors
 }: GetReferenceFieldMethodProps): Omit<
   ReferenceSelectProps<ConnectorReferenceDTO>,
-  'onChange' | 'onMultiSelectChange' | 'onCancel' | 'pagination'
+  'onChange' | 'onMultiSelectChange' | 'onCancel' | 'pagination' | 'onDeselect'
 > {
   return {
     name,
@@ -859,6 +860,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
         onChange={(connector, scope) => {
           props.onChange?.(connector, scope)
         }}
+        onDeselect={props.onDeselect}
         {...getReferenceFieldPropsValues}
         hideModal={inlineSelection.selected && inlineSelection.inlineModalClosed}
         selectedRenderer={getSelectedRenderer(

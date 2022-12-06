@@ -21,7 +21,8 @@ import {
   DataTooltipInterface,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  Layout
+  Layout,
+  ButtonGroup
 } from '@harness/uicore'
 import { defaultTo, get, pick } from 'lodash-es'
 import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
@@ -56,17 +57,20 @@ export function MultiTypeSecretInputFixedTypeComponent(
   const { value, onChange, disabled, ...rest } = props
   const { getString } = useStrings()
   return (
-    <Button
-      {...rest}
-      withoutBoxShadow
-      className={css.value}
-      icon="key-main"
-      iconProps={{ size: 24, height: 12 }}
-      data-testid={'create-or-select-secret'}
-      disabled={disabled}
-    >
-      <Text lineClamp={1}>{value || getString('createOrSelectSecret')}</Text>
-    </Button>
+    <ButtonGroup>
+      <Button
+        {...rest}
+        withoutBoxShadow
+        className={css.value}
+        icon="key-main"
+        iconProps={{ size: 24, height: 12 }}
+        data-testid={'create-or-select-secret'}
+        disabled={disabled}
+      >
+        <Text lineClamp={1}>{value || getString('createOrSelectSecret')}</Text>
+      </Button>
+      {props.onDeselect && value && <Button icon="main-delete" onClick={props.onDeselect} />}
+    </ButtonGroup>
   )
 }
 
@@ -186,7 +190,12 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
             onChange={handleChange}
             expressions={expressions}
             allowableTypes={allowableTypes}
-            fixedTypeComponentProps={{ onClick: openCreateOrSelectSecretModal }}
+            fixedTypeComponentProps={{
+              onClick: openCreateOrSelectSecretModal,
+              onDeselect: () => {
+                formik.setFieldValue(name, undefined)
+              }
+            }}
             fixedTypeComponent={MultiTypeSecretInputFixedTypeComponent}
             defaultValueToReset=""
             style={{ flexGrow: 1 }}
@@ -196,6 +205,9 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
             value={value}
             onChange={handleChange}
             onClick={openCreateOrSelectSecretModal}
+            onDeselect={() => {
+              formik.setFieldValue(name, undefined)
+            }}
             disabled={disabled}
             data-testid={name}
           />

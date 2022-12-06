@@ -312,6 +312,11 @@ const GitSyncRepoForm: React.FC<ModalConfigureProps & GitSyncRepoFormProps> = pr
                       accountIdentifier={accountId}
                       projectIdentifier={projectIdentifier}
                       orgIdentifier={orgIdentifier}
+                      onDeselect={() => {
+                        setFieldValue('gitConnector', undefined)
+                        setFieldValue?.('repo', undefined)
+                        setFieldValue?.('branch', undefined)
+                      }}
                       onChange={(value, scope) => {
                         modalErrorHandler?.hide()
                         setFieldValue('gitConnector', {

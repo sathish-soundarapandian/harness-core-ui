@@ -17,7 +17,8 @@ import {
   MultiTypeInputType,
   ButtonVariation,
   Container,
-  Icon
+  Icon,
+  ButtonGroup
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
@@ -70,6 +71,7 @@ export interface ReferenceSelectProps<T extends MinimalObject>
   width?: number
   isNewConnectorLabelVisible?: boolean
   onChange: (record: T, scope: Scope) => void
+  onDeselect?: () => void
   disabled?: boolean
   componentName?: string
   isMultiSelect?: boolean
@@ -184,27 +186,41 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
         singleSelectPlaceholder = selected.label
       }
     }
-
     return (
-      <Button
-        minimal
-        data-testid={`cr-field-${name}`}
-        className={css.container}
-        style={{ width }}
-        withoutCurrentColor={true}
-        rightIcon="chevron-down"
-        iconProps={{ size: 14 }}
-        disabled={disabled}
-        onClick={e => {
-          if (disabled) {
-            e.preventDefault()
-          } else {
-            setOpen(true)
-          }
-        }}
-      >
-        {singleSelectPlaceholder}
-      </Button>
+      <ButtonGroup>
+        <Button
+          minimal
+          style={{ width: width - 80 }}
+          data-testid={`cr-field-${name}`}
+          className={css.container}
+          withoutCurrentColor={true}
+          rightIcon="chevron-down"
+          iconProps={{ size: 14 }}
+          disabled={disabled}
+          onClick={e => {
+            if (disabled) {
+              e.preventDefault()
+            } else {
+              setOpen(true)
+            }
+          }}
+        >
+          {singleSelectPlaceholder}
+        </Button>
+        {props.onDeselect && selected  && (
+          <Button
+            rightIcon="main-delete"
+            iconProps={{ size: 14 }}
+            onClick={e => {
+              if (disabled) {
+                e.preventDefault()
+              } else if (props.onDeselect) {
+                props.onDeselect()
+              }
+            }}
+          ></Button>
+        )}
+      </ButtonGroup>
     )
   }
 
@@ -264,6 +280,7 @@ function MultiTypeReferenceInputFixedTypeComponent<T extends MinimalObject>(
     <ReferenceSelect
       {...restProps}
       selected={selected}
+      onDeselect={props.onDeselect}
       width={width}
       onChange={(record, scope) => {
         onChange?.({ record, scope } as any, MultiTypeInputValue.SELECT_OPTION, MultiTypeInputType.FIXED)
