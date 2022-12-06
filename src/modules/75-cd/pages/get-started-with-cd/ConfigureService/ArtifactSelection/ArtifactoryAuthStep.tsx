@@ -56,7 +56,7 @@ const commonFields = {
 }
 const dockerInitialFormData: ArtifactoryGenericInterface<DockerFormInterface> = {
   ...commonFields,
-  dockerRegistryUrl: 'https://hub.docker.com/r/',
+  dockerRegistryUrl: 'https://registry.hub.docker.com/v2/',
   authType: AuthTypes.ANNONYMOUS,
   dockerProviderType: DockerProviderType.DOCKERHUB,
   username: undefined,
