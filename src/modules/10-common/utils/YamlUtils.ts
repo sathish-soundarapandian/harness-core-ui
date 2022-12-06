@@ -312,11 +312,11 @@ const findAllValuesAtJSONPath = (jsonPath: string): string | string[] => {
     const currentToken = tokens[i]
     //'*' wildcard match could endup with multiple matches in the json
     if (currentToken === '*' && Array.isArray(value)) {
-      const ops: string[] = []
+      const matchingValues: string[] = []
       for (let j = 0; j < value.length; j++) {
-        ops.push(findAllValuesAtJSONPath(`pipeline.stages.${j}.stage.spec.execution`) as string)
+        matchingValues.push(findAllValuesAtJSONPath(`pipeline.stages.${j}.stage.spec.execution`) as string)
       }
-      return ops
+      return matchingValues
     } else {
       if (i === 0) {
         value = payload[currentToken]
