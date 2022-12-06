@@ -86,15 +86,24 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
 
-  const projectValue = defaultTo(get(initialValues?.artifacts, `${artifactPath}.spec.project`), artifact?.spec?.project)
+  const projectValue = getDefaultQueryParam(
+    artifact?.spec?.project,
+    get(initialValues?.artifacts, `${artifactPath}.spec.project`)
+  )
 
-  const feedValue = defaultTo(get(initialValues?.artifacts, `${artifactPath}.spec.feed`), artifact?.spec?.feed)
+  const feedValue = getDefaultQueryParam(
+    artifact?.spec?.feed,
+    get(initialValues?.artifacts, `${artifactPath}.spec.feed`)
+  )
 
-  const packageValue = defaultTo(get(initialValues?.artifacts, `${artifactPath}.spec.package`), artifact?.spec?.package)
+  const packageValue = getDefaultQueryParam(
+    artifact?.spec?.package,
+    get(initialValues?.artifacts, `${artifactPath}.spec.package`)
+  )
 
   const packageTypeValue = defaultTo(
-    get(initialValues?.artifacts, `${artifactPath}.spec.packageType`),
-    artifact?.spec?.packageType
+    artifact?.spec?.packageType,
+    get(initialValues?.artifacts, `${artifactPath}.spec.packageType`)
   )
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
