@@ -27,5 +27,5 @@ export function useFeatureFlag(flag: FeatureFlag): boolean {
 
 export function useFeatureFlags(): FeatureFlagMap {
   const { featureFlags } = useContext(AppStoreContext)
-  return { ...featureFlags, LANDING_OVERVIEW_PAGE_V2: true }
+  return featureFlags
 }
