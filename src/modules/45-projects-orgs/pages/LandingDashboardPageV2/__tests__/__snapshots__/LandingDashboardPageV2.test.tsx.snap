@@ -37,6 +37,11 @@ exports[`landing dashboard page tests time range update 1`] = `
           dummyRangeOne
         </div>
       </div>
+      <div
+        class="Layout--vertical StyledProps--main right"
+      >
+        Notifications card
+      </div>
     </div>
   </div>
 </div>
