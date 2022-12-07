@@ -15,7 +15,7 @@ import {
   noDeploymentData,
   noDeploymentOverview,
   deploymentStatsWithMoreThenOneData
-} from '../mocks'
+} from './mocks'
 import NotificationsCard from '../NotificationsCard'
 
 jest.mock('services/dashboard-service', () => ({
