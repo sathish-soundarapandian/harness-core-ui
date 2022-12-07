@@ -864,7 +864,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     (noOflinesInserted: number): void => {
       const editor = editorRef.current?.editor
       if (editor) {
-        getClosestStageIndexForStepInsertion()
+        setClosestStageIndex(getClosestStageIndexForStepInsertion())
         const position = findPositionsForMatchingKeys(editor, 'steps')[closestStageIndex] || ({} as Position)
         const endingLineForCursorPosition = position.lineNumber + (noOflinesInserted ? noOflinesInserted : 0)
         const contentInStartingLine = editor.getModel()?.getLineContent(position.lineNumber)?.trim()
