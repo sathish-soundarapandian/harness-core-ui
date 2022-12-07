@@ -56,8 +56,10 @@ describe('Test YamlUtils', () => {
   })
 
   test("Test findAllValuesAtJSONPath method for '*' and strict match", async () => {
-    expect((findAllValuesAtJSONPath('pipeline.stages.*.stage.spec.execution.steps') as string[]).length).toBe(2)
-    expect(findAllValuesAtJSONPath('pipeline.stages.0.stage.spec.execution.steps')).not.toBe(undefined)
-    expect(findAllValuesAtJSONPath('pipeline.stages.3.stage.spec.execution.steps')).toBe(undefined)
+    expect((findAllValuesAtJSONPath(pipeline, 'pipeline.stages.*.stage.spec.execution.steps') as string[]).length).toBe(
+      2
+    )
+    expect(findAllValuesAtJSONPath(pipeline, 'pipeline.stages.0.stage.spec.execution.steps')).not.toBe(undefined)
+    expect(findAllValuesAtJSONPath(pipeline, 'pipeline.stages.3.stage.spec.execution.steps')).toBe(undefined)
   })
 })

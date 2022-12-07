@@ -5,9 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getYAMLFromEditor, getMetaDataForKeyboardEventProcessing, getYAMLValidationErrors } from '../YAMLBuilderUtils'
 import { parse } from 'yaml'
 import type { Diagnostic } from 'vscode-languageserver-types'
+import type { editor } from 'monaco-editor'
+import {
+  getYAMLFromEditor,
+  getMetaDataForKeyboardEventProcessing,
+  getYAMLValidationErrors,
+  findPositionsForMatchingKeys
+} from '../YAMLBuilderUtils'
 
 jest.mock('@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
   getLanguageService: jest.fn()
@@ -24,7 +30,12 @@ const setupMockEditor = (
       Object.assign(
         {},
         {
-          getLineContent: (_lineNum: number) => `delegateName${_lineNum}: dn`
+          getLineContent: (_lineNum: number) => `delegateName${_lineNum}: dn`,
+          getValue: () => editorContent,
+          findMatches: () =>
+            [
+              { range: { endColumn: 18, endLineNumber: 68, startColumn: 13, startLineNumber: 68 } }
+            ] as editor.FindMatch[]
         }
       ),
     setPosition: () => {}
@@ -80,5 +91,17 @@ describe('YAMLBuilder Utils test', () => {
     expect(errorMap?.size).toEqual(1)
     const errorMssgs = errorMap?.get(2)
     expect(errorMssgs).toEqual('Incorrect type')
+  })
+
+  test('Test findPositionsForMatchingKeys method', () => {
+    expect(
+      findPositionsForMatchingKeys(
+        setupMockEditor(
+          'pipeline:\n  name: test324\n  identifier: test324\n  projectIdentifier: CI_Sanity\n  orgIdentifier: default\n  tags: {}\n  description: update\n  stages:\n    - stage:\n        name: stage1\n        identifier: stage1\n        type: CI\n        spec:\n          cloneCodebase: false\n          infrastructure:\n            type: KubernetesDirect\n            spec:\n              connectorRef: cidelplay\n              namespace: ci-prod-delegate\n              initTimeout: 30m\n              automountServiceAccountToken: true\n              nodeSelector: {}\n              os: Linux\n          execution:\n            steps:\n              - step:\n                  type: Run\n                  name: run_step\n                  identifier: blah\n                  spec:\n                    connectorRef: account.harnessImage\n                    image: maven:3.8-jdk-11\n                    shell: Sh\n                    command: |-\n                      touch harnessDockerfile\n                      echo "FROM bewithaman/minio:trial" >> Dockerfile\n                      cat Dockerfile\n                      pwd\n                  timeout: 5m\n              - step:\n                  type: BuildAndPushDockerRegistry\n                  name: docker_step\n                  identifier: ewf\n                  spec:\n                    connectorRef: testaman\n                    repo: bewithaman/minio\n                    tags:\n                      - local\n                  when:\n                    stageStatus: Failure\n                  failureStrategies: []\n    - stage:\n        name: stage2\n        identifier: stage2\n        type: CI\n        spec:\n          cloneCodebase: false\n          infrastructure:\n            type: KubernetesDirect\n            spec:\n              connectorRef: cidelplay\n              namespace: ci-prod-delegate\n              initTimeout: 30m\n              automountServiceAccountToken: true\n              nodeSelector: {}\n              os: Linux\n          execution:\n            steps:\n              - step:\n                  type: Run\n                  name: run_step\n                  identifier: blah\n                  spec:\n                    connectorRef: account.harnessImage\n                    image: maven:3.8-jdk-11\n                    shell: Sh\n                    command: |-\n                      touch harnessDockerfile\n                      echo "FROM bewithaman/minio:trial" >> Dockerfile\n                      cat Dockerfile\n                      pwd\n                  timeout: 5m\n              - step:\n                  type: BuildAndPushDockerRegistry\n                  name: docker_step\n                  identifier: ewf\n                  spec:\n                    connectorRef: testaman\n                    repo: bewithaman/minio\n                    tags:\n                      - local\n                  when:\n                    stageStatus: Failure\n                  failureStrategies: []\n        variables:\n          - name: PLUGIN_CONFIG\n            type: Secret\n            description: "true"\n            value: amandockerccfg\n          - name: PLUGIN_USERNAME__\n            type: String\n            description: ""\n            value: bewithaman\n          - name: PLUGIN_PASSWORD__\n            type: String\n            description: ""\n            value: aman.3291\n',
+          { lineNumber: 1, column: 1 }
+        ) as any,
+        'steps'
+      ).length
+    ).toBe(1)
   })
 })

@@ -9,6 +9,7 @@ import React from 'react'
 import type { DetailedReactHTMLElement } from 'react'
 import type { Diagnostic } from 'vscode-languageserver-types'
 import { parse } from 'yaml'
+import type { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 
 import { findLeafToParentPath, getSchemaWithLanguageSettings, validateYAMLWithSchema } from '../../utils/YamlUtils'
 import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
@@ -136,10 +137,19 @@ const verifyYAML = (args: {
   setYamlValidationErrors(undefined)
 }
 
+const findPositionsForMatchingKeys = (editor: editor.IStandaloneCodeEditor, textToFind: string): Position[] => {
+  const matches = editor?.getModel()?.findMatches(textToFind, true, false, false, null, true) as editor.FindMatch[]
+  return matches?.map((match: editor.FindMatch) => {
+    const { endLineNumber, endColumn } = match.range
+    return { lineNumber: endLineNumber, column: endColumn } as Position
+  })
+}
+
 export {
   getYAMLFromEditor,
   getMetaDataForKeyboardEventProcessing,
   getYAMLValidationErrors,
   getValidationErrorMessagesForToaster,
-  verifyYAML
+  verifyYAML,
+  findPositionsForMatchingKeys
 }
