@@ -35,7 +35,7 @@ import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { fileTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import type { TerraformData, TerraformProps } from '../TerraformInterfaces'
-import { getPath } from '../Editview/TerraformConfigFormHelper'
+import { getPath } from '../../ConfigFileStore/ConfigFileStoreHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 function ConfigSectionRef<T extends TerraformData = TerraformData>(

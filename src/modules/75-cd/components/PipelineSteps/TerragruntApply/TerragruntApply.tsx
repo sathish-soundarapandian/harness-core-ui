@@ -1,0 +1,168 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import React from 'react'
+import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import * as Yup from 'yup'
+import { isEmpty } from 'lodash-es'
+import { yupToFormErrors, FormikErrors } from 'formik'
+import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import TerraformInputStep from '../Common/Terraform/TerraformInputStep'
+import { ConfigurationTypes } from '../Common/Terraform/TerraformInterfaces'
+import type { TerragruntData, TerragruntVariableStepProps, TGFormData } from '../Common/Terragrunt/TerragruntInterface'
+import { onSubmitTerragruntData } from '../Common/Terragrunt/TerragruntHelper'
+import TerragruntEitView from '../Common/Terragrunt/TerragruntEditView'
+import { TerragruntVariableStep } from '../Common/Terragrunt/TerragruntVariableView'
+
+const TerragruntApplyWidgetWithRef = React.forwardRef(TerragruntEitView)
+
+export class TerragruntApply extends PipelineStep<TGFormData> {
+  constructor() {
+    super()
+    this._hasStepVariables = true
+    this._hasDelegateSelectionVisible = true
+  }
+  protected type = StepType.TerragruntApply
+  protected referenceId = 'terragruntApplyStep'
+  protected defaultValues: TGFormData = {
+    identifier: '',
+    timeout: '10m',
+    name: '',
+    type: StepType.TerragruntApply,
+    spec: {
+      configuration: {
+        type: ConfigurationTypes.Inline,
+        spec: {
+          configFiles: {
+            store: {
+              type: 'Git',
+              spec: {
+                gitFetchType: 'Branch'
+              }
+            }
+          },
+          moduleConfig: {
+            terragruntRunType: 'RunModule',
+            path: ''
+          }
+        }
+      },
+      provisionerIdentifier: ''
+    }
+  }
+  protected stepIcon: IconName = 'terragrunt-apply'
+  protected stepName = 'Terragrunt Apply'
+  //   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.Terragruntpply'
+
+  validateInputSet({
+    data,
+    template,
+    getString,
+    viewType
+  }: ValidateInputSetProps<TGFormData>): FormikErrors<TGFormData> {
+    const errors = {} as any
+    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+    if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
+      let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
+      if (isRequired) {
+        timeoutSchema = timeoutSchema.required(getString?.('validation.timeout10SecMinimum'))
+      }
+      const timeout = Yup.object().shape({
+        timeout: timeoutSchema
+      })
+      try {
+        timeout.validateSync(data)
+      } /* istanbul ignore next */ catch (e) {
+        if (e instanceof Yup.ValidationError) {
+          const err = yupToFormErrors(e)
+
+          Object.assign(errors, err)
+        }
+      }
+    }
+
+    if (isEmpty(errors.spec)) {
+      delete errors.spec
+    }
+    return errors
+  }
+
+  private getInitialValues(data: TGFormData): TerragruntData {
+    const formData = {
+      ...data,
+      spec: {
+        ...data.spec,
+        configuration: {
+          ...data.spec?.configuration,
+          spec: {
+            ...data.spec?.configuration?.spec
+          }
+        }
+      }
+    }
+    return formData
+  }
+  /* istanbul ignore next */
+  processFormData(data: any): TGFormData {
+    return onSubmitTerragruntData(data)
+  }
+
+  renderStep(props: StepProps<TGFormData, unknown>): JSX.Element {
+    const {
+      initialValues,
+      onUpdate,
+      onChange,
+      allowableTypes,
+      stepViewType,
+      formikRef,
+      inputSetData,
+      customStepProps,
+      isNewStep,
+      path,
+      readonly
+    } = props
+    if (this.isTemplatizedView(stepViewType)) {
+      return (
+        <TerraformInputStep
+          initialValues={initialValues}
+          onUpdate={data => onUpdate?.(this.processFormData(data))}
+          onChange={data => onChange?.(this.processFormData(data))}
+          allowableTypes={allowableTypes}
+          allValues={inputSetData?.allValues}
+          stepViewType={stepViewType}
+          readonly={inputSetData?.readonly}
+          inputSetData={inputSetData}
+          path={path}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
+      return (
+        <TerragruntVariableStep
+          {...(customStepProps as TerragruntVariableStepProps)}
+          initialValues={initialValues}
+          onUpdate={data => onUpdate?.(this.processFormData(data))}
+        />
+      )
+    }
+    return (
+      <TerragruntApplyWidgetWithRef
+        initialValues={this.getInitialValues(initialValues)}
+        onUpdate={data => onUpdate?.(this.processFormData(data))}
+        onChange={(data: any) => onChange?.(this.processFormData(data))}
+        allowableTypes={allowableTypes}
+        isNewStep={isNewStep}
+        stepViewType={stepViewType}
+        stepType={StepType.TerragruntApply}
+        ref={formikRef}
+        readonly={readonly}
+      />
+    )
+  }
+}

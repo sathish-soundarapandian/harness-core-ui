@@ -156,6 +156,8 @@ configFilePlaceHolder: 'Specify Config File...'
 backendConfigFilePlaceHolder: 'Specify Backend Config File...'
 
 configIdentifer: Configuration Identifier
+terraform: Terraform
+terragrunt: Terragrunt
 addInline: Add Inline
 addRemote: Add Remote
 tfVarStore: Terraform Var Store
@@ -386,8 +388,8 @@ featureRestriction:
     initialDeploymentsWarningActive: You have used {{ warningLimit }}% of deployments included in the free plan. After 1,000 deployments, the free plan will be restricted to 100 deployments per month.
     serviceOveruseTeamEnterprise: You have exceeded your service subscription limit. Consider increasing your limits to keep shipping.
 configFileDetails: 'Config File Details'
-configFileStore: 'Specify Terraform Config File Store'
-configFileStepOne: 'Terraform Config Store'
+configFileStore: 'Config File Store'
+configFileStepOne: 'Config Store'
 configFileStoreTitle: 'Config File'
 backendConfigFileDetails: 'Backend Config File Details'
 backendConfigFileStore: 'Specify Terraform Backend Config File Store'
@@ -635,3 +637,4 @@ environmentDetailPage:
   emptyInstanceDetailMsg: 'Empty instance detail'
   emptyServiceDetailMsg: 'There are no services with instances in this environment.'
   emptyExecutionListMsg: 'There are no executions for this given criteria.'
+moduleConfiguration: Module Configuration

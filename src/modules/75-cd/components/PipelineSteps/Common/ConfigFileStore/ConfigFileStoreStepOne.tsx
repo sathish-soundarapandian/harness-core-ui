@@ -37,11 +37,10 @@ import {
   ConnectorLabelMap,
   ConnectorTypes,
   getPath
-} from './TerraformConfigFormHelper'
+} from './ConfigFileStoreHelper'
+import css from './ConfigFileStore.module.scss'
 
-import css from './TerraformConfigForm.module.scss'
-
-interface TerraformConfigStepOneProps {
+interface ConfigFileStoreStepOneProps {
   data: any
   isReadonly: boolean
   allowableTypes: MultiTypeAllowedTypes
@@ -51,9 +50,10 @@ interface TerraformConfigStepOneProps {
   setSelectedConnector: (val: ConnectorTypes) => void
   isTerraformPlan?: boolean
   isBackendConfig?: boolean
+  isTerragrunt?: boolean
 }
 
-export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigStepOneProps> = ({
+export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreStepOneProps> = ({
   data,
   isReadonly,
   allowableTypes,
@@ -62,7 +62,8 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
   selectedConnector,
   setSelectedConnector,
   isTerraformPlan = false,
-  isBackendConfig = false
+  isBackendConfig = false,
+  isTerragrunt = false
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -123,7 +124,7 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
     })
   }
 
-  const getValidationSchema = (isBeConfig: boolean, isTfPlan: boolean): Yup.ObjectSchema | void => {
+  const getValidationSchema = (isBeConfig?: boolean, isTfPlan?: boolean): Yup.ObjectSchema | void => {
     if (isHarness(selectedConnector)) {
       return
     }
@@ -169,7 +170,11 @@ export const TerraformConfigStepOne: React.FC<StepProps<any> & TerraformConfigSt
   return (
     <Layout.Vertical className={css.tfConfigForm}>
       <Heading level={2} style={{ color: Color.BLACK, fontSize: 24, fontWeight: 'bold' }} margin={{ bottom: 'xlarge' }}>
-        {isBackendConfig ? getString('cd.backendConfigFileStore') : getString('cd.configFileStore')}
+        {isBackendConfig
+          ? getString('cd.backendConfigFileStore')
+          : isTerragrunt
+          ? `${getString('common.specify')} ${getString('cd.terragrunt')} ${getString('cd.configFileStore')}`
+          : `${getString('common.specify')} ${getString('cd.terraform')} ${getString('cd.configFileStore')}`}
       </Heading>
       <Formik
         formName={isBackendConfig ? 'tfPlanBackendConfigForm' : 'tfPlanConfigForm'}

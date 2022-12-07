@@ -4878,6 +4878,7 @@ export interface StringsMap {
   'cd.miniKubeCmd3': string
   'cd.miniKubeCmd4': string
   'cd.minikube': string
+  'cd.moduleConfiguration': string
   'cd.moreIssue': string
   'cd.moreIssues': string
   'cd.nameEmptyError': string
@@ -5168,7 +5169,9 @@ export interface StringsMap {
   'cd.steps.serverless.regionPlaceholder': string
   'cd.steps.serverless.stagePlaceholder': string
   'cd.successfullyLinkedClusters': string
+  'cd.terraform': string
   'cd.terraformVarFiles': string
+  'cd.terragrunt': string
   'cd.testConnectionStepName': string
   'cd.tfVarStore': string
   'cd.typeError': string

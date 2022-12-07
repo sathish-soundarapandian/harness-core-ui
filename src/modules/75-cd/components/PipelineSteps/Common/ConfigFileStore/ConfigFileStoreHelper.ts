@@ -16,6 +16,7 @@ import {
   buildGitPayload,
   buildArtifactoryPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import type { Scope } from '@common/interfaces/SecretsInterface'
 
 export const AllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket', 'Artifactory']
 export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Artifactory' | 'Harness'
@@ -192,5 +193,18 @@ export const stepTwoValidationSchema = (isTerraformPlan: boolean, isBackendConfi
             })
           })
         })
+  }
+}
+
+export interface Connector {
+  label: string
+  value: string
+  scope: Scope
+  live: boolean
+  connector: {
+    type: string
+    identifier: string
+    name: string
+    spec: { val: string; url: string; connectionType?: string; type?: string }
   }
 }

@@ -31,13 +31,12 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { HarnessOption } from '@pipeline/components/StartupScriptSelection/HarnessOption'
-import { formInputNames, formikOnChangeNames, stepTwoValidationSchema, getPath } from './TerraformConfigFormHelper'
-
-import type { Connector } from '../TerraformInterfaces'
-
-import css from './TerraformConfigForm.module.scss'
+import { formInputNames, formikOnChangeNames, stepTwoValidationSchema, getPath } from './ConfigFileStoreHelper'
+import type { Connector } from './ConfigFileStoreHelper'
+import css from './ConfigFileStore.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-interface TerraformConfigStepTwoProps {
+
+interface ConfigFileStoreStepTwoProps {
   allowableTypes: AllowedTypes
   isReadonly: boolean
   onSubmitCallBack: any
@@ -45,7 +44,7 @@ interface TerraformConfigStepTwoProps {
   isBackendConfig?: boolean
 }
 
-export const TerraformConfigStepTwo: React.FC<StepProps<any> & TerraformConfigStepTwoProps> = ({
+export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreStepTwoProps> = ({
   previousStep,
   prevStepData,
   onSubmitCallBack,
