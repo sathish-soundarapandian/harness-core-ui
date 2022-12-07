@@ -311,7 +311,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="artifactoryArtifact_repositoryUrl"
                   >
-                    repositoryUrlLabel
+                    repositoryUrlLabel (optional)
                   </span>
                    
                   <span
@@ -909,7 +909,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="artifactoryArtifact_repositoryUrl"
                   >
-                    repositoryUrlLabel
+                    repositoryUrlLabel (optional)
                   </span>
                    
                   <span

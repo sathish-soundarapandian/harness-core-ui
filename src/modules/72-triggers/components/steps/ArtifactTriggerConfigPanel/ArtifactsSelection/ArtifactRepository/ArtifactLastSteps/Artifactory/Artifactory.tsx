@@ -46,10 +46,6 @@ function Artifactory({
     artifactPath: Yup.string().when('repositoryFormat', {
       is: `${RepositoryFormatTypes.Docker}`,
       then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPath'))
-    }),
-    repositoryUrl: Yup.string().when('repositoryFormat', {
-      is: `${RepositoryFormatTypes.Docker}`,
-      then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryUrl'))
     })
   })
 
@@ -171,6 +167,7 @@ function Artifactory({
                         multiTextInputProps={{
                           allowableTypes: [MultiTypeInputType.FIXED]
                         }}
+                        isOptional
                       />
                     </div>
                   </>

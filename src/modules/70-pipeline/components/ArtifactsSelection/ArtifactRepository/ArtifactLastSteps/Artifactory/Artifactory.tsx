@@ -171,8 +171,7 @@ function Artifactory({
     tag: Yup.mixed().when('tagType', {
       is: 'value',
       then: Yup.mixed().required(getString('pipeline.artifactsSelection.validation.tag'))
-    }),
-    repositoryUrl: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryUrl'))
+    })
   }
 
   const serverlessArtifactorySchema = {
@@ -602,6 +601,7 @@ function Artifactory({
                     <FormInput.MultiTextInput
                       label={getString('repositoryUrlLabel')}
                       name="repositoryUrl"
+                      isOptional
                       placeholder={getString('pipeline.repositoryUrlPlaceholder')}
                       multiTextInputProps={{
                         expressions,
