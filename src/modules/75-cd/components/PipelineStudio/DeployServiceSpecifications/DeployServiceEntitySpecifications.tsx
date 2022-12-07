@@ -174,7 +174,7 @@ export default function DeployServiceEntitySpecifications({
       await debounceUpdateStage(stageData?.stage)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [stage]
   )
 
   const getDeployServiceWidgetInitValues = useCallback((): DeployServiceEntityData => {

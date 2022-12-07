@@ -131,22 +131,23 @@ export const gitStoreTypes: Array<ManifestStores> = [
   ManifestStoreMap.Git,
   ManifestStoreMap.Github,
   ManifestStoreMap.GitLab,
-  ManifestStoreMap.Bitbucket,
-  ManifestStoreMap.AzureRepo
+  ManifestStoreMap.Bitbucket
 ]
 
 export const gitStoreTypesWithHarnessStoreType: Array<ManifestStores> = [...gitStoreTypes, ManifestStoreMap.Harness]
 
 export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
-  K8sManifest: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
+  K8sManifest: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.AzureRepo, ManifestStoreMap.CustomRemote],
   Values: [
     ...gitStoreTypes,
+    ManifestStoreMap.AzureRepo,
     ManifestStoreMap.InheritFromManifest,
     ManifestStoreMap.Harness,
     ManifestStoreMap.CustomRemote
   ],
   HelmChart: [
     ...gitStoreTypes,
+    ManifestStoreMap.AzureRepo,
     ManifestStoreMap.Http,
     ManifestStoreMap.OciHelmChart,
     ManifestStoreMap.S3,
@@ -154,15 +155,21 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
     ManifestStoreMap.Harness,
     ManifestStoreMap.CustomRemote
   ],
-  OpenshiftTemplate: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
+  OpenshiftTemplate: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.AzureRepo, ManifestStoreMap.CustomRemote],
   OpenshiftParam: [
     ...gitStoreTypes,
+    ManifestStoreMap.AzureRepo,
     ManifestStoreMap.InheritFromManifest,
     ManifestStoreMap.Harness,
     ManifestStoreMap.CustomRemote
   ],
-  Kustomize: gitStoreTypesWithHarnessStoreType,
-  KustomizePatches: [...gitStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.Harness],
+  Kustomize: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.AzureRepo],
+  KustomizePatches: [
+    ...gitStoreTypes,
+    ManifestStoreMap.AzureRepo,
+    ManifestStoreMap.InheritFromManifest,
+    ManifestStoreMap.Harness
+  ],
   ServerlessAwsLambda: [...gitStoreTypes, ManifestStoreMap.S3],
   EcsTaskDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],
   EcsServiceDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.S3],

@@ -387,7 +387,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     if (
       getMultiTypeFromValue(get(formik.values, `${path}.artifacts.${artifactPath}.spec.bucketName`)) ===
         MultiTypeInputType.FIXED &&
-      (getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME || fixedConnectorValue.length === 0)
+      (getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME || fixedConnectorValue?.length === 0)
     ) {
       return getString('pipeline.bucketNameHelperText')
     }
@@ -398,9 +398,9 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
       (getMultiTypeFromValue(get(formik.values, `${path}.artifacts.${artifactPath}.spec.filePath`)) ===
         MultiTypeInputType.FIXED &&
         (getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME ||
-          fixedConnectorValue.length === 0)) ||
+          fixedConnectorValue?.length === 0)) ||
       getMultiTypeFromValue(fixedBucketValue) === MultiTypeInputType.RUNTIME ||
-      fixedBucketValue.length === 0
+      fixedBucketValue?.length === 0
     ) {
       return getString('pipeline.filePathHelperText')
     }

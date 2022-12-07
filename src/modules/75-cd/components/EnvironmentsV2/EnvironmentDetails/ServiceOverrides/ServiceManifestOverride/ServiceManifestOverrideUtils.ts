@@ -17,6 +17,7 @@ export type OverrideManifestStoresTypes =
   | 'InheritFromManifest'
   | 'Harness'
   | 'CustomRemote'
+  | 'AzureRepo'
 
 export const OverrideManifests: Record<OverrideManifestTypes, OverrideManifestTypes> = {
   Values: 'Values',
@@ -30,7 +31,8 @@ export const OverrideManifestStores: Record<OverrideManifestStoresTypes, Overrid
   Bitbucket: 'Bitbucket',
   InheritFromManifest: 'InheritFromManifest',
   Harness: 'Harness',
-  CustomRemote: 'CustomRemote'
+  CustomRemote: 'CustomRemote',
+  AzureRepo: 'AzureRepo'
 }
 export const AllowedManifestOverrideTypes = [
   OverrideManifests.Values,
@@ -46,17 +48,24 @@ const gitStoreTypes: Array<OverrideManifestStoresTypes> = [
 export const OverrideManifestStoreMap: Record<OverrideManifestTypes, OverrideManifestStoresTypes[]> = {
   Values: [
     ...gitStoreTypes,
+    OverrideManifestStores.AzureRepo,
     OverrideManifestStores.InheritFromManifest,
     OverrideManifestStores.Harness,
     OverrideManifestStores.CustomRemote
   ],
   OpenshiftParam: [
     ...gitStoreTypes,
+    OverrideManifestStores.AzureRepo,
     OverrideManifestStores.InheritFromManifest,
     OverrideManifestStores.Harness,
     OverrideManifestStores.CustomRemote
   ],
-  KustomizePatches: [...gitStoreTypes, OverrideManifestStores.InheritFromManifest, OverrideManifestStores.Harness]
+  KustomizePatches: [
+    ...gitStoreTypes,
+    OverrideManifestStores.AzureRepo,
+    OverrideManifestStores.InheritFromManifest,
+    OverrideManifestStores.Harness
+  ]
 }
 export const ManifestLabels: Record<OverrideManifestTypes, StringKeys> = {
   Values: 'pipeline.manifestTypeLabels.ValuesYaml',
