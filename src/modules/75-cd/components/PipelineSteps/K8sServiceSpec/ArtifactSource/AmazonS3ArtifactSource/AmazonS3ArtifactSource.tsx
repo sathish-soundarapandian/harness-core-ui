@@ -168,7 +168,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      connectorRef: fixedConnectorValue,
+      connectorRef: defaultTo(fixedConnectorValue, ''),
       region: getFinalQueryParamValue(fixedRegionValue)
     },
     lazy: true
@@ -297,9 +297,9 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      connectorRef: fixedConnectorValue,
+      connectorRef: defaultTo(fixedConnectorValue, ''),
       region: getFinalQueryParamValue(fixedRegionValue),
-      bucketName: fixedBucketValue,
+      bucketName: defaultTo(fixedBucketValue, ''),
       filePathRegex: '*'
     },
     lazy: true

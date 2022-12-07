@@ -87,7 +87,6 @@ describe('Artifact Source Template creation and assertion', () => {
     cy.contains('p', 'Nexus2').should('be.visible')
     cy.contains('p', 'Artifactory').should('be.visible')
     cy.contains('p', 'ACR').should('be.visible')
-    cy.contains('p', 'Jenkins').should('be.visible')
     cy.contains('p', 'Amazon S3').should('be.visible')
 
     cy.contains('span', 'Close').should('be.visible').click()
