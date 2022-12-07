@@ -293,5 +293,6 @@ export const featureNames = {
   CLOUD_INTEGRATION_FEATURE: 'Cloud Integration',
   LOAD_BALANCER_FEATURE: 'Load Balancer',
   COST_CATEGORY_FEATURE: 'Cost Categories',
-  GOVERNANCE: 'Governance'
+  GOVERNANCE: 'Governance',
+  CURRENCY_PREFERENCES: 'Currency Preferences'
 }

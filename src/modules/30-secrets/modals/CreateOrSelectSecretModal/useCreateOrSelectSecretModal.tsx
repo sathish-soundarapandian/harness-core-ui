@@ -42,7 +42,8 @@ export interface UseCreateOrSelectSecretModalReturn {
 
 const useCreateOrSelectSecretModal = (
   props: UseCreateOrSelectSecretModalProps,
-  inputs?: any[]
+  inputs?: any[],
+  selectedSecret?: string
 ): UseCreateOrSelectSecretModalReturn => {
   const { getString } = useStrings()
 
@@ -147,6 +148,7 @@ const useCreateOrSelectSecretModal = (
           secretType={secretType}
           setSecretType={setSecretType}
           scope={props.scope}
+          selectedSecret={selectedSecret}
         />
       </Dialog>
     )

@@ -8,7 +8,7 @@
 import { Container, Text } from '@harness/uicore'
 import React from 'react'
 import type { Color } from '@harness/design-system'
-import { numberFormatter } from '@cd/components/Services/common'
+import { numberFormatter } from '@common/utils/utils'
 import css from './TickerValue.module.scss'
 
 const TickerValue: React.FC<{ value: number; label: string; color: Color }> = props => {

@@ -171,6 +171,18 @@ function CustomRemoteManifest({
         formName="customRemoteManifest"
         validationSchema={Yup.object().shape({
           ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
+          extractionScript: Yup.string()
+            .trim()
+            .required(
+              getString('fieldRequired', { field: getString('pipeline.manifestType.customRemoteExtractionScript') })
+            ),
+          filePath: Yup.string()
+            .trim()
+            .required(
+              getString('fieldRequired', {
+                field: getString('pipeline.manifestType.customRemoteExtractedFileLocation')
+              })
+            ),
           paths: Yup.lazy((value): Yup.Schema<unknown> => {
             if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
               return Yup.array().of(

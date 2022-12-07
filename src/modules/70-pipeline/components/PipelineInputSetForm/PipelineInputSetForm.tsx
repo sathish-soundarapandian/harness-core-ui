@@ -347,10 +347,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             const pathPrefix = !isEmpty(finalPath) ? `${finalPath}.` : ''
             if (stageObj.stage) {
               const allValues = getStageFromPipeline(stageObj?.stage?.identifier || '', originalPipeline)
-              const pipelineStageTemplate = (stageObj?.stage?.spec as PipelineStageConfig)
-                ?.pipelineInputs as PipelineInfoConfig
-              const _originalPipeline = (originalPipeline?.stages?.[index]?.stage?.spec as PipelineStageConfig)
-                ?.pipelineInputs as PipelineInfoConfig
+              const pipelineStageTemplate = (stageObj?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
               const pipelineStageOutputs = (stageObj?.stage?.spec as PipelineStageConfig)?.outputs
 
               return (
@@ -375,9 +372,9 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                         />
                       )}
                       <PipelineInputSetFormInternal
-                        originalPipeline={_originalPipeline}
+                        originalPipeline={pipelineStageTemplate}
                         template={pipelineStageTemplate}
-                        path={`${pathPrefix}stages[${index}].stage.spec.pipelineInputs`}
+                        path={`${pathPrefix}stages[${index}].stage.spec.inputs`}
                         readonly={readonly}
                         viewType={viewType}
                         maybeContainerClass={maybeContainerClass}
@@ -405,11 +402,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             } else if (stageObj.parallel) {
               return stageObj.parallel.map((stageP, indexp) => {
                 const allValues = getStageFromPipeline(stageP?.stage?.identifier || '', originalPipeline)
-                const pipelineStageTemplate = (stageP?.stage?.spec as PipelineStageConfig)
-                  ?.pipelineInputs as PipelineInfoConfig
-                const _originalPipeline = (
-                  originalPipeline?.stages?.[index]?.parallel?.[indexp]?.stage?.spec as PipelineStageConfig
-                )?.pipelineInputs as PipelineInfoConfig
+                const pipelineStageTemplate = (stageP?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
                 const pipelineStageOutputs = (stageP?.stage?.spec as PipelineStageConfig)?.outputs
 
                 return (
@@ -434,9 +427,9 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                           />
                         )}
                         <PipelineInputSetFormInternal
-                          originalPipeline={_originalPipeline}
+                          originalPipeline={pipelineStageTemplate}
                           template={pipelineStageTemplate}
-                          path={`${pathPrefix}stages[${index}].parallel[${indexp}].stage.spec.pipelineInputs`}
+                          path={`${pathPrefix}stages[${index}].parallel[${indexp}].stage.spec.inputs`}
                           readonly={readonly}
                           viewType={viewType}
                           maybeContainerClass={maybeContainerClass}

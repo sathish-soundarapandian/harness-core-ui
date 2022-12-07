@@ -14,36 +14,36 @@ import moment from 'moment'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { Popover, Position, Classes } from '@blueprintjs/core'
-import { useStrings, UseStringsReturn } from 'framework/strings'
-import routes from '@common/RouteDefinitions'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   DATE_RANGE_SHORTCUTS,
   DATE_RANGE_SHORTCUTS_NAME,
   CE_DATE_FORMAT_INTERNAL,
   getStartDateTime,
   getEndDateTime
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
+import type { setTimeRangeFn } from '@common/types'
+import { useStrings, UseStringsReturn } from 'framework/strings'
+import routes from '@common/RouteDefinitions'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import type { setTimeRangeFn } from '@ce/types'
 import css from './TimeRangePicker.module.scss'
 
 const getDateLabelToDisplayText: (getString: UseStringsReturn['getString']) => Record<string, string> = getString => {
   return {
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_7_DAYS]: getString('ce.perspectives.timeRangeConstants.last7Days'),
-    [DATE_RANGE_SHORTCUTS_NAME.CURRENT_MONTH]: getString('ce.perspectives.timeRangeConstants.thisMonth'),
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_30_DAYS]: getString('projectsOrgs.landingDashboard.last30Days'),
-    [DATE_RANGE_SHORTCUTS_NAME.THIS_QUARTER]: getString('ce.perspectives.timeRangeConstants.thisQuarter'),
-    [DATE_RANGE_SHORTCUTS_NAME.THIS_YEAR]: getString('ce.perspectives.timeRangeConstants.thisYear'),
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_MONTH]: getString('ce.perspectives.timeRangeConstants.lastMonth'),
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_QUARTER]: getString('ce.perspectives.timeRangeConstants.lastQuarter'),
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_YEAR]: getString('ce.perspectives.timeRangeConstants.lastYear'),
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_3_MONTHS]: getString('ce.perspectives.timeRangeConstants.last3Months'),
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_6_MONTHS]: getString('ce.perspectives.timeRangeConstants.last6Months'),
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_12_MONTHS]: getString('ce.perspectives.timeRangeConstants.last12Months')
+    [DATE_RANGE_SHORTCUTS_NAME.LAST_7_DAYS]: getString('common.timeRangeConstants.last7Days'),
+    [DATE_RANGE_SHORTCUTS_NAME.CURRENT_MONTH]: getString('common.timeRangeConstants.thisMonth'),
+    [DATE_RANGE_SHORTCUTS_NAME.LAST_30_DAYS]: getString('common.subscriptions.usage.last30days'),
+    [DATE_RANGE_SHORTCUTS_NAME.THIS_QUARTER]: getString('common.timeRangeConstants.thisQuarter'),
+    [DATE_RANGE_SHORTCUTS_NAME.THIS_YEAR]: getString('common.timeRangeConstants.thisYear'),
+    [DATE_RANGE_SHORTCUTS_NAME.LAST_MONTH]: getString('common.timeRangeConstants.lastMonth'),
+    [DATE_RANGE_SHORTCUTS_NAME.LAST_QUARTER]: getString('common.timeRangeConstants.lastQuarter'),
+    [DATE_RANGE_SHORTCUTS_NAME.LAST_YEAR]: getString('common.timeRangeConstants.lastYear'),
+    [DATE_RANGE_SHORTCUTS_NAME.LAST_3_MONTHS]: getString('common.timeRangeConstants.last3Months'),
+    [DATE_RANGE_SHORTCUTS_NAME.LAST_6_MONTHS]: getString('common.timeRangeConstants.last6Months'),
+    [DATE_RANGE_SHORTCUTS_NAME.LAST_12_MONTHS]: getString('common.timeRangeConstants.last12Months')
   }
 }
 
@@ -183,9 +183,10 @@ interface TimeRangePickerProps {
     from: string
   }
   featureEnabled?: boolean
+  disableCustomRange?: boolean
 }
 
-const TimeRangePicker: React.FC<TimeRangePickerProps> = ({ timeRange, setTimeRange }) => {
+const TimeRangePicker: React.FC<TimeRangePickerProps> = ({ timeRange, setTimeRange, disableCustomRange }) => {
   const { getString } = useStrings()
 
   const { licenseInformation } = useLicenseStore()
@@ -263,7 +264,7 @@ const TimeRangePicker: React.FC<TimeRangePickerProps> = ({ timeRange, setTimeRan
               font={{ weight: 'semi-bold' }}
               color="grey800"
             >
-              {getString('ce.perspectives.timeRange.recommended')}
+              {getString('common.timeRange.recommended')}
             </Text>
             {RECOMMENDED_DATES.map(item => {
               return (
@@ -282,50 +283,52 @@ const TimeRangePicker: React.FC<TimeRangePickerProps> = ({ timeRange, setTimeRan
               )
             })}
 
-            <Popover
-              position={Position.LEFT_TOP}
-              modifiers={{
-                flip: { enabled: true },
-                keepTogether: { enabled: true },
-                preventOverflow: { enabled: true }
-              }}
-              isOpen={isPopoverOpen}
-              disabled={featureEnforced}
-              content={
-                <DateRangePicker
-                  defaultValue={[fromDate, toDate]}
-                  allowSingleDayRange={true}
-                  contiguousCalendarMonths={false}
-                  shortcuts={false}
-                  maxDate={maxDate}
-                  onChange={val => {
-                    if (val[0] && val[1]) {
-                      const from = moment(val[0]).format(CE_DATE_FORMAT_INTERNAL)
-                      const to = moment(val[1]).format(CE_DATE_FORMAT_INTERNAL)
-
-                      setTimeRange({
-                        from: from,
-                        to: to
-                      })
-                      setIsPopoverOpen(false)
-                    }
-                  }}
-                />
-              }
-            >
-              <Text
-                padding={{
-                  top: 'small',
-                  bottom: 'small',
-                  left: 'large',
-                  right: 'large'
+            {!disableCustomRange && (
+              <Popover
+                position={Position.LEFT_TOP}
+                modifiers={{
+                  flip: { enabled: true },
+                  keepTogether: { enabled: true },
+                  preventOverflow: { enabled: true }
                 }}
-                color={featureEnforced ? 'grey200' : 'primary7'}
-                className={css.pointerText}
+                isOpen={isPopoverOpen}
+                disabled={featureEnforced}
+                content={
+                  <DateRangePicker
+                    defaultValue={[fromDate, toDate]}
+                    allowSingleDayRange={true}
+                    contiguousCalendarMonths={false}
+                    shortcuts={false}
+                    maxDate={maxDate}
+                    onChange={val => {
+                      if (val[0] && val[1]) {
+                        const from = moment(val[0]).format(CE_DATE_FORMAT_INTERNAL)
+                        const to = moment(val[1]).format(CE_DATE_FORMAT_INTERNAL)
+
+                        setTimeRange({
+                          from: from,
+                          to: to
+                        })
+                        setIsPopoverOpen(false)
+                      }
+                    }}
+                  />
+                }
               >
-                {getString('ce.perspectives.timeRange.selectCustomRange')}
-              </Text>
-            </Popover>
+                <Text
+                  padding={{
+                    top: 'small',
+                    bottom: 'small',
+                    left: 'large',
+                    right: 'large'
+                  }}
+                  color={featureEnforced ? 'grey200' : 'primary7'}
+                  className={css.pointerText}
+                >
+                  {getString('common.timeRange.selectCustomRange')}
+                </Text>
+              </Popover>
+            )}
           </Layout.Vertical>
 
           <Layout.Vertical
@@ -343,7 +346,7 @@ const TimeRangePicker: React.FC<TimeRangePickerProps> = ({ timeRange, setTimeRan
               font={{ weight: 'semi-bold' }}
               color="grey800"
             >
-              {getString('ce.perspectives.timeRange.relativeDates')}
+              {getString('common.timeRange.relativeDates')}
             </Text>
             {RELATIVE_DATES.map(item => {
               return (
@@ -374,7 +377,7 @@ const TimeRangePicker: React.FC<TimeRangePickerProps> = ({ timeRange, setTimeRan
               font={{ weight: 'semi-bold' }}
               color="grey800"
             >
-              {getString('ce.perspectives.timeRange.calendarMonths')}
+              {getString('common.timeRange.calendarMonths')}
             </Text>
             {CALENDAR_MONTH_DATES.map(item => {
               return (
@@ -421,11 +424,11 @@ const SubscriptionLimitWarning = () => {
         <Icon name="info-message" size={24} style={{ color: Color.BLUE_700 }} />
         <Container>
           <Text inline color={Color.GREY_800}>
-            {getString('ce.perspectives.timeRangeLimitWarning.currentPlanOffer')}
+            {getString('common.timeRangeLimitWarning.currentPlanOffer')}
           </Text>
           <Upgrade />
           <Text inline color={Color.GREY_800}>
-            {getString('ce.perspectives.timeRangeLimitWarning.upgradeOffer')}
+            {getString('common.timeRangeLimitWarning.upgradeOffer')}
           </Text>
         </Container>
       </Layout.Horizontal>

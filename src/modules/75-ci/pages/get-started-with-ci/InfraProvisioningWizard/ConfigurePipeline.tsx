@@ -297,7 +297,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
 
   return (
     <Layout.Horizontal spacing="huge">
-      <Layout.Vertical width="30%" spacing="small">
+      <Layout.Vertical width="40%" spacing="small">
         <Container>
           <Layout.Vertical spacing="small" width="100%">
             <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xsmall' }}>
@@ -329,7 +329,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
           </Layout.Vertical>
         </Container>
       </Layout.Vertical>
-      <Layout.Vertical width="65%" spacing="huge">
+      <Layout.Vertical width="55%" spacing="huge">
         {selectedConfigOption &&
           ![PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.ChooseExistingYAML].includes(
             StarterConfigIdToOptionMap[selectedConfigOption.id]

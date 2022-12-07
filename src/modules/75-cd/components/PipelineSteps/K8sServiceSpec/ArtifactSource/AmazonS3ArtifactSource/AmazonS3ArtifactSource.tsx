@@ -82,25 +82,29 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
   const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
-  const fixedConnectorValue = defaultTo(
+  const fixedConnectorValue: string | undefined = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`),
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef)
   )
-  const fixedRegionValue = defaultTo(
+  const fixedRegionValue: string | undefined = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.region`),
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.region`, ''), artifact?.spec?.region)
   )
-  const fixedBucketValue = defaultTo(
+  const fixedBucketValue: string | undefined = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.bucketName`),
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.bucketName`, ''), artifact?.spec?.bucketName)
   )
-  const fixedFilePathRegexValue = defaultTo(
+  const fixedFilePathRegexValue: string | undefined = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.filePathRegex`),
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.filePathRegex`, ''), artifact?.spec?.filePathRegex)
   )
 
   const [regions, setRegions] = React.useState<SelectOption[]>([])
-  const [lastQueryData, setLastQueryData] = React.useState({
+  const [lastQueryData, setLastQueryData] = React.useState<{
+    connectorRef?: string
+    region?: string
+    bucketName?: string
+  }>({
     connectorRef: '',
     region: '',
     bucketName: ''
@@ -387,7 +391,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     if (
       getMultiTypeFromValue(get(formik.values, `${path}.artifacts.${artifactPath}.spec.bucketName`)) ===
         MultiTypeInputType.FIXED &&
-      (getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME || fixedConnectorValue.length === 0)
+      (getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME || fixedConnectorValue?.length === 0)
     ) {
       return getString('pipeline.bucketNameHelperText')
     }
@@ -398,9 +402,9 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
       (getMultiTypeFromValue(get(formik.values, `${path}.artifacts.${artifactPath}.spec.filePath`)) ===
         MultiTypeInputType.FIXED &&
         (getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME ||
-          fixedConnectorValue.length === 0)) ||
+          fixedConnectorValue?.length === 0)) ||
       getMultiTypeFromValue(fixedBucketValue) === MultiTypeInputType.RUNTIME ||
-      fixedBucketValue.length === 0
+      fixedBucketValue?.length === 0
     ) {
       return getString('pipeline.filePathHelperText')
     }

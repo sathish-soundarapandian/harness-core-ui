@@ -95,7 +95,10 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
             placeholder: getString(
               allowCreatingNewItems ? 'cf.onboarding.selectOrCreateEnvironment' : 'cf.shared.selectEnvironment'
             ),
-            id: 'selectOrCreateEnvironmentInput'
+            id: 'selectOrCreateEnvironmentInput',
+            'aria-label': getString(
+              allowCreatingNewItems ? 'cf.onboarding.selectOrCreateEnvironment' : 'cf.shared.selectEnvironment'
+            )
           }}
           {...props}
         />

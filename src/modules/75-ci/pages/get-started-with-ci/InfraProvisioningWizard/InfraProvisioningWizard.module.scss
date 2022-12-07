@@ -33,6 +33,34 @@
   margin-right: var(--spacing-large);
 }
 
+.gitProviderCard:last-of-type {
+  margin-right: 5px;
+}
+
+.otherGitProviderCard {
+  height: 110px;
+  width: 110px;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-rows: [tooltip] 20px [icon] auto;
+}
+
+.toolTipArea {
+  grid-row: tooltip;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 5px 5px 0 0;
+}
+
+.iconArea {
+  grid-row: icon;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+}
+
 .otherOptionCard {
   height: 110px;
   width: 110px;

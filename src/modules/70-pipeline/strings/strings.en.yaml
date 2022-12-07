@@ -892,15 +892,11 @@ artifactsSelection:
     imageNamePlaceholder: Enter Image Path
     enterTagRegex: Enter Tag Regex
   validation:
-    script: Script is required
-    artifactsArrayPath: Artifact array path is required
-    versionPath: Version path is required
     noBuild: No build found with given details
     noPackage: No package found with given details
     noFeeds: No feeds found with given details
     noVersion: No version found with given details
     packageType: Package Type is required
-    feed: Feed is required
     versionRegex: Version Regex is required
     packageName: Package Name is required
     imagePath: Image Path is required
@@ -1494,3 +1490,9 @@ triggeredBy: Triggered by {{triggerType}}
 manuallyTriggered: This execution was triggered manually
 triggeredByThirdParty: Triggered by a third party system
 triggeredByCron: Triggered on {{start}} by cron {{triggeredBy}}
+pipelineCachedCopy:
+  cachedCopyText: Cached Copy
+  reloadPipeline: Reload Pipeline?
+  reloadPipelineContent: Are you sure you want to load the pipeline from Git? You will lose all your unsaved changes.
+  cacheInProgress: Cache update in progress
+  cacheUpdateFailed: Cache Update Failed

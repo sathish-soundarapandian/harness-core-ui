@@ -1,0 +1,8 @@
+.container {
+  .card {
+    margin-right: var(--margin-form-field);
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}

@@ -171,6 +171,13 @@ function FormContent({
   const scriptType: ScriptType =
     formik.values?.spec?.scripts?.fetchAllArtifacts?.spec?.shell || (getString('common.bash') as ScriptType)
 
+  const getVersionFieldHelperText = () => {
+    return (
+      getMultiTypeFromValue(formik.values.spec.version) === MultiTypeInputType.FIXED &&
+      getHelpeTextForTags(helperTextData(selectedArtifact as ArtifactType, formik, 'test'), getString, false)
+    )
+  }
+
   return (
     <FormikForm>
       <div className={cx(css.artifactForm, formClassName)}>
@@ -363,14 +370,7 @@ function FormContent({
                 name="spec.version"
                 placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
                 useValue
-                helperText={
-                  getMultiTypeFromValue(formik.values.spec.version) === MultiTypeInputType.FIXED &&
-                  getHelpeTextForTags(
-                    helperTextData(selectedArtifact as ArtifactType, formik, 'test'),
-                    getString,
-                    false
-                  )
-                }
+                helperText={getVersionFieldHelperText()}
                 multiTypeInputProps={{
                   expressions,
                   allowableTypes,
@@ -624,8 +624,51 @@ export function CustomArtifact(
   const isTemplateContext = context === ModalViewFor.Template
 
   const schemaObject = {
-    spec: Yup.object().shape({
-      version: Yup.string().trim().required(getString('validation.nexusVersion'))
+    spec: Yup.object().when('type', {
+      is: formFillingMethod.MANUAL,
+      then: Yup.object().shape({
+        version: Yup.string()
+          .trim()
+          .required(getString('fieldRequired', { field: getString('version') }))
+      }),
+      otherwise: Yup.object().shape({
+        scripts: Yup.object().shape({
+          fetchAllArtifacts: Yup.object().shape({
+            artifactsArrayPath: Yup.string()
+              .trim()
+              .required(
+                getString('fieldRequired', {
+                  field: getString('pipeline.artifactsSelection.artifactsArrayPath')
+                })
+              ),
+            versionPath: Yup.string()
+              .trim()
+              .required(
+                getString('fieldRequired', {
+                  field: getString('pipeline.artifactsSelection.versionPath')
+                })
+              ),
+            spec: Yup.object().shape({
+              source: Yup.object().shape({
+                type: Yup.string()
+                  .trim()
+                  .required(getString('fieldRequired', { field: getString('common.scriptType') })),
+                spec: Yup.object().shape({
+                  script: Yup.string()
+                    .trim()
+                    .required(getString('fieldRequired', { field: getString('common.script') }))
+                })
+              })
+            })
+          })
+        }),
+        timeout: Yup.string()
+          .trim()
+          .required(getString('fieldRequired', { field: 'Timeout' })),
+        version: Yup.string()
+          .trim()
+          .required(getString('fieldRequired', { field: getString('version') }))
+      })
     })
   }
 
@@ -677,32 +720,8 @@ export function CustomArtifact(
         initialValues={getInitialValues()}
         formName="imagePath"
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
-        onSubmit={(formData, formikhelper) => {
-          let hasError = false
-          if (formData?.formType === formFillingMethod.SCRIPT) {
-            if (!formData?.spec?.scripts?.fetchAllArtifacts?.spec?.source?.spec?.script) {
-              formikhelper.setFieldError(
-                'spec.scripts.fetchAllArtifacts.spec.source.spec.script',
-                getString('pipeline.artifactsSelection.validation.script')
-              )
-              hasError = true
-            }
-            if (!formData?.spec?.scripts?.fetchAllArtifacts?.artifactsArrayPath) {
-              formikhelper.setFieldError(
-                'spec.scripts.fetchAllArtifacts.artifactsArrayPath',
-                getString('pipeline.artifactsSelection.validation.artifactsArrayPath')
-              )
-              hasError = true
-            }
-            if (!formData?.spec?.scripts?.fetchAllArtifacts?.versionPath) {
-              formikhelper.setFieldError(
-                'spec.scripts.fetchAllArtifacts.versionPath',
-                getString('pipeline.artifactsSelection.validation.versionPath')
-              )
-              hasError = true
-            }
-          }
-          if (!hasError) submitFormData?.({ ...formData })
+        onSubmit={formData => {
+          submitFormData?.({ ...formData })
         }}
       >
         {formik => {

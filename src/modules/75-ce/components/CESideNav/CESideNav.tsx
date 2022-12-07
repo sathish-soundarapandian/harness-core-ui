@@ -133,7 +133,11 @@ const SideNavItems = () => {
   const { accountId } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
-  const { CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI, CCM_COMMORCH: showCO } = useFeatureFlags()
+  const {
+    CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI,
+    CCM_COMMORCH: showCO,
+    CCM_CURRENCY_PREFERENCES: currencyPreferencesEnabled
+  } = useFeatureFlags()
 
   return (
     <Layout.Vertical spacing="small">
@@ -211,6 +215,17 @@ const SideNavItems = () => {
         )}
         <NavExpandable title={getString('common.setup')} route={routes.toCECOAccessPoints({ accountId })}>
           <Layout.Vertical spacing="small">
+            {currencyPreferencesEnabled && (
+              <SidebarLink
+                label={getString('ce.currencyPreferences.sideNavText')}
+                to={routes.toCECurrencyPreferences({ accountId })}
+                onClick={() => {
+                  trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, {
+                    feature_name: featureNames.CURRENCY_PREFERENCES
+                  })
+                }}
+              />
+            )}
             <SidebarLink
               label={getString('ce.cloudIntegration.sideNavText')}
               to={routes.toCECloudIntegration({ accountId })}

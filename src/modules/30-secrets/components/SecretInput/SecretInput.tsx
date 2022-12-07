@@ -91,7 +91,8 @@ const SecretInput: React.FC<FormikSecretInput> = props => {
       connectorTypeContext: connectorTypeContext,
       scope
     },
-    [name, onSuccess]
+    [name, onSuccess],
+    secretReference?.referenceString
   )
   const { openCreateSecretModal } = useCreateUpdateSecretModal({
     onSuccess: formData => {

@@ -73,6 +73,8 @@ import type { Pipeline } from '@pipeline/utils/types'
 import useDiffDialog from '@common/hooks/useDiffDialog'
 import { PipelineOutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/PipelineOutOfSyncErrorStrip/PipelineOutOfSyncErrorStrip'
 import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -81,6 +83,7 @@ import { RightBar } from '../RightBar/RightBar'
 import StudioGitPopover from '../StudioGitPopover'
 import usePipelineErrors from './PipelineErrors/usePipelineErrors'
 import { getDuplicateStepIdentifierList } from './PipelineCanvasUtils'
+import PipelineCachedCopy from './PipelineCachedCopy/PipelineCachedCopy'
 import css from './PipelineCanvas.module.scss'
 
 interface OtherModalProps {
@@ -181,7 +184,8 @@ export function PipelineCanvas({
     storeMetadata,
     entityValidityDetails,
     templateError,
-    yamlSchemaErrorWrapper
+    yamlSchemaErrorWrapper,
+    cacheResponse: pipelineCacheResponse
   } = state
 
   const { getString } = useStrings()
@@ -195,6 +199,7 @@ export function PipelineCanvas({
       GitQueryParams
   >()
   const history = useHistory()
+  const pipelineGitXCache = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
   // For remote pipeline queryParam will always as branch as selected branch except coming from list view
   // While opeining studio from list view, selected branch can be any branch as in pipeline response
@@ -974,6 +979,7 @@ export function PipelineCanvas({
                   />
                   <div>
                     <div className={css.savePublishContainer}>
+                      {pipelineGitXCache && !isEmpty(pipelineCacheResponse) && <PipelineCachedCopy />}
                       {isReadonly && (
                         <div className={css.readonlyAccessTag}>
                           <Icon name="eye-open" size={16} />

@@ -136,6 +136,8 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
     }
   })
 
+  const value = get(formik.values, name, defaultValue)
+
   const { openCreateOrSelectSecretModal } = useCreateOrSelectSecretModal(
     {
       type,
@@ -148,9 +150,9 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
       handleInlineSSHSecretCreation: () => openCreateSSHCredModal(),
       handleInlineWinRmSecretCreation: () => openCreateWinRmCredModal()
     },
-    [name, onSuccess]
+    [name, onSuccess],
+    value
   )
-  const value = get(formik.values, name, defaultValue)
   const hasError = errorCheck(name, formik)
 
   const {

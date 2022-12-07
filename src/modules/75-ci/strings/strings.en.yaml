@@ -175,6 +175,7 @@ getStartedWithCI:
   onPremLabel: On-prem
   codeRepo: Which code repository do you use?
   createPipeline: Create Pipeline
+  pipelineConfig: Pipeline Configuration
   provisioningSuccessful: Provisioning successful
   provisioningFailed: Provisioning failed
   setUpAuth: Set up Authentication

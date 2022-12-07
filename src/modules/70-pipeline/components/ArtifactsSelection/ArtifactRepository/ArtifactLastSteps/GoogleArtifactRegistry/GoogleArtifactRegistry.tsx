@@ -172,6 +172,17 @@ function FormComponent(
     return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
   }
 
+  const getVersionFieldHelperText = () => {
+    return (
+      getMultiTypeFromValue(formik.values.spec.version) === MultiTypeInputType.FIXED &&
+      getHelpeTextForTags(
+        helperTextData(selectedArtifact as ArtifactType, formik, getConnectorRefQueryData()),
+        getString,
+        false
+      )
+    )
+  }
+
   return (
     <FormikForm>
       <div className={cx(css.artifactForm, formClassName)}>
@@ -317,14 +328,7 @@ function FormComponent(
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               name="spec.version"
               useValue
-              helperText={
-                getMultiTypeFromValue(formik.values.spec.version) === MultiTypeInputType.FIXED &&
-                getHelpeTextForTags(
-                  helperTextData(selectedArtifact as ArtifactType, formik, getConnectorRefQueryData()),
-                  getString,
-                  false
-                )
-              }
+              helperText={getVersionFieldHelperText()}
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
@@ -479,21 +483,33 @@ export function GoogleArtifactRegistry(
     }
   }
 
+  const commonSpecSchemaObject = {
+    repositoryType: Yup.string().required(getString('pipeline.artifactsSelection.validation.repositoryType')),
+    project: Yup.string().required(getString('fieldRequired', { field: getString('projectLabel') })),
+    region: Yup.string().required(getString('fieldRequired', { field: getString('regionLabel') })),
+    repositoryName: Yup.string().required(getString('fieldRequired', { field: getString('common.repositoryName') })),
+    package: Yup.string().required(
+      getString('fieldRequired', { field: getString('pipeline.testsReports.callgraphField.package') })
+    )
+  }
+
   const schemaObject = {
-    versionType: Yup.string().required(),
-    spec: Yup.object().shape({
-      repositoryType: Yup.string().required(getString('pipeline.artifactsSelection.validation.repositoryType')),
-      project: Yup.string().required(getString('common.validation.projectIsRequired')),
-      region: Yup.string().required(getString('validation.regionRequired')),
-      repositoryName: Yup.string().required(getString('common.validation.repositoryName')),
-      package: Yup.string().required(getString('common.validation.package')),
-      versionRegex: Yup.string().when('versionType', {
-        is: 'regex',
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.versionRegex'))
+    versionType: Yup.string().required(
+      getString('fieldRequired', { field: getString('pipeline.artifactsSelection.versionDetails') })
+    ),
+    spec: Yup.object().when('versionType', {
+      is: 'regex',
+      then: Yup.object().shape({
+        ...commonSpecSchemaObject,
+        versionRegex: Yup.string()
+          .trim()
+          .required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.versionRegex') }))
       }),
-      version: Yup.mixed().when('versionType', {
-        is: 'value',
-        then: Yup.mixed().required(getString('validation.nexusVersion'))
+      otherwise: Yup.object().shape({
+        ...commonSpecSchemaObject,
+        version: Yup.string()
+          .trim()
+          .required(getString('fieldRequired', { field: getString('version') }))
       })
     })
   }

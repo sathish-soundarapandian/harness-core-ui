@@ -10,7 +10,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import routes from '@common/RouteDefinitions'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type {
   AccountPathProps,
   GitQueryParams,
@@ -24,7 +24,6 @@ import { TrialType } from '@pipeline/components/TrialModalTemplate/trialModalUti
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { FeatureFlag } from '@common/featureFlags'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { getCDTrialDialog } from './CDTrial/useCDTrialModal'
 import { getCITrialDialog } from './CITrial/useCITrialModal'
@@ -81,10 +80,8 @@ export default function PipelineStudio(): React.ReactElement {
     )
   }
   const { licenseInformation } = useLicenseStore()
-  const isCFEnabled = useFeatureFlag(FeatureFlag.CFNG_ENABLED)
-  const isCIEnabled = useFeatureFlag(FeatureFlag.CING_ENABLED)
-  const isCDEnabled = useFeatureFlag(FeatureFlag.CDNG_ENABLED)
-  const isPipelineChainingEnabled = useFeatureFlag(FeatureFlag.PIPELINE_CHAINING)
+  const { CDNG_ENABLED, CING_ENABLED, CFNG_ENABLED, PIE_NG_GITX_CACHING, PIPELINE_CHAINING } = useFeatureFlags()
+
   const { getString } = useStrings()
 
   return (
@@ -106,16 +103,17 @@ export default function PipelineStudio(): React.ReactElement {
           args,
           getString,
           module,
-          isCIEnabled: licenseInformation['CI'] && isCIEnabled,
-          isCDEnabled: licenseInformation['CD'] && isCDEnabled,
-          isCFEnabled: licenseInformation['CF'] && isCFEnabled,
+          isCIEnabled: licenseInformation['CI'] && CING_ENABLED,
+          isCDEnabled: licenseInformation['CD'] && CDNG_ENABLED,
+          isCFEnabled: licenseInformation['CF'] && CFNG_ENABLED,
           isSTOEnabled: licenseInformation['STO']?.status === 'ACTIVE',
           isApprovalStageEnabled: true,
-          isPipelineChainingEnabled
+          isPipelineChainingEnabled: PIPELINE_CHAINING
         })
       }
       stepsFactory={factory}
       runPipeline={handleRunPipeline}
+      isPipelineGitCacheEnabled={!!PIE_NG_GITX_CACHING}
     >
       <PipelineStudioInternal
         className={css.container}

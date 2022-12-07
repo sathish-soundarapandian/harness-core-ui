@@ -425,6 +425,17 @@ function Artifactory({
     )
   }
 
+  const getTagFieldHelperText = (formikForm: FormikProps<ImagePathTypes>) => {
+    return (
+      getMultiTypeFromValue(formikForm.values?.tag) === MultiTypeInputType.FIXED &&
+      getHelpeTextForTags(
+        helperTextData(selectedArtifact, formikForm, getConnectorIdValue(prevStepData)),
+        getString,
+        isGenericArtifactory
+      )
+    )
+  }
+
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       {!isTemplateContext && (
@@ -635,14 +646,7 @@ function Artifactory({
                       disabled={
                         isGenericArtifactory ? isArtifactPathDisabled(formik?.values) : isTagDisabled(formik?.values)
                       }
-                      helperText={
-                        getMultiTypeFromValue(formik.values?.tag) === MultiTypeInputType.FIXED &&
-                        getHelpeTextForTags(
-                          helperTextData(selectedArtifact, formik, getConnectorIdValue(prevStepData)),
-                          getString,
-                          isGenericArtifactory
-                        )
-                      }
+                      helperText={getTagFieldHelperText(formik)}
                       multiTypeInputProps={{
                         expressions,
                         allowableTypes,

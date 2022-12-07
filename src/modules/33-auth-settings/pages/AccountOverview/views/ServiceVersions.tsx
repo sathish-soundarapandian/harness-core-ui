@@ -75,6 +75,11 @@ const versionAPIs = [
     id: 'ng_ui'
   },
   {
+    url: 'chaos/manager/api/version',
+    label: 'Chaos Manager',
+    id: 'chaos_manager'
+  },
+  {
     label: 'Notifications',
     url: 'notifications/api/version',
     id: 'notifications'

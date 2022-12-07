@@ -8271,7 +8271,6 @@ export type K8sAzureInfrastructure = Infrastructure & {
 
 export type K8sBGSwapServicesStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  skipDryRun?: boolean
 }
 
 export interface K8sBasicInfo {
@@ -8291,7 +8290,6 @@ export type K8sBlueGreenStepInfo = StepSpecType & {
 
 export type K8sCanaryDeleteStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  skipDryRun?: boolean
 }
 
 export type K8sCanaryStepInfo = StepSpecType & {
@@ -8314,7 +8312,6 @@ export interface K8sContainer {
 export type K8sDeleteStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   deleteResources: DeleteResourcesWrapper
-  skipDryRun?: boolean
 }
 
 export type K8sGcpInfrastructure = Infrastructure & {
@@ -8349,7 +8346,6 @@ export type K8sManifest = ManifestAttributes & {
 export type K8sRollingRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   pruningEnabled?: boolean
-  skipDryRun?: boolean
 }
 
 export type K8sRollingStepInfo = StepSpecType & {
@@ -8361,7 +8357,6 @@ export type K8sRollingStepInfo = StepSpecType & {
 export type K8sScaleStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   instanceSelection: InstanceSelectionWrapper
-  skipDryRun?: boolean
   skipSteadyStateCheck?: boolean
   workload: string
 }
@@ -13303,6 +13298,7 @@ export type S3StoreConfig = StoreConfig & {
   connectorRef?: string
   folderPath?: string
   metadata?: string
+  paths?: string[]
   region?: string
 }
 
@@ -15865,11 +15861,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
+export type DeleteManyFreezesBodyRequestBody = string[]
+
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
-
-export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -35656,7 +35652,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -35670,7 +35666,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -35685,7 +35681,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -35699,7 +35695,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -35711,7 +35707,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -35720,7 +35716,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -36226,7 +36222,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -36240,7 +36236,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -36255,7 +36251,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -36269,7 +36265,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -36281,7 +36277,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -36290,7 +36286,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 

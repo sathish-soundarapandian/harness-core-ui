@@ -264,6 +264,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             <FormInput.MultiTextInput
               name={`${path}.artifacts.${artifactPath}.spec.org`}
               label={getString('projectsOrgs.orgName')}
+              isOptional={true}
               onChange={() => {
                 if (isFieldRuntime(`artifacts.${artifactPath}.spec.packageName`, template))
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.packageName`, '')

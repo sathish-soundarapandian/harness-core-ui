@@ -41,6 +41,7 @@ export interface CreateOrSelectSecretProps {
   secretType?: SelectOption
   setSecretType?: (val: SelectOption) => void
   scope?: ScopedObjectDTO
+  selectedSecret?: string
 }
 
 const CreateOrSelectSecret: React.FC<CreateOrSelectSecretProps> = ({
@@ -53,7 +54,8 @@ const CreateOrSelectSecret: React.FC<CreateOrSelectSecretProps> = ({
   handleInlineWinRmSecretCreation,
   secretType,
   setSecretType,
-  scope
+  scope,
+  selectedSecret
 }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   return (
@@ -76,6 +78,7 @@ const CreateOrSelectSecret: React.FC<CreateOrSelectSecretProps> = ({
         handleInlineWinRmSecretCreation={handleInlineWinRmSecretCreation}
         secretType={secretType}
         setSecretType={setSecretType}
+        selectedSecret={selectedSecret}
       />
     </section>
   )

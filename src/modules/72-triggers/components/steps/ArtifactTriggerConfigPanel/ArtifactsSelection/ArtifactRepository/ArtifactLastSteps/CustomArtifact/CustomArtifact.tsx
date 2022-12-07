@@ -199,11 +199,21 @@ export function CustomArtifact(
   const { initialValues, handleSubmit, prevStepData } = props
   const { getString } = useStrings()
   const validationSchema = Yup.object().shape({
-    script: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.script')),
+    script: Yup.string()
+      .trim()
+      .required(getString('common.validation.fieldIsRequired', { name: getString('common.script') })),
     artifactsArrayPath: Yup.string()
       .trim()
-      .required(getString('pipeline.artifactsSelection.validation.artifactsArrayPath')),
-    versionPath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.versionPath'))
+      .required(
+        getString('common.validation.fieldIsRequired', {
+          name: getString('pipeline.artifactsSelection.artifactsArrayPath')
+        })
+      ),
+    versionPath: Yup.string()
+      .trim()
+      .required(
+        getString('common.validation.fieldIsRequired', { name: getString('pipeline.artifactsSelection.versionPath') })
+      )
   })
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>

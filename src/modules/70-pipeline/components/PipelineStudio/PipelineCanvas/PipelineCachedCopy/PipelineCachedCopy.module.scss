@@ -1,0 +1,23 @@
+.cachedcopy {
+  background-color: var(--grey-100);
+  padding: var(--spacing-xsmall);
+  cursor: pointer;
+}
+.dialogStyles {
+  :global {
+    .ModalDialog--body {
+      padding: 0 !important;
+
+      &::before,
+      &::after {
+        margin: 0 !important;
+      }
+    }
+
+    .ModalDialog--bodyContent {
+      padding: 0 !important;
+    }
+  }
+
+  overflow: hidden;
+}

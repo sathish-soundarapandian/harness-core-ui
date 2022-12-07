@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Icon, Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import type { CEView } from 'services/ce'
 import {
   QlceViewFieldIdentifierData,
@@ -18,7 +19,6 @@ import {
   QlceViewFilterWrapperInput
 } from 'services/ce/services'
 import { getRuleFilters, getTimeFilters, normalizeViewRules } from '@ce/utils/perspectiveUtils'
-import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
 import OperatorSelector from './views/OperatorSelector'
 import OperandSelector from './views/OperandSelector'
 import ValuesSelector from './views/ValuesSelector'

@@ -31,6 +31,7 @@ import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { Description } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useToaster } from '@common/exports'
 import { getErrorMessage } from '@cf/utils/CFUtils'
+import { getIdentifierFromName } from '@common/utils/StringUtils'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -51,13 +52,13 @@ export interface EnvironmentDialogProps {
   createEnvFromInput?: boolean
   createEnvName?: string
   onCloseDialog?: () => void
+  setSelectedEnvironment?: (env: EnvironmentResponseDTO | undefined) => void
 }
 
 interface EnvironmentValues {
   name: string
   identifier: string
   description: string
-  tags: string[]
   type: EnvironmentType
 }
 
@@ -70,7 +71,8 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
   buttonText,
   createEnvFromInput = false,
   onCloseDialog = () => undefined,
-  createEnvName = ''
+  createEnvName = '',
+  setSelectedEnvironment = () => undefined
 }) => {
   const { showError } = useToaster()
   const { getString } = useStrings()
@@ -96,10 +98,9 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
 
   const initialValues: EnvironmentValues = {
     name: createEnvName,
-    identifier: createEnvName,
+    identifier: getIdentifierFromName(createEnvName),
     description: '',
-    type: EnvironmentType.NON_PRODUCTION,
-    tags: []
+    type: EnvironmentType.NON_PRODUCTION
   }
 
   const handleSubmit = (values: EnvironmentValues): void => {
@@ -113,11 +114,11 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
       description: values.description,
       projectIdentifier,
       orgIdentifier,
-      type: values.type,
-      tags: values.tags.length > 0 ? values.tags.reduce((acc, next) => ({ ...acc, [next]: next }), {}) : {}
+      type: values.type
     })
       .then(response => {
         hideModal()
+        setSelectedEnvironment(response.data)
         onCreate(response)
       })
       .catch(error => {
@@ -165,12 +166,6 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
           initialValues={initialValues}
           formName="cfEnvDialog"
           onSubmit={handleSubmit}
-          onReset={() => {
-            trackEvent(FeatureActions.CreateEnvCancel, {
-              category: Category.FEATUREFLAG
-            })
-            hideModal()
-          }}
           validationSchema={Yup.object().shape({
             name: NameSchema({ requiredErrorMsg: getString?.('fieldRequired', { field: 'Environment' }) }),
             identifier: IdentifierSchema()
@@ -202,14 +197,18 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
                       selected={getTypeOption(formikProps.values.type)}
                       className={css.cardSelect}
                       onChange={nextValue => formikProps.setFieldValue('type', nextValue.value)}
-                      renderItem={cardData => (
-                        <Container
-                          flex={{ align: 'center-center', distribution: 'space-between', justifyContent: 'center' }}
-                          className={css.cardBody}
-                        >
-                          <Text font={{ variation: FontVariation.SMALL }}>{cardData.text}</Text>
-                        </Container>
-                      )}
+                      renderItem={cardData => {
+                        const cardSelected = getTypeOption(formikProps.values.type).value === cardData.value
+                        return (
+                          <Container
+                            flex={{ align: 'center-center', distribution: 'space-between', justifyContent: 'center' }}
+                            className={css.cardBody}
+                            data-testid={`environmentType${cardSelected ? 'Selected' : ''}`}
+                          >
+                            <Text font={{ variation: FontVariation.SMALL }}>{cardData.text}</Text>
+                          </Container>
+                        )
+                      }}
                     />
                   </Layout.Vertical>
                 </Layout.Vertical>
@@ -226,7 +225,12 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
                     text={getString('cancel')}
                     type="reset"
                     minimal
-                    onClick={handleCloseModal}
+                    onClick={() => {
+                      trackEvent(FeatureActions.CreateEnvCancel, {
+                        category: Category.FEATUREFLAG
+                      })
+                      handleCloseModal()
+                    }}
                   />
                   {loading && <Spinner size={16} />}
                 </Layout.Horizontal>

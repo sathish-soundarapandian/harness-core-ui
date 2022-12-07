@@ -82,6 +82,7 @@ declare interface Window {
     sdkKey: string
     async: boolean
   }
+  noAuthHeader: boolean
 }
 
 declare interface WindowEventMap {

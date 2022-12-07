@@ -41,7 +41,8 @@ import {
   putPipelineV2Promise,
   ResponsePMSPipelineResponseDTO,
   YamlSchemaErrorWrapperDTO,
-  ResponsePMSPipelineSummaryResponse
+  ResponsePMSPipelineSummaryResponse,
+  CacheResponseMetadata
 } from 'services/pipeline-ng'
 import { useGlobalEventListener, useLocalStorage, useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -86,6 +87,7 @@ export interface PipelineInfoConfigWithGitDetails extends Partial<PipelineInfoCo
   templateError?: GetDataError<Failure | Error> | null
   remoteFetchError?: GetDataError<Failure | Error> | null
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
+  cacheResponse?: CacheResponseMetadata
 }
 
 interface FetchError {
@@ -104,6 +106,7 @@ const remoteFetchErrorGitDetails = (remoteFetchError: ResponsePMSPipelineRespons
 export const getPipelineByIdentifier = (
   params: GetPipelineQueryParams & GitQueryParams,
   identifier: string,
+  isPipelineGitCacheEnabled: boolean,
   signal?: AbortSignal
 ): Promise<PipelineInfoConfigWithGitDetails | FetchError> => {
   return getPipelinePromise(
@@ -121,7 +124,8 @@ export const getPipelineByIdentifier = (
       },
       requestOptions: {
         headers: {
-          'content-type': 'application/yaml'
+          'content-type': 'application/yaml',
+          ...(isPipelineGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {})
         }
       }
     },
@@ -146,7 +150,8 @@ export const getPipelineByIdentifier = (
         gitDetails: obj.data.gitDetails ?? {},
         entityValidityDetails: obj.data.entityValidityDetails ?? {},
         yamlSchemaErrorWrapper: obj.data.yamlSchemaErrorWrapper ?? {},
-        modules: response.data?.modules
+        modules: response.data?.modules,
+        cacheResponse: obj.data?.cacheResponse
       }
     } else if (response?.status === 'ERROR' && params?.storeType === StoreType.REMOTE) {
       return { remoteFetchError: response } as FetchError // handling remote pipeline not found
@@ -318,6 +323,7 @@ interface PipelinePayload {
   entityValidityDetails?: EntityValidityDetails
   templateInputsErrorNodeSummary?: ErrorNodeSummary
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
+  cacheResponse?: CacheResponseMetadata
 }
 
 const getId = (
@@ -335,6 +341,7 @@ export interface FetchPipelineBoundProps {
   queryParams: GetPipelineQueryParams
   pipelineIdentifier: string
   gitDetails: EntityGitDetails
+  isPipelineGitCacheEnabled: boolean
   storeMetadata?: StoreMetadata
   supportingTemplatesGitx?: boolean
 }
@@ -415,7 +422,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
     pipelineIdentifier: identifier,
     gitDetails,
     supportingTemplatesGitx,
-    storeMetadata
+    storeMetadata,
+    isPipelineGitCacheEnabled
   } = props
   const { forceFetch = false, forceUpdate = false, newPipelineId, signal, repoIdentifier, branch } = params
   const pipelineId = defaultTo(newPipelineId, identifier)
@@ -442,6 +450,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
     const pipelineByIdPromise = getPipelineByIdentifier(
       { ...queryParams, ...(repoIdentifier ? { repoIdentifier } : {}), ...(branch ? { branch } : {}) },
       pipelineId,
+      isPipelineGitCacheEnabled,
       signal
     )
 
@@ -516,7 +525,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       'connectorRef',
       'filePath',
       'yamlSchemaErrorWrapper',
-      'modules'
+      'modules',
+      'cacheResponse'
     ) as PipelineInfoConfig
     const payload: PipelinePayload = {
       [KeyPath]: id,
@@ -535,7 +545,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       yamlSchemaErrorWrapper: defaultTo(
         pipelineWithGitDetails?.yamlSchemaErrorWrapper,
         defaultTo(data?.yamlSchemaErrorWrapper, {})
-      )
+      ),
+      cacheResponse: defaultTo(pipelineWithGitDetails?.cacheResponse, data?.cacheResponse)
     }
     const templateQueryParams = {
       ...queryParams,
@@ -577,7 +588,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           yamlSchemaErrorWrapper: defaultTo(
             pipelineWithGitDetails?.yamlSchemaErrorWrapper,
             defaultTo(data?.yamlSchemaErrorWrapper, {})
-          )
+          ),
+          cacheResponse: defaultTo(pipelineWithGitDetails?.cacheResponse, data?.cacheResponse)
         })
       )
     } else {
@@ -608,6 +620,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           modules: payload.modules,
           gitDetails: payload.gitDetails,
           entityValidityDetails: payload.entityValidityDetails,
+          cacheResponse: payload.cacheResponse,
           templateTypes,
           templateIcons,
           templateServiceData,
@@ -640,7 +653,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
         isBEPipelineUpdated: false,
         gitDetails: defaultTo(data?.gitDetails, {}),
         entityValidityDetails: defaultTo(data?.entityValidityDetails, {}),
-        yamlSchemaErrorWrapper: defaultTo(data?.yamlSchemaErrorWrapper, {})
+        yamlSchemaErrorWrapper: defaultTo(data?.yamlSchemaErrorWrapper, {}),
+        cacheResponse: data?.cacheResponse
       })
     )
     dispatch(PipelineContextActions.initialized())
@@ -1018,6 +1032,7 @@ export interface PipelineProviderProps {
   stagesMap: StagesMap
   runPipeline: (identifier: string) => void
   renderPipelineStage: PipelineContextInterface['renderPipelineStage']
+  isPipelineGitCacheEnabled: boolean
 }
 
 export function PipelineProvider({
@@ -1027,7 +1042,8 @@ export function PipelineProvider({
   renderPipelineStage,
   stepsFactory,
   stagesMap,
-  runPipeline
+  runPipeline,
+  isPipelineGitCacheEnabled
 }: React.PropsWithChildren<PipelineProviderProps>): React.ReactElement {
   const contextType = PipelineContextType.Pipeline
   const allowableTypes: AllowedTypesWithRunTime[] = [
@@ -1069,7 +1085,8 @@ export function PipelineProvider({
       branch
     },
     storeMetadata: state.storeMetadata,
-    supportingTemplatesGitx
+    supportingTemplatesGitx,
+    isPipelineGitCacheEnabled
   })
 
   const updatePipelineStoreMetadata = _updateStoreMetadata.bind(null, {
