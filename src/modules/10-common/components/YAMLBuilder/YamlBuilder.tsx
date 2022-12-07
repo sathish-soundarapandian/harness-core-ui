@@ -11,7 +11,7 @@ import type { MonacoEditorProps } from 'react-monaco-editor'
 import ReactMonacoEditor from 'react-monaco-editor'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
-import { IKeyboardEvent, IPosition, languages, Range } from 'monaco-editor/esm/vs/editor/editor.api'
+import { IKeyboardEvent, IPosition, languages, Position, Range } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { Diagnostic } from 'vscode-languageserver-types'
 import {
@@ -25,7 +25,8 @@ import {
   isNil,
   isUndefined,
   get,
-  omit
+  omit,
+  set
 } from 'lodash-es'
 import { Layout, Text, Collapse } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -44,9 +45,18 @@ import type {
   Theme
 } from '@common/interfaces/YAMLBuilderProps'
 import { pluralize } from '@common/utils/StringUtils'
-import { getSchemaWithLanguageSettings, validateYAMLWithSchema } from '@common/utils/YamlUtils'
+import {
+  findAllValuesForJSONPath,
+  getSchemaWithLanguageSettings,
+  validateYAMLWithSchema
+} from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
-import { getYAMLFromEditor, getMetaDataForKeyboardEventProcessing, verifyYAML } from './YAMLBuilderUtils'
+import {
+  getYAMLFromEditor,
+  getMetaDataForKeyboardEventProcessing,
+  verifyYAML,
+  findPositionsForMatchingKeys
+} from './YAMLBuilderUtils'
 
 import css from './YamlBuilder.module.scss'
 import './resizer.scss'
@@ -142,6 +152,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     showPluginsPanel = false
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
+  const DEFAULT_STEP_INSERTION_JSON_PATH = 'pipeline.stages.0.stage.spec.execution.steps'
 
   setUpEditor(theme)
   const params = useParams()
@@ -828,36 +839,25 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [editorRef.current?.editor]
   )
 
-  const addTextAtCurrentCursorPosition = useCallback(
-    (textToInsert: string): void => {
+  const detectYAMLInsertion = useCallback(
+    (noOflinesInserted: number): void => {
       const editor = editorRef.current?.editor
-      const linesOfText = textToInsert.split('\n')
-      const numberOfNewLinesIntroduced = linesOfText.length
       if (editor) {
-        const position = editor?.getPosition()
-        if (position) {
-          const endingLineForCursorPosition =
-            position.lineNumber + (numberOfNewLinesIntroduced ? numberOfNewLinesIntroduced : 0)
+        const position = findPositionsForMatchingKeys(editor, 'steps')[0] || ({} as Position)
+        const endingLineForCursorPosition = position.lineNumber + (noOflinesInserted ? noOflinesInserted : 0)
+        const contentInStartingLine = editor.getModel()?.getLineContent(position.lineNumber)?.trim()
+        const startingPosition = position.lineNumber + (contentInStartingLine ? 1 : 0)
+        const endingPosition = contentInStartingLine ? endingLineForCursorPosition + 1 : endingLineForCursorPosition
 
-          const contentInStartingLine = editor.getModel()?.getLineContent(position.lineNumber)?.trim()
-          const startingPosition = position.lineNumber + (contentInStartingLine ? 1 : 0)
-          const endingPosition = contentInStartingLine ? endingLineForCursorPosition + 1 : endingLineForCursorPosition
+        // highlight the inserted text
+        highlightInsertedText(startingPosition, endingPosition)
 
-          // insert the plugin input
-          editor.trigger('keyboard', 'type', {
-            text: contentInStartingLine ? `\n${textToInsert}` : textToInsert
-          })
+        // add "Settings" control
+        addCodeLens(startingPosition, endingPosition)
 
-          // highlight the inserted text
-          highlightInsertedText(startingPosition, endingPosition)
-
-          // add "Settings" control
-          addCodeLens(startingPosition, endingPosition)
-
-          // Scroll to the end of the inserted text
-          editor.revealLineInCenter(endingPosition)
-          editor.focus()
-        }
+        // Scroll to the end of the inserted text
+        editor.revealLineInCenter(endingPosition)
+        editor.focus()
       }
     },
     [editorRef.current?.editor]
@@ -877,10 +877,28 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [editorRef.current?.editor]
   )
 
+  const wrapPlugInputInAStep = (pluginInput: Record<string, any>): Record<string, any> => {
+    return { step: pluginInput }
+  }
+
   useEffect(() => {
     if (!isEmpty(pluginInput) && pluginInput.shouldInsertYAML) {
       try {
-        addTextAtCurrentCursorPosition(yamlStringify(omit(pluginInput, 'shouldInsertYAML'))?.slice(0, -1))
+        const currentPipelineJSON = parse(currentYaml)
+        const existingSteps = findAllValuesForJSONPath(
+          currentPipelineJSON,
+          DEFAULT_STEP_INSERTION_JSON_PATH
+        ) as unknown[]
+        let updatedSteps = existingSteps.slice(0) as unknown[]
+        const stepToInsert = wrapPlugInputInAStep(omit(pluginInput, 'shouldInsertYAML'))
+        if (Array.isArray(existingSteps) && existingSteps.length > 1) {
+          updatedSteps.unshift(stepToInsert)
+        } else {
+          updatedSteps = [stepToInsert]
+        }
+        const updatedPipelineJSON = set(currentPipelineJSON, DEFAULT_STEP_INSERTION_JSON_PATH, updatedSteps)
+        setCurrentYaml(yamlStringify(updatedPipelineJSON))
+        detectYAMLInsertion(Object.keys(pluginInput).length)
       } catch (e) {
         // ignore error
       }

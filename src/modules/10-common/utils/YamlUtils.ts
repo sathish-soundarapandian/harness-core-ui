@@ -160,7 +160,7 @@ const getSchemaWithLanguageSettings = (schema: Record<string, any>): Record<stri
   }
 }
 
-const findAllValuesForJSONPath = (jsonObject: Record<string, any>, jsonPath: string): string | string[] => {
+const findAllValuesForJSONPath = (jsonObject: Record<string, any>, jsonPath: string): unknown | unknown[] => {
   const tokens: string[] = jsonPath.split('.')
   let value: string
   for (let i = 0; i < tokens.length; i++) {
@@ -189,5 +189,5 @@ export {
   getSchemaWithLanguageSettings,
   DEFAULT_YAML_PATH,
   findLeafToParentPath,
-  findAllValuesForJSONPath as findAllValuesAtJSONPath
+  findAllValuesForJSONPath
 }
