@@ -28,6 +28,7 @@ import { get, set, isEmpty } from 'lodash-es'
 
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
+import { shouldHideHeaderAndNavBtns } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import type { CommonManifestDataType, ManifestTypes } from '../../ManifestInterface'
 import { GitRepoName, ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
@@ -46,7 +47,7 @@ interface K8sValuesManifestPropType {
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
-  isOnboardingFlow?: boolean
+  context?: number
 }
 
 const showAdvancedSection = (selectedManifest: ManifestTypes | null): boolean => {
@@ -64,9 +65,11 @@ function K8sValuesManifest({
   previousStep,
   manifestIdsList,
   isReadonly = false,
-  isOnboardingFlow = false
+  context
 }: StepProps<ConnectorConfigDTO> & K8sValuesManifestPropType): React.ReactElement {
   const { getString } = useStrings()
+
+  const hideHeaderAndNavBtns = context ? shouldHideHeaderAndNavBtns(context) : false
 
   const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
@@ -153,7 +156,7 @@ function K8sValuesManifest({
     handleSubmit(manifestObj)
   }
   const handleValidate = (formData: CommonManifestDataType): void => {
-    if (isOnboardingFlow) {
+    if (hideHeaderAndNavBtns) {
       submitFormData({
         ...prevStepData,
         ...formData,
@@ -170,7 +173,7 @@ function K8sValuesManifest({
 
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
-      {!isOnboardingFlow && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {stepName}
         </Text>
@@ -292,7 +295,7 @@ function K8sValuesManifest({
                     />
                   )}
                 </div>
-                {!isOnboardingFlow && (
+                {!hideHeaderAndNavBtns && (
                   <Layout.Horizontal spacing="medium" className={css.saveBtn}>
                     <Button
                       variation={ButtonVariation.SECONDARY}

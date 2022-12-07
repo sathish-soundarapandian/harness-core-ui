@@ -24,7 +24,7 @@ import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
-import { ModalViewFor } from '../../CreateConnectorUtils'
+import { shouldHideHeaderAndNavBtns } from '../../CreateConnectorUtils'
 import { regionValues } from './StepAuthConstants'
 import css from './StepAWSAuthentication.module.scss'
 interface StepAWSAuthenticationProps extends ConnectorInfoDTO {
@@ -57,7 +57,8 @@ const StepAWSAuthentication: React.FC<StepProps<StepAWSAuthenticationProps> & Co
   const { getString } = useStrings()
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(props.isEditMode)
-  const isOnboardingFlow = context === ModalViewFor.CD_Onboarding
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
+
   useConnectorWizard({
     helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
   })
@@ -84,7 +85,7 @@ const StepAWSAuthentication: React.FC<StepProps<StepAWSAuthenticationProps> & Co
     nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepAWSAuthenticationProps)
   }
   const handleValidate = (formData: ConnectorConfigDTO): void => {
-    if (isOnboardingFlow) {
+    if (hideHeaderAndNavBtns) {
       handleSubmit({
         ...formData
       })
@@ -109,7 +110,7 @@ const StepAWSAuthentication: React.FC<StepProps<StepAWSAuthenticationProps> & Co
     <PageSpinner />
   ) : (
     <Layout.Vertical className={css.formCredentials}>
-      {!isOnboardingFlow && <Text font={{ variation: FontVariation.H3 }}>{getString('credentials')}</Text>}
+      {!hideHeaderAndNavBtns && <Text font={{ variation: FontVariation.H3 }}>{getString('credentials')}</Text>}
       <Formik
         initialValues={{
           ...initialValues,
@@ -201,7 +202,7 @@ const StepAWSAuthentication: React.FC<StepProps<StepAWSAuthenticationProps> & Co
                 />
               </Layout.Vertical>
             </Layout.Vertical>
-            {!isOnboardingFlow && (
+            {!hideHeaderAndNavBtns && (
               <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">
                 <Button
                   text={getString('back')}

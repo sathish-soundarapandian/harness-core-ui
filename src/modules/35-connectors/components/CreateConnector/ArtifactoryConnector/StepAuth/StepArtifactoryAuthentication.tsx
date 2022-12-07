@@ -32,7 +32,7 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
-import { ModalViewFor } from '../../CreateConnectorUtils'
+import { shouldHideHeaderAndNavBtns } from '../../CreateConnectorUtils'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../../NexusConnector/StepAuth/StepNexusConnector.module.scss'
 
@@ -75,7 +75,7 @@ const StepArtifactoryAuthentication: React.FC<
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(true && props.isEditMode)
   const { getString } = useStrings()
-  const isOnboardingFlow = context === ModalViewFor.CD_Onboarding
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const authOptions: SelectOption[] = [
     {
@@ -127,7 +127,7 @@ const StepArtifactoryAuthentication: React.FC<
     : undefined
 
   const handleValidate = (formData: ConnectorConfigDTO): void => {
-    if (isOnboardingFlow) {
+    if (hideHeaderAndNavBtns) {
       handleSubmit({
         ...formData
       })
@@ -138,7 +138,7 @@ const StepArtifactoryAuthentication: React.FC<
     <PageSpinner />
   ) : (
     <Layout.Vertical spacing="small" className={css.stepDetails}>
-      {!isOnboardingFlow && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} tooltipProps={{ dataTooltipId: 'artifactRepositoryDetails' }}>
           {getString('details')}
         </Text>
@@ -204,7 +204,7 @@ const StepArtifactoryAuthentication: React.FC<
                 </Container>
               ) : null}
             </Layout.Vertical>
-            {!isOnboardingFlow && (
+            {!hideHeaderAndNavBtns && (
               <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">
                 <Button
                   text={getString('back')}

@@ -61,7 +61,7 @@ export default function ArtifactImagePath(): JSX.Element {
     return {
       key: getString('connectors.stepFourName'),
       name: getString('connectors.stepFourName'),
-      context: ModalViewFor.Template,
+      context: ModalViewFor.CD_Onboarding,
       expressions,
       allowableTypes: ALLOWABLE_TYPES,
       initialValues: getInitiialArtifactLastStepData as any,

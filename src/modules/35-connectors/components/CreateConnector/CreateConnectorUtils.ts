@@ -22,6 +22,9 @@ export enum ModalViewFor {
   CD_Onboarding = 1
 }
 
+export const shouldHideHeaderAndNavBtns = (context: number | undefined): boolean =>
+  context === ModalViewFor.CD_Onboarding
+
 export function getScopingStringFromSecretRef(connecterConfig: ConnectorConfigDTO): string | undefined {
   return connecterConfig &&
     connecterConfig.passwordRefSecret &&

@@ -38,7 +38,8 @@ import {
   checkIfQueryParamsisNotEmpty,
   getConnectorIdValue,
   getArtifactFormData,
-  shouldFetchFieldOptions
+  shouldFetchFieldOptions,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
@@ -75,7 +76,7 @@ export function Nexus2Artifact({
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const schemaObject = {
     tagRegex: Yup.string().when('tagType', {
@@ -319,7 +320,7 @@ export function Nexus2Artifact({
   }
 
   const handleValidate = (formData: Nexus2InitialValuesType & { connectorId?: string }) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData({
         ...prevStepData,
         ...formData,
@@ -343,7 +344,7 @@ export function Nexus2Artifact({
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>
@@ -620,7 +621,7 @@ export function Nexus2Artifact({
                 isImagePath={false}
               />
             </div>
-            {!isTemplateContext && (
+            {!hideHeaderAndNavBtns && (
               <Layout.Horizontal spacing="medium">
                 <Button
                   variation={ButtonVariation.SECONDARY}

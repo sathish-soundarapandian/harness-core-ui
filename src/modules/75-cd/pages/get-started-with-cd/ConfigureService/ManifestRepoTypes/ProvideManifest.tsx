@@ -19,13 +19,14 @@ import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifes
 import K8sValuesManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/K8sValuesManifest/K8sValuesManifest'
 import type { ManifestLastStepProps, ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import HelmWithGIT from '@pipeline/components/ManifestSelection/ManifestWizardSteps/HelmWithGIT/HelmWithGIT'
+import { ModalViewFor } from '@connectors/components/CreateConnector/CreateConnectorUtils'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
 import type { ConfigureServiceInterface } from '../ConfigureService'
 import { getFullRepoName } from '../../DeployProvisioningWizard/Constants'
 
 export type ManifestLastTypeProps = StepProps<ConnectorConfigDTO> &
   ManifestLastStepProps & {
-    isOnboardingFlow: boolean
+    context: number
     prevStepData?: ConnectorConfigDTO
   }
 export interface ManifestSelectionLastStepsParams {
@@ -82,12 +83,12 @@ export const ProvideManifest = (): React.ReactElement => {
 
   const lastStepProps = React.useMemo((): ManifestLastTypeProps => {
     const manifestDetailsProps: ManifestLastStepProps & {
-      isOnboardingFlow: boolean
+      context: number
       prevStepData?: ConnectorConfigDTO
     } = {
       key: getString('pipeline.manifestType.manifestDetails'),
       name: getString('pipeline.manifestType.manifestDetails'),
-      isOnboardingFlow: true,
+      context: ModalViewFor.CD_Onboarding,
       expressions,
       allowableTypes,
       stepName: getString('pipeline.manifestType.manifestDetails'),

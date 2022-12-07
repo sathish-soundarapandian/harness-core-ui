@@ -34,7 +34,7 @@ import { Category, ConnectorActions, ConnectorTypes } from '@common/constants/Tr
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
-import { ModalViewFor } from '../../CreateConnectorUtils'
+import { shouldHideHeaderAndNavBtns } from '../../CreateConnectorUtils'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../CreateDockerConnector.module.scss'
 
@@ -79,7 +79,8 @@ const StepDockerAuthentication: React.FC<StepProps<StepDockerAuthenticationProps
     const { prevStepData, nextStep, accountId, context, formClassName = '' } = props
     const [initialValues, setInitialValues] = useState(defaultInitialFormData)
     const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(true && props.isEditMode)
-    const isOnboardingFlow = context === ModalViewFor.CD_Onboarding
+    const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
+
     const authOptions: SelectOption[] = [
       {
         label: getString('usernamePassword'),
@@ -136,7 +137,7 @@ const StepDockerAuthentication: React.FC<StepProps<StepDockerAuthenticationProps
     }
 
     const handleValidate = (formData: ConnectorConfigDTO): void => {
-      if (isOnboardingFlow) {
+      if (hideHeaderAndNavBtns) {
         handleSubmit({
           ...formData
         })
@@ -163,7 +164,7 @@ const StepDockerAuthentication: React.FC<StepProps<StepDockerAuthenticationProps
       <PageSpinner />
     ) : (
       <Layout.Vertical className={css.stepDetails} spacing="small">
-        {!isOnboardingFlow && <Text font={{ variation: FontVariation.H3 }}>{getString('details')}</Text>}
+        {!hideHeaderAndNavBtns && <Text font={{ variation: FontVariation.H3 }}>{getString('details')}</Text>}
         <Formik
           initialValues={{
             ...initialValues,
@@ -236,7 +237,7 @@ const StepDockerAuthentication: React.FC<StepProps<StepDockerAuthenticationProps
                   </>
                 ) : null}
               </Layout.Vertical>
-              {!isOnboardingFlow && (
+              {!hideHeaderAndNavBtns && (
                 <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">
                   <Button
                     text={getString('back')}

@@ -43,7 +43,8 @@ import {
   getArtifactFormData,
   isFieldFixedAndNonEmpty,
   helperTextData,
-  shellScriptType
+  shellScriptType,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -84,7 +85,7 @@ function FormContent({
   formClassName
 }: any): React.ReactElement {
   const { getString } = useStrings()
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -595,7 +596,7 @@ function FormContent({
           </>
         ) : null}
       </div>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Layout.Horizontal spacing="medium">
           <Button
             variation={ButtonVariation.SECONDARY}
@@ -621,7 +622,7 @@ export function CustomArtifact(
   const { context, initialValues, artifactIdentifiers, selectedArtifact, handleSubmit, prevStepData } = props
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = [ModalViewFor.Template, ModalViewFor.CD_Onboarding].includes(context)
 
   const schemaObject = {
     spec: Yup.object().when('type', {
@@ -717,7 +718,7 @@ export function CustomArtifact(
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>

@@ -29,6 +29,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import { shouldHideHeaderAndNavBtns } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 import type { HelmWithGITDataType } from '../../ManifestInterface'
 import {
@@ -60,7 +61,7 @@ interface HelmWithGITPropType {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   deploymentType?: string
-  isOnboardingFlow?: boolean
+  context?: number
 }
 
 function HelmWithGIT({
@@ -74,10 +75,10 @@ function HelmWithGIT({
   manifestIdsList,
   isReadonly = false,
   deploymentType,
-  isOnboardingFlow = false
+  context
 }: StepProps<ConnectorConfigDTO> & HelmWithGITPropType): React.ReactElement {
   const { getString } = useStrings()
-
+  const hideHeaderAndNavBtns = context ? shouldHideHeaderAndNavBtns(context) : false
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
   const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
@@ -172,7 +173,7 @@ function HelmWithGIT({
   }
 
   const handleValidate = (formData: HelmWithGITDataType) => {
-    if (isOnboardingFlow) {
+    if (hideHeaderAndNavBtns) {
       submitFormData({
         ...prevStepData,
         ...formData,
@@ -188,9 +189,11 @@ function HelmWithGIT({
   }
   return (
     <Layout.Vertical spacing="xxlarge" padding="small" className={css.manifestStore}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {stepName}
-      </Text>
+      {!hideHeaderAndNavBtns && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {stepName}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         formName="helmWithGit"
@@ -421,7 +424,7 @@ function HelmWithGIT({
                 />
               </Accordion>
             </div>
-            {!isOnboardingFlow && (
+            {!hideHeaderAndNavBtns && (
               <Layout.Horizontal spacing="medium" className={css.saveBtn}>
                 <Button
                   text={getString('back')}
