@@ -138,12 +138,15 @@ const verifyYAML = (args: {
 }
 
 const findPositionsForMatchingKeys = (editor: editor.IStandaloneCodeEditor, textToFind: string): Position[] => {
-  const matches = editor?.getModel()?.findMatches(textToFind, true, false, false, null, true, 1) as editor.FindMatch[]
+  const matches = editor?.getModel()?.findMatches(textToFind, true, false, false, null, true) as editor.FindMatch[]
   return matches?.map((match: editor.FindMatch) => {
     const { endLineNumber, endColumn } = match.range
     return { lineNumber: endLineNumber, column: endColumn } as Position
   })
 }
+
+const getYAMLStepInsertionLocation = (stageIndex: number): string =>
+  `pipeline.stages.${stageIndex}.stage.spec.execution.steps`
 
 export {
   getYAMLFromEditor,
@@ -151,5 +154,6 @@ export {
   getYAMLValidationErrors,
   getValidationErrorMessagesForToaster,
   verifyYAML,
-  findPositionsForMatchingKeys
+  findPositionsForMatchingKeys,
+  getYAMLStepInsertionLocation
 }

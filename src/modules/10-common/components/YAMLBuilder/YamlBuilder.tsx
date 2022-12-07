@@ -55,7 +55,8 @@ import {
   getYAMLFromEditor,
   getMetaDataForKeyboardEventProcessing,
   verifyYAML,
-  findPositionsForMatchingKeys
+  findPositionsForMatchingKeys,
+  getYAMLStepInsertionLocation
 } from './YAMLBuilderUtils'
 
 import css from './YamlBuilder.module.scss'
@@ -152,7 +153,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     showPluginsPanel = false
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
-  const DEFAULT_STEP_INSERTION_JSON_PATH = 'pipeline.stages.0.stage.spec.execution.steps'
 
   setUpEditor(theme)
   const params = useParams()
@@ -175,6 +175,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
   const [schemaValidationErrors, setSchemaValidationErrors] = useState<Diagnostic[]>()
   const [pluginInput, setPluginInput] = useState<Record<string, any>>({})
+  const [closestStageIndex, setClosestStageIndex] = useState<number>(0)
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -839,11 +840,32 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [editorRef.current?.editor]
   )
 
+  const getClosestStageIndexForStepInsertion = useCallback((): number => {
+    const editor = editorRef.current?.editor
+    if (editor) {
+      const currentCursorPosition = editor.getPosition()
+      const { lineNumber: currentCursorLineNum } = currentCursorPosition || {}
+      if (currentCursorLineNum) {
+        const stagePositions = findPositionsForMatchingKeys(editor, 'stage')
+        for (let idx = 1; idx < stagePositions.length - 1; idx++) {
+          if (
+            stagePositions[idx - 1].lineNumber <= currentCursorLineNum &&
+            currentCursorLineNum < stagePositions[idx].lineNumber
+          ) {
+            console.log(idx)
+          }
+        }
+      }
+    }
+    return 0
+  }, [editorRef.current?.editor])
+
   const detectYAMLInsertion = useCallback(
     (noOflinesInserted: number): void => {
       const editor = editorRef.current?.editor
       if (editor) {
-        const position = findPositionsForMatchingKeys(editor, 'steps')[0] || ({} as Position)
+        getClosestStageIndexForStepInsertion()
+        const position = findPositionsForMatchingKeys(editor, 'steps')[closestStageIndex] || ({} as Position)
         const endingLineForCursorPosition = position.lineNumber + (noOflinesInserted ? noOflinesInserted : 0)
         const contentInStartingLine = editor.getModel()?.getLineContent(position.lineNumber)?.trim()
         const startingPosition = position.lineNumber + (contentInStartingLine ? 1 : 0)
@@ -860,7 +882,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         editor.focus()
       }
     },
-    [editorRef.current?.editor]
+    [closestStageIndex, editorRef.current?.editor]
   )
 
   const highlightInsertedText = useCallback(
@@ -884,11 +906,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   useEffect(() => {
     if (!isEmpty(pluginInput) && pluginInput.shouldInsertYAML) {
       try {
+        const yamlStepToBeInsertedAt = getYAMLStepInsertionLocation(0)
         const currentPipelineJSON = parse(currentYaml)
-        const existingSteps = findAllValuesForJSONPath(
-          currentPipelineJSON,
-          DEFAULT_STEP_INSERTION_JSON_PATH
-        ) as unknown[]
+        const existingSteps = findAllValuesForJSONPath(currentPipelineJSON, yamlStepToBeInsertedAt) as unknown[]
         let updatedSteps = existingSteps.slice(0) as unknown[]
         const stepToInsert = wrapPlugInputInAStep(omit(pluginInput, 'shouldInsertYAML'))
         if (Array.isArray(existingSteps) && existingSteps.length > 1) {
@@ -896,7 +916,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         } else {
           updatedSteps = [stepToInsert]
         }
-        const updatedPipelineJSON = set(currentPipelineJSON, DEFAULT_STEP_INSERTION_JSON_PATH, updatedSteps)
+        const updatedPipelineJSON = set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps)
         setCurrentYaml(yamlStringify(updatedPipelineJSON))
         detectYAMLInsertion(Object.keys(pluginInput).length)
       } catch (e) {
