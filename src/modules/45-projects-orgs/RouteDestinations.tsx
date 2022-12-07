@@ -184,7 +184,7 @@ const ProjectsRedirect = (): React.ReactElement => {
 }
 
 const MainDashboardRedirect = (): React.ReactElement => {
-  const { NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
+  const { NEW_LEFT_NAVBAR_SETTINGS, LANDING_OVERVIEW_PAGE_V2 } = useFeatureFlags()
   const { accountId } = useParams<ProjectPathProps>()
 
   if (!NEW_LEFT_NAVBAR_SETTINGS) {
@@ -197,7 +197,7 @@ const MainDashboardRedirect = (): React.ReactElement => {
     )
   }
 
-  return <LandingDashboardPage />
+  return LANDING_OVERVIEW_PAGE_V2 ? <LandingDashboardPageV2 /> : <LandingDashboardPage />
 }
 
 const LandingDashboardPageRedirect = (): React.ReactElement => {
