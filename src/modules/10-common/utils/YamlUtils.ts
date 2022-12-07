@@ -318,11 +318,7 @@ const findAllValuesForJSONPath = (jsonPath: string): string | string[] => {
       }
       return matchingValues
     } else {
-      if (i === 0) {
-        value = payload[currentToken]
-      } else {
-        value = value[currentToken]
-      }
+      value = i === 0 ? payload[currentToken] : value[currentToken]
       if (!value) {
         break
       }
