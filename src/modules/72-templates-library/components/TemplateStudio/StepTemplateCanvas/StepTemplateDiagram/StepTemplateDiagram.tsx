@@ -23,7 +23,10 @@ import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepPalette } from '@pipeline/components/PipelineStudio/StepPalette/StepPalette'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
+import { getAllStepPaletteModuleInfos, getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { ModuleName } from 'framework/types/ModuleName'
+import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
 import css from './StepTemplateDiagram.module.scss'
 
 export const StepTemplateDiagram = (): JSX.Element => {
@@ -36,7 +39,8 @@ export const StepTemplateDiagram = (): JSX.Element => {
   const [stepPaletteModuleInfos, setStepPaletteModuleInfos] = React.useState<StepPalleteModuleInfo[]>([])
   const { module } = useParams<ModulePathParams>()
   const [isStepSelectorOpen, setIsStepSelectorOpen] = React.useState<boolean>()
-
+  const { CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
   const openStepSelector = React.useCallback(() => {
     setIsStepSelectorOpen(true)
   }, [setIsStepSelectorOpen])
@@ -75,7 +79,15 @@ export const StepTemplateDiagram = (): JSX.Element => {
     } else if (module === 'cf') {
       setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.FEATURE))
     } else {
-      setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.DEPLOY))
+      if (shouldVisible && CING_ENABLED && CFNG_ENABLED) {
+        setStepPaletteModuleInfos(getAllStepPaletteModuleInfos())
+      } else if (shouldVisible) {
+        setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.DEPLOY))
+      } else if (CING_ENABLED) {
+        setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.BUILD))
+      } else if (CFNG_ENABLED) {
+        setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.FEATURE))
+      }
     }
   }, [module])
 
