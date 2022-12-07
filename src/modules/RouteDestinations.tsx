@@ -70,7 +70,7 @@ export default function RouteDestinations(): React.ReactElement {
       {userProfileRoutes.props.children}
       {CHAOS_ENABLED ? ChaosRoutes().props.children : null}
       {CING_ENABLED ? CIRoutes.props.children : null}
-      {CDRoutes.props.children}
+      {licenseInformation['CD']?.status === 'ACTIVE' ? CDRoutes.props.children : null}
       {CVNG_ENABLED ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
       {licenseInformation['STO']?.status === 'ACTIVE' ? (
