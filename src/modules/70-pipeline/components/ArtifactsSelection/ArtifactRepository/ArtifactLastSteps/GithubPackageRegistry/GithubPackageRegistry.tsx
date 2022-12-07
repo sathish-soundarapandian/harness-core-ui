@@ -461,18 +461,31 @@ export function GithubPackageRegistry(
     }
   }
 
+  const commonSpecSchemaObject = {
+    packageType: Yup.string()
+      .trim()
+      .required(getString('fieldRequired', { field: getString('pipeline.packageType') })),
+    packageName: Yup.string()
+      .trim()
+      .required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.packageName') }))
+  }
   const schemaObject = {
-    versionType: Yup.string().required(),
-    spec: Yup.object().shape({
-      packageType: Yup.string().required(getString('pipeline.artifactsSelection.validation.packageType')),
-      packageName: Yup.string().required(getString('pipeline.artifactsSelection.validation.packageName')),
-      versionRegex: Yup.string().when('versionType', {
-        is: 'regex',
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.versionRegex'))
+    versionType: Yup.string().required(
+      getString('fieldRequired', { field: getString('pipeline.artifactsSelection.versionDetails') })
+    ),
+    spec: Yup.object().when('versionType', {
+      is: 'regex',
+      then: Yup.object().shape({
+        ...commonSpecSchemaObject,
+        versionRegex: Yup.string()
+          .trim()
+          .required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.versionRegex') }))
       }),
-      version: Yup.mixed().when('versionType', {
-        is: 'value',
-        then: Yup.mixed().required(getString('validation.nexusVersion'))
+      otherwise: Yup.object().shape({
+        ...commonSpecSchemaObject,
+        version: Yup.string()
+          .trim()
+          .required(getString('fieldRequired', { field: getString('version') }))
       })
     })
   }

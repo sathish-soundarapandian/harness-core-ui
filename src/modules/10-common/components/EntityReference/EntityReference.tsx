@@ -137,6 +137,7 @@ export interface EntityReferenceProps<T extends ScopedObjectDTO> {
   selectedRecords?: ScopeAndIdentifier[]
   onMultiSelect?: (selected: ScopeAndIdentifier[]) => void
   showAllTab?: boolean
+  selectedRecord?: ScopeAndIdentifier
 }
 
 export const tabIdToScopeMap: Record<TAB_ID, Scope | undefined> = {
@@ -156,8 +157,12 @@ function getDefaultSelectedTab(
   defaultScope?: Scope,
   projectIdentifier?: string,
   orgIdentifier?: string,
+  preSelectedRecord?: ScopeAndIdentifier,
   showAllTab = false
 ): TAB_ID {
+  if (preSelectedRecord && preSelectedRecord?.scope) {
+    return scopeToTabMap[preSelectedRecord?.scope]
+  }
   if (defaultScope) {
     return scopeToTabMap[defaultScope]
   }
@@ -191,11 +196,12 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
     input,
     isMultiSelect,
     selectedRecords: selectedRecordsFromProps,
-    showAllTab = false
+    showAllTab = false,
+    selectedRecord: selectedRecordFromProps
   } = props
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [selectedTab, setSelectedTab] = useState<TAB_ID>(
-    getDefaultSelectedTab(defaultScope, projectIdentifier, orgIdentifier, showAllTab)
+    getDefaultSelectedTab(defaultScope, projectIdentifier, orgIdentifier, selectedRecordFromProps, showAllTab)
   )
   const { accountId } = useParams<AccountPathProps>()
   const {
@@ -323,6 +329,7 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
             pagination={{ ...props.pagination, hidePageNumbers: true }}
             disableCollapse={disableCollapse}
             isMultiSelect={isMultiSelect}
+            preSelectedRecord={selectedRecordFromProps}
           />
         ) : (
           <Container padding={{ top: 'xlarge' }} flex={{ align: 'center-center' }} className={css.noDataContainer}>

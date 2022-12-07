@@ -411,6 +411,7 @@ const ECSBlueGreenCreateServiceStepInputSet = (
             name={`${prefix}spec.prodListenerRuleArn`}
             selectItems={prodListenerRules}
             useValue
+            isOptional={true}
             multiTypeInputProps={{
               selectProps: {
                 items: prodListenerRules,
@@ -478,6 +479,7 @@ const ECSBlueGreenCreateServiceStepInputSet = (
             name={`${prefix}spec.stageListenerRuleArn`}
             selectItems={stageListenerRules}
             useValue
+            isOptional={true}
             multiTypeInputProps={{
               selectProps: {
                 items: stageListenerRules,

@@ -26,7 +26,7 @@ import approvalStepCss from '../ApprovalStage/ApprovalStageSetupShellMode.module
 export function PipelineStageSetupShellMode(): React.ReactElement {
   const { getString } = useStrings()
   const layoutRef = useRef<HTMLDivElement>(null)
-  const [selectedTabId, setSelectedTabId] = useState<PipelineStageTabs>(PipelineStageTabs.OVERVIEW)
+  const [selectedTabId, setSelectedTabId] = useState<PipelineStageTabs>(PipelineStageTabs.INPUTS)
   const pipelineContext = usePipelineContext()
   const { checkErrorsForTab } = React.useContext(StageErrorContext)
   const {

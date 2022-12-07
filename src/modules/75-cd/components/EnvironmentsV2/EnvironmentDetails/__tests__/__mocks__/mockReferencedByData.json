@@ -1,0 +1,214 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "content": [
+      {
+        "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+        "referredEntity": {
+          "type": "Environment",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "e1",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Kapil",
+            "metadata": {
+              "fqn": "pipeline.stages.stg1.spec.infrastructure.environmentRef"
+            },
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Kapil",
+            "default": true
+          },
+          "name": ""
+        },
+        "referredByEntity": {
+          "type": "Pipelines",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "testSuccess",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Kapil",
+            "metadata": {},
+            "repoIdentifier": "oldgitsyncharness",
+            "branch": "master-patch",
+            "isDefault": false,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Kapil",
+            "default": false
+          },
+          "name": "testSuccess"
+        },
+        "detail": {
+          "type": "EntityReferredByPipelineSetupUsageDetail",
+          "identifier": "stg1",
+          "referenceType": "STAGE_IDENTIFIER"
+        },
+        "createdAt": 1668946185136
+      },
+      {
+        "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+        "referredEntity": {
+          "type": "Environment",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "e1",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Kapil",
+            "metadata": {
+              "fqn": "pipeline.stages.stg1.spec.environment.environmentRef"
+            },
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Kapil",
+            "default": true
+          },
+          "name": ""
+        },
+        "referredByEntity": {
+          "type": "Pipelines",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "IgnoreFailedPipe",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Kapil",
+            "metadata": {},
+            "repoIdentifier": "oldgitsyncharness",
+            "branch": "master-patch",
+            "isDefault": false,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Kapil",
+            "default": false
+          },
+          "name": "IgnoreFailedPipe"
+        },
+        "detail": {
+          "type": "EntityReferredByPipelineSetupUsageDetail",
+          "identifier": "stg1",
+          "referenceType": "STAGE_IDENTIFIER"
+        },
+        "createdAt": 1668946178133
+      },
+      {
+        "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+        "referredEntity": {
+          "type": "Environment",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "e1",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Kapil",
+            "metadata": {
+              "fqn": "pipeline.stages.stg1.spec.infrastructure.environmentRef"
+            },
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Kapil",
+            "default": true
+          },
+          "name": ""
+        },
+        "referredByEntity": {
+          "type": "Pipelines",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "testSuccess",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Kapil",
+            "metadata": {},
+            "repoIdentifier": "oldgitsyncharness",
+            "branch": "master",
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Kapil",
+            "default": true
+          },
+          "name": "testSuccess"
+        },
+        "detail": {
+          "type": "EntityReferredByPipelineSetupUsageDetail",
+          "identifier": "stg1",
+          "referenceType": "STAGE_IDENTIFIER"
+        },
+        "createdAt": 1661250466936
+      },
+      {
+        "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+        "referredEntity": {
+          "type": "Environment",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "e1",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Kapil",
+            "metadata": {
+              "fqn": "pipeline.stages.stg1.spec.environment.environmentRef"
+            },
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Kapil",
+            "default": true
+          },
+          "name": ""
+        },
+        "referredByEntity": {
+          "type": "Pipelines",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "IgnoreFailedPipe",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Kapil",
+            "metadata": {},
+            "repoIdentifier": "oldgitsyncharness",
+            "branch": "master",
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Kapil",
+            "default": true
+          },
+          "name": "IgnoreFailedPipe"
+        },
+        "detail": {
+          "type": "EntityReferredByPipelineSetupUsageDetail",
+          "identifier": "stg1",
+          "referenceType": "STAGE_IDENTIFIER"
+        },
+        "createdAt": 1661250466331
+      }
+    ],
+    "pageable": {
+      "sort": {
+        "sorted": true,
+        "unsorted": false,
+        "empty": false
+      },
+      "pageSize": 10,
+      "pageNumber": 0,
+      "offset": 0,
+      "paged": true,
+      "unpaged": false
+    },
+    "last": true,
+    "totalPages": 1,
+    "totalElements": 4,
+    "first": true,
+    "sort": {
+      "sorted": true,
+      "unsorted": false,
+      "empty": false
+    },
+    "number": 0,
+    "numberOfElements": 4,
+    "size": 10,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "bf6b7ce9-66f2-4632-8b7f-737305323999"
+}

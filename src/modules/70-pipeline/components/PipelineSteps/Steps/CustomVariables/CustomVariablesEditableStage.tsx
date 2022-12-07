@@ -275,7 +275,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                       size={ButtonSize.SMALL}
                       variation={ButtonVariation.LINK}
                       onClick={addNew}
-                      text={getString(defaultTo(addVariableLabel, 'common.addVariable'))}
+                      text={getString(defaultTo(addVariableLabel, 'variables.newVariable'))}
                     />
                   )}
                 </div>

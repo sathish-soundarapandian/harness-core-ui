@@ -21,7 +21,7 @@ import {
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CVStepper } from '@cv/components/CVStepper/CVStepper'
 import SLOTargetNotifications from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotifications'
-import { isFormDataValid, shouldOpenPeriodUpdateModal } from './CreateCompositeSloForm.utils'
+import { getErrorMessageByTabId, isFormDataValid, shouldOpenPeriodUpdateModal } from './CreateCompositeSloForm.utils'
 import { AddSLOs } from './components/AddSlos/AddSLOs'
 import { CreateCompositeSLOSteps, CreateCompositeSloFormInterface } from './CreateCompositeSloForm.types'
 import type { SLOV2Form } from '../../CVCreateSLOV2.types'
@@ -185,6 +185,11 @@ export const CreateCompositeSloForm = ({
                   title: getString('cv.CompositeSLO.DefineSLO'),
                   helpPanelReferenceId: 'defineCompositeSLO',
                   panel: <SLOName<SLOV2Form> formikProps={formikProps} identifier={identifier} isMultiSelect />,
+                  errorMessage: getErrorMessageByTabId(
+                    formikProps,
+                    CreateCompositeSLOSteps.Define_SLO_Identification,
+                    getString
+                  ),
                   preview: (
                     <CreatePreview id={CreateCompositeSLOSteps.Define_SLO_Identification} data={formikProps.values} />
                   )
@@ -194,6 +199,11 @@ export const CreateCompositeSloForm = ({
                   title: getString('cv.CompositeSLO.SetTimeWindow'),
                   helpPanelReferenceId: 'setCompositeSLOTimeWindow',
                   panel: <PeriodLength periodType={periodType} periodLengthType={periodLengthType} />,
+                  errorMessage: getErrorMessageByTabId(
+                    formikProps,
+                    CreateCompositeSLOSteps.Set_SLO_Time_Window,
+                    getString
+                  ),
                   preview: <CreatePreview id={CreateCompositeSLOSteps.Set_SLO_Time_Window} data={formikProps.values} />
                 },
                 {
@@ -208,6 +218,7 @@ export const CreateCompositeSloForm = ({
                       error={dashboardWidgetsError}
                     />
                   ),
+                  errorMessage: getErrorMessageByTabId(formikProps, CreateCompositeSLOSteps.Add_SLOs, getString),
                   preview: <CreatePreview id={CreateCompositeSLOSteps.Add_SLOs} data={formikProps.values} />
                 },
                 {
@@ -225,6 +236,7 @@ export const CreateCompositeSloForm = ({
                       refetchGraph={refetchDashboardWidgets}
                     />
                   ),
+                  errorMessage: getErrorMessageByTabId(formikProps, CreateCompositeSLOSteps.Set_SLO_Target, getString),
                   preview: <CreatePreview id={CreateCompositeSLOSteps.Set_SLO_Target} data={formikProps.values} />
                 },
                 {
@@ -244,6 +256,11 @@ export const CreateCompositeSloForm = ({
                         getNotifications={getNotifications}
                       />
                     </CompositeSLOContext.Provider>
+                  ),
+                  errorMessage: getErrorMessageByTabId(
+                    formikProps,
+                    CreateCompositeSLOSteps.Error_Budget_Policy,
+                    getString
                   )
                 }
               ]}

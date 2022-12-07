@@ -11,6 +11,12 @@ import { useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
 import { Drawer, Position } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'
+import {
+  CE_DATE_FORMAT_INTERNAL,
+  DATE_RANGE_SHORTCUTS,
+  getGMTEndDateTime,
+  getGMTStartDateTime
+} from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { CcmMetaData, QlceViewTimeFilterOperator, useFetchCcmMetaDataQuery } from 'services/ce/services'
@@ -22,12 +28,6 @@ import AnomalyFilters from '@ce/components/AnomaliesFilter/AnomaliesFilter'
 import AnomaliesListGridView from '@ce/components/AnomaliesListView/AnomaliesListView'
 import AnomaliesSearch from '@ce/components/AnomaliesSearch/AnomaliesSearch'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import {
-  CE_DATE_FORMAT_INTERNAL,
-  DATE_RANGE_SHORTCUTS,
-  getGMTEndDateTime,
-  getGMTStartDateTime
-} from '@ce/utils/momentUtils'
 import type { orderType, sortType } from '@common/components/Table/react-table-config'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import type { TimeRangeFilterType } from '@ce/types'

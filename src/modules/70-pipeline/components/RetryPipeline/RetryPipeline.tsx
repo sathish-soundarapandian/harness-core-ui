@@ -24,8 +24,8 @@ import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { defaultTo, get, isEmpty, pick, remove } from 'lodash-es'
-import type { FormikErrors } from 'formik'
+import { defaultTo, get, isEmpty, pick, remove, isEqual } from 'lodash-es'
+import type { FormikErrors, FormikProps } from 'formik'
 import { Classes, Dialog, Tooltip } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -187,6 +187,7 @@ function RetryPipeline({
   const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig>()
   const [invalidInputSetIds, setInvalidInputSetIds] = useState<Array<string>>([])
   const [loadingSingleInputSet, setLoadingSingleInputSet] = useState<boolean>(false)
+  const formikRef = useRef<FormikProps<PipelineInfoConfig>>()
 
   const yamlTemplate = React.useMemo(() => {
     return parse<Pipeline>(inputSetTemplateYaml || '')?.pipeline
@@ -626,6 +627,21 @@ function RetryPipeline({
     return getErrorsList(formErrors).errorCount > 0 || !selectedStage
   }
 
+  const currentPipelineValues = currentPipeline?.pipeline
+    ? clearRuntimeInput(currentPipeline.pipeline)
+    : ({} as PipelineInfoConfig)
+
+  useEffect(() => {
+    if (
+      !isEqual(formikRef.current?.values, {
+        ...currentPipelineValues
+      })
+    )
+      formikRef.current?.setValues({
+        ...currentPipelineValues
+      })
+  }, [currentPipeline?.pipeline])
+
   const [showPreflightCheckModal, hidePreflightCheckModal] = useModalHook(() => {
     return (
       <Dialog
@@ -719,14 +735,11 @@ function RetryPipeline({
 
   return (
     <Formik<PipelineInfoConfig>
-      initialValues={
-        currentPipeline?.pipeline ? clearRuntimeInput(currentPipeline.pipeline) : ({} as PipelineInfoConfig)
-      }
+      initialValues={currentPipelineValues}
       formName="retryPipeline"
       onSubmit={values => {
         handleRetryPipeline(values, false)
       }}
-      enableReinitialize
       validate={async values => {
         let errors: FormikErrors<InputSetDTO> = formErrors
 
@@ -756,8 +769,11 @@ function RetryPipeline({
         return errors
       }}
     >
-      {({ submitForm, values }) => {
+      {formik => {
+        const { submitForm, values } = formik
+        formikRef.current = formik
         const noRuntimeInputs = checkIfRuntimeInputsNotPresent()
+
         return (
           <Layout.Vertical>
             <>

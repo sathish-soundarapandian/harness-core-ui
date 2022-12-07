@@ -61,7 +61,7 @@ function PrimaryArtifactView({
   return (
     <section>
       {primaryArtifact && (
-        <section className={cx(css.artifactList, css.rowItem)} key={'Dockerhub'}>
+        <section className={cx(css.artifactList, css.rowItem)}>
           {identifierElement ? (
             identifierElement
           ) : (

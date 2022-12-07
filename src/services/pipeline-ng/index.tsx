@@ -36,6 +36,365 @@ export type AbortFailureActionConfig = FailureStrategyActionConfig & {
   type: 'Abort'
 }
 
+export interface AccessControlCheckError {
+  code?:
+    | 'DEFAULT_ERROR_CODE'
+    | 'INVALID_ARGUMENT'
+    | 'INVALID_EMAIL'
+    | 'DOMAIN_NOT_ALLOWED_TO_REGISTER'
+    | 'COMMNITY_EDITION_NOT_FOUND'
+    | 'DEPLOY_MODE_IS_NOT_ON_PREM'
+    | 'USER_ALREADY_REGISTERED'
+    | 'USER_INVITATION_DOES_NOT_EXIST'
+    | 'USER_DOES_NOT_EXIST'
+    | 'USER_INVITE_OPERATION_FAILED'
+    | 'USER_DISABLED'
+    | 'ACCOUNT_DOES_NOT_EXIST'
+    | 'INACTIVE_ACCOUNT'
+    | 'ACCOUNT_MIGRATED'
+    | 'USER_DOMAIN_NOT_ALLOWED'
+    | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
+    | 'RESOURCE_NOT_FOUND'
+    | 'INVALID_FORMAT'
+    | 'ROLE_DOES_NOT_EXIST'
+    | 'EMAIL_NOT_VERIFIED'
+    | 'EMAIL_VERIFICATION_TOKEN_NOT_FOUND'
+    | 'INVALID_TOKEN'
+    | 'REVOKED_TOKEN'
+    | 'INVALID_CAPTCHA_TOKEN'
+    | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
+    | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
+    | 'TOKEN_ALREADY_REFRESHED_ONCE'
+    | 'ACCESS_DENIED'
+    | 'NG_ACCESS_DENIED'
+    | 'INVALID_CREDENTIAL'
+    | 'INVALID_CREDENTIALS_THIRD_PARTY'
+    | 'INVALID_KEY'
+    | 'INVALID_CONNECTOR_TYPE'
+    | 'INVALID_KEYPATH'
+    | 'INVALID_VARIABLE'
+    | 'UNKNOWN_HOST'
+    | 'UNREACHABLE_HOST'
+    | 'INVALID_PORT'
+    | 'SSH_SESSION_TIMEOUT'
+    | 'SOCKET_CONNECTION_ERROR'
+    | 'CONNECTION_ERROR'
+    | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
+    | 'CONNECTION_TIMEOUT'
+    | 'SSH_CONNECTION_ERROR'
+    | 'USER_GROUP_ERROR'
+    | 'INVALID_EXECUTION_ID'
+    | 'ERROR_IN_GETTING_CHANNEL_STREAMS'
+    | 'UNEXPECTED'
+    | 'UNKNOWN_ERROR'
+    | 'UNKNOWN_EXECUTOR_TYPE_ERROR'
+    | 'DUPLICATE_STATE_NAMES'
+    | 'TRANSITION_NOT_LINKED'
+    | 'TRANSITION_TO_INCORRECT_STATE'
+    | 'TRANSITION_TYPE_NULL'
+    | 'STATES_WITH_DUP_TRANSITIONS'
+    | 'BARRIERS_NOT_RUNNING_CONCURRENTLY'
+    | 'NON_FORK_STATES'
+    | 'NON_REPEAT_STATES'
+    | 'INITIAL_STATE_NOT_DEFINED'
+    | 'FILE_INTEGRITY_CHECK_FAILED'
+    | 'INVALID_URL'
+    | 'FILE_DOWNLOAD_FAILED'
+    | 'PLATFORM_SOFTWARE_DELETE_ERROR'
+    | 'INVALID_CSV_FILE'
+    | 'INVALID_REQUEST'
+    | 'SCHEMA_VALIDATION_FAILED'
+    | 'FILTER_CREATION_ERROR'
+    | 'INVALID_YAML_ERROR'
+    | 'PLAN_CREATION_ERROR'
+    | 'INVALID_INFRA_STATE'
+    | 'PIPELINE_ALREADY_TRIGGERED'
+    | 'NON_EXISTING_PIPELINE'
+    | 'DUPLICATE_COMMAND_NAMES'
+    | 'INVALID_PIPELINE'
+    | 'COMMAND_DOES_NOT_EXIST'
+    | 'DUPLICATE_ARTIFACTSTREAM_NAMES'
+    | 'DUPLICATE_HOST_NAMES'
+    | 'STATE_NOT_FOR_TYPE'
+    | 'STATE_MACHINE_ISSUE'
+    | 'STATE_DISCONTINUE_FAILED'
+    | 'STATE_PAUSE_FAILED'
+    | 'PAUSE_ALL_ALREADY'
+    | 'RESUME_ALL_ALREADY'
+    | 'ROLLBACK_ALREADY'
+    | 'ABORT_ALL_ALREADY'
+    | 'EXPIRE_ALL_ALREADY'
+    | 'RETRY_FAILED'
+    | 'UNKNOWN_ARTIFACT_TYPE'
+    | 'UNKNOWN_STAGE_ELEMENT_WRAPPER_TYPE'
+    | 'INIT_TIMEOUT'
+    | 'LICENSE_EXPIRED'
+    | 'NOT_LICENSED'
+    | 'REQUEST_TIMEOUT'
+    | 'WORKFLOW_ALREADY_TRIGGERED'
+    | 'JENKINS_ERROR'
+    | 'INVALID_ARTIFACT_SOURCE'
+    | 'INVALID_ARTIFACT_SERVER'
+    | 'INVALID_CLOUD_PROVIDER'
+    | 'UPDATE_NOT_ALLOWED'
+    | 'DELETE_NOT_ALLOWED'
+    | 'APPDYNAMICS_CONFIGURATION_ERROR'
+    | 'APM_CONFIGURATION_ERROR'
+    | 'SPLUNK_CONFIGURATION_ERROR'
+    | 'ELK_CONFIGURATION_ERROR'
+    | 'LOGZ_CONFIGURATION_ERROR'
+    | 'SUMO_CONFIGURATION_ERROR'
+    | 'INSTANA_CONFIGURATION_ERROR'
+    | 'APPDYNAMICS_ERROR'
+    | 'STACKDRIVER_ERROR'
+    | 'STACKDRIVER_CONFIGURATION_ERROR'
+    | 'NEWRELIC_CONFIGURATION_ERROR'
+    | 'NEWRELIC_ERROR'
+    | 'DYNA_TRACE_CONFIGURATION_ERROR'
+    | 'DYNA_TRACE_ERROR'
+    | 'CLOUDWATCH_ERROR'
+    | 'CLOUDWATCH_CONFIGURATION_ERROR'
+    | 'PROMETHEUS_CONFIGURATION_ERROR'
+    | 'DATA_DOG_CONFIGURATION_ERROR'
+    | 'SERVICE_GUARD_CONFIGURATION_ERROR'
+    | 'ENCRYPTION_NOT_CONFIGURED'
+    | 'UNAVAILABLE_DELEGATES'
+    | 'WORKFLOW_EXECUTION_IN_PROGRESS'
+    | 'PIPELINE_EXECUTION_IN_PROGRESS'
+    | 'AWS_ACCESS_DENIED'
+    | 'AWS_CLUSTER_NOT_FOUND'
+    | 'AWS_SERVICE_NOT_FOUND'
+    | 'IMAGE_NOT_FOUND'
+    | 'ILLEGAL_ARGUMENT'
+    | 'IMAGE_TAG_NOT_FOUND'
+    | 'DELEGATE_NOT_AVAILABLE'
+    | 'INVALID_YAML_PAYLOAD'
+    | 'AUTHENTICATION_ERROR'
+    | 'AUTHORIZATION_ERROR'
+    | 'UNRECOGNIZED_YAML_FIELDS'
+    | 'COULD_NOT_MAP_BEFORE_YAML'
+    | 'MISSING_BEFORE_YAML'
+    | 'MISSING_YAML'
+    | 'NON_EMPTY_DELETIONS'
+    | 'GENERAL_YAML_ERROR'
+    | 'GENERAL_YAML_INFO'
+    | 'YAML_GIT_SYNC_ERROR'
+    | 'GIT_CONNECTION_ERROR'
+    | 'GIT_ERROR'
+    | 'ARTIFACT_SERVER_ERROR'
+    | 'ENCRYPT_DECRYPT_ERROR'
+    | 'SECRET_MANAGEMENT_ERROR'
+    | 'SECRET_NOT_FOUND'
+    | 'KMS_OPERATION_ERROR'
+    | 'GCP_KMS_OPERATION_ERROR'
+    | 'VAULT_OPERATION_ERROR'
+    | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
+    | 'AZURE_KEY_VAULT_OPERATION_ERROR'
+    | 'UNSUPPORTED_OPERATION_EXCEPTION'
+    | 'FEATURE_UNAVAILABLE'
+    | 'GENERAL_ERROR'
+    | 'BASELINE_CONFIGURATION_ERROR'
+    | 'SAML_IDP_CONFIGURATION_NOT_AVAILABLE'
+    | 'INVALID_AUTHENTICATION_MECHANISM'
+    | 'INVALID_SAML_CONFIGURATION'
+    | 'INVALID_OAUTH_CONFIGURATION'
+    | 'INVALID_LDAP_CONFIGURATION'
+    | 'USER_GROUP_SYNC_FAILURE'
+    | 'USER_GROUP_ALREADY_EXIST'
+    | 'INVALID_TWO_FACTOR_AUTHENTICATION_CONFIGURATION'
+    | 'EXPLANATION'
+    | 'HINT'
+    | 'NOT_WHITELISTED_IP'
+    | 'INVALID_TOTP_TOKEN'
+    | 'EMAIL_FAILED'
+    | 'SSL_HANDSHAKE_FAILED'
+    | 'NO_APPS_ASSIGNED'
+    | 'INVALID_INFRA_CONFIGURATION'
+    | 'TEMPLATES_LINKED'
+    | 'USER_HAS_NO_PERMISSIONS'
+    | 'USER_NOT_AUTHORIZED'
+    | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
+    | 'INVALID_USAGE_RESTRICTION'
+    | 'USAGE_RESTRICTION_ERROR'
+    | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
+    | 'DELEGATE_TASK_RETRY'
+    | 'KUBERNETES_API_TASK_EXCEPTION'
+    | 'KUBERNETES_TASK_EXCEPTION'
+    | 'KUBERNETES_YAML_ERROR'
+    | 'SAVE_FILE_INTO_GCP_STORAGE_FAILED'
+    | 'READ_FILE_FROM_GCP_STORAGE_FAILED'
+    | 'FILE_NOT_FOUND_ERROR'
+    | 'USAGE_LIMITS_EXCEEDED'
+    | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
+    | 'JIRA_ERROR'
+    | 'EXPRESSION_EVALUATION_FAILED'
+    | 'KUBERNETES_VALUES_ERROR'
+    | 'KUBERNETES_CLUSTER_ERROR'
+    | 'INCORRECT_SIGN_IN_MECHANISM'
+    | 'OAUTH_LOGIN_FAILED'
+    | 'INVALID_TERRAFORM_TARGETS_REQUEST'
+    | 'TERRAFORM_EXECUTION_ERROR'
+    | 'FILE_READ_FAILED'
+    | 'FILE_SIZE_EXCEEDS_LIMIT'
+    | 'CLUSTER_NOT_FOUND'
+    | 'MARKETPLACE_TOKEN_NOT_FOUND'
+    | 'INVALID_MARKETPLACE_TOKEN'
+    | 'INVALID_TICKETING_SERVER'
+    | 'SERVICENOW_ERROR'
+    | 'PASSWORD_EXPIRED'
+    | 'USER_LOCKED'
+    | 'PASSWORD_STRENGTH_CHECK_FAILED'
+    | 'ACCOUNT_DISABLED'
+    | 'INVALID_ACCOUNT_PERMISSION'
+    | 'PAGERDUTY_ERROR'
+    | 'HEALTH_ERROR'
+    | 'SAML_TEST_SUCCESS_MECHANISM_NOT_ENABLED'
+    | 'DOMAIN_WHITELIST_FILTER_CHECK_FAILED'
+    | 'INVALID_DASHBOARD_UPDATE_REQUEST'
+    | 'DUPLICATE_FIELD'
+    | 'INVALID_AZURE_VAULT_CONFIGURATION'
+    | 'USER_NOT_AUTHORIZED_DUE_TO_USAGE_RESTRICTIONS'
+    | 'INVALID_ROLLBACK'
+    | 'DATA_COLLECTION_ERROR'
+    | 'SUMO_DATA_COLLECTION_ERROR'
+    | 'DEPLOYMENT_GOVERNANCE_ERROR'
+    | 'BATCH_PROCESSING_ERROR'
+    | 'GRAPHQL_ERROR'
+    | 'FILE_CREATE_ERROR'
+    | 'ILLEGAL_STATE'
+    | 'GIT_DIFF_COMMIT_NOT_IN_ORDER'
+    | 'FAILED_TO_ACQUIRE_PERSISTENT_LOCK'
+    | 'FAILED_TO_ACQUIRE_NON_PERSISTENT_LOCK'
+    | 'POD_NOT_FOUND_ERROR'
+    | 'COMMAND_EXECUTION_ERROR'
+    | 'REGISTRY_EXCEPTION'
+    | 'ENGINE_INTERRUPT_PROCESSING_EXCEPTION'
+    | 'ENGINE_IO_EXCEPTION'
+    | 'ENGINE_OUTCOME_EXCEPTION'
+    | 'ENGINE_SWEEPING_OUTPUT_EXCEPTION'
+    | 'CACHE_NOT_FOUND_EXCEPTION'
+    | 'ENGINE_ENTITY_UPDATE_EXCEPTION'
+    | 'SHELL_EXECUTION_EXCEPTION'
+    | 'TEMPLATE_NOT_FOUND'
+    | 'AZURE_SERVICE_EXCEPTION'
+    | 'AZURE_CLIENT_EXCEPTION'
+    | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
+    | 'TIMEOUT_ENGINE_EXCEPTION'
+    | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
+    | 'NO_INSTALLED_DELEGATES'
+    | 'DUPLICATE_DELEGATE_EXCEPTION'
+    | 'GCP_MARKETPLACE_EXCEPTION'
+    | 'MISSING_DEFAULT_GOOGLE_CREDENTIALS'
+    | 'INCORRECT_DEFAULT_GOOGLE_CREDENTIALS'
+    | 'OPTIMISTIC_LOCKING_EXCEPTION'
+    | 'NG_PIPELINE_EXECUTION_EXCEPTION'
+    | 'NG_PIPELINE_CREATE_EXCEPTION'
+    | 'RESOURCE_NOT_FOUND_EXCEPTION'
+    | 'PMS_INITIALIZE_SDK_EXCEPTION'
+    | 'UNEXPECTED_SNIPPET_EXCEPTION'
+    | 'UNEXPECTED_SCHEMA_EXCEPTION'
+    | 'CONNECTOR_VALIDATION_EXCEPTION'
+    | 'TIMESCALE_NOT_AVAILABLE'
+    | 'MIGRATION_EXCEPTION'
+    | 'REQUEST_PROCESSING_INTERRUPTED'
+    | 'SECRET_MANAGER_ID_NOT_FOUND'
+    | 'GCP_SECRET_MANAGER_OPERATION_ERROR'
+    | 'GCP_SECRET_OPERATION_ERROR'
+    | 'GIT_OPERATION_ERROR'
+    | 'TASK_FAILURE_ERROR'
+    | 'INSTANCE_STATS_PROCESS_ERROR'
+    | 'INSTANCE_STATS_MIGRATION_ERROR'
+    | 'DEPLOYMENT_MIGRATION_ERROR'
+    | 'CG_LICENSE_USAGE_ERROR'
+    | 'INSTANCE_STATS_AGGREGATION_ERROR'
+    | 'UNRESOLVED_EXPRESSIONS_ERROR'
+    | 'KRYO_HANDLER_NOT_FOUND_ERROR'
+    | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'UNEXPECTED_TYPE_ERROR'
+    | 'EXCEPTION_HANDLER_NOT_FOUND'
+    | 'CONNECTOR_NOT_FOUND_EXCEPTION'
+    | 'GCP_SERVER_ERROR'
+    | 'HTTP_RESPONSE_EXCEPTION'
+    | 'SCM_NOT_FOUND_ERROR'
+    | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
+    | 'SCM_UNPROCESSABLE_ENTITY'
+    | 'PROCESS_EXECUTION_EXCEPTION'
+    | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
+    | 'SCM_INTERNAL_SERVER_ERROR'
+    | 'DATA'
+    | 'CONTEXT'
+    | 'PR_CREATION_ERROR'
+    | 'URL_NOT_REACHABLE'
+    | 'URL_NOT_PROVIDED'
+    | 'ENGINE_EXPRESSION_EVALUATION_ERROR'
+    | 'ENGINE_FUNCTOR_ERROR'
+    | 'JIRA_CLIENT_ERROR'
+    | 'SCM_NOT_MODIFIED'
+    | 'APPROVAL_STEP_NG_ERROR'
+    | 'BUCKET_SERVER_ERROR'
+    | 'GIT_SYNC_ERROR'
+    | 'TEMPLATE_EXCEPTION'
+    | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'INVALID_INPUT_SET'
+    | 'INVALID_OVERLAY_INPUT_SET'
+    | 'RESOURCE_ALREADY_EXISTS'
+    | 'INVALID_JSON_PAYLOAD'
+    | 'POLICY_EVALUATION_FAILURE'
+    | 'POLICY_SET_ERROR'
+    | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
+    | 'INVALID_NEXUS_REGISTRY_REQUEST'
+    | 'ENTITY_NOT_FOUND'
+    | 'INVALID_AZURE_CONTAINER_REGISTRY_REQUEST'
+    | 'AZURE_AUTHENTICATION_ERROR'
+    | 'AZURE_CONFIG_ERROR'
+    | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+  correlationId?: string
+  detailedMessage?: string
+  failedPermissionChecks?: PermissionCheck[]
+  message?: string
+  metadata?: ErrorMetadataDTO
+  responseMessages?: ResponseMessage[]
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export type AcrSpec = ArtifactTypeSpec & {
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
@@ -231,6 +590,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
@@ -403,9 +763,14 @@ export interface CIProperties {
 }
 
 export interface CacheResponseMetadata {
-  cacheState?: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
-  lastUpdatedAt?: number
-  ttlLeft?: number
+  cacheState: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
+  lastUpdatedAt: number
+  ttlLeft: number
+}
+
+export interface Capabilities {
+  add?: string[]
+  drop?: string[]
 }
 
 export interface CcmConnectorFilter {
@@ -555,6 +920,35 @@ export interface ConnectorWrapperResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'IN_PROGRESS' | 'UNKNOWN'
 }
 
+export interface ContainerInfraYamlSpec {
+  annotations?: {
+    [key: string]: string
+  }
+  automountServiceAccountToken?: boolean
+  connectorRef: string
+  containerSecurityContext?: SecurityContext
+  harnessImageConnectorRef?: string
+  initTimeout?: string
+  labels?: {
+    [key: string]: string
+  }
+  namespace: string
+  nodeSelector?: {
+    [key: string]: string
+  }
+  os?: 'Linux' | 'MacOS' | 'Windows'
+  priorityClassName?: string
+  runAsUser?: number
+  serviceAccountName?: string
+  tolerations?: Toleration[]
+  volumes?: ContainerVolume[]
+}
+
+export type ContainerK8sInfra = ContainerStepInfra & {
+  spec: ContainerInfraYamlSpec
+  type: 'KubernetesDirect'
+}
+
 export interface ContainerResource {
   limits: Limits
 }
@@ -565,13 +959,22 @@ export type ContainerStepInfo = StepSpecType & {
   entrypoint?: string[]
   image?: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  infrastructure: ContainerStepInfra
   metadata?: string
   privileged?: boolean
-  resources?: ContainerResource
+  resources: ContainerResource
   retry?: number
   runAsUser?: number
   settings?: ParameterFieldMapStringJsonNode
   uses?: string
+}
+
+export interface ContainerStepInfra {
+  type?: 'KubernetesDirect'
+}
+
+export interface ContainerVolume {
+  type?: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
 }
 
 export interface CriteriaSpec {
@@ -704,6 +1107,17 @@ export interface EmbeddedUser {
   externalUserId?: string
   name?: string
   uuid?: string
+}
+
+export type EmptyDirYaml = ContainerVolume & {
+  mountPath: string
+  spec: EmptyDirYamlSpec
+  type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
+}
+
+export interface EmptyDirYamlSpec {
+  medium?: string
+  size?: string
 }
 
 export interface EntityGitDetails {
@@ -1078,7 +1492,6 @@ export interface Error {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'NO_ELIGIBLE_DELEGATES'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1437,7 +1850,6 @@ export interface ErrorMetadata {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'NO_ELIGIBLE_DELEGATES'
   errorMessage?: string
 }
 
@@ -1994,7 +2406,6 @@ export interface Failure {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'NO_ELIGIBLE_DELEGATES'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2315,6 +2726,17 @@ export type HelmManifestSpec = ManifestTypeSpec & {
   eventConditions?: TriggerEventDataCondition[]
   helmVersion?: 'V2' | 'V3' | 'V380'
   store?: BuildStore
+}
+
+export type HostPathYaml = ContainerVolume & {
+  mountPath: string
+  spec: HostPathYamlSpec
+  type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
+}
+
+export interface HostPathYamlSpec {
+  path: string
+  type?: string
 }
 
 export type HttpBuildStoreTypeSpec = BuildStoreTypeSpec & {
@@ -2805,6 +3227,7 @@ export type NexusRegistrySpec = ArtifactTypeSpec & {
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
   extension?: string
+  group?: string
   groupId?: string
   imagePath?: string
   packageName?: string
@@ -3114,6 +3537,27 @@ export interface PatchInstruction {
     | 'RemoveSegmentsToVariationTargetMap'
 }
 
+export interface PermissionCheck {
+  permission?: string
+  resourceAttributes?: {
+    [key: string]: string
+  }
+  resourceIdentifier?: string
+  resourceScope?: ResourceScope
+  resourceType?: string
+}
+
+export type PersistentVolumeClaimYaml = ContainerVolume & {
+  mountPath: string
+  spec: PersistentVolumeClaimYamlSpec
+  type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
+}
+
+export interface PersistentVolumeClaimYamlSpec {
+  claimName: string
+  readOnly?: boolean
+}
+
 export interface PipelineConfig {
   pipeline?: PipelineInfoConfig
 }
@@ -3338,6 +3782,7 @@ export interface PipelineSaveResponse {
 
 export type PipelineStageConfig = StageInfoConfig & {
   inputSetReferences?: string[]
+  inputs?: JsonNode
   org: string
   outputs?: PipelineStageOutputs[]
   pipeline: string
@@ -3645,6 +4090,12 @@ export interface ResourceDTO {
     | 'CLOUD_ASSET_GOVERNANCE_RULE'
     | 'CLOUD_ASSET_GOVERNANCE_RULE_SET'
     | 'CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT'
+}
+
+export interface ResourceScope {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export interface ResourceScopeDTO {
@@ -4295,7 +4746,6 @@ export interface ResponseMessage {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'NO_ELIGIBLE_DELEGATES'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4750,6 +5200,17 @@ export type SecretNGVariable = NGVariable & {
   value: string
 }
 
+export interface SecurityContext {
+  allowPrivilegeEscalation?: boolean
+  capabilities?: Capabilities
+  privileged?: boolean
+  procMount?: string
+  readOnlyRootFilesystem?: boolean
+  runAsGroup?: number
+  runAsNonRoot?: boolean
+  runAsUser?: number
+}
+
 export interface Serve {
   distribution?: Distribution
   variation?: string
@@ -5030,6 +5491,7 @@ export interface StepData {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
+    | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
     | 'STRATEGY_MAX_CONCURRENT'
@@ -5251,6 +5713,14 @@ export interface TimeRange {
 
 export interface TimeoutIssuer {
   timeoutInstanceId: string
+}
+
+export interface Toleration {
+  effect?: string
+  key?: string
+  operator?: string
+  tolerationSeconds?: number
+  value?: string
 }
 
 export interface TotalHealthInfo {
@@ -5543,7 +6013,7 @@ export type NGTriggerConfigV2RequestBody = NGTriggerConfigV2
 
 export type RunStageRequestDTORequestBody = RunStageRequestDTO
 
-export type WebhookEndpointBodyRequestBody = string
+export type CustomWebhookEndpointBodyRequestBody = string
 
 export interface GetInitialStageYamlSnippetQueryParams {
   approvalType: 'HarnessApproval' | 'JiraApproval' | 'CustomApproval' | 'ServiceNowApproval'
@@ -6517,7 +6987,7 @@ export type CreateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -6531,7 +7001,7 @@ export const CreateInputSetForPipeline = (props: CreateInputSetForPipelineProps)
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >
     verb="POST"
@@ -6546,7 +7016,7 @@ export type UseCreateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -6560,7 +7030,7 @@ export const useCreateInputSetForPipeline = (props: UseCreateInputSetForPipeline
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >('POST', `/inputSets`, { base: getConfig('pipeline/api'), ...props })
 
@@ -6572,7 +7042,7 @@ export const createInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -6581,7 +7051,7 @@ export const createInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/inputSets`, props, signal)
 
@@ -6891,7 +7361,7 @@ export type CreateOverlayInputSetForPipelineProps = Omit<
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -6905,7 +7375,7 @@ export const CreateOverlayInputSetForPipeline = (props: CreateOverlayInputSetFor
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >
     verb="POST"
@@ -6920,7 +7390,7 @@ export type UseCreateOverlayInputSetForPipelineProps = Omit<
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -6934,7 +7404,7 @@ export const useCreateOverlayInputSetForPipeline = (props: UseCreateOverlayInput
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >('POST', `/inputSets/overlay`, { base: getConfig('pipeline/api'), ...props })
 
@@ -6946,7 +7416,7 @@ export const createOverlayInputSetForPipelinePromise = (
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -6955,7 +7425,7 @@ export const createOverlayInputSetForPipelinePromise = (
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/inputSets/overlay`, props, signal)
 
@@ -7439,7 +7909,7 @@ export type UpdateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >,
   'path' | 'verb'
@@ -7454,7 +7924,7 @@ export const UpdateInputSetForPipeline = ({ inputSetIdentifier, ...props }: Upda
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >
     verb="PUT"
@@ -7469,7 +7939,7 @@ export type UseUpdateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >,
   'path' | 'verb'
@@ -7484,7 +7954,7 @@ export const useUpdateInputSetForPipeline = ({ inputSetIdentifier, ...props }: U
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >('PUT', (paramsInPath: UpdateInputSetForPipelinePathParams) => `/inputSets/${paramsInPath.inputSetIdentifier}`, {
     base: getConfig('pipeline/api'),
@@ -7503,7 +7973,7 @@ export const updateInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   > & { inputSetIdentifier: string },
   signal?: RequestInit['signal']
@@ -7512,7 +7982,7 @@ export const updateInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >('PUT', getConfig('pipeline/api'), `/inputSets/${inputSetIdentifier}`, props, signal)
 
@@ -7545,7 +8015,7 @@ export type SanitiseInputSetProps = Omit<
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     SanitiseInputSetPathParams
   >,
   'path' | 'verb'
@@ -7560,7 +8030,7 @@ export const SanitiseInputSet = ({ inputSetIdentifier, ...props }: SanitiseInput
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     SanitiseInputSetPathParams
   >
     verb="POST"
@@ -7575,7 +8045,7 @@ export type UseSanitiseInputSetProps = Omit<
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     SanitiseInputSetPathParams
   >,
   'path' | 'verb'
@@ -7590,7 +8060,7 @@ export const useSanitiseInputSet = ({ inputSetIdentifier, ...props }: UseSanitis
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     SanitiseInputSetPathParams
   >('POST', (paramsInPath: SanitiseInputSetPathParams) => `/inputSets/${paramsInPath.inputSetIdentifier}/sanitise`, {
     base: getConfig('pipeline/api'),
@@ -7609,7 +8079,7 @@ export const sanitiseInputSetPromise = (
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     SanitiseInputSetPathParams
   > & { inputSetIdentifier: string },
   signal?: RequestInit['signal']
@@ -7618,7 +8088,7 @@ export const sanitiseInputSetPromise = (
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     SanitiseInputSetPathParams
   >('POST', getConfig('pipeline/api'), `/inputSets/${inputSetIdentifier}/sanitise`, props, signal)
 
@@ -7926,7 +8396,7 @@ export interface GetPreflightCheckResponseQueryParams {
 }
 
 export type GetPreflightCheckResponseProps = Omit<
-  GetProps<ResponsePreFlightDTO, Failure | Error, GetPreflightCheckResponseQueryParams, void>,
+  GetProps<ResponsePreFlightDTO, Failure | AccessControlCheckError | Error, GetPreflightCheckResponseQueryParams, void>,
   'path'
 >
 
@@ -7934,7 +8404,7 @@ export type GetPreflightCheckResponseProps = Omit<
  * get preflight check response
  */
 export const GetPreflightCheckResponse = (props: GetPreflightCheckResponseProps) => (
-  <Get<ResponsePreFlightDTO, Failure | Error, GetPreflightCheckResponseQueryParams, void>
+  <Get<ResponsePreFlightDTO, Failure | AccessControlCheckError | Error, GetPreflightCheckResponseQueryParams, void>
     path={`/pipeline/execute/getPreflightCheckResponse`}
     base={getConfig('pipeline/api')}
     {...props}
@@ -7942,7 +8412,12 @@ export const GetPreflightCheckResponse = (props: GetPreflightCheckResponseProps)
 )
 
 export type UseGetPreflightCheckResponseProps = Omit<
-  UseGetProps<ResponsePreFlightDTO, Failure | Error, GetPreflightCheckResponseQueryParams, void>,
+  UseGetProps<
+    ResponsePreFlightDTO,
+    Failure | AccessControlCheckError | Error,
+    GetPreflightCheckResponseQueryParams,
+    void
+  >,
   'path'
 >
 
@@ -7950,7 +8425,7 @@ export type UseGetPreflightCheckResponseProps = Omit<
  * get preflight check response
  */
 export const useGetPreflightCheckResponse = (props: UseGetPreflightCheckResponseProps) =>
-  useGet<ResponsePreFlightDTO, Failure | Error, GetPreflightCheckResponseQueryParams, void>(
+  useGet<ResponsePreFlightDTO, Failure | AccessControlCheckError | Error, GetPreflightCheckResponseQueryParams, void>(
     `/pipeline/execute/getPreflightCheckResponse`,
     { base: getConfig('pipeline/api'), ...props }
   )
@@ -7959,15 +8434,20 @@ export const useGetPreflightCheckResponse = (props: UseGetPreflightCheckResponse
  * get preflight check response
  */
 export const getPreflightCheckResponsePromise = (
-  props: GetUsingFetchProps<ResponsePreFlightDTO, Failure | Error, GetPreflightCheckResponseQueryParams, void>,
+  props: GetUsingFetchProps<
+    ResponsePreFlightDTO,
+    Failure | AccessControlCheckError | Error,
+    GetPreflightCheckResponseQueryParams,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponsePreFlightDTO, Failure | Error, GetPreflightCheckResponseQueryParams, void>(
-    getConfig('pipeline/api'),
-    `/pipeline/execute/getPreflightCheckResponse`,
-    props,
-    signal
-  )
+  getUsingFetch<
+    ResponsePreFlightDTO,
+    Failure | AccessControlCheckError | Error,
+    GetPreflightCheckResponseQueryParams,
+    void
+  >(getConfig('pipeline/api'), `/pipeline/execute/getPreflightCheckResponse`, props, signal)
 
 export interface HandleInterruptQueryParams {
   accountIdentifier: string
@@ -7993,7 +8473,7 @@ export interface HandleInterruptPathParams {
 export type HandleInterruptProps = Omit<
   MutateProps<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleInterruptQueryParams,
     void,
     HandleInterruptPathParams
@@ -8008,7 +8488,7 @@ export type HandleInterruptProps = Omit<
 export const HandleInterrupt = ({ planExecutionId, ...props }: HandleInterruptProps) => (
   <Mutate<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleInterruptQueryParams,
     void,
     HandleInterruptPathParams
@@ -8023,7 +8503,7 @@ export const HandleInterrupt = ({ planExecutionId, ...props }: HandleInterruptPr
 export type UseHandleInterruptProps = Omit<
   UseMutateProps<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleInterruptQueryParams,
     void,
     HandleInterruptPathParams
@@ -8038,7 +8518,7 @@ export type UseHandleInterruptProps = Omit<
 export const useHandleInterrupt = ({ planExecutionId, ...props }: UseHandleInterruptProps) =>
   useMutate<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleInterruptQueryParams,
     void,
     HandleInterruptPathParams
@@ -8057,7 +8537,7 @@ export const handleInterruptPromise = (
     ...props
   }: MutateUsingFetchProps<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleInterruptQueryParams,
     void,
     HandleInterruptPathParams
@@ -8066,7 +8546,7 @@ export const handleInterruptPromise = (
 ) =>
   mutateUsingFetch<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleInterruptQueryParams,
     void,
     HandleInterruptPathParams
@@ -8097,7 +8577,7 @@ export interface HandleStageInterruptPathParams {
 export type HandleStageInterruptProps = Omit<
   MutateProps<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleStageInterruptQueryParams,
     void,
     HandleStageInterruptPathParams
@@ -8112,7 +8592,7 @@ export type HandleStageInterruptProps = Omit<
 export const HandleStageInterrupt = ({ planExecutionId, nodeExecutionId, ...props }: HandleStageInterruptProps) => (
   <Mutate<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleStageInterruptQueryParams,
     void,
     HandleStageInterruptPathParams
@@ -8127,7 +8607,7 @@ export const HandleStageInterrupt = ({ planExecutionId, nodeExecutionId, ...prop
 export type UseHandleStageInterruptProps = Omit<
   UseMutateProps<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleStageInterruptQueryParams,
     void,
     HandleStageInterruptPathParams
@@ -8142,7 +8622,7 @@ export type UseHandleStageInterruptProps = Omit<
 export const useHandleStageInterrupt = ({ planExecutionId, nodeExecutionId, ...props }: UseHandleStageInterruptProps) =>
   useMutate<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleStageInterruptQueryParams,
     void,
     HandleStageInterruptPathParams
@@ -8163,7 +8643,7 @@ export const handleStageInterruptPromise = (
     ...props
   }: MutateUsingFetchProps<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleStageInterruptQueryParams,
     void,
     HandleStageInterruptPathParams
@@ -8172,7 +8652,7 @@ export const handleStageInterruptPromise = (
 ) =>
   mutateUsingFetch<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleStageInterruptQueryParams,
     void,
     HandleStageInterruptPathParams
@@ -8198,7 +8678,7 @@ export interface LatestExecutionIdPathParams {
 export type LatestExecutionIdProps = Omit<
   GetProps<
     ResponseRetryLatestExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     LatestExecutionIdQueryParams,
     LatestExecutionIdPathParams
   >,
@@ -8212,7 +8692,7 @@ export type LatestExecutionIdProps = Omit<
 export const LatestExecutionId = ({ planExecutionId, ...props }: LatestExecutionIdProps) => (
   <Get<
     ResponseRetryLatestExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     LatestExecutionIdQueryParams,
     LatestExecutionIdPathParams
   >
@@ -8225,7 +8705,7 @@ export const LatestExecutionId = ({ planExecutionId, ...props }: LatestExecution
 export type UseLatestExecutionIdProps = Omit<
   UseGetProps<
     ResponseRetryLatestExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     LatestExecutionIdQueryParams,
     LatestExecutionIdPathParams
   >,
@@ -8239,7 +8719,7 @@ export type UseLatestExecutionIdProps = Omit<
 export const useLatestExecutionId = ({ planExecutionId, ...props }: UseLatestExecutionIdProps) =>
   useGet<
     ResponseRetryLatestExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     LatestExecutionIdQueryParams,
     LatestExecutionIdPathParams
   >(
@@ -8257,7 +8737,7 @@ export const latestExecutionIdPromise = (
     ...props
   }: GetUsingFetchProps<
     ResponseRetryLatestExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     LatestExecutionIdQueryParams,
     LatestExecutionIdPathParams
   > & { planExecutionId: string },
@@ -8265,7 +8745,7 @@ export const latestExecutionIdPromise = (
 ) =>
   getUsingFetch<
     ResponseRetryLatestExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     LatestExecutionIdQueryParams,
     LatestExecutionIdPathParams
   >(getConfig('pipeline/api'), `/pipeline/execute/latestExecutionId/${planExecutionId}`, props, signal)
@@ -8295,7 +8775,7 @@ export interface HandleManualInterventionInterruptPathParams {
 export type HandleManualInterventionInterruptProps = Omit<
   MutateProps<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleManualInterventionInterruptQueryParams,
     void,
     HandleManualInterventionInterruptPathParams
@@ -8314,7 +8794,7 @@ export const HandleManualInterventionInterrupt = ({
 }: HandleManualInterventionInterruptProps) => (
   <Mutate<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleManualInterventionInterruptQueryParams,
     void,
     HandleManualInterventionInterruptPathParams
@@ -8329,7 +8809,7 @@ export const HandleManualInterventionInterrupt = ({
 export type UseHandleManualInterventionInterruptProps = Omit<
   UseMutateProps<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleManualInterventionInterruptQueryParams,
     void,
     HandleManualInterventionInterruptPathParams
@@ -8348,7 +8828,7 @@ export const useHandleManualInterventionInterrupt = ({
 }: UseHandleManualInterventionInterruptProps) =>
   useMutate<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleManualInterventionInterruptQueryParams,
     void,
     HandleManualInterventionInterruptPathParams
@@ -8369,7 +8849,7 @@ export const handleManualInterventionInterruptPromise = (
     ...props
   }: MutateUsingFetchProps<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleManualInterventionInterruptQueryParams,
     void,
     HandleManualInterventionInterruptPathParams
@@ -8378,7 +8858,7 @@ export const handleManualInterventionInterruptPromise = (
 ) =>
   mutateUsingFetch<
     ResponsePipelineExecutionInterrupt,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     HandleManualInterventionInterruptQueryParams,
     void,
     HandleManualInterventionInterruptPathParams
@@ -8407,7 +8887,7 @@ export interface StartPreflightCheckQueryParams {
 }
 
 export type StartPreflightCheckProps = Omit<
-  MutateProps<ResponseString, Failure | Error, StartPreflightCheckQueryParams, void, void>,
+  MutateProps<ResponseString, Failure | AccessControlCheckError | Error, StartPreflightCheckQueryParams, void, void>,
   'path' | 'verb'
 >
 
@@ -8415,7 +8895,7 @@ export type StartPreflightCheckProps = Omit<
  * initiate pre flight check
  */
 export const StartPreflightCheck = (props: StartPreflightCheckProps) => (
-  <Mutate<ResponseString, Failure | Error, StartPreflightCheckQueryParams, void, void>
+  <Mutate<ResponseString, Failure | AccessControlCheckError | Error, StartPreflightCheckQueryParams, void, void>
     verb="POST"
     path={`/pipeline/execute/preflightCheck`}
     base={getConfig('pipeline/api')}
@@ -8424,7 +8904,7 @@ export const StartPreflightCheck = (props: StartPreflightCheckProps) => (
 )
 
 export type UseStartPreflightCheckProps = Omit<
-  UseMutateProps<ResponseString, Failure | Error, StartPreflightCheckQueryParams, void, void>,
+  UseMutateProps<ResponseString, Failure | AccessControlCheckError | Error, StartPreflightCheckQueryParams, void, void>,
   'path' | 'verb'
 >
 
@@ -8432,7 +8912,7 @@ export type UseStartPreflightCheckProps = Omit<
  * initiate pre flight check
  */
 export const useStartPreflightCheck = (props: UseStartPreflightCheckProps) =>
-  useMutate<ResponseString, Failure | Error, StartPreflightCheckQueryParams, void, void>(
+  useMutate<ResponseString, Failure | AccessControlCheckError | Error, StartPreflightCheckQueryParams, void, void>(
     'POST',
     `/pipeline/execute/preflightCheck`,
     { base: getConfig('pipeline/api'), ...props }
@@ -8442,16 +8922,22 @@ export const useStartPreflightCheck = (props: UseStartPreflightCheckProps) =>
  * initiate pre flight check
  */
 export const startPreflightCheckPromise = (
-  props: MutateUsingFetchProps<ResponseString, Failure | Error, StartPreflightCheckQueryParams, void, void>,
+  props: MutateUsingFetchProps<
+    ResponseString,
+    Failure | AccessControlCheckError | Error,
+    StartPreflightCheckQueryParams,
+    void,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseString, Failure | Error, StartPreflightCheckQueryParams, void, void>(
-    'POST',
-    getConfig('pipeline/api'),
-    `/pipeline/execute/preflightCheck`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponseString,
+    Failure | AccessControlCheckError | Error,
+    StartPreflightCheckQueryParams,
+    void,
+    void
+  >('POST', getConfig('pipeline/api'), `/pipeline/execute/preflightCheck`, props, signal)
 
 export interface RePostPipelineExecuteWithInputSetYamlV2QueryParams {
   accountIdentifier: string
@@ -8478,7 +8964,7 @@ export interface RePostPipelineExecuteWithInputSetYamlV2PathParams {
 export type RePostPipelineExecuteWithInputSetYamlV2Props = Omit<
   MutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetYamlV2QueryParams,
     void,
     RePostPipelineExecuteWithInputSetYamlV2PathParams
@@ -8497,7 +8983,7 @@ export const RePostPipelineExecuteWithInputSetYamlV2 = ({
 }: RePostPipelineExecuteWithInputSetYamlV2Props) => (
   <Mutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetYamlV2QueryParams,
     void,
     RePostPipelineExecuteWithInputSetYamlV2PathParams
@@ -8512,7 +8998,7 @@ export const RePostPipelineExecuteWithInputSetYamlV2 = ({
 export type UseRePostPipelineExecuteWithInputSetYamlV2Props = Omit<
   UseMutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetYamlV2QueryParams,
     void,
     RePostPipelineExecuteWithInputSetYamlV2PathParams
@@ -8531,7 +9017,7 @@ export const useRePostPipelineExecuteWithInputSetYamlV2 = ({
 }: UseRePostPipelineExecuteWithInputSetYamlV2Props) =>
   useMutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetYamlV2QueryParams,
     void,
     RePostPipelineExecuteWithInputSetYamlV2PathParams
@@ -8552,7 +9038,7 @@ export const rePostPipelineExecuteWithInputSetYamlV2Promise = (
     ...props
   }: MutateUsingFetchProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetYamlV2QueryParams,
     void,
     RePostPipelineExecuteWithInputSetYamlV2PathParams
@@ -8561,7 +9047,7 @@ export const rePostPipelineExecuteWithInputSetYamlV2Promise = (
 ) =>
   mutateUsingFetch<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetYamlV2QueryParams,
     void,
     RePostPipelineExecuteWithInputSetYamlV2PathParams
@@ -8592,7 +9078,7 @@ export interface RePostPipelineExecuteWithInputSetYamlPathParams {
 export type RePostPipelineExecuteWithInputSetYamlProps = Omit<
   MutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetYamlQueryParams,
     void,
     RePostPipelineExecuteWithInputSetYamlPathParams
@@ -8611,7 +9097,7 @@ export const RePostPipelineExecuteWithInputSetYaml = ({
 }: RePostPipelineExecuteWithInputSetYamlProps) => (
   <Mutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetYamlQueryParams,
     void,
     RePostPipelineExecuteWithInputSetYamlPathParams
@@ -8626,7 +9112,7 @@ export const RePostPipelineExecuteWithInputSetYaml = ({
 export type UseRePostPipelineExecuteWithInputSetYamlProps = Omit<
   UseMutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetYamlQueryParams,
     void,
     RePostPipelineExecuteWithInputSetYamlPathParams
@@ -8645,7 +9131,7 @@ export const useRePostPipelineExecuteWithInputSetYaml = ({
 }: UseRePostPipelineExecuteWithInputSetYamlProps) =>
   useMutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetYamlQueryParams,
     void,
     RePostPipelineExecuteWithInputSetYamlPathParams
@@ -8666,7 +9152,7 @@ export const rePostPipelineExecuteWithInputSetYamlPromise = (
     ...props
   }: MutateUsingFetchProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetYamlQueryParams,
     void,
     RePostPipelineExecuteWithInputSetYamlPathParams
@@ -8675,7 +9161,7 @@ export const rePostPipelineExecuteWithInputSetYamlPromise = (
 ) =>
   mutateUsingFetch<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetYamlQueryParams,
     void,
     RePostPipelineExecuteWithInputSetYamlPathParams
@@ -8706,7 +9192,7 @@ export interface RePostPipelineExecuteWithInputSetListPathParams {
 export type RePostPipelineExecuteWithInputSetListProps = Omit<
   MutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetListQueryParams,
     MergeInputSetRequestRequestBody,
     RePostPipelineExecuteWithInputSetListPathParams
@@ -8725,7 +9211,7 @@ export const RePostPipelineExecuteWithInputSetList = ({
 }: RePostPipelineExecuteWithInputSetListProps) => (
   <Mutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetListQueryParams,
     MergeInputSetRequestRequestBody,
     RePostPipelineExecuteWithInputSetListPathParams
@@ -8740,7 +9226,7 @@ export const RePostPipelineExecuteWithInputSetList = ({
 export type UseRePostPipelineExecuteWithInputSetListProps = Omit<
   UseMutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetListQueryParams,
     MergeInputSetRequestRequestBody,
     RePostPipelineExecuteWithInputSetListPathParams
@@ -8759,7 +9245,7 @@ export const useRePostPipelineExecuteWithInputSetList = ({
 }: UseRePostPipelineExecuteWithInputSetListProps) =>
   useMutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetListQueryParams,
     MergeInputSetRequestRequestBody,
     RePostPipelineExecuteWithInputSetListPathParams
@@ -8780,7 +9266,7 @@ export const rePostPipelineExecuteWithInputSetListPromise = (
     ...props
   }: MutateUsingFetchProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetListQueryParams,
     MergeInputSetRequestRequestBody,
     RePostPipelineExecuteWithInputSetListPathParams
@@ -8789,7 +9275,7 @@ export const rePostPipelineExecuteWithInputSetListPromise = (
 ) =>
   mutateUsingFetch<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RePostPipelineExecuteWithInputSetListQueryParams,
     MergeInputSetRequestRequestBody,
     RePostPipelineExecuteWithInputSetListPathParams
@@ -8826,7 +9312,7 @@ export interface RerunStagesWithRuntimeInputYamlPathParams {
 export type RerunStagesWithRuntimeInputYamlProps = Omit<
   MutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RerunStagesWithRuntimeInputYamlQueryParams,
     RunStageRequestDTORequestBody,
     RerunStagesWithRuntimeInputYamlPathParams
@@ -8845,7 +9331,7 @@ export const RerunStagesWithRuntimeInputYaml = ({
 }: RerunStagesWithRuntimeInputYamlProps) => (
   <Mutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RerunStagesWithRuntimeInputYamlQueryParams,
     RunStageRequestDTORequestBody,
     RerunStagesWithRuntimeInputYamlPathParams
@@ -8860,7 +9346,7 @@ export const RerunStagesWithRuntimeInputYaml = ({
 export type UseRerunStagesWithRuntimeInputYamlProps = Omit<
   UseMutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RerunStagesWithRuntimeInputYamlQueryParams,
     RunStageRequestDTORequestBody,
     RerunStagesWithRuntimeInputYamlPathParams
@@ -8879,7 +9365,7 @@ export const useRerunStagesWithRuntimeInputYaml = ({
 }: UseRerunStagesWithRuntimeInputYamlProps) =>
   useMutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RerunStagesWithRuntimeInputYamlQueryParams,
     RunStageRequestDTORequestBody,
     RerunStagesWithRuntimeInputYamlPathParams
@@ -8900,7 +9386,7 @@ export const rerunStagesWithRuntimeInputYamlPromise = (
     ...props
   }: MutateUsingFetchProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RerunStagesWithRuntimeInputYamlQueryParams,
     RunStageRequestDTORequestBody,
     RerunStagesWithRuntimeInputYamlPathParams
@@ -8909,7 +9395,7 @@ export const rerunStagesWithRuntimeInputYamlPromise = (
 ) =>
   mutateUsingFetch<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RerunStagesWithRuntimeInputYamlQueryParams,
     RunStageRequestDTORequestBody,
     RerunStagesWithRuntimeInputYamlPathParams
@@ -8938,7 +9424,7 @@ export interface RetryPipelinePathParams {
 export type RetryPipelineProps = Omit<
   MutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RetryPipelineQueryParams,
     void,
     RetryPipelinePathParams
@@ -8951,7 +9437,13 @@ export type RetryPipelineProps = Omit<
  * Retry a executed pipeline with inputSet pipeline yaml
  */
 export const RetryPipeline = ({ identifier, ...props }: RetryPipelineProps) => (
-  <Mutate<ResponsePlanExecutionResponseDto, Failure | Error, RetryPipelineQueryParams, void, RetryPipelinePathParams>
+  <Mutate<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    RetryPipelineQueryParams,
+    void,
+    RetryPipelinePathParams
+  >
     verb="POST"
     path={`/pipeline/execute/retry/${identifier}`}
     base={getConfig('pipeline/api')}
@@ -8962,7 +9454,7 @@ export const RetryPipeline = ({ identifier, ...props }: RetryPipelineProps) => (
 export type UseRetryPipelineProps = Omit<
   UseMutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RetryPipelineQueryParams,
     void,
     RetryPipelinePathParams
@@ -8975,11 +9467,17 @@ export type UseRetryPipelineProps = Omit<
  * Retry a executed pipeline with inputSet pipeline yaml
  */
 export const useRetryPipeline = ({ identifier, ...props }: UseRetryPipelineProps) =>
-  useMutate<ResponsePlanExecutionResponseDto, Failure | Error, RetryPipelineQueryParams, void, RetryPipelinePathParams>(
-    'POST',
-    (paramsInPath: RetryPipelinePathParams) => `/pipeline/execute/retry/${paramsInPath.identifier}`,
-    { base: getConfig('pipeline/api'), pathParams: { identifier }, ...props }
-  )
+  useMutate<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    RetryPipelineQueryParams,
+    void,
+    RetryPipelinePathParams
+  >('POST', (paramsInPath: RetryPipelinePathParams) => `/pipeline/execute/retry/${paramsInPath.identifier}`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { identifier },
+    ...props
+  })
 
 /**
  * Retry a executed pipeline with inputSet pipeline yaml
@@ -8990,7 +9488,7 @@ export const retryPipelinePromise = (
     ...props
   }: MutateUsingFetchProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RetryPipelineQueryParams,
     void,
     RetryPipelinePathParams
@@ -8999,7 +9497,7 @@ export const retryPipelinePromise = (
 ) =>
   mutateUsingFetch<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RetryPipelineQueryParams,
     void,
     RetryPipelinePathParams
@@ -9017,7 +9515,12 @@ export interface RetryHistoryPathParams {
 }
 
 export type RetryHistoryProps = Omit<
-  GetProps<ResponseRetryHistoryResponseDto, Failure | Error, RetryHistoryQueryParams, RetryHistoryPathParams>,
+  GetProps<
+    ResponseRetryHistoryResponseDto,
+    Failure | AccessControlCheckError | Error,
+    RetryHistoryQueryParams,
+    RetryHistoryPathParams
+  >,
   'path'
 > &
   RetryHistoryPathParams
@@ -9026,7 +9529,12 @@ export type RetryHistoryProps = Omit<
  * Retry History for a given execution
  */
 export const RetryHistory = ({ planExecutionId, ...props }: RetryHistoryProps) => (
-  <Get<ResponseRetryHistoryResponseDto, Failure | Error, RetryHistoryQueryParams, RetryHistoryPathParams>
+  <Get<
+    ResponseRetryHistoryResponseDto,
+    Failure | AccessControlCheckError | Error,
+    RetryHistoryQueryParams,
+    RetryHistoryPathParams
+  >
     path={`/pipeline/execute/retryHistory/${planExecutionId}`}
     base={getConfig('pipeline/api')}
     {...props}
@@ -9034,7 +9542,12 @@ export const RetryHistory = ({ planExecutionId, ...props }: RetryHistoryProps) =
 )
 
 export type UseRetryHistoryProps = Omit<
-  UseGetProps<ResponseRetryHistoryResponseDto, Failure | Error, RetryHistoryQueryParams, RetryHistoryPathParams>,
+  UseGetProps<
+    ResponseRetryHistoryResponseDto,
+    Failure | AccessControlCheckError | Error,
+    RetryHistoryQueryParams,
+    RetryHistoryPathParams
+  >,
   'path'
 > &
   RetryHistoryPathParams
@@ -9043,10 +9556,16 @@ export type UseRetryHistoryProps = Omit<
  * Retry History for a given execution
  */
 export const useRetryHistory = ({ planExecutionId, ...props }: UseRetryHistoryProps) =>
-  useGet<ResponseRetryHistoryResponseDto, Failure | Error, RetryHistoryQueryParams, RetryHistoryPathParams>(
-    (paramsInPath: RetryHistoryPathParams) => `/pipeline/execute/retryHistory/${paramsInPath.planExecutionId}`,
-    { base: getConfig('pipeline/api'), pathParams: { planExecutionId }, ...props }
-  )
+  useGet<
+    ResponseRetryHistoryResponseDto,
+    Failure | AccessControlCheckError | Error,
+    RetryHistoryQueryParams,
+    RetryHistoryPathParams
+  >((paramsInPath: RetryHistoryPathParams) => `/pipeline/execute/retryHistory/${paramsInPath.planExecutionId}`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { planExecutionId },
+    ...props
+  })
 
 /**
  * Retry History for a given execution
@@ -9057,18 +9576,18 @@ export const retryHistoryPromise = (
     ...props
   }: GetUsingFetchProps<
     ResponseRetryHistoryResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RetryHistoryQueryParams,
     RetryHistoryPathParams
   > & { planExecutionId: string },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseRetryHistoryResponseDto, Failure | Error, RetryHistoryQueryParams, RetryHistoryPathParams>(
-    getConfig('pipeline/api'),
-    `/pipeline/execute/retryHistory/${planExecutionId}`,
-    props,
-    signal
-  )
+  getUsingFetch<
+    ResponseRetryHistoryResponseDto,
+    Failure | AccessControlCheckError | Error,
+    RetryHistoryQueryParams,
+    RetryHistoryPathParams
+  >(getConfig('pipeline/api'), `/pipeline/execute/retryHistory/${planExecutionId}`, props, signal)
 
 export interface GetStagesExecutionListQueryParams {
   accountIdentifier: string
@@ -9087,7 +9606,12 @@ export interface GetStagesExecutionListQueryParams {
 }
 
 export type GetStagesExecutionListProps = Omit<
-  GetProps<ResponseListStageExecutionResponse, Failure | Error, GetStagesExecutionListQueryParams, void>,
+  GetProps<
+    ResponseListStageExecutionResponse,
+    Failure | AccessControlCheckError | Error,
+    GetStagesExecutionListQueryParams,
+    void
+  >,
   'path'
 >
 
@@ -9095,7 +9619,12 @@ export type GetStagesExecutionListProps = Omit<
  * get list of stages for stage execution
  */
 export const GetStagesExecutionList = (props: GetStagesExecutionListProps) => (
-  <Get<ResponseListStageExecutionResponse, Failure | Error, GetStagesExecutionListQueryParams, void>
+  <Get<
+    ResponseListStageExecutionResponse,
+    Failure | AccessControlCheckError | Error,
+    GetStagesExecutionListQueryParams,
+    void
+  >
     path={`/pipeline/execute/stagesExecutionList`}
     base={getConfig('pipeline/api')}
     {...props}
@@ -9103,7 +9632,12 @@ export const GetStagesExecutionList = (props: GetStagesExecutionListProps) => (
 )
 
 export type UseGetStagesExecutionListProps = Omit<
-  UseGetProps<ResponseListStageExecutionResponse, Failure | Error, GetStagesExecutionListQueryParams, void>,
+  UseGetProps<
+    ResponseListStageExecutionResponse,
+    Failure | AccessControlCheckError | Error,
+    GetStagesExecutionListQueryParams,
+    void
+  >,
   'path'
 >
 
@@ -9111,10 +9645,12 @@ export type UseGetStagesExecutionListProps = Omit<
  * get list of stages for stage execution
  */
 export const useGetStagesExecutionList = (props: UseGetStagesExecutionListProps) =>
-  useGet<ResponseListStageExecutionResponse, Failure | Error, GetStagesExecutionListQueryParams, void>(
-    `/pipeline/execute/stagesExecutionList`,
-    { base: getConfig('pipeline/api'), ...props }
-  )
+  useGet<
+    ResponseListStageExecutionResponse,
+    Failure | AccessControlCheckError | Error,
+    GetStagesExecutionListQueryParams,
+    void
+  >(`/pipeline/execute/stagesExecutionList`, { base: getConfig('pipeline/api'), ...props })
 
 /**
  * get list of stages for stage execution
@@ -9122,18 +9658,18 @@ export const useGetStagesExecutionList = (props: UseGetStagesExecutionListProps)
 export const getStagesExecutionListPromise = (
   props: GetUsingFetchProps<
     ResponseListStageExecutionResponse,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     GetStagesExecutionListQueryParams,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseListStageExecutionResponse, Failure | Error, GetStagesExecutionListQueryParams, void>(
-    getConfig('pipeline/api'),
-    `/pipeline/execute/stagesExecutionList`,
-    props,
-    signal
-  )
+  getUsingFetch<
+    ResponseListStageExecutionResponse,
+    Failure | AccessControlCheckError | Error,
+    GetStagesExecutionListQueryParams,
+    void
+  >(getConfig('pipeline/api'), `/pipeline/execute/stagesExecutionList`, props, signal)
 
 export interface PostPipelineExecuteWithInputSetYamlQueryParams {
   accountIdentifier: string
@@ -9160,7 +9696,7 @@ export interface PostPipelineExecuteWithInputSetYamlPathParams {
 export type PostPipelineExecuteWithInputSetYamlProps = Omit<
   MutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetYamlQueryParams,
     void,
     PostPipelineExecuteWithInputSetYamlPathParams
@@ -9178,7 +9714,7 @@ export const PostPipelineExecuteWithInputSetYaml = ({
 }: PostPipelineExecuteWithInputSetYamlProps) => (
   <Mutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetYamlQueryParams,
     void,
     PostPipelineExecuteWithInputSetYamlPathParams
@@ -9193,7 +9729,7 @@ export const PostPipelineExecuteWithInputSetYaml = ({
 export type UsePostPipelineExecuteWithInputSetYamlProps = Omit<
   UseMutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetYamlQueryParams,
     void,
     PostPipelineExecuteWithInputSetYamlPathParams
@@ -9211,7 +9747,7 @@ export const usePostPipelineExecuteWithInputSetYaml = ({
 }: UsePostPipelineExecuteWithInputSetYamlProps) =>
   useMutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetYamlQueryParams,
     void,
     PostPipelineExecuteWithInputSetYamlPathParams
@@ -9230,7 +9766,7 @@ export const postPipelineExecuteWithInputSetYamlPromise = (
     ...props
   }: MutateUsingFetchProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetYamlQueryParams,
     void,
     PostPipelineExecuteWithInputSetYamlPathParams
@@ -9239,7 +9775,7 @@ export const postPipelineExecuteWithInputSetYamlPromise = (
 ) =>
   mutateUsingFetch<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetYamlQueryParams,
     void,
     PostPipelineExecuteWithInputSetYamlPathParams
@@ -9269,7 +9805,7 @@ export interface PostPipelineExecuteWithInputSetListPathParams {
 export type PostPipelineExecuteWithInputSetListProps = Omit<
   MutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetListQueryParams,
     MergeInputSetRequestRequestBody,
     PostPipelineExecuteWithInputSetListPathParams
@@ -9287,7 +9823,7 @@ export const PostPipelineExecuteWithInputSetList = ({
 }: PostPipelineExecuteWithInputSetListProps) => (
   <Mutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetListQueryParams,
     MergeInputSetRequestRequestBody,
     PostPipelineExecuteWithInputSetListPathParams
@@ -9302,7 +9838,7 @@ export const PostPipelineExecuteWithInputSetList = ({
 export type UsePostPipelineExecuteWithInputSetListProps = Omit<
   UseMutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetListQueryParams,
     MergeInputSetRequestRequestBody,
     PostPipelineExecuteWithInputSetListPathParams
@@ -9320,7 +9856,7 @@ export const usePostPipelineExecuteWithInputSetList = ({
 }: UsePostPipelineExecuteWithInputSetListProps) =>
   useMutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetListQueryParams,
     MergeInputSetRequestRequestBody,
     PostPipelineExecuteWithInputSetListPathParams
@@ -9340,7 +9876,7 @@ export const postPipelineExecuteWithInputSetListPromise = (
     ...props
   }: MutateUsingFetchProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetListQueryParams,
     MergeInputSetRequestRequestBody,
     PostPipelineExecuteWithInputSetListPathParams
@@ -9349,7 +9885,7 @@ export const postPipelineExecuteWithInputSetListPromise = (
 ) =>
   mutateUsingFetch<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetListQueryParams,
     MergeInputSetRequestRequestBody,
     PostPipelineExecuteWithInputSetListPathParams
@@ -9379,7 +9915,7 @@ export interface RunStagesWithRuntimeInputYamlPathParams {
 export type RunStagesWithRuntimeInputYamlProps = Omit<
   MutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RunStagesWithRuntimeInputYamlQueryParams,
     RunStageRequestDTORequestBody,
     RunStagesWithRuntimeInputYamlPathParams
@@ -9394,7 +9930,7 @@ export type RunStagesWithRuntimeInputYamlProps = Omit<
 export const RunStagesWithRuntimeInputYaml = ({ identifier, ...props }: RunStagesWithRuntimeInputYamlProps) => (
   <Mutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RunStagesWithRuntimeInputYamlQueryParams,
     RunStageRequestDTORequestBody,
     RunStagesWithRuntimeInputYamlPathParams
@@ -9409,7 +9945,7 @@ export const RunStagesWithRuntimeInputYaml = ({ identifier, ...props }: RunStage
 export type UseRunStagesWithRuntimeInputYamlProps = Omit<
   UseMutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RunStagesWithRuntimeInputYamlQueryParams,
     RunStageRequestDTORequestBody,
     RunStagesWithRuntimeInputYamlPathParams
@@ -9424,7 +9960,7 @@ export type UseRunStagesWithRuntimeInputYamlProps = Omit<
 export const useRunStagesWithRuntimeInputYaml = ({ identifier, ...props }: UseRunStagesWithRuntimeInputYamlProps) =>
   useMutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RunStagesWithRuntimeInputYamlQueryParams,
     RunStageRequestDTORequestBody,
     RunStagesWithRuntimeInputYamlPathParams
@@ -9443,7 +9979,7 @@ export const runStagesWithRuntimeInputYamlPromise = (
     ...props
   }: MutateUsingFetchProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RunStagesWithRuntimeInputYamlQueryParams,
     RunStageRequestDTORequestBody,
     RunStagesWithRuntimeInputYamlPathParams
@@ -9452,7 +9988,7 @@ export const runStagesWithRuntimeInputYamlPromise = (
 ) =>
   mutateUsingFetch<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     RunStagesWithRuntimeInputYamlQueryParams,
     RunStageRequestDTORequestBody,
     RunStagesWithRuntimeInputYamlPathParams
@@ -9482,7 +10018,7 @@ export interface PostPipelineExecuteWithInputSetYamlv2PathParams {
 export type PostPipelineExecuteWithInputSetYamlv2Props = Omit<
   MutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetYamlv2QueryParams,
     void,
     PostPipelineExecuteWithInputSetYamlv2PathParams
@@ -9500,7 +10036,7 @@ export const PostPipelineExecuteWithInputSetYamlv2 = ({
 }: PostPipelineExecuteWithInputSetYamlv2Props) => (
   <Mutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetYamlv2QueryParams,
     void,
     PostPipelineExecuteWithInputSetYamlv2PathParams
@@ -9515,7 +10051,7 @@ export const PostPipelineExecuteWithInputSetYamlv2 = ({
 export type UsePostPipelineExecuteWithInputSetYamlv2Props = Omit<
   UseMutateProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetYamlv2QueryParams,
     void,
     PostPipelineExecuteWithInputSetYamlv2PathParams
@@ -9533,7 +10069,7 @@ export const usePostPipelineExecuteWithInputSetYamlv2 = ({
 }: UsePostPipelineExecuteWithInputSetYamlv2Props) =>
   useMutate<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetYamlv2QueryParams,
     void,
     PostPipelineExecuteWithInputSetYamlv2PathParams
@@ -9553,7 +10089,7 @@ export const postPipelineExecuteWithInputSetYamlv2Promise = (
     ...props
   }: MutateUsingFetchProps<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetYamlv2QueryParams,
     void,
     PostPipelineExecuteWithInputSetYamlv2PathParams
@@ -9562,7 +10098,7 @@ export const postPipelineExecuteWithInputSetYamlv2Promise = (
 ) =>
   mutateUsingFetch<
     ResponsePlanExecutionResponseDto,
-    Failure | Error,
+    Failure | AccessControlCheckError | Error,
     PostPipelineExecuteWithInputSetYamlv2QueryParams,
     void,
     PostPipelineExecuteWithInputSetYamlv2PathParams
@@ -9589,7 +10125,12 @@ export interface GetRetryStagesPathParams {
 }
 
 export type GetRetryStagesProps = Omit<
-  GetProps<ResponseRetryInfo, Failure | Error, GetRetryStagesQueryParams, GetRetryStagesPathParams>,
+  GetProps<
+    ResponseRetryInfo,
+    Failure | AccessControlCheckError | Error,
+    GetRetryStagesQueryParams,
+    GetRetryStagesPathParams
+  >,
   'path'
 > &
   GetRetryStagesPathParams
@@ -9598,7 +10139,12 @@ export type GetRetryStagesProps = Omit<
  * Get retry stages for failed pipeline
  */
 export const GetRetryStages = ({ planExecutionId, ...props }: GetRetryStagesProps) => (
-  <Get<ResponseRetryInfo, Failure | Error, GetRetryStagesQueryParams, GetRetryStagesPathParams>
+  <Get<
+    ResponseRetryInfo,
+    Failure | AccessControlCheckError | Error,
+    GetRetryStagesQueryParams,
+    GetRetryStagesPathParams
+  >
     path={`/pipeline/execute/${planExecutionId}/retryStages`}
     base={getConfig('pipeline/api')}
     {...props}
@@ -9606,7 +10152,12 @@ export const GetRetryStages = ({ planExecutionId, ...props }: GetRetryStagesProp
 )
 
 export type UseGetRetryStagesProps = Omit<
-  UseGetProps<ResponseRetryInfo, Failure | Error, GetRetryStagesQueryParams, GetRetryStagesPathParams>,
+  UseGetProps<
+    ResponseRetryInfo,
+    Failure | AccessControlCheckError | Error,
+    GetRetryStagesQueryParams,
+    GetRetryStagesPathParams
+  >,
   'path'
 > &
   GetRetryStagesPathParams
@@ -9615,10 +10166,16 @@ export type UseGetRetryStagesProps = Omit<
  * Get retry stages for failed pipeline
  */
 export const useGetRetryStages = ({ planExecutionId, ...props }: UseGetRetryStagesProps) =>
-  useGet<ResponseRetryInfo, Failure | Error, GetRetryStagesQueryParams, GetRetryStagesPathParams>(
-    (paramsInPath: GetRetryStagesPathParams) => `/pipeline/execute/${paramsInPath.planExecutionId}/retryStages`,
-    { base: getConfig('pipeline/api'), pathParams: { planExecutionId }, ...props }
-  )
+  useGet<
+    ResponseRetryInfo,
+    Failure | AccessControlCheckError | Error,
+    GetRetryStagesQueryParams,
+    GetRetryStagesPathParams
+  >((paramsInPath: GetRetryStagesPathParams) => `/pipeline/execute/${paramsInPath.planExecutionId}/retryStages`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { planExecutionId },
+    ...props
+  })
 
 /**
  * Get retry stages for failed pipeline
@@ -9627,17 +10184,20 @@ export const getRetryStagesPromise = (
   {
     planExecutionId,
     ...props
-  }: GetUsingFetchProps<ResponseRetryInfo, Failure | Error, GetRetryStagesQueryParams, GetRetryStagesPathParams> & {
-    planExecutionId: string
-  },
+  }: GetUsingFetchProps<
+    ResponseRetryInfo,
+    Failure | AccessControlCheckError | Error,
+    GetRetryStagesQueryParams,
+    GetRetryStagesPathParams
+  > & { planExecutionId: string },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseRetryInfo, Failure | Error, GetRetryStagesQueryParams, GetRetryStagesPathParams>(
-    getConfig('pipeline/api'),
-    `/pipeline/execute/${planExecutionId}/retryStages`,
-    props,
-    signal
-  )
+  getUsingFetch<
+    ResponseRetryInfo,
+    Failure | AccessControlCheckError | Error,
+    GetRetryStagesQueryParams,
+    GetRetryStagesPathParams
+  >(getConfig('pipeline/api'), `/pipeline/execute/${planExecutionId}/retryStages`, props, signal)
 
 export interface CreateVariablesForPipelineExecutionQueryParams {
   accountIdentifier: string
@@ -9925,7 +10485,7 @@ export interface CreatePipelineQueryParams {
 }
 
 export type CreatePipelineProps = Omit<
-  MutateProps<ResponseString, Failure | Error, CreatePipelineQueryParams, WebhookEndpointBodyRequestBody, void>,
+  MutateProps<ResponseString, Failure | Error, CreatePipelineQueryParams, CustomWebhookEndpointBodyRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -9933,7 +10493,7 @@ export type CreatePipelineProps = Omit<
  * Create a Pipeline
  */
 export const CreatePipeline = (props: CreatePipelineProps) => (
-  <Mutate<ResponseString, Failure | Error, CreatePipelineQueryParams, WebhookEndpointBodyRequestBody, void>
+  <Mutate<ResponseString, Failure | Error, CreatePipelineQueryParams, CustomWebhookEndpointBodyRequestBody, void>
     verb="POST"
     path={`/pipelines`}
     base={getConfig('pipeline/api')}
@@ -9942,7 +10502,13 @@ export const CreatePipeline = (props: CreatePipelineProps) => (
 )
 
 export type UseCreatePipelineProps = Omit<
-  UseMutateProps<ResponseString, Failure | Error, CreatePipelineQueryParams, WebhookEndpointBodyRequestBody, void>,
+  UseMutateProps<
+    ResponseString,
+    Failure | Error,
+    CreatePipelineQueryParams,
+    CustomWebhookEndpointBodyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -9950,7 +10516,7 @@ export type UseCreatePipelineProps = Omit<
  * Create a Pipeline
  */
 export const useCreatePipeline = (props: UseCreatePipelineProps) =>
-  useMutate<ResponseString, Failure | Error, CreatePipelineQueryParams, WebhookEndpointBodyRequestBody, void>(
+  useMutate<ResponseString, Failure | Error, CreatePipelineQueryParams, CustomWebhookEndpointBodyRequestBody, void>(
     'POST',
     `/pipelines`,
     { base: getConfig('pipeline/api'), ...props }
@@ -9964,18 +10530,18 @@ export const createPipelinePromise = (
     ResponseString,
     Failure | Error,
     CreatePipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseString, Failure | Error, CreatePipelineQueryParams, WebhookEndpointBodyRequestBody, void>(
-    'POST',
-    getConfig('pipeline/api'),
-    `/pipelines`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponseString,
+    Failure | Error,
+    CreatePipelineQueryParams,
+    CustomWebhookEndpointBodyRequestBody,
+    void
+  >('POST', getConfig('pipeline/api'), `/pipelines`, props, signal)
 
 export interface ClonePipelineQueryParams {
   accountIdentifier: string
@@ -11662,7 +12228,7 @@ export type CreatePipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -11676,7 +12242,7 @@ export const CreatePipelineV2 = (props: CreatePipelineV2Props) => (
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >
     verb="POST"
@@ -11691,7 +12257,7 @@ export type UseCreatePipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -11705,7 +12271,7 @@ export const useCreatePipelineV2 = (props: UseCreatePipelineV2Props) =>
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >('POST', `/pipelines/v2`, { base: getConfig('pipeline/api'), ...props })
 
@@ -11717,7 +12283,7 @@ export const createPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -11726,7 +12292,7 @@ export const createPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/pipelines/v2`, props, signal)
 
@@ -11884,7 +12450,7 @@ export type PutPipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     PutPipelineV2PathParams
   >,
   'path' | 'verb'
@@ -11899,7 +12465,7 @@ export const PutPipelineV2 = ({ pipelineIdentifier, ...props }: PutPipelineV2Pro
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     PutPipelineV2PathParams
   >
     verb="PUT"
@@ -11914,7 +12480,7 @@ export type UsePutPipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     PutPipelineV2PathParams
   >,
   'path' | 'verb'
@@ -11929,7 +12495,7 @@ export const usePutPipelineV2 = ({ pipelineIdentifier, ...props }: UsePutPipelin
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     PutPipelineV2PathParams
   >('PUT', (paramsInPath: PutPipelineV2PathParams) => `/pipelines/v2/${paramsInPath.pipelineIdentifier}`, {
     base: getConfig('pipeline/api'),
@@ -11948,7 +12514,7 @@ export const putPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     PutPipelineV2PathParams
   > & { pipelineIdentifier: string },
   signal?: RequestInit['signal']
@@ -11957,7 +12523,7 @@ export const putPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     PutPipelineV2PathParams
   >('PUT', getConfig('pipeline/api'), `/pipelines/v2/${pipelineIdentifier}`, props, signal)
 
@@ -12022,7 +12588,13 @@ export interface ValidatePipelineByYAMLQueryParams {
 }
 
 export type ValidatePipelineByYAMLProps = Omit<
-  MutateProps<ResponseString, Failure | Error, ValidatePipelineByYAMLQueryParams, WebhookEndpointBodyRequestBody, void>,
+  MutateProps<
+    ResponseString,
+    Failure | Error,
+    ValidatePipelineByYAMLQueryParams,
+    CustomWebhookEndpointBodyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -12030,7 +12602,13 @@ export type ValidatePipelineByYAMLProps = Omit<
  * Validate a Pipeline YAML
  */
 export const ValidatePipelineByYAML = (props: ValidatePipelineByYAMLProps) => (
-  <Mutate<ResponseString, Failure | Error, ValidatePipelineByYAMLQueryParams, WebhookEndpointBodyRequestBody, void>
+  <Mutate<
+    ResponseString,
+    Failure | Error,
+    ValidatePipelineByYAMLQueryParams,
+    CustomWebhookEndpointBodyRequestBody,
+    void
+  >
     verb="POST"
     path={`/pipelines/validate-yaml-with-schema`}
     base={getConfig('pipeline/api')}
@@ -12043,7 +12621,7 @@ export type UseValidatePipelineByYAMLProps = Omit<
     ResponseString,
     Failure | Error,
     ValidatePipelineByYAMLQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -12053,11 +12631,13 @@ export type UseValidatePipelineByYAMLProps = Omit<
  * Validate a Pipeline YAML
  */
 export const useValidatePipelineByYAML = (props: UseValidatePipelineByYAMLProps) =>
-  useMutate<ResponseString, Failure | Error, ValidatePipelineByYAMLQueryParams, WebhookEndpointBodyRequestBody, void>(
-    'POST',
-    `/pipelines/validate-yaml-with-schema`,
-    { base: getConfig('pipeline/api'), ...props }
-  )
+  useMutate<
+    ResponseString,
+    Failure | Error,
+    ValidatePipelineByYAMLQueryParams,
+    CustomWebhookEndpointBodyRequestBody,
+    void
+  >('POST', `/pipelines/validate-yaml-with-schema`, { base: getConfig('pipeline/api'), ...props })
 
 /**
  * Validate a Pipeline YAML
@@ -12067,7 +12647,7 @@ export const validatePipelineByYAMLPromise = (
     ResponseString,
     Failure | Error,
     ValidatePipelineByYAMLQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -12076,7 +12656,7 @@ export const validatePipelineByYAMLPromise = (
     ResponseString,
     Failure | Error,
     ValidatePipelineByYAMLQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/pipelines/validate-yaml-with-schema`, props, signal)
 
@@ -12310,7 +12890,7 @@ export type PutPipelineProps = Omit<
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     PutPipelinePathParams
   >,
   'path' | 'verb'
@@ -12325,7 +12905,7 @@ export const PutPipeline = ({ pipelineIdentifier, ...props }: PutPipelineProps) 
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     PutPipelinePathParams
   >
     verb="PUT"
@@ -12340,7 +12920,7 @@ export type UsePutPipelineProps = Omit<
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     PutPipelinePathParams
   >,
   'path' | 'verb'
@@ -12355,7 +12935,7 @@ export const usePutPipeline = ({ pipelineIdentifier, ...props }: UsePutPipelineP
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     PutPipelinePathParams
   >('PUT', (paramsInPath: PutPipelinePathParams) => `/pipelines/${paramsInPath.pipelineIdentifier}`, {
     base: getConfig('pipeline/api'),
@@ -12374,7 +12954,7 @@ export const putPipelinePromise = (
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     PutPipelinePathParams
   > & { pipelineIdentifier: string },
   signal?: RequestInit['signal']
@@ -12383,7 +12963,7 @@ export const putPipelinePromise = (
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     PutPipelinePathParams
   >('PUT', getConfig('pipeline/api'), `/pipelines/${pipelineIdentifier}`, props, signal)
 
@@ -13679,7 +14259,13 @@ export interface CustomWebhookEndpointQueryParams {
 }
 
 export type CustomWebhookEndpointProps = Omit<
-  MutateProps<ResponseString, Failure | Error, CustomWebhookEndpointQueryParams, WebhookEndpointBodyRequestBody, void>,
+  MutateProps<
+    ResponseString,
+    Failure | Error,
+    CustomWebhookEndpointQueryParams,
+    CustomWebhookEndpointBodyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -13687,7 +14273,7 @@ export type CustomWebhookEndpointProps = Omit<
  * accept custom webhook event
  */
 export const CustomWebhookEndpoint = (props: CustomWebhookEndpointProps) => (
-  <Mutate<ResponseString, Failure | Error, CustomWebhookEndpointQueryParams, WebhookEndpointBodyRequestBody, void>
+  <Mutate<ResponseString, Failure | Error, CustomWebhookEndpointQueryParams, CustomWebhookEndpointBodyRequestBody, void>
     verb="POST"
     path={`/webhook/custom`}
     base={getConfig('pipeline/api')}
@@ -13700,7 +14286,7 @@ export type UseCustomWebhookEndpointProps = Omit<
     ResponseString,
     Failure | Error,
     CustomWebhookEndpointQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -13710,11 +14296,13 @@ export type UseCustomWebhookEndpointProps = Omit<
  * accept custom webhook event
  */
 export const useCustomWebhookEndpoint = (props: UseCustomWebhookEndpointProps) =>
-  useMutate<ResponseString, Failure | Error, CustomWebhookEndpointQueryParams, WebhookEndpointBodyRequestBody, void>(
-    'POST',
-    `/webhook/custom`,
-    { base: getConfig('pipeline/api'), ...props }
-  )
+  useMutate<
+    ResponseString,
+    Failure | Error,
+    CustomWebhookEndpointQueryParams,
+    CustomWebhookEndpointBodyRequestBody,
+    void
+  >('POST', `/webhook/custom`, { base: getConfig('pipeline/api'), ...props })
 
 /**
  * accept custom webhook event
@@ -13724,7 +14312,7 @@ export const customWebhookEndpointPromise = (
     ResponseString,
     Failure | Error,
     CustomWebhookEndpointQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -13733,7 +14321,7 @@ export const customWebhookEndpointPromise = (
     ResponseString,
     Failure | Error,
     CustomWebhookEndpointQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/webhook/custom`, props, signal)
 
@@ -13750,7 +14338,7 @@ export type CustomWebhookEndpointV2Props = Omit<
     ResponseNGProcessWebhookResponse,
     Failure | Error,
     CustomWebhookEndpointV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -13764,7 +14352,7 @@ export const CustomWebhookEndpointV2 = (props: CustomWebhookEndpointV2Props) => 
     ResponseNGProcessWebhookResponse,
     Failure | Error,
     CustomWebhookEndpointV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >
     verb="POST"
@@ -13779,7 +14367,7 @@ export type UseCustomWebhookEndpointV2Props = Omit<
     ResponseNGProcessWebhookResponse,
     Failure | Error,
     CustomWebhookEndpointV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -13793,7 +14381,7 @@ export const useCustomWebhookEndpointV2 = (props: UseCustomWebhookEndpointV2Prop
     ResponseNGProcessWebhookResponse,
     Failure | Error,
     CustomWebhookEndpointV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >('POST', `/webhook/custom/v2`, { base: getConfig('pipeline/api'), ...props })
 
@@ -13805,7 +14393,7 @@ export const customWebhookEndpointV2Promise = (
     ResponseNGProcessWebhookResponse,
     Failure | Error,
     CustomWebhookEndpointV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -13814,7 +14402,7 @@ export const customWebhookEndpointV2Promise = (
     ResponseNGProcessWebhookResponse,
     Failure | Error,
     CustomWebhookEndpointV2QueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/webhook/custom/v2`, props, signal)
 
@@ -14127,7 +14715,7 @@ export interface WebhookEndpointQueryParams {
 }
 
 export type WebhookEndpointProps = Omit<
-  MutateProps<ResponseString, Failure | Error, WebhookEndpointQueryParams, WebhookEndpointBodyRequestBody, void>,
+  MutateProps<ResponseString, Failure | Error, WebhookEndpointQueryParams, CustomWebhookEndpointBodyRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -14135,7 +14723,7 @@ export type WebhookEndpointProps = Omit<
  * accept webhook event
  */
 export const WebhookEndpoint = (props: WebhookEndpointProps) => (
-  <Mutate<ResponseString, Failure | Error, WebhookEndpointQueryParams, WebhookEndpointBodyRequestBody, void>
+  <Mutate<ResponseString, Failure | Error, WebhookEndpointQueryParams, CustomWebhookEndpointBodyRequestBody, void>
     verb="POST"
     path={`/webhook/trigger`}
     base={getConfig('pipeline/api')}
@@ -14144,7 +14732,13 @@ export const WebhookEndpoint = (props: WebhookEndpointProps) => (
 )
 
 export type UseWebhookEndpointProps = Omit<
-  UseMutateProps<ResponseString, Failure | Error, WebhookEndpointQueryParams, WebhookEndpointBodyRequestBody, void>,
+  UseMutateProps<
+    ResponseString,
+    Failure | Error,
+    WebhookEndpointQueryParams,
+    CustomWebhookEndpointBodyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -14152,7 +14746,7 @@ export type UseWebhookEndpointProps = Omit<
  * accept webhook event
  */
 export const useWebhookEndpoint = (props: UseWebhookEndpointProps) =>
-  useMutate<ResponseString, Failure | Error, WebhookEndpointQueryParams, WebhookEndpointBodyRequestBody, void>(
+  useMutate<ResponseString, Failure | Error, WebhookEndpointQueryParams, CustomWebhookEndpointBodyRequestBody, void>(
     'POST',
     `/webhook/trigger`,
     { base: getConfig('pipeline/api'), ...props }
@@ -14166,18 +14760,18 @@ export const webhookEndpointPromise = (
     ResponseString,
     Failure | Error,
     WebhookEndpointQueryParams,
-    WebhookEndpointBodyRequestBody,
+    CustomWebhookEndpointBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseString, Failure | Error, WebhookEndpointQueryParams, WebhookEndpointBodyRequestBody, void>(
-    'POST',
-    getConfig('pipeline/api'),
-    `/webhook/trigger`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponseString,
+    Failure | Error,
+    WebhookEndpointQueryParams,
+    CustomWebhookEndpointBodyRequestBody,
+    void
+  >('POST', getConfig('pipeline/api'), `/webhook/trigger`, props, signal)
 
 export interface TriggerExecutionDetailsQueryParams {
   accountIdentifier: string
@@ -14521,6 +15115,9 @@ export interface GetSchemaYamlQueryParams {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -14781,6 +15378,9 @@ export interface GetStepYamlSchemaQueryParams {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

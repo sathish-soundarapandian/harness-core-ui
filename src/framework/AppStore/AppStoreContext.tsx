@@ -164,6 +164,12 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
       accountId
     })
   )
+  const redirectUserToModuleHome = (featureFlagsMap: Partial<Record<FeatureFlag, boolean>>): void => {
+    if (featureFlagsMap.CREATE_DEFAULT_PROJECT && source === 'signup' && module && !isPurposePage) {
+      const moduleUrlWithDefaultProject = getModuleToDefaultURLMap(accountId, module)[module]
+      history.push(moduleUrlWithDefaultProject ? (moduleUrlWithDefaultProject as string) : routes.toHome({ accountId }))
+    }
+  }
   const showErrorAndRedirect = (getProjectResponse: Error): void => {
     if (projectIdentifierFromPath && orgIdentifierFromPath) {
       showError(getProjectResponse?.message)
@@ -214,12 +220,7 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
         featureFlags: featureFlagsMap
       }))
 
-      if (featureFlagsMap.CREATE_DEFAULT_PROJECT && source === 'signup' && module && !isPurposePage) {
-        const moduleUrlWithDefaultProject = getModuleToDefaultURLMap(accountId, module)[module]
-        history.push(
-          moduleUrlWithDefaultProject ? (moduleUrlWithDefaultProject as string) : routes.toHome({ accountId })
-        )
-      }
+      redirectUserToModuleHome(featureFlagsMap)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [legacyFeatureFlags])
@@ -242,6 +243,7 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
         ...prevState,
         featureFlags: featureFlagsMap
       }))
+      redirectUserToModuleHome(featureFlagsMap)
     }
   }, [featureFlags, loadingFeatureFlags])
 

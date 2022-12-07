@@ -184,14 +184,25 @@ export default function DeployStageSetupShell(): JSX.Element {
     }
   }, [selectedTabId])
 
-  const handleTabChange = (nextTab: DeployTabs): void => {
+  const handleTabChange = (nextTab: DeployTabs, checkTabSwitch?: boolean): void => {
+    let nextTabIdx = TabsOrder.indexOf(nextTab)
+    let currentTabIdx = TabsOrder.indexOf(selectedTabId)
+    if (selectedTabId === DeployTabs.ENVIRONMENT) currentTabIdx = TabsOrder.indexOf(DeployTabs.INFRASTRUCTURE)
+    if (nextTab === DeployTabs.ENVIRONMENT) nextTabIdx = TabsOrder.indexOf(DeployTabs.INFRASTRUCTURE)
+
     if (isNewEnvDef && nextTab === DeployTabs.INFRASTRUCTURE) {
       nextTab = DeployTabs.ENVIRONMENT
     }
-    checkErrorsForTab(selectedTabId).then(_ => {
+
+    if (!!checkTabSwitch && nextTabIdx < currentTabIdx) {
       setSelectedTabId(nextTab)
       setSelectedSectionId(nextTab)
-    })
+    } else {
+      checkErrorsForTab(selectedTabId).then(_ => {
+        setSelectedTabId(nextTab)
+        setSelectedSectionId(nextTab)
+      })
+    }
   }
 
   const selectedDeploymentType = serviceDefinitionType()
@@ -417,7 +428,12 @@ export default function DeployStageSetupShell(): JSX.Element {
 
   return (
     <section ref={layoutRef} key={selectedStageId} className={cx(css.setupShell)}>
-      <Tabs id="stageSetupShell" onChange={handleTabChange} selectedTabId={selectedTabId} data-tabId={selectedTabId}>
+      <Tabs
+        id="stageSetupShell"
+        onChange={(nextTab: DeployTabs) => handleTabChange(nextTab, true)}
+        selectedTabId={selectedTabId}
+        data-tabId={selectedTabId}
+      >
         <Tab
           id={DeployTabs.OVERVIEW}
           panel={<DeployStageSpecifications>{navBtns}</DeployStageSpecifications>}

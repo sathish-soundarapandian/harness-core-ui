@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import {
   AllowedTypes,
   Container,
@@ -61,9 +61,13 @@ function PrimaryArtifactRef({
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier },
     serviceIdentifier
   })
-  const artifactSources = defaultTo(
-    artifactSourceResponse?.data?.sourceIdentifiers?.map(source => ({ label: source, value: source })),
-    []
+  const artifactSources = useMemo(
+    () =>
+      defaultTo(
+        artifactSourceResponse?.data?.sourceIdentifiers?.map(source => ({ label: source, value: source })),
+        []
+      ),
+    [artifactSourceResponse?.data?.sourceIdentifiers]
   )
 
   useEffect(() => {
@@ -78,17 +82,18 @@ function PrimaryArtifactRef({
     ) {
       const shouldSetDefaultArtifactSource = isSingleArtifactSource && stepViewType !== StepViewType.TemplateUsage
 
-      const sourceIdentifierToSourceInputMap = get(
-        artifactSourceResponse?.data?.sourceIdentifierToSourceInputMap,
-        shouldSetDefaultArtifactSource
-          ? artifactSources[0].value
-          : `${initialValues.artifacts?.primary?.primaryArtifactRef}`
-      )
-      if (sourceIdentifierToSourceInputMap) {
-        const idSourceMap = yamlParse(defaultTo(sourceIdentifierToSourceInputMap, ''))
-        if (idSourceMap) {
-          //In templateusage view type, the formik is directly set by reading the values from pipeline yaml, whereas in run pipeline form, the set value is reset on switching between yaml and visual view
-          if (shouldSetDefaultArtifactSource) {
+      if (shouldSetDefaultArtifactSource) {
+        const sourceIdentifierToSourceInputMap = get(
+          artifactSourceResponse?.data?.sourceIdentifierToSourceInputMap,
+          shouldSetDefaultArtifactSource
+            ? artifactSources[0].value
+            : `${initialValues.artifacts?.primary?.primaryArtifactRef}`
+        )
+        if (sourceIdentifierToSourceInputMap) {
+          const idSourceMap = yamlParse(defaultTo(sourceIdentifierToSourceInputMap, ''))
+          if (idSourceMap) {
+            //In templateusage view type, the formik is directly set by reading the values from pipeline yaml, whereas in run pipeline form, the set value is reset on switching between yaml and visual view
+
             formik?.setValues(
               produce(formik?.values, (draft: any) => {
                 set(draft, `${path}.artifacts.primary.primaryArtifactRef`, artifactSources[0].value)
@@ -96,8 +101,20 @@ function PrimaryArtifactRef({
                   set(draft, `${path}.artifacts.primary.sources`, [clearRuntimeInput(idSourceMap)])
               })
             )
+
+            updateStageFormTemplate([idSourceMap], `${path}.artifacts.primary.sources`)
           }
-          updateStageFormTemplate([idSourceMap], `${path}.artifacts.primary.sources`)
+        } else {
+          // This is to select single artifact source by default even when there is no runtime inputs in Artifact source
+          const primaryRefFormikValue = get(formik?.values, `${path}.artifacts.primary.primaryArtifactRef`)
+          if (isEmpty(primaryRefFormikValue)) {
+            formik?.setValues(
+              produce(formik?.values, (draft: any) => {
+                set(draft, `${path}.artifacts.primary.primaryArtifactRef`, artifactSources[0].value)
+                set(draft, `${path}.artifacts.primary.sources`, undefined)
+              })
+            )
+          }
         }
       }
     }

@@ -236,6 +236,17 @@ function FormComponent({
     return !isFieldFixedAndNonEmpty(formik.values?.feed) || !isFieldFixedAndNonEmpty(formik.values?.package)
   }
 
+  const getVersionFieldHelperText = () => {
+    return (
+      getMultiTypeFromValue(formik.values.version) === MultiTypeInputType.FIXED &&
+      getHelpeTextForTags(
+        helperTextData(selectedArtifact as ArtifactType, formik, getConnectorRefQueryData()),
+        getString,
+        false
+      )
+    )
+  }
+
   return (
     <FormikForm>
       <div className={css.connectorForm}>
@@ -265,7 +276,8 @@ function FormComponent({
                 selectProps: {
                   itemRenderer: itemRenderer,
                   items: getItems(fetchingProjects, 'Projects', projectItems),
-                  allowCreatingNewItems: true
+                  allowCreatingNewItems: true,
+                  addClearBtn: true
                 },
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (
@@ -320,7 +332,8 @@ function FormComponent({
                 ),
                 itemRenderer: itemRenderer,
                 items: getItems(fetchingFeeds, 'Feeds', feedItems),
-                allowCreatingNewItems: true
+                allowCreatingNewItems: true,
+                addClearBtn: true
               },
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                 if (
@@ -378,7 +391,8 @@ function FormComponent({
                 ),
                 itemRenderer: itemRenderer,
                 items: getItems(fetchingPackages, 'Packages', packageItems),
-                allowCreatingNewItems: true
+                allowCreatingNewItems: true,
+                addClearBtn: true
               },
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                 if (
@@ -432,14 +446,7 @@ function FormComponent({
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               name="version"
               useValue
-              helperText={
-                getMultiTypeFromValue(formik.values.version) === MultiTypeInputType.FIXED &&
-                getHelpeTextForTags(
-                  helperTextData(selectedArtifact as ArtifactType, formik, getConnectorRefQueryData()),
-                  getString,
-                  false
-                )
-              }
+              helperText={getVersionFieldHelperText()}
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
@@ -453,7 +460,8 @@ function FormComponent({
                   ),
                   itemRenderer: itemRenderer,
                   items: getItems(fetchingVersions, 'Versions', versionItems),
-                  allowCreatingNewItems: true
+                  allowCreatingNewItems: true,
+                  addClearBtn: true
                 },
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (
@@ -576,22 +584,32 @@ export function AzureArtifacts(
   }
 
   const schemaObject = {
-    scope: Yup.string(),
+    scope: Yup.string().required(getString('fieldRequired', { field: getString('common.scopeLabel') })),
     project: Yup.string().when('scope', {
       is: val => val === 'project',
-      then: Yup.string().trim().required(getString('common.validation.projectIsRequired'))
+      then: Yup.string()
+        .trim()
+        .required(getString('fieldRequired', { field: getString('projectLabel') }))
     }),
-    feed: Yup.string().required(getString('pipeline.artifactsSelection.validation.feed')),
-    packageType: Yup.string(),
-    package: Yup.string().required(getString('pipeline.artifactsSelection.validation.packageName')),
-    versionType: Yup.string(),
+    feed: Yup.string().required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.feed') })),
+    packageType: Yup.string().required(getString('fieldRequired', { field: getString('pipeline.packageType') })),
+    package: Yup.string().required(
+      getString('fieldRequired', { field: getString('pipeline.artifactsSelection.packageName') })
+    ),
+    versionType: Yup.string().required(
+      getString('fieldRequired', { field: getString('pipeline.artifactsSelection.versionDetails') })
+    ),
     versionRegex: Yup.string().when('versionType', {
       is: 'regex',
-      then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.versionRegex'))
+      then: Yup.string()
+        .trim()
+        .required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.versionRegex') }))
     }),
-    version: Yup.mixed().when('versionType', {
+    version: Yup.string().when('versionType', {
       is: 'value',
-      then: Yup.mixed().required(getString('validation.nexusVersion'))
+      then: Yup.string()
+        .trim()
+        .required(getString('fieldRequired', { field: getString('version') }))
     })
   }
 

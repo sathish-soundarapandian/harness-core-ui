@@ -131,18 +131,20 @@ export enum NonGitOption {
 
 export type GitProviderCardSelectOptionTypes = ConnectorInfoDTO['type'] | NonGitOption
 
-export const OtherProviderOption: GitProvider = {
-  icon: 'gitops-application',
-  label: 'common.other',
-  type: NonGitOption.OTHER
-}
-
 export const GitProviderIcons: Map<ConnectorInfoDTO['type'], IconName> = new Map([
   [Connectors.GITHUB, 'github'],
   [Connectors.GITLAB, 'gitlab'],
   [Connectors.BITBUCKET, 'bitbucket-blue'],
   [Connectors.GIT, 'service-github']
 ])
+
+export const OtherProviderOptions: GitProvider[] = [
+  {
+    icon: GitProviderIcons.get(Connectors.GIT) as IconName,
+    label: 'common.other',
+    type: NonGitOption.OTHER
+  }
+]
 
 export const AllSaaSGitProviders: GitProvider[] = [
   {

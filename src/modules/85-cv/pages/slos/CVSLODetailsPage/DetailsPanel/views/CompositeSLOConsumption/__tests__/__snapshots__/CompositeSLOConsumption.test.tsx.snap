@@ -9,7 +9,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
       class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title StyledProps--color StyledProps--color-grey800 StyledProps--padding-bottom-medium"
     >
       cv.CompositeSLO.Consumption.title
-      (
+       (
       Jan 1, 1970 12:00 AM
        - 
       Jan 1, 1970 12:00 AM
@@ -26,7 +26,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
           class="TableV2--cell TableV2--sortable"
           colspan="1"
           role="columnheader"
-          style="width: 20%;"
+          style="width: 150px;"
           title="Toggle SortBy"
         >
           <p
@@ -90,7 +90,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
           class="TableV2--cell TableV2--sortable"
           colspan="1"
           role="columnheader"
-          style="width: 10%;"
+          style="width: 150px;"
           title="Toggle SortBy"
         >
           <p
@@ -122,7 +122,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
           class="TableV2--cell TableV2--sortable"
           colspan="1"
           role="columnheader"
-          style="width: 10%;"
+          style="width: 12%;"
           title="Toggle SortBy"
         >
           <p
@@ -154,7 +154,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
           class="TableV2--cell TableV2--sortable"
           colspan="1"
           role="columnheader"
-          style="width: 10%;"
+          style="width: 150px;"
           title="Toggle SortBy"
         >
           <p
@@ -186,7 +186,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
           class="TableV2--cell TableV2--sortable"
           colspan="1"
           role="columnheader"
-          style="width: 10%;"
+          style="width: 150px;"
           title="Toggle SortBy"
         >
           <p
@@ -218,7 +218,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
           class="TableV2--cell TableV2--sortable"
           colspan="1"
           role="columnheader"
-          style="width: 10%;"
+          style="width: 15%;"
           title="Toggle SortBy"
         >
           <p
@@ -250,7 +250,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
           class="TableV2--cell TableV2--sortable"
           colspan="1"
           role="columnheader"
-          style="width: 10%;"
+          style="width: 150px;"
           title="Toggle SortBy"
         >
           <p
@@ -292,7 +292,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 20%;"
+              style="width: 150px;"
             >
               <a
                 href="/account/undefined/cv/orgs/undefined/projects/undefined/slos/slo_1?sloType=Simple"
@@ -338,7 +338,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 10%;"
+              style="width: 150px;"
             >
               <p
                 class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
@@ -349,18 +349,19 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 10%;"
+              style="width: 12%;"
             >
               <p
                 class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
               >
                 50
+                %
               </p>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 10%;"
+              style="width: 150px;"
             >
               <p
                 class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
@@ -372,34 +373,35 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 10%;"
+              style="width: 150px;"
             >
               <p
                 class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
               >
                 99.49
+                %
               </p>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 10%;"
+              style="width: 15%;"
             >
               <p
                 class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
               >
-                36
+                36m 
               </p>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 10%;"
+              style="width: 150px;"
             >
               <p
                 class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
               >
-                18
+                18m 
               </p>
             </div>
           </div>
@@ -414,7 +416,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 20%;"
+              style="width: 150px;"
             >
               <a
                 href="/account/undefined/cv/orgs/undefined/projects/undefined/slos/slo_1?sloType=Simple"
@@ -460,7 +462,7 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 10%;"
+              style="width: 150px;"
             >
               <p
                 class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
@@ -471,18 +473,19 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 10%;"
+              style="width: 12%;"
             >
               <p
                 class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
               >
                 50
+                %
               </p>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 10%;"
+              style="width: 150px;"
             >
               <p
                 class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
@@ -494,34 +497,35 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 10%;"
+              style="width: 150px;"
             >
               <p
                 class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
               >
                 95.40
+                %
               </p>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 10%;"
+              style="width: 15%;"
             >
               <p
                 class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
               >
-                327
+                5h 27m 
               </p>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 10%;"
+              style="width: 150px;"
             >
               <p
                 class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
               >
-                163
+                2h 43m 
               </p>
             </div>
           </div>

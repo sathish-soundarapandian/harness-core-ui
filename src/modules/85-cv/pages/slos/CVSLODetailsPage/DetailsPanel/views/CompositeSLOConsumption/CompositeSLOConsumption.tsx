@@ -84,7 +84,6 @@ const CompositeSLOConsumption = ({ startTime, endTime }: CompositeSLOConsumption
           {
             accessor: 'sloName',
             Header: getString('cv.slos.sloName').toUpperCase(),
-            width: '20%',
             Cell: RenderSLOName
           },
           {
@@ -96,37 +95,33 @@ const CompositeSLOConsumption = ({ startTime, endTime }: CompositeSLOConsumption
           {
             accessor: 'sliType',
             Header: getString('cv.slos.sliType'),
-            width: '10%',
             Cell: RenderSLIType
           },
           {
             accessor: 'weightagePercentage',
             Header: getString('cv.CompositeSLO.Consumption.AssignedWeightage').toUpperCase(),
-            width: '10%',
+            width: '12%',
             Cell: RenderAssignedWeightage
           },
           {
             accessor: 'sloTargetPercentage',
             Header: getString('cv.slos.target').toUpperCase(),
-            width: '10%',
             Cell: RenderTarget
           },
           {
             accessor: 'sliStatusPercentage',
             Header: getString('cv.CompositeSLO.Consumption.ActualSlo').toUpperCase(),
-            width: '10%',
             Cell: RenderActualSlo
           },
           {
             accessor: 'errorBudgetBurned',
             Header: getString('cv.CompositeSLO.Consumption.ErrorBudgetBurned').toUpperCase(),
-            width: '10%',
+            width: '15%',
             Cell: RenderErrorBudgetBurned
           },
           {
             accessor: 'contributedErrorBudgetBurned',
             Header: getString('cv.CompositeSLO.Consumption.ContributedErrorBudgetBurned').toUpperCase(),
-            width: '10%',
             Cell: RenderContributedErrorBudgetBurned
           }
         ]}
@@ -137,7 +132,7 @@ const CompositeSLOConsumption = ({ startTime, endTime }: CompositeSLOConsumption
   return (
     <Card className={css.serviceDetailsCard}>
       <Text font={{ variation: FontVariation.CARD_TITLE }} color={Color.GREY_800} padding={{ bottom: 'medium' }}>
-        {getString('cv.CompositeSLO.Consumption.title')}({getDate(startTime)} - {getDate(endTime)})
+        {getString('cv.CompositeSLO.Consumption.title')} ({getDate(startTime)} - {getDate(endTime)})
       </Text>
       {content}
     </Card>

@@ -35,6 +35,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { getConnectorName, getConnectorValue } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
+import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import {
   GenericServiceSpecVariablesForm,
   K8sServiceSpecVariablesFormProps
@@ -323,7 +324,7 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.connectorRef`,
-          getString?.('fieldRequired', { field: 'connectorRef' })
+          getString?.('fieldRequired', { field: 'Connector' })
         )
       }
       if (
@@ -356,7 +357,9 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.folderPath`,
-          getString?.('fieldRequired', { field: 'folderPath' })
+          getString?.('fieldRequired', {
+            field: manifest.manifest?.type === ManifestDataType.HelmChart ? getString?.('chartPath') : 'Folder Path'
+          })
         )
       }
 
@@ -408,6 +411,32 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
           errors,
           `manifests[${index}].manifest.spec.chartName`,
           getString?.('fieldRequired', { field: 'Chart Name' })
+        )
+      }
+
+      // Custom Remote Manifest store specific fields
+      if (
+        isEmpty(manifest?.manifest?.spec?.store?.spec?.extractionScript) &&
+        isRequired &&
+        getMultiTypeFromValue(currentManifestTemplate?.extractionScript) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `manifests[${index}].manifest.spec.store.spec.extractionScript`,
+          getString?.('fieldRequired', { field: getString?.('pipeline.manifestType.customRemoteExtractionScript') })
+        )
+      }
+      if (
+        isEmpty(manifest?.manifest?.spec?.store?.spec?.filePath) &&
+        isRequired &&
+        getMultiTypeFromValue(currentManifestTemplate?.filePath) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `manifests[${index}].manifest.spec.store.spec.filePath`,
+          getString?.('fieldRequired', {
+            field: getString?.('pipeline.manifestType.customRemoteExtractedFileLocation')
+          })
         )
       }
     })
@@ -573,7 +602,69 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
       isRequired &&
       getMultiTypeFromValue(get(template, `${templatePathToField}.version`)) === MultiTypeInputType.RUNTIME
     ) {
-      set(errors, `${dataPathToField}.version`, getString?.('fieldRequired', { field: 'Version' }))
+      set(errors, `${dataPathToField}.version`, getString?.('fieldRequired', { field: getString?.('version') }))
+    }
+
+    // Github Package Registry specific fields
+    if (
+      isEmpty(get(data, `${dataPathToField}.packageName`)) &&
+      isRequired &&
+      getMultiTypeFromValue(get(template, `${templatePathToField}.packageName`)) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `${dataPathToField}.packageName`,
+        getString?.('fieldRequired', { field: getString?.('pipeline.artifactsSelection.packageName') })
+      )
+    }
+
+    // Azure Artifact specific fields
+    if (
+      isEmpty(get(data, `${dataPathToField}.project`)) &&
+      isRequired &&
+      getMultiTypeFromValue(get(template, `${templatePathToField}.project`)) === MultiTypeInputType.RUNTIME
+    ) {
+      set(errors, `${dataPathToField}.project`, getString?.('fieldRequired', { field: getString?.('projectLabel') }))
+    }
+    if (
+      isEmpty(get(data, `${dataPathToField}.feed`)) &&
+      isRequired &&
+      getMultiTypeFromValue(get(template, `${templatePathToField}.feed`)) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `${dataPathToField}.feed`,
+        getString?.('fieldRequired', { field: getString?.('pipeline.artifactsSelection.feed') })
+      )
+    }
+    if (
+      isEmpty(get(data, `${dataPathToField}.package`)) &&
+      isRequired &&
+      getMultiTypeFromValue(get(template, `${templatePathToField}.package`)) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `${dataPathToField}.package`,
+        getString?.('fieldRequired', {
+          field:
+            artifactType === ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
+              ? getString?.('pipeline.testsReports.callgraphField.package')
+              : getString?.('pipeline.artifactsSelection.packageName')
+        })
+      )
+    }
+
+    // Google Artifact Registry specific fields
+    if (
+      isEmpty(get(data, `${dataPathToField}.repositoryName`)) &&
+      isRequired &&
+      getMultiTypeFromValue(get(template, `${templatePathToField}.repositoryName`)) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `${dataPathToField}.repositoryName`,
+        getString?.('fieldRequired', { field: getString?.('common.repositoryName') })
+      )
     }
   }
 

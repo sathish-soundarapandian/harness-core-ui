@@ -14,16 +14,16 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import type { CellProps, Column, Renderer } from 'react-table'
-import { PopoverInteractionKind } from '@blueprintjs/core'
+import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Table } from '@common/components'
 import { useStrings } from 'framework/strings'
-import { numberFormatter } from '@cd/components/Services/common'
 import routes from '@common/RouteDefinitions'
 import type { ExecutionPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { ActiveServiceInstancePopover } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancePopover'
 import type { InstanceGroupedByInfrastructureV2, InstanceGroupedByPipelineExecution } from 'services/cd-ng'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { StoreType } from '@common/constants/GitSyncTypes'
+import { numberFormatter } from '@common/utils/utils'
 import { DialogEmptyState } from './EnvironmentDetailsUtils'
 
 import css from './EnvironmentDetailSummary.module.scss'
@@ -64,8 +64,6 @@ export const getSummaryViewTableData = (
     let totalInstances = 0
     let lastDeployedAt = 0
     const infraName = infra.infraName || infra.clusterIdentifier
-    const clusterIdentifier = infra.clusterIdentifier
-    const infraIdentifier = infra.infraIdentifier
     if (infra.instanceGroupedByPipelineExecutionList) {
       infra.instanceGroupedByPipelineExecutionList.forEach(infraDetail => {
         totalInstances += defaultTo(infraDetail.count, 0)
@@ -85,8 +83,8 @@ export const getSummaryViewTableData = (
       infraName: defaultTo(infraName, ''),
       totalInstanceCount: totalInstances,
       showInfra: true,
-      infraIdentifier: infraIdentifier,
-      clusterId: clusterIdentifier,
+      infraIdentifier: infra.infraIdentifier,
+      clusterId: infra.clusterIdentifier,
       lastDeployedAt: lastDeployedAt,
       envId: defaultTo(envFilter, ''),
       serviceFilter: defaultTo(serviceFilter, ''),
@@ -186,6 +184,7 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
             interactionKind={PopoverInteractionKind.CLICK}
             key={`${serviceFilter}_${buildId}_${index}`}
             modifiers={{ preventOverflow: { escapeWithReference: true } }}
+            position={Position.TOP}
             disabled={tableType === InfraViewTableType.SUMMARY}
           >
             <Container

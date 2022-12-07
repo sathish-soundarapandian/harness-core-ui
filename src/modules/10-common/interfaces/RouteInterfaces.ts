@@ -62,6 +62,14 @@ export interface PipelineLogsPathProps extends ExecutionPathProps {
   stepIndentifier: string
 }
 
+export interface GitOpsAppPathProps extends ProjectPathProps {
+  applicationId: string
+}
+
+export interface GitOpsAppQueryParams {
+  agentId?: string // this is query param
+}
+
 export type TemplateType =
   | 'Step'
   | 'Stage'
@@ -165,7 +173,7 @@ export interface EnvironmentPathProps {
 }
 
 export interface EnvironmentQueryParams {
-  sectionId?: 'CONFIGURATION' | 'INFRASTRUCTURE' | 'SERVICE_OVERRIDES' | 'GITOPS' | 'SUMMARY'
+  sectionId?: 'CONFIGURATION' | 'INFRASTRUCTURE' | 'SERVICE_OVERRIDES' | 'GITOPS' | 'SUMMARY' | 'REFERENCED_BY'
 }
 
 export interface EnvironmentGroupPathProps {

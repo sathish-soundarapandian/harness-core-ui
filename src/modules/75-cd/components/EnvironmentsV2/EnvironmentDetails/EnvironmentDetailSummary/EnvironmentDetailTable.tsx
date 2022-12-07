@@ -8,14 +8,14 @@
 import React, { useMemo } from 'react'
 import type { GetDataError } from 'restful-react'
 import cx from 'classnames'
-import { defaultTo, isEqual, noop } from 'lodash-es'
+import { defaultTo, isEqual, isUndefined, noop } from 'lodash-es'
 import { Container, Layout, PageError, PageSpinner, Popover, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { HTMLTable, Position } from '@blueprintjs/core'
 import { Table } from '@common/components'
 import { useStrings } from 'framework/strings'
-import { numberFormatter } from '@cd/components/Services/common'
+import { numberFormatter } from '@common/utils/utils'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
 import type { InstanceGroupedByService } from 'services/cd-ng'
 import { DialogEmptyState } from './EnvironmentDetailsUtils'
@@ -385,6 +385,14 @@ export const EnvironmentDetailTable = (
     )
   }
 
+  if (isUndefined(selectedRow) && tableType === TableType.FULL) {
+    setRowClickFilter({
+      artifactFilter: defaultTo(tableData[0].artifactVersion, ''),
+      serviceFilter: defaultTo(tableData[0].serviceId, '')
+    })
+    setSelectedRow(tableData[0] ? JSON.stringify(tableData[0]) + 0 : undefined)
+  }
+
   return (
     <Table<TableRowData>
       columns={columns}
@@ -394,19 +402,11 @@ export const EnvironmentDetailTable = (
       onRowClick={
         tableType === TableType.FULL
           ? (row, index) => {
-              if (JSON.stringify(row) + index === selectedRow) {
-                setRowClickFilter({
-                  artifactFilter: '',
-                  serviceFilter: ''
-                })
-                setSelectedRow(undefined)
-              } else {
-                setRowClickFilter({
-                  artifactFilter: defaultTo(row.artifactVersion, ''),
-                  serviceFilter: defaultTo(row.serviceId, '')
-                })
-                setSelectedRow(JSON.stringify(row) + index)
-              }
+              setRowClickFilter({
+                artifactFilter: defaultTo(row.artifactVersion, ''),
+                serviceFilter: defaultTo(row.serviceId, '')
+              })
+              setSelectedRow(JSON.stringify(row) + index)
             }
           : undefined
       }

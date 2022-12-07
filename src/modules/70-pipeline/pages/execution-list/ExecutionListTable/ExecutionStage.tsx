@@ -160,7 +160,12 @@ export const CDExecutionStageSummary: FC<{ stageInfo: Record<string, any> }> = (
         <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
           {getString('environment')}:
         </Text>
-        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_800} lineClamp={1} width={200}>
+        <Text
+          font={{ variation: FontVariation.SMALL_SEMI }}
+          color={Color.GREY_800}
+          lineClamp={1}
+          style={{ maxWidth: '200px' }}
+        >
           {environment}
         </Text>
       </Layout.Horizontal>

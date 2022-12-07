@@ -49,6 +49,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isOnPrem } from '@common/utils/utils'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
+import EntityUsage from '@common/pages/entityUsage/EntityUsage'
+import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import { PageHeaderTitle, PageHeaderToolbar } from './EnvironmentDetailsPageHeader'
 import EnvironmentConfiguration from './EnvironmentConfiguration/EnvironmentConfiguration'
 import { ServiceOverrides } from './ServiceOverrides/ServiceOverrides'
@@ -268,6 +270,13 @@ export default function EnvironmentDetails(): React.ReactElement {
                         title: getString('cd.gitOpsCluster'),
                         panel: <GitOpsCluster envRef={identifier} />,
                         hidden: !gitopsOnPremEnabled && isOnPrem()
+                      },
+                      {
+                        id: EnvironmentDetailsTab.REFERENCED_BY,
+                        title: getString('referencedBy'),
+                        panel: (
+                          <EntityUsage entityType={EntityType.Environment} entityIdentifier={environmentIdentifier} />
+                        )
                       }
                     ]}
                   >

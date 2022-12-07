@@ -84,7 +84,7 @@ export const RenderAssignedWeightage: Renderer<CellProps<any>> = ({ row }) => {
   const slo = row.original
   return (
     <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
-      {slo?.weightagePercentage}
+      {slo?.weightagePercentage}%
     </Text>
   )
 }
@@ -92,15 +92,38 @@ export const RenderActualSlo: Renderer<CellProps<any>> = ({ row }) => {
   const slo = row.original
   return (
     <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
-      {slo?.sliStatusPercentage?.toFixed(2)}
+      {slo?.sliStatusPercentage?.toFixed(2)}%
     </Text>
   )
 }
+
+export const durationAsString = (consumptionMinutes: number): string => {
+  const duration = moment.duration(consumptionMinutes, 'minutes')
+
+  //Get Days
+  const days = Math.floor(duration.asDays())
+  const daysFormatted = days ? `${days}d ` : ''
+
+  //Get Hours
+  const hours = duration.hours()
+  const hoursFormatted = hours ? `${hours}h ` : ''
+
+  //Get Minutes
+  const minutes = duration.minutes()
+  const minutesFormatted = minutes ? `${minutes}m ` : ''
+
+  //Get Seconds
+  const seconds = duration.seconds()
+  const secondsFormatted = seconds ? `${seconds}s ` : ''
+
+  return [daysFormatted, hoursFormatted, minutesFormatted, secondsFormatted].join('')
+}
+
 export const RenderErrorBudgetBurned: Renderer<CellProps<any>> = ({ row }) => {
   const slo = row.original
   return (
     <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
-      {slo?.errorBudgetBurned}
+      {durationAsString(slo?.errorBudgetBurned)}
     </Text>
   )
 }
@@ -108,7 +131,7 @@ export const RenderContributedErrorBudgetBurned: Renderer<CellProps<any>> = ({ r
   const slo = row.original
   return (
     <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
-      {slo?.contributedErrorBudgetBurned}
+      {durationAsString(slo?.contributedErrorBudgetBurned)}
     </Text>
   )
 }

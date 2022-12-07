@@ -205,7 +205,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           }
         }}
       />
-      {SRM_COMPOSITE_SLO && (
+      {SRM_COMPOSITE_SLO && !monitoredService && (
         <RbacButton
           icon="plus"
           data-testid="createCompositeSLO"

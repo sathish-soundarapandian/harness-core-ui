@@ -483,6 +483,7 @@ export interface StringsMap {
   'common.lastConnectedOn': string
   'common.lastModified': string
   'common.lastModifiedTime': string
+  'common.lastUpdatedAt': string
   'common.latest': string
   'common.launchFirstGen': string
   'common.letsGetYouStarted': string
@@ -962,6 +963,22 @@ export interface StringsMap {
   'common.test.connectionSuccessful': string
   'common.test.inProgress': string
   'common.test.retest': string
+  'common.timeRange.calendarMonths': string
+  'common.timeRange.recommended': string
+  'common.timeRange.relativeDates': string
+  'common.timeRange.selectCustomRange': string
+  'common.timeRangeConstants.last12Months': string
+  'common.timeRangeConstants.last3Months': string
+  'common.timeRangeConstants.last6Months': string
+  'common.timeRangeConstants.last7Days': string
+  'common.timeRangeConstants.lastMonth': string
+  'common.timeRangeConstants.lastQuarter': string
+  'common.timeRangeConstants.lastYear': string
+  'common.timeRangeConstants.thisMonth': string
+  'common.timeRangeConstants.thisQuarter': string
+  'common.timeRangeConstants.thisYear': string
+  'common.timeRangeLimitWarning.currentPlanOffer': string
+  'common.timeRangeLimitWarning.upgradeOffer': string
   'common.timeframe': string
   'common.tokens': string
   'common.totalLines': string
@@ -972,6 +989,7 @@ export interface StringsMap {
   'common.triggerName': string
   'common.triggersLabel': string
   'common.true': string
+  'common.tryAgain': string
   'common.types': string
   'common.unlimited': string
   'common.unsavedChanges': string
@@ -1028,6 +1046,7 @@ export interface StringsMap {
   'common.variables': string
   'common.versionLabel': string
   'common.videoNotSupportedError': string
+  'common.viewAll': string
   'common.viewAndExecutePermissions': string
   'common.viewContent': string
   'common.viewLatest': string
@@ -3208,8 +3227,6 @@ export interface StringsMap {
   'pipeline.artifactsSelection.validation.artifactId': string
   'pipeline.artifactsSelection.validation.artifactPath': string
   'pipeline.artifactsSelection.validation.artifactPathFilter': string
-  'pipeline.artifactsSelection.validation.artifactsArrayPath': string
-  'pipeline.artifactsSelection.validation.feed': string
   'pipeline.artifactsSelection.validation.filePathRegex': string
   'pipeline.artifactsSelection.validation.group': string
   'pipeline.artifactsSelection.validation.groupId': string
@@ -3225,11 +3242,9 @@ export interface StringsMap {
   'pipeline.artifactsSelection.validation.repositoryPort': string
   'pipeline.artifactsSelection.validation.repositoryType': string
   'pipeline.artifactsSelection.validation.repositoryUrl': string
-  'pipeline.artifactsSelection.validation.script': string
   'pipeline.artifactsSelection.validation.sidecarId': string
   'pipeline.artifactsSelection.validation.tag': string
   'pipeline.artifactsSelection.validation.tagRegex': string
-  'pipeline.artifactsSelection.validation.versionPath': string
   'pipeline.artifactsSelection.validation.versionRegex': string
   'pipeline.artifactsSelection.versionDetails': string
   'pipeline.artifactsSelection.versionPath': string
@@ -3924,6 +3939,11 @@ export interface StringsMap {
   'pipeline.phasesForm.phase': string
   'pipeline.phasesForm.phases': string
   'pipeline.phasesForm.useVerification': string
+  'pipeline.pipelineCachedCopy.cacheInProgress': string
+  'pipeline.pipelineCachedCopy.cacheUpdateFailed': string
+  'pipeline.pipelineCachedCopy.cachedCopyText': string
+  'pipeline.pipelineCachedCopy.reloadPipeline': string
+  'pipeline.pipelineCachedCopy.reloadPipelineContent': string
   'pipeline.pipelineChaining.newOutput': string
   'pipeline.pipelineChaining.outputTabSummaryDetail': string
   'pipeline.pipelineChaining.pipelineOutputs': string
@@ -5891,6 +5911,7 @@ export interface StringsMap {
   'ce.connector.AWS.title': string
   'ce.connector.AWS.visibility.description': string
   'ce.continuous': string
+  'ce.currencyPreferences.sideNavText': string
   'ce.dashboardPage.description': string
   'ce.dashboardPage.welcome': string
   'ce.enforcementMessage.autoStoppingRules': string
@@ -6181,22 +6202,6 @@ export interface StringsMap {
   'ce.perspectives.timeAggregation.daily': string
   'ce.perspectives.timeAggregation.hourly': string
   'ce.perspectives.timeAggregation.monthly': string
-  'ce.perspectives.timeRange.calendarMonths': string
-  'ce.perspectives.timeRange.recommended': string
-  'ce.perspectives.timeRange.relativeDates': string
-  'ce.perspectives.timeRange.selectCustomRange': string
-  'ce.perspectives.timeRangeConstants.last12Months': string
-  'ce.perspectives.timeRangeConstants.last3Months': string
-  'ce.perspectives.timeRangeConstants.last6Months': string
-  'ce.perspectives.timeRangeConstants.last7Days': string
-  'ce.perspectives.timeRangeConstants.lastMonth': string
-  'ce.perspectives.timeRangeConstants.lastQuarter': string
-  'ce.perspectives.timeRangeConstants.lastYear': string
-  'ce.perspectives.timeRangeConstants.thisMonth': string
-  'ce.perspectives.timeRangeConstants.thisQuarter': string
-  'ce.perspectives.timeRangeConstants.thisYear': string
-  'ce.perspectives.timeRangeLimitWarning.currentPlanOffer': string
-  'ce.perspectives.timeRangeLimitWarning.upgradeOffer': string
   'ce.perspectives.top12GroupBy': string
   'ce.perspectives.validations.emailRequired': string
   'ce.perspectives.validations.invalidEmails': string
@@ -6597,7 +6602,6 @@ export interface StringsMap {
   'cf.gitSync.saveFlagToGit': string
   'cf.gitSync.syncingPaused': string
   'cf.gitSync.toggleGitSyncPause': string
-  'cf.gitSync.tryAgain': string
   'cf.gitSync.turnOffGitAndContinue': string
   'cf.homepage.learnMore': string
   'cf.homepage.slogan': string
@@ -6622,11 +6626,13 @@ export interface StringsMap {
   'cf.onboarding.createFlag': string
   'cf.onboarding.createSdkKey': string
   'cf.onboarding.createdAndValidated': string
+  'cf.onboarding.enterKeyName': string
   'cf.onboarding.envCreated': string
   'cf.onboarding.environmentDescription': string
   'cf.onboarding.errorReceivingEvent': string
   'cf.onboarding.eventWeReceived': string
   'cf.onboarding.flagInputLabel': string
+  'cf.onboarding.freeBanner': string
   'cf.onboarding.furtherAssistance': string
   'cf.onboarding.help.getStarted': string
   'cf.onboarding.help.heading1': string
@@ -6973,6 +6979,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.parallelizationHelpText': string
   'ci.getStartedWithCI.parameterization': string
   'ci.getStartedWithCI.parameterizationHelpText': string
+  'ci.getStartedWithCI.pipelineConfig': string
   'ci.getStartedWithCI.pleaseChoose': string
   'ci.getStartedWithCI.provisionSecureEnv': string
   'ci.getStartedWithCI.provisioningFailed': string
@@ -7048,6 +7055,11 @@ export interface StringsMap {
   'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string
   'cv.CompositeSLO.AddSLOMessage': string
+  'cv.CompositeSLO.AddSLOValidation.maxSLOCount': string
+  'cv.CompositeSLO.AddSLOValidation.minMaxSLOCount': string
+  'cv.CompositeSLO.AddSLOValidation.minSLOCount': string
+  'cv.CompositeSLO.AddSLOValidation.totalSLOWeight': string
+  'cv.CompositeSLO.AddSLOValidation.weightMinMax': string
   'cv.CompositeSLO.Consumption.ActualSlo': string
   'cv.CompositeSLO.Consumption.AssignedWeightage': string
   'cv.CompositeSLO.Consumption.ContributedErrorBudgetBurned': string

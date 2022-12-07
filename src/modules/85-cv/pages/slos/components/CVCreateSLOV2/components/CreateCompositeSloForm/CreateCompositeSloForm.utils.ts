@@ -8,11 +8,39 @@
 import type { FormikProps } from 'formik'
 import { defaultTo, isEmpty, isEqual } from 'lodash-es'
 import type { SLOTargetFilterDTO } from 'services/cv'
+import type { UseStringsReturn } from 'framework/strings'
 import { PeriodLengthTypes, PeriodTypes } from '../../../CVCreateSLO/CVCreateSLO.types'
 import type { SLOV2Form } from '../../CVCreateSLOV2.types'
 import { createSloTargetFilterDTO } from './components/AddSlos/AddSLOs.utils'
 import { MinNumberOfSLO, MaxNumberOfSLO, SLOWeight } from './CreateCompositeSloForm.constant'
 import { CompositeSLOFormFields, CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
+
+const addSLOError = (formikProps: FormikProps<SLOV2Form>, getString?: UseStringsReturn['getString']) => {
+  let errorList: string[] = []
+  const { serviceLevelObjectivesDetails } = formikProps.values
+  const sumOfSLOweight = serviceLevelObjectivesDetails?.reduce((total, num) => {
+    return num.weightagePercentage + total
+  }, 0)
+  if (!serviceLevelObjectivesDetails?.length) {
+    errorList = [getString?.('cv.CompositeSLO.AddSLOValidation.minMaxSLOCount') as string]
+    return { status: false, errorMessages: errorList }
+  } else if (defaultTo(sumOfSLOweight, 0) !== 100) {
+    errorList = [getString?.('cv.CompositeSLO.AddSLOValidation.totalSLOWeight') as string]
+    return { status: false, errorMessages: errorList }
+  } else if (serviceLevelObjectivesDetails?.length < MinNumberOfSLO) {
+    errorList = [getString?.('cv.CompositeSLO.AddSLOValidation.minSLOCount') as string]
+    return { status: false, errorMessages: errorList }
+  } else if (serviceLevelObjectivesDetails?.length > MaxNumberOfSLO) {
+    errorList = [getString?.('cv.CompositeSLO.AddSLOValidation.maxSLOCount') as string]
+    return { status: false, errorMessages: errorList }
+  } else {
+    const hasInValidValue = serviceLevelObjectivesDetails.some(
+      slo => slo.weightagePercentage > SLOWeight.MAX || slo.weightagePercentage < SLOWeight.MIN
+    )
+    errorList = hasInValidValue ? [getString?.('cv.CompositeSLO.AddSLOValidation.weightMinMax') as string] : []
+    return { status: !hasInValidValue, errorMessages: errorList }
+  }
+}
 
 export const validateDefineSLOSection = (formikProps: FormikProps<SLOV2Form>): boolean => {
   formikProps.setFieldTouched(CompositeSLOFormFields.NAME, true)
@@ -53,24 +81,8 @@ export const validateSetSLOTimeWindow = (formikProps: FormikProps<SLOV2Form>): b
 }
 
 export const validateAddSLO = (formikProps: FormikProps<SLOV2Form>): boolean => {
-  const { serviceLevelObjectivesDetails } = formikProps.values
-  const sumOfSLOweight = serviceLevelObjectivesDetails?.reduce((total, num) => {
-    return num.weightagePercentage + total
-  }, 0)
-  if (!serviceLevelObjectivesDetails?.length) {
-    return false
-  } else if (Math.floor(defaultTo(sumOfSLOweight, 0)) !== 100) {
-    return false
-  } else if (serviceLevelObjectivesDetails?.length < MinNumberOfSLO) {
-    return false
-  } else if (serviceLevelObjectivesDetails?.length > MaxNumberOfSLO) {
-    return false
-  } else {
-    const hasInValidValue = serviceLevelObjectivesDetails.some(
-      slo => slo.weightagePercentage > SLOWeight.MAX || slo.weightagePercentage < SLOWeight.MIN
-    )
-    return !hasInValidValue
-  }
+  const { status } = addSLOError(formikProps)
+  return status
 }
 
 export const validateSetSLOTarget = (formikProps: FormikProps<SLOV2Form>): boolean => {
@@ -103,6 +115,47 @@ export const isFormDataValid = (
       return validateErrorBudgetPolicy()
     default:
       return false
+  }
+}
+
+const errorDefineSLOSection = (errors: FormikProps<SLOV2Form>['errors']) => {
+  const { name, identifier, userJourneyRef } = errors
+  return [name, identifier, userJourneyRef as string].filter(item => Boolean(item)) as string[]
+}
+
+const errorSetSLOTimeWindow = (errors: FormikProps<SLOV2Form>['errors']) => {
+  const { periodLength, periodLengthType, periodType } = errors
+  return [periodLength, periodLengthType, periodType].filter(item => Boolean(item)) as string[]
+}
+
+const errorAddSLO = (formikProps: FormikProps<SLOV2Form>, getString: UseStringsReturn['getString']) => {
+  const { errorMessages } = addSLOError(formikProps, getString)
+  return errorMessages.filter(item => Boolean(item)) as string[]
+}
+
+const errorSetSLOTarget = (errors: FormikProps<SLOV2Form>['errors']) => {
+  const { SLOTargetPercentage } = errors
+  return [SLOTargetPercentage].filter(item => Boolean(item)) as string[]
+}
+
+export const getErrorMessageByTabId = (
+  formikProps: FormikProps<SLOV2Form>,
+  selectedTabId: CreateCompositeSLOSteps,
+  getString: UseStringsReturn['getString']
+): string[] => {
+  switch (selectedTabId) {
+    case CreateCompositeSLOSteps.Define_SLO_Identification:
+      return errorDefineSLOSection(formikProps.errors)
+    case CreateCompositeSLOSteps.Set_SLO_Time_Window:
+      return errorSetSLOTimeWindow(formikProps.errors)
+    case CreateCompositeSLOSteps.Add_SLOs:
+      return errorAddSLO(formikProps, getString)
+    case CreateCompositeSLOSteps.Set_SLO_Target:
+      return errorSetSLOTarget(formikProps.errors)
+    case CreateCompositeSLOSteps.Error_Budget_Policy:
+      return []
+    default:
+      return []
   }
 }
 

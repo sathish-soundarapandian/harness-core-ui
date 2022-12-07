@@ -99,8 +99,8 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = ({
                 <EnvironmentDialog
                   createEnvFromInput={true}
                   createEnvName={createEnvName}
-                  onCreate={newEnv => {
-                    setSelectedEnvironment(newEnv?.data)
+                  setSelectedEnvironment={setSelectedEnvironment}
+                  onCreate={() => {
                     setEnvironmentCreated(true)
                     refetch()
                     setApiKey(undefined)

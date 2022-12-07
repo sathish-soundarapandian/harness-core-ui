@@ -360,7 +360,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                   class="bp3-popover-target"
                 >
                   <button
-                    aria-label="projectsOrgs.landingDashboard.last30Days"
+                    aria-label="common.subscriptions.usage.last30days"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
                     type="button"
                   >
@@ -386,7 +386,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                     <span
                       class="bp3-button-text"
                     >
-                      projectsOrgs.landingDashboard.last30Days
+                      common.subscriptions.usage.last30days
                     </span>
                     <span
                       class="bp3-icon bp3-icon-caret-down StyledProps--main"
@@ -2365,7 +2365,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                   class="bp3-popover-target"
                 >
                   <button
-                    aria-label="projectsOrgs.landingDashboard.last30Days"
+                    aria-label="common.subscriptions.usage.last30days"
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
                     type="button"
                   >
@@ -2391,7 +2391,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                     <span
                       class="bp3-button-text"
                     >
-                      projectsOrgs.landingDashboard.last30Days
+                      common.subscriptions.usage.last30days
                     </span>
                     <span
                       class="bp3-icon bp3-icon-caret-down StyledProps--main"

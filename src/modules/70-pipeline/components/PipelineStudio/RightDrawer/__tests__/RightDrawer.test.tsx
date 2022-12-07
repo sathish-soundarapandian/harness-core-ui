@@ -6,9 +6,10 @@
  */
 
 import React from 'react'
-import { fireEvent, render, act, waitFor, getByRole } from '@testing-library/react'
+import { fireEvent, render, act, waitFor, getByRole, screen } from '@testing-library/react'
 import { Formik, FormikForm, FormInput, IconName } from '@harness/uicore'
 import type { FormikProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
+import { cloneDeep } from 'lodash-es'
 import type { StepElementConfig } from 'services/cd-ng'
 import * as cdng from 'services/cd-ng'
 import * as pipelineng from 'services/pipeline-ng'
@@ -474,6 +475,21 @@ describe('Right Drawer tests', () => {
       })
       expect(pipelineContextMock.updatePipelineView).toHaveBeenCalled()
       expect(pipelineContextMock.updatePipelineView).toHaveBeenCalledWith(updatePipelineViewFnArg1)
+    })
+
+    test('Apply Changes button should be disabled if isReadOnly is true', async () => {
+      const contextValue = cloneDeep(pipelineContextMock)
+
+      contextValue.isReadonly = true
+      render(
+        <PipelineContext.Provider value={contextValue}>
+          <TestWrapper>
+            <RightDrawer />
+          </TestWrapper>
+        </PipelineContext.Provider>
+      )
+
+      expect(screen.getByRole('button', { name: 'applyChanges' })).toBeDisabled()
     })
   })
 

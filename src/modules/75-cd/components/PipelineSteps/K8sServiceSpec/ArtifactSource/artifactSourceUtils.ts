@@ -50,7 +50,7 @@ export const resetTags = (formik: FormikValues, tagPath: string): void => {
   }
 }
 
-export const shouldFetchTagsSource = (queryParamList: Array<string>): boolean => {
+export const shouldFetchTagsSource = (queryParamList: Array<string | undefined>): boolean => {
   return checkIfQueryParamsisNotEmpty(queryParamList)
 }
 
@@ -185,7 +185,7 @@ export const getDefaultQueryParam = (initialImagePath: string, formikImagePathVa
     : formikImagePathValue
 }
 
-export function getFinalQueryParamValue(initialParam: string): string | undefined {
+export function getFinalQueryParamValue(initialParam?: string): string | undefined {
   return initialParam !== DefaultParam ? initialParam : undefined
 }
 

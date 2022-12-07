@@ -253,8 +253,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
   const selectRepositoryItems = useMemo(() => {
     return repositoryDetails?.data?.map(repository => ({
-      value: defaultTo(repository.repositoryName, ''),
-      label: defaultTo(repository.repositoryName, '')
+      value: defaultTo(repository.repositoryId, ''),
+      label: defaultTo(repository.repositoryId, '')
     }))
   }, [repositoryDetails?.data])
 

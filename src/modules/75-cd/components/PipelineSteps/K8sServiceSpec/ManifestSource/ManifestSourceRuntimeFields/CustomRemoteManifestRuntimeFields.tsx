@@ -87,14 +87,14 @@ const CustomRemoteManifestRuntimeFields = ({
       {isFieldRuntime(`${manifestPath}.spec.store.spec.extractionScript`, template) && (
         <div className={css.verticalSpacingInput}>
           <MultiTypeFieldSelector
-            name={'extractionScript'}
+            name={`${path}.${manifestPath}.spec.store.spec.extractionScript`}
             label={getString('pipeline.manifestType.customRemoteExtractionScript')}
             allowedTypes={allowableTypes}
             style={{ width: 450 }}
             skipRenderValueInExpressionLabel
             expressionRender={() => (
               <MonacoTextField
-                name={'extractionScript'}
+                name={`${path}.${manifestPath}.spec.store.spec.extractionScript`}
                 expressions={expressions}
                 height={80}
                 fullScreenAllowed
@@ -103,7 +103,7 @@ const CustomRemoteManifestRuntimeFields = ({
             )}
           >
             <MonacoTextField
-              name={'extractionScript'}
+              name={`${path}.${manifestPath}.spec.store.spec.extractionScript`}
               expressions={expressions}
               height={80}
               fullScreenAllowed

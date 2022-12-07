@@ -66,8 +66,18 @@ exports[`<CDStageDetails /> tests test gitops apps 1`] = `
   <ul
     class="values"
   >
-    <li>
-      NAME_1
+    <li
+      class="gitOpsAppsLi"
+    >
+      <a
+        href="/account/undefined/undefined/orgs/undefined/projects/undefined/gitops/applications/ID_1?agentId=AGENT_1"
+      >
+        <p
+          class="StyledProps--font StyledProps--main"
+        >
+          NAME_1
+        </p>
+      </a>
       <span
         class="bp3-popover-wrapper serviceWrapper"
       >

@@ -13,7 +13,7 @@ import { Position, Menu, MenuItem } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'
 
 import { NodepoolTimeRange, NodepoolTimeRangeType, NodepoolTimeRangeValue } from '@ce/types'
-import { GET_NODEPOOL_DATE_RANGE } from '@ce/utils/momentUtils'
+import { GET_NODEPOOL_DATE_RANGE } from '@common/utils/momentUtils'
 import { Page } from '@common/exports'
 import {
   NodeRecommendationDto,

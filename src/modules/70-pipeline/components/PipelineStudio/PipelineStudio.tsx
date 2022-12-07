@@ -83,7 +83,6 @@ export default function PipelineStudio(): React.ReactElement {
   }
   const { licenseInformation } = useLicenseStore()
   const { CING_ENABLED, CFNG_ENABLED, PIE_NG_GITX_CACHING, PIPELINE_CHAINING } = useFeatureFlags()
-
   const { getString } = useStrings()
   const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
   return (

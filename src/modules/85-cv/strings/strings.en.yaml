@@ -854,6 +854,12 @@ CompositeSLO:
   compositeSloCreated: Composite SLO created successfully
   compositeSloUpdated: Composite SLO updated successfully
   SLIMetricRatio: SLI = (SLO1*weightage1 + SLO2*weightage2... + SLON*weightageN)/n*100
+  AddSLOValidation:
+    minMaxSLOCount: Should have minimun 2 SLOs and maximum 20 SLO's
+    totalSLOWeight: Total SLO weight should be equal to 100
+    minSLOCount: Should have minimun 2 SLOs
+    maxSLOCount: Should have maximum 20 SLOs
+    weightMinMax: SLO weight should be between 0.01 to 99.99
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on

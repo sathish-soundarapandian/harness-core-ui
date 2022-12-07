@@ -257,6 +257,30 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
           getString?.('fieldRequired', { field: 'Paths' })
         )
       }
+
+      // S3 manifest store specific fields
+      if (
+        isEmpty(manifest?.manifest?.spec?.store?.spec?.region) &&
+        isRequired &&
+        getMultiTypeFromValue(currentManifestTemplate?.region) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `manifests[${index}].manifest.spec.store.spec.region`,
+          getString?.('fieldRequired', { field: 'Region' })
+        )
+      }
+      if (
+        isEmpty(manifest?.manifest?.spec?.store?.spec?.bucketName) &&
+        isRequired &&
+        getMultiTypeFromValue(currentManifestTemplate?.bucketName) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `manifests[${index}].manifest.spec.store.spec.bucketName`,
+          getString?.('fieldRequired', { field: 'Bucket Name' })
+        )
+      }
     })
   }
 

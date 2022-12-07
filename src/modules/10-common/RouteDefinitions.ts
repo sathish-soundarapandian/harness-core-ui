@@ -6,6 +6,7 @@
  */
 
 import qs from 'qs'
+import { omit as _omit } from 'lodash-es'
 import { getEnvServiceRoute, getScopeBasedRoute, withAccountId } from '@common/utils/routeUtils'
 import type {
   OrgPathProps,
@@ -16,6 +17,8 @@ import type {
   ProjectPathProps,
   PipelinePathProps,
   TriggerPathProps,
+  GitOpsAppPathProps,
+  GitOpsAppQueryParams,
   ExecutionPathProps,
   FeatureFlagPathProps,
   BuildPathProps,
@@ -805,6 +808,22 @@ const routes = {
       path
     })
   }),
+  toGitOpsApplication: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      applicationId,
+      ...rest
+    }: GitOpsAppPathProps & ModulePathParams & GitOpsAppQueryParams) => {
+      const queryString = qs.stringify(_omit(rest, 'accountId'), { skipNulls: true })
+      if (queryString.length > 0) {
+        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops/applications/${applicationId}?${queryString}`
+      } else {
+        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops/applications/${applicationId}`
+      }
+    }
+  ),
   toServices: withAccountId(
     ({
       orgIdentifier,
@@ -1813,6 +1832,7 @@ const routes = {
   toCEGovernanceRuleEditor: withAccountId(
     ({ ruleId }: { ruleId: string }) => `/ce/governance/rules/${ruleId}/rule-editor/`
   ),
+  toCECurrencyPreferences: withAccountId(() => `/ce/currency-preferences`),
   toCCMMFE: withAccountId(() => `/ce/new`),
   /********************************************************************************************************************/
   toSTO: withAccountId(() => `/sto`),

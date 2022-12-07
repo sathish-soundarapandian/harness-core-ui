@@ -20,3 +20,11 @@ export interface StepPropsInterface {
   setSelectedStepId: (id: string) => void
 }
 export type StepStatusType = keyof typeof StepStatus
+
+export interface GetTitleStatusProps {
+  stepId: string
+  runValidationOnMount: boolean
+  isCurrentStep: boolean
+  currentStepStatus: StepStatusType
+  isStepValid?: (selectedTabId: string) => boolean
+}

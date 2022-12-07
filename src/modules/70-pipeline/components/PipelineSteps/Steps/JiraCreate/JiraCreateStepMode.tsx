@@ -51,6 +51,7 @@ import { isMultiTypeRuntime } from '@common/utils/utils'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { getGenuineValue, setIssueTypeOptions } from '../JiraApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
@@ -137,6 +138,8 @@ function FormContent({
       : undefined
 
   const requiredFields = get(formik.values, 'spec.selectedRequiredFields', []) as JiraFieldNGWithValue[]
+
+  const { ALLOW_USER_TYPE_FIELDS_JIRA } = useFeatureFlags()
 
   useDeepCompareEffect(() => {
     if (isEmpty(requiredFields)) {
@@ -551,7 +554,7 @@ function FormContent({
             readonly={readonly}
           />
         </div>
-        {unsupportedRequiredFields?.length > 0 && (
+        {!ALLOW_USER_TYPE_FIELDS_JIRA && unsupportedRequiredFields?.length > 0 && (
           <Text
             inline
             icon="circle-cross"

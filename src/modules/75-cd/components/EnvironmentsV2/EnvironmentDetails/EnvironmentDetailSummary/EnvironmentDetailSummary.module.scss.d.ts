@@ -14,6 +14,7 @@ declare const styles: {
   readonly detailSummaryView: string
   readonly dialogBase: string
   readonly dialogWrap: string
+  readonly executionListEmpty: string
   readonly fullViewTableStyle: string
   readonly hex: string
   readonly hexContainer: string
@@ -29,6 +30,7 @@ declare const styles: {
   readonly loadingContainer: string
   readonly main: string
   readonly nextButton: string
+  readonly nonCollapseRow: string
   readonly overflow: string
   readonly paddedContainer: string
   readonly paddedInfraContainer: string
@@ -36,6 +38,7 @@ declare const styles: {
   readonly prevButton: string
   readonly searchIconStyle: string
   readonly selected: string
+  readonly separatorStyle: string
   readonly serviceCardTitle: string
   readonly serviceCards: string
   readonly serviceColumnStyle: string

@@ -11,6 +11,7 @@ import { Container, Text, Layout, FlexExpander, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { Menu, MenuItem, Popover, Position, Drawer } from '@blueprintjs/core'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 import {
   useFetchViewFieldsQuery,
@@ -21,7 +22,6 @@ import {
 } from 'services/ce/services'
 import { getTimeFilters } from '@ce/utils/perspectiveUtils'
 
-import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
 import type { TimeRangeFilterType } from '@ce/types'
 
 import BusinessMappingBuilder from '@ce/components/BusinessMappingBuilder/BusinessMappingBuilder'

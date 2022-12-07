@@ -8,6 +8,7 @@
 import React, { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Text } from '@harness/uicore'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 import {
   QlceViewAggregateOperation,
@@ -19,7 +20,6 @@ import {
   useFetchperspectiveGridQuery,
   ViewFieldIdentifier
 } from 'services/ce/services'
-import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
 import type { TimeRange } from '@ce/pages/overview/OverviewPage'
 import routes from '@common/RouteDefinitions'
 import { getTimeFilters } from '@ce/utils/perspectiveUtils'

@@ -14,7 +14,7 @@ import type { StepPropsInterface, StepStatusType } from './Step.types'
 import { StepTitle } from './components/StepTitle/StepTitle'
 import { StepNavButtons } from './components/StepNavButtons/StepNavButtons'
 import { StepStatus } from './Step.constants'
-import { getStepStatus } from './Step.utils'
+import { getStepStatus, getTitleStatus } from './Step.utils'
 import css from './Step.module.scss'
 
 const Step = ({
@@ -56,8 +56,15 @@ const Step = ({
   )
 
   const stepTitleStatus = useMemo(
-    () => (runValidationOnMount ? getStepStatus(!!isStepValid?.(step.id)) : stepStatus),
-    [isStepValid, runValidationOnMount, step.id, stepStatus]
+    () =>
+      getTitleStatus({
+        stepId: step.id,
+        currentStepStatus: stepStatus,
+        runValidationOnMount: Boolean(runValidationOnMount),
+        isCurrentStep,
+        isStepValid
+      }),
+    [isStepValid, isCurrentStep, runValidationOnMount, step.id, stepStatus]
   )
 
   const isErrorMessageVisible = stepTitleStatus === StepStatus.ERROR
@@ -88,9 +95,21 @@ const Step = ({
         {(isCurrentStep || isErrorMessageVisible) && (
           <Container>
             {isErrorMessageVisible && (
-              <Text margin={{ bottom: isCurrentStep ? 'large' : '' }} intent="danger">
-                {getString('cv.CVStepper.StepError')}
-              </Text>
+              <>
+                {!step.errorMessage?.length ? (
+                  <Text margin={{ bottom: isCurrentStep ? 'large' : '' }} intent="danger">
+                    {getString('cv.CVStepper.StepError')}
+                  </Text>
+                ) : (
+                  step.errorMessage?.map((error, errorIndex) => {
+                    return (
+                      <Text key={errorIndex} margin={{ bottom: isCurrentStep ? 'large' : 'medium' }} intent="danger">
+                        {error}
+                      </Text>
+                    )
+                  })
+                )}
+              </>
             )}
             {isCurrentStep && (
               <>

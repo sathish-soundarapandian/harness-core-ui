@@ -12,7 +12,7 @@ import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { TestWrapper } from '@common/utils/testUtils'
 import { SelectGitProvider } from '../SelectGitProvider'
 import { InfraProvisioningWizard } from '../InfraProvisioningWizard'
-import { AllBuildLocationsForSaaS, Hosting, InfraProvisiongWizardStepId } from '../Constants'
+import { AllSaaSGitProviders, OtherProviderOptions, Hosting, InfraProvisiongWizardStepId } from '../Constants'
 
 const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' }
 
@@ -72,7 +72,7 @@ describe('Test SelectGitProvider component', () => {
       </TestWrapper>
     )
     const gitProviderCards = Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[]
-    expect(gitProviderCards.length).toBe(AllBuildLocationsForSaaS.length)
+    expect(gitProviderCards.length).toBe([...AllSaaSGitProviders, ...OtherProviderOptions].length)
   })
 
   test('User clicks on Github Provider card', async () => {

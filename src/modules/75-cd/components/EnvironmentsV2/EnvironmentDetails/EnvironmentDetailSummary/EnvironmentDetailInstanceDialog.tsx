@@ -10,7 +10,11 @@ import cx from 'classnames'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Container, Dialog, ExpandingSearchInput, ExpandingSearchInputHandle, Text } from '@harness/uicore'
-import type { InstanceGroupedByInfrastructureV2, InstanceGroupedByService } from 'services/cd-ng'
+import type {
+  InstanceGroupedByArtifactV2,
+  InstanceGroupedByInfrastructureV2,
+  InstanceGroupedByService
+} from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { EnvironmentDetailTable, InfraViewFilters, TableType } from './EnvironmentDetailTable'
@@ -59,27 +63,56 @@ export default function EnvironmentDetailInstanceDialog(
       return data
     }
     const searchValue = searchTerm.toLocaleLowerCase()
+
+    const artifactSearch = (artifact: InstanceGroupedByArtifactV2): boolean => {
+      return ((artifact.artifactVersion && artifact.artifactVersion?.toLocaleLowerCase().includes(searchValue)) ||
+        artifact.instanceGroupedByEnvironmentList?.some(
+          env =>
+            (env.instanceGroupedByInfraList?.length &&
+              env.instanceGroupedByInfraList?.some(
+                infra => infra.infraName && infra.infraName?.toLocaleLowerCase().includes(searchValue)
+              )) ||
+            (env.instanceGroupedByClusterList?.length &&
+              env.instanceGroupedByClusterList?.some(
+                cluster =>
+                  cluster.clusterIdentifier && cluster.clusterIdentifier?.toLocaleLowerCase().includes(searchValue)
+              ))
+        )) as boolean
+    }
+
+    //search and filter on service only
+    const serviceOnlyFilter = data.filter(
+      service =>
+        service.serviceName &&
+        service.serviceName.toLocaleLowerCase().includes(searchValue) &&
+        !service.instanceGroupedByArtifactList?.some(artifact => artifactSearch(artifact))
+    )
+
+    //search and filter on artifact only
+    const artifactOnlyFilter = data
+      .map(service => {
+        const filteredArtifact = service.instanceGroupedByArtifactList?.filter(artifact => artifactSearch(artifact))
+        if (filteredArtifact?.length) {
+          return {
+            ...service,
+            instanceGroupedByArtifactList: filteredArtifact
+          }
+        }
+      })
+      .filter(i => i)
+
+    if (serviceOnlyFilter.length) {
+      return serviceOnlyFilter
+    }
+    if (artifactOnlyFilter.length) {
+      return artifactOnlyFilter
+    }
     return data.filter(
       deployment =>
         (deployment.serviceName || '').toLocaleLowerCase().includes(searchValue) ||
-        deployment.instanceGroupedByArtifactList?.some(
-          artifact =>
-            (artifact.artifactVersion && artifact.artifactVersion?.toLocaleLowerCase().includes(searchValue)) ||
-            artifact.instanceGroupedByEnvironmentList?.some(
-              env =>
-                (env.instanceGroupedByInfraList?.length &&
-                  env.instanceGroupedByInfraList?.some(
-                    infra => infra.infraName && infra.infraName?.toLocaleLowerCase().includes(searchValue)
-                  )) ||
-                (env.instanceGroupedByClusterList?.length &&
-                  env.instanceGroupedByClusterList?.some(
-                    cluster =>
-                      cluster.clusterIdentifier && cluster.clusterIdentifier?.toLocaleLowerCase().includes(searchValue)
-                  ))
-            )
-        )
+        deployment.instanceGroupedByArtifactList?.some(artifact => artifactSearch(artifact))
     )
-  }, [searchTerm, data])
+  }, [searchTerm, data]) as InstanceGroupedByService[]
 
   const onSearch = useCallback((val: string) => {
     setSearchTerm(val.trim())
@@ -95,7 +128,7 @@ export default function EnvironmentDetailInstanceDialog(
     const finalArray = [] as InstanceGroupedByInfrastructureV2[][]
 
     filteredData?.forEach(service => {
-      if (rowClickFilter.serviceFilter && service.serviceId === rowClickFilter.serviceFilter) {
+      if (rowClickFilter.serviceFilter && service?.serviceId === rowClickFilter.serviceFilter) {
         if (service.instanceGroupedByArtifactList) {
           service.instanceGroupedByArtifactList.forEach(artifact => {
             if (rowClickFilter.artifactFilter && artifact.artifactVersion === rowClickFilter.artifactFilter) {
@@ -126,8 +159,8 @@ export default function EnvironmentDetailInstanceDialog(
       return dataInfra
     }
     const searchValue = searchTermInfra.toLocaleLowerCase()
-    return dataInfra.filter(infraArray =>
-      infraArray.some(
+    return dataInfra.map(infraArray =>
+      infraArray.filter(
         infra =>
           (infra.infraName && infra.infraName?.toLocaleLowerCase().includes(searchValue)) ||
           (infra.clusterIdentifier && infra.clusterIdentifier?.toLocaleLowerCase().includes(searchValue)) ||

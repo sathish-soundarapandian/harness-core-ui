@@ -9,14 +9,14 @@ import React from 'react'
 import { isEmpty as _isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { Container, Icon, Layout, Text } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
-import type { FixedScheduleClient } from '@ce/components/COCreateGateway/models'
 import {
   CE_DATE_FORMAT_INTERNAL,
   FORMAT_12_HOUR,
   get24HourTimeIn12HourFormat,
   getTimePeriodString
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
+import { useStrings } from 'framework/strings'
+import type { FixedScheduleClient } from '@ce/components/COCreateGateway/models'
 import { DaysOfWeek } from '@ce/constants'
 import { Utils } from '@ce/common/Utils'
 import css from './FixedScheduleList.module.scss'

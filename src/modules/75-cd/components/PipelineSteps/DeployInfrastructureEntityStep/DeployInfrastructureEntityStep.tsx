@@ -33,15 +33,7 @@ export class DeployInfrastructureEntityStep extends Step<DeployInfrastructureEnt
   }
 
   renderStep(props: StepProps<DeployInfrastructureEntityStepProps>): JSX.Element {
-    const {
-      initialValues,
-      readonly = false,
-      allowableTypes,
-      inputSetData,
-      stepViewType,
-      customStepProps,
-      onUpdate
-    } = props
+    const { initialValues, allowableTypes, inputSetData, stepViewType, customStepProps, onUpdate } = props
 
     if (isTemplatizedView(stepViewType)) {
       return (
@@ -51,7 +43,6 @@ export class DeployInfrastructureEntityStep extends Step<DeployInfrastructureEnt
            * The pseudo fields are present within the component - DeployInfrastructureEntityInputStep */}
           <DeployInfrastructureEntityInputStep
             initialValues={initialValues}
-            readonly={readonly}
             inputSetData={inputSetData}
             allowableTypes={allowableTypes}
             stepViewType={stepViewType}

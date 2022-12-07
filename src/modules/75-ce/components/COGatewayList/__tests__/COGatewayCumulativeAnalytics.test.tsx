@@ -7,9 +7,9 @@
 
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
+import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS } from '@common/utils/momentUtils'
 import { TestWrapper } from '@common/utils/testUtils'
 import { RulesMode } from '@ce/constants'
-import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS } from '@ce/utils/momentUtils'
 import COGatewayCumulativeAnalytics from '../COGatewayCumulativeAnalytics'
 import SpendVsSavingsChart from '../charts/SpendVsSavingsChart'
 

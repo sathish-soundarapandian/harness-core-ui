@@ -42,6 +42,8 @@ import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineU
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -113,6 +115,8 @@ export default function DeployEnvironment({
   const { refetchPipelineVariable } = usePipelineVariables()
   const uniquePathForEnvironments = React.useRef(`_pseudo_field_${uuid()}`)
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
+
+  const { GLOBAL_SERVICE_ENV } = useFeatureFlags()
 
   // State
   const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(getAllFixedEnvironments(initialValues))
@@ -366,6 +370,16 @@ export default function DeployEnvironment({
       })
     }
   }
+  const commonProps = {
+    name: isMultiEnvironment ? uniquePathForEnvironments.current : 'environment',
+    tooltipProps: isMultiEnvironment
+      ? { dataTooltipId: 'specifyYourEnvironments' }
+      : { dataTooltipId: 'specifyYourEnvironment' },
+    label: isMultiEnvironment
+      ? getString('cd.pipelineSteps.environmentTab.specifyYourEnvironments')
+      : getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment'),
+    disabled: disabled
+  }
 
   return (
     <>
@@ -375,47 +389,72 @@ export default function DeployEnvironment({
         className={css.inputField}
       >
         {isMultiEnvironment ? (
-          <FormMultiTypeMultiSelectDropDown
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironments')}
-            tooltipProps={{ dataTooltipId: 'specifyYourEnvironments' }}
-            name={uniquePathForEnvironments.current}
-            // Form group disabled
-            disabled={disabled}
-            dropdownProps={{
-              placeholder: placeHolderForEnvironments,
-              items: selectOptions,
-              // Field disabled
-              disabled,
-              isAllSelectionSupported: isUnderEnvGroup
-            }}
-            onChange={items => {
-              setFieldTouched(uniquePathForEnvironments.current, true)
-              if (items?.at(0)?.value === 'All') {
-                setFieldValue(`environments`, undefined)
-                setSelectedEnvironments([])
-              } else {
-                unstable_batchedUpdates(() => {
-                  setFieldValue(`environments`, items)
-                  if (isValueRuntimeInput(items)) {
-                    setFieldValue(gitOpsEnabled ? 'clusters' : 'infrastructures', RUNTIME_INPUT_VALUE)
-                  }
-                })
-                setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
-              }
-            }}
-            multiTypeProps={{
-              onTypeChange: setEnvironmentsType,
-              width: 280,
-              allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
-            }}
-          />
-        ) : (
+          GLOBAL_SERVICE_ENV && !isUnderEnvGroup ? (
+            /*** This condition is added as entities one step down the entity tree
+              will be following the parent scope so no need of the new component here ***/
+            <MultiTypeEnvironmentField
+              {...commonProps}
+              placeholder={placeHolderForEnvironments}
+              openAddNewModal={openAddNewModal}
+              isMultiSelect
+              onMultiSelectChange={(items: SelectOption[]) => {
+                setFieldTouched(uniquePathForEnvironments.current, true)
+                if (items?.at(0)?.value === 'All') {
+                  setFieldValue(`environments`, undefined)
+                  setSelectedEnvironments([])
+                } else {
+                  unstable_batchedUpdates(() => {
+                    setFieldValue(`environments`, items)
+                    if (isValueRuntimeInput(items)) {
+                      setFieldValue(gitOpsEnabled ? 'clusters' : 'infrastructures', RUNTIME_INPUT_VALUE)
+                    }
+                  })
+                  setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
+                }
+              }}
+              width={300}
+              multiTypeProps={{
+                expressions,
+                onTypeChange: setEnvironmentsType,
+                allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
+              }}
+            />
+          ) : (
+            <FormMultiTypeMultiSelectDropDown
+              {...commonProps}
+              dropdownProps={{
+                placeholder: placeHolderForEnvironments,
+                items: selectOptions,
+                // Field disabled
+                disabled,
+                isAllSelectionSupported: isUnderEnvGroup
+              }}
+              onChange={items => {
+                setFieldTouched(uniquePathForEnvironments.current, true)
+                if (items?.at(0)?.value === 'All') {
+                  setFieldValue(`environments`, undefined)
+                  setSelectedEnvironments([])
+                } else {
+                  unstable_batchedUpdates(() => {
+                    setFieldValue(`environments`, items)
+                    if (isValueRuntimeInput(items)) {
+                      setFieldValue(gitOpsEnabled ? 'clusters' : 'infrastructures', RUNTIME_INPUT_VALUE)
+                    }
+                  })
+                  setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
+                }
+              }}
+              multiTypeProps={{
+                onTypeChange: setEnvironmentsType,
+                width: 280,
+                allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
+              }}
+            />
+          )
+        ) : !GLOBAL_SERVICE_ENV ? (
           <FormInput.MultiTypeInput
-            tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
-            name="environment"
+            {...commonProps}
             useValue
-            disabled={disabled}
             placeholder={placeHolderForEnvironment}
             multiTypeInputProps={{
               onTypeChange: setEnvironmentsType,
@@ -429,6 +468,22 @@ export default function DeployEnvironment({
               expressions
             }}
             selectItems={selectOptions}
+          />
+        ) : (
+          <MultiTypeEnvironmentField
+            {...commonProps}
+            placeholder={placeHolderForEnvironment}
+            setRefValue={true}
+            openAddNewModal={openAddNewModal}
+            onChange={item => {
+              setSelectedEnvironments([item])
+            }}
+            width={300}
+            multiTypeProps={{
+              expressions,
+              allowableTypes: gitOpsEnabled ? getAllowableTypesWithoutExpression(allowableTypes) : allowableTypes,
+              defaultValueToReset: ''
+            }}
           />
         )}
         {isFixed && !isUnderEnvGroup && (

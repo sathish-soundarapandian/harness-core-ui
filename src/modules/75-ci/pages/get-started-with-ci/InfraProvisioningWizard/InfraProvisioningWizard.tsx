@@ -58,7 +58,9 @@ import {
   ACCOUNT_SCOPE_PREFIX,
   OAUTH2_USER_NAME,
   Hosting,
-  GitAuthenticationMethod
+  GitAuthenticationMethod,
+  NonGitOption,
+  getCloudPipelinePayloadWithoutCodebase
 } from './Constants'
 import { SelectGitProvider, SelectGitProviderRef } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
@@ -69,7 +71,12 @@ import {
   StarterConfigIdToOptionMap,
   StarterConfigurations
 } from './ConfigurePipeline'
-import { getPRTriggerActions, getFullRepoName, getPayloadForPipelineCreation } from '../../../utils/HostedBuildsUtils'
+import {
+  getPRTriggerActions,
+  getFullRepoName,
+  getPayloadForPipelineCreation,
+  addDetailsToPipeline
+} from '../../../utils/HostedBuildsUtils'
 import css from './InfraProvisioningWizard.module.scss'
 
 export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = props => {
@@ -105,7 +112,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
 
   useEffect(() => {
     setConfiguredGitConnector(selectGitProviderRef.current?.validatedConnector)
-  }, [selectGitProviderRef.current?.validatedConnector])
+  }, [selectGitProviderRef.current])
 
   useEffect(() => {
     setConfiguredGitConnector(preSelectedGitConnector)
@@ -159,6 +166,23 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     },
     [projectIdentifier, orgIdentifier, configuredGitConnector?.identifier, configurePipelineRef]
   )
+
+  const constructPipelinePayloadWithoutCodebase = React.useCallback((): string => {
+    const UNIQUE_PIPELINE_ID = new Date().getTime().toString()
+    const payload = addDetailsToPipeline({
+      originalPipeline: getCloudPipelinePayloadWithoutCodebase(),
+      name: `${getString('buildText')} ${getString('common.pipeline').toLowerCase()}`,
+      identifier: `${getString('buildText')}_${getString('common.pipeline').toLowerCase()}_${UNIQUE_PIPELINE_ID}`,
+      projectIdentifier,
+      orgIdentifier
+    })
+    try {
+      return yamlStringify(payload)
+    } catch (e) {
+      // Ignore error
+    }
+    return ''
+  }, [getString, projectIdentifier, orgIdentifier])
 
   const constructTriggerPayload = React.useCallback(
     ({
@@ -342,6 +366,51 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     }
   }, [selectRepositoryRef.current?.repository, configuredGitConnector, accountId, projectIdentifier, orgIdentifier])
 
+  const setupPipelineWithoutCodebaseAndTriggers = React.useCallback((): void => {
+    try {
+      createPipelineV2Promise({
+        body: constructPipelinePayloadWithoutCodebase(),
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier
+        },
+        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
+      }).then((createPipelineResponse: ResponsePipelineSaveResponse) => {
+        const { status } = createPipelineResponse
+        if (status === Status.SUCCESS && createPipelineResponse?.data?.identifier) {
+          setDisableBtn(false)
+          setShowPageLoader(false)
+          setShowGetStartedTabInMainMenu(false)
+          if (createPipelineResponse?.data?.identifier) {
+            history.push(
+              routes.toPipelineStudio({
+                accountId: accountId,
+                module: 'ci',
+                orgIdentifier,
+                projectIdentifier,
+                pipelineIdentifier: createPipelineResponse?.data?.identifier,
+                stageId: getString('buildText'),
+                sectionId: BuildTabs.EXECUTION
+              })
+            )
+          }
+        }
+      })
+    } catch (e) {
+      setDisableBtn(false)
+      setShowPageLoader(false)
+    }
+  }, [
+    constructPipelinePayloadWithoutCodebase,
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    setShowGetStartedTabInMainMenu,
+    history,
+    getString
+  ])
+
   const WizardSteps: Map<InfraProvisiongWizardStepId, WizardStep> = new Map([
     [
       InfraProvisiongWizardStepId.SelectGitProvider,
@@ -362,7 +431,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             setFieldTouched?.('gitProvider', true)
             return
           }
-          if (!gitAuthenticationMethod) {
+          if (!gitAuthenticationMethod && gitProvider?.type !== NonGitOption.OTHER) {
             setFieldTouched?.('gitAuthenticationMethod', true)
             return
           }
@@ -372,6 +441,11 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             setShowError(false)
             updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
             updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.InProgress)
+          } else if (gitProvider?.type === NonGitOption.OTHER) {
+            setShowError(false)
+            setDisableBtn(true)
+            setShowPageLoader(true)
+            setupPipelineWithoutCodebaseAndTriggers()
           }
         },
         stepFooterLabel: `${getString('next')}: ${getString('common.selectRepository')}`

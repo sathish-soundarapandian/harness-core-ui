@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Collapse, Container, Layout, Text } from '@harness/uicore'
+import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { InstanceGroupedByInfrastructureV2 } from 'services/cd-ng'
@@ -61,8 +62,10 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const singleArray = dataInfra.flat()
+
   const list = React.useMemo(() => {
-    if (!dataInfra.length) {
+    if (!singleArray.length) {
       return (
         <DialogEmptyState
           isSearchApplied={isSearchApplied}
@@ -73,7 +76,7 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
     }
     return (
       <Container>
-        <div className="separator" style={{ marginTop: '14px', borderTop: '1px solid var(--grey-200)' }} />
+        <div className={cx('separator', css.separatorStyle)} />
         <Text
           icon="services"
           font={{ variation: FontVariation.SMALL_BOLD }}
@@ -81,7 +84,21 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
         >{`${serviceFilter}, ${artifactFilter}`}</Text>
         {headers}
         <Container style={{ overflowY: 'auto', maxHeight: '590px' }}>
-          {dataInfra.map((infra, index) => {
+          {singleArray.map((infra, index) => {
+            if (infra.instanceGroupedByPipelineExecutionList?.length === 1) {
+              return (
+                <Container className={css.nonCollapseRow}>
+                  <EnvironmentDetailInfraTable
+                    tableType={InfraViewTableType.FULL}
+                    tableStyle={css.infraViewTableStyle}
+                    data={[infra]}
+                    artifactFilter={artifactFilter}
+                    envFilter={envFilter}
+                    serviceFilter={serviceFilter}
+                  />
+                </Container>
+              )
+            }
             return (
               <Collapse
                 key={index}
@@ -91,12 +108,13 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
                   <EnvironmentDetailInfraTable
                     tableType={InfraViewTableType.SUMMARY}
                     tableStyle={css.infraViewTableStyle}
-                    data={infra}
+                    data={[infra]}
                     artifactFilter={artifactFilter}
                     envFilter={envFilter}
                     serviceFilter={serviceFilter}
                   />
                 }
+                keepChildrenMounted={true}
                 expandedHeading={<>{/* empty element on purpose */}</>}
                 collapsedIcon={'main-chevron-right'}
                 expandedIcon={'main-chevron-down'}
@@ -105,7 +123,7 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
                   <EnvironmentDetailInfraTable
                     tableType={InfraViewTableType.FULL}
                     tableStyle={css.infraViewTableStyle}
-                    data={infra}
+                    data={[infra]}
                     artifactFilter={artifactFilter}
                     envFilter={envFilter}
                     serviceFilter={serviceFilter}
@@ -117,7 +135,7 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
         </Container>
       </Container>
     )
-  }, [artifactFilter, dataInfra, envFilter, getString, headers, isSearchApplied, resetSearch, serviceFilter])
+  }, [artifactFilter, envFilter, getString, headers, isSearchApplied, resetSearch, serviceFilter, singleArray])
 
   return list
 }

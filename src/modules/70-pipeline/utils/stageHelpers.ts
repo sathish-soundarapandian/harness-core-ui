@@ -200,7 +200,7 @@ export const getHelpeTextForTags = (
   getString: (key: StringKeys) => string,
   isServerlessDeploymentTypeSelected = false,
   defaultErrorMessage = ''
-): string => {
+): string | undefined => {
   const {
     connectorRef,
     region,
@@ -330,7 +330,7 @@ export const getHelpeTextForTags = (
     defaultErrorMessage
   )
 
-  return invalidFields.length > 0 ? helpText : ''
+  return invalidFields.length > 0 ? helpText : undefined
 }
 
 export const isServerlessDeploymentType = (deploymentType: string): boolean => {

@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
+import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useExecutionListFilterContext } from '@pipeline/pages/execution-list/ExecutionListFilterContext/ExecutionListFilterContext'
@@ -69,7 +70,7 @@ export function ExecutionListEmptyState({
   const { isAnyFilterApplied } = useExecutionListFilterContext()
 
   return (
-    <Container className={css.serviceDetailEmptyState} style={{ height: 400, margin: 18 }}>
+    <Container className={cx(css.serviceDetailEmptyState, css.executionListEmpty)}>
       {isAnyFilterApplied ? (
         <Layout.Vertical flex={{ alignItems: 'center' }}>
           <img src={noDataFound} alt={getString('common.filters.noResultsFound')} />

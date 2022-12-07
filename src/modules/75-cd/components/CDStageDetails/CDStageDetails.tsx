@@ -8,25 +8,54 @@
 import React from 'react'
 import cx from 'classnames'
 import { defaultTo, get } from 'lodash-es'
+import { Link, useParams } from 'react-router-dom'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Popover, Text } from '@harness/uicore'
 
 import { String as StrTemplate } from 'framework/strings'
 import type { Application, GitOpsExecutionSummary } from 'services/cd-ng'
+import routes from '@common/RouteDefinitions'
+import type { ProjectPathProps, ModulePathParams, Module } from '@common/interfaces/RouteInterfaces'
 import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { ServicePopoverCard } from '@cd/components/ServicePopoverCard/ServicePopoverCard'
 import serviceCardCSS from '@cd/components/ServicePopoverCard/ServicePopoverCard.module.scss'
 import css from './CDStageDetails.module.scss'
 
-const GitopsApplications = ({ gitOpsApps }: { gitOpsApps: Application[] }): React.ReactElement | null => {
+const GitopsApplications = ({
+  gitOpsApps,
+  orgIdentifier,
+  projectIdentifier,
+  accountId,
+  module
+}: {
+  gitOpsApps: Application[]
+  orgIdentifier: string
+  projectIdentifier: string
+  accountId: string
+  module: Module
+}): React.ReactElement | null => {
   if (gitOpsApps.length === 0) return null
+
+  const firstApp: Application = gitOpsApps[0]
 
   return (
     <div data-test-id="GitopsApplications">
       <StrTemplate className={css.title} tagName="div" stringID="applications" />
       <ul className={css.values}>
-        <li>
-          {gitOpsApps[0].name}
+        <li className={css.gitOpsAppsLi}>
+          <Link
+            onClick={e => e.stopPropagation()}
+            to={routes.toGitOpsApplication({
+              orgIdentifier,
+              projectIdentifier,
+              accountId,
+              module,
+              applicationId: (firstApp.identifier || firstApp.name) as string,
+              agentId: firstApp.agentIdentifier
+            })}
+          >
+            <Text>{firstApp.name}</Text>
+          </Link>
           {gitOpsApps.length > 1 ? (
             <Popover
               interactionKind={PopoverInteractionKind.HOVER}
@@ -37,7 +66,23 @@ const GitopsApplications = ({ gitOpsApps }: { gitOpsApps: Application[] }): Reac
               <div className={serviceCardCSS.main}>
                 <ul className={css.values}>
                   {gitOpsApps.slice(1).map((app: Application, index: number) => {
-                    return <li key={app.identifier || index}>{app.name}</li>
+                    return (
+                      <li key={app.identifier || index}>
+                        <Link
+                          onClick={e => e.stopPropagation()}
+                          to={routes.toGitOpsApplication({
+                            orgIdentifier,
+                            projectIdentifier,
+                            accountId,
+                            module,
+                            applicationId: (app.identifier || app.name) as string,
+                            agentId: app.agentIdentifier
+                          })}
+                        >
+                          <Text>{app.name}</Text>
+                        </Link>
+                      </li>
+                    )
                   })}
                 </ul>
               </div>
@@ -52,6 +97,7 @@ const GitopsApplications = ({ gitOpsApps }: { gitOpsApps: Application[] }): Reac
 export function CDStageDetails(props: StageDetailProps): React.ReactElement {
   const { stage } = props
   const gitOpsApps = get(stage, 'moduleInfo.cd.gitOpsAppSummary.applications') || []
+  const { orgIdentifier, projectIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
 
   const gitOpsEnvironments = Array.isArray(get(stage, 'moduleInfo.cd.gitopsExecutionSummary.environments'))
     ? (get(stage, 'moduleInfo.cd.gitopsExecutionSummary') as Required<GitOpsExecutionSummary>).environments.map(
@@ -91,7 +137,13 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
             )}
           </ul>
         </div>
-        <GitopsApplications gitOpsApps={gitOpsApps} />
+        <GitopsApplications
+          gitOpsApps={gitOpsApps}
+          orgIdentifier={orgIdentifier}
+          projectIdentifier={projectIdentifier}
+          accountId={accountId}
+          module={module}
+        />
       </div>
     </div>
   )

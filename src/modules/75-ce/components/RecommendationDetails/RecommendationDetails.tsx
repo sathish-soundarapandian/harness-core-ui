@@ -11,6 +11,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import copy from 'copy-to-clipboard'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import cx from 'classnames'
+import { DATE_RANGE_SHORTCUTS, getTimePeriodString } from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 
 import { convertNumberToFixedDecimalPlaces } from '@ce/utils/convertNumberToFixedDecimalPlaces'
@@ -25,7 +26,6 @@ import { RecommendationItem, TimeRangeValue, ResourceObject, QualityOfService, C
 import type { RecommendationOverviewStats } from 'services/ce/services'
 
 import formatCost from '@ce/utils/formatCost'
-import { DATE_RANGE_SHORTCUTS, getTimePeriodString } from '@ce/utils/momentUtils'
 import { addBufferToValue, addBufferWithoutPrecision, calculateSavingsPercentage } from '@ce/utils/recommendationUtils'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { RecommendationType, ChartColors, PercentileValues } from './constants'

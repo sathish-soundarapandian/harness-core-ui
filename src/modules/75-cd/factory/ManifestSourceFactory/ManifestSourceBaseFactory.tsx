@@ -18,6 +18,7 @@ import { EcsServiceDefinitionManifestSource } from '@cd/components/PipelineSteps
 import { EcsScalableTargetDefinitionManifestSource } from '@cd/components/PipelineSteps/ECSServiceSpec/ManifestSource/EcsScalableTargetDefinitionManifestSource/EcsScalableTargetDefinitionManifestSource'
 import { EcsScalingPolicyDefinitionManifestSource } from '@cd/components/PipelineSteps/ECSServiceSpec/ManifestSource/EcsScalingPolicyDefinitionManifestSource/EcsScalingPolicyDefinitionManifestSource'
 import { ReleaseRepoManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ReleaseRepoManifestSource/ReleaseRepoManifestSource'
+import { DeploymentRepoManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/DeploymentRepoManifestSource/DeploymentRepoManifestSource'
 
 import type { ManifestSourceBase } from './ManifestSourceBase'
 
@@ -57,5 +58,6 @@ manifestSourceBaseFactory.registerManifestSource(new EcsServiceDefinitionManifes
 manifestSourceBaseFactory.registerManifestSource(new EcsScalableTargetDefinitionManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new EcsScalingPolicyDefinitionManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new ReleaseRepoManifestSource())
+manifestSourceBaseFactory.registerManifestSource(new DeploymentRepoManifestSource())
 
 export default manifestSourceBaseFactory

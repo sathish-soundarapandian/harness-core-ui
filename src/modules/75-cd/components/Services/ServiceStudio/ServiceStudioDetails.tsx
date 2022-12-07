@@ -119,13 +119,13 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
       const response = isServiceCreateModalView ? await createService(body) : await updateService(body)
       if (response.status === 'SUCCESS') {
         if (isServiceEntityModalView) {
+          queryClient.invalidateQueries(['getServiceAccessList'])
           const serviceResponse = response.data?.service
           onServiceCreate?.({
             identifier: serviceResponse?.identifier as string,
             name: serviceResponse?.name as string
           })
         } else {
-          queryClient.invalidateQueries(['getServiceAccessList'])
           showSuccess(
             isServiceEntityModalView && isServiceCreateModalView
               ? getString('common.serviceCreated')

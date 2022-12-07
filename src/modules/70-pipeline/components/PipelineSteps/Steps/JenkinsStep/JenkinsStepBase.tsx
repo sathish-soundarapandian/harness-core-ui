@@ -18,7 +18,6 @@ import {
   SelectWithSubmenuOption
 } from '@harness/uicore'
 import type { FormikProps } from 'formik'
-import { v4 as uuid } from 'uuid'
 import * as Yup from 'yup'
 import { FieldArray } from 'formik'
 import cx from 'classnames'
@@ -106,8 +105,7 @@ function FormContent({
           return {
             name: item.name,
             value: item.defaultValue,
-            type: 'String',
-            id: uuid()
+            type: 'String'
           } as jobParameterInterface
         }) || []
       formik.setValues({
@@ -425,9 +423,9 @@ function FormContent({
                     <Spinner />
                   ) : (
                     isArray(formValues.spec.jobParameter) &&
-                    formValues.spec.jobParameter?.map(({ id }: jobParameterInterface, i: number) => {
+                    formValues.spec.jobParameter?.map((type: jobParameterInterface, i: number) => {
                       return (
-                        <div className={css.jobParameter} key={id}>
+                        <div className={css.jobParameter} key={type.id}>
                           <FormInput.Text
                             name={`spec.jobParameter.[${i}].name`}
                             placeholder={getString('name')}
@@ -466,7 +464,7 @@ function FormContent({
                     variation={ButtonVariation.LINK}
                     data-testid="add-environmentVar"
                     disabled={readonly}
-                    onClick={() => push({ name: '', type: 'String', value: '', id: uuid() })}
+                    onClick={() => push({ name: '', type: 'String', value: '' })}
                     className={css.addButton}
                   >
                     {getString('pipeline.jenkinsStep.addJobParameters')}

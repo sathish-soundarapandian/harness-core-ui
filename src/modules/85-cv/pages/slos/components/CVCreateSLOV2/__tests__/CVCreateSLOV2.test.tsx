@@ -107,8 +107,8 @@ describe('CVCreateSloV2', () => {
     act(() => {
       userEvent.click(screen.getByText('next'))
     })
-    await waitFor(() => expect(screen.getByText('cv.slos.validations.nameValidation')).toBeInTheDocument())
-    await waitFor(() => expect(screen.getByText('cv.slos.validations.userJourneyRequired')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getAllByText('cv.slos.validations.nameValidation').length).toEqual(2))
+    await waitFor(() => expect(screen.getAllByText('cv.slos.validations.userJourneyRequired').length).toEqual(2))
     expect(
       container.querySelector('[data-testid="steptitle_Define_SLO_Identification"] [icon="error"]')
     ).toBeInTheDocument()

@@ -160,3 +160,24 @@ describe('Gitops Fetch Linked App Step - Input Set', () => {
     expect(container).toMatchSnapshot('empty input sets')
   })
 })
+
+describe('Gitops Fetch Linked App Step - Input Set', () => {
+  beforeAll(() => {
+    factory.registerStep(new GitOpsFetchLinkedApps())
+  })
+
+  test('should render variable view', () => {
+    const onUpdate = jest.fn()
+    const { container } = render(
+      <TestStepWidget
+        initialValues={{}}
+        type={StepType.GitOpsFetchLinkedApps}
+        stepViewType={StepViewType.InputSet}
+        onUpdate={onUpdate}
+        customStepProps={{ metadataMap: {}, variablesData: { spec: {} } }}
+      />
+    )
+
+    expect(container).toMatchSnapshot('variable view')
+  })
+})
