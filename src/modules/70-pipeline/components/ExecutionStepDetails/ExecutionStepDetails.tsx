@@ -69,6 +69,10 @@ export default function ExecutionStepDetails(): React.ReactElement {
     return originalStep
   }, [allNodeMap, originalStep, retryStep])
 
+  const executionMetadata = useMemo(() => {
+    return defaultTo(pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata, {})
+  }, [pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata])
+
   const stepDetails = factory.getStepDetails(selectedStep.stepType as StepType)
   const interruptHistories = getInterruptHistoriesFromType(originalStep.interruptHistories, Interrupt.RETRY)
 
