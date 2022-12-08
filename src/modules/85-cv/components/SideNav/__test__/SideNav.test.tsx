@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Container } from '@harness/uicore'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as hooks from '@common/hooks/useFeatureFlag'
 import SideNav from '../SideNav'
@@ -18,7 +19,7 @@ jest.mock('@projects-orgs/components/ProjectSelector/ProjectSelector.tsx', () =>
     return (
       <Container>
         <button
-          onClick={() => props.onSelect({ projectIdentifier: '1234_project', orgIdentifer: '1234_org' })}
+          onClick={() => props.onSelect({ identifier: '1234_project', orgIdentifier: '1234_org' })}
           id="bt"
         ></button>
       </Container>
@@ -30,7 +31,7 @@ describe('Sidenav', () => {
   test('render', async () => {
     const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlag')
     useFeatureFlags.mockReturnValue(true)
-    const { container } = render(
+    const { container, getByText } = render(
       <TestWrapper
         path="/account/:accountId/cv/dashboard/orgs/:orgIdentifier/projects/:projectIdentifier"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
@@ -40,26 +41,15 @@ describe('Sidenav', () => {
     )
     await waitFor(() => expect(container.querySelector('[class*="Layout"]')).not.toBeNull())
     expect(container).toMatchSnapshot()
+    const projectTab = container.querySelector('[data-tab-id="ProjectTab"]')
+    userEvent.click(projectTab!)
     const button = container.querySelector('#bt')
     if (!button) {
       throw Error('Button was not rendered.')
     }
-  })
-
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('render2', async () => {
-    const { container } = render(
-      <TestWrapper>
-        <SideNav />
-      </TestWrapper>
-    )
-    await waitFor(() => expect(container.querySelector('[class*="Layout"]')).not.toBeNull())
-    const button = container.querySelector('#bt')
-    if (!button) {
-      throw Error('Button was not rendered.')
-    }
-
-    fireEvent.click(button)
-    // await waitFor(() => expect(mockHistoryPush).toHaveBeenCalledTimes(1))
+    userEvent.click(button)
+    const accountTab = container.querySelector('[data-tab-id="AccountTab"]')
+    userEvent.click(accountTab!)
+    expect(getByText('/account/dummy/cv/slos')).toBeInTheDocument()
   })
 })

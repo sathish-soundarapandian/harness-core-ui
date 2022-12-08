@@ -257,7 +257,7 @@ ldap:
       number: 'Hostname or IP must be a number'
     validateReferralHops:
       required: 'Referral Hops is required'
-      number: 'Referral Hops must be a number'
+      number: 'Referral Hops must be a positive number'
     validateConnectionTimeout:
       required: 'Connection timeout is required'
       number: 'Connection timeout must be a number'

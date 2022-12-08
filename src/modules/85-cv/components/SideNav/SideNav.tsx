@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
-import { Layout } from '@harness/uicore'
+import { Container, Layout, Tabs, Text } from '@harness/uicore'
 import { compile } from 'path-to-regexp'
 
 import routes from '@common/RouteDefinitions'
@@ -20,16 +20,23 @@ import { ModuleName } from 'framework/types/ModuleName'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import css from './SideNav.module.scss'
 
 export default function CVSideNav(): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } = useParams<PipelinePathProps>()
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const routeMatch = useRouteMatch()
   const { getString } = useStrings()
   const history = useHistory()
   const { updateAppStore } = useAppStore()
   const SRM_ET_EXPERIMENTAL = useFeatureFlag(FeatureFlag.SRM_ET_EXPERIMENTAL)
+  const SRM_COMPOSITE_SLO = useFeatureFlag(FeatureFlag.SRM_COMPOSITE_SLO)
+  enum CVSideNavTabIds {
+    AccountTab = 'AccountTab',
+    ProjectTab = 'ProjectTab'
+  }
 
-  return (
+  const ProjectPanel = (
     <Layout.Vertical spacing="small">
       <ProjectSelector
         moduleFilter={ModuleName.CV}
@@ -78,7 +85,46 @@ export default function CVSideNav(): React.ReactElement {
           ) : null}
           <ProjectSetupMenu module="cv" />
         </React.Fragment>
-      ) : null}
+      ) : (
+        <></>
+      )}
     </Layout.Vertical>
+  )
+
+  const AccountPanel = (
+    <Layout.Vertical spacing="small">
+      {!projectIdentifier && !orgIdentifier && (
+        <SidebarLink label={getString('cv.slos.title')} to={routes.toAccountCVSLOs({ accountId })} />
+      )}
+    </Layout.Vertical>
+  )
+
+  return SRM_COMPOSITE_SLO ? (
+    <Container className={css.cvtab}>
+      <Tabs
+        id={'cvSideNav'}
+        defaultSelectedTabId={isAccountLevel ? CVSideNavTabIds.AccountTab : CVSideNavTabIds.ProjectTab}
+        onChange={tabId => {
+          if (tabId === CVSideNavTabIds.AccountTab) {
+            updateAppStore({ selectedProject: undefined })
+            history.push(routes.toAccountCVSLOs({ accountId }))
+          }
+        }}
+        tabList={[
+          {
+            id: CVSideNavTabIds.AccountTab,
+            title: <Text color="white">{getString('account')}</Text>,
+            panel: AccountPanel
+          },
+          {
+            id: CVSideNavTabIds.ProjectTab,
+            title: <Text color="white">{getString('projectLabel')}</Text>,
+            panel: ProjectPanel
+          }
+        ]}
+      />
+    </Container>
+  ) : (
+    ProjectPanel
   )
 }

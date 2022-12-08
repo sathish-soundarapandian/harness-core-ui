@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import type { CellProps, Renderer } from 'react-table'
-import { Container, Text, Layout, TableV2, NoDataCard, Heading, Utils, TagsPopover } from '@harness/uicore'
+import { Container, Text, Layout, TableV2, NoDataCard, Heading, Utils, TagsPopover, Button } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
@@ -25,6 +25,10 @@ import FilterCard from '@cv/components/FilterCard/FilterCard'
 import ContextMenuActions from '@cv/components/ContextMenuActions/ContextMenuActions'
 import type { MonitoredServiceListItemDTO } from 'services/cv'
 import { EnvironmentToolTipDisplay } from '@cv/components/HarnessServiceAndEnvironment/components/EnvironmentToolTipDisplay'
+import { useFeature } from '@common/hooks/useFeatures'
+import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
+import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import IconGrid from '../IconGrid/IconGrid'
 import {
   calculateChangePercentage,
@@ -203,19 +207,14 @@ const MonitoredServiceListView: React.FC<MonitoredServiceListViewProps> = ({
 
   const { content, pageSize = 0, pageIndex = 0, totalPages = 0, totalItems = 0 } = monitoredServiceListData || {}
 
-  const RenderStatusToggle: Renderer<CellProps<MonitoredServiceListItemDTO>> = ({ row }) => {
-    const monitoredService = row.original
+  const { enabled: srmServicesFeatureEnabled } = useFeature({
+    featureRequest: {
+      featureName: FeatureIdentifier.SRM_SERVICES
+    }
+  })
 
-    const [canToggle] = usePermission(
-      {
-        resource: {
-          resourceType: ResourceType.MONITOREDSERVICE,
-          resourceIdentifier: projectIdentifier
-        },
-        permissions: [PermissionIdentifier.TOGGLE_MONITORED_SERVICE]
-      },
-      [projectIdentifier]
-    )
+  const RenderContextMenu: Renderer<CellProps<MonitoredServiceListItemDTO>> = ({ row }) => {
+    const monitoredService = row.original
 
     const onCopy = (): void => {
       const environmentVariables = `ET_COLLECTOR_URL: <check documentation for value>
@@ -232,14 +231,6 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
       <>
         <HelpPanel referenceId="monitoredServiceDetails" type={HelpPanelType.FLOATING_CONTAINER} />
         <Layout.Horizontal flex={{ alignItems: 'center' }}>
-          <ToggleOnOff
-            disabled={!canToggle}
-            checked={Boolean(monitoredService.healthMonitoringEnabled)}
-            loading={healthMonitoringFlagLoading}
-            onChange={checked => {
-              onToggleService(monitoredService.identifier as string, checked)
-            }}
-          />
           <ContextMenuActions
             titleText={getString('common.delete', { name: monitoredService.serviceName })}
             contentText={<ServiceDeleteContext serviceName={monitoredService.serviceName} />}
@@ -276,6 +267,64 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
     )
   }
 
+  const RenderStatusToggle: Renderer<CellProps<MonitoredServiceListItemDTO>> = ({ row }) => {
+    const monitoredService = row.original
+
+    const [canToggle] = usePermission(
+      {
+        resource: {
+          resourceType: ResourceType.MONITOREDSERVICE,
+          resourceIdentifier: projectIdentifier
+        },
+        permissions: [PermissionIdentifier.TOGGLE_MONITORED_SERVICE]
+      },
+      [projectIdentifier]
+    )
+
+    const canDisableMonitoredServiceToggle = !monitoredService?.serviceLicenseEnabled && !srmServicesFeatureEnabled
+
+    const getTooltip = (): ReactElement | undefined => {
+      if (!canToggle) {
+        return (
+          <RBACTooltip
+            permission={PermissionIdentifier.TOGGLE_MONITORED_SERVICE}
+            resourceType={ResourceType.MONITOREDSERVICE}
+          />
+        )
+      } else if (canDisableMonitoredServiceToggle) {
+        return (
+          <FeatureWarningTooltip
+            featureName={FeatureIdentifier.SRM_SERVICES}
+            warningMessage={getString('cv.monitoredServices.listToggleSwitchDisableMessage')}
+          />
+        )
+      }
+    }
+
+    return (
+      <>
+        <HelpPanel referenceId="monitoredServiceDetails" type={HelpPanelType.FLOATING_CONTAINER} />
+        <Layout.Horizontal flex={{ alignItems: 'center' }}>
+          <Button
+            noStyling
+            tooltip={getTooltip()}
+            className={css.toggleFlagButton}
+            disabled={canDisableMonitoredServiceToggle || !canToggle}
+          >
+            <ToggleOnOff
+              disabled={canDisableMonitoredServiceToggle || !canToggle}
+              checked={Boolean(monitoredService.healthMonitoringEnabled)}
+              loading={healthMonitoringFlagLoading}
+              onChange={checked => {
+                onToggleService(monitoredService.identifier as string, checked)
+              }}
+            />
+          </Button>
+        </Layout.Horizontal>
+      </>
+    )
+  }
+
   const filterOptions = getMonitoredServiceFilterOptions(getString, serviceCountData)
 
   return (
@@ -303,6 +352,11 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
                 Header: ' ',
                 width: '2.5%',
                 Cell: CategoryProps
+              },
+              {
+                Header: getString('enabledLabel'),
+                width: '6%',
+                Cell: RenderStatusToggle
               },
               {
                 Header: getString('name'),
@@ -335,9 +389,9 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
                 Cell: RenderDependenciesHealth
               },
               {
-                Header: getString('enabledLabel'),
-                width: '8%',
-                Cell: RenderStatusToggle
+                id: 'contextMenu',
+                width: '2%',
+                Cell: RenderContextMenu
               }
             ]}
             data={content}

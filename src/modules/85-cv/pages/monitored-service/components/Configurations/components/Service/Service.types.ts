@@ -16,4 +16,5 @@ export interface MonitoredServiceRef {
 
 export interface MonitoredServiceForm extends Omit<MonitoredServiceDTO, 'projectIdentifier' | 'orgIdentifier'> {
   isEdit: boolean
+  isMonitoredServiceEnabled?: boolean
 }

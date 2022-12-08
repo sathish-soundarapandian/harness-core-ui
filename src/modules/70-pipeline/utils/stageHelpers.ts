@@ -382,6 +382,10 @@ export const isAzureWebAppOrSshWinrmGenericDeploymentType = (
   return false
 }
 
+export const isTASDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.TAS
+}
+
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
@@ -391,7 +395,8 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.WinRm]: 'WinRM',
   [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details', //todospt
   [ServiceDeploymentType.SshWinRmAws]: 'Amazon Web Services Details',
-  [ServiceDeploymentType.SshWinRmAzure]: 'Azure Infrastructure details'
+  [ServiceDeploymentType.SshWinRmAzure]: 'Azure Infrastructure details',
+  [ServiceDeploymentType.TAS]: 'Tanzu Application Service Infrastructure Details'
 }
 
 export const getSelectedDeploymentType = (
@@ -623,7 +628,8 @@ export const deleteStageInfo = (stage?: DeploymentStageElementConfig): void => {
 export const infraDefinitionTypeMapping: { [key: string]: string } = {
   ServerlessAwsLambda: StepType.ServerlessAwsInfra,
   ECS: StepType.EcsInfra,
-  CustomDeployment: StepType.CustomDeployment
+  CustomDeployment: StepType.CustomDeployment,
+  TAS: StepType.TasInfra
 }
 
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {
@@ -642,6 +648,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.CustomDeploymentServiceSpec
     case ServiceDeploymentType.Elastigroup:
       return StepType.ElastigroupService
+    case ServiceDeploymentType.TAS:
+      return StepType.TasService
     default:
       return StepType.K8sServiceSpec
   }

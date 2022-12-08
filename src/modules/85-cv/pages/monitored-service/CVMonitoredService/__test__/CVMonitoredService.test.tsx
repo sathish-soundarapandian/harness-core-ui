@@ -10,6 +10,7 @@ import { render, waitFor, screen, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import * as useFeatures from '@common/hooks/useFeatures'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import * as cvServices from 'services/cv'
 import { RiskValues, getRiskLabelStringId, getCVMonitoringServicesSearchParam } from '@cv/utils/CommonUtils'
@@ -21,7 +22,10 @@ import {
   updatedServiceCountData,
   updatedMSListData,
   riskMSListData,
-  graphData
+  graphData,
+  MSListDataEnforcementMock,
+  MSListDataMock,
+  checkFeatureReturnMock
 } from './CVMonitoredService.mock'
 
 export const testWrapperProps: TestWrapperProps = {
@@ -168,6 +172,9 @@ describe('Monitored Service list', () => {
   })
 
   test('Enable service', async () => {
+    jest.spyOn(useFeatures, 'useFeature').mockImplementation(() => ({ ...checkFeatureReturnMock } as any))
+    jest.spyOn(useFeatures, 'useFeatures').mockImplementation(() => ({ features: new Map() } as any))
+
     const mutate = jest.fn()
 
     jest.spyOn(cvServices, 'useSetHealthMonitoringFlag').mockImplementation(() => ({ mutate } as any))
@@ -178,7 +185,7 @@ describe('Monitored Service list', () => {
       </TestWrapper>
     )
 
-    userEvent.click(container.querySelector('[data-name="on-btn"]')!)
+    userEvent.click(container.querySelector('.toggleFlagButton:first-child [data-name="on-btn"]')!)
 
     expect(mutate).toHaveBeenCalledWith(undefined, {
       pathParams: {
@@ -211,6 +218,9 @@ describe('Monitored Service list', () => {
   })
 
   test('Error state', async () => {
+    jest.spyOn(useFeatures, 'useFeature').mockImplementation(() => ({ ...checkFeatureReturnMock } as any))
+    jest.spyOn(useFeatures, 'useFeatures').mockImplementation(() => ({ features: new Map() } as any))
+
     const mutate = jest.fn().mockRejectedValue({ data: { message: 'Something went wrong' } })
 
     jest.spyOn(cvServices, 'useSetHealthMonitoringFlag').mockImplementation(() => ({ mutate } as any))
@@ -304,5 +314,81 @@ describe('Monitored Service list', () => {
     })
     await waitFor(() => expect(searchInput?.value).toBe(query))
     await waitFor(() => expect(cvServices.useListMonitoredService).toBeCalledTimes(2))
+  })
+
+  describe('SRM Enforcement framework tests', () => {
+    test('Should render the row switch as disabled, if the feature is disabled', async () => {
+      const checkFeatureReturnMock2 = {
+        enabled: false
+      }
+      jest.spyOn(cvServices, 'useListMonitoredService').mockImplementation(() => ({ data: MSListDataMock } as any))
+      jest.spyOn(useFeatures, 'useFeature').mockImplementation(() => ({ ...checkFeatureReturnMock2 } as any))
+
+      render(
+        <TestWrapper {...testWrapperProps}>
+          <CVMonitoredService />
+        </TestWrapper>
+      )
+
+      const toggleButton = document.querySelector('button.toggleFlagButton .optionBtn.notAllowed')
+
+      expect(toggleButton).toBeInTheDocument()
+    })
+
+    test('Should render the row switch as enabled, if the feature is enabled', async () => {
+      const checkFeatureReturnMock2 = {
+        enabled: true
+      }
+      jest.spyOn(cvServices, 'useListMonitoredService').mockImplementation(() => ({ data: MSListData } as any))
+      jest.spyOn(useFeatures, 'useFeature').mockImplementation(() => ({ ...checkFeatureReturnMock2 } as any))
+
+      render(
+        <TestWrapper {...testWrapperProps}>
+          <CVMonitoredService />
+        </TestWrapper>
+      )
+
+      const toggleButton = document.querySelector('button.toggleFlagButton .optionBtn.notAllowed')
+
+      expect(toggleButton).not.toBeInTheDocument()
+    })
+
+    test('Should render the row switch as enabled, if serviceLicenseEnabled is true and the feature count is equal to limit', async () => {
+      const checkFeatureReturnMock2 = {
+        enabled: false
+      }
+      jest.spyOn(cvServices, 'useListMonitoredService').mockImplementation(() => ({ data: MSListData } as any))
+      jest.spyOn(useFeatures, 'useFeature').mockImplementation(() => ({ ...checkFeatureReturnMock2 } as any))
+
+      render(
+        <TestWrapper {...testWrapperProps}>
+          <CVMonitoredService />
+        </TestWrapper>
+      )
+
+      const toggleButton = document.querySelector('button.toggleFlagButton .optionBtn.notAllowed')
+
+      expect(toggleButton).not.toBeInTheDocument()
+    })
+
+    test('Should render the row switch as disabled, if serviceLicenseEnabled is false and feature enabled is false', async () => {
+      const checkFeatureReturnMock2 = {
+        enabled: false
+      }
+      jest
+        .spyOn(cvServices, 'useListMonitoredService')
+        .mockImplementation(() => ({ data: MSListDataEnforcementMock } as any))
+      jest.spyOn(useFeatures, 'useFeature').mockImplementation(() => ({ ...checkFeatureReturnMock2 } as any))
+
+      render(
+        <TestWrapper {...testWrapperProps}>
+          <CVMonitoredService />
+        </TestWrapper>
+      )
+
+      const toggleButton = document.querySelector('button.toggleFlagButton .optionBtn.notAllowed')
+
+      expect(toggleButton).toBeInTheDocument()
+    })
   })
 })

@@ -11,6 +11,5 @@ declare const styles: {
   readonly iconColor: string
   readonly projectSelectorContainer: string
   readonly selector: string
-  readonly sidebarlink: string
 }
 export default styles

@@ -39,6 +39,9 @@ export const defaultLicensesByModule: {
   },
   CHAOS: {
     edition: Editions.FREE
+  },
+  CV: {
+    edition: Editions.FREE
   }
 }
 

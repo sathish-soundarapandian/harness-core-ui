@@ -20,5 +20,6 @@ declare const styles: {
   readonly pageContainer: string
   readonly tags: string
   readonly tagsText: string
+  readonly toggleFlagButton: string
 }
 export default styles

@@ -5,26 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef } from 'react'
-import { Card, Icon, Tag, TagsPopover, Text, Checkbox } from '@harness/uicore'
-import { FontVariation, Color } from '@harness/design-system'
-import { useHistory, useParams } from 'react-router-dom'
 import { Popover, Position } from '@blueprintjs/core'
-import { defaultTo, get, isEmpty } from 'lodash-es'
+import { Color, FontVariation } from '@harness/design-system'
+import { Card, Checkbox, Icon, Tag, TagsPopover, Text } from '@harness/uicore'
 import cx from 'classnames'
-import type { PipelineExecutionSummary } from 'services/pipeline-ng'
-import { UserLabel, Duration, TimeAgoPopover } from '@common/exports'
-import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
-import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
-import { String, useStrings } from 'framework/strings'
-import routes from '@common/RouteDefinitions'
-import type { PipelineType, PipelinePathProps, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
+import { defaultTo, get, isEmpty } from 'lodash-es'
+import React, { useRef } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
 import { StoreType } from '@common/constants/GitSyncTypes'
-import { usePermission } from '@rbac/hooks/usePermission'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ExecutionStatus, isExecutionIgnoreFailed, isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
+import { Duration, TimeAgoPopover, UserLabel } from '@common/exports'
+import type { ExecutionPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
+import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
+import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import executionFactory from '@pipeline/factories/ExecutionFactory'
+import { CardVariant } from '@pipeline/utils/constants'
 import {
   hasCDStage,
   hasCIStage,
@@ -33,39 +28,34 @@ import {
   hasSTOStage,
   StageType
 } from '@pipeline/utils/stageHelpers'
+import { ExecutionStatus, isExecutionIgnoreFailed, isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
-import GitPopover from '@pipeline/components/GitPopover/GitPopover'
-import { CardVariant } from '@pipeline/utils/constants'
-
+import { String, useStrings } from 'framework/strings'
+import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
-
+import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import type { EnvironmentDeploymentsInfo, ServiceDeploymentInfo } from 'services/cd-ng'
-import { DashboardSelected, ServiceExecutionsCard } from '../ServiceExecutionsCard/ServiceExecutionsCard'
-import MiniExecutionGraph from './MiniExecutionGraph/MiniExecutionGraph'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
+import { DashboardSelected, ServiceExecutionsCard } from '../ServiceExecutionsCard/ServiceExecutionsCard'
 import { TimePopoverWithLocal } from './TimePopoverWithLocal'
 import css from './ExecutionCard.module.scss'
 
 export interface ExecutionCardProps {
   pipelineExecution: PipelineExecutionSummary
-  variant?: CardVariant
   staticCard?: boolean
   isPipelineInvalid?: boolean
   showGitDetails?: boolean
-  onViewCompiledYaml?: () => void
   isCD?: boolean
 }
 
 function ExecutionCardFooter({
   pipelineExecution,
-  variant,
   isCD = false
-}: Pick<ExecutionCardProps, 'pipelineExecution' | 'variant' | 'isCD'>): React.ReactElement {
-  const fontVariation = variant === CardVariant.Minimal ? FontVariation.TINY : FontVariation.SMALL
-  const variantSize = variant === CardVariant.Minimal ? 10 : 14
+}: Pick<ExecutionCardProps, 'pipelineExecution' | 'isCD'>): React.ReactElement {
+  const fontVariation = FontVariation.TINY
+  const variantSize = 10
   return (
     <div className={css.footer}>
       <div className={css.triggerInfo}>
@@ -131,7 +121,7 @@ function ExecutionCardFooter({
             color: Color.GREY_900
           }}
           startTime={pipelineExecution?.startTs}
-          durationText={variant === CardVariant.Default ? undefined : ' '}
+          durationText=" "
           endTime={pipelineExecution?.endTs}
           font={{ variation: fontVariation }}
         />
@@ -141,14 +131,7 @@ function ExecutionCardFooter({
 }
 
 export default function ExecutionCard(props: ExecutionCardProps): React.ReactElement {
-  const {
-    pipelineExecution,
-    variant = CardVariant.Default,
-    staticCard = false,
-    isPipelineInvalid,
-    showGitDetails = false,
-    onViewCompiledYaml
-  } = props
+  const { pipelineExecution, staticCard = false, showGitDetails = false } = props
   const { orgIdentifier, projectIdentifier, accountId, module, pipelineIdentifier } =
     useParams<PipelineType<PipelinePathProps>>()
   const history = useHistory()
@@ -166,21 +149,6 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
   const { isCompareMode, compareItems, addToCompare, removeFromCompare } = useExecutionCompareContext()
 
   const checkboxRef = useRef<HTMLDivElement>(null)
-  const [canEdit, canExecute] = usePermission(
-    {
-      resourceScope: {
-        accountIdentifier: accountId,
-        orgIdentifier,
-        projectIdentifier
-      },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipelineExecution.pipelineIdentifier as string
-      },
-      permissions: [PermissionIdentifier.EDIT_PIPELINE, PermissionIdentifier.EXECUTE_PIPELINE]
-    },
-    [orgIdentifier, projectIdentifier, accountId, pipelineExecution.pipelineIdentifier]
-  )
   const disabled = isExecutionNotStarted(pipelineExecution.status)
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
 
@@ -223,12 +191,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
   }
 
   return (
-    <Card
-      elevation={0}
-      className={cx(css.card, !staticCard && css.hoverCard)}
-      data-disabled={disabled}
-      data-variant={variant}
-    >
+    <Card elevation={0} className={cx(css.card, !staticCard && css.hoverCard)} data-disabled={disabled}>
       <div className={cx(!staticCard && css.cardLink)} onClick={handleClick}>
         <div className={css.content}>
           <div className={css.header}>
@@ -245,15 +208,6 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                   </div>
                 )}
                 <div className={css.pipelineName}>{pipelineExecution?.name}</div>
-                {variant === CardVariant.Default ? (
-                  <String
-                    className={css.executionId}
-                    stringID={
-                      module === 'cd' ? 'execution.pipelineIdentifierTextCD' : 'execution.pipelineIdentifierTextCI'
-                    }
-                    vars={pipelineExecution}
-                  />
-                ) : null}
               </div>
               {!isEmpty(pipelineExecution?.tags) ? (
                 <TagsPopover
@@ -307,34 +261,6 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                   </Popover>
                 ) : null}
               </div>
-              {variant === CardVariant.Default || variant === CardVariant.MinimalWithActions ? (
-                <ExecutionActions
-                  executionStatus={pipelineExecution.status as ExecutionStatus}
-                  params={{
-                    accountId,
-                    orgIdentifier,
-                    pipelineIdentifier: defaultTo(pipelineExecution?.pipelineIdentifier, ''),
-                    executionIdentifier: defaultTo(pipelineExecution?.planExecutionId, ''),
-                    projectIdentifier,
-                    module,
-                    repoIdentifier: pipelineExecution?.gitDetails?.repoIdentifier,
-                    connectorRef: pipelineExecution.connectorRef,
-                    repoName: pipelineExecution?.gitDetails?.repoName,
-                    branch: pipelineExecution?.gitDetails?.branch,
-                    stagesExecuted: pipelineExecution?.stagesExecuted,
-                    storeType: pipelineExecution?.storeType as StoreType
-                  }}
-                  isPipelineInvalid={isPipelineInvalid}
-                  canEdit={canEdit}
-                  onViewCompiledYaml={onViewCompiledYaml}
-                  onCompareExecutions={() => addToCompare(pipelineExecution)}
-                  source={source}
-                  canExecute={canExecute}
-                  canRetry={pipelineExecution.canRetry}
-                  modules={pipelineExecution.modules}
-                  isExecutionListView
-                />
-              ) : null}
             </div>
           </div>
           <div className={css.main}>
@@ -354,7 +280,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                     data: defaultTo(pipelineExecution?.moduleInfo?.ci, {}),
                     nodeMap: defaultTo(pipelineExecution?.layoutNodeMap, {}),
                     startingNodeId: defaultTo(pipelineExecution?.startingNodeId, ''),
-                    variant
+                    variant: CardVariant.Minimal
                   })}
                 </div>
               ) : null}
@@ -365,7 +291,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                     data: defaultTo(pipelineExecution?.moduleInfo?.cd, {}),
                     nodeMap: defaultTo(pipelineExecution?.layoutNodeMap, {}),
                     startingNodeId: defaultTo(pipelineExecution?.startingNodeId, ''),
-                    variant
+                    variant: CardVariant.Minimal
                   })}
                 </div>
               ) : null}
@@ -387,24 +313,14 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                     data: defaultTo(pipelineExecution, {}),
                     nodeMap: defaultTo(pipelineExecution?.layoutNodeMap, {}),
                     startingNodeId: defaultTo(pipelineExecution?.startingNodeId, ''),
-                    variant
+                    variant: CardVariant.Minimal
                   })}
                 </div>
               ) : null}
             </div>
-            {variant === CardVariant.Default ? (
-              <MiniExecutionGraph
-                pipelineExecution={pipelineExecution}
-                projectIdentifier={projectIdentifier}
-                orgIdentifier={orgIdentifier}
-                accountId={accountId}
-                source={source}
-                module={module}
-              />
-            ) : null}
           </div>
         </div>
-        <ExecutionCardFooter pipelineExecution={pipelineExecution} variant={variant} isCD={HAS_CD} />
+        <ExecutionCardFooter pipelineExecution={pipelineExecution} isCD={HAS_CD} />
       </div>
     </Card>
   )

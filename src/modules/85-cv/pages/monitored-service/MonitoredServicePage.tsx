@@ -24,11 +24,13 @@ import ServiceHealth from './components/ServiceHealth/ServiceHealth'
 import HealthScoreCard from './components/ServiceHealth/components/HealthScoreCard/HealthScoreCard'
 import CVSLOsListingPage from '../slos/CVSLOsListingPage'
 import { isProjectChangedOnMonitoredService } from './MonitoredServicePage.utils'
+import MonitoredServiceTabTitle from './CVMonitoredService/components/MonitoredServiceTabTitle'
 import css from './MonitoredServicePage.module.scss'
 
 const ServiceHealthAndConfiguration: React.FC = () => {
   const history = useHistory()
   const { getString } = useStrings()
+
   const { tab = MonitoredServiceEnum.SLOs, view } = useQueryParams<{ tab?: MonitoredServiceEnum; view?: Views.GRID }>()
   const { orgIdentifier, projectIdentifier, accountId, identifier } = useParams<
     ProjectPathProps & { identifier: string }
@@ -50,6 +52,12 @@ const ServiceHealthAndConfiguration: React.FC = () => {
 
   const { monitoredService, lastModifiedAt } = monitoredServiceData?.data ?? {}
 
+  let selectedTab = tab
+
+  if (!loading && !error) {
+    selectedTab = monitoredService?.enabled ? tab : MonitoredServiceEnum.Configurations
+  }
+
   if (error) {
     if (isProjectChangedOnMonitoredService(error, identifier)) {
       history.push(
@@ -69,7 +77,7 @@ const ServiceHealthAndConfiguration: React.FC = () => {
   }
 
   const onTabChange = (nextTab: MonitoredServiceEnum): void => {
-    if (nextTab !== tab) {
+    if (nextTab !== tab && monitoredService?.enabled) {
       history.push({
         pathname: routes.toCVAddMonitoringServicesEdit({
           accountId,
@@ -124,6 +132,8 @@ const ServiceHealthAndConfiguration: React.FC = () => {
     </Page.Body>
   )
 
+  const isMonitoredServiceDisabled = Boolean(!identifier || !monitoredService?.enabled)
+
   return (
     <>
       <Page.Header
@@ -138,22 +148,39 @@ const ServiceHealthAndConfiguration: React.FC = () => {
       <Container className={css.monitoredServiceTabs}>
         <Tabs
           id="monitoredServiceTabs"
-          selectedTabId={tab}
+          selectedTabId={selectedTab}
           onChange={onTabChange}
           tabList={[
             {
               id: MonitoredServiceEnum.SLOs,
-              title: getString('cv.slos.title'),
-              panel: panelSLO
+              title: (
+                <MonitoredServiceTabTitle
+                  title={getString('cv.slos.title')}
+                  isTabDisabled={isMonitoredServiceDisabled}
+                />
+              ),
+              panel: panelSLO,
+              disabled: isMonitoredServiceDisabled
             },
             {
               id: MonitoredServiceEnum.ServiceHealth,
-              title: getString('cv.monitoredServices.monitoredServiceTabs.serviceHealth'),
-              panel: panelServiceHealth
+              title: (
+                <MonitoredServiceTabTitle
+                  title={getString('cv.monitoredServices.monitoredServiceTabs.serviceHealth')}
+                  isTabDisabled={isMonitoredServiceDisabled}
+                />
+              ),
+              panel: panelServiceHealth,
+              disabled: isMonitoredServiceDisabled
             },
             {
               id: MonitoredServiceEnum.Configurations,
-              title: getString('cv.monitoredServices.monitoredServiceTabs.configurations'),
+              title: (
+                <MonitoredServiceTabTitle
+                  title={getString('cv.monitoredServices.monitoredServiceTabs.configurations')}
+                  isTabDisabled={false}
+                />
+              ),
               panel: panelConfigurations
             }
           ]}

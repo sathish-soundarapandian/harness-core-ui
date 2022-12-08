@@ -4,6 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
+/* stylelint-disable color-no-hex */
 
 .footer {
   border-top: 1px solid var(--grey-200);
@@ -272,4 +273,19 @@
 .startConfigHeader {
   white-space: nowrap;
   padding-bottom: var(--spacing-xsmall);
+}
+
+.toggleLabel {
+  margin: 0;
+  color: var(--black);
+  font-size: var(--font-size-normal);
+  font-weight: 500;
+}
+
+.infoIcon {
+  margin: 0 !important;
+}
+
+.infoIcon path {
+  fill: #0278d5;
 }

@@ -20,6 +20,9 @@ import { EcsScalingPolicyDefinitionManifestSource } from '@cd/components/Pipelin
 import { ReleaseRepoManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ReleaseRepoManifestSource/ReleaseRepoManifestSource'
 import { DeploymentRepoManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/DeploymentRepoManifestSource/DeploymentRepoManifestSource'
 
+import { TASManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/TASManifestSource/TASManifestSource'
+import { TASAutoScalerSource } from '@cd/components/PipelineSteps/TasServiceSpec/ManifestSource/TASAutoScalerSource/TASAutoScalerSource'
+import { TASVarsSource } from '@cd/components/PipelineSteps/TasServiceSpec/ManifestSource/TASVarsSource/TASVarsSource'
 import type { ManifestSourceBase } from './ManifestSourceBase'
 
 export class ManifestSourceBaseFactory {
@@ -59,5 +62,8 @@ manifestSourceBaseFactory.registerManifestSource(new EcsScalableTargetDefinition
 manifestSourceBaseFactory.registerManifestSource(new EcsScalingPolicyDefinitionManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new ReleaseRepoManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new DeploymentRepoManifestSource())
+manifestSourceBaseFactory.registerManifestSource(new TASManifestSource())
+manifestSourceBaseFactory.registerManifestSource(new TASAutoScalerSource())
+manifestSourceBaseFactory.registerManifestSource(new TASVarsSource())
 
 export default manifestSourceBaseFactory

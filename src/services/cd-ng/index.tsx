@@ -51305,10 +51305,12 @@ export const updateSubscriptionPromise = (
   >('PUT', getConfig('ng/api'), `/subscriptions/${subscriptionId}`, props, signal)
 
 export interface GetTasOrganizationsQueryParams {
-  connectorRef: string
+  connectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  envId?: string
+  infraDefinitionId?: string
 }
 
 export type GetTasOrganizationsProps = Omit<
@@ -51408,10 +51410,10 @@ export const getTasSpacesPromise = (
   )
 
 export interface GetTasSpacesV2QueryParams {
-  connectorRef: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  organization?: string
   envId: string
   infraDefinitionId: string
 }

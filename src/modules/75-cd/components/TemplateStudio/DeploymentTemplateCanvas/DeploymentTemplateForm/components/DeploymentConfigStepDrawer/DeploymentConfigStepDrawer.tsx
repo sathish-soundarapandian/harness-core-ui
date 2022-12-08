@@ -32,8 +32,11 @@ import { generateRandomString } from '@pipeline/components/PipelineStudio/Execut
 import { DeploymentConfigStepDrawerTitle } from './DeploymentConfigStepDrawerTitle'
 import css from './DeploymentConfigStepDrawer.module.scss'
 
-const DEFAULT_STEP_PALETTE_MODULE_INFO = [
-  { module: 'cd', category: 'Utilities', shouldShowCommonSteps: true, commonStepCategory: 'Utilities' }
+export const DEFAULT_STEP_PALETTE_MODULE_INFO = [
+  { module: 'cd', category: 'Commands', shouldShowCommonSteps: true },
+  { module: 'cd', category: 'Builds', shouldShowCommonSteps: false },
+  { module: 'cv', shouldShowCommonSteps: false },
+  { module: 'cd', category: 'Chaos', shouldShowCommonSteps: false }
 ]
 
 function TemplateDetailsWrapper() {

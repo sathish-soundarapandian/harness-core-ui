@@ -6,7 +6,7 @@
  */
 
 import type { GroupedMetric } from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
-import type { CommonHealthSourceFormikInterface } from '../../connectors/CommonHealthSource/CommonHealthSource.types'
+import type { CommonCustomMetricFormikInterface } from '../../connectors/CommonHealthSource/CommonHealthSource.types'
 
 export type InitCustomFormData = InitHealthSourceCustomFormInterface
 
@@ -31,7 +31,7 @@ export type CreatedMetricsWithSelectedIndex = {
 
 export type CustomSelectedAndMappedMetrics = {
   selectedMetric: string
-  mappedMetrics: Map<string, CommonHealthSourceFormikInterface>
+  mappedMetrics: Map<string, CommonCustomMetricFormikInterface>
 }
 
 export interface CommonCustomMetricInterface {
@@ -42,8 +42,8 @@ export interface CommonCustomMetricInterface {
   addFieldLabel: string
   createdMetrics: string[]
   isValidInput: boolean
-  formikValues: CommonHealthSourceFormikInterface
-  mappedMetrics: Map<string, CommonHealthSourceFormikInterface>
+  formikValues: CommonCustomMetricFormikInterface
+  mappedMetrics: Map<string, CommonCustomMetricFormikInterface>
   initCustomForm: InitCustomFormData
   groupedCreatedMetrics?: GroupedCreatedMetrics
   shouldBeAbleToDeleteLastMetric?: boolean
@@ -59,7 +59,7 @@ export interface CommonCustomMetricInterface {
 export interface CommonUpdateSelectedMetricsMapInterface {
   updatedMetric: string
   oldMetric: string
-  mappedMetrics: Map<string, CommonHealthSourceFormikInterface>
+  mappedMetrics: Map<string, CommonCustomMetricFormikInterface>
   formikValues: any
   initCustomForm: InitCustomFormData
   isPrimaryMetric?: boolean
@@ -72,7 +72,7 @@ export interface CommonRemoveMetricInterface {
   smIndex: number
   setCreatedMetrics: (value: React.SetStateAction<CreatedMetricsWithSelectedIndex>) => void
   setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
-  formikValues: CommonHealthSourceFormikInterface
+  formikValues: CommonCustomMetricFormikInterface
 }
 
 export interface CommonSelectMetricInterface {

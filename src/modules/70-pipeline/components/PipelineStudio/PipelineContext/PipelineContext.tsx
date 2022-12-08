@@ -107,6 +107,7 @@ export const getPipelineByIdentifier = (
   params: GetPipelineQueryParams & GitQueryParams,
   identifier: string,
   isPipelineGitCacheEnabled: boolean,
+  loadFromCache?: boolean,
   signal?: AbortSignal
 ): Promise<PipelineInfoConfigWithGitDetails | FetchError> => {
   return getPipelinePromise(
@@ -125,7 +126,7 @@ export const getPipelineByIdentifier = (
       requestOptions: {
         headers: {
           'content-type': 'application/yaml',
-          ...(isPipelineGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {})
+          ...(isPipelineGitCacheEnabled && loadFromCache ? { 'Load-From-Cache': 'true' } : {})
         }
       }
     },
@@ -353,6 +354,7 @@ export interface FetchPipelineUnboundProps {
   signal?: AbortSignal
   repoIdentifier?: string
   branch?: string
+  loadFromCache?: boolean
 }
 
 export const findAllByKey = (keyToFind: string, obj?: PipelineInfoConfig): string[] => {
@@ -425,7 +427,15 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
     storeMetadata,
     isPipelineGitCacheEnabled
   } = props
-  const { forceFetch = false, forceUpdate = false, newPipelineId, signal, repoIdentifier, branch } = params
+  const {
+    forceFetch = false,
+    forceUpdate = false,
+    newPipelineId,
+    signal,
+    repoIdentifier,
+    branch,
+    loadFromCache = true
+  } = params
   const pipelineId = defaultTo(newPipelineId, identifier)
   let id = getId(
     queryParams.accountIdentifier,
@@ -451,6 +461,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       { ...queryParams, ...(repoIdentifier ? { repoIdentifier } : {}), ...(branch ? { branch } : {}) },
       pipelineId,
       isPipelineGitCacheEnabled,
+      loadFromCache,
       signal
     )
 

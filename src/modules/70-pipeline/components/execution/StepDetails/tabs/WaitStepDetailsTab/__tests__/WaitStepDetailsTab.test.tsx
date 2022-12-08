@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, waitFor, queryByAttribute } from '@testing-library/react'
+import { render, fireEvent, waitFor, queryByAttribute, screen } from '@testing-library/react'
 import type { ResponseWaitStepExecutionDetailsDto } from 'services/pipeline-ng'
 import { TestWrapper, UseGetMockData } from '@common/utils/testUtils'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
@@ -177,6 +177,40 @@ describe('<WaitStepDetailsTab /> tests', () => {
     )
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('shows loading spinner when loading prop is true', () => {
+    const details = {}
+    const step = data(ExecutionStatusEnum.WaitStepRunning, undefined, undefined, details)
+    const { container } = render(
+      <TestWrapper>
+        <WaitStepDetailsTab step={step as any} loading={true} executionDetails={mockDetailResponse.data} />
+      </TestWrapper>
+    )
+
+    expect(container.querySelector('.bp3-spinner')).toBeInTheDocument()
+  })
+
+  test('renders duration and elapsed time', () => {
+    const step = data(ExecutionStatusEnum.Success, 1670253216499, 1670253223862, {})
+    render(
+      <TestWrapper>
+        <WaitStepDetailsTab
+          step={step as any}
+          loading={false}
+          executionDetails={{
+            data: {
+              createdAt: 1670253216539,
+              duration: 300000,
+              nodeExecutionId: 'foo'
+            }
+          }}
+        />
+      </TestWrapper>
+    )
+
+    expect(screen.getByText('5 Minutes 0 Seconds')).toBeInTheDocument()
+    expect(screen.getByText('7s')).toBeInTheDocument()
   })
 
   test.each(AllStrategies)('interrupt %s works', async strategy => {

@@ -47,8 +47,14 @@ export function useFeature(props: FeatureProps): CheckFeatureReturn {
   const isCommunity = useGetCommunity()
   const { requestFeatures, checkFeature, requestLimitFeature, checkLimitFeature, getRestrictionType } =
     useFeaturesContext()
-  const { licenseInformation, CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE } =
-    useLicenseStore()
+  const {
+    licenseInformation,
+    CI_LICENSE_STATE,
+    CD_LICENSE_STATE,
+    FF_LICENSE_STATE,
+    CCM_LICENSE_STATE,
+    CV_LICENSE_STATE
+  } = useLicenseStore()
 
   const featureEnforced = useGetFeatureEnforced()
 
@@ -56,7 +62,7 @@ export function useFeature(props: FeatureProps): CheckFeatureReturn {
   const restrictionType = getRestrictionType({
     featureRequest,
     licenseInformation,
-    licenseState: { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE },
+    licenseState: { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE, CV_LICENSE_STATE },
     isCommunity
   })
   const isLimit = restrictionType && restrictionType !== RestrictionType.AVAILABILITY

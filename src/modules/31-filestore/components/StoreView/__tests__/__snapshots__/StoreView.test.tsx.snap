@@ -1,0 +1,272 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StoreView should render StoreView component 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <div
+      class="StyledProps--font StyledProps--main storeView"
+      style="height: calc(100vh - 75px);"
+    >
+      <div
+        class="StyledProps--font StyledProps--main currentPathContainer StyledProps--padding-medium StyledProps--flex"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--margin-right-xsmall StyledProps--font-size-normal StyledProps--font-weight-light StyledProps--color StyledProps--color-grey600"
+        >
+          /
+        </p>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main StyledProps--padding-xlarge"
+      >
+        <div
+          class="TableV2--table"
+        >
+          <div
+            class="TableV2--header"
+            role="row"
+          >
+            <div
+              class="TableV2--cell"
+              colspan="1"
+              role="columnheader"
+              style="width: 30%;"
+            >
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="FileStoreViewfileName"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  filestore.view.fileName
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              colspan="1"
+              role="columnheader"
+              style="width: 15%;"
+            >
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="FileStoreViewfileType"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  common.file
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              colspan="1"
+              role="columnheader"
+              style="width: 15%;"
+            >
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="FileStoreViewfileUsage"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  filestore.view.fileUsage
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              colspan="1"
+              role="columnheader"
+              style="width: 15%;"
+            >
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="FileStoreViewlastModifiedTime"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  common.lastModifiedTime
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              colspan="1"
+              role="columnheader"
+              style="width: 15%;"
+            >
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="FileStoreViewlastModifiedBy"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                  filestore.view.lastModifiedBy
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              colspan="1"
+              role="columnheader"
+              style="width: 10%;"
+            >
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="FileStoreViewmenu"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                >
+                   
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="TableV2--body"
+          >
+            <div
+              class="TableV2--row TableV2--card TableV2--clickable"
+              role="row"
+            >
+              <div
+                class="TableV2--cells"
+              >
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 30%;"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main"
+                    style="align-items: center;"
+                  >
+                    <img
+                      src="test-file-stub"
+                      style="margin-right: 10px;"
+                    />
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small"
+                      style="--text-line-clamp: 1;"
+                    >
+                      asd12
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 15%;"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small"
+                    style="--text-line-clamp: 1;"
+                  >
+                    File
+                  </p>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 15%;"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small"
+                    style="--text-line-clamp: 1;"
+                  >
+                    Manifest
+                  </p>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 15%;"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small"
+                    style="--text-line-clamp: 1;"
+                  >
+                    dummy date
+                  </p>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 15%;"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small"
+                    style="--text-line-clamp: 1;"
+                  >
+                    autouser1@harness.io
+                  </p>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  role="cell"
+                  style="width: 10%;"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-end"
+                  >
+                    <span
+                      class="bp3-popover-wrapper bp3-dark"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
+                          type="button"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="Options"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              viewBox="0 0 4 16"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                cx="2"
+                                cy="2"
+                                r="1.5"
+                              />
+                              <circle
+                                cx="2"
+                                cy="8"
+                                r="1.5"
+                              />
+                              <circle
+                                cx="2"
+                                cy="14"
+                                r="1.5"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

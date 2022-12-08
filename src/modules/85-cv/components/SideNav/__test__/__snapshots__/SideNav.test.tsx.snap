@@ -3,87 +3,150 @@
 exports[`Sidenav render 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+    class="StyledProps--font StyledProps--main cvtab"
   >
     <div
-      class="StyledProps--font StyledProps--main"
+      class="bp3-tabs Tabs--main Tabs--horizontal"
     >
-      <button
-        id="bt"
-      />
-    </div>
-    <a
-      class="link"
-      href="/account/dummy/cv/orgs/dummy/projects/dummy/slos"
-    >
-      <p
-        class="StyledProps--font StyledProps--main text"
-      >
-        cv.slos.title
-      </p>
-    </a>
-    <a
-      class="link"
-      href="/account/dummy/cv/orgs/dummy/projects/dummy/monitoringservices"
-    >
-      <p
-        class="StyledProps--font StyledProps--main text"
-      >
-        cv.monitoredServices.title
-      </p>
-    </a>
-    <a
-      class="link"
-      href="/account/dummy/cv/orgs/dummy/projects/dummy/changes"
-    >
-      <p
-        class="StyledProps--font StyledProps--main text"
-      >
-        changes
-      </p>
-    </a>
-    <a
-      class="link"
-      href="/account/dummy/cv/orgs/dummy/projects/dummy/CodeErrors"
-    >
-      <p
-        class="StyledProps--font StyledProps--main text"
-      >
-        cv.codeErrors
-      </p>
-    </a>
-    <div>
       <div
-        class="border"
-      />
-      <div
-        class="Layout--vertical StyledProps--main main"
+        class="bp3-tab-list"
+        role="tablist"
       >
-        <p
-          class="StyledProps--font StyledProps--main text StyledProps--font-xsmall StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-space-between"
-          style="display: flex; align-items: center;"
+        <div
+          class="bp3-tab-indicator-wrapper"
+          style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
         >
-          common.projectSetup
-          <span
-            class="bp3-icon bp3-icon-chevron-down StyledProps--main Text--icon StyledProps--padding-left-xsmall"
-            icon="chevron-down"
+          <div
+            class="bp3-tab-indicator"
+          />
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_cvSideNav_AccountTab"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab"
+          data-tab-id="AccountTab"
+          id="bp3-tab-title_cvSideNav_AccountTab"
+          role="tab"
+          tabindex="0"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-white"
           >
-            <svg
-              data-icon="chevron-down"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
+            account
+          </p>
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_cvSideNav_ProjectTab"
+          aria-disabled="false"
+          aria-expanded="true"
+          aria-selected="true"
+          class="bp3-tab"
+          data-tab-id="ProjectTab"
+          id="bp3-tab-title_cvSideNav_ProjectTab"
+          role="tab"
+          tabindex="0"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-white"
+          >
+            projectLabel
+          </p>
+        </div>
+      </div>
+      <div
+        aria-hidden="false"
+        aria-labelledby="bp3-tab-title_cvSideNav_ProjectTab"
+        class="bp3-tab-panel"
+        id="bp3-tab-panel_cvSideNav_ProjectTab"
+        role="tabpanel"
+      >
+        <div
+          class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+        >
+          <div
+            class="StyledProps--font StyledProps--main"
+          >
+            <button
+              id="bt"
+            />
+          </div>
+          <a
+            class="link"
+            href="/account/dummy/cv/orgs/dummy/projects/dummy/slos"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
             >
-              <desc>
-                chevron-down
-              </desc>
-              <path
-                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </p>
+              cv.slos.title
+            </p>
+          </a>
+          <a
+            class="link"
+            href="/account/dummy/cv/orgs/dummy/projects/dummy/monitoringservices"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              cv.monitoredServices.title
+            </p>
+          </a>
+          <a
+            class="link"
+            href="/account/dummy/cv/orgs/dummy/projects/dummy/changes"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              changes
+            </p>
+          </a>
+          <a
+            class="link"
+            href="/account/dummy/cv/orgs/dummy/projects/dummy/CodeErrors"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              cv.codeErrors
+            </p>
+          </a>
+          <div>
+            <div
+              class="border"
+            />
+            <div
+              class="Layout--vertical StyledProps--main main"
+            >
+              <p
+                class="StyledProps--font StyledProps--main text StyledProps--font-xsmall StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-space-between"
+                style="display: flex; align-items: center;"
+              >
+                common.projectSetup
+                <span
+                  class="bp3-icon bp3-icon-chevron-down StyledProps--main Text--icon StyledProps--padding-left-xsmall"
+                  icon="chevron-down"
+                >
+                  <svg
+                    data-icon="chevron-down"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    width="16"
+                  >
+                    <desc>
+                      chevron-down
+                    </desc>
+                    <path
+                      d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

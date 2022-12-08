@@ -22,7 +22,7 @@ import type {
   InitCustomFormData,
   InitHealthSourceCustomFormInterface
 } from './CommonCustomMetric.types'
-import type { CommonHealthSourceFormikInterface } from '../../connectors/CommonHealthSource/CommonHealthSource.types'
+import type { CommonCustomMetricFormikInterface } from '../../connectors/CommonHealthSource/CommonHealthSource.types'
 
 export function updateSelectedMetricsMap({
   updatedMetric,
@@ -33,9 +33,9 @@ export function updateSelectedMetricsMap({
   isPrimaryMetric
 }: CommonUpdateSelectedMetricsMapInterface): {
   selectedMetric: string
-  mappedMetrics: Map<string, CommonHealthSourceFormikInterface>
+  mappedMetrics: Map<string, CommonCustomMetricFormikInterface>
 } {
-  const emptyName = formikValues.metricName?.length
+  const emptyName = formikValues?.metricName?.length
   if (!emptyName) {
     return { selectedMetric: updatedMetric, mappedMetrics: mappedMetrics }
   }
@@ -86,7 +86,7 @@ export const defaultGroupedMetric = (getString: UseStringsReturn['getString']): 
 }
 
 export const initGroupedCreatedMetrics = (
-  mappedMetrics: Map<string, CommonHealthSourceFormikInterface>,
+  mappedMetrics: Map<string, CommonCustomMetricFormikInterface>,
   getString: UseStringsReturn['getString']
 ): GroupedCreatedMetrics =>
   groupBy(getGroupAndMetric(mappedMetrics, getString), function (item) {
@@ -94,7 +94,7 @@ export const initGroupedCreatedMetrics = (
   })
 
 export const getGroupAndMetric = (
-  mappedMetrics: Map<string, CommonHealthSourceFormikInterface>,
+  mappedMetrics: Map<string, CommonCustomMetricFormikInterface>,
   getString: UseStringsReturn['getString']
 ): GroupedMetric[] => {
   return Array.from(mappedMetrics?.values()).map(item => {
@@ -107,7 +107,7 @@ export const getGroupAndMetric = (
 }
 
 export const getGroupedCreatedMetrics = (
-  mappedMetrics: Map<string, CommonHealthSourceFormikInterface>,
+  mappedMetrics: Map<string, CommonCustomMetricFormikInterface>,
   getString: UseStringsReturn['getString']
 ): GroupedCreatedMetrics => {
   const filteredList = Array.from(mappedMetrics?.values()).map((item, index) => {
@@ -193,68 +193,17 @@ export function initializeCreatedMetrics(
 export function initializeSelectedMetricsMap(
   defaultSelectedMetricName: string,
   initCustomFormData: InitCustomFormData,
-  mappedServicesAndEnvs?: Map<string, CommonHealthSourceFormikInterface>
+  mappedServicesAndEnvs?: Map<string, CommonCustomMetricFormikInterface>,
+  selectedMetricData?: string
 ): CustomSelectedAndMappedMetrics {
   return {
-    selectedMetric: (Array.from(mappedServicesAndEnvs?.keys() || [])?.[0] as string) || defaultSelectedMetricName,
+    selectedMetric:
+      selectedMetricData ??
+      ((Array.from(mappedServicesAndEnvs?.keys() || [])?.[0] as string) || defaultSelectedMetricName),
     mappedMetrics: (mappedServicesAndEnvs ||
       new Map([[defaultSelectedMetricName, initCustomFormData as InitHealthSourceCustomFormInterface]])) as Map<
       string,
-      CommonHealthSourceFormikInterface
+      CommonCustomMetricFormikInterface
     >
   }
 }
-
-// Todo this will be used later
-// export const validateCommonCustomMetricFields = (
-//   values: BaseHealthSourceMetricInfo,
-//   createdMetrics: string[],
-//   selectedMetricIndex: number,
-//   errors: any,
-//   getString: (key: StringKeys) => string,
-//   mappedMetrics?: Map<string, BaseHealthSourceMetricInfo>
-// ): ((key: string) => string) => {
-//   let errorsToReturn = cloneDeep(errors)
-
-//   const commonIsAssignComponentValid =
-//     [values.sli, values.continuousVerification, values.healthScore].find(i => i) || false
-//   const commonisRiskCategoryValid = !!values?.riskCategory
-
-//   const duplicateNames = createdMetrics?.filter((metricName, index) => {
-//     if (index === selectedMetricIndex) {
-//       return false
-//     }
-//     return metricName === values.metricName
-//   })
-
-//   if (!values.groupName || !values.groupName?.value) {
-//     errorsToReturn[HealthSourceFieldNames.GROUP_NAME] = getString(
-//       'cv.monitoringSources.prometheus.validation.groupName'
-//     )
-//   }
-//   if (!values.metricName) {
-//     errorsToReturn[HealthSourceFieldNames.METRIC_NAME] = getString('cv.monitoringSources.metricNameValidation')
-//   }
-
-//   errorsToReturn = validateIdentifier(
-//     values,
-//     createdMetrics,
-//     selectedMetricIndex,
-//     errorsToReturn,
-//     getString,
-//     mappedMetrics
-//   )
-
-//   if (values.metricName && duplicateNames.length) {
-//     errorsToReturn[HealthSourceFieldNames.METRIC_NAME] = getString(
-//       'cv.monitoringSources.prometheus.validation.metricNameUnique'
-//     )
-//   }
-//   return validateAssignComponent(
-//     commonIsAssignComponentValid,
-//     errorsToReturn,
-//     getString,
-//     values,
-//     commonisRiskCategoryValid
-//   )
-// }

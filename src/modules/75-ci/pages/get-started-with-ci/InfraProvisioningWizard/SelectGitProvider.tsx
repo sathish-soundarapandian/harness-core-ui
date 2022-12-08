@@ -336,7 +336,7 @@ const SelectGitProviderRef = (
 
   useEffect(() => {
     if (gitProvider?.type === NonGitOption.OTHER) {
-      updateFooterLabel?.(`${getString('next')}: ${getString('ci.getStartedWithCI.pipelineConfig')}`)
+      updateFooterLabel?.(getString('ci.getStartedWithCI.createPipeline'))
     } else {
       updateFooterLabel?.(`${getString('next')}: ${getString('common.selectRepository')}`)
     }

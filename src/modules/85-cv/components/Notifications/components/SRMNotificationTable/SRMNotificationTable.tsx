@@ -8,6 +8,7 @@
 import React, { useContext, useMemo } from 'react'
 import { Text, Layout, Button, Switch, Container, Icon, ButtonVariation, TableV2, NoDataCard } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { useFormikContext } from 'formik'
 import type { CellProps, Renderer } from 'react-table'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -20,6 +21,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import noDataNotifications from '@cv/assets/noDataNotifications.svg'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ContextMenuActions from '@cv/components/ContextMenuActions/ContextMenuActions'
+import type { MonitoredServiceForm } from '@cv/pages/monitored-service/components/Configurations/components/Service/Service.types'
 import { CompositeSLOContext } from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/CompositeSLOContext'
 import { useSRMNotificationModal } from '../useSRMNotificationModal/useSRMNotificationModal'
 import type { CustomColumn, NotificationRulesItem, SRMNotificationTableProps } from './SRMNotificationTable.types'
@@ -51,10 +53,16 @@ function SRMNotificationTable(props: SRMNotificationTableProps): React.ReactElem
     handleCreateNotification
   })
 
+  const formik = useFormikContext<MonitoredServiceForm>()
+  const { values: formValues } = formik || {}
+
+  const isNotificationDisabled = formValues?.isEdit && !formValues?.isMonitoredServiceEnabled
+
   const getAddNotificationButton = (): JSX.Element => (
     <RbacButton
       icon="plus"
       text={getString('cv.notifications.newNotificationRule')}
+      disabled={isNotificationDisabled}
       variation={ButtonVariation.PRIMARY}
       onClick={() => openNotificationModal()}
       permission={{
@@ -277,6 +285,7 @@ function SRMNotificationTable(props: SRMNotificationTableProps): React.ReactElem
           data={notificationsData}
           className={css.notificationTable}
           pagination={{
+            showPagination: true,
             itemCount: totalItems,
             pageSize: pageSize,
             pageCount: totalPages,

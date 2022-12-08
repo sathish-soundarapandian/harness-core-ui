@@ -17,7 +17,8 @@ import {
   CDLicenseSummaryDTO,
   STOLicenseSummaryDTO,
   useGetCDLicenseUsageForServiceInstances,
-  useGetCDLicenseUsageForServices
+  useGetCDLicenseUsageForServices,
+  CVLicenseSummaryDTO
 } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useGetLicenseUsage as useGetFFUsage } from 'services/cf'
@@ -27,6 +28,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useGetCCMLicenseUsage } from 'services/ce'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { useGetLicenseUsage } from 'services/cv'
 
 export interface UsageAndLimitReturn {
   limitData: LimitReturn
@@ -65,6 +67,9 @@ interface UsageProps {
     activeDevelopers?: UsageProp
     activeScans?: UsageProp
   }
+  cv?: {
+    activeServices?: UsageProp
+  }
 }
 
 interface LimitProps {
@@ -85,6 +90,9 @@ interface LimitProps {
   sto?: {
     totalDevelopers?: number
     totalScans?: number
+  }
+  cv?: {
+    totalServices?: number
   }
 }
 
@@ -137,10 +145,20 @@ function useGetLimit(module: ModuleName): LimitReturn {
         }
         break
       }
+
       case ModuleName.STO: {
         moduleLimit = {
           sto: {
             totalDevelopers: (limitData?.data as STOLicenseSummaryDTO)?.totalDevelopers
+          }
+        }
+        break
+      }
+
+      case ModuleName.CV: {
+        moduleLimit = {
+          cv: {
+            totalServices: (limitData?.data as CVLicenseSummaryDTO)?.totalServices
           }
         }
         break
@@ -263,6 +281,19 @@ export function useGetUsage(module: ModuleName): UsageReturn {
     lazy: module !== ModuleName.STO
   })
 
+  const {
+    data: cvUsageData,
+    loading: loadingCVUsage,
+    error: cvUsageError,
+    refetch: refetchCVUsage
+  } = useGetLicenseUsage({
+    queryParams: {
+      accountIdentifier: accountId,
+      timestamp
+    },
+    lazy: module !== ModuleName.CV
+  })
+
   function setUsageByModule(): void {
     switch (module) {
       case ModuleName.CI:
@@ -332,6 +363,19 @@ export function useGetUsage(module: ModuleName): UsageReturn {
           refetchUsage: refetchSTOUsage
         })
         break
+
+      case ModuleName.CV:
+        setUsageData({
+          usage: {
+            cv: {
+              activeServices: cvUsageData?.data?.activeServices
+            }
+          },
+          loadingUsage: loadingCVUsage,
+          usageErrorMsg: cvUsageError?.message,
+          refetchUsage: refetchCVUsage
+        })
+        break
     }
   }
 
@@ -357,7 +401,10 @@ export function useGetUsage(module: ModuleName): UsageReturn {
     loadingSTOUsage,
     refetchSTOUsage,
     loadingCDSIUsage,
-    loadingCDUsage
+    loadingCDUsage,
+    cvUsageData,
+    loadingCVUsage,
+    cvUsageError
   ])
 
   return usageData

@@ -33,6 +33,7 @@ describe('Changing Project Page', () => {
 
     cy.visitPageAssertion('[class^=SideNav-module_main]')
     cy.contains('span', 'Service Reliability').click()
+    cy.get('[data-tab-id="ProjectTab"]').click()
     cy.contains('p', 'Select a Project').click()
     cy.contains('p', 'Project 1').click()
   })

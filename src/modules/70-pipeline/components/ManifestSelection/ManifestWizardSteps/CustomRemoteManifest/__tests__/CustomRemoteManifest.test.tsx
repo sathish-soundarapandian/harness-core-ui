@@ -334,4 +334,194 @@ describe('Custom remote tests', () => {
     const valuesPathsText = queryByText(container, 'pipeline.manifestType.valuesYamlPath')
     expect(valuesPathsText).toBeNull()
   })
+
+  test('varsYAMLPath is not present when selected manifest is of type TASVars', () => {
+    const manifestProps = {
+      stepName: 'Manifest details',
+      expressions: [],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
+      handleSubmit: jest.fn(),
+      selectedManifest: 'TasVars' as ManifestTypes,
+      manifestIdsList: [],
+      isReadonly: false,
+      prevStepData: {}
+    }
+    const defaultProps = {
+      ...manifestProps,
+      prevStepData: {
+        store: 'CustomRemote'
+      },
+      initialValues: { ...omit(initialValues, 'type', 'valuesPaths'), type: ManifestDataType.TasVars },
+      handleSubmit: jest.fn()
+    }
+
+    const { container } = render(
+      <TestWrapper>
+        <CustomRemoteManifest {...defaultProps} />
+      </TestWrapper>
+    )
+    const valuesPathsText = queryByText(container, 'pipeline.manifestType.varsYAMLPath')
+    expect(valuesPathsText).toBeNull()
+  })
+
+  test('varsYAMLPath is not present when selected manifest is of type TasAutoScaler', () => {
+    const manifestProps = {
+      stepName: 'Manifest details',
+      expressions: [],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
+      handleSubmit: jest.fn(),
+      selectedManifest: 'TasAutoScaler' as ManifestTypes,
+      manifestIdsList: [],
+      isReadonly: false,
+      prevStepData: {}
+    }
+    const defaultProps = {
+      ...manifestProps,
+      prevStepData: {
+        store: 'CustomRemote'
+      },
+      initialValues: { ...omit(initialValues, 'type', 'valuesPaths'), type: ManifestDataType.TasAutoScaler },
+      handleSubmit: jest.fn()
+    }
+
+    const { container } = render(
+      <TestWrapper>
+        <CustomRemoteManifest {...defaultProps} />
+      </TestWrapper>
+    )
+    const valuesPathsText = queryByText(container, 'pipeline.manifestType.autoScalerYAMLPath')
+    expect(valuesPathsText).toBeNull()
+  })
+
+  test('customRemoteManifest for TasManifest with fixed, runtime, expressions values', async () => {
+    const TasInitialValues = {
+      identifier: 'TasManifest',
+      type: ManifestDataType.TasManifest,
+      spec: {
+        store: {
+          type: 'CustomRemote',
+          spec: {
+            filePath: 'testPath',
+            extractionScript: 'custom script',
+            delegateSelectors: []
+          }
+        },
+        varsPaths: ['varsPath'],
+        autoScalerPath: ['autoScalerPath'],
+        cfCliVersion: 'V7'
+      }
+    }
+    const TasRuntimeValuesSpec = {
+      identifier: 'TasManifest',
+      type: ManifestDataType.TasManifest,
+      spec: {
+        store: {
+          type: 'CustomRemote',
+          spec: {
+            filePath: RUNTIME_INPUT_VALUE,
+            extractionScript: RUNTIME_INPUT_VALUE,
+            delegateSelectors: []
+          }
+        },
+        varsPaths: RUNTIME_INPUT_VALUE,
+        autoScalerPath: RUNTIME_INPUT_VALUE,
+        cfCliVersion: 'V7'
+      }
+    }
+    const TasExpressionsSpec = {
+      identifier: 'TasManifest',
+      type: ManifestDataType.TasManifest,
+      spec: {
+        store: {
+          type: 'CustomRemote',
+          spec: {
+            filePath: '<+tas.filePath>',
+            extractionScript: '<+tas.script>',
+            delegateSelectors: []
+          }
+        },
+        varsPaths: ['<+tas.varsPath>'],
+        autoScalerPath: ['<+tas.autoScalerPath>'],
+        cfCliVersion: 'V7'
+      }
+    }
+    const defaultProps = {
+      ...props,
+      selectedManifest: 'TasManifest' as ManifestTypes,
+      prevStepData: {
+        store: 'CustomRemote'
+      },
+      initialValues: TasInitialValues
+    }
+    const runtimeProps = {
+      ...defaultProps,
+      initialValues: TasRuntimeValuesSpec
+    }
+    const expressionProps = {
+      ...defaultProps,
+      initialValues: TasExpressionsSpec
+    }
+    const { container: runtimeValueContainer } = render(
+      <TestWrapper>
+        <CustomRemoteManifest {...runtimeProps} />
+      </TestWrapper>
+    )
+    expect(queryByAttribute('name', runtimeValueContainer, 'filePath')!).toHaveValue(RUNTIME_INPUT_VALUE)
+    expect(queryByAttribute('name', runtimeValueContainer, 'varsPaths')!).toHaveValue(RUNTIME_INPUT_VALUE)
+    expect(queryByAttribute('name', runtimeValueContainer, 'autoScalerPath')!).toHaveValue(RUNTIME_INPUT_VALUE)
+
+    const { container: expressionValueContainer } = render(
+      <TestWrapper>
+        <CustomRemoteManifest {...expressionProps} />
+      </TestWrapper>
+    )
+
+    expect(queryByAttribute('name', expressionValueContainer, 'filePath')!).toHaveValue('<+tas.filePath>')
+    expect(queryByAttribute('name', expressionValueContainer, 'varsPaths[0].path')!).toHaveValue('<+tas.varsPath>')
+    expect(queryByAttribute('name', expressionValueContainer, 'autoScalerPath[0].path')!).toHaveValue(
+      '<+tas.autoScalerPath>'
+    )
+
+    const { container } = render(
+      <TestWrapper>
+        <CustomRemoteManifest {...defaultProps} />
+      </TestWrapper>
+    )
+
+    expect(queryByAttribute('name', container, 'cfCliVersion')!).toHaveValue('CLI Version 7.0')
+    expect(queryByAttribute('name', container, 'filePath')!).toHaveValue('testPath')
+    expect(queryByAttribute('name', container, 'varsPaths[0].path')!).toHaveValue('varsPath')
+    expect(queryByAttribute('name', container, 'autoScalerPath[0].path')!).toHaveValue('autoScalerPath')
+    fireEvent.click(container.querySelector('button[type="submit"]')!)
+    await waitFor(() => {
+      expect(defaultProps.handleSubmit).toHaveBeenCalledTimes(2)
+      expect(defaultProps.handleSubmit).toHaveBeenCalledWith({
+        manifest: {
+          identifier: 'TasManifest',
+          type: ManifestDataType.TasManifest,
+          spec: {
+            varsPaths: ['varsPath'],
+            autoScalerPath: ['autoScalerPath'],
+            cfCliVersion: 'V7',
+            store: {
+              spec: {
+                delegateSelectors: [],
+                extractionScript: 'custom script',
+                filePath: 'testPath'
+              },
+              type: 'CustomRemote'
+            }
+          }
+        }
+      })
+    })
+  })
 })

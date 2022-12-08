@@ -663,7 +663,6 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
           <div
             class="bp3-card bp3-elevation-0 Card--card card hoverCard"
             data-disabled="false"
-            data-variant="Minimal"
           >
             <div
               class="cardLink"
@@ -896,7 +895,6 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
           <div
             class="bp3-card bp3-elevation-0 Card--card card hoverCard"
             data-disabled="false"
-            data-variant="Minimal"
           >
             <div
               class="cardLink"
@@ -1127,7 +1125,6 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
           <div
             class="bp3-card bp3-elevation-0 Card--card card hoverCard"
             data-disabled="false"
-            data-variant="Minimal"
           >
             <div
               class="cardLink"

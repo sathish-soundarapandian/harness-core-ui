@@ -495,6 +495,7 @@ cvTrialHomePage:
       description: Start 14 day CV Enterprise trial
 monitoredServices:
   title: '{{ $.common.monitoredServices }}'
+  listToggleSwitchDisableMessage: Nice work! You've reached our plan limits. Upgrade to enable SLO and service health for a monitored service.
   heading: Monitored Service
   filterlabel: 'Environment:'
   youHaveNoMonitoredServices: You have no monitored services
@@ -556,6 +557,7 @@ monitoredServices:
   monitoredServiceTabs:
     serviceHealth: Service Health
     configurations: Configurations
+    disabledText: Enable the monitored service to view the tab
   table:
     lastestHealthTrend: Health trend (Last 24h)
     serviceHealthScore: service Health Score
@@ -1021,3 +1023,7 @@ codeErrorsAgentsHeading: Agents running on your machines connected to Code Error
 codeErrorsAgentsTokens: '{{projectName}} Code Error Tokens'
 CVStepper:
   StepError: Required fields are missing or incorrect data
+licenseBanner:
+  freePlanUsageMessage: You have used {{activeServicesCount}}/{{totalServices}} Services included in the free plan
+  teamPlanUsageMessage: You have used {{activeServicesCount}}/{{totalServices}} Services included in the team plan
+  limitExceedMessage: You have reached your service subscription limit. Consider increasing your limits to keep using services

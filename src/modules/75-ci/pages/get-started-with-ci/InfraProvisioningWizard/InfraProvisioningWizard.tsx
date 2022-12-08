@@ -466,6 +466,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             }}
             disableNextBtn={() => setDisableBtn(true)}
             enableNextBtn={() => setDisableBtn(false)}
+            updateFooterLabel={setButtonLabel}
           />
         ),
         onClickBack: () => {
@@ -484,6 +485,11 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
             setCurrentWizardStepId(InfraProvisiongWizardStepId.ConfigurePipeline)
             setShowError(false)
+          } else if (!enableCloneCodebase) {
+            setShowError(false)
+            setDisableBtn(true)
+            setShowPageLoader(true)
+            setupPipelineWithoutCodebaseAndTriggers()
           } else {
             setShowError(true)
           }

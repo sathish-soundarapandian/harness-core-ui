@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { NotificationRuleResponse } from 'services/cv'
 import NotificationsContainer from '../NotificationsContainer'
@@ -52,35 +53,88 @@ describe('Unit tests for NotificationsContainer', () => {
     getNotifications: jest.fn()
   }
   test('Verify if NotificationsContainer renders', async () => {
-    const { container } = render(<WrapperComponent {...props} />)
+    const { container } = render(
+      <Formik initialValues={{ isEdit: true, isMonitoredServiceEnabled: true }} onSubmit={() => Promise.resolve()}>
+        <WrapperComponent {...props} />
+      </Formik>
+    )
     expect(container).toMatchSnapshot()
   })
 
   test('Verify if NotificationsContainer renders for notification type SERVICE_LEVEL_OBJECTIVE', async () => {
     const newProps = { ...props, type: SRMNotificationType.SERVICE_LEVEL_OBJECTIVE }
-    const { container, getByText } = render(<WrapperComponent {...newProps} />)
+    const { container, getByText } = render(
+      <Formik initialValues={{ isEdit: true, isMonitoredServiceEnabled: true }} onSubmit={() => Promise.resolve()}>
+        <WrapperComponent {...newProps} />
+      </Formik>
+    )
     expect(getByText('cv.notifications.errorBudgetPolicies')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
 
   test('Verify if NotificationsContainer renders for notification type MONITORED_SERVICE', async () => {
     const newProps = { ...props, type: SRMNotificationType.MONITORED_SERVICE }
-    const { container, getByText } = render(<WrapperComponent {...newProps} />)
+    const { container, getByText } = render(
+      <Formik initialValues={{ isEdit: true, isMonitoredServiceEnabled: true }} onSubmit={() => Promise.resolve()}>
+        <WrapperComponent {...newProps} />
+      </Formik>
+    )
     expect(getByText('rbac.notifications.name')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
 
   test('Verify if NotificationsContainer renders no notifications screen when there are no notificatons', async () => {
-    const { container, getByText } = render(<WrapperComponent {...props} />)
+    const { container, getByText } = render(
+      <Formik initialValues={{ isEdit: true, isMonitoredServiceEnabled: true }} onSubmit={() => Promise.resolve()}>
+        <WrapperComponent {...props} />
+      </Formik>
+    )
     expect(getByText('cv.notifications.newNotificationRule')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
 
-  test('Verify if NotificationsContainer renders notificationsTable with data when there are notofications present', async () => {
+  test('Verify if NotificationsContainer renders notificationsTable with data when there are notifications present', async () => {
     const newProps = { ...props, notificationsInTable: mockedNotificationsTable as NotificationRuleResponse[] }
-    const { container, queryByText } = render(<WrapperComponent {...newProps} />)
+    const { container, queryByText } = render(
+      <Formik initialValues={{ isEdit: true, isMonitoredServiceEnabled: true }} onSubmit={() => Promise.resolve()}>
+        <WrapperComponent {...newProps} />
+      </Formik>
+    )
     expect(queryByText('cv.notifications.newNotificationRule')).not.toBeInTheDocument()
     expect(container).toMatchSnapshot()
+  })
+
+  test('should render new notifications button as disabled if monitored service is disabled and it is edit scenario', async () => {
+    const { container, queryByText } = render(
+      <Formik initialValues={{ isEdit: true, isMonitoredServiceEnabled: false }} onSubmit={() => Promise.resolve()}>
+        <WrapperComponent {...props} />
+      </Formik>
+    )
+
+    expect(queryByText('cv.notifications.newNotificationRule')).toBeInTheDocument()
+    expect(container.querySelector('button[aria-label="cv.notifications.newNotificationRule"]')).toBeDisabled()
+  })
+
+  test('should render new notifications button as enabled if monitored service is enabled and it is edit scenario', async () => {
+    const { container, queryByText } = render(
+      <Formik initialValues={{ isEdit: true, isMonitoredServiceEnabled: true }} onSubmit={() => Promise.resolve()}>
+        <WrapperComponent {...props} />
+      </Formik>
+    )
+
+    expect(queryByText('cv.notifications.newNotificationRule')).toBeInTheDocument()
+    expect(container.querySelector('button[aria-label="cv.notifications.newNotificationRule"]')).not.toBeDisabled()
+  })
+
+  test('should render new notifications button as enabled if it is a create scenario', async () => {
+    const { container, queryByText } = render(
+      <Formik initialValues={{ isEdit: false }} onSubmit={() => Promise.resolve()}>
+        <WrapperComponent {...props} />
+      </Formik>
+    )
+
+    expect(queryByText('cv.notifications.newNotificationRule')).toBeInTheDocument()
+    expect(container.querySelector('button[aria-label="cv.notifications.newNotificationRule"]')).not.toBeDisabled()
   })
 
   test('Verify if getUpdatedNotificationRules method give correct results', () => {

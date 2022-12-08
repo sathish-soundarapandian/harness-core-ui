@@ -339,6 +339,8 @@ manifestType:
   kustomizePathRequired: Kustomize Path is required
   kustomizeFolderPathRequired: Kustomize Folder Path is required
   pathRequired: File Path is required
+  varsPathRequired: Vars Path is required
+  autoScalerPathRequired: Autoscaler Path is required
   bucketNameRequired: Bucket Name is required
   path: '{{$.common.path}}'
   osTemplatePath: Template File Path
@@ -365,6 +367,11 @@ manifestType:
   serverlessConfigFilePathPlaceholder: Enter Serverless Config File Path
   valuesYamlPath: Values.yaml
   addValuesYamlPath: Add Values.yaml
+  varsYAMLPath: Vars.yaml path
+  addVarsYAMLPath: Auto Vars.yaml path
+  autoScalerYAMLPath: AutoScaler.yaml
+  addAutoScalerYAMLPath: Add AutoScaler.yaml
+  cfCliVersion: CLI Version
   customRemoteExtractionScript: Custom Remote Manifest Extraction Script
   customRemoteExtractedFileLocation: Extracted Manifest File Location
   customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location
@@ -400,6 +407,9 @@ manifestTypeLabels:
   EcsScalingPolicyDefinition: 'ECS Scaling Policy'
   EcsScalableTargetDefinition: 'ECS Scalable Target'
   ReleaseRepo: Release Repo Manifest
+  TASManifest: TAS Manifest
+  VarsYAML: Vars
+  Autoscaler: AutoScaler
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'
 failureStrategies:
@@ -1104,6 +1114,7 @@ stepDescription:
   GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
   ElastigroupRollback: Rollback for the Elastigroup steps
+  ElastigroupSetup: Elastigroup setup step
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy

@@ -550,13 +550,13 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
         {
           Header: getString('typeLabel').toLocaleUpperCase(),
           id: 'type',
-          width: '10%',
+          width: '7%',
           Cell: RenderType
         },
         {
           Header: getString('cd.serviceDashboard.activeInstanceCount').toLocaleUpperCase(),
           id: 'serviceInstances',
-          width: '15%',
+          width: '14%',
           Cell: RenderServiceInstances
         },
         {
@@ -574,13 +574,13 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
         {
           Header: getString('cd.serviceDashboard.frequency').toLocaleUpperCase(),
           id: 'frequency',
-          width: '13%',
+          width: '11%',
           Cell: getRenderTickerCard('frequency')
         },
         {
           Header: getString('cd.serviceDashboard.lastPipelineExecution').toLocaleUpperCase(),
           id: 'lastDeployment',
-          width: '19%',
+          width: '15%',
           Cell: RenderLastDeployment
         },
         {

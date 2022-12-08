@@ -1554,6 +1554,9 @@ const routes = {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos`
     }
   ),
+  toAccountCVSLOs: withAccountId(() => {
+    return `/cv/slos`
+  }),
   toCVSLODetailsPage: withAccountId(
     ({
       module = 'cv',

@@ -155,7 +155,8 @@ const CFRoutes: FC = () => {
     FFM_1827,
     NG_SETTINGS,
     FFM_3959_FF_MFE_Environment_Detail,
-    FFM_5939_MFE_TARGET_GROUPS_LISTING
+    FFM_5939_MFE_TARGET_GROUPS_LISTING,
+    FFM_5256_FF_MFE_Environment_Listing
   } = useFeatureFlags()
 
   return (
@@ -288,7 +289,7 @@ const CFRoutes: FC = () => {
         pageName={PAGE_NAME.EnvironmentsPage}
       >
         <FFGitSyncProvider>
-          <EnvironmentsPage />
+          {FFM_5256_FF_MFE_Environment_Listing ? <FFUIApp /> : <EnvironmentsPage />}
         </FFGitSyncProvider>
       </RouteWithLayout>
 

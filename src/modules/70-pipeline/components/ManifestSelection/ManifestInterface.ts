@@ -13,7 +13,8 @@ import type {
   ConnectorConfigDTO,
   ManifestConfigWrapper,
   PageConnectorResponse,
-  ServiceDefinition
+  ServiceDefinition,
+  TasManifest
 } from 'services/cd-ng'
 
 export type ManifestTypes =
@@ -29,8 +30,17 @@ export type ManifestTypes =
   | 'EcsServiceDefinition'
   | 'EcsScalableTargetDefinition'
   | 'EcsScalingPolicyDefinition'
+  | 'TasManifest'
+  | 'TasVars'
+  | 'TasAutoScaler'
 
-export type PrimaryManifestType = 'K8sManifest' | 'HelmChart' | 'OpenshiftTemplate' | 'Kustomize'
+export type PrimaryManifestType =
+  | 'K8sManifest'
+  | 'HelmChart'
+  | 'OpenshiftTemplate'
+  | 'Kustomize'
+  | 'TasVars'
+  | 'TasAutoScaler'
 
 export type ManifestStores =
   | 'Git'
@@ -51,6 +61,7 @@ export type ManifestStoreTypeWithoutConnector = 'InheritFromManifest' | 'Harness
 
 export type HelmOCIVersionOptions = 'V380'
 export type HelmVersionOptions = 'V2' | 'V3'
+export type CLIVersionOptions = TasManifest['cfCliVersion']
 export type ManifestStoreWithoutConnector = Exclude<ManifestStores, ManifestStoreTypeWithoutConnector>
 
 export interface ManifestSelectionProps {
@@ -112,6 +123,7 @@ export interface ManifestLastStepProps {
   isReadonly?: boolean
   deploymentType?: string
   showIdentifierField?: boolean
+  containsTASManifest?: boolean
 }
 export interface CommandFlags {
   commandType: string | SelectOption | undefined
@@ -150,7 +162,18 @@ export interface HelmWithOCIDataType {
   valuesPaths?: any
   commandFlags: Array<CommandFlags>
 }
-
+export interface TASManifestDataType {
+  identifier: string
+  branch: string | undefined
+  commitId: string | undefined
+  gitFetchType: 'Branch' | 'Commit'
+  paths: any
+  skipResourceVersioning?: boolean
+  repoName?: string
+  varsPaths?: any
+  autoScalerPath?: any
+  cfCliVersion?: TasManifest['cfCliVersion']
+}
 export interface HelmWithGcsDataType extends HelmWithHTTPDataType {
   bucketName: SelectOption | string
   folderPath: string
@@ -246,6 +269,9 @@ export interface CustomManifestManifestDataType {
   delegateSelectors: Array<string> | string
   valuesPaths?: Array<{ path: string }> | string
   paramsPaths?: Array<{ path: string }> | string
+  varsPaths?: Array<{ path: string }> | string
+  autoScalerPath?: Array<{ path: string }> | string
+  cfCliVersion?: CLIVersionOptions
   skipResourceVersioning?: boolean
 }
 
@@ -262,4 +288,9 @@ export interface ServerlessLambdaWithS3DataType {
   bucketName: SelectOption | string
   paths: any
   configOverridePath?: string
+}
+export interface TASWithHarnessStorePropType extends Omit<HarnessFileStoreFormData, 'skipResourceVersioning'> {
+  varsPaths?: string[] | string
+  autoScalerPath?: string[] | string
+  cfCliVersion?: CLIVersionOptions
 }

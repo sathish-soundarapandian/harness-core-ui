@@ -3784,9 +3784,13 @@ export interface StringsMap {
   'pipeline.loopingStrategy.warningText': string
   'pipeline.manifestToConnectorLabelMap.AWSLabel': string
   'pipeline.manifestType.InheritFromManifest': string
+  'pipeline.manifestType.addAutoScalerYAMLPath': string
   'pipeline.manifestType.addManifestLabel': string
   'pipeline.manifestType.addValuesYamlPath': string
+  'pipeline.manifestType.addVarsYAMLPath': string
   'pipeline.manifestType.attachPath': string
+  'pipeline.manifestType.autoScalerPathRequired': string
+  'pipeline.manifestType.autoScalerYAMLPath': string
   'pipeline.manifestType.azureRepoConnectorLabel': string
   'pipeline.manifestType.basePath': string
   'pipeline.manifestType.basePathPlaceholder': string
@@ -3796,6 +3800,7 @@ export interface StringsMap {
   'pipeline.manifestType.bucketNamePlaceholder': string
   'pipeline.manifestType.bucketNameRequired': string
   'pipeline.manifestType.bucketPlaceHolder': string
+  'pipeline.manifestType.cfCliVersion': string
   'pipeline.manifestType.chartPathPlaceholder': string
   'pipeline.manifestType.chartPathRequired': string
   'pipeline.manifestType.commandFlagRequired': string
@@ -3857,6 +3862,9 @@ export interface StringsMap {
   'pipeline.manifestType.specifyManifestRepoType': string
   'pipeline.manifestType.specifyManifestStore': string
   'pipeline.manifestType.valuesYamlPath': string
+  'pipeline.manifestType.varsPathRequired': string
+  'pipeline.manifestType.varsYAMLPath': string
+  'pipeline.manifestTypeLabels.Autoscaler': string
   'pipeline.manifestTypeLabels.AwsSAM': string
   'pipeline.manifestTypeLabels.AzureFunctions': string
   'pipeline.manifestTypeLabels.EcsScalableTargetDefinition': string
@@ -3873,7 +3881,9 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.ServerlessAwsLambda': string
   'pipeline.manifestTypeLabels.ServerlessAzure': string
   'pipeline.manifestTypeLabels.ServerlessGCP': string
+  'pipeline.manifestTypeLabels.TASManifest': string
   'pipeline.manifestTypeLabels.ValuesYaml': string
+  'pipeline.manifestTypeLabels.VarsYAML': string
   'pipeline.manuallyTriggered': string
   'pipeline.mostRecentDirection': string
   'pipeline.moveStage.description': string
@@ -4166,6 +4176,7 @@ export interface StringsMap {
   'pipeline.stepDescription.ECSRollingRollback': string
   'pipeline.stepDescription.ECSRunTask': string
   'pipeline.stepDescription.ElastigroupRollback': string
+  'pipeline.stepDescription.ElastigroupSetup': string
   'pipeline.stepDescription.Email': string
   'pipeline.stepDescription.FlagConfiguration': string
   'pipeline.stepDescription.GCR': string
@@ -4606,6 +4617,13 @@ export interface StringsMap {
   'triggers.validation.repositoryFormat': string
   'triggers.validation.selectedArtifact': string
   'triggers.validation.triggerName': string
+  'cd.ElastigroupStep.appName': string
+  'cd.ElastigroupStep.desiredInstances': string
+  'cd.ElastigroupStep.maxInstances': string
+  'cd.ElastigroupStep.minInstances': string
+  'cd.ElastigroupStep.valueCannotBe': string
+  'cd.ElastigroupStep.valueCannotBeGreaterThan': string
+  'cd.ElastigroupStep.valueCannotBeLessThan': string
   'cd.GitOpsServerDelete': string
   'cd.IdEmptyError': string
   'cd.aboutGitOpsServer': string
@@ -5168,6 +5186,11 @@ export interface StringsMap {
   'cd.steps.pdcStep.title': string
   'cd.steps.serverless.regionPlaceholder': string
   'cd.steps.serverless.stagePlaceholder': string
+  'cd.steps.tasInfra.organizationError': string
+  'cd.steps.tasInfra.organizationPlaceholder': string
+  'cd.steps.tasInfra.space': string
+  'cd.steps.tasInfra.spacePlaceholder': string
+  'cd.steps.tasInfra.spacesError': string
   'cd.successfullyLinkedClusters': string
   'cd.terraform': string
   'cd.terraformVarFiles': string
@@ -7354,6 +7377,9 @@ export interface StringsMap {
   'cv.lastSuccessfulRun': string
   'cv.learnMore': string
   'cv.left': string
+  'cv.licenseBanner.freePlanUsageMessage': string
+  'cv.licenseBanner.limitExceedMessage': string
+  'cv.licenseBanner.teamPlanUsageMessage': string
   'cv.logCluster': string
   'cv.logs.eventMarkedAs': string
   'cv.logs.eventPriorityUpdate': string
@@ -7401,11 +7427,13 @@ export interface StringsMap {
   'cv.monitoredServices.filterlabel': string
   'cv.monitoredServices.heading': string
   'cv.monitoredServices.healthScoreDataNotAvailable': string
+  'cv.monitoredServices.listToggleSwitchDisableMessage': string
   'cv.monitoredServices.monitoredServiceCreated': string
   'cv.monitoredServices.monitoredServiceDeleted': string
   'cv.monitoredServices.monitoredServiceDetails': string
   'cv.monitoredServices.monitoredServiceName': string
   'cv.monitoredServices.monitoredServiceTabs.configurations': string
+  'cv.monitoredServices.monitoredServiceTabs.disabledText': string
   'cv.monitoredServices.monitoredServiceTabs.serviceHealth': string
   'cv.monitoredServices.monitoredServiceToggle': string
   'cv.monitoredServices.monitoredServiceUpdated': string

@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useEffect } from 'react'
 import { Button, ButtonVariation, Icon, IconName, Layout, ModalDialog, Text, useToggleOpen } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
@@ -16,7 +23,7 @@ enum CacheState {
 }
 const cacheStateToIconMap: Record<CacheResponseMetadata['cacheState'], IconName> = {
   VALID_CACHE: 'success-tick',
-  STALE_CACHE: 'danger-icon',
+  STALE_CACHE: 'stale-cache',
   UNKNOWN: 'danger-icon'
 }
 
@@ -39,28 +46,25 @@ function PipelineCachedCopy(): React.ReactElement {
 
   function reloadPipeline(): void {
     updatePipelineView({ ...pipelineView, isYamlEditable: false })
-    fetchPipeline({ forceFetch: true, forceUpdate: true })
+    fetchPipeline({ forceFetch: true, forceUpdate: true, loadFromCache: false })
   }
 
-  function getTooltipContent(): JSX.Element | undefined {
-    /* istanbul ignore if */
-    if (!isEmpty(cacheResponse.lastUpdatedAt)) {
-      return (
-        <>
-          {cacheResponse.cacheState === CacheState.STALE_CACHE && (
-            <div>{getString('pipeline.pipelineCachedCopy.cacheInProgress')}</div>
-          )}
-          <div>
-            {getString('common.lastUpdatedAt')}: {getReadableDateTime(cacheResponse.lastUpdatedAt)}
-          </div>
-        </>
-      )
-    }
+  function getTooltipContent(): JSX.Element {
+    return (
+      <>
+        {cacheResponse.cacheState === CacheState.STALE_CACHE && (
+          <div>{getString('pipeline.pipelineCachedCopy.cacheInProgress')}</div>
+        )}
+        <div>
+          {getString('common.lastUpdatedAt')}: {getReadableDateTime(cacheResponse.lastUpdatedAt)}
+        </div>
+      </>
+    )
   }
 
   return (
     <>
-      <Layout.Horizontal flex={{ alignItems: 'center' }} spacing="small" margin={{ right: 'small' }}>
+      <Layout.Horizontal flex={{ alignItems: 'center' }} spacing="small" margin={{ right: 'medium' }}>
         <div className={css.cachedcopy}>
           <Tooltip position="bottom" content={getTooltipContent()}>
             <Text

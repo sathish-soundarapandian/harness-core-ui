@@ -37,6 +37,9 @@ import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
 import type { ResourceDTO } from 'services/audit'
 import type { ResourceScope } from 'services/cd-ng'
 import AuditTrailFactory from '@audit-trail/factories/AuditTrailFactory'
+import featureFactory, { RenderMessageReturn } from 'framework/featureStore/FeaturesFactory'
+import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import { BannerType } from '@common/layouts/Constants'
 import { ErrorTracking } from '@et/ErrorTrackingApp'
 import { String } from 'framework/strings'
 import RbacFactory from '@rbac/factories/RbacFactory'
@@ -55,6 +58,8 @@ import { CVCodeErrors } from './pages/code-errors/CVCodeErrors'
 import { CVCodeErrorsAgents } from './pages/code-errors-agent-control/code-errors-agents/CVCodeErrorsAgents'
 import CVCodeErrorsAgentsControl from './pages/code-errors-agent-control/CVCodeErrorsAgentsControl'
 import CVCreateSLOV2 from './pages/slos/components/CVCreateSLOV2/CVCreateSLOV2'
+import { getIsValuePresent } from './utils/licenseBannerUtils'
+import { ThresholdPercentageToShowBanner } from './constants'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -75,6 +80,80 @@ import CVCreateSLOV2 from './pages/slos/components/CVCreateSLOV2/CVCreateSLOV2'
 //     return Promise.resolve(response)
 //   }
 // )
+
+featureFactory.registerFeaturesByModule('cv', {
+  features: [FeatureIdentifier.SRM_SERVICES],
+  renderMessage: (_, getString, additionalLicenseProps, usageAndLimitInfo): RenderMessageReturn => {
+    const { isFreeEdition, isTeamEdition, isEnterpriseEdition } = additionalLicenseProps || {}
+
+    const { limitData, usageData } = usageAndLimitInfo || {}
+    const { totalServices } = limitData?.limit?.cv || {}
+    const { activeServices } = usageData?.usage?.cv || {}
+
+    const activeServicesCount = activeServices?.count
+
+    /**
+     *  ********** activeServices < totalServices *************
+     *
+     * Banner type: Info
+     *
+     * Team edition:
+     * Show banner only if activeServices is above or equal to 75% of totalServices.
+     *
+     * Free edition:
+     * Show banner usage always
+     *
+     *
+     * ********** activeServices === totalServices *************
+     *
+     * Banner type: Level up
+     *
+     * Team edition and Free edition:
+     * You have exceeded your service subscription limit. Consider increasing your limits.
+     */
+
+    if (getIsValuePresent(activeServicesCount) && getIsValuePresent(totalServices)) {
+      const usagePercentge = (activeServicesCount / totalServices) * 100
+
+      if (activeServicesCount < totalServices) {
+        if (isFreeEdition) {
+          return {
+            message: () =>
+              getString('cv.licenseBanner.freePlanUsageMessage', {
+                activeServicesCount,
+                totalServices
+              }),
+            bannerType: BannerType.INFO
+          }
+        }
+
+        if (isTeamEdition && usagePercentge > ThresholdPercentageToShowBanner) {
+          return {
+            message: () =>
+              getString('cv.licenseBanner.teamPlanUsageMessage', {
+                activeServicesCount,
+                totalServices
+              }),
+            bannerType: BannerType.INFO
+          }
+        }
+      }
+
+      if (activeServicesCount >= totalServices && !isEnterpriseEdition) {
+        return {
+          message: () => getString('cv.licenseBanner.limitExceedMessage'),
+          bannerType: BannerType.LEVEL_UP
+        }
+      }
+    }
+
+    // ⭐️ No banner will be shown
+    return {
+      message: () => '',
+      bannerType: BannerType.LEVEL_UP
+    }
+  }
+})
 
 export const cvModuleParams: ModulePathParams = {
   module: ':module(cv)'
@@ -283,6 +362,10 @@ export default (
       sidebarProps={CVSideNavProps}
       path={routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
     >
+      <CVSLOsListingPage />
+    </RouteWithLayout>
+
+    <RouteWithLayout exact sidebarProps={CVSideNavProps} path={routes.toAccountCVSLOs({ ...accountPathProps })}>
       <CVSLOsListingPage />
     </RouteWithLayout>
 

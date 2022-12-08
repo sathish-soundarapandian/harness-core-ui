@@ -3,7 +3,7 @@
 exports[`Test Pipeline gitx cache Copy should render correctly 1`] = `
 <div>
   <div
-    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--margin-right-small"
+    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--margin-right-medium"
   >
     <div
       class="cachedcopy"

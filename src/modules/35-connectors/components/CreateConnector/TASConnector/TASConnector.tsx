@@ -24,6 +24,8 @@ import { ConnectivityModeType } from '@common/components/ConnectivityMode/Connec
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
 import StepTasAuthentication from './StepAuth/StepTasAuthentication'
 import ConnectivityModeStep from '../commonSteps/ConnectivityModeStep/ConnectivityModeStep'
+import tasPlatform from './ConnectivityModeStepImage/tasPlatform.svg'
+import tasDelegate from './ConnectivityModeStepImage/tasDelegate.svg'
 
 const TASConnector: React.FC<CreateConnectorModalProps> = props => {
   const { onClose, onSuccess } = props
@@ -64,6 +66,8 @@ const TASConnector: React.FC<CreateConnectorModalProps> = props => {
         hideModal={props.onClose}
         onConnectorCreated={props.onSuccess}
         helpPanelReferenceId="ConnectorConnectToTheProvider"
+        platformImage={tasPlatform}
+        delegateImage={tasDelegate}
       />
       {props.connectivityMode === ConnectivityModeType.Delegate ? (
         <DelegateSelectorStep

@@ -12,7 +12,6 @@ import type {
   CreatedMetricsWithSelectedIndex,
   CustomSelectedAndMappedMetrics
 } from '@cv/pages/health-source/common/CommonCustomMetric/CommonCustomMetric.types'
-import type { NonCustomFeildsInterface } from '../../../AppDynamics/AppDHealthSource.types'
 import type { HealthSourceConfig, HealthSourceInitialData } from '../../CommonHealthSource.types'
 
 export interface AddMetricForm {
@@ -31,8 +30,6 @@ export interface CustomMetricFormContainerProps {
   groupedCreatedMetrics: GroupedCreatedMetrics
   setCreatedMetrics: Dispatch<SetStateAction<CreatedMetricsWithSelectedIndex>>
   setGroupedCreatedMetrics: Dispatch<SetStateAction<GroupedCreatedMetrics>>
-  nonCustomFeilds: NonCustomFeildsInterface
-  setNonCustomFeilds: Dispatch<SetStateAction<NonCustomFeildsInterface>>
   isTemplate?: boolean
   expressions?: string[]
   healthSourceConfig: HealthSourceConfig

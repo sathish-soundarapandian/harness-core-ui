@@ -237,7 +237,7 @@ exports[`ServicesList render 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 10%;"
+          style="width: 7%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -249,7 +249,7 @@ exports[`ServicesList render 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 15%;"
+          style="width: 14%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -285,7 +285,7 @@ exports[`ServicesList render 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 13%;"
+          style="width: 11%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -297,7 +297,7 @@ exports[`ServicesList render 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 19%;"
+          style="width: 15%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -357,7 +357,7 @@ exports[`ServicesList render 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 10%;"
+              style="width: 7%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
@@ -366,7 +366,7 @@ exports[`ServicesList render 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 14%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
@@ -489,7 +489,7 @@ exports[`ServicesList render 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 13%;"
+              style="width: 11%;"
             >
               <div
                 class="Layout--vertical StyledProps--main tickerContainer StyledProps--padding-small"
@@ -543,7 +543,7 @@ exports[`ServicesList render 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 19%;"
+              style="width: 15%;"
             />
             <div
               class="TableV2--cell"
@@ -668,7 +668,7 @@ exports[`ServicesList render 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 10%;"
+              style="width: 7%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
@@ -700,7 +700,7 @@ exports[`ServicesList render 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 14%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
@@ -823,7 +823,7 @@ exports[`ServicesList render 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 13%;"
+              style="width: 11%;"
             >
               <div
                 class="Layout--vertical StyledProps--main tickerContainer StyledProps--padding-small"
@@ -877,7 +877,7 @@ exports[`ServicesList render 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 19%;"
+              style="width: 15%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main lastDeployment"

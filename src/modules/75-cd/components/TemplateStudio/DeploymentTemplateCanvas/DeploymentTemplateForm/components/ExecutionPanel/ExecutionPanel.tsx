@@ -28,7 +28,6 @@ import { useStrings } from 'framework/strings'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { TemplateUsage } from '@templates-library/utils/templatesUtils'
-import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import {
   getUpdatedDeploymentConfig,
@@ -40,16 +39,18 @@ import { TemplatesActionPopover } from '@templates-library/components/TemplatesA
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useMutateAsGet } from '@common/hooks'
+import { useGetStepsV2 } from 'services/pipeline-ng'
+import { getStepTypesFromCategories } from '@pipeline/hooks/useAddStepTemplate'
 import ExecutionPanelListView from './ExecutionPanelListView/ExecutionPanelListView'
 import { StepTemplateCard } from '../StepTemplateCard/StepTemplateCard'
+import { DEFAULT_STEP_PALETTE_MODULE_INFO } from '../DeploymentConfigStepDrawer/DeploymentConfigStepDrawer'
 import css from './ExecutionPanel.module.scss'
 export interface StepAdditionMenuItem {
   icon: IconName
   label: string
   onClick: () => void
 }
-
-const ALLOWED_STEP_TEMPLATE_TYPES = [StepType.SHELLSCRIPT, StepType.HTTP]
 
 export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>): JSX.Element {
   const {
@@ -74,6 +75,19 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>): 
   const [selectedTemplate, setSelectedTemplate] = React.useState<TemplateSummaryResponse | undefined>()
   const [stepTemplateRefsList, setStepTemplateRefsList] = React.useState(stepTemplateRefs)
   const [searchString, setSearchString] = React.useState<string | undefined>(undefined)
+  const [allChildTypes, setAllChildTypes] = React.useState<string[]>([])
+  const { data: stepsData } = useMutateAsGet(useGetStepsV2, {
+    queryParams: { accountId },
+    body: {
+      stepPalleteModuleInfos: DEFAULT_STEP_PALETTE_MODULE_INFO
+    }
+  })
+
+  React.useEffect(() => {
+    if (stepsData?.data?.stepCategories) {
+      setAllChildTypes(getStepTypesFromCategories(stepsData.data.stepCategories))
+    }
+  }, [stepsData?.data?.stepCategories])
 
   useEffect(() => {
     searchRef.current?.clear()
@@ -94,7 +108,7 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>): 
       const { template } = await getTemplate({
         templateType: 'Step',
         filterProperties: {
-          childTypes: ALLOWED_STEP_TEMPLATE_TYPES
+          childTypes: allChildTypes
         },
         disableVersionChange: true,
         allowedUsages: [TemplateUsage.USE]

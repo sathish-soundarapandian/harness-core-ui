@@ -167,24 +167,30 @@ function DeployEnvironment({
           const values = { ...formik?.values }
 
           const hasEnvChanged =
-            get(values, 'environment.environmentRef') !== get(values, 'environment.environmentInputs.identifier')
+            get(values, 'environment.environmentRef') !== get(initialValues, 'environment.environmentRef')
 
           if (parsedEnvironmentYaml.environmentInputs) {
-            ;(getMultiTypeFromValue(get(values, 'environment.environmentInputs')) === MultiTypeInputType.RUNTIME ||
-              hasEnvChanged) &&
+            if (
+              getMultiTypeFromValue(get(values, 'environment.environmentInputs')) === MultiTypeInputType.RUNTIME ||
+              hasEnvChanged
+            ) {
               set(values, 'environment.environmentInputs', {
                 ...clearRuntimeInput(parsedEnvironmentYaml.environmentInputs)
               })
+            }
           } else {
             unset(values, 'environment.environmentInputs')
           }
 
           if (parsedServiceOverridesYaml.serviceOverrideInputs) {
-            ;(getMultiTypeFromValue(get(values, 'environment.serviceOverrideInputs')) === MultiTypeInputType.RUNTIME ||
-              hasEnvChanged) &&
+            if (
+              getMultiTypeFromValue(get(values, 'environment.serviceOverrideInputs')) === MultiTypeInputType.RUNTIME ||
+              hasEnvChanged
+            ) {
               set(values, 'environment.serviceOverrideInputs', {
                 ...clearRuntimeInput(parsedServiceOverridesYaml.serviceOverrideInputs)
               })
+            }
           } else {
             unset(values, `environment.serviceOverrideInputs`)
           }

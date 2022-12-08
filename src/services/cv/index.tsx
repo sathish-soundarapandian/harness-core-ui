@@ -503,20 +503,20 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   awsAccountId?: string
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
   billingExportSpec?: BillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   subscriptionId: string
   tenantId: string
 }
 
 export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
   connectorRef: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
 }
 
 export interface CVLicenseUsageDTO {
@@ -1973,7 +1973,7 @@ export interface GcpBillingExportSpec {
 
 export type GcpCloudCostConnector = ConnectorConfigDTO & {
   billingExportSpec?: GcpBillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE')[]
   projectId: string
   serviceAccountEmail: string
 }
@@ -13662,6 +13662,55 @@ export const getMetricDefinitionsPromise = (
   getUsingFetch<RestResponseListTimeSeriesMetricDefinition, unknown, GetMetricDefinitionsQueryParams, void>(
     getConfig('cv/api'),
     `/timeseries/metric-template`,
+    props,
+    signal
+  )
+
+export interface GetLicenseUsageQueryParams {
+  accountIdentifier: string
+  timestamp?: number
+}
+
+export type GetLicenseUsageProps = Omit<
+  GetProps<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets License Usage for CV
+ */
+export const GetLicenseUsage = (props: GetLicenseUsageProps) => (
+  <Get<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>
+    path={`/usage/CV`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetLicenseUsageProps = Omit<
+  UseGetProps<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets License Usage for CV
+ */
+export const useGetLicenseUsage = (props: UseGetLicenseUsageProps) =>
+  useGet<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>(`/usage/CV`, {
+    base: getConfig('cv/api'),
+    ...props
+  })
+
+/**
+ * Gets License Usage for CV
+ */
+export const getLicenseUsagePromise = (
+  props: GetUsingFetchProps<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>(
+    getConfig('cv/api'),
+    `/usage/CV`,
     props,
     signal
   )

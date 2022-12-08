@@ -173,6 +173,15 @@ export function getStepPaletteModuleInfosFromStage(
                 module: 'cd',
                 category: 'Provisioner',
                 shouldShowCommonSteps: false
+              },
+              {
+                module: 'cd',
+                category: 'Builds',
+                shouldShowCommonSteps: false
+              },
+              {
+                module: 'cv',
+                shouldShowCommonSteps: false
               }
             ]
           : [
