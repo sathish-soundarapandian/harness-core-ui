@@ -35,6 +35,20 @@ jest.mock('services/cd-ng', () => ({
     }
   }),
   useGetBuildDetailsForDockerWithYaml: () => mockDockerTagsCallResponse,
+  useGetBuildDetailsForDocker: jest.fn().mockImplementation(() => {
+    return { data: { data: { buildDetailsList: [] } }, refetch: jest.fn(), error: null }
+  }),
+  useGetImagePathsForArtifactory: jest.fn().mockImplementation(() => {
+    return {
+      data: {},
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
+  }),
+  useGetBuildDetailsForArtifactoryArtifact: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: jest.fn(), error: null, loading: false }
+  }),
   useGetArtifactSourceInputs: jest.fn().mockImplementation(() => {
     return {
       data: {},
