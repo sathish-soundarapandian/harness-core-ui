@@ -73,31 +73,20 @@ export default function ProjectsSideNav(): React.ReactElement {
               }}
             />
           </Container>
-          <SidebarLink label={getString('overview')} to={routes.toProjectDetails(projectDetailsParams)} />
-          {NEW_LEFT_NAVBAR_SETTINGS && (
-            <>
-              <SidebarLink
-                className={css.sidebarlink}
-                label={getString('common.pipelineExecution')}
-                to={routes.toDeployments(projectDetailsParams)}
-              />
-              <SidebarLink
-                className={css.sidebarlink}
-                label={getString('pipelines')}
-                to={routes.toPipelines(projectDetailsParams)}
-              />
-              <SidebarLink
-                className={css.sidebarlink}
-                label={getString('services')}
-                to={routes.toServices(projectDetailsParams)}
-              />
-              <SidebarLink
-                className={css.sidebarlink}
-                label={getString('environments')}
-                to={routes.toEnvironment(projectDetailsParams)}
-              />
-            </>
-          )}
+          <Layout.Vertical spacing="small">
+            <SidebarLink label={getString('overview')} to={routes.toProjectDetails(projectDetailsParams)} />
+            {NEW_LEFT_NAVBAR_SETTINGS && (
+              <>
+                <SidebarLink
+                  label={getString('common.pipelineExecution')}
+                  to={routes.toDeployments(projectDetailsParams)}
+                />
+                <SidebarLink label={getString('pipelines')} to={routes.toPipelines(projectDetailsParams)} />
+                <SidebarLink label={getString('services')} to={routes.toServices(projectDetailsParams)} />
+                <SidebarLink label={getString('environments')} to={routes.toEnvironment(projectDetailsParams)} />
+              </>
+            )}
+          </Layout.Vertical>
           <ProjectSetupMenu defaultExpanded={NEW_LEFT_NAVBAR_SETTINGS} />
         </Container>
       )}
