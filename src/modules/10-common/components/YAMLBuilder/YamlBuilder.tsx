@@ -875,7 +875,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         const position =
           findPositionsForMatchingKeys(editor, 'steps')[closestStageIndexForYAMLInsertion] || ({} as Position)
         const endingLineForCursorPosition = position.lineNumber + (noOflinesInserted ? noOflinesInserted : 0)
-        const contentInStartingLine = editor.getModel()?.getLineContent(position.lineNumber)?.trim()
+        const contentInStartingLine = editor.getModel()?.getLineContent(position.lineNumber)?.trim() || ''
+        const contentInEndingLine = editor.getModel()?.getLineContent(endingLineForCursorPosition) || ''
         const startingLineNum = position.lineNumber + (contentInStartingLine ? 1 : 0)
         const endingLineNum = contentInStartingLine ? endingLineForCursorPosition + 1 : endingLineForCursorPosition
 
@@ -886,7 +887,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         addCodeLens(startingLineNum, endingLineNum)
 
         // Scroll to the end of the inserted text
-        editor.revealLineInCenter(endingLineNum)
+        editor.setPosition({ column: contentInEndingLine.length + 1, lineNumber: endingLineForCursorPosition })
+        editor.revealLineInCenter(endingLineForCursorPosition)
         editor.focus()
       }
     },
