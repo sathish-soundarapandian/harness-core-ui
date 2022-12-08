@@ -89,7 +89,7 @@ import {
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { AutoCompletionMap } from './YAMLAutoCompletionHelper'
-import { countKeys, isWindowsOS } from '@common/utils/utils'
+import { isWindowsOS } from '@common/utils/utils'
 import { carriageReturnRegex } from '@common/utils/StringUtils'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
 import { CompletionItemKind } from 'vscode-languageserver-types'
@@ -860,16 +860,17 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   )
 
   const getClosestIndexToSearchToken = useCallback(
-    (sourcePosition: Position, searchToken: string): number => {
+    (sourcePosition: Position, searchToken: string, limitToFirstNResults?: number): number => {
       const editor = editorRef.current?.editor
       if (editor) {
         const { lineNumber: currentCursorLineNum } = sourcePosition || {}
         if (currentCursorLineNum) {
-          const matchesFound = findPositionsForMatchingKeys(editor, searchToken).map(
-            (position: Position) => position.lineNumber
-          )
+          const allMatchesFound = findPositionsForMatchingKeys(editor, searchToken)
+          const matchesFound = (
+            limitToFirstNResults ? allMatchesFound.slice(0, limitToFirstNResults) : allMatchesFound
+          ).map((position: Position) => position.lineNumber)
           const closestPosition = matchesFound.reduce(function (prev, curr) {
-            return Math.abs(curr - currentCursorLineNum) > Math.abs(prev - currentCursorLineNum) ? curr : prev
+            return Math.abs(curr - currentCursorLineNum) < Math.abs(prev - currentCursorLineNum) ? curr : prev
           })
           console.log(matchesFound.indexOf(closestPosition))
           return matchesFound.indexOf(closestPosition)
@@ -914,13 +915,21 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const getSelectionRangeOnClickOfSettingsBtn = useCallback(
     (cursorPosition: Position): number => {
       if (cursorPosition) {
-        const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
-        const closestStepIndex = getClosestIndexToSearchToken(cursorPosition, 'step:')
-        const stepYAMLPath = `${getStageYAMLPathForStageIndex(closestStageIndex)}.${closestStepIndex}.step`
         try {
           const currentYAMLAsJSON = parse(currentYaml)
-          const stepValues = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
-          return countKeys(stepValues, { sum: 0, keys: [] }).sum
+          const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
+          const stageForTheFoundIndex = findAllValuesForJSONPath(
+            currentYAMLAsJSON,
+            getStageYAMLPathForStageIndex(closestStageIndex)
+          ) as unknown[]
+          if (Array.isArray(stageForTheFoundIndex)) {
+            const closestStepIndex = getClosestIndexToSearchToken(cursorPosition, 'step:', stageForTheFoundIndex.length)
+            const stepYAMLPath = `${getStageYAMLPathForStageIndex(closestStageIndex)}.${closestStepIndex}.step`
+            const stepValueTokens = yamlStringify(get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>).split(
+              '\n'
+            ).length
+            return stepValueTokens > 0 ? stepValueTokens - 1 : 0
+          }
         } catch (e) {
           // ignore error
         }
@@ -964,7 +973,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       }
       const decorations = editorRef.current?.editor?.deltaDecorations([], [pluginInputDecoration])
       if (decorations) {
-        setTimeout(() => editorRef.current?.editor?.deltaDecorations(decorations, []), 5000)
+        setTimeout(() => editorRef.current?.editor?.deltaDecorations(decorations, []), 10000)
       }
     },
     [editorRef.current?.editor]
