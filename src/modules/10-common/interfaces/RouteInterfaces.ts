@@ -127,6 +127,10 @@ export interface ExecutionPathProps extends PipelinePathProps {
   step?: string
   stageExecId?: string
 }
+export interface ExecutionQueryParams {
+  stage?: string
+  childStage?: string
+}
 
 export interface BuildPathProps extends ProjectPathProps {
   buildIdentifier: string

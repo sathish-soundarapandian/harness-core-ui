@@ -8,10 +8,15 @@
 import * as React from 'react'
 import cx from 'classnames'
 import { Icon, Layout, Text, Button, ButtonVariation, useToaster } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
+import { Link, useParams } from 'react-router-dom'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import { isExecutionRunning, ExecutionStatus } from '@pipeline/utils/statusHelpers'
+import type { ExecutionGraph } from 'services/pipeline-ng'
+import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
 import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
 import SVGMarker from '../SVGMarker'
@@ -29,12 +34,16 @@ export function StepGroupNode(props: any): JSX.Element {
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
   const [isNodeCollapsed, setNodeCollapsed] = React.useState(props?.type === 'Pipeline')
   const [childPipelineData, setChildPipelineData] = React.useState<PipelineGraphState[]>([])
+  const [executionMetaData, setExecutionMetaData] = React.useState<ExecutionGraph['executionMetadata'] | undefined>(
+    undefined
+  )
   const { showPrimary } = useToaster()
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const DefaultNode: React.FC<any> | undefined = props?.getDefaultNode()?.component
   const stepGroupData = defaultTo(props?.data?.stepGroup, props?.data?.step?.data?.stepGroup) || props?.data?.step
   const stepsData = stepGroupData?.steps
   const isParentMatrix = defaultTo(props?.isParentMatrix, false)
+  const { module, source = 'executions' } = useParams<PipelineType<ExecutionPathProps>>()
 
   const stepStatus = defaultTo(props?.status || props?.data?.status, props?.data?.step?.status as ExecutionStatus)
   const isExecutionView = Boolean(stepStatus)
@@ -54,6 +63,10 @@ export function StepGroupNode(props: any): JSX.Element {
   React.useEffect(() => {
     if (props?.childPipelineData?.length) setChildPipelineData(props?.childPipelineData)
   }, [props?.childPipelineData])
+
+  React.useEffect(() => {
+    if (props?.executionMetaData) setExecutionMetaData(props?.executionMetaData)
+  }, [props?.executionMetaData])
 
   React.useEffect(() => {
     props?.updateGraphLinks?.()
@@ -76,6 +89,8 @@ export function StepGroupNode(props: any): JSX.Element {
     setVisibilityOfAdd(false)
   }, 300)
   const nodeType = Object.keys(props?.data?.stepGroup?.strategy || {})[0]
+  const showExecutionMetaDataForChainedPipeline = props?.type === 'Pipeline' && !!executionMetaData
+
   return (
     <>
       {isNodeCollapsed && DefaultNode ? (
@@ -163,60 +178,90 @@ export function StepGroupNode(props: any): JSX.Element {
                 </Text>
               </div>
             )}
-            <div className={css.stepGroupHeader}>
-              <Layout.Horizontal
-                spacing="xsmall"
-                onMouseOver={e => {
-                  e.stopPropagation()
-                }}
-                onMouseOut={e => {
-                  e.stopPropagation()
-                }}
-              >
-                <Icon
-                  className={css.collapseIcon}
-                  name="minus"
-                  onClick={e => {
+            <div
+              className={cx(css.stepGroupHeader, {
+                [css.pipelineStageHeader]: showExecutionMetaDataForChainedPipeline
+              })}
+            >
+              <Layout.Horizontal spacing="xsmall" flex={{ justifyContent: 'space-between' }} width={'100%'}>
+                <Layout.Horizontal
+                  onMouseOver={e => {
                     e.stopPropagation()
-                    setNodeCollapsed(true)
                   }}
-                />
-                <Text
-                  data-nodeid={props.id}
-                  className={css.cursor}
-                  onMouseEnter={event => {
-                    event.stopPropagation()
-                    props?.fireEvent?.({
-                      type: Event.MouseEnterNode,
-                      target: event.target,
-                      data: { ...props }
-                    })
-                  }}
-                  onMouseLeave={event => {
-                    event.stopPropagation()
-                    debounceHideVisibility()
-                    props?.fireEvent?.({
-                      type: Event.MouseLeaveNode,
-                      target: event.target,
-                      data: { ...props }
-                    })
-                  }}
-                  lineClamp={1}
-                  onClick={event => {
-                    event.stopPropagation()
-                    debounceHideVisibility()
-                    props?.fireEvent?.({
-                      type: Event.StepGroupClicked,
-                      target: event.target,
-                      data: { ...props }
-                    })
-                  }}
-                  tooltipProps={{
-                    position: 'bottom'
+                  onMouseOut={e => {
+                    e.stopPropagation()
                   }}
                 >
-                  {props.name}
-                </Text>
+                  <Icon
+                    className={css.collapseIcon}
+                    name="minus"
+                    onClick={e => {
+                      e.stopPropagation()
+                      setNodeCollapsed(true)
+                    }}
+                  />
+                  <Text
+                    data-nodeid={props.id}
+                    className={css.cursor}
+                    onMouseEnter={event => {
+                      event.stopPropagation()
+                      props?.fireEvent?.({
+                        type: Event.MouseEnterNode,
+                        target: event.target,
+                        data: { ...props }
+                      })
+                    }}
+                    onMouseLeave={event => {
+                      event.stopPropagation()
+                      debounceHideVisibility()
+                      props?.fireEvent?.({
+                        type: Event.MouseLeaveNode,
+                        target: event.target,
+                        data: { ...props }
+                      })
+                    }}
+                    lineClamp={1}
+                    onClick={event => {
+                      event.stopPropagation()
+                      debounceHideVisibility()
+                      props?.fireEvent?.({
+                        type: Event.StepGroupClicked,
+                        target: event.target,
+                        data: { ...props }
+                      })
+                    }}
+                    tooltipProps={{
+                      position: 'bottom'
+                    }}
+                  >
+                    {props.name}
+                  </Text>
+                </Layout.Horizontal>
+                {showExecutionMetaDataForChainedPipeline && (
+                  <Link
+                    to={routes.toExecutionPipelineView({
+                      accountId: get(executionMetaData, 'accountId', ''),
+                      orgIdentifier: get(executionMetaData, 'orgIdentifier', ''),
+                      projectIdentifier: get(executionMetaData, 'projectIdentifier', ''),
+                      pipelineIdentifier: get(executionMetaData, 'pipelineIdentifier', '-1'),
+                      executionIdentifier: get(executionMetaData, 'planExecutionId', '-1'),
+                      module,
+                      source
+                    })}
+                    target="_blank"
+                    className={css.childPipelineDetails}
+                  >
+                    <Text
+                      font={{ variation: FontVariation.LEAD }}
+                      color={Color.PRIMARY_7}
+                      lineClamp={1}
+                      style={{ lineHeight: '18px' }}
+                    >
+                      {`${executionMetaData?.pipelineIdentifier} (ID: ${executionMetaData?.runSequence})`}
+                    </Text>
+                    <Icon name="launch" color={Color.PRIMARY_7} size={14} margin={{ left: 'xsmall' }} />
+                  </Link>
+                )}
               </Layout.Horizontal>
             </div>
             <div className={css.stepGroupBody}>

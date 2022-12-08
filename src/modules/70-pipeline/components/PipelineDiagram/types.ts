@@ -7,6 +7,7 @@
 
 import type { IconName } from '@harness/uicore'
 import type { CSSProperties } from 'react'
+import type { ExecutionGraph } from 'services/pipeline-ng'
 
 export interface ListenerHandle {
   deregister: () => any
@@ -46,6 +47,7 @@ export interface PipelineGraphState {
   stageNodeId?: string
   childPipelineData?: PipelineGraphState[]
   parentStageId?: string
+  executionMetaData?: ExecutionGraph['executionMetadata']
 }
 export interface NodeIds {
   startNode: string

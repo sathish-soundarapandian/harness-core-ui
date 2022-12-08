@@ -52,7 +52,8 @@ import type {
   EnvironmentQueryParams,
   AccountLevelGitOpsPathProps,
   TemplateType,
-  AccountRoutePlacement
+  AccountRoutePlacement,
+  ExecutionQueryParams
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -1125,7 +1126,7 @@ const routes = {
       module,
       source,
       ...rest
-    }: PipelineType<ExecutionPathProps> & GitQueryParams) => {
+    }: PipelineType<ExecutionPathProps> & GitQueryParams & ExecutionQueryParams) => {
       const basePath = module || 'home'
       const queryString = qs.stringify(rest, { skipNulls: true })
       if (queryString.length > 0) {

@@ -65,6 +65,7 @@ const setStageIds = ({
   setAutoStageNodeExecutionId,
   setSelectedStepId,
   setSelectedStageId,
+  setSelectedChildStageId,
   setSelectedStageExecutionId,
   data,
   error
@@ -76,6 +77,7 @@ const setStageIds = ({
   setAutoStageNodeExecutionId: Dispatch<SetStateAction<string>>
   setSelectedStepId: Dispatch<SetStateAction<string>>
   setSelectedStageId: Dispatch<SetStateAction<string>>
+  setSelectedChildStageId: Dispatch<SetStateAction<string>>
   setSelectedStageExecutionId: Dispatch<SetStateAction<string>>
   data?: ResponsePipelineExecutionDetail | null
   error?: GetDataError<Failure | Error> | null
@@ -110,7 +112,11 @@ const setStageIds = ({
     data.data?.childGraph?.pipelineExecutionSummary?.status as ExecutionStatus
   )
 
-  const runningStep = getActiveStep(data.data.executionGraph, data.data.pipelineExecutionSummary)
+  let runningStep = null
+  if (data.data?.executionGraph)
+    runningStep = getActiveStep(data.data?.executionGraph, data.data.pipelineExecutionSummary)
+  else if (data.data?.childGraph?.executionGraph)
+    runningStep = getActiveStep(data.data?.childGraph?.executionGraph, data.data?.childGraph?.pipelineExecutionSummary)
 
   if (runningStage) {
     if (isNodeTypeMatrixOrFor(data.data?.pipelineExecutionSummary?.layoutNodeMap?.[runningStage]?.nodeType)) {
@@ -130,8 +136,11 @@ const setStageIds = ({
       setSelectedStageExecutionId(nodeExecid)
     } else {
       setAutoSelectedStageId(runningStage)
-      runningChildStage && setAutoSelectedChildStageId(runningChildStage)
       setSelectedStageId(runningStage)
+      if (runningChildStage) {
+        setAutoSelectedChildStageId(runningChildStage)
+        setSelectedChildStageId(runningChildStage)
+      }
       setAutoStageNodeExecutionId('')
       setSelectedStageExecutionId('')
     }
@@ -163,6 +172,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   /* These are updated only when new data is fetched successfully */
   const [selectedStageId, setSelectedStageId] = React.useState<string>('')
   const [selectedStageExecutionId, setSelectedStageExecutionId] = React.useState<string>('')
+  const [selectedChildStageId, setSelectedChildStageId] = React.useState<string>('')
   const [selectedStepId, setSelectedStepId] = React.useState<string>('')
   const { preference: savedExecutionView, setPreference: setSavedExecutionView } = usePreferenceStore<
     string | undefined
@@ -260,9 +270,16 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   }
 
   const graphNodeMap = data?.data?.executionGraph?.nodeMap || {}
-  const isDataLoadedForSelectedStage = Object.keys(graphNodeMap).some(
+  const childGraphNodeMap = data?.data?.childGraph?.executionGraph?.nodeMap || {}
+
+  let isDataLoadedForSelectedStage = Object.keys(graphNodeMap).some(
     key => graphNodeMap?.[key]?.setupId === selectedStageId
   )
+
+  const isDataLoadedForChildSelectedStage = Object.keys(childGraphNodeMap).some(
+    key => childGraphNodeMap?.[key]?.setupId === selectedChildStageId
+  )
+  isDataLoadedForSelectedStage ||= isDataLoadedForChildSelectedStage
 
   let pipelineStagesMap = React.useMemo(() => {
     return getPipelineStagesMap(
@@ -287,6 +304,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   // combine steps and dependencies(ci stage)
   useDeepCompareEffect(() => {
     let nodeMap = { ...data?.data?.executionGraph?.nodeMap }
+    if (data?.data?.childGraph?.executionGraph) nodeMap = { ...data?.data?.childGraph?.executionGraph?.nodeMap }
 
     nodeMap = processForCIData({ nodeMap, data })
 
@@ -295,7 +313,12 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
 
       return { ...interruptHistories, ...nodeMap }
     })
-  }, [data?.data?.executionGraph?.nodeMap, data?.data?.executionGraph?.nodeAdjacencyListMap])
+  }, [
+    data?.data?.executionGraph?.nodeMap,
+    data?.data?.executionGraph?.nodeAdjacencyListMap,
+    data?.data?.childGraph?.executionGraph?.nodeMap,
+    data?.data?.childGraph?.executionGraph?.nodeAdjacencyListMap
+  ])
 
   // Do polling after initial default loading and has some data, stop if execution is in complete status
   usePolling(refetch, {
@@ -314,6 +337,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
       setAutoStageNodeExecutionId,
       setSelectedStepId,
       setSelectedStageId,
+      setSelectedChildStageId,
       setSelectedStageExecutionId,
       data,
       error
@@ -330,11 +354,19 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   React.useEffect(() => {
     if (loading) {
       setSelectedStageId((queryParams.stage as string) || autoSelectedStageId)
+      setSelectedChildStageId((queryParams.childStage as string) || autoSelectedChildStageId)
     }
     setSelectedStageExecutionId((queryParams?.stageExecId as string) || autoStageNodeExecutionId)
     setSelectedStepId((queryParams.step as string) || autoSelectedStepId)
     queryParams?.stage && !queryParams?.stageExecId && setAutoStageNodeExecutionId(queryParams?.stageExecId || '')
-  }, [loading, queryParams, autoSelectedStageId, autoSelectedStepId, autoStageNodeExecutionId])
+  }, [
+    loading,
+    queryParams,
+    autoSelectedStageId,
+    autoSelectedChildStageId,
+    autoSelectedStepId,
+    autoStageNodeExecutionId
+  ])
 
   useEffect(() => {
     if (HAS_CI && CI_TESTTAB_NAVIGATION && reportSummary?.failed_tests) {

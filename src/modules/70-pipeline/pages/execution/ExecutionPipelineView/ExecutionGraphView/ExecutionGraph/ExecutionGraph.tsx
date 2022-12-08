@@ -94,11 +94,25 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
   }, [childNodeData])
 
   React.useEffect(() => {
-    data?.items?.forEach((obj: PipelineGraphState) => {
-      if (obj.id === selectedStageId) obj.childPipelineData = _childPipelineData
-      else obj.childPipelineData = [] as PipelineGraphState[]
-    })
+    if (_childPipelineData) {
+      data?.items?.forEach((obj: PipelineGraphState) => {
+        if (obj.id === selectedStageId) obj.childPipelineData = _childPipelineData
+      })
+    }
   }, [_childPipelineData])
+
+  React.useEffect(() => {
+    if (pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata) {
+      data?.items?.forEach((obj: PipelineGraphState) => {
+        if (obj.id === selectedStageId) {
+          obj.executionMetaData = {
+            ...pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata,
+            runSequence: get(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary, 'runSequence', 0).toString()
+          }
+        }
+      })
+    }
+  }, [pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata])
 
   const {
     data: barrierInfoData,

@@ -143,6 +143,11 @@
       cursor: pointer;
     }
   }
+  .pipelineStageHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
   .stepGroupBody {
     padding: var(--spacing-large) var(--spacing-xxxlarge);
@@ -227,4 +232,9 @@
   p {
     word-break: break-word !important;
   }
+}
+
+.childPipelineDetails {
+  display: flex;
+  align-items: center;
 }
