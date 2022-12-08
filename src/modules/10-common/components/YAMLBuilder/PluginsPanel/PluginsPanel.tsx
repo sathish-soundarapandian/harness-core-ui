@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 import {
@@ -34,12 +34,20 @@ interface PluginsPanelInterface {
   existingPluginValues?: Record<string, any>
   onPluginAdd: (pluginInput: Record<string, any>) => void
   height?: React.CSSProperties['height']
+  shouldEnableFormView?: boolean
 }
 
 export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
-  const { height, onPluginAdd, existingPluginValues = {} } = props
+  const { height, onPluginAdd, existingPluginValues = {}, shouldEnableFormView = false } = props
   const { getString } = useStrings()
+  const [showFormView, setShowFormView] = useState<boolean>(false)
   const [selectedPlugin, setSelectedPlugin] = useState<string>('')
+
+  useEffect(() => {
+    if (shouldEnableFormView) {
+      setShowFormView(shouldEnableFormView)
+    }
+  }, [shouldEnableFormView])
 
   const renderPlugin = useCallback((plugin: PluginInterface): JSX.Element => {
     const { name, description, pluginIcon, publisherIcon, className } = plugin
@@ -107,7 +115,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
             </Text>
           }
           panel={
-            selectedPlugin ? (
+            selectedPlugin || showFormView ? (
               <Layout.Vertical spacing="medium" padding="medium">
                 <Formik
                   initialValues={existingPluginValues}
@@ -139,7 +147,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                   }}
                 </Formik>
                 {!isEmpty(existingPluginValues) && existingPluginValues && !existingPluginValues.shouldInsertYAML ? (
-                  <Text>Value received from YAML view!</Text>
+                  <Text lineClamp={1}>{JSON.stringify(existingPluginValues)}</Text>
                 ) : null}
               </Layout.Vertical>
             ) : (

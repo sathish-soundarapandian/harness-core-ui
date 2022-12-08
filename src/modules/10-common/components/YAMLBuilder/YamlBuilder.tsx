@@ -177,6 +177,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const [currentCursorPosition, setCurrentCursorPosition] = useState<Position>()
   const codeLensRegistrations = useRef<Set<IDisposable>>(new Set<IDisposable>())
   const codeLensPositionMarkers = useRef<Map<number, number>>(new Map<number, number>())
+  const [pluginValuesSelected, setPluginValuesSelected] = useState<Record<string, any>>()
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -825,9 +826,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const commandId = editorRef.current?.editor?.addCommand(
         0,
         () => {
-          const numberOfLinesAdded = getSelectionRangeOnClickOfSettingsBtn(cursorPosition)
-          if (numberOfLinesAdded) {
-            highlightInsertedText(fromLine, toLineNum + numberOfLinesAdded + 1)
+          const numberOfLinesInSelection = getSelectionRangeOnClickOfSettingsBtn(cursorPosition)
+          if (numberOfLinesInSelection) {
+            highlightInsertedText(fromLine, toLineNum + numberOfLinesInSelection + 1)
           }
         },
         ''
@@ -925,9 +926,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           if (Array.isArray(stageForTheFoundIndex)) {
             const closestStepIndex = getClosestIndexToSearchToken(cursorPosition, 'step:', stageForTheFoundIndex.length)
             const stepYAMLPath = `${getStageYAMLPathForStageIndex(closestStageIndex)}.${closestStepIndex}.step`
-            const stepValueTokens = yamlStringify(get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>).split(
-              '\n'
-            ).length
+            const stepValuesObj = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
+            setPluginValuesSelected(stepValuesObj)
+            const stepValueTokens = yamlStringify(stepValuesObj).split('\n').length
             return stepValueTokens > 0 ? stepValueTokens - 1 : 0
           }
         } catch (e) {
@@ -1027,7 +1028,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         </div>
         {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
       </Layout.Vertical>
-      {showPluginsPanel ? <PluginsPanel height={height} onPluginAdd={insertPluginIntoExistingYAML} /> : null}
+      {showPluginsPanel ? (
+        <PluginsPanel
+          height={height}
+          onPluginAdd={insertPluginIntoExistingYAML}
+          existingPluginValues={pluginValuesSelected}
+          shouldEnableFormView={!isEmpty(pluginValuesSelected)}
+        />
+      ) : null}
     </Layout.Horizontal>
   )
 }
