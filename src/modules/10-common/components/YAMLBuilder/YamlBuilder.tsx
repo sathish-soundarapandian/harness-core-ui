@@ -962,8 +962,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           className: css.pluginDecorator
         }
       }
-      editorRef.current?.editor?.deltaDecorations([], [pluginInputDecoration])
-      setTimeout(() => editorRef.current?.editor?.deltaDecorations([], []), 1000)
+      const decorations = editorRef.current?.editor?.deltaDecorations([], [pluginInputDecoration])
+      if (decorations) {
+        setTimeout(() => editorRef.current?.editor?.deltaDecorations(decorations, []), 5000)
+      }
     },
     [editorRef.current?.editor]
   )
