@@ -12,7 +12,7 @@ import ReactMonacoEditor from 'react-monaco-editor'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
 import { IKeyboardEvent, IPosition, languages, Position, Range } from 'monaco-editor/esm/vs/editor/editor.api'
-import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
+import type { editor, IDisposable } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { Diagnostic } from 'vscode-languageserver-types'
 import {
   debounce,
@@ -56,7 +56,7 @@ import {
   getMetaDataForKeyboardEventProcessing,
   verifyYAML,
   findPositionsForMatchingKeys,
-  getYAMLStepInsertionLocation
+  getStageYAMLPathForStageIndex
 } from './YAMLBuilderUtils'
 
 import css from './YamlBuilder.module.scss'
@@ -89,7 +89,7 @@ import {
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { AutoCompletionMap } from './YAMLAutoCompletionHelper'
-import { isWindowsOS } from '@common/utils/utils'
+import { countKeys, isWindowsOS } from '@common/utils/utils'
 import { carriageReturnRegex } from '@common/utils/StringUtils'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
 import { CompletionItemKind } from 'vscode-languageserver-types'
@@ -174,8 +174,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const editorVersionRef = useRef<number>()
   const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
   const [schemaValidationErrors, setSchemaValidationErrors] = useState<Diagnostic[]>()
-  const [pluginInput, setPluginInput] = useState<Record<string, any>>({})
   const [currentCursorPosition, setCurrentCursorPosition] = useState<Position>()
+  const codeLensRegistrations = useRef<Set<IDisposable>>(new Set<IDisposable>())
+  const codeLensPositionMarkers = useRef<Map<number, number>>(new Map<number, number>())
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -805,14 +806,33 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const showErrorFooter = showErrorPanel && !isEmpty(schemaValidationErrors)
 
-  const addCodeLens = useCallback(
-    (fromLine: number, toLineNum: number) => {
+  const disposeExistingCodeLensRegistrations = useCallback(() => {
+    for (let registration of codeLensRegistrations.current.values()) {
+      registration.dispose()
+    }
+  }, [codeLensRegistrations])
+
+  const addCodeLensRegistration = useCallback(
+    ({
+      fromLine,
+      toLineNum,
+      cursorPosition
+    }: {
+      fromLine: number
+      toLineNum: number
+      cursorPosition: Position
+    }): IDisposable => {
       const commandId = editorRef.current?.editor?.addCommand(
         0,
-        () => setPluginInput({ command: 'default', pathToProjects: 'default', arguments: 'default' }),
+        () => {
+          const numberOfLinesAdded = getSelectionRangeOnClickOfSettingsBtn(cursorPosition)
+          if (numberOfLinesAdded) {
+            highlightInsertedText(fromLine, toLineNum + numberOfLinesAdded + 1)
+          }
+        },
         ''
       )
-      const registrationId = monaco.languages.registerCodeLensProvider('yaml', {
+      const registrationId: IDisposable = monaco.languages.registerCodeLensProvider('yaml', {
         provideCodeLenses: function (_model: unknown, _token: unknown) {
           return {
             lenses: [
@@ -834,33 +854,25 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           }
         }
       })
-
-      return () => {
-        registrationId.dispose()
-      }
+      return registrationId
     },
     [editorRef.current?.editor]
   )
 
-  const getClosestStageIndexToCurrentPositionForStepInsertion = useCallback(
-    (sourcePosition: Position): number => {
+  const getClosestIndexToSearchToken = useCallback(
+    (sourcePosition: Position, searchToken: string): number => {
       const editor = editorRef.current?.editor
       if (editor) {
         const { lineNumber: currentCursorLineNum } = sourcePosition || {}
         if (currentCursorLineNum) {
-          const stagePositions = findPositionsForMatchingKeys(editor, 'stage:')
-          for (let idx = 0; idx < stagePositions.length - 1; idx++) {
-            const lineNumberForCurrentStageToken = stagePositions[idx].lineNumber
-            const lineNumberForNextStageToken = stagePositions[idx + 1].lineNumber
-            if (
-              currentCursorLineNum <= lineNumberForCurrentStageToken &&
-              currentCursorLineNum < lineNumberForNextStageToken
-            ) {
-              return idx
-            } else if (currentCursorLineNum >= lineNumberForNextStageToken) {
-              return idx + 1
-            }
-          }
+          const matchesFound = findPositionsForMatchingKeys(editor, searchToken).map(
+            (position: Position) => position.lineNumber
+          )
+          const closestPosition = matchesFound.reduce(function (prev, curr) {
+            return Math.abs(curr - currentCursorLineNum) > Math.abs(prev - currentCursorLineNum) ? curr : prev
+          })
+          console.log(matchesFound.indexOf(closestPosition))
+          return matchesFound.indexOf(closestPosition)
         }
       }
       return 0
@@ -884,7 +896,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         highlightInsertedText(startingLineNum, endingLineNum)
 
         // add "Settings" control
-        addCodeLens(startingLineNum, endingLineNum)
+        addCodeLensRegistration({
+          fromLine: startingLineNum,
+          toLineNum: endingLineNum,
+          cursorPosition: currentCursorPosition
+        })
 
         // Scroll to the end of the inserted text
         editor.setPosition({ column: contentInEndingLine.length + 1, lineNumber: endingLineForCursorPosition })
@@ -894,6 +910,48 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     },
     [currentCursorPosition, editorRef.current?.editor]
   )
+
+  const getSelectionRangeOnClickOfSettingsBtn = useCallback(
+    (cursorPosition: Position): number => {
+      if (cursorPosition) {
+        const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
+        const closestStepIndex = getClosestIndexToSearchToken(cursorPosition, 'step:')
+        const stepYAMLPath = `${getStageYAMLPathForStageIndex(closestStageIndex)}.${closestStepIndex}.step`
+        try {
+          const currentYAMLAsJSON = parse(currentYaml)
+          const stepValues = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
+          return countKeys(stepValues, { sum: 0, keys: [] }).sum
+        } catch (e) {
+          // ignore error
+        }
+      }
+      return 0
+    },
+    [currentYaml]
+  )
+
+  useEffect(() => {
+    const editor = editorRef.current?.editor
+    if (editor) {
+      const matchingPositions = findPositionsForMatchingKeys(editor, 'step:')
+      if (matchingPositions.length) {
+        disposeExistingCodeLensRegistrations()
+        matchingPositions.map((matchingPosition: Position) => {
+          const { lineNumber, column } = matchingPosition
+          if (!codeLensPositionMarkers.current.has(lineNumber)) {
+            codeLensPositionMarkers.current.set(lineNumber, column)
+            codeLensRegistrations.current.add(
+              addCodeLensRegistration({
+                fromLine: lineNumber,
+                toLineNum: lineNumber,
+                cursorPosition: matchingPosition
+              })
+            )
+          }
+        })
+      }
+    }
+  }, [currentYaml, editorRef.current?.editor])
 
   const highlightInsertedText = useCallback(
     (fromLine: number, toLineNum: number): void => {
@@ -905,6 +963,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         }
       }
       editorRef.current?.editor?.deltaDecorations([], [pluginInputDecoration])
+      setTimeout(() => editorRef.current?.editor?.deltaDecorations([], []), 1000)
     },
     [editorRef.current?.editor]
   )
@@ -917,8 +976,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     (pluginInput: Record<string, any>) => {
       if (!isEmpty(pluginInput) && pluginInput.shouldInsertYAML && currentCursorPosition) {
         try {
-          const closestIndex = getClosestStageIndexToCurrentPositionForStepInsertion(currentCursorPosition)
-          const yamlStepToBeInsertedAt = getYAMLStepInsertionLocation(closestIndex)
+          const closestIndex = getClosestIndexToSearchToken(currentCursorPosition, 'stage:')
+          const yamlStepToBeInsertedAt = getStageYAMLPathForStageIndex(closestIndex)
           const currentPipelineJSON = parse(currentYaml)
           const existingSteps = findAllValuesForJSONPath(currentPipelineJSON, yamlStepToBeInsertedAt) as unknown[]
           let updatedSteps = existingSteps.slice(0) as unknown[]
@@ -957,9 +1016,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         </div>
         {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
       </Layout.Vertical>
-      {showPluginsPanel ? (
-        <PluginsPanel height={height} onPluginAdd={insertPluginIntoExistingYAML} existingPluginValues={pluginInput} />
-      ) : null}
+      {showPluginsPanel ? <PluginsPanel height={height} onPluginAdd={insertPluginIntoExistingYAML} /> : null}
     </Layout.Horizontal>
   )
 }

@@ -67,7 +67,7 @@ const getMetaDataForKeyboardEventProcessing = ({
       const parentToCurrentPropertyPath = findLeafToParentPath(jsonEquivalentOfYAMLInEditor, currentProperty)
       return { currentProperty, yamlInEditor, parentToCurrentPropertyPath }
     } catch (e) {
-      onErrorCallback?.(e)
+      onErrorCallback?.(e as Record<string, any>)
     }
   }
 }
@@ -145,7 +145,7 @@ const findPositionsForMatchingKeys = (editor: editor.IStandaloneCodeEditor, text
   })
 }
 
-const getYAMLStepInsertionLocation = (stageIndex: number): string =>
+const getStageYAMLPathForStageIndex = (stageIndex: number): string =>
   `pipeline.stages.${stageIndex}.stage.spec.execution.steps`
 
 export {
@@ -155,5 +155,5 @@ export {
   getValidationErrorMessagesForToaster,
   verifyYAML,
   findPositionsForMatchingKeys,
-  getYAMLStepInsertionLocation
+  getStageYAMLPathForStageIndex
 }

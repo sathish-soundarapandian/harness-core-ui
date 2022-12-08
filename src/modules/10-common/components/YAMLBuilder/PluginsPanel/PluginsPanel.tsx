@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useCallback, useState } from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
@@ -24,13 +31,13 @@ import { Plugins } from './plugins'
 import css from './PluginsPanel.module.scss'
 
 interface PluginsPanelInterface {
-  existingPluginValues: Record<string, any>
+  existingPluginValues?: Record<string, any>
   onPluginAdd: (pluginInput: Record<string, any>) => void
   height?: React.CSSProperties['height']
 }
 
 export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
-  const { height, onPluginAdd, existingPluginValues } = props
+  const { height, onPluginAdd, existingPluginValues = {} } = props
   const { getString } = useStrings()
   const [selectedPlugin, setSelectedPlugin] = useState<string>('')
 
@@ -131,7 +138,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                     )
                   }}
                 </Formik>
-                {!isEmpty(existingPluginValues) && !existingPluginValues.shouldInsertYAML ? (
+                {!isEmpty(existingPluginValues) && existingPluginValues && !existingPluginValues.shouldInsertYAML ? (
                   <Text>Value received from YAML view!</Text>
                 ) : null}
               </Layout.Vertical>
