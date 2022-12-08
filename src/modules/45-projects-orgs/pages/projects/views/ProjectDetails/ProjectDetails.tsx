@@ -43,9 +43,9 @@ import {
   LandingDashboardContextProvider
 } from '@common/factories/LandingDashboardContext'
 import TimeRangeSelect from '@projects-orgs/components/TimeRangeSelect/TimeRangeSelect'
-import useDeleteProjectDialog from '../../DeleteProject'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
+import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectDetails.module.scss'
 
 const ProjectDetails: React.FC = () => {
@@ -113,7 +113,7 @@ const ProjectDetails: React.FC = () => {
   }
   const { openDialog } = useDeleteProjectDialog(projectData || { identifier: '', name: '' }, onDeleted)
   useDocumentTitle(getString('projectsText'))
-
+  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
   const getModuleInfoCards = (): React.ReactElement | React.ReactElement[] => {
     if (!projectData?.modules?.length) {
       return (
@@ -123,7 +123,7 @@ const ProjectDetails: React.FC = () => {
         </Layout.Vertical>
       )
     }
-    const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
+
     const infoCards = []
 
     if (shouldVisible && projectData.modules.includes(ModuleName.CD)) infoCards.push(ModuleName.CD)

@@ -25,11 +25,11 @@ import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
+import { ModuleName } from 'framework/types/ModuleName'
+import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
 import { getCDTrialDialog } from './CDTrial/useCDTrialModal'
 import { getCITrialDialog } from './CITrial/useCITrialModal'
 import { getPipelineStages } from './PipelineStagesUtils'
-import { ModuleName } from 'framework/types/ModuleName'
-import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
 import css from './PipelineStudio.module.scss'
 
 export default function PipelineStudio(): React.ReactElement {

@@ -23,9 +23,9 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
-import useDeleteProjectDialog from '../../DeleteProject'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
+import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectListView.module.scss'
 
 interface ProjectListViewProps {

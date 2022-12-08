@@ -8,7 +8,6 @@ exports[`Project Page List Create Project and Close 1`] = `
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
-      data-testid="page-header"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -253,7 +252,6 @@ exports[`Project Page List Create Project and Close 1`] = `
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody"
       data-name="page-body"
-      data-testid="page-body"
     >
       <div
         class="StyledProps--font StyledProps--main masonry"
@@ -3304,7 +3302,6 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
-      data-testid="page-header"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -3549,7 +3546,6 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody"
       data-name="page-body"
-      data-testid="page-body"
     >
       <div
         class="StyledProps--font StyledProps--main masonry"
@@ -6600,7 +6596,6 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
-      data-testid="page-header"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -6845,7 +6840,6 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody"
       data-name="page-body"
-      data-testid="page-body"
     >
       <div
         class="StyledProps--font StyledProps--main masonry"
@@ -9896,7 +9890,6 @@ exports[`Project Page List Whole Modal Test 1`] = `
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
-      data-testid="page-header"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -10141,7 +10134,6 @@ exports[`Project Page List Whole Modal Test 1`] = `
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody"
       data-name="page-body"
-      data-testid="page-body"
     >
       <div
         class="StyledProps--font StyledProps--main masonry"

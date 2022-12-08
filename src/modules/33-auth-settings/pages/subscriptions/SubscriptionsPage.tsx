@@ -31,8 +31,8 @@ import {
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetCommunity } from '@common/utils/utils'
-import SubscriptionTab from './SubscriptionTab'
 import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
+import SubscriptionTab from './SubscriptionTab'
 import css from './SubscriptionsPage.module.scss'
 
 export interface TrialInformation {
@@ -86,13 +86,12 @@ const SubscriptionsPage: React.FC = () => {
   useEffect(() => {
     trackPage(PAGE_NAME.SubscriptionsPage, { module: moduleCard as string })
   }, [])
+  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
   const ACTIVE_MODULE_SELECT_CARDS = MODULE_SELECT_CARDS.reduce(
     (accumulator: ModuleSelectCard[], card: ModuleSelectCard) => {
       const { module } = card
-
       switch (module) {
         case ModuleName.CD: {
-          const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
           shouldVisible && accumulator.push(card)
           return accumulator
         }

@@ -10,7 +10,7 @@ import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
-import { DEFAULT_MODULES_ORDER } from '@common/hooks/useNavModuleInfo'
+import { DEFAULT_MODULES_ORDER } from '@common/hooks/useGetModuleInfo'
 import MainNav from '../MainNav'
 
 jest.mock('framework/PreferenceStore/PreferenceStoreContext')

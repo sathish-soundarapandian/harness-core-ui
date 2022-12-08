@@ -8,11 +8,11 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ModuleName } from 'framework/types/ModuleName'
-import useNavModuleInfo, { useNavModuleInfoMap } from '../useNavModuleInfo'
+import useGetModuleInfo, { useNavModuleInfoMap } from '../useGetModuleInfo'
 
 describe('useModuleInfo tests', () => {
   test('test cd', () => {
-    const { result } = renderHook(() => useNavModuleInfo(ModuleName.CD), {
+    const { result } = renderHook(() => useGetModuleInfo(ModuleName.CD), {
       wrapper: TestWrapper
     })
 
@@ -22,7 +22,7 @@ describe('useModuleInfo tests', () => {
   })
 
   test('test ci', () => {
-    const { result } = renderHook(() => useNavModuleInfo(ModuleName.CI), {
+    const { result } = renderHook(() => useGetModuleInfo(ModuleName.CI), {
       wrapper: TestWrapper
     })
 
@@ -32,7 +32,7 @@ describe('useModuleInfo tests', () => {
   })
 
   test('test cv', () => {
-    const { result } = renderHook(() => useNavModuleInfo(ModuleName.CV), {
+    const { result } = renderHook(() => useGetModuleInfo(ModuleName.CV), {
       wrapper: TestWrapper
     })
 
@@ -42,7 +42,7 @@ describe('useModuleInfo tests', () => {
   })
 
   test('test cf', () => {
-    const { result } = renderHook(() => useNavModuleInfo(ModuleName.CF), {
+    const { result } = renderHook(() => useGetModuleInfo(ModuleName.CF), {
       wrapper: TestWrapper
     })
 
@@ -52,7 +52,7 @@ describe('useModuleInfo tests', () => {
   })
 
   test('test ce', () => {
-    const { result } = renderHook(() => useNavModuleInfo(ModuleName.CE), {
+    const { result } = renderHook(() => useGetModuleInfo(ModuleName.CE), {
       wrapper: TestWrapper
     })
 
@@ -62,7 +62,7 @@ describe('useModuleInfo tests', () => {
   })
 
   test('test sto', () => {
-    const { result } = renderHook(() => useNavModuleInfo(ModuleName.STO), {
+    const { result } = renderHook(() => useGetModuleInfo(ModuleName.STO), {
       wrapper: TestWrapper
     })
 
@@ -72,7 +72,7 @@ describe('useModuleInfo tests', () => {
   })
 
   test('test CHAOS', () => {
-    const { result } = renderHook(() => useNavModuleInfo(ModuleName.CHAOS), {
+    const { result } = renderHook(() => useGetModuleInfo(ModuleName.CHAOS), {
       wrapper: TestWrapper
     })
 
@@ -82,7 +82,7 @@ describe('useModuleInfo tests', () => {
   })
 
   test('test CODE', () => {
-    const { result } = renderHook(() => useNavModuleInfo(ModuleName.CODE), {
+    const { result } = renderHook(() => useGetModuleInfo(ModuleName.CODE), {
       wrapper: TestWrapper
     })
 
@@ -91,7 +91,7 @@ describe('useModuleInfo tests', () => {
     expect(result.current.shouldVisible).toBe(false)
   })
 
-  test('test useNavModuleInfoMap', () => {
+  test('test useGetModuleInfoMap', () => {
     const { result } = renderHook(() => useNavModuleInfoMap(), {
       wrapper: TestWrapper,
       initialProps: {

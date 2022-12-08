@@ -38,7 +38,6 @@ useSaveFeedbackMock.mockImplementation(() => {
 moment.now = jest.fn(() => 1482363367071)
 
 const featureFlags = {
-  CDNG_ENABLED: true,
   CVNG_ENABLED: true,
   CING_ENABLED: true,
   CENG_ENABLED: true,
@@ -74,7 +73,14 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, getByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -113,7 +119,15 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, getByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CI }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        pathParams={{ module: ModuleName.CI }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -225,7 +239,14 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, getByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -261,7 +282,14 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, getByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -296,7 +324,14 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, getByText, queryByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -331,7 +366,14 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, getByText, queryByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -365,7 +407,14 @@ describe('Subscriptions Page', () => {
     })
 
     const { container, getByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper
+        defaultAppStoreValues={{ featureFlags }}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
         <SubscriptionsPage />
       </TestWrapper>
     )
@@ -398,6 +447,9 @@ describe('Subscriptions Page', () => {
       <TestWrapper
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          },
           updateLicenseStore: updateLicenseStoreSpy
         }}
       >

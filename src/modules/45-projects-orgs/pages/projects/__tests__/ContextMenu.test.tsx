@@ -35,6 +35,11 @@ describe('Context Menu test', () => {
         path="/account/:accountId/projects"
         pathParams={{ accountId: 'testAcc' }}
         defaultAppStoreValues={defaultAppStoreValues}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
       >
         <ContextMenu
           project={projectWithModules}

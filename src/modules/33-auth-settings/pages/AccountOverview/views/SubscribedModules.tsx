@@ -93,10 +93,10 @@ const SubscribedModules: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
   function isModuleEnabled(moduleType: ModuleLicenseDTO['moduleType']): boolean | undefined {
     switch (moduleType) {
       case ModuleName.CD: {
-        const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
         return shouldVisible
       }
       case ModuleName.CE: {
