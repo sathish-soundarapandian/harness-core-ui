@@ -59,7 +59,7 @@ export type ArtifactSourceTemplateDetailsRef<T = unknown> =
   | React.MutableRefObject<ArtifactSourceTemplateDetailsFormikRef<T> | null>
   | null
 
-interface ArtifactSourceTemplateDetails {
+interface ArtifactSourceTemplateDetailsProps {
   artifactSourceConfigNode: TemplateStepNode
   onChange?: (step: Partial<Values>) => void
   onUpdate: (step: Partial<Values>) => void
@@ -85,7 +85,7 @@ const getFormValues = (artifactSourceConfigNode: TemplateStepNode) => {
 }
 
 function ArtifactSourceTemplateDetails(
-  props: ArtifactSourceTemplateDetails,
+  props: ArtifactSourceTemplateDetailsProps,
   ref: ArtifactSourceTemplateDetailsRef
 ): React.ReactElement {
   const {
@@ -194,12 +194,12 @@ function ArtifactSourceTemplateDetails(
             throw response
           }
         })
-      } catch (error) {
+      } catch (e) {
         setLoadingMergedTemplateInputs(false)
         updateFormValues(templateInputs)
       }
     } else if (!artifactSourceTemplateInputSetLoading) {
-      updateFormValues(undefined)
+      updateFormValues()
     }
   }, [templateInputs])
 
