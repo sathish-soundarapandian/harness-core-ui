@@ -36,6 +36,8 @@ import { TerraformDestroy } from './TerraformDestroy/TerraformDestroy'
 import { TerraformPlan } from './TerraformPlan/TerraformPlan'
 import { TerraformApply } from './TerraformApply/TerraformApply'
 import { TerragruntRollback } from './TerragruntRollback/TerragruntRollback'
+import { TerragruntApply } from './TerragruntApply/TerragruntApply'
+import { TerragruntDestroy } from './TerragruntDestroy/TerragruntDestroy'
 import { InfraProvisioning } from './InfraProvisioning/InfraProvisioning'
 import { GcpInfrastructureSpec } from './GcpInfrastructureSpec/GcpInfrastructureSpec'
 import { PDCInfrastructureSpec } from './PDCInfrastructureSpec/PDCInfrastructureSpec'
@@ -85,15 +87,9 @@ import { ElastigroupInfrastructureSpec } from './ElastigroupInfraSpec/Elastigrou
 import { ElastigroupServiceSpec } from './ElastigroupServiceSpec/ElastigroupServiceSpec'
 import { EmailStep } from './EmailStep/EmailStep'
 import { ElastigroupRollbackStep } from './ElastigroupRollbackStep/ElastigroupRollbackStep'
-<<<<<<< CDS-47746
-import { TerragruntApply } from './TerragruntApply/TerragruntApply'
-import { TerragruntDestroy } from './TerragruntDestroy/TerragruntDestroy'
-import { TerragruntPlan } from './TerragruntPlan/TerragruntPlan'
-=======
 import { ElastigroupSetupStep } from './ElastigroupSetupStep/ElastigroupSetupStep'
 import { TasServiceSpec } from './TasServiceSpec/TasServiceSpec'
 import { TASInfrastructureSpec } from './TASInfrastructureStep/TASInfrastructureStep'
->>>>>>> develop
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -136,7 +132,6 @@ factory.registerStep(new TerraformPlan())
 factory.registerStep(new TerragruntRollback())
 factory.registerStep(new TerragruntDestroy())
 factory.registerStep(new TerragruntApply())
-factory.registerStep(new TerragruntPlan())
 factory.registerStep(new InfraProvisioning())
 factory.registerStep(new PolicyStep())
 factory.registerStep(new ServerlessLambdaDeployStep())

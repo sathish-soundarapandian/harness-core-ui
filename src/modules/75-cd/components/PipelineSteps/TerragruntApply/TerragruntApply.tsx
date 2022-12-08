@@ -8,6 +8,7 @@
 import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
+import { v4 as uuid } from 'uuid'
 import { isEmpty } from 'lodash-es'
 import { yupToFormErrors, FormikErrors } from 'formik'
 import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
@@ -20,6 +21,7 @@ import type { TerragruntData, TerragruntVariableStepProps, TGFormData } from '..
 import { onSubmitTerragruntData } from '../Common/Terragrunt/TerragruntHelper'
 import TerragruntEitView from '../Common/Terragrunt/TerragruntEditView'
 import { TerragruntVariableStep } from '../Common/Terragrunt/TerragruntVariableView'
+import type { StringNGVariable } from 'services/pipeline-ng'
 
 const TerragruntApplyWidgetWithRef = React.forwardRef(TerragruntEitView)
 
@@ -95,6 +97,7 @@ export class TerragruntApply extends PipelineStep<TGFormData> {
   }
 
   private getInitialValues(data: TGFormData): TerragruntData {
+    const envVars = data.spec?.configuration?.spec?.environmentVariables as StringNGVariable[]
     const formData = {
       ...data,
       spec: {
@@ -102,11 +105,25 @@ export class TerragruntApply extends PipelineStep<TGFormData> {
         configuration: {
           ...data.spec?.configuration,
           spec: {
-            ...data.spec?.configuration?.spec
+            ...data.spec?.configuration?.spec,
+            targets: Array.isArray(data.spec?.configuration?.spec?.targets)
+              ? data.spec?.configuration?.spec?.targets.map(target => ({
+                  value: target,
+                  id: uuid()
+                }))
+              : [{ value: '', id: uuid() }],
+            environmentVariables: Array.isArray(envVars)
+              ? envVars.map(variable => ({
+                  key: variable.name,
+                  value: variable.value,
+                  id: uuid()
+                }))
+              : [{ key: '', value: '', id: uuid() }]
           }
         }
       }
     }
+
     return formData
   }
   /* istanbul ignore next */

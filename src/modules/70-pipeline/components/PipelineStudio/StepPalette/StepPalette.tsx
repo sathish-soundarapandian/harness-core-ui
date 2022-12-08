@@ -101,19 +101,6 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
 
     if (toShow) {
       setStepsCategories(toShow)
-      setStepsCategories([
-        ...toShow,
-        {
-          name: 'Terragrunt',
-          stepCategories: [],
-          stepsData: [
-            { name: 'Terragrunt Rollback', type: 'TerragruntRollback' },
-            { name: 'Terragrunt Destroy', type: 'TerragruntDestroy' },
-            { name: 'Terragrunt Apply', type: 'TerragruntApply' },
-            { name: 'Terragrunt Plan', type: 'TerragruntPlan' }
-          ]
-        }
-      ])
       setOriginalCategories(toShow)
     }
   }, [stepsData?.data?.stepCategories])

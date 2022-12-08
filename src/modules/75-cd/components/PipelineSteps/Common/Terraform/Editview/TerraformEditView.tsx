@@ -77,7 +77,13 @@ import {
 } from '../TerraformInterfaces'
 import { ConfigFileStoreStepOne } from '../../ConfigFileStore/ConfigFileStoreStepOne'
 import { ConfigFileStoreStepTwo } from '../../ConfigFileStore/ConfigFileStoreStepTwo'
-import { ConnectorMap, getBuildPayload, getConfigFilePath, getPath } from '../../ConfigFileStore/ConfigFileStoreHelper'
+import {
+  ConnectorMap,
+  ConnectorTypes,
+  getBuildPayload,
+  getConfigFilePath,
+  getPath
+} from '../../ConfigFileStore/ConfigFileStoreHelper'
 import { formatArtifactoryData } from './TerraformArtifactoryFormHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TerraformVarfile.module.scss'

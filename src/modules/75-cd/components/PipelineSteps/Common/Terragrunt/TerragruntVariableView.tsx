@@ -12,6 +12,8 @@ import { VariablesListTable } from '@pipeline/components/VariablesListTable/Vari
 import css from '../Terraform/TerraformStep.module.scss'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import type { TerragruntData, TerragruntVariableStepProps } from './TerragruntInterface'
+import { get } from 'lodash-es'
+import { ConfigVariables } from '../Terraform/Variableview/ConfigSection'
 
 export function TerragruntVariableStep(props: TerragruntVariableStepProps): React.ReactElement {
   const { variablesData = {} as TerragruntData, metadataMap, initialValues } = props
@@ -27,6 +29,28 @@ export function TerragruntVariableStep(props: TerragruntVariableStepProps): Reac
           metadataMap={metadataMap}
           className={pipelineVariableCss.variablePaddingL3}
         />
+        <ConfigVariables {...props} />
+        {(get(variablesData?.spec, 'configuration.spec.backendConfig.spec.content') ||
+          get(variablesData?.spec, 'configuration.spec.backendConfig.spec.store.spec')) && (
+          <>
+            <Text className={css.stepTitle}>{getString('pipelineSteps.backendConfig')}</Text>
+            <VariablesListTable
+              data={get(variablesData?.spec, 'configuration.spec.backendConfig.spec')}
+              originalData={get(initialValues.spec, 'configuration.spec.backendConfig.spec')}
+              metadataMap={metadataMap}
+              className={pipelineVariableCss.variablePaddingL4}
+            />
+            <VariablesListTable
+              data={get(variablesData?.spec, 'configuration.spec.backendConfig.spec.store.spec')}
+              originalData={get(initialValues.spec, 'configuration.spec.backendConfig.spec.store.spec')}
+              metadataMap={metadataMap}
+              className={pipelineVariableCss.variablePaddingL4}
+            />
+          </>
+        )}
+        {variablesData.spec?.configuration?.spec?.environmentVariables && (
+          <Text className={css.stepTitle}>{getString('environmentVariables')}</Text>
+        )}
         <VariablesListTable
           data={variablesData?.spec?.configuration?.spec}
           originalData={initialValues.spec?.configuration?.spec}

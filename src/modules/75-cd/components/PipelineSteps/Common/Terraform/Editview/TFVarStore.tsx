@@ -32,6 +32,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import {
+  AllowedTypes,
   ConnectorLabelMap,
   ConnectorMap,
   ConnectorTypes,

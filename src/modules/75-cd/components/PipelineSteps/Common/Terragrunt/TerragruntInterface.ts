@@ -4,6 +4,8 @@ import type { AllowedTypes } from '@harness/uicore'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   StepElementConfig,
+  TerraformBackendConfig,
+  TerraformVarFileWrapper,
   TerragruntApplyStepInfo,
   TerragruntDestroyStepInfo,
   TerragruntPlanExecutionData,
@@ -31,6 +33,28 @@ export interface TGDataSpec {
     path?: string
     terragruntRunType: 'RunAll' | 'RunModule'
   }
+  workspace?: string
+  backendConfig?:
+    | TerraformBackendConfig
+    | {
+        store?: {
+          type?: string
+          spec?: {
+            gitFetchType?: string
+            branch?: string
+            commitId?: string
+            folderPath?: string
+            connectorRef?: string | Connector
+            repositoryName?: string
+            artifactPaths?: string
+          }
+        }
+      }
+  targets?: any
+  environmentVariables?: any
+  varFiles?: TerraformVarFileWrapper[]
+  exportTerraformPlanJson?: boolean
+  exportTerraformHumanReadablePlan?: boolean
 }
 
 export interface TerragruntData extends StepElementConfig {
@@ -119,7 +143,12 @@ export interface TGDestroyData extends StepElementConfig {
 }
 
 export interface TGPlanFormData extends StepElementConfig {
-  spec?: TerragruntPlanStepInfo
+  spec?: Omit<TerragruntPlanStepInfo, 'configuration'> & {
+    configuration: Omit<TerragruntPlanExecutionData, 'environmentVariables' | 'targets'> & {
+      targets?: Array<{ id: string; value: string }> | string[] | string
+      environmentVariables?: Array<{ key: string; id: string; value: string }> | string
+    }
+  }
 }
 
 export interface TerragruntPlanProps {
@@ -138,4 +167,13 @@ export interface TerragruntPlanProps {
   gitScope?: GitFilterScope
   stepType?: string
   allValues?: TGPlanFormData
+}
+
+export interface TerragruntPlanVariableStepProps {
+  initialValues: TGPlanFormData
+  originalData?: TGPlanFormData
+  stageIdentifier?: string
+  onUpdate?(data: TGPlanFormData): void
+  metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
+  variablesData?: TGPlanFormData
 }
