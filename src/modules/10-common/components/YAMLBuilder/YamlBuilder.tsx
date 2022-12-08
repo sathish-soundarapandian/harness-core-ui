@@ -175,7 +175,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
   const [schemaValidationErrors, setSchemaValidationErrors] = useState<Diagnostic[]>()
   const [pluginInput, setPluginInput] = useState<Record<string, any>>({})
-  const [closestStageIndex, setClosestStageIndex] = useState<number>(0)
+  const [currentCursorPosition, setCurrentCursorPosition] = useState<Position>()
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -330,7 +330,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const autoCompleteYAML = useCallback((): void => {
     const editor = editorRef.current?.editor
     if (editor) {
-      const currentCursorPosition = editor.getPosition()
       const { lineNumber, column } = currentCursorPosition || {}
       if (lineNumber && column) {
         const editorContent = editor.getModel()?.getValue() || ''
@@ -365,7 +364,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         }
       }
     }
-  }, [editorRef.current?.editor])
+  }, [currentCursorPosition, editorRef.current?.editor])
 
   const showNoPermissionError = useCallback(
     throttle(() => {
@@ -407,6 +406,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       editor?.focus()
     }
     editor.onKeyDown((event: IKeyboardEvent) => handleEditorKeyDownEvent(event, editor))
+    editor.onDidChangeCursorPosition((event: editor.ICursorPositionChangedEvent) => {
+      setCurrentCursorPosition(event.position)
+    })
   }
 
   const disposePreviousSuggestions = (): void => {
@@ -840,49 +842,55 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [editorRef.current?.editor]
   )
 
-  const getClosestStageIndexForStepInsertion = useCallback((): number => {
-    const editor = editorRef.current?.editor
-    if (editor) {
-      const currentCursorPosition = editor.getPosition()
-      const { lineNumber: currentCursorLineNum } = currentCursorPosition || {}
-      if (currentCursorLineNum) {
-        const stagePositions = findPositionsForMatchingKeys(editor, 'stage')
-        for (let idx = 1; idx < stagePositions.length - 1; idx++) {
-          if (
-            stagePositions[idx - 1].lineNumber <= currentCursorLineNum &&
-            currentCursorLineNum < stagePositions[idx].lineNumber
-          ) {
-            console.log(idx)
+  const getClosestStageIndexToCurrentPositionForStepInsertion = useCallback(
+    (sourcePosition: Position): number => {
+      const editor = editorRef.current?.editor
+      if (editor) {
+        const { lineNumber: currentCursorLineNum } = sourcePosition || {}
+        if (currentCursorLineNum) {
+          const stagePositions = findPositionsForMatchingKeys(editor, 'stage:')
+          for (let idx = 0; idx < stagePositions.length - 1; idx++) {
+            const lineNumberForCurrentStageToken = stagePositions[idx].lineNumber
+            const lineNumberForNextStageToken = stagePositions[idx + 1].lineNumber
+            if (
+              currentCursorLineNum <= lineNumberForCurrentStageToken &&
+              currentCursorLineNum < lineNumberForNextStageToken
+            ) {
+              return idx
+            } else if (currentCursorLineNum >= lineNumberForNextStageToken) {
+              return idx + 1
+            }
           }
         }
       }
-    }
-    return 0
-  }, [editorRef.current?.editor])
+      return 0
+    },
+    [editorRef.current?.editor]
+  )
 
   const detectYAMLInsertion = useCallback(
-    (noOflinesInserted: number): void => {
+    (noOflinesInserted: number, closestStageIndexForYAMLInsertion): void => {
       const editor = editorRef.current?.editor
-      if (editor) {
-        setClosestStageIndex(getClosestStageIndexForStepInsertion())
-        const position = findPositionsForMatchingKeys(editor, 'steps')[closestStageIndex] || ({} as Position)
+      if (editor && currentCursorPosition) {
+        const position =
+          findPositionsForMatchingKeys(editor, 'steps')[closestStageIndexForYAMLInsertion] || ({} as Position)
         const endingLineForCursorPosition = position.lineNumber + (noOflinesInserted ? noOflinesInserted : 0)
         const contentInStartingLine = editor.getModel()?.getLineContent(position.lineNumber)?.trim()
-        const startingPosition = position.lineNumber + (contentInStartingLine ? 1 : 0)
-        const endingPosition = contentInStartingLine ? endingLineForCursorPosition + 1 : endingLineForCursorPosition
+        const startingLineNum = position.lineNumber + (contentInStartingLine ? 1 : 0)
+        const endingLineNum = contentInStartingLine ? endingLineForCursorPosition + 1 : endingLineForCursorPosition
 
         // highlight the inserted text
-        highlightInsertedText(startingPosition, endingPosition)
+        highlightInsertedText(startingLineNum, endingLineNum)
 
         // add "Settings" control
-        addCodeLens(startingPosition, endingPosition)
+        addCodeLens(startingLineNum, endingLineNum)
 
         // Scroll to the end of the inserted text
-        editor.revealLineInCenter(endingPosition)
+        editor.revealLineInCenter(endingLineNum)
         editor.focus()
       }
     },
-    [closestStageIndex, editorRef.current?.editor]
+    [currentCursorPosition, editorRef.current?.editor]
   )
 
   const highlightInsertedText = useCallback(
@@ -894,36 +902,40 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           className: css.pluginDecorator
         }
       }
-      editorRef?.current?.editor?.deltaDecorations([], [pluginInputDecoration])
+      editorRef.current?.editor?.deltaDecorations([], [pluginInputDecoration])
     },
     [editorRef.current?.editor]
   )
 
-  const wrapPlugInputInAStep = (pluginInput: Record<string, any>): Record<string, any> => {
+  const wrapPlugInputInAStep = useCallback((pluginInput: Record<string, any>): Record<string, any> => {
     return { step: pluginInput }
-  }
+  }, [])
 
-  useEffect(() => {
-    if (!isEmpty(pluginInput) && pluginInput.shouldInsertYAML) {
-      try {
-        const yamlStepToBeInsertedAt = getYAMLStepInsertionLocation(0)
-        const currentPipelineJSON = parse(currentYaml)
-        const existingSteps = findAllValuesForJSONPath(currentPipelineJSON, yamlStepToBeInsertedAt) as unknown[]
-        let updatedSteps = existingSteps.slice(0) as unknown[]
-        const stepToInsert = wrapPlugInputInAStep(omit(pluginInput, 'shouldInsertYAML'))
-        if (Array.isArray(existingSteps) && existingSteps.length > 1) {
-          updatedSteps.unshift(stepToInsert)
-        } else {
-          updatedSteps = [stepToInsert]
+  const insertPluginIntoExistingYAML = useCallback(
+    (pluginInput: Record<string, any>) => {
+      if (!isEmpty(pluginInput) && pluginInput.shouldInsertYAML && currentCursorPosition) {
+        try {
+          const closestIndex = getClosestStageIndexToCurrentPositionForStepInsertion(currentCursorPosition)
+          const yamlStepToBeInsertedAt = getYAMLStepInsertionLocation(closestIndex)
+          const currentPipelineJSON = parse(currentYaml)
+          const existingSteps = findAllValuesForJSONPath(currentPipelineJSON, yamlStepToBeInsertedAt) as unknown[]
+          let updatedSteps = existingSteps.slice(0) as unknown[]
+          const stepToInsert = wrapPlugInputInAStep(omit(pluginInput, 'shouldInsertYAML'))
+          if (Array.isArray(existingSteps) && existingSteps.length > 1) {
+            updatedSteps.unshift(stepToInsert)
+          } else {
+            updatedSteps = [stepToInsert]
+          }
+          const updatedPipelineJSON = set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps)
+          setCurrentYaml(yamlStringify(updatedPipelineJSON))
+          detectYAMLInsertion(Object.keys(pluginInput).length, closestIndex)
+        } catch (e) {
+          // ignore error
         }
-        const updatedPipelineJSON = set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps)
-        setCurrentYaml(yamlStringify(updatedPipelineJSON))
-        detectYAMLInsertion(Object.keys(pluginInput).length)
-      } catch (e) {
-        // ignore error
       }
-    }
-  }, [pluginInput])
+    },
+    [currentCursorPosition]
+  )
 
   return (
     <Layout.Horizontal>
@@ -944,7 +956,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
       </Layout.Vertical>
       {showPluginsPanel ? (
-        <PluginsPanel height={height} onPluginAdd={setPluginInput} existingPluginValues={pluginInput} />
+        <PluginsPanel height={height} onPluginAdd={insertPluginIntoExistingYAML} existingPluginValues={pluginInput} />
       ) : null}
     </Layout.Horizontal>
   )
