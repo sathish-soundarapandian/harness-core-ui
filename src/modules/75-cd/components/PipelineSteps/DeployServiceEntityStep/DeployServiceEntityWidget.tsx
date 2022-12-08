@@ -466,7 +466,7 @@ export default function DeployServiceEntityWidget({
         onSubmit={noop}
         validate={handleUpdate}
         initialValues={getInitialValues(initialValues)}
-        validationSchema={getValidationSchema(getString)}
+        validationSchema={setupModeType === setupMode.DIFFERENT && getValidationSchema(getString)}
       >
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.SERVICE }))
