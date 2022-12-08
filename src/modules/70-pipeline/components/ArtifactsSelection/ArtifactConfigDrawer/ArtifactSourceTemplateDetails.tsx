@@ -84,7 +84,7 @@ const getFormValues = (artifactSourceConfigNode: TemplateStepNode) => {
   })
 }
 
-export function ArtifactSourceTemplateDetails(
+function ArtifactSourceTemplateDetails(
   props: ArtifactSourceTemplateDetails,
   ref: ArtifactSourceTemplateDetailsRef
 ): React.ReactElement {
@@ -104,16 +104,12 @@ export function ArtifactSourceTemplateDetails(
   const formRef = React.useRef<FormikProps<unknown> | null>(null)
   const { setIntermittentLoading } = usePipelineContext()
   const { getString } = useStrings()
-  const { projectIdentifier, orgIdentifier, accountId } = useParams<{
-    projectIdentifier: string
-    orgIdentifier: string
-    accountId: string
-  }>()
   const artifactSourceTemplate = (artifactSourceConfigNode as TemplateStepNode)?.template || {}
   const { type: artifactSourceType } = artifactSourceTemplate.templateInputs || {}
   const artifactSource = artifactSourceType && artifactSourceBaseFactory.getArtifactSource(artifactSourceType)
 
   const queryParams = useParams<ProjectPathProps>()
+  const { projectIdentifier, orgIdentifier, accountId } = queryParams
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
   const scope = getScopeFromValue(artifactSourceTemplate.templateRef)
   const artifactSourceTemplateIdentifier = getIdentifierFromValue(artifactSourceTemplate.templateRef)

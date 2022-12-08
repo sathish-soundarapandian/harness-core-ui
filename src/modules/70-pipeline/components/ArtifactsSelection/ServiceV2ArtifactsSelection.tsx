@@ -103,9 +103,7 @@ const checkDuplicateStep = (
     })
 
     if (isDuplicate) {
-      setTimeout(() => {
-        formikRef.current?.setFieldError('identifier', getString('pipeline.uniqueIdentifier'))
-      }, 300)
+      formikRef.current?.setFieldError('identifier', getString('pipeline.uniqueIdentifier'))
       return true
     }
   }
@@ -527,6 +525,7 @@ export default function ServiceV2ArtifactsSelection({
     if (checkDuplicateStep(formikRef, artifactsList, artifactContext, getString, artifactIndex)) {
       return
     }
+    // form has been submitted so that errors can be populated and on the basis of that node gets updated in yaml
     await formikRef?.current?.submitForm()
     if (!isEmpty(formikRef.current?.getErrors())) {
       return

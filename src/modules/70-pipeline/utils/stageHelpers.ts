@@ -690,9 +690,9 @@ export const getAzureNexusRepoOptions = (
   azureFlag?: boolean,
   isTemplateContext?: boolean
 ): SelectOption[] => {
-  return isSSHWinRMDeploymentType(deploymentType) ||
-    (isAzureWebAppDeploymentType(deploymentType) && azureFlag) ||
-    !!isTemplateContext
+  return !!isTemplateContext ||
+    isSSHWinRMDeploymentType(deploymentType) ||
+    (isAzureWebAppDeploymentType(deploymentType) && azureFlag)
     ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
     : k8sRepositoryFormatTypes
 }
