@@ -189,15 +189,3 @@ export const getImageDimensions = (url: string): Promise<{ width: number; height
     img.src = url
   })
 }
-
-export const countKeys = (obj: Record<string, any>, result: { sum: number; keys: string[] }) => {
-  if (obj) {
-    const keys = Object.keys(obj)
-    result.sum += keys.length
-    result.keys = [...result.keys, ...keys]
-    keys.forEach(key => {
-      if (typeof obj[key] === 'object') result = countKeys(obj[key], result)
-    })
-  }
-  return result
-}
