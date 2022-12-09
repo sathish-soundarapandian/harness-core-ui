@@ -7,7 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly countRow: string
-  readonly deltaContainer: string
+  readonly body: string
+  readonly container: string
+  readonly header: string
 }
 export default styles

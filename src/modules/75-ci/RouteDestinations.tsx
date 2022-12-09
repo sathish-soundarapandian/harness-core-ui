@@ -55,6 +55,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import featureFactory from 'framework/featureStore/FeaturesFactory'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
+import ModuleOverviewFactory from '@projects-orgs/factories/ModuleOverviewFactory'
 import { ModuleName } from 'framework/types/ModuleName'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { CIExecutionCardSummary } from './components/CIExecutionCardSummary/CIExecutionCardSummary'
@@ -69,6 +70,7 @@ import CIDashboardPage from './pages/dashboard/CIDashboardPage'
 import GetStartedWithCI from './pages/get-started-with-ci/GetStartedWithCI'
 import CIHomePage from './pages/home/CIHomePage'
 import CITrialHomePage from './pages/home/CITrialHomePage'
+import CIModuleOverview from './components/CIModuleOverview/CIModuleOverview'
 
 // eslint-disable-next-line import/no-unresolved
 const CiuiMicroFrontendPath = React.lazy(() => import('ciui/MicroFrontendApp'))
@@ -86,6 +88,8 @@ executionFactory.registerSummary(StageType.BUILD, {
 executionFactory.registerStageDetails(StageType.BUILD, {
   component: CIStageDetails
 })
+
+ModuleOverviewFactory.registerModule(ModuleName.CI, CIModuleOverview)
 
 featureFactory.registerFeaturesByModule('ci', {
   features: [

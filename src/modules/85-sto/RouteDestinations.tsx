@@ -57,6 +57,8 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { RedirectToModuleTrialHomeFactory, RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { ModuleName } from 'framework/types/ModuleName'
+import ModuleOverviewFactory from '@projects-orgs/factories/ModuleOverviewFactory'
+import STOModuleOverview from './components/STOModuleOverview/STOModuleOverview'
 
 const STOSideNavProps: SidebarContext = {
   navComponent: STOSideNav,
@@ -75,6 +77,8 @@ const licenseRedirectData: LicenseRedirectProps = {
   startTrialRedirect: RedirectToModuleTrialHomeFactory(ModuleName.STO),
   expiredTrialRedirect: RedirectToSubscriptionsFactory(ModuleName.STO)
 }
+
+ModuleOverviewFactory.registerModule(ModuleName.STO, STOModuleOverview)
 
 featureFactory.registerFeaturesByModule('sto', {
   features: [FeatureIdentifier.MAX_TOTAL_SCANS, FeatureIdentifier.MAX_SCANS_PER_MONTH, FeatureIdentifier.DEVELOPERS],

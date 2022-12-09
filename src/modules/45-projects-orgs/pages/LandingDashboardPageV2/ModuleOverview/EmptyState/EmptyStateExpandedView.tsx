@@ -19,7 +19,7 @@ const EmptyStateExpandedView: React.FC<EmptyStateExpandedViewProps> = ({ title, 
       margin={{ top: 'small' }}
     >
       <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
-        {title}
+        {getString(title)}
         {Array.isArray(description) ? (
           <ul className={css.listStyle}>
             {description.map((desc, index) => (

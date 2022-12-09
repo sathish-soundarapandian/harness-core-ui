@@ -9,6 +9,7 @@ import OverviewGlanceCardsV2 from './OverviewGlanceCardsContainer/OverviewGlance
 import PreferencesCard from './PreferencesCard/PreferencesCard'
 import NotificationsCard from './NotificationsCard/NotificationsCard'
 import ModuleOverviewGrid from './ModuleOverview/Grid/ModuleOverviewGrid'
+import ResourcesCard from './ResourcesCard/ResourcesCard'
 import css from './LandingDashboardPageV2.module.scss'
 
 const LandingDashboardPageV2 = () => {
@@ -42,6 +43,7 @@ const LandingDashboardPageV2 = () => {
           <Layout.Vertical className={css.right}>
             <PreferencesCard />
             <NotificationsCard timeRange={timeRange} />
+            <ResourcesCard />
           </Layout.Vertical>
         </Layout.Horizontal>
       </PageBody>

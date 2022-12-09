@@ -14,7 +14,7 @@ import {
 import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { getGroupByFromTimeRange } from '@projects-orgs/utils/utils'
 
-const CDModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeRange }) => {
+const CIModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeRange }) => {
   const { accountId } = useParams<AccountPathProps>()
 
   const { data, loading } = useGetDeploymentStatsOverview({
@@ -59,7 +59,7 @@ const CDModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
 
   if (loading) {
     return (
-      <Container style={{ height: '100%' }} flex={{ justifyContent: 'center' }}>
+      <Container flex={{ justifyContent: 'center' }}>
         <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
       </Container>
     )
@@ -69,15 +69,15 @@ const CDModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
     <>
       <ModuleColumnChart
         detailedView={isExpanded}
-        data={deploymentStatsData || []}
-        count={response?.deploymentsStatsSummary?.countAndChangeRate?.count || 0}
+        data={deploymentStatsData.reverse() || []}
+        count={1000}
         countChangeInfo={{
-          countChange: response?.deploymentsStatsSummary?.deploymentRateAndChangeRate?.rate,
-          countChangeRate: response?.deploymentsStatsSummary?.deploymentRateAndChangeRate?.rateChangeRate
+          countChange: 100,
+          countChangeRate: 20
         }}
       />
     </>
   )
 }
 
-export default CDModuleOverview
+export default CIModuleOverview

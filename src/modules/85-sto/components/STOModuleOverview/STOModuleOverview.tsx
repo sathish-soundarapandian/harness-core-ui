@@ -13,8 +13,9 @@ import {
 } from 'services/dashboard-service'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { getGroupByFromTimeRange } from '@projects-orgs/utils/utils'
+import css from './STOModuleOverview.module.scss'
 
-const CDModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeRange }) => {
+const STOModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeRange }) => {
   const { accountId } = useParams<AccountPathProps>()
 
   const { data, loading } = useGetDeploymentStatsOverview({
@@ -35,21 +36,21 @@ const CDModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
     const custom: TimeBasedStats[] = []
     if (response?.deploymentsStatsSummary?.deploymentStats?.length) {
       response.deploymentsStatsSummary.deploymentStats.forEach(val => {
-        successData.push(defaultTo(val.countWithSuccessFailureDetails?.successCount, 0))
-        failureData.push(defaultTo(val.countWithSuccessFailureDetails?.failureCount, 0))
+        successData.push(defaultTo(val.countWithSuccessFailureDetails?.successCount || 0 + 10, 0))
+        failureData.push(defaultTo(val.countWithSuccessFailureDetails?.failureCount || 0 + 5, 0))
         custom.push(val)
       })
     }
     const successCount = successData.reduce((sum, i) => sum + i, 0)
     const failureCount = failureData.reduce((sum, i) => sum + i, 0)
     const successArr = {
-      name: `Success (${successCount})`,
+      name: `Medium (${successCount})`,
       data: successData,
-      color: '#5FB34E',
+      color: '#FCC026',
       custom
     }
     const failureArr = {
-      name: `Failed (${failureCount})`,
+      name: `Critical (${failureCount})`,
       data: failureData,
       color: '#EE5F54',
       custom
@@ -59,7 +60,7 @@ const CDModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
 
   if (loading) {
     return (
-      <Container style={{ height: '100%' }} flex={{ justifyContent: 'center' }}>
+      <Container flex={{ justifyContent: 'center' }}>
         <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
       </Container>
     )
@@ -70,14 +71,15 @@ const CDModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
       <ModuleColumnChart
         detailedView={isExpanded}
         data={deploymentStatsData || []}
-        count={response?.deploymentsStatsSummary?.countAndChangeRate?.count || 0}
+        count={500}
+        className={css.container}
         countChangeInfo={{
-          countChange: response?.deploymentsStatsSummary?.deploymentRateAndChangeRate?.rate,
-          countChangeRate: response?.deploymentsStatsSummary?.deploymentRateAndChangeRate?.rateChangeRate
+          countChange: 50,
+          countChangeRate: 10
         }}
       />
     </>
   )
 }
 
-export default CDModuleOverview
+export default STOModuleOverview
