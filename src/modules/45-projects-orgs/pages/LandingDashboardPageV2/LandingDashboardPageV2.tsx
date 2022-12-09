@@ -7,6 +7,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import OverviewGlanceCardsV2 from './OverviewGlanceCardsContainer/OverviewGlanceCardsContainer'
 import PreferencesCard from './PreferencesCard/PreferencesCard'
+import NotificationsCard from './NotificationsCard/NotificationsCard'
 import css from './LandingDashboardPageV2.module.scss'
 
 const LandingDashboardPageV2 = () => {
@@ -38,6 +39,7 @@ const LandingDashboardPageV2 = () => {
           </Layout.Vertical>
           <Layout.Vertical className={css.right}>
             <PreferencesCard />
+            <NotificationsCard timeRange={timeRange} />
           </Layout.Vertical>
         </Layout.Horizontal>
       </PageBody>
