@@ -8,9 +8,12 @@
 import cx from 'classnames'
 import { Button, ButtonVariation } from '@harness/uicore'
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { RightDrawer } from '@templates-library/components/TemplateStudio/RightDrawer/RightDrawer'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
+import { TemplateType } from '@templates-library/utils/templatesUtils'
+import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { DrawerTypes } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'
 import css from './RightBar.module.scss'
 
@@ -27,6 +30,9 @@ export const RightBar = (): JSX.Element => {
     },
     updateTemplateView
   } = React.useContext(TemplateContext)
+
+  const { templateType } = useParams<TemplateStudioPathProps>()
+  const isVariablesSectionDisabled = templateType === TemplateType.ArtifactSource
 
   const openTemplatesInputDrawer = React.useCallback(() => {
     updateTemplateView({
@@ -68,6 +74,7 @@ export const RightBar = (): JSX.Element => {
         iconProps={{ size: 28 }}
         text={getString('common.variables')}
         data-testid="input-variable"
+        disabled={isVariablesSectionDisabled}
       />
       <RightDrawer />
     </div>
