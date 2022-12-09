@@ -11,6 +11,7 @@ import { Container } from '@harness/uicore'
 import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import GitFilters from '@common/components/GitFilters/GitFilters'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import { isOnPrem } from '@common/utils/utils'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { useStrings } from 'framework/strings'
 import { GitSyncStoreProvider, useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
@@ -67,7 +68,8 @@ export const GovernanceRemoteComponentMounter = props => {
             useGetPipelineList,
             useGetPipeline,
             useGetOrganizationList,
-            useGetProjectList
+            useGetProjectList,
+            isOnPrem
           }}
           components={{
             NGBreadcrumbs,
