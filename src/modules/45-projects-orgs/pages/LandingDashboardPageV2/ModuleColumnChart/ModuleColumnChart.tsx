@@ -1,9 +1,10 @@
-import { Layout, Text } from '@harness/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import Highcharts, { SeriesColumnOptions } from 'highcharts'
 import React from 'react'
 import HighchartsReact from 'highcharts-react-official'
 import type { CountChangeAndCountChangeRateInfo } from 'services/dashboard-service'
+import { numberFormatter } from '@common/utils/utils'
 import css from './ModuleColumnChart.module.scss'
 
 interface ModuleColumnChartProps {
@@ -83,9 +84,12 @@ export const Delta: React.FC<DeltaProps> = ({ countChangeInfo }) => {
 
   return (
     <Layout.Horizontal className={css.deltaContainer} flex={{ justifyContent: 'center' }} style={{ backgroundColor }}>
-      <Text font={{ variation: FontVariation.TINY_SEMI }} style={{ color: rateColor }} margin={{ right: 'xsmall' }}>
-        {countChange > 0 ? '+' : '-'}
-      </Text>
+      <Icon
+        margin={{ right: 'tiny' }}
+        size={12}
+        color={Color.GREEN_700}
+        name={countChange > 0 ? 'symbol-triangle-up' : 'symbol-triangle-down'}
+      />
       <Text font={{ variation: FontVariation.TINY_SEMI }} style={{ color: rateColor }}>
         {new Intl.NumberFormat('default', {
           notation: 'compact',
@@ -104,12 +108,12 @@ const ModuleColumnChart: React.FC<ModuleColumnChartProps> = props => {
 
   return (
     <Layout.Vertical
-      style={{ height: detailedView ? '230px' : '67px', width: detailedView ? 'unset' : '100px' }}
-      margin={{ top: 'xlarge' }}
+      style={{ height: detailedView ? '230px' : '70px', width: detailedView ? 'unset' : '100px' }}
+      margin={{ top: 'large' }}
     >
-      <Layout.Horizontal>
+      <Layout.Horizontal padding={{ bottom: 'tiny' }} className={css.countRow}>
         <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_900} margin={{ right: 'small' }}>
-          {count}
+          {numberFormatter(count)}
         </Text>
         {countChangeInfo ? <Delta countChangeInfo={countChangeInfo} /> : undefined}
       </Layout.Horizontal>

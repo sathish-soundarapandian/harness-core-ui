@@ -70,7 +70,7 @@ const CDModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
       <ModuleColumnChart
         detailedView={isExpanded}
         data={deploymentStatsData || []}
-        count={10}
+        count={response?.deploymentsStatsSummary?.countAndChangeRate?.count || 0}
         countChangeInfo={{
           countChange: response?.deploymentsStatsSummary?.deploymentRateAndChangeRate?.rate,
           countChangeRate: response?.deploymentsStatsSummary?.deploymentRateAndChangeRate?.rateChangeRate

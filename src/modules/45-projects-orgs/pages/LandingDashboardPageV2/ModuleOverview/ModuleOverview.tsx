@@ -8,8 +8,14 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { StringKeys, useStrings } from 'framework/strings'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import ModuleOverviewFactory from '@projects-orgs/factories/ModuleOverviewFactory'
-import ModuleEmptyStateCollapsed from './EmptyState/ModuleEmptyStateCollapsed'
 import CDEmptyState from './EmptyState/CDEmptyState'
+import type { ModuleOverviewBaseProps } from './Grid/ModuleOverviewGrid'
+import CIEmptyState from './EmptyState/CIEmptyState'
+import ChaosEmptyState from './EmptyState/ChaosEmptyState'
+import CEEmptyState from './EmptyState/CEEmptyState'
+import CFEmptyState from './EmptyState/CFEmptyState'
+import SLOEmptyState from './EmptyState/SLOEmptyState'
+import STOEmptyState from './EmptyState/STOEmptyState'
 import css from './ModuleOverview.module.scss'
 
 interface ModuleOverviewProps {
@@ -23,17 +29,42 @@ interface ModuleOverviewProps {
 
 interface IModuleOverviewMap {
   label: StringKeys
+  EmptyState: React.ComponentType<ModuleOverviewBaseProps>
 }
 
-const moduleLabelMap: Record<NavModuleName, StringKeys> = {
-  [ModuleName.CD]: 'common.moduleOverviewLabel.cd',
-  [ModuleName.CI]: 'buildsText',
-  [ModuleName.CF]: 'common.moduleOverviewLabel.ff',
-  [ModuleName.CHAOS]: 'common.moduleOverviewLabel.chaos',
-  [ModuleName.STO]: 'common.moduleOverviewLabel.sto',
-  [ModuleName.CV]: 'common.moduleOverviewLabel.cv',
-  [ModuleName.CE]: 'common.moduleOverviewLabel.ce',
-  [ModuleName.CODE]: 'common.purpose.code.name'
+const moduleLabelMap: Record<NavModuleName, IModuleOverviewMap> = {
+  [ModuleName.CD]: {
+    label: 'common.moduleOverviewLabel.cd',
+    EmptyState: CDEmptyState
+  },
+  [ModuleName.CI]: {
+    label: 'buildsText',
+    EmptyState: CIEmptyState
+  },
+  [ModuleName.CF]: {
+    label: 'common.moduleOverviewLabel.ff',
+    EmptyState: CFEmptyState
+  },
+  [ModuleName.CHAOS]: {
+    label: 'common.moduleOverviewLabel.chaos',
+    EmptyState: ChaosEmptyState
+  },
+  [ModuleName.STO]: {
+    label: 'common.moduleOverviewLabel.sto',
+    EmptyState: STOEmptyState
+  },
+  [ModuleName.CV]: {
+    label: 'common.moduleOverviewLabel.cv',
+    EmptyState: SLOEmptyState
+  },
+  [ModuleName.CE]: {
+    label: 'common.moduleOverviewLabel.ce',
+    EmptyState: CEEmptyState
+  },
+  [ModuleName.CODE]: {
+    label: 'common.purpose.code.name',
+    EmptyState: () => null
+  }
 }
 
 const ModuleOverview: React.FC<ModuleOverviewProps> = ({
@@ -44,7 +75,7 @@ const ModuleOverview: React.FC<ModuleOverviewProps> = ({
   style,
   onClick
 }) => {
-  const label = moduleLabelMap[module]
+  const { label, EmptyState } = moduleLabelMap[module]
   const { getString } = useStrings()
   const { color, icon, backgroundColor, hasLicense } = useNavModuleInfo(module)
   const ModuleOverviewDetails = ModuleOverviewFactory.getModuleOverview(module)
@@ -78,7 +109,7 @@ const ModuleOverview: React.FC<ModuleOverviewProps> = ({
           <Icon className={css.icon} name={icon} size={isExpanded ? 68 : 32} />
         </Layout.Horizontal>
         <Container className={css.flex1}>
-          {showZeroState ? <CDEmptyState isExpanded={isExpanded} timeRange={timeRange} /> : renderOverviewDetails()}
+          {showZeroState ? <EmptyState isExpanded={isExpanded} timeRange={timeRange} /> : renderOverviewDetails()}
         </Container>
         <Text className={css.clickToExpandText} color={Color.GREY_400} font={{ variation: FontVariation.TINY }}>
           {getString('common.clickToExpand')}
