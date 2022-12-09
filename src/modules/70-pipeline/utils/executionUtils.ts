@@ -1084,6 +1084,7 @@ export const processExecutionDataForGraph = (
         type: [StageType.LOOP, StageType.PARALLELISM].includes(currentStage?.type as StageType)
           ? ExecutionPipelineNodeType.MATRIX
           : currentStage?.type,
+        parentStageId,
         data: {
           ...currentStage.data,
           conditionalExecutionEnabled: getConditionalExecutionFlag(currentStage?.data?.nodeRunInfo),
@@ -1114,6 +1115,7 @@ export const processExecutionDataForGraph = (
             ...currentNode,
             icon: getIconFromStageModule(node?.module, node.nodeType),
             status: node?.status as never,
+            parentStageId,
             data: {
               ...node,
               conditionalExecutionEnabled: getConditionalExecutionFlag(node?.nodeRunInfo),
