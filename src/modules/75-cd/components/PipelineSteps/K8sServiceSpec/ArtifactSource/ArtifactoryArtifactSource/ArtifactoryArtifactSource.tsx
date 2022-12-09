@@ -45,8 +45,7 @@ import {
   getHelpeTextForTags,
   isAzureWebAppGenericDeploymentType,
   isServerlessDeploymentType,
-  ServiceDeploymentType,
-  isCustomDeploymentType
+  ServiceDeploymentType
 } from '@pipeline/utils/stageHelpers'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import ServerlessArtifactoryRepository from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/Artifactory/ServerlessArtifactoryRepository'
@@ -255,8 +254,6 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     selectedDeploymentType === 'WinRm' ||
     selectedDeploymentType === 'Ssh'
 
-  const isCustomDeploymentSelected = isCustomDeploymentType(selectedDeploymentType)
-
   let repoFormat = defaultTo(
     artifact?.spec?.repositoryFormat,
     get(initialValues, `artifacts.${artifactPath}.spec.repositoryFormat`, '')
@@ -276,8 +273,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   }, [service, artifactPath, selectedDeploymentType, initialValues, artifact])
 
   const isGenericArtifactory = React.useMemo(() => {
-    return isServerlessOrSshOrWinRmSelected || isAzureWebAppGenericSelected || isCustomDeploymentSelected
-  }, [isServerlessOrSshOrWinRmSelected, isAzureWebAppGenericSelected, isCustomDeploymentSelected])
+    return isServerlessOrSshOrWinRmSelected || isAzureWebAppGenericSelected
+  }, [isServerlessOrSshOrWinRmSelected, isAzureWebAppGenericSelected])
 
   const connectorRef = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),

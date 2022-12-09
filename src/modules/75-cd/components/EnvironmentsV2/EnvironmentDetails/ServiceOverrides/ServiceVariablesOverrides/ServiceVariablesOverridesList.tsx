@@ -47,9 +47,9 @@ function ServiceVariablesOverridesList({
       )}
       {variableOverrides?.map?.((variable: VariableOverride, index: number) => (
         <div key={variable.name} className={cx(css.tableRow, css.rowValue)}>
-          <Text>{variable.name}</Text>
-          <Text>{variable.type}</Text>
-          <Text>{variable.value}</Text>
+          <Text lineClamp={1}>{variable.name}</Text>
+          <Text lineClamp={1}>{variable.type}</Text>
+          <Text lineClamp={1}>{variable.value}</Text>
           {!isReadonly && (
             <span>
               <Layout.Horizontal className={css.variableListButtons}>
