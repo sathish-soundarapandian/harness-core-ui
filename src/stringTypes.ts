@@ -290,6 +290,7 @@ export interface StringsMap {
   'common.extendTrial.heading': string
   'common.failureRate': string
   'common.false': string
+  'common.favorites': string
   'common.feature.keepGettingShipDone.requestUpgrade': string
   'common.feature.keepGettingShipDone.title': string
   'common.feature.levelUp.description': string
@@ -685,6 +686,7 @@ export interface StringsMap {
   'common.pwsh': string
   'common.readOnly': string
   'common.readonlyPermissions': string
+  'common.recents': string
   'common.recommended': string
   'common.referenceButtonText': string
   'common.referenceTextWarning': string
