@@ -138,7 +138,6 @@ getStartedWithCI:
   learnMoreAboutCI: Learn more about Harness CI
   buildyourOwnPipeline: Build your own Pipeline
   configInfra: Configure Infrastructure
-  connectRepo: Connect to Git Repository
 
   hostedByHarness: Hosted by Harness
   takeToTheNextLevel: Take your software build process to the next level using our Harness Continuous Integration

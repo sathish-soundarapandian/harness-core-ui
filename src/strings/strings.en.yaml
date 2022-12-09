@@ -904,7 +904,6 @@ pipelineSteps:
       notags: No tags found with given Image Path
     create:
       multipleServices: '{{$.multipleService}}'
-      deployStageName: Deploy
     inputSet:
       artifactServer: 'Artifact Server'
       branch: 'Branch'

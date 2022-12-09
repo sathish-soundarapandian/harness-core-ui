@@ -8,6 +8,7 @@ import { useStrings } from 'framework/strings'
 import OverviewGlanceCardsV2 from './OverviewGlanceCardsContainer/OverviewGlanceCardsContainer'
 import PreferencesCard from './PreferencesCard/PreferencesCard'
 import NotificationsCard from './NotificationsCard/NotificationsCard'
+import ModuleOverviewGrid from './ModuleOverview/Grid/ModuleOverviewGrid'
 import css from './LandingDashboardPageV2.module.scss'
 
 const LandingDashboardPageV2 = () => {
@@ -36,6 +37,7 @@ const LandingDashboardPageV2 = () => {
           <Layout.Vertical className={css.left}>
             <OverviewGlanceCardsV2 timeRange={timeRange} />
             <Container className={css.border} />
+            <ModuleOverviewGrid timeRange={timeRange} />
           </Layout.Vertical>
           <Layout.Vertical className={css.right}>
             <PreferencesCard />

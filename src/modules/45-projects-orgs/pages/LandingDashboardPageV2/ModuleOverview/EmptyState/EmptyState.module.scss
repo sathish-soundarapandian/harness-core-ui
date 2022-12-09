@@ -1,0 +1,7 @@
+.listStyle {
+  list-style-type: decimal;
+  padding-left: var(--spacing-medium);
+  li {
+    margin-bottom: var(--spacing-small);
+  }
+}

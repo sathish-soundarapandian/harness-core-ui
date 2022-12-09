@@ -519,7 +519,6 @@ onboarding:
   title: Feature Flags Quick Start Guide
   subTitle: Everything you need to know in less than 15 minutes.
   tryItOut: '{{ $.getStarted }}'
-  createAFlag: Create a Flag
   createEnvAndSdk: Create an Environment and SDK Key
   setupCode: Setup your Code
   oneCreateAFlag: '1. Create a Flag'

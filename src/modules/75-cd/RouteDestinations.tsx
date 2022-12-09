@@ -69,6 +69,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { AccountSideNavProps, MainDashboardSideNavProps } from '@common/RouteDestinations'
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
+import ModuleOverviewFactory from '@projects-orgs/factories/ModuleOverviewFactory'
 import { Environments } from './components/Environments/Environments'
 import { Environments as EnvironmentsV2 } from './components/EnvironmentsV2/Environments'
 import EnvironmentDetails from './components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetails'
@@ -88,6 +89,7 @@ import manifestSourceBaseFactory from './factory/ManifestSourceFactory/ManifestS
 import { getBannerText } from './utils/renderMessageUtils'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 import GetStartedWithCD from './pages/get-started-with-cd/GetStartedWithCD'
+import CDModuleOverview from './components/CDModuleOverview/CDModuleOverview'
 
 RbacFactory.registerResourceCategory(ResourceCategory.GITOPS, {
   icon: 'gitops-blue-circle',
@@ -202,6 +204,8 @@ featureFactory.registerFeaturesByModule('cd', {
     )
   }
 })
+
+ModuleOverviewFactory.registerModule(ModuleName.CD, CDModuleOverview)
 
 const RedirectToCDProject = RedirectToProjectFactory(ModuleName.CD, routes.toCDHome)
 

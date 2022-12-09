@@ -14,7 +14,6 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import type { ModuleLicenseDTO } from '../../../services/cd-ng'
 
 export type NavModuleName =
   | ModuleName.CD
@@ -29,88 +28,109 @@ export type NavModuleName =
 // Default order of modules on side nav, please add modules to this list accordingly.
 // For any module to be visible on side nav, it has to be added in this list
 export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
-  ModuleName.CODE,
   ModuleName.CD,
   ModuleName.CI,
   ModuleName.CF,
   ModuleName.CE,
   ModuleName.CV,
   ModuleName.STO,
-  ModuleName.CHAOS
+  ModuleName.CHAOS,
+  ModuleName.CODE
 ]
 
 export interface useNavModuleInfoReturnType {
   shouldVisible: boolean
   label: StringKeys
   icon: IconName
+  pipelineIcon: IconName
   homePageUrl: string
   hasLicense?: boolean
   color: string
+  backgroundColor: string
 }
 
 interface ModuleInfo {
   icon: IconName
+  pipelineIcon: IconName
   label: StringKeys
   getHomePageUrl: (accountId: string) => string
-  featureFlagName?: FeatureFlag
+  featureFlagName: FeatureFlag
   color: string
+  backgroundColor: string
 }
 
-const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
+export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CD]: {
     icon: 'cd-main',
     label: 'common.cdAndGitops',
     getHomePageUrl: (accountId: string) => routes.toCD({ accountId }),
+    pipelineIcon: 'pipeline-cd',
     featureFlagName: FeatureFlag.CDNG_ENABLED,
-    color: '--cd-border'
+    color: '--cd-border',
+    backgroundColor: '--cd-background'
   },
   [ModuleName.CI]: {
     icon: 'ci-main',
     label: 'common.purpose.ci.continuous',
+    pipelineIcon: 'pipeline-ci',
     getHomePageUrl: (accountId: string) => routes.toCI({ accountId }),
     featureFlagName: FeatureFlag.CING_ENABLED,
-    color: '--ci-border'
+    color: '--ci-border',
+    backgroundColor: '--ci-background'
   },
   [ModuleName.CV]: {
     icon: 'cv-main',
     label: 'common.serviceReliabilityManagement',
+    pipelineIcon: 'pipeline-srm',
     getHomePageUrl: (accountId: string) => routes.toCV({ accountId }),
     featureFlagName: FeatureFlag.CVNG_ENABLED,
-    color: '--srm-border'
+    color: '--srm-border',
+    backgroundColor: '--srm-background'
   },
   [ModuleName.CF]: {
     icon: 'ff-solid',
     label: 'common.purpose.cf.continuous',
+    pipelineIcon: 'pipeline-ff',
     getHomePageUrl: (accountId: string) => routes.toCF({ accountId }),
     featureFlagName: FeatureFlag.CFNG_ENABLED,
-    color: '--ff-border'
+    color: '--ff-border',
+    backgroundColor: '--ff-background'
   },
   [ModuleName.CE]: {
     icon: 'ce-main',
     label: 'common.purpose.ce.continuous',
     getHomePageUrl: (accountId: string) => routes.toCE({ accountId }),
     featureFlagName: FeatureFlag.CENG_ENABLED,
-    color: '--ccm-border'
+    color: '--ccm-border',
+    pipelineIcon: 'pipeline-ce',
+    backgroundColor: '--ccm-background'
   },
   [ModuleName.STO]: {
     icon: 'sto-color-filled',
-    label: 'common.purpose.sto.continuous',
+    label: 'common.stoText',
+    pipelineIcon: 'pipeline-sto',
     getHomePageUrl: (accountId: string) => routes.toSTO({ accountId }),
-    color: '--sto-border'
+    featureFlagName: FeatureFlag.SECURITY,
+    color: '--sto-border',
+    backgroundColor: '--sto-background'
   },
   [ModuleName.CHAOS]: {
     icon: 'chaos-main',
     label: 'chaos.homepage.chaosHomePageTitle',
+    pipelineIcon: 'pipeline-chaos',
     getHomePageUrl: (accountId: string) => routes.toChaos({ accountId }),
     featureFlagName: FeatureFlag.CHAOS_ENABLED,
-    color: '--chaos-border'
+    color: '--chaos-border',
+    backgroundColor: '--chaos-background'
   },
   [ModuleName.CODE]: {
     icon: 'code',
+    pipelineIcon: 'code',
     label: 'common.purpose.code.name',
     getHomePageUrl: (accountId: string) => routes.toCODE({ accountId }),
     featureFlagName: FeatureFlag.CODE_ENABLED,
-    color: '--default-module-border'
+    color: '--default-module-border',
+    backgroundColor: '--default-module-border'
   }
 }
 
@@ -140,8 +160,10 @@ const getModuleInfo = (
   accountId: string,
   hasLicense: boolean,
   shouldVisible: boolean,
-  color: string
-): useNavModuleInfoReturnType => {
+  color: string,
+  backgroundColor: string,
+  pipelineIcon: IconName
+) => {
   const { icon: moduleIcon, label, getHomePageUrl } = moduleInfo
   return {
     icon: moduleIcon,
@@ -149,19 +171,10 @@ const getModuleInfo = (
     homePageUrl: getHomePageUrl(accountId),
     shouldVisible: shouldVisible,
     hasLicense,
-    color
+    color,
+    backgroundColor,
+    pipelineIcon
   }
-}
-
-const shouldBeVisible = (
-  module: NavModuleName,
-  featureFlags: Partial<Record<FeatureFlag, boolean>>,
-  licenseInformation: { [key: string]: ModuleLicenseDTO } | Record<string, undefined>
-) => {
-  const featureFlagName = moduleInfoMap[module]?.featureFlagName
-  return featureFlagName !== undefined
-    ? !!featureFlags[featureFlagName]
-    : licenseInformation[module]?.status === 'ACTIVE'
 }
 
 const useNavModuleInfo = (module: NavModuleName) => {
@@ -169,14 +182,16 @@ const useNavModuleInfo = (module: NavModuleName) => {
   const featureFlags = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
-  const { color } = moduleInfoMap[module]
+  const { featureFlagName, color, backgroundColor, pipelineIcon } = moduleInfoMap[module]
 
   return getModuleInfo(
     moduleInfoMap[module],
     accountId,
     !!licenseInformation[module]?.id,
-    shouldBeVisible(module, featureFlags, licenseInformation),
-    color
+    !!featureFlags[featureFlagName],
+    color,
+    backgroundColor,
+    pipelineIcon
   ) as useNavModuleInfoReturnType
 }
 
@@ -195,12 +210,16 @@ export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoRet
         moduleInfoMap[module],
         accountId,
         !!licenseInformation[module]?.id,
-        shouldBeVisible(module, featureFlags, licenseInformation),
-        moduleInfoMap[module].color
+        !!featureFlags[moduleInfoMap[module].featureFlagName],
+        moduleInfoMap[module].color,
+        moduleInfoMap[module].backgroundColor,
+        moduleInfoMap[module].pipelineIcon
       )
     }
   }, {})
 
+  // eslint-disable-next-line
+  // @ts-ignore
   return infoMap as Record<NavModuleName, useNavModuleInfoReturnType>
 }
 

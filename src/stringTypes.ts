@@ -139,6 +139,7 @@ export interface StringsMap {
   'common.chaosText': string
   'common.city': string
   'common.clearSelection': string
+  'common.clickToExpand': string
   'common.clickToKnowMore': string
   'common.clientId': string
   'common.clientSecret': string
@@ -179,6 +180,7 @@ export interface StringsMap {
   'common.configureOptions.values': string
   'common.confirmAction': string
   'common.confirmText': string
+  'common.connectGitRepo': string
   'common.connectThroughDelegate': string
   'common.connectThroughDelegateInfo': string
   'common.connectThroughPlatform': string
@@ -191,6 +193,7 @@ export interface StringsMap {
   'common.copyVariableName': string
   'common.countryOrRegion': string
   'common.coverage': string
+  'common.createFlag': string
   'common.createPipeline': string
   'common.creating': string
   'common.current': string
@@ -487,6 +490,7 @@ export interface StringsMap {
   'common.lastUpdatedAt': string
   'common.latest': string
   'common.launchFirstGen': string
+  'common.learnMore': string
   'common.letsGetYouStarted': string
   'common.levelUp': string
   'common.link': string
@@ -517,12 +521,51 @@ export interface StringsMap {
   'common.moduleConfig.restoreDefault': string
   'common.moduleConfig.selectModules': string
   'common.moduleConfig.your': string
+  'common.moduleDetails.cd.collapsed.title': string
+  'common.moduleDetails.cd.expanded.list.four': string
+  'common.moduleDetails.cd.expanded.list.one': string
+  'common.moduleDetails.cd.expanded.list.three': string
+  'common.moduleDetails.cd.expanded.list.two': string
+  'common.moduleDetails.cd.expanded.title': string
+  'common.moduleDetails.ce.collapsed.title': string
+  'common.moduleDetails.ce.expanded.title': string
+  'common.moduleDetails.chaos.collapsed.title': string
+  'common.moduleDetails.chaos.expanded.list.one': string
+  'common.moduleDetails.chaos.expanded.list.three': string
+  'common.moduleDetails.chaos.expanded.list.two': string
+  'common.moduleDetails.chaos.expanded.title': string
+  'common.moduleDetails.ci.collapsed.title': string
+  'common.moduleDetails.ci.expanded.list.one': string
+  'common.moduleDetails.ci.expanded.list.three': string
+  'common.moduleDetails.ci.expanded.list.two': string
+  'common.moduleDetails.ci.expanded.title': string
+  'common.moduleDetails.ff.collapsed.title': string
+  'common.moduleDetails.ff.expanded.list.one': string
+  'common.moduleDetails.ff.expanded.list.three': string
+  'common.moduleDetails.ff.expanded.list.two': string
+  'common.moduleDetails.ff.expanded.title': string
+  'common.moduleDetails.slo.collapsed.title': string
+  'common.moduleDetails.slo.expanded.description': string
+  'common.moduleDetails.slo.expanded.title': string
+  'common.moduleDetails.sto.collapsed.title': string
+  'common.moduleDetails.sto.expanded.list.five': string
+  'common.moduleDetails.sto.expanded.list.four': string
+  'common.moduleDetails.sto.expanded.list.one': string
+  'common.moduleDetails.sto.expanded.list.three': string
+  'common.moduleDetails.sto.expanded.list.two': string
+  'common.moduleDetails.sto.expanded.title': string
   'common.moduleLabel': string
   'common.moduleList.buildAndTest': string
   'common.moduleList.deployChanges': string
   'common.moduleList.manageImpact': string
   'common.moduleList.optimize': string
   'common.moduleList.title': string
+  'common.moduleOverviewLabel.cd': string
+  'common.moduleOverviewLabel.ce': string
+  'common.moduleOverviewLabel.chaos': string
+  'common.moduleOverviewLabel.cv': string
+  'common.moduleOverviewLabel.ff': string
+  'common.moduleOverviewLabel.sto': string
   'common.moduleTitles.cd': string
   'common.moduleTitles.cf': string
   'common.monitoredServices': string
@@ -843,6 +886,7 @@ export interface StringsMap {
   'common.singularLabels.testTarget': string
   'common.skip': string
   'common.slack': string
+  'common.sloNoData': string
   'common.smtp.configured': string
   'common.smtp.conifg': string
   'common.smtp.deleteInProgress': string
@@ -6646,7 +6690,6 @@ export interface StringsMap {
   'cf.onboarding.android': string
   'cf.onboarding.clientKey': string
   'cf.onboarding.complete': string
-  'cf.onboarding.createAFlag': string
   'cf.onboarding.createEnv': string
   'cf.onboarding.createEnvAndSdk': string
   'cf.onboarding.createFlag': string
@@ -6976,7 +7019,6 @@ export interface StringsMap {
   'ci.getStartedWithCI.configurationOption': string
   'ci.getStartedWithCI.configurePipeline': string
   'ci.getStartedWithCI.configureYourPipeline': string
-  'ci.getStartedWithCI.connectRepo': string
   'ci.getStartedWithCI.createPipeline': string
   'ci.getStartedWithCI.createPipelineWithOtherOption': string
   'ci.getStartedWithCI.devFriendly': string
@@ -7896,7 +7938,6 @@ export interface StringsMap {
   'cv.slos.latencySLI': string
   'cv.slos.monitoredService': string
   'cv.slos.monitoredServiceText': string
-  'cv.slos.noData': string
   'cv.slos.noDataMS': string
   'cv.slos.noMatchingData': string
   'cv.slos.noMatchingDataForSearch': string
@@ -10233,10 +10274,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   'pipelineSteps.deleteResourcesPlaceHolder': string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  'pipelineSteps.deploy.create.deployStageName': string
   /**
    * @deprecated migrate this string to module level file
    */

@@ -1,0 +1,14 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(3, 186px);
+  grid-template-rows: repeat(3, 148px);
+  grid-auto-flow: dense;
+  grid-row-gap: var(--spacing-large);
+  grid-column-gap: var(--spacing-large);
+}
+
+.module {
+  height: 148px;
+  width: 186px;
+  z-index: 1;
+}

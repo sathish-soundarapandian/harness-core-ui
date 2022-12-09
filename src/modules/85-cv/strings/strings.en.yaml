@@ -751,7 +751,6 @@ slos:
   healthSource: Health source
   sloCreated: SLO created successfully
   sloUpdated: SLO updated successfully
-  noData: You don’t have any SLO created yet
   noDataMS: There are no SLOs available for this service
   noMatchingData: No matching data for the applied filters.
   noMatchingDataForSearch: No matching data for the applied search.
