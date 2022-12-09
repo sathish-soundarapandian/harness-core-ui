@@ -93,7 +93,10 @@ export default function DeployServiceEntitySpecifications({
         )
       } else {
         const isSingleSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef)
-        const isMultiSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.services?.values)
+
+        /*  Currently BE does not support use from stage with multi services, so commenting this temporarily, to filter stages with multi service. 
+        Once BE has support for multi service propagate, we need to just add the condition as ( !isSingleSvcEmpty || !isMultiSvcEmpty) */
+        // const isMultiSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.services?.values)
 
         const prevStageItemDeploymentType = (stageItem.stage as DeploymentStageElementConfig)?.spec?.deploymentType
         const prevStageItemCustomDeploymentConfig = (stageItem.stage as DeploymentStageElementConfig)?.spec
@@ -106,11 +109,7 @@ export default function DeployServiceEntitySpecifications({
               isEqual(prevStageItemCustomDeploymentConfig, currentStageCustomDeploymentConfig)
             : prevStageItemDeploymentType === currentStageDeploymentType
 
-        return (
-          (!isSingleSvcEmpty || !isMultiSvcEmpty) &&
-          currentStageType === stageItem?.stage?.type &&
-          areDeploymentDetailsSame
-        )
+        return !isSingleSvcEmpty && currentStageType === stageItem?.stage?.type && areDeploymentDetailsSame
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
