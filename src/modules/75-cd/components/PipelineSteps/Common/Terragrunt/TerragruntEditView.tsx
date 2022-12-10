@@ -42,18 +42,13 @@ import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/compo
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
+import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
+import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
-import { ConfigFileStoreStepOne } from '../ConfigFileStore/ConfigFileStoreStepOne'
-import { ConfigFileStoreStepTwo } from '../ConfigFileStore/ConfigFileStoreStepTwo'
-import {
-  ConnectorMap,
-  ConnectorTypes,
-  getBuildPayload,
-  getConfigFilePath,
-  getPath
-} from '../ConfigFileStore/ConfigFileStoreHelper'
+
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
@@ -64,19 +59,26 @@ import StepGithubAuthentication from '@connectors/components/CreateConnector/Git
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
 import StepArtifactoryAuthentication from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import { isMultiTypeRuntime } from '@common/utils/utils'
+import type { TerragruntData, TerragruntProps, TGFormData } from './TerragruntInterface'
+import { BackendConfigurationTypes, ConfigurationTypes } from '../Terraform/TerraformInterfaces'
+import TfVarFileList from '../Terraform/Editview/TFVarFileList'
+import {
+  ConnectorMap,
+  ConnectorTypes,
+  getBuildPayload,
+  getConfigFilePath,
+  getPath
+} from '../ConfigFileStore/ConfigFileStoreHelper'
+import { TFMonaco } from '../Terraform/Editview/TFMonacoEditor'
+import { ConfigFileStoreStepTwo } from '../ConfigFileStore/ConfigFileStoreStepTwo'
 import { TFArtifactoryForm } from '../Terraform/Editview/TerraformArtifactoryForm'
-import { BackendConfigurationTypes, ConfigurationTypes, TFFormData } from '../Terraform/TerraformInterfaces'
+import { ConfigFileStoreStepOne } from '../ConfigFileStore/ConfigFileStoreStepOne'
 import { formatArtifactoryData } from '../Terraform/Editview/TerraformArtifactoryFormHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../Terraform/Editview/TerraformVarfile.module.scss'
-import type { TerragruntData, TerragruntProps, TGFormData } from './TerragruntInterface'
-import { isMultiTypeRuntime } from '@common/utils/utils'
-import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
-import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
-import { TFMonaco } from '../Terraform/Editview/TFMonacoEditor'
-import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import TfVarFileList from '../Terraform/Editview/TFVarFileList'
 
 const setInitialValues = (data: TGFormData): TGFormData => {
   return data
@@ -88,9 +90,9 @@ interface StepChangeData<SharedObject> {
   prevStepData: SharedObject
 }
 
-export default function TerragruntEitView(
+export default function TerragruntEditView(
   props: TerragruntProps,
-  formikRef: StepFormikFowardRef<TFFormData>
+  formikRef: StepFormikFowardRef<TGFormData>
 ): React.ReactElement {
   const { stepType, isNewStep = true } = props
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, readonly = false } = props
@@ -272,11 +274,13 @@ export default function TerragruntEitView(
       </StepWizard>
     )
   }
+
   const onStepChange = (arg: StepChangeData<any>): void => {
     if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 1) {
       setConnectorView(false)
     }
   }
+
   const getTitle = (isBackendConfig: boolean): React.ReactElement => (
     <Layout.Vertical flex style={{ justifyContent: 'center', alignItems: 'center' }} margin={{ bottom: 'xlarge' }}>
       <Icon name="service-terragrunt" className={css.remoteIcon} size={50} padding={{ bottom: 'large' }} />
@@ -285,18 +289,49 @@ export default function TerragruntEitView(
       </Text>
     </Layout.Vertical>
   )
+
   const onCloseConfigWizard = (): void => {
     setSelectedConnector('Git')
     setConnectorView(false)
     setShowModal(false)
     setIsEditMode(false)
   }
+
   const onCloseBackendConfigWizard = (): void => {
     setSelectedConnector('Git')
     setConnectorView(false)
     setShowBackendConfigRemoteWizard(false)
     setIsEditMode(false)
   }
+
+  const onSelectChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    setFieldValue: (field: string, value: any) => void
+  ): void => {
+    const fieldName = 'spec.configuration.spec.backendConfig'
+    if (e.target.value === BackendConfigurationTypes.Inline) {
+      setFieldValue(fieldName, {
+        type: BackendConfigurationTypes.Inline,
+        spec: {
+          content: ''
+        }
+      })
+    } else if (e.target.value === BackendConfigurationTypes.Remote) {
+      setFieldValue(fieldName, {
+        type: BackendConfigurationTypes.Remote,
+        spec: {
+          store: {
+            type: 'Git',
+            spec: {
+              connectorRef: undefined,
+              gitFetchType: 'Branch'
+            }
+          }
+        }
+      })
+    }
+  }
+
   const newConfigFileComponent = (formik: any, isConfig: boolean, isBackendConfig: boolean): React.ReactElement => {
     return (
       <StepWizard title={getTitle(isBackendConfig)} className={css.configWizard} onStepChange={onStepChange}>
@@ -339,6 +374,7 @@ export default function TerragruntEitView(
               formik.setValues(valObj)
               setConnectorView(false)
               setShowModal(false)
+              setShowBackendConfigRemoteWizard(false)
             }}
           />
         ) : (
@@ -385,12 +421,14 @@ export default function TerragruntEitView(
               formik.setValues(valObj)
               setConnectorView(false)
               setShowModal(false)
+              setShowBackendConfigRemoteWizard(false)
             }}
           />
         )}
       </StepWizard>
     )
   }
+
   const inlineBackendConfig = (formik: FormikProps<TGFormData>): React.ReactElement => (
     <div className={cx(stepCss.formGroup, css.addMarginBottom)}>
       <MultiTypeFieldSelector
@@ -422,7 +460,7 @@ export default function TerragruntEitView(
           title={getString('cd.backEndConfig')}
         />
       </MultiTypeFieldSelector>
-      {/* {getMultiTypeFromValue(formik.values.spec?.configuration?.spec?.backendConfig?.spec?.content) ===
+      {getMultiTypeFromValue(formik.values.spec?.configuration?.spec?.backendConfig?.spec?.content) ===
         MultiTypeInputType.RUNTIME && (
         <ConfigureOptions
           value={formik.values.spec?.configuration?.spec?.backendConfig?.spec?.content as string}
@@ -434,36 +472,9 @@ export default function TerragruntEitView(
           onChange={value => formik.setFieldValue('spec.configuration.spec.backendConfig.spec.content', value)}
           isReadonly={readonly}
         />
-      )} */}
+      )}
     </div>
   )
-  const onSelectChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-    setFieldValue: (field: string, value: any) => void
-  ): void => {
-    const fieldName = 'spec.configuration.spec.backendConfig'
-    if (e.target.value === BackendConfigurationTypes.Inline) {
-      setFieldValue(fieldName, {
-        type: BackendConfigurationTypes.Inline,
-        spec: {
-          content: ''
-        }
-      })
-    } else if (e.target.value === BackendConfigurationTypes.Remote) {
-      setFieldValue(fieldName, {
-        type: BackendConfigurationTypes.Remote,
-        spec: {
-          store: {
-            type: 'Git',
-            spec: {
-              connectorRef: undefined,
-              gitFetchType: 'Branch'
-            }
-          }
-        }
-      })
-    }
-  }
 
   return (
     <>
@@ -510,7 +521,6 @@ export default function TerragruntEitView(
                   />
                 </div>
               )}
-
               <div className={cx(stepCss.formGroup, stepCss.sm)}>
                 <FormMultiTypeDurationField
                   name="timeout"
@@ -563,7 +573,7 @@ export default function TerragruntEitView(
                     variableName="spec.provisionerIdentifier"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced
+                    showAdvanced={true}
                     onChange={value => {
                       setFieldValue('spec.provisionerIdentifier', value)
                     }}
@@ -598,7 +608,7 @@ export default function TerragruntEitView(
                         )}
                         {configFilePath && (
                           <Text font="normal" lineClamp={1} width={200} data-testid={configFilePath}>
-                            /{configFilePath}
+                            {configFilePath}
                           </Text>
                         )}
                         {configFilePath ? (
@@ -700,7 +710,7 @@ export default function TerragruntEitView(
                             selectedConnector={selectedConnector}
                           />
                           <div className={css.divider} />
-                          {initialValues?.type !== 'TerraformDestroy' ? (
+                          {initialValues?.type !== 'TerragruntDestroy' ? (
                             <>
                               <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
                                 {formik.values?.spec?.configuration?.spec?.backendConfig?.type ===

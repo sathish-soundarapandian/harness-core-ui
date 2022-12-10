@@ -1,6 +1,6 @@
-import type { ListType } from '@common/components/List/List'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { unset } from 'lodash-es'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { ListType } from '@common/components/List/List'
 import type {
   StringNGVariable,
   TerragruntConfigFilesWrapper,
@@ -12,6 +12,7 @@ import type { TGFormData } from './TerragruntInterface'
 
 export const onSubmitTerragruntData = (values: any): TGFormData => {
   const configObject: TerragruntExecutionData = {
+    workspace: values?.spec?.configuration?.spec?.workspace,
     configFiles: {} as TerragruntConfigFilesWrapper,
     moduleConfig: {} as TerragruntModuleConfig
   }
@@ -47,7 +48,7 @@ export const onSubmitTerragruntData = (values: any): TGFormData => {
       configObject['backendConfig'] = {
         type: BackendConfigurationTypes.Inline,
         spec: {
-          // content: values?.spec?.configuration?.spec?.backendConfig?.spec?.content
+          content: values?.spec?.configuration?.spec?.backendConfig?.spec?.content
         }
       }
     } else if (values?.spec?.configuration?.spec?.backendConfig?.spec?.store) {
@@ -97,13 +98,16 @@ export const onSubmitTerragruntData = (values: any): TGFormData => {
     } else {
       unset(values?.spec?.configuration?.spec, 'varFiles')
     }
+    configObject['moduleConfig'] = {
+      ...values.spec?.configuration?.spec?.moduleConfig
+    }
 
     if (
       connectorValue ||
       getMultiTypeFromValue(values?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef) ===
         MultiTypeInputType.RUNTIME
     ) {
-      ;(configObject['configFiles'] = {
+      configObject['configFiles'] = {
         ...values.spec?.configuration?.spec?.configFiles,
         store: {
           ...values.spec?.configuration?.spec?.configFiles?.store,
@@ -118,17 +122,11 @@ export const onSubmitTerragruntData = (values: any): TGFormData => {
               : ''
           }
         }
-      }),
-        (configObject['moduleConfig'] = {
-          ...values.spec?.configuration?.spec?.moduleConfig
-        })
+      }
     }
 
     if (values?.spec?.configuration?.spec?.configFiles?.store?.type === 'Harness') {
       configObject['configFiles'] = { ...values?.spec?.configuration?.spec?.configFiles }
-      configObject['moduleConfig'] = {
-        ...values.spec?.configuration?.spec?.moduleConfig
-      }
     }
   }
   return {

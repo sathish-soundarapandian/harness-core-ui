@@ -29,12 +29,15 @@ import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-
 import type { TerraformData, TerraformProps } from '../TerraformInterfaces'
+import type { TerragruntData, TerragruntProps } from '../../Terragrunt/TerragruntInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
-  props: TerraformProps<T> & {
+type CommonProps<T> = TerraformProps<T> | TerragruntProps<T>
+type CommonData = TerraformData | TerragruntData
+
+function TFRemoteSectionRef<T extends CommonData = CommonData>(
+  props: CommonProps<T> & {
     remoteVar: any
     index: number
     formik?: FormikContextType<any>

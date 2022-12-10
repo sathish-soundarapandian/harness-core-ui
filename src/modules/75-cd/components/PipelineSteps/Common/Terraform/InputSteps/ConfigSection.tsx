@@ -23,7 +23,7 @@ import {
 import { connect, FormikContextType } from 'formik'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+// import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -31,24 +31,28 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { Connectors } from '@connectors/constants'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
-import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+// import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { fileTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import type { TerraformData, TerraformProps } from '../TerraformInterfaces'
+import type { TerragruntData, TerragruntProps } from '../../Terragrunt/TerragruntInterface'
 import { getPath } from '../../ConfigFileStore/ConfigFileStoreHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-function ConfigSectionRef<T extends TerraformData = TerraformData>(
-  props: TerraformProps<T> & { formik?: FormikContextType<any> }
+type CommonProps<T> = TerraformProps<T> | TerragruntProps<T>
+type CommonData = TerraformData | TerragruntData
+
+function ConfigSectionRef<T extends CommonData = CommonData>(
+  props: CommonProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
-  const { inputSetData, readonly, initialValues, path, allowableTypes, formik, stepViewType, isBackendConfig } = props
+  const { inputSetData, readonly, initialValues, path, allowableTypes, formik, isBackendConfig } = props
 
   const configPath = getPath(false, isBackendConfig)
-  const config = inputSetData?.template?.spec?.configuration
+  // const config = inputSetData?.template?.spec?.configuration
   const configSpec = get(inputSetData?.template, configPath)
   const store = configSpec?.store
 
@@ -112,12 +116,12 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
 
   return (
     <>
-      {(configSpec?.store?.spec || config?.spec?.workspace) && (
+      {configSpec?.store?.spec && (
         <Label style={{ color: Color.GREY_900, paddingBottom: 'var(--spacing-medium)' }}>
           {isBackendConfig ? getString('pipelineSteps.backendConfig') : getString('cd.configurationFile')}
         </Label>
       )}
-      {getMultiTypeFromValue(config?.spec?.workspace) === MultiTypeInputType.RUNTIME && (
+      {/* {getMultiTypeFromValue(config?.spec?.workspace) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <TextFieldInputSetView
             name={`${path}.spec.configuration.spec.workspace`}
@@ -135,7 +139,7 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
             fieldPath={'spec.configuration.spec.workspace'}
           />
         </div>
-      )}
+      )} */}
       {getMultiTypeFromValue(configSpec?.store?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField

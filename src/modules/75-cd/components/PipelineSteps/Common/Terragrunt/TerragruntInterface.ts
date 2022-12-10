@@ -1,6 +1,6 @@
+import type { AllowedTypes } from '@harness/uicore'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { Scope } from '@common/interfaces/SecretsInterface'
-import type { AllowedTypes } from '@harness/uicore'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   StepElementConfig,
@@ -93,6 +93,7 @@ export interface TerragruntProps<T = TerragruntData> {
   stepType?: string
   gitScope?: GitFilterScope
   allValues?: T
+  isBackendConfig?: boolean
 }
 
 export interface Connector {

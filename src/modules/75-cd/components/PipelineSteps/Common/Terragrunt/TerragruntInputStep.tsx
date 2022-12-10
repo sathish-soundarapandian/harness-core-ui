@@ -8,19 +8,30 @@
 import React from 'react'
 import cx from 'classnames'
 import { get, isEmpty } from 'lodash-es'
+import {
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  FormikForm,
+  Label,
+  Text,
+  Container,
+  FormInput
+} from '@harness/uicore'
+import { Color } from '@harness/design-system'
+import type { FormikContextType } from 'formik'
 import List from '@common/components/List/List'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Label, Color, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import ConfigInputs from '../Terraform/InputSteps/ConfigSection'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import type { TerragruntData, TerragruntProps } from './TerragruntInterface'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import ConfigInputs from '../Terraform/InputSteps/ConfigSection'
+import type { TerragruntData, TerragruntProps } from './TerragruntInterface'
 import { TFMonaco } from '../Terraform/Editview/TFMonacoEditor'
-import type { FormikContextType } from 'formik'
+import { TerraformStoreTypes } from '../Terraform/TerraformInterfaces'
+import TFRemoteSection from '../Terraform/InputSteps/TFRemoteSection'
+import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function TerragruntInputStep<T extends TerragruntData = TerragruntData>(
   props: TerragruntProps<T> & { formik?: FormikContextType<any> }
@@ -95,11 +106,67 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
         </div>
       )}
       <ConfigInputs {...props} onUpdate={onUpdateRef} onChange={onChangeRef} />
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.spec?.workspace) ===
+        MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <TextFieldInputSetView
+            name={`${path}.spec.configuration.spec.workspace`}
+            placeholder={getString('pipeline.terraformStep.workspace')}
+            label={getString('pipelineSteps.workspace')}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.spec.workspace'}
+          />
+        </div>
+      )}
       {inputSetData?.template?.spec?.configuration?.spec?.varFiles?.length && (
         <Label style={{ color: Color.GREY_900, paddingBottom: 'var(--spacing-medium)' }}>
           {getString('cd.terraformVarFiles')}
         </Label>
       )}
+      {inputSetData?.template?.spec?.configuration?.spec?.varFiles?.map((varFile: any, index) => {
+        if (varFile?.varFile?.type === TerraformStoreTypes.Inline) {
+          return (
+            <React.Fragment key={`${path}.spec.configuration.spec.varFiles[${index}]`}>
+              <Container flex width={120} padding={{ bottom: 'small' }}>
+                <Text font={{ weight: 'bold' }}>{getString('cd.varFile')}:</Text>
+                {varFile?.varFile?.identifier}
+              </Container>
+
+              {getMultiTypeFromValue(varFile?.varFile?.spec?.content) === MultiTypeInputType.RUNTIME && (
+                <div className={cx(stepCss.formGroup, stepCss.md)}>
+                  <FormInput.MultiTextInput
+                    name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.content`}
+                    label={getString('pipelineSteps.content')}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes
+                    }}
+                  />
+                </div>
+              )}
+            </React.Fragment>
+          )
+        } else if (varFile.varFile?.type === TerraformStoreTypes.Remote) {
+          return (
+            <TFRemoteSection
+              remoteVar={varFile}
+              index={index}
+              {...props}
+              onUpdate={onUpdateRef}
+              onChange={onChangeRef}
+            />
+          )
+        }
+        return <></>
+      })}
 
       {getMultiTypeFromValue(get(inputSetData?.template, 'spec.configuration.spec.backendConfig.spec.content')) ===
         MultiTypeInputType.RUNTIME && (
