@@ -337,6 +337,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                                 type={variable.type || /* istanbul ignore next */ 'String'}
                                 variableName={variable.name || /* istanbul ignore next */ ''}
                                 hideExecutionTimeField={hideExecutionTimeField}
+                                showAdvanced={true}
                                 onChange={(value, defaultValue) => {
                                   setFieldValue(`variables[${index}].value`, value)
                                   setFieldValue(

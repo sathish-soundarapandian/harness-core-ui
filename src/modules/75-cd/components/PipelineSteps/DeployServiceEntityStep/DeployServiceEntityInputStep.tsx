@@ -281,6 +281,7 @@ export function DeployServiceEntityInputStep({
               onChange={value => {
                 formik.setFieldValue(`${localPathPrefix}serviceRef`, value)
               }}
+              isReadonly={inputSetData?.readonly}
             />
           )}
         </div>
