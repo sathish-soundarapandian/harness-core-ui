@@ -13,8 +13,10 @@ const healthSource = 'appd_cvng_prod'
 const accountId = 'accountId'
 
 export const getUserJourneysCall = `/cv/api/user-journey?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&offset=0&pageSize=100`
+export const getAccountLevelUserJourneysCall = `/cv/api/user-journey?routingId=${accountId}&accountId=${accountId}&offset=0&pageSize=100`
 export const getUserJourneysCallForNewerProject = `/cv/api/user-journey?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}&offset=0&pageSize=100`
 export const listSLOsCall = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10*`
+export const accountLevelListSLOsCall = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&pageNumber=0&pageSize=10*`
 export const listSLOsCallForNewerProject = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}&pageNumber=0&pageSize=10&filter=`
 export const listSLOsCallWithUserJourneyNewOne = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&userJourneyIdentifiers=newone&filter=`
 export const listSLOsCallWithUserJourneySecondJourney = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&userJourneyIdentifiers=Second_Journey&filter=`
@@ -1700,4 +1702,169 @@ export const getEnvironmentsCallResponse = {
   },
   metaData: null,
   correlationId: 'd5ad5f5f-c3da-4b4d-bf7f-1573a294683f'
+}
+
+export const accountLevelSLOListResponse = {
+  status: 'SUCCESS',
+  data: {
+    totalPages: 1,
+    totalItems: 5,
+    pageItemCount: 5,
+    pageSize: 10,
+    content: [
+      {
+        sloIdentifier: 'testt',
+        name: 'testt',
+        orgName: 'cvng',
+        projectName: 'Testing',
+        monitoredServiceIdentifier: 'appd_qa',
+        monitoredServiceName: 'appd_qa',
+        healthSourceIdentifier: 'Dynatrace',
+        healthSourceName: 'Dynatrace',
+        serviceIdentifier: 'appd',
+        serviceName: 'appd',
+        environmentIdentifier: 'qa',
+        environmentName: 'qa',
+        tags: {},
+        userJourneys: [{ identifier: 'g1' }],
+        burnRate: 0.0,
+        errorBudgetRemainingPercentage: 100.0,
+        errorBudgetRemaining: 101,
+        totalErrorBudget: 101,
+        sloTargetType: 'Rolling',
+        sliType: 'Latency',
+        sloType: 'Simple',
+        sloTargetPercentage: 99.0,
+        noOfActiveAlerts: 0,
+        errorBudgetRisk: 'HEALTHY',
+        projectParams: {
+          orgIdentifier: 'identifier',
+          projectIdentifier: 'dummy'
+        }
+      },
+      {
+        sloIdentifier: 'simple1',
+        name: 'simple1',
+        orgName: 'cvng',
+        projectName: 'Testing',
+        monitoredServiceIdentifier: 'service1_qa',
+        monitoredServiceName: 'service1_qa',
+        healthSourceIdentifier: 'Prom2',
+        healthSourceName: 'Prom2',
+        serviceIdentifier: 'service1',
+        serviceName: 'service1',
+        environmentIdentifier: 'qa',
+        environmentName: 'qa',
+        tags: {},
+        userJourneys: [{ identifier: 'g1' }],
+        burnRate: 23.305785123966942,
+        errorBudgetRemainingPercentage: 30.082644628099175,
+        errorBudgetRemaining: 364,
+        totalErrorBudget: 1210,
+        sloTargetType: 'Rolling',
+        sliType: 'Availability',
+        sloType: 'Simple',
+        sloTargetPercentage: 88.0,
+        noOfActiveAlerts: 0,
+        errorBudgetRisk: 'NEED_ATTENTION',
+        projectParams: {
+          orgIdentifier: 'identifier',
+          projectIdentifier: 'dummy'
+        }
+      },
+      {
+        sloIdentifier: 'simple1',
+        name: 'simple1',
+        orgName: 'default',
+        projectName: 'demo_composite_slo',
+        monitoredServiceIdentifier: 'service1_env1',
+        monitoredServiceName: 'service1_env1',
+        healthSourceIdentifier: 'prom2',
+        healthSourceName: 'prom2',
+        serviceIdentifier: 'service1',
+        serviceName: 'service1',
+        environmentIdentifier: 'env1',
+        environmentName: 'env1',
+        tags: {},
+        userJourneys: [{ identifier: 't1' }],
+        burnRate: 6.9403108465608465,
+        errorBudgetRemainingPercentage: 44.47751322751323,
+        errorBudgetRemaining: 1345,
+        totalErrorBudget: 3024,
+        sloTargetType: 'Rolling',
+        sliType: 'Availability',
+        sloType: 'Simple',
+        sloTargetPercentage: 70.0,
+        noOfActiveAlerts: 0,
+        errorBudgetRisk: 'NEED_ATTENTION',
+        projectParams: {
+          orgIdentifier: 'identifier',
+          projectIdentifier: 'composite'
+        }
+      },
+      {
+        sloIdentifier: 'simple2',
+        name: 'simple2',
+        orgName: 'default',
+        projectName: 'demo_composite_slo',
+        monitoredServiceIdentifier: 'service1_env1',
+        monitoredServiceName: 'service1_env1',
+        healthSourceIdentifier: 'prom3',
+        healthSourceName: 'prom3',
+        serviceIdentifier: 'service1',
+        serviceName: 'service1',
+        environmentIdentifier: 'env1',
+        environmentName: 'env1',
+        tags: {},
+        userJourneys: [{ identifier: 't1' }],
+        burnRate: 11.926020408163264,
+        errorBudgetRemainingPercentage: 4.591836734693878,
+        errorBudgetRemaining: 162,
+        totalErrorBudget: 3528,
+        sloTargetType: 'Rolling',
+        sliType: 'Availability',
+        sloType: 'Simple',
+        sloTargetPercentage: 65.0,
+        noOfActiveAlerts: 0,
+        errorBudgetRisk: 'UNHEALTHY',
+        projectParams: {
+          orgIdentifier: 'identifier',
+          projectIdentifier: 'composite'
+        }
+      },
+      {
+        sloIdentifier: 'Simple3',
+        name: 'Simple3',
+        orgName: 'cvng',
+        projectName: 'Testing',
+        monitoredServiceIdentifier: 'service1_qa',
+        monitoredServiceName: 'service1_qa',
+        healthSourceIdentifier: 'Prom2',
+        healthSourceName: 'Prom2',
+        serviceIdentifier: 'service1',
+        serviceName: 'service1',
+        environmentIdentifier: 'qa',
+        environmentName: 'qa',
+        tags: {},
+        userJourneys: [{ identifier: 'g1' }],
+        burnRate: 17.5760582010582,
+        errorBudgetRemainingPercentage: 47.2718253968254,
+        errorBudgetRemaining: 953,
+        totalErrorBudget: 2016,
+        sloTargetType: 'Rolling',
+        sliType: 'Latency',
+        sloType: 'Simple',
+        sloTargetPercentage: 80.0,
+        noOfActiveAlerts: 0,
+        errorBudgetRisk: 'NEED_ATTENTION',
+        projectParams: {
+          orgIdentifier: 'identifier',
+          projectIdentifier: 'composite'
+        }
+      }
+    ],
+    pageIndex: 0,
+    empty: false
+  },
+  correlationId: '6d674e41-ccda-4c3f-b281-45306eded8e0'
 }

@@ -91,11 +91,20 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
     body: { ...filter, searchFilter: searchTerm, ...childResource }
   })
 
-  const { content, totalItems = 0, totalPages = 0, pageIndex = 0, pageSize = 10 } = dashboardWidgetsResponse?.data ?? {}
+  const { totalItems = 0, totalPages = 0, pageIndex = 0, pageSize = 10 } = dashboardWidgetsResponse?.data ?? {}
+  const content = isAccountLevel
+    ? dashboardWidgetsResponse?.data?.content?.map(sloData => {
+        const { sloIdentifier, projectParams } = sloData
+        return {
+          ...sloData,
+          sloIdentifier: `${sloIdentifier}.${projectParams?.orgIdentifier}.${projectParams?.projectIdentifier}`
+        }
+      })
+    : dashboardWidgetsResponse?.data?.content
   const isDisabled = selectedSlos?.length < MinNumberOfSLO || selectedSlos?.length > MaxNumberOfSLO
   useEffect(() => {
     // load selected SLOs when we get data from API
-    if (dashboardWidgetsResponse?.data?.content) {
+    if (content) {
       if (isNumber(pageIndex) && !initializedPageNumbers.includes(pageIndex) && serviceLevelObjectivesDetails.length) {
         const selectedSlosOnPage =
           content?.filter(item =>
@@ -124,17 +133,17 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
   }
 
   const isSelectAllChecked = () => {
-    const listOfSloIdsOnPage = dashboardWidgetsResponse?.data?.content?.map(item => item.sloIdentifier)
+    const listOfSloIdsOnPage = content?.map(item => item.sloIdentifier)
     const selectedSlosOnPage = selectedSlos.filter(item => listOfSloIdsOnPage?.includes(item.sloIdentifier))
     return listOfSloIdsOnPage?.length === selectedSlosOnPage.length
   }
 
   const onSelectAll = (checked: boolean) => {
     setSelectedSlos(prvSelected => {
-      const listOfSloIdsOnPage = dashboardWidgetsResponse?.data?.content?.map(item => item.sloIdentifier)
+      const listOfSloIdsOnPage = content?.map(item => item.sloIdentifier)
       const prevSelectedSlosNotOnPage = prvSelected.filter(item => !listOfSloIdsOnPage?.includes(item.sloIdentifier))
       if (checked) {
-        return [...prevSelectedSlosNotOnPage, ...(dashboardWidgetsResponse?.data?.content || [])]
+        return [...prevSelectedSlosNotOnPage, ...(content || [])]
       } else {
         return prevSelectedSlosNotOnPage
       }

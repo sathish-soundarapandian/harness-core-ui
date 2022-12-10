@@ -23,9 +23,10 @@ export const filterServiceLevelObjectivesDetailsFromSLOObjective = (
   serviceLevelObjectivesDetails?: SLOObjective[]
 ): ServiceLevelObjectiveDetailsDTO[] =>
   serviceLevelObjectivesDetails
-    ? serviceLevelObjectivesDetails.map(
-        sloDetail => pick(sloDetail, [...serviceLevelObjectiveKeys]) as ServiceLevelObjectiveDetailsDTO
-      )
+    ? serviceLevelObjectivesDetails.map(sloDetail => {
+        sloDetail.serviceLevelObjectiveRef = sloDetail.serviceLevelObjectiveRef.split('.')[0]
+        return pick(sloDetail, [...serviceLevelObjectiveKeys]) as ServiceLevelObjectiveDetailsDTO
+      })
     : []
 
 export const getSLOV2InitialFormData = (

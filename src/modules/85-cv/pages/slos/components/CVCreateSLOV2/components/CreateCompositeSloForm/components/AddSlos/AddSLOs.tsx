@@ -110,7 +110,17 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
 
   const [cursorIndex, setCursorIndex] = useState(0)
 
-  const serviceLevelObjectivesDetails = formikProps?.values?.serviceLevelObjectivesDetails || []
+  const defaultSLOD = formikProps?.values?.serviceLevelObjectivesDetails || []
+  const serviceLevelObjectivesDetails = isAccountLevel
+    ? defaultSLOD?.map(sloData => {
+        const { sloIdentifier, projectParams } = sloData
+        return {
+          ...sloData,
+          sloIdentifier: `${sloIdentifier}.${projectParams?.orgIdentifier}.${projectParams?.projectIdentifier}`,
+          serviceLevelObjectiveRef: `${sloIdentifier}.${projectParams?.orgIdentifier}.${projectParams?.projectIdentifier}`
+        }
+      })
+    : defaultSLOD
   const setServiceLevelObjectivesDetails = (updatedSLODetails: SLOObjective[]): void =>
     formikProps.setFieldValue(SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS, updatedSLODetails)
 
@@ -165,13 +175,11 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
     )
   }
 
-  const RenderDelete: Renderer<CellProps<ServiceLevelObjectiveDetailsDTO>> = ({ row }) => {
-    const { serviceLevelObjectiveRef } = row.original
+  const RenderDelete: Renderer<CellProps<SLOObjective>> = ({ row }) => {
+    const { serviceLevelObjectiveRef, name } = row.original
     const { openDialog } = useConfirmationDialog({
-      titleText: getString('common.delete', { name: serviceLevelObjectiveRef }),
-      contentText: (
-        <Text color={Color.GREY_800}>{getString('cv.slos.confirmDeleteSLO', { name: serviceLevelObjectiveRef })}</Text>
-      ),
+      titleText: getString('common.delete', { name }),
+      contentText: <Text color={Color.GREY_800}>{getString('cv.slos.confirmDeleteSLO', { name })}</Text>,
       confirmButtonText: getString('delete'),
       cancelButtonText: getString('cancel'),
       intent: Intent.DANGER,

@@ -157,7 +157,7 @@ interface RenderCheckBoxesInterface {
 
 export const RenderCheckBoxes = ({ row, selectedSlos, setSelectedSlos }: RenderCheckBoxesInterface) => {
   const sloData = row.original
-  const isChecked = Boolean([...selectedSlos].find(item => item.name === sloData.name))
+  const isChecked = Boolean([...selectedSlos].find(item => item.sloIdentifier === sloData.sloIdentifier))
   return (
     <Checkbox
       checked={isChecked}
