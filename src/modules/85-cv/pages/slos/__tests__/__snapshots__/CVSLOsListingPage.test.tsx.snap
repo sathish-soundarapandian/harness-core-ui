@@ -722,7 +722,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                 style="width: 18%;"
               >
                 <a
-                  href="/account/account_id/cv/slos/slo_identifier?sloType=Simple"
+                  href="/account/account_id/cv/orgs/org_identifier/projects/project_identifier/slos/slo_identifier?sloType=Simple"
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
@@ -950,7 +950,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                 style="width: 18%;"
               >
                 <a
-                  href="/account/account_id/cv/slos/?sloType=Composite"
+                  href="/account/account_id/cv/orgs/org_identifier/projects/project_identifier/slos/?sloType=Composite"
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
