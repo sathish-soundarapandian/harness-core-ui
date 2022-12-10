@@ -196,7 +196,9 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
 
   const links = [
     {
-      url: routes.toAccountCVSLOs({ accountId }),
+      url: isAccountLevel
+        ? routes.toAccountCVSLOs({ accountId })
+        : routes.toCVSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }),
       label: getString('cv.slos.title')
     }
   ]

@@ -276,18 +276,17 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   const RenderSLOName: Renderer<CellProps<any>> = ({ row }) => {
     const slo = row?.original
     const { name = '', sloIdentifier = '', description = '', sloType = '' } = slo || {}
-    const path =
-      orgIdentifier && projectIdentifier
-        ? routes.toCVSLODetailsPage({
-            identifier: sloIdentifier,
-            accountId,
-            orgIdentifier,
-            projectIdentifier
-          })
-        : routes.toAccountCVSLODetailsPage({
-            identifier: sloIdentifier,
-            accountId
-          })
+    const path = isAccountLevel
+      ? routes.toCVSLODetailsPage({
+          identifier: sloIdentifier,
+          accountId,
+          orgIdentifier,
+          projectIdentifier
+        })
+      : routes.toAccountCVSLODetailsPage({
+          identifier: sloIdentifier,
+          accountId
+        })
     const queryParams = getSearchString({ sloType })
     return (
       <Link to={`${path}${queryParams}`}>

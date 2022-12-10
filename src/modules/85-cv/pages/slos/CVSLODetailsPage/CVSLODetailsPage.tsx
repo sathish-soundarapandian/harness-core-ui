@@ -48,7 +48,6 @@ const CVSLODetailsPage: React.FC = () => {
   useEffect(() => {
     if (!isAccountLevel && projectIdentifierRef.current && projectIdentifierRef.current !== projectIdentifier) {
       history.push(routes.toCVSLOs({ accountId, orgIdentifier, projectIdentifier }))
-      return
     }
 
     projectIdentifierRef.current = projectIdentifier

@@ -95,7 +95,7 @@ exports[`CVCreateSloV2 CVCreateSLOV2 when isComposite is false 1`] = `
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/dummy/cv/slos"
+                href="/account/dummy/cv/orgs/dummy/projects/dummy/slos"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"

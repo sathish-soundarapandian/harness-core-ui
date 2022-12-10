@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { defaultTo } from 'lodash-es'
 import { Layout, Text, Checkbox } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { Renderer, CellProps, Row } from 'react-table'
@@ -20,18 +21,13 @@ export const getUpdatedSLOObjectives = (
 ): ServiceLevelObjectiveDetailsDTO[] => {
   const selectedSlosLength = selectedSlos.length
   const weight = Number(100 / selectedSlosLength).toFixed(1)
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const lastWeight = Number(100 - Number(weight) * (selectedSlosLength - 1)).toFixed(1)
   const updatedSLOObjective = selectedSlos.map((item, index) => {
-    const orgAndProjectIdentifiers =
-      orgIdentifier && projectIdentifier
-        ? {
-            orgIdentifier,
-            projectIdentifier
-          }
-        : {
-            orgIdentifier: item?.projectParams?.orgIdentifier ?? '',
-            projectIdentifier: item?.projectParams?.projectIdentifier ?? ''
-          }
+    const orgAndProjectIdentifiers = {
+      orgIdentifier: isAccountLevel ? defaultTo(item?.projectParams?.orgIdentifier, '') : orgIdentifier,
+      projectIdentifier: isAccountLevel ? defaultTo(item?.projectParams?.projectIdentifier, '') : projectIdentifier
+    }
     return {
       accountId,
       ...orgAndProjectIdentifiers,
