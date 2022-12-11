@@ -37,7 +37,7 @@ interface SubscriptionOverviewProps {
 const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
   const { accountName, licenseData, module, trialInformation, refetchGetLicense } = props
   const enabled = useFeatureFlag(FeatureFlag.VIEW_USAGE_ENABLED)
-  const [pipelineList, setPipelineList] = useState<PagePMSPipelineSummaryResponse | undefined>()
+  const [activeServiceLicenseList, setActiveServiceLicenseList] = useState<PagePMSPipelineSummaryResponse | undefined>()
   const { updateQueryParams } = useUpdateQueryParams<Partial<PipelineListPageQueryParams>>()
   const { preference: sortingPreference, setPreference: setSortingPreference } = usePreferenceStore<string | undefined>(
     PreferenceScope.USER,
@@ -50,15 +50,15 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
   const sort = sortingPreference ? JSON.parse(sortingPreference) : queryParams.sort
   const { searchTerm, repoIdentifier, branch, page, size, repoName } = queryParams
 
-  const fetchPipelines = useCallback(async () => {
+  const fetchServiceLicenseTable = useCallback(async () => {
     // try {
 
     //   }
     const filter: PipelineFilterProperties = {
-      filterType: 'PipelineSetup',
+      filterType: 'ServiceLicenseTable',
       repoName
     }
-    const { status, data } = await loadPipelineList(filter, {
+    const { status, data } = await loadServiceLicenseTable(filter, {
       queryParams: {
         accountIdentifier: accountId,
         projectIdentifier,
@@ -75,18 +75,18 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
       }
     })
     if (status === 'SUCCESS') {
-      setPipelineList(data)
+      setActiveServiceLicenseList(data)
     }
   }, [])
 
   useEffect(() => {
-    fetchPipelines()
-  }, [fetchPipelines])
+    fetchServiceLicenseTable()
+  }, [fetchServiceLicenseTable])
 
   const {
-    mutate: loadPipelineList,
-    error: pipelineListLoadingError,
-    loading: isPipelineListLoading
+    mutate: loadServiceLicenseTable,
+    error: serviceLicenseListLoadingError,
+    loading: isServiceLicenseListLoading
   } = useGetPipelineList({
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
