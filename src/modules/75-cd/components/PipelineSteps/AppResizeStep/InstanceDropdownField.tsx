@@ -33,7 +33,6 @@ import { get, isNil } from 'lodash-es'
 import * as Yup from 'yup'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { errorCheck } from '@common/utils/formikHelpers'
-// import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import {
   ALLOWED_VALUES_TYPE,
@@ -63,7 +62,6 @@ export function getInstanceDropdownSchema(
   getString: UseStringsReturn['getString']
 ): Yup.ObjectSchema {
   const { maximum } = props
-
   if (maximum && typeof maximum !== 'number') {
     throw new Error(`Invalid format "${maximum}" provided for maximum value`)
   }
@@ -72,7 +70,7 @@ export function getInstanceDropdownSchema(
       test(type: InstanceTypes): boolean | Yup.ValidationError {
         const { required = false } = props
         if (type === InstanceTypes.Count) {
-          const value = this.parent?.value
+          const value = this.parent?.spec?.value
           if (getMultiTypeFromValue(value as unknown as string) !== MultiTypeInputType.FIXED) {
             return true
           }
@@ -86,7 +84,7 @@ export function getInstanceDropdownSchema(
             })
           }
         } else if (type === InstanceTypes.Percentage) {
-          const value = this.parent?.value
+          const value = this.parent?.spec?.value
           if (required && isNil(value)) {
             return this.createError({
               message: getString('fieldRequired', { field: getString('cd.steps.tas.totalInstances') })

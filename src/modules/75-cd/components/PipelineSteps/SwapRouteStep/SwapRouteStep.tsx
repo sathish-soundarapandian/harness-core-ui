@@ -262,7 +262,7 @@ export class SwapRouteStep extends PipelineStep<SwapRouteData> {
       />
     )
   }
-  // TODO:: CHECK
+
   validateInputSet({
     data,
     template,

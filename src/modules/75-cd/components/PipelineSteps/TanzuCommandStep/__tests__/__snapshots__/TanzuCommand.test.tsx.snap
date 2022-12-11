@@ -223,22 +223,22 @@ exports[`TanzuCommandStep tests should render edit view as edit step with all ru
         class="formGroup md"
       >
         <div
-          class="Layout--horizontal StyledProps--main alignStyles"
+          class="group"
         >
           <div
-            class="bp3-form-group formGroup"
-            style="margin-bottom: 4px; margin-top: 4px;"
+            class="bp3-form-group"
+            style="margin-bottom: 0px;"
           >
             <label
               class="bp3-label"
-              for="spec.script.store.spec.files[0]"
+              for="spec.script.store.spec.files"
             >
               <div
-                class="StyledProps--font StyledProps--main StyledProps--flex"
+                class="formLabel"
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="TanzuCommandStep_spec.script.store.spec.files[0]"
+                  data-tooltip-id="TanzuCommandStep_spec.script.store.spec.files"
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
@@ -246,39 +246,6 @@ exports[`TanzuCommandStep tests should render edit view as edit step with all ru
                     common.script
                   </p>
                 </span>
-              </div>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
-            <div
-              class="bp3-form-content"
-            >
-              <div
-                class="StyledProps--font StyledProps--main selectFieldContainer formStyle StyledProps--flex"
-              >
-                <div
-                  class="bp3-form-group bp3-disabled runtimeDisabled"
-                >
-                  
-                  <div
-                    class="bp3-form-content"
-                  >
-                    <div
-                      class="bp3-input-group bp3-disabled"
-                    >
-                      <input
-                        autocomplete="off"
-                        class="bp3-input"
-                        disabled=""
-                        name="spec.script.store.spec.files[0]"
-                        type="text"
-                        value="<+input>"
-                      />
-                    </div>
-                  </div>
-                </div>
                 <div
                   class="bp3-popover-wrapper typeSelectorWrapper"
                 >
@@ -313,6 +280,35 @@ exports[`TanzuCommandStep tests should render edit view as edit step with all ru
                   </div>
                 </div>
               </div>
+               
+              <span
+                class="bp3-text-muted"
+              />
+            </label>
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="bp3-form-group bp3-disabled runtimeDisabled"
+              >
+                
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="bp3-input-group bp3-disabled"
+                  >
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      disabled=""
+                      name="spec.script.store.spec.files"
+                      type="text"
+                      value="<+input>"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <span
@@ -323,8 +319,8 @@ exports[`TanzuCommandStep tests should render edit view as edit step with all ru
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withRightIcon"
-                id="configureOptions_spec.script.store.spec.files[0]"
-                style="margin-top: 32px;"
+                id="configureOptions_spec.script.store.spec.files"
+                style="margin-top: 19px;"
                 tabindex="0"
                 type="button"
               >

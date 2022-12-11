@@ -36,11 +36,11 @@ describe('Test AppResizeStep', () => {
             timeout: RUNTIME_INPUT_VALUE,
             newAppInstances: {
               type: InstanceTypes.Count,
-              value: RUNTIME_INPUT_VALUE
+              spec: { value: RUNTIME_INPUT_VALUE }
             },
             oldAppInstances: {
               type: InstanceTypes.Count,
-              value: RUNTIME_INPUT_VALUE
+              spec: { value: RUNTIME_INPUT_VALUE }
             }
           }
         }}
@@ -61,11 +61,11 @@ describe('Test AppResizeStep', () => {
             timeout: RUNTIME_INPUT_VALUE,
             newAppInstances: {
               type: InstanceTypes.Count,
-              value: RUNTIME_INPUT_VALUE
+              spec: { value: RUNTIME_INPUT_VALUE }
             },
             oldAppInstances: {
               type: InstanceTypes.Count,
-              value: RUNTIME_INPUT_VALUE
+              spec: { value: RUNTIME_INPUT_VALUE }
             }
           }
         }}
@@ -77,11 +77,11 @@ describe('Test AppResizeStep', () => {
             timeout: RUNTIME_INPUT_VALUE,
             newAppInstances: {
               type: InstanceTypes.Count,
-              value: RUNTIME_INPUT_VALUE
+              spec: { value: RUNTIME_INPUT_VALUE }
             },
             oldAppInstances: {
               type: InstanceTypes.Count,
-              value: RUNTIME_INPUT_VALUE
+              spec: { value: RUNTIME_INPUT_VALUE }
             }
           }
         }}
@@ -100,8 +100,8 @@ describe('Test AppResizeStep', () => {
           type: 'AppResize',
           spec: {
             timeout: '10m',
-            newAppInstances: { type: InstanceTypes.Count, value: 15 },
-            oldAppInstances: { type: InstanceTypes.Count, value: 15 }
+            newAppInstances: { type: InstanceTypes.Count, spec: { value: 15 } },
+            oldAppInstances: { type: InstanceTypes.Count, spec: { value: 15 } }
           }
         }}
         type={StepType.TasAppResize}
@@ -121,8 +121,8 @@ describe('Test AppResizeStep', () => {
           type: 'AppResize',
           timeout: '10m',
           spec: {
-            newAppInstances: { type: InstanceTypes.Count, value: 15 },
-            oldAppInstances: { type: InstanceTypes.Count, value: 15 }
+            newAppInstances: { spec: { value: 15 }, type: InstanceTypes.Count },
+            oldAppInstances: { spec: { value: 15 }, type: InstanceTypes.Count }
           },
           name: 'App Resize Step'
         }}
@@ -141,11 +141,11 @@ describe('Test AppResizeStep', () => {
         name: 'App Resize Step',
         spec: {
           newAppInstances: {
-            value: 15,
+            spec: { value: 15 },
             type: InstanceTypes.Count
           },
           oldAppInstances: {
-            value: 15,
+            spec: { value: 15 },
             type: InstanceTypes.Count
           }
         },
@@ -167,11 +167,11 @@ describe('Test AppResizeStep', () => {
           timeout: '10m',
           spec: {
             newAppInstances: {
-              value: 20,
+              spec: { value: 20 },
               type: InstanceTypes.Percentage
             },
             oldAppInstances: {
-              value: 20,
+              spec: { value: 20 },
               type: InstanceTypes.Percentage
             }
           },
@@ -192,11 +192,11 @@ describe('Test AppResizeStep', () => {
         name: 'App Resize Step',
         spec: {
           newAppInstances: {
-            value: 20,
+            spec: { value: 20 },
             type: InstanceTypes.Percentage
           },
           oldAppInstances: {
-            value: 20,
+            spec: { value: 20 },
             type: InstanceTypes.Percentage
           }
         },
@@ -220,11 +220,11 @@ describe('Test AppResizeStep', () => {
           timeout: '10m',
           spec: {
             newAppInstances: {
-              value: 10,
+              spec: { value: 10 },
               type: InstanceTypes.Percentage
             },
             oldAppInstances: {
-              value: 10,
+              spec: { value: 10 },
               type: InstanceTypes.Percentage
             }
           },
@@ -244,11 +244,11 @@ describe('Test AppResizeStep', () => {
         name: 'App Resize Step',
         spec: {
           newAppInstances: {
-            value: 10,
+            spec: { value: 10 },
             type: InstanceTypes.Percentage
           },
           oldAppInstances: {
-            value: 10,
+            spec: { value: 10 },
             type: InstanceTypes.Percentage
           }
         },
@@ -270,11 +270,11 @@ describe('Test AppResizeStep', () => {
           timeout: '10m',
           spec: {
             newAppInstances: {
-              value: 10,
+              spec: { value: 10 },
               type: InstanceTypes.Count
             },
             oldAppInstances: {
-              value: 10,
+              spec: { value: 10 },
               type: InstanceTypes.Count
             }
           },
@@ -294,11 +294,11 @@ describe('Test AppResizeStep', () => {
         name: 'App Resize Step',
         spec: {
           newAppInstances: {
-            value: 10,
+            spec: { value: 10 },
             type: InstanceTypes.Count
           },
           oldAppInstances: {
-            value: 10,
+            spec: { value: 10 },
             type: InstanceTypes.Count
           }
         },
@@ -317,11 +317,11 @@ describe('Test AppResizeStep', () => {
           name: 'App Resize Step',
           spec: {
             newAppInstances: {
-              value: 10,
+              spec: { value: 10 },
               type: InstanceTypes.Percentage
             },
             oldAppInstances: {
-              value: 10,
+              spec: { value: 10 },
               type: InstanceTypes.Percentage
             }
           },
