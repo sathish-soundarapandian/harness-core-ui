@@ -148,9 +148,9 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
                   expressions={expressions}
                   allowableTypes={allowableTypes}
                 />
-                {getMultiTypeFromValue(values?.spec?.newAppInstances?.value) === MultiTypeInputType.RUNTIME && (
+                {getMultiTypeFromValue(values?.spec?.newAppInstances?.spec?.value) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={defaultTo(values?.spec?.newAppInstances?.value, '0')}
+                    value={defaultTo(values?.spec?.newAppInstances?.spec?.value, '0')}
                     type="String"
                     variableName={getString('cd.steps.tas.totalInstances')}
                     showRequiredField={false}
@@ -172,9 +172,9 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
                   expressions={expressions}
                   allowableTypes={allowableTypes}
                 />
-                {getMultiTypeFromValue(values?.spec?.oldAppInstances?.value) === MultiTypeInputType.RUNTIME && (
+                {getMultiTypeFromValue(values?.spec?.oldAppInstances?.spec?.value) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={defaultTo(values?.spec?.oldAppInstances?.value, '0')}
+                    value={defaultTo(values?.spec?.oldAppInstances?.spec?.value, '0')}
                     type="String"
                     variableName={getString('cd.steps.tas.oldAppInstances')}
                     showRequiredField={false}
@@ -218,7 +218,7 @@ const AppResizeInputStep: React.FC<AppResizeProps> = ({ template, readonly, path
           />
         </div>
       ) : null}
-      {getMultiTypeFromValue(template?.spec?.newAppInstances?.value) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(template?.spec?.newAppInstances?.spec?.value) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup)}>
           <FormInstanceDropdown
             expressions={expressions}
@@ -235,7 +235,7 @@ const AppResizeInputStep: React.FC<AppResizeProps> = ({ template, readonly, path
         </div>
       )}
 
-      {getMultiTypeFromValue(template?.spec?.oldAppInstances?.value) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(template?.spec?.oldAppInstances?.spec?.value) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup)}>
           <FormInstanceDropdown
             expressions={expressions}
@@ -282,11 +282,11 @@ export class AppResizeStep extends PipelineStep<AppResizeData> {
     spec: {
       newAppInstances: {
         type: InstanceTypes.Count,
-        value: '1'
+        spec: { value: '1' }
       },
       oldAppInstances: {
         type: InstanceTypes.Count,
-        value: '1'
+        spec: { value: '1' }
       }
     }
   }
@@ -373,7 +373,7 @@ export class AppResizeStep extends PipelineStep<AppResizeData> {
         }
       }
     }
-    if (getMultiTypeFromValue(template?.spec?.newAppInstances?.value) === MultiTypeInputType.RUNTIME) {
+    if (getMultiTypeFromValue(template?.spec?.newAppInstances?.spec?.value) === MultiTypeInputType.RUNTIME) {
       const newAppInstances = Yup.object().shape({
         newAppInstances: getInstanceDropdownSchema(
           {
@@ -395,7 +395,7 @@ export class AppResizeStep extends PipelineStep<AppResizeData> {
         }
       }
     }
-    if (getMultiTypeFromValue(template?.spec?.oldAppInstances?.value) === MultiTypeInputType.RUNTIME) {
+    if (getMultiTypeFromValue(template?.spec?.oldAppInstances?.spec?.value) === MultiTypeInputType.RUNTIME) {
       const oldAppInstances = Yup.object().shape({
         oldAppInstances: getInstanceDropdownSchema(
           {

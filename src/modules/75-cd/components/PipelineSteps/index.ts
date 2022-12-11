@@ -94,6 +94,9 @@ import { SwapRollbackStep } from './SwapRollbackStep/SwapRollback'
 import { AppResizeStep } from './AppResizeStep/AppResizeStep'
 import { TanzuCommandStep } from './TanzuCommandStep/TanzuCommand'
 import { TASRollbackStep } from './TasRollbackStep/TasRollbackStep'
+import { TASBasicAppSetupStep } from './TASBasicAppSetupStep/TASBasicAppSetupStep'
+import { TasBGAppSetupStep } from './TasBGAppSetup/TasBGAppSetup'
+import { TasCanaryAppSetupStep } from './TasCanaryAppSetup/TasCanaryAppSetup'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -178,8 +181,10 @@ factory.registerStep(new TasServiceSpec())
 factory.registerStep(new TASInfrastructureSpec())
 factory.registerStep(new ASGServiceSpec())
 factory.registerStep(new AppResizeStep())
-factory.registerStep(new AppResizeStep())
 factory.registerStep(new TASRollbackStep())
 factory.registerStep(new SwapRouteStep())
 factory.registerStep(new SwapRollbackStep())
 factory.registerStep(new TanzuCommandStep())
+factory.registerStep(new TASBasicAppSetupStep())
+factory.registerStep(new TasBGAppSetupStep())
+factory.registerStep(new TasCanaryAppSetupStep())

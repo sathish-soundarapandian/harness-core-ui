@@ -4233,6 +4233,7 @@ export interface StringsMap {
   'pipeline.stepDescription.ShellScriptProvision': string
   'pipeline.stepDescription.SwapRollback': string
   'pipeline.stepDescription.SwapRoute': string
+  'pipeline.stepDescription.TASBasicAppSetup': string
   'pipeline.stepDescription.TASRollback': string
   'pipeline.stepDescription.TanzuCommandScript': string
   'pipeline.stepDescription.TerraformApply': string
@@ -4642,6 +4643,7 @@ export interface StringsMap {
   'cd.ElastigroupStep.valueCannotBeLessThan': string
   'cd.GitOpsServerDelete': string
   'cd.IdEmptyError': string
+  'cd.TASSteps.existingVersionToKeep': string
   'cd.aboutGitOpsServer': string
   'cd.aboutHarnessAdapter': string
   'cd.aboutHarnessManagedGitOpsServer': string

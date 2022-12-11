@@ -393,11 +393,11 @@ describe('Test AppResizeStep', () => {
           spec: {
             skipDryRun: RUNTIME_INPUT_VALUE,
             newAppInstances: {
-              value: RUNTIME_INPUT_VALUE,
+              spec: { value: RUNTIME_INPUT_VALUE },
               type: InstanceTypes.Percentage
             },
             oldAppInstances: {
-              value: RUNTIME_INPUT_VALUE,
+              spec: { value: RUNTIME_INPUT_VALUE },
               type: InstanceTypes.Percentage
             }
           }
@@ -417,11 +417,11 @@ describe('Test AppResizeStep', () => {
         type: 'AppResize',
         spec: {
           newAppInstances: {
-            value: '10',
+            spec: { value: '10' },
             type: InstanceTypes.Percentage
           },
           oldAppInstances: {
-            value: '10',
+            spec: { value: '10' },
             type: InstanceTypes.Percentage
           }
         }
@@ -433,11 +433,11 @@ describe('Test AppResizeStep', () => {
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
           newAppInstances: {
-            value: RUNTIME_INPUT_VALUE,
+            spec: { value: RUNTIME_INPUT_VALUE },
             type: InstanceTypes.Percentage
           },
           oldAppInstances: {
-            value: RUNTIME_INPUT_VALUE,
+            spec: { value: RUNTIME_INPUT_VALUE },
             type: InstanceTypes.Percentage
           }
         }
@@ -462,11 +462,11 @@ describe('Test AppResizeStep', () => {
         spec: {
           timeout: '1s',
           newAppInstances: {
-            value: RUNTIME_INPUT_VALUE,
+            spec: { value: RUNTIME_INPUT_VALUE },
             type: InstanceTypes.Count
           },
           oldAppInstances: {
-            value: RUNTIME_INPUT_VALUE,
+            spec: { value: RUNTIME_INPUT_VALUE },
             type: InstanceTypes.Count
           }
         } as TasAppResizeStepInfo

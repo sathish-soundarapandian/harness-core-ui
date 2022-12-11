@@ -43,7 +43,6 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { ConfigFilesMap } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 import { MultiConfigSelectField } from '@pipeline/components/StartupScriptSelection/MultiConfigSelectField'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -406,7 +405,7 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
     spec: {
       script: {
         store: {
-          type: ConfigFilesMap.Harness,
+          type: 'Harness',
           spec: {}
         }
       }

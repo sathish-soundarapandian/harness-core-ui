@@ -1129,6 +1129,7 @@ stepDescription:
   TASRollback: Rollback for the TAS steps
   AppResize: Update the number of instances for this app
   TanzuCommandScript: Command Scripts to run any CF CLI command or script at any point in your Harness TAS Pipelines
+  TASBasicAppSetup: TAS basic setup step
   # CHECK
 executionStrategy:
   executionStrategies: Execution Strategies

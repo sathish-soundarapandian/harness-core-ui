@@ -656,3 +656,5 @@ ElastigroupStep:
   valueCannotBeLessThan: '{{value}} cannot be less than {{value2}}'
   valueCannotBeGreaterThan: '{{value}} cannot be greater than {{value2}}'
   valueCannotBe: '{{value}} cannot be empty, string etc., should only be a positive number'
+TASSteps:
+  existingVersionToKeep: Existing Versions To Keep
