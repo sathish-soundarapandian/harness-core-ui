@@ -7,13 +7,16 @@
 
 import React from 'react'
 import classnames from 'classnames'
+import { isEmpty } from 'lodash-es'
 import type { SelectOption } from '@harness/uicore'
-import { FormInput, Heading } from '@harness/uicore'
+import { FormInput, Heading, HarnessDocTooltip, Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
 import { EntityType, EnvironmentType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
 import { allProjectsObj, getEnvTypeMap, isAllOptionSelected } from '@freeze-windows/utils/FreezeWindowStudioUtil'
 import css from './FreezeWindowStudioConfigSection.module.scss'
+import { Link } from 'react-router-dom'
+import { useProjectDropdown } from '@freeze-windows/hooks/useProjectDropwodn'
 
 const All = 'All'
 const Equals = 'Equals'
@@ -173,6 +176,8 @@ interface ProjectFieldPropsInterface {
   resources: ResourcesInterface
   values: any
   setFieldValue: any
+  accountId: string
+  orgIdentifier?: string
 }
 export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   getString,
@@ -250,6 +255,66 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
           style={{ marginLeft: '24px' }}
         />
       ) : null}
+    </>
+  )
+}
+
+const ProjectFieldNode = ({ label, dataTooltipId, onClick, disabled }) => {
+  return (
+    <>
+      <label className={'bp3-label'}>
+        <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} />
+      </label>
+      <Container flex={{ alignItems: 'center', justifyContent: 'space-between' }} className={css.container}>
+        <Link
+          to="#"
+          // className={css.containerLink}
+          // data-testid={name}
+          onClick={e => {
+            e.preventDefault()
+            onClick()
+          }}
+        >
+          <Text
+            color={Color.PRIMARY_7}
+            flex={{ alignItems: 'center', justifyContent: 'flex-start', inline: false }}
+            padding="small"
+            // className={css.containerLinkText}
+          >
+            Projects
+          </Text>
+        </Link>
+      </Container>
+    </>
+  )
+}
+
+export const ProjectFieldSelect: React.FC<ProjectFieldPropsInterface> = ({
+  getString,
+  namePrefix,
+  resources,
+  values,
+  setFieldValue,
+  accountId,
+  orgIdentifier
+}) => {
+  const orgValue = values[FIELD_KEYS.Org] || []
+  const isAccLevel = resources.freezeWindowLevel === FreezeWindowLevels.ACCOUNT
+  const orgId = isAccLevel ? orgValue[0]?.value : orgIdentifier
+  const isDisabled = isAccLevel ? isAllOptionSelected(orgValue) || isEmpty(orgValue) : false
+  // const isDisabled = isOrgValueAll
+  const { open: openProj, close: closeProj } = useProjectDropdown({
+    orgIdentifier: orgId,
+    accountIdentifier: accountId
+  })
+  return (
+    <>
+      <ProjectFieldNode
+        label={getString('projectsText')}
+        dataTooltipId={''}
+        onClick={isDisabled ? () => {} : openProj}
+        disabled={isDisabled}
+      />
     </>
   )
 }

@@ -152,18 +152,18 @@ export const useFreezeStudioData = (): ResourcesInterface => {
 
   React.useEffect(() => {
     if (freezeWindowLevel === FreezeWindowLevels.ORG && orgIdentifier) {
-      refetchProjects()
+      // refetchProjects()
     }
   }, [orgIdentifier, freezeWindowLevel])
 
   const fetchProjectsForOrgId = debounce((_orgIdentifier: string) => {
     if (!_orgIdentifier) return
-    refetchProjects({
-      queryParams: {
-        accountIdentifier: accountId,
-        orgIdentifier: _orgIdentifier
-      }
-    })
+    // refetchProjects({
+    //   queryParams: {
+    //     accountIdentifier: accountId,
+    //     orgIdentifier: _orgIdentifier
+    //   }
+    // })
   }, 300)
 
   return {

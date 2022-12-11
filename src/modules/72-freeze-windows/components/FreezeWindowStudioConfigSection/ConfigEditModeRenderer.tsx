@@ -14,6 +14,7 @@ import {
   EnvironmentTypeRenderer,
   Organizationfield,
   ProjectField,
+  ProjectFieldSelect,
   ServiceFieldRenderer
 } from './FreezeStudioConfigSectionRenderers'
 import css from './FreezeWindowStudioConfigSection.module.scss'
@@ -26,6 +27,8 @@ interface ConfigEditModeRendererProps {
   saveEntity: any
   setVisualView: () => void
   fieldsVisibility: FieldVisibility
+  accountId: string
+  orgIdentifier: string
 }
 
 export const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
@@ -35,7 +38,9 @@ export const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
   resources,
   saveEntity,
   setVisualView,
-  fieldsVisibility
+  fieldsVisibility,
+  accountId,
+  orgIdentifier
 }) => {
   return (
     <FormikForm>
@@ -60,6 +65,19 @@ export const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
                 values={formikProps.values?.entity?.[index] || {}}
                 setFieldValue={formikProps.setFieldValue}
                 resources={resources}
+                accountId={accountId}
+              />
+            ) : null}
+            {fieldsVisibility.showProjectField ? (
+              <ProjectFieldSelect
+                getString={getString}
+                namePrefix={`entity[${index}]`}
+                values={formikProps.values?.entity?.[index] || {}}
+                setFieldValue={formikProps.setFieldValue}
+                resources={resources}
+                accountId={accountId}
+                orgIdentifier={orgIdentifier}
+                // orgIdentifier={resources.freezeWindowLevel === FreezeWindowLevels.ACCOUNT ? '' : orgIdentifier}
               />
             ) : null}
           </Layout.Vertical>

@@ -4404,6 +4404,7 @@ export interface StringsMap {
   'freezeWindows.freezeStudio.excludeProjects': string
   'freezeWindows.freezeStudio.freezeCreatedSuccessfully': string
   'freezeWindows.freezeStudio.freezeUpdatedSuccessfully': string
+  'freezeWindows.freezeStudio.selectProjects': string
   'freezeWindows.freezeWindowsPage.aboutFeezeWindows': string
   'freezeWindows.freezeWindowsPage.confirmDeleteText': string
   'freezeWindows.freezeWindowsPage.confirmDeleteTitle': string

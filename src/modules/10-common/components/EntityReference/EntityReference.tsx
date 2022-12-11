@@ -137,6 +137,7 @@ export interface EntityReferenceProps<T extends ScopedObjectDTO> {
   selectedRecords?: ScopeAndIdentifier[]
   onMultiSelect?: (selected: ScopeAndIdentifier[]) => void
   showAllTab?: boolean
+  showAccountTab?: boolean
   selectedRecord?: ScopeAndIdentifier
 }
 
@@ -197,6 +198,7 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
     isMultiSelect,
     selectedRecords: selectedRecordsFromProps,
     showAllTab = false,
+    showAccountTab = true,
     selectedRecord: selectedRecordFromProps
   } = props
   const [searchTerm, setSearchTerm] = useState<string>('')
@@ -399,7 +401,7 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
           {renderTab(showAllTab && !!(projectIdentifier || orgIdentifier), TAB_ID.ALL, 'common.all')}
           {renderTab(!!projectIdentifier, TAB_ID.PROJECT, 'projectLabel', 'projects-wizard', selectedProject?.name)}
           {renderTab(!!orgIdentifier, TAB_ID.ORGANIZATION, 'orgLabel', 'diagram-tree', selectedOrg?.name)}
-          {renderTab(true, TAB_ID.ACCOUNT, 'account', 'layers', selectedAccount?.accountName)}
+          {renderTab(showAccountTab, TAB_ID.ACCOUNT, 'account', 'layers', selectedAccount?.accountName)}
         </Tabs>
       </div>
 

@@ -15,6 +15,8 @@ import { convertValuesToYamlObj, FieldVisibility } from '@freeze-windows/utils/F
 import { ConfigEditModeRenderer } from './ConfigEditModeRenderer'
 import { ConfigViewModeRenderer } from './ConfigViewModeRenderer'
 import css from './FreezeWindowStudioConfigSection.module.scss'
+import { useParams } from 'react-router'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 interface ConfigRendererProps {
   config: EntityConfig
@@ -45,6 +47,7 @@ export const ConfigRenderer = ({
   onDeleteRule,
   isReadOnly
 }: ConfigRendererProps) => {
+  const { accountId, orgIdentifier } = useParams<ProjectPathProps>()
   const saveEntity = async () => {
     const formErrors = await formikProps.validateForm()
     if (!isEmpty(formErrors?.entity?.[index])) {
@@ -92,6 +95,8 @@ export const ConfigRenderer = ({
           saveEntity={saveEntity}
           setVisualView={setVisualViewMode}
           fieldsVisibility={fieldsVisibility}
+          accountId={accountId}
+          orgIdentifier={orgIdentifier}
         />
       ) : (
         <ConfigViewModeRenderer
