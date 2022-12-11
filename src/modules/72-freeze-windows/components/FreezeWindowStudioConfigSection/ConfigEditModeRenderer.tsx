@@ -60,6 +60,8 @@ export const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
                 values={formikProps.values?.entity?.[index] || {}}
                 setFieldValue={formikProps.setFieldValue}
                 resources={resources}
+                fetchProjectsByQuery={resources.fetchProjectsByQuery}
+                loadingProjects={resources.loadingProjects}
               />
             ) : null}
           </Layout.Vertical>

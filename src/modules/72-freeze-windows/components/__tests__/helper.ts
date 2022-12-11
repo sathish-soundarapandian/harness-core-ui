@@ -33,5 +33,7 @@ export const resources: ResourcesInterface = {
   servicesMap: {},
   freezeWindowLevel: FreezeWindowLevels.ACCOUNT,
   projectsByOrgId: {},
-  fetchProjectsForOrgId: () => null
+  fetchProjectsForOrgId: () => null,
+  loadingProjects: false,
+  fetchProjectsByQuery: () => null
 }

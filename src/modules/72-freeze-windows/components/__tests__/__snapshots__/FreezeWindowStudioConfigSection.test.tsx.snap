@@ -166,91 +166,95 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
               </div>
             </div>
             <div
-              class="bp3-form-group bp3-disabled"
-              data-id="entity[0].Project-3"
+              class="OverlaySpinner--overlaySpinner"
             >
-              <label
-                class="bp3-label"
-                for="entity[0].Project"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="freezeWindowStudioConfigForm_entity[0].Project"
-                >
-                  projectsText
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
               <div
-                class="bp3-form-content"
+                class="bp3-form-group bp3-disabled"
+                data-id="entity[0].Project-3"
               >
+                <label
+                  class="bp3-label"
+                  for="entity[0].Project"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="freezeWindowStudioConfigForm_entity[0].Project"
+                  >
+                    projectsText
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
                 <div
-                  class="bp3-popover-wrapper MultiSelect--main bp3-fill"
+                  class="bp3-form-content"
                 >
                   <div
-                    class="bp3-popover-target"
+                    class="bp3-popover-wrapper MultiSelect--main bp3-fill"
                   >
                     <div
-                      class=""
+                      class="bp3-popover-target"
                     >
                       <div
-                        class="bp3-input bp3-tag-input bp3-disabled bp3-multi-select"
+                        class=""
                       >
                         <div
-                          class="bp3-tag-input-values"
+                          class="bp3-input bp3-tag-input bp3-disabled bp3-multi-select"
                         >
-                          <span
-                            class="bp3-tag MultiSelect--tag"
-                            data-tag-index="0"
+                          <div
+                            class="bp3-tag-input-values"
                           >
                             <span
-                              class="bp3-text-overflow-ellipsis bp3-fill"
+                              class="bp3-tag MultiSelect--tag"
+                              data-tag-index="0"
                             >
-                              rbac.scopeItems.allProjects
+                              <span
+                                class="bp3-text-overflow-ellipsis bp3-fill"
+                              >
+                                rbac.scopeItems.allProjects
+                              </span>
                             </span>
-                          </span>
-                          <input
-                            autocomplete="off"
-                            class="bp3-input-ghost bp3-multi-select-tag-input-input"
-                            disabled=""
-                            name="entity[0].Project"
-                            value=""
-                          />
+                            <input
+                              autocomplete="off"
+                              class="bp3-input-ghost bp3-multi-select-tag-input-input"
+                              disabled=""
+                              name="entity[0].Project"
+                              value=""
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              class="bp3-form-group bp3-disabled"
-              data-id="entity[0].ExcludeProjCheckbox-4"
-            >
               <div
-                class="bp3-form-content"
+                class="bp3-form-group bp3-disabled"
+                data-id="entity[0].ExcludeProjCheckbox-4"
               >
-                <label
-                  class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                <div
+                  class="bp3-form-content"
                 >
-                  <input
-                    disabled=""
-                    name="entity[0].ExcludeProjCheckbox"
-                    type="checkbox"
-                  />
-                  <span
-                    class="bp3-control-indicator"
-                  />
-                  <span
-                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
-                    data-tooltip-id="freezeWindowStudioConfigForm_entity[0].ExcludeProjCheckbox"
+                  <label
+                    class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
                   >
-                    freezeWindows.freezeStudio.excludeProjects
-                  </span>
-                </label>
+                    <input
+                      disabled=""
+                      name="entity[0].ExcludeProjCheckbox"
+                      type="checkbox"
+                    />
+                    <span
+                      class="bp3-control-indicator"
+                    />
+                    <span
+                      class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                      data-tooltip-id="freezeWindowStudioConfigForm_entity[0].ExcludeProjCheckbox"
+                    >
+                      freezeWindows.freezeStudio.excludeProjects
+                    </span>
+                  </label>
+                </div>
               </div>
             </div>
           </div>

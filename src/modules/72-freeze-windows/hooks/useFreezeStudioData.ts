@@ -166,6 +166,27 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     })
   }, 300)
 
+  const fetchProjectsByQuery = debounce((query: string, orgId?: string) => {
+    if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
+      if (!orgId) return
+      refetchProjects({
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier: orgId,
+          searchTerm: (query || '').trim()
+        }
+      })
+    } else if (freezeWindowLevel === FreezeWindowLevels.ORG) {
+      refetchProjects({
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          searchTerm: (query || '').trim()
+        }
+      })
+    }
+  }, 500)
+
   return {
     orgs,
     orgsMap,
@@ -175,6 +196,8 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     servicesMap,
     freezeWindowLevel,
     projectsByOrgId,
-    fetchProjectsForOrgId
+    fetchProjectsForOrgId,
+    fetchProjectsByQuery,
+    loadingProjects
   }
 }

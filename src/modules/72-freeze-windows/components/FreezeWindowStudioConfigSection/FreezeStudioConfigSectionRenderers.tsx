@@ -8,7 +8,7 @@
 import React from 'react'
 import classnames from 'classnames'
 import type { SelectOption } from '@harness/uicore'
-import { FormInput, Heading } from '@harness/uicore'
+import { FormInput, Heading, OverlaySpinner } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
 import { EntityType, EnvironmentType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
@@ -173,13 +173,17 @@ interface ProjectFieldPropsInterface {
   resources: ResourcesInterface
   values: any
   setFieldValue: any
+  fetchProjectsByQuery: (query: string, orgId: string) => void
+  loadingProjects: boolean
 }
 export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   getString,
   namePrefix,
   resources,
   values,
-  setFieldValue
+  setFieldValue,
+  fetchProjectsByQuery,
+  loadingProjects
 }) => {
   const { projects, freezeWindowLevel } = resources
   const [excludeProjects, setExcludeProjects] = React.useState(projects)
@@ -216,8 +220,15 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
     }
   }, [projects, isOrgValueAll, isSingleOrgValue, resources.projectsByOrgId])
   return (
-    <>
+    <OverlaySpinner show={loadingProjects}>
       <FormInput.MultiSelect
+        // usePortal={false}
+        multiSelectProps={{
+          onQueryChange(query: string) {
+            fetchProjectsByQuery(query, isAccLevel ? orgValue[0].value : '')
+          },
+          resetOnSelect: false
+        }}
         name={projFieldName}
         items={allProj}
         label={getString('projectsText')}
@@ -244,13 +255,19 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
 
       {isCheckBoxEnabled && excludeProjValue ? (
         <FormInput.MultiSelect
+          multiSelectProps={{
+            onQueryChange(query: string) {
+              fetchProjectsByQuery(query, isAccLevel ? orgValue[0].value : '')
+            },
+            resetOnSelect: false
+          }}
           disabled={isOrgValueAll}
           name={excludeProjName}
           items={excludeProjects}
           style={{ marginLeft: '24px' }}
         />
       ) : null}
-    </>
+    </OverlaySpinner>
   )
 }
 
