@@ -33,19 +33,19 @@ import { TerraformStoreTypes } from '../Terraform/TerraformInterfaces'
 import TFRemoteSection from '../Terraform/InputSteps/TFRemoteSection'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export default function TerragruntInputStep<T extends TerragruntData = TerragruntData>(
-  props: TerragruntProps<T> & { formik?: FormikContextType<any> }
+export default function TerragruntInputStep(
+  props: TerragruntProps & { formik?: FormikContextType<any> }
 ): React.ReactElement {
   const { getString } = useStrings()
   const { inputSetData, readonly, path, allowableTypes, stepViewType, onUpdate, onChange, formik } = props
   const { expressions } = useVariablesExpression()
   /* istanbul ignore next */
   const onUpdateRef = (arg: TerragruntData): void => {
-    onUpdate?.(arg as T)
+    onUpdate?.(arg)
   }
   /* istanbul ignore next */
   const onChangeRef = (arg: TerragruntData): void => {
-    onChange?.(arg as T)
+    onChange?.(arg)
   }
   return (
     <FormikForm>

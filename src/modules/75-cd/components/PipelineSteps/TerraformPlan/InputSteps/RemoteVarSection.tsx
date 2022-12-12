@@ -26,15 +26,14 @@ import { Connectors } from '@connectors/constants'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import type { TerraformPlanProps } from '../../Common/Terraform/TerraformInterfaces'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import type { CombinedPlanFormData, CommonProps } from '../../Common/Terraform/TerraformInterfaces'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 function TFRemoteSectionRef(
-  props: TerraformPlanProps & {
+  props: CommonProps<CombinedPlanFormData> & {
     remoteVar: any
     index: number
     formik?: FormikContextType<any>

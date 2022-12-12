@@ -25,21 +25,32 @@ import type {
   TerraformPlanStepInfo,
   TerraformRollbackStepInfo,
   TerraformStepConfiguration,
-  TerraformVarFileWrapper
+  TerraformVarFileWrapper,
+  TerragruntPlanExecutionData,
+  TerragruntPlanStepInfo
 } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
+import type { TGDataSpec } from '../Terragrunt/TerragruntInterface'
 
 export const TerraformStoreTypes = {
   Inline: 'Inline',
   Remote: 'Remote'
 }
-export interface TerraformProps<T = TerraformData> {
+export interface CommonData<T> extends StepElementConfig {
+  spec: {
+    provisionerIdentifier: string
+    configuration: {
+      type: 'Inline' | 'InheritFromPlan' | 'InheritFromApply'
+      spec?: T
+    }
+  }
+}
+export interface CommonProps<T> {
   initialValues: T
   onUpdate?: (data: T) => void
   onChange?: (data: T) => void
   allowableTypes: AllowedTypes
   stepViewType?: StepViewType
-  configTypes?: SelectOption[]
   isNewStep?: boolean
   inputSetData?: {
     template?: T
@@ -51,27 +62,39 @@ export interface TerraformProps<T = TerraformData> {
   gitScope?: GitFilterScope
   allValues?: T
   isBackendConfig?: boolean
+  configTypes?: SelectOption[]
+  isTerragrunt?: boolean
 }
 
-export interface TerraformPlanProps {
-  initialValues: TFPlanFormData
-  onUpdate?: (data: TFPlanFormData) => void
-  onChange?: (data: TFPlanFormData) => void
-  allowableTypes: AllowedTypes
-  stepViewType?: StepViewType
-  configTypes?: SelectOption[]
-  isNewStep?: boolean
-  inputSetData?: {
-    template?: TFPlanFormData
-    path?: string
+export type TerraformData = CommonData<TFDataSpec>
+
+export type TerraformProps = CommonProps<TerraformData>
+
+export type TerraformPlanProps = CommonProps<TFPlanFormData>
+
+export type CombinedData = CommonData<TFDataSpec & TGDataSpec>
+
+export interface CommonPlanFormData<T, U> extends StepElementConfig {
+  spec?: Omit<T, 'configuration'> & {
+    configuration: Omit<U, 'environmentVariables' | 'targets' | 'moduleConfig'> & {
+      targets?: Array<{ id: string; value: string }> | string[] | string
+      environmentVariables?: Array<{ key: string; id: string; value: string }> | string
+      moduleConfig?: {
+        path?: string
+        terragruntRunType: 'RunAll' | 'RunModule'
+      }
+    }
   }
-  path?: string
-  readonly?: boolean
-  gitScope?: GitFilterScope
-  stepType?: string
-  allValues?: TFPlanFormData
-  isBackendConfig?: boolean
 }
+
+export type TerraformPlanData = CommonPlanFormData<TerraformPlanStepInfo, TerraformPlanExecutionData>
+
+export type TerragruntPlanData = CommonPlanFormData<TerragruntPlanStepInfo, TerragruntPlanExecutionData>
+
+export type CombinedPlanFormData = CommonPlanFormData<
+  TerraformPlanStepInfo & TerragruntPlanStepInfo,
+  TerraformPlanExecutionData & TerragruntPlanExecutionData
+>
 
 export interface RemoteVar {
   varFile: {
@@ -98,24 +121,18 @@ export interface RemoteVar {
   }
 }
 
-export interface TerraformPlanVariableStepProps {
-  initialValues: TFPlanFormData
-  originalData?: TFPlanFormData
+export interface CommonVariableStepProps<T> {
+  initialValues: T
+  originalData?: T
   stageIdentifier?: string
-  onUpdate?(data: TFPlanFormData): void
+  onUpdate?(data: T): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData?: TFPlanFormData
+  variablesData?: T
 }
 
-export interface TerraformVariableStepProps {
-  initialValues: TerraformData
-  originalData?: TerraformData
-  stageIdentifier?: string
-  onUpdate?(data: TerraformData): void
-  metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData?: TerraformData
-  stepType?: string
-}
+export type TerraformPlanVariableStepProps = CommonVariableStepProps<TFPlanFormData>
+
+export type TerraformVariableStepProps = CommonVariableStepProps<TerraformData>
 
 export const ConfigurationTypes: Record<TerraformStepConfiguration['type'], TerraformStepConfiguration['type']> = {
   Inline: 'Inline',
@@ -196,20 +213,6 @@ export interface Connector {
     spec: { val: string; url: string; connectionType?: string; type?: string }
   }
 }
-export interface TerraformData extends StepElementConfig {
-  spec?: {
-    provisionerIdentifier?: string
-    configuration?: {
-      type?: 'Inline' | 'InheritFromPlan' | 'InheritFromApply'
-
-      spec?: TFDataSpec
-    }
-  }
-}
-
-export interface TerraformPlanData extends StepElementConfig {
-  spec?: TerraformPlanStepInfo
-}
 
 export interface TFDataSpec {
   workspace?: string
@@ -252,7 +255,7 @@ export interface TFDataSpec {
 }
 
 export interface TFFormData extends StepElementConfig {
-  spec?: TerraformApplyStepInfo
+  spec: TerraformApplyStepInfo
 }
 
 export interface TFDestroyData extends StepElementConfig {
@@ -264,7 +267,7 @@ export interface TFRollbackData extends StepElementConfig {
 }
 
 export interface TFPlanFormData extends StepElementConfig {
-  spec?: Omit<TerraformPlanStepInfo, 'configuration'> & {
+  spec: Omit<TerraformPlanStepInfo, 'configuration'> & {
     configuration: Omit<TerraformPlanExecutionData, 'environmentVariables' | 'targets'> & {
       targets?: Array<{ id: string; value: string }> | string[] | string
       environmentVariables?: Array<{ key: string; id: string; value: string }> | string

@@ -88,6 +88,7 @@ interface TFArtifactoryProps {
   isTerraformPlan: boolean
   allowableTypes: AllowedTypes
   isBackendConfig?: boolean
+  isTerragruntPlan: boolean
 }
 
 export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = ({
@@ -96,6 +97,7 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
   onSubmitCallBack,
   isConfig,
   isTerraformPlan,
+  isTerragruntPlan,
   allowableTypes,
   isBackendConfig = false
 }) => {
@@ -108,8 +110,8 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const initialValues = formatInitialValues(isConfig, isBackendConfig, prevStepData, isTerraformPlan)
-  const connectorRef = getConnectorRef(isConfig, isBackendConfig, isTerraformPlan, prevStepData)
+  const initialValues = formatInitialValues(isConfig, isBackendConfig, prevStepData, isTerraformPlan, isTerragruntPlan)
+  const connectorRef = getConnectorRef(isConfig, isBackendConfig, isTerraformPlan, isTerragruntPlan, prevStepData)
   const { expressions } = useVariablesExpression()
   const {
     data: ArtifactRepoData,

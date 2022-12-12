@@ -12,12 +12,11 @@ import { FormInput, getMultiTypeFromValue, Label, MultiTypeInputType, Container,
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-
-import { TerraformPlanProps, TerraformStoreTypes } from '../../Common/Terraform/TerraformInterfaces'
+import { CombinedPlanFormData, CommonProps, TerraformStoreTypes } from '../../Common/Terraform/TerraformInterfaces'
 import RemoteVarSection from './RemoteVarSection'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export default function TfVarFile(props: TerraformPlanProps): React.ReactElement {
+export default function TfVarFile(props: CommonProps<CombinedPlanFormData>): React.ReactElement {
   const { getString } = useStrings()
   const { inputSetData, path, allowableTypes } = props
 

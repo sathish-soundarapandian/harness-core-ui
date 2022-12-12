@@ -16,20 +16,16 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import type { StringsMap } from 'stringTypes'
+import type { StringNGVariable } from 'services/pipeline-ng'
 import TerragruntInputStep from '../Common/Terragrunt/TerragruntInputStep'
 import TerragruntEditView from '../Common/Terragrunt/TerragruntEditView'
-import type {
-  TerragruntData,
-  TerragruntVariableStepProps,
-  TGDestroyData
-} from '../Common/Terragrunt/TerragruntInterface'
+import type { TerragruntData, TerragruntVariableStepProps } from '../Common/Terragrunt/TerragruntInterface'
 import { onSubmitTerragruntData } from '../Common/Terragrunt/TerragruntHelper'
 import { TerragruntVariableStep } from '../Common/Terragrunt/TerragruntVariableView'
-import type { StringNGVariable } from 'services/pipeline-ng'
 
 const TerragruntDestroyWidgetWithRef = React.forwardRef(TerragruntEditView)
 
-export class TerragruntDestroy extends PipelineStep<TGDestroyData> {
+export class TerragruntDestroy extends PipelineStep<TerragruntData> {
   constructor() {
     super()
     this._hasStepVariables = true
@@ -37,7 +33,7 @@ export class TerragruntDestroy extends PipelineStep<TGDestroyData> {
   }
   protected type = StepType.TerragruntDestroy
   protected referenceId = 'terragruntDestroyStep'
-  protected defaultValues: TGDestroyData = {
+  protected defaultValues: TerragruntData = {
     identifier: '',
     timeout: '10m',
     name: '',
@@ -46,10 +42,12 @@ export class TerragruntDestroy extends PipelineStep<TGDestroyData> {
       provisionerIdentifier: '',
       configuration: {
         type: 'InheritFromApply'
-      },
-      moduleConfig: {
-        terragruntRunType: 'RunModule',
-        path: ''
+        // spec:{
+        //   moduleConfig: {
+        //     terragruntRunType: 'RunModule',
+        //     path: ''
+        //   }
+        // }//optional ..pass only if required from prod
       }
     }
   }
@@ -62,7 +60,7 @@ export class TerragruntDestroy extends PipelineStep<TGDestroyData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<TGDestroyData>): FormikErrors<TGDestroyData> {
+  }: ValidateInputSetProps<TerragruntData>): FormikErrors<TerragruntData> {
     /* istanbul ignore next */
     const errors = {} as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
@@ -95,7 +93,7 @@ export class TerragruntDestroy extends PipelineStep<TGDestroyData> {
 
     return errors
   }
-  private getInitialValues(data: TGDestroyData): TerragruntData {
+  private getInitialValues(data: TerragruntData): TerragruntData {
     const envVars = data.spec?.configuration?.spec?.environmentVariables as StringNGVariable[]
     const formData = {
       ...data,
@@ -125,11 +123,11 @@ export class TerragruntDestroy extends PipelineStep<TGDestroyData> {
     return formData
   }
   /* istanbul ignore next */
-  processFormData(data: any): TGDestroyData {
+  processFormData(data: TerragruntData): TerragruntData {
     return onSubmitTerragruntData(data)
   }
 
-  renderStep(props: StepProps<TGDestroyData, TerragruntVariableStepProps>): JSX.Element {
+  renderStep(props: StepProps<TerragruntData, TerragruntVariableStepProps>): JSX.Element {
     const {
       initialValues,
       onUpdate,

@@ -50,7 +50,7 @@ interface ConfigFileStoreStepOneProps {
   setSelectedConnector: (val: ConnectorTypes) => void
   isTerraformPlan?: boolean
   isBackendConfig?: boolean
-  isTerragrunt?: boolean
+  isTerragruntPlan?: boolean
 }
 
 export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreStepOneProps> = ({
@@ -63,7 +63,7 @@ export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreSt
   setSelectedConnector,
   isTerraformPlan = false,
   isBackendConfig = false,
-  isTerragrunt = false
+  isTerragruntPlan = false
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -74,22 +74,24 @@ export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreSt
   }>()
 
   const storeTypes = isBackendConfig ? [...AllowedTypes, 'Harness'] : AllowedTypes
-  const path = getPath(isTerraformPlan, isBackendConfig)
+  const path = getPath(isTerraformPlan, isTerragruntPlan, isBackendConfig)
 
   useEffect(() => {
     let selectedStore: ConnectorTypes
     if (isBackendConfig) {
-      selectedStore = isTerraformPlan
-        ? data?.spec?.configuration?.backendConfig?.spec?.store?.type
-        : data?.spec?.configuration?.spec?.backendConfig?.spec?.store?.type
+      selectedStore =
+        isTerraformPlan || isTerragruntPlan
+          ? data?.spec?.configuration?.backendConfig?.spec?.store?.type
+          : data?.spec?.configuration?.spec?.backendConfig?.spec?.store?.type
     } else {
-      selectedStore = isTerraformPlan
-        ? data?.spec?.configuration?.configFiles?.store?.type
-        : data?.spec?.configuration?.spec?.configFiles?.store?.type
+      selectedStore =
+        isTerraformPlan || isTerragruntPlan
+          ? data?.spec?.configuration?.configFiles?.store?.type
+          : data?.spec?.configuration?.spec?.configFiles?.store?.type
     }
 
     selectedStore && setSelectedConnector(selectedStore)
-  }, [data, isTerraformPlan, isBackendConfig, setSelectedConnector])
+  }, [data, isTerraformPlan, isTerragruntPlan, isBackendConfig, setSelectedConnector])
 
   const isHarness = (store?: string): boolean => {
     return store === 'Harness'
@@ -124,12 +126,16 @@ export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreSt
     })
   }
 
-  const getValidationSchema = (isBeConfig?: boolean, isTfPlan?: boolean): Yup.ObjectSchema | void => {
+  const getValidationSchema = (
+    isBeConfig?: boolean,
+    isTfPlan?: boolean,
+    isTgPlan?: boolean
+  ): Yup.ObjectSchema | void => {
     if (isHarness(selectedConnector)) {
       return
     }
     if (isBeConfig) {
-      return isTfPlan
+      return isTfPlan || isTgPlan
         ? Yup.object().shape({
             spec: Yup.object().shape({
               configuration: Yup.object().shape({
@@ -147,7 +153,7 @@ export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreSt
             })
           })
     } else {
-      return isTfPlan
+      return isTfPlan || isTgPlan
         ? Yup.object().shape({
             spec: Yup.object().shape({
               configuration: Yup.object().shape({
@@ -172,7 +178,7 @@ export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreSt
       <Heading level={2} style={{ color: Color.BLACK, fontSize: 24, fontWeight: 'bold' }} margin={{ bottom: 'xlarge' }}>
         {isBackendConfig
           ? getString('cd.backendConfigFileStore')
-          : isTerragrunt
+          : isTerragruntPlan
           ? `${getString('common.specify')} ${getString('cd.terragrunt')} ${getString('cd.configFileStore')}`
           : `${getString('common.specify')} ${getString('cd.terraform')} ${getString('cd.configFileStore')}`}
       </Heading>
@@ -184,7 +190,7 @@ export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreSt
           nextStep?.({ formValues: values, selectedType: selectedConnector })
         }}
         initialValues={data}
-        validationSchema={getValidationSchema(isBackendConfig, isTerraformPlan)}
+        validationSchema={getValidationSchema(isBackendConfig, isTerraformPlan, isTerragruntPlan)}
       >
         {formik => {
           const connectorRef = get(formik?.values, `${path}.store.spec.connectorRef`)

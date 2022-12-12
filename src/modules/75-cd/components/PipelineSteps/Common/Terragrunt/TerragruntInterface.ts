@@ -1,100 +1,59 @@
 import type { AllowedTypes } from '@harness/uicore'
-import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   StepElementConfig,
-  TerraformBackendConfig,
-  TerraformVarFileWrapper,
-  TerragruntApplyStepInfo,
-  TerragruntDestroyStepInfo,
   TerragruntPlanExecutionData,
   TerragruntPlanStepInfo,
-  TerragruntRollbackStepInfo
+  TerragruntBackendConfig,
+  TerragruntRollbackStepInfo,
+  RemoteTerragruntBackendConfigSpec,
+  InlineTerragruntBackendConfigSpec,
+  TerragruntVarFileWrapper
 } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
+import type { CommonData, CommonProps, CommonVariableStepProps } from '../Terraform/TerraformInterfaces'
 
+interface StoreSpec {
+  type?: any
+  spec?: {
+    gitFetchType?: string
+    branch?: string
+    commitId?: string
+    folderPath?: string
+    connectorRef?: string | Connector
+    repositoryName?: string
+    artifactPaths?: string
+  }
+}
+interface RemoteTerragruntCustomBackendConfigSpec extends Omit<RemoteTerragruntBackendConfigSpec, 'store'> {
+  store?: StoreSpec
+}
+
+interface TerragruntCustomBackendConfig extends Omit<TerragruntBackendConfig, 'spec'> {
+  spec?: InlineTerragruntBackendConfigSpec | RemoteTerragruntCustomBackendConfigSpec
+}
 export interface TGDataSpec {
   configFiles?: {
-    store?: {
-      type?: string
-      spec?: {
-        gitFetchType?: string
-        branch?: string
-        commitId?: string
-        folderPath?: string
-        connectorRef?: string | Connector
-        repositoryName?: string
-        artifactPaths?: string
-      }
-    }
+    store?: StoreSpec
   }
   moduleConfig?: {
     path?: string
     terragruntRunType: 'RunAll' | 'RunModule'
   }
   workspace?: string
-  backendConfig?:
-    | TerraformBackendConfig
-    | {
-        store?: {
-          type?: string
-          spec?: {
-            gitFetchType?: string
-            branch?: string
-            commitId?: string
-            folderPath?: string
-            connectorRef?: string | Connector
-            repositoryName?: string
-            artifactPaths?: string
-          }
-        }
-      }
+  backendConfig?: TerragruntCustomBackendConfig
   targets?: any
   environmentVariables?: any
-  varFiles?: TerraformVarFileWrapper[]
-  exportTerraformPlanJson?: boolean
-  exportTerraformHumanReadablePlan?: boolean
+  varFiles?: TerragruntVarFileWrapper[]
+  exportTerragruntPlanJson?: boolean
 }
 
-export interface TerragruntData extends StepElementConfig {
-  spec?: {
-    provisionerIdentifier?: string
-    configuration?: {
-      type?: 'Inline' | 'InheritFromPlan' | 'InheritFromApply'
-      spec?: TGDataSpec
-    }
-  }
-}
+export type TerragruntData = CommonData<TGDataSpec>
 
-export interface TerragruntVariableStepProps {
-  initialValues: TerragruntData
-  originalData?: TerragruntData
-  stageIdentifier?: string
-  onUpdate?(data: TerragruntData): void
-  metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData?: TerragruntData
-  stepType?: string
-}
+export type TerragruntProps = CommonProps<TerragruntData>
 
-export interface TerragruntProps<T = TerragruntData> {
-  initialValues: T
-  onUpdate?: (data: T) => void
-  onChange?: (data: T) => void
-  allowableTypes: AllowedTypes
-  stepViewType?: StepViewType
-  isNewStep?: boolean
-  inputSetData?: {
-    template?: T
-    path?: string
-  }
-  readonly?: boolean
-  path?: string
-  stepType?: string
-  gitScope?: GitFilterScope
-  allValues?: T
-  isBackendConfig?: boolean
-}
+export type TerragruntVariableStepProps = CommonVariableStepProps<TerragruntData>
 
 export interface Connector {
   label: string
@@ -135,16 +94,8 @@ export interface TerragruntRollbackVariableStepProps {
   variablesData: TGRollbackData
 }
 
-export interface TGFormData extends StepElementConfig {
-  spec?: TerragruntApplyStepInfo
-}
-
-export interface TGDestroyData extends StepElementConfig {
-  spec?: TerragruntDestroyStepInfo
-}
-
 export interface TGPlanFormData extends StepElementConfig {
-  spec?: Omit<TerragruntPlanStepInfo, 'configuration'> & {
+  spec: Omit<TerragruntPlanStepInfo, 'configuration'> & {
     configuration: Omit<TerragruntPlanExecutionData, 'environmentVariables' | 'targets'> & {
       targets?: Array<{ id: string; value: string }> | string[] | string
       environmentVariables?: Array<{ key: string; id: string; value: string }> | string
@@ -152,29 +103,6 @@ export interface TGPlanFormData extends StepElementConfig {
   }
 }
 
-export interface TerragruntPlanProps {
-  initialValues: TGPlanFormData
-  onUpdate?: (data: TGPlanFormData) => void
-  onChange?: (data: TGPlanFormData) => void
-  allowableTypes: AllowedTypes
-  stepViewType?: StepViewType
-  isNewStep?: boolean
-  inputSetData?: {
-    template?: TGPlanFormData
-    path?: string
-  }
-  path?: string
-  readonly?: boolean
-  gitScope?: GitFilterScope
-  stepType?: string
-  allValues?: TGPlanFormData
-}
+export type TerragruntPlanProps = CommonProps<TGPlanFormData>
 
-export interface TerragruntPlanVariableStepProps {
-  initialValues: TGPlanFormData
-  originalData?: TGPlanFormData
-  stageIdentifier?: string
-  onUpdate?(data: TGPlanFormData): void
-  metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData?: TGPlanFormData
-}
+export type TerragruntPlanVariableStepProps = CommonVariableStepProps<TGPlanFormData>

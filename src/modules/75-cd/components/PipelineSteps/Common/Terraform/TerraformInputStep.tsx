@@ -34,19 +34,19 @@ import { TFMonaco } from './Editview/TFMonacoEditor'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export default function TerraformInputStep<T extends TerraformData = TerraformData>(
-  props: TerraformProps<T> & { formik?: FormikContextType<any> }
+export default function TerraformInputStep(
+  props: TerraformProps & { formik?: FormikContextType<any> }
 ): React.ReactElement {
   const { getString } = useStrings()
   const { inputSetData, readonly, path, allowableTypes, onUpdate, onChange, stepViewType, formik } = props
   const { expressions } = useVariablesExpression()
   /* istanbul ignore next */
   const onUpdateRef = (arg: TerraformData): void => {
-    onUpdate?.(arg as T)
+    onUpdate?.(arg)
   }
   /* istanbul ignore next */
   const onChangeRef = (arg: TerraformData): void => {
-    onChange?.(arg as T)
+    onChange?.(arg)
   }
   return (
     <FormikForm>

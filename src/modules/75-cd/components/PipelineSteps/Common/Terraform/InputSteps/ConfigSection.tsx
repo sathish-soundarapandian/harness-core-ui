@@ -34,15 +34,11 @@ import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 // import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { fileTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
-import type { TerraformData, TerraformProps } from '../TerraformInterfaces'
-import type { TerragruntData, TerragruntProps } from '../../Terragrunt/TerragruntInterface'
+import type { CombinedData, CommonProps } from '../TerraformInterfaces'
 import { getPath } from '../../ConfigFileStore/ConfigFileStoreHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-type CommonProps<T> = TerraformProps<T> | TerragruntProps<T>
-type CommonData = TerraformData | TerragruntData
-
-function ConfigSectionRef<T extends CommonData = CommonData>(
+function ConfigSectionRef<T extends CombinedData = CombinedData>(
   props: CommonProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
   const { getString } = useStrings()
@@ -51,7 +47,7 @@ function ConfigSectionRef<T extends CommonData = CommonData>(
   const { expressions } = useVariablesExpression()
   const { inputSetData, readonly, initialValues, path, allowableTypes, formik, isBackendConfig } = props
 
-  const configPath = getPath(false, isBackendConfig)
+  const configPath = getPath(false, false, isBackendConfig)
   // const config = inputSetData?.template?.spec?.configuration
   const configSpec = get(inputSetData?.template, configPath)
   const store = configSpec?.store

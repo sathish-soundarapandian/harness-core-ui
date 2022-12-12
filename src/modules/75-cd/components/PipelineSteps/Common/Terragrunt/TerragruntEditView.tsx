@@ -62,7 +62,7 @@ import DelegateSelectorStep from '@connectors/components/CreateConnector/commonS
 
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import { isMultiTypeRuntime } from '@common/utils/utils'
-import type { TerragruntData, TerragruntProps, TGFormData } from './TerragruntInterface'
+import type { TerragruntData, TerragruntProps } from './TerragruntInterface'
 import { BackendConfigurationTypes, ConfigurationTypes } from '../Terraform/TerraformInterfaces'
 import TfVarFileList from '../Terraform/Editview/TFVarFileList'
 import {
@@ -80,7 +80,7 @@ import { formatArtifactoryData } from '../Terraform/Editview/TerraformArtifactor
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../Terraform/Editview/TerraformVarfile.module.scss'
 
-const setInitialValues = (data: TGFormData): TGFormData => {
+const setInitialValues = (data: TerragruntData): TerragruntData => {
   return data
 }
 
@@ -92,7 +92,7 @@ interface StepChangeData<SharedObject> {
 
 export default function TerragruntEditView(
   props: TerragruntProps,
-  formikRef: StepFormikFowardRef<TGFormData>
+  formikRef: StepFormikFowardRef<TerragruntData>
 ): React.ReactElement {
   const { stepType, isNewStep = true } = props
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, readonly = false } = props
@@ -283,7 +283,12 @@ export default function TerragruntEditView(
 
   const getTitle = (isBackendConfig: boolean): React.ReactElement => (
     <Layout.Vertical flex style={{ justifyContent: 'center', alignItems: 'center' }} margin={{ bottom: 'xlarge' }}>
-      <Icon name="service-terragrunt" className={css.remoteIcon} size={50} padding={{ bottom: 'large' }} />
+      <Icon
+        name={isBackendConfig ? 'service-terraform' : 'service-terragrunt'}
+        className={css.remoteIcon}
+        size={50}
+        padding={{ bottom: 'large' }}
+      />
       <Text color={Color.WHITE}>
         {isBackendConfig ? getString('cd.backendConfigFileStoreTitle') : getString('cd.configFileStoreTitle')}
       </Text>
@@ -349,18 +354,18 @@ export default function TerragruntEditView(
           setConnectorView={setConnectorView}
           selectedConnector={selectedConnector}
           setSelectedConnector={setSelectedConnector}
-          isTerragrunt
         />
         {connectorView ? getNewConnectorSteps() : null}
         {selectedConnector === 'Artifactory' ? (
           <TFArtifactoryForm
             isConfig={isConfig}
             isTerraformPlan={false}
+            isTerragruntPlan={false}
             isBackendConfig={isBackendConfig}
             allowableTypes={allowableTypes}
             name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
             onSubmitCallBack={(data: any, prevStepData: any) => {
-              const path = getPath(false, isBackendConfig)
+              const path = getPath(false, false, isBackendConfig)
               const configObject = get(prevStepData?.formValues, path)
 
               const valObj = formatArtifactoryData(
@@ -384,7 +389,7 @@ export default function TerragruntEditView(
             isReadonly={readonly}
             allowableTypes={allowableTypes}
             onSubmitCallBack={(data: any, prevStepData: any) => {
-              const path = getPath(false, isBackendConfig)
+              const path = getPath(false, false, isBackendConfig)
               const configObject = get(data, path) || {
                 store: {}
               }
@@ -429,7 +434,7 @@ export default function TerragruntEditView(
     )
   }
 
-  const inlineBackendConfig = (formik: FormikProps<TGFormData>): React.ReactElement => (
+  const inlineBackendConfig = (formik: FormikProps<TerragruntData>): React.ReactElement => (
     <div className={cx(stepCss.formGroup, css.addMarginBottom)}>
       <MultiTypeFieldSelector
         name="spec.configuration.spec.backendConfig.spec.content"
@@ -478,7 +483,7 @@ export default function TerragruntEditView(
 
   return (
     <>
-      <Formik<TGFormData>
+      <Formik<TerragruntData>
         onSubmit={values => {
           const payload = {
             ...values
@@ -495,7 +500,7 @@ export default function TerragruntEditView(
         initialValues={setInitialValues(initialValues as any)}
         validationSchema={stepType === StepType.TerraformPlan ? planValidationSchema : regularValidationSchema}
       >
-        {(formik: FormikProps<TGFormData>) => {
+        {(formik: FormikProps<TerragruntData>) => {
           const { values, setFieldValue } = formik
           setFormikRef(formikRef, formik)
 
@@ -710,88 +715,86 @@ export default function TerragruntEditView(
                             selectedConnector={selectedConnector}
                           />
                           <div className={css.divider} />
-                          {initialValues?.type !== 'TerragruntDestroy' ? (
-                            <>
-                              <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
-                                {formik.values?.spec?.configuration?.spec?.backendConfig?.type ===
-                                  BackendConfigurationTypes.Remote && (
-                                  <Layout.Vertical>
-                                    <Label
-                                      data-tooltip-id={'TF-apply-remoteBackendConfiguration'}
-                                      style={{ color: Color.GREY_900 }}
-                                      className={css.configLabel}
-                                    >
-                                      {getString('cd.backendConfigurationFile')}
-                                      <HarnessDocTooltip
-                                        useStandAlone={true}
-                                        tooltipId="TF-apply-remoteBackendConfiguration"
-                                      />
-                                    </Label>
-                                  </Layout.Vertical>
-                                )}
-                                <div className={css.fileSelect}>
-                                  <select
-                                    className={css.fileDropdown}
-                                    name="spec.configuration.spec.backendConfig.type"
-                                    disabled={readonly}
-                                    value={
-                                      formik.values?.spec?.configuration?.spec?.backendConfig?.type ||
-                                      BackendConfigurationTypes.Inline
-                                    }
-                                    onChange={e => {
-                                      /* istanbul ignore next */
-                                      onSelectChange(e, setFieldValue)
-                                    }}
-                                    data-testid="backendConfigurationOptions"
-                                  >
-                                    <option value={BackendConfigurationTypes.Inline}>{getString('inline')}</option>
-                                    <option value={BackendConfigurationTypes.Remote}>{getString('remote')}</option>
-                                  </select>
-                                </div>
-                              </Layout.Horizontal>
+
+                          <>
+                            <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
                               {formik.values?.spec?.configuration?.spec?.backendConfig?.type ===
-                              BackendConfigurationTypes.Remote ? (
-                                <div
-                                  className={cx(css.configFile, css.configField, css.addMarginTop, css.addMarginBottom)}
-                                  onClick={() => {
-                                    /* istanbul ignore next */
-                                    setShowBackendConfigRemoteWizard(true)
-                                  }}
-                                  data-testid="remoteTemplate"
-                                >
-                                  <>
-                                    {!backendConfigFilePath && (
-                                      <a
-                                        className={css.configPlaceHolder}
-                                        onClick={() => setShowBackendConfigRemoteWizard(true)}
-                                      >
-                                        {getString('cd.backendConfigFilePlaceHolder')}
-                                      </a>
-                                    )}
-                                    {backendConfigFilePath && (
-                                      <>
-                                        <Text font="normal" lineClamp={1} width={200}>
-                                          /{backendConfigFilePath}
-                                        </Text>
-                                        <Button
-                                          minimal
-                                          icon="Edit"
-                                          withoutBoxShadow
-                                          iconProps={{ size: 16 }}
-                                          data-name="backend-config-edit"
-                                          withoutCurrentColor={true}
-                                        />
-                                      </>
-                                    )}
-                                  </>
-                                </div>
-                              ) : (
-                                inlineBackendConfig(formik)
+                                BackendConfigurationTypes.Remote && (
+                                <Layout.Vertical>
+                                  <Label
+                                    data-tooltip-id={'TF-apply-remoteBackendConfiguration'}
+                                    style={{ color: Color.GREY_900 }}
+                                    className={css.configLabel}
+                                  >
+                                    {getString('cd.backendConfigurationFile')}
+                                    <HarnessDocTooltip
+                                      useStandAlone={true}
+                                      tooltipId="TF-apply-remoteBackendConfiguration"
+                                    />
+                                  </Label>
+                                </Layout.Vertical>
                               )}
-                            </>
-                          ) : (
-                            inlineBackendConfig(formik)
-                          )}
+                              <div className={css.fileSelect}>
+                                <select
+                                  className={css.fileDropdown}
+                                  name="spec.configuration.spec.backendConfig.type"
+                                  disabled={readonly}
+                                  value={
+                                    formik.values?.spec?.configuration?.spec?.backendConfig?.type ||
+                                    BackendConfigurationTypes.Inline
+                                  }
+                                  onChange={e => {
+                                    /* istanbul ignore next */
+                                    onSelectChange(e, setFieldValue)
+                                  }}
+                                  data-testid="backendConfigurationOptions"
+                                >
+                                  <option value={BackendConfigurationTypes.Inline}>{getString('inline')}</option>
+                                  <option value={BackendConfigurationTypes.Remote}>{getString('remote')}</option>
+                                </select>
+                              </div>
+                            </Layout.Horizontal>
+                            {formik.values?.spec?.configuration?.spec?.backendConfig?.type ===
+                            BackendConfigurationTypes.Remote ? (
+                              <div
+                                className={cx(css.configFile, css.configField, css.addMarginTop, css.addMarginBottom)}
+                                onClick={() => {
+                                  /* istanbul ignore next */
+                                  setShowBackendConfigRemoteWizard(true)
+                                }}
+                                data-testid="remoteTemplate"
+                              >
+                                <>
+                                  {!backendConfigFilePath && (
+                                    <a
+                                      className={css.configPlaceHolder}
+                                      onClick={() => setShowBackendConfigRemoteWizard(true)}
+                                    >
+                                      {getString('cd.backendConfigFilePlaceHolder')}
+                                    </a>
+                                  )}
+                                  {backendConfigFilePath && (
+                                    <>
+                                      <Text font="normal" lineClamp={1} width={200}>
+                                        /{backendConfigFilePath}
+                                      </Text>
+                                      <Button
+                                        minimal
+                                        icon="Edit"
+                                        withoutBoxShadow
+                                        iconProps={{ size: 16 }}
+                                        data-name="backend-config-edit"
+                                        withoutCurrentColor={true}
+                                      />
+                                    </>
+                                  )}
+                                </>
+                              </div>
+                            ) : (
+                              inlineBackendConfig(formik)
+                            )}
+                          </>
+
                           <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
                             <MultiTypeList
                               multiTextInputProps={{

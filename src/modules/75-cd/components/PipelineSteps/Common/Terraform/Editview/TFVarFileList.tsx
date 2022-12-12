@@ -27,9 +27,8 @@ import { FieldArray, FieldArrayRenderProps } from 'formik'
 import type { FormikProps } from 'formik'
 
 import { useStrings } from 'framework/strings'
-import type { TerraformVarFileWrapper } from 'services/cd-ng'
-
-import { RemoteVar, TerraformData, TerraformStoreTypes } from '../TerraformInterfaces'
+import type { TerraformVarFileWrapper, TerragruntVarFileWrapper } from 'services/cd-ng'
+import { CombinedData, RemoteVar, TerraformStoreTypes } from '../TerraformInterfaces'
 import { TFRemoteWizard } from './TFRemoteWizard'
 import { TFVarStore } from './TFVarStore'
 
@@ -39,7 +38,7 @@ import css from './TerraformVarfile.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface TfVarFileProps {
-  formik: FormikProps<TerraformData>
+  formik: FormikProps<CombinedData>
   isReadonly?: boolean
   allowableTypes: AllowedTypes
   getNewConnectorSteps?: any
@@ -56,14 +55,14 @@ export default function TfVarFileList(props: TfVarFileProps): React.ReactElement
     setSelectedConnector,
     selectedConnector
   } = props
-  const inlineInitValues: TerraformVarFileWrapper = {
+  const inlineInitValues: TerraformVarFileWrapper | TerragruntVarFileWrapper = {
     varFile: {
       spec: {},
       identifier: '',
       type: TerraformStoreTypes.Inline
     }
   }
-  const remoteInitialValues: TerraformVarFileWrapper = {
+  const remoteInitialValues: TerraformVarFileWrapper | TerragruntVarFileWrapper = {
     varFile: {
       spec: {},
       identifier: '',
@@ -88,7 +87,10 @@ export default function TfVarFileList(props: TfVarFileProps): React.ReactElement
     onCloseOfRemoteWizard()
   }
 
-  const remoteRender = (varFile: TerraformVarFileWrapper, index: number): React.ReactElement => {
+  const remoteRender = (
+    varFile: TerraformVarFileWrapper | TerragruntVarFileWrapper,
+    index: number
+  ): React.ReactElement => {
     const remoteVar = varFile?.varFile as any
     return (
       <div className={css.configField}>
@@ -110,7 +112,10 @@ export default function TfVarFileList(props: TfVarFileProps): React.ReactElement
     )
   }
 
-  const inlineRender = (varFile: TerraformVarFileWrapper, index: number): React.ReactElement => {
+  const inlineRender = (
+    varFile: TerraformVarFileWrapper | TerragruntVarFileWrapper,
+    index: number
+  ): React.ReactElement => {
     const inlineVar = varFile?.varFile as any
     return (
       <div className={css.configField}>
@@ -213,45 +218,47 @@ export default function TfVarFileList(props: TfVarFileProps): React.ReactElement
           render={arrayHelpers => {
             return (
               <div>
-                {formik.values?.spec?.configuration?.spec?.varFiles?.map((varFile: TerraformVarFileWrapper, i) => {
-                  return (
-                    <Layout.Horizontal
-                      className={css.addMarginTop}
-                      key={`${varFile?.varFile?.spec?.type}`}
-                      flex={{ distribution: 'space-between' }}
-                      style={{ alignItems: 'end' }}
-                    >
+                {formik.values?.spec?.configuration?.spec?.varFiles?.map(
+                  (varFile: TerraformVarFileWrapper | TerragruntVarFileWrapper, i) => {
+                    return (
                       <Layout.Horizontal
-                        spacing="medium"
-                        style={{ alignItems: 'baseline' }}
-                        className={css.tfContainer}
-                        key={varFile?.varFile?.spec?.type}
-                        draggable={true}
-                        onDragEnd={onDragEnd}
-                        onDragOver={onDragOver}
-                        onDragLeave={onDragLeave}
-                        onDragStart={event => {
-                          /* istanbul ignore next */
-                          onDragStart(event, i)
-                        }}
-                        onDrop={event => onDrop(event, arrayHelpers, i)}
+                        className={css.addMarginTop}
+                        key={`${varFile?.varFile?.spec?.type}`}
+                        flex={{ distribution: 'space-between' }}
+                        style={{ alignItems: 'end' }}
                       >
-                        <Icon name="drag-handle-vertical" className={css.drag} />
-                        {(formik.values.spec?.configuration?.spec?.varFiles || [])?.length > 1 && (
-                          <Text color={Color.BLACK}>{`${i + 1}.`}</Text>
-                        )}
-                        {varFile?.varFile?.type === TerraformStoreTypes.Remote && remoteRender(varFile, i)}
-                        {varFile?.varFile?.type === TerraformStoreTypes.Inline && inlineRender(varFile, i)}
-                        <Button
-                          minimal
-                          icon="main-trash"
-                          data-testid={`remove-tfvar-file-${i}`}
-                          onClick={() => arrayHelpers.remove(i)}
-                        />
+                        <Layout.Horizontal
+                          spacing="medium"
+                          style={{ alignItems: 'baseline' }}
+                          className={css.tfContainer}
+                          key={varFile?.varFile?.spec?.type}
+                          draggable={true}
+                          onDragEnd={onDragEnd}
+                          onDragOver={onDragOver}
+                          onDragLeave={onDragLeave}
+                          onDragStart={event => {
+                            /* istanbul ignore next */
+                            onDragStart(event, i)
+                          }}
+                          onDrop={event => onDrop(event, arrayHelpers, i)}
+                        >
+                          <Icon name="drag-handle-vertical" className={css.drag} />
+                          {(formik.values.spec?.configuration?.spec?.varFiles || [])?.length > 1 && (
+                            <Text color={Color.BLACK}>{`${i + 1}.`}</Text>
+                          )}
+                          {varFile?.varFile?.type === TerraformStoreTypes.Remote && remoteRender(varFile, i)}
+                          {varFile?.varFile?.type === TerraformStoreTypes.Inline && inlineRender(varFile, i)}
+                          <Button
+                            minimal
+                            icon="main-trash"
+                            data-testid={`remove-tfvar-file-${i}`}
+                            onClick={() => arrayHelpers.remove(i)}
+                          />
+                        </Layout.Horizontal>
                       </Layout.Horizontal>
-                    </Layout.Horizontal>
-                  )
-                })}
+                    )
+                  }
+                )}
                 <Popover
                   interactionKind={PopoverInteractionKind.CLICK}
                   boundary="viewport"
@@ -305,6 +312,7 @@ export default function TfVarFileList(props: TfVarFileProps): React.ReactElement
                           <TFArtifactoryForm
                             isConfig={false}
                             isTerraformPlan={false}
+                            isTerragruntPlan={false}
                             allowableTypes={allowableTypes}
                             name={getString('cd.varFileDetails')}
                             onSubmitCallBack={(values: RemoteVar) => onSubmit(values, arrayHelpers)}

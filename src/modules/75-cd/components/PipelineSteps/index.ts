@@ -38,6 +38,7 @@ import { TerraformApply } from './TerraformApply/TerraformApply'
 import { TerragruntRollback } from './TerragruntRollback/TerragruntRollback'
 import { TerragruntApply } from './TerragruntApply/TerragruntApply'
 import { TerragruntDestroy } from './TerragruntDestroy/TerragruntDestroy'
+import { TerragruntPlan } from './TerragruntPlan/TerragruntPlan'
 import { InfraProvisioning } from './InfraProvisioning/InfraProvisioning'
 import { GcpInfrastructureSpec } from './GcpInfrastructureSpec/GcpInfrastructureSpec'
 import { PDCInfrastructureSpec } from './PDCInfrastructureSpec/PDCInfrastructureSpec'
@@ -132,6 +133,7 @@ factory.registerStep(new TerraformPlan())
 factory.registerStep(new TerragruntRollback())
 factory.registerStep(new TerragruntDestroy())
 factory.registerStep(new TerragruntApply())
+factory.registerStep(new TerragruntPlan())
 factory.registerStep(new InfraProvisioning())
 factory.registerStep(new PolicyStep())
 factory.registerStep(new ServerlessLambdaDeployStep())

@@ -364,11 +364,12 @@ export default function TerraformEditView(
           <TFArtifactoryForm
             isConfig={isConfig}
             isTerraformPlan={false}
+            isTerragruntPlan={false}
             isBackendConfig={isBackendConfig}
             allowableTypes={allowableTypes}
             name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
             onSubmitCallBack={(data: any, prevStepData: any) => {
-              const path = getPath(false, isBackendConfig)
+              const path = getPath(false, false, isBackendConfig)
               const configObject = get(prevStepData?.formValues, path)
 
               const valObj = formatArtifactoryData(
@@ -392,7 +393,7 @@ export default function TerraformEditView(
             isReadonly={readonly}
             allowableTypes={allowableTypes}
             onSubmitCallBack={(data: any, prevStepData: any) => {
-              const path = getPath(false, isBackendConfig)
+              const path = getPath(false, false, isBackendConfig)
               const configObject = get(data, path) || {
                 store: {}
               }

@@ -47,11 +47,15 @@ export const ConnectorLabelMap: Record<ConnectorTypes, StringKeys> = {
   Harness: 'harness'
 }
 
-export const getPath = (isTerraformPlan: boolean, isBackendConfig?: boolean): string => {
+export const getPath = (isTerraformPlan: boolean, isTerragruntPlan?: boolean, isBackendConfig?: boolean): string => {
   if (isBackendConfig) {
-    return isTerraformPlan ? 'spec.configuration.backendConfig.spec' : 'spec.configuration.spec.backendConfig.spec'
+    return isTerraformPlan || isTerragruntPlan
+      ? 'spec.configuration.backendConfig.spec'
+      : 'spec.configuration.spec.backendConfig.spec'
   } else {
-    return isTerraformPlan ? 'spec.configuration.configFiles' : 'spec.configuration.spec.configFiles'
+    return isTerraformPlan || isTerragruntPlan
+      ? 'spec.configuration.configFiles'
+      : 'spec.configuration.spec.configFiles'
   }
 }
 export const getConfigFilePath = (configFile: any): string | undefined => {
@@ -116,7 +120,12 @@ export const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
   return () => ({})
 }
 
-export const stepTwoValidationSchema = (isTerraformPlan: boolean, isBackendConfig: boolean, getString: any) => {
+export const stepTwoValidationSchema = (
+  isTerraformPlan: boolean,
+  isTerragruntPlan: boolean,
+  isBackendConfig: boolean,
+  getString: any
+) => {
   if (isBackendConfig) {
     const configSetup = {
       backendConfig: Yup.object().shape({
@@ -139,7 +148,7 @@ export const stepTwoValidationSchema = (isTerraformPlan: boolean, isBackendConfi
       })
     }
 
-    return isTerraformPlan
+    return isTerraformPlan || isTerragruntPlan
       ? Yup.object().shape({
           spec: Yup.object().shape({
             configuration: Yup.object().shape({
@@ -176,7 +185,7 @@ export const stepTwoValidationSchema = (isTerraformPlan: boolean, isBackendConfi
       })
     }
 
-    return isTerraformPlan
+    return isTerraformPlan || isTerragruntPlan
       ? Yup.object().shape({
           spec: Yup.object().shape({
             configuration: Yup.object().shape({

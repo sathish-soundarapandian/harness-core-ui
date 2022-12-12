@@ -4223,6 +4223,8 @@ export interface StringsMap {
   'pipeline.stepDescription.TerraformDestroy': string
   'pipeline.stepDescription.TerraformPlan': string
   'pipeline.stepDescription.TerraformRollback': string
+  'pipeline.stepDescription.TerragruntApply': string
+  'pipeline.stepDescription.TerragruntPlan': string
   'pipeline.stepDescription.Verify': string
   'pipeline.stepDescription.Wait': string
   'pipeline.stepDescription.createPR': string
@@ -4814,6 +4816,7 @@ export interface StringsMap {
   'cd.environmentUpdated': string
   'cd.exportTerraformHumanReadablePlan': string
   'cd.exportTerraformPlanJson': string
+  'cd.exportTerragruntPlanJson': string
   'cd.featureRestriction.banners.deploymentsPerMonthLevelUp': string
   'cd.featureRestriction.banners.dpmWarningActive': string
   'cd.featureRestriction.banners.initialDeploymentsWarningActive': string

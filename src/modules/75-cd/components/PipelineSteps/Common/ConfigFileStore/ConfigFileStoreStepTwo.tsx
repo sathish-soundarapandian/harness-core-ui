@@ -42,6 +42,7 @@ interface ConfigFileStoreStepTwoProps {
   onSubmitCallBack: any
   isTerraformPlan?: boolean
   isBackendConfig?: boolean
+  isTerragruntPlan?: boolean
 }
 
 export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreStepTwoProps> = ({
@@ -52,7 +53,8 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
   allowableTypes,
   name,
   isTerraformPlan = false,
-  isBackendConfig = false
+  isBackendConfig = false,
+  isTerragruntPlan = false
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -60,16 +62,16 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
     { label: getString('gitFetchTypes.fromBranch'), value: getString('pipelineSteps.deploy.inputSet.branch') },
     { label: getString('gitFetchTypes.fromCommit'), value: getString('pipelineSteps.commitIdValue') }
   ]
-  const validationSchema = stepTwoValidationSchema(isTerraformPlan, isBackendConfig, getString)
+  const validationSchema = stepTwoValidationSchema(isTerraformPlan, isTerragruntPlan, isBackendConfig, getString)
 
   const [path, setPath] = React.useState('')
 
   useEffect(() => {
-    setPath(getPath(isTerraformPlan, isBackendConfig))
-  }, [isTerraformPlan, isBackendConfig])
+    setPath(getPath(isTerraformPlan, isTerragruntPlan, isBackendConfig))
+  }, [isTerraformPlan, isTerragruntPlan, isBackendConfig])
 
   if (prevStepData?.selectedType === 'Harness') {
-    let values = get(prevStepData.formValues, `${getPath(isTerraformPlan, isBackendConfig)}.store`)
+    let values = get(prevStepData.formValues, `${getPath(isTerraformPlan, isTerragruntPlan, isBackendConfig)}.store`)
     if (values?.type !== 'Harness') {
       values = null
     }
@@ -253,7 +255,7 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
                               label={getString('cd.useConnectorCredentials')}
                               className={css.checkBox}
                               checked={
-                                isTerraformPlan
+                                isTerraformPlan || isTerragruntPlan
                                   ? formik?.values?.spec?.configuration?.configFiles?.moduleSource
                                       ?.useConnectorCredentials
                                   : formik?.values?.spec?.configuration?.spec?.configFiles?.moduleSource

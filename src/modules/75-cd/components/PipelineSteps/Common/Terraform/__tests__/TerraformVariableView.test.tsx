@@ -179,7 +179,6 @@ describe('Terraform Variable view ', () => {
             }
           }
         }}
-        stepType={StepType.TerraformDestroy}
         onUpdate={() => jest.fn()}
         {...{
           stageIdentifier: 'qaStage',
@@ -230,7 +229,7 @@ describe('Terraform Variable view ', () => {
     )
     expect(container).toMatchSnapshot()
   })
-  test('should render with no config', () => {
+  test('should render with InheritFromApply config', () => {
     const { container } = render(
       <TestWrapper>
         <TerraformVariableStep
@@ -239,7 +238,13 @@ describe('Terraform Variable view ', () => {
             type: 'TerraformDestroy',
             name: 'Test A',
             identifier: 'Test_A',
-            timeout: '10m'
+            timeout: '10m',
+            spec: {
+              provisionerIdentifier: '',
+              configuration: {
+                type: 'InheritFromApply'
+              }
+            }
           }}
         />
       </TestWrapper>

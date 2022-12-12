@@ -6,32 +6,24 @@
  */
 
 import React from 'react'
-
 import cx from 'classnames'
-
 import { Layout, Text, Button, Icon, StepWizard, Label, ButtonVariation, AllowedTypes } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, MenuItem, Popover, PopoverInteractionKind, Menu, Dialog, IDialogProps } from '@blueprintjs/core'
 import { FieldArray, FieldArrayRenderProps } from 'formik'
 import type { FormikProps } from 'formik'
-
 import { useStrings } from 'framework/strings'
 import type { TerraformVarFileWrapper } from 'services/cd-ng'
-
-import { RemoteVar, TFPlanFormData, TerraformStoreTypes } from '../Common/Terraform/TerraformInterfaces'
+import { RemoteVar, TerraformStoreTypes, CombinedPlanFormData } from '../Common/Terraform/TerraformInterfaces'
 import { TFRemoteWizard } from '../Common/Terraform/Editview/TFRemoteWizard'
 import { TFVarStore } from '../Common/Terraform/Editview/TFVarStore'
-
 import InlineVarFile from '../Common/Terraform/Editview/InlineVarFile'
 import { TFArtifactoryForm } from '../Common/Terraform/Editview/TerraformArtifactoryForm'
-
 import css from '../Common/Terraform/Editview/TerraformVarfile.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-// import TFRemoteWizard from './TFRemoteWizard'
-
 interface TfVarFileProps {
-  formik: FormikProps<TFPlanFormData>
+  formik: FormikProps<CombinedPlanFormData>
   isReadonly?: boolean
   allowableTypes: AllowedTypes
   getNewConnectorSteps?: any
@@ -307,6 +299,7 @@ export default function TfVarFileList(props: TfVarFileProps): React.ReactElement
                           <TFArtifactoryForm
                             isConfig={false}
                             isTerraformPlan
+                            isTerragruntPlan
                             allowableTypes={allowableTypes}
                             name={getString('cd.varFileDetails')}
                             onSubmitCallBack={values => onSubmit(values, arrayHelpers)}

@@ -20,9 +20,10 @@ export const formatInitialValues = (
   isConfig: boolean,
   isBackendConfig: boolean,
   prevStepData: any,
-  isTerraformPlan: boolean
+  isTerraformPlan: boolean,
+  isTerragruntPlan: boolean
 ) => {
-  if (isBackendConfig && isTerraformPlan) {
+  if (isBackendConfig && (isTerraformPlan || isTerragruntPlan)) {
     return {
       spec: {
         configuration: {
@@ -70,7 +71,7 @@ export const formatInitialValues = (
       }
     }
   }
-  if (isConfig && isTerraformPlan) {
+  if (isConfig && (isTerraformPlan || isTerragruntPlan)) {
     return {
       spec: {
         configuration: {
@@ -130,14 +131,15 @@ export const getConnectorRef = (
   isConfig: boolean,
   isBackendConfig: boolean,
   isTerraformPlan: boolean,
+  isTerragruntPlan: boolean,
   prevStepData: any
 ) => {
   let connectorValue
-  if (isConfig && isTerraformPlan) {
+  if (isConfig && (isTerraformPlan || isTerragruntPlan)) {
     connectorValue = prevStepData?.formValues.spec?.configuration?.configFiles?.store?.spec?.connectorRef
   } else if (isConfig) {
     connectorValue = prevStepData?.formValues?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef
-  } else if (isBackendConfig && isTerraformPlan) {
+  } else if (isBackendConfig && (isTerraformPlan || isTerragruntPlan)) {
     connectorValue = prevStepData?.formValues.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
   } else if (isBackendConfig) {
     connectorValue = prevStepData?.formValues?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
@@ -311,8 +313,8 @@ export const formatArtifactoryData = (prevStepData: any, data: any, configObject
   return valObj
 }
 
-export const getStore = (isTerraformPlan: boolean, isConfig: boolean, prevStepData: any) => {
-  if (isTerraformPlan && isConfig) {
+export const getStore = (isTerraformPlan: boolean, isTerragruntPlan: boolean, isConfig: boolean, prevStepData: any) => {
+  if ((isTerraformPlan || isTerragruntPlan) && isConfig) {
     return prevStepData.formValues?.spec?.configuration?.configFiles?.store
   }
 

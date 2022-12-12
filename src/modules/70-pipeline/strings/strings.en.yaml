@@ -1084,6 +1084,8 @@ stepDescription:
   TerraformDestroy: Remove any infrastructure you've provisioned using Harness.
   TerraformPlan: Run a Terraform script as a Terraform plan.
   TerraformApply: Apply a Terraform plan or script.
+  TerragruntPlan: Run a Terraform script as a Terragrunt plan.
+  TerragruntApply: Apply a Terragrunt plan or script.
   ResourceConstraint: Queue the number of resources Harness requests during a deployment by placing capacity limits on the requests.
   FlagConfiguration: Add or update Feature Flag configuration.
   HelmDeploy: Performs native Helm deployments. Requires Helm and Tiller and supports basic deployments. Helm charts are also supported in Harness Kubernetes deployments without requiring Helm or Tiller and using all deployment strategies.

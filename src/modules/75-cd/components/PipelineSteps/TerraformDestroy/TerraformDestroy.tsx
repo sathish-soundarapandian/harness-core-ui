@@ -26,15 +26,14 @@ import { TerraformVariableStep } from '../Common/Terraform/TerraformVariableView
 import {
   onSubmitTerraformData,
   TerraformData,
-  TerraformVariableStepProps,
-  TFDestroyData
+  TerraformVariableStepProps
 } from '../Common/Terraform/TerraformInterfaces'
 
 import TerraformEditView from '../Common/Terraform/Editview/TerraformEditView'
 
 const TerraformDestroyWidgetWithRef = React.forwardRef(TerraformEditView)
 
-export class TerraformDestroy extends PipelineStep<TFDestroyData> {
+export class TerraformDestroy extends PipelineStep<TerraformData> {
   constructor() {
     super()
     this._hasStepVariables = true
@@ -42,7 +41,7 @@ export class TerraformDestroy extends PipelineStep<TFDestroyData> {
   }
   protected type = StepType.TerraformDestroy
   protected referenceId = 'terraformDestroyStep'
-  protected defaultValues: TFDestroyData = {
+  protected defaultValues: TerraformData = {
     identifier: '',
     timeout: '10m',
     name: '',
@@ -63,7 +62,7 @@ export class TerraformDestroy extends PipelineStep<TFDestroyData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<TFDestroyData>): FormikErrors<TFDestroyData> {
+  }: ValidateInputSetProps<TerraformData>): FormikErrors<TerraformData> {
     /* istanbul ignore next */
     const errors = {} as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
@@ -99,7 +98,7 @@ export class TerraformDestroy extends PipelineStep<TFDestroyData> {
     /* istanbul ignore next */
     return errors
   }
-  private getInitialValues(data: TFDestroyData): TerraformData {
+  private getInitialValues(data: TerraformData): TerraformData {
     const envVars = data.spec?.configuration?.spec?.environmentVariables as StringNGVariable[]
     const formData = {
       ...data,
@@ -129,11 +128,11 @@ export class TerraformDestroy extends PipelineStep<TFDestroyData> {
     return formData
   }
   /* istanbul ignore next */
-  processFormData(data: any): TFDestroyData {
+  processFormData(data: any): TerraformData {
     return onSubmitTerraformData(data)
   }
 
-  renderStep(props: StepProps<TFDestroyData, TerraformVariableStepProps>): JSX.Element {
+  renderStep(props: StepProps<TerraformData, TerraformVariableStepProps>): JSX.Element {
     const {
       initialValues,
       onUpdate,

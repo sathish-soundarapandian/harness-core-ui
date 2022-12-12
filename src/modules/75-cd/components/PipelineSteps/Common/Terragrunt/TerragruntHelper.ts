@@ -5,12 +5,13 @@ import type {
   StringNGVariable,
   TerragruntConfigFilesWrapper,
   TerragruntExecutionData,
-  TerragruntModuleConfig
+  TerragruntModuleConfig,
+  TerragruntPlanExecutionData
 } from 'services/cd-ng'
 import { BackendConfigurationTypes } from '../Terraform/TerraformInterfaces'
-import type { TGFormData } from './TerragruntInterface'
+import type { TerragruntData, TGPlanFormData } from './TerragruntInterface'
 
-export const onSubmitTerragruntData = (values: any): TGFormData => {
+export const onSubmitTerragruntData = (values: TerragruntData): TerragruntData => {
   const configObject: TerragruntExecutionData = {
     workspace: values?.spec?.configuration?.spec?.workspace,
     configFiles: {} as TerragruntConfigFilesWrapper,
@@ -98,8 +99,8 @@ export const onSubmitTerragruntData = (values: any): TGFormData => {
     } else {
       unset(values?.spec?.configuration?.spec, 'varFiles')
     }
-    configObject['moduleConfig'] = {
-      ...values.spec?.configuration?.spec?.moduleConfig
+    if (values.spec?.configuration?.spec?.moduleConfig) {
+      configObject['moduleConfig'] = values.spec?.configuration?.spec?.moduleConfig
     }
 
     if (
@@ -124,20 +125,160 @@ export const onSubmitTerragruntData = (values: any): TGFormData => {
         }
       }
     }
-
-    if (values?.spec?.configuration?.spec?.configFiles?.store?.type === 'Harness') {
-      configObject['configFiles'] = { ...values?.spec?.configuration?.spec?.configFiles }
-    }
   }
   return {
     ...values,
     spec: {
       provisionerIdentifier: values.spec?.provisionerIdentifier,
       configuration: {
-        type: values?.spec?.configuration?.type,
+        type: values.spec?.configuration?.type,
         spec: {
           ...configObject
         }
+      }
+    }
+  }
+}
+
+export const onSubmitTGPlanData = (values: any): TGPlanFormData => {
+  const envVars = values.spec?.configuration?.environmentVariables
+  const envMap: StringNGVariable[] = []
+  if (Array.isArray(envVars)) {
+    envVars.forEach(mapValue => {
+      if (mapValue.value) {
+        envMap.push({
+          name: mapValue.key,
+          value: mapValue.value,
+          type: 'String'
+        })
+      }
+    })
+  }
+
+  const targets = values?.spec?.configuration?.targets as MultiTypeInputType
+  const targetMap: ListType = []
+  if (Array.isArray(targets)) {
+    targets.forEach(target => {
+      if (target.value) {
+        targetMap.push(target.value)
+      }
+    })
+  }
+
+  const connectorValue = values?.spec?.configuration?.configFiles?.store?.spec?.connectorRef
+  const backendConfigConnectorValue = values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
+
+  const configObject: TerragruntPlanExecutionData = {
+    command: values.spec?.configuration?.command,
+    workspace: values.spec?.configuration?.workspace,
+    configFiles: {} as TerragruntConfigFilesWrapper,
+    moduleConfig: {} as TerragruntModuleConfig,
+    secretManagerRef: ''
+  }
+
+  if (values.spec?.configuration?.moduleConfig) {
+    configObject['moduleConfig'] = values.spec?.configuration?.moduleConfig
+  }
+
+  if (values?.spec?.configuration?.backendConfig?.spec?.content) {
+    configObject['backendConfig'] = {
+      type: BackendConfigurationTypes.Inline,
+      spec: {
+        content: values?.spec?.configuration?.backendConfig?.spec?.content
+      }
+    }
+  } else if (values?.spec?.configuration?.backendConfig?.spec?.store?.spec) {
+    if (values?.spec?.configuration?.backendConfig?.spec?.store?.type === 'Harness') {
+      configObject['backendConfig'] = { ...values?.spec?.configuration?.backendConfig }
+    } else {
+      if (values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef) {
+        configObject['backendConfig'] = {
+          type: BackendConfigurationTypes.Remote,
+          ...values.spec?.configuration?.backendConfig,
+          spec: {
+            store: {
+              ...values.spec?.configuration?.backendConfig?.spec?.store,
+              type:
+                backendConfigConnectorValue?.connector?.type ||
+                values?.spec?.configuration?.backendConfig?.spec?.store?.type,
+              spec: {
+                ...values.spec?.configuration?.backendConfig?.spec?.store?.spec,
+                connectorRef: values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
+                  ? getMultiTypeFromValue(
+                      values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
+                    ) === MultiTypeInputType.RUNTIME || !backendConfigConnectorValue?.value
+                    ? values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
+                    : backendConfigConnectorValue?.value
+                  : ''
+              }
+            }
+          }
+        }
+      } else {
+        unset(values?.spec?.configuration, 'backendConfig')
+      }
+    }
+  } else {
+    unset(values?.spec?.configuration, 'backendConfig')
+  }
+
+  if (envMap.length) {
+    configObject['environmentVariables'] = envMap
+  } else if (getMultiTypeFromValue(values?.spec?.configuration?.environmentVariables) === MultiTypeInputType.RUNTIME) {
+    configObject['environmentVariables'] = values?.spec?.configuration?.environmentVariables
+  }
+
+  if (targetMap.length) {
+    configObject['targets'] = targetMap
+  } else if (getMultiTypeFromValue(values?.spec?.configuration?.targets) === MultiTypeInputType.RUNTIME) {
+    configObject['targets'] = values?.spec?.configuration?.targets
+  }
+
+  if (values?.spec?.configuration?.varFiles?.length) {
+    configObject['varFiles'] = values?.spec?.configuration?.varFiles
+  }
+
+  if (
+    connectorValue ||
+    getMultiTypeFromValue(values?.spec?.configuration?.configFiles?.store?.spec?.connectorRef) ===
+      MultiTypeInputType.RUNTIME
+  ) {
+    configObject['configFiles'] = {
+      ...values.spec?.configuration?.configFiles,
+      store: {
+        ...values.spec?.configuration?.configFiles?.store,
+        type: values?.spec?.configuration?.configFiles?.store?.type,
+        spec: {
+          ...values.spec?.configuration?.configFiles?.store?.spec,
+          connectorRef: values?.spec?.configuration?.configFiles?.store?.spec?.connectorRef
+            ? getMultiTypeFromValue(values?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef) ===
+                MultiTypeInputType.RUNTIME || !connectorValue?.value
+              ? values?.spec?.configuration?.configFiles?.store?.spec?.connectorRef
+              : connectorValue?.value
+            : ''
+        }
+      }
+    }
+  }
+
+  if (values?.spec?.configuration?.secretManagerRef) {
+    configObject['secretManagerRef'] = values?.spec?.configuration?.secretManagerRef
+      ? values?.spec?.configuration?.secretManagerRef
+      : ''
+  }
+
+  if (values?.spec?.configuration?.exportTerragruntPlanJson) {
+    configObject['exportTerragruntPlanJson'] = values?.spec?.configuration?.exportTerragruntPlanJson
+      ? values?.spec?.configuration?.exportTerragruntPlanJson
+      : false
+  }
+
+  return {
+    ...values,
+    spec: {
+      ...values.spec,
+      configuration: {
+        ...configObject
       }
     }
   }

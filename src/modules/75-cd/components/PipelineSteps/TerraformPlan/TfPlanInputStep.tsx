@@ -29,13 +29,13 @@ import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { TerraformBackendConfigSpec } from 'services/cd-ng'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { TFMonaco } from '../Common/Terraform/Editview/TFMonacoEditor'
-import type { TerraformPlanProps } from '../Common/Terraform/TerraformInterfaces'
+import type { CombinedPlanFormData, CommonProps } from '../Common/Terraform/TerraformInterfaces'
 import ConfigInputs from './InputSteps/TfConfigSection'
 import TfVarFiles from './InputSteps/TfPlanVarFiles'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function TfPlanInputStep(
-  props: TerraformPlanProps & { formik?: FormikContextType<any> }
+  props: CommonProps<CombinedPlanFormData> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
   const { getString } = useStrings()
   const { inputSetData, readonly, initialValues, allowableTypes, stepViewType, formik } = props
@@ -204,6 +204,23 @@ export default function TfPlanInputStep(
               isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
             }spec.configuration.exportTerraformHumanReadablePlan`}
             label={getString('cd.exportTerraformHumanReadablePlan')}
+            multiTypeTextbox={{ expressions, allowableTypes }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+          />
+        </div>
+      )}
+
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.exportTerragruntPlanJson) ===
+        MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            name={`${
+              isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+            }spec.configuration.exportTerragruntPlanJson`}
+            label={getString('cd.exportTerragruntPlanJson')}
             multiTypeTextbox={{ expressions, allowableTypes }}
             enableConfigureOptions={true}
             configureOptionsProps={{

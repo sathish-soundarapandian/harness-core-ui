@@ -10,13 +10,12 @@ import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import type { RemoteTerraformVarFileSpec } from 'services/cd-ng'
-import type { TerraformData, TerraformVariableStepProps } from '../TerraformInterfaces'
-import type { TerragruntVariableStepProps } from '../../Terragrunt/TerragruntInterface'
+import type { CombinedData, CommonVariableStepProps } from '../TerraformInterfaces'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import css from '@cd/components/PipelineSteps/Common/Terraform/TerraformStep.module.scss'
 
-export function ConfigVariables(props: TerraformVariableStepProps | TerragruntVariableStepProps): React.ReactElement {
-  const { variablesData = {} as TerraformData, metadataMap, initialValues } = props
+export function ConfigVariables<T extends CombinedData>(props: CommonVariableStepProps<T>): React.ReactElement {
+  const { variablesData = {} as CombinedData, metadataMap, initialValues } = props
   const { getString } = useStrings()
 
   return (

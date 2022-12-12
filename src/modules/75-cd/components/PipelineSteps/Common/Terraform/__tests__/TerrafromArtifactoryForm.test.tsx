@@ -17,6 +17,7 @@ const props = {
   previousStep: jest.fn(),
   isConfig: true,
   isTerraformPlan: true,
+  isTerragruntPlan: true,
   allowableTypes: [
     MultiTypeInputType.RUNTIME,
     MultiTypeInputType.EXPRESSION,

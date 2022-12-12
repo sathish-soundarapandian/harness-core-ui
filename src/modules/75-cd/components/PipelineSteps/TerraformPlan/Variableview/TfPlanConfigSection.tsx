@@ -8,15 +8,14 @@
 import React from 'react'
 import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import type { RemoteTerraformVarFileSpec } from 'services/cd-ng'
-
-import type { TerraformPlanData, TerraformPlanVariableStepProps } from '../../Common/Terraform/TerraformInterfaces'
+import type { CombinedPlanFormData, CommonVariableStepProps } from '../../Common/Terraform/TerraformInterfaces'
 import css from '@cd/components/PipelineSteps/Common/Terraform/TerraformStep.module.scss'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
-export function ConfigVariables(props: TerraformPlanVariableStepProps): React.ReactElement {
-  const { variablesData = {} as TerraformPlanData, metadataMap, initialValues } = props
+
+export function ConfigVariables(props: CommonVariableStepProps<CombinedPlanFormData>): React.ReactElement {
+  const { variablesData = {} as CombinedPlanFormData, metadataMap, initialValues } = props
   const { getString } = useStrings()
   return (
     <>

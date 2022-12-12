@@ -33,20 +33,20 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import type { TFRollbackData } from '../Common/Terraform/TerraformInterfaces'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import type {
   TerragruntRollbackProps,
   TerragruntRollbackVariableStepProps,
   TGRollbackData
 } from '../Common/Terragrunt/TerragruntInterface'
+import type { TFRollbackData } from '../Common/Terraform/TerraformInterfaces'
+import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 const setInitialValues = (data: TGRollbackData): TGRollbackData => {
   return {
     ...data,
     spec: {
-      provisionerIdentifier: data?.spec?.provisionerIdentifier
+      provisionerIdentifier: data.spec?.provisionerIdentifier
     }
   }
 }
@@ -62,11 +62,12 @@ function TerragruntRollbackWidget(
   return (
     <>
       <Formik<TGRollbackData>
-        /* isanbul ignore next */
         onSubmit={(values: TGRollbackData) => {
+          /* isanbul ignore next */
           onUpdate?.(values)
         }}
         validate={(values: TGRollbackData) => {
+          /* isanbul ignore next */
           onChange?.(values)
         }}
         formName="terragruntRollback"
@@ -281,14 +282,14 @@ export class TerragruntRollback extends PipelineStep<TGRollbackData> {
       try {
         timeout.validateSync(data)
       } catch (e) {
+        /* istanbul ignore else */
         if (e instanceof Yup.ValidationError) {
           const err = yupToFormErrors(e)
-
           Object.assign(errors, err)
         }
       }
     }
-
+    /* istanbul ignore else */
     if (isEmpty(errors.spec)) {
       delete errors.spec
     }

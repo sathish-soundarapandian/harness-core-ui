@@ -10,12 +10,15 @@ import { Text } from '@harness/uicore'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import type { TFPlanFormData, TerraformPlanVariableStepProps } from '../Common/Terraform/TerraformInterfaces'
+import type { CommonVariableStepProps, CombinedPlanFormData } from '../Common/Terraform/TerraformInterfaces'
 import { ConfigVariables } from './Variableview/TfPlanConfigSection'
 import css from '@cd/components/PipelineSteps/Common/Terraform/TerraformStep.module.scss'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
-export function TerraformVariableStep(props: TerraformPlanVariableStepProps): React.ReactElement {
-  const { variablesData = {} as TFPlanFormData, metadataMap, initialValues } = props
+
+export function TerraformVariableStep<T extends CombinedPlanFormData = CombinedPlanFormData>(
+  props: CommonVariableStepProps<T>
+): React.ReactElement {
+  const { variablesData = {} as CombinedPlanFormData, metadataMap, initialValues } = props
 
   const { getString } = useStrings()
   return (

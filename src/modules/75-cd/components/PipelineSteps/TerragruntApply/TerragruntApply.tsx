@@ -15,17 +15,18 @@ import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/Pipe
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
-import TerraformInputStep from '../Common/Terraform/TerraformInputStep'
+import type { StringsMap } from 'stringTypes'
+import type { StringNGVariable } from 'services/pipeline-ng'
 import { ConfigurationTypes } from '../Common/Terraform/TerraformInterfaces'
-import type { TerragruntData, TerragruntVariableStepProps, TGFormData } from '../Common/Terragrunt/TerragruntInterface'
+import type { TerragruntData, TerragruntVariableStepProps } from '../Common/Terragrunt/TerragruntInterface'
 import { onSubmitTerragruntData } from '../Common/Terragrunt/TerragruntHelper'
 import TerragruntEitView from '../Common/Terragrunt/TerragruntEditView'
 import { TerragruntVariableStep } from '../Common/Terragrunt/TerragruntVariableView'
-import type { StringNGVariable } from 'services/pipeline-ng'
+import TerragruntInputStep from '../Common/Terragrunt/TerragruntInputStep'
 
 const TerragruntApplyWidgetWithRef = React.forwardRef(TerragruntEitView)
 
-export class TerragruntApply extends PipelineStep<TGFormData> {
+export class TerragruntApply extends PipelineStep<TerragruntData> {
   constructor() {
     super()
     this._hasStepVariables = true
@@ -33,7 +34,7 @@ export class TerragruntApply extends PipelineStep<TGFormData> {
   }
   protected type = StepType.TerragruntApply
   protected referenceId = 'terragruntApplyStep'
-  protected defaultValues: TGFormData = {
+  protected defaultValues: TerragruntData = {
     identifier: '',
     timeout: '10m',
     name: '',
@@ -61,14 +62,14 @@ export class TerragruntApply extends PipelineStep<TGFormData> {
   }
   protected stepIcon: IconName = 'terragrunt-apply'
   protected stepName = 'Terragrunt Apply'
-  //   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.Terragruntpply'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.TerragruntApply'
 
   validateInputSet({
     data,
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<TGFormData>): FormikErrors<TGFormData> {
+  }: ValidateInputSetProps<TerragruntData>): FormikErrors<TerragruntData> {
     const errors = {} as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
@@ -96,7 +97,7 @@ export class TerragruntApply extends PipelineStep<TGFormData> {
     return errors
   }
 
-  private getInitialValues(data: TGFormData): TerragruntData {
+  private getInitialValues(data: TerragruntData): TerragruntData {
     const envVars = data.spec?.configuration?.spec?.environmentVariables as StringNGVariable[]
     const formData = {
       ...data,
@@ -127,11 +128,11 @@ export class TerragruntApply extends PipelineStep<TGFormData> {
     return formData
   }
   /* istanbul ignore next */
-  processFormData(data: any): TGFormData {
+  processFormData(data: TerragruntData): TerragruntData {
     return onSubmitTerragruntData(data)
   }
 
-  renderStep(props: StepProps<TGFormData, unknown>): JSX.Element {
+  renderStep(props: StepProps<TerragruntData, unknown>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -147,7 +148,7 @@ export class TerragruntApply extends PipelineStep<TGFormData> {
     } = props
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <TerraformInputStep
+        <TerragruntInputStep
           initialValues={initialValues}
           onUpdate={data => onUpdate?.(this.processFormData(data))}
           onChange={data => onChange?.(this.processFormData(data))}
@@ -172,7 +173,7 @@ export class TerragruntApply extends PipelineStep<TGFormData> {
       <TerragruntApplyWidgetWithRef
         initialValues={this.getInitialValues(initialValues)}
         onUpdate={data => onUpdate?.(this.processFormData(data))}
-        onChange={(data: any) => onChange?.(this.processFormData(data))}
+        onChange={data => onChange?.(this.processFormData(data))}
         allowableTypes={allowableTypes}
         isNewStep={isNewStep}
         stepViewType={stepViewType}
