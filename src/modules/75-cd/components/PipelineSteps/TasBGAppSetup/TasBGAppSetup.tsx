@@ -45,7 +45,7 @@ export class TasBGAppSetupStep extends PipelineStep<TasBGAppSetupData> {
 
   protected type = StepType.BGAppSetup
   protected stepName = 'BG App Setup'
-  protected stepIcon: IconName = 'tasBGSetup'
+  protected stepIcon: IconName = 'cog'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.TASBasicAppSetup' // BG APP DESC
   protected isHarnessSpecific = false
   protected invocationMap: Map<

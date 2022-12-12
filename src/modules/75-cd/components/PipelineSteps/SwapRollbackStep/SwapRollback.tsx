@@ -307,7 +307,7 @@ export class SwapRollbackStep extends PipelineStep<SwapRollbackData> {
 
   protected type = StepType.SwapRollback
   protected stepName = 'Swap Rollback'
-  protected stepIcon: IconName = 'tasSwapRollback'
+  protected stepIcon: IconName = 'cog'
   protected referenceId = 'SwapRollbackStep'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SwapRollback'
 

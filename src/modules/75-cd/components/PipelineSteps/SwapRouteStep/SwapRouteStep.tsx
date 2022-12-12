@@ -303,7 +303,7 @@ export class SwapRouteStep extends PipelineStep<SwapRouteData> {
 
   protected type = StepType.SwapRoutes
   protected stepName = 'Swap Routes'
-  protected stepIcon: IconName = 'tasSwapRoute'
+  protected stepIcon: IconName = 'cog'
   protected referenceId = 'swapRouteStep'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SwapRoute'
 
