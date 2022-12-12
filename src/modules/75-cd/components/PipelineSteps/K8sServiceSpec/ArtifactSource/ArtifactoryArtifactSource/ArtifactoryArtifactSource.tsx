@@ -35,7 +35,9 @@ import {
   useGetImagePathsForArtifactoryV2,
   useGetService,
   useGetBuildDetailsForArtifactoryArtifact,
-  useGetImagePathsForArtifactory
+  useGetImagePathsForArtifactory,
+  ArtifactListConfig,
+  ArtifactSource
 } from 'services/cd-ng'
 
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
@@ -46,6 +48,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import {
   getHelpeTextForTags,
   isAzureWebAppGenericDeploymentType,
+  isCustomDTGenericDeploymentType,
   isServerlessDeploymentType,
   ServiceDeploymentType
 } from '@pipeline/utils/stageHelpers'
@@ -275,9 +278,29 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     return false
   }, [service, artifactPath, selectedDeploymentType, initialValues, artifact])
 
+  const isCustomDeploymentGenericSelected = useMemo(() => {
+    /* istanbul ignore else */
+    if (service) {
+      const parsedService = service?.data?.yaml && parse(service?.data?.yaml)
+      // to be refactored for some fields once generic dependency is resolved via V2
+      const artifactsInfo = get(parsedService, `service.serviceDefinition.spec.artifacts`) as ArtifactListConfig
+      artifactsInfo?.primary?.sources?.map(artifactInfo => {
+        if (artifactInfo?.identifier === (artifact as ArtifactSource)?.identifier) {
+          repoFormat = artifactInfo?.spec?.repositoryFormat
+        }
+      })
+    }
+
+    if (repoFormat) {
+      return isCustomDTGenericDeploymentType(selectedDeploymentType, repoFormat)
+    }
+
+    return false
+  }, [service, artifactPath, selectedDeploymentType, initialValues, artifact])
+
   const isGenericArtifactory = React.useMemo(() => {
-    return isServerlessOrSshOrWinRmSelected || isAzureWebAppGenericSelected
-  }, [isServerlessOrSshOrWinRmSelected, isAzureWebAppGenericSelected])
+    return isServerlessOrSshOrWinRmSelected || isAzureWebAppGenericSelected || isCustomDeploymentGenericSelected
+  }, [isServerlessOrSshOrWinRmSelected, isAzureWebAppGenericSelected, isCustomDeploymentGenericSelected])
 
   const connectorRef = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
@@ -321,7 +344,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     },
     queryParams: {
       repository: getFinalQueryParamValue(repositoryValue),
-      connectorRef,
+      connectorRef: getFinalQueryParamValue(connectorRef),
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,

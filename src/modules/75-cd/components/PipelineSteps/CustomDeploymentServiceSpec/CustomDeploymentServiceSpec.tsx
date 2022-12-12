@@ -248,22 +248,15 @@ export class CustomDeploymentServiceSpec extends Step<ServiceSpec> {
         getString?.('fieldRequired', { field: 'Artifact Path Filter' })
       )
     }
-
-    if (
-      isEmpty(get(data, `${dataPathToField}.repositoryUrl`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.repositoryUrl`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.repositoryUrl`, getString?.('fieldRequired', { field: 'Repository URL' }))
-    }
-
     // ECR artifact specific fields
-    if (
-      isEmpty(get(data, `${dataPathToField}.region`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.region`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.region`, getString?.('fieldRequired', { field: 'Region' }))
+    if (artifactType !== ENABLED_ARTIFACT_TYPES.AmazonS3) {
+      if (
+        isEmpty(get(data, `${dataPathToField}.region`)) &&
+        isRequired &&
+        getMultiTypeFromValue(get(template, `${templatePathToField}.region`)) === MultiTypeInputType.RUNTIME
+      ) {
+        set(errors, `${dataPathToField}.region`, getString?.('fieldRequired', { field: 'Region' }))
+      }
     }
 
     // Nexus3 artifact specific fields
@@ -276,12 +269,14 @@ export class CustomDeploymentServiceSpec extends Step<ServiceSpec> {
         set(errors, `${dataPathToField}.spec.repositoryUrl`, getString?.('fieldRequired', { field: 'Repository URL' }))
       }
     }
-    if (
-      isEmpty(get(data, `${dataPathToField}.spec.artifactPath`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.spec.artifactPath`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.spec.artifactPath`, getString?.('fieldRequired', { field: 'Artifact Path' }))
+    if (artifactType !== ENABLED_ARTIFACT_TYPES.Jenkins) {
+      if (
+        isEmpty(get(data, `${dataPathToField}.spec.artifactPath`)) &&
+        isRequired &&
+        getMultiTypeFromValue(get(template, `${templatePathToField}.spec.artifactPath`)) === MultiTypeInputType.RUNTIME
+      ) {
+        set(errors, `${dataPathToField}.spec.artifactPath`, getString?.('fieldRequired', { field: 'Artifact Path' }))
+      }
     }
 
     // GCR artifact specific fields

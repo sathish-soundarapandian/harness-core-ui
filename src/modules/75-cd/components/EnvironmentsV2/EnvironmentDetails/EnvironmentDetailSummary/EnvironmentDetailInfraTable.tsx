@@ -179,7 +179,7 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
     }
   }
 }) => {
-  const totalVisibleInstance = tableType === InfraViewTableType.SUMMARY ? 8 : 26
+  const totalVisibleInstance = tableType === InfraViewTableType.SUMMARY ? 8 : 18
   return totalInstanceCount ? (
     <Container className={cx(css.paddedContainer, css.hexContainer)} flex={{ justifyContent: 'flex-start' }}>
       {Array(Math.min(totalInstanceCount, totalVisibleInstance))
