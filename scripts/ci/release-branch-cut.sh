@@ -26,7 +26,7 @@ chmod 700 scripts/ci/*.*
 #  scripts/ci/release-branch-create-versions.sh
 #fi
 # updating the jira tickets
-scripts/ci/jira-tagging-ngui-qa.sh
+scripts/ci/release-branch-update-jiras.sh
 
 # commit to develop
 git commit -nm "Branching to $NEW_BRANCH"
