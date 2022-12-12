@@ -110,18 +110,18 @@ export const canvasExecutionStageNodeCall =
 // Routes
 
 export const updatedPipelineExecutionEndpoint = `/pipeline/api/pipeline/execute/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&moduleType=cd&notifyOnlyUser=false`
-export const executionListRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/deployments`
-export const pipelinesExecutionDelegateRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/executions/${delegateExecutionId}/pipeline`
-export const executionHistoryRoute = `#/account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/executions`
-export const pipelineStudioRoute = `#/account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/pipeline-studio/?stageId=j&sectionId=SERVICE`
-export const newPipelineRoute = `#/account/accountId/cd/orgs/default/projects/${projectId}/pipelines/-1/pipeline-studio/`
-export const inputSetsRoute = `#/account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/input-sets`
-export const environmentRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/environment`
-export const servicesRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/services`
-export const pipelinesRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines`
-export const triggersRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers`
-export const templatesListRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/templates`
-export const testParallelNodesPipelineRoute = `#/account/accountId/cd/orgs/default/projects/project1/pipelines/sad/executions/testParallelNodesPipeline/pipeline`
+export const executionListRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/deployments`
+export const pipelinesExecutionDelegateRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/executions/${delegateExecutionId}/pipeline`
+export const executionHistoryRoute = `account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/executions`
+export const pipelineStudioRoute = `account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/pipeline-studio/?stageId=j&sectionId=SERVICE`
+export const newPipelineRoute = `account/accountId/cd/orgs/default/projects/${projectId}/pipelines/-1/pipeline-studio/`
+export const inputSetsRoute = `account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/input-sets`
+export const environmentRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/environment`
+export const servicesRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/services`
+export const pipelinesRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines`
+export const triggersRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers`
+export const templatesListRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/templates`
+export const testParallelNodesPipelineRoute = `account/accountId/cd/orgs/default/projects/project1/pipelines/sad/executions/testParallelNodesPipeline/pipeline`
 
 export const resolvedPipelineDetailsCall =
   '/template/api/templates/applyTemplates?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&pipelineIdentifier=testPipeline_Cypress&projectIdentifier=project1&getDefaultFromOtherRepo=true'

@@ -22,7 +22,7 @@ export const listAllReposByConnector = `/ng/api/scm/list-all-repos-by-connector?
 export const trialConnectorCall = `/ng/api/trial-signup/create-scm-connector?routingId=accountId&accountIdentifier=${accountIdentifier}`
 
 // BROWSER ROUTES
-export const environmentGroupRoute = `#/account/${accountIdentifier}/${module1}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment-group`
-export const environmentRoute = `#/account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment`
-export const environmentConfigurationRoute = `#/account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment/${environmentIdentifier}/details?sectionId=CONFIGURATION`
-export const projectDashboardRoute = `#/account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/dashboard`
+export const environmentGroupRoute = `account/${accountIdentifier}/${module1}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment-group`
+export const environmentRoute = `account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment`
+export const environmentConfigurationRoute = `account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment/${environmentIdentifier}/details?sectionId=CONFIGURATION`
+export const projectDashboardRoute = `account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/dashboard`

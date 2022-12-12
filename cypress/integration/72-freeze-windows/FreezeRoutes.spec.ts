@@ -32,7 +32,7 @@ describe('check if Route is available if FF is enabled', () => {
     cy.get('@freezeWindowsLink').click()
     cy.wait(500)
     cy.location().should(loc => {
-      expect(loc.hash).to.eq('#/account/accountId/settings/freeze-windows')
+      expect(loc.hash).to.eq('account/accountId/settings/freeze-windows')
     })
     cy.get('button span').contains('New Freeze Window')
   })
@@ -45,7 +45,7 @@ describe('check if Route is available if FF is enabled', () => {
     cy.get('@freezeWindowsLink').click()
     cy.wait(500)
     cy.location().should(loc => {
-      expect(loc.hash).to.eq('#/account/accountId/settings/organizations/default/setup/freeze-windows')
+      expect(loc.hash).to.eq('account/accountId/settings/organizations/default/setup/freeze-windows')
     })
     cy.get('button span').contains('New Freeze Window')
   })
@@ -61,7 +61,7 @@ describe('check if Route is available if FF is enabled', () => {
     cy.get('@freezeWindowsLink').click()
     cy.wait(500)
     cy.location().should(loc => {
-      expect(loc.hash).to.eq('#/account/accountId/cd/orgs/default/projects/project1/setup/freeze-windows')
+      expect(loc.hash).to.eq('account/accountId/cd/orgs/default/projects/project1/setup/freeze-windows')
     })
     cy.get('button span').contains('New Freeze Window')
   })

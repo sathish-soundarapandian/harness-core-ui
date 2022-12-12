@@ -64,7 +64,7 @@ describe('Environment Groups CRUD', () => {
 
     cy.location('hash').should(
       'eq',
-      '#/account/accountId/cd/orgs/default/projects/project1/environment-group/testEnvGroup/details?sectionId=ENVIRONMENTS'
+      'account/accountId/cd/orgs/default/projects/project1/environment-group/testEnvGroup/details?sectionId=ENVIRONMENTS'
     )
   })
 
@@ -135,7 +135,7 @@ describe('Environment Groups CRUD', () => {
 
     cy.location('hash').should(
       'eq',
-      '#/account/accountId/cd/orgs/default/projects/project1/environment-group/testEnvGroup/details?sectionId=CONFIGURATION'
+      'account/accountId/cd/orgs/default/projects/project1/environment-group/testEnvGroup/details?sectionId=CONFIGURATION'
     )
 
     cy.wait('@environmentGroupDetailsCall')
