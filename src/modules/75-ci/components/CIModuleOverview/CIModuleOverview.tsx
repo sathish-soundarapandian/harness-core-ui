@@ -13,6 +13,7 @@ import {
 } from 'services/dashboard-service'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { getGroupByFromTimeRange } from '@projects-orgs/utils/utils'
+import responseMock from './notificationMock.json'
 
 const CIModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeRange }) => {
   const { accountId } = useParams<AccountPathProps>()
@@ -24,7 +25,8 @@ const CIModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
       endTime: getGMTEndDateTime(timeRange?.to),
       groupBy: getGroupByFromTimeRange(timeRange) as GetDeploymentStatsOverviewQueryParams['groupBy'],
       sortBy: 'DEPLOYMENTS'
-    }
+    },
+    mock: { data: responseMock }
   })
 
   const response = data?.data?.response
@@ -57,7 +59,7 @@ const CIModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
     return [successArr, failureArr]
   }, [response?.deploymentsStatsSummary?.deploymentStats])
 
-  if (loading) {
+  if (false) {
     return (
       <Container flex={{ justifyContent: 'center' }}>
         <Icon name="spinner" size={24} color={Color.PRIMARY_7} />

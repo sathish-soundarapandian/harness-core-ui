@@ -17,6 +17,7 @@ import type { StringKeys } from 'framework/strings'
 import type { TimeRangeFilterType } from '@common/types'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import OverviewGlanceCardV2 from './OverviewGlanceCardV2/OverviewGlanceCardV2'
+import countMock from './countMock.json'
 import css from './OverviewGlanceCardsContainer.module.scss'
 
 interface GlanceCard {
@@ -39,7 +40,8 @@ const OverviewGlanceCardsV2: React.FC<OverviewGlanceCardsV2Props> = ({ timeRange
       accountIdentifier: accountId,
       startTime: getGMTStartDateTime(timeRange.from),
       endTime: getGMTEndDateTime(timeRange.to)
-    }
+    },
+    mock: { data: countMock }
   })
 
   const { projectsCountDetail, envCountDetail, servicesCountDetail, pipelinesCountDetail } =
@@ -77,13 +79,7 @@ const OverviewGlanceCardsV2: React.FC<OverviewGlanceCardsV2Props> = ({ timeRange
     <Layout.Horizontal className={css.container}>
       {GLANCE_CARDS.map(card => {
         return (
-          <OverviewGlanceCardV2
-            key={card.type}
-            className={css.card}
-            loading={loading}
-            redirectUrl={card.url}
-            {...card}
-          />
+          <OverviewGlanceCardV2 key={card.type} className={css.card} loading={false} redirectUrl={card.url} {...card} />
         )
       })}
     </Layout.Horizontal>

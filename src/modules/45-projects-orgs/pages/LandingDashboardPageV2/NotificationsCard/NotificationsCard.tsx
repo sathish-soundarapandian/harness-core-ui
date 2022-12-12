@@ -22,6 +22,7 @@ import type { TimeRangeFilterType } from '@common/types'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { getGroupByFromTimeRange } from '@projects-orgs/utils/utils'
 import DeployOverviewPopover, { FailedStatus } from './DeploymentOverviewPopover'
+import responseMock from './notificationMock.json'
 import css from './NotificationsCard.module.scss'
 
 const getBadge = (type: string, deployStat: PipelineExecutionInfo[]): JSX.Element | null => {
@@ -129,7 +130,8 @@ export const NotificationsCard: React.FC<NotificationsCardProps> = ({ timeRange 
       endTime: getGMTEndDateTime(timeRange.to),
       groupBy: getGroupByFromTimeRange(timeRange) as GetDeploymentStatsOverviewQueryParams['groupBy'],
       sortBy: 'DEPLOYMENTS'
-    }
+    },
+    mock: { data: responseMock }
   })
 
   const response = data?.data?.response
@@ -141,7 +143,7 @@ export const NotificationsCard: React.FC<NotificationsCardProps> = ({ timeRange 
           {getString('common.notification')}
         </Text>
       </Container>
-      {!loading ? (
+      {!false ? (
         <Container className={css.badgesContainer}>
           {response?.deploymentsOverview &&
             showBadgesCard(response?.deploymentsOverview) &&

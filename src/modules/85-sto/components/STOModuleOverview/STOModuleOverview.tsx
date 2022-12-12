@@ -13,6 +13,7 @@ import {
 } from 'services/dashboard-service'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { getGroupByFromTimeRange } from '@projects-orgs/utils/utils'
+import responseMock from './notificationMock.json'
 import css from './STOModuleOverview.module.scss'
 
 const STOModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeRange }) => {
@@ -25,7 +26,8 @@ const STOModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, time
       endTime: getGMTEndDateTime(timeRange?.to),
       groupBy: getGroupByFromTimeRange(timeRange) as GetDeploymentStatsOverviewQueryParams['groupBy'],
       sortBy: 'DEPLOYMENTS'
-    }
+    },
+    mock: { data: responseMock }
   })
 
   const response = data?.data?.response
@@ -58,7 +60,7 @@ const STOModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, time
     return [successArr, failureArr]
   }, [response?.deploymentsStatsSummary?.deploymentStats])
 
-  if (loading) {
+  if (false) {
     return (
       <Container flex={{ justifyContent: 'center' }}>
         <Icon name="spinner" size={24} color={Color.PRIMARY_7} />

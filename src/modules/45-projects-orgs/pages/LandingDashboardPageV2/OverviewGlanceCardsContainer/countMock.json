@@ -1,0 +1,27 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "response": {
+      "projectsCountDetail": {
+        "count": 672,
+        "countChangeAndCountChangeRateInfo": { "countChange": 17, "countChangeRate": 0.0 }
+      },
+      "servicesCountDetail": {
+        "count": 2094,
+        "countChangeAndCountChangeRateInfo": { "countChange": 131, "countChangeRate": 0.0 }
+      },
+      "envCountDetail": {
+        "count": 1198,
+        "countChangeAndCountChangeRateInfo": { "countChange": 46, "countChangeRate": 0.0 }
+      },
+      "pipelinesCountDetail": {
+        "count": 2369,
+        "countChangeAndCountChangeRateInfo": { "countChange": 112, "countChangeRate": 0.0 }
+      }
+    },
+    "executionStatus": "SUCCESS",
+    "executionMessage": "Successfully fetched data"
+  },
+  "metaData": null,
+  "correlationId": null
+}
