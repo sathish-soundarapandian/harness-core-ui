@@ -204,7 +204,7 @@ function HelmWithS3({
       identifier: '',
       bucketName: '',
       region: '',
-      folderPath: '',
+      folderPath: '/',
       helmVersion: 'V2',
       chartName: '',
       chartVersion: '',

@@ -52,7 +52,7 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
           {getString('cf.onboarding.selectEnvAndSdk')}
         </Heading>
       </Layout.Horizontal>
-      <Layout.Vertical spacing="xsmall">
+      <Layout.Vertical padding={{ top: 'xlarge', bottom: 'large' }}>
         <Text font={{ variation: FontVariation.BODY1 }} color={Color.GREY_800}>
           {getString('cf.onboarding.selectLanguage')}
         </Text>

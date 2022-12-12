@@ -143,15 +143,18 @@ export function useLogsContent(): UseLogsContentReturn {
       return
     }
     actions.fetchingSectionData(logKey)
+    const headers: Record<string, string> = {
+      'X-Harness-Token': logsTokenRef.current
+    }
+    if (!window.noAuthHeader) {
+      headers.Authorization = `Bearer ${SessionToken.getToken()}`
+    }
     startStream({
       queryParams: {
         accountId,
         key: encodeURIComponent(logKey)
       },
-      headers: {
-        'X-Harness-Token': logsTokenRef.current,
-        Authorization: `Bearer ${SessionToken.getToken()}`
-      },
+      headers,
       key: logKey
     })
   }

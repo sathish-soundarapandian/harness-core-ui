@@ -160,8 +160,10 @@ const FeaturesEnabledCell: CustomK8sCell = ({ row, column }) => {
 
   const isConnectorStatusSuccess = ccmk8sConnectorList?.[0]?.status?.status === ConnectorStatus.SUCCESS
 
+  const isLastEventRecieved = lastEventRecieved(metadata)
+
   const props = useMemo(() => {
-    if (isConnectorStatusSuccess) {
+    if (isConnectorStatusSuccess && isLastEventRecieved) {
       return {
         className: cx(css.permissionTag, css.success),
         background: Color.PURPLE_50,
@@ -178,9 +180,7 @@ const FeaturesEnabledCell: CustomK8sCell = ({ row, column }) => {
         iconProps: { size: 14, color: Color.RED_700 }
       }
     }
-  }, [isConnectorStatusSuccess])
-
-  const isLastEventRecieved = lastEventRecieved(metadata)
+  }, [isConnectorStatusSuccess, isLastEventRecieved])
 
   const tooltipText = isConnectorStatusSuccess
     ? metadata?.visibility?.[0]

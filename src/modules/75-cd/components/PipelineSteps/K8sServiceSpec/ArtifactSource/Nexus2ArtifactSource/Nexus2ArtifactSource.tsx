@@ -31,6 +31,7 @@ import {
   getFinalQueryParamValue,
   getFqnPath,
   getImagePath,
+  getValidInitialValuePath,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
   resetTags
@@ -63,7 +64,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     artifact,
     isSidecar,
     artifactPath,
-    serviceIdentifier
+    serviceIdentifier,
+    artifacts
   } = props
 
   const { getString } = useStrings()
@@ -83,43 +85,58 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   }
 
   const connectorRefValue = getDefaultQueryParam(
-    artifact?.spec?.connectorRef,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
 
   const repositoryValue = getDefaultQueryParam(
-    artifact?.spec?.repository,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.repository`, ''), artifact?.spec?.repository),
     get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
   )
 
   const repositoryFormatValue = getDefaultQueryParam(
-    artifact?.spec?.repositoryFormat,
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.repositoryFormat`, ''),
+      artifact?.spec?.repositoryFormat
+    ),
     get(initialValues?.artifacts, `${artifactPath}.spec.repositoryFormat`, '')
   )
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
 
   const artifactIdValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.artifactId,
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.spec.artifactId`, ''),
+      artifact?.spec?.spec?.artifactId
+    ),
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.artifactId`, '')
   )
 
   const groupIdValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.groupId,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.spec.groupId`, ''), artifact?.spec?.spec?.groupId),
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.groupId`, '')
   )
 
   const extensionValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.extension,
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.spec.extension`, ''),
+      artifact?.spec?.spec?.extension
+    ),
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.extension`, '')
   )
 
   const classifierValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.classifier,
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.spec.classifier`, ''),
+      artifact?.spec?.spec?.classifier
+    ),
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.classifier`, '')
   )
 
   const packageNameValue = getDefaultQueryParam(
-    artifact?.spec?.spec?.packageName,
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.spec.packageName`, ''),
+      artifact?.spec?.spec?.packageName
+    ),
     get(initialValues?.artifacts, `${artifactPath}.spec.spec.packageName`, '')
   )
 
@@ -138,7 +155,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     queryParams: {
       ...commonParams,
       connectorRef: getFinalQueryParamValue(connectorRefValue),
-      repositoryFormat: repositoryFormatValue,
+      repositoryFormat: getFinalQueryParamValue(repositoryFormatValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
       fqnPath: getFqnPath(
@@ -158,8 +175,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
   const selectRepositoryItems = useMemo(() => {
     return repositoryDetails?.data?.map(repository => ({
-      value: defaultTo(repository.repositoryName, ''),
-      label: defaultTo(repository.repositoryName, '')
+      value: defaultTo(repository.repositoryId, ''),
+      label: defaultTo(repository.repositoryId, '')
     }))
   }, [repositoryDetails?.data])
 
@@ -205,7 +222,18 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       branch,
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
-      fqnPath: getFqnPath(path as string, !!isPropagatedStage, stageIdentifier, defaultTo(artifactPath, ''), 'tag')
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'tag'
+      )
     },
     lazy: true
   })

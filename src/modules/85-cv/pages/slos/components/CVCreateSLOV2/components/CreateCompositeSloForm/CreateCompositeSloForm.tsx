@@ -21,7 +21,7 @@ import {
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CVStepper } from '@cv/components/CVStepper/CVStepper'
 import SLOTargetNotifications from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotifications'
-import { isFormDataValid, shouldOpenPeriodUpdateModal } from './CreateCompositeSloForm.utils'
+import { getErrorMessageByTabId, isFormDataValid, shouldOpenPeriodUpdateModal } from './CreateCompositeSloForm.utils'
 import { AddSLOs } from './components/AddSlos/AddSLOs'
 import { CreateCompositeSLOSteps, CreateCompositeSloFormInterface } from './CreateCompositeSloForm.types'
 import type { SLOV2Form } from '../../CVCreateSLOV2.types'
@@ -46,6 +46,8 @@ export const CreateCompositeSloForm = ({
   const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<
     ProjectPathProps & { identifier: string }
   >()
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
+  const queryParams = isAccountLevel ? { accountId } : { accountId, orgIdentifier, projectIdentifier }
   const { getString } = useStrings()
   const formikProps = useFormikContext<SLOV2Form>()
   const [notificationPage, setNotificationPage] = useState(0)
@@ -72,8 +74,8 @@ export const CreateCompositeSloForm = ({
     error: dashboardWidgetsError
   } = useMutateAsGet(useGetSLOHealthListViewV2, {
     lazy: true,
-    queryParams: { accountId, orgIdentifier, projectIdentifier, pageNumber: 0, pageSize: 20 },
-    body: { compositeSLOIdentifier: identifier }
+    queryParams: { ...queryParams, pageNumber: 0, pageSize: 20 },
+    body: { compositeSLOIdentifier: identifier, childResource: isAccountLevel }
   })
 
   const {
@@ -96,10 +98,15 @@ export const CreateCompositeSloForm = ({
     }
   }, [openPeriodUpdateModal, formikFilterData])
 
+  const sloIdentifiers = useMemo(
+    () => formikProps.values.serviceLevelObjectivesDetails?.map(item => item.sloIdentifier)?.join(''),
+    [formikProps.values.serviceLevelObjectivesDetails]
+  )
+
   useEffect(() => {
     if (formikProps.values.serviceLevelObjectivesDetails?.length) {
       onBoardingGraphRefetch({
-        queryParams: { accountId, orgIdentifier, projectIdentifier },
+        queryParams: { ...queryParams },
         body: {
           serviceLevelObjectivesDetails: filterServiceLevelObjectivesDetailsFromSLOObjective(
             formikProps.values.serviceLevelObjectivesDetails
@@ -107,7 +114,7 @@ export const CreateCompositeSloForm = ({
         }
       })
     }
-  }, [formikProps.values.serviceLevelObjectivesDetails])
+  }, [sloIdentifiers])
 
   useEffect(() => {
     if (identifier) {
@@ -167,98 +174,122 @@ export const CreateCompositeSloForm = ({
   return (
     <>
       <Page.Body loading={loading} error={error} retryOnError={() => retryOnError()}>
-        <CVStepper
-          id="createSLOTabs"
-          isStepValid={isStepValid}
-          runValidationOnMount={validateAllSteps}
-          onStepChange={onStepChange}
-          stepList={[
-            {
-              id: CreateCompositeSLOSteps.Define_SLO_Identification,
-              title: getString('cv.CompositeSLO.DefineSLO'),
-              helpPanelReferenceId: 'defineCompositeSLO',
-              panel: <SLOName<SLOV2Form> formikProps={formikProps} identifier={identifier} isMultiSelect />,
-              preview: (
-                <CreatePreview id={CreateCompositeSLOSteps.Define_SLO_Identification} data={formikProps.values} />
-              )
-            },
-            {
-              id: CreateCompositeSLOSteps.Set_SLO_Time_Window,
-              title: getString('cv.CompositeSLO.SetTimeWindow'),
-              helpPanelReferenceId: 'setCompositeSLOTimeWindow',
-              panel: <PeriodLength periodType={periodType} periodLengthType={periodLengthType} />,
-              preview: <CreatePreview id={CreateCompositeSLOSteps.Set_SLO_Time_Window} data={formikProps.values} />
-            },
-            {
-              id: CreateCompositeSLOSteps.Add_SLOs,
-              title: getString('cv.CompositeSLO.AddSLO'),
-              helpPanelReferenceId: 'addSLOsToCompositeSLO',
-              panel: (
-                <AddSLOs
-                  data={dashboardWidgetsResponse}
-                  loading={dashboardWidgetsLoading}
-                  refetch={refetchDashboardWidgets}
-                  error={dashboardWidgetsError}
-                />
-              ),
-              preview: <CreatePreview id={CreateCompositeSLOSteps.Add_SLOs} data={formikProps.values} />
-            },
-            {
-              id: CreateCompositeSLOSteps.Set_SLO_Target,
-              title: getString('cv.CompositeSLO.SetTarget'),
-              panel: (
-                <SLOTarget
-                  formikProps={formikProps}
-                  dataPoints={onBoardingGraphResponse?.resource?.dataPoints?.map(item => [item.timeStamp, item.value])}
-                  graphLoading={onBoardingGraphLoading}
-                  graphError={onBoardingGraphError}
-                  refetchGraph={refetchDashboardWidgets}
-                />
-              ),
-              preview: <CreatePreview id={CreateCompositeSLOSteps.Set_SLO_Target} data={formikProps.values} />
-            },
-            {
-              id: CreateCompositeSLOSteps.Error_Budget_Policy,
-              title: getString('cv.CompositeSLO.ErrorBudgetPolicy'),
-              helpPanelReferenceId: 'setErrorErrorBudgetAndNotification',
-              isOptional: true,
-              panel: (
-                <CompositeSLOContext.Provider value={{ renderInsideCompositeSLO: true }}>
-                  <SLOTargetNotifications
-                    setFieldValue={formikProps.setFieldValue}
-                    initialNotificationsTableData={notificationData?.data?.content || []}
-                    setPage={setNotificationPage}
-                    page={notificationPage}
-                    loading={notificationLoading}
-                    error={notificationError}
-                    getNotifications={getNotifications}
+        {!loading && (
+          <>
+            <CVStepper
+              id="createSLOTabs"
+              isStepValid={isStepValid}
+              runValidationOnMount={validateAllSteps}
+              onStepChange={onStepChange}
+              stepList={[
+                {
+                  id: CreateCompositeSLOSteps.Define_SLO_Identification,
+                  title: getString('cv.CompositeSLO.DefineSLO'),
+                  helpPanelReferenceId: 'defineCompositeSLO',
+                  panel: <SLOName<SLOV2Form> formikProps={formikProps} identifier={identifier} isMultiSelect />,
+                  errorMessage: getErrorMessageByTabId(
+                    formikProps,
+                    CreateCompositeSLOSteps.Define_SLO_Identification,
+                    getString
+                  ),
+                  preview: (
+                    <CreatePreview id={CreateCompositeSLOSteps.Define_SLO_Identification} data={formikProps.values} />
+                  )
+                },
+                {
+                  id: CreateCompositeSLOSteps.Set_SLO_Time_Window,
+                  title: getString('cv.CompositeSLO.SetTimeWindow'),
+                  helpPanelReferenceId: 'setCompositeSLOTimeWindow',
+                  panel: <PeriodLength periodType={periodType} periodLengthType={periodLengthType} />,
+                  errorMessage: getErrorMessageByTabId(
+                    formikProps,
+                    CreateCompositeSLOSteps.Set_SLO_Time_Window,
+                    getString
+                  ),
+                  preview: <CreatePreview id={CreateCompositeSLOSteps.Set_SLO_Time_Window} data={formikProps.values} />
+                },
+                {
+                  id: CreateCompositeSLOSteps.Add_SLOs,
+                  title: getString('cv.CompositeSLO.AddSLO'),
+                  helpPanelReferenceId: 'addSLOsToCompositeSLO',
+                  panel: (
+                    <AddSLOs
+                      data={dashboardWidgetsResponse}
+                      loading={dashboardWidgetsLoading}
+                      refetch={refetchDashboardWidgets}
+                      error={dashboardWidgetsError}
+                    />
+                  ),
+                  errorMessage: getErrorMessageByTabId(formikProps, CreateCompositeSLOSteps.Add_SLOs, getString),
+                  preview: <CreatePreview id={CreateCompositeSLOSteps.Add_SLOs} data={formikProps.values} />
+                },
+                {
+                  id: CreateCompositeSLOSteps.Set_SLO_Target,
+                  title: getString('cv.CompositeSLO.SetTarget'),
+                  panel: (
+                    <SLOTarget
+                      formikProps={formikProps}
+                      dataPoints={onBoardingGraphResponse?.resource?.dataPoints?.map(item => [
+                        item.timeStamp,
+                        item.value
+                      ])}
+                      graphLoading={onBoardingGraphLoading}
+                      graphError={onBoardingGraphError}
+                      refetchGraph={refetchDashboardWidgets}
+                    />
+                  ),
+                  errorMessage: getErrorMessageByTabId(formikProps, CreateCompositeSLOSteps.Set_SLO_Target, getString),
+                  preview: <CreatePreview id={CreateCompositeSLOSteps.Set_SLO_Target} data={formikProps.values} />
+                },
+                {
+                  id: CreateCompositeSLOSteps.Error_Budget_Policy,
+                  title: getString('cv.CompositeSLO.ErrorBudgetPolicy'),
+                  helpPanelReferenceId: 'setErrorErrorBudgetAndNotification',
+                  isOptional: true,
+                  panel: (
+                    <CompositeSLOContext.Provider value={{ renderInsideCompositeSLO: true }}>
+                      <SLOTargetNotifications
+                        setFieldValue={formikProps.setFieldValue}
+                        initialNotificationsTableData={notificationData?.data?.content || []}
+                        setPage={setNotificationPage}
+                        page={notificationPage}
+                        loading={notificationLoading}
+                        error={notificationError}
+                        getNotifications={getNotifications}
+                      />
+                    </CompositeSLOContext.Provider>
+                  ),
+                  errorMessage: getErrorMessageByTabId(
+                    formikProps,
+                    CreateCompositeSLOSteps.Error_Budget_Policy,
+                    getString
+                  )
+                }
+              ]}
+            />
+            <Page.Header
+              className={css.footer}
+              title={
+                <Layout.Horizontal spacing="medium">
+                  <Button text={getString('cancel')} variation={ButtonVariation.SECONDARY} onClick={onCancel} />
+                  <Button
+                    text={getString('save')}
+                    loading={loadingSaveButton}
+                    variation={ButtonVariation.PRIMARY}
+                    onClick={() => {
+                      setValidateAllSteps(true)
+                      // add check to check errors aprt from formik
+                      // fields
+                      if (!isInValid) {
+                        formikProps.submitForm()
+                      }
+                    }}
                   />
-                </CompositeSLOContext.Provider>
-              )
-            }
-          ]}
-        />
-        <Page.Header
-          className={css.footer}
-          title={
-            <Layout.Horizontal spacing="medium">
-              <Button text={getString('cancel')} variation={ButtonVariation.SECONDARY} onClick={onCancel} />
-              <Button
-                text={getString('save')}
-                loading={loadingSaveButton}
-                variation={ButtonVariation.PRIMARY}
-                onClick={() => {
-                  setValidateAllSteps(true)
-                  // add check to check errors aprt from formik
-                  // fields
-                  if (!isInValid) {
-                    formikProps.submitForm()
-                  }
-                }}
-              />
-            </Layout.Horizontal>
-          }
-        />
+                </Layout.Horizontal>
+              }
+            />
+          </>
+        )}
       </Page.Body>
     </>
   )

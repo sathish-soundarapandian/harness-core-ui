@@ -48,6 +48,9 @@ jest.mock('services/cd-ng', () => ({
   useListBucketsWithServiceV2: jest.fn().mockImplementation(() => {
     return { data: bucketListData, refetch: fetchBuckets, error: null, loading: false }
   }),
+  useGetV2BucketListForS3: jest.fn().mockImplementation(() => {
+    return { data: bucketListData, refetch: fetchBuckets, error: null, loading: false }
+  }),
   useGetFilePathsForS3: jest.fn().mockImplementation(() => {
     return { data: filePathListData, refetch: fetchFilePaths, error: null, loading: false }
   })

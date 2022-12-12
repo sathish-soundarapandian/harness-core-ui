@@ -116,7 +116,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
           },
           {
             label: <String stringID="environments" />,
-            icon: 'environments',
+            icon: 'infrastructure',
             route: routes.toEnvironment({ accountId, orgIdentifier }),
             colorClass: css.connectors
           }

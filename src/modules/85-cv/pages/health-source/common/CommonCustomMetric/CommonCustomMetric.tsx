@@ -43,7 +43,7 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
 
   useEffect(() => {
     setMappedMetrics(oldState => {
-      const emptyName = formikValues.metricName?.length
+      const emptyName = formikValues?.metricName?.length
       // add default metric data when we delete last metric and add again
       if (!emptyName && !oldState?.selectedMetric && mappedMetrics?.size === 0) {
         const initMap = new Map()

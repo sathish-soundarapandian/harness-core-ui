@@ -7,22 +7,15 @@
 
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   initializeCreatedMetrics,
   initializeSelectedMetricsMap
 } from '@cv/pages/health-source/common/CommonCustomMetric/CommonCustomMetric.utils'
 import CommonHealthSourceContainer, { CommonHealthSourceContainerProps } from '../CommonHealthSource.container'
-import {
-  createHealthSourceData,
-  initHealthSourceCustomForm,
-  initializeNonCustomFields
-} from '../CommonHealthSource.utils'
-import {
-  expectedHealthSourceData,
-  expectedThresholdsInitialData,
-  healthSourceMetricValue
-} from './CommonHealthSource.mock'
+import { createHealthSourceData, initHealthSourceCustomForm } from '../CommonHealthSource.utils'
+import { expectedHealthSourceData, healthSourceMetricValue } from './CommonHealthSource.mock'
 
 function WrapperComponent(props: CommonHealthSourceContainerProps): JSX.Element {
   return (
@@ -71,8 +64,11 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
     await waitFor(() => expect(getByText('cv.monitoringSources.addMetric')).toBeInTheDocument())
   })
 
-  test('should check initializeNonCustomFields for metric thresholds', () => {
-    expect(initializeNonCustomFields(expectedHealthSourceData as any, true)).toEqual(expectedThresholdsInitialData)
+  test('should be able to click on the submit button and submit the form', async () => {
+    const { getByText } = render(<WrapperComponent {...props} />)
+    const submitButton = getByText('submit')
+    await waitFor(() => expect(submitButton).toBeInTheDocument())
+    userEvent.click(submitButton)
   })
 
   test('should validate createHealthSourceData', () => {
@@ -87,19 +83,19 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
     initializeCreatedMetrics('defaultMetricName', selectedMetric, mappedMetrics)
 
     expect(createHealthSourceData(expectedHealthSourceData as any)).toEqual({
-      applicationName: '',
       connectorRef: 'TestAppD',
+      failFastThresholds: undefined,
       identifier: undefined,
+      ignoreThresholds: undefined,
       isEdit: true,
       mappedServicesAndEnvs: new Map(),
-      metricPacks: undefined,
       name: undefined,
       product: {
         label: 'Application Monitoring',
         value: 'Application Monitoring'
       },
-      tierName: '',
-      type: 'SumoLogic'
+      selectedMetric: undefined,
+      type: undefined
     })
   })
 })

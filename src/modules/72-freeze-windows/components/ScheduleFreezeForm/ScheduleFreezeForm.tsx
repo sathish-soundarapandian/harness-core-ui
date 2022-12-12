@@ -8,7 +8,7 @@
 import React, { ReactNode } from 'react'
 import { FormikForm, Formik, Layout, FormInput, SelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
-import { omit } from 'lodash-es'
+import { isNull, isUndefined, omit, omitBy } from 'lodash-es'
 import moment from 'moment'
 import { ALL_TIME_ZONES } from '@common/utils/dateUtils'
 import { DOES_NOT_REPEAT, getMomentFormat, RECURRENCE } from '@freeze-windows/utils/freezeWindowUtils'
@@ -121,7 +121,7 @@ const processInitialvalues = (freezeWindow: FreezeWindow): FreezeWindowFormData 
 
 const processFormData = (form: FreezeWindowFormData): FreezeWindow => {
   const processedForm = omit(form, ['endTimeMode', 'recurrence.spec.recurrenceEndMode'])
-  return {
+  const processedData = {
     ...processedForm,
     duration: form.endTimeMode === 'duration' ? processedForm.duration : undefined,
     endTime: form.endTimeMode === 'date' ? processedForm.endTime : undefined,
@@ -131,7 +131,9 @@ const processFormData = (form: FreezeWindowFormData): FreezeWindow => {
           spec: form.recurrence.spec.recurrenceEndMode === 'date' ? processedForm.recurrence.spec : undefined
         }
       : undefined
-  } as FreezeWindow
+  }
+
+  return omitBy(processedData, value => isUndefined(value) || isNull(value) || value === '') as unknown as FreezeWindow
 }
 
 export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({

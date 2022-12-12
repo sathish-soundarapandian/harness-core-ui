@@ -438,6 +438,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
           },
           isNewConnectorLabelVisible: canUpdate && isNewConnectorLabelVisible,
           selectedRenderer: getSelectedRenderer(selectedValue, !!connectorStatus, connectorStatusCheckInProgress),
+          selectedRecord: selectedValue,
           ...optionalReferenceSelectProps,
           disabled: isDisabled,
           hideModal: inlineSelection.selected && inlineSelection.inlineModalClosed,

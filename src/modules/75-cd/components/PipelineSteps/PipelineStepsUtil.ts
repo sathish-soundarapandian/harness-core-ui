@@ -36,8 +36,10 @@ export enum InfraDeploymentType {
   SshWinRmAzure = 'SshWinRmAzure',
   AzureWebApp = 'AzureWebApp',
   ECS = 'ECS',
+  Asg = 'Asg',
   CustomDeployment = 'CustomDeployment',
-  Elastigroup = 'Elastigroup'
+  Elastigroup = 'Elastigroup',
+  TAS = 'TAS'
 }
 
 export const deploymentTypeToInfraTypeMap = {
@@ -304,6 +306,14 @@ export function getECSInfraValidationSchema(getString: UseStringsReturn['getStri
       return Yup.string().required(
         getString('common.validation.fieldIsRequired', { name: getString('common.cluster') })
       )
+    })
+  })
+}
+export function getAsgInfraValidationSchema(getString: UseStringsReturn['getString']) {
+  return Yup.object().shape({
+    connectorRef: getConnectorSchema(getString),
+    region: Yup.lazy((): Yup.Schema<unknown> => {
+      return Yup.string().required(getString('validation.regionRequired'))
     })
   })
 }

@@ -23,6 +23,8 @@ import { ConnectivityModeType } from '@common/components/ConnectivityMode/Connec
 import AzureAuthentication from './StepAuth/AzureAuthentication'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import ConnectivityModeStep from '../commonSteps/ConnectivityModeStep/ConnectivityModeStep'
+import azureDelegate from './ConnectivityModeStepImages/azureDelegate.svg'
+import azurePlatform from './ConnectivityModeStepImages/azurePlatform.svg'
 
 function CreateAzureConnector(props: React.PropsWithChildren<CreateConnectorModalProps>): React.ReactElement {
   const { getString } = useStrings()
@@ -67,6 +69,8 @@ function CreateAzureConnector(props: React.PropsWithChildren<CreateConnectorModa
         setConnectivityMode={props.setConnectivityMode}
         hideModal={props.onClose}
         onConnectorCreated={props.onSuccess}
+        platformImage={azurePlatform}
+        delegateImage={azureDelegate}
       />
       {props.connectivityMode === ConnectivityModeType.Delegate ? (
         <DelegateSelectorStep

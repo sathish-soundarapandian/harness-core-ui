@@ -42,7 +42,8 @@ import { useStrings } from 'framework/strings'
 import { Ticker } from '@common/components/Ticker/Ticker'
 import { SortOption } from '@common/components/SortOption/SortOption'
 import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
-import { getFixed, INVALID_CHANGE_RATE, numberFormatter } from '@cd/components/Services/common'
+import { getFixed, INVALID_CHANGE_RATE } from '@cd/components/Services/common'
+import { numberFormatter } from '@common/utils/utils'
 import { ServiceDetailsDTO, useDeleteServiceV2 } from 'services/cd-ng'
 import { DeploymentTypeIcons } from '@cd/components/DeploymentTypeIcons/DeploymentTypeIcons'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -549,13 +550,13 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
         {
           Header: getString('typeLabel').toLocaleUpperCase(),
           id: 'type',
-          width: '10%',
+          width: '7%',
           Cell: RenderType
         },
         {
           Header: getString('cd.serviceDashboard.activeInstanceCount').toLocaleUpperCase(),
           id: 'serviceInstances',
-          width: '15%',
+          width: '14%',
           Cell: RenderServiceInstances
         },
         {
@@ -573,13 +574,13 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
         {
           Header: getString('cd.serviceDashboard.frequency').toLocaleUpperCase(),
           id: 'frequency',
-          width: '13%',
+          width: '11%',
           Cell: getRenderTickerCard('frequency')
         },
         {
           Header: getString('cd.serviceDashboard.lastPipelineExecution').toLocaleUpperCase(),
           id: 'lastDeployment',
-          width: '19%',
+          width: '15%',
           Cell: RenderLastDeployment
         },
         {

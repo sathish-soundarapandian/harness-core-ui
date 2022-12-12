@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Icon, SelectOption, Text, Button, Container, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Select } from '@blueprintjs/select'
@@ -21,7 +21,12 @@ import {
   ConnectorInfoDTO
 } from 'services/cd-ng'
 import { EntityReference } from '@common/exports'
-import { EntityReferenceResponse, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import {
+  EntityReferenceResponse,
+  getIdentifierFromValue,
+  getScopeFromDTO,
+  getScopeFromValue
+} from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useStrings } from 'framework/strings'
 import useCreateUpdateSecretModal from '@secrets/modals/CreateSecretModal/useCreateUpdateSecretModal'
@@ -60,6 +65,7 @@ export interface SecretReferenceProps extends SceretTypeDropDownProps {
   onCancel?: () => void
   handleInlineSSHSecretCreation?: () => void
   handleInlineWinRmSecretCreation?: () => void
+  selectedSecret?: string
 }
 
 const fetchRecords = (
@@ -164,7 +170,16 @@ const SelectTypeDropdown: React.FC<SceretTypeDropDownProps> = props => {
 }
 
 const SecretReference: React.FC<SecretReferenceProps> = props => {
-  const { defaultScope, accountIdentifier, projectIdentifier, orgIdentifier, type, mock, connectorTypeContext } = props
+  const {
+    defaultScope,
+    accountIdentifier,
+    projectIdentifier,
+    orgIdentifier,
+    type,
+    mock,
+    connectorTypeContext,
+    selectedSecret
+  } = props
   const { getString } = useStrings()
   const [pagedSecretData, setPagedSecretData] = useState<ResponsePageSecretResponseWrapper>({})
   const [pageNo, setPageNo] = useState(0)
@@ -178,7 +193,12 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
       })
     }
   })
-
+  const selectedSecretLocal = useMemo(() => {
+    if (selectedSecret === 'string') {
+      return { scope: getScopeFromValue(selectedSecret), identifier: getIdentifierFromValue(selectedSecret) }
+    }
+    return undefined
+  }, [selectedSecret])
   return (
     <Container className={css.secretRefContainer}>
       <EntityReference<SecretRef>
@@ -186,6 +206,7 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
           secret.scope = scope
           props.onSelect(secret)
         }}
+        selectedRecord={selectedSecretLocal}
         defaultScope={defaultScope}
         noDataCard={{
           image: SecretEmptyState,

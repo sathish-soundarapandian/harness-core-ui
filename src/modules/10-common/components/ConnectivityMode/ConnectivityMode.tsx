@@ -10,7 +10,6 @@ import cx from 'classnames'
 import { Text, FormikCollapsableSelect, CollapsableSelectType, CollapsableSelectOptions } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { FormikContextType } from 'formik'
-
 import DelegatesGit from '@common/icons/DelegatesGit.svg'
 import PlatformGit from '@common/icons/PlatformGit.svg'
 import { useStrings } from 'framework/strings'
@@ -34,23 +33,27 @@ interface ConnectivityModeProps {
   formik: FormikContextType<ConnectivityModeForm>
   className?: string
   onChange: (val: ConnectivityCardItem) => void
+  connectorLabel?: string
+  delegateImage?: string
+  platformImage?: string
 }
 
 const ConnectivityMode: React.FC<ConnectivityModeProps> = props => {
+  const { delegateImage = DelegatesGit, platformImage = PlatformGit } = props
   const { getString } = useStrings()
   const ConnectivityCard: ConnectivityCardItem[] = [
     {
       type: ConnectivityModeType.Manager,
       title: getString('common.connectThroughPlatform'),
-      info: getString('common.connectThroughPlatformInfo'),
-      icon: <img src={PlatformGit} width="100%" />,
+      info: getString('common.connectThroughPlatformInfo', { connectorType: props.connectorLabel }),
+      icon: <img src={platformImage} width="100%" />,
       value: ConnectivityModeType.Manager
     },
     {
       type: ConnectivityModeType.Delegate,
       title: getString('common.connectThroughDelegate'),
-      info: getString('common.connectThroughDelegateInfo'),
-      icon: <img src={DelegatesGit} width="100%" />,
+      info: getString('common.connectThroughDelegateInfo', { connectorType: props.connectorLabel }),
+      icon: <img src={delegateImage} width="100%" />,
       value: ConnectivityModeType.Delegate
     }
   ]

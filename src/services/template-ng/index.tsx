@@ -49,6 +49,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
@@ -58,9 +59,9 @@ export type AuditFilterProperties = FilterProperties & {
 }
 
 export interface CacheResponseMetadata {
-  cacheState?: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
-  lastUpdatedAt?: number
-  ttlLeft?: number
+  cacheState: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
+  lastUpdatedAt: number
+  ttlLeft: number
 }
 
 export interface CcmConnectorFilter {
@@ -515,7 +516,6 @@ export interface Error {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'NO_ELIGIBLE_DELEGATES'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -874,7 +874,6 @@ export interface ErrorMetadata {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'NO_ELIGIBLE_DELEGATES'
   errorMessage?: string
 }
 
@@ -1239,7 +1238,6 @@ export interface Failure {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'NO_ELIGIBLE_DELEGATES'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1909,7 +1907,6 @@ export interface ResponseMessage {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'NO_ELIGIBLE_DELEGATES'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'

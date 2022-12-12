@@ -14,43 +14,56 @@ import { useParams } from 'react-router-dom'
 
 import produce from 'immer'
 
-import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
+import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
-import { get, set, defaultTo, isEmpty, merge, unset } from 'lodash-es'
+import { get, set, defaultTo, isEmpty, merge, unset, some, isUndefined } from 'lodash-es'
 import { useArtifactSelectionLastSteps } from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
 import {
-  useGetConnectorListV2,
-  PageConnectorResponse,
-  SidecarArtifactWrapper,
-  PrimaryArtifact,
   ArtifactConfig,
-  SidecarArtifact,
   ArtifactListConfig,
-  ArtifactSource
+  ArtifactSource,
+  PageConnectorResponse,
+  PrimaryArtifact,
+  SidecarArtifact,
+  SidecarArtifactWrapper,
+  useGetConnectorListV2
 } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
-import { useStrings } from 'framework/strings'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { Scope } from '@common/interfaces/SecretsInterface'
+// eslint-disable-next-line no-restricted-imports
+import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
+import { ArtifactConfigDrawer } from '@pipeline/components/ArtifactsSelection/ArtifactConfigDrawer/ArtifactConfigDrawer'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import type {
+  StepOrStepGroupOrTemplateStepData,
+  Values
+} from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
+import { getTemplateInputSetYamlPromise } from 'services/template-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
+import { parse } from '@common/utils/YamlHelperMethods'
+import { createTemplate } from '@pipeline/utils/templateUtils'
+import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 import { ArtifactActions } from '@common/constants/TrackingConstants'
+import type { TemplateStepNode, TemplateLinkConfig } from 'services/pipeline-ng'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import ArtifactListView from './ArtifactListView/ArtifactListView'
 import type {
+  AmazonS3InitialValuesType,
   ArtifactsSelectionProps,
-  InitialArtifactDataType,
-  ConnectorRefLabelType,
   ArtifactType,
+  ConnectorRefLabelType,
   ImagePathProps,
   ImagePathTypes,
-  AmazonS3InitialValuesType,
+  InitialArtifactDataType,
   JenkinsArtifactType,
   GoogleArtifactRegistryInitialValuesType,
   CustomArtifactSource,
@@ -59,17 +72,55 @@ import type {
   AzureArtifactsInitialValues
 } from './ArtifactInterface'
 import {
-  ENABLED_ARTIFACT_TYPES,
+  allowedArtifactTypes,
   ArtifactIconByType,
   ArtifactTitleIdByType,
-  allowedArtifactTypes,
-  ModalViewFor,
+  ENABLED_ARTIFACT_TYPES,
   isAllowedCustomArtifactDeploymentTypes,
-  isSidecarAllowed
+  isSidecarAllowed,
+  ModalViewFor
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'
 import css from './ArtifactsSelection.module.scss'
+
+const checkDuplicateStep = (
+  formikRef: any,
+  artifactsList: ArtifactSource[] | SidecarArtifactWrapper[] | undefined,
+  artifactContext: ModalViewFor,
+  getString: UseStringsReturn['getString'],
+  artifactIndex: number
+): boolean => {
+  const values = formikRef.current?.getValues() as Values
+  if (values && formikRef.current?.setFieldError) {
+    const isDuplicate = some(artifactsList, (artifactData, index: number) => {
+      const artifactIdentifier =
+        artifactContext === ModalViewFor.PRIMARY
+          ? (artifactData as ArtifactSource).identifier
+          : (artifactData as SidecarArtifactWrapper)?.sidecar?.identifier
+
+      return artifactIdentifier === values.name && index !== artifactIndex
+    })
+
+    if (isDuplicate) {
+      formikRef.current?.setFieldError('identifier', getString('pipeline.uniqueIdentifier'))
+      return true
+    }
+  }
+  return false
+}
+
+const getUpdatedTemplate = (
+  artifactSourceConfigNodeTemplate?: TemplateLinkConfig,
+  formikValues?: TemplateLinkConfig
+) => {
+  const latestTemplateInputs = get(formikValues, 'templateInputs.artifacts.primary')
+  return {
+    templateRef: artifactSourceConfigNodeTemplate?.templateRef,
+    versionLabel: artifactSourceConfigNodeTemplate?.versionLabel,
+    templateInputs: !isEmpty(latestTemplateInputs) ? latestTemplateInputs : undefined
+  }
+}
 
 export default function ServiceV2ArtifactsSelection({
   deploymentType,
@@ -77,7 +128,9 @@ export default function ServiceV2ArtifactsSelection({
 }: ArtifactsSelectionProps): React.ReactElement | null {
   const {
     state: {
-      selectionState: { selectedStageId }
+      selectionState: { selectedStageId },
+      gitDetails,
+      storeMetadata
     },
     getStageFromPipeline,
     updateStage,
@@ -90,6 +143,10 @@ export default function ServiceV2ArtifactsSelection({
   const [artifactContext, setArtifactContext] = useState(ModalViewFor.PRIMARY)
   const [artifactIndex, setEditIndex] = useState(0)
   const [fetchedConnectorResponse, setFetchedConnectorResponse] = useState<PageConnectorResponse | undefined>()
+  const { getTemplate } = useTemplateSelector()
+  const [artifactSourceConfigNode, setArtifactSourceConfigNode] = React.useState<TemplateStepNode>()
+  const [isArtifactSourceDrawerOpen, setIsArtifactSourceDrawerOpen] = React.useState(false)
+  const formikRef = React.useRef<StepFormikRef | null>(null)
 
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -155,13 +212,7 @@ export default function ServiceV2ArtifactsSelection({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploymentType])
 
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<
-    PipelineType<{
-      orgIdentifier: string
-      projectIdentifier: string
-      accountId: string
-    }>
-  >()
+  const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const defaultQueryParams = {
     pageIndex: 0,
@@ -389,6 +440,57 @@ export default function ServiceV2ArtifactsSelection({
     }
   }, [artifactContext, artifactsList, artifactIndex, selectedArtifact])
 
+  const addOrUpdateArtifactSourceTemplate = async (): Promise<void> => {
+    await handleUseArtifactSourceTemplate(artifactContext, true)
+  }
+
+  const handleUseArtifactSourceTemplate = async (viewType: ModalViewFor, isEdit?: boolean) => {
+    if (!isEdit) {
+      setArtifactContext(viewType)
+      const artifactObject = get(artifacts, getArtifactsPath(viewType))
+      setEditIndex(defaultTo(artifactObject?.length, 0))
+    }
+
+    try {
+      const { template } = await getTemplate({
+        templateType: TemplateType.ArtifactSource,
+        allowedUsages: [TemplateUsage.USE],
+        filterProperties: {
+          childTypes: defaultTo(allowedArtifactTypes[deploymentType], [])
+        },
+        gitDetails,
+        storeMetadata
+      })
+
+      const templateInputYaml = await getTemplateInputSetYamlPromise({
+        templateIdentifier: template.identifier as string,
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier: template.orgIdentifier,
+          projectIdentifier: template.projectIdentifier,
+          versionLabel: template.versionLabel || ''
+        }
+      })
+
+      const artifactSourceTemplateInputs = templateInputYaml?.data
+        ? parse(templateInputYaml?.data as string)
+        : undefined
+      const processNode = createTemplate(
+        {
+          name: '',
+          identifier: '',
+          template: { templateInputs: artifactSourceTemplateInputs }
+        } as StepOrStepGroupOrTemplateStepData,
+        template
+      ) as TemplateStepNode
+
+      setArtifactSourceConfigNode(processNode)
+      setIsArtifactSourceDrawerOpen(true)
+    } catch (e) {
+      // no update is required
+    }
+  }
+
   const addNewArtifact = (viewType: ModalViewFor): void => {
     setArtifactContext(viewType)
     setConnectorView(false)
@@ -399,12 +501,66 @@ export default function ServiceV2ArtifactsSelection({
   }
 
   const editArtifact = (viewType: ModalViewFor, type?: ArtifactType, index?: number): void => {
+    const artifactObjList = get(artifacts, getArtifactsPath(viewType))
+    const artifactDetails = !isUndefined(index) && artifactObjList[index]
+    const artifactSourceTemplateNode = (
+      viewType === ModalViewFor.PRIMARY ? artifactDetails : artifactDetails?.sidecar
+    ) as TemplateStepNode
+
     setArtifactContext(viewType)
-    setConnectorView(false)
-    setSelectedArtifact(type as ArtifactType)
     setEditIndex(index as number)
-    showConnectorModal()
-    refetchConnectorList()
+
+    if (!isEmpty(artifactSourceTemplateNode?.template)) {
+      setArtifactSourceConfigNode(artifactSourceTemplateNode)
+      setIsArtifactSourceDrawerOpen(true)
+    } else {
+      setConnectorView(false)
+      setSelectedArtifact(type as ArtifactType)
+      showConnectorModal()
+      refetchConnectorList()
+    }
+  }
+
+  const handleApplyChanges = async () => {
+    if (checkDuplicateStep(formikRef, artifactsList, artifactContext, getString, artifactIndex)) {
+      return
+    }
+    // form has been submitted so that errors can be populated and on the basis of that node gets updated in yaml
+    await formikRef?.current?.submitForm()
+    if (!isEmpty(formikRef.current?.getErrors())) {
+      return
+    } else {
+      // update the node
+      const artifactSourceConfigValues = formikRef.current?.getValues() as ArtifactSource | SidecarArtifact
+      const updatedArtifactSourceConfigValues = produce(artifactSourceConfigValues, draft => {
+        set(draft, 'identifier', artifactSourceConfigValues.name)
+        set(
+          draft,
+          'template',
+          getUpdatedTemplate(artifactSourceConfigNode?.template, artifactSourceConfigValues?.template)
+        )
+      })
+      if (artifactContext === ModalViewFor.PRIMARY) {
+        setPrimaryArtifactData(updatedArtifactSourceConfigValues as ArtifactSource)
+      } else {
+        setSidecarArtifactData(updatedArtifactSourceConfigValues as SidecarArtifact)
+      }
+      if (stage) {
+        const newStage = produce(stage, draft => {
+          set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts', artifacts)
+        }).stage
+        if (newStage) {
+          updateStage(newStage)
+        }
+      }
+
+      setArtifactSourceConfigNode(undefined)
+      setIsArtifactSourceDrawerOpen(false)
+    }
+  }
+
+  const handleCloseDrawer = () => {
+    setIsArtifactSourceDrawerOpen(false)
   }
 
   const getIconProps = useMemo((): IconProps | undefined => {
@@ -553,20 +709,33 @@ export default function ServiceV2ArtifactsSelection({
   }
 
   return (
-    <ArtifactListView
-      stage={stage}
-      primaryArtifact={artifacts?.primary?.sources as ArtifactSource[]}
-      sideCarArtifact={artifacts?.sidecars}
-      addNewArtifact={addNewArtifact}
-      editArtifact={editArtifact}
-      removeArtifactSource={index => removeArtifactObject(ModalViewFor.PRIMARY, index)}
-      removeSidecar={index => removeArtifactObject(ModalViewFor.SIDECAR, index)}
-      fetchedConnectorResponse={fetchedConnectorResponse}
-      accountId={accountId}
-      refetchConnectors={refetchConnectorList}
-      isReadonly={readonly}
-      isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
-      isMultiArtifactSource
-    />
+    <>
+      <ArtifactListView
+        stage={stage}
+        primaryArtifact={artifacts?.primary?.sources as ArtifactSource[]}
+        sideCarArtifact={artifacts?.sidecars}
+        addNewArtifact={addNewArtifact}
+        handleUseArtifactSourceTemplate={handleUseArtifactSourceTemplate}
+        editArtifact={editArtifact}
+        removeArtifactSource={index => removeArtifactObject(ModalViewFor.PRIMARY, index)}
+        removeSidecar={index => removeArtifactObject(ModalViewFor.SIDECAR, index)}
+        fetchedConnectorResponse={fetchedConnectorResponse}
+        accountId={accountId}
+        refetchConnectors={refetchConnectorList}
+        isReadonly={readonly}
+        isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
+        isMultiArtifactSource
+      />
+      <ArtifactConfigDrawer
+        onCloseDrawer={handleCloseDrawer}
+        artifactSourceConfigNode={artifactSourceConfigNode}
+        isDrawerOpened={isArtifactSourceDrawerOpen}
+        isNewStep={true}
+        onApplyChanges={handleApplyChanges}
+        addOrUpdateTemplate={addOrUpdateArtifactSourceTemplate}
+        formikRef={formikRef}
+        serviceIdentifier={serviceId}
+      />
+    </>
   )
 }

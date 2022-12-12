@@ -7,15 +7,15 @@
 
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Service, ServiceLog, useLogsOfService } from 'services/lw'
-import { SimpleLogViewer } from '@common/components/LogViewer/SimpleLogViewer'
 import {
   ANOMALIES_LIST_FORMAT,
   FORMAT_12_HOUR,
   getGenericTimeZoneName,
   getStaticSchedulePeriodTime,
   getTimePeriodString
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
+import { Service, ServiceLog, useLogsOfService } from 'services/lw'
+import { SimpleLogViewer } from '@common/components/LogViewer/SimpleLogViewer'
 import type { RefreshFunction } from '@ce/types'
 import css from './COGatewayList.module.scss'
 

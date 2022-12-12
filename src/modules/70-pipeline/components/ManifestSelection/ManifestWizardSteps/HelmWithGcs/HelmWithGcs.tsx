@@ -131,7 +131,7 @@ function HelmWithGcs({
       chartVersion: '',
       skipResourceVersioning: false,
       bucketName: '',
-      folderPath: '',
+      folderPath: '/',
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
     }
   }

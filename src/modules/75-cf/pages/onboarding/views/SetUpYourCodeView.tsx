@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Container, Layout, RadioButtonGroup, Heading } from '@harness/uicore'
+import { Layout, RadioButtonGroup, Heading } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Divider } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -28,51 +28,48 @@ export const SetUpYourCodeView: React.FC<SetUpYourCodeViewProps> = ({ language, 
   )
 
   return (
-    <Container margin={{ top: 'small' }}>
-      <Layout.Vertical margin={{ top: 'small', bottom: 'small' }} spacing="medium">
+    <>
+      <Layout.Vertical padding={{ top: 'large', bottom: 'large' }}>
         <Divider />
       </Layout.Vertical>
-      <Layout.Vertical spacing="xsmall">
-        <Heading level={4} font={{ variation: FontVariation.H4 }} margin={{ bottom: 'large' }}>
-          {getString('cf.onboarding.setUpYourCode')}
-        </Heading>
-        <Container>
-          {language.name === 'Xamarin' && (
-            <RadioButtonGroup
-              padding={{ top: 'small' }}
-              asPills
-              selectedValue={xamarinOption}
-              onChange={() => {
-                if (xamarinOption === 'cf.onboarding.android') {
-                  setXamarinOption('cf.onboarding.ios')
-                  setCurrentReadme('cf.onboarding.readme.xamarinIOS')
-                } else {
-                  setXamarinOption('cf.onboarding.android')
-                  setCurrentReadme('cf.onboarding.readme.xamarinAndroid')
-                }
-              }}
-              options={[
-                {
-                  label: getString('cf.onboarding.android'),
-                  value: 'cf.onboarding.android'
-                },
-                {
-                  label: getString('cf.onboarding.ios'),
-                  value: 'cf.onboarding.ios'
-                }
-              ]}
-            />
-          )}
-          <MarkdownViewer
-            stringId={currentReadme}
-            vars={{
-              ...apiKey,
-              apiKey: apiKey.apiKey,
-              flagName: flagName
-            }}
-          />
-        </Container>
-      </Layout.Vertical>
-    </Container>
+      <Heading level={4} font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xsmall' }}>
+        {getString('cf.onboarding.setUpYourCode')}
+      </Heading>
+
+      {language.name === 'Xamarin' && (
+        <RadioButtonGroup
+          asPills
+          padding={{ top: 'small' }}
+          selectedValue={xamarinOption}
+          onChange={() => {
+            if (xamarinOption === 'cf.onboarding.android') {
+              setXamarinOption('cf.onboarding.ios')
+              setCurrentReadme('cf.onboarding.readme.xamarinIOS')
+            } else {
+              setXamarinOption('cf.onboarding.android')
+              setCurrentReadme('cf.onboarding.readme.xamarinAndroid')
+            }
+          }}
+          options={[
+            {
+              label: getString('cf.onboarding.android'),
+              value: 'cf.onboarding.android'
+            },
+            {
+              label: getString('cf.onboarding.ios'),
+              value: 'cf.onboarding.ios'
+            }
+          ]}
+        />
+      )}
+      <MarkdownViewer
+        stringId={currentReadme}
+        vars={{
+          ...apiKey,
+          apiKey: apiKey.apiKey,
+          flagName: flagName
+        }}
+      />
+    </>
   )
 }

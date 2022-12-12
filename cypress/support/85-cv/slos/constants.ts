@@ -108,6 +108,7 @@ export const listMonitoredServicesCallResponse = {
   data: [
     {
       identifier: 'cvng_prod',
+      enabled: true,
       name: 'cvng_prod',
       healthSources: [
         { name: 'appd_manager', identifier: 'appd_manager' },
@@ -625,6 +626,7 @@ export const getMonitoredServiceResponse = {
     lastModifiedAt: 1625627957333,
     monitoredService: {
       orgIdentifier: 'default',
+      enabled: true,
       projectIdentifier: 'project1',
       identifier: 'cvng_prod',
       name: 'cvng_prod',

@@ -17,9 +17,7 @@ import { useStrings } from 'framework/strings'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import CommonCustomMetric from '@cv/pages/health-source/common/CommonCustomMetric/CommonCustomMetric'
 import CustomMetricForm from './CustomMetricForm'
-import type { NonCustomFeildsInterface } from '../../../AppDynamics/AppDHealthSource.types'
-import { getMetricNameFilteredNonCustomFields } from '../../../MonitoredServiceConnector.utils'
-import type { CommonHealthSourceFormikInterface } from '../../CommonHealthSource.types'
+import type { CommonCustomMetricFormikInterface } from '../../CommonHealthSource.types'
 import type { AddMetricForm, CustomMetricFormContainerProps } from './CustomMetricForm.types'
 import { resetShowCustomMetric } from '../../CommonHealthSource.utils'
 import {
@@ -36,8 +34,6 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
     selectedMetric,
     setMappedMetrics,
     isMetricThresholdEnabled,
-    nonCustomFeilds,
-    setNonCustomFeilds,
     createdMetrics,
     setCreatedMetrics,
     setGroupedCreatedMetrics,
@@ -46,7 +42,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
     groupedCreatedMetrics
   } = props
 
-  const { values: formValues, setValues, isValid } = useFormikContext<CommonHealthSourceFormikInterface>()
+  const { values: formValues, setValues, isValid } = useFormikContext<CommonCustomMetricFormikInterface>()
   const enabledDefaultGroupName = !!healthSourceConfig?.sideNav?.enableDefaultGroupName
   const {
     sourceData: { existingMetricDetails }
@@ -66,17 +62,10 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   const filterRemovedMetricNameThresholds = useCallback(
     (deletedMetricName: string) => {
       if (isMetricThresholdEnabled && deletedMetricName) {
-        const updatedNonCustomFields = getMetricNameFilteredNonCustomFields<NonCustomFeildsInterface>(
-          isMetricThresholdEnabled,
-          nonCustomFeilds,
-          deletedMetricName
-        )
-
-        setNonCustomFeilds(updatedNonCustomFields)
+        // TODO implement this later
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isMetricThresholdEnabled, nonCustomFeilds]
+    [isMetricThresholdEnabled]
   )
 
   useEffect(() => {
@@ -141,7 +130,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
           groupedCreatedMetrics={groupedCreatedMetrics}
           setCreatedMetrics={setCreatedMetrics}
           setGroupedCreatedMetrics={setGroupedCreatedMetrics}
-          defaultMetricName={'appdMetric'}
+          defaultMetricName={'healthSourceMetric'}
           tooptipMessage={getString('cv.monitoringSources.gcoLogs.addQueryTooltip')}
           addFieldLabel={getString('cv.monitoringSources.addMetric')}
           initCustomForm={initHealthSourceCustomFormValue()}

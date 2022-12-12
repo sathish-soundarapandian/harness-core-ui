@@ -65,7 +65,7 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
       className={'padded-dialog'}
       isOpen={!!selectedVariable}
       enforceFocus={false}
-      title={isEdit ? getString('common.editVariable') : getString('common.addVariable')}
+      title={isEdit ? getString('common.editVariable') : getString('variables.newVariable')}
       onClose={closeModal}
     >
       <Formik

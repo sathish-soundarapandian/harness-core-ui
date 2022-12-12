@@ -23,6 +23,8 @@ import { buildAWSPayload } from '@connectors/pages/connectors/utils/ConnectorUti
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import StepAWSAuthentication from './StepAuth/StepAWSAuthentication'
 import ConnectivityModeStep from '../commonSteps/ConnectivityModeStep/ConnectivityModeStep'
+import awsPlatform from './ConnectivityModeStepImages/awsPlatform.svg'
+import awsDelegate from './ConnectivityModeStepImages/awsDelegate.svg'
 
 const CreateAWSConnector: React.FC<CreateConnectorModalProps> = props => {
   const { getString } = useStrings()
@@ -75,6 +77,8 @@ const CreateAWSConnector: React.FC<CreateConnectorModalProps> = props => {
           hideModal={props.onClose}
           onConnectorCreated={props.onSuccess}
           helpPanelReferenceId="ConnectorConnectToTheProvider"
+          delegateImage={awsDelegate}
+          platformImage={awsPlatform}
         />
         {props.connectivityMode === ConnectivityModeType.Delegate ? (
           <DelegateSelectorStep

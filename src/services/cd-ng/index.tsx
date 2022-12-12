@@ -404,7 +404,6 @@ export interface AccessControlCheckError {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'NO_ELIGIBLE_DELEGATES'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -645,6 +644,12 @@ export interface ActiveServiceInstanceSummary {
   countDetails?: InstanceCountDetailsByEnvTypeBase
 }
 
+export interface ActiveServicesFilterParams {
+  orgName?: string
+  projectName?: string
+  serviceName?: string
+}
+
 export interface Activity {
   accountIdentifier?: string
   activityStatus: 'SUCCESS' | 'FAILED'
@@ -719,6 +724,8 @@ export interface AgentMtlsEndpointRequest {
 }
 
 export type AllHostsFilter = HostFilterSpec & { [key: string]: any }
+
+export type AllowAllFilter = FilterSpec & { [key: string]: any }
 
 export type AmazonS3ArtifactConfig = ArtifactConfig & {
   bucketName: string
@@ -838,6 +845,7 @@ export interface Application {
   agentIdentifier?: string
   identifier?: string
   name?: string
+  url?: string
 }
 
 export interface ApplicationSettingsConfiguration {
@@ -1014,6 +1022,34 @@ export interface ArtifactsSummary {
   sidecars?: ArtifactSummary[]
 }
 
+export type AsgConfigurationManifest = ManifestAttributes & {
+  metadata?: string
+  store?: StoreConfigWrapper
+}
+
+export type AsgInfrastructure = Infrastructure & {
+  connectorRef: string
+  metadata?: string
+  region: string
+}
+
+export type AsgLaunchTemplateManifest = ManifestAttributes & {
+  metadata?: string
+  store?: StoreConfigWrapper
+}
+
+export type AsgScalingPolicyManifest = ManifestAttributes & {
+  metadata?: string
+  store?: StoreConfigWrapper
+}
+
+export type AsgScheduledUpdateGroupActionManifest = ManifestAttributes & {
+  metadata?: string
+  store?: StoreConfigWrapper
+}
+
+export type AsgServiceSpec = ServiceSpec & {}
+
 export type AuditFilterProperties = FilterProperties & {
   actions?: (
     | 'CREATE'
@@ -1051,6 +1087,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
@@ -1845,9 +1882,9 @@ export type CVModuleLicenseDTO = ModuleLicenseDTO & {
 }
 
 export interface CacheResponseMetadata {
-  cacheState?: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
-  lastUpdatedAt?: number
-  ttlLeft?: number
+  cacheState: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
+  lastUpdatedAt: number
+  ttlLeft: number
 }
 
 export interface Capacity {
@@ -1978,6 +2015,15 @@ export interface CloudformationTemplateFile {
 
 export interface CloudformationTemplateFileSpec {
   type?: string
+}
+
+export interface Cluster {
+  clusterId?: string
+  clusterName?: string
+  envGroupId?: string
+  envGroupName?: string
+  envId?: string
+  envName?: string
 }
 
 export interface ClusterBasicDTO {
@@ -2986,6 +3032,7 @@ export type DeploymentStageConfig = StageInfoConfig & {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
   environment?: EnvironmentYamlV2
   environmentGroup?: EnvironmentGroupYaml
   environments?: EnvironmentsYaml
@@ -3554,6 +3601,7 @@ export interface EntityDetail {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -3565,6 +3613,10 @@ export interface EntityDetail {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
 }
 
 export interface EntityDetailProtoDTO {
@@ -3639,9 +3691,16 @@ export interface EnvIdCountPair {
   envId?: string
 }
 
+export interface EnvSwaggerObjectWrapper {
+  envFilterEntityType?: 'infrastructures' | 'gitOpsClusters' | 'environments'
+  serviceOverrideConfig?: NGServiceOverrideConfig
+}
+
 export interface Environment {
-  identifier: string
-  type: 'PreProduction' | 'Production'
+  envGroupIdentifier?: string
+  envGroupName?: string
+  identifier?: string
+  name?: string
 }
 
 export interface EnvironmentDeploymentInfo {
@@ -3735,6 +3794,7 @@ export interface EnvironmentGroupYaml {
   deployToAll?: boolean
   envGroupRef: string
   environments?: EnvironmentYamlV2[]
+  filters?: FilterYaml[]
   metadata?: EnvironmentGroupMetadata
 }
 
@@ -3832,6 +3892,7 @@ export interface EnvironmentsMetadata {
 }
 
 export interface EnvironmentsYaml {
+  filters?: FilterYaml[]
   metadata?: EnvironmentsMetadata
   values?: EnvironmentYamlV2[]
 }
@@ -4186,7 +4247,6 @@ export interface Error {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'NO_ELIGIBLE_DELEGATES'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -4551,7 +4611,6 @@ export interface ErrorMetadata {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'NO_ELIGIBLE_DELEGATES'
   errorMessage?: string
 }
 
@@ -4967,7 +5026,6 @@ export interface Failure {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'NO_ELIGIBLE_DELEGATES'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -5158,6 +5216,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   name?:
     | 'TEST1'
     | 'TEST2'
@@ -5256,6 +5315,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   name?:
     | 'TEST1'
     | 'TEST2'
@@ -5349,6 +5409,7 @@ export interface FeedbackFormDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   score?: number
   suggestion?: string
 }
@@ -5472,6 +5533,16 @@ export interface FilterProperties {
   tags?: {
     [key: string]: string
   }
+}
+
+export interface FilterSpec {
+  [key: string]: any
+}
+
+export interface FilterYaml {
+  entities: ('infrastructures' | 'gitOpsClusters' | 'environments')[]
+  spec: FilterSpec
+  type: 'tags' | 'all'
 }
 
 export interface FolderNodeDTO {
@@ -5923,6 +5994,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -5934,6 +6006,10 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
   )[]
   moduleType?:
     | 'CD'
@@ -5948,6 +6024,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   searchTerm?: string
 }
 
@@ -6100,6 +6177,7 @@ export interface GitEntityFilterProperties {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -6111,6 +6189,10 @@ export interface GitEntityFilterProperties {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6126,6 +6208,7 @@ export interface GitEntityFilterProperties {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   searchTerm?: string
 }
 
@@ -6314,6 +6397,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -6325,6 +6409,10 @@ export interface GitFullSyncEntityInfoDTO {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6487,6 +6575,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -6498,6 +6587,10 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -6536,6 +6629,7 @@ export type GitOpsDeploymentRepoManifest = ManifestAttributes & {
 }
 
 export interface GitOpsExecutionSummary {
+  clusters?: Cluster[]
   environments?: Environment[]
 }
 
@@ -6780,6 +6874,7 @@ export interface GitSyncEntityDTO {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -6791,6 +6886,10 @@ export interface GitSyncEntityDTO {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -6947,6 +7046,7 @@ export interface GitSyncEntityListDTO {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -6958,6 +7058,10 @@ export interface GitSyncEntityListDTO {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7131,6 +7235,7 @@ export interface GitSyncErrorDTO {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -7142,6 +7247,10 @@ export interface GitSyncErrorDTO {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -7179,6 +7288,7 @@ export interface GitSyncRepoFilesList {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
 }
 
 export interface GitSyncSettingsDTO {
@@ -7667,6 +7777,7 @@ export interface InfrastructureDef {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
 }
 
 export interface InfrastructureDefinitionConfig {
@@ -7682,6 +7793,7 @@ export interface InfrastructureDefinitionConfig {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -7706,6 +7818,7 @@ export interface InfrastructureDefinitionConfig {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
 }
 
 export interface InfrastructureDetails {
@@ -7745,6 +7858,7 @@ export interface InfrastructureRequestDTO {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
   yaml?: string
 }
 
@@ -7767,6 +7881,7 @@ export interface InfrastructureResponseDTO {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -7789,6 +7904,7 @@ export interface InfrastructureResponseDTO {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
   yaml?: string
 }
 
@@ -7922,11 +8038,27 @@ export interface InstanceGroupedByArtifactList {
   instanceGroupedByArtifactList?: InstanceGroupedByArtifact[]
 }
 
+export interface InstanceGroupedByArtifactV2 {
+  artifactPath?: string
+  artifactVersion?: string
+  instanceGroupedByEnvironmentList?: InstanceGroupedByEnvironmentV2[]
+  lastDeployedAt?: number
+  latest?: boolean
+}
+
 export interface InstanceGroupedByEnvironment {
   envId?: string
   envName?: string
   instanceGroupedByClusterList?: InstanceGroupedByInfrastructure[]
   instanceGroupedByInfraList?: InstanceGroupedByInfrastructure[]
+}
+
+export interface InstanceGroupedByEnvironmentV2 {
+  envId?: string
+  envName?: string
+  instanceGroupedByClusterList?: InstanceGroupedByInfrastructureV2[]
+  instanceGroupedByInfraList?: InstanceGroupedByInfrastructureV2[]
+  lastDeployedAt?: number
 }
 
 export interface InstanceGroupedByInfrastructure {
@@ -7938,6 +8070,33 @@ export interface InstanceGroupedByInfrastructure {
   lastDeployedAt?: string
   lastPipelineExecutionId?: string
   lastPipelineExecutionName?: string
+}
+
+export interface InstanceGroupedByInfrastructureV2 {
+  agentIdentifier?: string
+  clusterIdentifier?: string
+  infraIdentifier?: string
+  infraName?: string
+  instanceGroupedByPipelineExecutionList?: InstanceGroupedByPipelineExecution[]
+  lastDeployedAt?: number
+}
+
+export interface InstanceGroupedByPipelineExecution {
+  count?: number
+  lastDeployedAt?: number
+  lastPipelineExecutionId?: string
+  lastPipelineExecutionName?: string
+}
+
+export interface InstanceGroupedByService {
+  instanceGroupedByArtifactList?: InstanceGroupedByArtifactV2[]
+  lastDeployedAt?: number
+  serviceId?: string
+  serviceName?: string
+}
+
+export interface InstanceGroupedByServiceList {
+  instanceGroupedByServiceList?: InstanceGroupedByService[]
 }
 
 export interface InstanceInfoDTO {
@@ -8083,7 +8242,7 @@ export interface JiraFieldNG {
 export interface JiraFieldSchemaNG {
   array?: boolean
   customType?: string
-  type: 'string' | 'number' | 'date' | 'datetime' | 'timetracking' | 'option' | 'user'
+  type: 'string' | 'number' | 'date' | 'datetime' | 'timetracking' | 'option' | 'user' | 'issuelink'
   typeStr: string
 }
 
@@ -8190,7 +8349,6 @@ export type K8sAzureInfrastructure = Infrastructure & {
 
 export type K8sBGSwapServicesStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  skipDryRun?: boolean
 }
 
 export interface K8sBasicInfo {
@@ -8210,7 +8368,6 @@ export type K8sBlueGreenStepInfo = StepSpecType & {
 
 export type K8sCanaryDeleteStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  skipDryRun?: boolean
 }
 
 export type K8sCanaryStepInfo = StepSpecType & {
@@ -8233,7 +8390,6 @@ export interface K8sContainer {
 export type K8sDeleteStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   deleteResources: DeleteResourcesWrapper
-  skipDryRun?: boolean
 }
 
 export type K8sGcpInfrastructure = Infrastructure & {
@@ -8268,7 +8424,6 @@ export type K8sManifest = ManifestAttributes & {
 export type K8sRollingRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   pruningEnabled?: boolean
-  skipDryRun?: boolean
 }
 
 export type K8sRollingStepInfo = StepSpecType & {
@@ -8280,7 +8435,6 @@ export type K8sRollingStepInfo = StepSpecType & {
 export type K8sScaleStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   instanceSelection: InstanceSelectionWrapper
-  skipDryRun?: boolean
   skipSteadyStateCheck?: boolean
   workload: string
 }
@@ -8613,6 +8767,7 @@ export interface LicensesWithSummaryDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
 }
 
 export type LocalConnectorDTO = ConnectorConfigDTO & {
@@ -8672,6 +8827,10 @@ export interface ManifestConfig {
     | 'TasManifest'
     | 'TasVars'
     | 'TasAutoScaler'
+    | 'AsgLaunchTemplate'
+    | 'AsgConfiguration'
+    | 'AsgScalingPolicy'
+    | 'AsgScheduledUpdateGroupAction'
 }
 
 export interface ManifestConfigWrapper {
@@ -8746,6 +8905,7 @@ export interface ModuleLicenseDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   premiumSupport?: boolean
   selfService?: boolean
   startTime?: number
@@ -9096,6 +9256,7 @@ export interface OAuthSignupDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   name?: string
   referer?: string
   signupAction?: 'REGULAR' | 'TRIAL' | 'SUBSCRIBE'
@@ -9510,6 +9671,20 @@ export interface PageInvite {
   totalPages?: number
 }
 
+export interface PageLicenseUsageDTO {
+  content?: LicenseUsageDTO[]
+  empty?: boolean
+  first?: boolean
+  last?: boolean
+  number?: number
+  numberOfElements?: number
+  pageable?: Pageable
+  size?: number
+  sort?: Sort
+  totalElements?: number
+  totalPages?: number
+}
+
 export interface PageOrganizationAggregateDTO {
   content?: OrganizationAggregateDTO[]
   empty?: boolean
@@ -9794,6 +9969,7 @@ export interface PartialSchemaDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -9994,6 +10170,7 @@ export interface Project {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   )[]
   name: string
   orgIdentifier?: string
@@ -10234,6 +10411,7 @@ export interface ReferencedByDTO {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -10245,6 +10423,10 @@ export interface ReferencedByDTO {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
 }
 
 export interface RefreshResponse {
@@ -10797,6 +10979,13 @@ export interface ResponseEnvCount {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseEnvSwaggerObjectWrapper {
+  correlationId?: string
+  data?: EnvSwaggerObjectWrapper
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseEnvironmentDeploymentInfo {
   correlationId?: string
   data?: EnvironmentDeploymentInfo
@@ -11077,9 +11266,23 @@ export interface ResponseInstanceCountDetailsByEnvTypeAndServiceId {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseInstanceDetailsByBuildId {
+  correlationId?: string
+  data?: InstanceDetailsByBuildId
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseInstanceGroupedByArtifactList {
   correlationId?: string
   data?: InstanceGroupedByArtifactList
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseInstanceGroupedByServiceList {
+  correlationId?: string
+  data?: InstanceGroupedByServiceList
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -11388,6 +11591,7 @@ export interface ResponseListEntityType {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -11399,6 +11603,10 @@ export interface ResponseListEntityType {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -11587,6 +11795,7 @@ export interface ResponseListServiceDefinitionType {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12062,7 +12271,6 @@ export interface ResponseMessage {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'NO_ELIGIBLE_DELEGATES'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -12105,13 +12313,6 @@ export interface ResponseNGEnvironmentConfig {
 export interface ResponseNGServiceConfig {
   correlationId?: string
   data?: NGServiceConfig
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseNGServiceOverrideConfig {
-  correlationId?: string
-  data?: NGServiceOverrideConfig
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -12315,6 +12516,13 @@ export interface ResponsePageInfrastructureResponse {
 export interface ResponsePageInvite {
   correlationId?: string
   data?: PageInvite
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageLicenseUsageDTO {
+  correlationId?: string
+  data?: PageLicenseUsageDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -12753,6 +12961,20 @@ export interface ResponseString {
 export interface ResponseSubscriptionDetailDTO {
   correlationId?: string
   data?: SubscriptionDetailDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseSvcEnvMigrationProjectWrapperResponseDto {
+  correlationId?: string
+  data?: SvcEnvMigrationProjectWrapperResponseDto
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseSvcEnvMigrationResponseDto {
+  correlationId?: string
+  data?: SvcEnvMigrationResponseDto
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -13765,6 +13987,7 @@ export interface ServiceDefinition {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
 }
 
 export interface ServiceDeployment {
@@ -13861,9 +14084,9 @@ export interface ServiceNowAuthenticationDTO {
 }
 
 export type ServiceNowConnector = ConnectorConfigDTO & {
-  auth?: ServiceNowAuthenticationDTO
+  auth: ServiceNowAuthenticationDTO
   delegateSelectors?: string[]
-  passwordRef: string
+  passwordRef?: string
   serviceNowUrl: string
   username?: string
   usernameRef?: string
@@ -14320,6 +14543,14 @@ export interface StageInfoConfig {
   execution?: ExecutionElementConfig
 }
 
+export interface StageMigrationFailureResponse {
+  failureReason?: string
+  orgIdentifier?: string
+  pipelineIdentifier?: string
+  projectIdentifier?: string
+  stageIdentifier?: string
+}
+
 export interface StageOverridesConfig {
   artifacts?: ArtifactListConfig
   configFiles?: ConfigFileWrapper[]
@@ -14351,6 +14582,7 @@ export interface StartTrialDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
 }
 
 export interface StartupCommandConfiguration {
@@ -14575,6 +14807,7 @@ export interface SubscriptionDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   paymentMethodId?: string
 }
 
@@ -14599,6 +14832,7 @@ export interface SubscriptionDetailDTO {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   pendingUpdate?: PendingUpdateDetailDTO
   status?: string
   subscriptionId?: string
@@ -14611,6 +14845,43 @@ export type SumoLogicConnectorDTO = ConnectorConfigDTO & {
   url: string
 }
 
+export interface SvcEnvMigrationProjectWrapperRequestDto {
+  infraIdentifierFormat: string
+  orgIdentifier: string
+  projectIdentifier: string
+  skipInfras?: string[]
+  skipPipelines?: string[]
+  skipServices?: string[]
+  templateMap?: {
+    [key: string]: TemplateObject
+  }
+  updatePipeline?: boolean
+}
+
+export interface SvcEnvMigrationProjectWrapperResponseDto {
+  failures?: StageMigrationFailureResponse[]
+  migratedPipelines?: string[]
+}
+
+export interface SvcEnvMigrationRequestDto {
+  infraIdentifierFormat: string
+  orgIdentifier: string
+  pipelineIdentifier: string
+  projectIdentifier: string
+  skipInfras?: string[]
+  skipServices?: string[]
+  templateMap?: {
+    [key: string]: TemplateObject
+  }
+  updatePipeline?: boolean
+}
+
+export interface SvcEnvMigrationResponseDto {
+  failures?: StageMigrationFailureResponse[]
+  migrated?: boolean
+  pipelineYaml?: string
+}
+
 export interface TGTGenerationSpecDTO {
   [key: string]: any
 }
@@ -14621,6 +14892,13 @@ export type TGTKeyTabFilePathSpecDTO = TGTGenerationSpecDTO & {
 
 export type TGTPasswordSpecDTO = TGTGenerationSpecDTO & {
   password?: string
+}
+
+export type TagsFilter = FilterSpec & {
+  matchType: 'all' | 'any'
+  tags: {
+    [key: string]: string
+  }
 }
 
 export interface TailFilePattern {
@@ -14749,6 +15027,11 @@ export interface TemplateLinkConfigForCustomSecretManager {
   templateInputs?: {
     [key: string]: NameValuePairWithDefault[]
   }
+  templateRef: string
+  versionLabel: string
+}
+
+export interface TemplateObject {
   templateRef: string
   versionLabel: string
 }
@@ -15157,6 +15440,7 @@ export interface UserAggregate {
 }
 
 export interface UserFilter {
+  emails?: string[]
   identifiers?: string[]
   parentFilter?: 'NO_PARENT_SCOPES' | 'INCLUDE_PARENT_SCOPES' | 'STRICTLY_PARENT_SCOPES'
   searchTerm?: string
@@ -15569,6 +15853,7 @@ export interface YamlSchemaMetadata {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   )[]
   namespace?: string
   yamlGroup: YamlGroup
@@ -15591,6 +15876,7 @@ export interface YamlSchemaWithDetails {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
@@ -15715,11 +16001,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
+
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -16403,6 +16689,7 @@ export interface ListActivitiesQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -16414,6 +16701,10 @@ export interface ListActivitiesQueryParams {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -16562,6 +16853,7 @@ export interface ListActivitiesQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -16573,6 +16865,10 @@ export interface ListActivitiesQueryParams {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -16825,6 +17121,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -16836,6 +17133,10 @@ export interface GetActivitiesSummaryQueryParams {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -16984,6 +17285,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -16995,6 +17297,10 @@ export interface GetActivitiesSummaryQueryParams {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -17906,6 +18212,7 @@ export interface GetProjectAggregateDTOListQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -29047,6 +29354,10 @@ export interface GetActiveInstancesByServiceIdEnvIdAndBuildIdsQueryParams {
   serviceId: string
   envId: string
   buildIds: string[]
+  infraIdentifier?: string
+  clusterIdentifier?: string
+  pipelineExecutionId?: string
+  lastDeployedAt?: number
 }
 
 export type GetActiveInstancesByServiceIdEnvIdAndBuildIdsProps = Omit<
@@ -29113,6 +29424,62 @@ export const getActiveInstancesByServiceIdEnvIdAndBuildIdsPromise = (
     GetActiveInstancesByServiceIdEnvIdAndBuildIdsQueryParams,
     void
   >(getConfig('ng/api'), `/dashboard/getInstancesByServiceEnvAndBuilds`, props, signal)
+
+export interface GetInstancesDetailsQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  serviceId: string
+  envId: string
+  infraIdentifier?: string
+  clusterIdentifier?: string
+  pipelineExecutionId: string
+  buildId: string
+}
+
+export type GetInstancesDetailsProps = Omit<
+  GetProps<ResponseInstanceDetailsByBuildId, Failure | Error, GetInstancesDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get list of instances grouped by serviceId, buildId, environment, infrastructure and pipeline execution
+ */
+export const GetInstancesDetails = (props: GetInstancesDetailsProps) => (
+  <Get<ResponseInstanceDetailsByBuildId, Failure | Error, GetInstancesDetailsQueryParams, void>
+    path={`/dashboard/getInstancesDetails`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetInstancesDetailsProps = Omit<
+  UseGetProps<ResponseInstanceDetailsByBuildId, Failure | Error, GetInstancesDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get list of instances grouped by serviceId, buildId, environment, infrastructure and pipeline execution
+ */
+export const useGetInstancesDetails = (props: UseGetInstancesDetailsProps) =>
+  useGet<ResponseInstanceDetailsByBuildId, Failure | Error, GetInstancesDetailsQueryParams, void>(
+    `/dashboard/getInstancesDetails`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get list of instances grouped by serviceId, buildId, environment, infrastructure and pipeline execution
+ */
+export const getInstancesDetailsPromise = (
+  props: GetUsingFetchProps<ResponseInstanceDetailsByBuildId, Failure | Error, GetInstancesDetailsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseInstanceDetailsByBuildId, Failure | Error, GetInstancesDetailsQueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/getInstancesDetails`,
+    props,
+    signal
+  )
 
 export interface GetServiceHeaderInfoQueryParams {
   accountIdentifier: string
@@ -31505,6 +31872,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -31516,6 +31884,10 @@ export interface ListReferredByEntitiesQueryParams {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -31725,6 +32097,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -31736,6 +32109,10 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
   searchTerm?: string
 }
 
@@ -31871,8 +32248,8 @@ export const createEnvironmentGroupPromise = (
 
 export interface GetEnvironmentGroupListQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   envGroupIdentifiers?: string[]
   searchTerm?: string
   page?: number
@@ -31965,8 +32342,8 @@ export const getEnvironmentGroupListPromise = (
 
 export interface DeleteEnvironmentGroupQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   branch?: string
   repoIdentifier?: string
   rootFolder?: string
@@ -32036,8 +32413,8 @@ export const deleteEnvironmentGroupPromise = (
 
 export interface GetEnvironmentGroupQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   deleted?: boolean
   branch?: string
   repoIdentifier?: string
@@ -32841,6 +33218,50 @@ export const updateEnvironmentV2Promise = (
     void
   >('PUT', getConfig('ng/api'), `/environmentsV2`, props, signal)
 
+export type DummyNGServiceOverrideConfigProps = Omit<
+  GetProps<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * This is dummy api to expose objects to swagger
+ */
+export const DummyNGServiceOverrideConfig = (props: DummyNGServiceOverrideConfigProps) => (
+  <Get<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>
+    path={`/environmentsV2/dummy-api-for-exposing-objects`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDummyNGServiceOverrideConfigProps = Omit<
+  UseGetProps<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * This is dummy api to expose objects to swagger
+ */
+export const useDummyNGServiceOverrideConfig = (props: UseDummyNGServiceOverrideConfigProps) =>
+  useGet<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>(
+    `/environmentsV2/dummy-api-for-exposing-objects`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * This is dummy api to expose objects to swagger
+ */
+export const dummyNGServiceOverrideConfigPromise = (
+  props: GetUsingFetchProps<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseEnvSwaggerObjectWrapper, Failure | Error, void, void>(
+    getConfig('ng/api'),
+    `/environmentsV2/dummy-api-for-exposing-objects`,
+    props,
+    signal
+  )
+
 export type DummyNGEnvironmentConfigApiProps = Omit<
   GetProps<ResponseNGEnvironmentConfig, Failure | Error, void, void>,
   'path'
@@ -32881,50 +33302,6 @@ export const dummyNGEnvironmentConfigApiPromise = (
   getUsingFetch<ResponseNGEnvironmentConfig, Failure | Error, void, void>(
     getConfig('ng/api'),
     `/environmentsV2/dummy-env-api`,
-    props,
-    signal
-  )
-
-export type DummyNGServiceOverrideConfigProps = Omit<
-  GetProps<ResponseNGServiceOverrideConfig, Failure | Error, void, void>,
-  'path'
->
-
-/**
- * This is dummy api to expose NGServiceOverrideConfig
- */
-export const DummyNGServiceOverrideConfig = (props: DummyNGServiceOverrideConfigProps) => (
-  <Get<ResponseNGServiceOverrideConfig, Failure | Error, void, void>
-    path={`/environmentsV2/dummy-serviceoverride-api`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseDummyNGServiceOverrideConfigProps = Omit<
-  UseGetProps<ResponseNGServiceOverrideConfig, Failure | Error, void, void>,
-  'path'
->
-
-/**
- * This is dummy api to expose NGServiceOverrideConfig
- */
-export const useDummyNGServiceOverrideConfig = (props: UseDummyNGServiceOverrideConfigProps) =>
-  useGet<ResponseNGServiceOverrideConfig, Failure | Error, void, void>(`/environmentsV2/dummy-serviceoverride-api`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
-
-/**
- * This is dummy api to expose NGServiceOverrideConfig
- */
-export const dummyNGServiceOverrideConfigPromise = (
-  props: GetUsingFetchProps<ResponseNGServiceOverrideConfig, Failure | Error, void, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseNGServiceOverrideConfig, Failure | Error, void, void>(
-    getConfig('ng/api'),
-    `/environmentsV2/dummy-serviceoverride-api`,
     props,
     signal
   )
@@ -33011,6 +33388,76 @@ export const getEnvironmentsInputYamlAndServiceOverridesPromise = (
     EnvironmentInputsetYamlAndServiceOverridesMetadataInput,
     void
   >('POST', getConfig('ng/api'), `/environmentsV2/environmentInputYamlAndServiceOverridesMetadata`, props, signal)
+
+export interface GetActiveServiceInstancesForEnvironmentQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  environmentIdentifier: string
+  serviceIdentifier?: string
+  buildId?: string
+}
+
+export type GetActiveServiceInstancesForEnvironmentProps = Omit<
+  GetProps<
+    ResponseInstanceGroupedByServiceList,
+    Failure | Error,
+    GetActiveServiceInstancesForEnvironmentQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get list of instances grouped by service for particular environment
+ */
+export const GetActiveServiceInstancesForEnvironment = (props: GetActiveServiceInstancesForEnvironmentProps) => (
+  <Get<ResponseInstanceGroupedByServiceList, Failure | Error, GetActiveServiceInstancesForEnvironmentQueryParams, void>
+    path={`/environmentsV2/getActiveServiceInstancesForEnvironment`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetActiveServiceInstancesForEnvironmentProps = Omit<
+  UseGetProps<
+    ResponseInstanceGroupedByServiceList,
+    Failure | Error,
+    GetActiveServiceInstancesForEnvironmentQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get list of instances grouped by service for particular environment
+ */
+export const useGetActiveServiceInstancesForEnvironment = (props: UseGetActiveServiceInstancesForEnvironmentProps) =>
+  useGet<
+    ResponseInstanceGroupedByServiceList,
+    Failure | Error,
+    GetActiveServiceInstancesForEnvironmentQueryParams,
+    void
+  >(`/environmentsV2/getActiveServiceInstancesForEnvironment`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get list of instances grouped by service for particular environment
+ */
+export const getActiveServiceInstancesForEnvironmentPromise = (
+  props: GetUsingFetchProps<
+    ResponseInstanceGroupedByServiceList,
+    Failure | Error,
+    GetActiveServiceInstancesForEnvironmentQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseInstanceGroupedByServiceList,
+    Failure | Error,
+    GetActiveServiceInstancesForEnvironmentQueryParams,
+    void
+  >(getConfig('ng/api'), `/environmentsV2/getActiveServiceInstancesForEnvironment`, props, signal)
 
 export interface GetEnvironmentAccessListQueryParams {
   page?: number
@@ -34884,6 +35331,7 @@ export interface GetReferencedByQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -34895,6 +35343,10 @@ export interface GetReferencedByQueryParams {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
   searchTerm?: string
 }
 
@@ -35351,7 +35803,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -35365,7 +35817,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -35380,7 +35832,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -35394,7 +35846,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -35406,7 +35858,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -35415,7 +35867,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -35921,7 +36373,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -35935,7 +36387,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -35950,7 +36402,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -35964,7 +36416,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -35976,7 +36428,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -35985,7 +36437,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -37236,6 +37688,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -37247,6 +37700,10 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -37463,6 +37920,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'ShellScriptProvision'
       | 'Freeze'
       | 'GitOpsUpdateReleaseRepo'
+      | 'GitOpsFetchLinkedApps'
       | 'EcsRunTask'
       | 'Chaos'
       | 'ElastigroupDeploy'
@@ -37474,6 +37932,10 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'TerraformApply'
       | 'TerraformDestroy'
       | 'TerraformRollback'
+      | 'IACMStage'
+      | 'IACMStep'
+      | 'IACM'
+      | 'Container'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -39389,6 +39851,7 @@ export interface GetInfrastructureListQueryParams {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
   deploymentTemplateIdentifier?: string
   versionLabel?: string
   sort?: string[]
@@ -42073,6 +42536,7 @@ export interface GetEditionActionsQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
 }
 
 export type GetEditionActionsProps = Omit<
@@ -42134,6 +42598,7 @@ export interface StartCommunityLicenseQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
 }
 
 export type StartCommunityLicenseProps = Omit<
@@ -42261,6 +42726,7 @@ export interface StartFreeLicenseQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   referer?: string
   gaClientId?: string
 }
@@ -42326,6 +42792,7 @@ export interface GetModuleLicensesByAccountAndModuleTypeQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
 }
 
 export interface GetModuleLicensesByAccountAndModuleTypePathParams {
@@ -42554,6 +43021,7 @@ export interface GetLicensesAndSummaryQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
 }
 
 export interface GetLicensesAndSummaryPathParams {
@@ -43376,6 +43844,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -43387,6 +43856,10 @@ export interface GetStepYamlSchemaQueryParams {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
   yamlGroup?: string
 }
 
@@ -43663,6 +44136,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -43674,6 +44148,10 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -43932,6 +44410,7 @@ export interface GetStepsQueryParams {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
 }
 
 export type GetStepsProps = Omit<GetProps<ResponseStepCategory, Failure | Error, GetStepsQueryParams, void>, 'path'>
@@ -44079,6 +44558,7 @@ export interface GetExecutionStrategyYamlQueryParams {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
   accountIdentifier?: string
@@ -44141,6 +44621,7 @@ export interface PostExecutionStrategyYamlQueryParams {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -44216,6 +44697,7 @@ export interface GetProjectListQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -44342,6 +44824,7 @@ export interface GetProjectListWithMultiOrgFilterQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -46484,6 +46967,160 @@ export const getMetadataPromise = (
     void
   >('POST', getConfig('ng/api'), `/secret-managers/meta-data`, props, signal)
 
+export interface MigrateSvcEnvFromPipelineQueryParams {
+  accountIdentifier: string
+}
+
+export type MigrateSvcEnvFromPipelineProps = Omit<
+  MutateProps<
+    ResponseSvcEnvMigrationResponseDto,
+    Failure | Error,
+    MigrateSvcEnvFromPipelineQueryParams,
+    SvcEnvMigrationRequestDto,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Migrate a pipeline to new service and environment framework
+ */
+export const MigrateSvcEnvFromPipeline = (props: MigrateSvcEnvFromPipelineProps) => (
+  <Mutate<
+    ResponseSvcEnvMigrationResponseDto,
+    Failure | Error,
+    MigrateSvcEnvFromPipelineQueryParams,
+    SvcEnvMigrationRequestDto,
+    void
+  >
+    verb="POST"
+    path={`/service-env-migration/pipeline`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseMigrateSvcEnvFromPipelineProps = Omit<
+  UseMutateProps<
+    ResponseSvcEnvMigrationResponseDto,
+    Failure | Error,
+    MigrateSvcEnvFromPipelineQueryParams,
+    SvcEnvMigrationRequestDto,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Migrate a pipeline to new service and environment framework
+ */
+export const useMigrateSvcEnvFromPipeline = (props: UseMigrateSvcEnvFromPipelineProps) =>
+  useMutate<
+    ResponseSvcEnvMigrationResponseDto,
+    Failure | Error,
+    MigrateSvcEnvFromPipelineQueryParams,
+    SvcEnvMigrationRequestDto,
+    void
+  >('POST', `/service-env-migration/pipeline`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Migrate a pipeline to new service and environment framework
+ */
+export const migrateSvcEnvFromPipelinePromise = (
+  props: MutateUsingFetchProps<
+    ResponseSvcEnvMigrationResponseDto,
+    Failure | Error,
+    MigrateSvcEnvFromPipelineQueryParams,
+    SvcEnvMigrationRequestDto,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseSvcEnvMigrationResponseDto,
+    Failure | Error,
+    MigrateSvcEnvFromPipelineQueryParams,
+    SvcEnvMigrationRequestDto,
+    void
+  >('POST', getConfig('ng/api'), `/service-env-migration/pipeline`, props, signal)
+
+export interface MigrateSvcEnvFromProjectQueryParams {
+  accountIdentifier: string
+}
+
+export type MigrateSvcEnvFromProjectProps = Omit<
+  MutateProps<
+    ResponseSvcEnvMigrationProjectWrapperResponseDto,
+    Failure | Error,
+    MigrateSvcEnvFromProjectQueryParams,
+    SvcEnvMigrationProjectWrapperRequestDto,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Migrate a project to new service and environment framework
+ */
+export const MigrateSvcEnvFromProject = (props: MigrateSvcEnvFromProjectProps) => (
+  <Mutate<
+    ResponseSvcEnvMigrationProjectWrapperResponseDto,
+    Failure | Error,
+    MigrateSvcEnvFromProjectQueryParams,
+    SvcEnvMigrationProjectWrapperRequestDto,
+    void
+  >
+    verb="POST"
+    path={`/service-env-migration/project`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseMigrateSvcEnvFromProjectProps = Omit<
+  UseMutateProps<
+    ResponseSvcEnvMigrationProjectWrapperResponseDto,
+    Failure | Error,
+    MigrateSvcEnvFromProjectQueryParams,
+    SvcEnvMigrationProjectWrapperRequestDto,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Migrate a project to new service and environment framework
+ */
+export const useMigrateSvcEnvFromProject = (props: UseMigrateSvcEnvFromProjectProps) =>
+  useMutate<
+    ResponseSvcEnvMigrationProjectWrapperResponseDto,
+    Failure | Error,
+    MigrateSvcEnvFromProjectQueryParams,
+    SvcEnvMigrationProjectWrapperRequestDto,
+    void
+  >('POST', `/service-env-migration/project`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Migrate a project to new service and environment framework
+ */
+export const migrateSvcEnvFromProjectPromise = (
+  props: MutateUsingFetchProps<
+    ResponseSvcEnvMigrationProjectWrapperResponseDto,
+    Failure | Error,
+    MigrateSvcEnvFromProjectQueryParams,
+    SvcEnvMigrationProjectWrapperRequestDto,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseSvcEnvMigrationProjectWrapperResponseDto,
+    Failure | Error,
+    MigrateSvcEnvFromProjectQueryParams,
+    SvcEnvMigrationProjectWrapperRequestDto,
+    void
+  >('POST', getConfig('ng/api'), `/service-env-migration/project`, props, signal)
+
 export interface ListServiceAccountQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -46779,7 +47416,7 @@ export type GetServiceAccountInternalProps = Omit<
   GetServiceAccountInternalPathParams
 
 /**
- * Get service account
+ * Get service account by id
  */
 export const GetServiceAccountInternal = ({ identifier, ...props }: GetServiceAccountInternalProps) => (
   <Get<
@@ -46806,7 +47443,7 @@ export type UseGetServiceAccountInternalProps = Omit<
   GetServiceAccountInternalPathParams
 
 /**
- * Get service account
+ * Get service account by id
  */
 export const useGetServiceAccountInternal = ({ identifier, ...props }: UseGetServiceAccountInternalProps) =>
   useGet<
@@ -46821,7 +47458,7 @@ export const useGetServiceAccountInternal = ({ identifier, ...props }: UseGetSer
   })
 
 /**
- * Get service account
+ * Get service account by id
  */
 export const getServiceAccountInternalPromise = (
   {
@@ -47840,6 +48477,7 @@ export interface GetServiceListQueryParams {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -48404,6 +49042,7 @@ export interface GetServiceAccessListQueryParams {
     | 'ECS'
     | 'Elastigroup'
     | 'TAS'
+    | 'Asg'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -49960,6 +50599,7 @@ export interface ListSubscriptionsQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
 }
 
 export type ListSubscriptionsProps = Omit<
@@ -50543,6 +51183,7 @@ export interface RetrieveProductPricesQueryParams {
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
+    | 'IACM'
 }
 
 export type RetrieveProductPricesProps = Omit<
@@ -50902,10 +51543,12 @@ export const updateSubscriptionPromise = (
   >('PUT', getConfig('ng/api'), `/subscriptions/${subscriptionId}`, props, signal)
 
 export interface GetTasOrganizationsQueryParams {
-  connectorRef: string
+  connectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  envId?: string
+  infraDefinitionId?: string
 }
 
 export type GetTasOrganizationsProps = Omit<
@@ -51005,10 +51648,10 @@ export const getTasSpacesPromise = (
   )
 
 export interface GetTasSpacesV2QueryParams {
-  connectorRef: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  organization?: string
   envId: string
   infraDefinitionId: string
 }
@@ -51725,6 +52368,87 @@ export const getCDLicenseUsageForServicesPromise = (
     props,
     signal
   )
+
+export interface LisCDActiveServicesQueryParams {
+  accountIdentifier?: string
+  page?: number
+  size?: number
+  sort?: string[]
+  timestamp?: number
+}
+
+export type LisCDActiveServicesProps = Omit<
+  MutateProps<
+    ResponsePageLicenseUsageDTO,
+    Failure | Error,
+    LisCDActiveServicesQueryParams,
+    ActiveServicesFilterParams,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * List Active Services in CD Module
+ */
+export const LisCDActiveServices = (props: LisCDActiveServicesProps) => (
+  <Mutate<
+    ResponsePageLicenseUsageDTO,
+    Failure | Error,
+    LisCDActiveServicesQueryParams,
+    ActiveServicesFilterParams,
+    void
+  >
+    verb="POST"
+    path={`/usage/cd/active-services`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseLisCDActiveServicesProps = Omit<
+  UseMutateProps<
+    ResponsePageLicenseUsageDTO,
+    Failure | Error,
+    LisCDActiveServicesQueryParams,
+    ActiveServicesFilterParams,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * List Active Services in CD Module
+ */
+export const useLisCDActiveServices = (props: UseLisCDActiveServicesProps) =>
+  useMutate<
+    ResponsePageLicenseUsageDTO,
+    Failure | Error,
+    LisCDActiveServicesQueryParams,
+    ActiveServicesFilterParams,
+    void
+  >('POST', `/usage/cd/active-services`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * List Active Services in CD Module
+ */
+export const lisCDActiveServicesPromise = (
+  props: MutateUsingFetchProps<
+    ResponsePageLicenseUsageDTO,
+    Failure | Error,
+    LisCDActiveServicesQueryParams,
+    ActiveServicesFilterParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageLicenseUsageDTO,
+    Failure | Error,
+    LisCDActiveServicesQueryParams,
+    ActiveServicesFilterParams,
+    void
+  >('POST', getConfig('ng/api'), `/usage/cd/active-services`, props, signal)
 
 export interface GetLicenseUsageQueryParams {
   accountIdentifier?: string
@@ -56590,6 +57314,7 @@ export interface GetYamlSchemaQueryParams {
     | 'ShellScriptProvision'
     | 'Freeze'
     | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
     | 'EcsRunTask'
     | 'Chaos'
     | 'ElastigroupDeploy'
@@ -56601,6 +57326,10 @@ export interface GetYamlSchemaQueryParams {
     | 'TerraformApply'
     | 'TerraformDestroy'
     | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
   subtype?:
     | 'K8sCluster'
     | 'Git'

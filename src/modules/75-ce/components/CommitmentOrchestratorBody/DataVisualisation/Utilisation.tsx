@@ -10,13 +10,13 @@ import { useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { defaultTo } from 'lodash-es'
 import { Container } from '@harness/uicore'
+import { getStaticSchedulePeriodTime } from '@common/utils/momentUtils'
 import {
   Column as GridColumn,
   RenderCostCell,
   RenderNameCell,
   RenderPercentageCell
 } from '@ce/components/PerspectiveGrid/Columns'
-import { getStaticSchedulePeriodTime } from '@ce/utils/momentUtils'
 import { CCM_CHART_TYPES } from '@ce/constants'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetCommitmentUtilisation } from 'services/lw-co'

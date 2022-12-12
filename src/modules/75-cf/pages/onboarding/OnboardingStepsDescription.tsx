@@ -22,7 +22,7 @@ export const OnboardingStepsDescription = (): React.ReactElement => {
   ]
 
   return (
-    <Layout.Horizontal>
+    <Layout.Horizontal padding={{ bottom: 'huge' }}>
       {steps.map((step, i) => (
         <Layout.Horizontal key={`item-${i}`} flex={{ alignItems: 'center' }} spacing="small">
           <Container

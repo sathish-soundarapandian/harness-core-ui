@@ -82,6 +82,7 @@ declare interface Window {
     sdkKey: string
     async: boolean
   }
+  noAuthHeader: boolean
 }
 
 declare interface WindowEventMap {
@@ -176,41 +177,6 @@ declare module 'sto/PipelineSecurityView' {
 }
 declare module 'stoV2/PipelineSecurityView' {
   const ChildApp: React.ComponentType<PipelineSecurityViewProps>
-  export default ChildApp
-}
-
-declare module 'code/App' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'code/RepositoriesListing' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'code/Repository' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'code/RepositoryFileEdit' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'code/RepositoryCommits' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'code/RepositoryBranches' {
-  const ChildApp: ChildAppComponent
-  export default ChildApp
-}
-
-declare module 'code/RepositorySettings' {
-  const ChildApp: ChildAppComponent
   export default ChildApp
 }
 

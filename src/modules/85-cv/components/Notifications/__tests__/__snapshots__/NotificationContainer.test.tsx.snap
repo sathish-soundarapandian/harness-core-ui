@@ -296,7 +296,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
 </div>
 `;
 
-exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer renders notificationsTable with data when there are notofications present 1`] = `
+exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer renders notificationsTable with data when there are notifications present 1`] = `
 <div>
   <div
     class="Layout--vertical StyledProps--main tooltipStyle notificationsContainer StyledProps--margin-medium"

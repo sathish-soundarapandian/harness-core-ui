@@ -20,6 +20,7 @@ import {
   GARBuildDetailsDTO,
   RegionGar,
   SidecarArtifact,
+  useGetBuildDetailsForGoogleArtifactRegistry,
   useGetBuildDetailsForGoogleArtifactRegistryV2,
   useGetRegionsForGoogleArtifactRegistry
 } from 'services/cd-ng'
@@ -32,6 +33,7 @@ import {
   getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
+  getValidInitialValuePath,
   getYamlData,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity
@@ -61,7 +63,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     isSidecar,
     serviceIdentifier,
     stepViewType,
-    pipelineIdentifier
+    pipelineIdentifier,
+    artifacts,
+    useArtifactV1Data = false
   } = props
 
   const { getString } = useStrings()
@@ -78,31 +82,50 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
 
   const connectorRefValue = getDefaultQueryParam(
-    artifact?.spec?.connectorRef,
-    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`)
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
+    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
   const packageValue = getDefaultQueryParam(
-    artifact?.spec?.package,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.package`, ''), artifact?.spec?.package),
     get(initialValues?.artifacts, `${artifactPath}.spec.package`)
   )
   const projectValue = getDefaultQueryParam(
-    artifact?.spec?.project,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.project`, ''), artifact?.spec?.project),
     get(initialValues?.artifacts, `${artifactPath}.spec.project`)
   )
   const regionValue = getDefaultQueryParam(
-    artifact?.spec?.region,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.region`, ''), artifact?.spec?.region),
     get(initialValues?.artifacts, `${artifactPath}.spec.region`)
   )
   const repositoryNameValue = getDefaultQueryParam(
-    artifact?.spec?.repositoryName,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.repositoryName`, ''), artifact?.spec?.repositoryName),
     get(initialValues?.artifacts, `${artifactPath}.spec.repositoryName`)
   )
 
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
-    data: buildsDetail,
-    refetch: refetchBuildDetails,
-    loading: fetchingBuilds,
-    error
+    data: buildsV1Detail,
+    refetch: refetchBuildV1Details,
+    loading: fetchingV1Builds,
+    error: fetchingV1BuildsError
+  } = useGetBuildDetailsForGoogleArtifactRegistry({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      package: getFinalQueryParamValue(packageValue),
+      project: getFinalQueryParamValue(projectValue),
+      region: getFinalQueryParamValue(regionValue),
+      repositoryName: getFinalQueryParamValue(repositoryNameValue)
+    }
+  })
+
+  const {
+    data: buildsV2Detail,
+    refetch: refetchBuildV2Details,
+    loading: fetchingV2Builds,
+    error: fetchingV2BuildsError
   } = useMutateAsGet(useGetBuildDetailsForGoogleArtifactRegistryV2, {
     lazy: true,
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
@@ -134,6 +157,20 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       )
     }
   })
+
+  const { refetchBuildDetails, fetchingBuilds, error, buildsDetail } = useArtifactV1Data
+    ? {
+        refetchBuildDetails: refetchBuildV1Details,
+        fetchingBuilds: fetchingV1Builds,
+        error: fetchingV1BuildsError,
+        buildsDetail: buildsV1Detail
+      }
+    : {
+        refetchBuildDetails: refetchBuildV2Details,
+        fetchingBuilds: fetchingV2Builds,
+        error: fetchingV2BuildsError,
+        buildsDetail: buildsV2Detail
+      }
 
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>

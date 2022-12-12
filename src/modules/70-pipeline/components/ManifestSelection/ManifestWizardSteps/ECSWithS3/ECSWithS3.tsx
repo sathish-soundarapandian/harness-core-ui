@@ -5,14 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, isEmpty, memoize, merge } from 'lodash-es'
+import { defaultTo, get, isEmpty, merge } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { Menu } from '@blueprintjs/core'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
+import produce from 'immer'
 import {
   Text,
   Layout,
@@ -31,7 +32,6 @@ import { FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import {
-  BucketResponse,
   ConnectorConfigDTO,
   ManifestConfig,
   ManifestConfigWrapper,
@@ -41,6 +41,7 @@ import {
 import { useListAwsRegions } from 'services/portal'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import {
@@ -89,8 +90,6 @@ export function ECSWithS3({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
-  const [regions, setRegions] = useState<SelectOption[]>([])
-  const [bucketList, setBucketList] = React.useState<BucketResponse[] | undefined>([])
   const [lastQueryData, setLastQueryData] = React.useState({ region: '' })
 
   /* Code related to region */
@@ -107,13 +106,11 @@ export function ECSWithS3({
     }
   })
 
-  useEffect(() => {
-    const regionValues = defaultTo(regionData?.resource, []).map(region => ({
+  const regions = useMemo(() => {
+    return defaultTo(regionData?.resource, []).map(region => ({
       value: region.value,
-      label: region.name
+      label: region.name as string
     }))
-
-    setRegions(regionValues as SelectOption[])
   }, [regionData?.resource])
 
   /* Code related to bucketName */
@@ -133,27 +130,22 @@ export function ECSWithS3({
     lazy: true
   })
 
-  React.useEffect(() => {
-    if (error) {
-      setBucketList([])
-    } else if (Array.isArray(bucketData?.data)) {
-      setBucketList(bucketData?.data)
-    }
-  }, [bucketData?.data, error])
-
-  const selectItems = React.useMemo(() => {
-    return bucketList?.map(currBucket => ({
-      label: currBucket.bucketName as string,
-      value: currBucket.bucketName as string
-    }))
-  }, [bucketList])
-
-  const buckets = React.useMemo((): { label: string; value: string }[] => {
+  const buckets: SelectOption[] = useMemo(() => {
     if (loading) {
       return [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
+    } else if (error) {
+      return []
+    } else if (Array.isArray(bucketData?.data)) {
+      return defaultTo(
+        bucketData?.data?.map(currBucket => ({
+          label: currBucket.bucketName as string,
+          value: currBucket.bucketName as string
+        })),
+        []
+      )
     }
-    return defaultTo(selectItems, [])
-  }, [loading, selectItems])
+    return []
+  }, [bucketData?.data, error, loading])
 
   React.useEffect(() => {
     if (checkIfQueryParamsisNotEmpty(Object.values(lastQueryData))) {
@@ -188,19 +180,31 @@ export function ECSWithS3({
     [canFetchBuckets]
   )
 
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        disabled={loading}
-        onClick={handleClick}
-      />
-    </div>
-  ))
+  const fetchBucketsByRegion = React.useCallback(
+    (formik: FormikProps<ECSWithS3DataType>) => {
+      if (!loading && formik.values?.region) {
+        fetchBuckets(formik.values.region)
+      }
+    },
+    [loading, fetchBuckets]
+  )
+
+  const itemRenderer = useCallback(
+    (item: { label: string }, { handleClick }) => (
+      <div key={item.label.toString()}>
+        <Menu.Item
+          text={
+            <Layout.Horizontal spacing="small">
+              <Text>{item.label}</Text>
+            </Layout.Horizontal>
+          }
+          disabled={loading}
+          onClick={handleClick}
+        />
+      </div>
+    ),
+    [loading]
+  )
 
   /** Calculating initialValues for formik form */
   const setBucketNameInitialValue = (values: ECSWithS3DataType, specValues: StoreConfig): void => {
@@ -328,14 +332,14 @@ export function ECSWithS3({
               ) {
                 return
               }
-              if (!loading && formik.values?.region) {
-                fetchBuckets(formik.values.region)
-              }
+              fetchBucketsByRegion(formik)
             }
           }}
         />
         {getMultiTypeFromValue(formik.values?.bucketName) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
+          <SelectConfigureOptions
+            options={buckets}
+            fetchOptions={fetchBucketsByRegion.bind(null, formik)}
             style={{ alignSelf: 'center', marginBottom: 3 }}
             value={formik.values?.bucketName as string}
             type="String"
@@ -413,16 +417,25 @@ export function ECSWithS3({
                     multiTypeInputProps={{
                       expressions,
                       allowableTypes,
-                      onChange: () => {
-                        if (getMultiTypeFromValue(formik.values.bucketName) === MultiTypeInputType.FIXED) {
-                          formik.setFieldValue('bucketName', '')
-                        }
+                      onChange: selectedValue => {
+                        const selectedValueString =
+                          typeof selectedValue === 'string'
+                            ? selectedValue
+                            : ((selectedValue as SelectOption)?.value as string)
+                        const updatedValues = produce(formik.values, draft => {
+                          draft.region = selectedValueString
+                          if (getMultiTypeFromValue(formik.values.bucketName) === MultiTypeInputType.FIXED) {
+                            draft.bucketName = ''
+                          }
+                        })
+                        formik.setValues(updatedValues)
                       }
                     }}
                     label={getString('regionLabel')}
                   />
                   {getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
+                    <SelectConfigureOptions
+                      options={regions}
                       style={{ alignSelf: 'center', marginBottom: 3 }}
                       value={formik.values?.region as string}
                       type="String"

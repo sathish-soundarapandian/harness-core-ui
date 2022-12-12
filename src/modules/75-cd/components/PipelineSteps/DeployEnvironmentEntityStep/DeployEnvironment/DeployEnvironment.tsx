@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
+import { unstable_batchedUpdates } from 'react-dom'
 import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
@@ -21,6 +22,7 @@ import {
   Layout,
   ModalDialog,
   MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
   SelectOption,
   useToggleOpen
 } from '@harness/uicore'
@@ -30,7 +32,7 @@ import { useStrings } from 'framework/strings'
 
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
-import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
+import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -40,6 +42,8 @@ import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineU
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -51,6 +55,12 @@ import AddEditEnvironmentModal from '../../DeployInfrastructureStep/AddEditEnvir
 import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
 import DeployCluster from '../DeployCluster/DeployCluster'
 
+import InlineEntityFilters from '../components/InlineEntityFilters/InlineEntityFilters'
+import {
+  EntityFilterType,
+  EntityType,
+  InlineEntityFiltersRadioType
+} from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
 import css from './DeployEnvironment.module.scss'
 
 interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomStepProps> {
@@ -106,6 +116,8 @@ export default function DeployEnvironment({
   const uniquePathForEnvironments = React.useRef(`_pseudo_field_${uuid()}`)
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
 
+  const { GLOBAL_SERVICE_ENV } = useFeatureFlags()
+
   // State
   const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(getAllFixedEnvironments(initialValues))
   const [environmentsType, setEnvironmentsType] = useState<MultiTypeInputType>(
@@ -113,9 +125,10 @@ export default function DeployEnvironment({
   )
 
   // Constants
-  const isFixed = environmentsType === MultiTypeInputType.FIXED
-
-  const isExpression = environmentsType === MultiTypeInputType.EXPRESSION
+  const isFixed = isMultiTypeFixed(environmentsType)
+  const isRuntime = isMultiTypeRuntime(environmentsType)
+  const isExpression = isMultiTypeExpression(environmentsType)
+  const filterPrefix = 'environmentFilters.runtime'
 
   // API
   const {
@@ -242,8 +255,8 @@ export default function DeployEnvironment({
         // set value of unique path to All in case no environments are selected or runtime if environments is set to runtime
         // This is specifically used for on load
         const envIdentifierValue =
-          getMultiTypeFromValue(values.environments) === MultiTypeInputType.RUNTIME
-            ? values.environments
+          getMultiTypeFromValue(initialValues.environments) === MultiTypeInputType.RUNTIME
+            ? initialValues.environments
             : [SELECT_ALL_OPTION]
 
         setFieldValue(`${uniquePathForEnvironments.current}`, envIdentifierValue)
@@ -349,50 +362,95 @@ export default function DeployEnvironment({
     updateFormikAndLocalState(newFormValues)
   }
 
+  const handleFilterRadio = (selectedRadioValue: InlineEntityFiltersRadioType): void => {
+    if (selectedRadioValue === InlineEntityFiltersRadioType.MANUAL) {
+      unstable_batchedUpdates(() => {
+        setFieldValue(gitOpsEnabled ? 'clusters' : 'infrastructures', RUNTIME_INPUT_VALUE)
+        setFieldValue(filterPrefix, undefined)
+      })
+    }
+  }
+  const commonProps = {
+    name: isMultiEnvironment ? uniquePathForEnvironments.current : 'environment',
+    tooltipProps: isMultiEnvironment
+      ? { dataTooltipId: 'specifyYourEnvironments' }
+      : { dataTooltipId: 'specifyYourEnvironment' },
+    label: isMultiEnvironment
+      ? getString('cd.pipelineSteps.environmentTab.specifyYourEnvironments')
+      : getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment'),
+    disabled: disabled
+  }
+
   return (
     <>
       <Layout.Horizontal
         spacing="medium"
         flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
         className={css.inputField}
+        margin={{ bottom: isMultiEnvironment ? 'medium' : 'none' }}
       >
         {isMultiEnvironment ? (
-          <FormMultiTypeMultiSelectDropDown
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironments')}
-            tooltipProps={{ dataTooltipId: 'specifyYourEnvironments' }}
-            name={uniquePathForEnvironments.current}
-            // Form group disabled
-            disabled={disabled}
-            dropdownProps={{
-              placeholder: placeHolderForEnvironments,
-              items: selectOptions,
-              // Field disabled
-              disabled,
-              isAllSelectionSupported: isUnderEnvGroup
-            }}
-            onChange={items => {
-              setFieldTouched(uniquePathForEnvironments.current, true)
-              if (items?.at(0)?.value === 'All') {
-                setFieldValue(`environments`, undefined)
-                setSelectedEnvironments([])
-              } else {
-                setFieldValue(`environments`, items)
-                setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
-              }
-            }}
-            multiTypeProps={{
-              onTypeChange: setEnvironmentsType,
-              width: 280,
-              allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
-            }}
-          />
-        ) : (
+          GLOBAL_SERVICE_ENV && !isUnderEnvGroup ? (
+            /*** This condition is added as entities one step down the entity tree
+              will be following the parent scope so no need of the new component here ***/
+            <MultiTypeEnvironmentField
+              {...commonProps}
+              placeholder={placeHolderForEnvironments}
+              openAddNewModal={openAddNewModal}
+              isMultiSelect
+              onMultiSelectChange={(items: SelectOption[]) => {
+                setFieldTouched(uniquePathForEnvironments.current, true)
+                if (items?.at(0)?.value === 'All') {
+                  setFieldValue(`environments`, undefined)
+                  setSelectedEnvironments([])
+                } else {
+                  unstable_batchedUpdates(() => {
+                    setFieldValue(`environments`, items)
+                    if (isValueRuntimeInput(items)) {
+                      setFieldValue(gitOpsEnabled ? 'clusters' : 'infrastructures', RUNTIME_INPUT_VALUE)
+                    }
+                  })
+                  setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
+                }
+              }}
+              width={300}
+              multiTypeProps={{
+                expressions,
+                onTypeChange: setEnvironmentsType,
+                allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
+              }}
+            />
+          ) : (
+            <FormMultiTypeMultiSelectDropDown
+              {...commonProps}
+              dropdownProps={{
+                placeholder: placeHolderForEnvironments,
+                items: selectOptions,
+                // Field disabled
+                disabled,
+                isAllSelectionSupported: isUnderEnvGroup
+              }}
+              onChange={items => {
+                setFieldTouched(uniquePathForEnvironments.current, true)
+                if (items?.at(0)?.value === 'All') {
+                  setFieldValue(`environments`, undefined)
+                  setSelectedEnvironments([])
+                } else {
+                  setFieldValue(`environments`, items)
+                  setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
+                }
+              }}
+              multiTypeProps={{
+                onTypeChange: setEnvironmentsType,
+                width: 280,
+                allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
+              }}
+            />
+          )
+        ) : !GLOBAL_SERVICE_ENV ? (
           <FormInput.MultiTypeInput
-            tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
-            name="environment"
+            {...commonProps}
             useValue
-            disabled={disabled}
             placeholder={placeHolderForEnvironment}
             multiTypeInputProps={{
               onTypeChange: setEnvironmentsType,
@@ -406,6 +464,22 @@ export default function DeployEnvironment({
               expressions
             }}
             selectItems={selectOptions}
+          />
+        ) : (
+          <MultiTypeEnvironmentField
+            {...commonProps}
+            placeholder={placeHolderForEnvironment}
+            setRefValue={true}
+            openAddNewModal={openAddNewModal}
+            onChange={item => {
+              setSelectedEnvironments([item])
+            }}
+            width={300}
+            multiTypeProps={{
+              expressions,
+              allowableTypes: gitOpsEnabled ? getAllowableTypesWithoutExpression(allowableTypes) : allowableTypes,
+              defaultValueToReset: ''
+            }}
           />
         )}
         {isFixed && !isUnderEnvGroup && (
@@ -475,6 +549,58 @@ export default function DeployEnvironment({
               </>
             )}
           </>
+        )}
+
+        {/* This component is specifically for filters */}
+        {isRuntime && !readonly && (isMultiEnvironment ? true : gitOpsEnabled) && (
+          <InlineEntityFilters
+            filterPrefix={filterPrefix}
+            entityStringKey={gitOpsEnabled ? 'common.clusters' : 'common.infrastructures'}
+            onRadioValueChange={handleFilterRadio}
+            readonly={readonly}
+            showCard
+            hasTopMargin
+            baseComponent={
+              <>
+                {gitOpsEnabled ? (
+                  <DeployCluster
+                    initialValues={{
+                      environments: RUNTIME_INPUT_VALUE as any
+                    }}
+                    readonly
+                    allowableTypes={allowableTypes}
+                    isMultiCluster
+                    environmentIdentifier={''}
+                    lazyCluster
+                  />
+                ) : (
+                  <DeployInfrastructure
+                    initialValues={{
+                      environments: RUNTIME_INPUT_VALUE as any
+                    }}
+                    readonly
+                    allowableTypes={allowableTypes}
+                    environmentIdentifier={''}
+                    isMultiInfrastructure
+                    deploymentType={deploymentType}
+                    customDeploymentRef={customDeploymentRef}
+                    lazyInfrastructure
+                  />
+                )}
+              </>
+            }
+            entityFilterListProps={{
+              entities: [gitOpsEnabled ? EntityType.CLUSTERS : EntityType.INFRASTRUCTURES],
+              filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
+              placeholderProps: {
+                entity: getString('common.filterOnName', {
+                  name: getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
+                }),
+                tags: getString('common.filterOnName', { name: getString('typeLabel') })
+              },
+              allowableTypes
+            }}
+          />
         )}
 
         <ModalDialog

@@ -25,7 +25,6 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     loading: loadingOrgs,
     data: orgsData,
     refetch: refetchOrgs
-    // error: orgsError
   } = useGetOrganizationAggregateDTOList({
     queryParams: { accountIdentifier: accountId },
     lazy: true
@@ -33,7 +32,6 @@ export const useFreezeStudioData = (): ResourcesInterface => {
 
   const {
     data: serviceData,
-    // error,
     loading: loadingServices,
     refetch: refetchServices
   } = useGetServiceList({
@@ -180,45 +178,3 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     fetchProjectsForOrgId
   }
 }
-// Deprecated - we will remove it in November
-// React.useEffect(() => {
-//   if (!loadingAccountProjects && accountProjects?.data?.content) {
-//     const accProjects = accountProjects?.data?.content
-//     const accum: Record<string, ProjctsByOrgId> = {}
-//
-//     accProjects.map(datum => {
-//       if (isEmpty(datum.project)) {
-//         return
-//       }
-//       const { name, identifier, orgIdentifier: _orgIdentifier } = datum.project
-//
-//       const obj = { value: identifier, label: name }
-//
-//       accum[_orgIdentifier as string] = accum[_orgIdentifier as string] || {
-//         projects: [],
-//         projectsMap: { All: allProjectsObj(getString) }
-//       }
-//       accum[_orgIdentifier as string].projects.push(obj)
-//       accum[_orgIdentifier as string].projectsMap[identifier] = obj
-//     })
-//
-//     setProjectsByOrgId(accum)
-//   }
-// }, [loadingAccountProjects])
-
-// React.useEffect(() => {
-//   if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT && accountId) {
-//     // refetchAllProjects()
-//   }
-// }, [accountId, freezeWindowLevel])
-
-// const {
-//   data: accountProjects,
-//   loading: loadingAccountProjects,
-//   refetch: refetchAllProjects
-// } = useGetProjectList({
-//   queryParams: {
-//     accountIdentifier: accountId
-//   },
-//   lazy: true
-// })

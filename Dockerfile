@@ -1,5 +1,5 @@
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6-941
-RUN microdnf module enable nginx:1.16
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.7
+RUN microdnf module enable nginx:1.20
 RUN microdnf install nginx
 
 COPY dist /opt/nextgenui

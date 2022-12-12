@@ -16,8 +16,6 @@ import { useStrings } from 'framework/strings'
 import { getSecretV2Promise, ResponseSecretResponseWrapper } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import css from './WebhookTriggerConfigPanel.module.scss'
 
 interface SecretInputWithDialogProps {
@@ -26,7 +24,7 @@ interface SecretInputWithDialogProps {
 
 const yamlWebhookSecretIdentifierName = 'encryptedWebhookSecretIdentifier'
 
-const WebhookSecretInputWithDialogImpl: React.FC<SecretInputWithDialogProps> = ({ formikProps }) => {
+const WebhookSecretInputWithDialog: React.FC<SecretInputWithDialogProps> = ({ formikProps }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -125,12 +123,6 @@ const WebhookSecretInputWithDialogImpl: React.FC<SecretInputWithDialogProps> = (
       </Dialog>
     </div>
   )
-}
-
-const WebhookSecretInputWithDialog: React.FC<SecretInputWithDialogProps> = props => {
-  const isSpgNgGithubWebhookAuthenticationEnabled = useFeatureFlag(FeatureFlag.SPG_NG_GITHUB_WEBHOOK_AUTHENTICATION)
-
-  return isSpgNgGithubWebhookAuthenticationEnabled ? <WebhookSecretInputWithDialogImpl {...props} /> : null
 }
 
 export default WebhookSecretInputWithDialog

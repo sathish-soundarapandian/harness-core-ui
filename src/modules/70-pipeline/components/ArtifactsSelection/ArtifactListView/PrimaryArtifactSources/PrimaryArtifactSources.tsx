@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, RUNTIME_INPUT_VALUE, Text } from '@harness/uicore'
+import { Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
@@ -43,20 +43,6 @@ function PrimaryArtifactSources(props: PrimaryArtifactSourcesProps): React.React
   return (
     <>
       <div className={css.sidecarList}>
-        <Layout.Horizontal spacing="medium">
-          <Text margin={{ bottom: 'xlarge' }} color={Color.GREY_800} font={{ weight: 'semi-bold', size: 'normal' }}>
-            {getString('primary')}
-          </Text>
-          <Text
-            margin={{ bottom: 'xlarge' }}
-            color={Color.GREY_500}
-            font={{ weight: 'semi-bold', size: 'normal' }}
-            className={css.primaryArtifactRef}
-          >
-            {RUNTIME_INPUT_VALUE}
-          </Text>
-        </Layout.Horizontal>
-
         <div className={cx(css.artifactList, css.listHeader)}>
           <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.ID')}</Text>
           <Text font={{ variation: FontVariation.TABLE_HEADERS }}>

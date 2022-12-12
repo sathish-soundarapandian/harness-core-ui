@@ -178,7 +178,7 @@ interface ActionsOptionsMapInterface {
   [key: string]: string[]
 }
 
-export const getEventLabelMap = (event: string): string => {
+const getEventLabelMap = (event: string): string => {
   // add space between camelcase-separated words
   if (event === eventTypes.PULL_REQUEST) {
     return 'Pull Request'

@@ -22,6 +22,7 @@ import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectListView.module.scss'
@@ -71,7 +72,8 @@ export const RenderColumnOrganization: Renderer<CellProps<ProjectAggregateDTO>> 
 }
 
 const RenderColumnModules: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SECURITY } = useFeatureFlags()
+  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { licenseInformation } = useLicenseStore()
   const data = row.original
 
   const shouldShowModules = data.projectResponse.project.modules?.length
@@ -100,7 +102,7 @@ const RenderColumnModules: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) 
       icons.push(<Icon name={getModuleIcon(ModuleName.CV)} size={20} key={ModuleName.CV} />)
     }
 
-    if (SECURITY && modules?.includes(ModuleName.STO)) {
+    if (licenseInformation['STO']?.status === 'ACTIVE' && modules?.includes(ModuleName.STO)) {
       icons.push(<Icon name={getModuleIcon(ModuleName.STO)} size={20} key={ModuleName.STO} />)
     }
 

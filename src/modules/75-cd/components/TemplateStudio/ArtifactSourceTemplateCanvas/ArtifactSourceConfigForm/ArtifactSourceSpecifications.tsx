@@ -19,8 +19,9 @@ import {
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, ProjectPathProps, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -71,9 +72,23 @@ interface ArtifactSourceConnectorProps {
   selectedConnectorTooltip: ConnectorInfoDTO['type']
 }
 
-type Params = { CUSTOM_ARTIFACT_NG?: boolean; NG_GOOGLE_ARTIFACT_REGISTRY?: boolean; GITHUB_PACKAGES?: boolean }
+type Params = {
+  CUSTOM_ARTIFACT_NG?: boolean
+  NG_GOOGLE_ARTIFACT_REGISTRY?: boolean
+  GITHUB_PACKAGES?: boolean
+  AZURE_ARTIFACTS_NG?: boolean
+  CD_AMI_ARTIFACTS_NG?: boolean
+  AZURE_WEBAPP_NG_JENKINS_ARTIFACTS?: boolean
+}
 
-const getEnabledArtifactTypesList = ({ CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, GITHUB_PACKAGES }: Params) => {
+const getEnabledArtifactTypesList = ({
+  CUSTOM_ARTIFACT_NG,
+  NG_GOOGLE_ARTIFACT_REGISTRY,
+  GITHUB_PACKAGES,
+  AZURE_ARTIFACTS_NG,
+  CD_AMI_ARTIFACTS_NG,
+  AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
+}: Params) => {
   return Object.values(ENABLED_ARTIFACT_TYPES).filter((artifactType: ArtifactType) => {
     if (artifactType === ENABLED_ARTIFACT_TYPES.CustomArtifact) {
       return !!CUSTOM_ARTIFACT_NG
@@ -85,6 +100,18 @@ const getEnabledArtifactTypesList = ({ CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_RE
 
     if (artifactType === ENABLED_ARTIFACT_TYPES.GithubPackageRegistry) {
       return !!GITHUB_PACKAGES
+    }
+
+    if (artifactType === ENABLED_ARTIFACT_TYPES.AzureArtifacts) {
+      return !!AZURE_ARTIFACTS_NG
+    }
+
+    if (artifactType === ENABLED_ARTIFACT_TYPES.AmazonMachineImage) {
+      return !!CD_AMI_ARTIFACTS_NG
+    }
+
+    if (artifactType === ENABLED_ARTIFACT_TYPES.Jenkins) {
+      return !!AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
     }
 
     return true
@@ -102,7 +129,13 @@ function ArtifactSourceConnector(props: ArtifactSourceConnectorProps) {
     selectedConnectorTooltip
   } = props
 
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId } = useParams<ProjectPathProps>()
+  const {
+    state: { template }
+  } = React.useContext(TemplateContext)
+
+  const { projectIdentifier, orgIdentifier } = template
+
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
 
@@ -180,18 +213,36 @@ export function ArtifactSourceSpecifications(props: {
   const { values: formValues, setFieldValue, setValues } = formik
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { templateIdentifier } = useParams<TemplateStudioPathProps>()
 
   const [selectedArtifactType, setSelectedArtifactType] = React.useState<ArtifactType>(formValues?.artifactType)
-  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, GITHUB_PACKAGES } = useFeatureFlags()
+  const {
+    CUSTOM_ARTIFACT_NG,
+    NG_GOOGLE_ARTIFACT_REGISTRY,
+    GITHUB_PACKAGES,
+    AZURE_ARTIFACTS_NG,
+    CD_AMI_ARTIFACTS_NG,
+    AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
+  } = useFeatureFlags()
 
   const enabledArtifactTypesList = useMemo(
     () =>
       getEnabledArtifactTypesList({
         CUSTOM_ARTIFACT_NG,
         NG_GOOGLE_ARTIFACT_REGISTRY,
-        GITHUB_PACKAGES
+        GITHUB_PACKAGES,
+        AZURE_ARTIFACTS_NG,
+        CD_AMI_ARTIFACTS_NG,
+        AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
       }),
-    [CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, GITHUB_PACKAGES]
+    [
+      CUSTOM_ARTIFACT_NG,
+      NG_GOOGLE_ARTIFACT_REGISTRY,
+      GITHUB_PACKAGES,
+      AZURE_ARTIFACTS_NG,
+      CD_AMI_ARTIFACTS_NG,
+      AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
+    ]
   )
 
   const handleArtifactTypeSelection = (artifactType: ArtifactType) => {
@@ -269,6 +320,7 @@ export function ArtifactSourceSpecifications(props: {
             <ThumbnailSelect
               className={css.thumbnailSelect}
               name={'artifactType'}
+              isReadonly={isReadonly || templateIdentifier !== DefaultNewTemplateId}
               items={supportedArtifactTypes}
               onChange={handleArtifactTypeSelection}
               layoutProps={{ className: css.wrapping }}

@@ -90,7 +90,7 @@ exports[`test cases for perspective grid view should be able to render grid view
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-small StyledProps--color StyledProps--color-grey400"
         >
-          ce.perspectives.timeRangeConstants.last7Days
+          common.timeRangeConstants.last7Days
         </p>
         <span
           style="flex-grow: 1;"
@@ -222,7 +222,7 @@ exports[`test cases for perspective grid view should be able to render grid view
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-small StyledProps--color StyledProps--color-grey400"
         >
-          ce.perspectives.timeRangeConstants.last7Days
+          common.timeRangeConstants.last7Days
         </p>
         <span
           style="flex-grow: 1;"
@@ -360,7 +360,7 @@ exports[`test cases for perspective grid view should be able to render grid view
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-small StyledProps--color StyledProps--color-grey400"
         >
-          ce.perspectives.timeRangeConstants.last7Days
+          common.timeRangeConstants.last7Days
         </p>
         <span
           style="flex-grow: 1;"
@@ -485,7 +485,7 @@ exports[`test cases for perspective grid view should be able to render grid view
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-small StyledProps--color StyledProps--color-grey400"
         >
-          ce.perspectives.timeRangeConstants.last7Days
+          common.timeRangeConstants.last7Days
         </p>
         <span
           style="flex-grow: 1;"

@@ -111,9 +111,6 @@ describe('Nexus Artifact tests', () => {
       'pipeline.artifactRepositoryDependencyRequired'
     )
     expect(repositoryParentFieldsRequiredErr).toBeInTheDocument()
-
-    const imagePahRequiredErr = await findByText(container, 'pipeline.artifactsSelection.validation.artifactPath')
-    expect(imagePahRequiredErr).toBeDefined()
   })
 
   // eslint-disable-next-line jest/no-disabled-tests

@@ -95,25 +95,6 @@ export const ValidationSchema = (
               return true
             }
           })
-      })
-      .when('validation', {
-        is: Validation.AllowedValues,
-        then: Yup.string()
-          .trim()
-          .test({
-            test(val: string): boolean | Yup.ValidationError {
-              if (
-                this.parent.allowedValues?.length > 0 &&
-                !isEmpty(val) &&
-                this.parent.allowedValues.indexOf(val) === -1
-              ) {
-                return this.createError({
-                  message: getString('common.configureOptions.validationErrors.defaultAllowedValid')
-                })
-              }
-              return true
-            }
-          })
       }),
     isAdvanced: Yup.boolean(),
     advancedValue: Yup.string().when(['validation', 'isAdvanced'], {

@@ -495,6 +495,7 @@ cvTrialHomePage:
       description: Start 14 day CV Enterprise trial
 monitoredServices:
   title: '{{ $.common.monitoredServices }}'
+  listToggleSwitchDisableMessage: Nice work! You've reached our plan limits. Upgrade to enable SLO and service health for a monitored service.
   heading: Monitored Service
   filterlabel: 'Environment:'
   youHaveNoMonitoredServices: You have no monitored services
@@ -556,6 +557,7 @@ monitoredServices:
   monitoredServiceTabs:
     serviceHealth: Service Health
     configurations: Configurations
+    disabledText: Enable the monitored service to view the tab
   table:
     lastestHealthTrend: Health trend (Last 24h)
     serviceHealthScore: service Health Score
@@ -577,7 +579,7 @@ notifications:
   serviceHealth: Changes and Service Health
   serviceHealthDescription: Focuses on changes to a service's code, configuration, behaviour, deployment and infrastructure.
   sloDescription: Focuses on SLO target and error budget changes on a given SLO.
-  condition: Condition
+  condition: '{{$.common.condition}}'
   changeType: Change Type
   healthScoreBelow: Health score is below
   thresholdBelow: Threshold is below
@@ -853,6 +855,13 @@ CompositeSLO:
   NoSloFound: There are no SLOs available for selected filter
   compositeSloCreated: Composite SLO created successfully
   compositeSloUpdated: Composite SLO updated successfully
+  SLIMetricRatio: SLI = (SLO1*weightage1 + SLO2*weightage2... + SLON*weightageN)/n*100
+  AddSLOValidation:
+    minMaxSLOCount: Should have minimun 2 SLOs and maximum 20 SLO's
+    totalSLOWeight: Total SLO weight should be equal to 100
+    minSLOCount: Should have minimun 2 SLOs
+    maxSLOCount: Should have maximum 20 SLOs
+    weightMinMax: SLO weight should be between 0.01 to 99.99
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on
@@ -1014,3 +1023,7 @@ codeErrorsAgentsHeading: Agents running on your machines connected to Code Error
 codeErrorsAgentsTokens: '{{projectName}} Code Error Tokens'
 CVStepper:
   StepError: Required fields are missing or incorrect data
+licenseBanner:
+  freePlanUsageMessage: You have used {{activeServicesCount}}/{{totalServices}} Services included in the free plan
+  teamPlanUsageMessage: You have used {{activeServicesCount}}/{{totalServices}} Services included in the team plan
+  limitExceedMessage: You have reached your service subscription limit. Consider increasing your limits to keep using services

@@ -29,8 +29,13 @@ export const serviceNowMock: ConnectorInfoDTO = {
     type: 'ServiceNow',
     spec: {
       serviceNowUrl: 'https://serviceNow.dev.harness.io/',
-      username: 'harnessadmin',
-      passwordRef: 'serviceNow_secret'
+      auth: {
+        type: 'UsernamePassword',
+        spec: {
+          username: 'harnessadmin',
+          passwordRef: 'serviceNow_secret'
+        }
+      }
     }
   },
   mockServiceNowSecret = {

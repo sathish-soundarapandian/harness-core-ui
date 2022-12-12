@@ -111,7 +111,16 @@ export const getJiraUpdateDeploymentModeProps = (): JiraUpdateDeploymentModeProp
         status: '',
         transitionName: ''
       },
-      fields: []
+      fields: [
+        {
+          name: 'Summary',
+          value: ''
+        },
+        {
+          name: 'Description',
+          value: ''
+        }
+      ]
     }
   },
   inputSetData: {
@@ -127,7 +136,16 @@ export const getJiraUpdateDeploymentModeProps = (): JiraUpdateDeploymentModeProp
           status: RUNTIME_INPUT_VALUE,
           transitionName: RUNTIME_INPUT_VALUE
         },
-        fields: []
+        fields: [
+          {
+            name: 'Summary',
+            value: RUNTIME_INPUT_VALUE
+          },
+          {
+            name: 'Description',
+            value: RUNTIME_INPUT_VALUE
+          }
+        ]
       }
     }
   },

@@ -43,12 +43,12 @@ import css from './FormMultiTypeServiceField.module.scss'
 export interface ServiceReferenceFieldProps extends Omit<IFormGroupProps, 'label'> {
   name: string
   label: string | React.ReactElement
-  openAddNewModal: () => void
   placeholder: string
   tooltipProps?: DataTooltipInterface
   deploymentType: ServiceDeploymentType
   gitOpsEnabled: boolean | undefined
   style?: React.CSSProperties
+  openAddNewModal?: () => void
   disabled?: boolean
   createNewLabel?: string
   isDrawerMode?: boolean
@@ -62,6 +62,7 @@ export interface ServiceReferenceFieldProps extends Omit<IFormGroupProps, 'label
   error?: string
   isMultiSelect?: boolean
   onMultiSelectChange?: any
+  isNewConnectorLabelVisible?: boolean
 }
 
 export function getSelectedRenderer(selected: any): JSX.Element {
@@ -103,6 +104,7 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     isMultiSelect,
     onMultiSelectChange,
     openAddNewModal,
+    isNewConnectorLabelVisible,
     placeholder,
     disabled,
     width,
@@ -144,7 +146,7 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
   })
   const handleMultiSelectChange = (svcs: any): void => {
     const services = svcs.map((svc: any) => ({ label: svc.identifier, value: svc.identifier }))
-    formik.setFieldValue('services', services)
+    formik.setFieldValue(name, services)
     onMultiSelectChange(services)
   }
   return (
@@ -159,7 +161,7 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
           referenceSelectProps={
             {
               ...getReferenceFieldPropsValues,
-              isNewConnectorLabelVisible: true,
+              isNewConnectorLabelVisible: isNewConnectorLabelVisible,
               placeholderClass: css.placeholderClass,
               createNewLabel: createNewLabel || 'Service',
               disabled: disabled,
@@ -175,18 +177,18 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
                 pageIndex: page || 0,
                 gotoPage: pageIndex => setPage(pageIndex)
               },
-              createNewBtnComponent: (
+              createNewBtnComponent: isNewConnectorLabelVisible ? (
                 <RbacButton
                   variation={ButtonVariation.SECONDARY}
                   onClick={() => {
-                    openAddNewModal()
+                    openAddNewModal?.()
                     setHideModal(true)
                   }}
                   text={`+ ${createNewLabel || 'Service'}`}
                   margin={{ right: 'small' }}
                   // TODO add permissions here depending on the tab from which it is clicked
                 ></RbacButton>
-              )
+              ) : null
             } as ReferenceSelectProps<ServiceResponseDTO>
           }
           onChange={(val, _valueType, type1) => {

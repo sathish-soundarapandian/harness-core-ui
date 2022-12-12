@@ -265,13 +265,17 @@ describe('S3ManifestStoreRuntimeView tests', () => {
     expect(modals.length).toBe(0)
 
     // Configure options testing for region, bucketName and filePath fields
-    const cogRegion = document.getElementById('configureOptions_region')
+    const cogRegion = document.getElementById(
+      'configureOptions_stage.serviceInputs.manifests[0].manifest.spec.store.spec.region'
+    )
     userEvent.click(cogRegion!)
     await waitFor(() => expect(modals.length).toBe(1))
     const regionCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(regionCOGModal)
 
-    const cogBucketName = document.getElementById('configureOptions_bucketName')
+    const cogBucketName = document.getElementById(
+      'configureOptions_stage.serviceInputs.manifests[0].manifest.spec.store.spec.bucketName'
+    )
     userEvent.click(cogBucketName!)
     await waitFor(() => expect(modals.length).toBe(1))
     const bucketNameCOGModal = modals[0] as HTMLElement

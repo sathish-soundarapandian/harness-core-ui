@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState } from 'react'
 import * as Yup from 'yup'
 import { pick, defaultTo } from 'lodash-es'
 import type { FormikContextType } from 'formik'
@@ -19,16 +19,14 @@ import {
   Button,
   SelectOption,
   Radio,
-  Icon,
-  useToaster
+  Icon
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { GitSyncEntityDTO, EntityGitDetails, useGetSettingValue } from 'services/cd-ng'
+import type { GitSyncEntityDTO, EntityGitDetails } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { getEntityNameFromType } from '@common/utils/StringUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { StringsMap } from 'stringTypes'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RepoBranchSelectV2 from '../RepoBranchSelectV2/RepoBranchSelectV2'
 import css from './SaveToGitFormV2.module.scss'
 
@@ -79,9 +77,8 @@ export interface SaveToGitFormV2Interface {
 }
 
 const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = props => {
-  const { isEditing = false, resource, disableCreatingNewBranch, accountId } = props
+  const { isEditing = false, resource, disableCreatingNewBranch } = props
   const { getString } = useStrings()
-  const { showError } = useToaster()
   const [isNewBranch, setIsNewBranch] = React.useState(false)
   const formikRef = useRef<FormikContextType<SaveToGitFormV2Interface>>()
   const [targetBranch, setTargetBranch] = useState<string>('')
@@ -89,24 +86,6 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
   const [disableBranchSelection, setDisableBranchSelection] = useState<boolean>(true)
 
   const initialValues: SaveToGitFormV2Interface = getInitialValues(resource, isEditing, getString)
-
-  const { NG_SETTINGS } = useFeatureFlags()
-  const {
-    data: gitCommandSetting,
-    loading,
-    error: gitCommandSettingError
-  } = useGetSettingValue({
-    identifier: 'enable_git_commands',
-    queryParams: { accountIdentifier: accountId },
-    lazy: !NG_SETTINGS
-  })
-
-  useEffect(() => {
-    if (gitCommandSettingError) {
-      showError(gitCommandSettingError.message)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gitCommandSettingError])
 
   const branch = defaultTo(resource.gitDetails?.branch, resource.storeMetadata?.branch)
 
@@ -131,7 +110,6 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
           className={css.createPrCheckbox}
           name="createPr"
           label={getString('common.git.startPRLabel')}
-          disabled={loading || gitCommandSetting?.data?.value === 'true'}
           onChange={e => {
             formikRef.current?.setFieldValue('createPr', e.currentTarget.checked)
             setCreatePR(e.currentTarget.checked)
@@ -161,9 +139,7 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
     isNewBranch,
     formikRef.current?.values,
     formikRef.current?.values?.targetBranch,
-    createPR,
-    gitCommandSetting,
-    loading
+    createPR
   ])
 
   return (

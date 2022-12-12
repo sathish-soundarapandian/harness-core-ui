@@ -6,7 +6,7 @@ exports[`GitOpsExecutionSummary render with multiple applications 1`] = `
     class="Layout--horizontal StyledProps--main"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--margin-left-small StyledProps--padding-left-xsmall"
       style="align-items: center;"
     >
       <span
@@ -37,11 +37,16 @@ exports[`GitOpsExecutionSummary render with multiple applications 1`] = `
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
       >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+        <a
+          href="/account/accountId/cd/orgs/default/projects/project1/gitops/applications/ID_1?agentId=AGENT_1"
         >
-          NAME_1
-        </p>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+            style="max-width: 200px; --text-line-clamp: 1;"
+          >
+            NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1
+          </p>
+        </a>
       </p>
       <span
         class="bp3-popover-wrapper bp3-dark"
@@ -69,7 +74,7 @@ exports[`GitOpsExecutionSummary render with one application 1`] = `
     class="Layout--horizontal StyledProps--main"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--margin-left-small StyledProps--padding-left-xsmall"
       style="align-items: center;"
     >
       <span
@@ -100,11 +105,16 @@ exports[`GitOpsExecutionSummary render with one application 1`] = `
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
       >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+        <a
+          href="/account/accountId/cd/orgs/default/projects/project1/gitops/applications/ID_1?agentId=AGENT_1"
         >
-          NAME_1
-        </p>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+            style="max-width: 200px; --text-line-clamp: 1;"
+          >
+            NAME_1
+          </p>
+        </a>
       </p>
     </div>
   </div>

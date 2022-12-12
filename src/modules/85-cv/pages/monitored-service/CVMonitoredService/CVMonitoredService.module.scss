@@ -81,3 +81,18 @@ $headerHeight: 146px;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
+
+.toggleFlagButton,
+.toggleFlagButton:hover,
+.toggleFlagButton:active {
+  border-radius: var(--spacing-small);
+  padding: 0 !important;
+  border: none !important;
+  background-color: transparent;
+
+  :global {
+    .bp3-control.bp3-switch input:checked ~ .bp3-control-indicator {
+      background-color: var(--primary-4);
+    }
+  }
+}

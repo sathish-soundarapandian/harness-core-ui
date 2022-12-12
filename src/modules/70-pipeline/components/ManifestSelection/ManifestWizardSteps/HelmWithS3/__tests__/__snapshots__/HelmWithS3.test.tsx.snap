@@ -1900,7 +1900,7 @@ exports[`helm with S3 tests expand advanced section 1`] = `
                           name="folderPath"
                           placeholder="pipeline.manifestType.chartPathPlaceholder"
                           type="text"
-                          value=""
+                          value="/"
                         />
                       </div>
                       <span
@@ -3782,7 +3782,7 @@ exports[`helm with S3 tests renders without crashing 1`] = `
                           name="folderPath"
                           placeholder="pipeline.manifestType.chartPathPlaceholder"
                           type="text"
-                          value=""
+                          value="/"
                         />
                       </div>
                       <span

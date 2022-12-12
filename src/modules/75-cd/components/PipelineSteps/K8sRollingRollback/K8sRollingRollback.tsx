@@ -46,7 +46,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 interface K8sRollingRollbackData extends StepElementConfig {
-  spec: Omit<K8sRollingRollbackStepInfo, 'skipDryRun'> & { skipDryRun: boolean }
+  spec: K8sRollingRollbackStepInfo
 }
 
 export interface K8RollingRollbackVariableStepProps {
@@ -83,12 +83,12 @@ function K8sRollingRollbackWidget(
     <>
       <Formik<K8sRollingRollbackData>
         onSubmit={(values: K8sRollingRollbackData) => {
-          onUpdate?.({ ...values, spec: { ...values.spec, skipDryRun: false } })
+          onUpdate?.({ ...values, spec: { ...values.spec } })
         }}
         formName="k8RollingRB"
         initialValues={initialValues}
         validate={data => {
-          onChange?.({ ...data, spec: { ...data.spec, skipDryRun: false } })
+          onChange?.({ ...data, spec: { ...data.spec } })
         }}
         validationSchema={Yup.object().shape({
           ...getNameAndIdentifierSchema(getString, stepViewType),
@@ -192,21 +192,6 @@ const K8sRollingRollbackInputStep: React.FC<K8sRollingRollbackProps> = ({
             disabled={inputSetData?.readonly}
             fieldPath={'timeout'}
             template={inputSetData?.template}
-          />
-        </div>
-      )}
-      {getMultiTypeFromValue(inputSetData?.template?.spec?.skipDryRun) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeCheckboxField
-            multiTypeTextbox={{
-              expressions,
-              allowableTypes: allowableTypes
-            }}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipDryRun`}
-            className={stepCss.checkbox}
-            label={getString('pipelineSteps.skipDryRun')}
-            disabled={inputSetData?.readonly}
-            setToFalseWhenEmpty={true}
           />
         </div>
       )}
@@ -344,7 +329,6 @@ export class K8sRollingRollbackStep extends PipelineStep<K8sRollingRollbackData>
     type: StepType.K8sRollingRollback,
     timeout: '10m',
     spec: {
-      skipDryRun: false,
       pruningEnabled: false
     }
   }

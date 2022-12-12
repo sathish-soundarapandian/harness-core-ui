@@ -247,6 +247,7 @@ export const FolderNode = React.memo((props: PropsWithChildren<FileStoreNodeDTO>
           <Text
             font={{ size: 'normal' }}
             color={!isActiveNode ? Color.PRIMARY_9 : Color.GREY_0}
+            tooltip={nodeItem.name}
             style={{
               maxWidth: 150,
               overflow: 'hidden',

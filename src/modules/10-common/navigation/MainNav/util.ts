@@ -13,7 +13,7 @@ import {
   CloudCostsNavItem,
   DeploymentsNavItem,
   FeatureFlagsNavItem,
-  SCMNavItem,
+  CODENavItem,
   SRMNavItem,
   STONavItem
 } from './ModuleLinks'
@@ -26,7 +26,7 @@ export const moduleToNavItemsMap: Record<NavModuleName, () => JSX.Element> = {
   [ModuleName.CV]: SRMNavItem,
   [ModuleName.CHAOS]: ChaosNavItem,
   [ModuleName.STO]: STONavItem,
-  [ModuleName.CODE]: SCMNavItem
+  [ModuleName.CODE]: CODENavItem
 }
 
 export const filterNavModules = (

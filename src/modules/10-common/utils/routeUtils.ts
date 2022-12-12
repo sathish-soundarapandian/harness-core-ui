@@ -35,7 +35,6 @@ import type {
   TemplateStudioPathProps,
   EnvironmentGroupPathProps,
   VariablesPathProps,
-  CODEPathProps,
   AccountRoutePlacement
 } from '@common/interfaces/RouteInterfaces'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
@@ -162,15 +161,6 @@ export const targetPathProps: TargetPathProps = {
 
 export const servicePathProps: ServicePathProps = {
   serviceId: ':serviceId'
-}
-
-export const codePathProps: Required<CODEPathProps> = {
-  ...projectPathProps,
-  repoName: ':repoName',
-  gitRef: ':gitRef*',
-  resourcePath: ':resourcePath*',
-  commitRef: ':commitRef*',
-  branch: ':branch*'
 }
 
 export function withAccountId<T>(fn: (args: T) => string) {

@@ -10,12 +10,12 @@ import { useParams } from 'react-router-dom'
 import { Thumbnail, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
+import { Spinner } from '@blueprintjs/core'
 import { String, useStrings } from 'framework/strings'
 import { Duration } from '@common/exports'
 import {
   useMarkWaitStep,
   ExecutionNode,
-  useExecutionDetails,
   WaitStepRequestDto,
   ResponseWaitStepExecutionDetailsDto
 } from 'services/pipeline-ng'
@@ -29,6 +29,8 @@ import css from './WaitStepTab.module.scss'
 
 export interface WaitStepDetailsTabProps {
   step: ExecutionNode
+  executionDetails: ResponseWaitStepExecutionDetailsDto | null | undefined
+  loading: boolean
 }
 
 interface WaitStepMarkState {
@@ -38,13 +40,13 @@ interface WaitStepMarkState {
 
 interface WaitStepDetailsProps {
   step: ExecutionNode
-  details: ResponseWaitStepExecutionDetailsDto | null
+  executionDetails: ResponseWaitStepExecutionDetailsDto | null | undefined
 }
 
-function WaitStepDetails({ step, details }: WaitStepDetailsProps): JSX.Element {
+function WaitStepDetails({ step, executionDetails }: WaitStepDetailsProps): JSX.Element {
   const { getString } = useStrings()
 
-  const duration = details?.data?.duration
+  const duration = executionDetails?.data?.duration
   const daysDuration = msToTime(duration)
   const startTime =
     new Date(defaultTo(step.startTs, '')).toLocaleString() === 'Invalid Date'
@@ -103,7 +105,7 @@ function WaitStepDetails({ step, details }: WaitStepDetailsProps): JSX.Element {
 }
 
 export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactElement {
-  const { step = {} } = props
+  const { step = {}, executionDetails, loading } = props
   const { getString } = useStrings()
   const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier } =
     useParams<PipelineType<ExecutionPathProps>>()
@@ -114,19 +116,6 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
 
   const { mutate: markWaitStep } = useMarkWaitStep({
     nodeExecutionId: step.uuid || /* istanbul ignore next */ ''
-  })
-
-  const commonParams = {
-    accountIdentifier: accountId,
-    projectIdentifier,
-    orgIdentifier
-  }
-
-  const { data: executionDetails } = useExecutionDetails({
-    nodeExecutionId: defaultTo(step.uuid, ''),
-    queryParams: {
-      ...commonParams
-    }
   })
 
   const [canExecute] = usePermission(
@@ -168,9 +157,17 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
   const isRunning = step?.status === 'WaitStepRunning'
   const { isMarked, markedAs } = markState
 
+  if (loading) {
+    return (
+      <Container height={'100px'} flex={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Spinner size={20} />
+      </Container>
+    )
+  }
+
   return (
     <React.Fragment>
-      <WaitStepDetails details={executionDetails} step={step} />
+      <WaitStepDetails executionDetails={executionDetails} step={step} />
       {isRunning && (
         <div className={css.manualInterventionTab}>
           <String tagName="div" className={css.title} stringID="common.PermissibleActions" />

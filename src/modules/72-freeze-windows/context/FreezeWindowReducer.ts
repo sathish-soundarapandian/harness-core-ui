@@ -27,8 +27,8 @@ export interface FreezeWindowReducerState {
 }
 export const initialState: FreezeWindowReducerState = {
   isYamlEditable: false,
-  freezeObj: { ...DefaultFreeze },
-  oldFreezeObj: { ...DefaultFreeze },
+  freezeObj: clone(DefaultFreeze),
+  oldFreezeObj: clone(DefaultFreeze),
   isUpdated: false
 }
 
@@ -56,9 +56,6 @@ export const FreezeReducer = (state: FreezeWindowReducerState, data: ActionRetur
             })
           : state.freezeObj) as Record<string, unknown>
       }
-    }
-    case FreezeWindowActions.Success: {
-      return { ...state, ...response } as FreezeWindowReducerState
     }
     case FreezeWindowActions.SetYamlHandler: {
       return {

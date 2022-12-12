@@ -1,0 +1,326 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "content": [
+      {
+        "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+        "referredEntity": {
+          "type": "Environment",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "Environment_Ash_3",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "metadata": {
+              "fqn": "pipeline.stages.dev1.spec.environment.environmentRef"
+            },
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Ashwin",
+            "default": true
+          },
+          "name": ""
+        },
+        "referredByEntity": {
+          "type": "Pipelines",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "Triggers_2",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "metadata": {},
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Ashwin",
+            "default": true
+          },
+          "name": "Triggers - 2"
+        },
+        "detail": {
+          "type": "EntityReferredByPipelineSetupUsageDetail",
+          "identifier": "dev1",
+          "referenceType": "STAGE_IDENTIFIER"
+        },
+        "createdAt": 1667882369207
+      },
+      {
+        "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+        "referredEntity": {
+          "type": "Environment",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "Environment_Ash_3",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "metadata": {
+              "fqn": "pipeline.stages.dev1.spec.environment.environmentRef"
+            },
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Ashwin",
+            "default": true
+          },
+          "name": ""
+        },
+        "referredByEntity": {
+          "type": "Pipelines",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "Triggers",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "metadata": {},
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Ashwin",
+            "default": true
+          },
+          "name": "Triggers"
+        },
+        "detail": {
+          "type": "EntityReferredByPipelineSetupUsageDetail",
+          "identifier": "dev1",
+          "referenceType": "STAGE_IDENTIFIER"
+        },
+        "createdAt": 1658743741782
+      },
+      {
+        "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+        "referredEntity": {
+          "type": "Environment",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "Environment_Ash_3",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "metadata": {
+              "fqn": "pipeline.stages.Stage_3.spec.environment.environmentRef"
+            },
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Ashwin",
+            "default": true
+          },
+          "name": ""
+        },
+        "referredByEntity": {
+          "type": "Pipelines",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "Stage_Template",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "metadata": {},
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Ashwin",
+            "default": true
+          },
+          "name": "Stage Template"
+        },
+        "detail": {
+          "type": "EntityReferredByPipelineSetupUsageDetail",
+          "identifier": "Stage_3",
+          "referenceType": "STAGE_IDENTIFIER"
+        },
+        "createdAt": 1658288168836
+      },
+      {
+        "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+        "referredEntity": {
+          "type": "Environment",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "Environment_Ash_3",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "metadata": {
+              "fqn": "templateInputs.spec.environment.environmentRef"
+            },
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Ashwin",
+            "default": true
+          },
+          "name": ""
+        },
+        "referredByEntity": {
+          "type": "Template",
+          "entityRef": {
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "identifier": "Stage_1",
+            "versionLabel": "v1",
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "scope": "project",
+            "default": true
+          },
+          "name": "Stage 1"
+        },
+        "detail": null,
+        "createdAt": 1658274663468
+      },
+      {
+        "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+        "referredEntity": {
+          "type": "Environment",
+          "entityRef": {
+            "scope": "account",
+            "identifier": "Environment_Ash_3",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "metadata": {},
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Ashwin",
+            "default": true
+          },
+          "name": ""
+        },
+        "referredByEntity": {
+          "type": "EnvironmentGroup",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "env_group_15",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "metadata": {},
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Ashwin",
+            "default": true
+          },
+          "name": "env group 15"
+        },
+        "detail": null,
+        "createdAt": 1651092013451
+      },
+      {
+        "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+        "referredEntity": {
+          "type": "Environment",
+          "entityRef": {
+            "scope": "account",
+            "identifier": "Environment_Ash_3",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "metadata": {},
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Ashwin",
+            "default": true
+          },
+          "name": ""
+        },
+        "referredByEntity": {
+          "type": "EnvironmentGroup",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "Test_11",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "metadata": {},
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Ashwin",
+            "default": true
+          },
+          "name": "Test 11"
+        },
+        "detail": null,
+        "createdAt": 1651064342235
+      },
+      {
+        "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+        "referredEntity": {
+          "type": "Environment",
+          "entityRef": {
+            "scope": "account",
+            "identifier": "Environment_Ash_3",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "metadata": {},
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Ashwin",
+            "default": true
+          },
+          "name": ""
+        },
+        "referredByEntity": {
+          "type": "EnvironmentGroup",
+          "entityRef": {
+            "scope": "project",
+            "identifier": "Env_Group_7",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "metadata": {},
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw/default/Ashwin",
+            "default": true
+          },
+          "name": "Env Group 7"
+        },
+        "detail": null,
+        "createdAt": 1651024561398
+      }
+    ],
+    "pageable": {
+      "sort": {
+        "unsorted": false,
+        "sorted": true,
+        "empty": false
+      },
+      "pageNumber": 0,
+      "pageSize": 10,
+      "offset": 0,
+      "paged": true,
+      "unpaged": false
+    },
+    "totalElements": 7,
+    "last": true,
+    "totalPages": 1,
+    "numberOfElements": 7,
+    "first": true,
+    "number": 0,
+    "sort": {
+      "unsorted": false,
+      "sorted": true,
+      "empty": false
+    },
+    "size": 10,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "229b1d23-8ec2-4739-b985-4117f7156f32"
+}

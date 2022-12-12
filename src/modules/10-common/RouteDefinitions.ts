@@ -6,6 +6,7 @@
  */
 
 import qs from 'qs'
+import { omit as _omit } from 'lodash-es'
 import { getEnvServiceRoute, getScopeBasedRoute, withAccountId } from '@common/utils/routeUtils'
 import type {
   OrgPathProps,
@@ -16,6 +17,8 @@ import type {
   ProjectPathProps,
   PipelinePathProps,
   TriggerPathProps,
+  GitOpsAppPathProps,
+  GitOpsAppQueryParams,
   ExecutionPathProps,
   FeatureFlagPathProps,
   BuildPathProps,
@@ -49,8 +52,6 @@ import type {
   EnvironmentQueryParams,
   AccountLevelGitOpsPathProps,
   TemplateType,
-  CODEProps,
-  RequireField,
   AccountRoutePlacement
 } from '@common/interfaces/RouteInterfaces'
 
@@ -807,6 +808,22 @@ const routes = {
       path
     })
   }),
+  toGitOpsApplication: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      applicationId,
+      ...rest
+    }: GitOpsAppPathProps & ModulePathParams & GitOpsAppQueryParams) => {
+      const queryString = qs.stringify(_omit(rest, 'accountId'), { skipNulls: true })
+      if (queryString.length > 0) {
+        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops/applications/${applicationId}?${queryString}`
+      } else {
+        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops/applications/${applicationId}`
+      }
+    }
+  ),
   toServices: withAccountId(
     ({
       orgIdentifier,
@@ -1451,46 +1468,6 @@ const routes = {
 
   toCODE: withAccountId(() => `/code`),
   toCODEHome: withAccountId(() => `/code/home`),
-  toCODERepositoriesListing: ({ space }: Required<Pick<CODEProps, 'space'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier] = space.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}`
-  },
-  toCODERepository: ({
-    repoPath,
-    gitRef,
-    resourcePath
-  }: RequireField<Pick<CODEProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath'>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}${
-      gitRef ? '/files/' + gitRef : ''
-    }${resourcePath ? '/~/' + resourcePath : ''}`
-  },
-  toCODERepositoryFileEdit: ({
-    repoPath,
-    gitRef,
-    resourcePath
-  }: RequireField<Pick<CODEProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath' | 'gitRef'>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/edit/${gitRef}/~/${
-      resourcePath || ''
-    }`
-  },
-  toCODERepositoryCommits: ({ repoPath, commitRef }: Required<Pick<CODEProps, 'repoPath' | 'commitRef'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/commits${
-      commitRef ? '/' + commitRef : ''
-    }`
-  },
-  toCODERepositoryBranches: ({ repoPath, branch }: Required<Pick<CODEProps, 'repoPath' | 'branch'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/branches${
-      branch ? '/' + branch : ''
-    }`
-  },
-  toCODERepositorySettings: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/settings`
-  },
 
   /********************************************************************************************************************/
   toCV: (params: Partial<ProjectPathProps>): string =>
@@ -1577,6 +1554,9 @@ const routes = {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos`
     }
   ),
+  toAccountCVSLOs: withAccountId(() => {
+    return `/cv/slos`
+  }),
   toCVSLODetailsPage: withAccountId(
     ({
       module = 'cv',
@@ -1585,6 +1565,9 @@ const routes = {
       projectIdentifier
     }: Partial<ProjectPathProps & { identifier: string; module: string }>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/${identifier}`
+  ),
+  toAccountCVSLODetailsPage: withAccountId(
+    ({ module = 'cv', identifier }: { identifier: string; module?: string }) => `/${module}/slos/${identifier}`
   ),
   toErrorTracking: withAccountId(
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
@@ -1601,6 +1584,9 @@ const routes = {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/create/composite`
     }
   ),
+  toAccountCVCreateCompositeSLOs: withAccountId(({ module = 'cv' }: { module?: string }) => {
+    return `/${module}/slos/create/composite`
+  }),
   toCVAddMonitoringServicesSetup: withAccountId(
     ({ projectIdentifier, orgIdentifier }: Partial<ProjectPathProps & { identifier: string }>) =>
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservices/setup`
@@ -1855,6 +1841,7 @@ const routes = {
   toCEGovernanceRuleEditor: withAccountId(
     ({ ruleId }: { ruleId: string }) => `/ce/governance/rules/${ruleId}/rule-editor/`
   ),
+  toCECurrencyPreferences: withAccountId(() => `/ce/currency-preferences`),
   toCCMMFE: withAccountId(() => `/ce/new`),
   /********************************************************************************************************************/
   toSTO: withAccountId(() => `/sto`),

@@ -134,17 +134,13 @@ export function FreezeWindowListTable({
     <TableV2
       columns={columns}
       data={content}
-      pagination={
-        totalItems > pageSize
-          ? {
-              itemCount: totalItems,
-              pageCount: totalPages,
-              pageSize,
-              pageIndex,
-              gotoPage
-            }
-          : undefined
-      }
+      pagination={{
+        itemCount: totalItems,
+        pageCount: totalPages,
+        pageSize,
+        pageIndex,
+        gotoPage
+      }}
       sortable
       onRowClick={rowDetails => onViewFreezeRow(rowDetails)}
       className={css.table}

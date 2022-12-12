@@ -9,7 +9,7 @@ import React, { useEffect } from 'react'
 import { Intent, Spinner } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'
 
-import { AllowedTypes, ConfirmationDialog, Container, ModalDialog, useToggleOpen } from '@harness/uicore'
+import { AllowedTypes, ConfirmationDialog, Layout, ModalDialog, useToggleOpen } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
@@ -86,7 +86,7 @@ export default function InfrastructureEntitiesList({
 
   return (
     <>
-      <Container className={css.infrastructureEntitiesList}>
+      <Layout.Vertical spacing={'medium'} margin={{ top: 'medium' }}>
         {infrastructuresData.map(row => {
           return (
             <InfrastructureEntityCard
@@ -101,7 +101,7 @@ export default function InfrastructureEntitiesList({
             />
           )
         })}
-      </Container>
+      </Layout.Vertical>
 
       <ModalDialog
         isOpen={!!infrastructureToEdit}

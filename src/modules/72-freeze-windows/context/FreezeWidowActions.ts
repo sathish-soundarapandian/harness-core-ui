@@ -38,7 +38,6 @@ const updateYamlView = (response: ActionResponse): ActionReturnType => ({
   response
 })
 
-const success = (response: ActionResponse): ActionReturnType => ({ type: FreezeWindowActions.Success, response })
 const updateFreeze = (response: ActionResponse): ActionReturnType => ({
   type: FreezeWindowActions.UpdateFreeze,
   response
@@ -51,7 +50,6 @@ const setYamlHandler = (response: ActionResponse): ActionReturnType => ({
 
 export const FreezeWindowContextActions = {
   updateYamlView,
-  success,
   updateFreeze,
   setYamlHandler
 }

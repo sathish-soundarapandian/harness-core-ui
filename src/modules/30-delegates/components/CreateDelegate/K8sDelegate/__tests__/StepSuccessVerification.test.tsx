@@ -11,7 +11,29 @@ import { TestWrapper } from '@common/utils/testUtils'
 import StepSuccessVerifcation from '../StepSuccessVerification/StepSuccessVerifcation'
 
 const onClose = jest.fn()
+let createGroupFnCalled = false
+let createGroupFn = jest.fn().mockImplementation(() => {
+  createGroupFnCalled = true
+  return {
+    ok: true
+  }
+})
+let showedError = false
+jest.mock('@harness/uicore', () => ({
+  ...jest.requireActual('@harness/uicore'),
+  useToaster: jest.fn(() => ({
+    showSuccess: jest.fn(),
+    showError: jest.fn().mockImplementation(() => {
+      showedError = true
+    })
+  }))
+}))
 jest.mock('services/portal', () => ({
+  useCreateDelegateGroup: jest.fn().mockImplementation(() => {
+    return {
+      mutate: createGroupFn
+    }
+  }),
   useGetDelegatesHeartbeatDetailsV2: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
   }),
@@ -51,5 +73,42 @@ describe('Create Step Verification Script Delegate', () => {
       fireEvent.click(stepReviewScriptDoneButton!)
     })
     expect(onClose).toBeCalled()
+  })
+  test('Click Done button with not verified step', async () => {
+    createGroupFn = jest.fn().mockImplementation(() => {
+      createGroupFnCalled = true
+      return {
+        ok: true
+      }
+    })
+    const { getAllByText } = render(
+      <TestWrapper>
+        <StepSuccessVerifcation prevStepData={{ replicas: 3, name: 'fdfdfdf' }} onClose={onClose} />
+      </TestWrapper>
+    )
+    const stepReviewScriptDoneButton = getAllByText('done')[0]
+    act(() => {
+      fireEvent.click(stepReviewScriptDoneButton!)
+    })
+    await waitFor(() => expect(createGroupFnCalled).toEqual(true))
+    expect(createGroupFnCalled).toEqual(true)
+  })
+  test('Click Done button with not verified step with error case', async () => {
+    createGroupFn = jest.fn().mockImplementation(() => {
+      return {
+        ok: false
+      }
+    })
+    const { getAllByText } = render(
+      <TestWrapper>
+        <StepSuccessVerifcation prevStepData={{ replicas: 3, name: 'fdfdfdf' }} onClose={onClose} />
+      </TestWrapper>
+    )
+    const stepReviewScriptDoneButton = getAllByText('done')[0]
+    act(() => {
+      fireEvent.click(stepReviewScriptDoneButton!)
+    })
+    await waitFor(() => expect(showedError).toEqual(true))
+    expect(showedError).toEqual(true)
   })
 })

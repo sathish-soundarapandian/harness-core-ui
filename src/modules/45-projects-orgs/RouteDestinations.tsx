@@ -78,6 +78,7 @@ import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 import SettingsList from '@default-settings/pages/SettingsList'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import LandingDashboardPage from './pages/LandingDashboardPage/LandingDashboardPage'
+import LandingDashboardPageV2 from './pages/LandingDashboardPageV2/LandingDashboardPageV2'
 
 export const ProjectDetailsSideNavProps: SidebarContext = {
   navComponent: ProjectDetailsSideNav,
@@ -199,6 +200,16 @@ const MainDashboardRedirect = (): React.ReactElement => {
   return <LandingDashboardPage />
 }
 
+const LandingDashboardPageRedirect = (): React.ReactElement => {
+  const { LANDING_OVERVIEW_PAGE_V2 } = useFeatureFlags()
+
+  if (LANDING_OVERVIEW_PAGE_V2) {
+    return <LandingDashboardPageV2 />
+  }
+
+  return <LandingDashboardPage />
+}
+
 export default (
   <>
     <RouteWithLayout
@@ -214,7 +225,7 @@ export default (
     </RouteWithLayout>
 
     <RouteWithLayout sidebarProps={HomeSideNavProps} path={routes.toLandingDashboard({ ...accountPathProps })} exact>
-      <LandingDashboardPage />
+      <LandingDashboardPageRedirect />
     </RouteWithLayout>
 
     <RouteWithLayout

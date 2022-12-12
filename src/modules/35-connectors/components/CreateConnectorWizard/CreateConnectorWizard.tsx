@@ -62,6 +62,7 @@ import CreateCustomSMConnector from '../CreateConnector/CustomSecretManagerConne
 import CreateGCPSecretManager from '../CreateConnector/GCPSecretManager/CreateGCPSecretManager'
 import SpotConnector from '../CreateConnector/SpotConnector/SpotConnector'
 import CreateAzureArtifactsConnector from '../CreateConnector/AzureArtifactConnector/CreateAzureArtifactConnector'
+import TASConnector from '../CreateConnector/TASConnector/TASConnector'
 
 interface CreateConnectorWizardProps {
   accountId: string
@@ -110,7 +111,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     onSuccess: onSuccessWithEventTracking
   }
 
-  const { CVNG_ENABLED, PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG, SPOT_ELASTIGROUP_NG } = useFeatureFlags()
+  const { CVNG_ENABLED, PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG, SPOT_ELASTIGROUP_NG, CDS_TAS_NG } = useFeatureFlags()
 
   useTrackEvent(ConnectorActions.StartCreateConnector, {
     category: Category.CONNECTOR,
@@ -205,6 +206,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
       return SPOT_ELASTIGROUP_NG ? <SpotConnector {...commonProps} /> : null
     case Connectors.AZURE_ARTIFACTS:
       return <CreateAzureArtifactsConnector {...commonProps} />
+    case Connectors.TAS:
+      return CDS_TAS_NG ? <TASConnector {...commonProps} /> : null
     default:
       return null
   }

@@ -32,6 +32,22 @@ interface AddStepTemplate {
   executionRef: ExecutionGraphRefObj | null
 }
 
+export const getStepTypesFromCategories = (stepCategories: StepCategory[]): string[] => {
+  const validStepTypes: string[] = []
+  stepCategories.forEach(category => {
+    if (category.stepCategories?.length) {
+      validStepTypes.push(...getStepTypesFromCategories(category.stepCategories))
+    } else if (category.stepsData?.length) {
+      category.stepsData.forEach(stepData => {
+        if (stepData.type) {
+          validStepTypes.push(stepData.type)
+        }
+      })
+    }
+  })
+  return validStepTypes
+}
+
 export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateReturnType {
   const { executionRef } = props
   const { accountId } = useParams<ProjectPathProps>()
@@ -67,22 +83,6 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
       stepPalleteModuleInfos: getStepPaletteModuleInfosFromStage(selectedStage?.stage?.type, selectedStage?.stage)
     }
   })
-
-  const getStepTypesFromCategories = (stepCategories: StepCategory[]): string[] => {
-    const validStepTypes: string[] = []
-    stepCategories.forEach(category => {
-      if (category.stepCategories?.length) {
-        validStepTypes.push(...getStepTypesFromCategories(category.stepCategories))
-      } else if (category.stepsData?.length) {
-        category.stepsData.forEach(stepData => {
-          if (stepData.type) {
-            validStepTypes.push(stepData.type)
-          }
-        })
-      }
-    })
-    return validStepTypes
-  }
 
   React.useEffect(() => {
     if (stepsData?.data?.stepCategories) {

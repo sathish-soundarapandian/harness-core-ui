@@ -10,7 +10,7 @@ import { Intent, Spinner } from '@blueprintjs/core'
 import { parse } from 'yaml'
 import { defaultTo } from 'lodash-es'
 
-import { AllowedTypes, ConfirmationDialog, Container, ModalDialog, useToggleOpen } from '@harness/uicore'
+import { AllowedTypes, ConfirmationDialog, Layout, ModalDialog, useToggleOpen } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 
@@ -88,7 +88,7 @@ export default function EnvironmentEntitiesList({
 
   return (
     <>
-      <Container className={css.environmentEntitiesList}>
+      <Layout.Vertical spacing={'medium'} margin={{ top: 'medium' }}>
         {environmentsData.map(row => {
           return (
             <EnvironmentEntityCard
@@ -107,7 +107,7 @@ export default function EnvironmentEntitiesList({
             />
           )
         })}
-      </Container>
+      </Layout.Vertical>
 
       <ModalDialog
         isOpen={!!environmentToEdit}

@@ -61,7 +61,9 @@ import { AzureSlotDeployment } from './AzureSlotDeployment/AzureSlotDeployment'
 import { AzureTrafficShift } from './AzureTrafficShift/AzureTrafficShift'
 import { AzureSwapSlot } from './AzureWebAppSwapSlot/AzureWebAppSwapSlot'
 import { AzureWebAppServiceSpec } from './AzureWebAppServiceSpec/AzureWebAppServiceSpec'
+import { ASGServiceSpec } from './ASGServiceSpec/ASGServiceSpec'
 import { ECSInfraSpec } from './ECSInfraSpec/ECSInfraSpec'
+import { AsgInfraSpec } from './AsgInfraSpec/AsgInfraSpec'
 import { ECSServiceSpec } from './ECSServiceSpec/ECSServiceSpec'
 import { ECSRollingDeployStep } from './ECSRollingDeployStep/ECSRollingDeployStep'
 import { ECSRollingRollbackStep } from './ECSRollingRollbackStep/ECSRollingRollbackStep'
@@ -84,6 +86,9 @@ import { ElastigroupInfrastructureSpec } from './ElastigroupInfraSpec/Elastigrou
 import { ElastigroupServiceSpec } from './ElastigroupServiceSpec/ElastigroupServiceSpec'
 import { EmailStep } from './EmailStep/EmailStep'
 import { ElastigroupRollbackStep } from './ElastigroupRollbackStep/ElastigroupRollbackStep'
+import { ElastigroupSetupStep } from './ElastigroupSetupStep/ElastigroupSetupStep'
+import { TasServiceSpec } from './TasServiceSpec/TasServiceSpec'
+import { TASInfrastructureSpec } from './TASInfrastructureStep/TASInfrastructureStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -144,6 +149,7 @@ factory.registerStep(new AzureSlotDeployment())
 factory.registerStep(new AzureTrafficShift())
 factory.registerStep(new AzureSwapSlot())
 factory.registerStep(new ECSInfraSpec())
+factory.registerStep(new AsgInfraSpec())
 factory.registerStep(new ECSServiceSpec())
 factory.registerStep(new ECSRollingDeployStep())
 factory.registerStep(new ECSRollingRollbackStep())
@@ -162,3 +168,7 @@ factory.registerStep(new ShellScriptProvisionStep())
 factory.registerStep(new ElastigroupInfrastructureSpec())
 factory.registerStep(new ElastigroupServiceSpec())
 factory.registerStep(new ElastigroupRollbackStep())
+factory.registerStep(new ElastigroupSetupStep())
+factory.registerStep(new TasServiceSpec())
+factory.registerStep(new TASInfrastructureSpec())
+factory.registerStep(new ASGServiceSpec())

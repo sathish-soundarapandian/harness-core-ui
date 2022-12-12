@@ -67,6 +67,10 @@ const MODULE_SELECT_CARDS: ModuleSelectCard[] = [
   {
     icon: 'srm-with-dark-text',
     module: ModuleName.CV
+  },
+  {
+    icon: 'sto-with-dark-text',
+    module: ModuleName.STO
   }
 ]
 const SubscriptionsPage: React.FC = () => {
@@ -101,6 +105,9 @@ const SubscriptionsPage: React.FC = () => {
           return accumulator
         case ModuleName.CF:
           CFNG_ENABLED && accumulator.push(card)
+          return accumulator
+        case ModuleName.STO:
+          licenseInformation['STO']?.status === 'ACTIVE' && accumulator.push(card)
           return accumulator
         default:
           return accumulator

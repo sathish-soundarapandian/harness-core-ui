@@ -67,7 +67,8 @@ export enum ServiceDeploymentType {
   ECS = 'ECS',
   Elastigroup = 'Elastigroup',
   SshWinRmAws = 'SshWinRmAws',
-  SshWinRmAzure = 'SshWinRmAzure'
+  SshWinRmAzure = 'SshWinRmAzure',
+  Asg = 'Asg'
 }
 
 export enum RepositoryFormatTypes {
@@ -160,12 +161,15 @@ export function hasSTOStage(pipelineExecution?: PipelineExecutionSummary): boole
 export const getHelperTextString = (
   invalidFields: string[],
   getString: (key: StringKeys) => string,
-  isServerlessDeploymentTypeSelected = false
+  isServerlessDeploymentTypeSelected = false,
+  defaultErrorMessage = ''
 ): string => {
   return `${invalidFields.length > 1 ? invalidFields.join(', ') : invalidFields[0]} ${
     invalidFields.length > 1 ? ' are ' : ' is '
   } ${
-    isServerlessDeploymentTypeSelected
+    defaultErrorMessage
+      ? defaultErrorMessage
+      : isServerlessDeploymentTypeSelected
       ? getString('pipeline.artifactPathDependencyRequired')
       : getString('pipeline.tagDependencyRequired')
   }`
@@ -195,8 +199,9 @@ export const getHelpeTextForTags = (
     feed?: string
   },
   getString: (key: StringKeys) => string,
-  isServerlessDeploymentTypeSelected = false
-): string => {
+  isServerlessDeploymentTypeSelected = false,
+  defaultErrorMessage = ''
+): string | undefined => {
   const {
     connectorRef,
     region,
@@ -319,9 +324,14 @@ export const getHelpeTextForTags = (
     invalidFields.push(getString('pipeline.ACR.subscription'))
   }
 
-  const helpText = getHelperTextString(invalidFields, getString, isServerlessDeploymentTypeSelected)
+  const helpText = getHelperTextString(
+    invalidFields,
+    getString,
+    isServerlessDeploymentTypeSelected,
+    defaultErrorMessage
+  )
 
-  return invalidFields.length > 0 ? helpText : ''
+  return invalidFields.length > 0 ? helpText : undefined
 }
 
 export const isServerlessDeploymentType = (deploymentType: string): boolean => {
@@ -373,6 +383,10 @@ export const isAzureWebAppOrSshWinrmGenericDeploymentType = (
   return false
 }
 
+export const isTASDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.TAS
+}
+
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
@@ -382,7 +396,8 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.WinRm]: 'WinRM',
   [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details', //todospt
   [ServiceDeploymentType.SshWinRmAws]: 'Amazon Web Services Details',
-  [ServiceDeploymentType.SshWinRmAzure]: 'Azure Infrastructure details'
+  [ServiceDeploymentType.SshWinRmAzure]: 'Azure Infrastructure details',
+  [ServiceDeploymentType.TAS]: 'Tanzu Application Service Infrastructure Details'
 }
 
 export const getSelectedDeploymentType = (
@@ -614,7 +629,9 @@ export const deleteStageInfo = (stage?: DeploymentStageElementConfig): void => {
 export const infraDefinitionTypeMapping: { [key: string]: string } = {
   ServerlessAwsLambda: StepType.ServerlessAwsInfra,
   ECS: StepType.EcsInfra,
-  CustomDeployment: StepType.CustomDeployment
+  CustomDeployment: StepType.CustomDeployment,
+  TAS: StepType.TasInfra,
+  Asg: StepType.AsgInfraSpec
 }
 
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {
@@ -633,6 +650,10 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.CustomDeploymentServiceSpec
     case ServiceDeploymentType.Elastigroup:
       return StepType.ElastigroupService
+    case ServiceDeploymentType.TAS:
+      return StepType.TasService
+    case ServiceDeploymentType.Asg:
+      return StepType.Asg
     default:
       return StepType.K8sServiceSpec
   }
@@ -668,8 +689,14 @@ export const getVariablesHeaderTooltipId = (selectedDeploymentType: ServiceDefin
   return `${selectedDeploymentType}DeploymentTypeVariables`
 }
 
-export const getAzureNexusRepoOptions = (deploymentType: string, azureFlag?: boolean): SelectOption[] => {
-  return isSSHWinRMDeploymentType(deploymentType) || (isAzureWebAppDeploymentType(deploymentType) && azureFlag)
+export const getAzureNexusRepoOptions = (
+  deploymentType: string,
+  azureFlag?: boolean,
+  isTemplateContext?: boolean
+): SelectOption[] => {
+  return !!isTemplateContext ||
+    isSSHWinRMDeploymentType(deploymentType) ||
+    (isAzureWebAppDeploymentType(deploymentType) && azureFlag)
     ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
     : k8sRepositoryFormatTypes
 }

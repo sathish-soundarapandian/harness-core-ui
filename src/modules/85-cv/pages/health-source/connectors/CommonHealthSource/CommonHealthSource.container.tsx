@@ -5,14 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useContext, useCallback } from 'react'
+import React, { useContext } from 'react'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import CommonHealthSource from './CommonHealthSource'
-import { createHealthSourceData, createHealthSourcePayload } from './CommonHealthSource.utils'
-import type { HealthSourceConfig } from './CommonHealthSource.types'
+import { createHealthSourceData } from './CommonHealthSource.utils'
+import type { CommonHealthSourceConfigurations, HealthSourceConfig } from './CommonHealthSource.types'
 
 export interface CommonHealthSourceContainerProps {
   // TODO - type will be added once the backend entities are available
@@ -24,25 +22,21 @@ export interface CommonHealthSourceContainerProps {
 }
 
 export default function CommonHealthSourceContainer(props: CommonHealthSourceContainerProps): JSX.Element {
-  const { data: sourceData, onSubmit, isTemplate, expressions, healthSourceConfig } = props
+  const { data: sourceData, isTemplate, expressions, healthSourceConfig } = props
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
-
-  const handleSubmit = useCallback(
-    async (value: UpdatedHealthSource) => {
-      const healthSourcePayload = createHealthSourcePayload(value, isMetricThresholdEnabled)
-      healthSourcePayload && (await onSubmit(sourceData, healthSourcePayload))
-    },
-    [sourceData]
-  )
+  const handleSubmit = () => {
+    // TODO will be implemented
+  }
 
   return (
     <CommonHealthSource
       // TODO - will be a common method to create the initial data for the form.
       data={createHealthSourceData(sourceData)}
       onSubmit={handleSubmit}
-      onPrevious={() => onPrevious(sourceData)}
+      onPrevious={(formikValues: CommonHealthSourceConfigurations) => {
+        onPrevious({ ...sourceData, ...formikValues })
+      }}
       isTemplate={isTemplate}
       expressions={expressions}
       healthSourceConfig={healthSourceConfig}

@@ -31,10 +31,16 @@ interface CodeSourceWrapper {
 export enum PipelineStageTabs {
   OVERVIEW = 'OVERVIEW',
   INPUTS = 'INPUTS',
+  OUTPUTS = 'OUTPUTS',
   ADVANCED = 'ADVANCED'
 }
 
-export const TabsHeadingOrder = [PipelineStageTabs.OVERVIEW, PipelineStageTabs.INPUTS, PipelineStageTabs.ADVANCED]
+export const TabsHeadingOrder = [
+  PipelineStageTabs.OVERVIEW,
+  PipelineStageTabs.INPUTS,
+  PipelineStageTabs.OUTPUTS,
+  PipelineStageTabs.ADVANCED
+]
 
 export const PipelineNameIdTagCell: Renderer<CellProps<PMSPipelineSummaryResponse>> = ({ row }) => {
   const data = row.original

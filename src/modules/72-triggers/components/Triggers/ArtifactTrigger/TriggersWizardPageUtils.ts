@@ -70,7 +70,8 @@ export const eventTypes = {
   MERGE_REQUEST: 'MergeRequest',
   ISSUE_COMMENT: 'IssueComment',
   PR_COMMENT: 'PRComment',
-  MR_COMMENT: 'MRComment'
+  MR_COMMENT: 'MRComment',
+  RELEASE: 'Release'
 }
 
 export const getArtifactId = (isManifest?: boolean, selectedArtifactId?: string) => {

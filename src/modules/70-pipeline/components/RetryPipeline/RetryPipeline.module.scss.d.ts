@@ -14,6 +14,7 @@ declare const styles: {
   readonly footer: string
   readonly footerCheckbox: string
   readonly footerContainer: string
+  readonly gitRemoteDetailsWrapper: string
   readonly inputSetFormRunPipeline: string
   readonly inputSetsUpdatingSpinner: string
   readonly noPipelineInputSetForm: string

@@ -96,6 +96,9 @@ export default function ExecutionGraphView(): React.ReactElement {
         step
       }
 
+      // delete retryStep param on step change
+      delete params.retryStep
+
       replaceQueryParams(params)
     }
   }
@@ -118,6 +121,7 @@ export default function ExecutionGraphView(): React.ReactElement {
     }
 
     delete params.step
+    delete params.retryStep
 
     replaceQueryParams(params)
   }

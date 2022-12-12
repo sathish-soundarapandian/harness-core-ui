@@ -28,7 +28,6 @@ import {
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
 import type { StringsMap } from 'stringTypes'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -71,10 +70,10 @@ function K8sCanaryDeleteWidget(
     <>
       <Formik<K8sCanaryDeleteStepData>
         onSubmit={(values: K8sCanaryDeleteStepData) => {
-          onUpdate?.({ ...values, spec: { skipDryRun: false, ...values?.spec } })
+          onUpdate?.({ ...values, spec: { ...values?.spec } })
         }}
         validate={(values: K8sCanaryDeleteStepData) => {
-          onChange?.({ ...values, spec: { skipDryRun: false, ...values?.spec } })
+          onChange?.({ ...values, spec: { ...values?.spec } })
         }}
         formName="k*CanaryDelete"
         initialValues={initialValues}
@@ -159,21 +158,6 @@ const K8sCanaryDeleteInputWidget: React.FC<K8sCanaryDeployProps> = ({ inputSetDa
             disabled={inputSetData?.readonly}
             fieldPath={'timeout'}
             template={inputSetData?.template}
-          />
-        </div>
-      )}
-      {getMultiTypeFromValue(inputSetData?.template?.spec?.skipDryRun) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeCheckboxField
-            multiTypeTextbox={{
-              expressions,
-              allowableTypes
-            }}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipDryRun`}
-            className={stepCss.checkbox}
-            label={getString('pipelineSteps.skipDryRun')}
-            disabled={inputSetData?.readonly}
-            setToFalseWhenEmpty={true}
           />
         </div>
       )}
@@ -297,8 +281,6 @@ export class K8sCanaryDeleteStep extends PipelineStep<K8sCanaryDeleteStepData> {
     identifier: '',
     timeout: '10m',
     type: StepType.K8sCanaryDelete,
-    spec: {
-      skipDryRun: false
-    }
+    spec: {}
   }
 }

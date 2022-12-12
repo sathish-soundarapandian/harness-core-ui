@@ -24,8 +24,8 @@ import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { defaultTo, get, isEmpty, pick, remove } from 'lodash-es'
-import type { FormikErrors } from 'formik'
+import { defaultTo, get, isEmpty, pick, remove, isEqual } from 'lodash-es'
+import type { FormikErrors, FormikProps } from 'formik'
 import { Classes, Dialog, Tooltip } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -187,6 +187,7 @@ function RetryPipeline({
   const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig>()
   const [invalidInputSetIds, setInvalidInputSetIds] = useState<Array<string>>([])
   const [loadingSingleInputSet, setLoadingSingleInputSet] = useState<boolean>(false)
+  const formikRef = useRef<FormikProps<PipelineInfoConfig>>()
 
   const yamlTemplate = React.useMemo(() => {
     return parse<Pipeline>(inputSetTemplateYaml || '')?.pipeline
@@ -626,6 +627,21 @@ function RetryPipeline({
     return getErrorsList(formErrors).errorCount > 0 || !selectedStage
   }
 
+  const currentPipelineValues = currentPipeline?.pipeline
+    ? clearRuntimeInput(currentPipeline.pipeline)
+    : ({} as PipelineInfoConfig)
+
+  useEffect(() => {
+    if (
+      !isEqual(formikRef.current?.values, {
+        ...currentPipelineValues
+      })
+    )
+      formikRef.current?.setValues({
+        ...currentPipelineValues
+      })
+  }, [currentPipeline?.pipeline])
+
   const [showPreflightCheckModal, hidePreflightCheckModal] = useModalHook(() => {
     return (
       <Dialog
@@ -719,14 +735,11 @@ function RetryPipeline({
 
   return (
     <Formik<PipelineInfoConfig>
-      initialValues={
-        currentPipeline?.pipeline ? clearRuntimeInput(currentPipeline.pipeline) : ({} as PipelineInfoConfig)
-      }
+      initialValues={currentPipelineValues}
       formName="retryPipeline"
       onSubmit={values => {
         handleRetryPipeline(values, false)
       }}
-      enableReinitialize
       validate={async values => {
         let errors: FormikErrors<InputSetDTO> = formErrors
 
@@ -756,8 +769,11 @@ function RetryPipeline({
         return errors
       }}
     >
-      {({ submitForm, values }) => {
+      {formik => {
+        const { submitForm, values } = formik
+        formikRef.current = formik
         const noRuntimeInputs = checkIfRuntimeInputsNotPresent()
+
         return (
           <Layout.Vertical>
             <>
@@ -770,23 +786,13 @@ function RetryPipeline({
                 >
                   {getString('pipeline.retryPipeline')}
                 </Heading>
-                {isPipelineRemote ? (
-                  <GitRemoteDetails
-                    repoName={repoIdentifier}
-                    branch={branch}
-                    filePath={pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.filePath}
-                    fileUrl={pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.fileUrl}
-                    flags={{ readOnly: true }}
-                  />
-                ) : (
-                  isGitSyncEnabled && (
-                    <GitSyncStoreProvider>
-                      <GitPopover
-                        data={pipelineResponse?.data?.gitDetails ?? {}}
-                        iconProps={{ margin: { left: 'small', top: 'xsmall' } }}
-                      />
-                    </GitSyncStoreProvider>
-                  )
+                {isGitSyncEnabled && (
+                  <GitSyncStoreProvider>
+                    <GitPopover
+                      data={pipelineResponse?.data?.gitDetails ?? {}}
+                      iconProps={{ margin: { left: 'small', top: 'xsmall' } }}
+                    />
+                  </GitSyncStoreProvider>
                 )}
                 <div className={css.optionBtns}>
                   <VisualYamlToggle
@@ -798,6 +804,17 @@ function RetryPipeline({
                   />
                 </div>
               </div>
+              {isPipelineRemote && (
+                <div className={css.gitRemoteDetailsWrapper}>
+                  <GitRemoteDetails
+                    repoName={repoIdentifier}
+                    branch={branch}
+                    filePath={pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.filePath}
+                    fileUrl={pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.fileUrl}
+                    flags={{ readOnly: true }}
+                  />
+                </div>
+              )}
               <ErrorsStrip formErrors={formErrors} domRef={formRefDom} />
             </>
             {selectedView === SelectedView.VISUAL ? (
@@ -887,6 +904,7 @@ function RetryPipeline({
                 className={css.footerCheckbox}
                 checked={skipPreFlightCheck}
                 onChange={e => setSkipPreFlightCheck(e.currentTarget.checked)}
+                disabled={isPipelineRemote}
               />
               <Tooltip position="top" content={getString('featureNA')}>
                 <Checkbox
@@ -957,9 +975,12 @@ function RetryPipeline({
                 accountId={accountId}
                 projectIdentifier={projectIdentifier}
                 orgIdentifier={orgIdentifier}
-                repoIdentifier={repoIdentifier}
-                branch={branch}
+                connectorRef={connectorRef}
+                repoIdentifier={repoIdentifier || pipelineResponse?.data?.gitDetails?.repoName}
+                branch={branch || pipelineResponse?.data?.gitDetails?.branch}
+                storeType={storeType}
                 isGitSyncEnabled={isGitSyncEnabled}
+                supportingGitSimplification={supportingGitSimplification}
                 setFormErrors={setFormErrors}
                 refetchParentData={() => getInputSetsList()}
               />

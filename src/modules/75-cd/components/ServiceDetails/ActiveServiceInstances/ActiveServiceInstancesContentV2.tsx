@@ -19,7 +19,7 @@ import { PageSpinner, Table } from '@common/components'
 import type { InstanceGroupedByArtifact, InstanceGroupedByInfrastructure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
-import { numberFormatter } from '@cd/components/Services/common'
+import { numberFormatter } from '@common/utils/utils'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, PipelinePathProps, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { ActiveServiceInstancePopover } from './ActiveServiceInstancePopover'
@@ -42,6 +42,7 @@ export interface TableRowData {
   totalEnvs?: number
   totalInfras?: number
   tableType?: TableType
+  clusterIdentifier?: string
 }
 
 export enum TableType {
@@ -77,7 +78,8 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
               artifactPath: defaultTo(artifact.artifactPath, ''),
               showArtifact: envShow && !index,
               showEnv: !index,
-              infraIdentifier: defaultTo(entity.infraIdentifier, '-'),
+              infraIdentifier: defaultTo(entity.infraIdentifier, ''),
+              clusterIdentifier: defaultTo(entity.clusterIdentifier, ''),
               infraName: defaultTo(entity.infraName, '-'),
               instanceCount: defaultTo(entity.count, 0),
               lastPipelineExecutionId: defaultTo(entity.lastPipelineExecutionId, ''),
@@ -102,7 +104,8 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
               envId: env.envId,
               envName: env.envName,
               showEnv: true,
-              infraIdentifier: '-',
+              infraIdentifier: '',
+              clusterIdentifier: '',
               infraName: '-',
               instanceCount: 0,
               lastPipelineExecutionId: '',
@@ -379,10 +382,26 @@ const RenderInstanceCount: Renderer<CellProps<TableRowData>> = ({
 
 const RenderInstances: Renderer<CellProps<TableRowData>> = ({
   row: {
-    original: { envId, artifactVersion: buildId, instanceCount, tableType }
+    original: {
+      envId,
+      artifactVersion: buildId,
+      instanceCount,
+      tableType,
+      infraIdentifier,
+      lastPipelineExecutionId,
+      lastDeployedAt,
+      clusterIdentifier
+    }
   }
 }) => {
   TOTAL_VISIBLE_INSTANCES = tableType === TableType.PREVIEW ? 4 : 7
+
+  //sending undefined as we need to pass payload conditionally
+  const lastDeployedTime = lastDeployedAt ? parseInt(lastDeployedAt) : undefined
+  const clusterId = clusterIdentifier ? clusterIdentifier : undefined
+  const infraId = infraIdentifier ? infraIdentifier : undefined
+  const pipelineExecutionId = lastPipelineExecutionId ? lastPipelineExecutionId : undefined
+
   return instanceCount ? (
     <Container className={cx(css.paddedContainer, css.hexContainer)} flex={{ justifyContent: 'flex-start' }}>
       {Array(Math.min(instanceCount, TOTAL_VISIBLE_INSTANCES))
@@ -390,7 +409,9 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
         .map((_, index) => (
           <Popover
             interactionKind={PopoverInteractionKind.HOVER}
-            key={index}
+            disabled={tableType === TableType.SUMMARY}
+            key={`${buildId}_${envId}_${index}`}
+            position={Position.TOP}
             modifiers={{ preventOverflow: { escapeWithReference: true } }}
           >
             <Container
@@ -400,7 +421,15 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
               background={Color.PRIMARY_3}
               margin={{ left: 'xsmall', right: 'xsmall', top: 'xsmall', bottom: 'xsmall' }}
             />
-            <ActiveServiceInstancePopover buildId={buildId} envId={envId} instanceNum={index} />
+            <ActiveServiceInstancePopover
+              buildId={buildId}
+              envId={envId}
+              instanceNum={index}
+              infraIdentifier={infraId}
+              lastDeployedAt={lastDeployedTime}
+              clusterId={clusterId}
+              pipelineExecutionId={pipelineExecutionId}
+            />
           </Popover>
         ))}
       {instanceCount > TOTAL_VISIBLE_INSTANCES ? (

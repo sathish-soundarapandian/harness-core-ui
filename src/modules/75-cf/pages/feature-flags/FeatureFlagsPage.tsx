@@ -595,6 +595,7 @@ const FeatureFlagsPage: React.FC = () => {
             pageCount={features?.pageCount || 0}
             pageIndex={pageNumber}
             gotoPage={setPageNumber}
+            showPagination
           />
         )
       }

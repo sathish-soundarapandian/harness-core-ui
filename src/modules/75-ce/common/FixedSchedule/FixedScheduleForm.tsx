@@ -27,15 +27,15 @@ import {
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
-import DaysOfWeekSelector from '@ce/common/DaysOfWeekSelector/DaysOfWeekSelector'
-import { useStrings } from 'framework/strings'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
   getMinDate,
   getStaticSchedulePeriodString,
   getStaticSchedulePeriodTime,
   getUserTimeZone
-} from '@ce/utils/momentUtils'
+} from '@common/utils/momentUtils'
+import DaysOfWeekSelector from '@ce/common/DaysOfWeekSelector/DaysOfWeekSelector'
+import { useStrings } from 'framework/strings'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { FixedScheduleClient, ScheduleTime } from '@ce/components/COCreateGateway/models'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useValidateStaticScheduleList } from 'services/lw'

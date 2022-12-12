@@ -3,95 +3,89 @@
 exports[`OnboardingDetailPage SelectEnvironmentView should render data correctly 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main grid StyledProps--margin-top-xlarge"
+    class="Layout--vertical StyledProps--main gridDisplay StyledProps--padding-top-xsmall"
   >
     <p
-      class="StyledProps--font StyledProps--main StyledProps--font-variation-body1 StyledProps--color StyledProps--color-grey800 StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-body1 StyledProps--color StyledProps--color-grey800 StyledProps--padding-bottom-medium"
     >
       cf.onboarding.selectOrCreateEnvironment
     </p>
     <p
-      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey600"
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey600 StyledProps--padding-bottom-medium"
     >
       cf.onboarding.environmentDescription
     </p>
-    <div
-      class="StyledProps--font StyledProps--main"
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey600 StyledProps--padding-bottom-xsmall"
     >
-      <div
-        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-      >
-        <span
-          class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-blue500"
-          data-icon="spinner"
-        >
-          <svg
-            fill="none"
-            height="16"
-            viewBox="0 0 36 36"
-            width="16"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
-              stroke="currentColor"
-              stroke-dasharray="75,100"
-              stroke-linecap="round"
-              stroke-width="2.8"
-              style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
-            />
-          </svg>
-        </span>
-      </div>
-    </div>
+      cf.onboarding.selectOrTypeEnv
+    </p>
   </div>
+  <span
+    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-blue500"
+    data-icon="spinner"
+  >
+    <svg
+      fill="none"
+      height="16"
+      viewBox="0 0 36 36"
+      width="16"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+        stroke="currentColor"
+        stroke-dasharray="75,100"
+        stroke-linecap="round"
+        stroke-width="2.8"
+        style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
+      />
+    </svg>
+  </span>
 </div>
 `;
 
 exports[`OnboardingDetailPage SelectEnvironmentView should render loading correctly 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main grid StyledProps--margin-top-xlarge"
+    class="Layout--vertical StyledProps--main gridDisplay StyledProps--padding-top-xsmall"
   >
     <p
-      class="StyledProps--font StyledProps--main StyledProps--font-variation-body1 StyledProps--color StyledProps--color-grey800 StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-body1 StyledProps--color StyledProps--color-grey800 StyledProps--padding-bottom-medium"
     >
       cf.onboarding.selectOrCreateEnvironment
     </p>
     <p
-      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey600"
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey600 StyledProps--padding-bottom-medium"
     >
       cf.onboarding.environmentDescription
     </p>
-    <div
-      class="StyledProps--font StyledProps--main"
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey600 StyledProps--padding-bottom-xsmall"
     >
-      <div
-        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-      >
-        <span
-          class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-blue500"
-          data-icon="spinner"
-        >
-          <svg
-            fill="none"
-            height="16"
-            viewBox="0 0 36 36"
-            width="16"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
-              stroke="currentColor"
-              stroke-dasharray="75,100"
-              stroke-linecap="round"
-              stroke-width="2.8"
-              style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
-            />
-          </svg>
-        </span>
-      </div>
-    </div>
+      cf.onboarding.selectOrTypeEnv
+    </p>
   </div>
+  <span
+    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-blue500"
+    data-icon="spinner"
+  >
+    <svg
+      fill="none"
+      height="16"
+      viewBox="0 0 36 36"
+      width="16"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+        stroke="currentColor"
+        stroke-dasharray="75,100"
+        stroke-linecap="round"
+        stroke-width="2.8"
+        style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
+      />
+    </svg>
+  </span>
 </div>
 `;

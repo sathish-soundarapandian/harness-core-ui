@@ -43,10 +43,11 @@ const CVSLODetailsPage: React.FC = () => {
 
   const projectIdentifierRef = useRef<string>()
   const isCompositeSLO = sloType === SLOType.COMPOSITE
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
+  const pathQueryParams = isAccountLevel ? { accountId } : { accountId, orgIdentifier, projectIdentifier }
   useEffect(() => {
-    if (projectIdentifierRef.current && projectIdentifierRef.current !== projectIdentifier) {
+    if (!isAccountLevel && projectIdentifierRef.current && projectIdentifierRef.current !== projectIdentifier) {
       history.push(routes.toCVSLOs({ accountId, orgIdentifier, projectIdentifier }))
-      return
     }
 
     projectIdentifierRef.current = projectIdentifier
@@ -60,9 +61,7 @@ const CVSLODetailsPage: React.FC = () => {
   } = useGetSLODetails({
     identifier,
     queryParams: {
-      accountId,
-      orgIdentifier,
-      projectIdentifier
+      ...pathQueryParams
     },
     lazy: true
   })
@@ -92,23 +91,29 @@ const CVSLODetailsPage: React.FC = () => {
 
   const { mutate: deleteSLOV2, loading: deleteSLOV2Loading } = useDeleteSLOV2Data({
     queryParams: {
-      accountId,
-      orgIdentifier,
-      projectIdentifier
+      ...pathQueryParams
     }
   })
 
   const onTabChange = (nextTab: SLODetailsPageTabIds): void => {
     /* istanbul ignore else */ if (nextTab !== tab) {
-      history.push({
-        pathname: routes.toCVSLODetailsPage({
-          identifier,
-          accountId,
-          orgIdentifier,
-          projectIdentifier
-        }),
-        search: getSearchString({ tab: nextTab, monitoredServiceIdentifier, sloType })
-      })
+      isAccountLevel
+        ? history.push({
+            pathname: routes.toAccountCVSLODetailsPage({
+              identifier,
+              accountId
+            }),
+            search: getSearchString({ tab: nextTab, sloType })
+          })
+        : history.push({
+            pathname: routes.toCVSLODetailsPage({
+              identifier,
+              accountId,
+              orgIdentifier,
+              projectIdentifier
+            }),
+            search: getSearchString({ tab: nextTab, monitoredServiceIdentifier, sloType })
+          })
     }
   }
 
@@ -175,6 +180,7 @@ const CVSLODetailsPage: React.FC = () => {
               deleteSLO={isCompositeSLO ? deleteSLOV2 : deleteSLO}
               refetchSLODetails={refetch}
               onTabChange={onTabChange}
+              isCompositeSLO={isCompositeSLO}
             />
           )}
         </Tabs>

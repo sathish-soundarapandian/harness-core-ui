@@ -9,5 +9,6 @@ export enum EntityType {
   Secrets = 'Secrets',
   Connectors = 'Connectors',
   Template = 'Template',
-  Service = 'Service'
+  Service = 'Service',
+  Environment = 'Environment'
 }

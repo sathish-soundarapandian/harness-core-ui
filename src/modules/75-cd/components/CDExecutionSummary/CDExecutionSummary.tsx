@@ -7,8 +7,13 @@
 
 import React from 'react'
 import { Icon } from '@harness/uicore'
-import { identity, uniqBy } from 'lodash-es'
-import type { CDPipelineModuleInfo, CDStageModuleInfo, ServiceExecutionSummary } from 'services/cd-ng'
+import { defaultTo, identity, uniqBy } from 'lodash-es'
+import type {
+  CDPipelineModuleInfo,
+  CDStageModuleInfo,
+  GitOpsExecutionSummary,
+  ServiceExecutionSummary
+} from 'services/cd-ng'
 import type { ExecutionSummaryProps } from '@pipeline/factories/ExecutionFactory/types'
 
 import { ServicesList } from './ServicesList'
@@ -33,8 +38,17 @@ export function CDExecutionSummary(props: ExecutionSummaryProps<CDPipelineModule
         services.push(stageInfo.serviceInfo)
       }
 
+      // This will removed with the multi service env list view effort
+      const gitOpsEnvironments = Array.isArray(stageInfo.gitopsExecutionSummary?.environments)
+        ? (stageInfo.gitopsExecutionSummary as Required<GitOpsExecutionSummary>).environments.map(envForGitOps =>
+            defaultTo(envForGitOps.name, '')
+          )
+        : []
+
       // istanbul ignore else
-      if (stageInfo.infraExecutionSummary?.name || stageInfo.infraExecutionSummary?.identifier) {
+      if (gitOpsEnvironments.length) {
+        environments.push(...gitOpsEnvironments)
+      } else if (stageInfo.infraExecutionSummary?.name || stageInfo.infraExecutionSummary?.identifier) {
         environments.push(stageInfo.infraExecutionSummary.name || stageInfo.infraExecutionSummary.identifier)
       }
     })

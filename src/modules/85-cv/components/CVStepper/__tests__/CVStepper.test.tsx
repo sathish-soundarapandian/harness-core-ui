@@ -37,7 +37,7 @@ describe('Validate CVStepper', () => {
         <Wrapped isStepValid={isStepValid} />
       </TestWrapper>
     )
-    expect(container.querySelector('[data-testid="steptitle_Step1"] [icon="edit"]')).toBeInTheDocument()
+    expect(container.querySelector('[data-testid="steptitle_Step1"] [data-icon="Edit"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step2"] [icon="ring"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step3"] [icon="ring"]')).toBeInTheDocument()
     expect(screen.getByText('next')).toBeInTheDocument()
@@ -45,7 +45,7 @@ describe('Validate CVStepper', () => {
     userEvent.click(screen.getByText('next'))
     expect(getByText('Preview Panel Step 1')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step1"] [icon="tick-circle"]')).toBeInTheDocument()
-    expect(container.querySelector('[data-testid="steptitle_Step2"] [icon="edit"]')).toBeInTheDocument()
+    expect(container.querySelector('[data-testid="steptitle_Step2"] [data-icon="Edit"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step3"] [icon="ring"]')).toBeInTheDocument()
     expect(screen.getByText('back')).toBeInTheDocument()
     expect(screen.getByText('next')).toBeInTheDocument()
@@ -53,7 +53,7 @@ describe('Validate CVStepper', () => {
     expect(getByText('Preview Panel Step 2')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step1"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step2"] [icon="tick-circle"]')).toBeInTheDocument()
-    expect(container.querySelector('[data-testid="steptitle_Step3"] [icon="edit"]')).toBeInTheDocument()
+    expect(container.querySelector('[data-testid="steptitle_Step3"] [data-icon="Edit"]')).toBeInTheDocument()
     expect(screen.getByText('back')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="nextButton"]')).not.toBeInTheDocument()
     userEvent.click(screen.getByText('save'))

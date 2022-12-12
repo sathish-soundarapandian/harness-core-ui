@@ -18,11 +18,12 @@ import {
   MultiTypeInputType,
   Icon,
   AllowedTypes,
-  Heading
+  Heading,
+  FormikForm,
+  IconName
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { defaultTo } from 'lodash-es'
@@ -34,6 +35,7 @@ import { ManifestStoreMap, ManifestToPathLabelMap, ManifestToPathMap } from '../
 import type { ManifestStores, PrimaryManifestType } from '../ManifestInterface'
 import DragnDropPaths from '../DragnDropPaths'
 import { removeEmptyFieldsFromStringArray } from '../ManifestWizardSteps/ManifestUtils'
+import { shouldAllowOnlyOneFilePath } from '../ManifestWizardSteps/CommonManifestDetails/utils'
 import css from '../ManifestSelection.module.scss'
 
 interface AttachPathYamlFlowType {
@@ -46,6 +48,7 @@ interface AttachPathYamlFlowType {
   removeValuesYaml: (index: number) => void
   valuesPaths: string[]
   isReadonly: boolean
+  valuesIcon?: IconName
 }
 
 function AttachPathYamlFlow({
@@ -57,10 +60,12 @@ function AttachPathYamlFlow({
   allowableTypes,
   attachPathYaml,
   removeValuesYaml,
-  isReadonly
+  isReadonly,
+  valuesIcon
 }: AttachPathYamlFlowType): React.ReactElement | null {
   const { getString } = useStrings()
 
+  const allowOnlyOneFilePath = shouldAllowOnlyOneFilePath(manifestType)
   const getValuesPathInitialValue = (): string[] | Array<{ path: string; uuid: string }> => {
     if (manifestStore === ManifestStoreMap.Harness) {
       return valuesPaths
@@ -122,56 +127,66 @@ function AttachPathYamlFlow({
           }}
           enableReinitialize={true}
         >
-          {formik => (
-            <Form>
-              <Layout.Vertical>
-                <Heading
-                  margin={{ bottom: 'xlarge' }}
-                  level={3}
-                  font={{ size: 'medium', weight: 'bold' }}
-                  color={Color.GREY_900}
-                >
-                  {getString('pipeline.manifestType.addValuesYamlPath')}
-                </Heading>
-                {ManifestToPathMap[manifestType] && manifestStore !== ManifestStoreMap.Harness ? (
-                  <DragnDropPaths
-                    formik={formik}
-                    expressions={expressions}
-                    allowableTypes={allowableTypes}
-                    fieldPath="valuesPaths"
-                    pathLabel={ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])}
-                    placeholder={getString('pipeline.manifestType.pathPlaceholder')}
-                    defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
-                    dragDropFieldWidth={400}
-                  />
-                ) : (
-                  <>
-                    <MultiConfigSelectField
-                      isAttachment
-                      name="valuesPaths"
-                      allowableTypes={allowableTypes}
-                      fileType={FILE_TYPE_VALUES.FILE_STORE}
+          {formik => {
+            return (
+              <FormikForm>
+                <Layout.Vertical>
+                  <Heading
+                    margin={{ bottom: 'xlarge' }}
+                    level={3}
+                    font={{ size: 'medium', weight: 'bold' }}
+                    color={Color.GREY_900}
+                  >
+                    {getString(
+                      defaultTo(ManifestToPathLabelMap[manifestType], 'pipeline.manifestType.addValuesYamlPath')
+                    )}
+                  </Heading>
+                  {ManifestToPathMap[manifestType] && manifestStore !== ManifestStoreMap.Harness ? (
+                    <DragnDropPaths
                       formik={formik}
                       expressions={expressions}
-                      values={formik.values.valuesPaths as string | string[]}
-                      multiTypeFieldSelectorProps={{
-                        disableTypeSelection: false,
-                        label: <Text>{getString('pipeline.manifestType.pathPlaceholder')}</Text>
-                      }}
+                      allowableTypes={allowableTypes}
+                      fieldPath="valuesPaths"
+                      pathLabel={
+                        ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])
+                      }
+                      placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+                      defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                      dragDropFieldWidth={400}
+                      allowOnlyOneFilePath={allowOnlyOneFilePath}
                     />
-                  </>
-                )}
-                <Layout.Horizontal>
-                  <Button variation={ButtonVariation.PRIMARY} type="submit" text={getString('submit')} />
-                </Layout.Horizontal>
-              </Layout.Vertical>
-            </Form>
-          )}
+                  ) : (
+                    <>
+                      <MultiConfigSelectField
+                        isAttachment
+                        name="valuesPaths"
+                        allowableTypes={allowableTypes}
+                        fileType={FILE_TYPE_VALUES.FILE_STORE}
+                        formik={formik}
+                        expressions={expressions}
+                        values={formik.values.valuesPaths as string | string[]}
+                        multiTypeFieldSelectorProps={{
+                          disableTypeSelection: false,
+                          label: <Text>{getString('pipeline.manifestType.pathPlaceholder')}</Text>
+                        }}
+                        restrictToSingleEntry={allowOnlyOneFilePath}
+                      />
+                    </>
+                  )}
+                  <Layout.Horizontal>
+                    <Button variation={ButtonVariation.PRIMARY} type="submit" text={getString('submit')} />
+                  </Layout.Horizontal>
+                </Layout.Vertical>
+              </FormikForm>
+            )
+          }}
         </Formik>
       </Dialog>
     ),
     [valuesPaths]
   )
+  const hideAddManifest = (allowOnlyOneFilePath && valuesPaths?.length === 1) || isReadonly
+  const valuesPathsIcon = defaultTo(valuesIcon, 'valuesFIle')
 
   return (
     <section className={css.valuesList}>
@@ -183,7 +198,7 @@ function AttachPathYamlFlow({
                 <Text inline lineClamp={1} width={25}>
                   {index + 1}.
                 </Text>
-                <Icon name="valuesFIle" inline padding={{ right: 'medium' }} size={24} />
+                <Icon name={valuesPathsIcon} inline padding={{ right: 'medium' }} size={24} />
                 <Text lineClamp={1}>{valuesPathValue}</Text>
               </Layout.Horizontal>
               {renderConnectorField}
@@ -208,7 +223,7 @@ function AttachPathYamlFlow({
           {`${ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])}: ${valuesPaths}`}
         </div>
       )}
-      {!isReadonly && (
+      {!hideAddManifest && (
         <Button
           className={css.addValuesYaml}
           id="add-manifest"

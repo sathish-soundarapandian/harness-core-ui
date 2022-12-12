@@ -66,7 +66,7 @@ interface ExecutionListSubHeaderProps {
 }
 
 function _ExecutionListSubHeader(
-  props: Pick<ExecutionListProps, 'isPipelineInvalid' | 'onRunPipeline' | 'repoName' | 'showBranchFilter'> &
+  props: Pick<ExecutionListProps, 'isPipelineInvalid' | 'onRunPipeline' | 'showBranchFilter'> &
     ExecutionListSubHeaderProps,
   ref: React.ForwardedRef<ExpandingSearchInputHandle>
 ): React.ReactElement {

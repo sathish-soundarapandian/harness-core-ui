@@ -159,20 +159,6 @@ export class ECSBlueGreenCreateServiceStep extends PipelineStep<ECSBlueGreenCrea
 
     if (
       isRequired &&
-      getMultiTypeFromValue(template?.spec?.prodListenerRuleArn) === MultiTypeInputType.RUNTIME &&
-      isEmpty(data?.spec?.prodListenerRuleArn)
-    ) {
-      set(
-        errors,
-        'spec.prodListenerRuleArn',
-        getString?.('common.validation.fieldIsRequired', {
-          name: getString('cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN')
-        })
-      )
-    }
-
-    if (
-      isRequired &&
       getMultiTypeFromValue(template?.spec?.stageListener) === MultiTypeInputType.RUNTIME &&
       isEmpty(data?.spec?.stageListener)
     ) {
@@ -181,20 +167,6 @@ export class ECSBlueGreenCreateServiceStep extends PipelineStep<ECSBlueGreenCrea
         'spec.stageListener',
         getString?.('common.validation.fieldIsRequired', {
           name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')
-        })
-      )
-    }
-
-    if (
-      isRequired &&
-      getMultiTypeFromValue(template?.spec?.stageListenerRuleArn) === MultiTypeInputType.RUNTIME &&
-      isEmpty(data?.spec?.stageListenerRuleArn)
-    ) {
-      set(
-        errors,
-        'spec.stageListenerRuleArn',
-        getString?.('common.validation.fieldIsRequired', {
-          name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')
         })
       )
     }

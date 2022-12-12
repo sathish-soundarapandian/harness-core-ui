@@ -175,6 +175,7 @@ allowpaths:
   - /aws/regions
   - /slo-dashboard/widget/{identifier}/consumption
   - /slo/v2/composite-slo/onboarding-graph
+  - /usage/CV
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

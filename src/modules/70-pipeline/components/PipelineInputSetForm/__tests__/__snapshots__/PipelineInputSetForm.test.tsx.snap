@@ -6,7 +6,7 @@ exports[`CD enabled CD stage form READONLY mode: disabled CD stage 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
     >
       <div
         class="formGroup sm"
@@ -210,7 +210,7 @@ exports[`CI enabled CI READONLY mode: CI stage readonly mode 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
     >
       <div
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-large"
@@ -311,7 +311,7 @@ exports[`CI enabled CI present in one of the stages: CI codebase input set form 
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
     >
       <div
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-large"
@@ -507,7 +507,7 @@ exports[`CI enabled CI present with triggers: CI codebase input set form with tr
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
     >
       <div
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-large"
@@ -703,7 +703,7 @@ exports[`CI enabled CI with ConnectorRef as runtime input: CI stage expects Conn
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
     >
       <div
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-large"
@@ -847,7 +847,7 @@ exports[`CI enabled PR Number build radio option should not be visible for CodeC
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
     >
       <div
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-large"
@@ -935,7 +935,7 @@ exports[`CI enabled Render CI Codebase all runtime inputs: all inputs as runtime
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
     >
       <div
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-large"

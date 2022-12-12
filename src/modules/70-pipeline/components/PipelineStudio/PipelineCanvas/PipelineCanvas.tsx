@@ -73,6 +73,8 @@ import type { Pipeline } from '@pipeline/utils/types'
 import useDiffDialog from '@common/hooks/useDiffDialog'
 import { PipelineOutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/PipelineOutOfSyncErrorStrip/PipelineOutOfSyncErrorStrip'
 import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -81,6 +83,7 @@ import { RightBar } from '../RightBar/RightBar'
 import StudioGitPopover from '../StudioGitPopover'
 import usePipelineErrors from './PipelineErrors/usePipelineErrors'
 import { getDuplicateStepIdentifierList } from './PipelineCanvasUtils'
+import PipelineCachedCopy from './PipelineCachedCopy/PipelineCachedCopy'
 import css from './PipelineCanvas.module.scss'
 
 interface OtherModalProps {
@@ -181,14 +184,9 @@ export function PipelineCanvas({
     storeMetadata,
     entityValidityDetails,
     templateError,
-    yamlSchemaErrorWrapper
+    yamlSchemaErrorWrapper,
+    cacheResponse: pipelineCacheResponse
   } = state
-
-  //For remote pipeline queryParam will always as branch as selected branch except coming from list view
-  // While opeining studio from list view, selected branch can be any branch as in pipeline response
-  if (originalPipeline?.identifier !== '-1' && storeType === StoreType.REMOTE && !branch && gitDetails?.branch) {
-    updateQueryParams({ branch: gitDetails?.branch })
-  }
 
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier, module } = useParams<
@@ -200,6 +198,25 @@ export function PipelineCanvas({
     }> &
       GitQueryParams
   >()
+  const history = useHistory()
+  const pipelineGitXCache = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
+
+  // For remote pipeline queryParam will always as branch as selected branch except coming from list view
+  // While opeining studio from list view, selected branch can be any branch as in pipeline response
+  // We also have to discard Transition url which was without branch
+
+  React.useEffect(() => {
+    if (
+      originalPipeline?.identifier !== DefaultNewPipelineId &&
+      storeType === StoreType.REMOTE &&
+      !branch &&
+      gitDetails?.branch
+    ) {
+      history.replace(toPipelineList({ orgIdentifier, projectIdentifier, accountId, module }))
+      updateQueryParams({ branch: gitDetails?.branch })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [branch, gitDetails?.branch, module, originalPipeline?.identifier, projectIdentifier])
 
   const { showError, clear } = useToaster()
 
@@ -220,7 +237,6 @@ export function PipelineCanvas({
     }
   })
 
-  const history = useHistory()
   const { supportingGitSimplification } = useAppStore()
   const { openPipelineErrorsModal } = usePipelineErrors()
   const isYaml = view === SelectedView.YAML
@@ -457,6 +473,11 @@ export function PipelineCanvas({
   }, [pipeline?.name])
 
   const onCloseCreate = React.useCallback(() => {
+    delete (pipeline as PipelineWithGitContextFormProps).repo
+    delete (pipeline as PipelineWithGitContextFormProps).branch
+    delete (pipeline as PipelineWithGitContextFormProps).connectorRef
+    delete (pipeline as PipelineWithGitContextFormProps).filePath
+    delete (pipeline as PipelineWithGitContextFormProps).storeType
     if (pipelineIdentifier === DefaultNewPipelineId || getOtherModal) {
       deletePipelineCache(gitDetails)
       history.push(toPipelineList({ orgIdentifier, projectIdentifier, accountId, module }))
@@ -958,6 +979,7 @@ export function PipelineCanvas({
                   />
                   <div>
                     <div className={css.savePublishContainer}>
+                      {pipelineGitXCache && !isEmpty(pipelineCacheResponse) && <PipelineCachedCopy />}
                       {isReadonly && (
                         <div className={css.readonlyAccessTag}>
                           <Icon name="eye-open" size={16} />

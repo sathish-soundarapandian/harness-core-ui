@@ -643,6 +643,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
                   selectProps: {
                     usePortal: true,
                     addClearBtn: !readonly,
+                    allowCreatingNewItems: true,
                     ...(fromTrigger && { value: TriggerDefaultFieldList.chartVersion }),
                     items: chartVersions,
                     noResults: (

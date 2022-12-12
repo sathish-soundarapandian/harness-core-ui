@@ -79,7 +79,7 @@ function TextFieldInputSet(props: TextFieldInputSetView): JSX.Element {
             showDefaultField={false}
             showAdvanced={true}
             onChange={val => formik?.setFieldValue(name, val)}
-            style={{ marginTop: 'var(--spacing-6)' }}
+            style={label ? { marginTop: 'var(--spacing-6)' } : undefined}
             allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
             {...configureOptionsProps}
             isReadonly={disabled}

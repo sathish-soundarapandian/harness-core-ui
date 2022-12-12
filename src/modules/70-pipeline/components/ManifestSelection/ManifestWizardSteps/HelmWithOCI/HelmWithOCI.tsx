@@ -93,7 +93,7 @@ function HelmWithOCI({
     return {
       identifier: '',
       helmVersion: 'V380',
-      basePath: '',
+      basePath: '/',
       chartName: '',
       chartVersion: '',
       skipResourceVersioning: false,

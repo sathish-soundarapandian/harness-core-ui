@@ -9,7 +9,7 @@ import React, { useState, useEffect } from 'react'
 import { isNumber } from 'highcharts'
 import type QueryString from 'qs'
 import { useParams } from 'react-router-dom'
-import type { Row } from 'react-table'
+import type { Column, Row } from 'react-table'
 import {
   Text,
   TableV2,
@@ -24,7 +24,12 @@ import {
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useMutateAsGet } from '@common/hooks'
+import { getErrorMessage } from '@cv/utils/CommonUtils'
 import noServiceAvailableImage from '@cv/assets/noMonitoredServices.svg'
+import {
+  getProjectAndOrgColumn,
+  getColumsForProjectAndAccountLevel
+} from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/CreateCompositeSloForm.utils'
 import { SLOObjective, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -61,12 +66,14 @@ interface SLOListProps {
 
 export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDetails }: SLOListProps): JSX.Element => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const { getString } = useStrings()
   const [pageNumber, setPageNumber] = useState(0)
   const [searchTerm, setSearchTerm] = useState('')
   const [initializedPageNumbers, setInitializedPageNumbers] = useState<number[]>([])
   const [selectedSlos, setSelectedSlos] = useState<SLOHealthListView[]>([])
 
+  const childResource = isAccountLevel ? { childResource: true } : {}
   const sloDashboardWidgetsParams: SLODashboardWidgetsParams = {
     queryParams: { accountId, orgIdentifier, projectIdentifier, pageNumber, pageSize: 10 },
     queryParamStringifyOptions: {
@@ -81,7 +88,7 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
     error: dashboardWidgetsError
   } = useMutateAsGet(useGetSLOHealthListViewV2, {
     queryParams: { ...sloDashboardWidgetsParams.queryParams },
-    body: { ...filter, searchFilter: searchTerm }
+    body: { ...filter, searchFilter: searchTerm, ...childResource }
   })
 
   const { content, totalItems = 0, totalPages = 0, pageIndex = 0, pageSize = 10 } = dashboardWidgetsResponse?.data ?? {}
@@ -134,6 +141,62 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
     })
   }
 
+  const allColumns = [
+    {
+      Header: (
+        <Checkbox
+          checked={isSelectAllChecked()}
+          onChange={(event: React.FormEvent<HTMLInputElement>) => {
+            onSelectAll(event.currentTarget.checked)
+          }}
+        />
+      ),
+      id: 'selectSlo',
+      width: '50px',
+      Cell: ({ row }: { row: Row<SLOHealthListView> }) => {
+        return <RenderCheckBoxes row={row} selectedSlos={selectedSlos} setSelectedSlos={setSelectedSlos} />
+      }
+    },
+    {
+      accessor: 'name',
+      Header: getString('cv.slos.sloName').toUpperCase(),
+      width: '20%',
+      Cell: RenderSLOName
+    },
+    ...(getProjectAndOrgColumn({ getString }) as Column<SLOHealthListView>[]),
+    {
+      accessor: 'serviceName',
+      Header: getString('cv.slos.monitoredService').toUpperCase(),
+      width: '20%',
+      Cell: RenderMonitoredService
+    },
+    {
+      accessor: 'userJourneyName',
+      Header: getString('cv.slos.userJourney').toUpperCase(),
+      width: '20%',
+      Cell: RenderUserJourney
+    },
+    {
+      accessor: 'tags',
+      Header: getString('tagsLabel').toUpperCase(),
+      width: '20%',
+      Cell: RenderTags
+    },
+    {
+      Header: getString('cv.slos.sliType'),
+      width: '20%',
+      Cell: RenderSLIType
+    },
+    {
+      accessor: 'sliType',
+      Header: getString('cv.slos.target').toUpperCase(),
+      width: '20%',
+      Cell: RenderTarget
+    }
+  ]
+
+  const filteredColumns = getColumsForProjectAndAccountLevel({ isAccountLevel, allColumns, getString })
+
   return (
     <>
       <Text margin={'medium'} font={{ variation: FontVariation.FORM_TITLE }}>
@@ -160,64 +223,13 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
       <Container margin={'medium'}>
         <Page.Body
           loading={dashboardWidgetsLoading}
-          error={Boolean(dashboardWidgetsError)}
+          error={getErrorMessage(dashboardWidgetsError)}
           retryOnError={() => refetchDashboardWidgets()}
         >
           {content?.length ? (
             <TableV2
               sortable
-              columns={[
-                {
-                  Header: (
-                    <Checkbox
-                      checked={isSelectAllChecked()}
-                      onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                        onSelectAll(event.currentTarget.checked)
-                      }}
-                    />
-                  ),
-                  id: 'selectSlo',
-                  width: '50px',
-                  Cell: ({ row }: { row: Row<SLOHealthListView> }) => {
-                    return <RenderCheckBoxes row={row} selectedSlos={selectedSlos} setSelectedSlos={setSelectedSlos} />
-                  }
-                },
-                {
-                  accessor: 'name',
-                  Header: getString('cv.slos.sloName').toUpperCase(),
-                  width: '20%',
-                  Cell: RenderSLOName
-                },
-                {
-                  accessor: 'serviceName',
-                  Header: getString('cv.slos.monitoredService').toUpperCase(),
-                  width: '20%',
-                  Cell: RenderMonitoredService
-                },
-                {
-                  accessor: 'userJourneyName',
-                  Header: getString('cv.slos.userJourney').toUpperCase(),
-                  width: '20%',
-                  Cell: RenderUserJourney
-                },
-                {
-                  accessor: 'tags',
-                  Header: getString('tagsLabel').toUpperCase(),
-                  width: '20%',
-                  Cell: RenderTags
-                },
-                {
-                  Header: getString('cv.slos.sliType'),
-                  width: '20%',
-                  Cell: RenderSLIType
-                },
-                {
-                  accessor: 'sliType',
-                  Header: getString('cv.slos.target').toUpperCase(),
-                  width: '20%',
-                  Cell: RenderTarget
-                }
-              ]}
+              columns={filteredColumns as Array<Column<SLOHealthListView>>}
               data={content || []}
               pagination={{
                 pageSize,

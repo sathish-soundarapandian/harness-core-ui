@@ -112,9 +112,9 @@ export const OnboardingDetailPage: React.FC = () => {
 
   return (
     <Layout.Vertical
-      height="100vh"
       padding={{ top: 'huge', left: 'huge', right: 'huge', bottom: 'none' }}
       background={Color.WHITE}
+      className={css.mainContent}
     >
       <Layout.Horizontal
         spacing="xsmall"
@@ -134,13 +134,13 @@ export const OnboardingDetailPage: React.FC = () => {
           }
         />
       </Layout.Horizontal>
-      <Container className={css.scrollOverflowY} height="100vh" padding={{ top: 'xxlarge', bottom: 'xxlarge' }}>
+      <Container className={css.onboardingContainer} height="100%" padding={{ top: 'xxlarge', bottom: 'xlarge' }}>
         {selectedStep !== STEP.VALIDATE_FLAG ? (
           <>
             <Heading level={3} font={{ variation: FontVariation.H3 }} margin={{ bottom: 'large' }}>
               {getString('cf.onboarding.letsGetStarted')}
             </Heading>
-            <Heading level={4} font={{ variation: FontVariation.H4 }} margin="none">
+            <Heading level={4} font={{ variation: FontVariation.H4 }} margin={{ bottom: 'medium' }}>
               {getString('cf.onboarding.createFlag')}
             </Heading>
 

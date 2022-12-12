@@ -196,7 +196,6 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
   })
 
   const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.CD_GIT_WEBHOOK_POLLING)
-  const isSpgNgGithubWebhookAuthenticationEnabled = useFeatureFlag(FeatureFlag.SPG_NG_GITHUB_WEBHOOK_AUTHENTICATION)
 
   const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
@@ -520,9 +519,13 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       autoAbortPreviousExecutions = false,
       pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
       pollInterval,
-      encryptedWebhookSecretIdentifier: { referenceString } = { referenceString: '' }
+      encryptedWebhookSecretIdentifier
     } = val
     const inputSetRefs = get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
+    const referenceString =
+      typeof encryptedWebhookSecretIdentifier === 'string'
+        ? encryptedWebhookSecretIdentifier
+        : encryptedWebhookSecretIdentifier?.referenceString ?? ''
 
     const stringifyPipelineRuntimeInput = yamlStringify({
       pipeline: clearNullUndefined(pipelineRuntimeInput)
@@ -585,10 +588,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         name,
         identifier,
         enabled: enabledStatus,
-        ...(formikValueSourceRepo === GitSourceProviders.GITHUB.value &&
-          isSpgNgGithubWebhookAuthenticationEnabled && {
-            encryptedWebhookSecretIdentifier: referenceString
-          }),
+        ...(formikValueSourceRepo === GitSourceProviders.GITHUB.value && {
+          encryptedWebhookSecretIdentifier: referenceString
+        }),
         description,
         tags,
         orgIdentifier,
@@ -776,8 +778,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           identifier,
           description,
           tags,
-          ...(sourceRepo === GitSourceProviders.GITHUB.value &&
-            isSpgNgGithubWebhookAuthenticationEnabled && { encryptedWebhookSecretIdentifier }),
+          ...(sourceRepo === GitSourceProviders.GITHUB.value && { encryptedWebhookSecretIdentifier }),
           pipeline: pipelineJson,
           sourceRepo,
           triggerType: TriggerTypes.WEBHOOK as unknown as NGTriggerSourceV2['type'],
@@ -1365,11 +1366,10 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         sourceRepo: sourceRepoOnNew,
         identifier: '',
         tags: {},
-        ...(sourceRepoOnNew === GitSourceProviders.GITHUB.value &&
-          isSpgNgGithubWebhookAuthenticationEnabled && {
-            encryptedWebhookSecretIdentifier: '',
-            isGithubWebhookAuthenticationEnabled
-          }),
+        ...(sourceRepoOnNew === GitSourceProviders.GITHUB.value && {
+          encryptedWebhookSecretIdentifier: '',
+          isGithubWebhookAuthenticationEnabled
+        }),
         pipeline: newPipeline,
         originalPipeline,
         resolvedPipeline,

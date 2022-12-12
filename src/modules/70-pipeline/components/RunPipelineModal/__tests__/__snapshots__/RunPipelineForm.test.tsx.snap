@@ -551,7 +551,7 @@ exports[`STUDIO MODE Valid input set enables Run button if it was disabled due t
                   class="divider"
                 />
                 <div
-                  class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+                  class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
                 >
                   <div
                     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-large"
@@ -1087,7 +1087,7 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
                   class="divider"
                 />
                 <div
-                  class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+                  class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
                 >
                   <div
                     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-large"
@@ -1702,7 +1702,7 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
                   class="divider"
                 />
                 <div
-                  class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+                  class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
                 >
                   <div
                     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-large"

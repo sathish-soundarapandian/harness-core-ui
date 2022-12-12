@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react'
 import type { Column as TableColumn } from 'react-table'
 import { Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
+import { getStaticSchedulePeriodTime } from '@common/utils/momentUtils'
 import {
   Column,
   getFixedDecimalData,
@@ -17,7 +18,6 @@ import {
   RenderPercentageCell,
   RenderTextCell
 } from '@ce/components/PerspectiveGrid/Columns'
-import { getStaticSchedulePeriodTime } from '@ce/utils/momentUtils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFetchComputeCoverage } from 'services/lw-co'
 import GridWithChartVisualiser from './GridWithChartVisualiser'

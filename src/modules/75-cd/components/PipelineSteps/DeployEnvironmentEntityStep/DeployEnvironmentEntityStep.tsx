@@ -21,7 +21,7 @@ import type {
   DeployEnvironmentEntityCustomInputStepProps,
   DeployEnvironmentEntityCustomStepProps
 } from './types'
-import { processInitialValues, processFormValues } from './utils'
+import { processInitialValues, processFormValues } from './utils/utils'
 import DeployEnvironmentEntityInputStep from './DeployEnvironmentEntityInputStep'
 
 export class DeployEnvironmentEntityStep extends Step<DeployEnvironmentEntityConfig> {

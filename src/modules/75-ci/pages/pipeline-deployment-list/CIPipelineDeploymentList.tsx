@@ -58,7 +58,6 @@ export default function CIPipelineDeploymentList(): React.ReactElement {
   return (
     <ExecutionList
       showHealthAndExecution
-      repoName={repoName}
       showBranchFilter
       onRunPipeline={onRunPipeline}
       isPipelineInvalid={isPipelineInvalid}

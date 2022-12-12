@@ -50,7 +50,7 @@ export const resetTags = (formik: FormikValues, tagPath: string): void => {
   }
 }
 
-export const shouldFetchTagsSource = (queryParamList: Array<string>): boolean => {
+export const shouldFetchTagsSource = (queryParamList: Array<string | undefined>): boolean => {
   return checkIfQueryParamsisNotEmpty(queryParamList)
 }
 
@@ -167,6 +167,14 @@ export const getImagePath = (initialImagePath: string, formikImagePathValue: str
     : formikImagePathValue
 }
 
+// When the runtime value is provided some fixed value in templateusage view, that field becomes part of the pipeline yaml, and the fixed data comes from the pipelines api for service v2.
+// In this scenario, we take the default value from the allvalues field instead of artifact path
+export const getValidInitialValuePath = (allValuesPath: string, defaultValuesPath: string): string => {
+  if (!isEmpty(allValuesPath) && getMultiTypeFromValue(allValuesPath) !== MultiTypeInputType.RUNTIME) {
+    return allValuesPath
+  }
+  return defaultValuesPath
+}
 export const getDefaultQueryParam = (initialImagePath: string, formikImagePathValue: string): string => {
   //initialImagePath is empty in case of new service entity, so we return defaultParam string to make tag as enabled
   if (isEmpty(initialImagePath)) {
@@ -177,7 +185,7 @@ export const getDefaultQueryParam = (initialImagePath: string, formikImagePathVa
     : formikImagePathValue
 }
 
-export function getFinalQueryParamValue(initialParam: string): string | undefined {
+export function getFinalQueryParamValue(initialParam?: string): string | undefined {
   return initialParam !== DefaultParam ? initialParam : undefined
 }
 

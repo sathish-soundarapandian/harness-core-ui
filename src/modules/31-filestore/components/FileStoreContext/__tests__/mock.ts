@@ -92,6 +92,61 @@ export const getDummyFileStoreContextValue = (): FileStoreContextState => {
   } as any
 }
 
+export const getDummyFileStoreContextValueWithFolderChildren = (): FileStoreContextState => {
+  return {
+    ...contextFSMock,
+    currentNode: {
+      identifier: 'Root',
+      parentIdentifier: '',
+      name: '/',
+      type: 'FOLDER',
+      path: '/',
+      lastModifiedAt: null,
+      lastModifiedBy: null,
+      children: [
+        {
+          identifier: 'asd12',
+          parentIdentifier: 'Root',
+          name: 'asd12',
+          type: 'FILE',
+          path: '/asd12',
+          lastModifiedAt: 1664608028996,
+          lastModifiedBy: {
+            name: 'autouser1@harness.io',
+            email: 'autouser1@harness.io'
+          },
+          fileUsage: 'MANIFEST_FILE',
+          description: 'desc',
+          tags: [
+            {
+              key: 'asd',
+              value: ''
+            }
+          ],
+          mimeType: 'txt',
+          content: 'asd',
+          size: 3,
+          initialContent: 'asd'
+        }
+      ]
+    },
+    setCurrentNode: jest.fn(),
+    setFileStore: jest.fn(),
+    updateFileStore: jest.fn(),
+    getNode: jest.fn(),
+    setLoading: jest.fn(),
+    setActiveTab: jest.fn(),
+    updateCurrentNode: jest.fn(),
+    setTempNodes: jest.fn(),
+    setUnsavedNodes: jest.fn(),
+    updateTempNodes: jest.fn(),
+    addDeletedNode: jest.fn(),
+    removeFromTempNodes: jest.fn(),
+    isCachedNode: jest.fn(),
+    handleSetIsUnsaved: jest.fn()
+  } as any
+}
+
 export const responseGetFoldersNodesMock = {
   status: 'SUCCESS',
   data: {

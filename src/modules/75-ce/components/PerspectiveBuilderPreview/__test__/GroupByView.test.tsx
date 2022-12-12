@@ -10,6 +10,7 @@ import { fireEvent, queryByAttribute, render, act, queryByText } from '@testing-
 import { Provider } from 'urql'
 import { fromValue } from 'wonka'
 import type { DocumentNode } from 'graphql'
+import { DEFAULT_TIME_RANGE } from '@common/utils/momentUtils'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   FetchPerspectiveTimeSeriesDocument,
@@ -23,7 +24,6 @@ import ChartResponseData from '@ce/pages/perspective-details/__test__/ChartDataR
 import SummaryResponseData from '@ce/pages/perspective-details/__test__/SummaryResponse.json'
 import ViewFieldResponseData from '@ce/pages/perspective-details/__test__/ViewFieldResponse.json'
 import { DEFAULT_GROUP_BY } from '@ce/utils/perspectiveUtils'
-import { DEFAULT_TIME_RANGE } from '@ce/utils/momentUtils'
 import GroupByView from '../GroupByView/GroupByView'
 
 const params = {

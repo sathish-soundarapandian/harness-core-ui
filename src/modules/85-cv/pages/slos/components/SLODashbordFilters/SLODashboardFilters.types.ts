@@ -18,4 +18,5 @@ export interface SLODashbordFiltersProps {
   dispatch: React.Dispatch<SLOFilterAction>
   filterItemsData: SLOFilterItemsData
   hideMonitoresServicesFilter: boolean
+  isAccountLevel?: boolean
 }

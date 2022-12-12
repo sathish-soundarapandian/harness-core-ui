@@ -149,7 +149,16 @@ registerFeatureFlagPipelineStage()
 registerFlagConfigurationPipelineStep()
 
 const CFRoutes: FC = () => {
-  const { FF_PIPELINE, FFM_1512, FFM_1827, NG_SETTINGS, FFM_3959_FF_MFE_Environment_Detail } = useFeatureFlags()
+  const {
+    FF_PIPELINE,
+    FFM_1512,
+    FFM_1827,
+    NG_SETTINGS,
+    FFM_3959_FF_MFE_Environment_Detail,
+    FFM_5939_MFE_TARGET_GROUPS_LISTING,
+    FFM_5256_FF_MFE_Environment_Listing,
+    FFM_5951_FF_MFE_Targets_Listing
+  } = useFeatureFlags()
 
   return (
     <>
@@ -260,9 +269,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.SegmentsPage}
       >
-        <FFGitSyncProvider>
-          <SegmentsPage />
-        </FFGitSyncProvider>
+        <FFGitSyncProvider>{FFM_5939_MFE_TARGET_GROUPS_LISTING ? <FFUIApp /> : <SegmentsPage />}</FFGitSyncProvider>
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -272,7 +279,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.TargetsPage}
       >
-        <TargetsPage />
+        {FFM_5951_FF_MFE_Targets_Listing ? <FFUIApp /> : <TargetsPage />}
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -283,7 +290,7 @@ const CFRoutes: FC = () => {
         pageName={PAGE_NAME.EnvironmentsPage}
       >
         <FFGitSyncProvider>
-          <EnvironmentsPage />
+          {FFM_5256_FF_MFE_Environment_Listing ? <FFUIApp /> : <EnvironmentsPage />}
         </FFGitSyncProvider>
       </RouteWithLayout>
 

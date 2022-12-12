@@ -9,6 +9,7 @@ import React, { useState } from 'react'
 import { Container, Layout, Icon, TextInput, Text } from '@harness/uicore'
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import {
   QlceViewFieldIdentifierData,
   ViewFieldIdentifier,
@@ -21,7 +22,6 @@ import { FIELD_TO_ICON_MAPPING } from '@ce/components/PerspectiveFilters/constan
 import { useStrings } from 'framework/strings'
 import type { TimeRangeFilterType } from '@ce/types'
 import { getRuleFilters, getTimeFilters, normalizeViewRules } from '@ce/utils/perspectiveUtils'
-import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'

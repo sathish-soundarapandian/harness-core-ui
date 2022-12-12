@@ -6,6 +6,19 @@
  */
 
 import { StepStatus } from './Step.constants'
-import type { StepStatusType } from './Step.types'
+import type { GetTitleStatusProps, StepStatusType } from './Step.types'
 
 export const getStepStatus = (value: boolean): StepStatusType => (value ? StepStatus.SUCCESS : StepStatus.ERROR)
+
+export const getTitleStatus = ({
+  runValidationOnMount,
+  stepId,
+  isCurrentStep,
+  isStepValid,
+  currentStepStatus
+}: GetTitleStatusProps): StepStatusType =>
+  runValidationOnMount
+    ? getStepStatus(!!isStepValid?.(stepId))
+    : isCurrentStep && currentStepStatus !== StepStatus.INCONCLUSIVE
+    ? getStepStatus(!!isStepValid?.(stepId))
+    : currentStepStatus

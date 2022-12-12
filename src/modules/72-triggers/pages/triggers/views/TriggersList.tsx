@@ -33,7 +33,6 @@ interface TriggersListPropsInterface {
   onNewTriggerClick: (val: TriggerDataInterface) => void
   isPipelineInvalid?: boolean
   gitAwareForTriggerEnabled?: boolean
-  pipeline: any
 }
 
 export default function TriggersList(props: TriggersListPropsInterface & GitQueryParams): JSX.Element {

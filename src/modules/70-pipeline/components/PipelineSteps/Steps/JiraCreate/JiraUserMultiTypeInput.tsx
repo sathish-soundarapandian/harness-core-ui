@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormInput } from '@harness/uicore'
+import { AllowedTypes, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
@@ -18,6 +18,7 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useJiraUserSearch } from 'services/cd-ng'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { JiraFieldsRendererProps } from './JiraFieldsRenderer'
 import { getUserValuesOptions } from './helper'
@@ -28,9 +29,10 @@ interface JiraUserProps {
   props: JiraFieldsRendererProps
   expressions: string[]
   formikFieldPath: string
+  index?: number
 }
 
-export function JiraUserMultiTypeInput({ selectedField, props, expressions, formikFieldPath }: JiraUserProps) {
+export function JiraUserMultiTypeInput({ selectedField, props, expressions, formikFieldPath, index }: JiraUserProps) {
   const { getString } = useStrings()
   const [searchTerm, setSearchTerm] = React.useState<string>(defaultTo(selectedField.value, ''))
   const { accountId, projectIdentifier, orgIdentifier } =
@@ -50,8 +52,13 @@ export function JiraUserMultiTypeInput({ selectedField, props, expressions, form
     /* istanbul ignore next */
     return setSearchTerm(query)
   }
+
+  const allowableTypes: AllowedTypes = props?.deploymentMode
+    ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED]
+    : [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+
   return (
-    <FormInput.MultiTypeInput
+    <SelectInputSetView
       selectItems={
         /* istanbul ignore next */ fetchUsers
           ? [{ label: getString('loading'), value: '' }]
@@ -70,8 +77,11 @@ export function JiraUserMultiTypeInput({ selectedField, props, expressions, form
           onQueryChange: handleQueryChange,
           resetOnSelect: false,
           loadingItems: fetchUsers
-        }
+        },
+        allowableTypes: allowableTypes
       }}
+      fieldPath={`spec.fields[${index}].value`}
+      template={props.template}
     />
   )
 }

@@ -23,7 +23,8 @@ describe('Validate useCommonGroupedSideNaveHook Hook', () => {
         useCommonGroupedSideNaveHook({
           defaultCustomMetricName: 'Default Custom Metric',
           initCustomMetricData: {},
-          mappedServicesAndEnvs: new Map()
+          mappedServicesAndEnvs: new Map(),
+          selectedMetricData: 'metric-1'
         }),
       { wrapper }
     )
@@ -31,7 +32,7 @@ describe('Validate useCommonGroupedSideNaveHook Hook', () => {
     expect((result as any).current.groupedCreatedMetrics).toEqual({})
     expect((result as any).current.groupedCreatedMetricsList).toEqual([])
     expect((result as any).current.mappedMetrics).toEqual(new Map())
-    expect((result as any).current.selectedMetric).toEqual('Default Custom Metric')
+    expect((result as any).current.selectedMetric).toEqual('metric-1')
     expect((result as any).current.selectedMetricIndex).toEqual(-1)
 
     act(() => {

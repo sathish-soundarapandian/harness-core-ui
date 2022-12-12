@@ -77,7 +77,7 @@ function FormComponent({
     }
   })
 
-  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value)
+  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
 
   const {
     data: tagsData,
@@ -462,6 +462,17 @@ export function AmazonMachineImage(
     )
   })
 
+  const handleValidate = (formData: AmazonMachineImageInitialValuesType) => {
+    if (isTemplateContext) {
+      submitFormData?.(
+        {
+          ...formData
+        },
+        getConnectorIdValue(prevStepData)
+      )
+    }
+  }
+
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       {!isTemplateContext && (
@@ -473,6 +484,7 @@ export function AmazonMachineImage(
         initialValues={getInitialValues()}
         formName="imagePath"
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
+        validate={handleValidate}
         onSubmit={(formData, formikhelper) => {
           let hasError = false
           if (formData?.versionType === 'value' && !formData?.spec?.version?.length) {

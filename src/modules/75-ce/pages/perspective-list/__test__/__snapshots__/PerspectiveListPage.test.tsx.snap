@@ -1239,7 +1239,7 @@ exports[`test cases for Perspective details Page should be able to render and sw
                     <p
                       class="StyledProps--font StyledProps--main"
                     >
-                      ce.perspectives.timeRangeConstants.lastMonth
+                      common.timeRangeConstants.lastMonth
                     </p>
                   </div>
                   <div
@@ -1407,7 +1407,7 @@ exports[`test cases for Perspective details Page should be able to render and sw
                     <p
                       class="StyledProps--font StyledProps--main"
                     >
-                      ce.perspectives.timeRangeConstants.last7Days
+                      common.timeRangeConstants.last7Days
                     </p>
                   </div>
                   <div
@@ -1523,7 +1523,7 @@ exports[`test cases for Perspective details Page should be able to render and sw
                     <p
                       class="StyledProps--font StyledProps--main"
                     >
-                      ce.perspectives.timeRangeConstants.last7Days
+                      common.timeRangeConstants.last7Days
                     </p>
                   </div>
                   <div
@@ -2687,7 +2687,7 @@ exports[`test cases for Perspective details Page should be able to render the de
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-small StyledProps--color StyledProps--color-grey400"
                 >
-                  ce.perspectives.timeRangeConstants.lastMonth
+                  common.timeRangeConstants.lastMonth
                 </p>
                 <span
                   style="flex-grow: 1;"
@@ -2759,7 +2759,7 @@ exports[`test cases for Perspective details Page should be able to render the de
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-small StyledProps--color StyledProps--color-grey400"
                 >
-                  ce.perspectives.timeRangeConstants.last7Days
+                  common.timeRangeConstants.last7Days
                 </p>
                 <span
                   style="flex-grow: 1;"
@@ -2896,7 +2896,7 @@ exports[`test cases for Perspective details Page should be able to render the de
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-small StyledProps--color StyledProps--color-grey400"
                 >
-                  ce.perspectives.timeRangeConstants.last7Days
+                  common.timeRangeConstants.last7Days
                 </p>
                 <span
                   style="flex-grow: 1;"

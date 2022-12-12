@@ -208,6 +208,7 @@ const TargetManagementFlagConfigurationPanel: FC<TargetManagementFlagConfigurati
                 itemCount={searchedFlags.length}
                 pageIndex={pageNumber < pageCount ? pageNumber : pageCount - 1}
                 gotoPage={setPageNumber}
+                showPagination
               />
             </div>
           )}

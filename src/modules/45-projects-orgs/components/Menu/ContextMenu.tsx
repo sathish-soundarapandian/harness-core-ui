@@ -19,6 +19,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { PermissionRequest } from '@rbac/hooks/usePermission'
 
 interface ContextMenuProps {
@@ -35,7 +36,8 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const { project, editProject, collaborators, setMenuOpen, openDialog } = props
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SECURITY } = useFeatureFlags()
+  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { licenseInformation } = useLicenseStore()
 
   const permissionRequest: Optional<PermissionRequest, 'permission'> = {
     resourceScope: {
@@ -193,7 +195,8 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
           onClick={handleCV}
         />
       ) : null}
-      {SECURITY && project.modules?.includes(ModuleName.STO) ? (
+
+      {licenseInformation['STO']?.status === 'ACTIVE' && project.modules?.includes(ModuleName.STO) ? (
         <Menu.Item
           text={
             <Layout.Horizontal spacing="xsmall">

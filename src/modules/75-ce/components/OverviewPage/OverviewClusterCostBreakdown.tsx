@@ -9,6 +9,7 @@ import React, { useMemo } from 'react'
 import { Container, Text, Layout } from '@harness/uicore'
 import { Link, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import routes from '@common/RouteDefinitions'
 import {
   Maybe,
@@ -18,7 +19,6 @@ import {
   useFetchPerspectiveDetailsSummaryQuery
 } from 'services/ce/services'
 import { useStrings } from 'framework/strings'
-import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
 import { getTimeFilters } from '@ce/utils/perspectiveUtils'
 import type { TimeRange } from '@ce/pages/overview/OverviewPage'
 import { getEmissionsValue } from '@ce/utils/formatResourceValue'

@@ -139,7 +139,6 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
     ...referenceProps
   } = props
   const [isOpen, setOpen] = useState(false)
-
   React.useEffect(() => {
     isOpen && setOpen(!hideModal) //this will hide modal if hideModal changes to true in open state
   }, [hideModal])
@@ -156,7 +155,12 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
         return { scope: el.scope, identifier: getIdentifierFromValue(el.value) }
       })
   }, [selectedReferences])
-
+  const selectedRecord = useMemo(() => {
+    if (!selected) return undefined
+    if (typeof selected === 'string')
+      return { scope: getScopeFromValue(selected), identifier: getIdentifierFromValue(selected) }
+    return { scope: selected.scope, identifier: getIdentifierFromValue(selected.value) }
+  }, [selected])
   const defaultScopeRef = useRef(referenceProps.defaultScope)
 
   const getPlaceholderElement = (): ReactNode => {
@@ -245,6 +249,7 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
             defaultScope={defaultScopeRef.current}
             isMultiSelect={isMultiSelect}
             selectedRecords={selectedRecords}
+            selectedRecord={selectedRecord}
           />
         </div>
       </Dialog>

@@ -5,11 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import { set } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
-import { CommonHealthSourceFieldNames, CommonHealthSourceFormikInterface } from '../../CommonHealthSource.types'
+import { CommonHealthSourceFieldNames, CommonCustomMetricFormikInterface } from '../../CommonHealthSource.types'
 import type { AddMetricForm } from './CustomMetricForm.types'
 
 export const validateAddMetricForm = (
@@ -25,14 +24,17 @@ export const validateAddMetricForm = (
   if (!metricName) {
     set(errors, CommonHealthSourceFieldNames.METRIC_NAME, getString('fieldRequired', { field: 'Metric name' }))
   }
-  if (!groupName || !(groupName as SelectOption)?.value) {
+  if (typeof groupName === 'string' && !groupName) {
+    set(errors, CommonHealthSourceFieldNames.GROUP_NAME, getString('fieldRequired', { field: 'Group name' }))
+  }
+  if (typeof groupName === 'object' && !groupName?.value) {
     set(errors, CommonHealthSourceFieldNames.GROUP_NAME, getString('fieldRequired', { field: 'Group name' }))
   }
   return errors
 }
 
 export function getAddMetricInitialValues(
-  formValues: CommonHealthSourceFormikInterface,
+  formValues: CommonCustomMetricFormikInterface,
   enabledDefaultGroupName: boolean
 ): AddMetricForm {
   return {

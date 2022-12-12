@@ -9,24 +9,23 @@ import React from 'react'
 import { defaultTo, get, isNil } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikValues } from 'formik'
-import { getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
 
 import { StringKeys, useStrings } from 'framework/strings'
 import { NameValuePair, useListAwsRegions } from 'services/portal'
 import { useGetBucketsInManifests } from 'services/cd-ng'
 import List from '@common/components/List/List'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { ManifestToConnectorMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { shouldAllowOnlyOneFilePath } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/CommonManifestDetails/utils'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import {
   getManifestFieldFqnPath,
@@ -37,7 +36,6 @@ import {
   isNewServiceEnvEntity,
   shouldFetchTagsSource
 } from '../../K8sServiceSpec/ArtifactSource/artifactSourceUtils'
-import ExperimentalInput from '../../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import { isFieldRuntime } from '../../K8sServiceSpec/K8sServiceSpecHelper'
 import css from '../../K8sServiceSpec/KubernetesManifests/KubernetesManifests.module.scss'
 
@@ -97,7 +95,7 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
   })
   const regions = (regionData?.resource || []).map((region: NameValuePair) => ({
     value: region.value,
-    label: region.name
+    label: region.name as string
   }))
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
@@ -190,7 +188,9 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
   const renderBucketNameField = (): React.ReactElement | null => {
     return (
       <div className={css.verticalSpacingInput}>
-        <ExperimentalInput
+        <SelectInputSetView
+          fieldPath={`${manifestPath}.spec.store.spec.bucketName`}
+          template={template}
           name={`${path}.${manifestPath}.spec.store.spec.bucketName`}
           disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.bucketName`)}
           formik={formik}
@@ -270,71 +270,37 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
         </div>
       )}
 
-      <div className={css.inputFieldLayout}>
-        {isFieldRuntime(`${manifestPath}.spec.store.spec.region`, template) && (
-          <div className={css.verticalSpacingInput}>
-            <ExperimentalInput
-              formik={formik}
-              name={`${path}.${manifestPath}.spec.store.spec.region`}
-              disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.region`)}
-              multiTypeInputProps={{
-                selectProps: {
-                  usePortal: true,
-                  addClearBtn: !readonly,
-                  items: regions
-                },
-                onChange: (selected: any) => {
-                  if (fixedRegionValue !== selected.value) {
-                    resetBuckets(formik, `${path}.${manifestPath}.spec.store.spec.bucketName`)
-                  }
-                },
-                expressions,
-                allowableTypes
-              }}
-              useValue
-              selectItems={regions}
-              label={getString('regionLabel')}
-            />
-          </div>
-        )}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.region`)) ===
-          MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            className={css.configureOptions}
-            style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.store.spec.region`)}
-            type="String"
-            variableName="region"
-            showRequiredField={false}
-            showDefaultField={true}
-            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
-            onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.region`, value)
+      {isFieldRuntime(`${manifestPath}.spec.store.spec.region`, template) && (
+        <div className={css.verticalSpacingInput}>
+          <SelectInputSetView
+            fieldPath={`${manifestPath}.spec.store.spec.region`}
+            template={template}
+            formik={formik}
+            name={`${path}.${manifestPath}.spec.store.spec.region`}
+            disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.region`)}
+            multiTypeInputProps={{
+              selectProps: {
+                usePortal: true,
+                addClearBtn: !readonly,
+                items: regions
+              },
+              onChange: (selected: any) => {
+                if (fixedRegionValue !== selected.value) {
+                  resetBuckets(formik, `${path}.${manifestPath}.spec.store.spec.bucketName`)
+                }
+              },
+              expressions,
+              allowableTypes
             }}
+            useValue
+            selectItems={regions}
+            label={getString('regionLabel')}
           />
-        )}
-      </div>
-      <div className={css.inputFieldLayout}>
-        {isFieldRuntime(`${manifestPath}.spec.store.spec.bucketName`, template) && renderBucketNameField()}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.bucketName`)) ===
-          MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            className={css.configureOptions}
-            style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.store.spec.bucketName`)}
-            type="String"
-            variableName="bucketName"
-            showRequiredField={false}
-            showDefaultField={true}
-            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
-            onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.bucketName`, value)
-            }}
-          />
-        )}
-      </div>
+        </div>
+      )}
+
+      {isFieldRuntime(`${manifestPath}.spec.store.spec.bucketName`, template) && renderBucketNameField()}
+
       {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
         <div className={css.verticalSpacingInput}>
           <List
@@ -347,6 +313,18 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
             expressions={expressions}
             isNameOfArrayType
             allowOnlyOne={shouldAllowOnlyOneFilePath(manifest?.type as ManifestTypes)}
+          />
+        </div>
+      )}
+
+      {isFieldRuntime(`${manifestPath}.spec.configOverridePath`, template) && (
+        <div className={css.verticalSpacingInput}>
+          <FormInput.MultiTextInput
+            disabled={isFieldDisabled(`${manifestPath}.spec.configOverridePath`)}
+            multiTextInputProps={{ expressions, allowableTypes: props.allowableTypes }}
+            label={getString('pipeline.manifestType.serverlessConfigFilePath')}
+            placeholder={getString('pipeline.manifestType.serverlessConfigFilePathPlaceholder')}
+            name={`${path}.${manifestPath}.spec.configOverridePath`}
           />
         </div>
       )}

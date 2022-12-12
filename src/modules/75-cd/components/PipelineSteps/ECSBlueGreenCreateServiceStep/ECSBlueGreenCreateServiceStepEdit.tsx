@@ -347,19 +347,9 @@ const ECSBlueGreenCreateServiceStepEdit = (
                 name: getString('cd.steps.ecsBGCreateServiceStep.labels.prodListener')
               })
             ),
-            prodListenerRuleArn: Yup.string().required(
-              getString('common.validation.fieldIsRequired', {
-                name: getString('cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN')
-              })
-            ),
             stageListener: Yup.string().required(
               getString('common.validation.fieldIsRequired', {
                 name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')
-              })
-            ),
-            stageListenerRuleArn: Yup.string().required(
-              getString('common.validation.fieldIsRequired', {
-                name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')
               })
             )
           })
@@ -485,6 +475,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   name="spec.prodListenerRuleArn"
                   selectItems={prodListenerRules}
                   useValue
+                  isOptional={true}
                   multiTypeInputProps={{
                     selectProps: {
                       items: prodListenerRules,
@@ -581,6 +572,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   name="spec.stageListenerRuleArn"
                   selectItems={stageListenerRules}
                   useValue
+                  isOptional={true}
                   multiTypeInputProps={{
                     selectProps: {
                       items: stageListenerRules,

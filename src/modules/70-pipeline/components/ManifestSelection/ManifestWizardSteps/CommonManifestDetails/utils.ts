@@ -10,9 +10,17 @@ import type { ManifestTypes } from '../../ManifestInterface'
 
 export const shouldAllowOnlyOneFilePath = (selectedManifest: ManifestTypes): boolean => {
   return [
+    ManifestDataType.ServerlessAwsLambda,
     ManifestDataType.EcsTaskDefinition,
     ManifestDataType.EcsServiceDefinition,
     ManifestDataType.EcsScalableTargetDefinition,
-    ManifestDataType.EcsScalingPolicyDefinition
+    ManifestDataType.EcsScalingPolicyDefinition,
+    ManifestDataType.TasManifest,
+    ManifestDataType.TasAutoScaler
   ].includes(selectedManifest)
 }
+
+/**
+ * @description List of manifests which are restricted to single addition
+ */
+export const allowedManifestForSingleAddition = [ManifestDataType.TasManifest, ManifestDataType.TasAutoScaler]

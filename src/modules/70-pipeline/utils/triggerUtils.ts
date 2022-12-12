@@ -6,7 +6,9 @@
  */
 
 import type { ExecutorInfoDTO } from 'services/pipeline-ng'
-import type { StringKeys } from 'framework/strings'
+import type { StringKeys, UseStringsReturn } from 'framework/strings'
+import { getReadableDateTime } from '@common/utils/dateUtils'
+import type { TriggerTypeIconAndExecutionText } from './types'
 
 export const mapTriggerTypeToStringID = (triggerType: ExecutorInfoDTO['triggerType']): StringKeys => {
   switch (triggerType) {
@@ -21,5 +23,51 @@ export const mapTriggerTypeToStringID = (triggerType: ExecutorInfoDTO['triggerTy
       return 'manifestsText'
     default:
       return 'execution.triggerType.MANUAL'
+  }
+}
+
+export const mapTriggerTypeToIconAndExecutionText = (
+  triggerType: ExecutorInfoDTO['triggerType'],
+  getString: UseStringsReturn['getString']
+): TriggerTypeIconAndExecutionText | undefined => {
+  switch (triggerType) {
+    case 'SCHEDULER_CRON': {
+      return {
+        iconName: 'stopwatch',
+        getText: (startTs?: number, triggeredBy?: string) =>
+          getString('pipeline.triggeredByCron', { start: getReadableDateTime(startTs), triggeredBy })
+      }
+    }
+    case 'WEBHOOK': {
+      return {
+        iconName: 'trigger-execution',
+        getText: () => getString('pipeline.triggeredBy', { triggerType: getString('execution.triggerType.WEBHOOK') })
+      }
+    }
+    case 'ARTIFACT': {
+      return {
+        iconName: 'trigger-artifact',
+        getText: () =>
+          getString('pipeline.triggeredBy', { triggerType: getString('pipeline.artifactTriggerConfigPanel.artifact') })
+      }
+    }
+    case 'MANIFEST': {
+      return {
+        iconName: 'service-helm',
+        getText: () => getString('pipeline.triggeredBy', { triggerType: getString('manifestsText') })
+      }
+    }
+    case 'WEBHOOK_CUSTOM': {
+      return {
+        iconName: 'trigger-execution',
+        getText: () => getString('pipeline.triggeredByThirdParty')
+      }
+    }
+    case 'MANUAL': {
+      return {
+        iconName: 'person',
+        getText: () => getString('pipeline.manuallyTriggered')
+      }
+    }
   }
 }

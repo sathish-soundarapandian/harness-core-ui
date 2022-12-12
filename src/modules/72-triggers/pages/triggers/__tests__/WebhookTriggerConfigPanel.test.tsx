@@ -17,7 +17,6 @@ import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps, pipelineModuleParams, triggerPathProps } from '@common/utils/routeUtils'
 import { useStrings } from 'framework/strings'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { getTriggerConfigDefaultProps, getTriggerConfigInitialValues } from './webhookMockConstants'
 import {
   GetGitTriggerEventDetailsResponse,
@@ -62,26 +61,33 @@ function WrapperComponent(props: { initialValues: any; isEdit?: boolean }): JSX.
 
 describe('WebhookTriggerConfigPanel Triggers tests', () => {
   describe('Renders/snapshots', () => {
-    test('Initial Render - Github Trigger Configuration Panel with SPG_NG_GITHUB_WEBHOOK_AUTHENTICATION FF false', async () => {
+    test('Initial Render - Github Trigger Configuration Panel with Github Webhook Authentication Enabled', async () => {
       jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue(GetSecretV2PromiseResponse as any)
       jest.spyOn(pipelineNg, 'useGetGitTriggerEventDetails').mockReturnValue(GetGitTriggerEventDetailsResponse as any)
-      jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(false)
       jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledTrue as any)
 
-      const { container } = render(<WrapperComponent initialValues={getTriggerConfigInitialValues({})} />)
+      const { container } = render(
+        <WrapperComponent
+          initialValues={{ ...getTriggerConfigInitialValues({}), isGithubWebhookAuthenticationEnabled: true }}
+        />
+      )
       await waitFor(() =>
         queryByText(container, result.current.getString('triggers.triggerConfigurationPanel.listenOnNewWebhook'))
       )
-      expect(queryByText(container, result.current.getString('secrets.secret.configureSecret'))).not.toBeInTheDocument()
+
+      expect(queryByText(container, result.current.getString('secrets.secret.configureSecret'))).toBeInTheDocument()
       expect(container).toMatchSnapshot()
     })
-    test('Initial Render - Github Trigger Configuration Panel with SPG_NG_GITHUB_WEBHOOK_AUTHENTICATION FF true', async () => {
+    test('Initial Render - Github Trigger Configuration Panel with Github Webhook Authentication disabled', async () => {
       jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue(GetSecretV2PromiseResponse as any)
       jest.spyOn(pipelineNg, 'useGetGitTriggerEventDetails').mockReturnValue(GetGitTriggerEventDetailsResponse as any)
-      jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(true)
       jest.spyOn(cdng, 'useGetSettingValue').mockReturnValue(GithubWebhookAuthenticationEnabledFalse as any)
 
-      const { container } = render(<WrapperComponent initialValues={getTriggerConfigInitialValues({})} />)
+      const { container } = render(
+        <WrapperComponent
+          initialValues={{ ...getTriggerConfigInitialValues({}), isGithubWebhookAuthenticationEnabled: false }}
+        />
+      )
       await waitFor(() =>
         queryByText(container, result.current.getString('triggers.triggerConfigurationPanel.listenOnNewWebhook'))
       )

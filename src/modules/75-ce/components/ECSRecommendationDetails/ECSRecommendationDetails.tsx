@@ -11,11 +11,11 @@ import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import copy from 'copy-to-clipboard'
+import { DATE_RANGE_SHORTCUTS, getTimePeriodString } from '@common/utils/momentUtils'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { useStrings } from 'framework/strings'
 
 import formatCost from '@ce/utils/formatCost'
-import { DATE_RANGE_SHORTCUTS, getTimePeriodString } from '@ce/utils/momentUtils'
 import { convertNumberToFixedDecimalPlaces } from '@ce/utils/convertNumberToFixedDecimalPlaces'
 import {
   getCPUValueInCPUFromExpression,

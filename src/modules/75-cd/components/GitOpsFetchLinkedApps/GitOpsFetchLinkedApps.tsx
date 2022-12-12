@@ -26,6 +26,7 @@ export class GitOpsFetchLinkedApps extends PipelineStep<StepElementConfig> {
   constructor() {
     super()
     // this._hasStepVariables = false
+    this._hasDelegateSelectionVisible = true
   }
   renderStep(
     props: StepProps<StepElementConfig, { variablesData: any; metadataMap: Record<string, VariableResponseMapValue> }>
@@ -56,14 +57,17 @@ export class GitOpsFetchLinkedApps extends PipelineStep<StepElementConfig> {
       )
     } else if (stepViewType === StepViewType.InputVariable) {
       // Variable Step
-      const variablesData = customStepProps?.variablesData
-      const metadataMap = customStepProps?.metadataMap as Record<string, VariableResponseMapValue>
+      const variablesData = /* istanbul ignore next */ customStepProps?.variablesData
+      const metadataMap = /* istanbul ignore next */ customStepProps?.metadataMap as Record<
+        string,
+        VariableResponseMapValue
+      >
       return (
         <VariablesListTable
           className={pipelineVariableCss.variablePaddingL3}
           metadataMap={metadataMap}
           data={variablesData.spec}
-          originalData={initialValues?.spec}
+          originalData={/* istanbul ignore next */ initialValues?.spec}
         />
       )
     }

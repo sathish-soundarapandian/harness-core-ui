@@ -21,6 +21,7 @@ import type { ClusterData } from '../types'
 
 export interface UseGetClustersDataProps {
   environmentIdentifier: string
+  lazyCluster?: boolean
 }
 
 export interface UseGetClustersDataReturn {
@@ -29,7 +30,10 @@ export interface UseGetClustersDataReturn {
   loadingClustersList: boolean
 }
 
-export function useGetClustersData({ environmentIdentifier }: UseGetClustersDataProps): UseGetClustersDataReturn {
+export function useGetClustersData({
+  environmentIdentifier,
+  lazyCluster
+}: UseGetClustersDataProps): UseGetClustersDataReturn {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -47,7 +51,8 @@ export function useGetClustersData({ environmentIdentifier }: UseGetClustersData
       orgIdentifier,
       projectIdentifier,
       environmentIdentifier
-    }
+    },
+    lazy: lazyCluster
   })
 
   const loading = loadingClustersList

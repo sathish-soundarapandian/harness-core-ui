@@ -8,11 +8,16 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { Container, Button } from '@harness/uicore'
+import * as useFeatureFlag from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import * as cvServices from 'services/cv'
-import { yamlResponse, monitoredServiceMockData } from '../CVMonitoredService/__test__/CVMonitoredService.mock'
+import {
+  yamlResponse,
+  monitoredServiceMockData,
+  monitoredServiceMockData2
+} from '../CVMonitoredService/__test__/CVMonitoredService.mock'
 import MonitoredServicePage from '../MonitoredServicePage'
 import { isProjectChangedOnMonitoredService } from '../MonitoredServicePage.utils'
 
@@ -74,6 +79,11 @@ jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironm
 }))
 
 describe('Unit tests for createting monitored source', () => {
+  beforeAll(() => {
+    const useFeatureFlags = jest.spyOn(useFeatureFlag, 'useFeatureFlag')
+    useFeatureFlags.mockReturnValue(true)
+  })
+
   beforeEach(() => {
     jest.spyOn(cvServices, 'useGetAllJourneys').mockReturnValue({
       data: {},
@@ -317,5 +327,106 @@ describe('Unit tests for createting monitored source', () => {
       }
     }
     expect(isProjectChangedOnMonitoredService(error, identifier)).toEqual(false)
+  })
+
+  test('should render SLOs and Service health tabs are disabled if the monitored service is disabled', async () => {
+    jest.spyOn(cvServices, 'useGetMonitoredService').mockImplementation(
+      () =>
+        ({
+          data: {
+            data: monitoredServiceMockData2
+          },
+          error: null,
+          loading: false,
+          refetch: jest.fn()
+        } as any)
+    )
+    jest.spyOn(cvServices, 'useGetMonitoredServiceScores').mockImplementation(
+      () =>
+        ({
+          data: null,
+          refetch: jest.fn(),
+          error: { message: '' },
+          loading: true
+        } as any)
+    )
+    jest.spyOn(cvServices, 'useGetMonitoredServiceOverAllHealthScore').mockReturnValue({
+      data: {},
+      refetch: jest.fn()
+    } as any)
+
+    jest.spyOn(cvServices, 'useChangeEventList').mockImplementation(
+      () =>
+        ({
+          data: {},
+          error: null,
+          loading: false,
+          refetch: jest.fn()
+        } as any)
+    )
+    jest.spyOn(cvServices, 'useGetServiceDependencyGraph').mockImplementation(
+      () =>
+        ({
+          data: {},
+          refetch: jest.fn(),
+          error: null,
+          loading: false
+        } as any)
+    )
+    jest.spyOn(cvServices, 'useChangeEventTimeline').mockImplementation(
+      () =>
+        ({
+          data: {
+            resource: {
+              categoryTimeline: {
+                Deployment: [],
+                Infrastructure: [],
+                Alert: []
+              }
+            }
+          },
+          refetch: jest.fn(),
+          error: null,
+          loading: false,
+          cancel: jest.fn()
+        } as any)
+    )
+    jest.spyOn(cvServices, 'useGetMonitoredServiceChangeTimeline').mockImplementation(
+      () =>
+        ({
+          data: {
+            resource: {
+              categoryTimeline: {
+                Deployment: [],
+                Infrastructure: [],
+                Alert: []
+              }
+            }
+          },
+          refetch: jest.fn(),
+          error: null,
+          loading: false,
+          cancel: jest.fn()
+        } as any)
+    )
+    jest.spyOn(cvServices, 'useGetSLOHealthListView').mockImplementation(
+      () =>
+        ({
+          data: null,
+          refetch: jest.fn(),
+          error: null,
+          loading: false,
+          cancel: jest.fn()
+        } as any)
+    )
+    const { container, getAllByRole } = render(
+      <TestWrapper {...testWrapperEditMode}>
+        <MonitoredServicePage />
+      </TestWrapper>
+    )
+
+    expect(getAllByRole('tab').length).toEqual(5)
+
+    expect(container.querySelectorAll('div[role="tab"][aria-disabled="true"]')).toHaveLength(2)
   })
 })

@@ -46,6 +46,7 @@ import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { getStageFromPipeline, getTemplatePath } from '../PipelineStudio/StepUtil'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { getFilteredAllowableTypes, StageSelectionData } from '../../utils/runPipelineUtils'
+import { OutputPanelInputSetView } from '../CommonPipelineStages/PipelineStage/PipelineStageOutputSection/OutputPanelInputSetView'
 import css from './PipelineInputSetForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -271,7 +272,10 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
   }
 
   return (
-    <Layout.Vertical spacing="medium" className={cx(css.container, maybeContainerClass)}>
+    <Layout.Vertical
+      spacing="medium"
+      className={cx(css.container, { [maybeContainerClass]: !hideTitle, [css.pipelineStageForm]: !!hideTitle })}
+    >
       {getMultiTypeFromValue(finalTemplate?.timeout) === MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <FormMultiTypeDurationField
@@ -299,10 +303,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
       ) : null}
       {finalTemplate?.variables && finalTemplate?.variables?.length > 0 && (
         <>
-          <Layout.Horizontal
-            spacing="small"
-            padding={{ top: hideTitle ? 0 : 'medium', left: 'large', right: 0, bottom: 0 }}
-          >
+          <Layout.Horizontal spacing="small" padding={{ top: 'medium', left: 'large', right: 0, bottom: 0 }}>
             <Text
               color={Color.BLACK_100}
               font={{ weight: 'semi-bold' }}
@@ -346,10 +347,8 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             const pathPrefix = !isEmpty(finalPath) ? `${finalPath}.` : ''
             if (stageObj.stage) {
               const allValues = getStageFromPipeline(stageObj?.stage?.identifier || '', originalPipeline)
-              const pipelineStageTemplate = (stageObj?.stage?.spec as PipelineStageConfig)
-                ?.pipelineInputs as PipelineInfoConfig
-              const _originalPipeline = (originalPipeline?.stages?.[index]?.stage?.spec as PipelineStageConfig)
-                ?.pipelineInputs as PipelineInfoConfig
+              const pipelineStageTemplate = (stageObj?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
+              const pipelineStageOutputs = (stageObj?.stage?.spec as PipelineStageConfig)?.outputs
 
               return (
                 <Layout.Vertical key={stageObj?.stage?.identifier || index}>
@@ -364,10 +363,18 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                           Stage: {defaultTo(allValues?.stage?.name, '')}
                         </Text>
                       </Layout.Horizontal>
+                      {pipelineStageOutputs && pipelineStageOutputs.length > 0 && (
+                        <OutputPanelInputSetView
+                          allowableTypes={getFilteredAllowableTypes(allowableTypes, viewType)}
+                          readonly={readonly}
+                          template={{ outputs: pipelineStageOutputs }}
+                          path={`${pathPrefix}stages[${index}].stage.spec.outputs`}
+                        />
+                      )}
                       <PipelineInputSetFormInternal
-                        originalPipeline={_originalPipeline}
+                        originalPipeline={pipelineStageTemplate}
                         template={pipelineStageTemplate}
-                        path={`${pathPrefix}stages[${index}].stage.spec.pipelineInputs`}
+                        path={`${pathPrefix}stages[${index}].stage.spec.inputs`}
                         readonly={readonly}
                         viewType={viewType}
                         maybeContainerClass={maybeContainerClass}
@@ -395,11 +402,8 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             } else if (stageObj.parallel) {
               return stageObj.parallel.map((stageP, indexp) => {
                 const allValues = getStageFromPipeline(stageP?.stage?.identifier || '', originalPipeline)
-                const pipelineStageTemplate = (stageP?.stage?.spec as PipelineStageConfig)
-                  ?.pipelineInputs as PipelineInfoConfig
-                const _originalPipeline = (
-                  originalPipeline?.stages?.[index]?.parallel?.[indexp]?.stage?.spec as PipelineStageConfig
-                )?.pipelineInputs as PipelineInfoConfig
+                const pipelineStageTemplate = (stageP?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
+                const pipelineStageOutputs = (stageP?.stage?.spec as PipelineStageConfig)?.outputs
 
                 return (
                   <Layout.Vertical key={`${stageObj?.stage?.identifier}-${stageP.stage?.identifier}-${indexp}`}>
@@ -414,10 +418,18 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                             Stage: {defaultTo(allValues?.stage?.name, '')}
                           </Text>
                         </Layout.Horizontal>
+                        {pipelineStageOutputs && pipelineStageOutputs.length > 0 && (
+                          <OutputPanelInputSetView
+                            allowableTypes={getFilteredAllowableTypes(allowableTypes, viewType)}
+                            readonly={readonly}
+                            template={{ outputs: pipelineStageOutputs }}
+                            path={`${pathPrefix}stages[${index}].parallel[${indexp}].stage.spec.outputs`}
+                          />
+                        )}
                         <PipelineInputSetFormInternal
-                          originalPipeline={_originalPipeline}
+                          originalPipeline={pipelineStageTemplate}
                           template={pipelineStageTemplate}
-                          path={`${pathPrefix}stages[${index}].parallel[${indexp}].stage.spec.pipelineInputs`}
+                          path={`${pathPrefix}stages[${index}].parallel[${indexp}].stage.spec.inputs`}
                           readonly={readonly}
                           viewType={viewType}
                           maybeContainerClass={maybeContainerClass}

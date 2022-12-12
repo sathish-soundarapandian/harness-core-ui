@@ -14,11 +14,22 @@ import {
   queryByAttribute,
   render,
   waitFor,
-  findByTestId as findByTestIdGlobal
+  findByTestId as findByTestIdGlobal,
+  within
 } from '@testing-library/react'
+
 import { TestWrapper } from '@common/utils/testUtils'
-import { GetInputSetsResponse } from '@pipeline/pages/inputSet-list/__tests__/InputSetListMocks'
+import routes from '@common/RouteDefinitions'
+import {
+  accountPathProps,
+  executionPathProps,
+  modulePathProps,
+  orgPathProps,
+  pipelinePathProps
+} from '@common/utils/routeUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
+import { StoreType } from '@common/constants/GitSyncTypes'
+import { GetInputSetsResponse } from '@pipeline/pages/inputSet-list/__tests__/InputSetListMocks'
 import {
   getMockFor_Generic_useMutate,
   getMockFor_useGetInputSetsListForPipeline,
@@ -244,5 +255,50 @@ describe('Retry Pipeline tests', () => {
 
     // Expect the input set save API to be called
     await waitFor(() => expect(mockCreateInputSet).toBeCalled())
+  })
+
+  test('Skip Preflight Check should be disabled and required git details should appear when pipeline is Git Synced', async () => {
+    const TEST_PATH = routes.toExecutionPipelineView({
+      ...accountPathProps,
+      ...orgPathProps,
+      ...modulePathProps,
+      ...pipelinePathProps,
+      ...executionPathProps
+    })
+    const TEST_PATH_PARAMS = {
+      accountId: 'accountId',
+      orgIdentifier: 'default',
+      projectIdentifier: 'projectId',
+      module: 'cd',
+      pipelineIdentifier: 'pipelineId',
+      executionIdentifier: 'executionId',
+      source: 'executions'
+    }
+    const QUERY_PARAMS = {
+      connectorRef: 'testConnectorRef',
+      repoName: 'testRepo',
+      branch: 'testBranch',
+      storeType: StoreType.REMOTE
+    }
+
+    const { getByText } = render(
+      <TestWrapper
+        path={TEST_PATH}
+        pathParams={TEST_PATH_PARAMS}
+        queryParams={QUERY_PARAMS}
+        defaultAppStoreValues={{ supportingGitSimplification: true }}
+      >
+        <RetryPipeline {...commonProps} params={{ ...commonProps.params, ...QUERY_PARAMS }} />
+      </TestWrapper>
+    )
+
+    const skipPreflightCheckboxParent = getByText('pre-flight-check.skipCheckBtn').parentElement as HTMLElement
+    expect(skipPreflightCheckboxParent).toBeInTheDocument()
+    const allCheckboxes = within(skipPreflightCheckboxParent).getAllByRole('checkbox')
+    const skipPreFlightCheck = allCheckboxes[0]
+    expect(skipPreFlightCheck).toBeDisabled()
+
+    expect(getByText('testRepo')).toBeInTheDocument()
+    expect(getByText('testBranch')).toBeInTheDocument()
   })
 })

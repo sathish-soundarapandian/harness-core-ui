@@ -175,7 +175,7 @@ export const STONavItem = () => {
   )
 }
 
-export const SCMNavItem = () => {
+export const CODENavItem = () => {
   const params = useParams<ProjectPathProps>()
 
   return (

@@ -806,9 +806,13 @@ export default function WebhookTriggerWizard(
       secureToken,
       autoAbortPreviousExecutions = false,
       pipelineBranchName = getDefaultPipelineReferenceBranch(event),
-      encryptedWebhookSecretIdentifier: { referenceString } = { referenceString: '' }
+      encryptedWebhookSecretIdentifier
     } = val
     const inputSetRefs = get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
+    const referenceString =
+      typeof encryptedWebhookSecretIdentifier === 'string'
+        ? encryptedWebhookSecretIdentifier
+        : encryptedWebhookSecretIdentifier?.referenceString ?? ''
 
     const stringifyPipelineRuntimeInput = yamlStringify({
       pipeline: clearNullUndefined(pipelineRuntimeInput)

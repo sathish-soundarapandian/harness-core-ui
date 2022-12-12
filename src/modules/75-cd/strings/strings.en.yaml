@@ -120,6 +120,12 @@ steps:
     elastigroupConfigReq: Elastigroup Configuration is required
     elastigroupTitle: Elastigroup Configuration Source
     elastigroupConfigDetails: '{{$.common.configDetails}}'
+  tasInfra:
+    space: Space
+    organizationPlaceholder: Select organization
+    spacePlaceholder: Specify the space
+    organizationError: No organization found with given Connector
+    spacesError: No spaces found within given organization
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -261,6 +267,7 @@ pipelineSteps:
     stageIsRequired: Stage is required
 cdLaunchText: Launch CD First Generation
 serviceDashboard:
+  instanceDataEmpty: Instance data is empty.
   activeServiceInstancesLabel: '{{$.common.subscriptions.usage.srvcInst}}'
   runningServiceInstancesLabel: 'Running Service Instances (Current)'
   recentDeployments: 'Recent Deployments'
@@ -624,3 +631,21 @@ artifactVersion: 'Version :'
 artifactPath: 'Path :'
 logoOfName: 'Logo of {{name}}'
 deploymentTemplates: 'Deployment Templates'
+environmentDetailPage:
+  infraSlashCluster: Infra / GitOps Cluster
+  selectArtifactMsg: 'Select an Artifact to view instance details'
+  noInstancesToShow: No Instances to show
+  seeFull: See full
+  viewInTable: 'View in table'
+  noServiceArtifactMsg: 'There is no service and artifact details present'
+  emptyInstanceDetailMsg: 'Empty instance detail'
+  emptyServiceDetailMsg: 'There are no services with instances in this environment.'
+  emptyExecutionListMsg: 'There are no executions for this given criteria.'
+ElastigroupStep:
+  appName: App Name
+  minInstances: Min Instances
+  maxInstances: Max Instances
+  desiredInstances: Desired Instances
+  valueCannotBeLessThan: '{{value}} cannot be less than {{value2}}'
+  valueCannotBeGreaterThan: '{{value}} cannot be greater than {{value2}}'
+  valueCannotBe: '{{value}} cannot be empty, string etc., should only be a positive number'

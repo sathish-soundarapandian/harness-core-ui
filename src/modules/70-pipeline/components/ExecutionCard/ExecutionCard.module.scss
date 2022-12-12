@@ -193,14 +193,12 @@ $actions-translate: 10px;
     }
   }
 
-  &[data-variant='Minimal'] {
-    .content {
-      padding: var(--spacing-5) var(--spacing-6) var(--spacing-4) var(--spacing-6);
-    }
+  .content {
+    padding: var(--spacing-5) var(--spacing-6) var(--spacing-4) var(--spacing-6);
+  }
 
-    .footer {
-      padding: 0 var(--spacing-6);
-    }
+  .footer {
+    padding: 0 var(--spacing-6);
   }
 }
 

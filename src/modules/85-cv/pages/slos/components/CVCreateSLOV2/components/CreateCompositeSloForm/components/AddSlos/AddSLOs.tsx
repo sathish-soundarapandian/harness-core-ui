@@ -47,6 +47,7 @@ import {
   RenderUserJourney
 } from './components/SLOList.utils'
 import { SLOWeight } from '../../CreateCompositeSloForm.constant'
+import { getColumsForProjectAndAccountLevel, getProjectAndOrgColumn } from '../../CreateCompositeSloForm.utils'
 import css from './AddSLOs.module.scss'
 
 interface AddSLOsProp {
@@ -71,7 +72,7 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
     () => formikProps?.values?.serviceLevelObjectivesDetails || []
   )
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const { showDrawer, hideDrawer } = useDrawer({
     createDrawerContent: () => {
       return (
@@ -209,6 +210,7 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
       width: '20%',
       Cell: RenderName
     },
+    ...(getProjectAndOrgColumn({ getString }) as Column<SLOObjective>[]),
     {
       accessor: 'serviceName',
       Header: getString('cv.slos.monitoredService').toUpperCase(),
@@ -277,6 +279,8 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
     }
   ]
 
+  const filteredColumns = getColumsForProjectAndAccountLevel({ isAccountLevel, allColumns: columns, getString })
+
   const showSLOTableAndMessage = Boolean(serviceLevelObjectivesDetails.length)
   const totalOfSloWeight = Number(
     serviceLevelObjectivesDetails
@@ -307,10 +311,10 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
       />
       {showSLOTableAndMessage && (
         <>
-          <TableV2 sortable columns={columns} data={serviceLevelObjectivesDetails} minimal />
+          <TableV2 sortable columns={filteredColumns} data={serviceLevelObjectivesDetails} minimal />
           <HelpPanel referenceId={'compositeSLOWeightage'} type={HelpPanelType.FLOATING_CONTAINER} />
           <Container className={cx(css.totalRow, showErrorState ? css.rowFailure : css.rowSuccess)}>
-            {Array(columns.length - 3)
+            {Array(5)
               .fill(0)
               .map((_, index) => (
                 <div key={index.toString()}></div>

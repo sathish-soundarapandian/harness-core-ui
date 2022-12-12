@@ -28,7 +28,7 @@ export const LabelAndValue = ({
         title={label}
         font={isLabelHeading ? { weight: 'semi-bold' } : { weight: 'light' }}
         color={Color.GREY_1000}
-        width={100}
+        width={isLabelHeading ? 100 : 300}
       >
         {label}
       </Text>
@@ -69,7 +69,7 @@ export const CreatePreview = ({ id, data }: CreatePreviewProps): JSX.Element => 
             label={getString('cv.slos.userJourney')}
             value={(data.userJourneyRef as unknown as MultiSelectOption[])
               ?.map((userJourney: SelectOption) => userJourney.label || userJourney)
-              .join(',')}
+              .join(' , ')}
           />
         </Layout.Vertical>
       )
@@ -103,13 +103,14 @@ export const CreatePreview = ({ id, data }: CreatePreviewProps): JSX.Element => 
             value={getString('cv.CompositeSLO.Weightage')}
           />
           {data?.serviceLevelObjectivesDetails?.map(slo => {
+            const { name, serviceLevelObjectiveRef, weightagePercentage } = slo
             return (
               <LabelAndValue
                 isLabelHeading={false}
                 className={css.previewRows}
-                key={slo.serviceLevelObjectiveRef}
-                label={slo.serviceLevelObjectiveRef}
-                value={`${slo.weightagePercentage.toString()}%`}
+                key={serviceLevelObjectiveRef}
+                label={name || serviceLevelObjectiveRef}
+                value={`${weightagePercentage.toString()}%`}
               />
             )
           })}

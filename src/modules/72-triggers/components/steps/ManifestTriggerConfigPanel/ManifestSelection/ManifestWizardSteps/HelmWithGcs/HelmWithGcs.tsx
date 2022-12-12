@@ -78,7 +78,7 @@ function HelmWithGcs({
     const { spec: storeSpec } = store ?? {}
 
     return {
-      folderPath: storeSpec?.folderPath ?? '',
+      folderPath: storeSpec?.folderPath ?? '/',
       bucketName: storeSpec?.bucketName ?? '',
       chartName: spec.chartName ?? '',
       helmVersion: spec.helmVersion ?? 'V2'

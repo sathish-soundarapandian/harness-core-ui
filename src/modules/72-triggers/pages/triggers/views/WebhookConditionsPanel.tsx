@@ -27,6 +27,8 @@ const WebhookConditionsPanel: React.FC<WebhookConditionsPanelPropsInterface> = (
     errors
   } = formikProps
   const { getString } = useStrings()
+  // Used to hide Source Branch, Target Branch, Changed Files, Tag Name for github release event
+  const isGithubReleaseEvent = sourceRepo === GitSourceProviders.GITHUB.value && event === eventTypes.RELEASE
 
   return (
     <Layout.Vertical className={cx(css.webhookConditionsContainer)} spacing="large" padding="xxlarge">
@@ -45,7 +47,7 @@ const WebhookConditionsPanel: React.FC<WebhookConditionsPanelPropsInterface> = (
         {getString('triggers.conditionsPanel.subtitle')}
         <HarnessDocTooltip tooltipId="conditionsSubtitle" useStandAlone={true} />
       </Text>
-      {sourceRepo !== GitSourceProviders.CUSTOM.value && (
+      {sourceRepo !== GitSourceProviders.CUSTOM.value && !isGithubReleaseEvent && (
         <Layout.Vertical className={css.formContent} style={{ marginBottom: 'var(--spacing-4)!important' }}>
           <section>
             <ConditionsRowHeaders getString={getString} />

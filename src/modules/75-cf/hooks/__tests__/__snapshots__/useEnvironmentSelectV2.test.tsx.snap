@@ -12,6 +12,7 @@ exports[`Test useEnvironmentSelectV2 useEnvironmentSelectV2 should send back pro
         class="bp3-input-group"
       >
         <input
+          aria-label="cf.shared.selectEnvironment"
           autocomplete="off"
           class="bp3-input"
           id="selectOrCreateEnvironmentInput"
