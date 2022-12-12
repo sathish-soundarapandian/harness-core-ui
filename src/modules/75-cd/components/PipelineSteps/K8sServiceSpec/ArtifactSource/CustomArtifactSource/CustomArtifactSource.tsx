@@ -30,7 +30,13 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
-import { getFqnPath, getYamlData, isFieldfromTriggerTabDisabled, isNewServiceEnvEntity } from '../artifactSourceUtils'
+import {
+  getFqnPath,
+  getValidInitialValuePath,
+  getYamlData,
+  isFieldfromTriggerTabDisabled,
+  isNewServiceEnvEntity
+} from '../artifactSourceUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import css from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactConnector.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -56,7 +62,8 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
     artifactPath,
     serviceIdentifier,
     initialValues,
-    stepViewType
+    stepViewType,
+    artifacts
   } = props
 
   const { getString } = useStrings()
@@ -81,23 +88,35 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
   }
   const versionPathValue = defaultTo(
     get(formik, `values.${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`),
-    artifact?.spec?.scripts?.fetchAllArtifacts?.versionPath
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`, ''),
+      artifact?.spec?.scripts?.fetchAllArtifacts?.versionPath
+    )
   )
   const artifactsArrayPathValue = defaultTo(
     get(formik, `values.${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`),
-    artifact?.spec?.scripts?.fetchAllArtifacts?.artifactsArrayPath
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`, ''),
+      artifact?.spec?.scripts?.fetchAllArtifacts?.artifactsArrayPath
+    )
   )
   const scriptValue = defaultTo(
     get(formik, `values.${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`),
-    artifact?.spec?.scripts?.fetchAllArtifacts?.spec?.source?.spec?.script
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`, ''),
+      artifact?.spec?.scripts?.fetchAllArtifacts?.spec?.source?.spec?.script
+    )
   )
   const inputValue = defaultTo(
     get(formik, `values.${path}.artifacts.${artifactPath}.spec.inputs`),
-    artifact?.spec?.inputs
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.inputs`, ''), artifact?.spec?.inputs)
   )
   const delegateSelectorsValue = defaultTo(
     get(formik, `values.${path}.artifacts.${artifactPath}.spec.delegateSelectors`),
-    artifact?.spec?.delegateSelectors
+    getValidInitialValuePath(
+      get(artifacts, `${artifactPath}.spec.delegateSelectors`, ''),
+      artifact?.spec?.delegateSelectors
+    )
   )
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')

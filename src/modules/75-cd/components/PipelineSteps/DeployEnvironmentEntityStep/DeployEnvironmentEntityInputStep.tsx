@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo, useRef, useState } from 'react'
-import { defaultTo, get, isBoolean, isEmpty, isEqual, isNil, pick, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isBoolean, isEmpty, isEqual, isNil, pick, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { Spinner } from '@blueprintjs/core'
 import { v4 as uuid } from 'uuid'
@@ -28,7 +28,7 @@ import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMu
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 
-import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -132,12 +132,7 @@ export default function DeployEnvironmentEntityInputStep({
     // if this is a multi environment template, then set up a dummy field,
     // so that environments can be updated in this dummy field
     if (isMultiEnvironment) {
-      if (
-        isValueRuntimeInput(get(formik.values, pathToEnvironments)) &&
-        (stepViewType === StepViewType.TemplateUsage
-          ? isValueRuntimeInput(get(formik.values, pathForDeployToAll))
-          : true)
-      ) {
+      if (isValueRuntimeInput(get(formik.values, pathToEnvironments))) {
         formik.setFieldValue(uniquePath.current, RUNTIME_INPUT_VALUE)
       } else {
         formik.setFieldValue(
@@ -200,7 +195,7 @@ export default function DeployEnvironmentEntityInputStep({
     const newEnvironmentsTemplate: EnvironmentYamlV2[] = createEnvTemplate(
       existingTemplate as EnvironmentYamlV2[],
       environmentIdentifiers,
-      environmentsData,
+      cloneDeep(environmentsData),
       isMultiEnvironment,
       gitOpsEnabled ? 'gitOpsClusters' : 'infrastructureDefinitions'
     )
@@ -210,7 +205,7 @@ export default function DeployEnvironmentEntityInputStep({
     const newEnvironmentsValues = createEnvValues(
       existingEnvironmentValues,
       environmentIdentifiers,
-      environmentsData,
+      cloneDeep(environmentsData),
       deployToAllEnvironments,
       gitOpsEnabled ? 'gitOpsClusters' : 'infrastructureDefinitions',
       stepViewType
@@ -220,27 +215,20 @@ export default function DeployEnvironmentEntityInputStep({
     if (isMultiEnvironment) {
       const newFormikValues = { ...formik.values }
       if (areFiltersAdded) {
-        formik.setFieldValue(
+        set(
+          newFormikValues,
           pathToEnvironments,
           newEnvironmentsValues.map(envValue => pick(envValue, 'environmentRef'))
         )
-      } else if (
-        areEnvironmentsRuntimeUnderEnvGroup &&
-        stepViewType === StepViewType.TemplateUsage &&
-        environmentsSelectedType === 'all'
-      ) {
-        // This will be removed once reconciliation support has been added from BE
-        set(newFormikValues, pathToEnvironments, RUNTIME_INPUT_VALUE)
-        set(newFormikValues, pathForDeployToAll, environmentsSelectedType === 'all')
       } else {
         updateStageFormTemplate(newEnvironmentsTemplate, fullPath)
 
         // update form values
         set(newFormikValues, pathToEnvironments, newEnvironmentsValues)
+      }
 
-        if (areEnvironmentsRuntimeUnderEnvGroup) {
-          set(newFormikValues, pathForDeployToAll, environmentsSelectedType === 'all')
-        }
+      if (areEnvironmentsRuntimeUnderEnvGroup) {
+        set(newFormikValues, pathForDeployToAll, environmentsSelectedType === 'all')
       }
       formik.setFieldValue(mainEntityPath, get(newFormikValues, mainEntityPath))
     }
@@ -255,7 +243,7 @@ export default function DeployEnvironmentEntityInputStep({
       const newIdentifiers = environmentsList.map(environmentInList => environmentInList.identifier)
       setEnvironmentsSelectedType('all')
       setEnvironmentIdentifiers(newIdentifiers)
-    } else {
+    } else if (Array.isArray(items)) {
       setEnvironmentsSelectedType('other')
       setEnvironmentIdentifiers(items.map(item => item.value as string))
     }

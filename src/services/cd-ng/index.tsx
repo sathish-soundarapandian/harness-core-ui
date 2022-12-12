@@ -1022,11 +1022,6 @@ export interface ArtifactsSummary {
   sidecars?: ArtifactSummary[]
 }
 
-export type AsgCanaryDeployStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-  nrOfInstances: number
-}
-
 export type AsgConfigurationManifest = ManifestAttributes & {
   metadata?: string
   store?: StoreConfigWrapper
@@ -3587,7 +3582,6 @@ export interface EntityDetail {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -5981,7 +5975,6 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -6165,7 +6158,6 @@ export interface GitEntityFilterProperties {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -6386,7 +6378,6 @@ export interface GitFullSyncEntityInfoDTO {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -6565,7 +6556,6 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -6865,7 +6855,6 @@ export interface GitSyncEntityDTO {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -7038,7 +7027,6 @@ export interface GitSyncEntityListDTO {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -7228,7 +7216,6 @@ export interface GitSyncErrorDTO {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -8245,7 +8232,7 @@ export interface JiraFieldNG {
 export interface JiraFieldSchemaNG {
   array?: boolean
   customType?: string
-  type: 'string' | 'number' | 'date' | 'datetime' | 'timetracking' | 'option' | 'user'
+  type: 'string' | 'number' | 'date' | 'datetime' | 'timetracking' | 'option' | 'user' | 'issuelink'
   typeStr: string
 }
 
@@ -10401,7 +10388,6 @@ export interface ReferencedByDTO {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -11582,7 +11568,6 @@ export interface ResponseListEntityType {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -14653,7 +14638,6 @@ export interface StepData {
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
     | 'EcsRunTask'
-    | 'ASG_CANARY_DEPLOY'
     | 'Command'
     | 'JenkinsBuild'
     | 'AzureCreateARMResource'
@@ -16682,7 +16666,6 @@ export interface ListActivitiesQueryParams {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -16847,7 +16830,6 @@ export interface ListActivitiesQueryParams {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -17116,7 +17098,6 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -17281,7 +17262,6 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -31869,7 +31849,6 @@ export interface ListReferredByEntitiesQueryParams {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -32095,7 +32074,6 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -35330,7 +35308,6 @@ export interface GetReferencedByQueryParams {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -37688,7 +37665,6 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -37921,7 +37897,6 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'EcsRollingRollback'
       | 'EcsCanaryDeploy'
       | 'EcsCanaryDelete'
-      | 'EcsCanaryDeploy'
       | 'AzureCreateARMResource'
       | 'BuildAndPushACR'
       | 'AzureCreateBPResource'
@@ -43846,7 +43821,6 @@ export interface GetStepYamlSchemaQueryParams {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -44139,7 +44113,6 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'
@@ -57318,7 +57291,6 @@ export interface GetYamlSchemaQueryParams {
     | 'EcsRollingRollback'
     | 'EcsCanaryDeploy'
     | 'EcsCanaryDelete'
-    | 'EcsCanaryDeploy'
     | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
     | 'AzureCreateBPResource'

@@ -41,8 +41,8 @@ export interface TableRowData {
   showEnv?: boolean
   totalEnvs?: number
   totalInfras?: number
-  rowNum?: number
   tableType?: TableType
+  clusterIdentifier?: string
 }
 
 export enum TableType {
@@ -78,7 +78,8 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
               artifactPath: defaultTo(artifact.artifactPath, ''),
               showArtifact: envShow && !index,
               showEnv: !index,
-              infraIdentifier: defaultTo(entity.infraIdentifier, '-'),
+              infraIdentifier: defaultTo(entity.infraIdentifier, ''),
+              clusterIdentifier: defaultTo(entity.clusterIdentifier, ''),
               infraName: defaultTo(entity.infraName, '-'),
               instanceCount: defaultTo(entity.count, 0),
               lastPipelineExecutionId: defaultTo(entity.lastPipelineExecutionId, ''),
@@ -86,7 +87,6 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
               lastDeployedAt: defaultTo(entity.lastDeployedAt, ''),
               envId: defaultTo(env.envId, ''),
               envName: defaultTo(env.envName, ''),
-              rowNum: index,
               tableType: TableType.FULL
             }
           }
@@ -104,13 +104,13 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
               envId: env.envId,
               envName: env.envName,
               showEnv: true,
-              infraIdentifier: '-',
+              infraIdentifier: '',
+              clusterIdentifier: '',
               infraName: '-',
               instanceCount: 0,
               lastPipelineExecutionId: '',
               lastPipelineExecutionName: '',
               lastDeployedAt: '',
-              rowNum: 0,
               tableType: TableType.FULL
             })
           }
@@ -382,10 +382,26 @@ const RenderInstanceCount: Renderer<CellProps<TableRowData>> = ({
 
 const RenderInstances: Renderer<CellProps<TableRowData>> = ({
   row: {
-    original: { envId, artifactVersion: buildId, instanceCount, tableType, rowNum }
+    original: {
+      envId,
+      artifactVersion: buildId,
+      instanceCount,
+      tableType,
+      infraIdentifier,
+      lastPipelineExecutionId,
+      lastDeployedAt,
+      clusterIdentifier
+    }
   }
 }) => {
   TOTAL_VISIBLE_INSTANCES = tableType === TableType.PREVIEW ? 4 : 7
+
+  //sending undefined as we need to pass payload conditionally
+  const lastDeployedTime = lastDeployedAt ? parseInt(lastDeployedAt) : undefined
+  const clusterId = clusterIdentifier ? clusterIdentifier : undefined
+  const infraId = infraIdentifier ? infraIdentifier : undefined
+  const pipelineExecutionId = lastPipelineExecutionId ? lastPipelineExecutionId : undefined
+
   return instanceCount ? (
     <Container className={cx(css.paddedContainer, css.hexContainer)} flex={{ justifyContent: 'flex-start' }}>
       {Array(Math.min(instanceCount, TOTAL_VISIBLE_INSTANCES))
@@ -394,7 +410,7 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
           <Popover
             interactionKind={PopoverInteractionKind.HOVER}
             disabled={tableType === TableType.SUMMARY}
-            key={index}
+            key={`${buildId}_${envId}_${index}`}
             position={Position.TOP}
             modifiers={{ preventOverflow: { escapeWithReference: true } }}
           >
@@ -405,7 +421,15 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
               background={Color.PRIMARY_3}
               margin={{ left: 'xsmall', right: 'xsmall', top: 'xsmall', bottom: 'xsmall' }}
             />
-            <ActiveServiceInstancePopover buildId={buildId} envId={envId} instanceNum={defaultTo(rowNum, 0) + index} />
+            <ActiveServiceInstancePopover
+              buildId={buildId}
+              envId={envId}
+              instanceNum={index}
+              infraIdentifier={infraId}
+              lastDeployedAt={lastDeployedTime}
+              clusterId={clusterId}
+              pipelineExecutionId={pipelineExecutionId}
+            />
           </Popover>
         ))}
       {instanceCount > TOTAL_VISIBLE_INSTANCES ? (

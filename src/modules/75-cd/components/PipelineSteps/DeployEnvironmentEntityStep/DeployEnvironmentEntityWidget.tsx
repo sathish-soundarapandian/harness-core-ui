@@ -41,6 +41,13 @@ import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
 import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
 import { getValidationSchema } from './utils/utils'
 
+import InlineEntityFilters from './components/InlineEntityFilters/InlineEntityFilters'
+import {
+  EntityFilterType,
+  EntityType,
+  InlineEntityFiltersRadioType
+} from './components/InlineEntityFilters/InlineEntityFiltersUtils'
+
 import css from './DeployEnvironmentEntityStep.module.scss'
 
 export interface DeployEnvironmentEntityWidgetProps extends Required<DeployEnvironmentEntityCustomStepProps> {
@@ -126,6 +133,8 @@ export default function DeployEnvironmentEntityWidget({
               ? (RUNTIME_INPUT_VALUE as any)
               : [{ label: environment, value: environment }]
             : []
+
+        draft.environmentFilters = {}
 
         delete draft.environment
         delete draft.environmentGroup
@@ -261,6 +270,12 @@ export default function DeployEnvironmentEntityWidget({
     }
   }
 
+  const handleFilterRadio = (selectedRadioValue: InlineEntityFiltersRadioType): void => {
+    if (selectedRadioValue === InlineEntityFiltersRadioType.MANUAL) {
+      formikRef.current?.setFieldValue('environmentFilters.fixedScenario', undefined)
+    }
+  }
+
   return (
     <>
       <Formik<DeployEnvironmentEntityFormState>
@@ -330,6 +345,44 @@ export default function DeployEnvironmentEntityWidget({
                     customDeploymentRef={customDeploymentRef}
                     gitOpsEnabled={gitOpsEnabled}
                     scope={scope}
+                  />
+                ) : isMultiEnvironment ? (
+                  <InlineEntityFilters
+                    filterPrefix={'environmentFilters.fixedScenario'}
+                    entityStringKey="environments"
+                    onRadioValueChange={handleFilterRadio}
+                    readonly={readonly}
+                    baseComponent={
+                      <DeployEnvironment
+                        initialValues={initialValues}
+                        readonly={readonly}
+                        allowableTypes={allowableTypes}
+                        isMultiEnvironment
+                        stageIdentifier={stageIdentifier}
+                        deploymentType={deploymentType}
+                        customDeploymentRef={customDeploymentRef}
+                        gitOpsEnabled={gitOpsEnabled}
+                      />
+                    }
+                    entityFilterListProps={{
+                      entities: [
+                        EntityType.ENVIRONMENTS,
+                        gitOpsEnabled ? EntityType.CLUSTERS : EntityType.INFRASTRUCTURES
+                      ],
+                      filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
+                      placeholderProps: {
+                        entity: getString('common.filterOnName', {
+                          name:
+                            'environments or ' + getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
+                        }),
+                        tags: getString('common.filterOnName', { name: getString('typeLabel') })
+                      },
+                      allowableTypes
+                    }}
+                    gridAreaProps={{
+                      headerAndRadio: 'input-field',
+                      content: 'main-content'
+                    }}
                   />
                 ) : (
                   <DeployEnvironment

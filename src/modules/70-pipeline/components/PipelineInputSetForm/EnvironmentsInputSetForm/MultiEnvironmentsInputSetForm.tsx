@@ -104,7 +104,7 @@ export function MultiEnvironmentsInputSetForm({
               formik.setFieldValue(`${path}.${pathToEnvironments}`, get(data, pathToEnvironments))
 
               const deployToAll = get(data, 'environmentGroup.deployToAll')
-              if (isBoolean(deployToAll)) {
+              if (isBoolean(deployToAll) || isValueRuntimeInput(deployToAll)) {
                 formik.setFieldValue(`${path}.environmentGroup.deployToAll`, deployToAll)
               }
             })
@@ -171,7 +171,7 @@ export function MultiEnvironmentsInputSetForm({
               return (
                 deploymentType &&
                 environment.environmentRef && (
-                  <React.Fragment key={`${environment.environmentRef}_${index}`}>
+                  <React.Fragment key={`${path}_${environment.environmentRef}_${index}`}>
                     {showEnvironmentPrefix && (
                       <Text
                         font={{ size: 'normal', weight: 'bold' }}
@@ -281,7 +281,7 @@ export function MultiEnvironmentsInputSetForm({
 
                             formik.setFieldValue(`${path}.${pathToEnvironments}[${index}]`, {
                               ...omit(environmentAtIndex, ['deployToAll', 'gitOpsClusters']),
-                              ...pick(data, ['deployToAll', 'gitOpsClusters'])
+                              ...pick(data, ['deployToAll', ...(data.deployToAll !== true ? ['gitOpsClusters'] : [])])
                             })
                           }}
                         />

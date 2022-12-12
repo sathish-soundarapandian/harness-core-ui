@@ -387,6 +387,7 @@ export default function DeployEnvironment({
         spacing="medium"
         flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
         className={css.inputField}
+        margin={{ bottom: isMultiEnvironment ? 'medium' : 'none' }}
       >
         {isMultiEnvironment ? (
           GLOBAL_SERVICE_ENV && !isUnderEnvGroup ? (
@@ -435,12 +436,7 @@ export default function DeployEnvironment({
                   setFieldValue(`environments`, undefined)
                   setSelectedEnvironments([])
                 } else {
-                  unstable_batchedUpdates(() => {
-                    setFieldValue(`environments`, items)
-                    if (isValueRuntimeInput(items)) {
-                      setFieldValue(gitOpsEnabled ? 'clusters' : 'infrastructures', RUNTIME_INPUT_VALUE)
-                    }
-                  })
+                  setFieldValue(`environments`, items)
                   setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
                 }
               }}
@@ -556,7 +552,7 @@ export default function DeployEnvironment({
         )}
 
         {/* This component is specifically for filters */}
-        {isRuntime && !readonly && gitOpsEnabled && (
+        {isRuntime && !readonly && (isMultiEnvironment ? true : gitOpsEnabled) && (
           <InlineEntityFilters
             filterPrefix={filterPrefix}
             entityStringKey={gitOpsEnabled ? 'common.clusters' : 'common.infrastructures'}
@@ -601,7 +597,8 @@ export default function DeployEnvironment({
                   name: getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
                 }),
                 tags: getString('common.filterOnName', { name: getString('typeLabel') })
-              }
+              },
+              allowableTypes
             }}
           />
         )}

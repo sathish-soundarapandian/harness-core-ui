@@ -902,6 +902,11 @@ artifactsSelection:
     imageNamePlaceholder: Enter Image Path
     enterTagRegex: Enter Tag Regex
   validation:
+    connectorForJobname: Connector is required to fetch job name
+    jobConnectorRequired: Job name and connector are required to fetch
+    script: Script is required
+    artifactsArrayPath: Artifact array path is required
+    versionPath: Version path is required
     noBuild: No build found with given details
     noPackage: No package found with given details
     noFeeds: No feeds found with given details

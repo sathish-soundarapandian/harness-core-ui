@@ -30,7 +30,13 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-import { getFqnPath, getYamlData, isFieldfromTriggerTabDisabled, isNewServiceEnvEntity } from '../artifactSourceUtils'
+import {
+  getFqnPath,
+  getValidInitialValuePath,
+  getYamlData,
+  isFieldfromTriggerTabDisabled,
+  isNewServiceEnvEntity
+} from '../artifactSourceUtils'
 import css from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactConnector.module.scss'
 
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
@@ -59,7 +65,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     stageIdentifier,
     pipelineIdentifier,
     stepViewType,
-    useArtifactV1Data = false
+    useArtifactV1Data = false,
+    artifacts
   } = props
 
   const { getString } = useStrings()
@@ -74,16 +81,16 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
   const connectorRefValue = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`),
-    get(artifact, `spec.connectorRef`)
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef)
   )
   const orgValue = defaultTo(get(initialValues?.artifacts, `${artifactPath}.spec.org`), get(artifact, `spec.org`))
   const packageNameValue = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.packageName`),
-    get(artifact, `spec.packageName`)
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.packageName`, ''), artifact?.spec?.packageName)
   )
   const packageTypeValue = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.packageType`),
-    get(artifact, `spec.packageType`)
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.packageType`, ''), artifact?.spec?.packageType)
   )
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')

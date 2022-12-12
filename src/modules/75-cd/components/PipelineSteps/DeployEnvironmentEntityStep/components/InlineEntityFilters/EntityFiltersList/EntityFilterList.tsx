@@ -9,7 +9,7 @@ import React, { useMemo } from 'react'
 import { FieldArray, useFormikContext } from 'formik'
 import { get } from 'lodash-es'
 
-import { Button, ButtonSize, ButtonVariation, Container, FormInput, MultiTypeInputType, Text } from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, FormInput, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
@@ -32,7 +32,8 @@ export default function EntityFilterList<T>({
   entities,
   filters,
   defaultFilterType = EntityFilterType.ALL,
-  placeholderProps
+  placeholderProps,
+  allowableTypes
 }: EntityFilterListProps): React.ReactElement {
   const { getString } = useStrings()
   const { values } = useFormikContext<T>()
@@ -60,7 +61,10 @@ export default function EntityFilterList<T>({
       render={({ push, remove }) => {
         function handleAdd(): void {
           push({
-            type: defaultFilterType
+            type: defaultFilterType,
+            spec: {
+              matchType: 'all'
+            }
           })
         }
 
@@ -115,7 +119,7 @@ export default function EntityFilterList<T>({
                           name={`${filterPrefix}.[${index}].spec.tags`}
                           tagsProps={{ placeholder: placeholderProps.tags }}
                           multiTypeProps={{
-                            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                            allowableTypes
                           }}
                           enableConfigureOptions
                         />

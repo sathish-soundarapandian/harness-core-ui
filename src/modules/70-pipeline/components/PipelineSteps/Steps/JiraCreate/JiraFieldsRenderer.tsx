@@ -58,7 +58,8 @@ export const shouldShowTextField = (selectedField: JiraFieldNG): boolean => {
     selectedField.schema.type === 'string' ||
     selectedField.schema.type === 'date' ||
     selectedField.schema.type === 'datetime' ||
-    selectedField.schema.type === 'number'
+    selectedField.schema.type === 'number' ||
+    selectedField.schema.type === 'issuelink'
   ) {
     return true
   }

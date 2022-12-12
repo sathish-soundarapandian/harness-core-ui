@@ -48,7 +48,7 @@ export const createInfraValues = (
   stepViewType?: StepViewType
 ): InfraStructureDefinitionYaml[] => {
   return infrastructureIdentifiers.map(infraId => {
-    const valueFromInfrastructuresData = infrastructuresData.find(
+    const inputsFromInfrastructuresData = infrastructuresData.find(
       infraTemplate => infraTemplate.infrastructureDefinition.identifier === infraId
     )?.infrastructureInputs
 
@@ -63,12 +63,11 @@ export const createInfraValues = (
       : ({} as InfraStructureDefinitionYaml)
 
     let infrastructureInputs = newInfrastructureObject.inputs
-    const infrastructureInputsFromInfrastructureData = valueFromInfrastructuresData?.inputs
 
-    const baseInfrastructureInputs = !isEmpty(infrastructureInputsFromInfrastructureData)
+    const baseInfrastructureInputs = !isEmpty(inputsFromInfrastructuresData)
       ? deployToAllInfrastructures && stepViewType === StepViewType.TemplateUsage
-        ? infrastructureInputsFromInfrastructureData
-        : clearRuntimeInput(infrastructureInputsFromInfrastructureData)
+        ? inputsFromInfrastructuresData
+        : clearRuntimeInput(inputsFromInfrastructuresData)
       : undefined
 
     if (!infrastructureInputs) {

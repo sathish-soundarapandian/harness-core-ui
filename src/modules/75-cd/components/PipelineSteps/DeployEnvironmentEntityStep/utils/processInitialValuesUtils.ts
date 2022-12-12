@@ -208,7 +208,11 @@ export function processMultiEnvironmentInitialValues(
     category: 'multi',
     ...getEnvironmentsFormStateFromInitialValues(initialValues.environments?.values, false, gitOpsEnabled),
     ...(environmentFilters.length &&
-      isValueRuntimeInput(environmentValues.environments) && { environmentFilters: { runtime: environmentFilters } })
+      (isValueRuntimeInput(environmentValues.environments) || !initialValues.environments?.values) && {
+        environmentFilters: {
+          [`${initialValues.environments?.values ? 'runtime' : 'fixedScenario'}`]: environmentFilters
+        }
+      })
   }
 }
 

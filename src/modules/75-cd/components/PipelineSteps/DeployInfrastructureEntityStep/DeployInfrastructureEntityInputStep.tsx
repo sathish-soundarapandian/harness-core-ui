@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo, useRef, useState } from 'react'
-import { defaultTo, get, isBoolean, isEmpty, isEqual, isNil, pick, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isBoolean, isEmpty, isEqual, isNil, pick, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { Spinner } from '@blueprintjs/core'
 import { v4 as uuid } from 'uuid'
@@ -24,7 +24,7 @@ import { isValueRuntimeInput } from '@common/utils/utils'
 
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import { useGetInfrastructuresData } from '../DeployEnvironmentEntityStep/DeployInfrastructure/useGetInfrastructuresData'
@@ -56,7 +56,6 @@ export default function DeployInfrastructureEntityInputStep({
   isMultipleInfrastructure,
   deployToAllInfrastructures,
   stepViewType,
-  showEnvironmentsSelectionInputField,
   areEnvironmentFiltersAdded
 }: DeployInfrastructureEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
@@ -171,8 +170,8 @@ export default function DeployInfrastructureEntityInputStep({
         }
 
         let uniquePathValue = get(formik.values, uniquePath.current)
-        if (isNil(uniquePathValue)) {
-          if (isValueRuntimeInput(get(formik.values, localPath)) && !showEnvironmentsSelectionInputField) {
+        if (!(uniquePath.current in formik.values)) {
+          if (isValueRuntimeInput(get(formik.values, localPath))) {
             uniquePathValue = RUNTIME_INPUT_VALUE
           }
           set(newFormikValues, uniquePath.current, uniquePathValue)
@@ -182,7 +181,11 @@ export default function DeployInfrastructureEntityInputStep({
       }
       // This condition is required when there exist no infrastructures but user selects all
       else if (!isBoolean(deployToAllInfrastructures) && infrastructuresSelectedType === 'all') {
-        formik.setFieldValue(pathForDeployToAll, true)
+        const newFormikValues = { ...formik.values }
+        set(newFormikValues, localPath, undefined)
+
+        set(newFormikValues, pathForDeployToAll, true)
+        formik.setValues(newFormikValues)
       }
 
       return
@@ -201,7 +204,7 @@ export default function DeployInfrastructureEntityInputStep({
     const newInfrastructuresTemplate = createInfraTemplate(
       existingTemplate as InfraStructureDefinitionYaml[],
       infrastructureIdentifiers,
-      infrastructuresData
+      cloneDeep(infrastructuresData)
     )
 
     // updated values based on selected infrastructures
@@ -209,7 +212,7 @@ export default function DeployInfrastructureEntityInputStep({
     const newInfrastructuresValues = createInfraValues(
       existingInfrastructureValues,
       infrastructureIdentifiers,
-      infrastructuresData,
+      cloneDeep(infrastructuresData),
       deployToAllInfrastructures,
       stepViewType
     )
@@ -225,6 +228,12 @@ export default function DeployInfrastructureEntityInputStep({
 
         // update form values
         const newFormikValues = { ...formik.values }
+
+        set(newFormikValues, localPath, newInfrastructuresValues)
+
+        if (!isBoolean(deployToAllInfrastructures)) {
+          set(newFormikValues, pathForDeployToAll, infrastructuresSelectedType === 'all')
+        }
 
         // if this is multi infrastructures, then set up a dummy field,
         // so that infrastructures can be updated in this dummy field
@@ -246,21 +255,11 @@ export default function DeployInfrastructureEntityInputStep({
           set(newFormikValues, uniquePath.current, uniquePathValue)
         }
 
-        set(newFormikValues, localPath, newInfrastructuresValues)
-
-        if (!isBoolean(deployToAllInfrastructures)) {
-          set(newFormikValues, pathForDeployToAll, infrastructuresSelectedType === 'all')
-          // This will be removed once reconciliation support has been added from BE
-          if (stepViewType === StepViewType.TemplateUsage && infrastructuresSelectedType === 'all') {
-            set(newFormikValues, localPath, RUNTIME_INPUT_VALUE)
-          }
-        }
-
         formik.setValues(newFormikValues)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [infrastructuresData, infrastructureIdentifiers])
+  }, [infrastructuresData, infrastructureIdentifiers, infrastructuresSelectedType])
 
   function handleInfrastructuresChange(items: SelectOption[]): void {
     if (isValueRuntimeInput(items)) {
@@ -270,7 +269,7 @@ export default function DeployInfrastructureEntityInputStep({
       const newIdentifiers = infrastructuresList.map(infrastructureInList => infrastructureInList.identifier)
       setInfrastructuresSelectedType('all')
       setInfrastructureIdentifiers(newIdentifiers)
-    } else {
+    } else if (Array.isArray(items)) {
       setInfrastructuresSelectedType('other')
       setInfrastructureIdentifiers(items.map(item => item.value as string))
     }

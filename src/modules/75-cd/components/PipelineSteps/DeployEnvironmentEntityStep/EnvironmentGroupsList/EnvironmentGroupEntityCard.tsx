@@ -148,10 +148,11 @@ export function EnvironmentGroupCard({
             filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
             placeholderProps: {
               entity: getString('common.filterOnName', {
-                name: 'environments or' + getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
+                name: 'environments or ' + getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
               }),
               tags: getString('common.filterOnName', { name: getString('typeLabel') })
-            }
+            },
+            allowableTypes
           }}
         />
       </>

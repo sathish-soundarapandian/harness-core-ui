@@ -100,6 +100,8 @@ export const createEnvValues = (
       ? // This condition marks the field as RUNTIME when used in templates
         deployToAllEnvironments && stepViewType === StepViewType.TemplateUsage
         ? newEnvironmentObject?.infrastructureDefinitions
+        : isValueRuntimeInput(newEnvironmentObject?.infrastructureDefinitions as any)
+        ? (RUNTIME_INPUT_VALUE as any)
         : clearRuntimeInput(newEnvironmentObject?.infrastructureDefinitions)
       : undefined
 
@@ -107,6 +109,8 @@ export const createEnvValues = (
       ? // This condition marks the field as RUNTIME when used in templates
         deployToAllEnvironments && stepViewType === StepViewType.TemplateUsage
         ? newEnvironmentObject?.gitOpsClusters
+        : isValueRuntimeInput(newEnvironmentObject?.infrastructureDefinitions as any)
+        ? (RUNTIME_INPUT_VALUE as any)
         : clearRuntimeInput(newEnvironmentObject?.gitOpsClusters)
       : undefined
 

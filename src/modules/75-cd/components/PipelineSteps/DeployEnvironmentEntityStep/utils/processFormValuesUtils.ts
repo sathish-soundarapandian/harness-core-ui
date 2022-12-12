@@ -20,13 +20,19 @@ export function processFiltersFormValues(
   filters?: DeployEnvironmentEntityFormState['environmentGroupFilters']
 ): FilterYaml[] {
   return defaultTo(filters, []).map(filter => {
+    const filterEntities = defaultTo(filter.entities, [])?.map(
+      opt => opt.value as NonNullable<EnvSwaggerObjectWrapper['envFilterEntityType']>
+    )
+    const filterSpec = defaultTo(filter.spec, {} as TagsFilter)
+
     return {
-      ...filter,
-      entities: filter.entities.map(opt => opt.value as NonNullable<EnvSwaggerObjectWrapper['envFilterEntityType']>),
+      type: filter.type,
+      entities: filterEntities,
       spec: {
-        ...filter.spec,
-        tags: filter.spec.tags,
-        matchType: isValueRuntimeInput(filter.spec.tags) ? RUNTIME_INPUT_VALUE : filter.spec.matchType
+        ...(filter.type === 'tags' && {
+          tags: filterSpec.tags,
+          matchType: isValueRuntimeInput(filterSpec.tags) ? RUNTIME_INPUT_VALUE : filterSpec.matchType
+        })
       } as TagsFilter
     }
   })
@@ -212,7 +218,20 @@ export function processMultiEnvironmentFormValues(
   gitOpsEnabled: boolean
 ): DeployEnvironmentEntityConfig {
   const filters = processFiltersFormValues(data?.environmentFilters?.runtime)
+  const fixedEnvfilters = processFiltersFormValues(data?.environmentFilters?.fixedScenario)
   const environmentValues = getEnvironmentsFormValuesFromFormState(data, gitOpsEnabled)
+
+  if (fixedEnvfilters.length) {
+    return {
+      environments: {
+        metadata: {
+          parallel: data.parallel
+        },
+        filters: fixedEnvfilters
+        // TODO: remove this on BE swagger update
+      } as any
+    }
+  }
 
   if (!isNil(data.environments)) {
     return {

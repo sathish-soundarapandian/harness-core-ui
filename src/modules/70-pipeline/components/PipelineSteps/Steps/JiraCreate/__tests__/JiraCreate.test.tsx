@@ -26,7 +26,8 @@ import {
   getJiraRequiredFieldRendererProps,
   getJiraOptionalFieldRendererProps,
   getJiraUserFieldRendererProps,
-  mockJiraUserResponse
+  mockJiraUserResponse,
+  getJiraFieldRendererRuntimeProps
 } from './JiraCreateTestHelper'
 import { JiraFieldsRenderer } from '../JiraFieldsRenderer'
 import { JiraUserMultiTypeInput } from '../JiraUserMultiTypeInput'
@@ -375,5 +376,15 @@ describe('Jira Create tests', () => {
       viewType: StepViewType.TriggerForm
     })
     expect(response).toMatchSnapshot('Value must be greater than or equal to "10s"')
+  })
+
+  test('JiraFields as runtime', async () => {
+    const props = getJiraFieldRendererRuntimeProps()
+    const { container } = render(
+      <TestWrapper>
+        <JiraFieldsRenderer {...props}></JiraFieldsRenderer>
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
   })
 })

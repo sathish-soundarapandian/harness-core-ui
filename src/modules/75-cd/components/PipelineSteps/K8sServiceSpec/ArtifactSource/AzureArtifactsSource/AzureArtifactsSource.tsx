@@ -33,6 +33,7 @@ import {
   getDefaultQueryParam,
   getFqnPath,
   getImagePath,
+  getValidInitialValuePath,
   getYamlData,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
@@ -67,7 +68,8 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
     artifactPath,
     serviceIdentifier,
     stepViewType,
-    pipelineIdentifier
+    pipelineIdentifier,
+    artifacts
   } = props
 
   const commonParams = {
@@ -82,28 +84,28 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
   const { expressions } = useVariablesExpression()
 
   const connectorRefValue = defaultTo(
-    artifact?.spec?.connectorRef,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
 
-  const projectValue = getDefaultQueryParam(
-    artifact?.spec?.project,
-    get(initialValues?.artifacts, `${artifactPath}.spec.project`)
+  const projectValue = defaultTo(
+    get(initialValues?.artifacts, `${artifactPath}.spec.project`),
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.project`, ''), artifact?.spec?.project)
   )
 
-  const feedValue = getDefaultQueryParam(
-    artifact?.spec?.feed,
-    get(initialValues?.artifacts, `${artifactPath}.spec.feed`)
+  const feedValue = defaultTo(
+    get(initialValues?.artifacts, `${artifactPath}.spec.feed`),
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.feed`, ''), artifact?.spec?.feed)
   )
 
-  const packageValue = getDefaultQueryParam(
-    artifact?.spec?.package,
-    get(initialValues?.artifacts, `${artifactPath}.spec.package`)
+  const packageValue = defaultTo(
+    get(initialValues?.artifacts, `${artifactPath}.spec.package`),
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.package`, ''), artifact?.spec?.package)
   )
 
   const packageTypeValue = defaultTo(
-    artifact?.spec?.packageType,
-    get(initialValues?.artifacts, `${artifactPath}.spec.packageType`)
+    get(initialValues?.artifacts, `${artifactPath}.spec.packageType`),
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.packageType`, ''), artifact?.spec?.packageType)
   )
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
