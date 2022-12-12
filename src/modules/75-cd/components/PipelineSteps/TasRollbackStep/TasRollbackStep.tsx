@@ -33,7 +33,7 @@ interface TASRollbackStepVariableStepProps {
 export class TASRollbackStep extends PipelineStep<StepElementConfig> {
   protected type = StepType.AppRollback
   protected stepName = 'App Rollback'
-  protected stepIcon: IconName = 'cog' //TODO
+  protected stepIcon: IconName = 'tasRollback'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.TASRollback'
   protected isHarnessSpecific = false
   protected defaultValues: StepElementConfig = {

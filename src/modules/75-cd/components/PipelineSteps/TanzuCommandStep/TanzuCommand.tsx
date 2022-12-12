@@ -375,7 +375,7 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
 
   protected type = StepType.TanzuCommand
   protected stepName = 'Tanzu Command'
-  protected stepIcon: IconName = 'cog' //Todo
+  protected stepIcon: IconName = 'tanzuCommand'
   protected referenceId = 'TanzuCommandStep'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.TanzuCommandScript'
 

@@ -45,7 +45,7 @@ export class TasCanaryAppSetupStep extends PipelineStep<TasCanaryAppSetupData> {
 
   protected type = StepType.CanaryAppSetup
   protected stepName = 'Canary App Setup'
-  protected stepIcon: IconName = 'cog' // TODO
+  protected stepIcon: IconName = 'tasCanarySetup'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.TASBasicAppSetup' // BG APP DESC
   protected isHarnessSpecific = false
   protected invocationMap: Map<

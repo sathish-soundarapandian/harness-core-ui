@@ -45,7 +45,7 @@ export class TASBasicAppSetupStep extends PipelineStep<TASBasicAppSetupData> {
 
   protected type = StepType.BasicAppSetup
   protected stepName = 'Basic App Setup'
-  protected stepIcon: IconName = 'cog' // TODO
+  protected stepIcon: IconName = 'tasBasicSetup'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.TASBasicAppSetup'
   protected isHarnessSpecific = false
   protected invocationMap: Map<
