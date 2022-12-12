@@ -53,7 +53,7 @@ describe('Verify Step Addition', () => {
     ).as('pipelineList')
 
     cy.visit(
-      '#/account/accountId/cd/orgs/default/projects/project1/pipelines/testCypressInit/pipeline-studio/?storeType=INLINE&stageId=test&sectionId=EXECUTION',
+      'account/accountId/cd/orgs/default/projects/project1/pipelines/testCypressInit/pipeline-studio/?storeType=INLINE&stageId=test&sectionId=EXECUTION',
       {
         timeout: 30000
       }
