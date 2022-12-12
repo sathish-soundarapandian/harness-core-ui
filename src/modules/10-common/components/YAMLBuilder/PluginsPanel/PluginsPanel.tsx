@@ -132,13 +132,10 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                   {_formik => {
                     return (
                       <FormikForm>
-                        <FormInput.Text name="command" placeholder={'Enter a command'} label={'Command'} />
-                        <FormInput.TextArea
-                          name="pathToProjects"
-                          placeholder={'Enter path to projects'}
-                          label={'Path to projects'}
-                        />
-                        <FormInput.Text name="arguments" placeholder={'Enter arguments'} label={'Arguments'} />
+                        <FormInput.Text name="connectorRef" label={'Connector'} />
+                        <FormInput.Text name="image" label={'Image'} />
+                        <FormInput.Text name="shell" label={'Shell'} />
+                        <FormInput.TextArea name="command" label={'Command'} textArea={{ style: { maxHeight: 150 } }} />
                         <Button style={{ height: '40px', width: '100px' }} type="submit">
                           {getString('add')}
                         </Button>
@@ -146,9 +143,6 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                     )
                   }}
                 </Formik>
-                {!isEmpty(existingPluginValues) && existingPluginValues && !existingPluginValues.shouldInsertYAML ? (
-                  <Text lineClamp={1}>{JSON.stringify(existingPluginValues)}</Text>
-                ) : null}
               </Layout.Vertical>
             ) : (
               <Layout.Vertical>

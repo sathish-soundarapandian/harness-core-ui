@@ -188,6 +188,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const yamlError = getString('yamlBuilder.yamlError')
 
+  const shouldRenderPluginsPanel: boolean = !isReadOnlyMode && isEditModeSupported && showPluginsPanel
+
   const handler = React.useMemo(
     () =>
       ({
@@ -926,7 +928,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           if (Array.isArray(stageForTheFoundIndex)) {
             const closestStepIndex = getClosestIndexToSearchToken(cursorPosition, 'step:', stageForTheFoundIndex.length)
             const stepYAMLPath = `${getStageYAMLPathForStageIndex(closestStageIndex)}.${closestStepIndex}.step`
-            const stepValuesObj = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
+            const stepValuesObj = get(get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>, 'spec')
             setPluginValuesSelected(stepValuesObj)
             const stepValueTokens = yamlStringify(stepValuesObj).split('\n').length
             return stepValueTokens > 0 ? stepValueTokens - 1 : 0
@@ -942,7 +944,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   useEffect(() => {
     const editor = editorRef.current?.editor
-    if (editor) {
+    if (shouldRenderPluginsPanel && editor) {
       const matchingPositions = findPositionsForMatchingKeys(editor, 'step:')
       if (matchingPositions.length) {
         disposeExistingCodeLensRegistrations()
@@ -961,7 +963,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         })
       }
     }
-  }, [currentYaml, editorRef.current?.editor])
+  }, [currentYaml, editorRef.current?.editor, shouldRenderPluginsPanel])
 
   const highlightInsertedText = useCallback(
     (fromLine: number, toLineNum: number): void => {
@@ -1018,7 +1020,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             css.main,
             { [css.darkBg]: theme === 'DARK' },
             { [css.borderWithErrorPanel]: showErrorFooter },
-            { [css.borderWithPluginsPanel]: showPluginsPanel }
+            { [css.borderWithPluginsPanel]: shouldRenderPluginsPanel }
           )}
         >
           <div className={css.editor}>
@@ -1028,7 +1030,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         </div>
         {showErrorFooter ? <Container padding={{ bottom: 'medium' }}>{renderErrorPanel()}</Container> : null}
       </Layout.Vertical>
-      {showPluginsPanel ? (
+      {shouldRenderPluginsPanel ? (
         <PluginsPanel
           height={height}
           onPluginAdd={insertPluginIntoExistingYAML}

@@ -184,7 +184,7 @@ function PipelineYamlView(): React.ReactElement {
             }}
             yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}
             height={'calc(100vh - 215px)'}
-            width="50vw"
+            width={isReadonly || !isYamlEditable ? '78vw' : '50vw'}
             invocationMap={stepsFactory.getInvocationMap()}
             schema={schema}
             onEnableEditMode={enableEditMode}
