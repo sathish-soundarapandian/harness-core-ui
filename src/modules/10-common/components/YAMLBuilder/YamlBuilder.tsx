@@ -983,7 +983,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   )
 
   const wrapPlugInputInAStep = useCallback((pluginInput: Record<string, any>): Record<string, any> => {
-    return { step: pluginInput }
+    return { step: { spec: pluginInput } }
   }, [])
 
   const insertPluginIntoExistingYAML = useCallback(
