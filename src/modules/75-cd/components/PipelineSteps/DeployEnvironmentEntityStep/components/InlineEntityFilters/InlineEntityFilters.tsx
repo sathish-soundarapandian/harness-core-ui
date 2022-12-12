@@ -9,7 +9,7 @@ import React, { BaseSyntheticEvent, PropsWithChildren, ReactNode, useState } fro
 import cx from 'classnames'
 import { useFormikContext } from 'formik'
 import { get } from 'lodash-es'
-import { Card, Text } from '@harness/uicore'
+import { Card, Container, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { RadioGroup } from '@blueprintjs/core'
 
@@ -32,6 +32,7 @@ export default function InlineEntityFilters<T>({
   hasTopMargin,
   baseComponent,
   entityFilterListProps,
+  gridAreaProps,
   children
 }: PropsWithChildren<InlineEntityFiltersProps>): React.ReactElement {
   const { getString } = useStrings()
@@ -47,7 +48,7 @@ export default function InlineEntityFilters<T>({
     onRadioValueChange?.(selectedRadioValue)
   }
 
-  const renderInlineEntityFilters = (inlineEntityFilterChildren: ReactNode): React.ReactElement => (
+  const renderHeaderAndRadioGroup = (): React.ReactElement => (
     <>
       <Text font={{ variation: FontVariation.CARD_TITLE }} margin={{ bottom: 'small' }}>
         {getString(entityStringKey)}
@@ -71,16 +72,43 @@ export default function InlineEntityFilters<T>({
         className={css.radioGroup}
         inline
       />
-
-      {radioValue === InlineEntityFiltersRadioType.MANUAL && baseComponent}
-
-      {radioValue === InlineEntityFiltersRadioType.FILTERS && (
-        <EntityFilterList<T> filterPrefix={filterPrefix} readonly={readonly} {...entityFilterListProps} />
-      )}
-
-      {radioValue === InlineEntityFiltersRadioType.MANUAL && inlineEntityFilterChildren}
     </>
   )
+
+  const renderInlineEntityFilters = (inlineEntityFilterChildren: ReactNode): React.ReactElement => {
+    const renderContent = (): React.ReactElement => (
+      <>
+        {radioValue === InlineEntityFiltersRadioType.MANUAL && baseComponent}
+
+        {radioValue === InlineEntityFiltersRadioType.FILTERS && (
+          <EntityFilterList<T> filterPrefix={filterPrefix} readonly={readonly} {...entityFilterListProps} />
+        )}
+
+        {radioValue === InlineEntityFiltersRadioType.MANUAL && inlineEntityFilterChildren}
+      </>
+    )
+
+    return (
+      <>
+        {gridAreaProps ? (
+          <>
+            <Container style={{ gridArea: gridAreaProps.headerAndRadio }}>{renderHeaderAndRadioGroup()}</Container>
+            <Card
+              className={cx(css.inlineEntityFilterCard, { [css.topMargin]: hasTopMargin })}
+              style={{ gridArea: gridAreaProps.content }}
+            >
+              {renderContent()}
+            </Card>
+          </>
+        ) : (
+          <>
+            {renderHeaderAndRadioGroup()}
+            {renderContent()}
+          </>
+        )}
+      </>
+    )
+  }
 
   return showCard ? (
     <Card className={cx(css.inlineEntityFilterCard, { [css.topMargin]: hasTopMargin })}>

@@ -243,7 +243,8 @@ export function EnvironmentEntityCard({
                   name: getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
                 }),
                 tags: getString('common.filterOnName', { name: getString('typeLabel') })
-              }
+              },
+              allowableTypes
             }}
           />
         </>

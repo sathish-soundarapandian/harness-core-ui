@@ -24,7 +24,7 @@ import {
 } from '@harness/uicore'
 import { defaultTo, get, isArray } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import type { ResponsePageServiceResponse, ServiceResponseDTO } from 'services/cd-ng'
+import type { EnvironmentResponseDTO, ResponsePageServiceResponse } from 'services/cd-ng'
 import RbacButton from '@rbac/components/Button/Button'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
@@ -34,26 +34,23 @@ import {
   MultiTypeReferenceInputProps,
   ReferenceSelectProps
 } from '@common/components/ReferenceSelect/ReferenceSelect'
-import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { getReferenceFieldProps } from './Utils'
-import css from './FormMultiTypeServiceField.module.scss'
+import css from './FormMultiTypeEnvironmentField.module.scss'
 
-export interface ServiceReferenceFieldProps extends Omit<IFormGroupProps, 'label'> {
+export interface EnvironmentReferenceFieldProps extends Omit<IFormGroupProps, 'label'> {
   name: string
   label: string | React.ReactElement
   placeholder: string
   tooltipProps?: DataTooltipInterface
-  deploymentType: ServiceDeploymentType
-  gitOpsEnabled: boolean | undefined
   style?: React.CSSProperties
   openAddNewModal?: () => void
   disabled?: boolean
   createNewLabel?: string
   isDrawerMode?: boolean
   multitypeInputValue?: MultiTypeInputType
-  multiTypeProps?: Omit<MultiTypeReferenceInputProps<ServiceResponseDTO>, 'name' | 'referenceSelectProps'>
+  multiTypeProps?: Omit<MultiTypeReferenceInputProps<EnvironmentResponseDTO>, 'name' | 'referenceSelectProps'>
   setRefValue?: boolean
   onChange?: (service: any) => void
   selected?: string
@@ -89,13 +86,11 @@ function generateInitialValues(selected: SelectOption[] | string): (string | Ite
   return selected
 }
 
-export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.ReactElement {
+export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps): React.ReactElement {
   const {
     name,
     style,
     createNewLabel,
-    deploymentType,
-    gitOpsEnabled,
     multitypeInputValue,
     multiTypeProps = {},
     setRefValue = false,
@@ -114,7 +109,7 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const [page, setPage] = useState(0)
-  const [pagedServiceData, setPagedServiceData] = useState<ResponsePageServiceResponse>({})
+  const [pagedEnvironmentData, setPagedEnvironmentData] = useState<ResponsePageServiceResponse>({})
   const [hideModal, setHideModal] = useState(false)
   const selected = generateInitialValues(get(formik?.values, name, isMultiSelect ? [] : ''))
   const [selectedValue, setSelectedValue] = React.useState<any>(selected)
@@ -138,24 +133,22 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     selected,
     placeholder,
     isMultiSelect,
-    deploymentType,
-    gitOpsEnabled,
-    setPagedServiceData,
-    selectedServices: Array.isArray(selected) ? selected : [],
+    setPagedEnvironmentData,
+    selectedEnvironments: Array.isArray(selected) ? selected : [],
     getString
   })
-  const handleMultiSelectChange = (svcs: any): void => {
-    const services = svcs.map((svc: any) => ({ label: svc.identifier, value: svc.identifier }))
-    formik.setFieldValue(name, services)
-    onMultiSelectChange(services)
+  const handleMultiSelectChange = (envs: any): void => {
+    const environments = envs.map((env: any) => ({ label: env.identifier, value: env.identifier }))
+    formik.setFieldValue(name, environments)
+    onMultiSelectChange(environments)
   }
   return (
     <div style={style}>
-      <Container data-testid="serviceTooltip">
+      <Container data-testid="environmentTooltip">
         <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} className={Classes.LABEL} />
       </Container>
       <FormGroup {...rest} labelFor={name} helperText={helperText} intent={intent}>
-        <MultiTypeReferenceInput<ServiceResponseDTO>
+        <MultiTypeReferenceInput<EnvironmentResponseDTO>
           name={name}
           disabled={disabled}
           referenceSelectProps={
@@ -163,7 +156,7 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
               ...getReferenceFieldPropsValues,
               isNewConnectorLabelVisible: isNewConnectorLabelVisible,
               placeholderClass: css.placeholderClass,
-              createNewLabel: createNewLabel || 'Service',
+              createNewLabel: createNewLabel || 'Environment',
               disabled: disabled,
               disableCollapse: true,
               selectedRenderer: getSelectedRenderer(selected),
@@ -171,9 +164,9 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
               onMultiSelectChange: handleMultiSelectChange,
               isMultiSelect: isMultiSelect,
               pagination: {
-                itemCount: pagedServiceData?.data?.totalItems || 0,
-                pageSize: pagedServiceData?.data?.pageSize || 10,
-                pageCount: pagedServiceData?.data?.totalPages || -1,
+                itemCount: pagedEnvironmentData?.data?.totalItems || 0,
+                pageSize: pagedEnvironmentData?.data?.pageSize || 10,
+                pageCount: pagedEnvironmentData?.data?.totalPages || -1,
                 pageIndex: page || 0,
                 gotoPage: pageIndex => setPage(pageIndex)
               },
@@ -184,16 +177,16 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
                     openAddNewModal?.()
                     setHideModal(true)
                   }}
-                  text={`+ ${createNewLabel || 'Service'}`}
+                  text={`+ ${createNewLabel || 'Environment'}`}
                   margin={{ right: 'small' }}
                   // TODO add permissions here depending on the tab from which it is clicked
                 ></RbacButton>
               ) : null
-            } as ReferenceSelectProps<ServiceResponseDTO>
+            } as ReferenceSelectProps<EnvironmentResponseDTO>
           }
           onChange={(val, _valueType, type1) => {
             if (val && type1 === MultiTypeInputType.FIXED) {
-              const { record, scope } = val as unknown as { record: ServiceResponseDTO; scope: Scope }
+              const { record, scope } = val as unknown as { record: EnvironmentResponseDTO; scope: Scope }
               const value = {
                 label: record.name,
                 value:

@@ -29,6 +29,8 @@ import { useDeepCompareEffect } from '@common/hooks'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import type { DeployServiceEntityData, DeployServiceEntityCustomProps } from './DeployServiceEntityUtils'
 import { useGetServicesData } from './useGetServicesData'
@@ -70,6 +72,7 @@ export function DeployServiceEntityInputStep({
   const servicesValue: ServiceYamlV2[] = get(initialValues, `services.values`, [])
   const serviceTemplate = inputSetData?.template?.service?.serviceRef
   const servicesTemplate = inputSetData?.template?.services?.values
+  const { GLOBAL_SERVICE_ENV } = useFeatureFlags()
   const serviceIdentifiers: string[] = useMemo(() => {
     if (serviceValue) {
       return [serviceValue]
@@ -215,30 +218,53 @@ export function DeployServiceEntityInputStep({
 
   const loading = loadingServicesList || loadingServicesData || updatingData
 
+  const commonProps = {
+    name: isMultiSvcTemplate ? uniquePath.current : `${localPathPrefix}serviceRef`,
+    tooltipProps: { dataTooltipId: 'specifyYourService' },
+    label: isMultiSvcTemplate
+      ? getString('cd.pipelineSteps.serviceTab.specifyYourServices')
+      : getString('cd.pipelineSteps.serviceTab.specifyYourService'),
+    disabled: inputSetData?.readonly || isMultiSvcTemplate ? loading : false
+  }
+
   return (
     <>
       <Layout.Horizontal style={{ alignItems: 'flex-end' }}>
         <div className={css.inputFieldLayout}>
           {getMultiTypeFromValue(serviceTemplate) === MultiTypeInputType.RUNTIME ? (
-            <ExperimentalInput
-              tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-              label={getString('cd.pipelineSteps.serviceTab.specifyYourService')}
-              name={`${localPathPrefix}serviceRef`}
-              placeholder={getString('cd.pipelineSteps.serviceTab.selectService')}
-              selectItems={selectOptions}
-              useValue
-              multiTypeInputProps={{
-                expressions,
-                allowableTypes: allowableTypes,
-                selectProps: {
-                  addClearBtn: !inputSetData?.readonly,
-                  items: selectOptions
-                }
-              }}
-              disabled={inputSetData?.readonly}
-              className={css.inputWidth}
-              formik={formik}
-            />
+            GLOBAL_SERVICE_ENV ? (
+              <MultiTypeServiceField
+                {...commonProps}
+                deploymentType={deploymentType as ServiceDeploymentType}
+                gitOpsEnabled={gitOpsEnabled}
+                placeholder={getString('cd.pipelineSteps.serviceTab.selectService')}
+                setRefValue={true}
+                isNewConnectorLabelVisible={false}
+                width={300}
+                multiTypeProps={{
+                  expressions,
+                  allowableTypes,
+                  defaultValueToReset: ''
+                }}
+              />
+            ) : (
+              <ExperimentalInput
+                {...commonProps}
+                placeholder={getString('cd.pipelineSteps.serviceTab.selectService')}
+                selectItems={selectOptions}
+                useValue
+                multiTypeInputProps={{
+                  expressions,
+                  allowableTypes: allowableTypes,
+                  selectProps: {
+                    addClearBtn: !inputSetData?.readonly,
+                    items: selectOptions
+                  }
+                }}
+                className={css.inputWidth}
+                formik={formik}
+              />
+            )
           ) : null}
           {getMultiTypeFromValue(get(formik?.values, `${localPathPrefix}serviceRef`)) ===
             MultiTypeInputType.RUNTIME && (
@@ -259,24 +285,38 @@ export function DeployServiceEntityInputStep({
           )}
         </div>
         {isMultiSvcTemplate ? (
-          <FormMultiTypeMultiSelectDropDown
-            tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-            label={getString('cd.pipelineSteps.serviceTab.specifyYourServices')}
-            name={uniquePath.current}
-            disabled={inputSetData?.readonly || loading}
-            dropdownProps={{
-              items: selectOptions,
-              placeholder: getString('services'),
-              disabled: loading || inputSetData?.readonly
-            }}
-            onChange={handleServicesChange}
-            multiTypeProps={{
-              width: 300,
-              height: 32,
-              expressions,
-              allowableTypes
-            }}
-          />
+          GLOBAL_SERVICE_ENV ? (
+            <MultiTypeServiceField
+              {...commonProps}
+              deploymentType={deploymentType as ServiceDeploymentType}
+              gitOpsEnabled={gitOpsEnabled}
+              placeholder={getString('services')}
+              isMultiSelect={true}
+              onMultiSelectChange={handleServicesChange}
+              width={300}
+              isNewConnectorLabelVisible={false}
+              multiTypeProps={{
+                expressions,
+                allowableTypes
+              }}
+            />
+          ) : (
+            <FormMultiTypeMultiSelectDropDown
+              {...commonProps}
+              dropdownProps={{
+                items: selectOptions,
+                placeholder: getString('services'),
+                disabled: loading || inputSetData?.readonly
+              }}
+              onChange={handleServicesChange}
+              multiTypeProps={{
+                width: 300,
+                height: 32,
+                expressions,
+                allowableTypes
+              }}
+            />
+          )
         ) : null}
         {loading ? <Spinner className={css.inputSetSpinner} size={16} /> : null}
       </Layout.Horizontal>

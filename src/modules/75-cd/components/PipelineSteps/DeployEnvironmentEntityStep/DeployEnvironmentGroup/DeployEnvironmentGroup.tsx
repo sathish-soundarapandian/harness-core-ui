@@ -29,7 +29,6 @@ import { useStrings } from 'framework/strings'
 import type { EnvironmentGroupResponseDTO } from 'services/cd-ng'
 
 import type { Scope } from '@common/interfaces/SecretsInterface'
-import { isValueRuntimeInput } from '@common/utils/utils'
 
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -214,9 +213,6 @@ export default function DeployEnvironmentGroup({
             defaultValueToReset: '',
             onChange: item => {
               setSelectedEnvironmentGroups(getSelectedEnvironmentGroupsFromOptions([item as SelectOption]))
-              if (isValueRuntimeInput(item)) {
-                setFieldValue('environments', RUNTIME_INPUT_VALUE)
-              }
             }
           }}
           selectItems={selectOptions}
@@ -287,10 +283,11 @@ export default function DeployEnvironmentGroup({
               filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
               placeholderProps: {
                 entity: getString('common.filterOnName', {
-                  name: 'environments or' + getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
+                  name: 'environments or ' + getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
                 }),
                 tags: getString('common.filterOnName', { name: getString('typeLabel') })
-              }
+              },
+              allowableTypes
             }}
           >
             <InlineEntityFilters
@@ -337,7 +334,8 @@ export default function DeployEnvironmentGroup({
                     name: getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
                   }),
                   tags: getString('common.filterOnName', { name: getString('typeLabel') })
-                }
+                },
+                allowableTypes
               }}
             />
           </InlineEntityFilters>

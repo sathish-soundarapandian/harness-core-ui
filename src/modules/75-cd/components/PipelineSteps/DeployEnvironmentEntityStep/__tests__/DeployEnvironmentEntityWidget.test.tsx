@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { useFormikContext } from 'formik'
 import { getAllByRole, render, screen, waitFor } from '@testing-library/react'
@@ -37,6 +44,15 @@ jest.mock('../DeployEnvironment/DeployEnvironment', () => ({
   }
 }))
 
+jest.mock('../components/InlineEntityFilters/InlineEntityFilters', () => ({
+  __esModule: true,
+  default: () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const formik = useFormikContext()
+    return <div data-testid="mock-inline-entity-filters">{JSON.stringify(formik.values)}</div>
+  }
+}))
+
 describe('deploy environment entity widget', () => {
   test('renders single environment and can toggle empty state to multi environment', async () => {
     render(
@@ -62,7 +78,9 @@ describe('deploy environment entity widget', () => {
 
     await waitFor(() => expect(multiEnvToggle).toBeChecked())
     await waitFor(() =>
-      expect(screen.getByText('{"category":"multi","parallel":true,"environments":[]}')).toBeVisible()
+      expect(
+        screen.getByText('{"category":"multi","parallel":true,"environments":[],"environmentFilters":{}}')
+      ).toBeVisible()
     )
   })
 
@@ -100,7 +118,7 @@ describe('deploy environment entity widget', () => {
     await waitFor(() =>
       expect(
         screen.getByText(
-          '{"category":"multi","parallel":true,"environments":[{"label":"Env_1","value":"Env_1"}],"infrastructures":{"Env_1":[]}}'
+          '{"category":"multi","parallel":true,"environments":[{"label":"Env_1","value":"Env_1"}],"environmentFilters":{},"infrastructures":{"Env_1":[]}}'
         )
       ).toBeVisible()
     )

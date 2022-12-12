@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { AllowedTypes } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
 
 export enum InlineEntityFiltersRadioType {
@@ -28,6 +29,11 @@ export interface InlineEntityFiltersProps {
       entity: string
       tags: string
     }
+    allowableTypes: AllowedTypes
+  }
+  gridAreaProps?: {
+    headerAndRadio: string
+    content: string
   }
 }
 
@@ -53,14 +59,7 @@ export const entityFilterTypeStringsMap: Record<EntityFilterType, StringKeys> = 
   tags: 'tagsLabel'
 }
 
-export interface EntityFilterListProps {
+export type EntityFilterListProps = InlineEntityFiltersProps['entityFilterListProps'] & {
   filterPrefix: string
   readonly: boolean
-  entities: EntityType[]
-  filters: EntityFilterType[]
-  defaultFilterType?: EntityFilterType
-  placeholderProps: {
-    entity: string
-    tags: string
-  }
 }
