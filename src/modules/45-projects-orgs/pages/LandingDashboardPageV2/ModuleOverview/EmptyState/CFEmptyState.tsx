@@ -1,12 +1,17 @@
 import { Button, ButtonVariation, Layout } from '@harness/uicore'
 import React from 'react'
+import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import routes from '@common/RouteDefinitions'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from './EmptyStateExpandedView'
 import EmptyStateCollapsedView from './EmptyStateCollapsedView'
 
 const CFEmptyState: React.FC<ModuleOverviewBaseProps> = ({ isExpanded }) => {
   const { getString } = useStrings()
+  const { accountId } = useParams<AccountPathProps>()
+  const history = useHistory()
   if (isExpanded) {
     return (
       <EmptyStateExpandedView
@@ -18,7 +23,16 @@ const CFEmptyState: React.FC<ModuleOverviewBaseProps> = ({ isExpanded }) => {
         ]}
         footer={
           <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ bottom: 'small' }}>
-            <Button variation={ButtonVariation.PRIMARY}>{getString('getStarted')}</Button>
+            <Button
+              variation={ButtonVariation.PRIMARY}
+              onClick={e => {
+                e.preventDefault()
+                e.stopPropagation()
+                history.push(routes.toCF({ accountId }))
+              }}
+            >
+              {getString('getStarted')}
+            </Button>
             <Button variation={ButtonVariation.LINK} rightIcon="launch">
               {getString('common.learnMore')}
             </Button>
