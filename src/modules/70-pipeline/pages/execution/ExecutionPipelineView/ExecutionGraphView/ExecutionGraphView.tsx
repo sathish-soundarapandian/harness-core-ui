@@ -62,6 +62,7 @@ export default function ExecutionGraphView(): React.ReactElement {
     allNodeMap,
     pipelineStagesMap,
     selectedStageId,
+    selectedChildStageId,
     selectedStageExecutionId,
     queryParams,
     setSelectedStepId,
@@ -93,6 +94,7 @@ export default function ExecutionGraphView(): React.ReactElement {
         view: queryParams?.view,
         stage: selectedStageId,
         ...(selectedStageExecutionId && { stageExecId: selectedStageExecutionId }),
+        ...(selectedChildStageId && { childStage: selectedChildStageId }),
         step
       }
 

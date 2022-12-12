@@ -396,6 +396,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         pipelineStagesMap,
         isPipelineInvalid,
         selectedStageId,
+        selectedChildStageId,
         selectedStepId,
         selectedStageExecutionId,
         loading,

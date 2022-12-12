@@ -23,6 +23,7 @@ export interface ExecutionContextParams {
   pipelineStagesMap: Map<string, GraphLayoutNode>
   isPipelineInvalid?: boolean
   selectedStageId: string
+  selectedChildStageId?: string
   selectedStepId: string
   selectedStageExecutionId: string
   loading: boolean
@@ -46,6 +47,7 @@ export const ExecutionContext = createContext<ExecutionContextParams>({
   pipelineStagesMap: new Map(),
   isPipelineInvalid: false,
   selectedStageId: '',
+  selectedChildStageId: '',
   selectedStepId: '',
   selectedStageExecutionId: '',
   loading: false,

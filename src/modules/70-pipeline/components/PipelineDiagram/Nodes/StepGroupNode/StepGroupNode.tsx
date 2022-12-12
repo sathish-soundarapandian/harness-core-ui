@@ -13,10 +13,18 @@ import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
-import { isExecutionRunning, ExecutionStatus } from '@pipeline/utils/statusHelpers'
+import {
+  isExecutionRunning,
+  ExecutionStatus,
+  isExecutionSkipped,
+  isExecutionNotStarted
+} from '@pipeline/utils/statusHelpers'
 import type { ExecutionGraph } from 'services/pipeline-ng'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import { useUpdateQueryParams } from '@common/hooks'
+import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
+import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
 import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
 import SVGMarker from '../SVGMarker'
@@ -29,6 +37,8 @@ import css from './StepGroupNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
 export function StepGroupNode(props: any): JSX.Element {
+  const { replaceQueryParams } = useUpdateQueryParams<ExecutionPageQueryParams>()
+  const { queryParams } = useExecutionContext()
   const allowAdd = defaultTo(props.allowAdd, false)
   const { getString } = useStrings()
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
@@ -98,6 +108,20 @@ export function StepGroupNode(props: any): JSX.Element {
           onClick={() => {
             if (props?.type !== 'Pipeline' && isEmpty(stepsData) && isExecutionView) {
               showPrimary(getString('pipeline.execution.emptyStepGroup'))
+            }
+            if (props?.type === 'Pipeline') {
+              if (
+                isExecutionNotStarted(props?.status) ||
+                isExecutionSkipped(props?.status) ||
+                isExecutionRunning(props?.status)
+              )
+                return
+              const params = {
+                ...queryParams,
+                stage: props?.id
+              }
+              delete params?.childStage
+              replaceQueryParams(params)
             }
             setNodeCollapsed(false)
           }}
@@ -255,9 +279,18 @@ export function StepGroupNode(props: any): JSX.Element {
                       font={{ variation: FontVariation.LEAD }}
                       color={Color.PRIMARY_7}
                       lineClamp={1}
+                      style={{ lineHeight: '18px', maxWidth: '90px' }}
+                      margin={{ right: 'xsmall' }}
+                    >
+                      {`${executionMetaData?.pipelineIdentifier}`}
+                    </Text>
+                    <Text
+                      font={{ variation: FontVariation.LEAD }}
+                      color={Color.PRIMARY_7}
+                      lineClamp={1}
                       style={{ lineHeight: '18px' }}
                     >
-                      {`${executionMetaData?.pipelineIdentifier} (ID: ${executionMetaData?.runSequence})`}
+                      {`(ID: ${executionMetaData?.runSequence})`}
                     </Text>
                     <Icon name="launch" color={Color.PRIMARY_7} size={14} margin={{ left: 'xsmall' }} />
                   </Link>

@@ -84,8 +84,17 @@ function ExecutionMetadataTrigger(): React.ReactElement {
             className={css.parentPipelineDetails}
           >
             <Icon name="chained-pipeline" color={Color.PRIMARY_7} size={20} margin={{ right: 'xsmall' }} />
+            <Text
+              font={{ variation: FontVariation.LEAD }}
+              color={Color.PRIMARY_7}
+              lineClamp={1}
+              style={{ maxWidth: '150px' }}
+              margin={{ right: 'xsmall' }}
+            >
+              {`${identifier}`}
+            </Text>
             <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
-              {`${identifier} (ID: ${runsequence})`}
+              {`(ID: ${runsequence})`}
             </Text>
           </Link>
         )}
