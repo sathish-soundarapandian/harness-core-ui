@@ -271,7 +271,7 @@ export class AppResizeStep extends PipelineStep<AppResizeData> {
   protected type = StepType.AppResize
   protected stepName = 'App Resize'
   protected referenceId = 'appResizeStep'
-  protected stepIcon: IconName = 'cog'
+  protected stepIcon: IconName = 'tasAppResize'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AppResize'
   protected isHarnessSpecific = false
   protected defaultValues: AppResizeData = {

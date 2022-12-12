@@ -47,7 +47,9 @@ export enum InstanceTypes {
 }
 export interface InstanceFieldValue {
   type: InstanceTypes
-  value: number | string
+  spec: {
+    value?: number | string
+  }
 }
 export interface GetDurationValidationSchemaProps {
   maximum?: number
@@ -136,7 +138,7 @@ export const InstanceDropdownField: React.FC<InstanceDropdownFieldProps> = ({
   return (
     <FormGroup labelFor={name} label={label} className={css.formGroup} {...restProps}>
       <MultiTextInput
-        name={`${name}.value`}
+        name={`${name}.spec.value`}
         textProps={{
           type: 'number',
           placeholder: isPercentageType
@@ -152,13 +154,13 @@ export const InstanceDropdownField: React.FC<InstanceDropdownFieldProps> = ({
           } else if (val) {
             finalValue = val as string
           }
-          onChange?.({ ...value, value: finalValue as string })
+          onChange?.({ ...value, spec: { value: finalValue } })
         }}
         expressions={expressions}
         allowableTypes={allowableTypes}
         disabled={readonly}
         key={isPercentageType ? 'percent' : 'count'}
-        value={value.value as unknown as string}
+        value={value.spec.value as unknown as string}
       />
 
       <Popover
@@ -168,7 +170,7 @@ export const InstanceDropdownField: React.FC<InstanceDropdownFieldProps> = ({
             <MenuItem
               text={getString('instanceFieldOptions.percentageText')}
               onClick={() => {
-                onChange?.({ value: 100, type: InstanceTypes.Percentage })
+                onChange?.({ spec: { value: 100 }, type: InstanceTypes.Percentage })
               }}
               data-name="percentage"
               disabled={readonly}
@@ -176,7 +178,7 @@ export const InstanceDropdownField: React.FC<InstanceDropdownFieldProps> = ({
             <MenuItem
               text={getString('instanceFieldOptions.instanceText')}
               onClick={() => {
-                onChange?.({ value: 1, type: InstanceTypes.Count })
+                onChange?.({ spec: { value: 1 }, type: InstanceTypes.Count })
               }}
               data-name="instances"
               disabled={readonly}
@@ -224,7 +226,7 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
   } = restProps
 
   const value: InstanceFieldValue = get(formik?.values, name, { type: InstanceTypes.Count, value: 0 })
-  const valueForConfigureOptions = value.value as string
+  const valueForConfigureOptions = value?.spec?.value as string
 
   const tooltipContext = React.useContext(FormikTooltipContext)
   const dataTooltipId = tooltipContext?.formName ? `${tooltipContext?.formName}_${name}` : ''
@@ -253,7 +255,7 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
             showDefaultField={false}
             showAdvanced={true}
             onChange={val => {
-              formik?.setFieldValue(name, { ...value, value: val })
+              formik?.setFieldValue(name, { ...value, spec: { value: val } })
             }}
             style={{ marginTop: 'var(--spacing-6)' }}
             allowedValuesType={ALLOWED_VALUES_TYPE.NUMBER}
