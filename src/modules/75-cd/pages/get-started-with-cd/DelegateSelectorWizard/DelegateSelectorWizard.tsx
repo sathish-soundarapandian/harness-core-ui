@@ -183,7 +183,7 @@ const DelegateSelectorWizardRef = (
     isEditMode: false,
     isGitSyncEnabled: false,
     afterSuccessHandler: noop,
-    skipGoveranceCheck: true,
+    skipGovernanceCheck: true,
     hideSuccessToast: true
   })
 

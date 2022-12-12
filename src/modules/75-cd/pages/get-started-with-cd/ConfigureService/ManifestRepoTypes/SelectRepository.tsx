@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { defaultTo, isEmpty } from 'lodash-es'
@@ -37,7 +37,6 @@ export const SelectRepository = (props: SelectRepositoryProps): React.ReactEleme
   const { getString } = useStrings()
   const [repository, setRepository] = useState<UserRepoResponse | undefined>(selectedRepository)
   const [query, setQuery] = useState<string>('')
-  const [repositories, setRepositories] = useState<UserRepoResponse[]>()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   const {
@@ -68,23 +67,18 @@ export const SelectRepository = (props: SelectRepositoryProps): React.ReactEleme
   }, [accountId, fetchRepositories, orgIdentifier, projectIdentifier, validatedConnectorRef])
 
   useEffect(() => {
-    setRepositories(repoData?.data)
-  }, [repoData?.data])
-
-  useEffect(() => {
     if (selectedRepository) {
       setRepository(selectedRepository)
     }
   }, [selectedRepository])
 
-  useEffect(() => {
+  const repositories = useMemo(() => {
     if (query) {
-      setRepositories((repoData?.data || []).filter(item => item.name?.includes(query)))
+      return (repoData?.data || []).filter(item => item.name?.includes(query))
     } else {
-      setRepositories(repoData?.data)
+      return repoData?.data
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query])
+  }, [query, repoData?.data])
 
   useEffect(() => {
     !isEmpty(repository) && onChange?.(repository as UserRepoResponse)

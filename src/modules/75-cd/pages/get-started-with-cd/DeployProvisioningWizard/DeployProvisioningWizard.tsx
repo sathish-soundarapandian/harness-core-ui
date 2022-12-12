@@ -62,7 +62,7 @@ const WizardStepOrder = [
 ]
 
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
-  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.SelectDeploymentType } = props
+  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.RunPipeline } = props
   const {
     state: { service: serviceData, selectedSectionId, infrastructure, environment },
     setSelectedSectionId

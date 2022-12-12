@@ -288,7 +288,6 @@ export default (
       exact
       layout={EmptyLayout}
       licenseRedirectData={licenseRedirectData}
-      // sidebarProps={CDSideNavProps}
       path={routes.toCDOnboardingWizard({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
       pageName={PAGE_NAME.CDOnboardingWizard}
     >

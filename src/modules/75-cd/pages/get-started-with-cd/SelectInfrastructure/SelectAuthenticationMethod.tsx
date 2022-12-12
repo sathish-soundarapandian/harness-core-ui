@@ -183,7 +183,7 @@ const SelectAuthenticationMethodRef = (
     isEditMode: false,
     isGitSyncEnabled: false,
     afterSuccessHandler,
-    skipGoveranceCheck: true,
+    skipGovernanceCheck: true,
     hideSuccessToast: true
   })
 

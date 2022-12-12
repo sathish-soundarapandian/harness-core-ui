@@ -86,7 +86,7 @@ function K8sValuesManifest({
         ...specValues,
         identifier: initialValues.identifier,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
-        repoName: getRepositoryName(prevStepData, initialValues), //CHECK IN INTIAL CALUE
+        repoName: getRepositoryName(prevStepData, initialValues),
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths

@@ -300,11 +300,12 @@ const ConfigureServiceRef = (
         }
       }
     }
+    // TODO:: CHECK HOW MANY RENDERS WITH WITHOUT
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    formikRef?.current?.values,
-    formikRef?.current?.setFieldTouched,
-    selectGitProviderRef?.current?.values,
+    // formikRef?.current?.values,
+    // formikRef?.current?.setFieldTouched,
+    // selectGitProviderRef?.current?.values,
     serviceIdentifier
   ])
 

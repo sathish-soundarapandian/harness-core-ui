@@ -28,7 +28,6 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
   const { getString } = useStrings()
 
   const environmentEntites: Record<string, string> = {
-    'cd.getStartedWithCD.delegateRunAs': delegate?.delegateType as string,
     connector: delegate?.environmentEntities?.connector as string,
     environment: delegate?.environmentEntities?.environment as string,
     infrastructureText: delegate?.environmentEntities?.infrastructure as string,
@@ -80,7 +79,9 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
                 onClick={() => setSelectedSectionId(DeployProvisiongWizardStepId.SelectDeploymentType)}
               />
             </Layout.Horizontal>
-            <Text font="normal">{service?.serviceDefinition?.type}</Text>
+            <Text margin={{ left: 'medium' }} font="normal">
+              {service?.serviceDefinition?.type}
+            </Text>
           </Layout.Vertical>
 
           <img className={css.successImage} src={successSetup} />
@@ -107,9 +108,22 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
             </Layout.Horizontal>
             {successsFullConfiguration()}
           </Layout.Horizontal>
+          <Text style={{ lineHeight: '28px' }} font={{ variation: FontVariation.BODY1 }}>
+            {getString('cd.getStartedWithCD.delegateRunAs')}
+          </Text>
+          <Container>
+            <Text margin={{ left: 'medium' }} style={{ lineHeight: '28px' }} font="normal">
+              {delegate?.delegateType as string}
+            </Text>
+            {/* TODO:: is delegate installed text */}
+          </Container>
+
+          <Text style={{ lineHeight: '28px' }} font={{ variation: FontVariation.BODY1 }}>
+            {getString('cd.getStartedWithCD.environmentDetails')}
+          </Text>
           {Object.keys(environmentEntites).map(entity => {
             return (
-              <Text key={entity} style={{ lineHeight: '28px' }} font="normal">
+              <Text margin={{ left: 'medium' }} key={entity} style={{ lineHeight: '28px' }} font="normal">
                 {getString(entity as StringKeys)}: {environmentEntites[entity]}
               </Text>
             )
@@ -139,7 +153,7 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
           </Layout.Horizontal>
           {Object.keys(serviceEntities).map(entity => {
             return (
-              <Text key={entity} style={{ lineHeight: '28px' }} font="normal">
+              <Text margin={{ left: 'medium' }} key={entity} style={{ lineHeight: '28px' }} font="normal">
                 {getString(entity as StringKeys)}: {serviceEntities[entity]}
               </Text>
             )

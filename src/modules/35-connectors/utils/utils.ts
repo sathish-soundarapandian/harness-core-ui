@@ -12,6 +12,6 @@ export const connectorGovernanceModalProps = (): UseGovernanceModalProps => {
     errorHeaderMsg: 'connectors.policyEvaluations.failedToSave',
     warningHeaderMsg: 'connectors.policyEvaluations.warning',
     considerWarningAsError: false,
-    skipGoveranceCheck: false
+    skipGovernanceCheck: false
   }
 }

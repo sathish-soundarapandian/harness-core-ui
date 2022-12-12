@@ -212,7 +212,7 @@ const ArtifactoryAuthStep = ({
     isGitSyncEnabled: false,
     afterSuccessHandler: noop,
     onErrorHandler,
-    skipGoveranceCheck: true,
+    skipGovernanceCheck: true,
     hideSuccessToast: true
   })
 

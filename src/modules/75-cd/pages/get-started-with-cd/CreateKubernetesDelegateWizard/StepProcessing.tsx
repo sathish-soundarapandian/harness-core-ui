@@ -44,7 +44,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
   const {
     data,
     loading,
-    refetch: verifyHeartBeat
+    refetch: verifyHeartbeat
   } = useGetDelegatesHeartbeatDetailsV2({
     queryParams: {
       accountId,
@@ -71,14 +71,14 @@ const StepProcessing: FC<StepDelegateData> = props => {
     ) {
       const timerId = window.setTimeout(() => {
         setCounter(counter + POLL_INTERVAL)
-        verifyHeartBeat()
+        verifyHeartbeat()
       }, POLL_INTERVAL)
 
       if (counter >= TIME_OUT * (replicas || 1)) {
         window.clearTimeout(timerId)
         setVerifyHeartBeat(true)
         setShowError(true)
-        trackEvent(CDOnboardingActions.HeartBeatFailedOnboardingYAML, {
+        trackEvent(CDOnboardingActions.HeartbeatFailedOnboardingYAML, {
           category: Category.DELEGATE,
           data: { name: name, delegateType: delegateType }
         })
@@ -97,7 +97,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
       onSuccessHandler && onSuccessHandler({ delegateCreated: true, delegateInstalled: true })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, verifyHeartBeat, loading, onSuccessHandler])
+  }, [data, verifyHeartbeat, loading, onSuccessHandler])
 
   if (showError) {
     return (
@@ -125,7 +125,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
                 <Button
                   variation={ButtonVariation.SECONDARY}
                   onClick={() => {
-                    verifyHeartBeat()
+                    verifyHeartbeat()
                     setShowError(false)
                   }}
                 >

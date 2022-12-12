@@ -42,7 +42,7 @@ interface UseCreateEditConnector {
   afterSuccessHandler: (data: UseSaveSuccessResponse) => void
   gitDetails?: EntityGitDetails
   onErrorHandler?: (data: ResponseMessage) => void
-  skipGoveranceCheck?: boolean
+  skipGovernanceCheck?: boolean
   hideSuccessToast?: boolean
 }
 interface OnInitiateConnectorCreateEditProps<T> {
@@ -57,10 +57,10 @@ export default function useCreateEditConnector<T>(props: UseCreateEditConnector)
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
 
-  const { skipGoveranceCheck = false, hideSuccessToast = false } = props
+  const { skipGovernanceCheck = false, hideSuccessToast = false } = props
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal({
     ...connectorGovernanceModalProps(),
-    skipGoveranceCheck
+    skipGovernanceCheck
   })
   const [connectorPayload, setConnectorPayload] = useState<Connector>({})
   const [connectorResponse, setConnectorResponse] = useState<UseSaveSuccessResponse>()

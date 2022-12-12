@@ -111,7 +111,6 @@ const SelectGitProviderRef = (
 ): React.ReactElement => {
   const { gitValues, connectionStatus, selectedGitProvider, onSuccess } = props
   const { getString } = useStrings()
-  const [gitProvider, setGitProvider] = useState<GitProvider | undefined>(selectedGitProvider)
   const [authMethod, setAuthMethod] = useState<GitAuthenticationMethod | undefined>(gitValues?.gitAuthenticationMethod)
   const [testConnectionStatus, setTestConnectionStatus] = useState<TestStatus>(
     connectionStatus || TestStatus.NOT_INITIATED
@@ -137,25 +136,25 @@ const SelectGitProviderRef = (
 
   //#region OAuth validation and integration
 
-  useEffect(() => {
-    setGitProvider(selectedGitProvider)
-  }, [selectedGitProvider])
+  // useEffect(() => {
+  //   setGitProvider(selectedGitProvider)
+  // }, [selectedGitProvider])
 
   //#region OAuth validation and integration
-  const disableOAuthForGitProvider = gitProvider?.type === Connectors.BITBUCKET
+  const disableOAuthForGitProvider = selectedGitProvider?.type === Connectors.BITBUCKET
   const createOAuthConnector = useCallback(
     ({ tokenRef, refreshTokenRef }: { tokenRef: string; refreshTokenRef?: string }): void => {
-      if (gitProvider?.type) {
+      if (selectedGitProvider?.type) {
         try {
           createConnector(
             set(
               getOAuthConnectorPayload({
                 tokenRef: ACCOUNT_SCOPE_PREFIX.concat(tokenRef),
                 refreshTokenRef: refreshTokenRef ? ACCOUNT_SCOPE_PREFIX.concat(refreshTokenRef) : '',
-                gitProviderType: gitProvider.type as ConnectorInfoDTO['type']
+                gitProviderType: selectedGitProvider.type as ConnectorInfoDTO['type']
               }),
               'connector.spec.url',
-              getGitUrl(getString, gitProvider?.type as ConnectorInfoDTO['type'])
+              getGitUrl(getString, selectedGitProvider?.type as ConnectorInfoDTO['type'])
             )
           )
             .then((createOAuthCtrResponse: ResponseConnectorResponse) => {
@@ -177,14 +176,14 @@ const SelectGitProviderRef = (
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [gitProvider?.type, getString]
+    [selectedGitProvider?.type, getString]
   )
 
   /* Event listener for OAuth server event, this is essential for landing user back to the same tab from where the OAuth started, once it's done */
   const handleOAuthServerEvent = useCallback(
     (event: MessageEvent): void => {
       if (oAuthStatus === Status.IN_PROGRESS) {
-        if (!gitProvider) {
+        if (!selectedGitProvider) {
           return
         }
         if (event.origin !== getBackendServerUrl() && !isEnvironmentAllowedForOAuth()) {
@@ -210,7 +209,7 @@ const SelectGitProviderRef = (
         }
       }
     },
-    [createOAuthConnector, gitProvider, oAuthStatus]
+    [createOAuthConnector, selectedGitProvider, oAuthStatus]
   )
 
   useEffect(() => {
@@ -317,7 +316,7 @@ const SelectGitProviderRef = (
   useEffect(() => {
     if (formikRef.current?.values && formikRef.current?.setFieldTouched) {
       const existingValues = { ...formikRef.current?.values, testConnectionStatus }
-      let updatedValues = set(existingValues, 'gitProvider', gitProvider)
+      let updatedValues = set(existingValues, 'gitProvider', selectedGitProvider)
       updatedValues = set(updatedValues, 'gitAuthenticationMethod', authMethod)
       formikRef.current?.setValues(updatedValues)
 
@@ -330,12 +329,12 @@ const SelectGitProviderRef = (
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formikRef, connector, secret, authMethod, gitProvider, testConnectionStatus, connectorResponse])
+  }, [formikRef, connector, secret, authMethod, selectedGitProvider, testConnectionStatus, connectorResponse])
 
   //#region scm validation
 
   const getSecretPayload = React.useCallback((): SecretDTOV2 => {
-    const gitProviderLabel = gitProvider?.type as string
+    const gitProviderLabel = selectedGitProvider?.type as string
     const secretName = `${gitProviderLabel} ${getString('common.getStarted.accessTokenLabel')}`
     const secretPayload: SecretDTOV2 = {
       name: secretName,
@@ -346,7 +345,7 @@ const SelectGitProviderRef = (
         secretManagerIdentifier: DEFAULT_HARNESS_KMS
       } as SecretTextSpecDTO
     }
-    switch (gitProvider?.type) {
+    switch (selectedGitProvider?.type) {
       case Connectors.GITHUB:
         return set(secretPayload, 'spec.value', formikRef.current?.values.accessToken)
       case Connectors.BITBUCKET:
@@ -357,7 +356,7 @@ const SelectGitProviderRef = (
         return secretPayload
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gitProvider?.type, formikRef.current?.values, getString])
+  }, [selectedGitProvider?.type, formikRef.current?.values, getString])
 
   const getSCMConnectorPayload = React.useCallback(
     (secretId: string, type: GitProvider['type']): ConnectorInfoDTO => {
@@ -368,7 +367,7 @@ const SelectGitProviderRef = (
         spec: {
           executeOnDelegate: false,
           type: 'Account',
-          url: getGitUrl(getString, gitProvider?.type as ConnectorInfoDTO['type']),
+          url: getGitUrl(getString, selectedGitProvider?.type as ConnectorInfoDTO['type']),
           authentication: {
             type: 'Http',
             spec: {}
@@ -377,7 +376,7 @@ const SelectGitProviderRef = (
         }
       }
       let updatedConnectorPayload: ConnectorInfoDTO
-      switch (gitProvider?.type) {
+      switch (selectedGitProvider?.type) {
         case Connectors.GITLAB:
         case Connectors.GITHUB:
           updatedConnectorPayload = set(commonConnectorPayload, 'spec.authentication.spec.type', 'UsernameToken')
@@ -410,7 +409,7 @@ const SelectGitProviderRef = (
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [gitProvider?.type, formikRef.current?.values?.username, getString]
+    [selectedGitProvider?.type, formikRef.current?.values?.username, getString]
   )
 
   const TestConnection = (): React.ReactElement => {
@@ -428,11 +427,11 @@ const SelectGitProviderRef = (
                 if (validateGitProviderSetup()) {
                   setTestConnectionStatus(TestStatus.IN_PROGRESS)
                   setTestConnectionErrors([])
-                  if (gitProvider?.type) {
+                  if (selectedGitProvider?.type) {
                     const createSecretPayload = getSecretPayload()
                     const createConnectorPayload = getSCMConnectorPayload(
                       createSecretPayload.identifier,
-                      gitProvider.type
+                      selectedGitProvider.type
                     )
                     createSCMConnector({
                       secret: createSecretPayload,
@@ -533,11 +532,11 @@ const SelectGitProviderRef = (
   //#region form view
 
   const permissionsForSelectedGitProvider = GitProviderPermissions.filter(
-    (providerPermissions: GitProviderPermission) => providerPermissions.type === gitProvider?.type
+    (providerPermissions: GitProviderPermission) => providerPermissions.type === selectedGitProvider?.type
   )[0]
 
   const getButtonLabel = React.useCallback((): string => {
-    switch (gitProvider?.type) {
+    switch (selectedGitProvider?.type) {
       case Connectors.GITHUB:
         return getString('common.getStarted.accessTokenLabel')
       case Connectors.BITBUCKET:
@@ -547,7 +546,7 @@ const SelectGitProviderRef = (
       default:
         return ''
     }
-  }, [getString, gitProvider?.type])
+  }, [getString, selectedGitProvider?.type])
 
   const renderTextField = React.useCallback(
     ({
@@ -585,7 +584,7 @@ const SelectGitProviderRef = (
 
   const renderNonOAuthView = React.useCallback(
     (_formikProps: FormikProps<SelectGitProviderInterface>): JSX.Element => {
-      switch (gitProvider?.type) {
+      switch (selectedGitProvider?.type) {
         case Connectors.GITHUB:
           return (
             <Layout.Vertical width="100%">
@@ -628,7 +627,7 @@ const SelectGitProviderRef = (
           return <></>
       }
     },
-    [gitProvider, renderTextField]
+    [selectedGitProvider, renderTextField]
   )
 
   //#endregion
@@ -643,11 +642,11 @@ const SelectGitProviderRef = (
       setFieldTouched?.('gitAuthenticationMethod', true)
       return
     }
-    if (gitProvider?.type === Connectors.GITHUB) {
+    if (selectedGitProvider?.type === Connectors.GITHUB) {
       setFieldTouched?.('accessToken', !accessToken)
-    } else if (gitProvider?.type === Connectors.GITLAB) {
+    } else if (selectedGitProvider?.type === Connectors.GITLAB) {
       setFieldTouched?.('accessKey', !accessKey)
-    } else if (gitProvider?.type === Connectors.BITBUCKET) {
+    } else if (selectedGitProvider?.type === Connectors.BITBUCKET) {
       if (!username) {
         setFieldTouched?.('username', true)
       }
@@ -655,11 +654,11 @@ const SelectGitProviderRef = (
         setFieldTouched?.('applicationPassword', true)
       }
     }
-  }, [gitProvider, authMethod])
+  }, [selectedGitProvider, authMethod])
 
   const validateGitProviderSetup = React.useCallback((): boolean => {
     const { accessToken, accessKey, applicationPassword, username } = formikRef.current?.values || {}
-    switch (gitProvider?.type) {
+    switch (selectedGitProvider?.type) {
       case Connectors.GITHUB:
         return authMethod === GitAuthenticationMethod.AccessToken && !!accessToken
       case Connectors.GITLAB:
@@ -672,26 +671,26 @@ const SelectGitProviderRef = (
       default:
         return false
     }
-  }, [gitProvider, authMethod])
+  }, [selectedGitProvider, authMethod])
 
   //#endregion
 
   const shouldRenderAuthFormFields = React.useCallback((): boolean => {
-    if (gitProvider?.type) {
+    if (selectedGitProvider?.type) {
       return (
-        (gitProvider.type === Connectors.GITHUB && authMethod === GitAuthenticationMethod.AccessToken) ||
-        (gitProvider.type === Connectors.GITLAB && authMethod === GitAuthenticationMethod.AccessKey) ||
-        (gitProvider.type === Connectors.BITBUCKET &&
+        (selectedGitProvider.type === Connectors.GITHUB && authMethod === GitAuthenticationMethod.AccessToken) ||
+        (selectedGitProvider.type === Connectors.GITLAB && authMethod === GitAuthenticationMethod.AccessKey) ||
+        (selectedGitProvider.type === Connectors.BITBUCKET &&
           authMethod === GitAuthenticationMethod.UserNameAndApplicationPassword)
       )
     }
     return false
-  }, [gitProvider, authMethod])
+  }, [selectedGitProvider, authMethod])
   //#region formik related
 
   const getInitialValues = React.useCallback((): Record<string, string> => {
     let initialValues = {}
-    switch (gitProvider?.type) {
+    switch (selectedGitProvider?.type) {
       case Connectors.GITHUB:
         initialValues = { accessToken: defaultTo(gitValues?.accessToken, '') }
         break
@@ -707,11 +706,11 @@ const SelectGitProviderRef = (
     }
     return initialValues
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gitProvider])
+  }, [selectedGitProvider])
 
   const getValidationSchema = React.useCallback(() => {
     let baseSchema
-    switch (gitProvider?.type) {
+    switch (selectedGitProvider?.type) {
       case Connectors.GITHUB:
         baseSchema = Yup.object()
           .shape({
@@ -745,7 +744,7 @@ const SelectGitProviderRef = (
       default:
         return Yup.object().shape({})
     }
-  }, [getString, gitProvider])
+  }, [getString, selectedGitProvider])
 
   //#endregion
 
@@ -759,7 +758,7 @@ const SelectGitProviderRef = (
 
   const resetFormFields = React.useCallback((): void => {
     setTestConnectionStatus(TestStatus.NOT_INITIATED)
-    switch (gitProvider?.type) {
+    switch (selectedGitProvider?.type) {
       case Connectors.GITHUB:
         resetField('accessToken')
         return
@@ -773,7 +772,7 @@ const SelectGitProviderRef = (
       default:
         return
     }
-  }, [gitProvider])
+  }, [selectedGitProvider])
 
   //#endregion
 
@@ -786,7 +785,7 @@ const SelectGitProviderRef = (
         <Formik<SelectGitProviderInterface>
           initialValues={{
             ...getInitialValues(),
-            gitProvider,
+            gitProvider: selectedGitProvider,
             gitAuthenticationMethod: undefined
           }}
           formName="cdInfraProvisiong-gitProvider"
@@ -798,7 +797,7 @@ const SelectGitProviderRef = (
             formikRef.current = formikProps
             return (
               <FormikForm>
-                {gitProvider ? (
+                {selectedGitProvider ? (
                   <Layout.Vertical>
                     <Container padding={{ bottom: 'large' }}>
                       <Text font={{ variation: FontVariation.H5 }} padding={{ bottom: 'small' }}>
@@ -819,10 +818,10 @@ const SelectGitProviderRef = (
                               }, MAX_TIMEOUT_OAUTH)
                               oAuthSecretIntercepted.current = false
                               setAuthMethod(GitAuthenticationMethod.OAuth)
-                              if (gitProvider?.type) {
+                              if (selectedGitProvider?.type) {
                                 try {
                                   const { headers } = getRequestOptions()
-                                  const oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${gitProvider.type.toLowerCase()}&accountId=${accountId}`
+                                  const oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${selectedGitProvider.type.toLowerCase()}&accountId=${accountId}`
                                   const response = await fetch(oauthRedirectEndpoint, {
                                     headers
                                   })
@@ -838,9 +837,9 @@ const SelectGitProviderRef = (
                             intent={authMethod === GitAuthenticationMethod.OAuth ? 'primary' : 'none'}
                             disabled={
                               disableOAuthForGitProvider ||
-                              (gitProvider?.type &&
+                              (selectedGitProvider?.type &&
                                 [Connectors.GITHUB, Connectors.GITLAB].includes(
-                                  gitProvider.type as ConnectorInfoDTO['type']
+                                  selectedGitProvider.type as ConnectorInfoDTO['type']
                                 ) &&
                                 oAuthStatus === Status.IN_PROGRESS)
                             }
@@ -868,9 +867,9 @@ const SelectGitProviderRef = (
                             onClick={() => {
                               oAuthSecretIntercepted.current = false
                               resetFormFields()
-                              if (gitProvider?.type) {
+                              if (selectedGitProvider?.type) {
                                 const gitAuthMethod = GitProviderTypeToAuthenticationMethodMapping.get(
-                                  gitProvider.type as ConnectorInfoDTO['type']
+                                  selectedGitProvider.type as ConnectorInfoDTO['type']
                                 )
                                 setAuthMethod(gitAuthMethod)
                               }
@@ -905,7 +904,9 @@ const SelectGitProviderRef = (
                             onClick={(event: React.MouseEvent<Element, MouseEvent>) => {
                               event.preventDefault()
                               window.open(
-                                AccessTokenPermissionsDocLinks.get(gitProvider?.type as ConnectorInfoDTO['type']),
+                                AccessTokenPermissionsDocLinks.get(
+                                  selectedGitProvider?.type as ConnectorInfoDTO['type']
+                                ),
                                 '_blank'
                               )
                             }}
@@ -916,7 +917,7 @@ const SelectGitProviderRef = (
                             permissionsForSelectedGitProvider.permissions.length > 0 ? (
                               <Text>
                                 {permissionsForSelectedGitProvider.type}&nbsp;
-                                {(gitProvider.type === Connectors.BITBUCKET
+                                {(selectedGitProvider.type === Connectors.BITBUCKET
                                   ? getString('permissions')
                                   : getString('common.scope').concat('s')
                                 ).toLowerCase()}
