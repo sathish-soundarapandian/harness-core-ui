@@ -22,7 +22,7 @@ export interface TASBasicAppSetupTemplate {
   identifier: string
   timeout: string
   name: string
-  type: StepType.TasBasicAppSetup
+  type: StepType.BasicAppSetup
   spec: {
     instanceCount: string
     existingVersionToKeep: string

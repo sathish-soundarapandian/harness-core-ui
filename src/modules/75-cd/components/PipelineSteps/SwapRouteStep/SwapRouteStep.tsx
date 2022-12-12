@@ -301,8 +301,8 @@ export class SwapRouteStep extends PipelineStep<SwapRouteData> {
     return errors
   }
 
-  protected type = StepType.TasSwapRoutes
-  protected stepName = 'Swap Route'
+  protected type = StepType.SwapRoutes
+  protected stepName = 'Swap Routes'
   protected stepIcon: IconName = 'cog' //Todo
   protected referenceId = 'swapRouteStep'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SwapRoute'
@@ -310,7 +310,7 @@ export class SwapRouteStep extends PipelineStep<SwapRouteData> {
   protected defaultValues: SwapRouteData = {
     identifier: '',
     name: '',
-    type: StepType.TasSwapRoutes,
+    type: StepType.SwapRoutes,
     timeout: '10m',
     spec: {
       downSizeOldApplication: false

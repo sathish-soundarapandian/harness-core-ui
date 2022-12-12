@@ -43,8 +43,8 @@ export class TASBasicAppSetupStep extends PipelineStep<TASBasicAppSetupData> {
     this._hasDelegateSelectionVisible = true
   }
 
-  protected type = StepType.TasBasicAppSetup
-  protected stepName = 'TasBasicApp Setup'
+  protected type = StepType.BasicAppSetup
+  protected stepName = 'Basic App Setup'
   protected stepIcon: IconName = 'cog' // TODO
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.TASBasicAppSetup'
   protected isHarnessSpecific = false
@@ -57,7 +57,7 @@ export class TASBasicAppSetupStep extends PipelineStep<TASBasicAppSetupData> {
     identifier: '',
     timeout: '10m',
     name: '',
-    type: StepType.TasBasicAppSetup,
+    type: StepType.BasicAppSetup,
     spec: {
       instanceCount: InstancesType.FromManifest,
       existingVersionToKeep: 1

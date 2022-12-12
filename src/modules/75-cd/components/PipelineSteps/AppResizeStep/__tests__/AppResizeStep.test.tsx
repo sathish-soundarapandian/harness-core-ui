@@ -21,7 +21,7 @@ factory.registerStep(new AppResizeStep())
 describe('Test AppResizeStep', () => {
   test('should render edit view as new step', () => {
     const { container } = render(
-      <TestStepWidget initialValues={{}} type={StepType.TasAppResize} stepViewType={StepViewType.Edit} />
+      <TestStepWidget initialValues={{}} type={StepType.AppResize} stepViewType={StepViewType.Edit} />
     )
     expect(container).toMatchSnapshot()
   })
@@ -44,7 +44,7 @@ describe('Test AppResizeStep', () => {
             }
           }
         }}
-        type={StepType.TasAppResize}
+        type={StepType.AppResize}
         stepViewType={StepViewType.Edit}
       />
     )
@@ -85,7 +85,7 @@ describe('Test AppResizeStep', () => {
             }
           }
         }}
-        type={StepType.TasAppResize}
+        type={StepType.AppResize}
         stepViewType={StepViewType.InputSet}
       />
     )
@@ -104,7 +104,7 @@ describe('Test AppResizeStep', () => {
             oldAppInstances: { type: InstanceTypes.Count, spec: { value: 15 } }
           }
         }}
-        type={StepType.TasAppResize}
+        type={StepType.AppResize}
         stepViewType={StepViewType.Edit}
       />
     )
@@ -126,7 +126,7 @@ describe('Test AppResizeStep', () => {
           },
           name: 'App Resize Step'
         }}
-        type={StepType.TasAppResize}
+        type={StepType.AppResize}
         ref={ref}
         stepViewType={StepViewType.Edit}
         onUpdate={onUpdate}
@@ -177,7 +177,7 @@ describe('Test AppResizeStep', () => {
           },
           name: 'App Resize Step'
         }}
-        type={StepType.TasAppResize}
+        type={StepType.AppResize}
         stepViewType={StepViewType.Edit}
         onUpdate={onUpdate}
         ref={ref}
@@ -230,7 +230,7 @@ describe('Test AppResizeStep', () => {
           },
           type: 'AppResize'
         }}
-        type={StepType.TasAppResize}
+        type={StepType.AppResize}
         stepViewType={StepViewType.Edit}
         onUpdate={onUpdate}
         ref={ref}
@@ -280,7 +280,7 @@ describe('Test AppResizeStep', () => {
           },
           type: 'AppResize'
         }}
-        type={StepType.TasAppResize}
+        type={StepType.AppResize}
         stepViewType={StepViewType.Edit}
         onUpdate={onUpdate}
         ref={ref}
@@ -328,7 +328,7 @@ describe('Test AppResizeStep', () => {
           timeout: '10m',
           type: 'AppResize'
         }}
-        type={StepType.TasAppResize}
+        type={StepType.AppResize}
         onUpdate={onUpdate}
         customStepProps={{
           stageIdentifier: 'qaStage',
@@ -376,7 +376,7 @@ describe('Test AppResizeStep', () => {
 
   test('should render null for StepviewType.template', () => {
     const { container } = render(
-      <TestStepWidget initialValues={{}} type={StepType.TasAppResize} stepViewType={StepViewType.Template} />
+      <TestStepWidget initialValues={{}} type={StepType.AppResize} stepViewType={StepViewType.Template} />
     )
     expect(container).toMatchSnapshot()
   })
@@ -402,7 +402,7 @@ describe('Test AppResizeStep', () => {
             }
           }
         }}
-        type={StepType.TasAppResize}
+        type={StepType.AppResize}
         stepViewType={StepViewType.InputSet}
       />
     )

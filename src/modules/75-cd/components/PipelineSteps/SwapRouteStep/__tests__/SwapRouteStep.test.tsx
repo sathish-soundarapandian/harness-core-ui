@@ -19,7 +19,7 @@ import { SwapRouteStep } from '../SwapRouteStep'
 factory.registerStep(new SwapRouteStep())
 
 const existingInitialValues = {
-  type: StepType.TasSwapRoutes,
+  type: StepType.SwapRoutes,
   name: 'Swap Route Step Default',
   identifier: 'Swap_Route_Step_Default',
   timeout: '10m',
@@ -41,7 +41,7 @@ describe('SwapRouteStep tests', () => {
     const { container, getByText } = render(
       <TestStepWidget
         initialValues={{}}
-        type={StepType.TasSwapRoutes}
+        type={StepType.SwapRoutes}
         onUpdate={onUpdate}
         onChange={onChange}
         ref={ref}
@@ -69,7 +69,7 @@ describe('SwapRouteStep tests', () => {
         identifier: 'Swap_Route_Step',
         name: 'Swap Route Step',
         timeout: '20m',
-        type: StepType.TasSwapRoutes,
+        type: StepType.SwapRoutes,
         spec: {
           downSizeOldApplication: false
         }
@@ -81,7 +81,7 @@ describe('SwapRouteStep tests', () => {
     const { container } = render(
       <TestStepWidget
         initialValues={{
-          type: StepType.TasSwapRoutes,
+          type: StepType.SwapRoutes,
           identifier: 'Swap_Route_Step',
           name: 'Swap Route Step',
           timeout: RUNTIME_INPUT_VALUE,
@@ -89,7 +89,7 @@ describe('SwapRouteStep tests', () => {
             upsizeInActiveApp: RUNTIME_INPUT_VALUE
           }
         }}
-        type={StepType.TasSwapRoutes}
+        type={StepType.SwapRoutes}
         stepViewType={StepViewType.Edit}
         readonly
       />
@@ -104,7 +104,7 @@ describe('SwapRouteStep tests', () => {
           identifier: 'Swap_Route_Step',
           name: 'Swap Route Step',
           timeout: '',
-          type: StepType.TasSwapRoutes,
+          type: StepType.SwapRoutes,
           spec: {
             downSizeOldApplication: RUNTIME_INPUT_VALUE
           }
@@ -113,12 +113,12 @@ describe('SwapRouteStep tests', () => {
           identifier: 'Swap_Route_Step',
           name: 'Swap Route Step',
           timeout: RUNTIME_INPUT_VALUE,
-          type: StepType.TasSwapRoutes,
+          type: StepType.SwapRoutes,
           spec: {
             downSizeOldApplication: RUNTIME_INPUT_VALUE
           }
         }}
-        type={StepType.TasSwapRoutes}
+        type={StepType.SwapRoutes}
         stepViewType={StepViewType.InputSet}
         onUpdate={onUpdate}
         inputSetData={{ path: '', readonly: true }}
@@ -138,7 +138,7 @@ describe('SwapRouteStep tests', () => {
       identifier: 'Swap_Route_Step',
       name: 'Swap Route Step',
       timeout: '10m',
-      type: StepType.TasSwapRoutes,
+      type: StepType.SwapRoutes,
       spec: {
         downSizeOldApplication: RUNTIME_INPUT_VALUE
       }
@@ -149,7 +149,7 @@ describe('SwapRouteStep tests', () => {
     const { getByText } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
-        type={StepType.TasSwapRoutes}
+        type={StepType.SwapRoutes}
         onUpdate={onUpdate}
         onChange={onChange}
         stepViewType={StepViewType.InputVariable}
@@ -160,19 +160,19 @@ describe('SwapRouteStep tests', () => {
           metadataMap: {
             'Swap Route Step Default': {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.TasSwapRoutesStep.name',
-                localName: 'step.TasSwapRoutesStep.name'
+                fqn: 'pipeline.stages.testStage.execution.steps.SwapRoutesStep.name',
+                localName: 'step.SwapRoutesStep.name'
               }
             },
             '10m': {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.TasSwapRoutesStep.timeout',
+                fqn: 'pipeline.stages.testStage.execution.steps.SwapRoutesStep.timeout',
                 localName: 'step.SwapRoute.timeout'
               }
             },
             false: {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.TasSwapRoutesStep.spec.downSizeOldApplication',
+                fqn: 'pipeline.stages.testStage.execution.steps.SwapRoutesStep.spec.downSizeOldApplication',
                 localName: 'step.downSizeOldApplication'
               }
             }

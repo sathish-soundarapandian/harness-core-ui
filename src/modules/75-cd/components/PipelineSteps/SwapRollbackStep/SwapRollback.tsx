@@ -305,8 +305,8 @@ export class SwapRollbackStep extends PipelineStep<SwapRollbackData> {
     return errors
   }
 
-  protected type = StepType.TasSwapRollback
-  protected stepName = 'Swap Route'
+  protected type = StepType.SwapRollback
+  protected stepName = 'Swap Rollback'
   protected stepIcon: IconName = 'cog' //Todo
   protected referenceId = 'SwapRollbackStep'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SwapRollback'
@@ -314,7 +314,7 @@ export class SwapRollbackStep extends PipelineStep<SwapRollbackData> {
   protected defaultValues: SwapRollbackData = {
     identifier: '',
     name: '',
-    type: StepType.TasSwapRollback,
+    type: StepType.SwapRollback,
     timeout: '10m',
     spec: {
       upsizeInActiveApp: false

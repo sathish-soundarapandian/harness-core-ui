@@ -644,12 +644,6 @@ export interface ActiveServiceInstanceSummary {
   countDetails?: InstanceCountDetailsByEnvTypeBase
 }
 
-export interface ActiveServicesFilterParams {
-  orgName?: string
-  projectName?: string
-  serviceName?: string
-}
-
 export interface Activity {
   accountIdentifier?: string
   activityStatus: 'SUCCESS' | 'FAILED'
@@ -3616,13 +3610,12 @@ export interface EntityDetail {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -6018,13 +6011,12 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -6210,13 +6202,12 @@ export interface GitEntityFilterProperties {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -6439,13 +6430,12 @@ export interface GitFullSyncEntityInfoDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -6626,13 +6616,12 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -6934,13 +6923,12 @@ export interface GitSyncEntityDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -7115,13 +7103,12 @@ export interface GitSyncEntityListDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -7313,13 +7300,12 @@ export interface GitSyncErrorDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -8114,7 +8100,6 @@ export interface InstanceGroupedByArtifactV2 {
   artifactPath?: string
   artifactVersion?: string
   instanceGroupedByEnvironmentList?: InstanceGroupedByEnvironmentV2[]
-  lastDeployedAt?: number
   latest?: boolean
 }
 
@@ -8130,7 +8115,6 @@ export interface InstanceGroupedByEnvironmentV2 {
   envName?: string
   instanceGroupedByClusterList?: InstanceGroupedByInfrastructureV2[]
   instanceGroupedByInfraList?: InstanceGroupedByInfrastructureV2[]
-  lastDeployedAt?: number
 }
 
 export interface InstanceGroupedByInfrastructure {
@@ -8150,7 +8134,6 @@ export interface InstanceGroupedByInfrastructureV2 {
   infraIdentifier?: string
   infraName?: string
   instanceGroupedByPipelineExecutionList?: InstanceGroupedByPipelineExecution[]
-  lastDeployedAt?: number
 }
 
 export interface InstanceGroupedByPipelineExecution {
@@ -8162,7 +8145,6 @@ export interface InstanceGroupedByPipelineExecution {
 
 export interface InstanceGroupedByService {
   instanceGroupedByArtifactList?: InstanceGroupedByArtifactV2[]
-  lastDeployedAt?: number
   serviceId?: string
   serviceName?: string
 }
@@ -9743,20 +9725,6 @@ export interface PageInvite {
   totalPages?: number
 }
 
-export interface PageLicenseUsageDTO {
-  content?: LicenseUsageDTO[]
-  empty?: boolean
-  first?: boolean
-  last?: boolean
-  number?: number
-  numberOfElements?: number
-  pageable?: Pageable
-  size?: number
-  sort?: Sort
-  totalElements?: number
-  totalPages?: number
-}
-
 export interface PageOrganizationAggregateDTO {
   content?: OrganizationAggregateDTO[]
   empty?: boolean
@@ -10498,13 +10466,12 @@ export interface ReferencedByDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -11687,13 +11654,12 @@ export interface ResponseListEntityType {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -12606,13 +12572,6 @@ export interface ResponsePageInfrastructureResponse {
 export interface ResponsePageInvite {
   correlationId?: string
   data?: PageInvite
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponsePageLicenseUsageDTO {
-  correlationId?: string
-  data?: PageLicenseUsageDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -14756,6 +14715,12 @@ export interface StepData {
     | 'TerragruntDestroy'
     | 'TerragruntRollback'
     | 'SwapRollback'
+    | 'BasicAppSetup'
+    | 'BGAppSetup'
+    | 'CanaryAppSetup'
+    | 'AppResize'
+    | 'SwapRoutes'
+    | 'AppRollback'
     | 'TanzuCommand'
 }
 
@@ -15081,7 +15046,7 @@ export interface TasInstanceSelectionWrapper {
 }
 
 export interface TasInstanceValue {
-  value?: string //TODO::CHECK
+  value: string //TODO:: from BE
 }
 
 export type TasManifest = ManifestAttributes & {
@@ -16124,9 +16089,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -16857,13 +16822,12 @@ export interface ListActivitiesQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -17030,13 +16994,12 @@ export interface ListActivitiesQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -17307,13 +17270,12 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -17480,13 +17442,12 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -32076,13 +32037,12 @@ export interface ListReferredByEntitiesQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -32310,13 +32270,12 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -35553,13 +35512,12 @@ export interface GetReferencedByQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -37919,13 +37877,12 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -38160,13 +38117,12 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'IACMStage'
       | 'IACMStep'
       | 'IACM'
-      | 'Container'
-      | 'TasCanaryAppSetup'
-      | 'TasBGAppSetup'
-      | 'TasBasicAppSetupStep'
-      | 'TasAppResizeStep'
-      | 'TasRollbackStep'
-      | 'TasSwapRoutesStep'
+      | 'CanaryAppSetup'
+      | 'BGAppSetup'
+      | 'BasicAppSetup'
+      | 'AppResize'
+      | 'AppRollback'
+      | 'SwapRoutes'
       | 'SwapRollback'
       | 'TanzuCommand'
       | 'Container'
@@ -44093,13 +44049,12 @@ export interface GetStepYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -44394,13 +44349,12 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'
@@ -47219,15 +47173,15 @@ export const getMetadataPromise = (
     void
   >('POST', getConfig('ng/api'), `/secret-managers/meta-data`, props, signal)
 
-export interface MigrateSvcEnvFromPipelineQueryParams {
+export interface SvcEnvMigrationQueryParams {
   accountIdentifier: string
 }
 
-export type MigrateSvcEnvFromPipelineProps = Omit<
+export type SvcEnvMigrationProps = Omit<
   MutateProps<
     ResponseSvcEnvMigrationResponseDto,
     Failure | Error,
-    MigrateSvcEnvFromPipelineQueryParams,
+    SvcEnvMigrationQueryParams,
     SvcEnvMigrationRequestDto,
     void
   >,
@@ -47237,11 +47191,11 @@ export type MigrateSvcEnvFromPipelineProps = Omit<
 /**
  * Migrate a pipeline to new service and environment framework
  */
-export const MigrateSvcEnvFromPipeline = (props: MigrateSvcEnvFromPipelineProps) => (
+export const SvcEnvMigration = (props: SvcEnvMigrationProps) => (
   <Mutate<
     ResponseSvcEnvMigrationResponseDto,
     Failure | Error,
-    MigrateSvcEnvFromPipelineQueryParams,
+    SvcEnvMigrationQueryParams,
     SvcEnvMigrationRequestDto,
     void
   >
@@ -47252,11 +47206,11 @@ export const MigrateSvcEnvFromPipeline = (props: MigrateSvcEnvFromPipelineProps)
   />
 )
 
-export type UseMigrateSvcEnvFromPipelineProps = Omit<
+export type UseSvcEnvMigrationProps = Omit<
   UseMutateProps<
     ResponseSvcEnvMigrationResponseDto,
     Failure | Error,
-    MigrateSvcEnvFromPipelineQueryParams,
+    SvcEnvMigrationQueryParams,
     SvcEnvMigrationRequestDto,
     void
   >,
@@ -47266,11 +47220,11 @@ export type UseMigrateSvcEnvFromPipelineProps = Omit<
 /**
  * Migrate a pipeline to new service and environment framework
  */
-export const useMigrateSvcEnvFromPipeline = (props: UseMigrateSvcEnvFromPipelineProps) =>
+export const useSvcEnvMigration = (props: UseSvcEnvMigrationProps) =>
   useMutate<
     ResponseSvcEnvMigrationResponseDto,
     Failure | Error,
-    MigrateSvcEnvFromPipelineQueryParams,
+    SvcEnvMigrationQueryParams,
     SvcEnvMigrationRequestDto,
     void
   >('POST', `/service-env-migration/pipeline`, { base: getConfig('ng/api'), ...props })
@@ -47278,11 +47232,11 @@ export const useMigrateSvcEnvFromPipeline = (props: UseMigrateSvcEnvFromPipeline
 /**
  * Migrate a pipeline to new service and environment framework
  */
-export const migrateSvcEnvFromPipelinePromise = (
+export const svcEnvMigrationPromise = (
   props: MutateUsingFetchProps<
     ResponseSvcEnvMigrationResponseDto,
     Failure | Error,
-    MigrateSvcEnvFromPipelineQueryParams,
+    SvcEnvMigrationQueryParams,
     SvcEnvMigrationRequestDto,
     void
   >,
@@ -47291,87 +47245,14 @@ export const migrateSvcEnvFromPipelinePromise = (
   mutateUsingFetch<
     ResponseSvcEnvMigrationResponseDto,
     Failure | Error,
-    MigrateSvcEnvFromPipelineQueryParams,
+    SvcEnvMigrationQueryParams,
     SvcEnvMigrationRequestDto,
     void
   >('POST', getConfig('ng/api'), `/service-env-migration/pipeline`, props, signal)
 
-export interface MigrateSvcEnvFromProjectQueryParams {
+export interface SvcEnvMigrationQueryParams {
   accountIdentifier: string
 }
-
-export type MigrateSvcEnvFromProjectProps = Omit<
-  MutateProps<
-    ResponseSvcEnvMigrationProjectWrapperResponseDto,
-    Failure | Error,
-    MigrateSvcEnvFromProjectQueryParams,
-    SvcEnvMigrationProjectWrapperRequestDto,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Migrate a project to new service and environment framework
- */
-export const MigrateSvcEnvFromProject = (props: MigrateSvcEnvFromProjectProps) => (
-  <Mutate<
-    ResponseSvcEnvMigrationProjectWrapperResponseDto,
-    Failure | Error,
-    MigrateSvcEnvFromProjectQueryParams,
-    SvcEnvMigrationProjectWrapperRequestDto,
-    void
-  >
-    verb="POST"
-    path={`/service-env-migration/project`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseMigrateSvcEnvFromProjectProps = Omit<
-  UseMutateProps<
-    ResponseSvcEnvMigrationProjectWrapperResponseDto,
-    Failure | Error,
-    MigrateSvcEnvFromProjectQueryParams,
-    SvcEnvMigrationProjectWrapperRequestDto,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Migrate a project to new service and environment framework
- */
-export const useMigrateSvcEnvFromProject = (props: UseMigrateSvcEnvFromProjectProps) =>
-  useMutate<
-    ResponseSvcEnvMigrationProjectWrapperResponseDto,
-    Failure | Error,
-    MigrateSvcEnvFromProjectQueryParams,
-    SvcEnvMigrationProjectWrapperRequestDto,
-    void
-  >('POST', `/service-env-migration/project`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Migrate a project to new service and environment framework
- */
-export const migrateSvcEnvFromProjectPromise = (
-  props: MutateUsingFetchProps<
-    ResponseSvcEnvMigrationProjectWrapperResponseDto,
-    Failure | Error,
-    MigrateSvcEnvFromProjectQueryParams,
-    SvcEnvMigrationProjectWrapperRequestDto,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseSvcEnvMigrationProjectWrapperResponseDto,
-    Failure | Error,
-    MigrateSvcEnvFromProjectQueryParams,
-    SvcEnvMigrationProjectWrapperRequestDto,
-    void
-  >('POST', getConfig('ng/api'), `/service-env-migration/project`, props, signal)
 
 export interface ListServiceAccountQueryParams {
   accountIdentifier?: string
@@ -52621,87 +52502,6 @@ export const getCDLicenseUsageForServicesPromise = (
     signal
   )
 
-export interface LisCDActiveServicesQueryParams {
-  accountIdentifier?: string
-  page?: number
-  size?: number
-  sort?: string[]
-  timestamp?: number
-}
-
-export type LisCDActiveServicesProps = Omit<
-  MutateProps<
-    ResponsePageLicenseUsageDTO,
-    Failure | Error,
-    LisCDActiveServicesQueryParams,
-    ActiveServicesFilterParams,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * List Active Services in CD Module
- */
-export const LisCDActiveServices = (props: LisCDActiveServicesProps) => (
-  <Mutate<
-    ResponsePageLicenseUsageDTO,
-    Failure | Error,
-    LisCDActiveServicesQueryParams,
-    ActiveServicesFilterParams,
-    void
-  >
-    verb="POST"
-    path={`/usage/cd/active-services`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseLisCDActiveServicesProps = Omit<
-  UseMutateProps<
-    ResponsePageLicenseUsageDTO,
-    Failure | Error,
-    LisCDActiveServicesQueryParams,
-    ActiveServicesFilterParams,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * List Active Services in CD Module
- */
-export const useLisCDActiveServices = (props: UseLisCDActiveServicesProps) =>
-  useMutate<
-    ResponsePageLicenseUsageDTO,
-    Failure | Error,
-    LisCDActiveServicesQueryParams,
-    ActiveServicesFilterParams,
-    void
-  >('POST', `/usage/cd/active-services`, { base: getConfig('ng/api'), ...props })
-
-/**
- * List Active Services in CD Module
- */
-export const lisCDActiveServicesPromise = (
-  props: MutateUsingFetchProps<
-    ResponsePageLicenseUsageDTO,
-    Failure | Error,
-    LisCDActiveServicesQueryParams,
-    ActiveServicesFilterParams,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponsePageLicenseUsageDTO,
-    Failure | Error,
-    LisCDActiveServicesQueryParams,
-    ActiveServicesFilterParams,
-    void
-  >('POST', getConfig('ng/api'), `/usage/cd/active-services`, props, signal)
-
 export interface GetLicenseUsageQueryParams {
   accountIdentifier?: string
   timestamp?: number
@@ -55931,7 +55731,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -55941,7 +55741,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -55954,7 +55754,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -55968,7 +55768,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -55980,7 +55780,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -55989,7 +55789,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -56382,7 +56182,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -56396,7 +56196,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -56411,7 +56211,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -56425,7 +56225,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -56437,7 +56237,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -56446,7 +56246,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -56582,7 +56382,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -56597,7 +56397,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -56612,7 +56412,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -56627,7 +56427,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -56646,7 +56446,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -56655,7 +56455,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -56674,7 +56474,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -56689,7 +56489,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -56704,7 +56504,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -56719,7 +56519,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -56738,7 +56538,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -56747,7 +56547,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -57581,13 +57381,12 @@ export interface GetYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'Container'
-    | 'TasCanaryAppSetup'
-    | 'TasBGAppSetup'
-    | 'TasBasicAppSetupStep'
-    | 'TasAppResizeStep'
-    | 'TasRollbackStep'
-    | 'TasSwapRoutesStep'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
     | 'SwapRollback'
     | 'TanzuCommand'
     | 'Container'

@@ -43,8 +43,8 @@ export class TasBGAppSetupStep extends PipelineStep<TasBGAppSetupData> {
     this._hasDelegateSelectionVisible = true
   }
 
-  protected type = StepType.TasBGAppSetup
-  protected stepName = 'TasBGApp Setup'
+  protected type = StepType.BGAppSetup
+  protected stepName = 'BG App Setup'
   protected stepIcon: IconName = 'cog' // TODO
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.TASBasicAppSetup' // BG APP DESC
   protected isHarnessSpecific = false
@@ -57,7 +57,7 @@ export class TasBGAppSetupStep extends PipelineStep<TasBGAppSetupData> {
     identifier: '',
     timeout: '10m',
     name: '',
-    type: StepType.TasBGAppSetup,
+    type: StepType.BGAppSetup,
     spec: {
       instanceCount: InstancesType.FromManifest,
       existingVersionToKeep: 1,

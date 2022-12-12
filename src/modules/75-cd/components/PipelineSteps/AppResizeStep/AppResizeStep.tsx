@@ -268,7 +268,7 @@ const AppResizeVariableStep: React.FC<AppResizeVariableStepProps> = ({ variables
 
 const AppResizeWidgetWithRef = React.forwardRef(AppResizeWidget)
 export class AppResizeStep extends PipelineStep<AppResizeData> {
-  protected type = StepType.TasAppResize
+  protected type = StepType.AppResize
   protected stepName = 'App Resize'
   protected referenceId = 'appResizeStep'
   protected stepIcon: IconName = 'cog' //TODO:: update icon
@@ -278,7 +278,7 @@ export class AppResizeStep extends PipelineStep<AppResizeData> {
     identifier: '',
     timeout: '10m',
     name: '',
-    type: StepType.TasAppResize,
+    type: StepType.AppResize,
     spec: {
       newAppInstances: {
         type: InstanceTypes.Count,

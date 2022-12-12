@@ -19,7 +19,7 @@ import { SwapRollbackStep } from '../SwapRollback'
 factory.registerStep(new SwapRollbackStep())
 
 const existingInitialValues = {
-  type: StepType.TasSwapRollback,
+  type: StepType.SwapRollback,
   name: 'Swap Route Step Default',
   identifier: 'Swap_Route_Step_Default',
   timeout: '10m',
@@ -41,7 +41,7 @@ describe('SwapRollbackStep tests', () => {
     const { container, getByText } = render(
       <TestStepWidget
         initialValues={{}}
-        type={StepType.TasSwapRollback}
+        type={StepType.SwapRollback}
         onUpdate={onUpdate}
         onChange={onChange}
         ref={ref}
@@ -69,7 +69,7 @@ describe('SwapRollbackStep tests', () => {
         identifier: 'Swap_Route_Step',
         name: 'Swap Route Step',
         timeout: '20m',
-        type: StepType.TasSwapRollback,
+        type: StepType.SwapRollback,
         spec: {
           upsizeInActiveApp: false
         }
@@ -81,7 +81,7 @@ describe('SwapRollbackStep tests', () => {
     const { container } = render(
       <TestStepWidget
         initialValues={{
-          type: StepType.TasSwapRollback,
+          type: StepType.SwapRollback,
           name: 'Swap Route Step Default',
           identifier: 'Swap_Route_Step_Default',
           timeout: RUNTIME_INPUT_VALUE,
@@ -89,7 +89,7 @@ describe('SwapRollbackStep tests', () => {
             upsizeInActiveApp: RUNTIME_INPUT_VALUE
           }
         }}
-        type={StepType.TasSwapRollback}
+        type={StepType.SwapRollback}
         stepViewType={StepViewType.Edit}
         readonly
       />
@@ -104,7 +104,7 @@ describe('SwapRollbackStep tests', () => {
           identifier: 'Swap_Route_Step',
           name: 'Swap Route Step',
           timeout: '',
-          type: StepType.TasSwapRollback,
+          type: StepType.SwapRollback,
           spec: {
             upsizeInActiveApp: RUNTIME_INPUT_VALUE
           }
@@ -113,12 +113,12 @@ describe('SwapRollbackStep tests', () => {
           identifier: 'Swap_Route_Step',
           name: 'Swap Route Step',
           timeout: RUNTIME_INPUT_VALUE,
-          type: StepType.TasSwapRollback,
+          type: StepType.SwapRollback,
           spec: {
             upsizeInActiveApp: RUNTIME_INPUT_VALUE
           }
         }}
-        type={StepType.TasSwapRollback}
+        type={StepType.SwapRollback}
         stepViewType={StepViewType.InputSet}
         onUpdate={onUpdate}
         inputSetData={{ path: '', readonly: true }}
@@ -138,7 +138,7 @@ describe('SwapRollbackStep tests', () => {
       identifier: 'Swap_Route_Step',
       name: 'Swap Route Step',
       timeout: '10m',
-      type: StepType.TasSwapRollback,
+      type: StepType.SwapRollback,
       spec: {
         upsizeInActiveApp: RUNTIME_INPUT_VALUE
       }
@@ -149,7 +149,7 @@ describe('SwapRollbackStep tests', () => {
     const { getByText } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
-        type={StepType.TasSwapRollback}
+        type={StepType.SwapRollback}
         onUpdate={onUpdate}
         onChange={onChange}
         stepViewType={StepViewType.InputVariable}

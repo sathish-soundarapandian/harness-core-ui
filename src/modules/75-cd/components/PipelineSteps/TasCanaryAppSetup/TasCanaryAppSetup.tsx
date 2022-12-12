@@ -43,8 +43,8 @@ export class TasCanaryAppSetupStep extends PipelineStep<TasCanaryAppSetupData> {
     this._hasDelegateSelectionVisible = true
   }
 
-  protected type = StepType.TasCanaryAppSetup
-  protected stepName = 'TasBGApp Setup'
+  protected type = StepType.CanaryAppSetup
+  protected stepName = 'Canary App Setup'
   protected stepIcon: IconName = 'cog' // TODO
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.TASBasicAppSetup' // BG APP DESC
   protected isHarnessSpecific = false
@@ -57,7 +57,7 @@ export class TasCanaryAppSetupStep extends PipelineStep<TasCanaryAppSetupData> {
     identifier: '',
     timeout: '10m',
     name: '',
-    type: StepType.TasCanaryAppSetup,
+    type: StepType.CanaryAppSetup,
     spec: {
       instanceCount: InstancesType.FromManifest,
       existingVersionToKeep: 1,

@@ -31,15 +31,15 @@ interface TASRollbackStepVariableStepProps {
 }
 
 export class TASRollbackStep extends PipelineStep<StepElementConfig> {
-  protected type = StepType.TasRollback
-  protected stepName = 'TAS Rollback'
+  protected type = StepType.AppRollback
+  protected stepName = 'App Rollback'
   protected stepIcon: IconName = 'cog' //TODO
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.TASRollback'
   protected isHarnessSpecific = false
   protected defaultValues: StepElementConfig = {
     identifier: '',
     name: '',
-    type: StepType.TasRollback,
+    type: StepType.AppRollback,
     timeout: '10m'
   }
 

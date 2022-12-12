@@ -22,7 +22,7 @@ const existingInitialValues = {
   identifier: 'TAS_Rollback_Stepback',
   name: 'TAS Rollback Stepback',
   timeout: '10m',
-  type: StepType.TasRollback
+  type: StepType.AppRollback
 }
 const onUpdate = jest.fn()
 const onChange = jest.fn()
@@ -37,7 +37,7 @@ describe('TASRollbackStepStep tests', () => {
     const { container, getByText } = render(
       <TestStepWidget
         initialValues={{}}
-        type={StepType.TasRollback}
+        type={StepType.AppRollback}
         onUpdate={onUpdate}
         onChange={onChange}
         ref={ref}
@@ -62,7 +62,7 @@ describe('TASRollbackStepStep tests', () => {
         identifier: 'TAS_Rollback_Step',
         name: 'TAS Rollback Step',
         timeout: '10m',
-        type: StepType.TasRollback
+        type: StepType.AppRollback
       })
     )
   })
@@ -74,15 +74,15 @@ describe('TASRollbackStepStep tests', () => {
           identifier: 'TAS_Rollback_Step',
           name: 'TAS Rollback Step',
           timeout: '',
-          type: StepType.TasRollback
+          type: StepType.AppRollback
         }}
         template={{
           identifier: 'TAS_Rollback_Step',
           name: 'TAS Rollback Step',
           timeout: RUNTIME_INPUT_VALUE,
-          type: StepType.TasRollback
+          type: StepType.AppRollback
         }}
-        type={StepType.TasRollback}
+        type={StepType.AppRollback}
         stepViewType={StepViewType.InputSet}
         onUpdate={onUpdate}
       />
@@ -101,7 +101,7 @@ describe('TASRollbackStepStep tests', () => {
       identifier: 'TAS_Rollback_Step',
       name: 'TAS Rollback Step',
       timeout: '10m',
-      type: StepType.TasRollback
+      type: StepType.AppRollback
     })
   })
 
@@ -109,7 +109,7 @@ describe('TASRollbackStepStep tests', () => {
     const { getByText } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
-        type={StepType.TasRollback}
+        type={StepType.AppRollback}
         onUpdate={onUpdate}
         onChange={onChange}
         stepViewType={StepViewType.InputVariable}
@@ -120,14 +120,14 @@ describe('TASRollbackStepStep tests', () => {
           metadataMap: {
             'TAS Rollback Stepback': {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.TasRollback.name',
-                localName: 'step.TASRollbackStep.name'
+                fqn: 'pipeline.stages.testStage.execution.steps.AppRollback.name',
+                localName: 'step.AppRollbackStep.name'
               }
             },
             '10m': {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.TasRollback.timeout',
-                localName: 'step.TasRollback.timeout'
+                fqn: 'pipeline.stages.testStage.execution.steps.AppRollback.timeout',
+                localName: 'step.AppRollback.timeout'
               }
             }
           }
