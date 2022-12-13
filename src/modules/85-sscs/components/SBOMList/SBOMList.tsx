@@ -37,8 +37,8 @@ export const SBOMList: FC = () => {
       projectIdentifier,
       orgIdentifier
     },
-    packagename: searchTerm || ''
-    // lazy: !searchTerm
+    packagename: searchTerm || '',
+    lazy: !searchTerm
   })
 
   return (
@@ -53,18 +53,22 @@ export const SBOMList: FC = () => {
             onChange={text => {
               updateQueryParams(text ? { searchTerm: text } : { searchTerm: undefined })
             }}
-            defaultValue={''}
+            defaultValue={searchTerm}
             ref={searchRef}
           />
         </Layout.Horizontal>
       </Page.SubHeader>
       <Page.Body className={css.pageBody} loading={loading} error={error?.message} retryOnError={() => refetch()}>
-        <div className={css.tableTitle}>
-          <Text color={Color.GREY_800} font={{ weight: 'bold' }}>
-            {`${getString('total')}: ${data?.packageReferences?.length}`}
-          </Text>
-        </div>
-        {data?.packageReferences && <SBOMTable data={data.packageReferences} />}
+        {data?.packageReferences?.length && (
+          <div>
+            <div className={css.tableTitle}>
+              <Text color={Color.GREY_800} font={{ weight: 'bold' }}>
+                {`${getString('total')}: ${data?.packageReferences?.length}`}
+              </Text>
+            </div>
+            {data?.packageReferences && <SBOMTable data={data.packageReferences} />}
+          </div>
+        )}
       </Page.Body>
     </>
   )
