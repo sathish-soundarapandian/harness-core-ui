@@ -19,9 +19,10 @@ import {
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { Menu } from '@blueprintjs/core'
 import { defaultTo, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import type { IItemRendererProps } from '@blueprintjs/select'
+import { MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -40,9 +41,11 @@ import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraAp
 import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import type { AzureArtifactsRegistrySpec } from 'services/pipeline-ng'
-import { ModalViewFor, scopeOptions } from '../../../ArtifactHelper'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { scopeOptions } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
+import { ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
-import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -54,7 +57,6 @@ export const packageTypeOptions: SelectOption[] = [
 function FormComponent({
   context,
   expressions,
-  allowableTypes,
   prevStepData,
   previousStep,
   formik,
@@ -163,18 +165,14 @@ function FormComponent({
     )
   }, [packagesResponse?.data])
 
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        disabled={fetchingVersions || fetchingFeeds || fetchingPackages || fetchingProjects}
-        onClick={handleClick}
-      />
-    </div>
+  const feedItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingFeeds} />
+  ))
+  const packageItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingPackages} />
+  ))
+  const projectItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingProjects} />
   ))
 
   const isFeedDisabled = (): boolean => {
@@ -209,9 +207,9 @@ function FormComponent({
               useValue
               multiTypeInputProps={{
                 expressions,
-                allowableTypes,
+                allowableTypes: [MultiTypeInputType.FIXED],
                 selectProps: {
-                  itemRenderer: itemRenderer,
+                  itemRenderer: projectItemRenderer,
                   items: getItems(fetchingProjects, 'Projects', projectItems),
                   allowCreatingNewItems: true
                 },
@@ -244,7 +242,7 @@ function FormComponent({
             useValue
             multiTypeInputProps={{
               expressions,
-              allowableTypes,
+              allowableTypes: [MultiTypeInputType.FIXED],
               selectProps: {
                 noResults: (
                   <NoTagResults
@@ -253,7 +251,7 @@ function FormComponent({
                     defaultErrorText={getString('pipeline.artifactsSelection.validation.noFeeds')}
                   />
                 ),
-                itemRenderer: itemRenderer,
+                itemRenderer: feedItemRenderer,
                 items: getItems(fetchingFeeds, 'Feeds', feedItems),
                 allowCreatingNewItems: true
               },
@@ -296,7 +294,7 @@ function FormComponent({
                     defaultErrorText={getString('pipeline.artifactsSelection.validation.noPackage')}
                   />
                 ),
-                itemRenderer: itemRenderer,
+                itemRenderer: packageItemRenderer,
                 items: getItems(fetchingPackages, 'Packages', packageItems),
                 allowCreatingNewItems: true
               },
@@ -383,7 +381,7 @@ export function AzureArtifacts(
         initialValues={initialValues}
         formName="azureArtifact"
         validationSchema={primarySchema}
-        onSubmit={formData => {
+        onSubmit={(formData: AzureArtifactsRegistrySpec) => {
           submitFormData(
             {
               ...formData
@@ -392,7 +390,7 @@ export function AzureArtifacts(
           )
         }}
       >
-        {formik => {
+        {(formik: any) => {
           return <FormComponent {...props} formik={formik} />
         }}
       </Formik>

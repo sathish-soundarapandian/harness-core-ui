@@ -60,6 +60,8 @@ import { ArtifactIdentifierValidation, ModalViewFor, scopeOptions, tagOptions } 
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import type { IItemRendererProps } from '@blueprintjs/select'
 
 export const packageTypeOptions: SelectOption[] = [
   { label: 'Maven', value: RepositoryFormatTypes.Maven },
@@ -215,18 +217,17 @@ function FormComponent({
     )
   }, [versionResponse?.data])
 
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        disabled={fetchingVersions || fetchingFeeds || fetchingPackages || fetchingProjects}
-        onClick={handleClick}
-      />
-    </div>
+  const versionItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingVersions} />
+  ))
+  const feedItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingFeeds} />
+  ))
+  const packageItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingPackages} />
+  ))
+  const projectItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingProjects} />
   ))
 
   const isFeedDisabled = (): boolean => {
@@ -278,7 +279,7 @@ function FormComponent({
                 expressions,
                 allowableTypes,
                 selectProps: {
-                  itemRenderer: itemRenderer,
+                  itemRenderer: projectItemRenderer,
                   items: getItems(fetchingProjects, 'Projects', projectItems),
                   allowCreatingNewItems: true,
                   addClearBtn: true
@@ -334,7 +335,7 @@ function FormComponent({
                     defaultErrorText={getString('pipeline.artifactsSelection.validation.noFeeds')}
                   />
                 ),
-                itemRenderer: itemRenderer,
+                itemRenderer: feedItemRenderer,
                 items: getItems(fetchingFeeds, 'Feeds', feedItems),
                 allowCreatingNewItems: true,
                 addClearBtn: true
@@ -393,7 +394,7 @@ function FormComponent({
                     defaultErrorText={getString('pipeline.artifactsSelection.validation.noPackage')}
                   />
                 ),
-                itemRenderer: itemRenderer,
+                itemRenderer: packageItemRenderer,
                 items: getItems(fetchingPackages, 'Packages', packageItems),
                 allowCreatingNewItems: true,
                 addClearBtn: true
@@ -462,7 +463,7 @@ function FormComponent({
                       defaultErrorText={getString('pipeline.artifactsSelection.validation.noBuild')}
                     />
                   ),
-                  itemRenderer: itemRenderer,
+                  itemRenderer: versionItemRenderer,
                   items: getItems(fetchingVersions, 'Versions', versionItems),
                   allowCreatingNewItems: true,
                   addClearBtn: true

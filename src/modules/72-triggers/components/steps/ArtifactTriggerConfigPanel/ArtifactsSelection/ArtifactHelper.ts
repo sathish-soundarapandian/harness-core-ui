@@ -75,7 +75,7 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   AmazonS3: 'pipeline.artifactsSelection.amazonS3Title',
   GoogleArtifactRegistry: 'pipeline.artifactsSelection.googleArtifactRegistryTitle',
   GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle',
-  AzureArtifacts: 'pipeline.artifactsSelection.azureArtifactRegistryTitle'
+  AzureArtifacts: 'connectors.title.azureArtifacts'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {

@@ -75,6 +75,7 @@ import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArt
 import { showConnectorStep } from './ArtifactUtils'
 import { GithubPackageRegistry } from './ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
 import { GoogleArtifactRegistry } from './ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
+import { AzureArtifacts } from './ArtifactRepository/ArtifactLastSteps/AzureArtifacts/AzuerArtifacts'
 import css from '@pipeline/components/ArtifactsSelection/ArtifactsSelection.module.scss'
 
 interface ArtifactsSelectionProps {
@@ -443,6 +444,8 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
         return <GoogleArtifactRegistry {...artifactLastStepProps()} />
       case 'Acr':
         return <ACRArtifact {...artifactLastStepProps()} />
+      case 'AzureArtifacts':
+        return <AzureArtifacts {...artifactLastStepProps()} />
       case 'CustomArtifact':
         return <CustomArtifact {...artifactLastStepProps()} />
       case 'Jenkins':
