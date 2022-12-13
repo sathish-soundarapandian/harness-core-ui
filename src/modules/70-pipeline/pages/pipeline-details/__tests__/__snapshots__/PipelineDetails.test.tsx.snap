@@ -163,6 +163,7 @@ exports[`Pipeline Details tests render snapshot view for non pipeline studio rou
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody"
       data-name="page-body"
+      data-testid="page-body"
     />
   </div>
 </div>

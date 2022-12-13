@@ -230,6 +230,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
               awsInstanceFilter: value.awsInstanceFilter,
               hostConnectionType: value.hostConnectionType
             }
+
             delayedOnUpdate(data as SshWinRmAwsInfrastructure)
           }}
           onSubmit={noop}
@@ -298,7 +299,9 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                           if (value) {
                             formik.setFieldValue('region', option)
                           }
-                          formik.setFieldValue('awsInstanceFilter.tags', undefined)
+                          if (formik.values.region) {
+                            formik.setFieldValue('awsInstanceFilter.tags', undefined)
+                          }
                         },
                         selectProps: {
                           items: regions,

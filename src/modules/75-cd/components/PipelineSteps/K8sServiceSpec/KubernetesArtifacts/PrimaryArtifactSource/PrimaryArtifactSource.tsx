@@ -6,11 +6,10 @@
  */
 
 import React, { useEffect } from 'react'
-import { get, isEmpty } from 'lodash-es'
+import { get, isEmpty, set } from 'lodash-es'
+import produce from 'immer'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Text } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -54,7 +53,6 @@ const ArtifactInputField = (props: KubernetesArtifactsProps): React.ReactElement
   }
   return (
     <div key={(props.artifact as SidecarArtifact).identifier}>
-      <Text className={css.inputheader}>{get(props.artifact, 'identifier', '')}</Text>
       {artifactSource &&
         artifactSource.renderContent({
           ...props,
@@ -74,7 +72,6 @@ const ArtifactInputField = (props: KubernetesArtifactsProps): React.ReactElement
 }
 
 export const PrimaryArtifactSource = (props: KubernetesArtifactsProps): React.ReactElement | null => {
-  const { getString } = useStrings()
   const primaryArtifactSource = props.template?.artifacts?.primary?.sources
   return (
     <div
@@ -83,17 +80,38 @@ export const PrimaryArtifactSource = (props: KubernetesArtifactsProps): React.Re
     >
       {Array.isArray(primaryArtifactSource) && !!primaryArtifactSource?.length && (
         <>
-          <Text className={css.inputheader}>{getString('primaryArtifactText')}</Text>
           {props.template?.artifacts?.primary?.sources?.map((primarySource, index) => {
             if (!primarySource) {
               return null
             }
 
-            const artifactPath = `primary.sources[${index}]`
+            const artifactTemplate = get(primarySource, 'template')
+            const isArtifactTemplatePresent = !isEmpty(artifactTemplate)
+
+            const artifactPath = isArtifactTemplatePresent
+              ? `primary.sources[${index}].template.templateInputs`
+              : `primary.sources[${index}]`
+            const updatedPrimarySource = isArtifactTemplatePresent
+              ? {
+                  ...primarySource,
+                  ...artifactTemplate?.templateInputs
+                }
+              : primarySource
+
+            const updatedInitialValues = isArtifactTemplatePresent
+              ? produce(props.initialValues, draft => {
+                  const identifierValue = get(props.initialValues?.artifacts, `primary.sources[${index}].identifier`)
+                  if (identifierValue) {
+                    set(draft, `artifacts.${artifactPath}.identifier`, `${identifierValue}.template.templateInputs`)
+                  }
+                })
+              : props.initialValues
+
             return (
               <ArtifactInputField
                 {...props}
-                artifact={primarySource}
+                initialValues={updatedInitialValues}
+                artifact={updatedPrimarySource}
                 artifactPath={artifactPath}
                 key={primarySource?.identifier}
               />

@@ -202,6 +202,25 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
           fieldPath="spec.transitionTo.transitionName"
         />
       ) : null}
+
+      {template?.spec?.fields?.map((field, index) => {
+        return (
+          <TextFieldInputSetView
+            label={field?.name}
+            key={field.name}
+            disabled={isApprovalStepFieldDisabled(readonly)}
+            name={`${prefix}spec.fields[${index}].value`}
+            placeholder={field.name}
+            className={css.deploymentViewMedium}
+            multiTextInputProps={{
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+              expressions
+            }}
+            fieldPath={`spec.fields[${index}].value`}
+            template={template}
+          />
+        )
+      })}
     </React.Fragment>
   )
 }

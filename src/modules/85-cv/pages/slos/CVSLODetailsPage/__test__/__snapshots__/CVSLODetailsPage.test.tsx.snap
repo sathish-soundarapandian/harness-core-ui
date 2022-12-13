@@ -4,6 +4,7 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--large StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -396,6 +397,7 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
         <div
           class="StyledProps--font StyledProps--main PageBody--pageBody"
           data-name="page-body"
+          data-testid="page-body"
         >
           <div
             class="StyledProps--font StyledProps--main StyledProps--padding-xlarge"

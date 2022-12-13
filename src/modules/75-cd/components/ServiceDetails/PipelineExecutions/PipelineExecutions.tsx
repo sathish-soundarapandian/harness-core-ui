@@ -13,7 +13,6 @@ import { Color } from '@harness/design-system'
 import { useGetDeploymentsByServiceId, GetDeploymentsByServiceIdQueryParams } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
-import { CardVariant } from '@pipeline/utils/constants'
 import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import { executionStatusInfoToExecutionSummary } from '@cd/pages/dashboard/CDDashboardPage'
 import { DeploymentsTimeRangeContext } from '@cd/components/Services/common'
@@ -88,7 +87,6 @@ export const PipelineExecutions: React.FC = () => {
           const deployment = filteredDeployments[index]
           return (
             <ExecutionCard
-              variant={CardVariant.Minimal}
               key={deployment?.planExecutionId}
               pipelineExecution={executionStatusInfoToExecutionSummary(deployment, DashboardSelected.SERVICEDETAIL)}
             />

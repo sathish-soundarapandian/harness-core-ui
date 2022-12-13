@@ -194,6 +194,10 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
                 setAwsRoles([])
               }}
               setRefValue
+              templateProps={{
+                isTemplatizedView: true,
+                templateValue: inputSetData?.template?.spec?.configuration?.spec?.connectorRef
+              }}
             />
           </div>
         )

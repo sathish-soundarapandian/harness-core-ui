@@ -18,6 +18,7 @@ const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 
 const GenerateStringTypesPlugin = require('../scripts/webpack/GenerateStringTypesPlugin').GenerateStringTypesPlugin
 const moduleFederationConfig = require('./modulefederation.config')
+const CodeModules = require('../src/modules/60-code/modules')
 const {
   container: { ModuleFederationPlugin }
 } = webpack
@@ -33,7 +34,7 @@ const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
 const enableCIUI = process.env.ENABLE_CI_UI === 'true'
 const enableTIUI = process.env.ENABLE_TI_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
-const enableSCM = process.env.ENABLE_SCM === 'true'
+const enableCODE = process.env.ENABLE_CODE === 'true'
 const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
 
 console.log('Common build flags')
@@ -45,7 +46,7 @@ console.table({
   enableCIUI,
   enableTIUI,
   enableSTO,
-  enableSCM,
+  enableCODE,
   enableFFUI
 })
 
@@ -202,7 +203,7 @@ const config = {
         enableCCMUI,
         enableCIUI,
         enableTIUI,
-        enableSCM,
+        enableCODE,
         enableFFUI
       })
     ),
@@ -257,21 +258,9 @@ if (!enableSTO) {
   config.resolve.alias['stoV2/PipelineSecurityView'] = ChildAppError
 }
 
-// render a mock app when SCM MF is disabled
-if (!enableSCM) {
-  const scmModules = [
-    'scm/Welcome',
-    'scm/Repos',
-    'scm/NewRepo',
-    'scm/RepoFiles',
-    'scm/RepoFileDetail',
-    'scm/RepoCommits',
-    'scm/RepoCommitDetail',
-    'scm/RepoPullRequests',
-    'scm/RepoPullRequestDetail',
-    'scm/RepoSettings'
-  ]
-  scmModules.forEach(mod => (config.resolve.alias[mod] = ChildAppError))
+// render a mock app when CODE MF is disabled
+if (!enableCODE) {
+  CodeModules.forEach(mod => (config.resolve.alias[mod] = ChildAppError))
 }
 
 if (!enableFFUI) {

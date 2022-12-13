@@ -190,7 +190,7 @@ exports[`FeatureFlagsDetailPage FeatureFlagsDetailPage should render data correc
             </span>
           </h4>
           <div
-            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main containerBorder StyledProps--background-primary1 StyledProps--padding-small"
+            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main containerBorder StyledProps--background-primary1 StyledProps--padding-top-xsmall StyledProps--padding-right-small StyledProps--padding-bottom-xsmall StyledProps--padding-left-small"
           >
             <span
               class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small"

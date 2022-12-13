@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { merge } from 'lodash-es'
+import { defaultTo, merge } from 'lodash-es'
 import { Tabs, Tab } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { StageType } from '@pipeline/utils/stageHelpers'
@@ -16,6 +17,8 @@ import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/
 import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
 import { StepMode } from '@pipeline/utils/stepUtils'
 import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
+import { useExecutionDetails } from 'services/pipeline-ng'
+import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { WaitStepDetailsTab } from '../../tabs/WaitStepDetailsTab/WaitStepDetailsTab'
 import { ManualInterventionTab } from '../../tabs/ManualInterventionTab/ManualInterventionTab'
 import css from '../DefaultView/DefaultView.module.scss'
@@ -30,6 +33,7 @@ enum StepDetailTab {
 export function WaitStepView(props: StepDetailProps): React.ReactElement {
   const { step, stageType = StageType.DEPLOY, isStageExecutionInputConfigured } = props
   const { getString } = useStrings()
+  const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<ExecutionPathProps>>()
   const shouldShowInputOutput =
     ((step?.stepType ?? '') as string) !== 'liteEngineTask' && !isStageExecutionInputConfigured
   const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
@@ -49,6 +53,16 @@ export function WaitStepView(props: StepDetailProps): React.ReactElement {
       setActiveTab(tab)
     }
   }, [step.identifier, isManualInterruption, isWaitingOnExecInputs, isStageExecutionInputConfigured])
+
+  const { data: executionDetails, loading } = useExecutionDetails({
+    nodeExecutionId: defaultTo(step?.uuid, ''),
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier
+    }
+  })
+
   return (
     <div className={css.tabs}>
       <Tabs
@@ -64,7 +78,7 @@ export function WaitStepView(props: StepDetailProps): React.ReactElement {
           <Tab
             id={StepDetailTab.STEP_DETAILS}
             title={getString('details')}
-            panel={<WaitStepDetailsTab step={step} />}
+            panel={<WaitStepDetailsTab step={step} executionDetails={executionDetails} loading={loading} />}
           />
         }
         {shouldShowInputOutput && (

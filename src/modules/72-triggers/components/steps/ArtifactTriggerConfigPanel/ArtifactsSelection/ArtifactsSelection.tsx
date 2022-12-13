@@ -29,6 +29,7 @@ import {
   buildAzurePayload,
   buildDockerPayload,
   buildGcpPayload,
+  buildGithubPayload,
   buildNexusPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
@@ -52,6 +53,8 @@ import { getTriggerArtifactInitialSpec } from '@triggers/components/Triggers/Art
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
 import type { ArtifactTriggerConfig, NGTriggerSourceV2 } from 'services/pipeline-ng'
+import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
+import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import { GCRImagePath } from './ArtifactRepository/ArtifactLastSteps/GCRImagePath/GCRImagePath'
 import { ECRArtifact } from './ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
@@ -384,6 +387,24 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
             <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifactType]} {...connectorDetailStepProps} />
             <GcpAuthentication name={getString('details')} {...authenticationStepProps} />
             <DelegateSelectorStep buildPayload={buildGcpPayload} {...delegateStepProps} />
+            <ConnectorTestConnection
+              type={ArtifactToConnectorMap[selectedArtifactType]}
+              {...ConnectorTestConnectionProps}
+            />
+          </StepWizard>
+        )
+      case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
+        return (
+          <StepWizard title={stepWizardTitle}>
+            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifactType]} {...connectorDetailStepProps} />
+            <GitDetailsStep
+              type={ArtifactToConnectorMap[selectedArtifactType]}
+              {...connectorDetailStepProps}
+              {...authenticationStepProps}
+              name={getString('details')}
+            />
+            <StepGithubAuthentication name={getString('credentials')} {...authenticationStepProps} />
+            <DelegateSelectorStep buildPayload={buildGithubPayload} {...delegateStepProps} />
             <ConnectorTestConnection
               type={ArtifactToConnectorMap[selectedArtifactType]}
               {...ConnectorTestConnectionProps}

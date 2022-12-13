@@ -41,10 +41,10 @@ exports[`Artifactory Artifact Source tests snapshot test for Sidecar Artifactory
             class="imagePathContainer"
           >
             <div
-              class="StyledProps--font StyledProps--main tagInputButton"
+              class="StyledProps--font StyledProps--main"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                class="Layout--horizontal StyledProps--main"
               >
                 <div
                   class="bp3-form-group"
@@ -244,6 +244,11 @@ exports[`Artifactory Artifact Source tests snapshot test for Sidecar Artifactory
                     </button>
                   </span>
                 </span>
+              </div>
+              <div
+                class="bp3-form-helper-text"
+              >
+                connector, repository  are  pipeline.artifactOrImagePathDependencyRequired
               </div>
             </div>
           </div>

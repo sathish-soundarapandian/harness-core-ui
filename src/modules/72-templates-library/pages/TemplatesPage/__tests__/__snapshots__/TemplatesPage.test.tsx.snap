@@ -4,6 +4,7 @@ exports[`<TemplatesPage /> tests should match snapshot 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard templatesPageHeader StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -96,6 +97,7 @@ exports[`<TemplatesPage /> tests should match snapshot 1`] = `
   </div>
   <div
     class="Layout--horizontal StyledProps--main PageSubHeader--container templatesPageSubHeader StyledProps--flex"
+    data-testid="page-subheader"
   >
     <div
       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
@@ -362,6 +364,7 @@ exports[`<TemplatesPage /> tests should match snapshot 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody templatesPageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--margin-bottom-large StyledProps--flex StyledProps--flex-alignItems-center"
@@ -456,6 +459,7 @@ exports[`<TemplatesPage /> tests should render error view correctly 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard templatesPageHeader StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -548,6 +552,7 @@ exports[`<TemplatesPage /> tests should render error view correctly 1`] = `
   </div>
   <div
     class="Layout--horizontal StyledProps--main PageSubHeader--container templatesPageSubHeader StyledProps--flex"
+    data-testid="page-subheader"
   >
     <div
       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
@@ -814,9 +819,11 @@ exports[`<TemplatesPage /> tests should render error view correctly 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody templatesPageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main PageError--pageError StyledProps--flex StyledProps--flex-align-center-center"
+      data-testid="page-error"
       style="width: 100%; height: 100%;"
     >
       <div
@@ -868,6 +875,7 @@ exports[`<TemplatesPage /> tests should render loading view correctly 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard templatesPageHeader StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -960,6 +968,7 @@ exports[`<TemplatesPage /> tests should render loading view correctly 1`] = `
   </div>
   <div
     class="Layout--horizontal StyledProps--main PageSubHeader--container templatesPageSubHeader StyledProps--flex"
+    data-testid="page-subheader"
   >
     <div
       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
@@ -1226,9 +1235,11 @@ exports[`<TemplatesPage /> tests should render loading view correctly 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody templatesPageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main PageSpinner--spinner StyledProps--flex StyledProps--flex-align-center-center"
+      data-testid="page-spinner"
     >
       <div
         class="Layout--vertical Layout--layout-spacing-medium StyledProps--main PageSpinner--content"
@@ -1310,6 +1321,7 @@ exports[`<TemplatesPage /> tests should render no results view correctly 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard templatesPageHeader StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -1402,6 +1414,7 @@ exports[`<TemplatesPage /> tests should render no results view correctly 1`] = `
   </div>
   <div
     class="Layout--horizontal StyledProps--main PageSubHeader--container templatesPageSubHeader StyledProps--flex"
+    data-testid="page-subheader"
   >
     <div
       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
@@ -1668,6 +1681,7 @@ exports[`<TemplatesPage /> tests should render no results view correctly 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody templatesPageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--vertical Layout--layout-spacing-xxxlarge StyledProps--main mainContainer StyledProps--flex StyledProps--flex-align-center-center"

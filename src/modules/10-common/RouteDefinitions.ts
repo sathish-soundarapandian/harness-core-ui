@@ -6,7 +6,8 @@
  */
 
 import qs from 'qs'
-import { getScopeBasedRoute, withAccountId } from '@common/utils/routeUtils'
+import { omit as _omit } from 'lodash-es'
+import { getEnvServiceRoute, getScopeBasedRoute, withAccountId } from '@common/utils/routeUtils'
 import type {
   OrgPathProps,
   ConnectorPathProps,
@@ -16,6 +17,8 @@ import type {
   ProjectPathProps,
   PipelinePathProps,
   TriggerPathProps,
+  GitOpsAppPathProps,
+  GitOpsAppQueryParams,
   ExecutionPathProps,
   FeatureFlagPathProps,
   BuildPathProps,
@@ -49,8 +52,7 @@ import type {
   EnvironmentQueryParams,
   AccountLevelGitOpsPathProps,
   TemplateType,
-  SCMPathProps,
-  RequireField
+  AccountRoutePlacement
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -806,17 +808,96 @@ const routes = {
       path
     })
   }),
+  toGitOpsApplication: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      applicationId,
+      ...rest
+    }: GitOpsAppPathProps & ModulePathParams & GitOpsAppQueryParams) => {
+      const queryString = qs.stringify(_omit(rest, 'accountId'), { skipNulls: true })
+      if (queryString.length > 0) {
+        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops/applications/${applicationId}?${queryString}`
+      } else {
+        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops/applications/${applicationId}`
+      }
+    }
+  ),
   toServices: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/services`
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      accountRoutePlacement
+    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }>) => {
+      return getEnvServiceRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path: 'services',
+        accountRoutePlacement
+      })
+    }
   ),
   toServiceStudio: withAccountId(
-    ({ orgIdentifier, projectIdentifier, serviceId, module }: PipelineType<ProjectPathProps & ServicePathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/services/${serviceId}`
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      serviceId,
+      module,
+      accountRoutePlacement
+    }: Partial<
+      ProjectPathProps & ModulePathParams & ServicePathProps & { accountRoutePlacement?: AccountRoutePlacement }
+    >) => {
+      return getEnvServiceRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path: `services/${serviceId}`,
+        accountRoutePlacement
+      })
+    }
   ),
   toEnvironment: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment`
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      accountRoutePlacement
+    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }>) => {
+      return getEnvServiceRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path: 'environment',
+        accountRoutePlacement
+      })
+    }
+  ),
+  toEnvironmentGroups: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      accountRoutePlacement
+    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }>) => {
+      return getEnvServiceRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path: 'environment-group',
+        accountRoutePlacement
+      })
+    }
   ),
   toEnvironmentDetails: withAccountId(
     ({
@@ -825,35 +906,49 @@ const routes = {
       projectIdentifier,
       module,
       environmentIdentifier,
+      accountRoutePlacement,
       ...rest
-    }: PipelineType<ProjectPathProps & EnvironmentPathProps & EnvironmentQueryParams>) => {
+    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }> &
+      EnvironmentQueryParams &
+      EnvironmentPathProps) => {
       const queryString = qs.stringify(rest, { skipNulls: true })
-      if (queryString.length > 0) {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment/${environmentIdentifier}/details?${queryString}`
-      } else {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment/${environmentIdentifier}/details`
-      }
+      const routePath = getEnvServiceRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path: `environment/${environmentIdentifier}/details`,
+        accountRoutePlacement
+      })
+
+      return queryString.length > 0 ? `${routePath}?${queryString}` : routePath
     }
-  ),
-  toEnvironmentGroups: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment-group`
   ),
   toEnvironmentGroupDetails: withAccountId(
     ({
       accountId,
       orgIdentifier,
       projectIdentifier,
-      environmentGroupIdentifier,
       module,
+      environmentGroupIdentifier,
+      accountRoutePlacement,
       ...rest
-    }: PipelineType<ProjectPathProps & EnvironmentGroupPathProps & EnvironmentGroupQueryParams>) => {
+    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }> &
+      EnvironmentGroupQueryParams &
+      EnvironmentGroupPathProps) => {
       const queryString = qs.stringify(rest, { skipNulls: true })
-      if (queryString.length > 0) {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment-group/${environmentGroupIdentifier}/details?${queryString}`
-      } else {
-        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment-group/${environmentGroupIdentifier}/details`
-      }
+      const routePath = getEnvServiceRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path: `environment-group/${environmentGroupIdentifier}/details`,
+        accountRoutePlacement
+      })
+
+      return queryString.length > 0 ? `${routePath}?${queryString}` : routePath
     }
   ),
   toPipelineDetail: withAccountId(
@@ -1361,88 +1456,18 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/onboarding`
   ),
+
   toCFOnboardingDetail: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/onboarding/detail`
   ),
-
   toCFConfigurePath: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/configurePath`
   ),
 
-  // SCM Module (https://harness.atlassian.net/wiki/spaces/SCM/overview?homepageId=21144371782)
-  toSCM: withAccountId(() => `/scm`),
-  toSCMHome: withAccountId(() => `/scm/home`),
-  toSCMRepos: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: SCMPathProps) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos`
-  ),
-  toSCMNewRepo: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: SCMPathProps) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/new`
-  ),
-  toSCMRepoSettings: withAccountId(
-    ({ orgIdentifier, projectIdentifier, repoName }: RequireField<SCMPathProps, 'repoName'>) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/settings`
-  ),
-  toSCMFiles: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      repoName,
-      branchName
-    }: RequireField<SCMPathProps, 'repoName' | 'branchName'>) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}`
-  ),
-  toSCMFileDetails: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      repoName,
-      branchName,
-      filePath
-    }: RequireField<SCMPathProps, 'repoName' | 'branchName' | 'filePath'>) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/files/${filePath}`
-  ),
-  toSCMPullRequests: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      repoName,
-      branchName
-    }: RequireField<SCMPathProps, 'repoName' | 'branchName'>) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/pull-requests`
-  ),
-  toSCMPullRequestDetails: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      repoName,
-      branchName,
-      pullRequestId
-    }: RequireField<SCMPathProps, 'repoName' | 'branchName' | 'pullRequestId'>) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/pull-requests/${pullRequestId}`
-  ),
-  toSCMCommits: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      repoName,
-      branchName
-    }: RequireField<SCMPathProps, 'repoName' | 'branchName'>) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/commits`
-  ),
-  toSCMCommitDetails: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      repoName,
-      branchName,
-      commitId
-    }: RequireField<SCMPathProps, 'repoName' | 'branchName' | 'commitId'>) =>
-      `/scm/orgs/${orgIdentifier}/projects/${projectIdentifier}/repos/${repoName}/branches/${branchName}/commits/${commitId}`
-  ),
+  toCODE: withAccountId(() => `/code`),
+  toCODEHome: withAccountId(() => `/code/home`),
 
   /********************************************************************************************************************/
   toCV: (params: Partial<ProjectPathProps>): string =>
@@ -1529,6 +1554,9 @@ const routes = {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos`
     }
   ),
+  toAccountCVSLOs: withAccountId(() => {
+    return `/cv/slos`
+  }),
   toCVSLODetailsPage: withAccountId(
     ({
       module = 'cv',
@@ -1537,6 +1565,9 @@ const routes = {
       projectIdentifier
     }: Partial<ProjectPathProps & { identifier: string; module: string }>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/${identifier}`
+  ),
+  toAccountCVSLODetailsPage: withAccountId(
+    ({ module = 'cv', identifier }: { identifier: string; module?: string }) => `/${module}/slos/${identifier}`
   ),
   toErrorTracking: withAccountId(
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
@@ -1553,6 +1584,9 @@ const routes = {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/create/composite`
     }
   ),
+  toAccountCVCreateCompositeSLOs: withAccountId(({ module = 'cv' }: { module?: string }) => {
+    return `/${module}/slos/create/composite`
+  }),
   toCVAddMonitoringServicesSetup: withAccountId(
     ({ projectIdentifier, orgIdentifier }: Partial<ProjectPathProps & { identifier: string }>) =>
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservices/setup`
@@ -1800,6 +1834,14 @@ const routes = {
   toCommitmentOrchestration: withAccountId(() => `/ce/commitment-orchestration`),
   toCommitmentOrchestrationSetup: withAccountId(() => `/ce/commitment-orchestration/setup`),
   toCECloudIntegration: withAccountId(() => `/ce/cloud-integrations/`),
+  toCEGovernance: withAccountId(() => `/ce/governance/`),
+  toCEGovernanceRules: withAccountId(() => `/ce/governance/rules/`),
+  toCEGovernanceEnforcements: withAccountId(() => `/ce/governance/enforcements/`),
+  toCEGovernanceEvaluations: withAccountId(() => `/ce/governance/evaluations/`),
+  toCEGovernanceRuleEditor: withAccountId(
+    ({ ruleId }: { ruleId: string }) => `/ce/governance/rules/${ruleId}/rule-editor/`
+  ),
+  toCECurrencyPreferences: withAccountId(() => `/ce/currency-preferences`),
   toCCMMFE: withAccountId(() => `/ce/new`),
   /********************************************************************************************************************/
   toSTO: withAccountId(() => `/sto`),

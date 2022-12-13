@@ -120,7 +120,7 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
                 class="Tooltip--acenter"
                 data-tooltip-id="GithubPackageRegistry_pipeline.stages[0].stage.spec.seviceConfig.serviceDefinition.spec.artifacts.primary.spec.org"
               >
-                projectsOrgs.orgName
+                projectsOrgs.orgName (optional)
               </span>
                
               <span
@@ -506,7 +506,7 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
                 class="Tooltip--acenter"
                 data-tooltip-id="GithubPackageRegistry_pipeline.stages[0].stage.spec.seviceConfig.serviceDefinition.spec.artifacts.primary.spec.org"
               >
-                projectsOrgs.orgName
+                projectsOrgs.orgName (optional)
               </span>
                
               <span

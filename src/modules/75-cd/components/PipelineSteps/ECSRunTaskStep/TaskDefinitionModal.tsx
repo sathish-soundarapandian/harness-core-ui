@@ -23,6 +23,8 @@ import StepGithubAuthentication from '@connectors/components/CreateConnector/Git
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
+import { buildAWSPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { ManifestWizard } from '@pipeline/components/ManifestSelection/ManifestWizard/ManifestWizard'
@@ -45,6 +47,7 @@ import type {
   ManifestLastStepProps,
   ManifestStores
 } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import { ECSWithS3 } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ECSWithS3/ECSWithS3'
 import css from './TaskDefinitionModal.module.scss'
 
 const DIALOG_PROPS: IDialogProps = {
@@ -153,6 +156,9 @@ export const TaskDefinitionModal = (props: TaskDefinitionModalProps): React.Reac
       case store === ManifestStoreMap.Harness:
         manifestDetailStep = <HarnessFileStore {...lastStepProps()} />
         break
+      case store === ManifestStoreMap.S3:
+        manifestDetailStep = <ECSWithS3 {...lastStepProps()} />
+        break
       default:
         manifestDetailStep = <CommonManifestDetails {...lastStepProps()} />
         break
@@ -224,31 +230,43 @@ export const TaskDefinitionModal = (props: TaskDefinitionModalProps): React.Reac
   const getNewConnectorSteps = useCallback((): JSX.Element => {
     const buildPayload = getBuildPayload(ManifestToConnectorMap[store])
 
-    return (
-      <StepWizard title={getString('connectors.createNewConnector')}>
-        <ConnectorDetailsStep {...connectorDetailStepProps} />
-        <GitDetailsStep
-          type={ManifestToConnectorMap[store]}
-          name={getString('details')}
-          isEditMode={isEditMode}
-          connectorInfo={undefined}
-        />
-        {ManifestToConnectorMap[store] === Connectors.GIT ? (
-          <StepGitAuthentication {...gitTypeStoreAuthenticationProps} />
-        ) : null}
-        {ManifestToConnectorMap[store] === Connectors.GITHUB ? (
-          <StepGithubAuthentication {...gitTypeStoreAuthenticationProps} />
-        ) : null}
-        {ManifestToConnectorMap[store] === Connectors.BITBUCKET ? (
-          <StepBitbucketAuthentication {...gitTypeStoreAuthenticationProps} />
-        ) : null}
-        {ManifestToConnectorMap[store] === Connectors.GITLAB ? (
-          <StepGitlabAuthentication {...authenticationStepProps} />
-        ) : null}
-        <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildPayload} />
-        <ConnectorTestConnection {...ConnectorTestConnectionProps} />
-      </StepWizard>
-    )
+    switch (store) {
+      case ManifestStoreMap.S3:
+        return (
+          <StepWizard iconProps={{ size: 37 }} title={getString('connectors.createNewConnector')}>
+            <ConnectorDetailsStep {...connectorDetailStepProps} />
+            <StepAWSAuthentication {...authenticationStepProps} />
+            <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildAWSPayload} />
+            <ConnectorTestConnection {...ConnectorTestConnectionProps} />
+          </StepWizard>
+        )
+      default:
+        return (
+          <StepWizard title={getString('connectors.createNewConnector')}>
+            <ConnectorDetailsStep {...connectorDetailStepProps} />
+            <GitDetailsStep
+              type={ManifestToConnectorMap[store]}
+              name={getString('details')}
+              isEditMode={isEditMode}
+              connectorInfo={undefined}
+            />
+            {ManifestToConnectorMap[store] === Connectors.GIT ? (
+              <StepGitAuthentication {...gitTypeStoreAuthenticationProps} />
+            ) : null}
+            {ManifestToConnectorMap[store] === Connectors.GITHUB ? (
+              <StepGithubAuthentication {...gitTypeStoreAuthenticationProps} />
+            ) : null}
+            {ManifestToConnectorMap[store] === Connectors.BITBUCKET ? (
+              <StepBitbucketAuthentication {...gitTypeStoreAuthenticationProps} />
+            ) : null}
+            {ManifestToConnectorMap[store] === Connectors.GITLAB ? (
+              <StepGitlabAuthentication {...authenticationStepProps} />
+            ) : null}
+            <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildPayload} />
+            <ConnectorTestConnection {...ConnectorTestConnectionProps} />
+          </StepWizard>
+        )
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectorView, store, isEditMode])

@@ -25,7 +25,7 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
               class="jenkinsFieldContainer"
             >
               <div
-                class="formGroup sm"
+                class="formGroup xxlg"
               >
                 <div
                   class="bp3-form-group bp3-disabled"
@@ -541,7 +541,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
               class="jenkinsFieldContainer"
             >
               <div
-                class="formGroup sm"
+                class="formGroup xxlg"
               >
                 <div
                   class="bp3-form-group bp3-disabled"
@@ -1025,7 +1025,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
               class="jenkinsFieldContainer"
             >
               <div
-                class="formGroup sm"
+                class="formGroup xxlg"
               >
                 <div
                   class="bp3-form-group bp3-disabled"

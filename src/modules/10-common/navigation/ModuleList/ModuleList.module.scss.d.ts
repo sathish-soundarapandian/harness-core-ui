@@ -11,10 +11,13 @@ declare const styles: {
   readonly blue: string
   readonly clickable: string
   readonly configScreenWithoutReorder: string
+  readonly infoTooltipText: string
   readonly link: string
   readonly modulesList: string
   readonly modulesListContainer: string
+  readonly popover: string
   readonly secondaryText: string
   readonly secondaryTextContainer: string
+  readonly tooltipIcon: string
 }
 export default styles

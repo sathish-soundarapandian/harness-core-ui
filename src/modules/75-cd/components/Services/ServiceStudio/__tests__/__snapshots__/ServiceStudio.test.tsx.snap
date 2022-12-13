@@ -7,6 +7,7 @@ exports[`ServiceStudio should render ServiceStudio 1`] = `
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--large header StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+      data-testid="page-header"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -71,7 +72,7 @@ exports[`ServiceStudio should render ServiceStudio 1`] = `
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/dummy/undefined/orgs/dummy/projects/dummy/services"
+                href="/account/dummy/home/orgs/dummy/projects/dummy/services"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
@@ -237,7 +238,7 @@ exports[`ServiceStudio should render ServiceStudio 1`] = `
                             role="tab"
                             tabindex="0"
                           >
-                            cd.serviceDashboard.activeServiceInstancesLabel
+                            cd.serviceDashboard.runningServiceInstancesLabel
                           </div>
                           <div
                             aria-controls="bp3-tab-panel_ServiceDetailTabs_Deployments"
@@ -250,7 +251,7 @@ exports[`ServiceStudio should render ServiceStudio 1`] = `
                             role="tab"
                             tabindex="0"
                           >
-                            pipeline.dashboards.activeDeployments
+                            cd.serviceDashboard.recentDeployments
                           </div>
                         </div>
                         <div

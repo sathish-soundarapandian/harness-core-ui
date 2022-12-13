@@ -1,0 +1,777 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Referenced_By Tab Test render data with gitSync 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard secondHeader StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    />
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main"
+      >
+        <div
+          class="bp3-input-group ui-search-box ExpandingSearchInput--main search  ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+          data-name=""
+          style="width: 350px; max-width: 350px;"
+        >
+          <span
+            class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+            data-icon="thinner-search"
+          >
+            <svg
+              fill="none"
+              height="14"
+              viewBox="0 0 16 16"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <input
+            class="bp3-input  ExpandingSearchInput--filter"
+            dir="auto"
+            placeholder="Search"
+            style="padding-right: 38px;"
+            type="search"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <div
+      class="TableV2--table table tableWithSpace"
+    >
+      <div
+        class="TableV2--header"
+        role="row"
+      >
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 30%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            entity
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 50%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            COMMON.GITSYNC.REPODETAILS
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 20%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            details
+          </p>
+        </div>
+      </div>
+      <div
+        class="TableV2--body"
+      >
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 30%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                    style="--text-line-clamp: 1;"
+                  >
+                    Triggers - 2
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  Pipelines
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            />
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 30%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                    style="--text-line-clamp: 1;"
+                  >
+                    Triggers
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  Pipelines
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            />
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 30%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                    style="--text-line-clamp: 1;"
+                  >
+                    Stage Template
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  Pipelines
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            />
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 30%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                    style="--text-line-clamp: 1;"
+                  >
+                    Stage 1 (v1)
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  Template
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            />
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 30%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                    style="--text-line-clamp: 1;"
+                  >
+                    env group 15
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  EnvironmentGroup
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            />
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 30%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                    style="--text-line-clamp: 1;"
+                  >
+                    Test 11
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  EnvironmentGroup
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            />
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 30%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                    style="--text-line-clamp: 1;"
+                  >
+                    Env Group 7
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  EnvironmentGroup
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Referenced_By Tab Test render for data 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard secondHeader StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    />
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main"
+      >
+        <div
+          class="bp3-input-group ui-search-box ExpandingSearchInput--main search  ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+          data-name=""
+          style="width: 350px; max-width: 350px;"
+        >
+          <span
+            class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+            data-icon="thinner-search"
+          >
+            <svg
+              fill="none"
+              height="14"
+              viewBox="0 0 16 16"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <input
+            class="bp3-input  ExpandingSearchInput--filter"
+            dir="auto"
+            placeholder="Search"
+            style="padding-right: 38px;"
+            type="search"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <div
+      class="TableV2--table table tableWithSpace"
+    >
+      <div
+        class="TableV2--header"
+        role="row"
+      >
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 50%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            entity
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 50%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            details
+          </p>
+        </div>
+      </div>
+      <div
+        class="TableV2--body"
+      >
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                    style="--text-line-clamp: 1;"
+                  >
+                    testSuccess
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  Pipelines
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            />
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                    style="--text-line-clamp: 1;"
+                  >
+                    IgnoreFailedPipe
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  Pipelines
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            />
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                    style="--text-line-clamp: 1;"
+                  >
+                    testSuccess
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  Pipelines
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            />
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                    style="--text-line-clamp: 1;"
+                  >
+                    IgnoreFailedPipe
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  Pipelines
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Referenced_By Tab Test render for no data 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard secondHeader StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    />
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main"
+      >
+        <div
+          class="bp3-input-group ui-search-box ExpandingSearchInput--main search  ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+          data-name=""
+          style="width: 350px; max-width: 350px;"
+        >
+          <span
+            class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+            data-icon="thinner-search"
+          >
+            <svg
+              fill="none"
+              height="14"
+              viewBox="0 0 16 16"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <input
+            class="bp3-input  ExpandingSearchInput--filter"
+            dir="auto"
+            placeholder="Search"
+            style="padding-right: 38px;"
+            type="search"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <div
+      class="StyledProps--font StyledProps--main NoDataCard--noDataCard StyledProps--flex StyledProps--flex-align-center-center"
+    >
+      <div
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+        style="align-items: center; margin-top: -48px; width: 470px;"
+      >
+        <span
+          class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey600"
+          data-icon="nav-project"
+        >
+          <svg
+            height="48"
+            viewBox="0 0 16 16"
+            width="48"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              clip-rule="evenodd"
+              d="M8.163 1.126a.5.5 0 00-.5 0L2.056 4.36a.5.5 0 00-.25.433v6.234a.5.5 0 00.248.432l5.87 3.415a.5.5 0 00.501 0l5.631-3.259a.5.5 0 00.25-.433V7.478a.5.5 0 00-1 0v3.417l-4.625 2.677.035-5.07 5.34-3.091a.5.5 0 000-.865l-5.894-3.42zM7.717 8.5l-.035 5.077-4.875-2.837V5.66l4.91 2.84zm.502-.865l-4.913-2.84 4.606-2.659 4.897 2.842-4.59 2.657zm-3.864-.068a.5.5 0 10-.5.866l2.165 1.25a.5.5 0 10.5-.866l-2.165-1.25z"
+              fill="currentColor"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <p
+          class="StyledProps--font StyledProps--main NoDataCard--message StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
+        >
+          common.noRefData
+        </p>
+        <div
+          class="NoDataCard--buttonContainer"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

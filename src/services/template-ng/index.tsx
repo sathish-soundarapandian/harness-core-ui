@@ -18,6 +18,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'UPDATE'
     | 'RESTORE'
     | 'DELETE'
+    | 'FORCE_DELETE'
     | 'UPSERT'
     | 'INVITE'
     | 'RESEND_INVITE'
@@ -35,7 +36,21 @@ export type AuditFilterProperties = FilterProperties & {
   )[]
   endTime?: number
   environments?: Environment[]
-  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS')[]
+  modules?: (
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'IACM'
+  )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
   scopes?: ResourceScopeDTO[]
@@ -43,11 +58,18 @@ export type AuditFilterProperties = FilterProperties & {
   staticFilter?: 'EXCLUDE_LOGIN_EVENTS' | 'EXCLUDE_SYSTEM_EVENTS'
 }
 
+export interface CacheResponseMetadata {
+  cacheState: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
+  lastUpdatedAt: number
+  ttlLeft: number
+}
+
 export interface CcmConnectorFilter {
   awsAccountId?: string
+  awsAccountIds?: string[]
   azureSubscriptionId?: string
   azureTenantId?: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
   gcpProjectId?: string
   k8sConnectorRef?: string[]
 }
@@ -113,6 +135,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Tas'
     | 'Spot'
   )[]
 }
@@ -491,6 +514,8 @@ export interface Error {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -847,6 +872,8 @@ export interface ErrorMetadata {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   errorMessage?: string
 }
 
@@ -1209,6 +1236,8 @@ export interface Failure {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1243,9 +1272,14 @@ export interface FilterProperties {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
   tags?: {
     [key: string]: string
   }
+}
+
+export type GitErrorMetadataDTO = ErrorMetadataDTO & {
+  branch?: string
 }
 
 export interface InputSetError {
@@ -1292,7 +1326,15 @@ export interface NGTemplateInfoConfig {
   tags?: {
     [key: string]: string
   }
-  type: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager' | 'ArtifactSource'
+  type:
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
+    | 'StepGroup'
   variables?: NGVariable[]
   versionLabel: string
 }
@@ -1466,6 +1508,9 @@ export interface ResourceDTO {
     | 'AUTOSTOPPING_STARTSTOP'
     | 'SETTING'
     | 'NG_LOGIN_SETTINGS'
+    | 'CLOUD_ASSET_GOVERNANCE_RULE'
+    | 'CLOUD_ASSET_GOVERNANCE_RULE_SET'
+    | 'CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT'
 }
 
 export interface ResourceScopeDTO {
@@ -1860,6 +1905,8 @@ export interface ResponseMessage {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -1872,6 +1919,7 @@ export interface ResponseMessage {
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
+    | 'APPROVAL_REJECTION'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -2062,6 +2110,7 @@ export interface TemplateFilterProperties {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
   listingScope?: TemplateScope
   repoName?: string
   tags?: {
@@ -2075,6 +2124,7 @@ export interface TemplateFilterProperties {
     | 'MonitoredService'
     | 'SecretManager'
     | 'ArtifactSource'
+    | 'StepGroup'
   )[]
   templateIdentifiers?: string[]
   templateNames?: string[]
@@ -2100,6 +2150,7 @@ export interface TemplateInfo {
     | 'MonitoredService'
     | 'SecretManager'
     | 'ArtifactSource'
+    | 'StepGroup'
   templateIdentifier?: string
   versionLabel?: string
 }
@@ -2122,6 +2173,7 @@ export interface TemplateListRepoResponse {
 }
 
 export interface TemplateMergeResponse {
+  cacheResponseMetadata?: CacheResponseMetadata
   mergedPipelineYaml?: string
   mergedPipelineYamlWithTemplateRef?: string
   templateReferenceSummaries?: TemplateReferenceSummary[]
@@ -2153,6 +2205,7 @@ export interface TemplateMetadataSummaryResponse {
     | 'MonitoredService'
     | 'SecretManager'
     | 'ArtifactSource'
+    | 'StepGroup'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
@@ -2173,6 +2226,7 @@ export interface TemplateReferenceSummary {
 
 export interface TemplateResponse {
   accountId: string
+  cacheResponseMetadata?: CacheResponseMetadata
   childType?: string
   connectorRef?: string
   description?: string
@@ -2197,6 +2251,7 @@ export interface TemplateResponse {
     | 'MonitoredService'
     | 'SecretManager'
     | 'ArtifactSource'
+    | 'StepGroup'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
@@ -2243,6 +2298,7 @@ export interface TemplateSummaryResponse {
     | 'MonitoredService'
     | 'SecretManager'
     | 'ArtifactSource'
+    | 'StepGroup'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
@@ -2350,6 +2406,7 @@ export interface GetFilterListQueryParams {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
 }
 
 export type GetFilterListProps = Omit<
@@ -2515,6 +2572,7 @@ export interface DeleteFilterQueryParams {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
 }
 
 export type DeleteFilterProps = Omit<
@@ -2581,6 +2639,7 @@ export interface GetFilterQueryParams {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
 }
 
 export interface GetFilterPathParams {
@@ -3630,6 +3689,7 @@ export interface GetTemplateSchemaQueryParams {
     | 'MonitoredService'
     | 'SecretManager'
     | 'ArtifactSource'
+    | 'StepGroup'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'

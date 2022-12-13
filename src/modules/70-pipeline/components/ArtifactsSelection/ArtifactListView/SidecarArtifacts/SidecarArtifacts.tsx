@@ -10,7 +10,10 @@ import { Icon } from '@harness/icons'
 import { Button, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
+import { isEmpty } from 'lodash-es'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
+import type { TemplateStepNode } from 'services/pipeline-ng'
+import { ArtifactSourceTemplateView } from '@pipeline/components/ArtifactsSelection/ArtifactListView/PrimaryArtifact/PrimaryArtifactView'
 import { useStrings } from 'framework/strings'
 import type { PageConnectorResponse, SidecarArtifact, SidecarArtifactWrapper } from 'services/cd-ng'
 import { ArtifactIconByType, ArtifactTitleIdByType, ENABLED_ARTIFACT_TYPES, ModalViewFor } from '../../ArtifactHelper'
@@ -76,7 +79,28 @@ function SidecarArtifacts({
           return sidecarConnectorName ?? sidecar?.spec?.connectorRef
         }
 
-        return (
+        const templateActionBtns = isReadonly ? null : (
+          <Layout.Horizontal>
+            <Button
+              icon="Edit"
+              minimal
+              iconProps={{ size: 18 }}
+              onClick={() => {
+                editArtifact(ModalViewFor.SIDECAR, sidecar?.type as ArtifactType, index)
+              }}
+            />
+            <Button iconProps={{ size: 18 }} icon="main-trash" minimal onClick={() => removeSidecar(index)} />
+          </Layout.Horizontal>
+        )
+
+        const artifactSourceTemplate = (sidecar as TemplateStepNode)?.template
+
+        return !isEmpty(artifactSourceTemplate) ? (
+          <ArtifactSourceTemplateView
+            artifactSourceTemplateData={sidecar as TemplateStepNode}
+            templateActionBtns={templateActionBtns}
+          />
+        ) : (
           <section className={cx(css.artifactList, css.rowItem)} key={`${sidecar?.identifier}-${index}`}>
             <div>
               <Text width={200} className={css.type} color={Color.BLACK} lineClamp={1}>

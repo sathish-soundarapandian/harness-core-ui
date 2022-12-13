@@ -10,6 +10,7 @@ import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useFeatureFlag from '@common/hooks/useFeatureFlag'
+import mockImport from 'framework/utils/mockImport'
 import type { MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes.types'
 import ModuleTagsFilter, { ModuleTagsFilterProps } from '../ModuleTagsFilter'
 
@@ -38,8 +39,12 @@ describe('ModuleTagsFilter', () => {
       CENG_ENABLED: true,
       CING_ENABLED: true,
       CDNG_ENABLED: true,
-      CFNG_ENABLED: true,
-      SECURITY: true
+      CFNG_ENABLED: true
+    })
+    mockImport('framework/LicenseStore/LicenseStoreContext', {
+      useLicenseStore: jest.fn().mockImplementation(() => ({
+        licenseInformation: { STO: { status: 'ACTIVE' } }
+      }))
     })
   })
 
@@ -59,8 +64,12 @@ describe('ModuleTagsFilter', () => {
       CENG_ENABLED: true,
       CING_ENABLED: true,
       CDNG_ENABLED: false,
-      CFNG_ENABLED: false,
-      SECURITY: false
+      CFNG_ENABLED: false
+    })
+    mockImport('framework/LicenseStore/LicenseStoreContext', {
+      useLicenseStore: jest.fn().mockImplementation(() => ({
+        licenseInformation: { STO: { status: 'EXPIRED' } }
+      }))
     })
 
     renderComponent()

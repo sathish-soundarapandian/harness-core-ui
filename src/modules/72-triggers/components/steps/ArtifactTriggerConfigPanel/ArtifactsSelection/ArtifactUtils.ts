@@ -119,17 +119,6 @@ export const checkIfQueryParamsisNotEmpty = (queryParamList: Array<string | numb
     return querydata !== undefined
   })
 }
-export const shouldFetchTags = (
-  prevStepData: ConnectorConfigDTO | undefined,
-  queryParamList: Array<string | number>
-): boolean => {
-  return (
-    !isEmpty(getConnectorIdValue(prevStepData)) &&
-    getMultiTypeFromValue(getConnectorIdValue(prevStepData)) === MultiTypeInputType.FIXED &&
-    checkIfQueryParamsisNotEmpty(queryParamList) &&
-    queryParamList.every(query => getMultiTypeFromValue(query) === MultiTypeInputType.FIXED)
-  )
-}
 
 export const getFinalArtifactObj = (
   formData: ImagePathTypes & { connectorId?: string },

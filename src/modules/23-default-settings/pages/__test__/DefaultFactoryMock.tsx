@@ -187,6 +187,7 @@ export const responseData = {
         value: 'dfdfsf',
         defaultValue: 'default',
         settingSource: 'ACCOUNT',
+        allowedScopes: ['ACCOUNT', 'ORGANIZATION', 'PROJECT'],
         isSettingEditable: true
       },
       lastModifiedAt: 1658989800873
@@ -205,6 +206,7 @@ export const responseData = {
         value: 'something',
         defaultValue: 'default',
         settingSource: 'ACCOUNT',
+        allowedScopes: ['ACCOUNT', 'ORGANIZATION', 'PROJECT'],
         isSettingEditable: true
       },
       lastModifiedAt: 1658991313071
@@ -223,6 +225,7 @@ export const responseData = {
         value: 'default',
         defaultValue: 'default',
         settingSource: 'ACCOUNT',
+        allowedScopes: ['ACCOUNT', 'ORGANIZATION', 'PROJECT'],
         isSettingEditable: true
       },
       lastModifiedAt: 1658745566476
@@ -241,6 +244,7 @@ export const responseData = {
         value: '21',
         defaultValue: '2',
         settingSource: 'ACCOUNT',
+        allowedScopes: ['ACCOUNT', 'ORGANIZATION', 'PROJECT'],
         isSettingEditable: true
       },
       lastModifiedAt: 1658989811878
@@ -259,6 +263,7 @@ export const responseData = {
         value: 'default',
         defaultValue: 'default',
         settingSource: 'DEFAULT',
+        allowedScopes: ['ACCOUNT', 'ORGANIZATION', 'PROJECT'],
         isSettingEditable: true
       },
       lastModifiedAt: null
@@ -277,6 +282,7 @@ export const responseData = {
         value: 'default',
         defaultValue: 'default',
         settingSource: 'DEFAULT',
+        allowedScopes: ['ACCOUNT', 'ORGANIZATION', 'PROJECT'],
         isSettingEditable: false
       },
       lastModifiedAt: null
@@ -295,6 +301,7 @@ export const responseData = {
         value: 'default',
         defaultValue: 'default',
         settingSource: 'DEFAULT',
+        allowedScopes: ['ACCOUNT', 'ORGANIZATION', 'PROJECT'],
         isSettingEditable: false
       },
       lastModifiedAt: null
@@ -313,6 +320,7 @@ export const responseData = {
         value: 'default',
         defaultValue: 'default',
         settingSource: 'DEFAULT',
+        allowedScopes: ['ACCOUNT', 'ORGANIZATION', 'PROJECT'],
         isSettingEditable: false
       },
       lastModifiedAt: null

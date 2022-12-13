@@ -21,8 +21,7 @@ import {
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { AwsCurAttributes } from 'services/cd-ng'
-import type { CEAwsConnector } from 'services/ce'
+import type { AwsCurAttributes, CEAwsConnector } from 'services/cd-ng'
 import { CE_AWS_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import ConnectorInstructionList from '@connectors/common/ConnectorCreationInstructionList/ConnectorCreationInstructionList'
@@ -47,10 +46,14 @@ const CostUsageStep: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   const handleSubmit = (formData: AwsCurAttributes) => {
     const newspec: CEAwsConnector = {
       crossAccountAccess: { crossAccountRoleArn: '' },
-      ...prevStepData?.spec,
-      curAttributes: formData
+      ...prevStepData?.spec
     }
     const payload = prevStepData
+
+    if (!isExistingCostUsageReport) {
+      newspec.curAttributes = formData
+    }
+
     if (payload) {
       payload.spec = newspec
       payload.includeBilling = !isExistingCostUsageReport

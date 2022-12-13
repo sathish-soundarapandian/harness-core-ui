@@ -44,7 +44,6 @@ const useGetUsageAndLimitReturnMock = {
 jest.mock('@common/hooks/useGetUsageAndLimit', () => ({
   useGetUsage: () => useGetUsageAndLimitReturnMock
 }))
-
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
 useExtendTrialLicenseMock.mockImplementation(() => {
   return {

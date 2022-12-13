@@ -32,6 +32,7 @@ import type {
   DeployServiceEntityCustomProps,
   DeployServiceEntityData
 } from '@cd/components/PipelineSteps/DeployServiceEntityStep/DeployServiceEntityUtils'
+import { useStrings } from 'framework/strings'
 import PropagateFromServiceV2 from './PropagateWidget/PropagateFromServiceV2'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
@@ -58,6 +59,7 @@ export default function DeployServiceEntitySpecifications({
     updateStage
   } = usePipelineContext()
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
+  const { getString } = useStrings()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = useCallback(
     debounce(
@@ -91,7 +93,10 @@ export default function DeployServiceEntitySpecifications({
         )
       } else {
         const isSingleSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef)
-        const isMultiSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.services?.values)
+
+        /*  Currently BE does not support use from stage with multi services, so commenting this temporarily, to filter out stages with multi service. 
+        Once BE has support for multi service propagate, we need to just add the condition as ( !isSingleSvcEmpty || !isMultiSvcEmpty) */
+        // const isMultiSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.services?.values)
 
         const prevStageItemDeploymentType = (stageItem.stage as DeploymentStageElementConfig)?.spec?.deploymentType
         const prevStageItemCustomDeploymentConfig = (stageItem.stage as DeploymentStageElementConfig)?.spec
@@ -104,11 +109,7 @@ export default function DeployServiceEntitySpecifications({
               isEqual(prevStageItemCustomDeploymentConfig, currentStageCustomDeploymentConfig)
             : prevStageItemDeploymentType === currentStageDeploymentType
 
-        return (
-          (!isSingleSvcEmpty || !isMultiSvcEmpty) &&
-          currentStageType === stageItem?.stage?.type &&
-          areDeploymentDetailsSame
-        )
+        return !isSingleSvcEmpty && currentStageType === stageItem?.stage?.type && areDeploymentDetailsSame
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -126,15 +127,17 @@ export default function DeployServiceEntitySpecifications({
             value: stageItem.stage?.identifier || ''
           }
         } else if (!get(stageItem.stage, `spec.serviceConfig.useFromStage`)) {
-          const defaultService = (stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef
+          const singleServiceRef = (stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef
+          const serviceLabelVal = isEmpty(singleServiceRef) ? getString('services') : `Service [${singleServiceRef}]`
           return {
-            label: `Stage [${stageItem.stage?.name}] - Service [${defaultService}]`,
+            label: `Stage [${stageItem.stage?.name}] - ${serviceLabelVal}`,
             value: stageItem.stage?.identifier
           }
         }
       })
     }
-  }, [getStagesAllowedforPropogate, stageIndex, stages])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stageIndex])
 
   const [selectedPropagatedState, setSelectedPropagatedState] = useState<SelectOption | string>(
     previousStageList?.find(v => v?.value === stage?.stage?.spec?.service?.useFromStage?.stage) as SelectOption
@@ -156,12 +159,8 @@ export default function DeployServiceEntitySpecifications({
 
   const updateService = useCallback(
     async (value: DeployServiceEntityData) => {
-      const isPropogatedFromStage = !isEmpty(get(stage, 'stage.spec.service.useFromStage'))
       const stageData = produce(stage, draft => {
         if (draft) {
-          if (isPropogatedFromStage) {
-            unset(draft, 'stage.spec.service.useFromStage')
-          }
           if (!isNil(value.service)) {
             set(draft, 'stage.spec.service', value.service)
             unset(draft, 'stage.spec.services')
@@ -173,19 +172,34 @@ export default function DeployServiceEntitySpecifications({
       })
       await debounceUpdateStage(stageData?.stage)
     },
-    [debounceUpdateStage, stage]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [stage]
   )
 
   const getDeployServiceWidgetInitValues = useCallback((): DeployServiceEntityData => {
-    return {
-      ...pick(stage?.stage?.spec, ['service', 'services']),
-      ...(scope !== Scope.PROJECT &&
-        isEmpty(get(stage, 'stage.spec.service.serviceRef')) && {
-          service: { serviceRef: RUNTIME_INPUT_VALUE }
-        })
+    if (setupModeType === setupMode.DIFFERENT) {
+      return {
+        ...pick(stage?.stage?.spec, ['service', 'services']),
+        ...(scope !== Scope.PROJECT &&
+          isEmpty(get(stage, 'stage.spec.service.serviceRef')) && {
+            service: { serviceRef: RUNTIME_INPUT_VALUE }
+          })
+      }
+    } else {
+      const stagewithServiceV2 = stages.slice(0, stageIndex).filter(getStagesAllowedforPropogate)
+      const propogatedFromStage = stagewithServiceV2?.find(
+        eachStage => eachStage?.stage?.identifier === stage?.stage?.spec?.service?.useFromStage?.stage
+      )
+      return {
+        ...pick(propogatedFromStage?.stage?.spec, ['service', 'services']),
+        ...(scope !== Scope.PROJECT &&
+          isEmpty(get(stage, 'stage.spec.service.serviceRef')) && {
+            service: { serviceRef: RUNTIME_INPUT_VALUE }
+          })
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [setupModeType, stage?.stage?.spec?.service?.useFromStage?.stage, selectedPropagatedState])
 
   const onPropogatedStageSelect = useCallback(
     (value: SelectOption): void => {
@@ -197,16 +211,26 @@ export default function DeployServiceEntitySpecifications({
       debounceUpdateStage(stageData?.stage)
       setSelectedPropagatedState(value)
     },
-    [debounceUpdateStage, stage]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [stage]
   )
   const onStageServiceChange = useCallback(
     (mode: string): void => {
       if (!isReadonly) {
         setSetupMode(mode)
         setSelectedPropagatedState('')
+        const stageData = produce(stage, draft => {
+          if (draft) {
+            if (mode === setupMode.DIFFERENT) {
+              unset(draft, 'stage.spec.service.useFromStage')
+            }
+          }
+        })
+        updateStage(stageData?.stage as StageElementConfig)
       }
     },
-    [isReadonly]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   )
 
   return (
@@ -225,28 +249,27 @@ export default function DeployServiceEntitySpecifications({
             />
           </Container>
         )}
-        {setupModeType === setupMode.DIFFERENT && (
-          <StepWidget<DeployServiceEntityData, DeployServiceEntityCustomProps>
-            type={StepType.DeployServiceEntity}
-            readonly={isReadonly}
-            initialValues={getDeployServiceWidgetInitValues()}
-            allowableTypes={
-              scope === Scope.PROJECT
-                ? allowableTypes
-                : ((allowableTypes as MultiTypeInputType[]).filter(
-                    item => item !== MultiTypeInputType.FIXED
-                  ) as AllowedTypes)
-            }
-            onUpdate={updateService}
-            factory={factory}
-            stepViewType={StepViewType.Edit}
-            customStepProps={{
-              stageIdentifier: defaultTo(stage?.stage?.identifier, ''),
-              deploymentType: stage?.stage?.spec?.deploymentType,
-              gitOpsEnabled: defaultTo(stage?.stage?.spec?.gitOpsEnabled, false)
-            }}
-          />
-        )}
+        <StepWidget<DeployServiceEntityData, DeployServiceEntityCustomProps>
+          type={StepType.DeployServiceEntity}
+          readonly={isReadonly || setupModeType === setupMode.PROPAGATE}
+          initialValues={getDeployServiceWidgetInitValues()}
+          allowableTypes={
+            scope === Scope.PROJECT
+              ? allowableTypes
+              : ((allowableTypes as MultiTypeInputType[]).filter(
+                  item => item !== MultiTypeInputType.FIXED
+                ) as AllowedTypes)
+          }
+          onUpdate={updateService}
+          factory={factory}
+          stepViewType={StepViewType.Edit}
+          customStepProps={{
+            stageIdentifier: defaultTo(stage?.stage?.identifier, ''),
+            deploymentType: stage?.stage?.spec?.deploymentType,
+            gitOpsEnabled: defaultTo(stage?.stage?.spec?.gitOpsEnabled, false),
+            setupModeType
+          }}
+        />
         <Container margin={{ top: 'xxlarge' }}>{children}</Container>
       </div>
     </div>

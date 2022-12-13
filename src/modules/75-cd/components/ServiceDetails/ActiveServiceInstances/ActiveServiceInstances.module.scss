@@ -159,3 +159,14 @@
   font-size: var(--font-size-mall) !important;
   color: var(--grey-800) !important;
 }
+
+.spinner {
+  height: 100px;
+}
+
+.errorText {
+  color: var(--red-500) !important;
+  margin: 4px 0;
+  font-size: 12px;
+  padding-top: 1% !important;
+}

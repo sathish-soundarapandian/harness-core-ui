@@ -118,6 +118,7 @@ const useDelete = (identifier: string, name: string, type: string, notCurrentNod
     intent: Intent.DANGER,
     buttonIntent: Intent.DANGER,
     onCloseDialog: async (isConfirmed: boolean) => {
+      /* istanbul ignore next */
       if (isConfirmed) {
         if (isCachedNode(currentNode.identifier)) {
           removeFromTempNodes(currentNode.identifier)

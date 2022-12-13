@@ -22,8 +22,7 @@ import {
   createTooltipLabel,
   createChangeInfoCardData,
   getStartAndEndTime,
-  createTimelineSeriesData,
-  createNoDataMessage
+  createTimelineSeriesData
 } from '../ChangeTimeline.utils'
 import { ChangeSourceTypes } from '../ChangeTimeline.constants'
 
@@ -103,20 +102,5 @@ describe('Verify Util funcitons', () => {
     expect(createTooltipLabel(4, ChangeSourceTypes.Incidents, getString)).toEqual('4 cv.changeSource.tooltip.incidents')
     expect(createTooltipLabel(1, ChangeSourceTypes.Infrastructure, getString)).toEqual('1 infrastructureText change')
     expect(createTooltipLabel(4, ChangeSourceTypes.Infrastructure, getString)).toEqual('4 infrastructureText changes')
-  })
-
-  test('Shoudl valdiate createNoDataMessage', () => {
-    expect(createNoDataMessage([], ChangeSourceTypes.Deployments, '24 hours ', getString)).toEqual(
-      'cv.changeSource.noDataAvailableForChangeScore.  cv.monitoredServices.serviceHealth.pleaseSelectAnotherTimeWindow'
-    )
-    expect(createNoDataMessage([], ChangeSourceTypes.Incidents, '24 hours ', getString)).toEqual(
-      'cv.changeSource.noDataAvailableForChangeScore.  cv.monitoredServices.serviceHealth.pleaseSelectAnotherTimeWindow'
-    )
-    expect(createNoDataMessage([], ChangeSourceTypes.Infrastructure, '24 hours ', getString)).toEqual(
-      'cv.changeSource.noDataAvailableForChangeScore.  cv.monitoredServices.serviceHealth.pleaseSelectAnotherTimeWindow'
-    )
-    expect(createNoDataMessage([{}], ChangeSourceTypes.Deployments, '24 hours ', getString)).toEqual('')
-    expect(createNoDataMessage([{}], ChangeSourceTypes.Incidents, '24 hours ', getString)).toEqual('')
-    expect(createNoDataMessage([{}], ChangeSourceTypes.Infrastructure, '24 hours ', getString)).toEqual('')
   })
 })

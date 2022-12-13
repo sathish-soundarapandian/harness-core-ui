@@ -37,6 +37,12 @@ export function TerraformVariableStep(props: TerraformPlanVariableStepProps): Re
             metadataMap={metadataMap}
             className={pipelineVariableCss.variablePaddingL4}
           />
+          <VariablesListTable
+            data={variablesData?.spec?.configuration?.backendConfig?.spec?.store?.spec}
+            originalData={initialValues.spec?.configuration?.backendConfig?.spec?.store?.spec}
+            metadataMap={metadataMap}
+            className={pipelineVariableCss.variablePaddingL4}
+          />
         </>
       )}
       {variablesData?.spec?.configuration?.environmentVariables && (

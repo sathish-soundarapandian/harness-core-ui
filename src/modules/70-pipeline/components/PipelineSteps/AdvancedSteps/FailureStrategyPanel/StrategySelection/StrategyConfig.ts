@@ -67,6 +67,27 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.ProceedWithDefaultValues
         ]
       }
+    case StageType.PIPELINE:
+      return {
+        [Modes.STEP]: [
+          Strategy.ManualIntervention,
+          Strategy.StageRollback,
+          Strategy.Ignore,
+          Strategy.Retry,
+          Strategy.MarkAsSuccess,
+          Strategy.Abort,
+          Strategy.ProceedWithDefaultValues
+        ],
+        [Modes.STEP_GROUP]: [
+          Strategy.ManualIntervention,
+          Strategy.StageRollback,
+          Strategy.Ignore,
+          Strategy.Retry,
+          Strategy.MarkAsSuccess,
+          Strategy.Abort
+        ],
+        [Modes.STAGE]: [Strategy.Ignore, Strategy.MarkAsSuccess, Strategy.Abort, Strategy.ProceedWithDefaultValues]
+      }
     case StageType.DEPLOY:
     default:
       return {
@@ -111,9 +132,16 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.Verification,
     ErrorType.PolicyEvaluationFailure,
     ErrorType.AllErrors,
-    ErrorType.InputTimeoutError
+    ErrorType.InputTimeoutError,
+    ErrorType.ApprovalRejection
   ],
-  [StageType.BUILD]: [ErrorType.Timeout, ErrorType.Unknown, ErrorType.InputTimeoutError, ErrorType.AllErrors],
+  [StageType.BUILD]: [
+    ErrorType.Timeout,
+    ErrorType.Unknown,
+    ErrorType.InputTimeoutError,
+    ErrorType.AllErrors,
+    ErrorType.ApprovalRejection
+  ],
   [StageType.APPROVAL]: [
     ErrorType.Authentication,
     ErrorType.Authorization,
@@ -124,7 +152,8 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.Verification,
     ErrorType.AllErrors,
     ErrorType.PolicyEvaluationFailure,
-    ErrorType.InputTimeoutError
+    ErrorType.InputTimeoutError,
+    ErrorType.ApprovalRejection
   ],
   [StageType.FEATURE]: [ErrorType.Timeout, ErrorType.Unknown, ErrorType.InputTimeoutError, ErrorType.AllErrors],
   [StageType.SECURITY]: [ErrorType.Timeout, ErrorType.Unknown, ErrorType.InputTimeoutError, ErrorType.AllErrors],
@@ -138,7 +167,8 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.Verification,
     ErrorType.AllErrors,
     ErrorType.PolicyEvaluationFailure,
-    ErrorType.InputTimeoutError
+    ErrorType.InputTimeoutError,
+    ErrorType.ApprovalRejection
   ],
   [StageType.CUSTOM]: [
     ErrorType.Authentication,
@@ -150,7 +180,8 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.Verification,
     ErrorType.AllErrors,
     ErrorType.PolicyEvaluationFailure,
-    ErrorType.InputTimeoutError
+    ErrorType.InputTimeoutError,
+    ErrorType.ApprovalRejection
   ],
   [StageType.Template]: [],
   [StageType.MATRIX]: [],

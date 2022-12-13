@@ -24,7 +24,7 @@ import {
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { get, isEmpty } from 'lodash-es'
+import { get, isEmpty, remove } from 'lodash-es'
 import { Classes } from '@blueprintjs/core'
 import {
   OrganizationResponse,
@@ -32,7 +32,7 @@ import {
   useGetOrganizationList,
   useGetProjectAggregateDTOList
 } from 'services/cd-ng'
-import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import {
@@ -67,7 +67,8 @@ const queryParamOptions = {
 
 export function PipelineStageMinimalMode(props: any): React.ReactElement {
   const { getString } = useStrings()
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
+  const { accountId, orgIdentifier, projectIdentifier, pipelineIdentifier } =
+    useParams<PipelineType<PipelinePathProps>>()
   const { selectedOrg: currentOrg, selectedProject: currentProject } = useAppStore()
   const { repoIdentifier, branch, page, size } = useQueryParams<PartialPipelineListPageQueryParams>(queryParamOptions)
   const { getRBACErrorMessage } = useRBACError()
@@ -134,6 +135,11 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
         }
       )
       if (status === 'SUCCESS') {
+        if (data?.content)
+          // Parent pipeline should not be displayed in the child pipeline selection list.
+          remove(data.content, (pipelineObj: PMSPipelineSummaryResponse) => {
+            return pipelineObj?.identifier === pipelineIdentifier
+          })
         setPipelineListData(data)
       }
     } catch (e) {
@@ -178,10 +184,16 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
     return options
   }, [projectData, selectedProject, projectsQuery, selectedOrg])
 
-  function handleOrgChange(item: SelectOption): void {
+  const handleOrgChange = (item: SelectOption): void => {
     setSelectedOrg(item)
     setSelectedProject({ label: '', value: '' } as SelectOption)
     setSelectedRow({})
+  }
+
+  const handleClose = (): void => {
+    window.dispatchEvent(new CustomEvent('CLOSE_CREATE_STAGE_POPOVER'))
+    setSelectedRow({})
+    setOpen(false)
   }
 
   return (
@@ -191,14 +203,14 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
         enforceFocus={false}
         canEscapeKeyClose
         canOutsideClickClose
-        onClose={() => setOpen(false)}
+        onClose={handleClose}
         className={css.dialog}
         title={
           <Text font={{ variation: FontVariation.H3 }}>{getString('pipeline.pipelineChaining.selectPipeline')}</Text>
         }
       >
         <Container className={css.mainContainer}>
-          <Layout.Horizontal padding={{ top: 'large' }} spacing="medium">
+          <Layout.Horizontal padding={{ top: 'xsmall' }} spacing="medium" flex={{ alignItems: 'flex-end' }}>
             <div className={css.searchBox}>
               <TextInput
                 wrapperClassName={css.search}
@@ -210,9 +222,15 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
               />
             </div>
             <div className={css.selectInput}>
+              <Text margin={{ bottom: 'small' }} font={{ variation: FontVariation.H6 }} color={Color.GREY_800}>
+                {getString('orgLabel')}
+              </Text>
               <Select items={organizations} onChange={handleOrgChange} value={selectedOrg} />
             </div>
             <div className={css.selectInput}>
+              <Text margin={{ bottom: 'small' }} font={{ variation: FontVariation.H6 }} color={Color.GREY_800}>
+                {getString('projectLabel')}
+              </Text>
               <Select
                 items={projects}
                 onQueryChange={setProjectsQuery}
@@ -221,6 +239,7 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
                   setSelectedRow({})
                 }}
                 value={selectedProject}
+                popoverClassName={css.projectListPopover}
               />
             </div>
           </Layout.Horizontal>
@@ -256,10 +275,17 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
               variation={ButtonVariation.PRIMARY}
               text={getString('entityReference.apply')}
               onClick={() => setOpen(false)}
-              disabled={isEmpty(selectedRow)}
+              disabled={isEmpty(selectedRow) || isEmpty(selectedOrg.value) || isEmpty(selectedProject.value)}
               className={cx(Classes.POPOVER_DISMISS)}
+              tooltip={
+                isEmpty(selectedProject.value)
+                  ? getString('pipeline.pipelineChaining.noProjectSelected')
+                  : isEmpty(selectedRow)
+                  ? getString('pipeline.pipelineChaining.noPipelineSelected')
+                  : undefined
+              }
             />
-            <Button variation={ButtonVariation.TERTIARY} text={getString('cancel')} onClick={() => setOpen(false)} />
+            <Button variation={ButtonVariation.TERTIARY} text={getString('cancel')} onClick={handleClose} />
           </Layout.Horizontal>
         </Container>
       </Dialog>

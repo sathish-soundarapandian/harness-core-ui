@@ -10,7 +10,8 @@ import type { AdditionalInfo } from 'services/cv'
 export const VerificationJobType: { [key: string]: AdditionalInfo['type'] } = {
   TEST: 'TEST',
   CANARY: 'CANARY',
-  BLUE_GREEN: 'BLUE_GREEN'
+  BLUE_GREEN: 'BLUE_GREEN',
+  ROLLING: 'ROLLING'
 }
 
 export enum HealthSourcesType {
@@ -25,3 +26,5 @@ export enum HealthSourcesType {
 export const appId = '_ia5NKUCSoytYrZJMM15mQ' //t0-jbpLoR7S2BTsNfsk4Iw'
 export const ADD_NEW_VALUE = '@@add_new'
 export const EXECUTED_BY = 'executedBy'
+
+export const ThresholdPercentageToShowBanner = 75

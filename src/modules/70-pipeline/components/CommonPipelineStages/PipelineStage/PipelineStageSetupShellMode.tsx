@@ -20,12 +20,13 @@ import { PipelineStageOverview } from './PipelineStageOverview'
 import { PipelineStageAdvancedSpecifications } from './PipelineStageAdvancedSpecifications'
 import { PipelineStageInputSection } from './PipelineStageInputSection'
 import { PipelineStageTabs, TabsHeadingOrder } from './utils'
+import { PipelineStageOutputSection } from './PipelineStageOutputSection/PipelineStageOutputSection'
 import approvalStepCss from '../ApprovalStage/ApprovalStageSetupShellMode.module.scss'
 
 export function PipelineStageSetupShellMode(): React.ReactElement {
   const { getString } = useStrings()
   const layoutRef = useRef<HTMLDivElement>(null)
-  const [selectedTabId, setSelectedTabId] = useState<PipelineStageTabs>(PipelineStageTabs.OVERVIEW)
+  const [selectedTabId, setSelectedTabId] = useState<PipelineStageTabs>(PipelineStageTabs.INPUTS)
   const pipelineContext = usePipelineContext()
   const { checkErrorsForTab } = React.useContext(StageErrorContext)
   const {
@@ -43,11 +44,19 @@ export function PipelineStageSetupShellMode(): React.ReactElement {
   const { stage: selectedStage } = getStageFromPipeline<StageElementConfig>(selectedStageId)
 
   const handleTabChange = (nextTab: PipelineStageTabs): void => {
-    checkErrorsForTab(selectedTabId).then(_ => {
-      updatePipeline(pipeline)
+    const nextTabIdx = TabsHeadingOrder.indexOf(nextTab)
+    const currentTabIdx = TabsHeadingOrder.indexOf(selectedTabId)
+
+    if (nextTabIdx < currentTabIdx) {
       setSelectedTabId(nextTab)
       setSelectedSectionId(nextTab)
-    })
+    } else {
+      checkErrorsForTab(selectedTabId).then(_ => {
+        updatePipeline(pipeline)
+        setSelectedTabId(nextTab)
+        setSelectedSectionId(nextTab)
+      })
+    }
   }
 
   const actionBtns: React.ReactElement = (
@@ -88,7 +97,7 @@ export function PipelineStageSetupShellMode(): React.ReactElement {
     <section ref={layoutRef} key={selectedStageId} className={approvalStepCss.approvalStageSetupShellWrapper}>
       <Tabs
         id="pipelineStageSetupShell"
-        onChange={(tabId: PipelineStageTabs) => setSelectedTabId(tabId)}
+        onChange={(tabId: PipelineStageTabs) => handleTabChange(tabId)}
         selectedTabId={selectedTabId}
         data-tabId={selectedTabId}
       >
@@ -115,12 +124,32 @@ export function PipelineStageSetupShellMode(): React.ReactElement {
           id={PipelineStageTabs.INPUTS}
           title={
             <span className={approvalStepCss.tab}>
-              <Icon name="deployment-success-legacy" height={20} size={20} />
+              <Icon name="template-inputs" height={20} size={20} />
               {getString('inputs')}
             </span>
           }
           panel={<PipelineStageInputSection storeMetadata={storeMetadata}>{actionBtns}</PipelineStageInputSection>}
           data-testid={PipelineStageTabs.INPUTS}
+          className={cx(approvalStepCss.fullHeight, approvalStepCss.stepGroup)}
+        />
+        <Icon
+          name="chevron-right"
+          height={20}
+          size={20}
+          margin={{ right: 'small', left: 'small' }}
+          color={'grey400'}
+          style={{ alignSelf: 'center' }}
+        />
+        <Tab
+          id={PipelineStageTabs.OUTPUTS}
+          title={
+            <span className={approvalStepCss.tab}>
+              <Icon name="pipeline-outputs" height={20} size={20} color={'black'} />
+              {getString('connectors.ceAws.crossAccountRoleExtention.step3.p2')}
+            </span>
+          }
+          panel={<PipelineStageOutputSection>{actionBtns}</PipelineStageOutputSection>}
+          data-testid={PipelineStageTabs.OUTPUTS}
           className={cx(approvalStepCss.fullHeight, approvalStepCss.stepGroup)}
         />
         <Icon

@@ -12,6 +12,22 @@
       "minimumCount": 3,
       "disallowPipelineExecutor": true
     },
+    "validatedApprovalUserGroups": [
+      {
+        "accountIdentifier": "OgiB4-xETamKNVAz-wQRjw",
+        "orgIdentifier": null,
+        "projectIdentifier": null,
+        "identifier": "ug1",
+        "name": "ug1"
+      },
+      {
+        "accountIdentifier": "OgiB4-xETamKNVAz-wQRjw",
+        "orgIdentifier": null,
+        "projectIdentifier": null,
+        "identifier": "ug2",
+        "name": "ug2"
+      }
+    ],
     "approvalActivities": [
       {
         "user": {

@@ -18,13 +18,12 @@ import type RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/R
 import type routes from '@common/RouteDefinitions'
 import type { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { IdentifierSchema, NameSchema } from '@common/utils/Validation'
+import type { Description } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import type { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { getIdentifierFromName } from '@common/utils/StringUtils'
 import type * as trackingConstants from '@common/constants/TrackingConstants'
 import type useActiveEnvironment from './hooks/useActiveEnvironment'
-import type SectionNoData from './components/NoData/SectionNoData/SectionNoData'
-import type { EnvironmentSDKKeyType } from './utils/CFUtils'
 
 export interface FFCustomMicroFrontendProps {
   ffServices: typeof ffServices & {
@@ -42,7 +41,7 @@ export interface FFCustomMicroFrontendProps {
   customComponents: {
     RbacOptionsMenuButton: typeof RbacOptionsMenuButton
     ContainerSpinner: typeof ContainerSpinner
-    SectionNoData: typeof SectionNoData
+    Description: typeof Description
   }
   customRoutes: typeof routes
   customUtils: {
@@ -51,7 +50,6 @@ export interface FFCustomMicroFrontendProps {
     getIdentifierFromName: typeof getIdentifierFromName
   }
   customEnums: {
-    EnvironmentSDKKeyType: typeof EnvironmentSDKKeyType
     FeatureIdentifier: typeof FeatureIdentifier
     trackingConstants: typeof trackingConstants
   }

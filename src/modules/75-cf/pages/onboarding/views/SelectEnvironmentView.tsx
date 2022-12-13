@@ -43,7 +43,7 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = ({
   const [dialogOpen, setDialogOpen] = useState(false)
   const [createEnvName, setCreateEnvName] = useState<string>('')
 
-  const { EnvironmentSelect, loading, error, refetch, environments } = useEnvironmentSelectV2({
+  const { EnvironmentSelect, loading, error, refetch } = useEnvironmentSelectV2({
     selectedEnvironmentIdentifier: selectedEnvironment?.identifier,
     allowCreatingNewItems: true,
     noDefault: true,
@@ -76,67 +76,70 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = ({
   }
 
   return (
-    <Layout.Vertical spacing="xsmall" margin={{ top: 'xlarge' }} className={css.grid}>
-      <Text
-        font={{ variation: FontVariation.BODY1 }}
-        color={Color.GREY_800}
-        margin={{ top: 'medium', bottom: 'medium' }}
-      >
-        {getString('cf.onboarding.selectOrCreateEnvironment')}
-      </Text>
-      <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
-        {getString('cf.onboarding.environmentDescription')}
-      </Text>
-      <Container>
-        <Layout.Horizontal spacing="small">
-          {loading && <Icon name="spinner" size={16} color="blue500" />}
-          {!loading && (
-            <>
-              <Container width={250}>
-                <EnvironmentSelect />
-              </Container>
-              {!!environments?.length && createEnvName && dialogOpen && (
-                <EnvironmentDialog
-                  createEnvFromInput={true}
-                  createEnvName={createEnvName}
-                  onCreate={newEnv => {
-                    setSelectedEnvironment(newEnv?.data)
-                    setEnvironmentCreated(true)
-                    refetch()
-                    setApiKey(undefined)
-                    onCloseEnvDialog()
-                  }}
-                  buttonProps={{
-                    text: getString('cf.onboarding.createEnv')
-                  }}
-                  onCloseDialog={onCloseEnvDialog}
-                />
-              )}
-            </>
+    <>
+      <Layout.Vertical className={css.gridDisplay} padding={{ top: 'xsmall' }}>
+        <Text font={{ variation: FontVariation.BODY1 }} color={Color.GREY_800} padding={{ bottom: 'medium' }}>
+          {getString('cf.onboarding.selectOrCreateEnvironment')}
+        </Text>
+        <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600} padding={{ bottom: 'medium' }}>
+          {getString('cf.onboarding.environmentDescription')}
+        </Text>
+        <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600} padding={{ bottom: 'xsmall' }}>
+          {getString('cf.onboarding.selectOrTypeEnv')}
+        </Text>
+      </Layout.Vertical>
+      {loading && <Icon name="spinner" size={16} color="blue500" />}
+      {!loading && (
+        <>
+          <Container width={400}>
+            <EnvironmentSelect />
+          </Container>
+          {createEnvName && dialogOpen && (
+            <EnvironmentDialog
+              createEnvFromInput={true}
+              createEnvName={createEnvName}
+              onCreate={newEnv => {
+                setSelectedEnvironment(newEnv?.data)
+                setEnvironmentCreated(true)
+                refetch()
+                setApiKey(undefined)
+                onCloseEnvDialog()
+              }}
+              buttonProps={{
+                text: getString('cf.onboarding.createEnv')
+              }}
+              onCloseDialog={onCloseEnvDialog}
+            />
           )}
-        </Layout.Horizontal>
-        {environmentCreated && (
-          <Text
-            margin={{ top: 'medium' }}
-            icon="tick-circle"
-            color={Color.GREEN_700}
-            iconProps={{ color: Color.GREEN_700, size: 16 }}
-          >
-            {getString('cf.onboarding.envCreated')}
-          </Text>
-        )}
+          {environmentCreated && (
+            <Text
+              margin={{ top: 'medium' }}
+              icon="tick-circle"
+              color={Color.GREEN_700}
+              iconProps={{ color: Color.GREEN_700, size: 16 }}
+            >
+              {getString('cf.onboarding.envCreated')}
+            </Text>
+          )}
+        </>
+      )}
 
-        {!!environments?.length && selectedEnvironment && (
-          <>
+      {selectedEnvironment && (
+        <>
+          <Layout.Vertical className={css.gridDisplay}>
             <Text
               font={{ variation: FontVariation.BODY1 }}
               color={Color.GREY_800}
-              margin={{ top: 'medium', bottom: 'medium' }}
+              padding={{ top: 'large', bottom: 'xsmall' }}
             >
               {getString('cf.onboarding.createSdkKey')}
             </Text>
             {!apiKey ? (
-              <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600} margin={{ bottom: 'medium' }}>
+              <Text
+                font={{ variation: FontVariation.BODY }}
+                color={Color.GREY_600}
+                padding={{ top: 'xsmall', bottom: 'xsmall' }}
+              >
                 {getString('cf.onboarding.sdkKeyDescription')}
               </Text>
             ) : (
@@ -146,37 +149,33 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = ({
                 vars={{ env: selectedEnvironment.name }}
               />
             )}
-            <Layout.Horizontal
-              spacing="small"
-              flex={{ alignItems: 'baseline' }}
-              margin={{ top: 'small', bottom: 'small' }}
-            >
-              {apiKey ? (
-                <IdentifierText identifier={apiKey.apiKey} allowCopy lineClamp={1} hideLabel />
-              ) : (
-                <AddKeyDialog
-                  keyType={
-                    language.type === PlatformEntryType.CLIENT
-                      ? EnvironmentSDKKeyType.CLIENT
-                      : EnvironmentSDKKeyType.SERVER
-                  }
-                  environment={selectedEnvironment as EnvironmentResponseDTO}
-                  onCreate={(newKey: ApiKey, hideCreate) => {
-                    setApiKey(newKey)
-                    hideCreate()
-                  }}
-                  buttonProps={{
-                    intent: 'none',
-                    variation: ButtonVariation.SECONDARY,
-                    minimal: false,
-                    text: getString('cf.environments.apiKeys.addKeyTitle')
-                  }}
-                />
-              )}
-            </Layout.Horizontal>
-          </>
-        )}
-      </Container>
-    </Layout.Vertical>
+          </Layout.Vertical>
+          <Layout.Horizontal flex={{ alignItems: 'baseline' }} padding={{ top: 'small' }}>
+            {apiKey ? (
+              <IdentifierText identifier={apiKey.apiKey} allowCopy hideLabel />
+            ) : (
+              <AddKeyDialog
+                keyType={
+                  language.type === PlatformEntryType.CLIENT
+                    ? EnvironmentSDKKeyType.CLIENT
+                    : EnvironmentSDKKeyType.SERVER
+                }
+                environment={selectedEnvironment as EnvironmentResponseDTO}
+                onCreate={(newKey: ApiKey, hideCreate) => {
+                  setApiKey(newKey)
+                  hideCreate()
+                }}
+                buttonProps={{
+                  intent: 'none',
+                  variation: ButtonVariation.SECONDARY,
+                  minimal: false,
+                  text: getString('cf.environments.apiKeys.addKeyTitle')
+                }}
+              />
+            )}
+          </Layout.Horizontal>
+        </>
+      )}
+    </>
   )
 }

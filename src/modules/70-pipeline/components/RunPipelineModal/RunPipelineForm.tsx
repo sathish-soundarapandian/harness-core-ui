@@ -8,7 +8,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Dialog, Classes } from '@blueprintjs/core'
 import {
-  Text,
   Button,
   Formik,
   Layout,
@@ -19,12 +18,13 @@ import {
   SelectOption,
   OverlaySpinner
 } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { isEmpty, defaultTo, keyBy, omitBy } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
+import type { GetDataError } from 'restful-react'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   PipelineConfig,
@@ -37,7 +37,8 @@ import {
   useRunStagesWithRuntimeInputYaml,
   useRerunStagesWithRuntimeInputYaml,
   useGetStagesExecutionList,
-  useValidateTemplateInputs
+  useValidateTemplateInputs,
+  Failure
 } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -80,7 +81,6 @@ import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
-import { getFreezeRouteLink } from '@common/utils/freezeWindowUtils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
@@ -102,6 +102,7 @@ import RunModalHeader from './RunModalHeader'
 import CheckBoxActions from './CheckBoxActions'
 import VisualView from './VisualView'
 import { useInputSets } from './useInputSets'
+import { ActiveFreezeWarning } from './ActiveFreezeWarning'
 import css from './RunPipelineForm.module.scss'
 
 export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & GitQueryParams> {
@@ -111,6 +112,7 @@ export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & G
   executionView?: boolean
   mockData?: ResponseJsonNode
   executionInputSetTemplateYaml?: string
+  executionInputSetTemplateYamlError?: GetDataError<Failure | Error> | null
   stagesExecuted?: string[]
   executionIdentifier?: string
   source: ExecutionPathProps['source']
@@ -143,6 +145,7 @@ function RunPipelineFormBasic({
   connectorRef,
   storeType,
   executionInputSetTemplateYaml = '',
+  executionInputSetTemplateYamlError,
   stagesExecuted,
   executionIdentifier
 }: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
@@ -818,6 +821,7 @@ function RunPipelineFormBasic({
                       pipelineIdentifier={pipelineIdentifier}
                       executionIdentifier={pipelineExecutionId}
                       template={defaultTo(inputSetTemplate?.pipeline, {} as PipelineInfoConfig)}
+                      templateError={executionInputSetTemplateYamlError}
                       pipeline={pipeline}
                       currentPipeline={{ pipeline: values }}
                       getTemplateError={inputSetsError}
@@ -859,6 +863,7 @@ function RunPipelineFormBasic({
                     setNotifyOnlyMe={setNotifyOnlyMe}
                     storeType={storeType as StoreType}
                   />
+                  <ActiveFreezeWarning data={shouldDisableDeploymentData?.data} />
                   {executionView ? null : (
                     <Layout.Horizontal
                       padding={{ left: 'xlarge', right: 'xlarge', top: 'large', bottom: 'large' }}
@@ -912,30 +917,7 @@ function RunPipelineFormBasic({
                           disabled={
                             blockedStagesSelected ||
                             (getErrorsList(formErrors).errorCount > 0 && runClicked) ||
-                            loadingShouldDisableDeployment ||
-                            shouldDisableDeploymentData?.data?.shouldDisable
-                          }
-                          tooltip={
-                            shouldDisableDeploymentData?.data?.shouldDisable &&
-                            shouldDisableDeploymentData?.data?.freezeReferences?.[0] ? (
-                              <Layout.Horizontal spacing="small" padding="small">
-                                <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
-                                  {getString('pipeline.runDisabledOnFreeze')}
-                                </Text>
-                                <Link
-                                  to={getFreezeRouteLink(shouldDisableDeploymentData?.data?.freezeReferences?.[0], {
-                                    projectIdentifier,
-                                    orgIdentifier,
-                                    accountId,
-                                    module: defaultTo(module, 'cd')
-                                  })}
-                                >
-                                  <Text font={{ variation: FontVariation.SMALL }} color={Color.PRIMARY_7}>
-                                    {getString('pipeline.viewFreeze')}
-                                  </Text>
-                                </Link>
-                              </Layout.Horizontal>
-                            ) : undefined
+                            loadingShouldDisableDeployment
                           }
                         />
                         <div className={css.secondaryButton}>

@@ -45,7 +45,6 @@ import {
 } from '@pipeline/components/Dashboards/shared'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
-import { CardVariant } from '@pipeline/utils/constants'
 import { ExecutionTriggerInfo, PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
 import { TitleWithToolTipId } from '@common/components/Title/TitleWithToolTipId'
 import bgImage from './images/CI-OverviewImageBG.png'
@@ -236,7 +235,6 @@ export const CIDashboardPage: React.FC = () => {
               {data?.data?.failed?.map((build, index) => (
                 <ExecutionCard
                   key={index}
-                  variant={CardVariant.Minimal}
                   pipelineExecution={buildInfoToExecutionSummary(build)}
                   staticCard={true}
                   // staticCard={!build?.planExecutionId} // Enable when Backend supports re-routing
@@ -256,7 +254,6 @@ export const CIDashboardPage: React.FC = () => {
               {data?.data?.active?.map((build, index) => (
                 <ExecutionCard
                   key={index}
-                  variant={CardVariant.Minimal}
                   pipelineExecution={buildInfoToExecutionSummary(build)}
                   staticCard={true}
                   // staticCard={!build?.planExecutionId} // Enable when Backend supports re-routing

@@ -16,6 +16,7 @@ import type { ModuleLicenseDTO } from 'services/cd-ng'
 import CIUsageInfo from './CIUsageInfo'
 import FFUsageInfo from './FFUsageInfo'
 import CDUsageInfo from './CDUsageInfo'
+import STOUsageInfo from './STOUsageInfo'
 import css from '../SubscriptionsPage.module.scss'
 
 interface SubscriptionUsageProps {
@@ -33,6 +34,8 @@ const getModuleUsages = (props: SubscriptionUsageProps): React.ReactElement | un
       return <CCMUsageInfo />
     case ModuleName.CD:
       return <CDUsageInfo {...props} />
+    case ModuleName.STO:
+      return <STOUsageInfo />
     default:
       return undefined
   }

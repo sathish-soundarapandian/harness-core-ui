@@ -26,6 +26,7 @@ import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import type { Error, ResponseMessage } from 'services/pipeline-ng'
 import type { Error as TemplateError } from 'services/template-ng'
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import noEntityFoundImage from './images/no-entity-found.svg'
 import css from './NoEntityFound.module.scss'
 
@@ -51,11 +52,11 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
   const { identifier, entityType, errorObj, gitDetails, errorPlacement = ErrorPlacement.TOP } = props
   const { repoIdentifier, branch, versionLabel, connectorRef, storeType, repoName } =
     useQueryParams<TemplateStudioQueryParams>()
-
   const { getString } = useStrings()
   const history = useHistory()
   const { supportingGitSimplification } = useAppStore()
   const { replaceQueryParams } = useUpdateQueryParams<GitQueryParams>()
+  const { fetchPipeline } = usePipelineContext()
 
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
 
@@ -96,7 +97,12 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
                   : {})
               })
             )
-            location.reload()
+            fetchPipeline({
+              forceFetch: true,
+              forceUpdate: true,
+              repoIdentifier: selectedFilter.repo,
+              branch: selectedFilter.branch
+            })
           } else if (entityType === 'inputSet') {
             replaceQueryParams(
               {

@@ -177,3 +177,8 @@ export interface BaseReactComponentProps {
   showMarkers?: boolean
   customNodeStyle?: CSSProperties
 }
+
+export interface Position {
+  x: number
+  y: number
+}

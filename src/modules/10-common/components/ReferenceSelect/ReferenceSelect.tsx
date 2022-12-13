@@ -59,6 +59,7 @@ export interface ReferenceSelectProps<T extends MinimalObject>
   name: string
   placeholder: string
   selectAnReferenceLabel: string
+  placeholderClass?: string
   selected?: string | Item
   createNewLabel?: string
   createNewBtnComponent?: JSX.Element
@@ -134,10 +135,10 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
     isMultiSelect,
     selectedReferences,
     onMultiSelectChange,
+    placeholderClass,
     ...referenceProps
   } = props
   const [isOpen, setOpen] = useState(false)
-
   React.useEffect(() => {
     isOpen && setOpen(!hideModal) //this will hide modal if hideModal changes to true in open state
   }, [hideModal])
@@ -154,7 +155,12 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
         return { scope: el.scope, identifier: getIdentifierFromValue(el.value) }
       })
   }, [selectedReferences])
-
+  const selectedRecord = useMemo(() => {
+    if (!selected) return undefined
+    if (typeof selected === 'string')
+      return { scope: getScopeFromValue(selected), identifier: getIdentifierFromValue(selected) }
+    return { scope: selected.scope, identifier: getIdentifierFromValue(selected.value) }
+  }, [selected])
   const defaultScopeRef = useRef(referenceProps.defaultScope)
 
   const getPlaceholderElement = (): ReactNode => {
@@ -169,6 +175,7 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
             setOpen(true)
           }}
           selected={selectedRecords}
+          placeholderClass={placeholderClass}
         />
       )
     }
@@ -242,6 +249,7 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
             defaultScope={defaultScopeRef.current}
             isMultiSelect={isMultiSelect}
             selectedRecords={selectedRecords}
+            selectedRecord={selectedRecord}
           />
         </div>
       </Dialog>
@@ -286,6 +294,7 @@ export interface MultiReferenceSelectPlaceholderProps {
   selected: ScopeAndIdentifier[]
   onClear: () => void
   onClick: (arg?: Scope) => void
+  placeholderClass?: string
 }
 
 export const MultiReferenceSelectPlaceholder: FC<MultiReferenceSelectPlaceholderProps> = ({
@@ -293,7 +302,8 @@ export const MultiReferenceSelectPlaceholder: FC<MultiReferenceSelectPlaceholder
   placeholder,
   selected,
   onClear,
-  onClick
+  onClick,
+  placeholderClass
 }) => {
   const groupedReferences = useMemo(() => {
     return Object.values(
@@ -309,7 +319,7 @@ export const MultiReferenceSelectPlaceholder: FC<MultiReferenceSelectPlaceholder
     <Container
       border
       padding="xsmall"
-      className={cx('bp3-input', disabled ? 'bp3-disabled' : '', css.placeholderContainer)}
+      className={cx('bp3-input', disabled ? 'bp3-disabled' : '', css.placeholderContainer, placeholderClass)}
     >
       {groupedReferences?.length ? (
         <Layout.Horizontal

@@ -17,6 +17,7 @@ interface CardWithOuterTitleProp {
   className?: string
   dataTooltipId?: string
   headerClassName?: string
+  cardSectionClassName?: string
 }
 
 export default function CardWithOuterTitle({
@@ -24,7 +25,8 @@ export default function CardWithOuterTitle({
   children,
   className,
   dataTooltipId,
-  headerClassName
+  headerClassName,
+  cardSectionClassName
 }: CardWithOuterTitleProp): JSX.Element {
   return (
     <Layout.Vertical margin={'medium'} className={cx(css.tooltipStyle, className)}>
@@ -33,7 +35,7 @@ export default function CardWithOuterTitle({
           {title}
         </Text>
       )}
-      <Card className={cx(css.sectionCard, css.shadow)}>{children}</Card>
+      <Card className={cx(css.sectionCard, css.shadow, cardSectionClassName)}>{children}</Card>
     </Layout.Vertical>
   )
 }

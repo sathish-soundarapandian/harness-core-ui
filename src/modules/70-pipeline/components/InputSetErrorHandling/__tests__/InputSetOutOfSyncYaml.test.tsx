@@ -92,6 +92,7 @@ jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => ConnectorResponse),
   useCreatePR: jest.fn(() => noop),
   useCreatePRV2: jest.fn(() => noop),
+  useGetSettingValue: jest.fn(() => noop),
   useGetFileContent: jest.fn(() => noop),
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(gitHubMock)),
   useGetListOfReposByRefConnector: jest.fn().mockImplementation(() => {
@@ -103,13 +104,16 @@ jest.mock('services/cd-ng', () => ({
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
   }),
+  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useListGitSync: jest.fn().mockImplementation(() => {
-    return { data: gitConfigs, refetch: getListGitSync }
-  }),
-  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: jest.fn() }
+  })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
-  }),
-  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
+  })
 }))
 
 jest.mock('@common/hooks', () => ({
@@ -559,8 +563,11 @@ describe('Remote Git Sync Input Set Error Exp', () => {
     jest.mock('services/cd-ng', () => ({
       useGetConnector: jest.fn().mockImplementation(() => {
         return { data: gitHubMock.data.content[0], refetch: getGitConnector, loading: false }
-      }),
-      useListGitSync: jest.fn().mockImplementation(() => {
+      })
+    }))
+
+    jest.mock('services/cd-ng-rq', () => ({
+      useListGitSyncQuery: jest.fn().mockImplementation(() => {
         return { data: gitSyncListResponse, refetch: getListGitSync, loading: false }
       })
     }))

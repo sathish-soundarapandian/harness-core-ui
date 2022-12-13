@@ -6,11 +6,16 @@
  */
 
 import SessionToken from 'framework/utils/SessionToken'
+import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { mapKeys } from 'lodash-es'
 import qs from 'qs'
 
 export const getConfig = (str: string): string => {
-  return window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+  if (window.browserRouterEnabled) {
+    return `${window.apiUrl || ''}/${str}`
+  } else {
+    return window.apiUrl ? `${window.apiUrl}/${str}` : getLocationPathName().replace('ng/', '') + str
+  }
 }
 export interface GetUsingFetchProps<
   _TData = any,
@@ -155,7 +160,9 @@ const getHeaders = (headers: RequestInit['headers'] = {}): RequestInit['headers'
 
   const token = SessionToken.getToken()
   if (token && token.length > 0) {
-    retHeaders.Authorization = `Bearer ${token}`
+    if (!window.noAuthHeader) {
+      retHeaders.Authorization = `Bearer ${token}`
+    }
   }
 
   // add/overwrite passed headers

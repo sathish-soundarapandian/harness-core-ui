@@ -30,10 +30,9 @@ $footer-cta-height: 50px;
       flex: 1;
       clear: left;
       clear: right;
-      margin: $footer-cta-height var(--spacing-medium);
       margin-bottom: 0;
       overflow-y: scroll;
-      padding: 2px !important;
+      padding: var(--spacing-xxsmall) var(--spacing-none) var(--spacing-xxsmall) var(--spacing-xxsmall) !important;
     }
   }
 }

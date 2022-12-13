@@ -9,6 +9,7 @@
 declare const styles: {
   readonly addFieldsModal: string
   readonly alignCenter: string
+  readonly btnPosition: string
   readonly connector: string
   readonly connectorLabel: string
   readonly deploymentViewMedium: string
@@ -16,6 +17,7 @@ declare const styles: {
   readonly fetching: string
   readonly fieldsPopover: string
   readonly fieldsPopoverHeading: string
+  readonly formError: string
   readonly headerRow: string
   readonly jiraFieldSelectorSection: string
   readonly label: string

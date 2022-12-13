@@ -25,30 +25,34 @@ export const OnboardingPage = (): React.ReactElement => {
   const { trackEvent } = useTelemetry()
 
   return (
-    <Container>
+    <>
+      {/* Products free banner */}
       <Layout.Horizontal flex={{ justifyContent: 'center' }} width="100%" margin={{ bottom: 'huge' }}>
-        <img src={productsFreeForever} />
+        <img src={productsFreeForever} alt={getString('cf.onboarding.freeBanner')} />
       </Layout.Horizontal>
-      <Container padding="huge" flex={{ justifyContent: 'center' }} height="65vh">
-        <Layout.Horizontal height="auto" width="auto" className={css.mainContentContainer} padding="huge">
-          {/* Left side - Text & Button */}
-          <Layout.Vertical flex={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
+
+      {/* Overall Layout */}
+      <Container padding="huge" flex={{ justifyContent: 'center' }} height="650px">
+        <Container flex={{ justifyContent: 'center' }} className={css.mainContentContainer} padding="huge">
+          {/* Left Side */}
+          <Container className={css.leftSide}>
             <Layout.Horizontal spacing="small" style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
               <Icon name="cf-main" height={30} size={30} />
               <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_800}>
                 {getString('common.purpose.cf.continuous')}
               </Text>
             </Layout.Horizontal>
-            <Layout.Vertical>
+            <Layout.Vertical
+              flex={{ alignItems: 'flex-start', justifyContent: 'space-between' }}
+              padding={{ top: 'xxxlarge' }}
+            >
               <Text font={{ variation: FontVariation.H2 }} tag="h2" margin={{ bottom: 'medium' }}>
                 {getString('cf.onboarding.title')}
               </Text>
               <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_800} margin={{ bottom: 'huge' }}>
                 {getString('cf.onboarding.subTitle')}
               </Text>
-              {OnboardingStepsDescription()}
-            </Layout.Vertical>
-            <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-end' }}>
+              <OnboardingStepsDescription />
               <Button
                 intent={Intent.PRIMARY}
                 variation={ButtonVariation.PRIMARY}
@@ -61,14 +65,13 @@ export const OnboardingPage = (): React.ReactElement => {
                   history.push(routes.toCFOnboardingDetail({ accountId, orgIdentifier, projectIdentifier }))
                 }}
               />
-            </Layout.Horizontal>
-          </Layout.Vertical>
+            </Layout.Vertical>
+          </Container>
+
           {/* Right side - img */}
-          <Layout.Horizontal>
-            <img src={ffOnboarding} width={380} height={320} />
-          </Layout.Horizontal>
-        </Layout.Horizontal>
+          <img className={css.onboardingImg} src={ffOnboarding} width={380} height={320} alt="" />
+        </Container>
       </Container>
-    </Container>
+    </>
   )
 }

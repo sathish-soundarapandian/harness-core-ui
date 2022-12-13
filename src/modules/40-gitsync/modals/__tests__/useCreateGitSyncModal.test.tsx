@@ -39,11 +39,14 @@ jest.mock('services/cd-ng', () => ({
       mutate: jest.fn()
     }
   }),
-  useListGitSync: jest
-    .fn()
-    .mockImplementation(() => ({ data: gitConfigs, refetch: () => Promise.resolve(gitConfigs) })),
-  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
-    return { data: sourceCodeManagers, refetch: () => Promise.resolve(sourceCodeManagers) }
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: jest.fn() }
+  })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
   })
 }))
 

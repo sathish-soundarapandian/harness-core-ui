@@ -19,6 +19,9 @@ jest.mock('services/cd-ng', () => ({
   }),
   useDeleteSecretV2: jest.fn().mockImplementation(() => {
     return { refetch: jest.fn(), error: null }
+  }),
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { value: 'false' } }
   })
 }))
 

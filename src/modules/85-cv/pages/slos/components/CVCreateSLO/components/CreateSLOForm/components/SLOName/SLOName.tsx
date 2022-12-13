@@ -107,8 +107,7 @@ const SLOName = <T,>({
 
           // selecting the current user journey
           if (isMultiSelect && Array.isArray(userJourneyRef)) {
-            userJourneyRef?.push({ value: newOption.identifier, label: newOption.name })
-            formikProps.setFieldValue('userJourneyRef', userJourneyRef)
+            formikProps.setFieldValue('userJourneyRef', [...userJourneyRef, newOption.identifier])
           } else {
             formikProps.setFieldValue('userJourneyRef', newOption.identifier)
           }

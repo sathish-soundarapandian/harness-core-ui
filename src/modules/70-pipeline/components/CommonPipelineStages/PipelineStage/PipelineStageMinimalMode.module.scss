@@ -19,6 +19,7 @@
 
 .mainContainer {
   width: 770px;
+  overflow-x: hidden;
   .selectInput {
     width: 25%;
   }
@@ -131,4 +132,14 @@
   color: var(--grey-800) !important;
   font-weight: 600 !important;
   line-height: 24px;
+}
+
+.projectListPopover {
+  :global(.Select--menuItemLabel) {
+    width: 180px;
+  }
+}
+
+.nameIdPopover {
+  width: 270px;
 }

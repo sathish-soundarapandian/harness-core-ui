@@ -7,7 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly grid: string
+  readonly gridDisplay: string
   readonly idText: string
   readonly sdkLabel: string
   readonly secret: string

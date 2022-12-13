@@ -29,7 +29,12 @@ export default defineConfig({
       plugins: [
         reactQueryPlugin({
           customFetcher: 'services/fetcher',
-          allowedOperationIds: ['getServicesYamlAndRuntimeInputs', 'getServiceAccessList'],
+          allowedOperationIds: [
+            'getServicesYamlAndRuntimeInputs',
+            'getServiceAccessList',
+            'listGitSync',
+            'getSourceCodeManagers'
+          ],
           overrides: {
             getServicesYamlAndRuntimeInputs: {
               useQuery: true
@@ -52,7 +57,7 @@ export default defineConfig({
       plugins: [
         reactQueryPlugin({
           customFetcher: 'services/fetcher',
-          allowedOperationIds: ['getPipelineExecution']
+          allowedOperationIds: ['getPipelineSummary', 'validateTemplateInputs']
         })
       ]
     }

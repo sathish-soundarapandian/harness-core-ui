@@ -22,7 +22,9 @@ import {
   Select,
   SelectOption,
   IconProps,
-  IconName
+  IconName,
+  Toggle,
+  Label
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { ConnectorInfoDTO, useGetListOfAllReposByRefConnector, UserRepoResponse, Error } from 'services/cd-ng'
@@ -31,6 +33,7 @@ import { Connectors } from '@connectors/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { getFullRepoName } from '../../../utils/HostedBuildsUtils'
+import { ACCOUNT_SCOPE_PREFIX } from './Constants'
 
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -51,6 +54,7 @@ interface SelectRepositoryProps {
   onConnectorSelect?: (connector: ConnectorInfoDTO) => void
   disableNextBtn: () => void
   enableNextBtn: () => void
+  updateFooterLabel?: React.Dispatch<React.SetStateAction<string>>
 }
 
 const SelectRepositoryRef = (
@@ -63,7 +67,8 @@ const SelectRepositoryRef = (
     disableNextBtn,
     enableNextBtn,
     connectorsEligibleForPreSelection,
-    onConnectorSelect
+    onConnectorSelect,
+    updateFooterLabel
   } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -86,7 +91,7 @@ const SelectRepositoryRef = (
     },
     lazy: true
   })
-  const enableCloneCodebase = true
+  const [enableCloneCodebase, setEnableCloneCodebase] = useState(true)
 
   const getIcon = useCallback((type: ConnectorInfoDTO['type']): IconName | undefined => {
     switch (type) {
@@ -135,7 +140,7 @@ const SelectRepositoryRef = (
           accountIdentifier: accountId,
           projectIdentifier,
           orgIdentifier,
-          connectorRef: `${connectorRef}`
+          connectorRef: `${ACCOUNT_SCOPE_PREFIX}${connectorRef}`
         }
       })
     }
@@ -200,6 +205,14 @@ const SelectRepositoryRef = (
     }
   }, [repository, enableCloneCodebase])
 
+  useEffect(() => {
+    if (enableCloneCodebase) {
+      updateFooterLabel?.(`${getString('next')}: ${getString('ci.getStartedWithCI.configurePipeline')}`)
+    } else {
+      updateFooterLabel?.(getString('ci.getStartedWithCI.createPipeline'))
+    }
+  }, [enableCloneCodebase])
+
   const renderRepositories = useCallback((): JSX.Element => {
     if (fetchingRepositories) {
       return (
@@ -249,12 +262,18 @@ const SelectRepositoryRef = (
       <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xsmall' }}>
         {getString('common.selectYourRepo')}
       </Text>
-      <Layout.Horizontal
-        flex={{ justifyContent: 'flex-start' }}
-        spacing="xsmall"
-        padding={{ bottom: enableCloneCodebase ? 'xsmall' : 'xlarge' }}
-      >
-        <Text font={{ variation: FontVariation.BODY }}>{getString('common.getStarted.codebaseHelptext')}</Text>
+      <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }} spacing="small">
+        <Label className={css.toggleLabel}>{getString('cloneCodebaseLabel')}</Label>
+        <Toggle
+          checked={enableCloneCodebase}
+          onToggle={val => {
+            setEnableCloneCodebase(val)
+          }}
+        />
+      </Layout.Horizontal>
+      <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small" padding={{ bottom: 'xsmall' }}>
+        <Icon name="code-info" size={24} className={css.infoIcon} />
+        <Text font={{ variation: FontVariation.BODY }}>{getString('ci.getStartedWithCI.cloneCodebaseHelpText')}</Text>
       </Layout.Horizontal>
       {enableCloneCodebase ? (
         <>
@@ -296,16 +315,7 @@ const SelectRepositoryRef = (
             ) : null}
           </Container>
         </>
-      ) : (
-        <Container
-          padding={{ top: 'small', bottom: 'small', left: 'medium', right: 'medium' }}
-          className={css.noCodebaseHelpText}
-        >
-          <Text font={{ variation: FontVariation.BODY }}>
-            {getString('ci.getStartedWithCI.createPipelineWithOtherOption')}
-          </Text>
-        </Container>
-      )}
+      ) : null}
     </Layout.Vertical>
   )
 }

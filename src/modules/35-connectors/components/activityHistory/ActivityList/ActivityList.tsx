@@ -173,7 +173,7 @@ const ActivityList: React.FC<ActivityListProps> = props => {
       {dataArray?.length ? (
         <TableV2<AllActivity> columns={columns} data={dataArray || []} />
       ) : (
-        <Container height={'200px'}>
+        <Container height="100%" background={Color.PRIMARY_BG}>
           <Page.NoDataCard icon="nav-dashboard" message={getString('activityHistory.noData')} />
         </Container>
       )}

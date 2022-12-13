@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { ErrorNodeSummary, useValidateTemplateInputs } from 'services/pipeline-ng'
+import { ErrorNodeSummary, useValidateTemplateInputsQuery } from 'services/pipeline-rq'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
@@ -20,7 +20,9 @@ export interface PipelineOutOfSyncErrorStripProps {
   updateRootEntity: (entityYaml: string) => Promise<void>
 }
 
-export function PipelineOutOfSyncErrorStrip({ updateRootEntity }: PipelineOutOfSyncErrorStripProps) {
+export function PipelineOutOfSyncErrorStrip({
+  updateRootEntity
+}: PipelineOutOfSyncErrorStripProps): React.ReactElement {
   const {
     state: { originalPipeline, gitDetails, storeMetadata, pipelineIdentifier },
     isReadonly,
@@ -30,16 +32,21 @@ export function PipelineOutOfSyncErrorStrip({ updateRootEntity }: PipelineOutOfS
   const params = useParams<ProjectPathProps>()
   const { accountId, orgIdentifier, projectIdentifier } = params
 
-  const { data: errorData } = useValidateTemplateInputs({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      identifier: pipelineIdentifier,
-      ...getGitQueryParamsWithParentScope(storeMetadata, params)
+  const { data: errorData } = useValidateTemplateInputsQuery(
+    {
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        identifier: pipelineIdentifier,
+        ...getGitQueryParamsWithParentScope(storeMetadata, params)
+      }
     },
-    lazy: isCommunity
-  })
+    {
+      enabled: (!!originalPipeline?.identifier || originalPipeline?.identifier !== '-1') && !isCommunity,
+      staleTime: 5_000
+    }
+  )
 
   const errorNodeSummary = React.useMemo((): ErrorNodeSummary | undefined => {
     if (errorData?.data?.validYaml === false && errorData?.data.errorNodeSummary) {

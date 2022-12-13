@@ -121,7 +121,7 @@ function HelmWithGIT({
       branch: undefined,
       commitId: undefined,
       gitFetchType: 'Branch',
-      folderPath: '',
+      folderPath: '/',
       helmVersion: 'V2',
       skipResourceVersioning: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],

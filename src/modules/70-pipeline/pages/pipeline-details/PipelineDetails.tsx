@@ -13,7 +13,8 @@ import { matchPath, useLocation, useParams, useRouteMatch } from 'react-router-d
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import { useGlobalEventListener, useQueryParams, useUpdateQueryParams } from '@common/hooks'
-import { Error, useGetPipelineSummary } from 'services/pipeline-ng'
+import type { Error } from 'services/pipeline-ng'
+import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
 import { NavigatedToPage } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -51,23 +52,33 @@ function PipelinePageHeader(): React.ReactElement {
   const { trackEvent } = useTelemetry()
   const { branch, repoIdentifier, storeType, repoName, connectorRef } = useQueryParams<GitQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams()
-
-  const {
-    data: pipeline,
-    refetch,
-    error
-  } = useGetPipelineSummary({
-    pipelineIdentifier,
-    queryParams: {
-      accountIdentifier: accountId,
+  const { isExact: isPipelineStudioRoute } = useRouteMatch(
+    routes.toPipelineStudio({
       orgIdentifier,
       projectIdentifier,
-      branch,
-      repoIdentifier,
-      getMetadataOnly: true
+      pipelineIdentifier,
+      accountId,
+      module
+    })
+  ) || { isExact: false }
+
+  const { data: pipeline, error } = useGetPipelineSummaryQuery(
+    {
+      pipelineIdentifier,
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        branch,
+        repoIdentifier,
+        getMetadataOnly: true
+      }
     },
-    lazy: true
-  })
+    {
+      enabled: !isPipelineStudioRoute && pipelineIdentifier !== DefaultNewPipelineId,
+      staleTime: 5 * 60 * 1000
+    }
+  )
 
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
 
@@ -172,16 +183,6 @@ function PipelinePageHeader(): React.ReactElement {
     [accountId, getString, module, orgIdentifier, projectIdentifier]
   )
 
-  const { isExact: isPipelineStudioRoute } = useRouteMatch(
-    routes.toPipelineStudio({
-      orgIdentifier,
-      projectIdentifier,
-      pipelineIdentifier,
-      accountId,
-      module
-    })
-  ) || { isExact: false }
-
   const isExecutionHistoryView = !!matchPath(location.pathname, {
     path: routes.toPipelineDeploymentList({
       orgIdentifier,
@@ -192,27 +193,19 @@ function PipelinePageHeader(): React.ReactElement {
     })
   })
 
-  React.useEffect(() => {
-    // For studio tab we do not need information as Page.Header below renders Name and GitRemoteDetails only for other 3 tabs
-    if (!isPipelineStudioRoute && pipelineIdentifier !== DefaultNewPipelineId) {
-      refetch()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pipelineIdentifier, isPipelineStudioRoute])
-
   if (
-    (error?.data && !isGitSyncEnabled && (!supportingGitSimplification || storeType !== StoreType.REMOTE)) ||
-    (error?.data as Error)?.code === 'ENTITY_NOT_FOUND'
+    (error && !isGitSyncEnabled && (!supportingGitSimplification || storeType !== StoreType.REMOTE)) ||
+    (error as Error)?.code === 'ENTITY_NOT_FOUND'
   ) {
-    return <GenericErrorHandler errStatusCode={error?.status} errorMessage={(error?.data as Error)?.message} />
+    return <GenericErrorHandler errStatusCode={error?.status} errorMessage={(error as Error)?.message} />
   }
 
   if (
-    error?.data &&
+    error &&
     isEmpty(pipeline) &&
     (isGitSyncEnabled || (supportingGitSimplification && storeType === StoreType.REMOTE))
   ) {
-    return <NoEntityFound identifier={pipelineIdentifier} entityType={'pipeline'} errorObj={error.data as Error} />
+    return <NoEntityFound identifier={pipelineIdentifier} entityType={'pipeline'} errorObj={error as Error} />
   }
 
   const isTriggersView = !!matchPath(location.pathname, {
@@ -225,7 +218,7 @@ function PipelinePageHeader(): React.ReactElement {
     })
   })
 
-  const onGitBranchChange = (selectedFilter: GitFilterScope, defaultSelected = false): void => {
+  const onGitBranchChange = (selectedFilter: GitFilterScope): void => {
     if (branch !== selectedFilter.branch) {
       updateQueryParams(
         {
@@ -234,9 +227,6 @@ function PipelinePageHeader(): React.ReactElement {
         { skipNulls: true },
         true
       )
-      if (!defaultSelected) {
-        window.location.reload()
-      }
     }
   }
 

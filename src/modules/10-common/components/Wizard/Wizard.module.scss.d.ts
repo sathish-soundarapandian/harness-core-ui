@@ -18,9 +18,7 @@ declare const styles: {
   readonly positionInHeader: string
   readonly sideItems: string
   readonly tab: string
-  readonly tabPanel: string
   readonly tabsContainer: string
-  readonly transparentBlock: string
   readonly wizardShell: string
   readonly yamlContainer: string
 }

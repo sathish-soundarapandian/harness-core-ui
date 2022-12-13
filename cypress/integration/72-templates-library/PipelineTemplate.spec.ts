@@ -22,7 +22,7 @@ import {
   afterUseTemplatePipelineTemplateInputsResponse
 } from '../../support/72-templates-library/constants'
 
-describe.skip('Pipeline Template creation and assertion', () => {
+describe('Pipeline Template creation and assertion', () => {
   const templateDetailsCall =
     '/template/api/templates/templateInputs/testPipelineTemplate?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&versionLabel=v1.0&getDefaultFromOtherRepo=true'
   const pipelineTemplatePublishCall =
@@ -106,17 +106,18 @@ describe.skip('Pipeline Template creation and assertion', () => {
     cy.visit(pipelinesRoute, {
       timeout: 30000
     })
-    cy.contains('span', 'Create a Pipeline').eq(0).should('be.visible')
-    cy.contains('span', 'Create a Pipeline').eq(0).click()
-    cy.contains('span', 'Start with Template').should('be.visible')
-    cy.contains('span', 'Start with Template').click()
+    cy.visitPageAssertion('[class*="PageHeader--container"]')
+
+    cy.get('div[class*="PageSubHeader--container"]').within(() => {
+      cy.contains('span', 'Create a Pipeline').should('be.visible').click()
+    })
+    cy.contains('span', 'Start with Template').should('be.visible').click()
     cy.contains('span', 'Pipeline Name is a required field').should('be.visible')
 
     cy.fillField('name', pipelineMadeFromTemplate)
     cy.contains('span', 'Start with Template').click()
 
-    cy.contains('p', 'PIPELINE').should('be.visible')
-    cy.contains('p', 'PIPELINE').click({ force: true })
+    cy.contains('p', 'PIPELINE').should('be.visible').click({ force: true })
     cy.wait(1000)
 
     cy.get('p[data-testid="testPipelineTemplate"]').should('be.visible') //

@@ -73,7 +73,9 @@ export default function DeployEnvironmentGroupInputStep({
             selectItems={selectOptions}
             useValue
             multiTypeInputProps={{
-              allowableTypes: allowableTypes,
+              allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(
+                item => item !== MultiTypeInputType.EXPRESSION && item !== MultiTypeInputType.EXECUTION_TIME
+              ) as AllowedTypes,
               selectProps: {
                 items: selectOptions
               }

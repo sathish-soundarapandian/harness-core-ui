@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly criteriaHeader: string
+  readonly emptyThresholdsContainer: string
   readonly metricThresholdContentCard: string
   readonly metricThresholdContentCriteria: string
   readonly metricThresholdContentFailFastTableHeader: string

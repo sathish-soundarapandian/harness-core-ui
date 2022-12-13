@@ -17,7 +17,6 @@ import {
   Text,
   Icon
 } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, get, isEmpty } from 'lodash-es'
@@ -44,8 +43,6 @@ import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
@@ -268,8 +265,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
-
   return (
     <Layout.Vertical spacing="medium">
       <Formik<AzureInfrastructureUI>
@@ -304,9 +299,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
           formikRef.current = formik
           return (
             <FormikForm>
-              <Layout.Vertical flex={{ alignItems: 'flex-start' }} margin={{ bottom: 'medium' }} spacing="medium">
-                <Text font={{ variation: FontVariation.H6 }}>{isSvcEnvEnabled ? 'Cluster Details' : ''}</Text>
-              </Layout.Vertical>
               <Layout.Vertical spacing="medium">
                 <Layout.Horizontal className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
                   <FormMultiTypeConnectorField

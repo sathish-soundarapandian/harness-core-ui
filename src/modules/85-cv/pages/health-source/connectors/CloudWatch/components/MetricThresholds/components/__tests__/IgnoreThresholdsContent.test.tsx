@@ -5,10 +5,7 @@ import userEvent from '@testing-library/user-event'
 
 import { TestWrapper } from '@common/utils/testUtils'
 
-import {
-  formikInitialValuesCriteriaGreaterThanMock,
-  formikInitialValuesCriteriaMock
-} from '@cv/pages/health-source/common/MetricThresholds/__tests__/MetricThresholds.utils.mock'
+import { formikInitialValuesCriteriaLessThanMock } from '@cv/pages/health-source/common/MetricThresholds/__tests__/MetricThresholds.utils.mock'
 import { formikInitialValues, MockContextValues } from './IgnoreThresholdsContent.mock'
 import IgnoreThresholdContent from '../IgnoreThresholdsContent'
 import { MetricThresholdContext } from '../../MetricThresholds.constants'
@@ -27,7 +24,7 @@ const WrappingComponent = ({ formValues }: { formValues?: any }): JSX.Element =>
   )
 }
 
-describe('DataDogIgnoreThresholdTabContent', () => {
+describe('CloudWatch IgnoreThresholdTabContent', () => {
   test('should render the component with all input fields', () => {
     const { container } = render(<WrappingComponent />)
 
@@ -87,27 +84,8 @@ describe('DataDogIgnoreThresholdTabContent', () => {
       userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
     })
 
-    expect(greaterThanInput).toBeInTheDocument()
-    expect(lessThanInput).not.toBeInTheDocument()
-
-    const selectCaretPercentageType = container
-      .querySelector(`[name="ignoreThresholds.0.criteria.criteriaPercentageType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretPercentageType).toBeInTheDocument()
-    userEvent.click(selectCaretPercentageType!)
-
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-
-    act(() => {
-      userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
-    })
-
-    const greaterThanInput2 = container.querySelector(`[name="ignoreThresholds.0.criteria.spec.greaterThan"]`)
-    const lessThanInput2 = container.querySelector(`[name="ignoreThresholds.0.criteria.spec.lessThan"]`)
-
-    expect(greaterThanInput2).not.toBeInTheDocument()
-    expect(lessThanInput2).toBeInTheDocument()
+    expect(greaterThanInput).not.toBeInTheDocument()
+    expect(lessThanInput).toBeInTheDocument()
   })
 
   test('should check whether a new row is added when Add Threshold button is clicked', () => {
@@ -130,33 +108,14 @@ describe('DataDogIgnoreThresholdTabContent', () => {
     expect(screen.getAllByTestId('ThresholdRow')).toHaveLength(1)
   })
 
-  test('should check whether criteria section works correctly', () => {
-    const { container } = render(<WrappingComponent formValues={formikInitialValuesCriteriaMock} />)
+  test('should check whether criteria section works correctly for greaterThan', () => {
+    const { container } = render(<WrappingComponent formValues={formikInitialValuesCriteriaLessThanMock} />)
 
     const lessThanInput = container.querySelector('input[name="ignoreThresholds.0.criteria.spec.lessThan"]')
     const greaterThanInput = container.querySelector('input[name="ignoreThresholds.0.criteria.spec.greaterThan"]')
-    const criteriaPercentageType = container.querySelector(
-      'input[name="ignoreThresholds.0.criteria.criteriaPercentageType"]'
-    )
 
     expect(lessThanInput).toBeInTheDocument()
     expect(lessThanInput).toHaveValue(21)
-    expect(criteriaPercentageType).toHaveValue('cv.monitoringSources.appD.lesserThan')
     expect(greaterThanInput).toBeNull()
-  })
-
-  test('should check whether criteria section works correctly for greaterThan', () => {
-    const { container } = render(<WrappingComponent formValues={formikInitialValuesCriteriaGreaterThanMock} />)
-
-    const lessThanInput = container.querySelector('input[name="ignoreThresholds.0.criteria.spec.lessThan"]')
-    const greaterThanInput = container.querySelector('input[name="ignoreThresholds.0.criteria.spec.greaterThan"]')
-    const criteriaPercentageType = container.querySelector(
-      'input[name="ignoreThresholds.0.criteria.criteriaPercentageType"]'
-    )
-
-    expect(greaterThanInput).toBeInTheDocument()
-    expect(greaterThanInput).toHaveValue(21)
-    expect(criteriaPercentageType).toHaveValue('cv.monitoringSources.appD.greaterThan')
-    expect(lessThanInput).toBeNull()
   })
 })

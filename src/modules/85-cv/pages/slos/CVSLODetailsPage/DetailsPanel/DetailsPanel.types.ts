@@ -27,7 +27,7 @@ export interface DetailsPanelProps {
 }
 
 export interface KeyValuePairProps {
-  keyText: string
+  label: string
   value: string
 }
 
@@ -46,4 +46,5 @@ export interface TabToolbarProps {
   >
   refetchSLODetails: () => Promise<void>
   onTabChange: (nextTab: SLODetailsPageTabIds) => void
+  isCompositeSLO?: boolean
 }

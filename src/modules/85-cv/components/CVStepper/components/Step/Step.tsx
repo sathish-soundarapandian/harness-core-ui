@@ -8,12 +8,13 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import cx from 'classnames'
 import { Container, Card, Text } from '@harness/uicore'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import type { StepPropsInterface, StepStatusType } from './Step.types'
 import { StepTitle } from './components/StepTitle/StepTitle'
 import { StepNavButtons } from './components/StepNavButtons/StepNavButtons'
 import { StepStatus } from './Step.constants'
-import { getStepStatus } from './Step.utils'
+import { getStepStatus, getTitleStatus } from './Step.utils'
 import css from './Step.module.scss'
 
 const Step = ({
@@ -32,6 +33,7 @@ const Step = ({
   const [stepStatus, setStepStatus] = useState<StepStatusType>(StepStatus.INCONCLUSIVE)
   const isLastStep = selectedStepIndex === stepList.length - 1
   const isCurrentStep = selectedStepIndex === index
+  const { id, panel, preview, helpPanelReferenceId } = step
 
   const onTitleClick = useCallback(
     (titleIndex: number): void => {
@@ -54,8 +56,15 @@ const Step = ({
   )
 
   const stepTitleStatus = useMemo(
-    () => (runValidationOnMount ? getStepStatus(!!isStepValid?.(step.id)) : stepStatus),
-    [isStepValid, runValidationOnMount, step.id, stepStatus]
+    () =>
+      getTitleStatus({
+        stepId: step.id,
+        currentStepStatus: stepStatus,
+        runValidationOnMount: Boolean(runValidationOnMount),
+        isCurrentStep,
+        isStepValid
+      }),
+    [isStepValid, isCurrentStep, runValidationOnMount, step.id, stepStatus]
   )
 
   const isErrorMessageVisible = stepTitleStatus === StepStatus.ERROR
@@ -65,45 +74,58 @@ const Step = ({
   )
 
   return (
-    <>
-      <Container className={css.stepContainer}>
-        <StepTitle
-          step={step}
-          index={index}
-          isCurrent={isCurrentStep}
-          stepStatus={stepTitleStatus}
-          onClick={onTitleClick}
-          isOptional={isOptional}
-        />
-        <Container
-          data-testid={`preview_${step.id}`}
-          className={cx(css.alignContainerRight, (index !== stepList.length - 1 || isLastStep) && css.borderLeft)}
-        >
-          {isPreviewVisible && (
-            <Container data-testid={`preview_${step.id}`}>
-              <>{step.preview}</>
-            </Container>
-          )}
-          {(isCurrentStep || isErrorMessageVisible) && (
-            <Container>
-              {isErrorMessageVisible && (
-                <Text margin={{ bottom: isCurrentStep ? 'large' : '' }} intent="danger">
-                  {getString('cv.CVStepper.StepError')}
-                </Text>
-              )}
-              {isCurrentStep && (
-                <>
-                  <Card data-testid={`panel_${step.id}`} className={css.card}>
-                    {step.panel}
-                  </Card>
-                  <StepNavButtons index={index} onContinue={onContinue} isLastStep={isLastStep} />
-                </>
-              )}
-            </Container>
-          )}
-        </Container>
+    <Container className={cx(css.stepContainer, index === stepList.length - 1 && css.bottomMargin)}>
+      <StepTitle
+        step={step}
+        index={index}
+        isCurrent={isCurrentStep}
+        stepStatus={stepTitleStatus}
+        onClick={onTitleClick}
+        isOptional={isOptional}
+      />
+      <Container
+        data-testid={`preview_${id}`}
+        className={cx(css.alignContainerRight, (index !== stepList.length - 1 || isLastStep) && css.borderLeft)}
+      >
+        {isPreviewVisible && (
+          <Container data-testid={`preview_${id}`} width={500}>
+            <>{preview}</>
+          </Container>
+        )}
+        {(isCurrentStep || isErrorMessageVisible) && (
+          <Container>
+            {isErrorMessageVisible && (
+              <>
+                {!step.errorMessage?.length ? (
+                  <Text margin={{ bottom: isCurrentStep ? 'large' : '' }} intent="danger">
+                    {getString('cv.CVStepper.StepError')}
+                  </Text>
+                ) : (
+                  step.errorMessage?.map((error, errorIndex) => {
+                    return (
+                      <Text key={errorIndex} margin={{ bottom: isCurrentStep ? 'large' : 'medium' }} intent="danger">
+                        {error}
+                      </Text>
+                    )
+                  })
+                )}
+              </>
+            )}
+            {isCurrentStep && (
+              <>
+                <Card data-testid={`panel_${id}`} className={css.card}>
+                  {panel}
+                </Card>
+                <StepNavButtons index={index} onContinue={onContinue} isLastStep={isLastStep} />
+              </>
+            )}
+          </Container>
+        )}
       </Container>
-    </>
+      {isCurrentStep && helpPanelReferenceId && (
+        <HelpPanel referenceId={helpPanelReferenceId} type={HelpPanelType.FLOATING_CONTAINER} />
+      )}
+    </Container>
   )
 }
 

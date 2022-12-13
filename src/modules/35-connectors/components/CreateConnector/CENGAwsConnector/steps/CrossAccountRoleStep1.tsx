@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { uniq } from 'lodash-es'
 import { Button, Layout, StepProps, Container, Text, Checkbox, IconName, Icon } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
@@ -14,8 +14,10 @@ import { CE_AWS_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
-import type { CEAwsConnectorDTO } from './OverviewStep'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 
+import type { CEAwsConnectorDTO } from './OverviewStep'
 import EmptyState from '../images/empty-state.svg'
 
 import css from '../CreateCeAwsConnector.module.scss'
@@ -23,7 +25,8 @@ import css from '../CreateCeAwsConnector.module.scss'
 export enum Features {
   VISIBILITY = 'VISIBILITY',
   OPTIMIZATION = 'OPTIMIZATION',
-  BILLING = 'BILLING'
+  BILLING = 'BILLING',
+  GOVERNANCE = 'GOVERNANCE'
 }
 
 interface CardData {
@@ -40,101 +43,139 @@ interface CardData {
 const useSelectedCards = (featuresEnabled: Features[]) => {
   const { getString } = useStrings()
 
-  const FeatureCards = useRef<CardData[]>([
-    {
-      icon: 'ce-visibility',
-      text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
-      value: Features.BILLING,
-      desc: <Text font={{ variation: FontVariation.SMALL_BOLD }}>{getString('connectors.costVisibility')}</Text>,
-      heading: getString('connectors.costVisibility'),
-      prefix: getString('common.aws'),
-      features: [
-        getString('connectors.ceAws.crossAccountRoleStep1.default.feat1'),
-        getString('connectors.ceAzure.chooseRequirements.billing.feat2'),
-        getString('connectors.ceAzure.chooseRequirements.billing.feat3'),
-        getString('connectors.ceAzure.chooseRequirements.billing.feat4'),
-        getString('connectors.ceAzure.chooseRequirements.billing.feat5')
-      ],
-      footer: (
-        <>
-          <Text inline font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_600}>
-            {getString('common.default')}
-          </Text>{' '}
-          {getString('connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer2')}{' '}
-          <Text inline font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_600}>
-            {getString('connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer3')}
-          </Text>
-        </>
-      )
-    },
-    {
-      icon: 'ce-visibility-plus',
-      text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
-      value: Features.VISIBILITY,
-      desc: (
-        <>
-          {getString('common.resourceLabel')}{' '}
+  const isGovernanceEnabled = useFeatureFlag(FeatureFlag.CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI)
+
+  const FeatureCards = useMemo(() => {
+    const cards = [
+      {
+        icon: 'ce-visibility',
+        text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+        value: Features.BILLING,
+        desc: <Text font={{ variation: FontVariation.SMALL_BOLD }}>{getString('connectors.costVisibility')}</Text>,
+        heading: getString('connectors.costVisibility'),
+        prefix: getString('common.aws'),
+        features: [
+          getString('connectors.ceAws.crossAccountRoleStep1.default.feat1'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat2'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat3'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat4'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat5')
+        ],
+        footer: (
+          <>
+            <Text inline font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_600}>
+              {getString('common.default')}
+            </Text>{' '}
+            {getString('connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer2')}{' '}
+            <Text inline font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_600}>
+              {getString('connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer3')}
+            </Text>
+          </>
+        )
+      },
+      {
+        icon: 'ce-visibility-plus',
+        text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+        value: Features.VISIBILITY,
+        desc: (
+          <>
+            {getString('common.resourceLabel')}{' '}
+            <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
+              {getString('connectors.ceAzure.chooseRequirements.visibility.heading')}
+            </Text>
+          </>
+        ),
+        heading: getString('connectors.ceAws.crossAccountRoleStep1.visible.heading'),
+        prefix: getString('common.aws'),
+        features: [
+          getString('connectors.ceAws.crossAccountRoleStep1.visible.feat1'),
+          getString('connectors.ceAws.crossAccountRoleStep1.visible.feat2')
+        ],
+        footer: (
+          <>
+            {getString('connectors.ceAws.crossAccountRoleStep1.adding')}{' '}
+            <a
+              href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#aws_ecs_and_resource_inventory_management"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {getString('connectors.ceAws.crossAccountRoleStep1.thesePermissions')}
+            </a>{' '}
+            {getString('connectors.ceAws.crossAccountRoleStep1.iamRole')}
+          </>
+        )
+      },
+      {
+        icon: 'nav-settings',
+        text: getString('connectors.ceAzure.chooseRequirements.optimizationCardDesc'),
+        value: Features.OPTIMIZATION,
+        desc: (
+          <>
+            {getString('connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.prefix')}{' '}
+            <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
+              {getString('common.ce.autostopping')}
+            </Text>
+          </>
+        ),
+        heading: getString('common.ce.autostopping'),
+        prefix: getString('connectors.ceAws.crossAccountRoleStep1.optimize.prefix'),
+        features: [
+          getString('connectors.ceAws.crossAccountRoleStep1.optimize.feat1'),
+          getString('connectors.ceAws.crossAccountRoleStep1.optimize.feat2'),
+          getString('connectors.ceAzure.chooseRequirements.optimization.feat2'),
+          getString('connectors.ceAzure.chooseRequirements.optimization.feat3'),
+          getString('connectors.ceAzure.chooseRequirements.optimization.feat4')
+        ],
+        footer: (
+          <>
+            {getString('connectors.ceAws.crossAccountRoleStep1.adding')}{' '}
+            <a
+              href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#aws_resource_optimization_using_auto_stopping_rules"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {getString('connectors.ceAws.crossAccountRoleStep1.thesePermissions')}
+            </a>{' '}
+            {getString('connectors.ceAws.crossAccountRoleStep1.iamRole')}
+          </>
+        )
+      }
+    ]
+
+    if (isGovernanceEnabled) {
+      cards.push({
+        icon: 'nav-settings',
+        text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+        value: Features.GOVERNANCE,
+        desc: (
           <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
-            {getString('connectors.ceAzure.chooseRequirements.visibility.heading')}
+            {getString('connectors.ceAws.crossAccountRoleStep1.cards.governance.header')}
           </Text>
-        </>
-      ),
-      heading: getString('connectors.ceAws.crossAccountRoleStep1.visible.heading'),
-      prefix: getString('common.aws'),
-      features: [
-        getString('connectors.ceAws.crossAccountRoleStep1.visible.feat1'),
-        getString('connectors.ceAws.crossAccountRoleStep1.visible.feat2')
-      ],
-      footer: (
-        <>
-          {getString('connectors.ceAzure.chooseRequirements.optimization.footer1')}{' '}
-          <a
-            href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#aws_ecs_and_resource_inventory_management"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {getString('permissions').toLowerCase()}
-          </a>{' '}
-          {getString('connectors.ceAws.crossAccountRoleStep1.optimize.footer')}
-        </>
-      )
-    },
-    {
-      icon: 'nav-settings',
-      text: getString('connectors.ceAzure.chooseRequirements.optimizationCardDesc'),
-      value: Features.OPTIMIZATION,
-      desc: (
-        <>
-          {getString('connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.prefix')}{' '}
-          <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
-            {getString('common.ce.autostopping')}
-          </Text>
-        </>
-      ),
-      heading: getString('common.ce.autostopping'),
-      prefix: getString('connectors.ceAws.crossAccountRoleStep1.optimize.prefix'),
-      features: [
-        getString('connectors.ceAws.crossAccountRoleStep1.optimize.feat1'),
-        getString('connectors.ceAws.crossAccountRoleStep1.optimize.feat2'),
-        getString('connectors.ceAzure.chooseRequirements.optimization.feat2'),
-        getString('connectors.ceAzure.chooseRequirements.optimization.feat3'),
-        getString('connectors.ceAzure.chooseRequirements.optimization.feat4')
-      ],
-      footer: (
-        <>
-          {getString('connectors.ceAzure.chooseRequirements.optimization.footer1')}{' '}
-          <a
-            href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#aws_resource_optimization_using_auto_stopping_rules"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {getString('permissions').toLowerCase()}
-          </a>{' '}
-          {getString('connectors.ceAws.crossAccountRoleStep1.optimize.footer')}
-        </>
-      )
+        ),
+        heading: getString('connectors.ceAws.crossAccountRoleStep1.cards.governance.header'),
+        prefix: getString('common.aws'),
+        features: [
+          getString('connectors.ceAws.crossAccountRoleStep1.cards.governance.feat1'),
+          getString('connectors.ceAws.crossAccountRoleStep1.cards.governance.feat2')
+        ],
+        footer: (
+          <>
+            {getString('connectors.ceAws.crossAccountRoleStep1.adding')}{' '}
+            <a
+              href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {getString('connectors.ceAws.crossAccountRoleStep1.thesePermissions')}
+            </a>{' '}
+            {getString('connectors.ceAws.crossAccountRoleStep1.iamRole')}
+          </>
+        )
+      })
     }
-  ]).current
+
+    return cards as CardData[]
+  }, [isGovernanceEnabled])
 
   const [selectedCards, setSelectedCards] = useState<CardData[]>(() => {
     const initialSelectedCards = []
@@ -163,7 +204,12 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   useStepLoadTelemetry(CE_AWS_CONNECTOR_CREATION_EVENTS.LOAD_CHOOSE_REQUIREMENTS)
 
   const handleSubmit = () => {
-    const features: Features[] = selectedCards.map(card => card.value)
+    let features: Features[] = selectedCards.map(card => card.value)
+
+    if (!prevStepData?.includeBilling) {
+      features = features.filter(item => item !== Features.BILLING)
+    }
+
     const newspec = {
       crossAccountAccess: { crossAccountRoleArn: '' },
       ...prevStepData?.spec,
@@ -204,6 +250,8 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
 
   const [featureDetails, setFeatureDetails] = useState<CardData>()
 
+  const showExistingCurWarning = !isGovCloudAccount && !prevStepData?.includeBilling
+
   return (
     <Layout.Vertical className={css.stepContainer}>
       <Text
@@ -237,7 +285,7 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
             {featureDetails ? (
               <FeatureDetails feature={featureDetails} />
             ) : (
-              <Layout.Vertical spacing="medium" style={{ alignItems: 'center' }}>
+              <Layout.Vertical spacing="medium" className={css.emptyState}>
                 <img src={EmptyState} width={110} />
                 <Text font={{ variation: FontVariation.TINY, align: 'center' }} width={100}>
                   {getString('connectors.ceAws.crossAccountRoleStep1.hoverOver')}
@@ -246,7 +294,28 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
             )}
           </Layout.Vertical>
         </Layout.Horizontal>
-        <Layout.Horizontal className={css.buttonPanel} spacing="small">
+        {showExistingCurWarning ? (
+          <Layout.Horizontal spacing="small" className={css.exitingReportWarning}>
+            <Icon size={20} name="warning-outline" className={css.warningIcon} />
+            <Container>
+              <Text font={{ variation: FontVariation.SMALL_SEMI, italic: true }} inline>
+                {getString('connectors.costVisibility')}
+              </Text>{' '}
+              <Text font={{ variation: FontVariation.SMALL_BOLD }} inline>
+                {getString('connectors.ceAws.crossAccountRoleStep1.existingCurWarning1', {
+                  masterAccountName: 'masterAccountName'
+                })}
+              </Text>{' '}
+              <Text font={{ variation: FontVariation.SMALL_SEMI, italic: true }} inline>
+                {getString('connectors.costVisibility')}
+              </Text>{' '}
+              <Text font={{ variation: FontVariation.SMALL_BOLD }} inline>
+                {getString('connectors.ceAws.crossAccountRoleStep1.existingCurWarning2')}
+              </Text>
+            </Container>
+          </Layout.Horizontal>
+        ) : null}
+        <Layout.Horizontal spacing="small">
           <Button text={getString('previous')} icon="chevron-left" onClick={handleprev}></Button>
           <Button
             type="submit"
@@ -254,7 +323,10 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
             text={getString('continue')}
             rightIcon="chevron-right"
             onClick={handleSubmit}
-            disabled={!prevStepData?.includeBilling && selectedCards.length == 0}
+            disabled={
+              (!prevStepData?.includeBilling && selectedCards.length == 0) ||
+              (showExistingCurWarning && selectedCards.length == 1)
+            }
           />
         </Layout.Horizontal>
       </Container>

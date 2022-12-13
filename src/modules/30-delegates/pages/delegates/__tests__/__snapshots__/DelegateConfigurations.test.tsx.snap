@@ -141,6 +141,7 @@ exports[`Delegates Configurations Page check filter panel 1`] = `
       <div
         class="StyledProps--font StyledProps--main PageBody--pageBody"
         data-name="page-body"
+        data-testid="page-body"
       >
         <div
           class="delegateProfilesContainer"
@@ -521,6 +522,7 @@ exports[`Delegates Configurations Page render data 1`] = `
       <div
         class="StyledProps--font StyledProps--main PageBody--pageBody"
         data-name="page-body"
+        data-testid="page-body"
       >
         <div
           class="delegateProfilesContainer"
@@ -700,6 +702,7 @@ exports[`Delegates Configurations Page render data and add new 1`] = `
       <div
         class="StyledProps--font StyledProps--main PageBody--pageBody"
         data-name="page-body"
+        data-testid="page-body"
       >
         <div
           class="delegateProfilesContainer"
@@ -876,6 +879,7 @@ exports[`Delegates Configurations Page test name search configs debounce 1`] = `
       <div
         class="StyledProps--font StyledProps--main PageBody--pageBody"
         data-name="page-body"
+        data-testid="page-body"
       >
         <div
           class="delegateProfilesContainer"

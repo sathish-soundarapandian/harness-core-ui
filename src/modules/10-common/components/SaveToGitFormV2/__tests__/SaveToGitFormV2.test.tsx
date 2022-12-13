@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, findByText, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, findByText, fireEvent, render, waitFor, queryByAttribute } from '@testing-library/react'
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import SaveToGitFormV2 from '../SaveToGitFormV2'
@@ -28,12 +28,15 @@ const saveToGitFormV2Handler = jest.fn(gitDetails => Promise.resolve(gitDetails)
 jest.mock('services/cd-ng', () => ({
   useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
     return { data: mockBranches, refetch: fetchBranches }
+  }),
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { data: { value: 'false' } } }
   })
 }))
 
 describe('SaveToGitFormV2 test', () => {
   afterEach(() => {
-    fetchBranches.mockReset()
+    jest.clearAllMocks()
   })
 
   test('Creating new branch and PR in SaveToGitFormV2', async () => {
@@ -84,6 +87,9 @@ describe('SaveToGitFormV2 test', () => {
       const submitBtn = await findByText(container, 'save')
       fireEvent.click(submitBtn)
     })
+    // Create PR should be enabled
+    const prCheckbox = queryByAttribute('name', container, 'createPr')
+    expect(prCheckbox).not.toBeDisabled()
 
     //targetBranch as same with branch should have form validation error
     expect(getByText('common.git.validation.sameBranches')).toBeInTheDocument()

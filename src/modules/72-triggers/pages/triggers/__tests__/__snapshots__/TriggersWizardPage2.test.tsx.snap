@@ -5,6 +5,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <section
       class="wizardShell tabs"
@@ -387,7 +388,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                     class="nestedAccordions"
                                   >
                                     <div
-                                      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+                                      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
                                     >
                                       <div
                                         class="nopadLeft accordionSummary"
@@ -1330,6 +1331,7 @@ exports[`Manifest Trigger Tests function getArtifactSpecObj by displaying select
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <section
       class="wizardShell tabs"
@@ -2046,6 +2048,7 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <section
       class="wizardShell tabs"
@@ -3428,6 +3431,7 @@ exports[`Manifest Trigger Tests on click of edit artifact - submits thru the rig
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <section
       class="wizardShell tabs"
@@ -4446,6 +4450,7 @@ exports[`Manifest Trigger Tests on edit -with event conditions payload 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <section
       class="wizardShell tabs"
@@ -4899,6 +4904,7 @@ exports[`Manifest Trigger Tests throws validation error when select artifact/man
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <section
       class="wizardShell tabs"

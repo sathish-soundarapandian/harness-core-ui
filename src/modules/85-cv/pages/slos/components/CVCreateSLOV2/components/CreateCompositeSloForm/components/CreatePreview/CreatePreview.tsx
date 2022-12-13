@@ -9,39 +9,55 @@ import React from 'react'
 import { Layout, Text, SelectOption, MultiSelectOption } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { SLOV2Form } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import { KeyValuePair } from '@cv/pages/slos/CVSLODetailsPage/DetailsPanel/views/ServiceDetails'
 import { PeriodLengthTypes, PeriodTypes } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
 import { CreateCompositeSLOSteps } from '../../CreateCompositeSloForm.types'
+import type { CreatePreviewProps, LabelValueProps, CalenderValuePreviewProps } from './CreatePreview.types'
+import css from './CreatePreview.module.scss'
 
-export const LabelAndValue = ({ label, value }: { label: string; value: string }): JSX.Element => {
+export const LabelAndValue = ({
+  label,
+  value,
+  className,
+  isLabelHeading = true,
+  isValueHeading = false
+}: LabelValueProps): JSX.Element => {
   return (
-    <Layout.Horizontal spacing="medium">
-      <Text font={{ weight: 'semi-bold' }} color={Color.GREY_1000}>
+    <Layout.Horizontal spacing="medium" className={className}>
+      <Text
+        title={label}
+        font={isLabelHeading ? { weight: 'semi-bold' } : { weight: 'light' }}
+        color={Color.GREY_1000}
+        width={isLabelHeading ? 100 : 300}
+      >
         {label}
       </Text>
-      <Text color={Color.GREY_1000}>{value}</Text>
+      <Text font={isValueHeading ? { weight: 'semi-bold' } : { weight: 'light' }} color={Color.GREY_1000}>
+        {value}
+      </Text>
     </Layout.Horizontal>
   )
 }
 
-export const CalenderValuePreview = ({ data }: { data: SLOV2Form }): JSX.Element => {
+export const CalenderValuePreview = ({ data, isPreview }: CalenderValuePreviewProps): JSX.Element => {
   let content = <></>
   const { getString } = useStrings()
+  const Preview = isPreview ? LabelAndValue : KeyValuePair
   if (data.periodLengthType === PeriodLengthTypes.MONTHLY) {
-    content = <LabelAndValue label={getString('cv.widowEnds')} value={data.dayOfMonth?.toString() || ''} />
+    content = <Preview label={getString('cv.widowEnds')} value={data.dayOfMonth?.toString() || ''} />
   }
   if (data.periodLengthType === PeriodLengthTypes.WEEKLY) {
-    content = <LabelAndValue label={getString('cv.widowEnds')} value={data.dayOfWeek?.toString() || ''} />
+    content = <Preview label={getString('cv.widowEnds')} value={data.dayOfWeek?.toString() || ''} />
   }
   return (
     <>
-      <LabelAndValue label={getString('cv.periodLength')} value={data.periodLengthType || ''} />
+      <Preview label={getString('cv.periodLength')} value={data.periodLengthType || ''} />
       {content}
     </>
   )
 }
 
-export const CreatePreview = ({ id, data }: { id: CreateCompositeSLOSteps; data: SLOV2Form }): JSX.Element => {
+export const CreatePreview = ({ id, data }: CreatePreviewProps): JSX.Element => {
   const { getString } = useStrings()
   switch (id) {
     case CreateCompositeSLOSteps.Define_SLO_Identification:
@@ -53,7 +69,7 @@ export const CreatePreview = ({ id, data }: { id: CreateCompositeSLOSteps; data:
             label={getString('cv.slos.userJourney')}
             value={(data.userJourneyRef as unknown as MultiSelectOption[])
               ?.map((userJourney: SelectOption) => userJourney.label || userJourney)
-              .join(',')}
+              .join(' , ')}
           />
         </Layout.Vertical>
       )
@@ -64,27 +80,37 @@ export const CreatePreview = ({ id, data }: { id: CreateCompositeSLOSteps; data:
           {data.periodType === PeriodTypes.ROLLING && (
             <LabelAndValue label={getString('cv.periodLength')} value={data.periodLength || ''} />
           )}
-          {data.periodType === PeriodTypes.CALENDAR && <CalenderValuePreview data={data} />}
+          {data.periodType === PeriodTypes.CALENDAR && <CalenderValuePreview data={data} isPreview />}
         </Layout.Vertical>
       )
     case CreateCompositeSLOSteps.Set_SLO_Target:
       return (
         <Layout.Vertical spacing="medium">
           <LabelAndValue
-            label={`${getString('cv.SLOTarget')} ${getString('instanceFieldOptions.percentage')}`}
-            value={data.SLOTargetPercentage.toString() || ''}
+            label={`${getString('cv.SLOTarget')}`}
+            value={`${data.SLOTargetPercentage.toString()}%` || ''}
           />
         </Layout.Vertical>
       )
     case CreateCompositeSLOSteps.Add_SLOs:
       return (
         <Layout.Vertical spacing="medium">
+          <LabelAndValue
+            isLabelHeading={true}
+            isValueHeading={true}
+            className={css.previewRows}
+            label={getString('cv.SLO')}
+            value={getString('cv.CompositeSLO.Weightage')}
+          />
           {data?.serviceLevelObjectivesDetails?.map(slo => {
+            const { name, serviceLevelObjectiveRef, weightagePercentage } = slo
             return (
               <LabelAndValue
-                key={slo.serviceLevelObjectiveRef}
-                label={slo.serviceLevelObjectiveRef}
-                value={slo.weightagePercentage.toString()}
+                isLabelHeading={false}
+                className={css.previewRows}
+                key={serviceLevelObjectiveRef}
+                label={name || serviceLevelObjectiveRef}
+                value={`${weightagePercentage.toString()}%`}
               />
             )
           })}

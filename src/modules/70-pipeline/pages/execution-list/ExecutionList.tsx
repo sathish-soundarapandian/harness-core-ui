@@ -5,33 +5,27 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
-
-import { Container, PageSpinner, Text } from '@harness/uicore'
-
+import React, { useRef, useState } from 'react'
+import { Container, ExpandingSearchInputHandle, PageSpinner, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-
 import { matchPath, useLocation, useParams } from 'react-router-dom'
+import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
+import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
 import { Page } from '@common/exports'
-import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { useMutateAsGet, useUpdateQueryParams } from '@common/hooks'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
-import type { PipelineType, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { usePolling } from '@common/hooks/usePolling'
+import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
 import { useGetCommunity } from '@common/utils/utils'
 import PipelineBuildExecutionsChart from '@pipeline/components/Dashboards/BuildExecutionsChart/PipelineBuildExecutionsChart'
 import PipelineSummaryCards from '@pipeline/components/Dashboards/PipelineSummaryCards/PipelineSummaryCards'
 import { ExecutionCompareProvider } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
-import { usePolling } from '@common/hooks/usePolling'
-import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import { PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
-import routes from '@common/RouteDefinitions'
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
-import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
-import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
+import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useStrings } from 'framework/strings'
-import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
+import { GetListOfExecutionsQueryParams, PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
 import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
 import {
   ExecutionListFilterContextProvider,
@@ -39,11 +33,10 @@ import {
 } from './ExecutionListFilterContext/ExecutionListFilterContext'
 import { ExecutionListSubHeader } from './ExecutionListSubHeader/ExecutionListSubHeader'
 import { MemoisedExecutionListTable } from './ExecutionListTable/ExecutionListTable'
-import { ExecutionListCards } from './ExecutionListCards/ExecutionListCards'
 import css from './ExecutionList.module.scss'
+
 export interface ExecutionListProps {
   onRunPipeline(): void
-  repoName?: string
   showHealthAndExecution?: boolean
   isPipelineInvalid?: boolean
   showBranchFilter?: boolean
@@ -54,9 +47,8 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const { showHealthAndExecution, ...rest } = props
   const { getString } = useStrings()
   const defaultBranchSelect: string = getString('common.gitSync.selectBranch')
-  const { repoName } = useQueryParams<{ repoName?: string }>()
-  const { updateQueryParams } = useUpdateQueryParams<{ repoName?: string }>()
-
+  const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
+  const searchRef = useRef({} as ExpandingSearchInputHandle)
   const [selectedBranch, setSelectedBranch] = useState<string | undefined>(defaultBranchSelect)
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId } =
     useParams<PipelineType<PipelinePathProps>>()
@@ -72,18 +64,18 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     repoIdentifier,
     branch,
     searchTerm,
-    pipelineIdentifier: pipelineIdentifierFromQueryParam
+    pipelineIdentifier: pipelineIdentifierFromQueryParam,
+    repoName
   } = queryParams
 
-  const NEW_EXECUTION_LIST_VIEW = useFeatureFlag(FeatureFlag.NEW_EXECUTION_LIST_VIEW)
+  const resetFilter = (): void => {
+    searchRef.current.clear()
+    replaceQueryParams({})
+  }
 
   const { module } = useModuleInfo()
   const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
   const location = useLocation()
-  // TODO: Temporary, remove once released
-  const { listview } = useQueryParams<{ listview?: boolean }>({ decoder: queryParamDecodeAll() })
-  const Executions = listview === true || NEW_EXECUTION_LIST_VIEW ? MemoisedExecutionListTable : ExecutionListCards
-
   const isExecutionHistoryView = !!matchPath(location.pathname, {
     path: routes.toPipelineDeploymentList({
       orgIdentifier,
@@ -117,7 +109,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
       sort: sort.join(','), // TODO: this is temporary until BE supports common format for all. Currently BE supports status in  arrayFormat: 'repeat' and sort in  arrayFormat: 'comma'
       myDeployments,
       status,
-      repoName,
+      ...(!isExecutionHistoryView && repoName ? { repoName } : {}),
       ...(selectedBranch !== defaultBranchSelect ? { branch: selectedBranch } : {}),
       repoIdentifier,
       searchTerm,
@@ -149,11 +141,9 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const showSpinner = initLoading || (loading && !isPolling)
 
   const onChangeRepo = (_repoName: string): void => {
+    setSelectedBranch(undefined)
     updateQueryParams({ repoName: (_repoName || []) as string })
   }
-  useEffect(() => {
-    if (!repoName) setSelectedBranch(undefined)
-  }, [repoName])
 
   const { globalFreezes } = useGlobalFreezeBanner()
   return (
@@ -176,6 +166,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
             onChangeRepo={onChangeRepo}
             repoName={repoName}
             borderless
+            ref={searchRef}
             {...rest}
           />
         )}
@@ -191,10 +182,14 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
                 {`${getString('total')}: ${data?.data?.totalElements}`}
               </Text>
             </div>
-            <Executions executionList={executionList} onViewCompiledYaml={setViewCompiledYaml} {...rest} />
+            <MemoisedExecutionListTable
+              executionList={executionList}
+              onViewCompiledYaml={setViewCompiledYaml}
+              {...rest}
+            />
           </>
         ) : (
-          <ExecutionListEmpty {...rest} />
+          <ExecutionListEmpty {...rest} resetFilter={resetFilter} />
         )}
       </Page.Body>
     </>

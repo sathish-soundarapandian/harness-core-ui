@@ -16,14 +16,14 @@ import css from '../AccountOverview.module.scss'
 const versionAPIs = [
   {
     label: 'Access Control',
-    url: 'gateway/authz/api/version',
+    url: 'authz/api/version',
     id: 'access_control'
   },
-  {
-    url: 'auth/version.json',
-    label: 'Auth UI',
-    id: 'ng_auth_ui'
-  },
+  // {
+  //   url: 'auth/version.json',
+  //   label: 'Auth UI',
+  //   id: 'ng_auth_ui'
+  // },
   {
     label: 'Cloud Cost Management',
     url: 'ccm/api/version',
@@ -75,6 +75,11 @@ const versionAPIs = [
     id: 'ng_ui'
   },
   {
+    url: 'chaos/manager/api/version',
+    label: 'Chaos Manager',
+    id: 'chaos_manager'
+  },
+  {
     label: 'Notifications',
     url: 'notifications/api/version',
     id: 'notifications'
@@ -93,10 +98,13 @@ const versionAPIs = [
     label: 'Template Service',
     url: 'template/api/version',
     id: 'template_service'
+  },
+  {
+    label: 'GitOps',
+    url: 'gitops/api/v1/version',
+    id: 'gitops'
   }
 ]
-
-const BASE_URL = window.location.pathname.replace(/\/ng\/?/, '/')
 
 interface ServiceData {
   label?: string
@@ -112,41 +120,42 @@ const ServiceVersions = () => {
   const fetchServices = () => {
     const servicesLength = data.length
     if (servicesLength <= 0) {
-      const promiseArr = versionAPIs.map(row => fetch(row.url.startsWith('http') ? row.url : BASE_URL + row.url))
+      const promiseArr = versionAPIs.map(row =>
+        fetch(row.url.startsWith('http') ? row.url : window.getApiBaseUrl(row.url))
+      )
 
       setLoading(true)
       Promise.allSettled(promiseArr)
         .then(async responses => {
-          setLoading(false)
-          const labelVersionsArr: ServiceData[] = []
-          await responses.map(async (res, index) => {
-            const row = versionAPIs[index]
-            let serviceRow: ServiceData = {
-              label: row.label
-            }
-            if (res.status === 'fulfilled') {
-              const response = await res.value.json()
-
-              if (response.version) {
-                // for NGUI
-                serviceRow['version'] = response.version
-              } else if (response.versionInfo) {
-                // for CF
-                serviceRow['version'] = response.versionInfo
-              } else if (response.resource && response.resource.versionInfo) {
-                serviceRow['version'] = response.resource.versionInfo.version
+          Promise.allSettled(
+            responses.map(response => (response.status === 'fulfilled' ? response.value.json() : response))
+          ).then(resArr => {
+            const labelVersionsArr = resArr.map((response: any, index) => {
+              const row = versionAPIs[index]
+              if (response.status === 'fulfilled') {
+                const serviceRow: ServiceData = {
+                  label: row.label
+                }
+                if (response.value.version) {
+                  // for NGUI
+                  serviceRow['version'] = response.value.version
+                } else if (response.value.versionInfo) {
+                  // for CF
+                  serviceRow['version'] = response.value.versionInfo
+                } else if (response.value.resource && response.value.resource.versionInfo) {
+                  serviceRow['version'] = response.value.resource.versionInfo.version
+                }
+                return serviceRow
+              } else {
+                return {
+                  label: row.label,
+                  version: 'NA'
+                }
               }
-            } else {
-              serviceRow = {
-                label: row.label,
-                version: 'NA'
-              }
-            }
-            labelVersionsArr.push(serviceRow)
-            if (index === promiseArr.length - 1) {
-              setData(labelVersionsArr)
-            }
+            })
+            setData(labelVersionsArr)
           })
+          setLoading(false)
         })
         .catch(() => {
           showError('Error fetching Service Versions')

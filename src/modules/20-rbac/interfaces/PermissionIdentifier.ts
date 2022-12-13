@@ -92,6 +92,7 @@ export enum PermissionIdentifier {
   EDIT_TEMPLATE = 'core_template_edit',
   DELETE_TEMPLATE = 'core_template_delete',
   ACCESS_TEMPLATE = 'core_template_access',
+  COPY_TEMPLATE = 'core_template_copy',
 
   // This is edit, delete, access permission
   // There is no view permission for deployment freeze
@@ -184,6 +185,8 @@ export enum PermissionIdentifier {
   VIEW_CCM_LOADBALANCER = 'ccm_loadBalancer_view',
   EDIT_CCM_LOADBALANCER = 'ccm_loadBalancer_edit',
   DELETE_CCM_LOADBALANCER = 'ccm_loadBalancer_delete',
+  VIEW_CCM_CURRENCYPREFERENCE = 'ccm_currencyPreference_view',
+  EDIT_CCM_CURRENCYPREFERENCE = 'ccm_currencyPreference_edit',
   // Billing Permissions
   EDIT_LICENSE = 'core_license_edit',
   DELETE_LICENSE = 'core_license_delete',

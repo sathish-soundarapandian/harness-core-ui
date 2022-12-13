@@ -44,7 +44,6 @@ function EncryptedFileSelectField(props: SelectEncryptedProps): React.ReactEleme
   const { getString } = useStrings()
   const { formik, name, readonly = false, onChange, value = '', isSshWinRm = false } = props
   const secretValue = get(formik.values, name) || ''
-
   const { openCreateOrSelectSecretModal } = useCreateOrSelectSecretModal(
     {
       type: isSshWinRm ? 'SecretFile' : undefined,
@@ -60,7 +59,8 @@ function EncryptedFileSelectField(props: SelectEncryptedProps): React.ReactEleme
         onChange(result)
       }
     },
-    []
+    [],
+    secretValue
   )
 
   const data = React.useMemo(() => {

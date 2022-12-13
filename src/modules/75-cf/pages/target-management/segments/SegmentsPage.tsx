@@ -302,6 +302,7 @@ export const SegmentsPage: React.FC = () => {
             gotoPage={index => {
               setPageNumber(index)
             }}
+            showPagination
           />
         )
       }

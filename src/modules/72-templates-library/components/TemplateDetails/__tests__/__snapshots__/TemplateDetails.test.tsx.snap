@@ -423,6 +423,7 @@ exports[`<TemplateDetails /> tests should match snapshot - when reference by tab
                       >
                         <div
                           class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard secondHeader referencedByHeader StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+                          data-testid="page-header"
                         >
                           <div
                             class="Layout--vertical StyledProps--main"
@@ -472,6 +473,7 @@ exports[`<TemplateDetails /> tests should match snapshot - when reference by tab
                         <div
                           class="StyledProps--font StyledProps--main PageBody--pageBody referencedByBody"
                           data-name="page-body"
+                          data-testid="page-body"
                         >
                           <div
                             class="StyledProps--font StyledProps--main NoDataCard--noDataCard StyledProps--flex StyledProps--flex-align-center-center"

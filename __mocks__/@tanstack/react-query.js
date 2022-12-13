@@ -1,5 +1,7 @@
-module.exports.useQuery = () => {
-  fail('Please mock your API calls')
+module.exports.useQuery = args => {
+  const queryKey = Array.isArray(args) ? args[0] : args.queryKey
+
+  fail(`Please mock your API calls: ${queryKey}`)
   return {}
 }
 

@@ -20,11 +20,11 @@ import { SLITypeEnum } from '@cv/pages/slos/components/CVCreateSLO/components/Cr
 import type { KeyValuePairProps, ServiceDetailsProps } from '../DetailsPanel.types'
 import css from '../DetailsPanel.module.scss'
 
-export const KeyValuePair: React.FC<KeyValuePairProps> = ({ keyText, value }) => {
+export const KeyValuePair: React.FC<KeyValuePairProps> = ({ label, value }) => {
   return (
     <Container>
       <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_400}>
-        {keyText}
+        {label}
       </Text>
       <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_800}>
         {value}
@@ -68,22 +68,24 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
           </Container>
         )}
 
-        <KeyValuePair
-          keyText={getString('cv.slos.sliType')}
-          value={getString(
-            sloDashboardWidget.type === SLITypeEnum.AVAILABILITY
-              ? 'cv.slos.slis.type.availability'
-              : 'cv.slos.slis.type.latency'
-          )}
-        />
         {!isCompositeSLO && (
           <KeyValuePair
-            keyText={getString('pipeline.verification.healthSourceLabel')}
+            label={getString('cv.slos.sliType')}
+            value={getString(
+              sloDashboardWidget.type === SLITypeEnum.AVAILABILITY
+                ? 'cv.slos.slis.type.availability'
+                : 'cv.slos.slis.type.latency'
+            )}
+          />
+        )}
+        {!isCompositeSLO && sloDashboardWidget?.healthSourceName && (
+          <KeyValuePair
+            label={getString('pipeline.verification.healthSourceLabel')}
             value={sloDashboardWidget.healthSourceName}
           />
         )}
         <KeyValuePair
-          keyText={getString('cv.slos.sloTargetAndBudget.periodType')}
+          label={getString('cv.slos.sloTargetAndBudget.periodType')}
           value={getString(
             sloDashboardWidget.sloTargetType === PeriodTypeEnum.ROLLING
               ? 'cv.slos.sloTargetAndBudget.periodTypeOptions.rolling'

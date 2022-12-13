@@ -40,6 +40,7 @@ import type { StageSelectionData } from '../../utils/runPipelineUtils'
 import { getSelectedStagesFromPipeline } from './CommonUtils/CommonUtils'
 import type { CustomVariablesData } from '../PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 import type { DeployServiceEntityData } from '../PipelineInputSetForm/StageInputSetForm'
+import { validateOutputPanelInputSet } from '../CommonPipelineStages/PipelineStage/PipelineStageOutputSection/utils'
 
 export function getStepFromStage(stepId: string, steps?: ExecutionWrapperConfig[]): ExecutionWrapperConfig | undefined {
   let responseStep: ExecutionWrapperConfig | undefined = undefined
@@ -779,11 +780,24 @@ export const validatePipeline = ({
       if (stageObj.stage) {
         const originalStage = getStageFromPipeline(stageObj.stage.identifier, originalPipeline)
         if (stageObj.stage.type === StageType.PIPELINE) {
-          const chainedPipeline = (stageObj.stage?.spec as PipelineStageConfig)?.pipelineInputs as PipelineInfoConfig
+          const chainedPipeline = (stageObj.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
           const chainedPipelineTemplate = (template?.stages?.[index]?.stage?.spec as PipelineStageConfig)
-            ?.pipelineInputs as PipelineInfoConfig
+            ?.inputs as PipelineInfoConfig
           const _originalPipeline = (originalPipeline?.stages?.[index]?.stage?.spec as PipelineStageConfig)
-            ?.pipelineInputs as PipelineInfoConfig
+            ?.inputs as PipelineInfoConfig
+
+          const chainedPipelineOutputErrorsResponse = validateOutputPanelInputSet({
+            data: { outputs: get(stageObj.stage?.spec as PipelineStageConfig, 'outputs', []) },
+            template: { outputs: get(template?.stages?.[index]?.stage?.spec as PipelineStageConfig, 'outputs', []) },
+            getString
+          })
+          if (!isEmpty(chainedPipelineOutputErrorsResponse.outputs)) {
+            set(
+              errors,
+              `${isEmpty(path) ? '' : `${path}.`}stages[${index}].stage.spec.outputs`,
+              chainedPipelineOutputErrorsResponse.outputs
+            )
+          }
 
           const chainedPipelineErrorsResponse = validatePipeline({
             pipeline: chainedPipeline,
@@ -799,7 +813,7 @@ export const validatePipeline = ({
           if (!isEmpty(chainedPipelineErrorsResponse)) {
             set(
               errors,
-              `${isEmpty(path) ? '' : `${path}.`}stages[${index}].stage.spec.pipelineInputs`,
+              `${isEmpty(path) ? '' : `${path}.`}stages[${index}].stage.spec.inputs`,
               chainedPipelineErrorsResponse
             )
           }
@@ -821,13 +835,32 @@ export const validatePipeline = ({
           if (stageP.stage) {
             const originalStage = getStageFromPipeline(stageP.stage.identifier, originalPipeline)
             if (stageP.stage.type === StageType.PIPELINE) {
-              const chainedPipeline = (stageP.stage?.spec as PipelineStageConfig)?.pipelineInputs as PipelineInfoConfig
+              const chainedPipeline = (stageP.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
               const chainedPipelineTemplate = (
                 template?.stages?.[index]?.parallel?.[indexP]?.stage?.spec as PipelineStageConfig
-              )?.pipelineInputs as PipelineInfoConfig
+              )?.inputs as PipelineInfoConfig
               const _originalPipeline = (
                 originalPipeline?.stages?.[index]?.parallel?.[indexP]?.stage?.spec as PipelineStageConfig
-              )?.pipelineInputs as PipelineInfoConfig
+              )?.inputs as PipelineInfoConfig
+
+              const chainedPipelineOutputErrorsResponse = validateOutputPanelInputSet({
+                data: { outputs: get(stageP.stage?.spec as PipelineStageConfig, 'outputs', []) },
+                template: {
+                  outputs: get(
+                    template?.stages?.[index]?.parallel?.[indexP]?.stage?.spec as PipelineStageConfig,
+                    'outputs',
+                    []
+                  )
+                },
+                getString
+              })
+              if (!isEmpty(chainedPipelineOutputErrorsResponse.outputs)) {
+                set(
+                  errors,
+                  `${isEmpty(path) ? '' : `${path}.`}stages[${index}].parallel[${indexP}].stage.spec.outputs`,
+                  chainedPipelineOutputErrorsResponse.outputs
+                )
+              }
 
               const chainedPipelineErrorsResponse = validatePipeline({
                 pipeline: chainedPipeline,
@@ -843,7 +876,7 @@ export const validatePipeline = ({
               if (!isEmpty(chainedPipelineErrorsResponse)) {
                 set(
                   errors,
-                  `${isEmpty(path) ? '' : `${path}.`}stages[${index}].parallel[${indexP}].stage.spec.pipelineInputs`,
+                  `${isEmpty(path) ? '' : `${path}.`}stages[${index}].parallel[${indexP}].stage.spec.inputs`,
                   chainedPipelineErrorsResponse
                 )
               }

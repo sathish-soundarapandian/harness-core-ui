@@ -5,12 +5,28 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEqual, defaultTo } from 'lodash-es'
+import { isEqual, defaultTo, pick } from 'lodash-es'
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
-import type { CalenderSLOTargetSpec, RollingSLOTargetSpec, ServiceLevelObjectiveV2DTO, SLOTargetDTO } from 'services/cv'
+import type {
+  CalenderSLOTargetSpec,
+  RollingSLOTargetSpec,
+  ServiceLevelObjectiveDetailsDTO,
+  ServiceLevelObjectiveV2DTO,
+  SLOTargetDTO
+} from 'services/cv'
 import { PeriodLengthTypes, PeriodTypes } from '../CVCreateSLO/CVCreateSLO.types'
-import { SLOV2Form, SLOV2FormFields } from './CVCreateSLOV2.types'
+import { SLOObjective, SLOV2Form, SLOV2FormFields } from './CVCreateSLOV2.types'
+import { serviceLevelObjectiveKeys } from './components/CreateCompositeSloForm/CreateCompositeSloForm.constant'
+
+export const filterServiceLevelObjectivesDetailsFromSLOObjective = (
+  serviceLevelObjectivesDetails?: SLOObjective[]
+): ServiceLevelObjectiveDetailsDTO[] =>
+  serviceLevelObjectivesDetails
+    ? serviceLevelObjectivesDetails.map(
+        sloDetail => pick(sloDetail, [...serviceLevelObjectiveKeys]) as ServiceLevelObjectiveDetailsDTO
+      )
+    : []
 
 export const getSLOV2InitialFormData = (
   sloType: ServiceLevelObjectiveV2DTO['type'],
@@ -107,7 +123,11 @@ export const createSLOV2RequestPayload = (
       type: values.periodType,
       spec: { ...getSLOTarget(values) }
     },
-    spec: { serviceLevelObjectivesDetails: values.serviceLevelObjectivesDetails }
+    spec: {
+      serviceLevelObjectivesDetails: filterServiceLevelObjectivesDetailsFromSLOObjective(
+        values.serviceLevelObjectivesDetails
+      )
+    }
   }
 }
 

@@ -84,7 +84,8 @@ const MultiTypeTagSelector = ({
   useEffect(() => {
     const formikTags = get(formik.values, name, {})
     if (
-      ((typeof lastInitialTags === 'object' && Object.keys(lastInitialTags).length > 0) || !lastInitialTags) &&
+      ((lastInitialTags && typeof lastInitialTags === 'object' && Object.keys(lastInitialTags).length > 0) ||
+        !lastInitialTags) &&
       selectedTags.length > 0 &&
       typeof formikTags === 'object' &&
       Object.keys(formikTags).length === 0

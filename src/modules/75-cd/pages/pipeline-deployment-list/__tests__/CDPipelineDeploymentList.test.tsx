@@ -28,7 +28,18 @@ window.IntersectionObserver = jest.fn().mockImplementation(() => ({
   observe: () => null,
   unobserve: () => null
 }))
+const mockRepositories = {
+  status: 'SUCCESS',
+  data: {
+    repositories: ['main', 'main-patch', 'main-patch1', 'main-patch2']
+  },
+  metaData: null,
+  correlationId: 'cc779876-d3af-44e5-8991-916dfecb4548'
+}
 
+const fetchRepositories = jest.fn(() => {
+  return Object.create(mockRepositories)
+})
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/utils/YamlUtils', () => ({}))
 
@@ -46,12 +57,14 @@ jest.mock('services/pipeline-ng', () => ({
     mockGetCallFunction(args)
     return { mutate: jest.fn(() => Promise.resolve(pipelineList)), cancel: jest.fn(), loading: false }
   }),
+  useGetExecutionRepositoriesList: jest.fn().mockImplementation(() => {
+    return { data: mockRepositories, refetch: fetchRepositories, error: null, loading: false }
+  }),
   useGetExecutionBranchesList: jest.fn().mockImplementation(() => {
     return { data: jest.fn(), refetch: jest.fn() }
   }),
   useGetTemplateFromPipeline: jest.fn(() => ({ data: {} })),
   useGetPipeline: jest.fn(() => ({ data: {} })),
-  useGetPipelineSummary: jest.fn(() => PipelineDetailsMockResponse),
   useCreateInputSetForPipeline: jest.fn(() => ({ data: {} })),
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => ({ data: {} })),
   useHandleInterrupt: jest.fn(() => ({})),
@@ -85,6 +98,10 @@ jest.mock('services/pipeline-ng', () => ({
   useValidateTemplateInputs: jest.fn(() => ({ data: null }))
 }))
 
+jest.mock('services/pipeline-rq', () => ({
+  useGetPipelineSummaryQuery: jest.fn(() => PipelineDetailsMockResponse)
+}))
+
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
 const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
 
@@ -104,14 +121,17 @@ jest.mock('services/cd-ng', () => ({
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
   }),
-  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
-    return { data: sourceCodeManagers, refetch: jest.fn() }
-  }),
   useCreatePR: jest.fn(() => noop),
   useCreatePRV2: jest.fn(() => noop),
   useGetFileContent: jest.fn(() => noop),
   useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
 }))
 
 jest.mock('services/template-ng', () => ({

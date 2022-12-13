@@ -14,7 +14,7 @@
   height: 100% !important;
   width: calc(100% - var(--main-nav-width)) !important;
   background: var(--theme-light-nav-panel-bg) !important;
-  z-index: 100;
+  z-index: 21;
   .sortableListContainer {
     overflow-y: scroll;
   }

@@ -62,6 +62,7 @@ export const useRenderMultiTypeInputWithAllowedValues = ({
         disabled={readonly}
         tooltipProps={tooltipProps}
         className={className}
+        style={{ flexGrow: 1 }}
       />
     )
   }

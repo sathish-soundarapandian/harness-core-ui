@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import { useParams } from 'react-router-dom'
-import { isEmpty, isEqual } from 'lodash-es'
+import { isEmpty, isEqual, cloneDeep } from 'lodash-es'
 
 import { PageSpinner } from '@harness/uicore'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -28,7 +28,7 @@ import { Editions } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useFeaturesContext } from 'framework/featureStore/FeaturesContext'
-import { VersionMap, LICENSE_STATE_VALUES } from './licenseStoreUtil'
+import { VersionMap, LICENSE_STATE_VALUES, defaultLicensesByModule } from './licenseStoreUtil'
 
 // Only keep GA modules for now
 export interface LicenseStoreContextProps {
@@ -39,6 +39,8 @@ export interface LicenseStoreContextProps {
   readonly CCM_LICENSE_STATE: LICENSE_STATE_VALUES
   readonly CD_LICENSE_STATE: LICENSE_STATE_VALUES
   readonly CHAOS_LICENSE_STATE: LICENSE_STATE_VALUES
+  readonly STO_LICENSE_STATE: LICENSE_STATE_VALUES
+  readonly CV_LICENSE_STATE: LICENSE_STATE_VALUES
 
   updateLicenseStore(data: Partial<Pick<LicenseStoreContextProps, 'licenseInformation'>>): void
 }
@@ -59,7 +61,9 @@ export const LICENSE_STATE_NAMES: { [T in licenseStateNames]: T } = {
   FF_LICENSE_STATE: 'FF_LICENSE_STATE',
   CCM_LICENSE_STATE: 'CCM_LICENSE_STATE',
   CD_LICENSE_STATE: 'CD_LICENSE_STATE',
-  CHAOS_LICENSE_STATE: 'CHAOS_LICENSE_STATE'
+  CHAOS_LICENSE_STATE: 'CHAOS_LICENSE_STATE',
+  STO_LICENSE_STATE: 'STO_LICENSE_STATE',
+  CV_LICENSE_STATE: 'CV_LICENSE_STATE'
 }
 
 export const LicenseStoreContext = React.createContext<LicenseStoreContextProps>({
@@ -70,6 +74,8 @@ export const LicenseStoreContext = React.createContext<LicenseStoreContextProps>
   CCM_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
   CD_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
   CHAOS_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
+  STO_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
+  CV_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
   updateLicenseStore: () => void 0
 })
 
@@ -91,25 +97,9 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
 
   // If the user has been created from NG signup we will always enforce licensing
   // If the user is a CG user we will look at the NG_LICENSES_ENABLED feature flag to determine whether or not we should enforce licensing
-  const shouldLicensesBeDisabled = __DEV__ || (!createdFromNG && !NG_LICENSES_ENABLED)
+  const shouldLicensesBeDisabled = !createdFromNG && !NG_LICENSES_ENABLED
 
-  const defaultLicenses = {
-    CD: {
-      edition: Editions.FREE
-    },
-    CI: {
-      edition: Editions.FREE
-    },
-    CF: {
-      edition: Editions.FREE
-    },
-    CE: {
-      edition: Editions.FREE
-    },
-    CHAOS: {
-      edition: Editions.FREE
-    }
-  }
+  const defaultLicenses = cloneDeep(defaultLicensesByModule)
 
   const [state, setState] = useState<Omit<LicenseStoreContextProps, 'updateLicenseStore' | 'strings'>>({
     licenseInformation: shouldLicensesBeDisabled ? defaultLicenses : {},
@@ -118,7 +108,9 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
     FF_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
     CCM_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
     CD_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
-    CHAOS_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED
+    CHAOS_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
+    STO_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
+    CV_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED
   })
 
   const {
@@ -257,12 +249,16 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
     const CCMModuleLicenseData = licenses['CE']
     const CDModuleLicenseData = licenses['CD']
     const ChaosModuleLicenseData = licenses['CHAOS']
+    const STOModuleLicenseData = licenses['STO']
+    const CVModuleLicenseData = licenses['CV']
 
     const updatedCILicenseState: LICENSE_STATE_VALUES = getLicenseState(CIModuleLicenseData?.expiryTime)
     const updatedFFLicenseState: LICENSE_STATE_VALUES = getLicenseState(FFModuleLicenseData?.expiryTime)
     const updatedCCMLicenseState: LICENSE_STATE_VALUES = getLicenseState(CCMModuleLicenseData?.expiryTime)
     const updatedCDLicenseState: LICENSE_STATE_VALUES = getLicenseState(CDModuleLicenseData?.expiryTime)
     const updatedChaosLicenseState: LICENSE_STATE_VALUES = getLicenseState(ChaosModuleLicenseData?.expiryTime)
+    const updatedSTOLicenseState: LICENSE_STATE_VALUES = getLicenseState(STOModuleLicenseData?.expiryTime)
+    const updatedCVLicenseState: LICENSE_STATE_VALUES = getLicenseState(CVModuleLicenseData?.expiryTime)
 
     setState(prevState => ({
       ...prevState,
@@ -271,7 +267,9 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
       FF_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedFFLicenseState,
       CCM_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedCCMLicenseState,
       CD_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedCDLicenseState,
-      CHAOS_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedChaosLicenseState
+      CHAOS_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedChaosLicenseState,
+      STO_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedSTOLicenseState,
+      CV_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedCVLicenseState
     }))
 
     if (!getAccountLicensesLoading && !isEmpty(currentUserInfo)) {
@@ -291,6 +289,8 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
           | 'CCM_LICENSE_STATE'
           | 'CD_LICENSE_STATE'
           | 'CHAOS_LICENSE_STATE'
+          | 'STO_LICENSE_STATE'
+          | 'CV_LICENSE_STATE'
         >
       >
     ): void => {
@@ -299,6 +299,8 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
       const CCMModuleLicenseData = updateData.licenseInformation?.['CE']
       const CDModuleLicenseData = updateData.licenseInformation?.['CD']
       const ChaosModuleLicenseData = updateData.licenseInformation?.['CHAOS']
+      const STOModuleLicenseData = updateData.licenseInformation?.['STO']
+      const CVModuleLicenseData = updateData.licenseInformation?.['CV']
 
       setState(prevState => ({
         ...prevState,
@@ -317,6 +319,12 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
           : prevState.CD_LICENSE_STATE,
         CHAOS_LICENSE_STATE: ChaosModuleLicenseData?.expiryTime
           ? getLicenseState(ChaosModuleLicenseData.expiryTime)
+          : prevState.CHAOS_LICENSE_STATE,
+        STO_LICENSE_STATE: STOModuleLicenseData?.expiryTime
+          ? getLicenseState(STOModuleLicenseData.expiryTime)
+          : prevState.STO_LICENSE_STATE,
+        CV_LICENSE_STATE: CVModuleLicenseData?.expiryTime
+          ? getLicenseState(CVModuleLicenseData.expiryTime)
           : prevState.CHAOS_LICENSE_STATE
       }))
     },
@@ -345,6 +353,8 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
         CI_LICENSE_STATE: state.CI_LICENSE_STATE,
         FF_LICENSE_STATE: state.FF_LICENSE_STATE,
         CHAOS_LICENSE_STATE: state.CHAOS_LICENSE_STATE,
+        STO_LICENSE_STATE: state.STO_LICENSE_STATE,
+        CV_LICENSE_STATE: state.CV_LICENSE_STATE,
         licenseInformation: state.licenseInformation,
         versionMap: state.versionMap,
         updateLicenseStore
@@ -374,6 +384,8 @@ export function handleUpdateLicenseStore(
           | 'CCM_LICENSE_STATE'
           | 'CD_LICENSE_STATE'
           | 'CHAOS_LICENSE_STATE'
+          | 'STO_LICENSE_STATE'
+          | 'CV_LICENSE_STATE'
         >
       >
     | undefined
@@ -400,6 +412,13 @@ export function handleUpdateLicenseStore(
     }
   } else if (module.toUpperCase() === ModuleName.CHAOS) {
     newLicenseInformation[ModuleName.CHAOS] = data
+  } else if (module.toUpperCase() === ModuleName.STO) {
+    newLicenseInformation[ModuleName.STO] = data
+    licenseStoreData = {
+      licenseInformation: newLicenseInformation
+    }
+  } else if (module.toUpperCase() === ModuleName.CV) {
+    newLicenseInformation[ModuleName.CV] = data
     licenseStoreData = {
       licenseInformation: newLicenseInformation
     }

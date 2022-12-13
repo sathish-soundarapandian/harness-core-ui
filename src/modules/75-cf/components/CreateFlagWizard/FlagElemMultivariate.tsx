@@ -154,7 +154,11 @@ const FlagElemMultivariate: React.FC<FlagElemMultivariateProps> = props => {
       validationSchema={yup.object().shape({
         variations: yup.array().of(
           yup.object().shape({
-            name: yup.string().trim().required(getString('cf.creationModal.nameIsRequired')),
+            name: yup
+              .string()
+              .trim()
+              .matches(/[a-z]/gi, getString('cf.creationModal.mustContainLetter'))
+              .required(getString('cf.creationModal.nameIsRequired')),
             value: yup.string().trim().required(getString('cf.creationModal.valueIsRequired')),
             identifier: yup.string().trim().required(getString('cf.creationModal.idIsRequired'))
           })

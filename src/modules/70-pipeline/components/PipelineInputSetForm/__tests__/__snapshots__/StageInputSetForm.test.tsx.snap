@@ -21,7 +21,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
           class="nestedAccordions"
         >
           <div
-            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
           >
             <div
               class="nopadLeft accordionSummary"
@@ -685,7 +685,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
           class="nestedAccordions"
         >
           <div
-            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
           >
             <div
               class="nopadLeft accordionSummary"
@@ -1349,7 +1349,7 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
           class="nestedAccordions"
         >
           <div
-            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
           >
             <div
               class="nopadLeft accordionSummary"
@@ -2013,7 +2013,7 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
           class="nestedAccordions"
         >
           <div
-            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-xlarge"
           >
             <div
               class="nopadLeft accordionSummary"

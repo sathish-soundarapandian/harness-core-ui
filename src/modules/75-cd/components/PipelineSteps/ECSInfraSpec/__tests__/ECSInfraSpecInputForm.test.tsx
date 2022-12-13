@@ -121,7 +121,7 @@ describe('ECSInfraSpecInputForm tests', () => {
     userEvent.click(applySelected)
 
     await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
-    await waitFor(() => expect(fetchClusters).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(fetchClusters).toHaveBeenCalledTimes(0))
     expect(clusterInput.value).toBe('')
     // Choose region
     const regionDropdownIcon = allDropDownIcons[1]
@@ -132,10 +132,11 @@ describe('ECSInfraSpecInputForm tests', () => {
     const usEastNVirginiaOption = await findByText(regionSelectListMenu as HTMLElement, 'US East (N. Virginia)')
     expect(usEastNVirginiaOption).not.toBeNull()
     userEvent.click(usEastNVirginiaOption)
-    await waitFor(() => expect(fetchClusters).toHaveBeenCalledTimes(2))
+    await waitFor(() => expect(fetchClusters).toHaveBeenCalledTimes(0))
     // Choose cluster
     const clusterDropdownIcon = allDropDownIcons[2]
     userEvent.click(clusterDropdownIcon!)
+    await waitFor(() => expect(fetchClusters).toHaveBeenCalledTimes(1))
     expect(portalDivs.length).toBe(3)
     const clusterDropdownPortalDiv = portalDivs[2]
     const clusterSelectListMenu = clusterDropdownPortalDiv.querySelector('.bp3-menu')

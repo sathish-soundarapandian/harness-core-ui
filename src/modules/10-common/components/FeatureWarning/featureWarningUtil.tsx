@@ -41,6 +41,7 @@ export function getPlanModule(licenseStatus: LicenseStatusProps, moduleType?: Mo
     case 'CI':
     case 'CF':
     case 'CE':
+    case 'CV':
       return moduleType.toLowerCase() as Module
     default:
       return getDefaultPlanModule(licenseStatus)
@@ -48,7 +49,7 @@ export function getPlanModule(licenseStatus: LicenseStatusProps, moduleType?: Mo
 }
 
 function getDefaultPlanModule(licenseStatus: LicenseStatusProps): Module | undefined {
-  const { CD_LICENSE_STATE, CI_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE } = licenseStatus
+  const { CD_LICENSE_STATE, CI_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE, CV_LICENSE_STATE } = licenseStatus
   if (CD_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
     return 'cd'
   }
@@ -61,18 +62,24 @@ function getDefaultPlanModule(licenseStatus: LicenseStatusProps): Module | undef
   if (CCM_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
     return 'ce'
   }
+  if (CV_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
+    return 'cv'
+  }
   return undefined
 }
 
 // this is to find the plan page that a feature goes to
 function useGetFeaturePlanModule(featureName?: FeatureIdentifier): Module | undefined {
   const moduleType = useFeatureModule(featureName)
-  const { CD_LICENSE_STATE, CI_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE } = useLicenseStore()
+  const { CD_LICENSE_STATE, CI_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE, CV_LICENSE_STATE } =
+    useLicenseStore()
+
   const licenseStatus = {
     CD_LICENSE_STATE,
     CI_LICENSE_STATE,
     FF_LICENSE_STATE,
-    CCM_LICENSE_STATE
+    CCM_LICENSE_STATE,
+    CV_LICENSE_STATE
   }
   return getPlanModule(licenseStatus, moduleType)
 }

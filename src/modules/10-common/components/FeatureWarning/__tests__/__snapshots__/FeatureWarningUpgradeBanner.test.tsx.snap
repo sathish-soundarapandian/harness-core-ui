@@ -4,6 +4,7 @@ exports[`FeatureWarningUpgradeBanner FeatureWarningUpgradeBanner 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--small bgColorOrange StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"

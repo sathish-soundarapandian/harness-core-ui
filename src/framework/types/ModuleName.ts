@@ -12,7 +12,7 @@ export enum ModuleName {
   CI = 'CI',
   CF = 'CF',
   CV = 'CV',
-  SCM = 'SCM',
+  CODE = 'CODE',
   STO = 'STO',
   CHAOS = 'CHAOS',
   DX = 'DX',
@@ -27,9 +27,9 @@ export const moduleToModuleNameMapping: Record<Module, ModuleName> = {
   ce: ModuleName.CE,
   cf: ModuleName.CF,
   cv: ModuleName.CV,
-  scm: ModuleName.SCM,
+  code: ModuleName.CODE,
   sto: ModuleName.STO,
   chaos: ModuleName.CHAOS
 }
 
-export type Module = 'ci' | 'cd' | 'cf' | 'cv' | 'ce' | 'sto' | 'chaos' | 'scm'
+export type Module = 'ci' | 'cd' | 'cf' | 'cv' | 'ce' | 'sto' | 'chaos' | 'code'

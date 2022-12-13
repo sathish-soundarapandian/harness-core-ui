@@ -118,7 +118,11 @@ const FlagElemBoolean = (props: FlagElemBooleanProps): JSX.Element => {
       validationSchema={yup.object().shape({
         variations: yup.array().of(
           yup.object().shape({
-            name: yup.string().trim().required(getString('cf.creationModal.nameIsRequired'))
+            name: yup
+              .string()
+              .trim()
+              .matches(/[a-z]/gi, getString('cf.creationModal.mustContainLetter'))
+              .required(getString('cf.creationModal.nameIsRequired'))
           })
         )
       })}
@@ -215,7 +219,7 @@ const FlagElemBoolean = (props: FlagElemBooleanProps): JSX.Element => {
                     />
                   </Container>
                 </Layout.Horizontal>
-                <Container margin={{ bottom: 'xlarge' }}>
+                <Container margin={{ bottom: 'large' }}>
                   <Text color={Color.BLACK} margin={{ top: 'medium' }}>
                     {getString('cf.creationModal.defaultRules')}
                   </Text>

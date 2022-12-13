@@ -30,6 +30,7 @@ export const actionToLabelMap: Record<AuditEventDTO['action'], StringKeys> = {
   REMOVE_MEMBERSHIP: 'auditTrail.actions.removed_membership',
   CREATE_TOKEN: 'auditTrail.actions.create_token',
   REVOKE_TOKEN: 'auditTrail.actions.revoke_token',
+  FORCE_DELETE: 'auditTrail.actions.force_deleted',
   LOGIN: 'auditTrail.actions.login',
   LOGIN2FA: 'auditTrail.actions.login2fa',
   UNSUCCESSFUL_LOGIN: 'auditTrail.actions.unsuccessfullLogin',

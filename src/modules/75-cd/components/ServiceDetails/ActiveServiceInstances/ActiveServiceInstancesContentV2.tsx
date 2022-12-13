@@ -19,7 +19,7 @@ import { PageSpinner, Table } from '@common/components'
 import type { InstanceGroupedByArtifact, InstanceGroupedByInfrastructure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
-import { numberFormatter } from '@cd/components/Services/common'
+import { numberFormatter } from '@common/utils/utils'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, PipelinePathProps, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { ActiveServiceInstancePopover } from './ActiveServiceInstancePopover'
@@ -42,12 +42,25 @@ export interface TableRowData {
   totalEnvs?: number
   totalInfras?: number
   tableType?: TableType
+  clusterIdentifier?: string
 }
 
 export enum TableType {
   PREVIEW = 'preview', // for card (headers visible, no Pipeline column, Clusters as count)
   SUMMARY = 'summary', // for details popup collapsed row, assuming single entry in 'data' (headers hidden)
   FULL = 'full' // for details popup expanded row (headers hidden)
+}
+
+export const isClusterData = (data: InstanceGroupedByArtifact[]): boolean => {
+  let isCluster = false
+  data.forEach(artifact => {
+    artifact.instanceGroupedByEnvironmentList?.forEach(env => {
+      if (env.instanceGroupedByClusterList?.length) {
+        isCluster = true
+      }
+    })
+  })
+  return isCluster
 }
 
 // full table is the expanded table in the dialog
@@ -65,7 +78,8 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
               artifactPath: defaultTo(artifact.artifactPath, ''),
               showArtifact: envShow && !index,
               showEnv: !index,
-              infraIdentifier: defaultTo(entity.infraIdentifier, '-'),
+              infraIdentifier: defaultTo(entity.infraIdentifier, ''),
+              clusterIdentifier: defaultTo(entity.clusterIdentifier, ''),
               infraName: defaultTo(entity.infraName, '-'),
               instanceCount: defaultTo(entity.count, 0),
               lastPipelineExecutionId: defaultTo(entity.lastPipelineExecutionId, ''),
@@ -90,7 +104,8 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
               envId: env.envId,
               envName: env.envName,
               showEnv: true,
-              infraIdentifier: '-',
+              infraIdentifier: '',
+              clusterIdentifier: '',
               infraName: '-',
               instanceCount: 0,
               lastPipelineExecutionId: '',
@@ -177,7 +192,7 @@ export const getSummaryTableData = (instanceGroupedByArtifact?: InstanceGroupedB
             }
           })
           env.instanceGroupedByClusterList?.forEach(cluster => {
-            infraName ??= cluster.infraName
+            infraName ??= cluster.clusterIdentifier
             totalInfras++
             totalInstances += cluster.count || 0
             if (cluster.lastDeployedAt) {
@@ -367,18 +382,36 @@ const RenderInstanceCount: Renderer<CellProps<TableRowData>> = ({
 
 const RenderInstances: Renderer<CellProps<TableRowData>> = ({
   row: {
-    original: { envId, artifactVersion: buildId, instanceCount, tableType }
+    original: {
+      envId,
+      artifactVersion: buildId,
+      instanceCount,
+      tableType,
+      infraIdentifier,
+      lastPipelineExecutionId,
+      lastDeployedAt,
+      clusterIdentifier
+    }
   }
 }) => {
   TOTAL_VISIBLE_INSTANCES = tableType === TableType.PREVIEW ? 4 : 7
+
+  //sending undefined as we need to pass payload conditionally
+  const lastDeployedTime = lastDeployedAt ? parseInt(lastDeployedAt) : undefined
+  const clusterId = clusterIdentifier ? clusterIdentifier : undefined
+  const infraId = infraIdentifier ? infraIdentifier : undefined
+  const pipelineExecutionId = lastPipelineExecutionId ? lastPipelineExecutionId : undefined
+
   return instanceCount ? (
     <Container className={cx(css.paddedContainer, css.hexContainer)} flex={{ justifyContent: 'flex-start' }}>
       {Array(Math.min(instanceCount, TOTAL_VISIBLE_INSTANCES))
         .fill(null)
         .map((_, index) => (
           <Popover
-            interactionKind={PopoverInteractionKind.CLICK}
-            key={index}
+            interactionKind={PopoverInteractionKind.HOVER}
+            disabled={tableType === TableType.SUMMARY}
+            key={`${buildId}_${envId}_${index}`}
+            position={Position.TOP}
             modifiers={{ preventOverflow: { escapeWithReference: true } }}
           >
             <Container
@@ -388,7 +421,15 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
               background={Color.PRIMARY_3}
               margin={{ left: 'xsmall', right: 'xsmall', top: 'xsmall', bottom: 'xsmall' }}
             />
-            <ActiveServiceInstancePopover buildId={buildId} envId={envId} instanceNum={index} />
+            <ActiveServiceInstancePopover
+              buildId={buildId}
+              envId={envId}
+              instanceNum={index}
+              infraIdentifier={infraId}
+              lastDeployedAt={lastDeployedTime}
+              clusterId={clusterId}
+              pipelineExecutionId={pipelineExecutionId}
+            />
           </Popover>
         ))}
       {instanceCount > TOTAL_VISIBLE_INSTANCES ? (
@@ -524,8 +565,8 @@ export const ActiveServiceInstancesContentV2 = (
   }>
 ): React.ReactElement => {
   const { tableType, loading = false, data, error, refetch } = props
+  const isCluster = isClusterData(defaultTo(data, []))
   const { getString } = useStrings()
-
   const tableData: TableRowData[] = useMemo(() => {
     switch (tableType) {
       case TableType.SUMMARY:
@@ -554,7 +595,9 @@ export const ActiveServiceInstancesContentV2 = (
       {
         Header: (
           <Text lineClamp={1} color={Color.GREY_900}>
-            {getString('cd.serviceDashboard.headers.infrastructures').toLocaleUpperCase()}
+            {isCluster
+              ? getString('common.cluster')
+              : getString('cd.serviceDashboard.headers.infrastructures').toLocaleUpperCase()}
           </Text>
         ),
         id: 'infra',
@@ -586,7 +629,7 @@ export const ActiveServiceInstancesContentV2 = (
 
     return columnsArray
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isCluster])
 
   if (loading || error || !(data || []).length || (tableType === TableType.PREVIEW && !tableData.length)) {
     const component = (() => {

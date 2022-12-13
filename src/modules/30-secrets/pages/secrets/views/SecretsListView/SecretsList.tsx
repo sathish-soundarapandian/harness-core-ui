@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { useParams, useHistory, useLocation, useRouteMatch } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import { Menu, Position, Classes, Intent } from '@blueprintjs/core'
@@ -24,7 +24,7 @@ import {
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
-import { SecretResponseWrapper, useDeleteSecretV2 } from 'services/cd-ng'
+import { SecretResponseWrapper, useDeleteSecretV2, useGetSettingValue } from 'services/cd-ng'
 import type { PageSecretResponseWrapper, SecretTextSpecDTO, SecretDTOV2 } from 'services/cd-ng'
 import { getStringForType } from '@secrets/utils/SSHAuthUtils'
 import useCreateSSHCredModal from '@secrets/modals/CreateSSHCredModal/useCreateSSHCredModal'
@@ -38,16 +38,21 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useCreateWinRmCredModal } from '@secrets/modals/CreateWinRmCredModal/useCreateWinRmCredModal'
-import { FeatureFlag } from '@common/featureFlags'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { SettingType } from '@default-settings/interfaces/SettingType.types'
 import css from './SecretsList.module.scss'
 
 interface SecretsListProps {
   secrets?: PageSecretResponseWrapper
   gotoPage: (pageNumber: number) => void
   refetch?: () => void
+}
+
+type CustomColumn = Column<SecretResponseWrapper> & {
+  refreshSecrets?: (() => void) | undefined
+  forceDeleteSupported?: boolean
 }
 
 const RenderColumnSecret: Renderer<CellProps<SecretResponseWrapper>> = ({ row }) => {
@@ -141,21 +146,23 @@ interface SecretMenuItemProps {
   onSuccessfulEdit: any
   onSuccessfulDelete: any
   setIsReference?: (isReferenceTab: boolean) => void
+  forceDeleteSupported?: boolean
 }
 
 export const SecretMenuItem: React.FC<SecretMenuItemProps> = ({
   secret,
   onSuccessfulEdit,
   onSuccessfulDelete,
-  setIsReference
+  setIsReference,
+  forceDeleteSupported
 }) => {
   const data = secret
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { getRBACErrorMessage } = useRBACError()
   const { showSuccess, showError } = useToaster()
   const history = useHistory()
-  const isForceDeleteSupported = useFeatureFlag(FeatureFlag.PL_FORCE_DELETE_CONNECTOR_SECRET)
   const [menuOpen, setMenuOpen] = useState(false)
+
   const { mutate: deleteSecret } = useDeleteSecretV2({
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier },
     requestOptions: { headers: { 'content-type': 'application/json' } }
@@ -223,7 +230,7 @@ export const SecretMenuItem: React.FC<SecretMenuItemProps> = ({
       name: defaultTo(data?.name, '')
     },
     redirectToReferencedBy: redirectToReferencedBy,
-    forceDeleteCallback: isForceDeleteSupported ? () => deleteHandler(true) : undefined
+    forceDeleteCallback: forceDeleteSupported ? () => deleteHandler(true) : undefined
   })
 
   const { openDialog } = useConfirmationDialog({
@@ -305,16 +312,33 @@ export const RenderColumnAction: Renderer<CellProps<SecretResponseWrapper>> = ({
       secret={row.original.secret}
       onSuccessfulEdit={(column as any).refreshSecrets}
       onSuccessfulDelete={(column as any).refreshSecrets}
+      forceDeleteSupported={(column as CustomColumn).forceDeleteSupported}
     />
   )
 }
 const SecretsList: React.FC<SecretsListProps> = ({ secrets, refetch, gotoPage }) => {
   const history = useHistory()
+  const { showError } = useToaster()
+  const { accountId } = useParams<ProjectPathProps>()
   const data: SecretResponseWrapper[] = useMemo(() => secrets?.content || [], [secrets?.content])
   const { pathname } = useLocation()
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
+  const { PL_FORCE_DELETE_CONNECTOR_SECRET, NG_SETTINGS } = useFeatureFlags()
+  const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
+    identifier: SettingType.ENABLE_FORCE_DELETE,
+    queryParams: { accountIdentifier: accountId },
+    lazy: !NG_SETTINGS
+  })
 
-  const columns: Column<SecretResponseWrapper>[] = useMemo(
+  useEffect(() => {
+    if (forceDeleteSettingsError) {
+      showError(getRBACErrorMessage(forceDeleteSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forceDeleteSettingsError])
+
+  const columns: CustomColumn[] = useMemo(
     () => [
       {
         Header: getString('secretType'),
@@ -353,10 +377,12 @@ const SecretsList: React.FC<SecretsListProps> = ({ secrets, refetch, gotoPage })
         width: '5%',
         Cell: RenderColumnAction,
         refreshSecrets: refetch,
+        forceDeleteSupported: PL_FORCE_DELETE_CONNECTOR_SECRET && forceDeleteSettings?.data?.value === 'true',
         disableSortBy: true
       }
     ],
-    [refetch]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [refetch, forceDeleteSettings]
   )
 
   return (

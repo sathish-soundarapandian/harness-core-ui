@@ -11,6 +11,8 @@ export interface StepDetailsInterface {
   panel: React.ReactElement
   preview?: React.ReactElement
   isOptional?: boolean
+  helpPanelReferenceId?: string
+  errorMessage?: string[]
 }
 
 export interface CVStepperProps {

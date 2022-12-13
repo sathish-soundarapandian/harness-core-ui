@@ -209,6 +209,17 @@ monitoringSources:
   addMetric: Add Metric
   addQuery: Add Query
   totalMappedQueries: '{{total}} {{query}} mapped'
+  commonHealthSource:
+    metric: HealthSource Metric
+    addMetric: Add metric
+    metricName: Metric name
+    addGroupName: Add group Name
+    runQuery: Run Query
+    confirmDeleteMetric: 'Are you sure you want to delete metric {{name}}'
+    submitQueryToSeeRecords: 'Submit query to see records.'
+    defineQuery: Define Query
+    defineQueryDescription: Queries can only be defined for a single timeseries. The expressions can be added directly or built with query builder.
+    defineQuerySubDescription: Learn how to find the query to monitor your data source with Harness.
   appD:
     advancedOptional: Advanced (Optional)
     ignoreThresholds: Ignore Thresholds
@@ -489,6 +500,7 @@ cvTrialHomePage:
       description: Start 14 day CV Enterprise trial
 monitoredServices:
   title: '{{ $.common.monitoredServices }}'
+  listToggleSwitchDisableMessage: Nice work! You've reached our plan limits. Upgrade to enable SLO and service health for a monitored service.
   heading: Monitored Service
   filterlabel: 'Environment:'
   youHaveNoMonitoredServices: You have no monitored services
@@ -550,6 +562,7 @@ monitoredServices:
   monitoredServiceTabs:
     serviceHealth: Service Health
     configurations: Configurations
+    disabledText: Enable the monitored service to view the tab
   table:
     lastestHealthTrend: Health trend (Last 24h)
     serviceHealthScore: service Health Score
@@ -571,7 +584,7 @@ notifications:
   serviceHealth: Changes and Service Health
   serviceHealthDescription: Focuses on changes to a service's code, configuration, behaviour, deployment and infrastructure.
   sloDescription: Focuses on SLO target and error budget changes on a given SLO.
-  condition: Condition
+  condition: '{{$.common.condition}}'
   changeType: Change Type
   healthScoreBelow: Health score is below
   thresholdBelow: Threshold is below
@@ -832,11 +845,28 @@ CompositeSLO:
   SetTarget: Set SLO Target
   ErrorBudgetPolicy: Error Budget Policy
   Weightage: Weightage
+  NoData: You don’t have any matching SLOs
+  NoDataSuggestion: Try changing the time window or clearing your search input.
+  Consumption:
+    title: SLO consumption breakdown for the period
+    AssignedWeightage: Assigned Weightage
+    ActualSlo: Actual SLO
+    ErrorBudgetBurned: Error Budget Burned
+    ContributedErrorBudgetBurned: Contributed Error Budget Burned
   PeriodChangeWarning:
     title: Review Period Type Change
     message: Updating period type will reset selected SLOs, Do you want to continue ?
   MatchingSLO: SLOs matching the time window.
   NoSloFound: There are no SLOs available for selected filter
+  compositeSloCreated: Composite SLO created successfully
+  compositeSloUpdated: Composite SLO updated successfully
+  SLIMetricRatio: SLI = (SLO1*weightage1 + SLO2*weightage2... + SLON*weightageN)/n*100
+  AddSLOValidation:
+    minMaxSLOCount: Should have minimun 2 SLOs and maximum 20 SLO's
+    totalSLOWeight: Total SLO weight should be equal to 100
+    minSLOCount: Should have minimun 2 SLOs
+    maxSLOCount: Should have maximum 20 SLOs
+    weightMinMax: SLO weight should be between 0.01 to 99.99
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on
@@ -988,6 +1018,7 @@ metricThresholds:
     duplicateThreshold: Duplicate threshold
     percentageValidation: Enter value below 100
   deletePromptTitle: Confirm delete Metric thresholds
+  noThresholdsMessage: No thresholds created yet
   metricPacksDeletePromptContent: Unchecking the metric pack will also remove the corresponding metric thresholds settings. This action cannot be undone.
   customMetricsDeletePromptContent: Deleting the custom metric will also remove the corresponding metric thresholds settings. This action cannot be undone.
 codeErrors: Code Errors
@@ -997,3 +1028,7 @@ codeErrorsAgentsHeading: Agents running on your machines connected to Code Error
 codeErrorsAgentsTokens: '{{projectName}} Code Error Tokens'
 CVStepper:
   StepError: Required fields are missing or incorrect data
+licenseBanner:
+  freePlanUsageMessage: You have used {{activeServicesCount}}/{{totalServices}} Services included in the free plan
+  teamPlanUsageMessage: You have used {{activeServicesCount}}/{{totalServices}} Services included in the team plan
+  limitExceedMessage: You have reached your service subscription limit. Consider increasing your limits to keep using services

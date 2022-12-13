@@ -21,6 +21,7 @@ import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { SavedExecutionViewTypes } from '@pipeline/components/LogsContent/LogsContent'
 import css from './ExecutionTabs.module.scss'
 
@@ -52,8 +53,8 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const { view } = useQueryParams<ExecutionQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams<ExecutionQueryParams>()
   const opaBasedGovernanceEnabled = useFeatureFlag(FeatureFlag.OPA_PIPELINE_GOVERNANCE)
-  const stoCDPipelineSecurityEnabled = useFeatureFlag(FeatureFlag.STO_CD_PIPELINE_SECURITY)
-  const stoCIPipelineSecurityEnabled = useFeatureFlag(FeatureFlag.STO_CI_PIPELINE_SECURITY)
+  const { licenseInformation } = useLicenseStore()
+  const stoPipelineSecurityEnabled = licenseInformation['STO']?.status === 'ACTIVE'
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
   const canUsePolicyEngine = useAnyEnterpriseLicense()
 
@@ -230,7 +231,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if ((isCD && stoCDPipelineSecurityEnabled) || ((isCI || isSTO) && stoCIPipelineSecurityEnabled)) {
+  if ((isCD || isCI || isSTO) && stoPipelineSecurityEnabled) {
     tabList.push({
       id: TAB_ID_MAP.STO_SECURITY,
       title: (

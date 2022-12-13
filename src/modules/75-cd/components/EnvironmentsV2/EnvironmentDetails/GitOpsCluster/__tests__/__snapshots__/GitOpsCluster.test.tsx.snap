@@ -131,16 +131,21 @@ exports[`GitOps Cluster tests click on select cluster 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >
@@ -189,16 +194,21 @@ exports[`GitOps Cluster tests click on select cluster 1`] = `
                   </span>
                   <div
                     class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
+                    style="align-items: unset;"
                   >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
-                      data-id="cluster-id-label"
-                      style="--text-line-clamp: 1; width: 150px;"
+                    <div
+                      class="Layout--horizontal StyledProps--main clusterTitle StyledProps--margin-left-small"
                     >
-                      
-                    </p>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
+                        data-id="cluster-id-label"
+                        style="--text-line-clamp: 1; width: 125px;"
+                      >
+                        
+                      </p>
+                    </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
+                      class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-small"
                       data-id="cluster-id-text"
                       style="--text-line-clamp: 1; width: 150px;"
                     >

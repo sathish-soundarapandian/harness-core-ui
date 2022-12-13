@@ -41,6 +41,8 @@ export interface GetServiceAccessListQueryQueryParams {
     | 'ServerlessAwsLambda'
     | 'Ssh'
     | 'WinRm'
+    | 'TAS'
+    | 'Asg'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string

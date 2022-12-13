@@ -172,7 +172,13 @@ const UserGroupForm: React.FC<UserGroupModalData> = props => {
                     ),
                     itemRender: (item, { handleClick }) => (
                       <UserItemRenderer key={item.value.toString()} item={item} handleClick={handleClick} />
-                    )
+                    ),
+                    itemListPredicate: (query, items) =>
+                      items.filter(
+                        (item: UserItem) =>
+                          item.label.toString().toLowerCase().includes(query.toLowerCase()) ||
+                          item.email?.toString().toLowerCase().includes(query.toLowerCase())
+                      )
                   }}
                 />
               )}

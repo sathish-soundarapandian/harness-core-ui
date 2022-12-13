@@ -17,6 +17,7 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
   SelectOption
 } from '@harness/uicore'
 
@@ -24,6 +25,7 @@ import { useStrings } from 'framework/strings'
 
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
+import { isValueRuntimeInput } from '@common/utils/utils'
 
 import ClusterEntitiesList from '../ClusterEntitiesList/ClusterEntitiesList'
 import type { DeployEnvironmentEntityFormState } from '../types'
@@ -35,6 +37,7 @@ interface DeployClusterProps {
   allowableTypes: AllowedTypes
   environmentIdentifier: string
   isMultiCluster?: boolean
+  lazyCluster?: boolean
 }
 
 export function getAllFixedClusters(data: DeployEnvironmentEntityFormState, environmentIdentifier: string): string[] {
@@ -60,7 +63,8 @@ export default function DeployCluster({
   readonly,
   allowableTypes,
   environmentIdentifier,
-  isMultiCluster
+  isMultiCluster,
+  lazyCluster
 }: DeployClusterProps): JSX.Element {
   const { values, setFieldValue, setValues } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
@@ -76,7 +80,8 @@ export default function DeployCluster({
 
   // API
   const { clustersList, loadingClustersList } = useGetClustersData({
-    environmentIdentifier
+    environmentIdentifier,
+    lazyCluster
   })
 
   const selectOptions = useMemo(() => {
@@ -118,7 +123,13 @@ export default function DeployCluster({
           getMultiTypeFromValue(values.clusters?.[environmentIdentifier]) === MultiTypeInputType.RUNTIME
             ? values.clusters?.[environmentIdentifier]
             : [SELECT_ALL_OPTION]
-        setFieldValue(`${uniquePathForClusters.current}`, clusterIdentifierValue)
+
+        // This if condition is used to show runtime value for the cluster when it is shown for filtering
+        if (readonly && isValueRuntimeInput(initialValues.environments)) {
+          setFieldValue(`${uniquePathForClusters.current}`, RUNTIME_INPUT_VALUE)
+        } else {
+          setFieldValue(`${uniquePathForClusters.current}`, clusterIdentifierValue)
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

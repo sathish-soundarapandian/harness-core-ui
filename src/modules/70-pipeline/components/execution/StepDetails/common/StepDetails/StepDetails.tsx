@@ -96,7 +96,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
         )}
         {labels.map((label, index) => (
           <tr key={index}>
-            <th>{`${label.label}:`}:</th>
+            <th>{`${label.label}:`}</th>
             <td>
               {isArray(label.value)
                 ? label.value.map((outcome, idx) => {

@@ -223,4 +223,18 @@ describe('FlagElemMultivariate', () => {
 
     expect(screen.getByText('next')).toBeInTheDocument()
   })
+
+  test('it should validate that variation Id is not a number', async () => {
+    renderComponent()
+
+    const var1NameInput = document.getElementsByName('variations.0.name')[0]
+    expect(var1NameInput).toBeInTheDocument()
+
+    await userEvent.type(var1NameInput, '2', { allAtOnce: true })
+    var1NameInput.blur()
+
+    await waitFor(() => {
+      expect(screen.getByText('cf.creationModal.mustContainLetter')).toBeVisible()
+    })
+  })
 })

@@ -55,8 +55,9 @@ const ModuleCarousel: React.FC<ModuleCarouselProps> = ({ module: selectedModule,
           hideSlideChangeButtons
           slideClassName={css.carouselSlide}
           indicatorsClassName={css.indicators}
+          activeIndicatorClassName={css.indicatorActive}
           autoPlay
-          autoPlayInterval={3000}
+          autoPlayInterval={10000}
           hideIndicators={data.length <= 1}
         >
           {data.length > 0 ? (

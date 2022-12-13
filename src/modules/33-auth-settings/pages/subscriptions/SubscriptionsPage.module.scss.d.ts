@@ -21,6 +21,7 @@ declare const styles: {
   readonly moduleSelectCards: string
   readonly outterCard: string
   readonly selected: string
+  readonly sto: string
   readonly subscriptionTabButton: string
   readonly subscriptionTabButtons: string
 }

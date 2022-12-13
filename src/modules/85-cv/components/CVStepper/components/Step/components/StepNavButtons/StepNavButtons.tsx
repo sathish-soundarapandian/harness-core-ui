@@ -19,6 +19,7 @@ export const StepNavButtons = ({ index, isLastStep, onContinue }: StepNavButtons
           data-testid="backButton"
           variation={ButtonVariation.SECONDARY}
           onClick={() => onContinue(index - 1, true)}
+          icon={'chevron-left'}
         >
           {getString('back')}
         </Button>
@@ -29,6 +30,7 @@ export const StepNavButtons = ({ index, isLastStep, onContinue }: StepNavButtons
           variation={ButtonVariation.PRIMARY}
           text={getString('next')}
           onClick={() => onContinue(index + 1)}
+          rightIcon={'chevron-right'}
         />
       )}
     </Layout.Horizontal>

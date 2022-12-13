@@ -6,10 +6,10 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { cloneDeep } from 'lodash-es'
 import { Classes } from '@blueprintjs/core'
-import type { DeploymentVerificationJobInstanceSummary } from 'services/cv'
+import type { AdditionalInfo, DeploymentVerificationJobInstanceSummary } from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import { RiskValues } from '@cv/utils/CommonUtils'
 import { DeploymentProgressAndNodes, DeploymentProgressAndNodesProps } from '../DeploymentProgressAndNodes'
@@ -228,5 +228,28 @@ describe('Deployment progress and nodes unit tests', () => {
     )
 
     await waitFor(() => expect(getByText('pipeline.verification.waitForAnalysis')).not.toBeNull())
+  })
+
+  test('should show nodes for rolling deployment type', () => {
+    const propsWithRollingType = {
+      ...CanaryDeploymentMockData,
+      deploymentSummary: {
+        ...CanaryDeploymentMockData.deploymentSummary,
+        additionalInfo: {
+          ...CanaryDeploymentMockData.deploymentSummary!.additionalInfo,
+          type: 'ROLLING' as AdditionalInfo['type'],
+          canaryInstancesLabel: 'Canary instance label',
+          primaryInstancesLabel: 'Primary instance label'
+        }
+      }
+    }
+    render(
+      <TestWrapper>
+        <DeploymentProgressAndNodes {...propsWithRollingType} />
+      </TestWrapper>
+    )
+
+    expect(screen.getByText(/CANARY INSTANCE LABEL/)).toBeInTheDocument()
+    expect(screen.getByText(/PRIMARY INSTANCE LABEL/)).toBeInTheDocument()
   })
 })

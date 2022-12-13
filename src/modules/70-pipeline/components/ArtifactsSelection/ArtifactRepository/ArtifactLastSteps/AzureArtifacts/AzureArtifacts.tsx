@@ -19,6 +19,7 @@ import {
   FormInput,
   FormikForm
 } from '@harness/uicore'
+import cx from 'classnames'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
@@ -73,7 +74,8 @@ function FormComponent({
   previousStep,
   isReadonly = false,
   formik,
-  isMultiArtifactSource
+  isMultiArtifactSource,
+  formClassName = ''
 }: any): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -86,7 +88,8 @@ function FormComponent({
     branch
   }
 
-  const connectorRefValue = defaultTo(getGenuineValue(prevStepData?.connectorId?.value), '')
+  const connectorRefValue = defaultTo(getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier), '')
+  const isTemplateContext = context === ModalViewFor.Template
   const projectValue = defaultTo(getGenuineValue(formik.values.project), '')
   const feedValue = defaultTo(getGenuineValue(formik.values.feed), '')
   const packageValue = defaultTo(getGenuineValue(formik.values.package), '')
@@ -236,9 +239,20 @@ function FormComponent({
     return !isFieldFixedAndNonEmpty(formik.values?.feed) || !isFieldFixedAndNonEmpty(formik.values?.package)
   }
 
+  const getVersionFieldHelperText = () => {
+    return (
+      getMultiTypeFromValue(formik.values.version) === MultiTypeInputType.FIXED &&
+      getHelpeTextForTags(
+        helperTextData(selectedArtifact as ArtifactType, formik, getConnectorRefQueryData()),
+        getString,
+        false
+      )
+    )
+  }
+
   return (
     <FormikForm>
-      <div className={css.connectorForm}>
+      <div className={cx(css.connectorForm, formClassName)}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.imagePathContainer}>
@@ -265,7 +279,8 @@ function FormComponent({
                 selectProps: {
                   itemRenderer: itemRenderer,
                   items: getItems(fetchingProjects, 'Projects', projectItems),
-                  allowCreatingNewItems: true
+                  allowCreatingNewItems: true,
+                  addClearBtn: true
                 },
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (
@@ -320,7 +335,8 @@ function FormComponent({
                 ),
                 itemRenderer: itemRenderer,
                 items: getItems(fetchingFeeds, 'Feeds', feedItems),
-                allowCreatingNewItems: true
+                allowCreatingNewItems: true,
+                addClearBtn: true
               },
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                 if (
@@ -378,7 +394,8 @@ function FormComponent({
                 ),
                 itemRenderer: itemRenderer,
                 items: getItems(fetchingPackages, 'Packages', packageItems),
-                allowCreatingNewItems: true
+                allowCreatingNewItems: true,
+                addClearBtn: true
               },
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                 if (
@@ -432,14 +449,7 @@ function FormComponent({
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               name="version"
               useValue
-              helperText={
-                getMultiTypeFromValue(formik.values.version) === MultiTypeInputType.FIXED &&
-                getHelpeTextForTags(
-                  helperTextData(selectedArtifact as ArtifactType, formik, getConnectorRefQueryData()),
-                  getString,
-                  false
-                )
-              }
+              helperText={getVersionFieldHelperText()}
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
@@ -453,7 +463,8 @@ function FormComponent({
                   ),
                   itemRenderer: itemRenderer,
                   items: getItems(fetchingVersions, 'Versions', versionItems),
-                  allowCreatingNewItems: true
+                  allowCreatingNewItems: true,
+                  addClearBtn: true
                 },
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (
@@ -517,20 +528,22 @@ function FormComponent({
           </div>
         )}
       </div>
-      <Layout.Horizontal spacing="medium">
-        <Button
-          variation={ButtonVariation.SECONDARY}
-          text={getString('back')}
-          icon="chevron-left"
-          onClick={() => previousStep?.(prevStepData)}
-        />
-        <Button
-          variation={ButtonVariation.PRIMARY}
-          type="submit"
-          text={getString('submit')}
-          rightIcon="chevron-right"
-        />
-      </Layout.Horizontal>
+      {!isTemplateContext && (
+        <Layout.Horizontal spacing="medium">
+          <Button
+            variation={ButtonVariation.SECONDARY}
+            text={getString('back')}
+            icon="chevron-left"
+            onClick={() => previousStep?.(prevStepData)}
+          />
+          <Button
+            variation={ButtonVariation.PRIMARY}
+            type="submit"
+            text={getString('submit')}
+            rightIcon="chevron-right"
+          />
+        </Layout.Horizontal>
+      )}
     </FormikForm>
   )
 }
@@ -541,6 +554,7 @@ export function AzureArtifacts(
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
+  const isTemplateContext = context === ModalViewFor.Template
 
   const getInitialValues = (): AzureArtifactsInitialValues => {
     return getArtifactFormData(
@@ -548,6 +562,17 @@ export function AzureArtifacts(
       selectedArtifact as ArtifactType,
       isIdentifierAllowed
     ) as AzureArtifactsInitialValues
+  }
+
+  const handleValidate = (formData: AzureArtifactsInitialValues) => {
+    if (isTemplateContext) {
+      submitFormData(
+        {
+          ...formData
+        },
+        getConnectorIdValue(prevStepData)
+      )
+    }
   }
 
   const submitFormData = (formData: AzureArtifactsInitialValues, connectorId?: string): void => {
@@ -576,22 +601,32 @@ export function AzureArtifacts(
   }
 
   const schemaObject = {
-    scope: Yup.string(),
+    scope: Yup.string().required(getString('fieldRequired', { field: getString('common.scopeLabel') })),
     project: Yup.string().when('scope', {
       is: val => val === 'project',
-      then: Yup.string().trim().required(getString('common.validation.projectIsRequired'))
+      then: Yup.string()
+        .trim()
+        .required(getString('fieldRequired', { field: getString('projectLabel') }))
     }),
-    feed: Yup.string().required('pipeline.artifactsSelection.validation.feed'),
-    packageType: Yup.string(),
-    package: Yup.string().required('pipeline.artifactsSelection.validation.packageName'),
-    versionType: Yup.string(),
+    feed: Yup.string().required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.feed') })),
+    packageType: Yup.string().required(getString('fieldRequired', { field: getString('pipeline.packageType') })),
+    package: Yup.string().required(
+      getString('fieldRequired', { field: getString('pipeline.artifactsSelection.packageName') })
+    ),
+    versionType: Yup.string().required(
+      getString('fieldRequired', { field: getString('pipeline.artifactsSelection.versionDetails') })
+    ),
     versionRegex: Yup.string().when('versionType', {
       is: 'regex',
-      then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.versionRegex'))
+      then: Yup.string()
+        .trim()
+        .required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.versionRegex') }))
     }),
-    version: Yup.mixed().when('versionType', {
+    version: Yup.string().when('versionType', {
       is: 'value',
-      then: Yup.mixed().required(getString('validation.nexusVersion'))
+      then: Yup.string()
+        .trim()
+        .required(getString('fieldRequired', { field: getString('version') }))
     })
   }
 
@@ -607,13 +642,16 @@ export function AzureArtifacts(
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
+      {!isTemplateContext && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         formName="imagePath"
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData(
             {

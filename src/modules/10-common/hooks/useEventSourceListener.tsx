@@ -12,6 +12,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import SessionToken from 'framework/utils/SessionToken'
 import { returnUrlParams } from '@common/utils/routeUtils'
 import { getLoginPageURL } from 'framework/utils/SessionUtils'
+import { getRequestOptions } from 'framework/app/App'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDeepCompareEffect } from './useDeepCompareEffect'
@@ -57,16 +58,6 @@ export function useEventSourceListener<T = unknown>({
   const [source, setSource] = useState<EventSource>()
   const { onMessage, onError, onOpen, onParseError, options } = event
   const token = SessionToken.getToken()
-
-  const getRequestOptions = React.useCallback((): Partial<RequestInit> => {
-    const headers: HeadersInit = {}
-
-    if (token && token.length > 0) {
-      headers.Authorization = `Bearer ${token}`
-    }
-
-    return { headers }
-  }, [token])
 
   const getQueryParams = (params?: Record<string, unknown>): string => {
     return `?${qs.stringify({ ...params, routingId: accountId }, queryParamStringifyOptions)}`

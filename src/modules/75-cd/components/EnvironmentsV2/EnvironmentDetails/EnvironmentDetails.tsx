@@ -11,7 +11,7 @@ import { Expander } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import { parse } from 'yaml'
 import cx from 'classnames'
-import { defaultTo, isEqual, isNull } from 'lodash-es'
+import { defaultTo, isEqual } from 'lodash-es'
 import * as Yup from 'yup'
 
 import {
@@ -49,12 +49,16 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isOnPrem } from '@common/utils/utils'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
+import EntityUsage from '@common/pages/entityUsage/EntityUsage'
+import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import { PageHeaderTitle, PageHeaderToolbar } from './EnvironmentDetailsPageHeader'
 import EnvironmentConfiguration from './EnvironmentConfiguration/EnvironmentConfiguration'
 import { ServiceOverrides } from './ServiceOverrides/ServiceOverrides'
 import InfrastructureDefinition from './InfrastructureDefinition/InfrastructureDefinition'
 import { EnvironmentDetailsTab } from '../utils'
 import GitOpsCluster from './GitOpsCluster/GitOpsCluster'
+import EnvironmentDetailSummary from './EnvironmentDetailSummary/EnvironmentDetailSummary'
+
 import css from './EnvironmentDetails.module.scss'
 
 export default function EnvironmentDetails(): React.ReactElement {
@@ -66,13 +70,16 @@ export default function EnvironmentDetails(): React.ReactElement {
 
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
-  const { GITOPS_ONPREM_ENABLED } = useFeatureFlags()
+  const { GITOPS_ONPREM_ENABLED, CDC_ENVIRONMENT_DASHBOARD_NG } = useFeatureFlags()
   const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
+  const environmentSummaryEnabled = CDC_ENVIRONMENT_DASHBOARD_NG
 
   const formikRef = useRef<FormikProps<NGEnvironmentInfoConfig>>()
 
   const [selectedTabId, setSelectedTabId] = useState<EnvironmentDetailsTab>(
-    EnvironmentDetailsTab[EnvironmentDetailsTab[defaultTo(sectionId, 'CONFIGURATION')]]
+    EnvironmentDetailsTab[
+      EnvironmentDetailsTab[defaultTo(sectionId, environmentSummaryEnabled ? 'SUMMARY' : 'CONFIGURATION')]
+    ]
   )
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [updateLoading, setUpdateLoading] = useState(false)
@@ -163,7 +170,7 @@ export default function EnvironmentDetails(): React.ReactElement {
 
     if (
       name == newName &&
-      (isNull(description) || description === newDescription) &&
+      description === newDescription &&
       isEqual(tags, newTags) &&
       type === newType &&
       isEqual(variables, newVariables) &&
@@ -228,6 +235,12 @@ export default function EnvironmentDetails(): React.ReactElement {
                     data-tabId={selectedTabId}
                     tabList={[
                       {
+                        id: EnvironmentDetailsTab.SUMMARY,
+                        title: getString('summary'),
+                        panel: <EnvironmentDetailSummary environmentIdentifiers={environmentIdentifier} />,
+                        hidden: !environmentSummaryEnabled
+                      },
+                      {
                         id: EnvironmentDetailsTab.CONFIGURATION,
                         title: getString('configuration'),
                         panel: (
@@ -259,6 +272,13 @@ export default function EnvironmentDetails(): React.ReactElement {
                         title: getString('cd.gitOpsCluster'),
                         panel: <GitOpsCluster envRef={identifier} />,
                         hidden: !gitopsOnPremEnabled && isOnPrem()
+                      },
+                      {
+                        id: EnvironmentDetailsTab.REFERENCED_BY,
+                        title: getString('referencedBy'),
+                        panel: (
+                          <EntityUsage entityType={EntityType.Environment} entityIdentifier={environmentIdentifier} />
+                        )
                       }
                     ]}
                   >

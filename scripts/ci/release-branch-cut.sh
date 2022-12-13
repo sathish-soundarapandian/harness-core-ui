@@ -21,12 +21,12 @@ echo $NEW_BRANCH
 chmod 700 scripts/ci/*.*
 
 # Add new versions to Jira
-echo "Adding new versions to Jira"
-if [[ "$EXECUTE_NEW_VERSION_CODE" == "true" ]]; then
-  scripts/ci/release-branch-create-versions.sh
-fi
+#echo "Adding new versions to Jira"
+#if [[ "$EXECUTE_NEW_VERSION_CODE" == "true" ]]; then
+#  scripts/ci/release-branch-create-versions.sh
+#fi
 # updating the jira tickets
-scripts/ci/release-branch-update-jiras.sh
+scripts/ci/jira-tagging-ngui-qa.sh
 
 # commit to develop
 git commit -nm "Branching to $NEW_BRANCH"

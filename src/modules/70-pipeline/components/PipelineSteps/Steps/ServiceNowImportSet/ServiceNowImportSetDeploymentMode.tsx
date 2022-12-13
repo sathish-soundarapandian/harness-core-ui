@@ -127,6 +127,10 @@ export default function ServiceNowImportSetDeploymentMode(props: ServiceNowImpor
           }}
           type={'ServiceNow'}
           gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
+          templateProps={{
+            isTemplatizedView: true,
+            templateValue: template?.spec?.connectorRef
+          }}
         />
       )}
 

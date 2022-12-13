@@ -97,3 +97,4 @@ createSecret: Create a Secret
 policyEvaluations:
   failedToSave: Secret cannot be saved due to the policy evaluation failures
   warning: Secret saved with policy warnings
+gcpSecretEdit: You cannot modify this once the secret is created in the GCP secret manager.

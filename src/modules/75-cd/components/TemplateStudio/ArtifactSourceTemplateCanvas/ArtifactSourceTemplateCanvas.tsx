@@ -9,6 +9,7 @@ import React from 'react'
 import { debounce, isEqual, set, get, isString, omit } from 'lodash-es'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
+import { ArtifactToConnectorMap } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { ArtifactSourceConfigFormWithRef } from '@cd/components/TemplateStudio/ArtifactSourceTemplateCanvas/ArtifactSourceConfigForm/ArtifactSourceConfigForm'
 import { sanitize } from '@common/utils/JSONUtils'
 import type {
@@ -19,14 +20,19 @@ import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/Art
 
 function getProcessedTemplate(formikValues: ArtifactSourceConfigFormData) {
   const { artifactType, connectorId } = formikValues || {}
+  const isConnectorRefApplicable = Boolean(ArtifactToConnectorMap[artifactType])
   return {
     type: artifactType,
     spec: {
       ...omit(get(formikValues, 'artifactConfig.spec', {}), 'connectorRef'),
-      connectorRef:
-        connectorId && isString(connectorId)
-          ? connectorId
-          : getConnectorIdValue({ connectorId: formikValues.connectorId })
+      ...(isConnectorRefApplicable
+        ? {
+            connectorRef:
+              connectorId && isString(connectorId)
+                ? connectorId
+                : getConnectorIdValue({ connectorId: formikValues.connectorId })
+          }
+        : {})
     }
   }
 }

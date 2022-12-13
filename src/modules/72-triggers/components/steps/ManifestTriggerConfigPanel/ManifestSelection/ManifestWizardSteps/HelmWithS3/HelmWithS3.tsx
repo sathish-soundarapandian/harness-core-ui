@@ -115,7 +115,7 @@ function HelmWithS3({
     return {
       region: storeSpec?.region ?? '',
       bucketName: storeSpec?.bucketName ?? '',
-      folderPath: storeSpec?.folderPath ?? '',
+      folderPath: storeSpec?.folderPath ?? '/',
       chartName: spec.chartName ?? '',
       helmVersion: spec.helmVersion ?? 'V2'
     }

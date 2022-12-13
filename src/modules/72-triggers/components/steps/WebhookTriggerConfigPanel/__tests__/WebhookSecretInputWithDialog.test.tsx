@@ -11,7 +11,6 @@ import { Button, FormikForm, Text } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { act, fireEvent, queryByText, render, waitFor } from '@testing-library/react'
 import * as cdng from 'services/cd-ng'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import WebhookSecretInputWithDialog from '../WebhookSecretInputWithDialog'
 
@@ -67,130 +66,113 @@ const mockSecret = {
 }
 
 describe('WebhookSecretInputWithDialog Tests:', () => {
-  test('Should return null if SPG_NG_GITHUB_WEBHOOK_AUTHENTICATION FF is false', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(false)
-    const { container } = render(
-      <Formik initialValues={{}} onSubmit={noop}>
-        {formikProps => <WebhookSecretInputWithDialog formikProps={formikProps} />}
-      </Formik>
+  test('Initial render', async () => {
+    jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue({ loading: false } as any)
+    const { container, getByTestId } = render(
+      <WrapperComponent isGithubWebhookAuthenticationEnabled={true} encryptedWebhookSecretIdentifier="" />
     )
-
+    await waitFor(() => {
+      expect(getByTestId('mockSecretInput')).toBeDefined()
+    })
     expect(container).toMatchSnapshot()
   })
 
-  describe('SPG_NG_GITHUB_WEBHOOK_AUTHENTICATION FF is true', () => {
+  test('Should show loading button if the secret data loading', async () => {
+    jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue({ loading: true } as any)
+    const { container } = render(<WrapperComponent />)
+    await waitFor(() => expect(container.getElementsByClassName('bp3-button-spinner')).not.toBeUndefined())
+    expect(container).toMatchSnapshot()
+  })
+
+  test('getSecretV2Promise API Error', async () => {
+    const errorMessage = 'Something went wrong'
+    jest.spyOn(cdng, 'getSecretV2Promise').mockImplementation(() => {
+      throw new Error(errorMessage)
+    })
+    const { container } = render(<WrapperComponent />)
+    await waitFor(() => expect(queryByText(container, errorMessage)).toBeDefined())
+    expect(container).toMatchSnapshot()
+  })
+
+  describe('Render with secret value', () => {
     beforeEach(() => {
-      jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(true)
+      jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue({ loading: false, data: mockSecret } as any)
     })
 
-    test('Initial render', async () => {
-      jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue({ loading: false } as any)
+    test('SecretInput: Optional', async () => {
+      const { container, getByTestId } = render(<WrapperComponent isGithubWebhookAuthenticationEnabled={false} />)
+      await waitFor(() => {
+        expect(getByTestId('mockSecretInput')).toBeDefined()
+        expect(queryByText(container, mockSecret.data.secret.name)).toBeDefined()
+      })
+      expect(container).toMatchSnapshot()
+    })
+
+    test('SecretInput: Required', async () => {
+      const { container, getByTestId } = render(<WrapperComponent isGithubWebhookAuthenticationEnabled={true} />)
+      await waitFor(() => {
+        expect(getByTestId('mockSecretInput')).toBeDefined()
+        expect(queryByText(container, mockSecret.data.secret.name)).toBeDefined()
+      })
+      expect(container).toMatchSnapshot()
+    })
+
+    test('Account Level SecretInput: Required', async () => {
       const { container, getByTestId } = render(
-        <WrapperComponent isGithubWebhookAuthenticationEnabled={true} encryptedWebhookSecretIdentifier="" />
+        <WrapperComponent encryptedWebhookSecretIdentifier={'account.testSecret'} />
       )
       await waitFor(() => {
         expect(getByTestId('mockSecretInput')).toBeDefined()
+        expect(queryByText(container, mockSecret.data.secret.name)).toBeDefined()
       })
       expect(container).toMatchSnapshot()
     })
 
-    test('Should show loading button if the secret data loading', async () => {
-      jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue({ loading: true } as any)
-      const { container } = render(<WrapperComponent />)
-      await waitFor(() => expect(container.getElementsByClassName('bp3-button-spinner')).not.toBeUndefined())
+    test('SecretInput: Open the Dialog', async () => {
+      const { container, getByTestId } = render(<WrapperComponent isGithubWebhookAuthenticationEnabled={true} />)
+      await waitFor(() => {
+        expect(getByTestId('mockSecretInput')).toBeDefined()
+        expect(getByTestId('mockSecretInputSubmit')).toBeDefined()
+        expect(queryByText(container, mockSecret.data.secret.name)).toBeDefined()
+      })
+      await act(async () => {
+        fireEvent.click(getByTestId('mockSecretInputSubmit'))
+      })
+      const dialog = findDialogContainer()
+      if (!dialog) {
+        throw new Error('Something went wrong')
+      }
+      expect(dialog.getElementsByClassName('Dialog--close').length).toBe(1)
       expect(container).toMatchSnapshot()
+      expect(dialog).toMatchSnapshot()
     })
 
-    test('getSecretV2Promise API Error', async () => {
-      const errorMessage = 'Something went wrong'
-      jest.spyOn(cdng, 'getSecretV2Promise').mockImplementation(() => {
-        throw new Error(errorMessage)
+    test('SecretInput: Close the Dialog', async () => {
+      const { container, getByTestId } = render(<WrapperComponent isGithubWebhookAuthenticationEnabled={true} />)
+      await waitFor(() => {
+        expect(getByTestId('mockSecretInput')).toBeDefined()
+        expect(queryByText(container, mockSecret.data.secret.name)).toBeDefined()
       })
-      const { container } = render(<WrapperComponent />)
-      await waitFor(() => expect(queryByText(container, errorMessage)).toBeDefined())
+      await act(async () => {
+        fireEvent.click(getByTestId('mockSecretInputSubmit'))
+      })
+      const openedDialog = findDialogContainer()
+      if (!openedDialog) {
+        throw new Error('Something went wrong')
+      }
+      const dialogCloseBtn = openedDialog.getElementsByClassName('Dialog--close')[0]
+      if (!dialogCloseBtn) {
+        throw new Error('Something went wrong')
+      }
+      await act(async () => {
+        fireEvent.click(dialogCloseBtn)
+      })
+      await waitFor(() => {
+        const closedDialog = findDialogContainer()
+        expect(closedDialog).not.toBeInTheDocument()
+      })
+
       expect(container).toMatchSnapshot()
-    })
-
-    describe('Render with secret value', () => {
-      beforeEach(() => {
-        jest.spyOn(cdng, 'getSecretV2Promise').mockReturnValue({ loading: false, data: mockSecret } as any)
-      })
-
-      test('SecretInput: Optional', async () => {
-        const { container, getByTestId } = render(<WrapperComponent isGithubWebhookAuthenticationEnabled={false} />)
-        await waitFor(() => {
-          expect(getByTestId('mockSecretInput')).toBeDefined()
-          expect(queryByText(container, mockSecret.data.secret.name)).toBeDefined()
-        })
-        expect(container).toMatchSnapshot()
-      })
-
-      test('SecretInput: Required', async () => {
-        const { container, getByTestId } = render(<WrapperComponent isGithubWebhookAuthenticationEnabled={true} />)
-        await waitFor(() => {
-          expect(getByTestId('mockSecretInput')).toBeDefined()
-          expect(queryByText(container, mockSecret.data.secret.name)).toBeDefined()
-        })
-        expect(container).toMatchSnapshot()
-      })
-
-      test('Account Level SecretInput: Required', async () => {
-        const { container, getByTestId } = render(
-          <WrapperComponent encryptedWebhookSecretIdentifier={'account.testSecret'} />
-        )
-        await waitFor(() => {
-          expect(getByTestId('mockSecretInput')).toBeDefined()
-          expect(queryByText(container, mockSecret.data.secret.name)).toBeDefined()
-        })
-        expect(container).toMatchSnapshot()
-      })
-
-      test('SecretInput: Open the Dialog', async () => {
-        const { container, getByTestId } = render(<WrapperComponent isGithubWebhookAuthenticationEnabled={true} />)
-        await waitFor(() => {
-          expect(getByTestId('mockSecretInput')).toBeDefined()
-          expect(getByTestId('mockSecretInputSubmit')).toBeDefined()
-          expect(queryByText(container, mockSecret.data.secret.name)).toBeDefined()
-        })
-        await act(async () => {
-          fireEvent.click(getByTestId('mockSecretInputSubmit'))
-        })
-        const dialog = findDialogContainer()
-        if (!dialog) {
-          throw new Error('Something went wrong')
-        }
-        expect(dialog.getElementsByClassName('Dialog--close').length).toBe(1)
-        expect(container).toMatchSnapshot()
-        expect(dialog).toMatchSnapshot()
-      })
-
-      test('SecretInput: Close the Dialog', async () => {
-        const { container, getByTestId } = render(<WrapperComponent isGithubWebhookAuthenticationEnabled={true} />)
-        await waitFor(() => {
-          expect(getByTestId('mockSecretInput')).toBeDefined()
-          expect(queryByText(container, mockSecret.data.secret.name)).toBeDefined()
-        })
-        await act(async () => {
-          fireEvent.click(getByTestId('mockSecretInputSubmit'))
-        })
-        const openedDialog = findDialogContainer()
-        if (!openedDialog) {
-          throw new Error('Something went wrong')
-        }
-        const dialogCloseBtn = openedDialog.getElementsByClassName('Dialog--close')[0]
-        if (!dialogCloseBtn) {
-          throw new Error('Something went wrong')
-        }
-        await act(async () => {
-          fireEvent.click(dialogCloseBtn)
-        })
-        await waitFor(() => {
-          const closedDialog = findDialogContainer()
-          expect(closedDialog).not.toBeInTheDocument()
-        })
-
-        expect(container).toMatchSnapshot()
-      })
     })
   })
 })

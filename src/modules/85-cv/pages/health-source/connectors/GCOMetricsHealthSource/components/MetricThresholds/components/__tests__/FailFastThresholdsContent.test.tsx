@@ -154,25 +154,6 @@ describe('FailFastThresholdContent', () => {
 
     expect(greaterThanInput).toBeInTheDocument()
     expect(lessThanInput).not.toBeInTheDocument()
-
-    const selectCaretPercentageType = container
-      .querySelector(`[name="failFastThresholds.0.criteria.criteriaPercentageType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretPercentageType).toBeInTheDocument()
-    fireEvent.click(selectCaretPercentageType!)
-
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
-    })
-
-    const greaterThanInput2 = container.querySelector(`[name="failFastThresholds.0.criteria.spec.greaterThan"]`)
-    const lessThanInput2 = container.querySelector(`[name="failFastThresholds.0.criteria.spec.lessThan"]`)
-
-    expect(greaterThanInput2).not.toBeInTheDocument()
-    expect(lessThanInput2).toBeInTheDocument()
   })
 
   test('should check whether a new row is added when Add Threshold button is clicked', () => {

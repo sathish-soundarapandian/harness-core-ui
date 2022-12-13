@@ -13,6 +13,7 @@ export enum StepType {
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',
   GitOpsUpdateReleaseRepo = 'GitOpsUpdateReleaseRepo',
+  GitOpsFetchLinkedApps = 'GitOpsFetchLinkedApps',
   Command = 'Command',
   Email = 'Email',
   CustomApproval = 'CustomApproval',
@@ -125,7 +126,12 @@ export enum StepType {
   ChaosExperiment = 'Chaos',
   Elastigroup = 'Elastigroup',
   ElastigroupService = 'ElastigroupService',
-  ElastigroupRollback = 'ElastigroupRollback'
+  ElastigroupRollback = 'ElastigroupRollback',
+  ElastigroupSetup = 'ElastigroupSetup',
+  TasService = 'TasService',
+  TasInfra = 'TAS',
+  Asg = 'ASGServiceSpec',
+  AsgInfraSpec = 'AsgInfraSpec'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

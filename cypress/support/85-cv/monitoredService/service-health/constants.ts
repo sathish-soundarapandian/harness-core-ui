@@ -15,6 +15,7 @@ export const monitoredServiceListData = {
         serviceName: 'appd',
         environmentName: 'prod',
         type: 'Application',
+        enabled: true,
         healthMonitoringEnabled: true,
         currentHealthScore: {
           healthScore: null,
@@ -393,6 +394,7 @@ export const monitoredServiceData = {
       identifier: 'appd_prod',
       name: 'appd_prod',
       type: 'Application',
+      enabled: true,
       description: '',
       serviceRef: 'appd',
       environmentRef: 'prod',

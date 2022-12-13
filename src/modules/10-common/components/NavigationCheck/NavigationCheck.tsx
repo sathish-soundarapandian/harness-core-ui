@@ -7,11 +7,12 @@
 
 import React, { useState, useEffect } from 'react'
 import { Prompt } from 'react-router-dom'
-import { useConfirmationDialog } from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 
 import type * as History from 'history'
 import { useStrings } from 'framework/strings'
+import css from './NavigationCheck.module.scss'
 
 export interface NavigationCheckProps {
   when?: boolean
@@ -23,12 +24,16 @@ export interface NavigationCheckProps {
   }
   navigate: (path: string) => void
   shouldBlockNavigation?: (location: History.Location) => boolean
+  onDiscardButtonClick?: () => void
+  showDiscardBtn?: boolean
 }
 export const NavigationCheck = ({
   when,
   navigate,
   shouldBlockNavigation,
-  textProps
+  textProps,
+  onDiscardButtonClick,
+  showDiscardBtn
 }: NavigationCheckProps): JSX.Element => {
   const [lastLocation, setLastLocation] = useState<History.Location | null>(null)
   const [confirmedNavigation, setConfirmedNavigation] = useState(false)
@@ -48,8 +53,38 @@ export const NavigationCheck = ({
     setConfirmedNavigation(true)
   }
 
-  const { openDialog } = useConfirmationDialog({
-    cancelButtonText: textProps?.cancelButtonText || getString('cancel'),
+  const customButtonContainer = (
+    <Container className={css.customButtons}>
+      <Button
+        text={getString('common.discard')}
+        variation={ButtonVariation.SECONDARY}
+        size={ButtonSize.MEDIUM}
+        onClick={() => {
+          onDiscardButtonClick?.()
+          closeDialog()
+        }}
+      />
+      <Button
+        text={getString('cancel')}
+        variation={ButtonVariation.TERTIARY}
+        size={ButtonSize.MEDIUM}
+        onClick={() => closeDialog()}
+      />
+    </Container>
+  )
+
+  const confirmationDialogProps = showDiscardBtn
+    ? {
+        customButtons: customButtonContainer,
+        showCloseButton: false,
+        className: css.paddingTop8
+      }
+    : {
+        cancelButtonText: textProps?.cancelButtonText || getString('cancel')
+      }
+
+  const { openDialog, closeDialog } = useConfirmationDialog({
+    ...confirmationDialogProps,
     contentText: textProps?.contentText || getString('navigationCheckText'),
     titleText: textProps?.titleText || getString('navigationCheckTitle'),
     confirmButtonText: textProps?.confirmButtonText || getString('confirm'),

@@ -273,6 +273,61 @@ describe('ECSRollingDeployStep tests', () => {
     )
   })
 
+  test('Edit view - validation errors should appear for required fields', async () => {
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const { container, getByText, getAllByText } = render(
+      <TestStepWidget
+        testWrapperProps={{ defaultFeatureFlagValues: { NG_SVC_ENV_REDESIGN: true } }}
+        initialValues={{}}
+        type={StepType.EcsBlueGreenCreateService}
+        onUpdate={onUpdate}
+        onChange={onChange}
+        ref={ref}
+        stepViewType={StepViewType.Edit}
+        isNewStep={true}
+        customStepProps={{
+          selectedStage: {
+            stage: {
+              spec: {
+                environment: {
+                  environmentRef: 'Env_1',
+                  infrastructureDefinitions: [
+                    {
+                      identifier: 'Infra_Def_1'
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }}
+      />
+    )
+
+    const nameInput = queryByNameAttribute('name', container)
+    expect(nameInput).toBeInTheDocument()
+    const timeoutInput = queryByNameAttribute('timeout', container)
+    expect(timeoutInput).toBeInTheDocument()
+    const loadBalancerSelect = queryByNameAttribute('spec.loadBalancer', container) as HTMLInputElement
+    expect(loadBalancerSelect).toBeInTheDocument()
+    const prodListenerSelect = queryByNameAttribute('spec.prodListener', container) as HTMLInputElement
+    expect(prodListenerSelect).toBeInTheDocument()
+    const prodListenerRuleSelect = queryByNameAttribute('spec.prodListenerRuleArn', container) as HTMLInputElement
+    expect(prodListenerRuleSelect).toBeInTheDocument()
+    const stageListenerSelect = queryByNameAttribute('spec.stageListener', container) as HTMLInputElement
+    expect(stageListenerSelect).toBeInTheDocument()
+    const stageListenerRuleSelect = queryByNameAttribute('spec.stageListenerRuleArn', container) as HTMLInputElement
+    expect(stageListenerRuleSelect).toBeInTheDocument()
+
+    act(() => {
+      ref.current?.submitForm()
+    })
+    await waitFor(() => expect(onUpdate).not.toHaveBeenCalled())
+
+    expect(getByText('pipelineSteps.stepNameRequired')).toBeInTheDocument()
+    expect(getAllByText('common.validation.fieldIsRequired')).toHaveLength(3)
+  })
+
   test('DeploymentForm view renders fine when Service / Env V2 FF is OFF', async () => {
     const { container, getByText, findByText, debug } = render(
       <TestStepWidget
@@ -406,7 +461,7 @@ describe('ECSRollingDeployStep tests', () => {
   })
 
   test('errors are set properly when stepViewType is DeploymentForm and Service / Env V2 FF is OFF', async () => {
-    const { container, getByText } = render(
+    const { container, getByText, getAllByText } = render(
       <TestStepWidget
         testWrapperProps={{ defaultFeatureFlagValues: { NG_SVC_ENV_REDESIGN: false } }}
         initialValues={{
@@ -463,8 +518,11 @@ describe('ECSRollingDeployStep tests', () => {
     expect(timeoutInput).toBeVisible()
 
     userEvent.click(submitBtn)
-    await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
     expect(onUpdate).not.toHaveBeenCalled()
+
+    await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
+    expect(getAllByText('common.validation.fieldIsRequired')).toHaveLength(3)
+
     userEvent.type(timeoutInput!, '20m')
   })
 
@@ -593,6 +651,78 @@ describe('ECSRollingDeployStep tests', () => {
       },
       type: StepType.EcsBlueGreenCreateService
     })
+  })
+
+  test('InputSet view - validation errors should appear for required fields', async () => {
+    const { container, getByText, getAllByText } = render(
+      <TestStepWidget
+        testWrapperProps={{ defaultFeatureFlagValues: { NG_SVC_ENV_REDESIGN: true } }}
+        initialValues={{
+          identifier: 'Step_1',
+          name: 'Step 1',
+          timeout: '',
+          spec: {
+            loadBalancer: '',
+            prodListener: '',
+            prodListenerRuleArn: '',
+            stageListener: '',
+            stageListenerRuleArn: ''
+          },
+          type: StepType.EcsBlueGreenCreateService
+        }}
+        template={{
+          identifier: 'Step_1',
+          name: 'Step 1',
+          timeout: RUNTIME_INPUT_VALUE,
+          spec: {
+            loadBalancer: RUNTIME_INPUT_VALUE,
+            prodListener: RUNTIME_INPUT_VALUE,
+            prodListenerRuleArn: RUNTIME_INPUT_VALUE,
+            stageListener: RUNTIME_INPUT_VALUE,
+            stageListenerRuleArn: RUNTIME_INPUT_VALUE
+          },
+          type: StepType.EcsBlueGreenCreateService
+        }}
+        type={StepType.EcsBlueGreenCreateService}
+        stepViewType={StepViewType.InputSet}
+        onUpdate={onUpdate}
+        customStepProps={{
+          selectedStage: {
+            stage: {
+              spec: {
+                environment: {
+                  environmentRef: 'Env_1',
+                  infrastructureDefinitions: [
+                    {
+                      identifier: 'Infra_Def_1'
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }}
+      />
+    )
+
+    const timeoutInput = queryByNameAttribute('timeout', container)
+    expect(timeoutInput).toBeInTheDocument()
+    const loadBalancerSelect = queryByNameAttribute('spec.loadBalancer', container) as HTMLInputElement
+    expect(loadBalancerSelect).toBeInTheDocument()
+    const prodListenerSelect = queryByNameAttribute('spec.prodListener', container) as HTMLInputElement
+    expect(prodListenerSelect).toBeInTheDocument()
+    const prodListenerRuleSelect = queryByNameAttribute('spec.prodListenerRuleArn', container) as HTMLInputElement
+    expect(prodListenerRuleSelect).toBeInTheDocument()
+    const stageListenerSelect = queryByNameAttribute('spec.stageListener', container) as HTMLInputElement
+    expect(stageListenerSelect).toBeInTheDocument()
+    const stageListenerRuleSelect = queryByNameAttribute('spec.stageListenerRuleArn', container) as HTMLInputElement
+    expect(stageListenerRuleSelect).toBeInTheDocument()
+
+    const submitBtn = getByText('Submit')
+    userEvent.click(submitBtn)
+    await waitFor(() => expect(onUpdate).not.toHaveBeenCalled())
+    await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
+    expect(getAllByText('common.validation.fieldIsRequired')).toHaveLength(3)
   })
 
   test('Variables view renders fine', async () => {

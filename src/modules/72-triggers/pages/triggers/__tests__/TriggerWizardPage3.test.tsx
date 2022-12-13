@@ -73,12 +73,14 @@ jest.spyOn(cdng, 'useGetConnector').mockImplementation((): any => {
   return { data: connectorsData, refetch: fetchConnectors, loading: false }
 })
 
-jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {
-  return { data: gitConfigs, refetch: getListGitSync, loading: false }
-})
-jest.spyOn(cdng, 'useGetSourceCodeManagers').mockImplementation((): any => {
-  return { data: sourceCodeManagers, refetch: jest.fn(), loading: false }
-})
+jest.mock('services/cd-ng-rq', () => ({
+  useListGitSyncQuery: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: getListGitSync }
+  }),
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
+}))
 
 const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
   <TestWrapper>{children}</TestWrapper>

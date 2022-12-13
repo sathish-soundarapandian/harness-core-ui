@@ -9,7 +9,7 @@
   --main-nav-width: 88px;
   background: var(--theme-light-nav-panel-bg);
   padding: var(--spacing-xxlarge) var(--spacing-medium) var(--spacing-xxlarge) var(--spacing-xxlarge);
-  margin-left: var(--main-nav-width);
+  margin-left: var(--main-nav-width) !important;
 
   .modulesListContainer {
     height: 100%;
@@ -17,6 +17,12 @@
 
   .blue {
     color: var(--primary-5);
+  }
+
+  .tooltipIcon {
+    &:hover {
+      color: inherit !important;
+    }
   }
 
   .clickable {
@@ -31,6 +37,26 @@
     .secondaryText {
       font-family: var(--font-family-reenie-beanie) !important;
       font-size: 24px !important;
+    }
+  }
+  .infoTooltipText {
+    line-height: 20px;
+  }
+
+  :global {
+    .bp3-overlay-exit-active {
+      transform: translateX(calc(-1 * 100% - var(--main-nav-width))) !important;
+    }
+  }
+}
+
+.popover {
+  :global {
+    .bp3-transition-container {
+      z-index: 22;
+    }
+    .bp3-popover {
+      z-index: 22;
     }
   }
 }

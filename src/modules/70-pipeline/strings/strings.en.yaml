@@ -310,6 +310,7 @@ manifestType:
   attachPath: + Attach {{manifestPath}}
   manifestTyperequired: Manifest Type is required
   gitConnectorLabel: 'Git'
+  azureRepoConnectorLabel: 'Azure Repo'
   bitBucketLabel: 'Bitbucket'
   InheritFromManifest: 'Inherit From Manifest'
   customRemote: 'Custom Remote'
@@ -338,13 +339,15 @@ manifestType:
   kustomizePathRequired: Kustomize Path is required
   kustomizeFolderPathRequired: Kustomize Folder Path is required
   pathRequired: File Path is required
+  varsPathRequired: Vars Path is required
+  autoScalerPathRequired: Autoscaler Path is required
   bucketNameRequired: Bucket Name is required
   path: '{{$.common.path}}'
   osTemplatePath: Template File Path
   osTemplatePathPlaceHolder: Enter Template File Path
   osTemplatePathRequired: Template File Path is required
   bucketNamePlaceholder: Enter Bucket Name
-  bucketPlaceHolder: Select or Add bucket name
+  bucketPlaceHolder: Select or Add Bucket Name
   pathPlaceholder: Enter File Path
   folderPathPlaceholder: Enter Folder Path
   chartPathPlaceholder: Enter Chart Path
@@ -364,6 +367,11 @@ manifestType:
   serverlessConfigFilePathPlaceholder: Enter Serverless Config File Path
   valuesYamlPath: Values.yaml
   addValuesYamlPath: Add Values.yaml
+  varsYAMLPath: Vars.yaml path
+  addVarsYAMLPath: Auto Vars.yaml path
+  autoScalerYAMLPath: AutoScaler.yaml
+  addAutoScalerYAMLPath: Add AutoScaler.yaml
+  cfCliVersion: CLI Version
   customRemoteExtractionScript: Custom Remote Manifest Extraction Script
   customRemoteExtractedFileLocation: Extracted Manifest File Location
   customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location
@@ -398,7 +406,14 @@ manifestTypeLabels:
   EcsServiceDefinition: 'ECS Service Definition'
   EcsScalingPolicyDefinition: 'ECS Scaling Policy'
   EcsScalableTargetDefinition: 'ECS Scalable Target'
+  AsgLaunchTemplate: ASG Launch Template
+  AsgConfiguration: ASG Configuration
+  AsgScalingPolicy: ASG Scaling Policy
+  AsgScheduledUpdateGroupAction: ASG Scheduled Group Update Action
   ReleaseRepo: Release Repo Manifest
+  TASManifest: TAS Manifest
+  VarsYAML: Vars
+  Autoscaler: AutoScaler
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'
 failureStrategies:
@@ -437,6 +452,7 @@ failureStrategies:
     Unknown: Unknown Errors
     PolicyEvaluationFailure: Policy Evaluation Failures
     InputTimeoutError: Execution-time Inputs Timeout Errors
+    ApprovalRejection: Approval Rejection
   validation:
     arrayOrUndefined: Value must be an array if defined.
     strategyRequired: 'At least 1 strategy is required'
@@ -587,6 +603,8 @@ executionFilters:
     ApprovalWaiting: Waiting on approval
     InterventionWaiting: Waiting on intervention
     Waiting: Waiting for resources
+    InputWaiting: Waiting on inputs
+    WaitStepRunning: Waiting on wait step
 logs:
   sectionName: 'Section {{index}}'
   errorText: Something has gone wrong while fetching logs
@@ -616,8 +634,11 @@ enterBuildRegex: Enter Build Regex
 buildRegex: Build Regex
 selectJenkinsBuildsPlaceholder: Select Jenkins Build
 releaseRepo: Release Repo
+deploymentRepo: Deployment Repo
 addReleaseRepo: + Add Release Repo Manifest
+addDeploymenteRepo: + Add Deployment Repo Manifest
 releaseRepoStore: Release Repo Store
+deploymentRepoStore: Deployment Repo Store
 runtimeInputsSubmittedMsg: Inputs have been submitted successfully
 packageType: Package Type
 packageTypePlaceholder: Select Package Type
@@ -801,6 +822,12 @@ pipelineSteps:
   approvalStageDescription: Approve or reject changes during Pipeline progress.
 pipelineChaining:
   selectPipeline: Select Pipeline
+  noProjectSelected: Project is not selected
+  noPipelineSelected: Pipeline is not selected
+  pipelineOutputs: Pipeline Outputs
+  outputTabSummaryDetail: Define outputs from child pipeline that you can use in other stages in parent pipeline.
+  newOutput: New Output
+  removeOutput: Remove this output
 aboutYourStage:
   stageNamePlaceholder: Enter Stage Name
 infraSpecifications:
@@ -827,6 +854,7 @@ artifactImagePathLabel: Artifact/Image Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
 artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
+  loadingRepository: Loading Repository...
   artifactId: Artifact ID
   customArtifactManualFill: Manually Enter an artifact version
   customArtifactScriptFill: Provide a script to dynamically pull the artifact location.
@@ -880,6 +908,8 @@ artifactsSelection:
     imageNamePlaceholder: Enter Image Path
     enterTagRegex: Enter Tag Regex
   validation:
+    connectorForJobname: Connector is required to fetch job name
+    jobConnectorRequired: Job name and connector are required to fetch
     script: Script is required
     artifactsArrayPath: Artifact array path is required
     versionPath: Version path is required
@@ -888,7 +918,6 @@ artifactsSelection:
     noFeeds: No feeds found with given details
     noVersion: No version found with given details
     packageType: Package Type is required
-    feed: Feed is required
     versionRegex: Version Regex is required
     packageName: Package Name is required
     imagePath: Image Path is required
@@ -1010,8 +1039,10 @@ gitCloneStep:
     associatedBuildInput: Associated build input
 tagDependencyRequired: required to fetch the tags
 artifactPathDependencyRequired: required to fetch the artifact paths
+artifactOrImagePathDependencyRequired: required to fetch the artifact/image path
 artifactRepositoryDependencyRequired: 'Artifactory Connector is required to fetch repositories. You can make this field Runtime input otherwise.'
-dependencyRequired: 'Connector is required to fetch buckets'
+bucketNameHelperText: 'Connector is required to fetch buckets'
+filePathHelperText: 'Connector and Bucket Name are required to fetch file paths'
 myDeploymentsText: My Deployments
 myBuildsText: My Builds
 mySecurityTestsText: My Security Tests
@@ -1019,6 +1050,8 @@ myExecutionsText: My Executions
 noRegions: No regions found
 noBuckets: No buckets found with given region
 noBucketsFound: No buckets found
+noFilePathsFound: No file paths found
+noClustersFound: No clusters found
 gitRepo: Git Repo
 buildRepo: Build Repo
 failureTypetext: Select Failure Type
@@ -1077,6 +1110,7 @@ stepDescription:
   createPR: Create PR
   mergePR: Merge PR
   updateReleaseRepo: Update Release Repo
+  fetchLinkedApps: Fetch Linked Apps
   fetchInstanceScript: Fetch Instances
   AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
   CustomApproval: Custom Approval
@@ -1092,6 +1126,7 @@ stepDescription:
   GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
   ElastigroupRollback: Rollback for the Elastigroup steps
+  ElastigroupSetup: Elastigroup setup step
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
@@ -1177,6 +1212,9 @@ featureRestriction:
   maxTotalBuilds90PercentLimit: You have used {{usagePercent}}% of builds included in the free plan. After 2,500 builds, the free plan will be restricted to 100 builds per month.
   maxBuildsPerMonth100PercentLimit: You have used 100 / 100 free builds this month. Consider upgrading for unlimited builds.
   numMonthlyBuilds: You have used {{count}} / {{limit}} free builds this month.
+  maxTotalScans90PercentLimit: You have used {{usagePercent}}% of scans included in the free plan. After 2,500 scans, the free plan will be restricted to 100 scans per month.
+  maxScansPerMonth100PercentLimit: You have used 100 / 100 free scans this month. Consider upgrading for unlimited builds.
+  numMonthlyScans: You have used {{count}} / {{limit}} free scans this month.
   subscription90PercentLimit: You have used {{usagePercent}}% of your developer subscription limit.
   subscriptionExceededLimit: You have exceeded your developer subscription limit.
   unlimitedBuildsRequiredPlan: Monthly builds limit met. For Unlimited builds, consider upgrading to Team or Enterprise plan.
@@ -1261,7 +1299,7 @@ serviceDeploymentTypes:
   awsCodeDeploy: CodeDeploy
   winrm: WinRM
   awsLambda: AWS Lambda
-  pcf: TAS
+  tas: Tanzu Application Services
   ssh: Secure Shell
   deployDifferentLabel: Deploy different service
   serverlessAwsLambda: Serverless Lambda
@@ -1274,6 +1312,7 @@ serviceDeploymentTypes:
   serverlessAwsType: Serverless Aws Lambda
   customDeploy: Custom Deployment
   spotElastigroup: Spot Elastigroup
+  asg: AWS ASG
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
@@ -1469,5 +1508,16 @@ customDeployment:
 step:
   validation:
     namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
-runDisabledOnFreeze: Cannot run pipeline due to an active freeze
+runDisabledOnFreeze: An active freeze is applicable on this pipeline. Any deployment stage on this pipeline will be aborted.
 viewFreeze: View freeze details
+triggeredBy: Triggered by {{triggerType}}
+manuallyTriggered: This execution was triggered manually
+triggeredByThirdParty: Triggered by a third party system
+triggeredByCron: Triggered on {{start}} by cron {{triggeredBy}}
+configureArtifactSource: Configure Artifact Source
+pipelineCachedCopy:
+  cachedCopyText: Cached Copy
+  reloadPipeline: Reload Pipeline?
+  reloadPipelineContent: Are you sure you want to load the pipeline from Git? You will lose all your unsaved changes.
+  cacheInProgress: Cache update in progress
+  cacheUpdateFailed: Cache Update Failed

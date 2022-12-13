@@ -16,13 +16,13 @@ exports[`Test DeploymentInfraWrapperWithRef initial render - with step template 
           data-tooltip-id="deploymentStepsDT"
         >
           <p
-            class="StyledProps--font StyledProps--main headerText marginRight StyledProps--color StyledProps--color-black"
+            class="StyledProps--font StyledProps--main headerText StyledProps--color StyledProps--color-black"
           >
             cd.deploymentSteps
           </p>
         </div>
         <span
-          class="bp3-popover-wrapper main"
+          class="bp3-popover-wrapper main marginLeft"
         >
           <span
             class="bp3-popover-target"
@@ -367,13 +367,13 @@ exports[`Test DeploymentInfraWrapperWithRef initial render - without step templa
           data-tooltip-id="deploymentStepsDT"
         >
           <p
-            class="StyledProps--font StyledProps--main headerText marginRight StyledProps--color StyledProps--color-black"
+            class="StyledProps--font StyledProps--main headerText StyledProps--color StyledProps--color-black"
           >
             cd.deploymentSteps
           </p>
         </div>
         <span
-          class="bp3-popover-wrapper main"
+          class="bp3-popover-wrapper main marginLeft"
         >
           <span
             class="bp3-popover-target"

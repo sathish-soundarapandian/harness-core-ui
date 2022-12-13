@@ -11,7 +11,6 @@ import { render, fireEvent, waitFor } from '@testing-library/react'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useGetLicensesAndSummary, useExtendTrialLicense, useSaveFeedback } from 'services/cd-ng'
-
 import { TrialLicenseBanner } from '../TrialLicenseBanner'
 
 jest.mock('services/cd-ng')
@@ -31,9 +30,9 @@ useSaveFeedbackMock.mockImplementation(() => {
     mutate: saveFeedbackMock
   }
 })
+
 jest.mock('framework/LicenseStore/LicenseStoreContext')
 const useLicenseStoreMock = useLicenseStore as jest.MockedFunction<any>
-
 describe('TrialLicenseBanner', () => {
   test('should render banner and provide feedback button if api call returns TRIAL and not expired', () => {
     useGetLicensesAndSummaryMock.mockImplementation(() => {
@@ -58,7 +57,6 @@ describe('TrialLicenseBanner', () => {
         updateLicenseStore: () => void 0
       }
     })
-
     const { container, getByText, queryByText } = render(
       <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
         <TrialLicenseBanner />

@@ -16,7 +16,7 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 import { SparklineChart } from '@common/components/SparklineChart/SparklineChart'
 import { TrendPopover } from '@cd/components/TrendPopover/TrendPopover'
 import { PieChart } from '@cd/components/PieChart/PieChart'
-import { numberFormatter } from '@cd/components/Services/common'
+import { numberFormatter } from '@common/utils/utils'
 import css from '@cd/components/Services/ServiceInstancesWidget/ServiceInstancesWidget.module.scss'
 
 export interface ServiceInstanceWidgetProps {

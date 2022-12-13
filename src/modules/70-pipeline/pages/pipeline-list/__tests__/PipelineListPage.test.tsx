@@ -24,6 +24,7 @@ import pipelines from './mocks/pipelinesWithRecentExecutions.json'
 
 jest.useFakeTimers()
 
+const showImportResourceModal = jest.fn()
 const openRunPipelineModal = jest.fn()
 const useGetPipelineListMutate = jest.fn().mockResolvedValue(pipelines)
 const mockDeleteFunction = jest.fn()
@@ -95,9 +96,18 @@ jest.mock('services/cd-ng', () => ({
     refetch: jest.fn().mockResolvedValue(gitSyncListResponse),
     loading: false
   })),
-  useGetSourceCodeManagers: jest.fn(() => ({ data: sourceCodeManagers, refetch: jest.fn() })),
   useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
 }))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
+}))
+
+jest.mock('@pipeline/components/ImportResource/useImportResource', () => {
+  return () => ({ showImportResourceModal })
+})
 
 jest.mock('@pipeline/components/RunPipelineModal/useRunPipelineModal', () => ({
   useRunPipelineModal: () => ({
@@ -116,7 +126,17 @@ const getModuleParams = (module = 'cd') => ({
 const TEST_PATH = routes.toPipelines({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })
 const renderPipelinesListPage = (module = 'cd'): RenderResult =>
   render(
-    <TestWrapper path={TEST_PATH} pathParams={getModuleParams(module)} defaultAppStoreValues={defaultAppStoreValues}>
+    <TestWrapper
+      path={TEST_PATH}
+      pathParams={getModuleParams(module)}
+      defaultAppStoreValues={{
+        ...defaultAppStoreValues,
+        isGitSyncEnabled: true,
+        isGitSimplificationEnabled: true,
+        supportingGitSimplification: true,
+        gitSyncEnabledOnlyForFF: true
+      }}
+    >
       <PipelineListPage />
     </TestWrapper>
   )
@@ -179,12 +199,23 @@ describe('CD Pipeline List Page', () => {
   test('should be able to add a new pipeline with identifier as "-1"', async () => {
     renderPipelinesListPage()
     expect(useGetRepositoryList).toBeCalled()
-    const addPipeline = await screen.findByTestId('add-pipeline')
+    const addPipeline = (await screen.findAllByTestId('add-pipeline'))[0]
     userEvent.click(addPipeline)
     const location = await screen.findByTestId('location')
     expect(
       location.innerHTML.endsWith(routes.toPipelineStudio({ ...getModuleParams(), pipelineIdentifier: '-1' } as any))
     ).toBeTruthy()
+  })
+
+  test('should be able to import pipeline', async () => {
+    renderPipelinesListPage()
+    userEvent.click(
+      await screen.findByRole('button', {
+        name: /chevron-down/i
+      })
+    )
+    userEvent.click(await screen.findByText('common.importFromGit'))
+    expect(showImportResourceModal).toHaveBeenCalled()
   })
 
   test('should be able to run pipeline from menu', async () => {

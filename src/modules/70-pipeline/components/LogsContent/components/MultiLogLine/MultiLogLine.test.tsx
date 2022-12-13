@@ -70,14 +70,16 @@ describe('<MultiLogLine /> tests', () => {
         rel="noreferrer"
         target="_blank"
       >
-        https://npm.
-        <mark
-          data-current-search-result="true"
-          data-search-result-index="0"
-        >
-          pk
-        </mark>
-        g.github.com
+        <span>
+          https://npm.
+          <mark
+            data-current-search-result="true"
+            data-search-result-index="0"
+          >
+            pk
+          </mark>
+          g.github.com
+        </span>
       </a>
     `)
     expect(container).toMatchSnapshot()

@@ -299,7 +299,6 @@ exports[`Jiracreateupdate view test  output snapshot if array is present of outc
             <tr>
               <th>
                 pipeline.jiraApprovalStep.issueKey:
-                :
               </th>
               <td>
                 <a

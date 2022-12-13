@@ -35,8 +35,9 @@ import type {
   TemplateStudioPathProps,
   EnvironmentGroupPathProps,
   VariablesPathProps,
-  SCMPathProps
+  AccountRoutePlacement
 } from '@common/interfaces/RouteInterfaces'
+import { getLocationPathName } from 'framework/utils/WindowLocation'
 
 export const accountPathProps: AccountPathProps = {
   accountId: ':accountId'
@@ -162,15 +163,6 @@ export const servicePathProps: ServicePathProps = {
   serviceId: ':serviceId'
 }
 
-export const scmPathProps: Required<SCMPathProps> = {
-  ...projectPathProps,
-  repoName: ':repoName',
-  branchName: ':branchName',
-  filePath: ':filePath',
-  pullRequestId: ':pullRequestId',
-  commitId: ':commitId'
-}
-
 export function withAccountId<T>(fn: (args: T) => string) {
   return (params: T & { accountId: string }): string => {
     const path = fn(params)
@@ -229,4 +221,27 @@ export const validateReturnUrl = (url: string): boolean => {
   }
 }
 
-export const returnLaunchUrl = (url: string): string => `${window.location.pathname.replace(/\/ng\//, '/')}${url}`
+export const returnLaunchUrl = (url: string): string => {
+  return `${getLocationPathName().replace(/\/ng\//, '/')}${url}`
+}
+
+export const getEnvServiceRoute = ({
+  scope: { orgIdentifier, projectIdentifier, module },
+  path,
+  accountRoutePlacement
+}: {
+  scope: Partial<ProjectPathProps & ModulePathParams>
+  path: string
+  accountRoutePlacement?: AccountRoutePlacement
+}): string => {
+  if (orgIdentifier && projectIdentifier) {
+    const basePath = module || 'home'
+    return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/${path}`
+  } else if (orgIdentifier) {
+    return `/settings/organizations/${orgIdentifier}/setup/resources/${path}`
+  } else if (accountRoutePlacement) {
+    return accountRoutePlacement === 'settings' ? `settings/resources/${path}` : `${path}`
+  } else {
+    return window.location.href.includes('settings') ? `settings/resources/${path}` : `${path}`
+  }
+}

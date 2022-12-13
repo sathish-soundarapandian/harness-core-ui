@@ -45,6 +45,7 @@ import {
   buildGitlabPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useQueryParams } from '@common/hooks/useQueryParams'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { allowedManifestTypes, gitStoreTypes, showAddManifestBtn } from '../../Manifesthelper'
 
 import type { ManifestStores } from '../../ManifestInterface'
@@ -59,6 +60,7 @@ import { ReleaseRepoListViewProps, ReleaseRepoManifestToConnectorMap } from '../
 import css from '../../ManifestSelection.module.scss'
 
 type ManifestType = 'ReleaseRepo'
+const DeploymentRepoType = 'DeploymentRepo'
 const ReleaseRepoIcon = 'service-kubernetes'
 
 interface ReleaseRepoStepInitData {
@@ -93,9 +95,11 @@ function ReleaseRepoListView({
   const [isEditMode, setIsEditMode] = useState(false)
   const { expressions } = useVariablesExpression()
   const [manifestIndex, setEditIndex] = useState(0)
+  const [selectedRepoType, setSelectedRepoType] = useState<string>('')
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { GITOPS_FETCH_LINKED_APPS } = useFeatureFlags()
 
   const getLabels = (): ConnectorRefLabelType => {
     return {
@@ -130,6 +134,7 @@ function ReleaseRepoListView({
   }
 
   const editManifest = (manifestType: ManifestType, store: ManifestStores, index: number): void => {
+    setSelectedRepoType(manifestType)
     setSelectedManifest(manifestType)
     setManifestStore(store)
     setConnectorView(false)
@@ -327,6 +332,13 @@ function ReleaseRepoListView({
   }
 
   const addNewReleaseRepo = (): void => {
+    setSelectedRepoType('')
+    setEditIndex(listOfManifests.length)
+    showReleaseRepoModal()
+  }
+
+  const addNewDeploymentRepo = (): void => {
+    setSelectedRepoType(DeploymentRepoType)
     setEditIndex(listOfManifests.length)
     showReleaseRepoModal()
   }
@@ -346,13 +358,18 @@ function ReleaseRepoListView({
       setManifestStore('')
       setIsEditMode(false)
       setSelectedManifest(null)
+      setSelectedRepoType('')
     }
     const manifest = get(listOfManifests[manifestIndex], 'manifest', null)
 
+    const isDeploymentRepoType = selectedRepoType === DeploymentRepoType
     return (
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
           <ReleaseRepoWizard
+            stepName={
+              isDeploymentRepoType ? getString('pipeline.deploymentRepoStore') : getString('pipeline.releaseRepoStore')
+            }
             types={allowedManifestTypes[deploymentType]}
             manifestStoreTypes={gitStoreTypes}
             labels={getLabels()}
@@ -367,6 +384,7 @@ function ReleaseRepoListView({
             handleSubmit={handleSubmit}
             isReadonly={isReadonly}
             onClose={onClose}
+            isDeploymentRepoType={isDeploymentRepoType}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
@@ -380,7 +398,8 @@ function ReleaseRepoListView({
     expressions.length,
     expressions,
     allowableTypes,
-    isEditMode
+    isEditMode,
+    selectedRepoType
   ])
 
   const removeManifestConfig = (index: number): void => {
@@ -438,6 +457,7 @@ function ReleaseRepoListView({
             {listOfManifests &&
               listOfManifests.map((data: ManifestConfigWrapper, index: number) => {
                 const manifest = data['manifest']
+                const isDeploymentRepoManifest = get(manifest, 'type') === 'DeploymentRepo'
 
                 const { color } = getStatus(
                   getConnectorPath(get(manifest, 'spec.store.type', ''), manifest),
@@ -458,7 +478,11 @@ function ReleaseRepoListView({
                           {get(manifest, 'identifier', '')}
                         </Text>
                       </div>
-                      <div>{getString('pipeline.releaseRepo')}</div>
+                      <div>
+                        {isDeploymentRepoManifest
+                          ? getString('pipeline.deploymentRepo')
+                          : getString('pipeline.releaseRepo')}
+                      </div>
                       {renderConnectorField(
                         get(manifest, 'spec.store.type', ''),
                         getConnectorPath(get(manifest, 'spec.store.type', ''), manifest),
@@ -507,7 +531,11 @@ function ReleaseRepoListView({
         </Layout.Vertical>
       </Layout.Vertical>
       <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
-        {showAddManifestBtn(isReadonly, true, listOfManifests) ? (
+        {showAddManifestBtn(
+          isReadonly,
+          true,
+          listOfManifests?.filter(data => data?.manifest?.type !== 'DeploymentRepo')
+        ) ? (
           <Button
             className={css.addManifest}
             id="add-release-repo"
@@ -516,6 +544,22 @@ function ReleaseRepoListView({
             data-test-id="add-release-repo"
             onClick={addNewReleaseRepo}
             text={getString('pipeline.addReleaseRepo')}
+          />
+        ) : null}
+        {GITOPS_FETCH_LINKED_APPS &&
+        showAddManifestBtn(
+          isReadonly,
+          true,
+          listOfManifests?.filter(data => data?.manifest?.type === 'DeploymentRepo')
+        ) ? (
+          <Button
+            className={css.addManifest}
+            id="add-deployment-repo"
+            size={ButtonSize.SMALL}
+            variation={ButtonVariation.LINK}
+            data-test-id="add-deployment-repo"
+            onClick={addNewDeploymentRepo}
+            text={getString('pipeline.addDeploymenteRepo')}
           />
         ) : null}
       </Layout.Vertical>

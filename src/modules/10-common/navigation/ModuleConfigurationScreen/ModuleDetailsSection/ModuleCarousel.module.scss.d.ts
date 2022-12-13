@@ -11,6 +11,7 @@ declare const styles: {
   readonly carouselSlide: string
   readonly container: string
   readonly heading: string
+  readonly indicatorActive: string
   readonly indicators: string
   readonly main: string
 }

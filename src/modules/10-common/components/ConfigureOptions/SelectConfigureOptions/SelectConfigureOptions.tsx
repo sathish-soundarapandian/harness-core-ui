@@ -21,6 +21,7 @@ import css from './SelectConfigureOptions.module.scss'
 export interface SelectConfigureOptionsProps extends ConfigureOptionsProps {
   value: string
   options: SelectOption[]
+  fetchOptions?: () => void
   loading?: boolean
   error?: GetDataError<Failure | Error> | null
 }
@@ -31,6 +32,7 @@ export const SelectConfigureOptions = (props: SelectConfigureOptionsProps): Reac
     onChange,
     isReadonly,
     options,
+    fetchOptions,
     variableName,
     type,
     showAdvanced,
@@ -57,8 +59,13 @@ export const SelectConfigureOptions = (props: SelectConfigureOptionsProps): Reac
   }, [error])
 
   const multiSelectProps: Omit<MultiSelectProps, 'value' | 'onChange' | 'items' | 'tagInputProps'> = {
-    placeholder: loading ? getString('loading') : getString('common.configureOptions.selectAllowedValuesPlaceholder')
+    placeholder: loading ? getString('loading') : getString('common.configureOptions.selectAllowedValuesPlaceholder'),
+    allowCreatingNewItems: true
   }
+
+  React.useEffect(() => {
+    fetchOptions?.()
+  })
 
   const getAllowedValuesMultiSelectComponent = (
     allowedValuesCustomComponentProps: AllowedValuesCustomComponentProps

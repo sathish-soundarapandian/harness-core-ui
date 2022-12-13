@@ -15,16 +15,20 @@ import {
   CFLicenseSummaryDTO,
   CELicenseSummaryDTO,
   CDLicenseSummaryDTO,
+  STOLicenseSummaryDTO,
   useGetCDLicenseUsageForServiceInstances,
-  useGetCDLicenseUsageForServices
+  useGetCDLicenseUsageForServices,
+  CVLicenseSummaryDTO
 } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useGetLicenseUsage as useGetFFUsage } from 'services/cf'
 import { useGetUsage as useGetCIUsage } from 'services/ci'
+import { useGetUsage as useGetSTOUsage } from 'services/sto'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useGetCCMLicenseUsage } from 'services/ce'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { useGetLicenseUsage } from 'services/cv'
 
 export interface UsageAndLimitReturn {
   limitData: LimitReturn
@@ -59,6 +63,13 @@ interface UsageProps {
     activeServiceInstances?: UsageProp
     serviceLicenses?: UsageProp
   }
+  sto?: {
+    activeDevelopers?: UsageProp
+    activeScans?: UsageProp
+  }
+  cv?: {
+    activeServices?: UsageProp
+  }
 }
 
 interface LimitProps {
@@ -75,6 +86,13 @@ interface LimitProps {
   }
   ccm?: {
     totalSpendLimit?: number
+  }
+  sto?: {
+    totalDevelopers?: number
+    totalScans?: number
+  }
+  cv?: {
+    totalServices?: number
   }
 }
 
@@ -125,6 +143,25 @@ function useGetLimit(module: ModuleName): LimitReturn {
             totalSpendLimit: (limitData?.data as CELicenseSummaryDTO)?.totalSpendLimit
           }
         }
+        break
+      }
+
+      case ModuleName.STO: {
+        moduleLimit = {
+          sto: {
+            totalDevelopers: (limitData?.data as STOLicenseSummaryDTO)?.totalDevelopers
+          }
+        }
+        break
+      }
+
+      case ModuleName.CV: {
+        moduleLimit = {
+          cv: {
+            totalServices: (limitData?.data as CVLicenseSummaryDTO)?.totalServices
+          }
+        }
+        break
       }
     }
     return moduleLimit
@@ -231,6 +268,31 @@ export function useGetUsage(module: ModuleName): UsageReturn {
     },
     lazy: module !== ModuleName.CD
   })
+  const {
+    data: stoUsageData,
+    loading: loadingSTOUsage,
+    error: stoUsageError,
+    refetch: refetchSTOUsage
+  } = useGetSTOUsage({
+    queryParams: {
+      accountIdentifier: accountId,
+      timestamp
+    },
+    lazy: module !== ModuleName.STO
+  })
+
+  const {
+    data: cvUsageData,
+    loading: loadingCVUsage,
+    error: cvUsageError,
+    refetch: refetchCVUsage
+  } = useGetLicenseUsage({
+    queryParams: {
+      accountIdentifier: accountId,
+      timestamp
+    },
+    lazy: module !== ModuleName.CV
+  })
 
   function setUsageByModule(): void {
     switch (module) {
@@ -288,6 +350,32 @@ export function useGetUsage(module: ModuleName): UsageReturn {
           }
         })
         break
+      case ModuleName.STO:
+        setUsageData({
+          usage: {
+            sto: {
+              activeDevelopers: stoUsageData?.data?.activeDevelopers,
+              activeScans: stoUsageData?.data?.activeScans
+            }
+          },
+          loadingUsage: loadingSTOUsage,
+          usageErrorMsg: stoUsageError?.message,
+          refetchUsage: refetchSTOUsage
+        })
+        break
+
+      case ModuleName.CV:
+        setUsageData({
+          usage: {
+            cv: {
+              activeServices: cvUsageData?.data?.activeServices
+            }
+          },
+          loadingUsage: loadingCVUsage,
+          usageErrorMsg: cvUsageError?.message,
+          refetchUsage: refetchCVUsage
+        })
+        break
     }
   }
 
@@ -308,8 +396,15 @@ export function useGetUsage(module: ModuleName): UsageReturn {
     cdUsageData,
     cdSIUsageError,
     cdUsageError,
+    stoUsageData,
+    stoUsageError,
+    loadingSTOUsage,
+    refetchSTOUsage,
     loadingCDSIUsage,
-    loadingCDUsage
+    loadingCDUsage,
+    cvUsageData,
+    loadingCVUsage,
+    cvUsageError
   ])
 
   return usageData

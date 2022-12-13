@@ -4,6 +4,7 @@ exports[`GitSync Page render GitSync page for new user with no pipeline created 
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--medium StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -93,6 +94,7 @@ exports[`GitSync Page render GitSync page for new user with no pipeline created 
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main pageContainer"

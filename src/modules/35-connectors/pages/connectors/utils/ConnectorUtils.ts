@@ -26,7 +26,8 @@ import type {
   AzureKeyVaultConnectorDTO,
   GcpKmsConnectorDTO,
   ErrorTrackingConnectorDTO,
-  ELKConnectorDTO
+  ELKConnectorDTO,
+  TasConnector
 } from 'services/cd-ng'
 import { FormData, CredTypeValues, HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
@@ -301,6 +302,32 @@ export const buildSpotPayload = (formData: FormData) => {
         }
       }
     }
+  }
+
+  return { connector: savedData }
+}
+
+export const buildTasPayload = (formData: FormData): ConnectorRequestBody => {
+  const savedData: ConnectorInfoDTO = {
+    name: formData.name,
+    description: formData?.description,
+    projectIdentifier: formData?.projectIdentifier,
+    orgIdentifier: formData?.orgIdentifier,
+    identifier: formData.identifier,
+    tags: formData?.tags,
+    type: Connectors.TAS,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
+      credential: {
+        type: CredTypeValues.ManualConfig,
+        spec: {
+          endpointUrl: formData.endpointUrl,
+          [formData.username.type === ValueType.TEXT ? 'username' : 'usernameRef']: formData.username.value,
+          passwordRef: formData.passwordRef.referenceString
+        }
+      }
+    } as TasConnector
   }
 
   return { connector: savedData }
@@ -706,6 +733,31 @@ export const setupGCPFormData = async (connectorInfo: ConnectorInfoDTO, accountI
     delegateType: connectorInfo.spec.credential.type,
     password: await setSecretField(connectorInfo.spec.credential?.spec?.secretKeyRef, scopeQueryParams),
     connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate)
+  }
+
+  return formData
+}
+
+export const setupTasFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo?.projectIdentifier,
+    orgIdentifier: connectorInfo?.orgIdentifier
+  }
+
+  const authdata = connectorInfo?.spec?.credential?.spec
+  const formData = {
+    username:
+      authdata?.username || authdata?.usernameRef
+        ? {
+            value: authdata.username || authdata.usernameRef,
+            type: authdata.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
+          }
+        : undefined,
+    passwordRef: await setSecretField(authdata?.passwordRef, scopeQueryParams),
+    endpointUrl: authdata.endpointUrl || '',
+    connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate),
+    delegate: connectorInfo?.spec?.delegateSelectors
   }
 
   return formData
@@ -2023,10 +2075,14 @@ export const buildServiceNowPayload = (formData: FormData) => {
     spec: {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
       serviceNowUrl: formData.serviceNowUrl,
-
-      username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
-      usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
-      passwordRef: formData.passwordRef.referenceString
+      auth: {
+        type: AuthTypes.USER_PASSWORD,
+        spec: {
+          username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
+          usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+          passwordRef: formData.passwordRef.referenceString
+        }
+      }
     }
   }
 
@@ -2044,16 +2100,19 @@ export const setupServiceNowFormData = async (
 
   const formData = {
     serviceNowUrl: connectorInfo.spec.serviceNowUrl,
-
+    authType: connectorInfo.spec.auth.type,
     username:
-      connectorInfo.spec.username || connectorInfo.spec.usernameRef
+      connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD &&
+      (connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef)
         ? {
-            value: connectorInfo.spec.username || connectorInfo.spec.usernameRef,
-            type: connectorInfo.spec.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
+            value: connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef,
+            type: connectorInfo.spec.auth.spec.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
           }
         : undefined,
-
-    passwordRef: await setSecretField(connectorInfo.spec.passwordRef, scopeQueryParams)
+    passwordRef:
+      connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD
+        ? await setSecretField(connectorInfo.spec.auth.spec.passwordRef, scopeQueryParams)
+        : undefined
   }
   return formData
 }
@@ -2217,6 +2276,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'gcp-secret-manager'
     case Connectors.SPOT:
       return 'spot'
+    case Connectors.TAS:
+      return 'tas'
     default:
       return 'cog'
   }
@@ -2298,6 +2359,8 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'Spot'
     case Connectors.AZURE_ARTIFACTS:
       return 'Azure Artifacts'
+    case Connectors.TAS:
+      return 'Tanzu Application Service'
     default:
       return ''
   }
@@ -2401,6 +2464,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.gcpSM')
     case Connectors.SPOT:
       return getString('connectors.testConnectionStep.validationText.spot')
+    case Connectors.TAS:
+      return getString('connectors.testConnectionStep.validationText.tas')
     default:
       return ''
   }

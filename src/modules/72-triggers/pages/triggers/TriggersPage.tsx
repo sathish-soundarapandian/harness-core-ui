@@ -7,14 +7,13 @@
 
 import React, { useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { parse } from 'yaml'
 import routes from '@common/RouteDefinitions'
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { useGetPipeline, useGetPipelineSummary } from 'services/pipeline-ng'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useQueryParams } from '@common/hooks'
+import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import TriggersList from './views/TriggersList'
 import type { TriggerDataInterface } from './utils/TriggersListUtils'
 
@@ -55,29 +54,22 @@ const TriggersPage: React.FC = (): React.ReactElement => {
   }
   const { getString } = useStrings()
 
-  const { data: pipeline } = useGetPipelineSummary({
-    pipelineIdentifier,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      repoIdentifier,
-      branch
+  const { data: pipeline } = useGetPipelineSummaryQuery(
+    {
+      pipelineIdentifier,
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        branch,
+        repoIdentifier,
+        getMetadataOnly: true
+      }
+    },
+    {
+      staleTime: 5 * 60 * 1000
     }
-  })
-  const { data: pipelineResponse } = useGetPipeline({
-    pipelineIdentifier,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      getTemplatesResolvedPipeline: true,
-      branch,
-      parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoName
-    }
-  })
-  const resolvedPipeline = parse(pipelineResponse?.data?.yamlPipeline || '')
+  )
 
   useDocumentTitle([pipeline?.data?.name || getString('pipelines'), getString('common.triggersLabel')])
 
@@ -97,7 +89,6 @@ const TriggersPage: React.FC = (): React.ReactElement => {
       branch={branch}
       isPipelineInvalid={isPipelineInvalid}
       gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
-      pipeline={resolvedPipeline}
     />
   )
 }

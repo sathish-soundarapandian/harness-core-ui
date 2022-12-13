@@ -15,17 +15,28 @@ import { TestStepWidget, factory } from '@pipeline/components/PipelineSteps/Step
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import connectorsData from '@pipeline/components/ManifestSelection/__tests__/connectors_mock.json'
+import { awsRegionsData } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ECSWithS3/__tests__/mocks'
+import { bucketNameList } from '../../ECSServiceSpec/ManifestSource/__tests__/helpers/mock'
 import { ECSRunTaskStep } from '../ECSRunTaskStep'
 import { testTaskDefinitionLastStep, testTaskDefinitionSecondStep } from './TaskDefinitionModal.test'
 
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
+const fetchBuckets = jest.fn().mockReturnValue(bucketNameList)
 jest.mock('services/cd-ng', () => ({
   getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: { data: connectorsData.data.content[1] }, refetch: fetchConnectors, loading: false }
   }),
-  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
+  useGetBucketListForS3: jest.fn().mockImplementation(() => {
+    return { data: bucketNameList, refetch: fetchBuckets, error: null, loading: false }
+  })
+}))
+jest.mock('services/portal', () => ({
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: awsRegionsData, refetch: jest.fn(), error: null, loading: false }
+  })
 }))
 
 factory.registerStep(new ECSRunTaskStep())
@@ -92,6 +103,15 @@ describe('ECSRunTaskStep tests', () => {
     await testTaskDefinitionLastStep(portal)
     await waitFor(() => expect(dialogList.length).toBe(0))
 
+    const addRunTaskRequestDefinitionBtn = getByText('cd.steps.ecsRunTaskStep.runTaskRequestDefinition')
+    userEvent.click(addRunTaskRequestDefinitionBtn)
+    const runTaskRequestDefinitionPortal = dialogList[0] as HTMLElement
+    // Test manifest store tiles, choose Git and fill in Connector field
+    await testTaskDefinitionSecondStep(runTaskRequestDefinitionPortal)
+    // Fill in required field and submit manifest
+    await testTaskDefinitionLastStep(runTaskRequestDefinitionPortal)
+    await waitFor(() => expect(dialogList.length).toBe(0))
+
     // Optional Configurations
     const optionalConfigAccordionHeader = getByText('common.optionalConfig')
     userEvent.click(optionalConfigAccordionHeader)
@@ -115,6 +135,15 @@ describe('ECSRunTaskStep tests', () => {
               gitFetchType: 'Branch',
               paths: ['test-path']
             }
+          },
+          runTaskRequestDefinition: {
+            spec: {
+              branch: 'testBranch',
+              connectorRef: 'account.Git_CTR',
+              gitFetchType: 'Branch',
+              paths: ['test-path']
+            },
+            type: 'Git'
           },
           skipSteadyStateCheck: true
         },

@@ -17,6 +17,8 @@ import { actionToLabelMap, getOrgDropdownList, getProjectDropdownList } from '@a
 import UserItemRenderer from '@audit-trail/components/UserItemRenderer/UserItemRenderer'
 import UserTagRenderer from '@audit-trail/components/UserTagRenderer/UserTagRenderer'
 import AuditTrailFactory from '@audit-trail/factories/AuditTrailFactory'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import type { AuditTrailFormType } from './FilterDrawer'
 
 interface AuditTrailFormProps {
@@ -25,6 +27,7 @@ interface AuditTrailFormProps {
 
 const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const isForceDeleteSupported = useFeatureFlag(FeatureFlag.PL_FORCE_DELETE_CONNECTOR_SECRET)
   const [userQuery, setUserQuery] = useState<string>()
   const [orgQuery, setOrgQuery] = useState<string>()
   const [projectsQuery, setProjectsQuery] = useState<string>()
@@ -79,6 +82,12 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
       label: getString(map[key]),
       value: key
     }))
+  }
+
+  let auditActions = getOptionsForMultiSelect(actionToLabelMap)
+
+  if (!isForceDeleteSupported) {
+    auditActions = auditActions.filter(action => action?.value !== 'FORCE_DELETE')
   }
 
   const projects = projectData?.data?.content ? getProjectDropdownList(projectData?.data?.content) : []
@@ -147,12 +156,7 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
         disabled={props.formikProps?.values?.['resourceType']?.length !== 1}
         tooltipProps={{ dataTooltipId: 'auditTrails_resourceIdentifier' }}
       />
-      <FormInput.MultiSelect
-        items={getOptionsForMultiSelect(actionToLabelMap)}
-        name="actions"
-        label={getString('action')}
-        key="actions"
-      />
+      <FormInput.MultiSelect items={auditActions} name="actions" label={getString('action')} key="actions" />
     </>
   )
 }

@@ -14,18 +14,29 @@ import {
   queryByAttribute,
   render,
   waitFor,
-  findByTestId as findByTestIdGlobal
+  findByTestId as findByTestIdGlobal,
+  within
 } from '@testing-library/react'
+
 import { TestWrapper } from '@common/utils/testUtils'
-import { GetInputSetsResponse } from '@pipeline/pages/inputSet-list/__tests__/InputSetListMocks'
+import routes from '@common/RouteDefinitions'
+import {
+  accountPathProps,
+  executionPathProps,
+  modulePathProps,
+  orgPathProps,
+  pipelinePathProps
+} from '@common/utils/routeUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
+import { StoreType } from '@common/constants/GitSyncTypes'
+import { GetInputSetsResponse } from '@pipeline/pages/inputSet-list/__tests__/InputSetListMocks'
 import {
   getMockFor_Generic_useMutate,
   getMockFor_useGetInputSetsListForPipeline,
   getMockFor_useGetPipeline
 } from '@pipeline/components/RunPipelineModal/__tests__/mocks'
 import RetryPipeline from '../RetryPipeline'
-import { mockInputsetYamlV2, mockPostRetryPipeline, mockRetryStages } from './mocks'
+import { mockInputsetYamlV2, mockPostRetryPipeline, mockRetryStages, templateResponse } from './mocks'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -52,6 +63,7 @@ window.IntersectionObserver = jest.fn().mockImplementation(() => ({
 
 jest.mock('services/pipeline-ng', () => ({
   useGetPipeline: jest.fn(() => getMockFor_useGetPipeline()),
+  useGetTemplateFromPipeline: jest.fn(() => templateResponse),
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => ({ mutate: jest.fn() })),
   useGetInputSetsListForPipeline: jest.fn(() => getMockFor_useGetInputSetsListForPipeline()),
   useCreateInputSetForPipeline: jest.fn(() => ({ mutate: mockCreateInputSet })),
@@ -74,14 +86,14 @@ describe('Retry Pipeline tests', () => {
   })
 
   test('toggle between visual and yaml mode', async () => {
-    const { container, getByText, queryAllByText } = render(
+    const { getByText, queryAllByText } = render(
       <TestWrapper>
         <RetryPipeline {...commonProps} />
       </TestWrapper>
     )
     fireEvent.click(getByText('YAML'))
-    const editorDiv = container.querySelector('.editor')
-    await waitFor(() => expect(editorDiv).toBeTruthy())
+    const noExecutionText = getByText('pipeline.inputSets.noRuntimeInputsWhileExecution')
+    expect(noExecutionText).toBeDefined()
 
     fireEvent.click(getByText('VISUAL'))
     await waitFor(() => expect(queryAllByText('pipeline.retryPipeline')[0]).toBeInTheDocument())
@@ -173,14 +185,26 @@ describe('Retry Pipeline tests', () => {
   })
 
   test('should not allow submit if form is incomplete', async () => {
-    const { container, getByText, queryByText } = render(
+    const { container, getByText } = render(
       <TestWrapper>
         <RetryPipeline {...commonProps} />
       </TestWrapper>
     )
-    // Navigate to 'Provide Values'
-    fireEvent.click(getByText('pipeline.pipelineInputPanel.provide'))
-    await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
+    const retryStageInfo = await findByText(container, 'pipeline.stagetoRetryFrom')
+    expect(retryStageInfo).toBeDefined()
+
+    await waitFor(() => expect(container.querySelector('.bp3-popover-target')).toBeTruthy())
+    await fillAtForm([
+      {
+        container,
+        type: InputTypes.SELECT,
+        fieldId: 'selectRetryStage',
+        value: 'stage1'
+      }
+    ])
+
+    await waitFor(() => expect(getByText('stage1')).toBeTruthy())
+    fireEvent.click(getByText('stage1'))
 
     // Submit the incomplete form
     const runButton = container.querySelector('button[type="submit"]')
@@ -231,5 +255,50 @@ describe('Retry Pipeline tests', () => {
 
     // Expect the input set save API to be called
     await waitFor(() => expect(mockCreateInputSet).toBeCalled())
+  })
+
+  test('Skip Preflight Check should be disabled and required git details should appear when pipeline is Git Synced', async () => {
+    const TEST_PATH = routes.toExecutionPipelineView({
+      ...accountPathProps,
+      ...orgPathProps,
+      ...modulePathProps,
+      ...pipelinePathProps,
+      ...executionPathProps
+    })
+    const TEST_PATH_PARAMS = {
+      accountId: 'accountId',
+      orgIdentifier: 'default',
+      projectIdentifier: 'projectId',
+      module: 'cd',
+      pipelineIdentifier: 'pipelineId',
+      executionIdentifier: 'executionId',
+      source: 'executions'
+    }
+    const QUERY_PARAMS = {
+      connectorRef: 'testConnectorRef',
+      repoName: 'testRepo',
+      branch: 'testBranch',
+      storeType: StoreType.REMOTE
+    }
+
+    const { getByText } = render(
+      <TestWrapper
+        path={TEST_PATH}
+        pathParams={TEST_PATH_PARAMS}
+        queryParams={QUERY_PARAMS}
+        defaultAppStoreValues={{ supportingGitSimplification: true }}
+      >
+        <RetryPipeline {...commonProps} params={{ ...commonProps.params, ...QUERY_PARAMS }} />
+      </TestWrapper>
+    )
+
+    const skipPreflightCheckboxParent = getByText('pre-flight-check.skipCheckBtn').parentElement as HTMLElement
+    expect(skipPreflightCheckboxParent).toBeInTheDocument()
+    const allCheckboxes = within(skipPreflightCheckboxParent).getAllByRole('checkbox')
+    const skipPreFlightCheck = allCheckboxes[0]
+    expect(skipPreFlightCheck).toBeDisabled()
+
+    expect(getByText('testRepo')).toBeInTheDocument()
+    expect(getByText('testBranch')).toBeInTheDocument()
   })
 })

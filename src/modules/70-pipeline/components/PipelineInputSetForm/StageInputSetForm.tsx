@@ -75,7 +75,7 @@ import { ConditionalExecutionForm, StrategyForm } from './StageAdvancedInputSetF
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '../AbstractSteps/Step'
 import { OsTypes, ArchTypes, CIBuildInfrastructureType } from '../../utils/constants'
-import EnvironmentsInputSetForm from './EnvironmentsInputSetForm'
+import EnvironmentsInputSetForm from './EnvironmentsInputSetForm/EnvironmentsInputSetForm'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
 
@@ -1042,11 +1042,9 @@ export function StageInputSetFormInternal({
         deploymentStageTemplate={deploymentStageTemplate}
         allowableTypes={
           scope === Scope.PROJECT
-            ? ((allowableTypes as MultiTypeInputType[])?.filter(
-                item => item !== MultiTypeInputType.EXPRESSION
-              ) as AllowedTypes)
+            ? allowableTypes
             : ((allowableTypes as MultiTypeInputType[])?.filter(
-                item => item !== MultiTypeInputType.FIXED && item !== MultiTypeInputType.EXPRESSION
+                item => item !== MultiTypeInputType.FIXED
               ) as AllowedTypes)
         }
         path={path}

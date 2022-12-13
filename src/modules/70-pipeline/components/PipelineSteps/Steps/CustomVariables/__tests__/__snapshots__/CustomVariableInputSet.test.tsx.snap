@@ -172,7 +172,7 @@ exports[`<CustomVariableInputSet /> tests renders correctly 1`] = `
               >
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withRightIcon"
-                  id="configureOptions_variables[1].value"
+                  id="configureOptions_var2"
                   tabindex="0"
                   type="button"
                 >
@@ -369,7 +369,7 @@ exports[`<CustomVariableInputSet /> tests renders correctly 1`] = `
               >
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withRightIcon"
-                  id="configureOptions_variables[3].value"
+                  id="configureOptions_var4"
                   tabindex="0"
                   type="button"
                 >

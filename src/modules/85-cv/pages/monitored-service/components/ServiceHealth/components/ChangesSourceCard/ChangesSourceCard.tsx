@@ -15,7 +15,7 @@ import { Ticker, TickerVerticalAlignment } from '@common/components/Ticker/Ticke
 import { useToaster } from '@common/components'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useGetMonitoredServiceChangeEventSummary } from 'services/cv'
-import { numberFormatter } from '@cd/components/Services/common'
+import { numberFormatter } from '@common/utils/utils'
 import type { ChangeSourceCardData, ChangeSourceCardInterface } from './ChangesSourceCard.types'
 import TickerValue from './components/TickerValue/TickerValue'
 import { calculateChangePercentage, getTickerColor } from './ChangesSourceCard.utils'
@@ -24,19 +24,26 @@ import ChangesSourceLoading from './components/ChangesSourceLoading/ChangesSourc
 import css from './ChangesSourceCard.module.scss'
 
 export default function ChangeSourceCard(props: ChangeSourceCardInterface): JSX.Element {
-  const { startTime, endTime, monitoredServiceIdentifier } = props
+  const { startTime, endTime, monitoredServiceIdentifiers, monitoredServiceIdentifier } = props
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
+
+  const monitoredServiceParams = monitoredServiceIdentifier
+    ? { monitoredServiceIdentifier: monitoredServiceIdentifier }
+    : { monitoredServiceIdentifiers }
 
   const { data, loading, error } = useGetMonitoredServiceChangeEventSummary({
     queryParams: {
       accountId,
       orgIdentifier,
       projectIdentifier,
-      monitoredServiceIdentifier,
+      ...monitoredServiceParams,
       startTime,
       endTime
+    },
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
     }
   })
 

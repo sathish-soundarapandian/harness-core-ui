@@ -856,6 +856,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
       intent={intent}
     >
       <ReferenceSelect<ConnectorReferenceDTO>
+        selected={selectedValue}
         onChange={(connector, scope) => {
           props.onChange?.(connector, scope)
         }}

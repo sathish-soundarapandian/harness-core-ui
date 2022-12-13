@@ -6,6 +6,7 @@
  */
 
 import React, { useState } from 'react'
+import { isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import {
@@ -14,6 +15,7 @@ import {
   Button,
   ButtonVariation,
   Container,
+  FormError,
   Formik,
   FormikForm,
   FormInput,
@@ -120,9 +122,9 @@ const ECSRunTaskStepEdit = (
             disabled={readonly}
             onClick={() => {
               if (renderRunTaskRequestDefinition) {
-                formik.setFieldValue('spec.runTaskRequestDefinition', {})
+                formik.setFieldValue('spec.runTaskRequestDefinition', undefined)
               } else {
-                formik.setFieldValue('spec.taskDefinition', {})
+                formik.setFieldValue('spec.taskDefinition', undefined)
               }
               setSelectedManifest(null)
             }}
@@ -149,7 +151,21 @@ const ECSRunTaskStepEdit = (
         }}
         validationSchema={Yup.object().shape({
           ...getNameAndIdentifierSchema(getString, stepViewType),
-          timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum'))
+          timeout: getDurationValidationSchema({ minimum: '10s' }).required(
+            getString('validation.timeout10SecMinimum')
+          ),
+          spec: Yup.object().shape({
+            taskDefinition: Yup.object().required(
+              getString('common.validation.fieldIsRequired', {
+                name: getString('cd.steps.ecsRunTaskStep.ecsRunTaskDefinition')
+              })
+            ),
+            runTaskRequestDefinition: Yup.object().required(
+              getString('common.validation.fieldIsRequired', {
+                name: getString('cd.steps.ecsRunTaskStep.runTaskRequestDefinition')
+              })
+            )
+          })
         })}
       >
         {(formik: FormikProps<ECSRunTaskStepInitialValues>) => {
@@ -184,6 +200,12 @@ const ECSRunTaskStepEdit = (
                     {getString('cd.pipelineSteps.serviceTab.manifest.taskDefinition')}
                   </Button>
                 )}
+                {!isEmpty(formik.errors.spec?.taskDefinition) && (
+                  <FormError
+                    name={getString('cd.steps.ecsRunTaskStep.runTaskDefinition')}
+                    errorMessage={formik.errors.spec?.taskDefinition}
+                  ></FormError>
+                )}
               </Container>
               <div className={css.ecsRunTaskRequestDefinitionTitle} data-tooltip-id={`ecsRunTaskRequestDefinition`}>
                 {getString('cd.steps.ecsRunTaskStep.ecsRunTaskRequestDefinition')}
@@ -207,6 +229,12 @@ const ECSRunTaskStepEdit = (
                   >
                     {getString('cd.steps.ecsRunTaskStep.runTaskRequestDefinition')}
                   </Button>
+                )}
+                {!isEmpty(formik.errors.spec?.runTaskRequestDefinition) && (
+                  <FormError
+                    name={getString('cd.steps.ecsRunTaskStep.runTaskDefinition')}
+                    errorMessage={formik.errors.spec?.runTaskRequestDefinition}
+                  ></FormError>
                 )}
               </Container>
               {selectedManifest && (

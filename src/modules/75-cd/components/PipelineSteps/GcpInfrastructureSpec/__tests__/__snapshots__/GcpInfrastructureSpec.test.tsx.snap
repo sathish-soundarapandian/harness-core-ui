@@ -6,7 +6,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view for inputse
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+      class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-right-medium StyledProps--padding-bottom-small"
     >
       <div
         class="formGroup md"
@@ -115,7 +115,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view for inputse
           class="StyledProps--font StyledProps--main"
         >
           <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+            class="Layout--horizontal StyledProps--main"
           >
             <div
               class="bp3-form-group"

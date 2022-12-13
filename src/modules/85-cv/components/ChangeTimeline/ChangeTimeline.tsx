@@ -15,13 +15,7 @@ import { useChangeEventTimeline, useGetMonitoredServiceChangeTimeline } from 'se
 import type { ChangeTimelineProps } from './ChangeTimeline.types'
 import { Timeline } from './components/Timeline/Timeline'
 import { ChangeSourceTypes } from './ChangeTimeline.constants'
-
-import {
-  createChangeInfoCardData,
-  createNoDataMessage,
-  createTimelineSeriesData,
-  getStartAndEndTime
-} from './ChangeTimeline.utils'
+import { createChangeInfoCardData, createTimelineSeriesData, getStartAndEndTime } from './ChangeTimeline.utils'
 import ChangeTimelineError from './components/ChangeTimelineError/ChangeTimelineError'
 
 export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element {
@@ -179,33 +173,15 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
       timelineRows={[
         {
           labelName: getString('deploymentsText'),
-          data: createTimelineSeriesData(ChangeSourceTypes.Deployments, getString, categoryTimeline?.Deployment),
-          noDataMessage: createNoDataMessage(
-            categoryTimeline?.Deployment,
-            ChangeSourceTypes.Deployments,
-            selectedTimePeriod?.label,
-            getString
-          )
+          data: createTimelineSeriesData(ChangeSourceTypes.Deployments, getString, categoryTimeline?.Deployment)
         },
         {
           labelName: getString('infrastructureText'),
-          data: createTimelineSeriesData(ChangeSourceTypes.Infrastructure, getString, categoryTimeline?.Infrastructure),
-          noDataMessage: createNoDataMessage(
-            categoryTimeline?.Infrastructure,
-            ChangeSourceTypes.Infrastructure,
-            selectedTimePeriod?.label,
-            getString
-          )
+          data: createTimelineSeriesData(ChangeSourceTypes.Infrastructure, getString, categoryTimeline?.Infrastructure)
         },
         {
           labelName: getString('cv.changeSource.tooltip.incidents'),
-          data: createTimelineSeriesData(ChangeSourceTypes.Incidents, getString, categoryTimeline?.Alert),
-          noDataMessage: createNoDataMessage(
-            categoryTimeline?.Alert,
-            ChangeSourceTypes.Incidents,
-            selectedTimePeriod?.label,
-            getString
-          )
+          data: createTimelineSeriesData(ChangeSourceTypes.Incidents, getString, categoryTimeline?.Alert)
         }
       ]}
       timestamps={[startTimeRoundedOffToNearest30min, endTimeRoundedOffToNearest30min]}

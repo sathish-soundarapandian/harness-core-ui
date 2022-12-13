@@ -20,8 +20,7 @@ import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import { UserLabel } from '@common/components'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
@@ -42,6 +41,22 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String as LocaleString } from 'framework/strings'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import AuditTrailFactory from '@audit-trail/factories/AuditTrailFactory'
+import {
+  getActiveUsageNumber,
+  getPercentageNumber,
+  isFeatureCountActive,
+  isFeatureLimitBreachedIncludesExceeding,
+  isFeatureLimitMet,
+  isFeatureOveruseActive,
+  isFeatureWarningActive,
+  isFeatureWarningActiveIncludesLimit
+} from '@common/layouts/FeatureBanner'
+import { BannerType } from '@common/layouts/Constants'
+import featureFactory from 'framework/featureStore/FeaturesFactory'
+import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
+import { RedirectToModuleTrialHomeFactory, RedirectToSubscriptionsFactory } from '@common/Redirects'
+import { ModuleName } from 'framework/types/ModuleName'
 
 const STOSideNavProps: SidebarContext = {
   navComponent: STOSideNav,
@@ -52,6 +67,113 @@ const STOSideNavProps: SidebarContext = {
 const moduleParams: ModulePathParams = {
   module: ':module(sto)'
 }
+
+// License
+
+const licenseRedirectData: LicenseRedirectProps = {
+  licenseStateName: LICENSE_STATE_NAMES.STO_LICENSE_STATE,
+  startTrialRedirect: RedirectToModuleTrialHomeFactory(ModuleName.STO),
+  expiredTrialRedirect: RedirectToSubscriptionsFactory(ModuleName.STO)
+}
+
+featureFactory.registerFeaturesByModule('sto', {
+  features: [FeatureIdentifier.MAX_TOTAL_SCANS, FeatureIdentifier.MAX_SCANS_PER_MONTH, FeatureIdentifier.DEVELOPERS],
+  renderMessage: (props, getString, additionalLicenseProps = {}) => {
+    const {
+      isFreeEdition: isSTOFree,
+      isTeamEdition: isSTOTeam,
+      isEnterpriseEdition: isSTOEnterprise
+    } = additionalLicenseProps
+    const isTeamOrEnterprise = isSTOEnterprise || isSTOTeam
+    const featuresMap = props.features
+    const maxTotalScansFeatureDetail = featuresMap.get(FeatureIdentifier.MAX_TOTAL_SCANS) // tested both
+    const maxScansPerMonthFeatureDetail = featuresMap.get(FeatureIdentifier.MAX_SCANS_PER_MONTH)
+    const activeDevelopersFeatureDetail = featuresMap.get(FeatureIdentifier.DEVELOPERS)
+
+    // Check for limit breach
+    const isMaxScansPerMonthBreached = isFeatureLimitBreachedIncludesExceeding(maxScansPerMonthFeatureDetail)
+    let limitBreachMessageString = ''
+    if (isMaxScansPerMonthBreached) {
+      limitBreachMessageString = getString('pipeline.featureRestriction.maxScansPerMonth100PercentLimit')
+    }
+
+    if (limitBreachMessageString) {
+      return {
+        message: () => limitBreachMessageString,
+        bannerType: BannerType.LEVEL_UP
+      }
+    }
+
+    // Checking for limit overuse warning
+    let overuseMessageString = ''
+    const isActiveDevelopersOveruseActive = isFeatureOveruseActive(activeDevelopersFeatureDetail)
+
+    if (isActiveDevelopersOveruseActive && isTeamOrEnterprise) {
+      overuseMessageString = getString('pipeline.featureRestriction.subscriptionExceededLimit')
+    }
+    if (overuseMessageString) {
+      return {
+        message: () => overuseMessageString,
+        bannerType: BannerType.OVERUSE
+      }
+    }
+
+    // Checking for limit usage warning
+    let warningMessageString = ''
+    const isMaxScansPerMonthCountActive = isFeatureCountActive(maxScansPerMonthFeatureDetail)
+    const isMaxTotalScansWarningActive = isFeatureWarningActive(maxTotalScansFeatureDetail)
+    const isMaxTotalScansLimitMet = isFeatureLimitMet(maxTotalScansFeatureDetail)
+    const isActiveDevelopersWarningActive = isFeatureWarningActiveIncludesLimit(activeDevelopersFeatureDetail)
+
+    if (
+      isSTOFree &&
+      isMaxTotalScansLimitMet &&
+      isMaxScansPerMonthCountActive &&
+      typeof maxScansPerMonthFeatureDetail?.featureDetail?.count !== 'undefined'
+    ) {
+      warningMessageString = getString('pipeline.featureRestriction.numMonthlyBuilds', {
+        count: maxScansPerMonthFeatureDetail.featureDetail.count,
+        limit: maxScansPerMonthFeatureDetail.featureDetail.limit
+      })
+    } else if (
+      isSTOFree &&
+      isMaxTotalScansWarningActive &&
+      maxTotalScansFeatureDetail?.featureDetail?.count &&
+      maxTotalScansFeatureDetail.featureDetail.limit
+    ) {
+      const usagePercent = getActiveUsageNumber(maxTotalScansFeatureDetail)
+
+      warningMessageString = getString('pipeline.featureRestriction.maxTotalBuilds90PercentLimit', {
+        usagePercent
+      })
+    } else if (
+      isActiveDevelopersWarningActive &&
+      activeDevelopersFeatureDetail?.featureDetail?.count &&
+      activeDevelopersFeatureDetail.featureDetail.limit &&
+      isTeamOrEnterprise
+    ) {
+      const usagePercent = getPercentageNumber(maxTotalScansFeatureDetail)
+
+      warningMessageString = getString('pipeline.featureRestriction.subscription90PercentLimit', { usagePercent })
+    }
+
+    if (warningMessageString) {
+      return {
+        message: () => warningMessageString,
+        bannerType: BannerType.INFO
+      }
+    }
+
+    // If neither of limit breach/ warning/ overuse needs to be shown, return with an empty string.
+    // This will ensure no banner is shown
+    return {
+      message: () => '',
+      bannerType: BannerType.LEVEL_UP
+    }
+  }
+})
+
+// RBAC
 
 RbacFactory.registerResourceCategory(ResourceCategory.STO, {
   icon: 'sto-color-filled',
@@ -98,6 +220,8 @@ RbacFactory.registerResourceTypeHandler(ResourceType.STO_ISSUE, {
   }
 })
 
+// Audit Trail
+
 AuditTrailFactory.registerResourceHandler('STO_TARGET', {
   moduleIcon: {
     name: 'sto-grey'
@@ -139,24 +263,20 @@ const RedirectToProjectOverviewPage = (): React.ReactElement => {
   }
 }
 
+const RemoteSTOApp = lazy(() => import(`stoV2/App`))
+
 const RouteDestinations: React.FC = () => {
-  const isV2 = useFeatureFlag(FeatureFlag.STO_API_V2)
   const { NG_SETTINGS } = useFeatureFlags()
-  const RemoteSTOApp = lazy(() => (isV2 ? import(`stoV2/App`) : import(`sto/App`)))
 
   return (
     <>
-      <RouteWithLayout
-        exact
-        // licenseRedirectData={licenseRedirectData}
-        path={routes.toSTO({ ...accountPathProps })}
-      >
+      <RouteWithLayout exact licenseRedirectData={licenseRedirectData} path={routes.toSTO({ ...accountPathProps })}>
         <RedirectToProjectOverviewPage />
       </RouteWithLayout>
 
       <RouteWithLayout
         exact
-        // licenseRedirectData={licenseRedirectData}
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={STOSideNavProps}
         path={[
           routes.toSTOOverview({ ...accountPathProps }),
@@ -168,7 +288,7 @@ const RouteDestinations: React.FC = () => {
 
       <RouteWithLayout
         exact
-        // licenseRedirectData={licenseRedirectData}
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={STOSideNavProps}
         path={[
           routes.toSTOTargets({ ...accountPathProps }),
@@ -180,7 +300,7 @@ const RouteDestinations: React.FC = () => {
 
       <RouteWithLayout
         exact
-        // licenseRedirectData={licenseRedirectData}
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={STOSideNavProps}
         path={[
           routes.toSTOSecurityReview({ ...accountPathProps }),
@@ -195,54 +315,54 @@ const RouteDestinations: React.FC = () => {
           pipelineStudioComponent={PipelineStudio}
           pipelineDeploymentListComponent={CIPipelineDeploymentList}
           moduleParams={moduleParams}
-          // licenseRedirectData={licenseRedirectData}
+          licenseRedirectData={licenseRedirectData}
           sidebarProps={STOSideNavProps}
         />
         <AccessControlRouteDestinations
           moduleParams={moduleParams}
-          // licenseRedirectData={licenseRedirectData}
+          licenseRedirectData={licenseRedirectData}
           sidebarProps={STOSideNavProps}
         />
         <ConnectorRouteDestinations
           moduleParams={moduleParams}
-          // licenseRedirectData={licenseRedirectData}
+          licenseRedirectData={licenseRedirectData}
           sidebarProps={STOSideNavProps}
         />
         {NG_SETTINGS && (
           <DefaultSettingsRouteDestinations
             moduleParams={moduleParams}
-            // licenseRedirectData={licenseRedirectData}
+            licenseRedirectData={licenseRedirectData}
             sidebarProps={STOSideNavProps}
           />
         )}
         <SecretRouteDestinations
           moduleParams={moduleParams}
-          // licenseRedirectData={licenseRedirectData}
+          licenseRedirectData={licenseRedirectData}
           sidebarProps={STOSideNavProps}
         />
         <VariableRouteDestinations
           moduleParams={moduleParams}
-          // licenseRedirectData={licenseRedirectData}
+          licenseRedirectData={licenseRedirectData}
           sidebarProps={STOSideNavProps}
         />
         <DelegateRouteDestinations
           moduleParams={moduleParams}
-          // licenseRedirectData={licenseRedirectData}
+          licenseRedirectData={licenseRedirectData}
           sidebarProps={STOSideNavProps}
         />
         <TemplateRouteDestinations
           moduleParams={moduleParams}
-          // licenseRedirectData={licenseRedirectData}
+          licenseRedirectData={licenseRedirectData}
           sidebarProps={STOSideNavProps}
         />
         <GitSyncRouteDestinations
           moduleParams={moduleParams}
-          // licenseRedirectData={licenseRedirectData}
+          licenseRedirectData={licenseRedirectData}
           sidebarProps={STOSideNavProps}
         />
         <TriggersRouteDestinations
           moduleParams={moduleParams}
-          // licenseRedirectData={licenseRedirectData}
+          licenseRedirectData={licenseRedirectData}
           sidebarProps={STOSideNavProps}
         />
         <GovernanceRouteDestinations

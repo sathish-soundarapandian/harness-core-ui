@@ -3,15 +3,15 @@
 exports[`CreatePreview should render CalenderValuePreview with empty value 1`] = `
 <div>
   <div
-    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+    class="StyledProps--font StyledProps--main"
   >
     <p
-      class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
     >
       cv.periodLength
     </p>
     <p
-      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
     >
       
     </p>
@@ -22,15 +22,15 @@ exports[`CreatePreview should render CalenderValuePreview with empty value 1`] =
 exports[`CreatePreview should render CalenderValuePreview with init value 1`] = `
 <div>
   <div
-    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+    class="StyledProps--font StyledProps--main"
   >
     <p
-      class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
     >
       cv.periodLength
     </p>
     <p
-      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
     >
       
     </p>
@@ -49,11 +49,13 @@ exports[`CreatePreview should render LabelAndValue with empty values 1`] = `
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+      style="width: 100px;"
+      title=""
     >
       
     </p>
     <p
-      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+      class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
     >
       
     </p>

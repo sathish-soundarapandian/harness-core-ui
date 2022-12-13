@@ -56,8 +56,7 @@ const mockedFormValues = {
         type: 'Percentage',
         spec: {
           greaterThan: 87
-        },
-        criteriaPercentageType: 'greaterThan'
+        }
       },
       metricType: 'Custom',
       metricName: 'test1'

@@ -24,9 +24,11 @@ import {
   ButtonVariation,
   ButtonSize,
   FormError,
-  PageSpinner
+  PageSpinner,
+  HarnessDocTooltip
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
+import { Divider } from '@blueprintjs/core'
 import { getRequestOptions } from 'framework/app/App'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
@@ -68,6 +70,7 @@ import {
   DEFAULT_HARNESS_KMS,
   AccessTokenPermissionsDocLinks,
   GitProviderIcons,
+  OtherProviderOptions,
   NonGitOption
 } from './Constants'
 import { getOAuthConnectorPayload } from '../../../utils/HostedBuildsUtils'
@@ -115,7 +118,7 @@ const SelectGitProviderRef = (
   const [authMethod, setAuthMethod] = useState<GitAuthenticationMethod>()
   const [testConnectionStatus, setTestConnectionStatus] = useState<TestStatus>(TestStatus.NOT_INITIATED)
   const formikRef = useRef<FormikContextType<SelectGitProviderInterface>>()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId } = useParams<ProjectPathProps>()
   const [testConnectionErrors, setTestConnectionErrors] = useState<ResponseMessage[]>()
   const [connector, setConnector] = useState<ConnectorInfoDTO>()
   const [secret, setSecret] = useState<SecretDTOV2>()
@@ -143,9 +146,7 @@ const SelectGitProviderRef = (
               getOAuthConnectorPayload({
                 tokenRef: tokenRef,
                 refreshTokenRef: refreshTokenRef ? refreshTokenRef : '',
-                gitProviderType: gitProvider.type as ConnectorInfoDTO['type'],
-                orgIdentifier,
-                projectIdentifier
+                gitProviderType: gitProvider.type as ConnectorInfoDTO['type']
               }),
               'connector.spec.url',
               getGitUrl(getString, gitProvider?.type as ConnectorInfoDTO['type'])
@@ -268,7 +269,9 @@ const SelectGitProviderRef = (
   }, [gitProvider, authMethod, selectedHosting])
 
   useEffect(() => {
-    if (
+    if (gitProvider?.type === NonGitOption.OTHER) {
+      enableNextBtn()
+    } else if (
       authMethod &&
       [
         GitAuthenticationMethod.AccessToken,
@@ -288,7 +291,7 @@ const SelectGitProviderRef = (
         disableNextBtn()
       }
     }
-  }, [authMethod, oAuthStatus, testConnectionStatus])
+  }, [authMethod, disableNextBtn, enableNextBtn, gitProvider?.type, oAuthStatus, testConnectionStatus])
 
   const setForwardRef = ({
     values,
@@ -876,14 +879,41 @@ const SelectGitProviderRef = (
                           className={cx(
                             { [css.githubIcon]: item.icon === GitProviderIcons.get(Connectors.GITHUB) },
                             { [css.gitlabIcon]: item.icon === GitProviderIcons.get(Connectors.GITLAB) },
-                            { [css.bitbucketIcon]: item.icon === GitProviderIcons.get(Connectors.BITBUCKET) },
-                            { [css.genericGitIcon]: item.icon === GitProviderIcons.get(Connectors.GIT) }
+                            { [css.bitbucketIcon]: item.icon === GitProviderIcons.get(Connectors.BITBUCKET) }
                           )}
                         />
                         <Text font={{ variation: FontVariation.SMALL_SEMI }} padding={{ top: 'small' }}>
                           {getString(item.label)}
                         </Text>
                       </Layout.Vertical>
+                    )}
+                    onChange={handleGitProviderSelection}
+                  />
+                  <Divider />
+                  <CardSelect
+                    data={OtherProviderOptions}
+                    selected={gitProvider}
+                    cornerSelected={true}
+                    className={css.icons}
+                    cardClassName={css.otherGitProviderCard}
+                    renderItem={(item: GitProvider) => (
+                      <>
+                        <div className={css.toolTipArea}>
+                          <HarnessDocTooltip tooltipId="otherGit" useStandAlone={false} />
+                        </div>
+                        <div className={css.iconArea}>
+                          <Icon
+                            name={item.icon}
+                            size={30}
+                            flex
+                            className={cx({ [css.genericGitIcon]: item.icon === GitProviderIcons.get(Connectors.GIT) })}
+                            color="black"
+                          />
+                          <Text font={{ variation: FontVariation.SMALL_SEMI }} padding={{ top: 'small' }}>
+                            {getString(item.label)}
+                          </Text>
+                        </div>
+                      </>
                     )}
                     onChange={handleGitProviderSelection}
                   />
@@ -933,7 +963,7 @@ const SelectGitProviderRef = (
                               if (gitProvider?.type) {
                                 try {
                                   const { headers } = getRequestOptions()
-                                  const oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${gitProvider.type.toLowerCase()}&accountId=${accountId}&orgId=${orgIdentifier}&projectId=${projectIdentifier}`
+                                  const oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${gitProvider.type.toLowerCase()}&accountId=${accountId}`
                                   const response = await fetch(oauthRedirectEndpoint, {
                                     headers
                                   })

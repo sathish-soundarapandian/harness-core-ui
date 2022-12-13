@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`landing dashboard page tests time range update 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <h2
+        class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold"
+        level="2"
+      >
+        projectsOrgs.landingDashboard.dashboardTitle
+      </h2>
+    </div>
+    <button
+      data-testid="updateTimeRange"
+    />
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main container StyledProps--padding-top-huge StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-flex-start"
+    >
+      <div
+        class="Layout--vertical StyledProps--main left"
+      >
+        <div
+          data-testid="timeRangeFrom"
+        >
+          dummyRangeOne
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

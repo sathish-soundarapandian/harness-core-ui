@@ -33,3 +33,28 @@ export const createResponseMock = {
   metaData: null,
   correlationId: 'asdasd123'
 }
+
+export const createResponseFolderMock = {
+  status: 'SUCCESS',
+  data: {
+    accountIdentifier: 'a1',
+    orgIdentifier: 'default',
+    projectIdentifier: 'test1',
+    identifier: 'folder112',
+    name: 'folder112',
+    type: 'FOLDER',
+    parentIdentifier: 'Root',
+    path: '/folder112',
+    createdBy: {
+      name: 'automation ng',
+      email: 'a1@ha.io'
+    },
+    lastModifiedBy: {
+      name: 'automation ng',
+      email: 'a1@ha.io'
+    },
+    lastModifiedAt: 1668498597208
+  },
+  metaData: null,
+  correlationId: 't5'
+}

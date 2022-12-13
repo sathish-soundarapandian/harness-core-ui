@@ -195,6 +195,10 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
           }}
           type={'ServiceNow'}
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+          templateProps={{
+            isTemplatizedView: true,
+            templateValue: template?.spec?.connectorRef
+          }}
         />
       ) : null}
 

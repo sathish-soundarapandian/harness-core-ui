@@ -4,6 +4,7 @@ exports[`test cases for Budgets List Page should be able to render the budget li
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -187,6 +188,7 @@ exports[`test cases for Budgets List Page should be able to render the budget li
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--margin-large"

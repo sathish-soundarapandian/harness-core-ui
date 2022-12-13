@@ -26,12 +26,11 @@ export interface SelectItem {
   value: string
 }
 
-interface CriteriaPercentageType {
+export interface CriteriaPercentageType {
   criteriaPercentageType?: CriteriaThresholdValues
 }
 
 export type MetricThresholdType = MetricThreshold & {
-  criteria: MetricThreshold['criteria'] & CriteriaPercentageType
   metricType?: string
   spec?: MetricThresholdSpec & FailMetricThresholdSpec
 }
@@ -41,7 +40,6 @@ export interface ThresholdCriteriaPropsType {
   index: number
   thresholdTypeName: ThresholdsPropertyNames
   replaceFn: (value: MetricThresholdType) => void
-  criteriaPercentageType?: CriteriaThresholdValues
 }
 
 export type ThresholdSelectProps = {
@@ -96,3 +94,12 @@ export interface MetricThresholdsState {
 }
 
 export type ThresholdObject = Partial<Record<ThresholdsPropertyNames, MetricThresholdType[]>>
+
+export interface HandleCriteriaPercentageUpdateParams {
+  thresholds: MetricThresholdType[]
+  index: number
+  isIgnoreThresholdTab: boolean
+  isFailFastThresholdTab: boolean
+  selectedValue: MetricThresholdCriteria['type']
+  replaceFn: (value: MetricThresholdType) => void
+}

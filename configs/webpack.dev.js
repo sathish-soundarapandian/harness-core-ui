@@ -124,10 +124,10 @@ const config = {
     new HTMLWebpackPlugin({
       template: 'src/index.html',
       filename: 'index.html',
+      publicPath: '/',
       minify: false,
       templateParameters: {
         __DEV__: true,
-        __NON_CDN_BASE_PATH__: '/',
         HELP_PANEL_ACCESS_TOKEN_DEV: HELP_PANEL_ACCESS_TOKEN,
         HELP_PANEL_SPACE_DEV: HELP_PANEL_SPACE,
         HELP_PANEL_ENVIRONMENT_DEV: HELP_PANEL_ENVIRONMENT,

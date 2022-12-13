@@ -29,13 +29,13 @@ describe('Environment Tab', () => {
         >
           <a
             class="TabNavigation--tags TabNavigation--small"
-            href="/account/undefined/undefined/orgs/undefined/projects/undefined/environment"
+            href="/account/undefined/environment"
           >
             environment
           </a>
           <a
             class="TabNavigation--tags TabNavigation--small"
-            href="/account/undefined/undefined/orgs/undefined/projects/undefined/environment-group"
+            href="/account/undefined/environment-group"
           >
             common.environmentGroups.label
           </a>
@@ -57,7 +57,7 @@ describe('Environment Tab', () => {
         >
           <a
             class="TabNavigation--tags TabNavigation--small"
-            href="/account/undefined/undefined/orgs/undefined/projects/undefined/environment"
+            href="/account/undefined/environment"
           >
             environment
           </a>

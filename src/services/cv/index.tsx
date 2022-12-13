@@ -12,71 +12,6 @@ import { Get, GetProps, useGet, UseGetProps, Mutate, MutateProps, useMutate, Use
 
 import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from '../config'
 export const SPEC_VERSION = '1.0'
-export interface Activity {
-  accountId: string
-  activityEndTime?: number
-  activityName?: string
-  activitySourceId?: string
-  activityStartTime: number
-  analysisStatus?:
-    | 'IGNORED'
-    | 'NOT_STARTED'
-    | 'VERIFICATION_PASSED'
-    | 'VERIFICATION_FAILED'
-    | 'ERROR'
-    | 'ABORTED'
-    | 'IN_PROGRESS'
-  changeSourceIdentifier?: string
-  createdAt?: number
-  eventTime?: number
-  lastUpdatedAt?: number
-  monitoredServiceIdentifier?: string
-  orgIdentifier: string
-  projectIdentifier: string
-  tags?: string[]
-  type: 'DEPLOYMENT' | 'CONFIG' | 'KUBERNETES' | 'HARNESS_CD' | 'PAGER_DUTY' | 'HARNESS_CD_CURRENT_GEN'
-  uuid?: string
-  validUntil?: string
-  verificationIteration?: number
-  verificationJobInstanceIds?: string[]
-  verificationJobRuntimeDetails?: VerificationJobRuntimeDetails[]
-  verificationJobs?: VerificationJob[]
-  verificationSummary?: ActivityVerificationSummary
-}
-
-export interface ActivityVerificationSummary {
-  aborted?: number
-  aggregatedStatus?:
-    | 'IGNORED'
-    | 'NOT_STARTED'
-    | 'VERIFICATION_PASSED'
-    | 'VERIFICATION_FAILED'
-    | 'ERROR'
-    | 'ABORTED'
-    | 'IN_PROGRESS'
-  durationMs?: number
-  errors?: number
-  failed?: number
-  notStarted?: number
-  passed?: number
-  progress?: number
-  progressPercentage?: number
-  remainingTimeMs?: number
-  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
-  startTime?: number
-  total?: number
-  verficationStatusMap?: {
-    [key: string]:
-      | 'IGNORED'
-      | 'NOT_STARTED'
-      | 'VERIFICATION_PASSED'
-      | 'VERIFICATION_FAILED'
-      | 'ERROR'
-      | 'ABORTED'
-      | 'IN_PROGRESS'
-  }
-}
-
 export interface AdditionalInfo {
   type?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO'
 }
@@ -87,94 +22,12 @@ export interface AnalysisDTO {
   riskProfile?: RiskProfile
 }
 
-export interface AnalysisInput {
-  controlHosts?: string[]
-  endTime?: number
-  learningEngineTaskType?:
-    | 'SERVICE_GUARD_TIME_SERIES'
-    | 'LOG_CLUSTER'
-    | 'SERVICE_GUARD_LOG_ANALYSIS'
-    | 'CANARY_LOG_ANALYSIS'
-    | 'TEST_LOG_ANALYSIS'
-    | 'TIME_SERIES_CANARY'
-    | 'CANARY_DEPLOYMENT_TIME_SERIES'
-    | 'BEFORE_AFTER_DEPLOYMENT_TIME_SERIES'
-    | 'SERVICE_GUARD_FEEDBACK_ANALYSIS'
-    | 'TIME_SERIES_LOAD_TEST'
-  startTime?: number
-  testHosts?: string[]
-  timeRange?: TimeRange
-  verificationJobInstanceId?: string
-  verificationTaskId?: string
-}
-
 export interface AnalysisResult {
   count?: number
   label?: number
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
   riskScore?: number
   tag?: 'KNOWN' | 'UNEXPECTED' | 'UNKNOWN'
-}
-
-export interface AnalysisState {
-  inputs?: AnalysisInput
-  retryCount?: number
-  status?:
-    | 'CREATED'
-    | 'RUNNING'
-    | 'SUCCESS'
-    | 'RETRY'
-    | 'TRANSITION'
-    | 'IGNORED'
-    | 'TIMEOUT'
-    | 'FAILED'
-    | 'COMPLETED'
-    | 'TERMINATED'
-  type?:
-    | 'HOST_SAMPLING_STATE'
-    | 'CANARY_TIME_SERIES'
-    | 'DEPLOYMENT_LOG_ANALYSIS'
-    | 'SERVICE_GUARD_LOG_ANALYSIS'
-    | 'SERVICE_GUARD_TIME_SERIES'
-    | 'TEST_TIME_SERIES'
-    | 'DEPLOYMENT_LOG_CLUSTER'
-    | 'PRE_DEPLOYMENT_LOG_CLUSTER'
-    | 'SERVICE_GUARD_LOG_CLUSTER'
-    | 'SERVICE_GUARD_TREND_ANALYSIS'
-    | 'SLI_METRIC_ANALYSIS'
-    | 'DEPLOYMENT_TIME_SERIES_ANALYSIS_STATE'
-    | 'COMPOSOITE_SLO_METRIC_ANALYSIS'
-}
-
-export interface AnalysisStateMachine {
-  accountId?: string
-  analysisEndTime?: number
-  analysisStartTime?: number
-  completedStates?: AnalysisState[]
-  createdAt?: number
-  currentState?: AnalysisState
-  endTime?: number
-  lastUpdatedAt?: number
-  logLevel?: 'INFO' | 'WARN' | 'ERROR'
-  nextAttemptTime?: number
-  startTime?: number
-  stateMachineIgnoreMinutes: number
-  status?:
-    | 'CREATED'
-    | 'RUNNING'
-    | 'SUCCESS'
-    | 'RETRY'
-    | 'TRANSITION'
-    | 'IGNORED'
-    | 'TIMEOUT'
-    | 'FAILED'
-    | 'COMPLETED'
-    | 'TERMINATED'
-  totalRetryCount?: number
-  totalRetryCountToBePropagated?: number
-  uuid?: string
-  validUntil?: string
-  verificationTaskId?: string
 }
 
 export interface AnalyzedLogDataDTO {
@@ -650,83 +503,32 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   awsAccountId?: string
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
   isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
   billingExportSpec?: BillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
   subscriptionId: string
   tenantId: string
 }
 
 export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
   connectorRef: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
 }
 
-export interface CVConfig {
-  accountId: string
-  category: 'Performance' | 'Errors' | 'Infrastructure'
-  connectorIdentifier: string
-  createNextTaskIteration?: number
-  createdAt?: number
-  demo?: boolean
-  deploymentVerificationEnabled?: boolean
-  eligibleForDemo?: boolean
-  enabled?: boolean
-  firstTimeDataCollectionTimeRange?: TimeRange
-  fullyQualifiedIdentifier?: string
-  identifier: string
-  lastUpdatedAt?: number
-  liveMonitoringEnabled?: boolean
-  monitoredServiceIdentifier?: string
-  monitoringSourceName: string
-  orgIdentifier: string
-  productName?: string
-  projectIdentifier: string
-  slienabled?: boolean
-  type?:
-    | 'APP_DYNAMICS'
-    | 'SPLUNK'
-    | 'SPLUNK_METRIC'
-    | 'STACKDRIVER'
-    | 'STACKDRIVER_LOG'
-    | 'KUBERNETES'
-    | 'NEW_RELIC'
-    | 'PROMETHEUS'
-    | 'DATADOG_METRICS'
-    | 'DATADOG_LOG'
-    | 'ERROR_TRACKING'
-    | 'DYNATRACE'
-    | 'CUSTOM_HEALTH_METRIC'
-    | 'CUSTOM_HEALTH_LOG'
-    | 'ELASTICSEARCH'
-    | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
-  uuid?: string
-  verificationTaskTags?: {
-    [key: string]: string
-  }
-  verificationType: 'TIME_SERIES' | 'LOG'
+export interface CVLicenseUsageDTO {
+  accountIdentifier?: string
+  activeServices?: UsageDataDTO
+  module?: string
+  timestamp?: number
 }
 
 export type CVNGEmailChannelSpec = CVNGNotificationChannelSpec & {
   recipients?: string[]
   userGroups?: string[]
-}
-
-export interface CVNGLog {
-  accountId?: string
-  endTime?: number
-  lastUpdatedAt?: number
-  logRecords?: CVNGLogRecord[]
-  logType?: 'ApiCallLog' | 'ExecutionLog'
-  startTime?: number
-  traceableId?: string
-  traceableType?: 'ONBOARDING' | 'VERIFICATION_TASK'
-  uuid?: string
 }
 
 export interface CVNGLogDTO {
@@ -738,12 +540,6 @@ export interface CVNGLogDTO {
   traceableId?: string
   traceableType?: 'ONBOARDING' | 'VERIFICATION_TASK'
   type?: 'ApiCallLog' | 'ExecutionLog'
-}
-
-export interface CVNGLogRecord {
-  createdAt?: number
-  errorLog?: boolean
-  tags?: CVNGLogTag[]
 }
 
 export interface CVNGLogTag {
@@ -774,26 +570,6 @@ export type CVNGPagerDutyChannelSpec = CVNGNotificationChannelSpec & {
 export type CVNGSlackChannelSpec = CVNGNotificationChannelSpec & {
   userGroups?: string[]
   webhookUrl?: string
-}
-
-export interface CVNGStepTask {
-  accountId?: string
-  activityId?: string
-  asyncTaskIteration?: number
-  callbackId?: string
-  createdAt?: number
-  deploymentStartTime?: number
-  deploymentTag?: string
-  environmentIdentifier?: string
-  lastUpdatedAt?: number
-  orgIdentifier?: string
-  projectIdentifier?: string
-  serviceIdentifier?: string
-  skip?: boolean
-  status?: 'IN_PROGRESS' | 'DONE'
-  uuid?: string
-  validUntil?: string
-  verificationJobInstanceId?: string
 }
 
 export type CalenderSLOTargetSpec = SLOTargetSpec & {
@@ -988,6 +764,7 @@ export interface ConnectorInfoDTO {
     | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Tas'
     | 'Spot'
 }
 
@@ -1133,28 +910,8 @@ export interface DataCollectionRequest {
     | 'CLOUDWATCH_METRIC_DATA_REQUEST'
     | 'CLOUDWATCH_METRICS_METADATA_REQUEST'
     | 'AWS_GENERIC_DATA_COLLECTION_REQUEST'
-}
-
-export interface DataCollectionTask {
-  accountId?: string
-  createdAt?: number
-  dataCollectionInfo?: DataCollectionInfo
-  dataCollectionWorkerId?: string
-  endTime?: number
-  exception?: string
-  lastPickedAt?: number
-  lastUpdatedAt?: number
-  logLevel?: 'INFO' | 'WARN' | 'ERROR'
-  nextTaskId?: string
-  retryCount?: number
-  stacktrace?: string
-  startTime?: number
-  status?: 'FAILED' | 'QUEUED' | 'RUNNING' | 'WAITING' | 'EXPIRED' | 'SUCCESS' | 'ABORTED'
-  type?: 'SERVICE_GUARD' | 'DEPLOYMENT' | 'SLI'
-  uuid?: string
-  validAfter?: number
-  verificationTaskId?: string
-  workerStatusIteration?: number
+    | 'SUMOLOGIC_METRIC_SAMPLE_DATA'
+    | 'SUMOLOGIC_LOG_SAMPLE_DATA'
 }
 
 export interface DataCollectionTaskDTO {
@@ -1772,6 +1529,8 @@ export interface Error {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2194,6 +1953,8 @@ export interface Failure {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2218,7 +1979,7 @@ export interface GcpBillingExportSpec {
 
 export type GcpCloudCostConnector = ConnectorConfigDTO & {
   billingExportSpec?: GcpBillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
   projectId: string
   serviceAccountEmail: string
 }
@@ -2515,7 +2276,70 @@ export interface HealthSourceDTO {
     | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
   verificationType?: 'TIME_SERIES' | 'LOG'
+}
+
+export interface HealthSourceParams {
+  [key: string]: any
+}
+
+export interface HealthSourceQueryParams {
+  serviceInstanceField?: string
+}
+
+export interface HealthSourceRecordsRequest {
+  connectorIdentifier: string
+  endTime: number
+  healthSourceParams?: HealthSourceParams
+  healthSourceQueryParams?: HealthSourceQueryParams
+  providerType:
+    | 'APP_DYNAMICS'
+    | 'SPLUNK'
+    | 'SPLUNK_METRIC'
+    | 'STACKDRIVER'
+    | 'STACKDRIVER_LOG'
+    | 'KUBERNETES'
+    | 'NEW_RELIC'
+    | 'PROMETHEUS'
+    | 'DATADOG_METRICS'
+    | 'DATADOG_LOG'
+    | 'ERROR_TRACKING'
+    | 'DYNATRACE'
+    | 'CUSTOM_HEALTH_METRIC'
+    | 'CUSTOM_HEALTH_LOG'
+    | 'ELASTICSEARCH'
+    | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
+  query: string
+  startTime: number
+}
+
+export interface HealthSourceRecordsResponse {
+  providerType?:
+    | 'APP_DYNAMICS'
+    | 'SPLUNK'
+    | 'SPLUNK_METRIC'
+    | 'STACKDRIVER'
+    | 'STACKDRIVER_LOG'
+    | 'KUBERNETES'
+    | 'NEW_RELIC'
+    | 'PROMETHEUS'
+    | 'DATADOG_METRICS'
+    | 'DATADOG_LOG'
+    | 'ERROR_TRACKING'
+    | 'DYNATRACE'
+    | 'CUSTOM_HEALTH_METRIC'
+    | 'CUSTOM_HEALTH_LOG'
+    | 'ELASTICSEARCH'
+    | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
+  rawRecords?: { [key: string]: any }[]
 }
 
 export interface HealthSourceSpec {
@@ -2735,6 +2559,9 @@ export interface LearningEngineTask {
     | 'CANARY_DEPLOYMENT_TIME_SERIES'
     | 'BEFORE_AFTER_DEPLOYMENT_TIME_SERIES'
     | 'SERVICE_GUARD_FEEDBACK_ANALYSIS'
+    | 'BEFORE_AFTER_DEPLOYMENT_LOG'
+    | 'CANARY_DEPLOYMENT_LOG'
+    | 'LOG_ANALYSIS'
     | 'TIME_SERIES_LOAD_TEST'
   createdAt?: number
   endTime?: number
@@ -2757,6 +2584,9 @@ export interface LearningEngineTask {
     | 'CANARY_DEPLOYMENT_TIME_SERIES'
     | 'BEFORE_AFTER_DEPLOYMENT_TIME_SERIES'
     | 'SERVICE_GUARD_FEEDBACK_ANALYSIS'
+    | 'BEFORE_AFTER_DEPLOYMENT_LOG'
+    | 'CANARY_DEPLOYMENT_LOG'
+    | 'LOG_ANALYSIS'
     | 'TIME_SERIES_LOAD_TEST'
   uuid?: string
   verificationTaskId?: string
@@ -2791,13 +2621,6 @@ export interface LiveMonitoringLogAnalysisRadarChartClusterDTO {
 
 export type LocalConnectorDTO = ConnectorConfigDTO & {
   default?: boolean
-}
-
-export interface LocalTime {
-  hour?: number
-  minute?: number
-  nano?: number
-  second?: number
 }
 
 export interface LogAnalysisCluster {
@@ -2939,12 +2762,22 @@ export interface LogData {
   trend?: FrequencyDTO[]
 }
 
+export interface LogRecord {
+  message?: string
+  serviceInstance?: string
+  timestamp?: number
+}
+
 export interface LogRecordDTO {
   accountId?: string
   host?: string
   log?: string
   timestamp?: number
   verificationTaskId?: string
+}
+
+export interface LogRecordsResponse {
+  logRecords?: LogRecord[]
 }
 
 export interface LogSampleRequestDTO {
@@ -3039,6 +2872,8 @@ export interface MetricPack {
     | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
   identifier?: string
   lastUpdatedAt?: number
   metrics?: MetricDefinition[]
@@ -3068,6 +2903,8 @@ export interface MetricPackDTO {
     | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
   identifier?: string
   metrics?: MetricDefinitionDTO[]
   orgIdentifier?: string
@@ -3080,6 +2917,10 @@ export interface MetricPackValidationResponse {
   metricPackName?: string
   metricValidationResponses?: MetricValidationResponse[]
   overallStatus?: 'SUCCESS' | 'NO_DATA' | 'FAILED'
+}
+
+export interface MetricRecordsResponse {
+  timeSeriesData?: TimeSeries[]
 }
 
 export interface MetricResponseMapping {
@@ -3168,6 +3009,20 @@ export interface MonitoredServiceDTO {
   type: 'Application' | 'Infrastructure'
 }
 
+export interface MonitoredServiceDetail {
+  environmentIdentifier?: string
+  environmentName?: string
+  healthSourceIdentifier?: string
+  healthSourceName?: string
+  monitoredServiceIdentifier?: string
+  monitoredServiceName?: string
+  orgName?: string
+  projectName?: string
+  projectParams?: ProjectParams
+  serviceIdentifier?: string
+  serviceName?: string
+}
+
 export interface MonitoredServiceListItemDTO {
   changeSummary?: ChangeSummaryDTO
   currentHealthScore?: RiskData
@@ -3203,11 +3058,6 @@ export interface MonitoredServiceWithHealthSources {
 
 export type MonthlyCalenderSpec = CalenderSpec & {
   dayOfMonth: number
-}
-
-export interface NGTag {
-  key: string
-  value: string
 }
 
 export interface NameValuePairWithDefault {
@@ -3303,15 +3153,9 @@ export interface NotificationRuleDTO {
   identifier: string
   name: string
   notificationMethod: CVNGNotificationChannel
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   type: 'MonitoredService' | 'ServiceLevelObjective'
-}
-
-export interface NotificationRuleRef {
-  enabled: boolean
-  lastSuccessFullNotificationSent: number
-  notificationRuleRef: string
 }
 
 export interface NotificationRuleRefDTO {
@@ -3505,6 +3349,16 @@ export interface PageNotificationRuleResponse {
   totalPages?: number
 }
 
+export interface PageSLOConsumptionBreakdown {
+  content?: SLOConsumptionBreakdown[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageSLOHealthListView {
   content?: SLOHealthListView[]
   empty?: boolean
@@ -3644,7 +3498,20 @@ export interface PagerDutyWebhookEventDTO {
 }
 
 export interface PartialSchemaDTO {
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'IACM'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -3677,8 +3544,8 @@ export interface ProgressLog {
 
 export interface ProjectParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type PrometheusConnectorDTO = ConnectorConfigDTO & {
@@ -3735,12 +3602,57 @@ export interface QueryDTO {
   timeStampIdentifier: string
 }
 
+export interface QueryJsonPath {
+  queryValueJsonPath?: string
+  timestampFormat?: string
+  timestampJsonPath?: string
+}
+
+export interface QueryRecordsRequest {
+  connectorIdentifier: string
+  endTime: number
+  healthSourceParams?: HealthSourceParams
+  healthSourceQueryParams?: HealthSourceQueryParams
+  providerType:
+    | 'APP_DYNAMICS'
+    | 'SPLUNK'
+    | 'SPLUNK_METRIC'
+    | 'STACKDRIVER'
+    | 'STACKDRIVER_LOG'
+    | 'KUBERNETES'
+    | 'NEW_RELIC'
+    | 'PROMETHEUS'
+    | 'DATADOG_METRICS'
+    | 'DATADOG_LOG'
+    | 'ERROR_TRACKING'
+    | 'DYNATRACE'
+    | 'CUSTOM_HEALTH_METRIC'
+    | 'CUSTOM_HEALTH_LOG'
+    | 'ELASTICSEARCH'
+    | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
+  query: string
+  queryJSONPath?: QueryJsonPath
+  startTime: number
+}
+
 export type RatioSLIMetricSpec = SLIMetricSpec & {
   eventType: 'Good' | 'Bad'
   metric1: string
   metric2: string
   thresholdType: '>' | '<' | '>=' | '<='
   thresholdValue: number
+}
+
+export interface ReferenceDTO {
+  accountIdentifier?: string
+  count?: number
+  identifier?: string
+  name?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export interface Response {
@@ -3760,6 +3672,13 @@ export interface ResponseAppdynamicsMetricDataResponse {
 export interface ResponseBoolean {
   correlationId?: string
   data?: boolean
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseCVLicenseUsageDTO {
+  correlationId?: string
+  data?: CVLicenseUsageDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4265,6 +4184,8 @@ export interface ResponseMessage {
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
     | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4277,6 +4198,7 @@ export interface ResponseMessage {
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
+    | 'APPROVAL_REJECTION'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -4362,6 +4284,13 @@ export interface ResponsePageMonitoredServiceResponse {
 export interface ResponsePageNotificationRuleResponse {
   correlationId?: string
   data?: PageNotificationRuleResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageSLOConsumptionBreakdown {
+  correlationId?: string
+  data?: PageSLOConsumptionBreakdown
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4513,14 +4442,6 @@ export interface RestResponseChangeTimeline {
   responseMessages?: ResponseMessage[]
 }
 
-export interface RestResponseDataCollectionTask {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: DataCollectionTask
-  responseMessages?: ResponseMessage[]
-}
-
 export interface RestResponseDeploymentActivitySummaryDTO {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -4542,6 +4463,14 @@ export interface RestResponseHealthMonitoringFlagResponse {
     [key: string]: { [key: string]: any }
   }
   resource?: HealthMonitoringFlagResponse
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseHealthSourceRecordsResponse {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: HealthSourceRecordsResponse
   responseMessages?: ResponseMessage[]
 }
 
@@ -4771,6 +4700,14 @@ export interface RestResponseLogAnalysisRadarChartListWithCountDTO {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseLogRecordsResponse {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: LogRecordsResponse
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseMapStringMapStringListDouble {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -4804,6 +4741,14 @@ export interface RestResponseMapStringMapStringListTimeSeriesAnomaliesDTO {
       [key: string]: TimeSeriesAnomaliesDTO[]
     }
   }
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseMetricRecordsResponse {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: MetricRecordsResponse
   responseMessages?: ResponseMessage[]
 }
 
@@ -4884,14 +4829,6 @@ export interface RestResponseSLIOnboardingGraphs {
     [key: string]: { [key: string]: any }
   }
   resource?: SLIOnboardingGraphs
-  responseMessages?: ResponseMessage[]
-}
-
-export interface RestResponseSLODebugResponse {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: SLODebugResponse
   responseMessages?: ResponseMessage[]
 }
 
@@ -5007,14 +4944,6 @@ export interface RestResponseUserJourneyResponse {
   responseMessages?: ResponseMessage[]
 }
 
-export interface RestResponseVerifyStepDebugResponse {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: VerifyStepDebugResponse
-  responseMessages?: ResponseMessage[]
-}
-
 export interface RestResponseVoid {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -5069,11 +4998,6 @@ export type RollingSLOTargetSpec = SLOTargetSpec & {
   periodLength: string
 }
 
-export interface RuntimeParameter {
-  runtimeParam?: boolean
-  value?: string
-}
-
 export interface Slidto {
   enabled?: boolean
 }
@@ -5089,23 +5013,25 @@ export interface SLIOnboardingGraphs {
   sliGraph?: TimeGraphResponse
 }
 
-export interface SLIRecord {
-  createdAt?: number
-  epochMinute?: number
-  lastUpdatedAt?: number
-  runningBadCount?: number
-  runningGoodCount?: number
-  sliId?: string
-  sliState?: 'NO_DATA' | 'GOOD' | 'BAD'
-  sliVersion?: number
-  timestamp?: number
-  uuid?: string
-  validUntil?: string
-  verificationTaskId?: string
-  version?: number
+export interface SLOConsumptionBreakdown {
+  contributedErrorBudgetBurned: number
+  environmentIdentifier: string
+  errorBudgetBurned: number
+  monitoredServiceIdentifier: string
+  orgName?: string
+  projectName?: string
+  projectParams: ProjectParams
+  serviceName: string
+  sliStatusPercentage: number
+  sliType: 'Availability' | 'Latency'
+  sloIdentifier: string
+  sloName: string
+  sloTargetPercentage: number
+  weightagePercentage: number
 }
 
 export interface SLODashboardApiFilter {
+  childResource?: boolean
   compositeSLOIdentifier?: string
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
   monitoredServiceIdentifier?: string
@@ -5131,49 +5057,32 @@ export interface SLODashboardWidget {
   currentPeriodEndTime: number
   currentPeriodLengthDays: number
   currentPeriodStartTime: number
-  environmentIdentifier: string
-  environmentName: string
+  environmentIdentifier?: string
+  environmentName?: string
   errorBudgetBurndown: Point[]
   errorBudgetRemaining: number
   errorBudgetRemainingPercentage: number
   errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
-  healthSourceIdentifier: string
-  healthSourceName: string
-  monitoredServiceIdentifier: string
-  monitoredServiceName: string
+  healthSourceIdentifier?: string
+  healthSourceName?: string
+  monitoredServiceDetails?: MonitoredServiceDetail[]
+  monitoredServiceIdentifier?: string
+  monitoredServiceName?: string
   recalculatingSLI?: boolean
-  serviceIdentifier: string
-  serviceName: string
+  serviceIdentifier?: string
+  serviceName?: string
   sloIdentifier: string
   sloPerformanceTrend: Point[]
   sloTargetPercentage: number
   sloTargetType: 'Rolling' | 'Calender'
+  sloType: 'Simple' | 'Composite'
   tags?: {
     [key: string]: string
   }
   timeRemainingDays: number
   title: string
   totalErrorBudget: number
-  type: 'Availability' | 'Latency'
-}
-
-export interface SLODebugResponse {
-  projectParams?: ProjectParams
-  serviceLevelIndicatorList?: ServiceLevelIndicator[]
-  serviceLevelObjective?: ServiceLevelObjective
-  sliIdentifierToAnalysisStateMachineMap?: {
-    [key: string]: AnalysisStateMachine
-  }
-  sliIdentifierToDataCollectionTaskMap?: {
-    [key: string]: DataCollectionTask[]
-  }
-  sliIdentifierToSLIRecordMap?: {
-    [key: string]: SLIRecord[]
-  }
-  sliIdentifierToVerificationTaskMap?: {
-    [key: string]: VerificationTask
-  }
-  sloHealthIndicator?: SLOHealthIndicator
+  type?: 'Availability' | 'Latency'
 }
 
 export interface SLOErrorBudgetResetDTO {
@@ -5185,22 +5094,6 @@ export interface SLOErrorBudgetResetDTO {
   remainingErrorBudgetAtReset?: number
   serviceLevelObjectiveIdentifier?: string
   validUntil?: number
-}
-
-export interface SLOHealthIndicator {
-  accountId?: string
-  createdAt?: number
-  errorBudgetBurnRate?: number
-  errorBudgetRemainingMinutes?: number
-  errorBudgetRemainingPercentage?: number
-  errorBudgetRisk?: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
-  lastComputedAt?: number
-  lastUpdatedAt?: number
-  monitoredServiceIdentifier?: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  serviceLevelObjectiveIdentifier?: string
-  uuid?: string
 }
 
 export interface SLOHealthListView {
@@ -5217,6 +5110,9 @@ export interface SLOHealthListView {
   monitoredServiceName?: string
   name: string
   noOfActiveAlerts: number
+  orgName?: string
+  projectName?: string
+  projectParams: ProjectParams
   serviceIdentifier?: string
   serviceName?: string
   sliType?: 'Availability' | 'Latency'
@@ -5235,11 +5131,6 @@ export interface SLOHealthListView {
 export interface SLORiskCountResponse {
   riskCounts?: RiskCount[]
   totalCount?: number
-}
-
-export interface SLOTarget {
-  timeRangeFilters?: TimeRangeFilter[]
-  type?: 'Rolling' | 'Calender'
 }
 
 export interface SLOTargetDTO {
@@ -5306,30 +5197,6 @@ export interface ServiceGuardTxnMetricAnalysisDataDTO {
   shortTermHistory?: number[]
 }
 
-export interface ServiceLevelIndicator {
-  accountId?: string
-  createNextTaskIteration?: number
-  createdAt?: number
-  enabled?: boolean
-  firstTimeDataCollectionTimeRange?: TimeRange
-  healthSourceIdentifier?: string
-  identifier?: string
-  lastUpdatedAt?: number
-  metricNames?: string[]
-  monitoredServiceIdentifier?: string
-  name?: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  sliMissingDataType?: 'Good' | 'Bad' | 'Ignore'
-  slimetricType?: 'Threshold' | 'Ratio'
-  type?: 'Availability' | 'Latency'
-  uuid?: string
-  verificationTaskTags?: {
-    [key: string]: string
-  }
-  version?: number
-}
-
 export interface ServiceLevelIndicatorDTO {
   healthSourceRef?: string
   identifier?: string
@@ -5342,31 +5209,6 @@ export interface ServiceLevelIndicatorDTO {
 export interface ServiceLevelIndicatorSpec {
   spec: SLIMetricSpec
   type?: 'Threshold' | 'Ratio'
-}
-
-export interface ServiceLevelObjective {
-  accountId?: string
-  createdAt?: number
-  desc?: string
-  enabled?: boolean
-  healthSourceIdentifier?: string
-  identifier?: string
-  lastUpdatedAt?: number
-  monitoredServiceIdentifier?: string
-  name?: string
-  nextNotificationIteration?: number
-  notificationRuleRefs?: NotificationRuleRef[]
-  orgIdentifier?: string
-  projectIdentifier?: string
-  serviceLevelIndicators?: string[]
-  sloTarget?: SLOTarget
-  sloTargetPercentage?: number
-  tags: NGTag[]
-  timeRangeFilters?: TimeRangeFilter[]
-  type?: 'Availability' | 'Latency'
-  userJourneyIdentifier?: string
-  uuid?: string
-  zoneOffset?: ZoneOffset
 }
 
 export interface ServiceLevelObjectiveDTO {
@@ -5389,8 +5231,8 @@ export interface ServiceLevelObjectiveDTO {
 
 export interface ServiceLevelObjectiveDetailsDTO {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   serviceLevelObjectiveRef: string
   weightagePercentage: number
 }
@@ -5427,10 +5269,26 @@ export interface ServiceLevelObjectiveV2Response {
   serviceLevelObjectiveV2: ServiceLevelObjectiveV2DTO
 }
 
+export interface ServiceNowAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface ServiceNowAuthenticationDTO {
+  spec: ServiceNowAuthCredentialsDTO
+  type: 'UsernamePassword'
+}
+
 export type ServiceNowConnector = ConnectorConfigDTO & {
+  auth: ServiceNowAuthenticationDTO
   delegateSelectors?: string[]
-  passwordRef: string
+  passwordRef?: string
   serviceNowUrl: string
+  username?: string
+  usernameRef?: string
+}
+
+export type ServiceNowUserNamePasswordDTO = ServiceNowAuthCredentialsDTO & {
+  passwordRef: string
   username?: string
   usernameRef?: string
 }
@@ -5551,6 +5409,7 @@ export interface StackdriverDefinition {
   identifier: string
   isManualQuery?: boolean
   jsonMetricDefinition?: { [key: string]: any }
+  jsonMetricDefinitionString?: string
   metricName: string
   metricTags?: string[]
   riskProfile?: RiskProfile
@@ -5575,8 +5434,26 @@ export type SumoLogicConnectorDTO = ConnectorConfigDTO & {
   url: string
 }
 
-export interface TaskInfo {
-  taskType?: 'LIVE_MONITORING' | 'DEPLOYMENT' | 'SLI' | 'COMPOSITE_SLO'
+export type TasConnector = ConnectorConfigDTO & {
+  credential: TasCredential
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+}
+
+export interface TasCredential {
+  spec?: TasCredentialSpec
+  type: 'ManualConfig'
+}
+
+export interface TasCredentialSpec {
+  [key: string]: any
+}
+
+export type TasManualDetails = TasCredentialSpec & {
+  endpointUrl: string
+  passwordRef: string
+  username?: string
+  usernameRef?: string
 }
 
 export interface TemplateDTO {
@@ -5640,6 +5517,11 @@ export interface TimeRangeParams {
   startTime?: number
 }
 
+export interface TimeSeries {
+  data?: TimeSeriesDataPoint[]
+  timeseriesName?: string
+}
+
 export interface TimeSeriesAnalysisSummary {
   numAnomMetrics?: number
   totalNumMetrics?: number
@@ -5687,6 +5569,11 @@ export interface TimeSeriesDataCollectionRecord {
   verificationTaskId?: string
 }
 
+export interface TimeSeriesDataPoint {
+  timestamp?: number
+  value?: number
+}
+
 export interface TimeSeriesDataRecordGroupValue {
   groupName?: string
   percent?: number
@@ -5719,6 +5606,8 @@ export interface TimeSeriesMetricDataDTO {
     | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
   environmentIdentifier?: string
   groupName?: string
   metricDataList?: MetricData[]
@@ -5824,6 +5713,8 @@ export interface TimeSeriesThreshold {
     | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   lastUpdatedAt?: number
   metricGroupName?: string
@@ -5867,6 +5758,8 @@ export interface TimeSeriesThresholdDTO {
     | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
   metricGroupName?: string
   metricName?: string
   metricPackIdentifier?: string
@@ -5928,6 +5821,8 @@ export interface TransactionMetricInfo {
     | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
   nodeRiskCountDTO?: NodeRiskCountDTO
   nodes?: HostData[]
   transactionMetric?: TransactionMetric
@@ -5954,6 +5849,12 @@ export interface TransactionMetricRisk {
 export interface TransactionMetricSums {
   metricSums?: MetricSum[]
   transactionName?: string
+}
+
+export interface UsageDataDTO {
+  count?: number
+  displayName?: string
+  references?: ReferenceDTO[]
 }
 
 export interface UserJourneyDTO {
@@ -6000,120 +5901,6 @@ export type VaultConnectorDTO = ConnectorConfigDTO & {
   xvaultAwsIamServerId?: string
 }
 
-export interface VerificationJob {
-  accountId: string
-  activitySourceIdentifier?: string
-  allMonitoringSourcesEnabled?: boolean
-  createdAt?: number
-  cvConfigs?: CVConfig[]
-  dataSources?: (
-    | 'APP_DYNAMICS'
-    | 'SPLUNK'
-    | 'SPLUNK_METRIC'
-    | 'STACKDRIVER'
-    | 'STACKDRIVER_LOG'
-    | 'KUBERNETES'
-    | 'NEW_RELIC'
-    | 'PROMETHEUS'
-    | 'DATADOG_METRICS'
-    | 'DATADOG_LOG'
-    | 'ERROR_TRACKING'
-    | 'DYNATRACE'
-    | 'CUSTOM_HEALTH_METRIC'
-    | 'CUSTOM_HEALTH_LOG'
-    | 'ELASTICSEARCH'
-    | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
-  )[]
-  defaultJob?: boolean
-  duration?: Duration
-  envIdentifier: string
-  executionDuration?: Duration
-  failOnNoAnalysis?: RuntimeParameter
-  identifier: string
-  jobName: string
-  lastUpdatedAt?: number
-  monitoredServiceIdentifier?: string
-  monitoringSources?: string[]
-  orgIdentifier?: string
-  projectIdentifier?: string
-  serviceIdentifier: string
-  type?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO'
-  uuid?: string
-  verificationJobUrl?: string
-}
-
-export interface VerificationJobInstance {
-  accountId: string
-  createdAt?: number
-  cvConfigMap?: {
-    [key: string]: CVConfig
-  }
-  dataCollectionDelay?: Duration
-  dataCollectionTaskIteration?: number
-  deploymentStartTime?: number
-  endTime?: number
-  executionStatus?: 'QUEUED' | 'RUNNING' | 'FAILED' | 'SUCCESS' | 'TIMEOUT' | 'ABORTED'
-  lastUpdatedAt?: number
-  name?: string
-  newHostsTrafficSplitPercentage?: number
-  newVersionHosts?: string[]
-  oldVersionHosts?: string[]
-  progressLogs?: ProgressLog[]
-  progressPercentage?: number
-  resolvedJob?: VerificationJob
-  startTime?: number
-  timeoutTaskIteration?: number
-  uuid?: string
-  validUntil?: string
-  verificationStatus?:
-    | 'IGNORED'
-    | 'NOT_STARTED'
-    | 'VERIFICATION_PASSED'
-    | 'VERIFICATION_FAILED'
-    | 'ERROR'
-    | 'ABORTED'
-    | 'IN_PROGRESS'
-}
-
-export interface VerificationJobRuntimeDetails {
-  runtimeValues?: {
-    [key: string]: string
-  }
-  verificationJobIdentifier?: string
-}
-
-export interface VerificationTask {
-  accountId?: string
-  createdAt?: number
-  tags?: {
-    [key: string]: string
-  }
-  taskInfo?: TaskInfo
-  uuid?: string
-  validUntil?: string
-}
-
-export interface VerifyStepDebugResponse {
-  activity?: Activity
-  cvngStepTask?: CVNGStepTask
-  projectParams?: ProjectParams
-  verificationJobInstance?: VerificationJobInstance
-  verificationTaskIdToAnalysisStateMachineMap?: {
-    [key: string]: AnalysisStateMachine
-  }
-  verificationTaskIdToCVNGApiLogMap?: {
-    [key: string]: CVNGLog[]
-  }
-  verificationTaskIdToCVNGExecutionLogMap?: {
-    [key: string]: CVNGLog[]
-  }
-  verificationTaskIdToDataCollectionTaskMap?: {
-    [key: string]: DataCollectionTask[]
-  }
-  verificationTaskList?: VerificationTask[]
-}
-
 export interface VerifyStepSummary {
   name?: string
   verificationStatus?:
@@ -6152,11 +5939,13 @@ export interface YamlSchemaMetadata {
     | 'CF'
     | 'CE'
     | 'STO'
+    | 'CHAOS'
+    | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
-    | 'CHAOS'
+    | 'IACM'
   )[]
   namespace?: string
   yamlGroup: YamlGroup
@@ -6166,57 +5955,23 @@ export interface YamlSchemaWithDetails {
   availableAtAccountLevel?: boolean
   availableAtOrgLevel?: boolean
   availableAtProjectLevel?: boolean
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'IACM'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
-}
-
-export interface ZoneOffset {
-  id?: string
-  rules?: ZoneRules
-  totalSeconds?: number
-}
-
-export interface ZoneOffsetTransition {
-  dateTimeAfter?: string
-  dateTimeBefore?: string
-  duration?: Duration
-  gap?: boolean
-  instant?: number
-  offsetAfter?: ZoneOffset
-  offsetBefore?: ZoneOffset
-  overlap?: boolean
-}
-
-export interface ZoneOffsetTransitionRule {
-  dayOfMonthIndicator?: number
-  dayOfWeek?: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
-  localTime?: LocalTime
-  midnightEndOfDay?: boolean
-  month?:
-    | 'JANUARY'
-    | 'FEBRUARY'
-    | 'MARCH'
-    | 'APRIL'
-    | 'MAY'
-    | 'JUNE'
-    | 'JULY'
-    | 'AUGUST'
-    | 'SEPTEMBER'
-    | 'OCTOBER'
-    | 'NOVEMBER'
-    | 'DECEMBER'
-  offsetAfter?: ZoneOffset
-  offsetBefore?: ZoneOffset
-  standardOffset?: ZoneOffset
-  timeDefinition?: 'UTC' | 'WALL' | 'STANDARD'
-}
-
-export interface ZoneRules {
-  fixedOffset?: boolean
-  transitionRules?: ZoneOffsetTransitionRule[]
-  transitions?: ZoneOffsetTransition[]
 }
 
 export type ChangeEventDTORequestBody = ChangeEventDTO
@@ -6229,6 +5984,8 @@ export type MonitoredServiceDTORequestBody = MonitoredServiceDTO
 
 export type NotificationRuleDTORequestBody = NotificationRuleDTO
 
+export type QueryRecordsRequestRequestBody = QueryRecordsRequest
+
 export type ServiceGuardTimeSeriesAnalysisDTORequestBody = ServiceGuardTimeSeriesAnalysisDTO
 
 export type ServiceLevelIndicatorDTORequestBody = ServiceLevelIndicatorDTO
@@ -6239,7 +5996,7 @@ export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type SaveMonitoredServiceFromYamlBodyRequestBody = string
+export type UpdateMonitoredServiceFromYamlBodyRequestBody = string
 
 export interface ChangeEventListQueryParams {
   serviceIdentifiers?: string[]
@@ -6494,6 +6251,315 @@ export const getChangeEventDetailPromise = (
     signal
   )
 
+export interface GetSampleLogDataPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetSampleLogDataProps = Omit<
+  MutateProps<
+    RestResponseLogRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleLogDataPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetSampleLogDataPathParams
+
+/**
+ * Fetch log records by submitting a query to the health source provider.
+ */
+export const GetSampleLogData = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: GetSampleLogDataProps) => (
+  <Mutate<RestResponseLogRecordsResponse, unknown, void, QueryRecordsRequestRequestBody, GetSampleLogDataPathParams>
+    verb="POST"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/log-records`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSampleLogDataProps = Omit<
+  UseMutateProps<
+    RestResponseLogRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleLogDataPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetSampleLogDataPathParams
+
+/**
+ * Fetch log records by submitting a query to the health source provider.
+ */
+export const useGetSampleLogData = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseGetSampleLogDataProps) =>
+  useMutate<RestResponseLogRecordsResponse, unknown, void, QueryRecordsRequestRequestBody, GetSampleLogDataPathParams>(
+    'POST',
+    (paramsInPath: GetSampleLogDataPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/health-source/log-records`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * Fetch log records by submitting a query to the health source provider.
+ */
+export const getSampleLogDataPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseLogRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleLogDataPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseLogRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleLogDataPathParams
+  >(
+    'POST',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/log-records`,
+    props,
+    signal
+  )
+
+export interface GetSampleMetricDataPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetSampleMetricDataProps = Omit<
+  MutateProps<
+    RestResponseMetricRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleMetricDataPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetSampleMetricDataPathParams
+
+/**
+ * Fetch metric records by submitting a query to the health source provider.
+ */
+export const GetSampleMetricData = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: GetSampleMetricDataProps) => (
+  <Mutate<
+    RestResponseMetricRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleMetricDataPathParams
+  >
+    verb="POST"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/metric-records`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSampleMetricDataProps = Omit<
+  UseMutateProps<
+    RestResponseMetricRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleMetricDataPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetSampleMetricDataPathParams
+
+/**
+ * Fetch metric records by submitting a query to the health source provider.
+ */
+export const useGetSampleMetricData = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseGetSampleMetricDataProps) =>
+  useMutate<
+    RestResponseMetricRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleMetricDataPathParams
+  >(
+    'POST',
+    (paramsInPath: GetSampleMetricDataPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/health-source/metric-records`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * Fetch metric records by submitting a query to the health source provider.
+ */
+export const getSampleMetricDataPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseMetricRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleMetricDataPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseMetricRecordsResponse,
+    unknown,
+    void,
+    QueryRecordsRequestRequestBody,
+    GetSampleMetricDataPathParams
+  >(
+    'POST',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/metric-records`,
+    props,
+    signal
+  )
+
+export interface GetSampleRawRecordPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetSampleRawRecordProps = Omit<
+  MutateProps<
+    RestResponseHealthSourceRecordsResponse,
+    unknown,
+    void,
+    HealthSourceRecordsRequest,
+    GetSampleRawRecordPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetSampleRawRecordPathParams
+
+/**
+ * Fetch health source raw records by submitting a query to the health source provider.
+ */
+export const GetSampleRawRecord = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: GetSampleRawRecordProps) => (
+  <Mutate<
+    RestResponseHealthSourceRecordsResponse,
+    unknown,
+    void,
+    HealthSourceRecordsRequest,
+    GetSampleRawRecordPathParams
+  >
+    verb="POST"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/records`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSampleRawRecordProps = Omit<
+  UseMutateProps<
+    RestResponseHealthSourceRecordsResponse,
+    unknown,
+    void,
+    HealthSourceRecordsRequest,
+    GetSampleRawRecordPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetSampleRawRecordPathParams
+
+/**
+ * Fetch health source raw records by submitting a query to the health source provider.
+ */
+export const useGetSampleRawRecord = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseGetSampleRawRecordProps) =>
+  useMutate<
+    RestResponseHealthSourceRecordsResponse,
+    unknown,
+    void,
+    HealthSourceRecordsRequest,
+    GetSampleRawRecordPathParams
+  >(
+    'POST',
+    (paramsInPath: GetSampleRawRecordPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/health-source/records`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * Fetch health source raw records by submitting a query to the health source provider.
+ */
+export const getSampleRawRecordPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseHealthSourceRecordsResponse,
+    unknown,
+    void,
+    HealthSourceRecordsRequest,
+    GetSampleRawRecordPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseHealthSourceRecordsResponse,
+    unknown,
+    void,
+    HealthSourceRecordsRequest,
+    GetSampleRawRecordPathParams
+  >(
+    'POST',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/records`,
+    props,
+    signal
+  )
+
 export interface GetAppDynamicsApplicationsQueryParams {
   accountId: string
   orgIdentifier: string
@@ -6609,8 +6675,8 @@ export const getAppdynamicsBaseFoldersPromise = (
 
 export interface GetCompleteServiceInstanceMetricPathQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   appName: string
   completeMetricPath: string
@@ -6930,8 +6996,8 @@ export const getAppdynamicsMetricStructurePromise = (
 
 export interface GetServiceInstanceMetricPathQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   appName: string
   baseFolder: string
@@ -7127,6 +7193,7 @@ export interface GetMonitoredServiceChangeEventSummaryQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   monitoredServiceIdentifier?: string
+  monitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert')[]
   changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD')[]
   startTime: number
@@ -7495,8 +7562,8 @@ export const saveCVNGLogRecordsPromise = (
 
 export interface GetDatadogLogIndexesQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   tracingId: string
 }
@@ -7547,8 +7614,8 @@ export const getDatadogLogIndexesPromise = (
 
 export interface GetDatadogLogSampleDataQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   tracingId: string
 }
@@ -7628,8 +7695,8 @@ export const getDatadogLogSampleDataPromise = (
 
 export interface GetDatadogActiveMetricsQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   filter?: string
   tracingId: string
@@ -7681,8 +7748,8 @@ export const getDatadogActiveMetricsPromise = (
 
 export interface GetDatadogDashboardDetailsQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   dashboardId: string
   tracingId: string
@@ -7739,8 +7806,8 @@ export const getDatadogDashboardDetailsPromise = (
 
 export interface GetDatadogDashboardsQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   pageSize: number
   offset: number
@@ -7794,8 +7861,8 @@ export const getDatadogDashboardsPromise = (
 
 export interface GetDatadogMetricTagsListQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   metric: string
   tracingId: string
@@ -7847,8 +7914,8 @@ export const getDatadogMetricTagsListPromise = (
 
 export interface GetDatadogMetricTagsQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   metric: string
   filter?: string
@@ -7901,8 +7968,8 @@ export const getDatadogMetricTagsPromise = (
 
 export interface GetDatadogSampleDataQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   tracingId: string
   query: string
@@ -8418,8 +8485,8 @@ export const getELKIndicesPromise = (
 
 export interface GetELKLogSampleDataQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   tracingId: string
   index: string
@@ -8966,6 +9033,8 @@ export interface GetMetricPacksQueryParams {
     | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
 }
 
 export type GetMetricPacksProps = Omit<
@@ -9034,6 +9103,8 @@ export interface SaveMetricPacksQueryParams {
     | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
 }
 
 export type SaveMetricPacksProps = Omit<
@@ -9646,7 +9717,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9660,7 +9731,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -9675,7 +9746,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9689,7 +9760,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -9701,7 +9772,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -9710,7 +9781,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 
@@ -10811,8 +10882,8 @@ export const getMonitoredServiceDetailsWithServiceIdPromise = (
 
 export interface GetSliGraphQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export interface GetSliGraphPathParams {
@@ -11133,8 +11204,9 @@ export const getNewRelicMetricDataPromise = (
 
 export interface GetNotificationRuleDataQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  notificationRuleIdentifiers?: string[]
   pageNumber: number
   pageSize: number
 }
@@ -11262,8 +11334,8 @@ export const saveNotificationRuleDataPromise = (
 
 export interface DeleteNotificationRuleDataQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type DeleteNotificationRuleDataProps = Omit<
@@ -11315,8 +11387,8 @@ export const deleteNotificationRuleDataPromise = (
 
 export interface UpdateNotificationRuleDataQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export interface UpdateNotificationRuleDataPathParams {
@@ -11411,6 +11483,7 @@ export interface GetServicesFromPagerDutyQueryParams {
   projectIdentifier: string
   connectorIdentifier?: string
   requestGuid: string
+  query?: string
 }
 
 export type GetServicesFromPagerDutyProps = Omit<
@@ -11553,6 +11626,8 @@ export interface GetLabelNamesQueryParams {
     | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
 }
 
 export type GetLabelNamesProps = Omit<
@@ -11626,6 +11701,8 @@ export interface GetLabeValuesQueryParams {
     | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
 }
 
 export type GetLabeValuesProps = Omit<
@@ -11699,6 +11776,8 @@ export interface GetMetricNamesQueryParams {
     | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
 }
 
 export type GetMetricNamesProps = Omit<
@@ -11772,6 +11851,8 @@ export interface GetSampleDataQueryParams {
     | 'ELASTICSEARCH'
     | 'CLOUDWATCH_METRICS'
     | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
 }
 
 export type GetSampleDataProps = Omit<
@@ -11864,8 +11945,8 @@ export const getRiskCategoryForCustomHealthMetricPromise = (
 
 export interface GetServiceDependencyGraphQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   environmentIdentifier?: string
   serviceIdentifier?: string
   monitoredServiceIdentifier?: string
@@ -12058,8 +12139,8 @@ export const saveSLODataPromise = (
 
 export interface GetSLOAssociatedMonitoredServicesQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   pageNumber?: number
   pageSize?: number
 }
@@ -12115,8 +12196,8 @@ export const getSLOAssociatedMonitoredServicesPromise = (
 
 export interface GetServiceLevelObjectivesRiskCountQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   userJourneyIdentifiers?: string[]
   monitoredServiceIdentifier?: string
   sliTypes?: ('Availability' | 'Latency')[]
@@ -12173,8 +12254,8 @@ export interface GetSLODetailsQueryParams {
   startTime?: number
   endTime?: number
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export interface GetSLODetailsPathParams {
@@ -12232,10 +12313,97 @@ export const getSLODetailsPromise = (
     signal
   )
 
+export interface GetSloConsumptionBreakdownViewQueryParams {
+  startTime?: number
+  endTime?: number
+  accountId: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetSloConsumptionBreakdownViewPathParams {
+  identifier: string
+}
+
+export type GetSloConsumptionBreakdownViewProps = Omit<
+  GetProps<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >,
+  'path'
+> &
+  GetSloConsumptionBreakdownViewPathParams
+
+/**
+ * get SLO consumption breakdown
+ */
+export const GetSloConsumptionBreakdownView = ({ identifier, ...props }: GetSloConsumptionBreakdownViewProps) => (
+  <Get<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >
+    path={`/slo-dashboard/widget/${identifier}/consumption`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSloConsumptionBreakdownViewProps = Omit<
+  UseGetProps<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >,
+  'path'
+> &
+  GetSloConsumptionBreakdownViewPathParams
+
+/**
+ * get SLO consumption breakdown
+ */
+export const useGetSloConsumptionBreakdownView = ({ identifier, ...props }: UseGetSloConsumptionBreakdownViewProps) =>
+  useGet<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >(
+    (paramsInPath: GetSloConsumptionBreakdownViewPathParams) =>
+      `/slo-dashboard/widget/${paramsInPath.identifier}/consumption`,
+    { base: getConfig('cv/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * get SLO consumption breakdown
+ */
+export const getSloConsumptionBreakdownViewPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageSLOConsumptionBreakdown,
+    unknown,
+    GetSloConsumptionBreakdownViewQueryParams,
+    GetSloConsumptionBreakdownViewPathParams
+  >(getConfig('cv/api'), `/slo-dashboard/widget/${identifier}/consumption`, props, signal)
+
 export interface GetSLOHealthListViewQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   userJourneyIdentifiers?: string[]
   monitoredServiceIdentifier?: string
   sliTypes?: ('Availability' | 'Latency')[]
@@ -12292,8 +12460,8 @@ export const getSLOHealthListViewPromise = (
 
 export interface GetSLOHealthListViewV2QueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   pageNumber?: number
   pageSize?: number
 }
@@ -12359,8 +12527,8 @@ export const getSLOHealthListViewV2Promise = (
 
 export interface GetServiceLevelObjectivesV2QueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   offset: number
   pageSize: number
   userJourneys?: string[]
@@ -12496,10 +12664,89 @@ export const saveSLOV2DataPromise = (
     void
   >('POST', getConfig('cv/api'), `/slo/v2`, props, signal)
 
+export interface GetOnboardingGraphQueryParams {
+  accountId: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetOnboardingGraphProps = Omit<
+  MutateProps<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get onboarding graph for composite slo
+ */
+export const GetOnboardingGraph = (props: GetOnboardingGraphProps) => (
+  <Mutate<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >
+    verb="POST"
+    path={`/slo/v2/composite-slo/onboarding-graph`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetOnboardingGraphProps = Omit<
+  UseMutateProps<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get onboarding graph for composite slo
+ */
+export const useGetOnboardingGraph = (props: UseGetOnboardingGraphProps) =>
+  useMutate<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >('POST', `/slo/v2/composite-slo/onboarding-graph`, { base: getConfig('cv/api'), ...props })
+
+/**
+ * Get onboarding graph for composite slo
+ */
+export const getOnboardingGraphPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseTimeGraphResponse,
+    unknown,
+    GetOnboardingGraphQueryParams,
+    CompositeServiceLevelObjectiveSpec,
+    void
+  >('POST', getConfig('cv/api'), `/slo/v2/composite-slo/onboarding-graph`, props, signal)
+
 export interface DeleteSLOV2DataQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type DeleteSLOV2DataProps = Omit<
@@ -12550,8 +12797,8 @@ export const deleteSLOV2DataPromise = (
 
 export interface GetServiceLevelObjectiveV2QueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export interface GetServiceLevelObjectiveV2PathParams {
@@ -12635,8 +12882,8 @@ export const getServiceLevelObjectiveV2Promise = (
 
 export interface UpdateSLOV2DataQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export interface UpdateSLOV2DataPathParams {
@@ -13796,8 +14043,8 @@ export const getSumoLogicEndPointsPromise = (
 
 export interface GetTimeSeriesMetricDataQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   monitoredServiceIdentifier?: string
   startTime: number
   endTime: number
@@ -13954,10 +14201,59 @@ export const getMetricDefinitionsPromise = (
     signal
   )
 
+export interface GetLicenseUsageQueryParams {
+  accountIdentifier: string
+  timestamp?: number
+}
+
+export type GetLicenseUsageProps = Omit<
+  GetProps<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets License Usage for CV
+ */
+export const GetLicenseUsage = (props: GetLicenseUsageProps) => (
+  <Get<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>
+    path={`/usage/CV`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetLicenseUsageProps = Omit<
+  UseGetProps<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets License Usage for CV
+ */
+export const useGetLicenseUsage = (props: UseGetLicenseUsageProps) =>
+  useGet<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>(`/usage/CV`, {
+    base: getConfig('cv/api'),
+    ...props
+  })
+
+/**
+ * Gets License Usage for CV
+ */
+export const getLicenseUsagePromise = (
+  props: GetUsingFetchProps<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>(
+    getConfig('cv/api'),
+    `/usage/CV`,
+    props,
+    signal
+  )
+
 export interface GetAllJourneysQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   offset: number
   pageSize: number
 }
@@ -14008,8 +14304,8 @@ export const getAllJourneysPromise = (
 
 export interface SaveUserJourneyQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type SaveUserJourneyProps = Omit<

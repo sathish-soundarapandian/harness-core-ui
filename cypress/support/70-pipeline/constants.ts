@@ -82,13 +82,13 @@ export const serverlessBuildDetails = `/ng/api/artifacts/artifactory/getBuildDet
 export const pipelineHealthCall = `/pipeline/api/dashboard/pipelineHealth?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}*`
 export const pipelineExecutionCall = `/pipeline/api/dashboard/pipelineExecution?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}*`
 export const abortPipelineCall = `pipeline/api/pipeline/execute/interrupt/${executionId}?routingId=${accountId}&orgIdentifier=${orgIdentifier}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&interruptType=AbortAll`
-export const serverlessLambdaYamlSnippet = `/ng/api/pipelines/configuration/strategies/yaml-snippets?routingId=${accountId}&serviceDefinitionType=${serverlessLambdaServiceDefinitionType}&strategyType=${strategyType}`
+export const serverlessLambdaYamlSnippet = `/ng/api/pipelines/configuration/strategies/yaml-snippets?routingId=${accountId}&accountIdentifier=${accountId}&serviceDefinitionType=${serverlessLambdaServiceDefinitionType}&strategyType=${strategyType}`
 export const servicesV2 = `/ng/api/servicesV2?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const postServiceCall = `ng/api/servicesV2?routingId=${accountId}&accountIdentifier=${accountId}`
 export const jobDetailsCall = `/ng/api/artifacts/jenkins/jobs?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}`
 export const jobDetailsCallAfterConnectorChange = `/ng/api/artifacts/jenkins/jobs?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${anotherConnectorName}`
-export const jobDetailsForParentJob = `/ng/api/artifacts/jenkins/jobs?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${anotherConnectorName}&parentJobName=${parentJob}`
-export const jobParametersList = `/ng/api/artifacts/jenkins/job/AutomationQA/details?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${anotherConnectorName}`
+export const jobDetailsForParentJob = `/ng/api/artifacts/jenkins/jobs?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}&parentJobName=${parentJob}`
+export const jobParametersList = `/ng/api/artifacts/jenkins/job/AutomationQA/details?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}`
 export const pipelineDetailsAPIRoute = `/pipeline/api/pipelines/PipelineTest?accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const templatesListCall = `/template/api/templates/list?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&templateListType=LastUpdated&searchTerm=&page=0&sort=lastUpdatedAt%2CDESC&size=20`
 export const templateReferencesCall = `/ng/api/entitySetupUsage/v2?routingId=${accountId}&accountIdentifier=${accountId}&referredEntityFQN=accountId%2Fdefault%2Fproject1%2FCypress_Template_Example_1%2FVersion1%2F&referredEntityType=Template&pageIndex=0&pageSize=4`
@@ -386,7 +386,7 @@ export const artifactRepoTypes = [
 ]
 
 export const triggersListData = {
-  Webhook: ['GitHub', 'GitLab', 'BitBucket', 'Azure Repos', 'AWS Code Commit', 'Custom'],
+  Webhook: ['GitHub', 'GitLab', 'BitBucket', 'Azure Repos', 'Custom'],
   Artifact: [
     'GCR',
     'ECR',

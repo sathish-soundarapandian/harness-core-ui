@@ -6,15 +6,15 @@ exports[`Valiate SLOTarget should render SLOTarget 1`] = `
     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-small"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      class="StyledProps--font StyledProps--main"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
       >
         cv.slos.sloTargetAndBudget.periodType
       </p>
       <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
       >
         
       </p>
@@ -86,7 +86,7 @@ exports[`Valiate SLOTarget should render SLOTarget 1`] = `
   >
     <div
       class="StyledProps--font StyledProps--main"
-      style="width: 450px;"
+      style="width: 500px;"
     >
       <div>
         <div
@@ -392,7 +392,7 @@ exports[`Valiate SLOTarget should render SLOTarget 1`] = `
           </div>
         </div>
         <p
-          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-semi StyledProps--margin-top-large StyledProps--margin-left-xxxlarge"
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-semi StyledProps--margin-left-xxxlarge"
           style="display: flex; align-items: center;"
         >
           <span
@@ -414,7 +414,7 @@ exports[`Valiate SLOTarget should render SLOTarget 1`] = `
               />
             </svg>
           </span>
-          cv.SLIMetricRatio
+          cv.CompositeSLO.SLIMetricRatio
         </p>
       </div>
     </div>
@@ -449,43 +449,43 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 1`] = `
     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-small"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      class="StyledProps--font StyledProps--main"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
       >
         cv.slos.sloTargetAndBudget.periodType
       </p>
       <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
       >
         Calender
       </p>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      class="StyledProps--font StyledProps--main"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
       >
         cv.periodLength
       </p>
       <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
       >
         Monthly
       </p>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      class="StyledProps--font StyledProps--main"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
       >
         cv.widowEnds
       </p>
       <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
       >
         10
       </p>
@@ -557,7 +557,7 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 1`] = `
   >
     <div
       class="StyledProps--font StyledProps--main"
-      style="width: 450px;"
+      style="width: 500px;"
     >
       <div>
         <div
@@ -863,7 +863,7 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 1`] = `
           </div>
         </div>
         <p
-          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-semi StyledProps--margin-top-large StyledProps--margin-left-xxxlarge"
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-semi StyledProps--margin-left-xxxlarge"
           style="display: flex; align-items: center;"
         >
           <span
@@ -885,7 +885,7 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 1`] = `
               />
             </svg>
           </span>
-          cv.SLIMetricRatio
+          cv.CompositeSLO.SLIMetricRatio
         </p>
       </div>
     </div>
@@ -920,43 +920,43 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 2`] = `
     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-small"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      class="StyledProps--font StyledProps--main"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
       >
         cv.slos.sloTargetAndBudget.periodType
       </p>
       <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
       >
         Calender
       </p>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      class="StyledProps--font StyledProps--main"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
       >
         cv.periodLength
       </p>
       <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
       >
         Weekly
       </p>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      class="StyledProps--font StyledProps--main"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
       >
         cv.widowEnds
       </p>
       <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
       >
         Mon
       </p>
@@ -1028,7 +1028,7 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 2`] = `
   >
     <div
       class="StyledProps--font StyledProps--main"
-      style="width: 450px;"
+      style="width: 500px;"
     >
       <div>
         <div
@@ -1334,7 +1334,7 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 2`] = `
           </div>
         </div>
         <p
-          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-semi StyledProps--margin-top-large StyledProps--margin-left-xxxlarge"
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-semi StyledProps--margin-left-xxxlarge"
           style="display: flex; align-items: center;"
         >
           <span
@@ -1356,7 +1356,7 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 2`] = `
               />
             </svg>
           </span>
-          cv.SLIMetricRatio
+          cv.CompositeSLO.SLIMetricRatio
         </p>
       </div>
     </div>
@@ -1391,29 +1391,29 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 3`] = `
     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-small"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      class="StyledProps--font StyledProps--main"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
       >
         cv.slos.sloTargetAndBudget.periodType
       </p>
       <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
       >
         Calender
       </p>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      class="StyledProps--font StyledProps--main"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
       >
         cv.periodLength
       </p>
       <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
       >
         Quarterly
       </p>
@@ -1485,7 +1485,7 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 3`] = `
   >
     <div
       class="StyledProps--font StyledProps--main"
-      style="width: 450px;"
+      style="width: 500px;"
     >
       <div>
         <div
@@ -1791,7 +1791,7 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 3`] = `
           </div>
         </div>
         <p
-          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-semi StyledProps--margin-top-large StyledProps--margin-left-xxxlarge"
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-semi StyledProps--margin-left-xxxlarge"
           style="display: flex; align-items: center;"
         >
           <span
@@ -1813,7 +1813,7 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 3`] = `
               />
             </svg>
           </span>
-          cv.SLIMetricRatio
+          cv.CompositeSLO.SLIMetricRatio
         </p>
       </div>
     </div>
@@ -1848,29 +1848,29 @@ exports[`Valiate SLOTarget should render SLOTarget for rolling 1`] = `
     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-small"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      class="StyledProps--font StyledProps--main"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
       >
         cv.slos.sloTargetAndBudget.periodType
       </p>
       <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
       >
         Rolling
       </p>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      class="StyledProps--font StyledProps--main"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
       >
         cv.periodLength
       </p>
       <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"
       >
         10
       </p>
@@ -1942,7 +1942,7 @@ exports[`Valiate SLOTarget should render SLOTarget for rolling 1`] = `
   >
     <div
       class="StyledProps--font StyledProps--main"
-      style="width: 450px;"
+      style="width: 500px;"
     >
       <div>
         <div
@@ -2248,7 +2248,7 @@ exports[`Valiate SLOTarget should render SLOTarget for rolling 1`] = `
           </div>
         </div>
         <p
-          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-semi StyledProps--margin-top-large StyledProps--margin-left-xxxlarge"
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-semi StyledProps--margin-left-xxxlarge"
           style="display: flex; align-items: center;"
         >
           <span
@@ -2270,7 +2270,7 @@ exports[`Valiate SLOTarget should render SLOTarget for rolling 1`] = `
               />
             </svg>
           </span>
-          cv.SLIMetricRatio
+          cv.CompositeSLO.SLIMetricRatio
         </p>
       </div>
     </div>

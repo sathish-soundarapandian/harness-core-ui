@@ -266,6 +266,10 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
                 formik?.setFieldValue(`${path}.spec.configuration.roleArn`, '')
               setAwsRoles([])
             }}
+            templateProps={{
+              isTemplatizedView: true,
+              templateValue: inputSetData?.template?.spec?.configuration?.connectorRef
+            }}
           />
         </div>
       )}

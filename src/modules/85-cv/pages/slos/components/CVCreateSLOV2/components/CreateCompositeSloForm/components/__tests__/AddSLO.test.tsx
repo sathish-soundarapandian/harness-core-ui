@@ -25,11 +25,15 @@ jest.mock('@common/hooks', () => ({
 const serviceLevelObjectivesDetails = [
   {
     accountId: 'default',
+    orgIdentifier: 'default',
+    projectIdentifier: 'Project1',
     serviceLevelObjectiveRef: 'hHJYxnUFTCypZdmYr0Q0tQ',
     weightagePercentage: 50
   },
   {
     accountId: 'default',
+    orgIdentifier: 'default',
+    projectIdentifier: 'Project1',
     serviceLevelObjectiveRef: '7b-_GIZxRu6VjFqAqqdVDQ',
     weightagePercentage: 50
   }
@@ -74,14 +78,20 @@ describe('Validate  AddSLO', () => {
     useMutateAsGet.mockImplementation(() => {
       return {
         data: mockSLODashboardWidgetsData,
-        loading: true,
+        loading: false,
         error: null,
         refetch: jest.fn()
       }
     })
     const { getByText } = render(
       <TestWrapper>
-        <Formik initialValues={{ serviceLevelObjectivesDetails }} onSubmit={jest.fn()}>
+        <Formik
+          initialValues={[
+            { ...serviceLevelObjectivesDetails[0], serviceLevelObjectiveRef: 'SLO4' },
+            { ...serviceLevelObjectivesDetails[1], serviceLevelObjectiveRef: 'SLO3' }
+          ]}
+          onSubmit={jest.fn()}
+        >
           {() => <AddSLOs />}
         </Formik>
       </TestWrapper>
@@ -119,8 +129,8 @@ describe('Validate  AddSLO', () => {
     act(() => {
       fireEvent.click(addSloButton!)
     })
-    expect(getByText('SLO3')).toBeInTheDocument()
-    expect(getByText('SLO4')).toBeInTheDocument()
+    expect(getByText('SLO-3')).toBeInTheDocument()
+    expect(getByText('SLO-4')).toBeInTheDocument()
   })
 
   test('should render AddSLOs with existing values values', () => {

@@ -137,17 +137,13 @@ export function ExecutionListTable({
       className={css.table}
       columns={columns}
       data={content}
-      pagination={
-        totalElements > size
-          ? {
-              itemCount: totalElements,
-              pageSize: size,
-              pageCount: totalPages,
-              pageIndex: number,
-              gotoPage: page => updateQueryParams({ page })
-            }
-          : undefined
-      }
+      pagination={{
+        itemCount: totalElements,
+        pageSize: size,
+        pageCount: totalPages,
+        pageIndex: number,
+        gotoPage: page => updateQueryParams({ page })
+      }}
       sortable
       renderRowSubComponent={renderRowSubComponent}
       onRowClick={rowDetails => history.push(getExecutionPipelineViewLink(rowDetails, pathParams, queryParams))}

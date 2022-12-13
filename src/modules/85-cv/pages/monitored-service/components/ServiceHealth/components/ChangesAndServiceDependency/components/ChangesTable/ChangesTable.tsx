@@ -39,7 +39,8 @@ export default function ChangesTable({
   changeCategories,
   changeSourceTypes,
   recordsPerPage,
-  dataTooltipId
+  dataTooltipId,
+  monitoredServiceDetails
 }: ChangesTableInterface): JSX.Element {
   const [page, setPage] = useState(0)
   const { getString } = useStrings()
@@ -61,9 +62,13 @@ export default function ChangesTable({
     setPage(0)
   }, [startTime, endTime])
 
+  const monitoredServiceIdentifiers = monitoredServiceDetails?.map(item => item.monitoredServiceIdentifier || '')
+
   const changeEventListQueryParams = useMemo(() => {
     return {
-      ...(monitoredServiceIdentifier ? { monitoredServiceIdentifiers: [monitoredServiceIdentifier] } : {}),
+      ...(monitoredServiceIdentifier
+        ? { monitoredServiceIdentifiers: [monitoredServiceIdentifier] }
+        : { monitoredServiceIdentifiers }),
       ...(!monitoredServiceIdentifier && serviceIdentifier
         ? { serviceIdentifiers: Array.isArray(serviceIdentifier) ? serviceIdentifier : [serviceIdentifier] }
         : {}),

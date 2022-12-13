@@ -39,6 +39,7 @@ export interface CollapsableTableProps<T extends ScopedObjectDTO> {
   disableCollapse?: boolean
   isMultiSelect?: boolean
   selectedTab?: TAB_ID
+  preSelectedRecord?: ScopeAndIdentifier | undefined
 }
 
 export function CollapsableList<T extends ScopedObjectDTO>(props: CollapsableTableProps<T>): JSX.Element {
@@ -48,9 +49,12 @@ export function CollapsableList<T extends ScopedObjectDTO>(props: CollapsableTab
     selectedRecord,
     setSelectedRecord,
     selectedRecords,
-    setSelectedRecords
+    setSelectedRecords,
+    preSelectedRecord
   } = props
-
+  const isPreselected = (item: EntityReferenceResponse<T>): boolean => {
+    return selectedRecords.length === 0 && !selectedRecord && item.identifier === preSelectedRecord?.identifier
+  }
   const isSelected = (item: EntityReferenceResponse<T>): boolean => {
     if (isMultiSelect)
       return selectedRecords.some(sR => sR.identifier === item.identifier && getScopeFromDTO(item.record) === sR.scope)
@@ -74,7 +78,6 @@ export function CollapsableList<T extends ScopedObjectDTO>(props: CollapsableTab
       setSelectedRecord(props.selectedRecord === item.record ? undefined : item.record)
     }
   }
-
   return (
     <>
       <div className={css.referenceList}>
@@ -86,7 +89,7 @@ export function CollapsableList<T extends ScopedObjectDTO>(props: CollapsableTab
             iconProps={{ size: 12 } as IconProps}
             isRemovable={false}
             collapseClassName={cx(css.collapseWrapper, {
-              [css.selectedItem]: isSelected(item)
+              [css.selectedItem]: isPreselected(item) || isSelected(item)
             })}
             collapseHeaderClassName={cx(css.collapseHeader, { [css.hideCollapseIcon]: disableCollapse })}
             heading={
@@ -94,7 +97,7 @@ export function CollapsableList<T extends ScopedObjectDTO>(props: CollapsableTab
                 {props.recordRender({
                   item,
                   selectedScope: getScopeFromDTO(item.record),
-                  selected: isSelected(item)
+                  selected: isPreselected(item) || isSelected(item)
                 })}
               </div>
             }
@@ -102,7 +105,7 @@ export function CollapsableList<T extends ScopedObjectDTO>(props: CollapsableTab
             {props.collapsedRecordRender?.({
               item,
               selectedScope: getScopeFromDTO(item.record),
-              selected: isSelected(item)
+              selected: isPreselected(item) || isSelected(item)
             })}
           </Collapse>
         ))}

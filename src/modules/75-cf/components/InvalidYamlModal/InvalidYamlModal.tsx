@@ -41,7 +41,7 @@ const InvalidYamlModal = ({
     <Container flex className={css.modalFooter}>
       <Button
         loading={isLoading}
-        text={getString('cf.gitSync.tryAgain')}
+        text={getString('common.tryAgain')}
         variation={ButtonVariation.PRIMARY}
         onClick={event => {
           event.preventDefault()

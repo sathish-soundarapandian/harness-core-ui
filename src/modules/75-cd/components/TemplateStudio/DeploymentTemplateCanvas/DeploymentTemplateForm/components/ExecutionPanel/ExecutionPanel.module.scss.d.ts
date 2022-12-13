@@ -14,6 +14,7 @@ declare const styles: {
   readonly deploymentStepsCard: string
   readonly executionWidgetWrapper: string
   readonly headerText: string
+  readonly marginLeft: string
   readonly marginRight: string
   readonly stepsContainer: string
   readonly updateTemplateSettingsDialog: string

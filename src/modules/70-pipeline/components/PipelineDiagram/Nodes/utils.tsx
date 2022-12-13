@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { isNumber } from 'lodash-es'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import type { KVPair } from '../types'
 import { dragPlaceholderImageBase64 } from './assets/dragImageBase64'
 import { dragStagePlaceholderImageBase64 } from './assets/dragStageImageBase64'
 import type { Dimension } from './NodeDimensionStore'
@@ -42,20 +42,21 @@ export const getPositionOfAddIcon = (props: any, isRightNode?: boolean): string 
   return '-50px'
 }
 
-export const matrixNodeNameToJSON = (nodeName: KVPair): string => {
+export const transformMatrixLabels = (nodeData: string): string => {
   const parsedNodeName = {}
-
   try {
     // if object parse to yaml
-    if (JSON.parse(Object.values(nodeName)[0])) {
-      Object.values(nodeName).map((nodeDetails: string) => Object.assign(parsedNodeName, JSON.parse(nodeDetails)))
+    const parsedVal = JSON.parse(nodeData)
+    if (parsedVal && !isNumber(parsedVal)) {
+      Object.assign(parsedNodeName, parsedVal)
       return yamlStringify(parsedNodeName, { indent: 4 })
+    } else {
+      return JSON.stringify(nodeData)
     }
   } catch (_e) {
-    // name is string, parse it to string
-    return `(${Object.values(nodeName)?.join(', ')}): ` as string
+    // name is string/number, parse it to string
+    return JSON.stringify(nodeData)
   }
-  return JSON.stringify(nodeName)
 }
 
 export function getSGDimensions(nodeDimensionMetaData: Dimension, index: number): LayoutStyles {

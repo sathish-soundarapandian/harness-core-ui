@@ -301,12 +301,12 @@ function ServerlessAwsLambdaManifest({
                       formik={formik}
                       expressions={expressions}
                       allowableTypes={allowableTypes}
-                      allowOnlyOneFilePath={true}
                       fieldPath="paths"
                       pathLabel={getString('common.git.folderPath')}
                       placeholder={getString('pipeline.manifestType.folderPathPlaceholder')}
                       defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                       dragDropFieldWidth={filePathWidth}
+                      allowOnlyOneFilePath={true}
                     />
                     {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions

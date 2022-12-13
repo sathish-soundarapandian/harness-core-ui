@@ -25,7 +25,8 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
   filterState,
   dispatch,
   filterItemsData,
-  hideMonitoresServicesFilter
+  hideMonitoresServicesFilter,
+  isAccountLevel
 }) => {
   const { getString } = useStrings()
 
@@ -65,7 +66,7 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
           }}
         />
       </Layout.Vertical>
-      {!hideMonitoresServicesFilter && (
+      {!hideMonitoresServicesFilter && !isAccountLevel && (
         <Layout.Vertical width="240px" margin={{ right: 'small' }} data-testid="monitoredServices-filter">
           <Select
             value={{
@@ -97,18 +98,20 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
           }}
         />
       </Layout.Vertical>
-      <Layout.Vertical width="240px" margin={{ right: 'small' }} data-testid="sliType-filter">
-        <Select
-          value={{
-            label: `${getString('cv.slos.sliType')}: ${defaultTo(filterState?.sliTypes?.label, getString('all'))}`,
-            value: defaultTo(filterState?.sliTypes?.value, getString('all'))
-          }}
-          items={getSliTypeOptionsForFilter(getString)}
-          onChange={item => {
-            dispatch(updateSliType({ sliTypes: item }))
-          }}
-        />
-      </Layout.Vertical>
+      {!isAccountLevel && (
+        <Layout.Vertical width="240px" margin={{ right: 'small' }} data-testid="sliType-filter">
+          <Select
+            value={{
+              label: `${getString('cv.slos.sliType')}: ${defaultTo(filterState?.sliTypes?.label, getString('all'))}`,
+              value: defaultTo(filterState?.sliTypes?.value, getString('all'))
+            }}
+            items={getSliTypeOptionsForFilter(getString)}
+            onChange={item => {
+              dispatch(updateSliType({ sliTypes: item }))
+            }}
+          />
+        </Layout.Vertical>
+      )}
       {!hideMonitoresServicesFilter && !hideResetFilterButton && (
         <Button
           className={css.clearButton}

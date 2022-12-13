@@ -10,19 +10,22 @@ import { Button, FormInput, Layout, TextInput, Text } from '@harness/uicore'
 import { Formik } from 'formik'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import {
   useAddHarnessApprovalActivity,
   ApprovalInstanceResponse,
   HarnessApprovalActivityRequest,
   HarnessApprovalInstanceDetails,
-  ResponseHarnessApprovalInstanceAuthorization
+  ResponseHarnessApprovalInstanceAuthorization,
+  ApprovalUserGroupDTO
 } from 'services/pipeline-ng'
 import { String, useStrings } from 'framework/strings'
 import { Duration } from '@common/exports'
 import { isApprovalWaiting } from '@pipeline/utils/approvalUtils'
 import { StepDetails } from '@pipeline/components/execution/StepDetails/common/StepDetails/StepDetails'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
+import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { HarnessApprover } from './HarnessApprover/HarnessApprover'
 import css from './HarnessApprovalTab.module.scss'
 
@@ -68,12 +71,40 @@ export function HarnessApprovalTab(props: HarnessApprovalTabProps): React.ReactE
   const isCurrentUserAuthorized = !!authData?.data?.authorized
   const currentUserUnAuthorizedReason = authData?.data?.reason
   const isWaitingAll = isWaiting && approvalData && isApprovalWaiting(approvalData.status)
-
   async function handleSubmit(data: HarnessApprovalActivityRequest): Promise<void> {
     const newState = await submitApproval({ ...data, action: action.current })
     updateState(newState?.data as ApprovalData)
   }
 
+  const generateUserGroupsLinkElements = React.useCallback((): JSX.Element[] => {
+    const userGroups: JSX.Element[] = []
+    approvalData?.details?.approvers?.userGroups?.forEach(userGroup => {
+      const userGroupDetails = approvalData?.details?.validatedApprovalUserGroups?.find(
+        (userGroupObject: { identifier: string }) => {
+          const userGroupIdentifier = userGroup.indexOf('.') < 0 ? userGroup : userGroup.split('.')[1]
+          return userGroupObject.identifier === userGroupIdentifier
+        }
+      )
+      userGroupDetails &&
+        userGroups.push(
+          <Link
+            to={{
+              pathname: routes.toUserGroupDetails({
+                accountId: userGroupDetails?.accountIdentifier as string,
+                orgIdentifier: userGroupDetails?.orgIdentifier,
+                projectIdentifier: userGroupDetails?.projectIdentifier,
+                userGroupIdentifier: userGroupDetails?.identifier,
+                module: 'cd'
+              }),
+              search: `?parentScope=${getPrincipalScopeFromDTO(userGroupDetails as ApprovalUserGroupDTO)}`
+            }}
+          >
+            {userGroupDetails?.name}
+          </Link>
+        )
+    })
+    return userGroups
+  }, [approvalData])
   const { getString } = useStrings()
 
   return (
@@ -120,6 +151,7 @@ export function HarnessApprovalTab(props: HarnessApprovalTabProps): React.ReactE
               endTs: endTs,
               stepParameters: props.stepParameters
             }}
+            labels={[{ label: getString('common.userGroups'), value: generateUserGroupsLinkElements() }]}
           />
         </React.Fragment>
       ) : null}

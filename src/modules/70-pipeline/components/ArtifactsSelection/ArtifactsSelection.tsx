@@ -95,7 +95,14 @@ export default function ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, GITHUB_PACKAGES, AZURE_ARTIFACTS_NG } = useFeatureFlags()
+  const {
+    CUSTOM_ARTIFACT_NG,
+    NG_GOOGLE_ARTIFACT_REGISTRY,
+    GITHUB_PACKAGES,
+    AZURE_ARTIFACTS_NG,
+    CD_AMI_ARTIFACTS_NG,
+    AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
+  } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
@@ -121,6 +128,13 @@ export default function ArtifactsSelection({
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
     }
     if (
+      deploymentType === ServiceDeploymentType.Kubernetes &&
+      CD_AMI_ARTIFACTS_NG &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AmazonMachineImage)
+    ) {
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AmazonMachineImage)
+    }
+    if (
       [ServiceDeploymentType.Kubernetes, ServiceDeploymentType.CustomDeployment].includes(
         deploymentType as ServiceDeploymentType
       ) &&
@@ -128,6 +142,13 @@ export default function ArtifactsSelection({
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
+    }
+    if (
+      deploymentType === 'AzureWebApp' &&
+      AZURE_WEBAPP_NG_JENKINS_ARTIFACTS &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Jenkins)
+    ) {
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Jenkins)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploymentType])

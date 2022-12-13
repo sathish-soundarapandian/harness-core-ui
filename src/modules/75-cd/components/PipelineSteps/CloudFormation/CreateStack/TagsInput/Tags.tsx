@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 import {
@@ -41,6 +41,10 @@ export const Tags = ({ allowableTypes, readonly = false, formik, regions }: Tags
   const { setFieldValue, values } = formik
   const [showRemoteTags, setShowRemoteTags] = useState<boolean>(false)
   const tagsType = defaultTo(values?.spec?.configuration?.tags?.type, TemplateTypes.Inline)
+
+  useEffect(() => {
+    setFieldValue('spec.configuration.tags.type', tagsType)
+  }, [])
   const remoteTagsPath = values?.spec?.configuration?.tags?.spec?.store?.spec?.paths
   /* istanbul ignore next */
   const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -75,7 +79,7 @@ export const Tags = ({ allowableTypes, readonly = false, formik, regions }: Tags
       <div className={css.templateSelect}>
         <select
           className={css.templateDropdown}
-          name="spec.configuration.templateFile.type"
+          name="spec.configuration.tags.type"
           disabled={readonly}
           value={tagsType}
           onChange={e => {

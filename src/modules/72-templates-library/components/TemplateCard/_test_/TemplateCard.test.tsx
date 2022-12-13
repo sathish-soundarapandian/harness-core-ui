@@ -27,8 +27,11 @@ jest.mock('services/cd-ng', () => ({
       ],
       refetch: jest.fn()
     }
-  }),
-  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
+  })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn() }
   })
 }))

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, act, getByText as getElementByText, waitFor } from '@testing-library/react'
+import { render, fireEvent, act, getByText as getElementByText, waitFor, findByText } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
@@ -107,33 +107,26 @@ describe('ECSInfraSpecEditable tests', () => {
       </TestWrapper>
     )
 
+    // Region
+    const regionInput = queryByNameAttribute('region', container) as HTMLInputElement
+    expect(regionInput.value).toBe('GovCloud (US-East)')
+
+    // Cluster
+    const clusterInput = queryByNameAttribute('cluster', container) as HTMLInputElement
+    expect(clusterInput.value).toBe('aws-cluster-3')
+
+    // Allow simultaneous deployments on the same infrastructure checkbox
+    const allowSimultaneousDeploymentsCheckbox = queryByNameAttribute('allowSimultaneousDeployments', container)
+    expect(allowSimultaneousDeploymentsCheckbox).toBeChecked()
+
     // connectorRef
     await waitFor(() => expect(getByText('Aws Connector 2')).toBeInTheDocument())
     const connnectorRefInput = getByTestId(/connectorRef/)
     expect(connnectorRefInput).toBeTruthy()
     userEvent.click(connnectorRefInput!)
-
     await testConnectorRefChange()
-    await waitFor(() =>
-      expect(fetchClusters).toBeCalledWith({
-        queryParams: {
-          accountIdentifier: 'testAccountId',
-          orgIdentifier: 'testOrg',
-          projectIdentifier: 'testProject',
-          awsConnectorRef: 'Aws_Connector_1',
-          region: 'us-gov-east-1'
-        }
-      })
-    )
-    // region
-    const regionInput = queryByNameAttribute('region', container) as HTMLInputElement
-    expect(regionInput.value).toBe('GovCloud (US-East)')
-    // cluster
-    const clusterInput = queryByNameAttribute('cluster', container) as HTMLInputElement
-    expect(clusterInput.value).toBe('aws-cluster-3')
-    // Allow simultaneous deployments on the same infrastructure checkbox
-    const allowSimultaneousDeploymentsCheckbox = queryByNameAttribute('allowSimultaneousDeployments', container)
-    expect(allowSimultaneousDeploymentsCheckbox).toBeChecked()
+
+    await waitFor(() => expect(clusterInput.value).toBe(''))
   })
 
   test('cluster field should have loading as placeholder text when useClusters returns loading as true', async () => {
@@ -155,9 +148,61 @@ describe('ECSInfraSpecEditable tests', () => {
       </TestWrapper>
     )
 
-    // cluster
+    const allDropDownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+
+    const clusterDropdownIcon = allDropDownIcons[2]
+    userEvent.click(clusterDropdownIcon!)
+    expect(portalDivs.length).toBe(1)
+    const clusterDropdownPortalDiv = portalDivs[0]
+    const clusterSelectListMenu = clusterDropdownPortalDiv.querySelector('.bp3-menu')
+    const awsCluster1Option = await findByText(clusterSelectListMenu as HTMLElement, 'Loading Clusters...')
+    expect(awsCluster1Option).not.toBeNull()
+    expect(awsCluster1Option.parentElement?.parentElement?.parentElement).toHaveClass('bp3-disabled')
+    userEvent.click(awsCluster1Option)
     const clusterInput = queryByNameAttribute('cluster', container) as HTMLInputElement
-    expect(clusterInput.placeholder).toBe('loading')
+    expect(clusterInput.value).toBe('')
+  })
+
+  test('cluster field should show error as first option when useClusters returns error', async () => {
+    jest.spyOn(cdng, 'useClusters').mockImplementation((): any => {
+      return {
+        error: {
+          code: 'KRYO_HANDLER_NOT_FOUND_ERROR',
+          message: 'Error while fetching clusters',
+          status: 'ERROR'
+        },
+        loading: false,
+        data: null,
+        refetch: fetchClusters
+      }
+    })
+    const { container } = render(
+      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
+        <ECSInfraSpecEditable
+          initialValues={existingInitialValues}
+          allowableTypes={allowableTypes}
+          readonly={false}
+          onUpdate={updateStage}
+        />
+      </TestWrapper>
+    )
+
+    const allDropDownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+
+    const clusterDropdownIcon = allDropDownIcons[2]
+    userEvent.click(clusterDropdownIcon!)
+    expect(portalDivs.length).toBe(1)
+    const clusterDropdownPortalDiv = portalDivs[0]
+    const clusterSelectListMenu = clusterDropdownPortalDiv.querySelector('.bp3-menu')
+    const awsCluster1Option = await findByText(clusterSelectListMenu as HTMLElement, 'Error while fetching clusters')
+    expect(awsCluster1Option).not.toBeNull()
+    userEvent.click(awsCluster1Option)
+    const clusterInput = queryByNameAttribute('cluster', container) as HTMLInputElement
+    expect(clusterInput.value).toBe('')
   })
 
   test('check infra tab for all existing Runtime initial values ', async () => {

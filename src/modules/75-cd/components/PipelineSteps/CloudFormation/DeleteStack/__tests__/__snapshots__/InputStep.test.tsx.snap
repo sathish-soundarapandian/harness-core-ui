@@ -284,7 +284,7 @@ exports[`Test cloudformation delete stack input set should render all input vari
                 class="StyledProps--font StyledProps--main"
               >
                 <div
-                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                  class="Layout--horizontal StyledProps--main"
                 >
                   <div
                     class="bp3-form-group"
@@ -397,7 +397,7 @@ exports[`Test cloudformation delete stack input set should render all input vari
                 class="StyledProps--font StyledProps--main"
               >
                 <div
-                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                  class="Layout--horizontal StyledProps--main"
                 >
                   <div
                     class="bp3-form-group"

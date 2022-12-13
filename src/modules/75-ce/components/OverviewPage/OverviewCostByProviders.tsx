@@ -8,6 +8,7 @@
 import React, { useMemo, useState } from 'react'
 import moment from 'moment'
 import { Container, Layout, Text } from '@harness/uicore'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import type { TimeRange } from '@ce/pages/overview/OverviewPage'
 import { CCM_CHART_TYPES } from '@ce/constants'
 import { getTimeFilters } from '@ce/utils/perspectiveUtils'
@@ -18,7 +19,6 @@ import {
   useFetchOverviewTimeSeriesQuery
 } from 'services/ce/services'
 import { useStrings } from 'framework/strings'
-import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
 import { ChartConfigType, transformTimeSeriesData } from '../CloudCostInsightChart/chartUtils'
 import CEChart from '../CEChart/CEChart'
 import { ChartTypes, Loader } from './OverviewPageLayout'

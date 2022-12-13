@@ -80,7 +80,7 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
   }
 
   return (
-    <Layout.Vertical spacing="medium">
+    <Layout.Vertical spacing="medium" margin={{ bottom: 'xlarge' }}>
       {!!template?.artifacts?.primary?.primaryArtifactRef && (
         <PrimaryArtifactRef primaryArtifact={allValues?.artifacts?.primary} template={template} {...commonProps} />
       )}

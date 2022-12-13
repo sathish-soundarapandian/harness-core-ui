@@ -127,7 +127,7 @@ export const createStepNodeFromTemplate = (template: TemplateSummaryResponse, is
       })) as unknown as StepElementConfig
 }
 
-export const getScopedTemplatesFromTemplateRefs = (templateRefs: string[]) => {
+export const getScopedTemplatesFromTemplateRefs = (templateRefs: string[]): Record<string, string[]> => {
   return templateRefs.reduce((a: { [key: string]: string[] }, b) => {
     const identifier = getIdentifierFromValue(b)
     const scope = getScopeFromValue(b)
@@ -140,7 +140,10 @@ export const getScopedTemplatesFromTemplateRefs = (templateRefs: string[]) => {
   }, {})
 }
 
-const getPromisesForTemplateList = (params: GetTemplateListQueryParams, templateRefs: string[]) => {
+const getPromisesForTemplateList = (
+  params: GetTemplateListQueryParams,
+  templateRefs: string[]
+): Promise<ResponsePageTemplateSummaryResponse>[] => {
   const scopedTemplates = getScopedTemplatesFromTemplateRefs(templateRefs)
 
   const promises: Promise<ResponsePageTemplateSummaryResponse>[] = []
@@ -170,7 +173,7 @@ const getPromisesForTemplateGet = (
   params: GetTemplateQueryParams,
   templateRefs: string[],
   storeMetadata?: StoreMetadata
-) => {
+): Promise<ResponseTemplateResponse>[] => {
   const promises: Promise<ResponseTemplateResponse>[] = []
   templateRefs.forEach(templateRef => {
     const templateIdentifier = getIdentifierFromValue(templateRef)

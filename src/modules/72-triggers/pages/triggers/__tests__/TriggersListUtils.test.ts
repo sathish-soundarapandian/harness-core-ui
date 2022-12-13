@@ -20,6 +20,6 @@ describe('Test util methods', () => {
     webhookTriggerCategories = triggerCategories.find((item: CategoryInterface) => item.categoryValue === 'Webhook')
     expect(webhookTriggerCategories).toBeDefined()
     expect(webhookTriggerCategories?.items?.find(item => item.value === Connectors.AZURE_REPO)).toBeDefined()
-    expect(webhookTriggerCategories?.items?.length).toBe(6)
+    expect(webhookTriggerCategories?.items?.length).toBe(5)
   })
 })

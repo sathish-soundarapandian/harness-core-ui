@@ -44,6 +44,7 @@ export default function BaseScript(props: {
         <FormInput.Select
           items={shellScriptType}
           name="spec.shell"
+          disabled={readonly}
           label={getString('common.scriptType')}
           placeholder={getString('common.scriptType')}
           onChange={() => {

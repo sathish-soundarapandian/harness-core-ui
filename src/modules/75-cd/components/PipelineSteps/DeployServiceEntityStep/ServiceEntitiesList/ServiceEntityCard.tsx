@@ -37,6 +37,7 @@ export interface ServiceEntityCardProps extends ServiceData {
   onEditClick(svc: ServiceData): void
   onDeleteClick(svc: ServiceData): void
   cardClassName?: string
+  isPropogateFromStage: boolean
 }
 
 export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactElement {
@@ -50,7 +51,8 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
     allowableTypes,
     stageIdentifier,
     deploymentType,
-    cardClassName
+    cardClassName,
+    isPropogateFromStage
   } = props
   const [showInputs, setShowInputs] = React.useState(!!defaultExpanded)
   const { getString } = useStrings()
@@ -96,24 +98,26 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
             </Text>
           </span>
         </div>
-        <Layout.Horizontal>
-          <Button
-            icon="Edit"
-            data-testid={`edit-service-${service.identifier}`}
-            disabled={readonly}
-            onClick={() => onEditClick({ service, serviceInputs })}
-            minimal
-            aria-label={getString('editService')}
-          />
-          <Button
-            icon="main-trash"
-            data-testid={`delete-service-${service.identifier}`}
-            disabled={readonly}
-            onClick={() => onDeleteClick({ service, serviceInputs })}
-            aria-label={getString('common.deleteService')}
-            minimal
-          />
-        </Layout.Horizontal>
+        {!isPropogateFromStage && (
+          <Layout.Horizontal>
+            <Button
+              icon="Edit"
+              data-testid={`edit-service-${service.identifier}`}
+              disabled={readonly}
+              onClick={() => onEditClick({ service, serviceInputs })}
+              minimal
+              aria-label={getString('editService')}
+            />
+            <Button
+              icon="main-trash"
+              data-testid={`delete-service-${service.identifier}`}
+              disabled={readonly}
+              onClick={() => onDeleteClick({ service, serviceInputs })}
+              aria-label={getString('common.deleteService')}
+              minimal
+            />
+          </Layout.Horizontal>
+        )}
       </div>
       {serviceInputs && MULTI_SERVICE_INFRA && get(formik?.values, `serviceInputs.${serviceIdentifier}`) ? (
         <>

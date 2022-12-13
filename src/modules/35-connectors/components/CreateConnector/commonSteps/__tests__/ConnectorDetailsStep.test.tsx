@@ -25,8 +25,11 @@ jest.mock('services/cd-ng', () => ({
   }),
   useListGitSync: jest.fn().mockImplementation(() => {
     return { data: gitConfigs, refetch: jest.fn() }
-  }),
-  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
+  })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })
 }))

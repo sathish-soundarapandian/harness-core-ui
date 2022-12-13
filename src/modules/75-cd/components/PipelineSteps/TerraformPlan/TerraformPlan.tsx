@@ -815,7 +815,7 @@ function TerraformPlanWidget(
                           disabled={readonly}
                         />
                       </div>
-                      <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
+                      <div className={cx(stepCss.formGroup, css.addMarginTop)}>
                         <FormMultiTypeCheckboxField
                           formik={formik as FormikProps<unknown>}
                           name={'spec.configuration.exportTerraformPlanJson'}
@@ -835,6 +835,34 @@ function TerraformPlanWidget(
                             onChange={
                               /* istanbul ignore next */ value =>
                                 formik.setFieldValue('spec?.configuration?.exportTerraformPlanJson', value)
+                            }
+                            style={{ alignSelf: 'center' }}
+                            isReadonly={readonly}
+                          />
+                        )}
+                      </div>
+                      <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
+                        <FormMultiTypeCheckboxField
+                          formik={formik as FormikProps<unknown>}
+                          name={'spec.configuration.exportTerraformHumanReadablePlan'}
+                          label={getString('cd.exportTerraformHumanReadablePlan')}
+                          multiTypeTextbox={{ expressions, allowableTypes }}
+                          disabled={readonly}
+                        />
+                        {getMultiTypeFromValue(formik.values?.spec?.configuration?.exportTerraformHumanReadablePlan) ===
+                          MultiTypeInputType.RUNTIME && (
+                          <ConfigureOptions
+                            value={
+                              (formik.values?.spec?.configuration?.exportTerraformHumanReadablePlan || '') as string
+                            }
+                            type="String"
+                            variableName="spec?.configuration?.exportTerraformHumanReadablePlan"
+                            showRequiredField={false}
+                            showDefaultField={false}
+                            showAdvanced={true}
+                            onChange={
+                              /* istanbul ignore next */ value =>
+                                formik.setFieldValue('spec?.configuration?.exportTerraformHumanReadablePlan', value)
                             }
                             style={{ alignSelf: 'center' }}
                             isReadonly={readonly}
@@ -921,7 +949,8 @@ export class TerraformPlan extends PipelineStep<TFPlanFormData> {
           }
         },
         secretManagerRef: '',
-        exportTerraformPlanJson: false
+        exportTerraformPlanJson: false,
+        exportTerraformHumanReadablePlan: false
       },
       provisionerIdentifier: ''
     }
@@ -1001,7 +1030,8 @@ export class TerraformPlan extends PipelineStep<TFPlanFormData> {
                 }))
               : [{ key: '', value: '', id: uuid() }]
             : data?.spec?.configuration?.environmentVariables,
-          exportTerraformPlanJson: data?.spec?.configuration?.exportTerraformPlanJson
+          exportTerraformPlanJson: data?.spec?.configuration?.exportTerraformPlanJson,
+          exportTerraformHumanReadablePlan: data?.spec?.configuration?.exportTerraformHumanReadablePlan
         }
       }
     }

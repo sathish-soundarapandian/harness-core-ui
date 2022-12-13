@@ -60,7 +60,7 @@ import {
   getBmDataSources
 } from '@ce/utils/perspectiveUtils'
 import { AGGREGATE_FUNCTION, getGridColumnsByGroupBy } from '@ce/components/PerspectiveGrid/Columns'
-import { getGMTStartDateTime, getGMTEndDateTime, DEFAULT_TIME_RANGE } from '@ce/utils/momentUtils'
+import { getGMTStartDateTime, getGMTEndDateTime, DEFAULT_TIME_RANGE } from '@common/utils/momentUtils'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import EmptyView from '@ce/images/empty-state.svg'

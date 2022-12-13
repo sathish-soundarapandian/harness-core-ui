@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { defaultTo, get } from 'lodash-es'
+import { connect } from 'formik'
 import {
   DataTooltipInterface,
   MultiTypeInputType,
@@ -16,14 +17,15 @@ import {
   Layout
 } from '@harness/uicore'
 import type { FormMultiTypeInputProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
-import { connect, FormikContextType } from 'formik'
-import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
+import type { FormikContextProps, FormikExtended } from '@harness/uicore/dist/components/FormikForm/utils'
+
 import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import { useRenderMultiTypeInputWithAllowedValues } from '../utils/utils'
 
-interface SelectInputSetViewProps extends FormMultiTypeInputProps {
-  formik?: FormikContextType<any>
+interface SelectInputSetViewProps extends FormMultiTypeInputProps, FormikContextProps<any> {
+  formik?: FormikExtended<any>
   fieldPath: string
   template: any
   tooltipProps?: DataTooltipInterface
@@ -64,7 +66,7 @@ export function SelectInputSet(props: SelectInputSetViewProps): JSX.Element {
 
   return (
     <Container className={className}>
-      <Layout.Horizontal spacing={'medium'}>
+      <Layout.Horizontal>
         {inputField}
         {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
           <SelectConfigureOptions
@@ -76,7 +78,7 @@ export function SelectInputSet(props: SelectInputSetViewProps): JSX.Element {
             showDefaultField={false}
             showAdvanced={true}
             onChange={val => formik?.setFieldValue(name, val)}
-            style={{ marginTop: 'var(--spacing-6)' }}
+            style={label ? { marginTop: 'var(--spacing-6)' } : undefined}
             {...configureOptionsProps}
             isReadonly={disabled}
           />

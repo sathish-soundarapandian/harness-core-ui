@@ -8,7 +8,7 @@
 .optionBtns {
   display: flex;
   align-items: center;
-  margin: 0 250px;
+  margin: 0 180px;
 }
 
 .pipelineHeader {
@@ -51,8 +51,9 @@
 .run-modal-header {
   min-height: var(--spacing-8);
   display: flex;
-  padding: var(--spacing-xlarge);
-  border-bottom: 1px solid #d9dae6;
+  justify-content: flex-start;
+  align-items: center;
+  padding: var(--spacing-medium) var(--spacing-large);
 }
 
 .run-modal-header-title {
@@ -66,6 +67,10 @@
   overflow-x: hidden;
   overflow: auto !important;
   border-top: 1px solid var(--grey-200);
+}
+
+.gitRemoteDetailsWrapper {
+  padding: 0 var(--spacing-large) var(--spacing-medium);
 }
 
 .no-pipeline-input-set-form {

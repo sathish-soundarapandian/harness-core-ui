@@ -26,7 +26,7 @@ import { ServicesDashboardPage } from './ServicesDashboardPage/ServicesDashboard
 
 import css from './Services.module.scss'
 
-export const Services: React.FC = () => {
+export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showServicesDashboard }) => {
   const { view, setView, fetchDeploymentList } = useServiceStore()
   const { getString } = useStrings()
   const isCommunity = useGetCommunity()
@@ -53,9 +53,13 @@ export const Services: React.FC = () => {
       <Page.Header
         title={getString('services')}
         breadcrumbs={<NGBreadcrumbs />}
-        toolbar={<TimeRangeSelector timeRange={resultTimeFilterRange?.range} setTimeRange={setTimeRange} minimal />}
+        toolbar={
+          showServicesDashboard && (
+            <TimeRangeSelector timeRange={resultTimeFilterRange?.range} setTimeRange={setTimeRange} minimal />
+          )
+        }
       />
-      {isCommunity ? (
+      {isCommunity || !showServicesDashboard ? (
         <ServicesListPage />
       ) : (
         <DeploymentsTimeRangeContext.Provider value={{ timeRange: resultTimeFilterRange, setTimeRange }}>

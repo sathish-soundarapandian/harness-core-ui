@@ -19,13 +19,14 @@ import {
   getMultiTypeFromValue,
   FormInput,
   MultiSelectOption,
-  FormikForm
+  FormikForm,
+  SelectWithSubmenuOption
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { cloneDeep, defaultTo, isEqual } from 'lodash-es'
+import { cloneDeep, defaultTo, isEqual, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { PopoverInteractionKind } from '@blueprintjs/core'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -45,11 +46,12 @@ import type {
   JenkinsArtifactType
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
-import type { SubmenuSelectOption } from '@pipeline/components/PipelineSteps/Steps/JenkinsStep/types'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { isMultiTypeRuntime } from '@common/utils/utils'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
+import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
 
 function FormComponent({
@@ -68,7 +70,7 @@ function FormComponent({
   const lastOpenedJob = useRef<any>(null)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const [jobDetails, setJobDetails] = useState<SubmenuSelectOption[]>([])
+  const [jobDetails, setJobDetails] = useState<SelectWithSubmenuOption[]>([])
   const selectedJobName = useRef<string | null>(null)
   const [artifactPath, setFilePath] = useState<SelectOption[]>([])
   const [build, setJenkinsBuilds] = useState<SelectOption[]>([])
@@ -80,7 +82,9 @@ function FormComponent({
     branch
   }
 
-  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value)
+  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
+  const jobNameValue = formik.values?.spec?.jobName
+  const artifactValue = getGenuineValue(formik.values?.spec?.artifactPath)
   const isTemplateContext = context === ModalViewFor.Template
 
   const {
@@ -89,7 +93,7 @@ function FormComponent({
     loading: fetchingJobs,
     error: fetchingJobsError
   } = useGetJobDetailsForJenkins({
-    lazy: true,
+    lazy: getMultiTypeFromValue(prevStepData?.connectorId) === MultiTypeInputType.RUNTIME,
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString()
@@ -99,36 +103,31 @@ function FormComponent({
   const {
     refetch: refetchartifactPaths,
     data: artifactPathsResponse,
-    loading: fetchingArtifacts
+    loading: fetchingArtifacts,
+    error: errorFetchingPath
   } = useGetArtifactPathForJenkins({
+    lazy: true,
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString()
     },
-    jobName: encodeURIComponent(encodeURIComponent(initialValues?.spec?.jobName as string))
+    jobName: encodeURIComponent(encodeURIComponent(jobNameValue?.label || ''))
   })
 
   const {
     refetch: refetchJenkinsBuild,
     data: jenkinsBuildResponse,
-    loading: fetchingBuild
+    loading: fetchingBuild,
+    error: errorFetchingBuild
   } = useGetBuildsForJenkins({
+    lazy: true,
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString(),
-      artifactPath: initialValues?.spec?.artifactPath || ''
+      artifactPath: artifactValue || ''
     },
-    jobName: encodeURIComponent(encodeURIComponent(initialValues?.spec?.jobName as string))
+    jobName: encodeURIComponent(encodeURIComponent(jobNameValue?.label || ''))
   })
-
-  useEffect(() => {
-    refetchJobs({
-      queryParams: {
-        ...commonParams,
-        connectorRef: connectorRefValue?.toString()
-      }
-    })
-  }, [prevStepData])
 
   useEffect(() => {
     if (artifactPathsResponse?.data) {
@@ -158,13 +157,13 @@ function FormComponent({
     }
   }, [jenkinsBuildResponse])
 
-  const getJobItems = (jobs: JobDetails[]): SubmenuSelectOption[] => {
+  const getJobItems = (jobs: JobDetails[]): SelectWithSubmenuOption[] => {
     return jobs?.map(job => {
       return {
         label: job.jobName || '',
         value: job.url || '',
         submenuItems: [],
-        hasSubItems: job.folder
+        hasSubmenuItems: job.folder
       }
     })
   }
@@ -177,7 +176,7 @@ function FormComponent({
           label: targetJob?.jobName || '',
           value: targetJob?.url || '',
           submenuItems: [],
-          hasSubItems: targetJob?.folder
+          hasSubmenuItems: targetJob?.folder
         }
         formik.setValues({
           ...formik.values,
@@ -216,7 +215,7 @@ function FormComponent({
 
   useEffect(() => {
     if (lastOpenedJob.current) {
-      setJobDetails((prevState: SubmenuSelectOption[]) => {
+      setJobDetails((prevState: SelectWithSubmenuOption[]) => {
         const clonedJobDetails = cloneDeep(prevState)
         const parentJob = clonedJobDetails.find(obj => obj.value === lastOpenedJob.current)
         if (parentJob) {
@@ -230,7 +229,7 @@ function FormComponent({
           label: job.jobName || '',
           value: job.url || '',
           submenuItems: [],
-          hasSubItems: job.folder
+          hasSubmenuItems: job.folder
         }
       })
       if (!isEqual(jobs, jobDetails)) {
@@ -238,6 +237,20 @@ function FormComponent({
       }
     }
   }, [jobsResponse])
+
+  const artifactPathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingArtifacts} />
+  ))
+
+  const buildItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingBuild} />
+  ))
+
+  const canFetchBuildsOrArtifacts =
+    getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.RUNTIME ||
+    getMultiTypeFromValue(jobNameValue) === MultiTypeInputType.RUNTIME ||
+    !jobNameValue ||
+    !connectorRefValue
 
   return (
     <FormikForm>
@@ -262,57 +275,28 @@ function FormComponent({
               expressions,
               width: 500,
               selectWithSubmenuProps: {
-                loading: fetchingJobs,
                 items: jobDetails,
-                interactionKind: PopoverInteractionKind.CLICK,
                 allowCreatingNewItems: true,
-                onChange: (primaryValue, secondaryValue, type) => {
-                  const newJobName =
-                    type === MultiTypeInputType.FIXED && primaryValue && secondaryValue
-                      ? secondaryValue
-                      : primaryValue || ''
-                  formik.setFieldValue('spec.jobName', newJobName)
+                onChange: primaryValue => {
                   setJenkinsBuilds([])
-                  selectedJobName.current = isMultiTypeRuntime(type)
-                    ? (newJobName as unknown as string)
-                    : newJobName.label
-                  if (type === MultiTypeInputType.FIXED && newJobName?.label?.length) {
-                    refetchartifactPaths({
-                      queryParams: {
-                        ...commonParams,
-                        connectorRef: connectorRefValue?.toString()
-                      },
-                      pathParams: {
-                        jobName: encodeURIComponent(encodeURIComponent(newJobName?.label))
-                      }
-                    })
-                    refetchJenkinsBuild({
+                  selectedJobName.current =
+                    getMultiTypeFromValue(primaryValue) === MultiTypeInputType.RUNTIME
+                      ? (primaryValue as unknown as string)
+                      : primaryValue.label
+                },
+                onSubmenuOpen: (item?: SelectWithSubmenuOption) => {
+                  lastOpenedJob.current = item?.value
+                  const parentJob = jobDetails?.find(job => job.label === item?.label)
+                  if (!parentJob?.submenuItems?.length) {
+                    return refetchJobs({
                       queryParams: {
                         ...commonParams,
                         connectorRef: connectorRefValue?.toString(),
-                        artifactPath: ''
-                      },
-                      pathParams: {
-                        jobName: encodeURIComponent(encodeURIComponent(selectedJobName.current || ''))
+                        parentJobName: item?.label
                       }
                     })
                   }
-                },
-                onOpening: (item: SelectOption) => {
-                  lastOpenedJob.current = item.value
-                  // TODO: To scroll the jobDetails component to its original height
-                  // const indexOfParent = jobDetails.findIndex(obj => obj.value === item.value)
-                  // const parentNode = document.getElementsByClassName('Select--menuItem')?.[indexOfParent]
-                  // if (parentNode) {
-                  //   parentJobY.current = parentNode.getBoundingClientRect()?.y
-                  // }
-                  refetchJobs({
-                    queryParams: {
-                      ...commonParams,
-                      connectorRef: connectorRefValue?.toString(),
-                      parentJobName: item.label
-                    }
-                  })
+                  return Promise.resolve()
                 }
               }
             }}
@@ -341,27 +325,34 @@ function FormComponent({
               onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.artifactPath', type),
               width: 500,
               expressions,
-              onChange: (newFilePath: any) => {
+              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                 if (
-                  getMultiTypeFromValue(selectedJobName.current as any) !== MultiTypeInputType.RUNTIME &&
-                  getMultiTypeFromValue(newFilePath.value) === MultiTypeInputType.FIXED
+                  e?.target?.type !== 'text' ||
+                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                  canFetchBuildsOrArtifacts
                 ) {
-                  refetchJenkinsBuild({
-                    queryParams: {
-                      ...commonParams,
-                      connectorRef: connectorRefValue?.toString(),
-                      artifactPath: newFilePath.value
-                    },
-                    pathParams: {
-                      jobName: encodeURIComponent(encodeURIComponent(selectedJobName.current || ''))
-                    }
-                  })
+                  return
                 }
+                refetchartifactPaths()
               },
               selectProps: {
                 allowCreatingNewItems: true,
                 addClearBtn: !isReadonly,
-                items: defaultTo(artifactPath, [])
+                items: defaultTo(artifactPath, []),
+                noResults: (
+                  <NoTagResults
+                    tagError={errorFetchingPath}
+                    isServerlessDeploymentTypeSelected={false}
+                    defaultErrorText={
+                      fetchingArtifacts
+                        ? getString('loading')
+                        : canFetchBuildsOrArtifacts
+                        ? `${getString('pipeline.artifactsSelection.validation.jobConnectorRequired')} artifactPath`
+                        : getString('common.filters.noResultsFound')
+                    }
+                  />
+                ),
+                itemRenderer: artifactPathItemRenderer
               },
               allowableTypes
             }}
@@ -397,7 +388,32 @@ function FormComponent({
               selectProps: {
                 allowCreatingNewItems: true,
                 addClearBtn: !isReadonly,
-                items: defaultTo(build, [])
+                items: defaultTo(build, []),
+                loadingItems: fetchingBuild,
+                itemRenderer: buildItemRenderer,
+                noResults: (
+                  <NoTagResults
+                    tagError={errorFetchingBuild}
+                    isServerlessDeploymentTypeSelected={false}
+                    defaultErrorText={
+                      fetchingBuild
+                        ? getString('loading')
+                        : canFetchBuildsOrArtifacts
+                        ? `${getString('pipeline.artifactsSelection.validation.jobConnectorRequired')} build`
+                        : getString('common.filters.noResultsFound')
+                    }
+                  />
+                )
+              },
+              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                if (
+                  e?.target?.type !== 'text' ||
+                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                  canFetchBuildsOrArtifacts
+                ) {
+                  return
+                }
+                refetchJenkinsBuild()
               },
               allowableTypes
             }}

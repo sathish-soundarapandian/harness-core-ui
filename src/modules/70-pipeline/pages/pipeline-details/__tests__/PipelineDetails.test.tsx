@@ -13,13 +13,15 @@ import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-import { useGetPipelineSummary } from 'services/pipeline-ng'
+import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import PipelineDetails from '../PipelineDetails'
 import { PipelineResponse } from './PipelineDetailsMocks'
-jest.mock('services/pipeline-ng', () => ({
-  useGetPipelineSummary: jest.fn(() => PipelineResponse)
+
+jest.mock('services/pipeline-rq', () => ({
+  useGetPipelineSummaryQuery: jest.fn(() => PipelineResponse)
 }))
+
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 const mockBranches = {
@@ -40,14 +42,17 @@ jest.mock('services/cd-ng', () => ({
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
   }),
-  useListGitSync: jest.fn().mockImplementation(() => {
-    return { data: gitConfigs, refetch: getListGitSync }
-  }),
-  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
-    return { data: sourceCodeManagers, refetch: jest.fn() }
-  }),
   useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
     return { data: mockBranches, refetch: fetchBranches, error: null, loading: false }
+  }),
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: getListGitSync }
+  })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
   })
 }))
 
@@ -171,13 +176,11 @@ describe('Pipeline Details tests', () => {
   })
 
   test('should render correct view when api errors out and renders error handler component', () => {
-    ;(useGetPipelineSummary as jest.Mock).mockImplementation(() => ({
+    ;(useGetPipelineSummaryQuery as jest.Mock).mockImplementation(() => ({
       data: [],
       refetch: jest.fn(),
       error: {
-        data: {
-          message: 'Error occured'
-        }
+        message: 'Error occured'
       },
       loading: false
     }))
@@ -205,13 +208,11 @@ describe('Pipeline Details tests', () => {
   })
 
   test('should render correct view when api errors out and supportingGitSimplification is enabled', () => {
-    ;(useGetPipelineSummary as jest.Mock).mockImplementation(() => ({
+    ;(useGetPipelineSummaryQuery as jest.Mock).mockImplementation(() => ({
       data: [],
       refetch: jest.fn(),
       error: {
-        data: {
-          message: 'Error occured'
-        }
+        message: 'Error occured'
       },
       loading: false
     }))
@@ -240,7 +241,7 @@ describe('Pipeline Details tests', () => {
   })
 
   test('should render correct view when api errors out and isGitSyncEnabled is enabled', () => {
-    ;(useGetPipelineSummary as jest.Mock).mockImplementation(() => ({
+    ;(useGetPipelineSummaryQuery as jest.Mock).mockImplementation(() => ({
       data: [],
       refetch: jest.fn(),
       error: {
@@ -273,13 +274,11 @@ describe('Pipeline Details tests', () => {
   })
 
   test('should render correct view when api errors out when supportingGitSimplification is enabled and storetype is inline', () => {
-    ;(useGetPipelineSummary as jest.Mock).mockImplementation(() => ({
+    ;(useGetPipelineSummaryQuery as jest.Mock).mockImplementation(() => ({
       data: [],
       refetch: jest.fn(),
       error: {
-        data: {
-          message: 'Error occured'
-        }
+        message: 'Error occured'
       },
       loading: false
     }))

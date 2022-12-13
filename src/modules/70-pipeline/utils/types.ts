@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { IconName } from '@harness/icons'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import type {
   NodeRunInfo,
@@ -85,3 +86,8 @@ export interface ECSRollingDeployStepInitialValues extends StepElementConfig {
 }
 
 export type TemplateIcons = { [K: string]: string | undefined | TemplateIcons }
+
+export type TriggerTypeIconAndExecutionText = {
+  iconName: IconName
+  getText: (startTs?: number, triggeredBy?: string) => string
+}

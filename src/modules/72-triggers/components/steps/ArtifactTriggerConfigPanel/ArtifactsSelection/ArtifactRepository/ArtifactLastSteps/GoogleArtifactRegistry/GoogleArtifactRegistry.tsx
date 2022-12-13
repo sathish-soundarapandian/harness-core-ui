@@ -15,7 +15,8 @@ import {
   ButtonVariation,
   SelectOption,
   FormInput,
-  FormikForm
+  FormikForm,
+  MultiTypeInputType
 } from '@harness/uicore'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
@@ -63,6 +64,9 @@ function FormComponent(
             name="project"
             label={getString('projectLabel')}
             placeholder={getString('pipeline.artifactsSelection.projectPlaceholder')}
+            multiTextInputProps={{
+              allowableTypes: [MultiTypeInputType.FIXED]
+            }}
           />
         </div>
         <div className={css.jenkinsFieldContainer}>
@@ -73,6 +77,7 @@ function FormComponent(
             placeholder={getString('pipeline.regionPlaceholder')}
             multiTypeInputProps={{
               width: 500,
+              allowableTypes: [MultiTypeInputType.FIXED],
               selectProps: {
                 allowCreatingNewItems: true,
                 items: regions
@@ -86,13 +91,19 @@ function FormComponent(
             name="repositoryName"
             label={getString('common.repositoryName')}
             placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
+            multiTextInputProps={{
+              allowableTypes: [MultiTypeInputType.FIXED]
+            }}
           />
         </div>
         <div className={css.jenkinsFieldContainer}>
           <FormInput.MultiTextInput
-            name="pkg"
+            name="package"
             label={getString('pipeline.testsReports.callgraphField.package')}
             placeholder={getString('pipeline.manifestType.packagePlaceholder')}
+            multiTextInputProps={{
+              allowableTypes: [MultiTypeInputType.FIXED]
+            }}
           />
         </div>
       </div>
@@ -124,7 +135,7 @@ export function GoogleArtifactRegistry(
     project: Yup.string().required(getString('common.validation.projectIsRequired')),
     region: Yup.string().required(getString('validation.regionRequired')),
     repositoryName: Yup.string().required(getString('common.validation.repositoryName')),
-    pkg: Yup.string().required(getString('common.validation.package'))
+    package: Yup.string().required(getString('common.validation.package'))
   }
 
   const primarySchema = Yup.object().shape(schemaObject)

@@ -19,12 +19,10 @@ const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
 jest.spyOn(cdng, 'useGetListOfBranchesWithStatus').mockImplementation((): any => {
   return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
 })
-jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {
-  return { data: gitConfigs, refetch: getListGitSync, loading: false }
-})
-jest.spyOn(cdng, 'useGetSourceCodeManagers').mockImplementation((): any => {
-  return { data: sourceCodeManagers, refetch: jest.fn(), loading: false }
-})
+jest.mock('services/cd-ng-rq', () => ({
+  useListGitSyncQuery: jest.fn(() => ({ data: gitConfigs, refetch: getListGitSync, loading: false })),
+  useGetSourceCodeManagersQuery: jest.fn(() => ({ data: sourceCodeManagers, refetch: jest.fn(), loading: false }))
+}))
 
 const getProps = (): GitPopoverProps => ({
   data: {

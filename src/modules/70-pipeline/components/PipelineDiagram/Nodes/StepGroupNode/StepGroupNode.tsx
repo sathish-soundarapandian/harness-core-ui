@@ -69,7 +69,7 @@ export function StepGroupNode(props: any): JSX.Element {
       {isNodeCollapsed && DefaultNode ? (
         <DefaultNode
           onClick={() => {
-            if (isEmpty(stepsData)) {
+            if (isEmpty(stepsData) && isExecutionView) {
               showPrimary(getString('pipeline.execution.emptyStepGroup'))
             }
             setNodeCollapsed(false)

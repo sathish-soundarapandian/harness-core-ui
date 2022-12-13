@@ -253,12 +253,12 @@ export default function SelectDeploymentType({
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-  const { SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG } = useFeatureFlags()
+  const { SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, ASG_NG } = useFeatureFlags()
 
   // Supported in NG (Next Gen - The one for which you are coding right now)
   const ngSupportedDeploymentTypes = React.useMemo(() => {
-    return getNgSupportedDeploymentTypes({ SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG })
-  }, [SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG])
+    return getNgSupportedDeploymentTypes({ SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, ASG_NG })
+  }, [SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, ASG_NG])
 
   // Suppported in CG (First Gen - Old Version of Harness App)
   const cgSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {
@@ -343,15 +343,20 @@ export default function SelectDeploymentType({
     return null
   }
 
-  const renderRecentDeploymentTemplates = (): ReactNode => (
-    <RecentDeploymentTemplates
-      labelClassName={viewContext ? stageCss.tabSubHeading : stageCss.deploymentTypeHeading}
-      readonly={isReadonly}
-      templateLinkConfig={templateLinkConfig}
-      onDeploymentTemplateSelect={onDeploymentTemplateSelect}
-      selectedDeploymentType={selectedDeploymentType}
-    />
-  )
+  const renderRecentDeploymentTemplates = (): ReactNode => {
+    if (isReadonly && selectedDeploymentType !== ServiceDeploymentType.CustomDeployment) {
+      return null
+    }
+    return (
+      <RecentDeploymentTemplates
+        labelClassName={viewContext ? stageCss.tabSubHeading : stageCss.deploymentTypeHeading}
+        readonly={isReadonly}
+        templateLinkConfig={templateLinkConfig}
+        onDeploymentTemplateSelect={onDeploymentTemplateSelect}
+        selectedDeploymentType={selectedDeploymentType}
+      />
+    )
+  }
 
   const renderDeploymentTypeLabel = (): ReactNode => {
     // only selected deployment type thumbnail is rendered in readonly mode,

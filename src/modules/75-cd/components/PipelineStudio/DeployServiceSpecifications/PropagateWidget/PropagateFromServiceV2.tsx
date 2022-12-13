@@ -79,18 +79,20 @@ export default function PropagateFromServiceV2({
                     checked={values.setupModeType === setupMode.PROPAGATE}
                     className={css.propagateFromRadio}
                   />
-                  <FormInput.Select
-                    className={css.stageSelectDropDown}
-                    name="selectedPropagatedState"
-                    placeholder={getString('pipeline.selectStagePlaceholder')}
-                    disabled={values.setupModeType === setupMode.DIFFERENT || isReadonly}
-                    onChange={value => {
-                      formik.setFieldValue('selectedPropagatedState', value)
-                      onPropogatedStageSelect(value)
-                    }}
-                    value={values.selectedPropagatedState as SelectOption}
-                    items={previousStageList}
-                  />
+                  <span onClick={e => e.stopPropagation()}>
+                    <FormInput.Select
+                      className={css.stageSelectDropDown}
+                      name="selectedPropagatedState"
+                      placeholder={getString('pipeline.selectStagePlaceholder')}
+                      disabled={values.setupModeType === setupMode.DIFFERENT || isReadonly}
+                      onChange={value => {
+                        formik.setFieldValue('selectedPropagatedState', value)
+                        onPropogatedStageSelect(value)
+                      }}
+                      value={values.selectedPropagatedState as SelectOption}
+                      items={previousStageList}
+                    />
+                  </span>
                   <span data-tooltip-id="stagePropogate" />
                   <HarnessDocTooltip useStandAlone={true} tooltipId="stagePropogate" />
                 </Layout.Horizontal>

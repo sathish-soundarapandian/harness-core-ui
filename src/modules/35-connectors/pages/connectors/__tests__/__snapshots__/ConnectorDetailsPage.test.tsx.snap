@@ -4,6 +4,7 @@ exports[`Connector DetailsPage Page Test Initial snapshot should match render 1`
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--large header StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -212,6 +213,7 @@ exports[`Connector DetailsPage Page Test Initial snapshot should match render 1`
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--horizontal StyledProps--main StyledProps--padding-xlarge"
@@ -547,6 +549,7 @@ exports[`Connector DetailsPage Page Test Initial snapshot should match render at
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--large header StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -755,6 +758,7 @@ exports[`Connector DetailsPage Page Test Initial snapshot should match render at
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--horizontal StyledProps--main StyledProps--padding-xlarge"

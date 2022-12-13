@@ -128,7 +128,7 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({
       const endX = Math.min(containerWidth, initialSliderWidth + offset)
       const startXPercentage = startX / containerWidth
       const endXPercentage = endX / containerWidth
-      if (startXPercentage && endXPercentage) {
+      if (startXPercentage && endXPercentage && !hideSlider) {
         setTimeout(() => {
           onSliderDragEnd?.({
             startX,
@@ -139,7 +139,7 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({
         }, 500)
       }
     }
-  }, [containerWidth, setDefaultSlider, initialSliderWidth, onSliderDragEnd])
+  }, [hideSlider, containerWidth, setDefaultSlider, initialSliderWidth, onSliderDragEnd])
 
   const containerStyles = useMemo(
     () => ({ width: initialContainerWidth, left: leftContainerOffset }),

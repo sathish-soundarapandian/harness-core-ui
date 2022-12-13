@@ -11,7 +11,12 @@ import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import GetStartedWithCD from '../GetStartedWithCD'
 
-jest.mock('nanoid', () => ({ nanoid: () => 'hjhj87878' }))
+jest.mock('nanoid', () => ({
+  customAlphabet: () => {
+    const retnFn = () => 'bsadfd'
+    return retnFn
+  }
+}))
 describe('Test Get Started With CD', () => {
   test('initial render', async () => {
     const { getByText } = render(

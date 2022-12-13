@@ -29,9 +29,14 @@ export const RepoStoreIcons: Record<string, IconName> = {
   GitLab: 'gitlab'
 }
 export type ReleaseRepoManifestTypes = 'ReleaseRepo'
+export type DeploymentRepoManifestTypes = 'DeploymentRepo'
 
-export const ReleaseRepoManifestDataType: Record<ReleaseRepoManifestTypes, ReleaseRepoManifestTypes> = {
-  ReleaseRepo: 'ReleaseRepo'
+export const ReleaseRepoManifestDataType: Record<
+  ReleaseRepoManifestTypes | DeploymentRepoManifestTypes,
+  ReleaseRepoManifestTypes | DeploymentRepoManifestTypes
+> = {
+  ReleaseRepo: 'ReleaseRepo',
+  DeploymentRepo: 'DeploymentRepo'
 }
 
 export type ReleaseRepoManifestStores = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'AzureRepo'

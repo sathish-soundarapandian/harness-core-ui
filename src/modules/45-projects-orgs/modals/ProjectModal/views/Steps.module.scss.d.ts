@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly align: string
+  readonly avatarGroupAdd: string
   readonly button: string
   readonly card: string
   readonly clone: string

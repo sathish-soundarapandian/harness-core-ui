@@ -358,11 +358,7 @@ export function InputSetListView({
       columns={columns}
       data={get(data, 'content', [])}
       onRowClick={item => !isPipelineInvalid && pipelineHasRuntimeInputs && goToInputSetDetail?.(item)}
-      pagination={
-        totalItems > pageSize
-          ? { itemCount: totalItems, pageSize: pageSize, pageCount: totalPages, pageIndex: pageIndex, gotoPage }
-          : undefined
-      }
+      pagination={{ itemCount: totalItems, pageSize: pageSize, pageCount: totalPages, pageIndex: pageIndex, gotoPage }}
     />
   )
 }

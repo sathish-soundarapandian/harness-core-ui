@@ -16,6 +16,7 @@ import ThresholdGroup from '@cv/pages/health-source/common/MetricThresholds/Comp
 import ThresholdSelect from '@cv/pages/health-source/common/MetricThresholds/Components/ThresholdSelect'
 import { NewDefaultVauesForIgnoreThreshold } from '@cv/pages/health-source/common/MetricThresholds/MetricThresholds.constants'
 import type { IgnoreThresholdsFieldArrayInterface } from '../MetricThresholds.types'
+import EmptyThresholdsDisplay from './components/EmptyThresholdsDisplay'
 import css from './MetricThreshold.module.scss'
 
 export default function IgnoreThresholdsFieldArray<T>({
@@ -77,6 +78,7 @@ export default function IgnoreThresholdsFieldArray<T>({
     <FieldArray
       name="ignoreThresholds"
       render={props => {
+        const thresholds = props?.form?.values?.ignoreThresholds
         return (
           <Container style={{ minHeight: 300 }}>
             <Container
@@ -103,7 +105,9 @@ export default function IgnoreThresholdsFieldArray<T>({
               </Layout.Horizontal>
             </Container>
 
-            {props?.form?.values?.ignoreThresholds?.map((data: MetricThresholdType, index: number) => {
+            {!thresholds?.length && <EmptyThresholdsDisplay />}
+
+            {thresholds?.map((data: MetricThresholdType, index: number) => {
               return (
                 <Container
                   key={index}
@@ -161,7 +165,6 @@ export default function IgnoreThresholdsFieldArray<T>({
                     index={index}
                     criteriaType={data?.criteria?.type}
                     thresholdTypeName="ignoreThresholds"
-                    criteriaPercentageType={data?.criteria?.criteriaPercentageType}
                     replaceFn={props.replace.bind(null, index)}
                   />
                   <Button icon="trash" minimal iconProps={{ size: 14 }} onClick={() => props.remove(index)} />

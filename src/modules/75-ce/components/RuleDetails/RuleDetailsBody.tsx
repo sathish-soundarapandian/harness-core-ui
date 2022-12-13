@@ -11,6 +11,7 @@ import cx from 'classnames'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { Container, Icon, Layout, PageBody, Tab, Tabs, Text, Utils } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
+import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS, getStaticSchedulePeriodTime } from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 import {
   Service,
@@ -22,8 +23,7 @@ import {
   useSavingsOfService
 } from 'services/lw'
 import type { RefreshFunction, TimeRangeFilterType } from '@ce/types'
-import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS, getStaticSchedulePeriodTime } from '@ce/utils/momentUtils'
-import TimeRangePicker from '@ce/common/TimeRangePicker/TimeRangePicker'
+import TimeRangePicker from '@common/components/TimeRangePicker/TimeRangePicker'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import formatCost from '@ce/utils/formatCost'
 import type { ConnectorInfoDTO } from 'services/cd-ng'

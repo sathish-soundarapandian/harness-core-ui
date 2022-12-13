@@ -111,8 +111,8 @@ describe('ECSRunTaskStepEdit tests', () => {
     onUpdate.mockReset()
     onChange.mockReset()
   })
-  test(`renders fine for empty values and values can be changed`, async () => {
-    const { container, getByText, queryByText } = render(
+  test(`renders fine for empty values and error for taskDefinition and runTaskRequestDefinition fields shown`, async () => {
+    const { container, getByText, queryByText, getAllByText } = render(
       <TestWrapper>
         <ECSRunTaskStepEditRef
           initialValues={emptyInitialValues}
@@ -168,17 +168,8 @@ describe('ECSRunTaskStepEdit tests', () => {
     act(() => {
       formikRef.current?.submitForm()
     })
-    await waitFor(() =>
-      expect(onUpdate).toHaveBeenCalledWith({
-        identifier: 'Test_Name',
-        name: 'Test Name',
-        timeout: '20m',
-        spec: {
-          skipSteadyStateCheck: true
-        },
-        type: StepType.EcsRunTask
-      })
-    )
+
+    await waitFor(() => expect(getAllByText('common.validation.fieldIsRequired')).toHaveLength(2))
   })
 
   test('add name, timeout, Task Definition, Run Task Request Definition to step and submit', async () => {
@@ -519,7 +510,18 @@ describe('ECSRunTaskStepEdit tests', () => {
       name: 'Existing Name',
       type: StepType.EcsRunTask,
       timeout: RUNTIME_INPUT_VALUE,
-      spec: {}
+      spec: {
+        taskDefinition: {
+          identifier: 'TaskDefinition',
+          type: 'Git' as any,
+          spec: {}
+        },
+        runTaskRequestDefinition: {
+          itentifier: 'RunTaskRequest',
+          type: 'S3' as any,
+          spec: {}
+        }
+      }
     }
 
     const { container } = render(
@@ -561,7 +563,18 @@ describe('ECSRunTaskStepEdit tests', () => {
         identifier: 'Existing_Name',
         name: 'Existing Name',
         timeout: '<+input>.regex(<+input>.includes(/test/))',
-        spec: {},
+        spec: {
+          taskDefinition: {
+            identifier: 'TaskDefinition',
+            type: 'Git' as any,
+            spec: {}
+          },
+          runTaskRequestDefinition: {
+            itentifier: 'RunTaskRequest',
+            type: 'S3' as any,
+            spec: {}
+          }
+        },
         type: StepType.EcsRunTask
       })
     )

@@ -50,8 +50,7 @@ const mockedFormValues = {
         type: 'Percentage',
         spec: {
           greaterThan: 65
-        },
-        criteriaPercentageType: 'greaterThan'
+        }
       },
       metricType: 'Custom',
       metricName: 'CustomHealth Metric'

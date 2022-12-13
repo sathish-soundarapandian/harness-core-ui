@@ -1083,8 +1083,7 @@ export const ignoreThresholdsMockData = [
       type: 'Percentage',
       spec: {
         lessThan: 1
-      },
-      criteriaPercentageType: 'lessThan'
+      }
     }
   },
   {
@@ -1099,8 +1098,7 @@ export const ignoreThresholdsMockData = [
       type: 'Percentage',
       spec: {
         greaterThan: 12
-      },
-      criteriaPercentageType: 'greaterThan'
+      }
     }
   },
   {
@@ -1115,8 +1113,7 @@ export const ignoreThresholdsMockData = [
       type: 'Percentage',
       spec: {
         greaterThan: 12
-      },
-      criteriaPercentageType: 'greaterThan'
+      }
     }
   },
   {
@@ -1153,8 +1150,7 @@ export const failFastThresholdsMockData = [
       type: 'Percentage',
       spec: {
         greaterThan: 22
-      },
-      criteriaPercentageType: 'greaterThan'
+      }
     }
   },
   {
@@ -1280,7 +1276,7 @@ export const payloadWithThreshold = {
         identifier: 'Performance',
         metricThresholds: [
           {
-            criteria: { criteriaPercentageType: 'lessThan', spec: { lessThan: 1 }, type: 'Percentage' },
+            criteria: { spec: { lessThan: 1 }, type: 'Percentage' },
             groupName: 'testP2',
             metricName: 'average_wait_time_ms',
             metricType: 'Performance',
@@ -1288,7 +1284,7 @@ export const payloadWithThreshold = {
             type: 'IgnoreThreshold'
           },
           {
-            criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
+            criteria: { spec: { greaterThan: 12 }, type: 'Percentage' },
             groupName: 'testP',
             metricName: 'stall_count',
             metricType: 'Performance',
@@ -1296,7 +1292,7 @@ export const payloadWithThreshold = {
             type: 'IgnoreThreshold'
           },
           {
-            criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 22 }, type: 'Percentage' },
+            criteria: { spec: { greaterThan: 22 }, type: 'Percentage' },
             groupName: 'testPE',
             metricName: 'average_response_time_ms',
             metricType: 'Performance',
@@ -1330,7 +1326,7 @@ export const payloadWithThreshold = {
         identifier: 'Custom',
         metricThresholds: [
           {
-            criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
+            criteria: { spec: { greaterThan: 12 }, type: 'Percentage' },
             groupName: 'testP',
             metricName: 'stall_count',
             metricType: 'Custom',
@@ -1602,7 +1598,7 @@ export const metricThresholdsPayloadMockData = [
     identifier: 'Performance',
     metricThresholds: [
       {
-        criteria: { criteriaPercentageType: 'lessThan', spec: { lessThan: 1 }, type: 'Percentage' },
+        criteria: { spec: { lessThan: 1 }, type: 'Percentage' },
         groupName: 'testP2',
         metricName: 'average_wait_time_ms',
         metricType: 'Performance',
@@ -1610,7 +1606,7 @@ export const metricThresholdsPayloadMockData = [
         type: 'IgnoreThreshold'
       },
       {
-        criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
+        criteria: { spec: { greaterThan: 12 }, type: 'Percentage' },
         groupName: 'testP',
         metricName: 'stall_count',
         metricType: 'Performance',
@@ -1618,7 +1614,7 @@ export const metricThresholdsPayloadMockData = [
         type: 'IgnoreThreshold'
       },
       {
-        criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 22 }, type: 'Percentage' },
+        criteria: { spec: { greaterThan: 22 }, type: 'Percentage' },
         groupName: 'testPE',
         metricName: 'average_response_time_ms',
         metricType: 'Performance',
@@ -1631,7 +1627,7 @@ export const metricThresholdsPayloadMockData = [
     identifier: 'Custom',
     metricThresholds: [
       {
-        criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
+        criteria: { spec: { greaterThan: 12 }, type: 'Percentage' },
         groupName: 'testP',
         metricName: 'stall_count',
         metricType: 'Custom',

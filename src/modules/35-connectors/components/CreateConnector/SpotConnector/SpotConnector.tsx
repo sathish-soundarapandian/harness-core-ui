@@ -24,6 +24,8 @@ import { ConnectivityModeType } from '@common/components/ConnectivityMode/Connec
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
 import StepSpotAuthentication from './StepAuth/StepSpotAuthentication'
 import ConnectivityModeStep from '../commonSteps/ConnectivityModeStep/ConnectivityModeStep'
+import spotPlatform from './ConnectivityModeStepImage/spotPlatform.svg'
+import spotDelegate from './ConnectivityModeStepImage/spotDelegate.svg'
 
 const SpotConnector: React.FC<CreateConnectorModalProps> = props => {
   const { onClose, onSuccess } = props
@@ -64,6 +66,8 @@ const SpotConnector: React.FC<CreateConnectorModalProps> = props => {
         hideModal={props.onClose}
         onConnectorCreated={props.onSuccess}
         helpPanelReferenceId="ConnectorConnectToTheProvider"
+        platformImage={spotPlatform}
+        delegateImage={spotDelegate}
       />
       {props.connectivityMode === ConnectivityModeType.Delegate ? (
         <DelegateSelectorStep

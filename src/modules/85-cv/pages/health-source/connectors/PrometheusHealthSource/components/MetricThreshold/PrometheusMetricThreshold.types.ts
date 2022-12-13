@@ -28,7 +28,6 @@ export interface ThresholdCriteriaPropsType {
   index: number
   thresholdTypeName: string
   replaceFn: (value: any) => void
-  criteriaPercentageType?: string
 }
 
 export type PrometheusMetricThresholdContextType = PrometheusMetricThresholdPropsType

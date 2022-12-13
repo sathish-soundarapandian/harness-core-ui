@@ -24,7 +24,7 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import { usePipelineVariables } from '../PipelineVariablesContext/PipelineVariablesContext'
-import type { InputSetValue } from './utils'
+import type { ChildPipelineStageProps, InputSetValue } from './utils'
 import { MultipleInputSetList } from './MultipleInputSetList'
 import { RenderValue } from './RenderValue'
 import SelectedMultipleList from './SelectedMultipleList'
@@ -48,7 +48,7 @@ export interface InputSetSelectorProps {
   isRetryPipelineForm?: boolean
   onReconcile?: (identifier: string) => void
   reRunInputSetYaml?: string
-  usePortal?: boolean
+  childPipelineProps?: ChildPipelineStageProps
 }
 
 export function InputSetSelector({
@@ -68,7 +68,7 @@ export function InputSetSelector({
   isRetryPipelineForm,
   onReconcile,
   reRunInputSetYaml,
-  usePortal
+  childPipelineProps
 }: InputSetSelectorProps): React.ReactElement {
   const [searchParam, setSearchParam] = React.useState('')
   const [selectedInputSets, setSelectedInputSets] = React.useState<InputSetValue[]>(value || [])
@@ -112,8 +112,8 @@ export function InputSetSelector({
   } = useGetInputSetsListForPipeline({
     queryParams: {
       accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
+      orgIdentifier: childPipelineProps?.childOrgIdentifier ?? orgIdentifier,
+      projectIdentifier: childPipelineProps?.childProjectIdentifier ?? projectIdentifier,
       pipelineIdentifier,
       inputSetType: isOverlayInputSet ? 'INPUT_SET' : undefined,
       ...getGitQueryParams()
@@ -121,6 +121,32 @@ export function InputSetSelector({
     debounce: 300,
     lazy: true
   })
+
+  useEffect(() => {
+    if (
+      inputSetResponse?.data?.content &&
+      inputSetResponse?.data?.content?.length > 0 &&
+      childPipelineProps?.inputSetReferences &&
+      childPipelineProps?.inputSetReferences?.length > 0 &&
+      isEmpty(value)
+    ) {
+      const savedInputSets = childPipelineProps.inputSetReferences?.map(inputSetRef => {
+        const currentInputSet = inputSetResponse?.data?.content?.find(
+          currInputSet => currInputSet.identifier === inputSetRef
+        )
+        return {
+          ...currentInputSet,
+          label: defaultTo(currentInputSet?.name, ''),
+          value: defaultTo(currentInputSet?.identifier, ''),
+          type: currentInputSet?.inputSetType,
+          gitDetails: defaultTo(currentInputSet?.gitDetails, {}),
+          inputSetErrorDetails: currentInputSet?.inputSetErrorDetails,
+          overlaySetErrorDetails: currentInputSet?.overlaySetErrorDetails
+        }
+      })
+      onChange?.(savedInputSets as InputSetValue[])
+    }
+  }, [inputSetResponse?.data?.content, childPipelineProps?.inputSetReferences])
 
   React.useEffect(() => {
     refetch()
@@ -207,7 +233,7 @@ export function InputSetSelector({
   return (
     <Popover
       position={Position.BOTTOM}
-      usePortal={!!usePortal}
+      usePortal={!!childPipelineProps?.usePortal}
       isOpen={openInputSetsList}
       minimal={true}
       className={css.isPopoverParent}

@@ -4,6 +4,7 @@ exports[`Project Details render with modules and edit menu 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--xxlarge header StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -458,6 +459,7 @@ exports[`Project Details render with modules and edit menu 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--horizontal StyledProps--main"
@@ -856,6 +858,7 @@ exports[`Project Details render with no modules and invite collaborators 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--xlarge header StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -1232,6 +1235,7 @@ exports[`Project Details render with no modules and invite collaborators 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--horizontal StyledProps--main"

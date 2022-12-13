@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { defaultTo } from 'lodash-es'
+import React, { useRef } from 'react'
+import { defaultTo, isEmpty } from 'lodash-es'
+import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
 import {
   Button,
@@ -85,6 +86,8 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
   const { NG_EXECUTION_INPUT } = useFeatureFlags()
   const parsedValues = parseInput(input)
 
+  const formikRef = useRef<FormikProps<FormValues>>()
+
   // is not a valid input
   if (!parsedValues) {
     showError(getString('common.configureOptions.notValidExpression'))
@@ -120,7 +123,7 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
         : Validation.None
   }
 
-  const getAllowedValuesToSubmit = (formAllowedValues: unknown): string[] => {
+  const getAllowedValuesToSubmit = (formAllowedValues: string[] | MultiSelectOption[]): string[] => {
     switch (allowedValuesType) {
       case ALLOWED_VALUES_TYPE.MULTI_SELECT:
         return (formAllowedValues as MultiSelectOption[]).map(
@@ -132,18 +135,35 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
   }
 
   return (
-    <Formik
+    <Formik<FormValues>
       initialValues={inputValues}
       formName="configureOptionsForm"
       validationSchema={Yup.object().shape(ValidationSchema(getString))}
       onSubmit={data => {
-        data.allowedValues = getAllowedValuesToSubmit(data.allowedValues)
+        const formAllowedValues = getAllowedValuesToSubmit(data.allowedValues)
+        // If default value is not one of given allowed values then show error and return from function
+        // This is done because of allowed values custom component changes as ValidationSchema for defaultValue
+        // in case of allowed values is not working properly
+        // So, set error manually and do not close modal
+        if (
+          formAllowedValues?.length > 0 &&
+          !isEmpty(data.defaultValue) &&
+          formAllowedValues.indexOf(data.defaultValue as string) === -1
+        ) {
+          formikRef.current?.setFieldError(
+            'defaultValue',
+            getString('common.configureOptions.validationErrors.defaultAllowedValid')
+          )
+          return
+        }
+        data.allowedValues = formAllowedValues
         const inputStr = getInputStr(data, !!NG_EXECUTION_INPUT)
         setInput(inputStr)
         closeModal(inputStr, data.defaultValue, data.isRequired)
       }}
     >
       {formik => {
+        formikRef.current = formik
         const { submitForm, values } = formik
         return (
           <FormikForm>

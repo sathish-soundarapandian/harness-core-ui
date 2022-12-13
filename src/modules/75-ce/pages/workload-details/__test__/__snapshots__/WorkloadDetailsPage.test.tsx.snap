@@ -4,6 +4,7 @@ exports[`test cases for Workload details Page should be able to render the detai
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -128,6 +129,7 @@ exports[`test cases for Workload details Page should be able to render the detai
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody pageCtn"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--background-white StyledProps--padding-small"
@@ -142,7 +144,7 @@ exports[`test cases for Workload details Page should be able to render the detai
           class="bp3-popover-target"
         >
           <button
-            aria-label="ce.perspectives.timeRangeConstants.last7Days"
+            aria-label="common.timeRangeConstants.last7Days"
             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
             type="button"
           >
@@ -168,7 +170,7 @@ exports[`test cases for Workload details Page should be able to render the detai
             <span
               class="bp3-button-text"
             >
-              ce.perspectives.timeRangeConstants.last7Days
+              common.timeRangeConstants.last7Days
             </span>
             <span
               class="bp3-icon bp3-icon-caret-down StyledProps--main"

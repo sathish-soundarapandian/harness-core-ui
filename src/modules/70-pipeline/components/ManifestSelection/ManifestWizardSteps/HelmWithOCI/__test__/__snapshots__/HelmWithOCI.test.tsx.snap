@@ -101,7 +101,7 @@ exports[`helm with OCI tests renders without crashing 1`] = `
                           name="basePath"
                           placeholder="pipeline.manifestType.basePathPlaceholder"
                           type="text"
-                          value=""
+                          value="/"
                         />
                       </div>
                       <span

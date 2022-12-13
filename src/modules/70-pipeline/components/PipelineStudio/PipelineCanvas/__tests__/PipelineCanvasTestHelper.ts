@@ -38,7 +38,7 @@ const stagesMap = {
   Pipeline: {
     name: 'Deploy',
     type: 'Pipeline',
-    icon: 'pipeline',
+    icon: 'chained-pipeline',
     iconColor: 'var(--pipeline-blue-color)',
     isApproval: false,
     openExecutionStrategy: false
@@ -71,8 +71,8 @@ export const getPipelineContextMockData = (
     pipeline: {
       name: 'Pipeline',
       identifier: 'Pipeline',
-      description: null,
-      tags: null,
+      description: 'test',
+      tags: { tags1: '' },
       stages: [
         {
           stage: {
@@ -88,8 +88,8 @@ export const getPipelineContextMockData = (
     originalPipeline: {
       name: 'Pipeline',
       identifier: 'Pipeline',
-      description: null,
-      tags: null,
+      description: 'test',
+      tags: { tags1: '' },
       stages: [
         {
           stage: {

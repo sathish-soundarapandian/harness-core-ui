@@ -583,7 +583,11 @@ const getCustomStepProps = (gitOpsEnabled = false): CustomStepProps => ({
 
 describe('deploy environment or group input set initial values utils', () => {
   test('processInputSetInitialValues returns the right values', () => {
-    expect(processInputSetInitialValues({}, getCustomStepProps())).toEqual({ environment: {}, infrastructureRef: '' })
+    expect(processInputSetInitialValues({}, getCustomStepProps())).toEqual({
+      environment: {},
+      infrastructureRef: '',
+      service: {}
+    })
 
     expect(
       processInputSetInitialValues(
@@ -617,7 +621,8 @@ describe('deploy environment or group input set initial values utils', () => {
         infrastructureDefinitions: [{ identifier: 'infra_8' }],
         serviceOverrideInputs: { variables: [{ name: 'test', type: 'String', value: 'test' }] }
       },
-      infrastructureRef: 'infra_8'
+      infrastructureRef: 'infra_8',
+      service: {}
     })
 
     expect(
@@ -646,7 +651,8 @@ describe('deploy environment or group input set initial values utils', () => {
         environmentRef: 'env_15',
         serviceOverrideInputs: { variables: [{ name: 'test', type: 'String', value: 'test' }] }
       },
-      infrastructureRef: ''
+      infrastructureRef: '',
+      service: {}
     })
 
     expect(
@@ -687,7 +693,8 @@ describe('deploy environment or group input set initial values utils', () => {
         environmentRef: 'env_16',
         gitOpsClusters: [{ identifier: 'cluster_8' }, { identifier: 'cluster_9' }],
         serviceOverrideInputs: { variables: [{ name: 'test', type: 'String', value: 'test' }] }
-      }
+      },
+      service: {}
     })
 
     expect(
@@ -716,7 +723,8 @@ describe('deploy environment or group input set initial values utils', () => {
         environmentInputs: { variables: [{ name: 'test1', type: 'String', value: 'test1' }] },
         environmentRef: 'env_17',
         serviceOverrideInputs: { variables: [{ name: 'test', type: 'String', value: 'test' }] }
-      }
+      },
+      service: {}
     })
 
     expect(
@@ -746,7 +754,8 @@ describe('deploy environment or group input set initial values utils', () => {
         environmentInputs: { variables: [{ name: 'test1', type: 'String', value: 'test1' }] },
         environmentRef: 'env_18',
         serviceOverrideInputs: { variables: [{ name: 'test', type: 'String', value: 'test' }] }
-      }
+      },
+      service: {}
     })
   })
 })

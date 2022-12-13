@@ -9,13 +9,12 @@ import type { MetricThresholdType } from '@cv/pages/health-source/connectors/App
 import type { TimeSeriesMetricPackDTO } from 'services/cv'
 import type { GroupedCreatedMetrics } from '../../CustomMetric/CustomMetric.types'
 
-import { MetricCriteriaValues, PercentageCriteriaDropdownValues } from '../MetricThresholds.constants'
+import { MetricCriteriaValues } from '../MetricThresholds.constants'
 import type { ThresholdsPropertyNames } from '../MetricThresholds.types'
 import {
   checkDuplicate,
   getActionItems,
   getCriterialItems,
-  getCriteriaPercentageDropdownOptions,
   getCustomMetricGroupNames,
   getDefaultMetricTypeValue,
   getDefaultValueForMetricType,
@@ -26,8 +25,6 @@ import {
   getIsMetricThresholdCanBeShown,
   getIsRemovedMetricNameContainsMetricThresholds,
   getIsRemovedMetricPackContainsMetricThresholds,
-  getIsShowGreaterThan,
-  getIsShowLessThan,
   getMetricItems,
   getMetricItemsForOnlyCustomMetrics,
   getMetricNameItems,
@@ -67,14 +64,6 @@ describe('AppDIgnoreThresholdTabContent', () => {
     expect(items).toEqual([
       { label: 'cv.monitoringSources.appD.absoluteValue', value: 'Absolute' },
       { label: 'cv.monitoringSources.appD.percentageDeviation', value: 'Percentage' }
-    ])
-  })
-  test('should test getCriteriaPercentageDropdownOptions', () => {
-    const items = getCriteriaPercentageDropdownOptions(key => key)
-
-    expect(items).toEqual([
-      { label: 'cv.monitoringSources.appD.greaterThan', value: 'greaterThan' },
-      { label: 'cv.monitoringSources.appD.lesserThan', value: 'lessThan' }
     ])
   })
 
@@ -237,12 +226,11 @@ describe('AppDIgnoreThresholdTabContent', () => {
       },
       criteria: {
         type: MetricCriteriaValues.Percentage,
-        criteriaPercentageType: PercentageCriteriaDropdownValues.GreaterThan,
         spec: {}
       }
     }
-    validateCommonFieldsForMetricThreshold('ignoreThresholds', errors, [testValue], key => key, true)
-    expect(errors).toEqual({ 'ignoreThresholds.0.criteria.spec.greaterThan': 'cv.required' })
+    validateCommonFieldsForMetricThreshold('failFastThresholds', errors, [testValue], key => key, true)
+    expect(errors).toEqual({ 'failFastThresholds.0.criteria.spec.greaterThan': 'cv.required' })
   })
 
   test('should check validateCommonFieldsForMetricThreshold for percentage criteria', () => {
@@ -258,15 +246,16 @@ describe('AppDIgnoreThresholdTabContent', () => {
       },
       criteria: {
         type: MetricCriteriaValues.Percentage,
-        criteriaPercentageType: PercentageCriteriaDropdownValues.LessThan,
-        spec: {}
+        spec: {
+          greaterThan: 12
+        }
       }
     }
-    validateCommonFieldsForMetricThreshold('ignoreThresholds', errors, [testValue], key => key, true)
-    expect(errors).toEqual({ 'ignoreThresholds.0.criteria.spec.lessThan': 'cv.required' })
+    validateCommonFieldsForMetricThreshold('failFastThresholds', errors, [testValue], key => key, true)
+    expect(errors).toEqual({})
   })
 
-  test('should check validateCommonFieldsForMetricThreshold for count', () => {
+  test('should check validateCommonFieldsForMetricThreshold for empty count', () => {
     const errors = {}
     const testValue: MetricThresholdType = {
       metricType: 'test',
@@ -279,9 +268,8 @@ describe('AppDIgnoreThresholdTabContent', () => {
       },
       criteria: {
         type: MetricCriteriaValues.Percentage,
-        criteriaPercentageType: PercentageCriteriaDropdownValues.LessThan,
         spec: {
-          lessThan: 10
+          greaterThan: 10
         }
       }
     }
@@ -289,7 +277,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
     expect(errors).toEqual({ 'failFastThresholds.0.spec.spec.count': 'cv.required' })
   })
 
-  test('should check validateCommonFieldsForMetricThreshold for count', () => {
+  test('should check validateCommonFieldsForMetricThreshold for less count', () => {
     const errors = {}
     const testValue: MetricThresholdType = {
       metricType: 'test',
@@ -304,9 +292,8 @@ describe('AppDIgnoreThresholdTabContent', () => {
       },
       criteria: {
         type: MetricCriteriaValues.Percentage,
-        criteriaPercentageType: PercentageCriteriaDropdownValues.LessThan,
         spec: {
-          lessThan: 10
+          greaterThan: 10
         }
       }
     }
@@ -328,7 +315,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
       criteria: {
         type: MetricCriteriaValues.Absolute,
         spec: {
-          lessThan: 0.32
+          greaterThan: 0.32
         }
       }
     }
@@ -471,60 +458,15 @@ describe('AppDIgnoreThresholdTabContent', () => {
       },
       criteria: {
         type: MetricCriteriaValues.Percentage,
-        criteriaPercentageType: PercentageCriteriaDropdownValues.LessThan,
         spec: {
-          lessThan: 101
+          greaterThan: 101
         }
       }
     }
     validateCommonFieldsForMetricThreshold('failFastThresholds', errors, [testValue], key => key, true)
     expect(errors).toEqual({
-      'failFastThresholds.0.criteria.spec.lessThan': 'cv.metricThresholds.validations.percentageValidation'
+      'failFastThresholds.0.criteria.spec.greaterThan': 'cv.metricThresholds.validations.percentageValidation'
     })
-  })
-
-  test('getIsShowGreaterThan function returns correct values', () => {
-    // Absolute criteria selected
-    let result = getIsShowGreaterThan('Absolute')
-
-    expect(result).toBe(true)
-
-    // Percentage criteria is selected and Greater than criteriaPercentageType is selected
-    result = getIsShowGreaterThan('Percentage', 'greaterThan')
-
-    expect(result).toBe(true)
-
-    // Percentage criteria is selected and API response has greaterThan value
-    result = getIsShowGreaterThan('Percentage', undefined, { greaterThan: 21, lessThan: undefined })
-
-    expect(result).toBe(true)
-
-    // False for less than selection it should be false
-    result = getIsShowGreaterThan('Percentage', 'lessThan', { greaterThan: undefined, lessThan: 4 })
-
-    expect(result).toBe(false)
-  })
-
-  test('getIsShowLessThan function returns correct values', () => {
-    // Absolute criteria selected
-    let result = getIsShowLessThan('Absolute')
-
-    expect(result).toBe(true)
-
-    // Percentage criteria is selected and Less than criteriaPercentageType is selected
-    result = getIsShowLessThan('Percentage', 'lessThan')
-
-    expect(result).toBe(true)
-
-    // Percentage criteria is selected and API response has lessThan value
-    result = getIsShowLessThan('Percentage', undefined, { greaterThan: undefined, lessThan: 21 })
-
-    expect(result).toBe(true)
-
-    // False for greaterThan selection it should be false
-    result = getIsShowLessThan('Percentage', 'greaterThan', { greaterThan: 44, lessThan: undefined })
-
-    expect(result).toBe(false)
   })
 
   test('getMetricItems should return correct values', () => {
@@ -608,7 +550,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
 
     expect(result).toEqual([
       {
-        criteria: { criteriaPercentageType: 'lessThan', spec: { lessThan: 1 }, type: 'Percentage' },
+        criteria: { spec: { lessThan: 1 }, type: 'Percentage' },
         groupName: 'testP2',
         metricName: 'average_wait_time_ms',
         metricType: 'Performance',
@@ -616,7 +558,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
         type: 'IgnoreThreshold'
       },
       {
-        criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
+        criteria: { spec: { greaterThan: 12 }, type: 'Percentage' },
         groupName: 'testP',
         metricName: 'stall_count',
         metricType: 'Performance',
@@ -624,7 +566,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
         type: 'IgnoreThreshold'
       },
       {
-        criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
+        criteria: { spec: { greaterThan: 12 }, type: 'Percentage' },
         groupName: 'testP',
         metricName: 'stall_count',
         metricType: 'Custom',

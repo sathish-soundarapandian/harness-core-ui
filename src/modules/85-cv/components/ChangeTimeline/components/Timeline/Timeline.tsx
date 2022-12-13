@@ -22,7 +22,6 @@ export function Timeline(props: TimelineProps): JSX.Element {
         return (
           <TimelineRow
             isLoading={isLoading}
-            noDataMessage={timelineProps.noDataMessage}
             startTimestamp={timestamps[0]}
             endTimestamp={timestamps[timestamps?.length - 1]}
             labelWidth={labelWidth}

@@ -32,9 +32,6 @@ jest.mock('services/cd-ng', () => ({
     data: {}
   }),
   useGetYamlSchema: jest.fn(() => ({ data: null })),
-  useGetSourceCodeManagers: () => ({
-    data: []
-  }),
   useCreatePR: () => ({ data: [], mutate: jest.fn() }),
   useCreatePRV2: () => ({
     data: [],
@@ -45,11 +42,14 @@ jest.mock('services/cd-ng', () => ({
     mutate: jest.fn(),
     refetch: jest.fn()
   }),
-  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
-  useListGitSync: () => ({
-    data: [],
-    mutate: jest.fn(),
-    refetch: jest.fn()
+  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
+}))
+jest.mock('services/cd-ng-rq', () => ({
+  useListGitSyncQuery: jest.fn().mockImplementation(() => {
+    return { data: [], refetch: jest.fn() }
+  }),
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: [], refetch: jest.fn() }
   })
 }))
 jest.mock('services/pipeline-ng', () => ({

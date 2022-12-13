@@ -16,9 +16,11 @@ declare const styles: {
   readonly iconChecked: string
   readonly image: string
   readonly mainContainer: string
+  readonly nameIdPopover: string
   readonly noPipelineSection: string
   readonly noPipelineText: string
   readonly pipelineContainer: string
+  readonly projectListPopover: string
   readonly search: string
   readonly searchBox: string
   readonly selectInput: string

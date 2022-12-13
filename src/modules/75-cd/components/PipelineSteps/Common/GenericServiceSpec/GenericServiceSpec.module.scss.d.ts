@@ -28,9 +28,11 @@ declare const styles: {
   readonly manifestVariablesTable: string
   readonly mtop: string
   readonly nestedAccordions: string
+  readonly nestedSectionCard: string
   readonly nopadLeft: string
   readonly notwide: string
   readonly padSmall: string
+  readonly runtimeSelectWithSubmenu: string
   readonly sectionCard: string
   readonly sectionHeader: string
   readonly selectPopover: string

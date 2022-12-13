@@ -40,8 +40,8 @@ harnessPlatform: 'Harness Platform'
 harnessDelegate: 'Harness Delegate'
 connectThroughPlatform: 'Connect through Harness Platform'
 connectThroughDelegate: 'Connect through a Harness Delegate'
-connectThroughPlatformInfo: 'Use this option to connect to a SaaS Git provider. Secure communication with the Git provider is done through the Harness Platform. All credentials are encrypted and stored in the Secret Manager configured in Harness.'
-connectThroughDelegateInfo: 'Use this option to connect to a Git Provider behind your corporate firewall. Secure communication with the Git provider is through a Harness Delegate you install in your environment. The Delegate securely connects to the Harness Platform and performs tasks using your repositories.'
+connectThroughPlatformInfo: 'Use this option to connect to a {{connectorType}} provider. Secure communication with the {{connectorType}} provider is done through the Harness Platform. All credentials are encrypted and stored in the Secret Manager configured in Harness.'
+connectThroughDelegateInfo: 'Use this option to connect to a {{connectorType}} Provider behind your corporate firewall. Secure communication with the {{connectorType}} provider is through a Harness Delegate you install in your environment. The Delegate securely connects to the Harness Platform and performs tasks using your repositories.'
 pipeline: Pipeline
 templateStartLabel: Start with Template
 duplicateId: 'Duplicate Identifier'
@@ -312,8 +312,8 @@ purpose:
     tests: '{{$.tests}}'
   errorTracking:
     title: Error Tracking
-  scm:
-    name: Repos
+  code:
+    name: Code
 trialInProgress: Trial in progress
 trialInProgressDescription: A Project contains your pipelines, resources, and team members. Get started by creating your first Project.
 letsGetYouStarted: Let’s get you started
@@ -489,6 +489,8 @@ subscriptions:
     mau: '{{ maus }} Monthly Active users'
   ci:
     developers: '{{ developers }} Developers'
+  sto:
+    developers: '{{ developers }} Developers'
   expiryCountdown: expires in {{ days }} days
   expired: expired {{ days }} days ago
   banner:
@@ -510,6 +512,10 @@ subscriptions:
     ffActiveUserTootip: Monthly Active Users (MAUs) are only applicable to client-side applications and are defined as unique end users evaluating flags from client-side SDKs (JavaScript, iOS, Android, C/C++, React, etc) over a 30-day period.
     ffDeveloperTooltip: Developers are Harness Feature Flag users actually engaged with the product to create/edit/delete Feature Flags and/or Targets/Segments.
     ffFFTooltip: Total number of Feature Flags currently
+    stoScans: Security Scans
+    stoDevelopers: Active Security Developers
+    stoDevelopersTooltip: A Security Developer is an active STO module user engaged in creating or editing STO pipeline, applying STO policies, governance or exemptions, and consuming custom reports.
+    stoScansTooltip: A Security Scan is a pipeline execution that involves a security step.
     monthlyUsers: Monthly Active Users
     activeDevelopers: Active Developers
     developers: Developers
@@ -1104,6 +1110,7 @@ configDetails: 'Configuration Details'
 freezeActiveBannerTextPrefix: Freeze enabled on all deployments for this
 freezeActiveBannerTimeframe: from <b>{{startTime}}</b> to <b>{{endTime}}</b>
 freezeListActiveBannerText: There are {{count}} ongoing deployment freeze windows
+loadingFieldOptions: Loading {{fieldName}}s...
 freezeListActiveBannerExpandedTextPrefix: On the
 resourceIdentifier: Resource Identifier
 configureNav: Or configure your nav!
@@ -1126,3 +1133,34 @@ installed: Installed
 verified: Verified
 executionTab:
   stepsCount: At least one step is required
+clickToKnowMore: 'Click to know more about'
+settingCategory:
+  general: General
+condition: Condition
+any: Any
+filterOnName: Filter on {{name}}
+deployToEntity: Deploy to {{entity}}
+deployToFilteredList: Deploy to filtered list
+selectNameManually: 'Select {{ name }} manually'
+timeRangeConstants:
+  last7Days: 'Last 7 Days'
+  thisMonth: '{{ $.common.feature.levelUp.limitMessage.thisMonth }}'
+  thisQuarter: 'This Quarter'
+  thisYear: 'This Year'
+  lastMonth: '{{$.common.datePickerShortcuts.LastMonth}}'
+  lastQuarter: 'Last Quarter'
+  lastYear: 'Last Year'
+  last3Months: 'Last 3 Months'
+  last6Months: 'Last 6 Months'
+  last12Months: 'Last 12 Months'
+timeRange:
+  relativeDates: 'Relative dates'
+  calendarMonths: 'Calendar months'
+  recommended: '{{$.common.recommended}}'
+  selectCustomRange: 'Select custom range'
+timeRangeLimitWarning:
+  currentPlanOffer: Free plan provides data for the last one month.
+  upgradeOffer: now for data retention upto 5 years.
+viewAll: View all
+lastUpdatedAt: Last updated at
+tryAgain: Try Again

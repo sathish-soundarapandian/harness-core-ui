@@ -378,8 +378,7 @@ export const sourceDataPrometheusPayload = {
         type: 'Percentage',
         spec: {
           greaterThan: 1222
-        },
-        criteriaPercentageType: 'greaterThan'
+        }
       }
     }
   ]
@@ -432,7 +431,7 @@ export const expectedResultPrometheusPayload = {
             type: 'IgnoreThreshold'
           },
           {
-            criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 1222 }, type: 'Percentage' },
+            criteria: { spec: { greaterThan: 1222 }, type: 'Percentage' },
             metricName: 'Prometheus Metric',
             metricType: 'Custom',
             spec: { action: 'FailAfterOccurrence', spec: { count: 12 } },

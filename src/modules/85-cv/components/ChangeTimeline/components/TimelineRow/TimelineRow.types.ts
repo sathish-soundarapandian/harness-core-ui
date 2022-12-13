@@ -33,7 +33,6 @@ export interface TimelineRowProps {
   startTimestamp?: number
   endTimestamp?: number
   isLoading?: boolean
-  noDataMessage?: string | null
   hideTimeline?: boolean
 }
 

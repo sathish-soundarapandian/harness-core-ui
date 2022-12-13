@@ -89,7 +89,7 @@ export const initGroupedCreatedMetrics = (
   getString: UseStringsReturn['getString']
 ): GroupedCreatedMetrics =>
   groupBy(getGroupAndMetric(mappedMetrics, getString), function (item) {
-    return item?.groupName?.label
+    return (item?.groupName as SelectOption)?.label
   })
 
 export const getGroupAndMetric = (
@@ -118,7 +118,7 @@ export const getGroupedCreatedMetrics = (
     }
   })
   return groupBy(filteredList.reverse(), function (item) {
-    return item?.groupName?.label
+    return (item?.groupName as SelectOption)?.label
   })
 }
 

@@ -9,12 +9,13 @@ import * as Yup from 'yup'
 import { isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
+import { ArtifactToConnectorMap } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 
 export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
     artifactType: Yup.string().required(getString('cd.artifactSource.artifactRepositoryTypeIsRequired')),
     connectorId: Yup.mixed().when('artifactType', {
-      is: artifactType => !isEmpty(artifactType),
+      is: artifactType => !isEmpty(artifactType) && Boolean(ArtifactToConnectorMap[artifactType]),
       then: Yup.mixed().test({
         test(value: string | undefined | ConnectorConfigDTO): boolean | Yup.ValidationError {
           return isEmpty(value) ? this.createError({ message: getString('validation.sshConnectorRequired') }) : true

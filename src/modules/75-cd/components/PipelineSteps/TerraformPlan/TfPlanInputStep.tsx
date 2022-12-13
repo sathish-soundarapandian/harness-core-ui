@@ -120,7 +120,13 @@ export default function TfPlanInputStep(
         getMultiTypeFromValue(
           (inputSetData?.template?.spec?.configuration?.backendConfig?.spec as TerraformBackendConfigSpec)?.content
         ) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <div
+            className={cx(stepCss.formGroup, stepCss.md)}
+            // needed to prevent the run pipeline to get triggered on pressing enter within TFMonaco editor
+            onKeyDown={e => {
+              e.stopPropagation()
+            }}
+          >
             <MultiTypeFieldSelector
               name={`${
                 isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
@@ -174,7 +180,6 @@ export default function TfPlanInputStep(
           />
         </div>
       )}
-
       {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.exportTerraformPlanJson) ===
         MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -183,6 +188,22 @@ export default function TfPlanInputStep(
               isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
             }spec.configuration.exportTerraformPlanJson`}
             label={getString('cd.exportTerraformPlanJson')}
+            multiTypeTextbox={{ expressions, allowableTypes }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.exportTerraformHumanReadablePlan) ===
+        MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            name={`${
+              isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+            }spec.configuration.exportTerraformHumanReadablePlan`}
+            label={getString('cd.exportTerraformHumanReadablePlan')}
             multiTypeTextbox={{ expressions, allowableTypes }}
             enableConfigureOptions={true}
             configureOptionsProps={{

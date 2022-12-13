@@ -4,6 +4,7 @@ exports[`OnPremFeatureWarningInfoBanner OnPremFeatureWarningInfoBanner 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--small bgColorWhite StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"

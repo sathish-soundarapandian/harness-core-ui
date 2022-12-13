@@ -25,8 +25,8 @@ import {
   StartTrialDTO,
   useSaveFeedback,
   FeedbackFormDTO,
-  GetLicensesAndSummaryQueryParams,
-  useGetLicensesAndSummary
+  useGetLicensesAndSummary,
+  GetLicensesAndSummaryQueryParams
 } from 'services/cd-ng'
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'

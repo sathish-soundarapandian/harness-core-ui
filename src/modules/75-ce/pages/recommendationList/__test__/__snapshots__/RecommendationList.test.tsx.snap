@@ -4,6 +4,7 @@ exports[`test cases for Recommendation List Page should be able to render empty 
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -170,6 +171,7 @@ exports[`test cases for Recommendation List Page should be able to render empty 
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main listContainer"
@@ -484,6 +486,7 @@ exports[`test cases for Recommendation List Page should be able to render page w
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -650,6 +653,7 @@ exports[`test cases for Recommendation List Page should be able to render page w
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main listContainer"
@@ -960,6 +964,7 @@ exports[`test cases for Recommendation List Page should be able to render page w
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -1126,6 +1131,7 @@ exports[`test cases for Recommendation List Page should be able to render page w
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main listContainer"
@@ -1458,6 +1464,7 @@ exports[`test cases for Recommendation List Page should be able to render the li
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
   >
     <div
       class="Layout--vertical StyledProps--main"
@@ -1624,6 +1631,7 @@ exports[`test cases for Recommendation List Page should be able to render the li
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="StyledProps--font StyledProps--main listContainer"

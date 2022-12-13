@@ -54,8 +54,9 @@ interface GroupProps {
 }
 
 const Item: React.FC<ItemProps> = ({ data, tooltipProps, onModuleClick }) => {
-  const { homePageUrl, shouldVisible, color } = useNavModuleInfo(data)
+  const { homePageUrl, shouldVisible, color, label } = useNavModuleInfo(data)
   const { module } = useModuleInfo()
+  const { getString } = useStrings()
   const currentModule = module ? moduleToModuleNameMapping[module] : undefined
 
   if (!shouldVisible) {
@@ -66,19 +67,35 @@ const Item: React.FC<ItemProps> = ({ data, tooltipProps, onModuleClick }) => {
     <Link to={homePageUrl} className={css.link}>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
         <NavModule module={data} active={currentModule === data} onClick={onModuleClick} />
-        <Icon
-          name="tooltip-icon"
-          padding={'small'}
-          margin={{ left: 'small' }}
-          style={{ color: tooltipProps.activeModule === data ? `var(${color})` : undefined }}
-          size={12}
-          className={css.clickable}
-          onClick={e => {
-            e.stopPropagation()
-            e.preventDefault()
-            tooltipProps.handleClick(data)
-          }}
-        />
+        <Popover
+          content={
+            <Text color={Color.WHITE} padding="medium" className={css.infoTooltipText}>
+              {getString('common.clickToKnowMore')}
+              <br />
+              {getString(label)}.
+            </Text>
+          }
+          disabled={tooltipProps.activeModule === data}
+          popoverClassName={Classes.DARK}
+          portalClassName={css.popover}
+          interactionKind={PopoverInteractionKind.HOVER}
+          position={Position.TOP}
+        >
+          <Container style={{ color: `var(${color})` }}>
+            <Icon
+              name="tooltip-icon"
+              padding={'small'}
+              style={{ color: tooltipProps.activeModule === data ? `var(${color})` : undefined }}
+              size={12}
+              className={cx(css.clickable, css.tooltipIcon)}
+              onClick={e => {
+                e.stopPropagation()
+                e.preventDefault()
+                tooltipProps.handleClick(data)
+              }}
+            />
+          </Container>
+        </Popover>
       </Layout.Horizontal>
     </Link>
   )
@@ -140,12 +157,13 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
                     </Text>
                   }
                   popoverClassName={Classes.DARK}
+                  portalClassName={css.popover}
                   interactionKind={PopoverInteractionKind.HOVER}
                   position={Position.RIGHT}
                 >
                   <Icon
                     name="customize"
-                    size={24}
+                    size={32}
                     className={cx(css.blue, css.clickable)}
                     padding={'small'}
                     onClick={() => {
@@ -181,6 +199,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
                     orderedModules
                   })
                   close()
+                  setActiveModuleCarousel(undefined)
                 }}
               />
             ))}

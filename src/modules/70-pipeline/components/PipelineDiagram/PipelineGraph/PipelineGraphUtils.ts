@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, get, throttle } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import type { IconName } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 import {
@@ -282,35 +282,6 @@ export const scrollZoom = (
   }
 }
 
-const setupDragEventListeners = (draggableParent: HTMLElement, overlay: HTMLElement): void => {
-  draggableParent.onmousedown = function (event) {
-    if (event?.target !== draggableParent) {
-      return
-    }
-    const initialX = event.pageX
-    const initialY = event.pageY
-    const overlayPosition = getComputedPosition(overlay, draggableParent as HTMLDivElement) as DOMRect
-    const moveAt = (pageX: number, pageY: number): void => {
-      const newX = overlayPosition?.left + pageX - initialX
-      const newY = overlayPosition?.top + pageY - initialY
-      overlay.style.transform = `translate(${newX}px,${newY}px)`
-    }
-
-    const onMouseMove = throttle((e: MouseEvent): void => {
-      moveAt(e.pageX, e.pageY)
-    }, 16)
-
-    draggableParent.addEventListener('mousemove', onMouseMove)
-    draggableParent.onmouseup = function () {
-      draggableParent.removeEventListener('mousemove', onMouseMove)
-      draggableParent.onmouseup = null
-    }
-    draggableParent.onmouseleave = function () {
-      draggableParent.removeEventListener('mousemove', onMouseMove)
-    }
-  }
-}
-
 const getSVGLinksFromPipeline = ({
   states,
   parentElement,
@@ -492,7 +463,7 @@ const getPipelineGraphData = ({
       isNestedGroup
     })
 
-    if (Array.isArray(serviceDependencies) && serviceDependencies.length > 0) {
+    if (Array.isArray(serviceDependencies)) {
       //CI module
       const dependencyStepGroup = getDefaultBuildDependencies(serviceDependencies)
       graphState.unshift(dependencyStepGroup)
@@ -745,6 +716,7 @@ const transformStepsData = ({
         const iconUrl = get(templateIcons, templateRef) as string | undefined
         const type = (templateRef ? get(templateTypes, templateRef) : first?.step?.type) as string
         const { nodeType, iconName } = getNodeInfo(defaultTo(type, ''), graphType)
+        const stepIcon = get(step, 'data.icon') || iconName
         const isExecutionView = get(first, 'step.status', false)
         finalData.push({
           id: getuniqueIdForStep(first),
@@ -752,7 +724,7 @@ const transformStepsData = ({
           name: first?.step?.name as string,
           type,
           nodeType: nodeType as string,
-          icon: iconName,
+          icon: stepIcon,
           iconUrl,
           data: {
             ...first,
@@ -804,13 +776,14 @@ const transformStepsData = ({
       } else {
         const stepData = step as StepElementConfig
         const isExecutionView = get(step, 'status', false)
+        const stepIcon = get(step, 'data.icon') || iconName
         finalData.push({
           id: getuniqueIdForStep({ step } as any),
           identifier: stepData?.identifier as string,
           name: stepData?.name as string,
           type: stepData?.type as string,
           nodeType: stepData?.type as string,
-          icon: iconName,
+          icon: stepIcon,
           status: get(stepData, 'status', ''),
           data: {
             step: {
@@ -818,7 +791,7 @@ const transformStepsData = ({
             },
             type: stepData?.name as string,
             nodeType: stepData?.name as string,
-            icon: iconName,
+            icon: stepIcon,
             loopingStrategyEnabled: !!stepData?.strategy,
             conditionalExecutionEnabled:
               (stepData as any)?.data?.conditionalExecutionEnabled ||
@@ -931,7 +904,6 @@ export {
   getComputedPosition,
   getFinalSVGArrowPath,
   getPipelineGraphData,
-  setupDragEventListeners,
   getSVGLinksFromPipeline,
   getTerminalNodeLinks,
   getRelativeBounds,

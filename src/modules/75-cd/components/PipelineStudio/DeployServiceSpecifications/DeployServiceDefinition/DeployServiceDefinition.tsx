@@ -130,6 +130,7 @@ function DeployServiceDefinition(): React.ReactElement {
     await debounceUpdatePipeline(
       produce({ ...pipeline } as ServicePipelineConfig, draft => {
         set(draft, 'gitOpsEnabled', false)
+        deleteServiceData(draft?.stages?.[0]?.stage as DeploymentStageElementConfig)
         set(
           draft,
           'stages[0].stage.spec.serviceConfig.serviceDefinition.type',
@@ -144,15 +145,15 @@ function DeployServiceDefinition(): React.ReactElement {
     onCloseDialog: async isConfirmed => {
       if (isConfirmed) {
         setCustomDeploymentData(undefined)
-        deleteServiceData(currStageData)
         if (gitOpsEnabled) {
-          updateDeploymentTypeWithGitops()
-        } else if (
-          currStageData?.spec?.serviceConfig?.serviceDefinition?.type === ServiceDeploymentType.CustomDeployment
-        ) {
+          await updateDeploymentTypeWithGitops()
+        }
+
+        if (currStageData?.spec?.serviceConfig?.serviceDefinition?.type === ServiceDeploymentType.CustomDeployment) {
           shouldDeleteServiceData.current = true
           onCustomDeploymentSelection()
-        } else {
+        } else if (!gitOpsEnabled) {
+          deleteServiceData(currStageData)
           await debounceUpdateStage(currStageData)
         }
         setSelectedDeploymentType(currStageData?.spec?.serviceConfig?.serviceDefinition?.type as ServiceDeploymentType)
@@ -233,7 +234,7 @@ function DeployServiceDefinition(): React.ReactElement {
     }
   }, [customDeploymentData, stage, updateStage])
 
-  const handleDeploymentTypeChange = (deploymentType: ServiceDeploymentType): void => {
+  const handleDeploymentTypeChange = async (deploymentType: ServiceDeploymentType): Promise<void> => {
     if (deploymentType !== selectedDeploymentType) {
       const stageData = produce(stage, draft => {
         const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
@@ -246,13 +247,14 @@ function DeployServiceDefinition(): React.ReactElement {
         setSelectedDeploymentType(deploymentType)
         setCustomDeploymentData(undefined)
         if (gitOpsEnabled) {
-          updateDeploymentTypeWithGitops(deploymentType)
+          await updateDeploymentTypeWithGitops(deploymentType)
+        }
+
+        if (deploymentType === ServiceDeploymentType.CustomDeployment) {
+          shouldDeleteServiceData.current = false
+          onCustomDeploymentSelection()
         } else {
           updateStage(stageData?.stage as StageElementConfig)
-          if (deploymentType === ServiceDeploymentType.CustomDeployment) {
-            shouldDeleteServiceData.current = false
-            onCustomDeploymentSelection()
-          }
         }
       }
     }

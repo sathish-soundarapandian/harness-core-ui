@@ -53,6 +53,10 @@ export const HEALTHSOURCE_LIST = [
   {
     name: HealthSourceTypes.CloudWatch,
     icon: getConnectorIconByType(Connectors.AWS)
+  },
+  {
+    name: HealthSourceTypes.SumoLogic,
+    icon: getConnectorIconByType(Connectors.SUMOLOGIC)
   }
 ]
 

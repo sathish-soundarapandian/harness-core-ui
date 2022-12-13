@@ -20,7 +20,9 @@ export const deploymentTypeLabel: Record<ServiceDefinition['type'], StringKeys> 
   AzureWebApp: 'pipeline.serviceDeploymentTypes.azureWebApp',
   ECS: 'pipeline.serviceDeploymentTypes.amazonEcs',
   Elastigroup: 'pipeline.serviceDeploymentTypes.spotElastigroup',
-  CustomDeployment: 'pipeline.serviceDeploymentTypes.customDeployment'
+  CustomDeployment: 'pipeline.serviceDeploymentTypes.customDeployment',
+  TAS: 'pipeline.serviceDeploymentTypes.tas',
+  Asg: 'pipeline.serviceDeploymentTypes.asg'
 }
 
 export const deploymentTypeIcon: Record<ServiceTypes, IconName> = {
@@ -32,7 +34,9 @@ export const deploymentTypeIcon: Record<ServiceTypes, IconName> = {
   AzureWebApp: 'azurewebapp',
   KubernetesGitOps: 'gitops-green', //type specific to gitops
   ECS: 'service-amazon-ecs',
-  Elastigroup: 'elastigroup'
+  Elastigroup: 'elastigroup',
+  Tas: 'tas',
+  Asg: 'aws-asg'
 }
 
 // this is added for card names in execution strategies
@@ -45,5 +49,7 @@ export const executionStrategyTypes: Record<ServiceDefinition['type'], StringKey
   AzureWebApp: 'pipeline.serviceDeploymentTypes.azureWebApp',
   CustomDeployment: 'pipeline.serviceDeploymentTypes.customDeploy',
   Elastigroup: 'pipeline.serviceDeploymentTypes.spotElastigroup',
-  ECS: 'ce.common.containerService'
+  ECS: 'ce.common.containerService',
+  Asg: 'pipeline.serviceDeploymentTypes.asg',
+  TAS: 'pipeline.serviceDeploymentTypes.tas'
 }

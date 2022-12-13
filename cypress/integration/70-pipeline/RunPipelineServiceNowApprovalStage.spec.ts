@@ -24,13 +24,14 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     'ng/api/servicenow/getTemplate?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=service_now_connector&ticketType=INCIDENT&templateName=&limit=1&offset=0'
   const serviceNowTemplateCallWithName =
     'ng/api/servicenow/getTemplate?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=service_now_connector&ticketType=INCIDENT&templateName=Test_TemplateName&limit=1&offset=0'
-
+  const accountLicense = 'ng/api/licenses/account?routingId=accountId&accountIdentifier=accountId'
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
       // failing the test
       return false
     })
+    cy.intercept('GET', accountLicense, { fixture: 'pipeline/api/approvals/accountLicense' })
     cy.intercept('GET', gitSyncCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('GET', serviceNowYamlSnippetCall, { fixture: 'pipeline/api/serviceNowStage/stageYamlSnippet' }).as(
       'stageYaml'

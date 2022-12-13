@@ -10,7 +10,7 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-import { useGetExecutionRepositoriesList, useGetListOfExecutions } from 'services/pipeline-ng'
+import { useGetListOfExecutions } from 'services/pipeline-ng'
 import filters from '@pipeline/pages/execution-list/__tests__/mocks/filters.json'
 import services from '@pipeline/pages/pipeline-list/__tests__/mocks/services.json'
 import environments from '@pipeline/pages/pipeline-list/__tests__/mocks/environments.json'
@@ -97,19 +97,22 @@ jest.mock('services/cd-ng', () => ({
   useGetEnvironmentListForProject: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: environments, refetch: jest.fn() })),
-  useListGitSync: jest.fn().mockImplementation(() => {
-    return { data: gitConfigs, refetch: getListGitSync }
-  }),
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
-  }),
-  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
-    return { data: sourceCodeManagers, refetch: jest.fn() }
   }),
   useGetServiceDefinitionTypes: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: deploymentTypes, refetch: jest.fn() })),
-  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
+  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false }),
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: getListGitSync }
+  })
+}))
+
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
 }))
 
 const testPath = routes.toDeployments({
@@ -132,8 +135,6 @@ describe('ExecutionListPage', () => {
         <ExecutionListPage />
       </TestWrapper>
     )
-    expect(useGetExecutionRepositoriesList).toBeCalled()
-
     await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
     const noRunsLabel = await screen.findByText('pipeline.noRunsText')
     expect(noRunsLabel).toBeInTheDocument()
@@ -148,8 +149,6 @@ describe('ExecutionListPage', () => {
         <ExecutionListPage />
       </TestWrapper>
     )
-    expect(useGetExecutionRepositoriesList).toBeCalled()
-
     await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
     const noRunsText = await screen.findByText('pipeline.noRunsText')
     expect(noRunsText).toBeInTheDocument()
@@ -164,7 +163,6 @@ describe('ExecutionListPage', () => {
         <ExecutionListPage />
       </TestWrapper>
     )
-    expect(useGetExecutionRepositoriesList).toBeCalled()
 
     await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
     const noScansText = await screen.findByText('pipeline.noRunsText')

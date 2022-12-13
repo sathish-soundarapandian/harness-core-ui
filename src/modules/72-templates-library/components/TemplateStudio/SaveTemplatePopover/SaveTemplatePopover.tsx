@@ -26,7 +26,7 @@ import {
 } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
-import type { EntityGitDetails, Failure, NGTemplateInfoConfig } from 'services/template-ng'
+import type { EntityGitDetails, Failure, NGTemplateInfoConfig, TemplateSummaryResponse } from 'services/template-ng'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Templates/templates'
 import useCommentModal from '@common/hooks/CommentModal/useCommentModal'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
@@ -116,7 +116,10 @@ function SaveTemplatePopover(
     await deleteTemplateCache(details)
   }
 
-  const navigateToLocation = (newTemplate: NGTemplateInfoConfig, updatedGitDetails?: SaveToGitFormInterface): void => {
+  const navigateToLocation = (
+    newTemplate: TemplateSummaryResponse,
+    updatedGitDetails?: SaveToGitFormInterface
+  ): void => {
     history.replace(
       routes.toTemplateStudio({
         projectIdentifier: newTemplate.projectIdentifier,
@@ -132,19 +135,21 @@ function SaveTemplatePopover(
     )
   }
 
+  /* istanbul ignore next */
   const nextCallback = async (
-    latestTemplate: NGTemplateInfoConfig,
+    latestTemplate: TemplateSummaryResponse,
     updatedGitDetails?: SaveToGitFormInterface,
     updatedStoreMetadata?: StoreMetadata
   ) => {
     const isInlineTemplate = isEmpty(updatedGitDetails) && updatedStoreMetadata?.storeType !== StoreType.REMOTE
     if (isInlineTemplate) {
       clear()
-      showSuccess(getString('common.template.saveTemplate.publishTemplate'))
       if (templateIdentifier === DefaultNewTemplateId) {
+        showSuccess(getString('common.template.saveTemplate.publishTemplate'))
         await customDeleteTemplateCache()
         navigateToLocation(latestTemplate, updatedGitDetails)
       } else {
+        showSuccess(getString('common.template.updateTemplate.templateUpdated'))
         await fetchTemplate({ forceFetch: true, forceUpdate: true })
       }
     } else {

@@ -23,7 +23,7 @@ import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { useGetUsage, UsageAndLimitReturn } from '@common/hooks/useGetUsageAndLimit'
-import type { CEModuleLicenseDTO } from 'services/cd-ng'
+import type { CEModuleLicenseDTO, CVModuleLicenseDTO } from 'services/cd-ng'
 import {
   ViewUsageLink,
   ExplorePlansBtn,
@@ -165,17 +165,20 @@ export default function FeatureBanner(): React.ReactElement | null {
   const features = useFeatures({ featuresRequest: { featureNames: defaultTo(activeModuleFeatures?.features, []) } })
 
   const moduleName: ModuleName = module ? moduleToModuleNameMapping[module] : ModuleName.COMMON
-
   const usage = useGetUsage(moduleName)
   const { licenseInformation } = useLicenseStore()
   const isFreeEdition = isFreePlan(licenseInformation, moduleName)
+
+  // Add limit info here manually
   const usageAndLimitInfo: UsageAndLimitReturn = {
     usageData: usage,
     limitData: {
-      limit: { ccm: { totalSpendLimit: (licenseInformation?.CE as CEModuleLicenseDTO)?.spendLimit } }
+      limit: {
+        ccm: { totalSpendLimit: (licenseInformation?.CE as CEModuleLicenseDTO)?.spendLimit },
+        cv: { totalServices: (licenseInformation?.CV as CVModuleLicenseDTO)?.numberOfServices }
+      }
     }
   }
-
   const isTeamEdition = isTeamPlan(licenseInformation, moduleName)
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, moduleName)
   const additionalLicenseProps = useMemo(() => {

@@ -16,6 +16,7 @@ import { DatadogProduct } from '@cv/pages/health-source/connectors/DatadogMetric
 import { ErrorTrackingProductNames } from '@cv/pages/health-source/connectors/ErrorTrackingHealthSource/ErrorTrackingHealthSource.utils'
 import { CustomHealthProduct } from '@cv/pages/health-source/connectors/CustomHealthSource/CustomHealthSource.constants'
 import { CloudWatchProductNames } from '@cv/pages/health-source/connectors/CloudWatch/CloudWatchConstants'
+import { SumoLogicProducts } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import {
   NewRelicProductNames,
   ConnectorRefFieldName,
@@ -264,6 +265,17 @@ export const getFeatureOption = (
         {
           value: CloudWatchProductNames.METRICS,
           label: CloudWatchProductNames.METRICS
+        }
+      ]
+    case Connectors.SUMOLOGIC:
+      return [
+        {
+          value: 'METRICS',
+          label: SumoLogicProducts.METRICS
+        },
+        {
+          value: 'LOGS',
+          label: SumoLogicProducts.LOGS
         }
       ]
     default:

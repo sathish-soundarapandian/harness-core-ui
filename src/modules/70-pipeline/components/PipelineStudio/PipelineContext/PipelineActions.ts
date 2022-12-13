@@ -17,7 +17,8 @@ import type {
   ErrorNodeSummary,
   Failure,
   YamlSchemaErrorWrapperDTO,
-  PipelineInfoConfig
+  PipelineInfoConfig,
+  CacheResponseMetadata
 } from 'services/pipeline-ng'
 import type { DependencyElement } from 'services/ci'
 import type { TemplateServiceDataType } from '@pipeline/utils/templateUtils'
@@ -153,6 +154,7 @@ export interface PipelineReducerState {
   templateError?: GetDataError<Failure | Error> | null
   remoteFetchError?: GetDataError<Failure | Error> | null
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
+  cacheResponse?: CacheResponseMetadata
 }
 
 // @ts-ignore
@@ -170,6 +172,7 @@ export interface ActionResponse {
   storeMetadata?: StoreMetadata
   gitDetails?: EntityGitDetails
   entityValidityDetails?: EntityValidityDetails
+  cacheResponse?: CacheResponseMetadata
   pipeline?: PipelineInfoConfig
   pipelineIdentifier?: string
   yamlHandler?: YamlBuilderHandlerBinding
@@ -281,6 +284,7 @@ export const initialState: PipelineReducerState = {
   storeMetadata: {},
   gitDetails: {},
   entityValidityDetails: {},
+  cacheResponse: {} as CacheResponseMetadata,
   templateTypes: {},
   templateIcons: {},
   templateServiceData: {},

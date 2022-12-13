@@ -18,6 +18,7 @@ import type {
   CEModuleLicenseDTO,
   CFModuleLicenseDTO,
   CIModuleLicenseDTO,
+  STOModuleLicenseDTO,
   ModuleLicenseDTO
 } from 'services/cd-ng'
 import css from './SubscriptionDetailsCard.module.scss'
@@ -222,6 +223,20 @@ function getLicenseCountByModule({
         <Layout.Vertical spacing="medium">
           <Text color={Color.BLACK} font={{ weight: 'semi-bold' }} margin={{ bottom: 5 }}>
             {getString('common.subscriptions.ccm.cloudSpend', { spendLimit: spendLimit })}
+          </Text>
+        </Layout.Vertical>
+      )
+    }
+    case ModuleName.STO: {
+      const stoModuleLicenseDTO = licenseData as STOModuleLicenseDTO
+      const developers =
+        stoModuleLicenseDTO?.numberOfDevelopers === -1
+          ? getString('common.unlimited')
+          : stoModuleLicenseDTO?.numberOfDevelopers?.toLocaleString()
+      return (
+        <Layout.Vertical spacing="medium">
+          <Text color={Color.BLACK} font={{ weight: 'semi-bold' }} margin={{ bottom: 5 }}>
+            {getString('common.subscriptions.sto.developers', { developers: developers })}
           </Text>
         </Layout.Vertical>
       )

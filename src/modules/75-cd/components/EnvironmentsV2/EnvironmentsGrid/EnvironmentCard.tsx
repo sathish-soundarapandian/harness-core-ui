@@ -26,9 +26,10 @@ export interface EnvironmentCardProps {
   response: EnvironmentResponse
   onEdit: (id: string) => void
   onDelete: (id: string) => void
+  onClick: (id: string) => void
 }
 
-export function EnvironmentCard({ response, onEdit, onDelete }: EnvironmentCardProps): React.ReactElement {
+export function EnvironmentCard({ response, onEdit, onDelete, onClick }: EnvironmentCardProps): React.ReactElement {
   const { getString } = useStrings()
   const { openDialog } = useConfirmationDialog({
     titleText: getString('cd.environment.delete'),
@@ -54,7 +55,7 @@ export function EnvironmentCard({ response, onEdit, onDelete }: EnvironmentCardP
     <Card
       className={css.environmentCard}
       interactive
-      onClick={() => onEdit(get(response, 'environment.identifier', ''))}
+      onClick={() => onClick(get(response, 'environment.identifier', ''))}
     >
       <Container padding={'xlarge'} border={{ bottom: true }}>
         <CardBody.Menu
@@ -63,7 +64,10 @@ export function EnvironmentCard({ response, onEdit, onDelete }: EnvironmentCardP
               <RbacMenuItem
                 icon="edit"
                 text={getString('edit')}
-                onClick={() => onEdit(get(response, 'environment.identifier', ''))}
+                onClick={e => {
+                  e.stopPropagation()
+                  onEdit(get(response, 'environment.identifier', ''))
+                }}
                 permission={{
                   resource: {
                     resourceType: ResourceType.ENVIRONMENT

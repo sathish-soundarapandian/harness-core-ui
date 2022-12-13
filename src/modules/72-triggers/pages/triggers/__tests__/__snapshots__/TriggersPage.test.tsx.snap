@@ -7,6 +7,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
     Help Panel
     <div
       class="Layout--horizontal StyledProps--main PageSubHeader--container StyledProps--flex"
+      data-testid="page-subheader"
     >
       <button
         aria-label="triggers.newTrigger"
@@ -85,6 +86,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody"
       data-name="page-body"
+      data-testid="page-body"
     >
       <div
         class="TableV2--table table"
@@ -2293,71 +2295,6 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                     </section>
                     <section
                       class="step"
-                      data-cy="execution.triggerType.WEBHOOK_common.repo_provider.awscodecommit"
-                    >
-                      <div
-                        class="bp3-card bp3-elevation-0 Card--card"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="service-aws-code-deploy"
-                        >
-                          <svg
-                            height="25"
-                            viewBox="0 0 12 14"
-                            width="25"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M1.9 11.8L.3 11V2.9l1.6-.8z"
-                              fill="#4b612c"
-                            />
-                            <path
-                              d="M7.8 10.2l-5.9 1.6V2.1l5.9 1.6z"
-                              fill="#759c3e"
-                            />
-                            <path
-                              d="M2.9 5.6L6 5.2l.1.1v3.3l-.1.1-3.1-.4z"
-                              fill="#4b612c"
-                            />
-                            <path
-                              d="M11.7 5l-2.8.3-6-1 3.1-1z"
-                              fill="#3c4929"
-                            />
-                            <path
-                              d="M11.7 9l-2.8-.3-6 1 3.3.8z"
-                              fill="#b7ca9d"
-                            />
-                            <path
-                              d="M2.9 12.4L6 13.9l.1-3.4-3.2-.8z"
-                              fill="#4b612c"
-                            />
-                            <path
-                              d="M11.7 11.1L6 13.9v-3.4L11.7 9z"
-                              fill="#759c3e"
-                            />
-                            <path
-                              d="M2.9 1.6L6 .1v3.4l-3.1.8z"
-                              fill="#4b612c"
-                            />
-                            <g
-                              fill="#759c3e"
-                            >
-                              <path
-                                d="M11.7 8L6 8.7V5.2l5.7.8zM11.7 5L6 3.5V.1l5.7 2.8z"
-                              />
-                            </g>
-                          </svg>
-                        </span>
-                      </div>
-                      <section
-                        class="stepName"
-                      >
-                        common.repo_provider.awscodecommit
-                      </section>
-                    </section>
-                    <section
-                      class="step"
                       data-cy="execution.triggerType.WEBHOOK_common.repo_provider.customLabel"
                     >
                       <div
@@ -3165,7 +3102,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                       triggers.showAllTriggers
                        (
                     </p>
-                    18
+                    17
                     )
                   </section>
                 </section>
@@ -3184,7 +3121,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                   >
                     execution.triggerType.WEBHOOK
                      (
-                    6
+                    5
                     )
                   </section>
                   <section
@@ -3237,6 +3174,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - Shows Tr
     Help Panel
     <div
       class="Layout--horizontal StyledProps--main PageSubHeader--container StyledProps--flex"
+      data-testid="page-subheader"
     >
       <button
         aria-label="triggers.newTrigger"
@@ -3287,6 +3225,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - Shows Tr
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody"
       data-name="page-body"
+      data-testid="page-body"
     >
       <div
         class="TableV2--table table"

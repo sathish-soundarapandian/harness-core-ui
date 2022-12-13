@@ -11,7 +11,16 @@ import { defaultTo, get, isEmpty, isNil, memoize } from 'lodash-es'
 import { Menu } from '@blueprintjs/core'
 
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
-import { BucketResponse, SidecarArtifact, useListBucketsWithServiceV2 } from 'services/cd-ng'
+import {
+  BucketResponse,
+  FilePaths,
+  GetFilePathsV2ForS3QueryParams,
+  SidecarArtifact,
+  useGetFilePathsForS3,
+  useGetFilePathsV2ForS3,
+  useGetV2BucketListForS3,
+  useListBucketsWithServiceV2
+} from 'services/cd-ng'
 import { useListAwsRegions } from 'services/portal'
 import { useStrings } from 'framework/strings'
 import { useMutateAsGet } from '@common/hooks'
@@ -27,9 +36,9 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
-  getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
+  getValidInitialValuePath,
   getYamlData,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
@@ -37,18 +46,14 @@ import {
 } from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
-export const resetBuckets = (formik: FormikValues, bucketPath: string): void => {
-  const bucketValue = get(formik.values, bucketPath, '')
-  if (getMultiTypeFromValue(bucketValue) === MultiTypeInputType.FIXED && bucketValue?.length) {
-    formik.setFieldValue(bucketPath, '')
+export const resetFieldValue = (formik: FormikValues, fieldPath: string): void => {
+  const fieldValue = get(formik?.values, fieldPath, '')
+  if (getMultiTypeFromValue(fieldValue) === MultiTypeInputType.FIXED && fieldValue?.length) {
+    formik.setFieldValue(fieldPath, '')
   }
 }
 
-export interface AmazonS3ContentProps extends ArtifactSourceRenderProps {
-  isBucketSelectionDisabled: (props: ArtifactSourceRenderProps) => boolean
-}
-
-const Content = (props: AmazonS3ContentProps): JSX.Element => {
+const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
   const {
     isPrimaryArtifactsRuntime,
     isSidecarRuntime,
@@ -68,10 +73,11 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     artifact,
     isSidecar,
     artifactPath,
-    isBucketSelectionDisabled,
     pipelineIdentifier,
     serviceIdentifier,
-    stepViewType
+    stepViewType,
+    artifacts,
+    useArtifactV1Data = false
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -79,25 +85,35 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
   const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
-  const fixedConnectorValue = defaultTo(
+  const fixedConnectorValue: string | undefined = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`),
-    artifact?.spec?.connectorRef
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef)
   )
-  const fixedRegionValue = defaultTo(
+  const fixedRegionValue: string | undefined = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.region`),
-    artifact?.spec?.region
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.region`, ''), artifact?.spec?.region)
   )
-  const fixedFilePathRegexValue = defaultTo(
+  const fixedBucketValue: string | undefined = defaultTo(
+    get(initialValues?.artifacts, `${artifactPath}.spec.bucketName`),
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.bucketName`, ''), artifact?.spec?.bucketName)
+  )
+  const fixedFilePathRegexValue: string | undefined = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.filePathRegex`),
-    artifact?.spec?.filePathRegex
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.filePathRegex`, ''), artifact?.spec?.filePathRegex)
   )
 
   const [regions, setRegions] = React.useState<SelectOption[]>([])
-  const [lastQueryData, setLastQueryData] = React.useState({
+  const [lastQueryData, setLastQueryData] = React.useState<{
+    connectorRef?: string
+    region?: string
+    bucketName?: string
+  }>({
     connectorRef: '',
-    region: ''
+    region: '',
+    bucketName: ''
   })
 
+  // Region related code
   const {
     data: regionData,
     loading: loadingRegions,
@@ -117,6 +133,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     setRegions(regionValues as SelectOption[])
   }, [regionData?.resource])
 
+  // Bucket related code
   const bucketListAPIQueryParams = {
     accountIdentifier: accountId,
     orgIdentifier,
@@ -139,11 +156,29 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     )
   }
 
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
-    data: bucketData,
-    error,
-    loading,
-    refetch: refetchBuckets
+    data: bucketV1Data,
+    error: bucketV1Error,
+    loading: bucketV1Loading,
+    refetch: refetchV1Buckets
+  } = useGetV2BucketListForS3({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      connectorRef: defaultTo(fixedConnectorValue, ''),
+      region: getFinalQueryParamValue(fixedRegionValue)
+    },
+    lazy: true
+  })
+
+  const {
+    data: bucketV2Data,
+    error: bucketV2Error,
+    loading: bucketV2Loading,
+    refetch: refetchV2Buckets
   } = useMutateAsGet(useListBucketsWithServiceV2, {
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
@@ -157,6 +192,20 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     lazy: true,
     debounce: 300
   })
+
+  const { bucketData, error, loading, refetchBuckets } = useArtifactV1Data
+    ? {
+        bucketData: bucketV1Data,
+        error: bucketV1Error,
+        loading: bucketV1Loading,
+        refetchBuckets: refetchV1Buckets
+      }
+    : {
+        bucketData: bucketV2Data,
+        error: bucketV2Error,
+        loading: bucketV2Loading,
+        refetchBuckets: refetchV2Buckets
+      }
 
   const selectItems = useMemo(() => {
     return defaultTo(
@@ -198,20 +247,169 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
         shouldFetchTagsSource([fixedConnectorValue])
       )
     }
-    return true
   }, [NG_SVC_ENV_REDESIGN, template, lastQueryData, fixedConnectorValue, fixedRegionValue, bucketData?.data])
 
   const fetchBuckets = React.useCallback((): void => {
     if (canFetchBuckets()) {
       setLastQueryData({
         connectorRef: fixedConnectorValue,
-        region: fixedRegionValue
+        region: fixedRegionValue,
+        bucketName: lastQueryData.bucketName
       })
       refetchBuckets()
     }
-  }, [canFetchBuckets, refetchBuckets, fixedConnectorValue, fixedRegionValue])
+  }, [canFetchBuckets, refetchBuckets, fixedConnectorValue, fixedRegionValue, lastQueryData])
 
-  const isFieldDisabled = (fieldName: string, isBucket = false): boolean => {
+  // File Path related code
+  const filePathListAPIQueryParams: GetFilePathsV2ForS3QueryParams = {
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    connectorRef: fixedConnectorValue,
+    region: getFinalQueryParamValue(fixedRegionValue),
+    bucketName: fixedBucketValue,
+    filePathRegex: '*',
+    pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+    serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+    fqnPath: getFqnPath(
+      path as string,
+      !!isPropagatedStage,
+      stageIdentifier,
+      defaultTo(
+        isSidecar
+          ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+          : artifactPath,
+        ''
+      ),
+      'filePath'
+    )
+  }
+
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
+  const {
+    data: filePathV1Data,
+    error: filePathV1Error,
+    loading: fetchingV1FilePaths,
+    refetch: refetchV1FilePaths
+  } = useGetFilePathsForS3({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      connectorRef: defaultTo(fixedConnectorValue, ''),
+      region: getFinalQueryParamValue(fixedRegionValue),
+      bucketName: defaultTo(fixedBucketValue, ''),
+      filePathRegex: '*'
+    },
+    lazy: true
+  })
+
+  const {
+    data: filePathV2Data,
+    error: filePathV2Error,
+    loading: fetchingV2FilePaths,
+    refetch: refetchV2FilePaths
+  } = useMutateAsGet(useGetFilePathsV2ForS3, {
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      ...filePathListAPIQueryParams
+    },
+    lazy: true,
+    debounce: 300
+  })
+
+  const { filePathData, filePathError, fetchingFilePaths, refetchFilePaths } = useArtifactV1Data
+    ? {
+        filePathData: filePathV1Data,
+        filePathError: filePathV1Error,
+        fetchingFilePaths: fetchingV1FilePaths,
+        refetchFilePaths: refetchV1FilePaths
+      }
+    : {
+        filePathData: filePathV2Data,
+        filePathError: filePathV2Error,
+        fetchingFilePaths: fetchingV2FilePaths,
+        refetchFilePaths: refetchV2FilePaths
+      }
+
+  const filePathSelectItems = useMemo(() => {
+    return defaultTo(
+      filePathData?.data?.map((currFilePath: FilePaths) => ({
+        value: defaultTo(currFilePath.buildDetails?.number, ''),
+        label: defaultTo(currFilePath.buildDetails?.number, '')
+      })),
+      []
+    )
+  }, [filePathData?.data])
+
+  const getFilePaths = React.useCallback((): { label: string; value: string }[] => {
+    if (fetchingFilePaths) {
+      const loadingFilePathOptionsText = getString('common.loadingFieldOptions', {
+        fieldName: getString('common.git.filePath')
+      })
+      return [{ label: loadingFilePathOptionsText, value: loadingFilePathOptionsText }]
+    }
+    return defaultTo(filePathSelectItems, [])
+  }, [fetchingFilePaths, filePathSelectItems])
+
+  const canFetchFilePaths = React.useCallback((): boolean => {
+    if (NG_SVC_ENV_REDESIGN) {
+      let shouldFetchFilePaths = false
+      if (isFieldRuntime(`artifacts.${artifactPath}.spec.connectorRef`, template)) {
+        shouldFetchFilePaths = !!(
+          lastQueryData.connectorRef !== fixedConnectorValue && shouldFetchTagsSource([fixedConnectorValue])
+        )
+      }
+      if (!shouldFetchFilePaths && isFieldRuntime(`artifacts.${artifactPath}.spec.region`, template)) {
+        // Checking if fixedRegionValue is empty because region is not required to get buckets
+        if (!isEmpty(fixedRegionValue)) {
+          shouldFetchFilePaths = !!(
+            lastQueryData.region !== fixedRegionValue && shouldFetchTagsSource([fixedRegionValue])
+          )
+        }
+      }
+      if (isFieldRuntime(`artifacts.${artifactPath}.spec.bucketName`, template)) {
+        shouldFetchFilePaths = !!(
+          lastQueryData.bucketName !== fixedBucketValue && shouldFetchTagsSource([fixedBucketValue])
+        )
+      }
+      return shouldFetchFilePaths || isNil(filePathData?.data)
+    } else {
+      return !!(
+        (lastQueryData.connectorRef != fixedConnectorValue ||
+          lastQueryData.region !== fixedRegionValue ||
+          lastQueryData.bucketName !== fixedBucketValue) &&
+        shouldFetchTagsSource([fixedConnectorValue, fixedBucketValue])
+      )
+    }
+  }, [
+    NG_SVC_ENV_REDESIGN,
+    template,
+    lastQueryData,
+    fixedConnectorValue,
+    fixedRegionValue,
+    fixedBucketValue,
+    filePathData?.data
+  ])
+
+  const fetchFilePaths = React.useCallback((): void => {
+    if (canFetchFilePaths()) {
+      setLastQueryData({
+        connectorRef: fixedConnectorValue,
+        region: fixedRegionValue,
+        bucketName: fixedBucketValue
+      })
+      refetchFilePaths()
+    }
+  }, [canFetchFilePaths, refetchFilePaths, fixedConnectorValue, fixedRegionValue, fixedBucketValue])
+
+  const isFieldDisabled = (fieldName: string, isBucket = false, isFilePath = false): boolean => {
     /* instanbul ignore else */
     if (
       readonly ||
@@ -227,7 +425,17 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     }
 
     if (isBucket) {
-      return isBucketSelectionDisabled(props)
+      return (
+        getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME || fixedConnectorValue?.length === 0
+      )
+    }
+    if (isFilePath) {
+      return (
+        getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME ||
+        fixedConnectorValue?.length === 0 ||
+        getMultiTypeFromValue(fixedBucketValue) === MultiTypeInputType.RUNTIME ||
+        fixedBucketValue?.length === 0
+      )
     }
 
     return false
@@ -242,11 +450,34 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
             <Text>{item.label}</Text>
           </Layout.Horizontal>
         }
-        disabled={loading}
+        disabled={loading || fetchingFilePaths}
         onClick={handleClick}
       />
     </div>
   ))
+
+  const getBucketNameHelperText = () => {
+    if (
+      getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.bucketName`)) ===
+        MultiTypeInputType.FIXED &&
+      (getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME || fixedConnectorValue?.length === 0)
+    ) {
+      return getString('pipeline.bucketNameHelperText')
+    }
+  }
+
+  const getFilePathHelperText = () => {
+    if (
+      (getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.filePath`)) ===
+        MultiTypeInputType.FIXED &&
+        (getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME ||
+          fixedConnectorValue?.length === 0)) ||
+      getMultiTypeFromValue(fixedBucketValue) === MultiTypeInputType.RUNTIME ||
+      fixedBucketValue?.length === 0
+    ) {
+      return getString('pipeline.filePathHelperText')
+    }
+  }
 
   return (
     <>
@@ -277,7 +508,8 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                     : item.record?.identifier
 
                 if (connectorRefValue !== fixedConnectorValue) {
-                  resetBuckets(formik, `${path}.artifacts.${artifactPath}.spec.bucketName`)
+                  resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.bucketName`)
+                  resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.filePath`)
                 }
               }}
               className={css.connectorMargin}
@@ -294,11 +526,12 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
               name={`${path}.artifacts.${artifactPath}.spec.region`}
               selectItems={regions}
               useValue
-              disabled={(!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.region`)) || loading}
+              disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.region`)}
               multiTypeInputProps={{
                 onChange: selected => {
                   if (fixedRegionValue !== (selected as any).value) {
-                    resetBuckets(formik, `${path}.artifacts.${artifactPath}.spec.bucketName`)
+                    resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.bucketName`)
+                    resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.filePath`)
                   }
                 },
                 selectProps: {
@@ -321,16 +554,17 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
               label={getString('pipeline.manifestType.bucketName')}
               placeholder={loading ? getString('loading') : getString('pipeline.manifestType.bucketPlaceHolder')}
               name={`${path}.artifacts.${artifactPath}.spec.bucketName`}
-              disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`, true)}
-              helperText={
-                !get(formik, `values.${path}.artifacts.${artifactPath}.spec.connectorRef`)?.length &&
-                getMultiTypeFromValue(artifact?.spec?.connectorRef) === MultiTypeInputType.RUNTIME &&
-                getString('pipeline.dependencyRequired')
-              }
+              disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`, true, false)}
+              helperText={getBucketNameHelperText()}
               useValue
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
+                onChange: selected => {
+                  if (fixedBucketValue !== (selected as any).value) {
+                    resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.filePath`)
+                  }
+                },
                 selectProps: {
                   noResults: (
                     <Text lineClamp={1} width={500} height={100} padding="small">
@@ -358,14 +592,39 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
           )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.filePath`, template) && (
-            <FormInput.MultiTextInput
+            <FormInput.MultiTypeInput
+              selectItems={getFilePaths()}
               label={getString('common.git.filePath')}
+              placeholder={loading ? getString('loading') : getString('pipeline.manifestType.pathPlaceholder')}
               name={`${path}.artifacts.${artifactPath}.spec.filePath`}
-              placeholder={getString('pipeline.manifestType.pathPlaceholder')}
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.filePath`)}
-              multiTextInputProps={{
+              disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.filePath`, false, true)}
+              helperText={getFilePathHelperText()}
+              useValue
+              multiTypeInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                selectProps: {
+                  noResults: (
+                    <Text lineClamp={1} width={500} height={100} padding="small">
+                      {getRBACErrorMessage(filePathError as RBACError) || getString('pipeline.noFilePathsFound')}
+                    </Text>
+                  ),
+                  itemRenderer: itemRenderer,
+                  items: getFilePaths(),
+                  allowCreatingNewItems: true,
+                  addClearBtn: true
+                },
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
+                  }
+                  if (!fetchingFilePaths) {
+                    fetchFilePaths()
+                  }
+                }
               }}
             />
           )}
@@ -412,25 +671,15 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
   )
 }
 
-export class AmazonS3ArtifactSource extends ArtifactSourceBase<AmazonS3ContentProps> {
+export class AmazonS3ArtifactSource extends ArtifactSourceBase<ArtifactSourceRenderProps> {
   protected artifactType = ENABLED_ARTIFACT_TYPES.AmazonS3
   protected isSidecar = false
 
   // NOTE: This is not used anywhere currently, this written because it is abstract method in ArtifactSourceBase class
-  // ArtifactSourceBase should extended here, otherwise AmazonS3ArtifactSource class instancecan not be registered
+  // ArtifactSourceBase should extended here, otherwise AmazonS3ArtifactSource class instance can not be registered
   // in src/modules/75-cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory.tsx file
   isTagsSelectionDisabled(_props: ArtifactSourceRenderProps): boolean {
     return false
-  }
-
-  isBucketSelectionDisabled(props: ArtifactSourceRenderProps): boolean {
-    const { initialValues, artifactPath, artifact } = props
-
-    const isConnectorPresent = getDefaultQueryParam(
-      artifact?.spec?.connectorRef,
-      get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '')
-    )
-    return !isConnectorPresent
   }
 
   renderContent(props: ArtifactSourceRenderProps): JSX.Element | null {
@@ -440,6 +689,6 @@ export class AmazonS3ArtifactSource extends ArtifactSourceBase<AmazonS3ContentPr
 
     this.isSidecar = defaultTo(props.isSidecar, false)
 
-    return <Content {...props} isBucketSelectionDisabled={this.isBucketSelectionDisabled.bind(this)} />
+    return <Content {...props} />
   }
 }

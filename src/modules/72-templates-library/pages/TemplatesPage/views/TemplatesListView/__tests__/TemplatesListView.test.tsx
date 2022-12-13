@@ -14,16 +14,17 @@ import { TemplatesListView } from '@templates-library/pages/TemplatesPage/views/
 import { TestWrapper } from '@common/utils/testUtils'
 import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
 import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-import * as cdng from 'services/cd-ng'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 
-jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {
-  return { data: gitConfigs, refetch: jest.fn(), loading: false }
-})
-jest.spyOn(cdng, 'useGetSourceCodeManagers').mockImplementation((): any => {
-  return { data: sourceCodeManagers, refetch: jest.fn(), loading: false }
-})
+jest.mock('services/cd-ng-rq', () => ({
+  useListGitSyncQuery: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: jest.fn() }
+  }),
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
+}))
 
 const baseProps: TemplatesViewProps = {
   data: defaultTo(mockTemplates.data, {}),

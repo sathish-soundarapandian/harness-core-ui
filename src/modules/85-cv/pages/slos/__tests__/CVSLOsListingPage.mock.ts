@@ -86,7 +86,8 @@ export const dashboardWidgetsContent: SLODashboardWidget = {
   serviceIdentifier: 'service',
   environmentIdentifier: 'env',
   environmentName: 'env',
-  serviceName: 'serviceName'
+  serviceName: 'serviceName',
+  sloType: 'Simple'
 }
 
 export const dashboardWidgetsResponse: ResponsePageSLOHealthListView = {
@@ -209,7 +210,8 @@ export const mockSLODashboardWidgetsData = {
         sloTargetType: 'Rolling',
         sloTargetPercentage: 97.0,
         noOfActiveAlerts: 12,
-        errorBudgetRisk: 'HEALTHY'
+        errorBudgetRisk: 'HEALTHY',
+        sloType: 'Composite'
       }
     ],
     pageIndex: 0,

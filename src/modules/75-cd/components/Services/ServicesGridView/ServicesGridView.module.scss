@@ -7,7 +7,7 @@
 
 .masonry {
   min-height: calc(100vh - var(--page-header-height) - 64px);
-  width: 1200px;
+  width: min(100%, 1200px) !important;
   margin: 0 auto !important;
   display: grid;
   justify-content: center;

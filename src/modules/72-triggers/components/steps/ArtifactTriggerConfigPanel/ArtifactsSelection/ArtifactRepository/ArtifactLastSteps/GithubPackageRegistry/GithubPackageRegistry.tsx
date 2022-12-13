@@ -49,7 +49,6 @@ export const packageTypes: SelectOption[] = [
 
 function FormComponent({
   expressions,
-  allowableTypes,
   prevStepData,
   previousStep,
   isReadonly = false,
@@ -68,7 +67,7 @@ function FormComponent({
     branch
   }
   const packageTypeValue = getGenuineValue(formik.values.packageType || initialValues?.packageType)
-  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value)
+  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
   const orgValue = getGenuineValue(formik.values.org)
 
   const {
@@ -163,7 +162,7 @@ function FormComponent({
             }}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes: [MultiTypeInputType.FIXED]
             }}
           />
         </div>
@@ -177,7 +176,7 @@ function FormComponent({
             useValue
             multiTypeInputProps={{
               expressions,
-              allowableTypes,
+              allowableTypes: [MultiTypeInputType.FIXED],
               selectProps: {
                 noResults: (
                   <NoTagResults

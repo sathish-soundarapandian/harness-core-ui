@@ -36,7 +36,13 @@ jest.mock('services/cd-ng', () => ({
   useGetPackagesFromGithubWithServiceV2: jest.fn().mockImplementation(() => {
     return { data: packagesData, refetch: fetchPackages, error: null, loading: false }
   }),
+  useGetPackagesFromGithub: jest.fn().mockImplementation(() => {
+    return { data: packagesData, refetch: fetchPackages, error: null, loading: false }
+  }),
   useGetVersionsFromPackagesWithServiceV2: jest.fn().mockImplementation(() => {
+    return { data: versionsData, refetch: fetchVersions, error: null, loading: false }
+  }),
+  useGetVersionsFromPackages: jest.fn().mockImplementation(() => {
     return { data: versionsData, refetch: fetchVersions, error: null, loading: false }
   })
 }))

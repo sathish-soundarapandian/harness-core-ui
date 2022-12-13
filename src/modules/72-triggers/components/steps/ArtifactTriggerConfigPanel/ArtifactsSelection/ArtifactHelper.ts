@@ -169,6 +169,7 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Acr
   ],
+  Asg: [ENABLED_ARTIFACT_TYPES.AmazonMachineImage],
   Elastigroup: [ENABLED_ARTIFACT_TYPES.AmazonS3],
   CustomDeployment: [
     ENABLED_ARTIFACT_TYPES.CustomArtifact,
@@ -178,6 +179,17 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.AmazonS3,
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
     ENABLED_ARTIFACT_TYPES.Ecr
+  ],
+  TAS: [
+    ENABLED_ARTIFACT_TYPES.AmazonS3,
+    ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
+    ENABLED_ARTIFACT_TYPES.Acr,
+    ENABLED_ARTIFACT_TYPES.DockerRegistry,
+    ENABLED_ARTIFACT_TYPES.Ecr,
+    ENABLED_ARTIFACT_TYPES.Gcr,
+    ENABLED_ARTIFACT_TYPES.Jenkins,
+    ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+    ENABLED_ARTIFACT_TYPES.CustomArtifact
   ]
 }
 

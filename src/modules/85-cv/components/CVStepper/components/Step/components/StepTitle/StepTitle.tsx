@@ -7,12 +7,14 @@
 
 import React from 'react'
 import { noop } from 'lodash-es'
+import cx from 'classnames'
 import { Text, Layout, Icon } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { StepTitleInterface } from './StepTitle.types'
 import { getStateByStatus } from './StepTitle.utils'
 import { StepStatus } from '../../Step.constants'
+import css from './StepTitle.module.scss'
 
 export const StepTitle = ({
   step,
@@ -35,9 +37,15 @@ export const StepTitle = ({
         flex={{ alignItems: 'center', justifyContent: 'start' }}
       >
         {isCurrent ? (
-          <Icon name={isErrorOrSuccess ? icon : 'edit'} size={20} margin="small" color={iconColor} />
+          <Icon
+            name={isErrorOrSuccess ? icon : 'Edit'}
+            size={isErrorOrSuccess ? 20 : 16}
+            margin="small"
+            color={iconColor}
+            className={cx(css.iconNoBorder, !isErrorOrSuccess && css.editIcon)}
+          />
         ) : (
-          <Icon name={icon} size={20} margin="small" color={iconColor} />
+          <Icon name={icon} size={20} margin="small" color={iconColor} className={css.iconNoBorder} />
         )}
         <Text font={{ variation: FontVariation.H5 }} color={labelColor}>
           {step.title} {isOptional && getString('titleOptional')}

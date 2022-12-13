@@ -196,17 +196,24 @@ export default function Configurations(
   }, [identifier])
 
   const initialValues: MonitoredServiceForm = useMemo(
-    () =>
-      getInitFormData(
+    () => {
+      const formInitiaValues = getInitFormData(
         defaultMonitoredService,
         isTemplate ? templateIdentifier !== DefaultNewTemplateId : !!identifier,
         isTemplate,
         isTemplate ? templateValue : dataMonitoredServiceById?.data?.monitoredService,
         templateScope
-      ),
+      )
+
+      return {
+        ...formInitiaValues,
+        isMonitoredServiceEnabled: dataMonitoredServiceById?.data?.monitoredService?.enabled
+      }
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
-      dataMonitoredServiceById?.data?.monitoredService.name,
+      dataMonitoredServiceById?.data?.monitoredService?.name,
+      dataMonitoredServiceById?.data?.monitoredService?.enabled,
       identifier,
       loadingGetMonitoredService,
       defaultMonitoredService,

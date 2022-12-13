@@ -19,6 +19,7 @@ interface FooterRendererProps {
 }
 
 export const FooterRenderer = (props: FooterRendererProps): React.ReactElement => {
+  /* istanbul ignore next */
   const { onSubmit, onCancel, confirmText, cancelText, type, loading = false } = props
   return (
     <Layout.Horizontal spacing="small" padding="none" margin="none">

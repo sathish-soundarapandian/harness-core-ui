@@ -413,6 +413,7 @@ export default function AddEditServiceOverride({
                               isReadonly={isReadonly}
                               expressions={expressions}
                               allowableTypes={allowableTypes}
+                              serviceType={serviceType}
                             />
                           }
                         />

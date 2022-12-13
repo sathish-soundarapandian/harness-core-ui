@@ -133,6 +133,7 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
         />
       </Layout.Horizontal>
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     disableBranchSelection,
     isNewBranch,

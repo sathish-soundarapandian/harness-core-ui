@@ -42,7 +42,8 @@ export const ErrorType: Record<FailureErrorType, FailureErrorType> = {
   DelegateProvisioning: 'DelegateProvisioning',
   Unknown: 'Unknown',
   PolicyEvaluationFailure: 'PolicyEvaluationFailure',
-  InputTimeoutError: 'InputTimeoutError'
+  InputTimeoutError: 'InputTimeoutError',
+  ApprovalRejection: 'ApprovalRejection'
 }
 
 export const strategyIconMap: Record<StrategyType, IconName> = {

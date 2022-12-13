@@ -173,6 +173,12 @@ allowpaths:
   - /slo/v2/{identifier}/notification-rules
   - /aws/prometheus/workspaces
   - /aws/regions
+  - /slo-dashboard/widget/{identifier}/consumption
+  - /slo/v2/composite-slo/onboarding-graph
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/log-records
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/metric-records
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/records
+  - /usage/CV
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

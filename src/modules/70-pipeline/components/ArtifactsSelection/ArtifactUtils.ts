@@ -72,6 +72,10 @@ export const getConnectorIdValue = (prevStepData: ConnectorConfigDTO | undefined
   return prevStepData?.identifier || ''
 }
 
+export const getConnectorRefQueryData = (prevStepData: ConnectorConfigDTO | undefined): string => {
+  return prevStepData?.connectorId?.value || prevStepData?.connectorId?.connector?.value || prevStepData?.identifier
+}
+
 export const helperTextData = (
   selectedArtifact: ArtifactType | null,
   formik: FormikValues,
@@ -166,7 +170,7 @@ export const checkIfQueryParamsisNotEmpty = (queryParamList: Array<string | numb
     return querydata !== undefined
   })
 }
-export const shouldFetchTags = (
+export const shouldFetchFieldOptions = (
   prevStepData: ConnectorConfigDTO | undefined,
   queryParamList: Array<string | number>
 ): boolean => {
@@ -434,8 +438,8 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
         spec: {
           version: '',
           versionRegex: '',
-          amiTags: [],
-          amiFilters: [],
+          tags: null,
+          filters: null,
           region: ''
         }
       }
@@ -591,3 +595,13 @@ export const amiFilters = [
     value: 'ami-platform'
   }
 ]
+
+export const getInSelectOptionForm = (data: { [key: string]: any } | string) => {
+  return getMultiTypeFromValue(data as string) === MultiTypeInputType.RUNTIME
+    ? data
+    : data
+    ? Object.keys(data || {})?.map((key: string | number) => {
+        return { name: key, value: (data as { [key: string]: any })?.[key as any] }
+      })
+    : data
+}

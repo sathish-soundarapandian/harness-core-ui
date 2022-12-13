@@ -29,14 +29,12 @@ import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { CreateAFlagView } from './views/CreateAFlagView'
 import { OnboardingSelectedFlag } from './OnboardingSelectedFlag'
 import { SetUpYourApplicationView } from './views/SetUpYourApplicationView'
-import { SetUpYourCodeView } from './views/SetUpYourCodeView'
 import { ValidateYourFlagView } from './views/ValidatingYourFlagView'
 import css from './OnboardingDetailPage.module.scss'
 
 enum STEP {
   CREATE_A_FLAG,
   SELECT_ENV_SDK,
-  SET_UP_CODE,
   VALIDATE_FLAG
 }
 
@@ -91,15 +89,6 @@ export const OnboardingDetailPage: React.FC = () => {
   const thirdStepStatus = useMemo<StepStatus>(() => {
     if (currentStep === 3) {
       return StepStatus.INPROGRESS
-    } else if (currentStep > 3) {
-      return StepStatus.SUCCESS
-    }
-    return StepStatus.TODO
-  }, [currentStep])
-
-  const fourthStepStatus = useMemo<StepStatus>(() => {
-    if (currentStep === 4) {
-      return StepStatus.INPROGRESS
     }
     return StepStatus.TODO
   }, [currentStep])
@@ -110,8 +99,6 @@ export const OnboardingDetailPage: React.FC = () => {
       case 2:
         return STEP.SELECT_ENV_SDK
       case 3:
-        return STEP.SET_UP_CODE
-      case 4:
         return STEP.VALIDATE_FLAG
       default:
         // first step/tab
@@ -125,36 +112,40 @@ export const OnboardingDetailPage: React.FC = () => {
 
   return (
     <Layout.Vertical
-      className={css.grid}
-      height="100vh"
       padding={{ top: 'huge', left: 'huge', right: 'huge', bottom: 'none' }}
-      style={{ overflowY: 'auto' }}
       background={Color.WHITE}
+      className={css.mainContent}
     >
-      <Layout.Horizontal spacing="xsmall" flex data-testid="getStartedProgressStepper" height="10px">
+      <Layout.Horizontal
+        spacing="xsmall"
+        flex
+        data-testid="getStartedProgressStepper"
+        height="10px"
+        padding={{ bottom: 'xlarge' }}
+        className={css.keepOnTop}
+      >
         <MultiStepProgressIndicator
           progressMap={
             new Map([
               [0, { StepStatus: firstStepStatus }],
               [1, { StepStatus: secondStepStatus }],
-              [2, { StepStatus: thirdStepStatus }],
-              [3, { StepStatus: fourthStepStatus }]
+              [2, { StepStatus: thirdStepStatus }]
             ])
           }
         />
       </Layout.Horizontal>
-      <Container style={{ flexGrow: 1 }} padding={{ top: 'xxlarge', bottom: 'xxlarge' }}>
+      <Container className={css.onboardingContainer} height="100%" padding={{ top: 'xxlarge', bottom: 'xlarge' }}>
         {selectedStep !== STEP.VALIDATE_FLAG ? (
           <>
             <Heading level={3} font={{ variation: FontVariation.H3 }} margin={{ bottom: 'large' }}>
               {getString('cf.onboarding.letsGetStarted')}
             </Heading>
-            <Heading level={4} font={{ variation: FontVariation.H4 }} margin="none">
+            <Heading level={4} font={{ variation: FontVariation.H4 }} margin={{ bottom: 'medium' }}>
               {getString('cf.onboarding.createFlag')}
             </Heading>
 
-            {selectedFlag && (selectedStep === STEP.SELECT_ENV_SDK || selectedStep === STEP.SET_UP_CODE) && (
-              <Layout.Vertical margin={{ top: 'medium', bottom: 'medium' }} spacing="medium">
+            {selectedFlag && selectedStep === STEP.SELECT_ENV_SDK && (
+              <Layout.Vertical spacing="medium">
                 <OnboardingSelectedFlag selectedFlag={selectedFlag} />
                 <Divider />
               </Layout.Vertical>
@@ -170,8 +161,9 @@ export const OnboardingDetailPage: React.FC = () => {
           <CreateAFlagView selectedFlag={selectedFlag} setSelectedFlag={setSelectedFlag} />
         )}
 
-        {selectedStep === STEP.SELECT_ENV_SDK && (
+        {selectedStep === STEP.SELECT_ENV_SDK && selectedFlag && (
           <SetUpYourApplicationView
+            flagInfo={selectedFlag}
             language={language}
             setLanguage={setLanguage}
             apiKey={apiKey}
@@ -181,16 +173,7 @@ export const OnboardingDetailPage: React.FC = () => {
           />
         )}
 
-        {selectedStep === STEP.SET_UP_CODE && language && selectedFlag && apiKey && selectedEnvironment && (
-          <SetUpYourCodeView
-            apiKey={apiKey}
-            language={language}
-            flagName={selectedFlag?.name}
-            environment={selectedEnvironment}
-          />
-        )}
-
-        {selectedStep === STEP.VALIDATE_FLAG && selectedEnvironment && (
+        {selectedStep === STEP.VALIDATE_FLAG && selectedFlag && selectedEnvironment && (
           <ValidateYourFlagView
             flagInfo={selectedFlag as Feature}
             language={language as PlatformEntry}
@@ -221,10 +204,6 @@ export const OnboardingDetailPage: React.FC = () => {
           disabled={disableNext}
           onClick={() => {
             if (selectedStep === STEP.SELECT_ENV_SDK) {
-              trackEvent(FeatureActions.SetUpYourApplicationVerify, {
-                category: Category.FEATUREFLAG
-              })
-            } else if (selectedStep === STEP.SET_UP_CODE) {
               trackEvent(FeatureActions.SetUpYourApplicationVerify, {
                 category: Category.FEATUREFLAG
               })

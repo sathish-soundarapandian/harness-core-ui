@@ -103,7 +103,6 @@ exports[`ServiceNowcreateupdate view test  snapshot for displaying ticketNumber 
             <tr>
               <th>
                 pipeline.serviceNowApprovalStep.issueNumber:
-                :
               </th>
               <td>
                 <a

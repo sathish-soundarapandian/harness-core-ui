@@ -13,6 +13,7 @@ import {
 } from '../../support/70-pipeline/constants'
 
 describe('RUN PIPELINE MODAL - deploy stage', () => {
+  const accountLicense = 'ng/api/licenses/account?routingId=accountId&accountIdentifier=accountId'
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -21,12 +22,16 @@ describe('RUN PIPELINE MODAL - deploy stage', () => {
     })
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.login('test', 'test')
-
+    cy.intercept('GET', accountLicense, { fixture: 'pipeline/api/approvals/accountLicense' })
     cy.visitCreatePipeline()
 
     cy.fillName('testPipeline_Cypress')
 
     cy.clickSubmit()
+
+    cy.intercept('GET', cdFailureStrategiesYaml, { fixture: 'pipeline/api/pipelines/failureStrategiesYaml' }).as(
+      'cdFailureStrategiesYaml'
+    )
 
     switch (Cypress.currentTest.title) {
       case 'error validations on pipeline save from API':
@@ -35,10 +40,6 @@ describe('RUN PIPELINE MODAL - deploy stage', () => {
         cy.createDeploymentStage()
         break
     }
-
-    cy.intercept('GET', cdFailureStrategiesYaml, { fixture: 'pipeline/api/pipelines/failureStrategiesYaml' }).as(
-      'cdFailureStrategiesYaml'
-    )
   })
 
   it('should display the delete pipeline stage modal', () => {

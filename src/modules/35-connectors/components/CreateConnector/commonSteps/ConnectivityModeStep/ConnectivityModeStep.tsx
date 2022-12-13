@@ -38,6 +38,7 @@ import { useStrings } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { ConnectorLabels } from '@connectors/constants'
 import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import css from './ConnectivityModeStep.module.scss'
@@ -62,10 +63,21 @@ interface ConnectivityModeStepProps {
   customHandleCreate?: (payload: ConnectorConfigDTO) => Promise<ConnectorInfoDTO | undefined>
   customHandleUpdate?: (payload: ConnectorConfigDTO) => Promise<ConnectorInfoDTO | undefined>
   helpPanelReferenceId?: string
+  delegateImage?: string
+  platformImage?: string
 }
 
 const ConnectivityModeStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectivityModeStepProps> = props => {
-  const { prevStepData, nextStep, connectorInfo, buildPayload, customHandleUpdate, customHandleCreate } = props
+  const {
+    prevStepData,
+    nextStep,
+    connectorInfo,
+    buildPayload,
+    customHandleUpdate,
+    customHandleCreate,
+    delegateImage,
+    platformImage
+  } = props
   const { getString } = useStrings()
   const {
     accountId,
@@ -188,6 +200,9 @@ const ConnectivityModeStep: React.FC<StepProps<ConnectorConfigDTO> & Connectivit
                     onChange={(val: ConnectivityCardItem) => {
                       props.setConnectivityMode?.(val.type)
                     }}
+                    connectorLabel={ConnectorLabels[props.type as ConnectorInfoDTO['type']]}
+                    delegateImage={delegateImage}
+                    platformImage={platformImage}
                   />
                 </Layout.Vertical>
                 <Layout.Horizontal padding={{ top: 'medium' }} margin={{ top: 'xxxlarge' }} spacing="medium">

@@ -19,4 +19,6 @@ export interface DeployInfrastructureEntityCustomStepProps {
 export interface DeployInfrastructureEntityCustomInputStepProps extends DeployInfrastructureEntityCustomStepProps {
   deployToAllInfrastructures?: boolean
   customDeploymentRef?: TemplateLinkConfig
+  showEnvironmentsSelectionInputField?: boolean
+  areEnvironmentFiltersAdded?: boolean
 }

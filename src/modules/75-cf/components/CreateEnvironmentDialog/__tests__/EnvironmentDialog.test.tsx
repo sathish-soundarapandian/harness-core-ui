@@ -13,8 +13,11 @@ import * as useFeaturesMock from '@common/hooks/useFeatures'
 import * as usePlanEnforcementMock from '@cf/hooks/usePlanEnforcement'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { CheckFeatureReturn } from 'framework/featureStore/featureStoreUtil'
-
+import mockImport from 'framework/utils/mockImport'
 import EnvironmentDialog, { EnvironmentDialogProps } from '../EnvironmentDialog'
+import mockCreateEnvironmentResp from './mockCreateEnvironmentResp'
+
+const createEnvironment = jest.fn().mockResolvedValue(mockCreateEnvironmentResp)
 
 const renderComponent = (props: Partial<EnvironmentDialogProps> = {}): RenderResult => {
   return render(
@@ -28,9 +31,32 @@ const renderComponent = (props: Partial<EnvironmentDialogProps> = {}): RenderRes
 }
 
 describe('EnvironmentDialog', () => {
-  beforeEach(() =>
+  beforeEach(() => {
     jest.spyOn(usePlanEnforcementMock, 'default').mockReturnValue({ isPlanEnforcementEnabled: true, isFreePlan: false })
-  )
+    mockImport('services/cd-ng', {
+      useCreateEnvironment: () => ({
+        mutate: createEnvironment,
+        loading: false
+      })
+    })
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  test('it should select an environment type', async () => {
+    renderComponent({ createEnvFromInput: true })
+
+    expect(screen.getAllByTestId(/^environmentType.*$/)).toHaveLength(2)
+    expect(screen.getByTestId('environmentTypeSelected')).toHaveTextContent('nonProduction')
+
+    userEvent.click(screen.getByText('production'))
+    await waitFor(() => expect(screen.getByTestId('environmentTypeSelected')).toHaveTextContent('production'))
+
+    userEvent.click(screen.getByText('nonProduction'))
+    await waitFor(() => expect(screen.getByTestId('environmentTypeSelected')).toHaveTextContent('nonProduction'))
+  })
 
   test('it should display plan enforcement tooltip when limits reached', async () => {
     const mockedReturnValue = new Map<FeatureIdentifier, CheckFeatureReturn>()
@@ -74,6 +100,49 @@ describe('EnvironmentDialog', () => {
     })
   })
 
+  test('it should autofill the environment name when created from input', async () => {
+    renderComponent({ onCreate: jest.fn(), createEnvFromInput: true, createEnvName: 'my environment name' })
+
+    userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+
+    await waitFor(() => {
+      expect(createEnvironment).toBeCalled()
+      expect(screen.queryByText('cf.create.env.error')).not.toBeInTheDocument()
+    })
+  })
+
+  test('it should sanitise the Id based on the env name text provided', async () => {
+    renderComponent({ onCreate: jest.fn(), createEnvFromInput: true, createEnvName: 'my environment name' })
+
+    expect(document.querySelector('div[class*="InputWithIdentifier--idValue"]')).toHaveTextContent(
+      'my_environment_name'
+    )
+
+    // form should submit
+    userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+
+    await waitFor(() => {
+      expect(createEnvironment).toBeCalled()
+      expect(screen.queryByText('cf.create.env.error')).not.toBeInTheDocument()
+    })
+  })
+
+  test('it should call onCloseDialog when modal closes', async () => {
+    const onClose = jest.fn()
+    renderComponent({ createEnvFromInput: true, onCloseDialog: onClose })
+
+    await waitFor(() => {
+      expect(onClose).not.toHaveBeenCalled()
+      expect(screen.getByRole('button', { name: 'cancel' })).toBeVisible()
+    })
+
+    userEvent.click(screen.getByRole('button', { name: 'cancel' }))
+
+    await waitFor(() => {
+      expect(onClose).toHaveBeenCalled()
+    })
+  })
+
   describe('Environment name validation', () => {
     beforeEach(() => {
       jest
@@ -110,7 +179,7 @@ describe('EnvironmentDialog', () => {
     })
 
     test('it should not show error message if Environment name contains an ASCII character', async () => {
-      renderComponent()
+      renderComponent({ onCreate: jest.fn() })
 
       // open the modal
       userEvent.click(screen.getByRole('button', { name: 'newEnvironment' }))

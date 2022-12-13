@@ -30,8 +30,7 @@ import { useToaster } from '@common/exports'
 import {
   DeleteFeatureFlagQueryParams,
   Feature,
-  Features,
-  FeatureState,
+  GetAllFeaturesQueryParams,
   GitSyncErrorResponse,
   useDeleteFeatureFlag,
   useGetAllFeatures
@@ -50,7 +49,6 @@ import { CFEnvironmentSelect } from '@cf/components/CFEnvironmentSelect/CFEnviro
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import {
   CF_DEFAULT_PAGE_SIZE,
-  FeatureFlagActivationStatus,
   featureFlagHasCustomRules,
   getDefaultVariation,
   getErrorMessage,
@@ -86,7 +84,6 @@ export interface RenderColumnFlagProps {
   cell: Cell<Feature>
   toggleFeatureFlag: UseToggleFeatureFlag
   governance: UseGovernancePayload
-  update: (status: boolean) => void
   refetchFlags: () => void
 }
 
@@ -96,7 +93,6 @@ export const RenderColumnFlag: React.FC<RenderColumnFlagProps> = ({
   toggleFeatureFlag,
   governance,
   cell: { row },
-  update,
   refetchFlags
 }) => {
   const data = row.original
@@ -149,9 +145,8 @@ export const RenderColumnFlag: React.FC<RenderColumnFlagProps> = ({
       }
 
       setStatus(!status)
-      update(!status)
       refetchFlags()
-    } catch (error: any) {
+    } catch (error) {
       if (error.status === GIT_SYNC_ERROR_CODE) {
         gitSync.handleError(error.data as GitSyncErrorResponse)
       } else {
@@ -269,7 +264,7 @@ export const RenderColumnFlag: React.FC<RenderColumnFlagProps> = ({
           tooltipProps={{
             interactionKind:
               switchDisabled || !numberOfEnvs ? PopoverInteractionKind.HOVER : PopoverInteractionKind.CLICK,
-            hasBackdrop: switchDisabled || !numberOfEnvs ? false : true,
+            hasBackdrop: !(switchDisabled || !numberOfEnvs),
             position: switchDisabled || !numberOfEnvs ? Position.BOTTOM_LEFT : Position.TOP_LEFT
           }}
           className={css.toggleFlagButton}
@@ -423,8 +418,9 @@ const FeatureFlagsPage: React.FC = () => {
   const searchRef = React.useRef<ExpandingSearchInputHandle>({} as ExpandingSearchInputHandle)
   const [pageNumber, setPageNumber] = useState(0)
   const [searchTerm, setSearchTerm] = useState('')
-  const [flagFilter, setFlagFilter] = useState<Record<string, any> | FilterProps>({})
-  const queryParams = useMemo(() => {
+  const [flagFilter, setFlagFilter] = useState<Optional<FilterProps>>({})
+
+  const queryParams = useMemo<GetAllFeaturesQueryParams>(() => {
     return {
       projectIdentifier,
       environmentIdentifier,
@@ -437,15 +433,23 @@ const FeatureFlagsPage: React.FC = () => {
       name: searchTerm,
       [flagFilter.queryProps?.key]: flagFilter.queryProps?.value
     }
-  }, [projectIdentifier, environmentIdentifier, accountIdentifier, orgIdentifier, pageNumber, searchTerm, flagFilter])
+  }, [
+    projectIdentifier,
+    environmentIdentifier,
+    accountIdentifier,
+    orgIdentifier,
+    pageNumber,
+    searchTerm,
+    flagFilter.queryProps?.key,
+    flagFilter.queryProps?.value
+  ])
 
   const {
-    data,
+    data: features,
     loading: flagsLoading,
     error: flagsError,
     refetch
   } = useGetAllFeatures({
-    lazy: true,
     queryParams
   })
   const {
@@ -467,32 +471,13 @@ const FeatureFlagsPage: React.FC = () => {
 
   const deleteFlag = useDeleteFeatureFlag({ queryParams })
 
-  const [features, setFeatures] = useState<Features | null>(null)
   const { getString } = useStrings()
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setFeatures(data)
-  }, [data])
-
-  useEffect(() => {
-    setLoading(flagsLoading || envsLoading)
-  }, [flagsLoading, envsLoading])
-
-  /* Hook needed because lazy loading being used on useGetAllFeatures above means changes to filters are NOT picked up when queryParams memo changes */
-  useEffect(() => {
-    refetch({ queryParams })
-  }, [refetch, queryParams])
-
-  const gitSyncing = useMemo<boolean>(
-    () => toggleFeatureFlag.loading || deleteFlag.loading,
-    [toggleFeatureFlag.loading, deleteFlag.loading]
-  )
 
   const gitSync = useFFGitSyncContext()
-
   const governance = useGovernance()
 
+  const loading = flagsLoading || envsLoading
+  const gitSyncing = toggleFeatureFlag.loading || deleteFlag.loading
   const error = flagsError || envsError || deleteFlag.error || (toggleFeatureFlag.error && !governance.governanceError)
 
   const columns: Column<Feature>[] = useMemo(
@@ -509,18 +494,6 @@ const FeatureFlagsPage: React.FC = () => {
               toggleFeatureFlag={toggleFeatureFlag}
               governance={governance}
               cell={cell}
-              update={status => {
-                const feature = features?.features?.find(f => f.identifier === cell.row.original.identifier)
-                if (feature) {
-                  if (feature.envProperties) {
-                    feature.envProperties.state = (
-                      status ? FeatureFlagActivationStatus.ON : FeatureFlagActivationStatus.OFF
-                    ) as FeatureState
-                  }
-                  feature.modifiedAt = Date.now()
-                  setFeatures({ ...features } as Features)
-                }
-              }}
               refetchFlags={() => refetch({ queryParams })}
             />
           )
@@ -578,9 +551,8 @@ const FeatureFlagsPage: React.FC = () => {
     name => {
       setSearchTerm(name)
       setPageNumber(0)
-      refetch({ queryParams: { ...queryParams, name, pageNumber: 0 } })
     },
-    [setSearchTerm, refetch, queryParams, setPageNumber]
+    [setSearchTerm, setPageNumber]
   )
 
   const emptyFeatureFlags = !features?.features?.length
@@ -622,10 +594,8 @@ const FeatureFlagsPage: React.FC = () => {
             pageSize={features?.pageSize || 0}
             pageCount={features?.pageCount || 0}
             pageIndex={pageNumber}
-            gotoPage={index => {
-              setPageNumber(index)
-              refetch({ queryParams: { ...queryParams, pageNumber: index } })
-            }}
+            gotoPage={setPageNumber}
+            showPagination
           />
         )
       }
@@ -637,8 +607,8 @@ const FeatureFlagsPage: React.FC = () => {
         refetch()
       }}
     >
-      <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
-        {showFilterCards && (
+      {showFilterCards && (
+        <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
           <FlagTableFilters
             features={features}
             currentFilter={flagFilter}
@@ -647,8 +617,10 @@ const FeatureFlagsPage: React.FC = () => {
               setFlagFilter(currentFilter)
             }}
           />
-        )}
-        {!emptyFeatureFlags ? (
+        </Container>
+      )}
+      {!emptyFeatureFlags ? (
+        <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
           <TableV2<Feature>
             columns={columns}
             data={features?.features || []}
@@ -665,17 +637,17 @@ const FeatureFlagsPage: React.FC = () => {
               )
             }}
           />
-        ) : (
-          <NoFeatureFlags
-            hasFeatureFlags={hasFeatureFlags}
-            hasSearchTerm={searchTerm.length > 0}
-            hasFlagFilter={flagFilter.queryProps?.key?.length > 0 && flagFilter.queryProps?.value?.length > 0}
-            environmentIdentifier={environmentIdentifier}
-            clearFilter={onClearFilter}
-            clearSearch={onClearSearch}
-          />
-        )}
-      </Container>
+        </Container>
+      ) : (
+        <NoFeatureFlags
+          hasFeatureFlags={hasFeatureFlags}
+          hasSearchTerm={searchTerm.length > 0}
+          hasFlagFilter={flagFilter.queryProps?.key?.length > 0 && flagFilter.queryProps?.value?.length > 0}
+          environmentIdentifier={environmentIdentifier}
+          clearFilter={onClearFilter}
+          clearSearch={onClearSearch}
+        />
+      )}
     </ListingPageTemplate>
   )
 }

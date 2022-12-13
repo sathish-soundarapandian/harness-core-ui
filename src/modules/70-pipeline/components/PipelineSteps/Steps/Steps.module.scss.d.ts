@@ -55,5 +55,6 @@ declare const styles: {
   readonly withoutAligning: string
   readonly withoutSpacing: string
   readonly xlg: string
+  readonly xxlg: string
 }
 export default styles

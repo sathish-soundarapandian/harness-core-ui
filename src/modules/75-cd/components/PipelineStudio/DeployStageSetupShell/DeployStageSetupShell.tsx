@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
+import { useParams } from 'react-router-dom'
 import { Layout, Tabs, Tab, Button, Icon, ButtonVariation, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import cx from 'classnames'
 import { Expander, IconName } from '@blueprintjs/core'
@@ -13,6 +14,7 @@ import { defaultTo, get, isEmpty, set, debounce } from 'lodash-es'
 import type { ValidationError } from 'yup'
 import YAML from 'yaml'
 import produce from 'immer'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import {
   GetExecutionStrategyYamlQueryParams,
@@ -95,6 +97,7 @@ export default function DeployStageSetupShell(): JSX.Element {
   } = pipelineContext
 
   const query = useQueryParams()
+  const { accountId } = useParams<AccountPathProps>()
   const [incompleteTabs, setIncompleteTabs] = React.useState<{ [key in DeployTabs]?: boolean }>({})
   const [selectedTabId, setSelectedTabId] = React.useState<DeployTabs>(
     selectedStepId ? DeployTabs.EXECUTION : DeployTabs.SERVICE
@@ -181,14 +184,25 @@ export default function DeployStageSetupShell(): JSX.Element {
     }
   }, [selectedTabId])
 
-  const handleTabChange = (nextTab: DeployTabs): void => {
+  const handleTabChange = (nextTab: DeployTabs, checkTabSwitch?: boolean): void => {
+    let nextTabIdx = TabsOrder.indexOf(nextTab)
+    let currentTabIdx = TabsOrder.indexOf(selectedTabId)
+    if (selectedTabId === DeployTabs.ENVIRONMENT) currentTabIdx = TabsOrder.indexOf(DeployTabs.INFRASTRUCTURE)
+    if (nextTab === DeployTabs.ENVIRONMENT) nextTabIdx = TabsOrder.indexOf(DeployTabs.INFRASTRUCTURE)
+
     if (isNewEnvDef && nextTab === DeployTabs.INFRASTRUCTURE) {
       nextTab = DeployTabs.ENVIRONMENT
     }
-    checkErrorsForTab(selectedTabId).then(_ => {
+
+    if (!!checkTabSwitch && nextTabIdx < currentTabIdx) {
       setSelectedTabId(nextTab)
       setSelectedSectionId(nextTab)
-    })
+    } else {
+      checkErrorsForTab(selectedTabId).then(_ => {
+        setSelectedTabId(nextTab)
+        setSelectedSectionId(nextTab)
+      })
+    }
   }
 
   const selectedDeploymentType = serviceDefinitionType()
@@ -212,6 +226,7 @@ export default function DeployStageSetupShell(): JSX.Element {
 
   const { data: yamlSnippet, refetch: refetchYamlSnippet } = useGetExecutionStrategyYaml({
     queryParams: {
+      accountIdentifier: accountId,
       serviceDefinitionType: selectedDeploymentType as GetExecutionStrategyYamlQueryParams['serviceDefinitionType'],
       strategyType
     },
@@ -252,7 +267,7 @@ export default function DeployStageSetupShell(): JSX.Element {
     if (!loading && selectedStage?.stage && isEmpty(selectedStage?.stage?.spec?.execution)) {
       if (!stageYamlSnippet?.data) {
         // fetch data on first load of new stage
-        setTimeout(() => refetch(), 20000)
+        refetch()
       } else {
         // update the new stage with the fetched data
         updateStage(
@@ -360,7 +375,6 @@ export default function DeployStageSetupShell(): JSX.Element {
   React.useEffect(() => {
     if (!isServiceDefinitionPresent) {
       setSelectedTabId(DeployTabs.SERVICE)
-      return
     }
     validate()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -414,7 +428,12 @@ export default function DeployStageSetupShell(): JSX.Element {
 
   return (
     <section ref={layoutRef} key={selectedStageId} className={cx(css.setupShell)}>
-      <Tabs id="stageSetupShell" onChange={handleTabChange} selectedTabId={selectedTabId} data-tabId={selectedTabId}>
+      <Tabs
+        id="stageSetupShell"
+        onChange={(nextTab: DeployTabs) => handleTabChange(nextTab, true)}
+        selectedTabId={selectedTabId}
+        data-tabId={selectedTabId}
+      >
         <Tab
           id={DeployTabs.OVERVIEW}
           panel={<DeployStageSpecifications>{navBtns}</DeployStageSpecifications>}

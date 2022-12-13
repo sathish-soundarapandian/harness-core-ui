@@ -58,3 +58,11 @@ export interface NewNodeModal extends NewNodeConfig {
   fileStoreContext?: FileStoreContextState
   notCurrentNode?: boolean
 }
+
+export interface NodeParamsDTO {
+  identifier: string
+  name: string
+  type: FileStoreNodeTypes
+  parentIdentifier: string
+  children: FileStoreNodeDTO[] | any[] | undefined
+}

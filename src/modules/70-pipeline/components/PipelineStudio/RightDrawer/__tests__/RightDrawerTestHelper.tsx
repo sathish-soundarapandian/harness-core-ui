@@ -39,7 +39,7 @@ const stagesMap = {
   Pipeline: {
     name: 'Pipeline',
     type: StageType.PIPELINE,
-    icon: 'pipeline',
+    icon: 'chained-pipeline',
     iconColor: 'var(--pipeline-blue-color)',
     isApproval: false,
     openExecutionStrategy: false

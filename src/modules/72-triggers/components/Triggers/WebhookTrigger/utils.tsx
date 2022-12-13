@@ -16,7 +16,7 @@ import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { connectorUrlType } from '@connectors/constants'
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
 import type { SourceRepo, TriggerBaseType } from '../TriggerInterface'
-import { ciCodebaseBuild, CUSTOM, TriggerGitEvent } from '../utils'
+import { ciCodebaseBuild, ciCodebaseBuildPullRequest, CUSTOM, TriggerGitEvent } from '../utils'
 
 export function getDefaultPipelineReferenceBranch(event = ''): string {
   switch (event) {
@@ -404,5 +404,51 @@ export const eventTypes = {
   MERGE_REQUEST: 'MergeRequest',
   ISSUE_COMMENT: 'IssueComment',
   PR_COMMENT: 'PRComment',
-  MR_COMMENT: 'MRComment'
+  MR_COMMENT: 'MRComment',
+  RELEASE: 'Release'
+}
+
+export const getPipelineWithInjectedWithCloneCodebase = ({
+  event,
+  pipeline,
+  isPipelineFromTemplate
+}: {
+  event: string
+  pipeline: PipelineInfoConfig
+  isPipelineFromTemplate: boolean
+}): any => {
+  if (isPipelineFromTemplate) {
+    const pipelineFromTemplate = { ...(pipeline || {}) }
+    if (pipelineFromTemplate?.template?.templateInputs?.properties?.ci?.codebase?.build) {
+      pipelineFromTemplate.template.templateInputs.properties.ci.codebase.build =
+        event === eventTypes.PULL_REQUEST || event === eventTypes.MERGE_REQUEST
+          ? ciCodebaseBuildPullRequest
+          : ciCodebaseBuild
+    }
+
+    return pipelineFromTemplate
+  }
+  if (event === eventTypes.PULL_REQUEST || event === eventTypes.MERGE_REQUEST) {
+    return {
+      ...pipeline,
+      properties: {
+        ci: {
+          codebase: {
+            build: ciCodebaseBuildPullRequest
+          }
+        }
+      }
+    }
+  } else {
+    return {
+      ...pipeline,
+      properties: {
+        ci: {
+          codebase: {
+            build: ciCodebaseBuild
+          }
+        }
+      }
+    }
+  }
 }

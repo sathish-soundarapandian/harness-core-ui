@@ -15,7 +15,8 @@ import {
   ButtonVariation,
   FormInput,
   SelectOption,
-  FormikForm
+  FormikForm,
+  MultiTypeInputType
 } from '@harness/uicore'
 import { FieldArray } from 'formik'
 import { FontVariation } from '@harness/design-system'
@@ -36,14 +37,7 @@ const scriptInputType: SelectOption[] = [
   { label: 'Number', value: 'Number' }
 ]
 
-function FormContent({
-  expressions,
-  allowableTypes,
-  prevStepData,
-  previousStep,
-  isReadonly = false,
-  formik
-}: any): React.ReactElement {
+function FormContent({ expressions, prevStepData, previousStep, isReadonly = false, formik }: any): React.ReactElement {
   const { getString } = useStrings()
 
   const scriptType: ScriptType = getString('common.bash') as ScriptType
@@ -58,8 +52,7 @@ function FormContent({
               label={getString('common.script')}
               defaultValueToReset=""
               disabled={isReadonly}
-              allowedTypes={allowableTypes}
-              disableTypeSelection={isReadonly}
+              disableTypeSelection={true}
               skipRenderValueInExpressionLabel
               expressionRender={() => {
                 return (
@@ -91,7 +84,7 @@ function FormContent({
               disabled={isReadonly}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes: [MultiTypeInputType.FIXED]
               }}
             />
           </div>
@@ -104,7 +97,7 @@ function FormContent({
               disabled={isReadonly}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes: [MultiTypeInputType.FIXED]
               }}
             />
           </div>
@@ -114,7 +107,7 @@ function FormContent({
               name="inputs"
               label={getString('pipeline.scriptInputVariables')}
               isOptional
-              allowedTypes={allowableTypes}
+              allowedTypes={[MultiTypeInputType.FIXED]}
               optionalLabel={getString('common.optionalLabel')}
               defaultValueToReset={[]}
               disableTypeSelection={true}
@@ -147,7 +140,7 @@ function FormContent({
                               name={`inputs.[${i}].value`}
                               placeholder={getString('valueLabel')}
                               multiTextInputProps={{
-                                allowableTypes,
+                                allowableTypes: [MultiTypeInputType.FIXED],
                                 expressions,
                                 disabled: isReadonly
                               }}
@@ -206,11 +199,21 @@ export function CustomArtifact(
   const { initialValues, handleSubmit, prevStepData } = props
   const { getString } = useStrings()
   const validationSchema = Yup.object().shape({
-    script: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.script')),
+    script: Yup.string()
+      .trim()
+      .required(getString('common.validation.fieldIsRequired', { name: getString('common.script') })),
     artifactsArrayPath: Yup.string()
       .trim()
-      .required(getString('pipeline.artifactsSelection.validation.artifactsArrayPath')),
-    versionPath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.versionPath'))
+      .required(
+        getString('common.validation.fieldIsRequired', {
+          name: getString('pipeline.artifactsSelection.artifactsArrayPath')
+        })
+      ),
+    versionPath: Yup.string()
+      .trim()
+      .required(
+        getString('common.validation.fieldIsRequired', { name: getString('pipeline.artifactsSelection.versionPath') })
+      )
   })
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>

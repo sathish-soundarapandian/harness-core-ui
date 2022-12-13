@@ -6,14 +6,20 @@
  */
 
 import React from 'react'
-import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
-import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { ManifestContent } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ManifestSourceRuntimeFields/ManifestContent'
+import { get } from 'lodash-es'
 
+import { ManifestDataType, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
+import { ManifestContent } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ManifestSourceRuntimeFields/ManifestContent'
+import { S3ManifestStoreRuntimeView } from '../S3ManifestStoreRuntimeView'
 export class EcsScalingPolicyDefinitionManifestSource extends ManifestSourceBase<ManifestSourceRenderProps> {
   protected manifestType = ManifestDataType.EcsScalingPolicyDefinition
 
   renderContent(props: ManifestSourceRenderProps): JSX.Element | null {
+    const manifestStoreType = get(props.template, `${props.manifestPath}.spec.store.type`, null)
+    if (manifestStoreType === ManifestStoreMap.S3) {
+      return <S3ManifestStoreRuntimeView {...props} pathFieldlabel="fileFolderPathText" />
+    }
     return <ManifestContent {...props} pathFieldlabel="fileFolderPathText" />
   }
 }

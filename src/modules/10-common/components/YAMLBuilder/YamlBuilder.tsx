@@ -89,8 +89,6 @@ import {
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { AutoCompletionMap } from './YAMLAutoCompletionHelper'
-import { isWindowsOS } from '@common/utils/utils'
-import { carriageReturnRegex } from '@common/utils/StringUtils'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { PluginsPanel } from './PluginsPanel/PluginsPanel'
@@ -150,7 +148,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     showCopyIcon = true,
     showErrorPanel = false,
     comparableYaml,
-    showPluginsPanel = false
+    showPluginsPanel = false,
+    displayBorder = true
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
 
@@ -222,10 +221,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     if (sanitizedJSONObj && Object.keys(sanitizedJSONObj).length > 0) {
       const yamlEqOfJSON = yamlStringify(sanitizedJSONObj)
       let sanitizedYAML = yamlEqOfJSON.replace(': null\n', ': \n')
-
-      if (isWindowsOS()) {
-        sanitizedYAML = sanitizedYAML.replace(carriageReturnRegex, '\n')
-      }
 
       setCurrentYaml(sanitizedYAML)
       yamlRef.current = sanitizedYAML
@@ -310,8 +305,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   )
 
   const onYamlChange = useCallback(
-    debounce((editedYaml: string): void => {
-      const updatedYaml = isWindowsOS() ? editedYaml.replace(carriageReturnRegex, '\n') : editedYaml
+    debounce((updatedYaml: string): void => {
       setCurrentYaml(updatedYaml)
       yamlRef.current = updatedYaml
       verifyYAML({
@@ -1051,7 +1045,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       <Layout.Vertical>
         <div
           className={cx(
-            css.main,
+            displayBorder ? css.main : null,
             { [css.darkBg]: theme === 'DARK' },
             { [css.borderWithErrorPanel]: showErrorFooter },
             { [css.borderWithPluginsPanel]: shouldRenderPluginsPanel }

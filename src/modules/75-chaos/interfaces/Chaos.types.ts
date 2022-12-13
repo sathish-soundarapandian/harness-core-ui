@@ -51,4 +51,5 @@ export interface ChaosStepExecutionProps {
   expectedResilienceScore: number
   isManualInterruption: boolean
   actionButtons: React.ReactElement
+  onViewExecutionClick: (expRunIdentifier: string) => void
 }

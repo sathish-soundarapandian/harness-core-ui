@@ -5,6 +5,7 @@ exports[`Input Set List tests render Input Set List view 1`] = `
   Help Panel
   <div
     class="Layout--horizontal StyledProps--main PageSubHeader--container StyledProps--flex"
+    data-testid="page-subheader"
   >
     <div
       class="Layout--horizontal StyledProps--main"
@@ -89,6 +90,7 @@ exports[`Input Set List tests render Input Set List view 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="TableV2--table table"

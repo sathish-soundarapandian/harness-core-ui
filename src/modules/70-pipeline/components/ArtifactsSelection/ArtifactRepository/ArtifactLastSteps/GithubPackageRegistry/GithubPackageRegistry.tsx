@@ -26,6 +26,7 @@ import { FontVariation } from '@harness/design-system'
 import { defaultTo, isNil, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import { getConnectorIdValue, getArtifactFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
@@ -47,7 +48,7 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
-import { ArtifactSourceIdentifier } from '../ArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -83,7 +84,7 @@ function FormComponent({
     branch
   }
   const packageTypeValue = getGenuineValue(formik.values.spec.packageType || initialValues?.spec?.packageType)
-  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value)
+  const connectorRefValue = getGenuineValue(defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier))
   const packageNameValue = getGenuineValue(formik.values.spec.packageName || initialValues?.spec?.packageName)
   const orgValue = getGenuineValue(formik.values.spec.org)
 
@@ -114,7 +115,8 @@ function FormComponent({
       packageType: defaultTo(packageTypeValue, ''),
       packageName: defaultTo(packageNameValue, ''),
       connectorRef: defaultTo(connectorRefValue, ''),
-      versionRegex: '*'
+      versionRegex: '*',
+      org: orgValue
     }
   })
 
@@ -156,26 +158,29 @@ function FormComponent({
     return defaultTo(selectVersionItems, [])
   }
 
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        disabled={fetchingPackages}
-        onClick={handleClick}
-      />
-    </div>
-  ))
+  const getItemRenderer = memoize((item: SelectOption, { handleClick }: IItemRendererProps, disabled: boolean) => {
+    return (
+      <div key={item.label.toString()}>
+        <Menu.Item
+          text={
+            <Layout.Horizontal spacing="small">
+              <Text>{item.label}</Text>
+            </Layout.Horizontal>
+          }
+          disabled={disabled}
+          onClick={handleClick}
+        />
+      </div>
+    )
+  })
 
   return (
     <FormikForm>
       <div className={css.connectorForm}>
-        {isMultiArtifactSource && <ArtifactSourceIdentifier />}
+        {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
+        {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.jenkinsFieldContainer}>
-          <div className={cx(stepCss.formGroup, stepCss.sm)}>
+          <div className={cx(stepCss.formGroup, stepCss.xxlg)}>
             <FormInput.Select
               items={packageTypes}
               name="spec.packageType"
@@ -252,7 +257,7 @@ function FormComponent({
                     defaultErrorText={getString('pipeline.artifactsSelection.validation.noBuild')}
                   />
                 ),
-                itemRenderer: itemRenderer,
+                itemRenderer: (item, props) => getItemRenderer(item, props, fetchingPackages),
                 items: getPackages(),
                 allowCreatingNewItems: true
               },
@@ -327,7 +332,7 @@ function FormComponent({
                       defaultErrorText={getString('pipeline.artifactsSelection.validation.noVersion')}
                     />
                   ),
-                  itemRenderer: itemRenderer,
+                  itemRenderer: (item, props) => getItemRenderer(item, props, fetchingVersion),
                   items: getVersions(),
                   allowCreatingNewItems: true
                 },
@@ -338,15 +343,7 @@ function FormComponent({
                   ) {
                     return
                   }
-                  refetchVersionDetails({
-                    queryParams: {
-                      ...commonParams,
-                      packageType: defaultTo(packageTypeValue, ''),
-                      packageName: defaultTo(packageNameValue, ''),
-                      connectorRef: defaultTo(connectorRefValue, ''),
-                      versionRegex: '*'
-                    }
-                  })
+                  refetchVersionDetails()
                 }
               }}
             />
@@ -464,18 +461,31 @@ export function GithubPackageRegistry(
     }
   }
 
+  const commonSpecSchemaObject = {
+    packageType: Yup.string()
+      .trim()
+      .required(getString('fieldRequired', { field: getString('pipeline.packageType') })),
+    packageName: Yup.string()
+      .trim()
+      .required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.packageName') }))
+  }
   const schemaObject = {
-    versionType: Yup.string().required(),
-    spec: Yup.object().shape({
-      packageType: Yup.string().required(getString('pipeline.artifactsSelection.validation.packageType')),
-      packageName: Yup.string().required(getString('pipeline.artifactsSelection.validation.packageName')),
-      versionRegex: Yup.string().when('versionType', {
-        is: 'regex',
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.versionRegex'))
+    versionType: Yup.string().required(
+      getString('fieldRequired', { field: getString('pipeline.artifactsSelection.versionDetails') })
+    ),
+    spec: Yup.object().when('versionType', {
+      is: 'regex',
+      then: Yup.object().shape({
+        ...commonSpecSchemaObject,
+        versionRegex: Yup.string()
+          .trim()
+          .required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.versionRegex') }))
       }),
-      version: Yup.mixed().when('versionType', {
-        is: 'value',
-        then: Yup.mixed().required(getString('validation.nexusVersion'))
+      otherwise: Yup.object().shape({
+        ...commonSpecSchemaObject,
+        version: Yup.string()
+          .trim()
+          .required(getString('fieldRequired', { field: getString('version') }))
       })
     })
   }

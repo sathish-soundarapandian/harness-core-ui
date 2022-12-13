@@ -150,6 +150,25 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
           />
         </div>
       )}
+      {getMultiTypeFromValue(configSpec?.store?.spec?.repoName) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <TextFieldInputSetView
+            label={getString('pipelineSteps.repoName')}
+            name={`${path}.${configPath}.store.spec.repoName`}
+            placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            template={inputSetData?.template}
+            fieldPath={`${path}.${configPath}.store.spec.repoName`}
+          />
+        </div>
+      )}
 
       {getMultiTypeFromValue(configSpec?.store?.spec?.branch) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>

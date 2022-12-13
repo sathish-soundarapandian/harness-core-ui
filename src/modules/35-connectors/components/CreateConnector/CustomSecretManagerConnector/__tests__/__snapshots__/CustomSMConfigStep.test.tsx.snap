@@ -201,6 +201,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep - input sets are empty 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="flex-grow: 1;"
                   >
                     <button
                       class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -1063,6 +1064,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode - submit data 1`] = 
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="flex-grow: 1;"
                   >
                     <button
                       class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -1925,6 +1927,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="flex-grow: 1;"
                   >
                     <button
                       class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -2699,6 +2702,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="flex-grow: 1;"
                   >
                     <button
                       class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -3685,6 +3689,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="flex-grow: 1;"
                   >
                     <button
                       class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"

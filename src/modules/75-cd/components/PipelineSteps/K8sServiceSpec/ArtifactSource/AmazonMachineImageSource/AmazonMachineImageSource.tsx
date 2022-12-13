@@ -5,22 +5,34 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
-import { defaultTo, get } from 'lodash-es'
+import React, { useEffect, useMemo, useState } from 'react'
+import { defaultTo, get, isNil, memoize } from 'lodash-es'
 
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { useTags } from 'services/cd-ng'
+import { BuildDetails, useListVersionsForAMIArtifact, useTags } from 'services/cd-ng'
 import { useListAwsRegions } from 'services/portal'
 import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
-import { amiFilters } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { amiFilters, getInSelectOptionForm } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { useMutateAsGet } from '@common/hooks'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import {
+  getDefaultQueryParam,
+  getFinalQueryParamValue,
+  getFqnPath,
+  getValidInitialValuePath,
+  getYamlData,
+  isNewServiceEnvEntity
+} from '../artifactSourceUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-import { getDefaultQueryParam } from '../artifactSourceUtils'
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
 }
@@ -40,7 +52,13 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     orgIdentifier,
     artifact,
     repoIdentifier,
-    branch
+    branch,
+    stepViewType,
+    pipelineIdentifier,
+    serviceIdentifier,
+    stageIdentifier,
+    isSidecar,
+    artifacts
   } = props
 
   const { getString } = useStrings()
@@ -49,12 +67,23 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   const { expressions } = useVariablesExpression()
 
   const connectorRefValue = getDefaultQueryParam(
-    artifact?.spec?.connectorRef,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
+
   const regionValue = getDefaultQueryParam(
-    artifact?.spec?.region,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.region`, ''), artifact?.spec?.region),
     get(initialValues?.artifacts, `${artifactPath}.spec.region`, '')
+  )
+
+  const tagsValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tags`, ''), artifact?.spec?.tags),
+    get(initialValues?.artifacts, `${artifactPath}.spec.tags`, '')
+  )
+
+  const filterValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.filters`, ''), artifact?.spec?.filters),
+    get(initialValues?.artifacts, `${artifactPath}.spec.filters`, '')
   )
 
   const { data: regionData } = useListAwsRegions({
@@ -62,6 +91,73 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       accountId
     }
   })
+
+  const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
+
+  const {
+    data: versionDetails,
+    loading: isVersionLoading,
+    refetch: refetchVersion,
+    error: versionError
+  } = useMutateAsGet(useListVersionsForAMIArtifact, {
+    body: {
+      tags: getInSelectOptionForm(tagsValue),
+      filter: getInSelectOptionForm(filterValue),
+      runtimeInputYaml: getYamlData(formik?.values, stepViewType as StepViewType, path as string)
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      region: getFinalQueryParamValue(regionValue),
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      versionRegex: '*',
+      pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'version'
+      )
+    },
+    lazy: true
+  })
+
+  const selectVersionItems = useMemo(() => {
+    return versionDetails?.data?.map((packageInfo: BuildDetails) => ({
+      value: defaultTo(packageInfo.number, ''),
+      label: defaultTo(packageInfo.number, '')
+    }))
+  }, [versionDetails?.data])
+
+  useEffect(() => {
+    if (!isNil(formik.values?.version)) {
+      if (getMultiTypeFromValue(formik.values?.version) !== MultiTypeInputType.FIXED) {
+        formik.setFieldValue('versionRegex', formik.values?.version)
+      } else {
+        formik.setFieldValue('versionRegex', '')
+      }
+    }
+  }, [formik.values?.version])
+
+  const getVersions = (): SelectOption[] => {
+    if (isVersionLoading) {
+      return [{ label: 'Loading Versions...', value: 'Loading Versions...' }]
+    }
+    return defaultTo(selectVersionItems, [])
+  }
 
   const {
     data: tagsData,
@@ -101,6 +197,20 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     setRegions(regionValues as SelectOption[])
   }, [regionData?.resource])
 
+  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
+    <div key={item.label.toString()}>
+      <Menu.Item
+        text={
+          <Layout.Horizontal spacing="small">
+            <Text>{item.label}</Text>
+          </Layout.Horizontal>
+        }
+        disabled={isVersionLoading}
+        onClick={handleClick}
+      />
+    </div>
+  ))
+
   const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
@@ -139,7 +249,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               multiTypeInputProps={{
                 onTypeChange: (type: MultiTypeInputType) =>
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.region`, type),
-                width: 500,
+                width: 391,
                 expressions,
                 selectProps: {
                   allowCreatingNewItems: true,
@@ -152,14 +262,38 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
-            <FormInput.MultiTextInput
+            <FormInput.MultiTypeInput
               name={`${path}.artifacts.${artifactPath}.spec.version`}
               label={getString('version')}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               disabled={readonly}
-              multiTextInputProps={{
+              selectItems={getVersions()}
+              useValue
+              multiTypeInputProps={{
                 expressions,
-                allowableTypes
+                width: 391,
+                allowableTypes,
+                selectProps: {
+                  noResults: (
+                    <NoTagResults
+                      tagError={versionError}
+                      isServerlessDeploymentTypeSelected={false}
+                      defaultErrorText={getString('pipeline.artifactsSelection.validation.noVersion')}
+                    />
+                  ),
+                  itemRenderer: itemRenderer,
+                  items: getVersions(),
+                  allowCreatingNewItems: true
+                },
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
+                  }
+                  refetchVersion()
+                }
               }}
             />
           )}
@@ -170,33 +304,34 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.artifactsSelection.versionRegexPlaceholder')}
               disabled={readonly}
               multiTextInputProps={{
+                width: 391,
                 expressions,
                 allowableTypes
               }}
             />
           )}
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.amiTags`, template) && (
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.tags`, template) && (
             <MultiTypeTagSelector
-              name={`${path}.artifacts.${artifactPath}.spec.amiTags`}
+              name={`${path}.artifacts.${artifactPath}.spec.tags`}
               className="tags-select"
               expressions={expressions}
-              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
               tags={tags}
               label={'AMI Tags'}
               isLoadingTags={isTagsLoading}
-              initialTags={get(initialValues?.artifacts, `${artifactPath}.spec.amiTags`, '')}
+              initialTags={get(initialValues?.artifacts, `${artifactPath}.spec.tags`, '')}
               errorMessage={get(tagsError, 'data.message', '')}
             />
           )}
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.amiFilters`, template) && (
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.filters`, template) && (
             <MultiTypeTagSelector
-              name={`${path}.artifacts.${artifactPath}.spec.amiFilters`}
+              name={`${path}.artifacts.${artifactPath}.spec.filters`}
               className="tags-select"
               expressions={expressions}
-              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
               label={'AMI Filters'}
               tags={amiFilters}
-              initialTags={get(initialValues?.artifacts, `${artifactPath}.spec.amiFilters`, '')}
+              initialTags={get(initialValues?.artifacts, `${artifactPath}.spec.filters`, '')}
               errorMessage={get(tagsError, 'data.message', '')}
             />
           )}

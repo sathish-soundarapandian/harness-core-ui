@@ -25,7 +25,7 @@ import { FieldArray } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { cloneDeep, defaultTo, get, memoize, merge, omit, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, memoize, merge, omit } from 'lodash-es'
 import cx from 'classnames'
 import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -54,19 +54,17 @@ import type {
   PipelinePathProps,
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
-import { useGetDelegateSelectorsUpTheHierarchy } from 'services/portal'
 import type { DelegateCardInterface } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
+import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-
-const DELEGATE_POLLING_INTERVAL_IN_MS = 5000
 
 const scriptInputType: SelectOption[] = [
   { label: 'String', value: 'String' },
@@ -87,11 +85,9 @@ function FormContent({
 }: any): React.ReactElement {
   const { getString } = useStrings()
   const isTemplateContext = context === ModalViewFor.Template
-  const [delegates, setDelegates] = React.useState<SelectOption[]>([])
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const queryParams = { accountId, orgId: orgIdentifier, projectId: projectIdentifier }
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -99,13 +95,7 @@ function FormContent({
     repoIdentifier,
     branch
   }
-  const {
-    data: delegatesData,
-    loading,
-    refetch
-  } = useGetDelegateSelectorsUpTheHierarchy({
-    queryParams
-  })
+
   const ValueFillCards: DelegateCardInterface[] = [
     {
       type: formFillingMethod.MANUAL,
@@ -120,6 +110,7 @@ function FormContent({
   const versionPathValue = getGenuineValue(get(formik, `values.spec.scripts.fetchAllArtifacts.versionPath`))
   const scriptValue = get(formik, `values.spec.scripts.fetchAllArtifacts.spec.source.spec.script`)
   const inputValue = get(formik, `values.spec.inputs`)
+  const delegateSelectorsValue = get(formik, `values.spec.delegateSelectors`)
 
   const artifactArrayPathValue = getGenuineValue(
     get(formik, `values.spec.scripts.fetchAllArtifacts.artifactsArrayPath`)
@@ -134,7 +125,9 @@ function FormContent({
     lazy: true,
     body: {
       script: scriptValue,
-      inputs: inputValue
+      inputs: inputValue,
+      delegateSelector:
+        getMultiTypeFromValue(delegateSelectorsValue) === MultiTypeInputType.FIXED ? delegateSelectorsValue : undefined
     },
     queryParams: {
       ...commonParams,
@@ -175,34 +168,15 @@ function FormContent({
     return isFieldFixedAndNonEmpty(versionPathValue || '') && isFieldFixedAndNonEmpty(artifactArrayPathValue || '')
   }
 
-  React.useEffect(() => {
-    if (delegatesData) {
-      setDelegates(
-        delegatesData.resource?.map(item => {
-          return {
-            label: item,
-            value: item
-          }
-        }) as SelectOption[]
-      )
-    }
-  }, [delegatesData])
-
-  // polling logic
-  React.useEffect(() => {
-    let id: number | null
-    if (!loading) {
-      id = window.setTimeout(() => refetch(), DELEGATE_POLLING_INTERVAL_IN_MS)
-    }
-    return () => {
-      if (id) {
-        window.clearTimeout(id)
-      }
-    }
-  }, [delegatesData, loading, refetch])
-
   const scriptType: ScriptType =
     formik.values?.spec?.scripts?.fetchAllArtifacts?.spec?.shell || (getString('common.bash') as ScriptType)
+
+  const getVersionFieldHelperText = () => {
+    return (
+      getMultiTypeFromValue(formik.values.spec.version) === MultiTypeInputType.FIXED &&
+      getHelpeTextForTags(helperTextData(selectedArtifact as ArtifactType, formik, 'test'), getString, false)
+    )
+  }
 
   return (
     <FormikForm>
@@ -396,14 +370,7 @@ function FormContent({
                 name="spec.version"
                 placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
                 useValue
-                helperText={
-                  getMultiTypeFromValue(formik.values.spec.version) === MultiTypeInputType.FIXED &&
-                  getHelpeTextForTags(
-                    helperTextData(selectedArtifact as ArtifactType, formik, 'test'),
-                    getString,
-                    false
-                  )
-                }
+                helperText={getVersionFieldHelperText()}
                 multiTypeInputProps={{
                   expressions,
                   allowableTypes,
@@ -602,22 +569,7 @@ function FormContent({
                       </MultiTypeFieldSelector>
                     </div>
                     <div className={css.customArtifactContainer}>
-                      <FormInput.MultiSelectTypeInput
-                        selectItems={delegates || []}
-                        name="spec.delegateSelectors"
-                        label={getString('common.defineDelegateSelector')}
-                        placeholder={getString('pipeline.artifactsSelection.delegateselectionPlaceholder')}
-                        key="delegateSelectors"
-                        multiSelectTypeInputProps={{
-                          allowableTypes,
-                          expressions,
-                          multiSelectProps: {
-                            usePortal: true,
-                            items: delegates || [],
-                            allowCreatingNewItems: false
-                          }
-                        }}
-                      />
+                      <DelegateSelectorPanel isReadonly={isReadonly} name="spec.delegateSelectors" />
                       {getMultiTypeFromValue(formik.values?.spec?.delegateSelectors) === MultiTypeInputType.RUNTIME && (
                         <div className={css.configureOptions}>
                           <ConfigureOptions
@@ -672,8 +624,51 @@ export function CustomArtifact(
   const isTemplateContext = context === ModalViewFor.Template
 
   const schemaObject = {
-    spec: Yup.object().shape({
-      version: Yup.string().trim().required(getString('validation.nexusVersion'))
+    spec: Yup.object().when('type', {
+      is: formFillingMethod.MANUAL,
+      then: Yup.object().shape({
+        version: Yup.string()
+          .trim()
+          .required(getString('fieldRequired', { field: getString('version') }))
+      }),
+      otherwise: Yup.object().shape({
+        scripts: Yup.object().shape({
+          fetchAllArtifacts: Yup.object().shape({
+            artifactsArrayPath: Yup.string()
+              .trim()
+              .required(
+                getString('fieldRequired', {
+                  field: getString('pipeline.artifactsSelection.artifactsArrayPath')
+                })
+              ),
+            versionPath: Yup.string()
+              .trim()
+              .required(
+                getString('fieldRequired', {
+                  field: getString('pipeline.artifactsSelection.versionPath')
+                })
+              ),
+            spec: Yup.object().shape({
+              source: Yup.object().shape({
+                type: Yup.string()
+                  .trim()
+                  .required(getString('fieldRequired', { field: getString('common.scriptType') })),
+                spec: Yup.object().shape({
+                  script: Yup.string()
+                    .trim()
+                    .required(getString('fieldRequired', { field: getString('common.script') }))
+                })
+              })
+            })
+          })
+        }),
+        timeout: Yup.string()
+          .trim()
+          .required(getString('fieldRequired', { field: 'Timeout' })),
+        version: Yup.string()
+          .trim()
+          .required(getString('fieldRequired', { field: getString('version') }))
+      })
     })
   }
 
@@ -691,18 +686,6 @@ export function CustomArtifact(
     if (prevStepData?.spec) {
       currentValue = { ...prevStepData, type: 'CustomArtifact' }
     }
-    if (
-      currentValue?.spec &&
-      getMultiTypeFromValue(currentValue?.spec?.delegateSelectors) === MultiTypeInputType.FIXED
-    ) {
-      currentValue.spec.delegateSelectors = (currentValue.spec?.delegateSelectors as string[])?.map(
-        item =>
-          ({
-            label: item,
-            value: item
-          } as SelectOption)
-      ) as SelectOption[]
-    }
     if (currentValue?.spec?.scripts) {
       currentValue.formType = formFillingMethod.SCRIPT
     } else if (currentValue?.spec?.version && currentValue.spec?.version?.length > 0) {
@@ -716,11 +699,6 @@ export function CustomArtifact(
   }
 
   const submitFormData = (formData: CustomArtifactSource): void => {
-    const delegateSelectorsStrings =
-      getMultiTypeFromValue(formData?.spec?.delegateSelectors) === MultiTypeInputType.FIXED
-        ? (formData?.spec?.delegateSelectors as SelectOption[])?.map((item: SelectOption) => item.value)
-        : formData?.spec?.delegateSelectors
-    set(formData, 'spec.delegateSelectors', delegateSelectorsStrings)
     if (isIdentifierAllowed) {
       merge(formData, { identifier: formData?.identifier })
     }
@@ -729,6 +707,12 @@ export function CustomArtifact(
       filteredFormData = { ...filteredFormData, spec: { version: formData.spec?.version || '' } }
     }
     handleSubmit(filteredFormData)
+  }
+
+  const handleValidate = (formData: CustomArtifactSource) => {
+    if (isTemplateContext) {
+      submitFormData?.({ ...formData })
+    }
   }
 
   return (
@@ -742,32 +726,9 @@ export function CustomArtifact(
         initialValues={getInitialValues()}
         formName="imagePath"
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
-        onSubmit={(formData, formikhelper) => {
-          let hasError = false
-          if (formData?.formType === formFillingMethod.SCRIPT) {
-            if (!formData?.spec?.scripts?.fetchAllArtifacts?.spec?.source?.spec?.script) {
-              formikhelper.setFieldError(
-                'spec.scripts.fetchAllArtifacts.spec.source.spec.script',
-                getString('pipeline.artifactsSelection.validation.script')
-              )
-              hasError = true
-            }
-            if (!formData?.spec?.scripts?.fetchAllArtifacts?.artifactsArrayPath) {
-              formikhelper.setFieldError(
-                'spec.scripts.fetchAllArtifacts.artifactsArrayPath',
-                getString('pipeline.artifactsSelection.validation.artifactsArrayPath')
-              )
-              hasError = true
-            }
-            if (!formData?.spec?.scripts?.fetchAllArtifacts?.versionPath) {
-              formikhelper.setFieldError(
-                'spec.scripts.fetchAllArtifacts.versionPath',
-                getString('pipeline.artifactsSelection.validation.versionPath')
-              )
-              hasError = true
-            }
-          }
-          if (!hasError) submitFormData?.({ ...formData })
+        validate={handleValidate}
+        onSubmit={formData => {
+          submitFormData?.({ ...formData })
         }}
       >
         {formik => {

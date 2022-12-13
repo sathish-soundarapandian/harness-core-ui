@@ -11,7 +11,7 @@ import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@h
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { SidecarArtifact, useGetBuildDetailsForEcrWithYaml } from 'services/cd-ng'
+import { SidecarArtifact, useGetBuildDetailsForEcr, useGetBuildDetailsForEcrWithYaml } from 'services/cd-ng'
 import { NameValuePair, useListAwsRegions } from 'services/portal'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
@@ -32,7 +32,8 @@ import {
   isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource,
-  isExecutionTimeFieldDisabled
+  isExecutionTimeFieldDisabled,
+  getValidInitialValuePath
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
@@ -64,7 +65,9 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     artifact,
     isSidecar,
     artifactPath,
-    stepViewType
+    stepViewType,
+    artifacts,
+    useArtifactV1Data = false
   } = props
 
   const { getString } = useStrings()
@@ -72,23 +75,44 @@ const Content = (props: ECRRenderContent): JSX.Element => {
   const { expressions } = useVariablesExpression()
   const [lastQueryData, setLastQueryData] = React.useState({ connectorRef: '', imagePath: '', region: '' })
   const imagePathValue = getImagePath(
-    artifact?.spec?.imagePath,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.imagePath`, ''), artifact?.spec?.imagePath),
     get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
   )
   const connectorRefValue = getDefaultQueryParam(
-    artifact?.spec?.connectorRef,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
   const regionValue = getDefaultQueryParam(
-    artifact?.spec?.region,
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.region`, ''), artifact?.spec?.region),
     get(initialValues?.artifacts, `${artifactPath}.spec.region`, '')
   )
 
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
-    data: ecrTagsData,
-    loading: fetchingTags,
-    refetch: refetchTags,
-    error: fetchTagsError
+    data: ecrTagsV1Data,
+    loading: fetchingV1Tags,
+    refetch: refetchV1Tags,
+    error: fetchTagsV1Error
+  } = useGetBuildDetailsForEcr({
+    queryParams: {
+      imagePath: defaultTo(getFinalQueryParamValue(imagePathValue), ''),
+      connectorRef: defaultTo(getFinalQueryParamValue(connectorRefValue), ''),
+      region: defaultTo(getFinalQueryParamValue(regionValue), ''),
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      repoIdentifier,
+      branch
+    },
+    lazy: true
+  })
+
+  const {
+    data: ecrTagsV2Data,
+    loading: fetchingV2Tags,
+    refetch: refetchV2Tags,
+    error: fetchTagsV2Error
   } = useMutateAsGet(useGetBuildDetailsForEcrWithYaml, {
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
@@ -122,6 +146,20 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     },
     lazy: true
   })
+
+  const { refetchTags, fetchingTags, fetchTagsError, ecrTagsData } = useArtifactV1Data
+    ? {
+        refetchTags: refetchV1Tags,
+        fetchingTags: fetchingV1Tags,
+        fetchTagsError: fetchTagsV1Error,
+        ecrTagsData: ecrTagsV1Data
+      }
+    : {
+        refetchTags: refetchV2Tags,
+        fetchingTags: fetchingV2Tags,
+        fetchTagsError: fetchTagsV2Error,
+        ecrTagsData: ecrTagsV2Data
+      }
 
   const { data: regionData } = useListAwsRegions({
     queryParams: {

@@ -7,7 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly container: string
-  readonly grid: string
+  readonly keepOnTop: string
+  readonly mainContent: string
+  readonly onboardingContainer: string
 }
 export default styles

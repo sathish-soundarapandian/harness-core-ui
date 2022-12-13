@@ -33,6 +33,7 @@ interface TextFieldInputSetView extends FormMultiTextTypeInputProps {
   tooltipProps?: DataTooltipInterface
   enableConfigureOptions?: boolean
   configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
+  variableNamePath?: string
 }
 
 function TextFieldInputSet(props: TextFieldInputSetView): JSX.Element {
@@ -45,8 +46,9 @@ function TextFieldInputSet(props: TextFieldInputSetView): JSX.Element {
     className,
     ...rest
   } = props
-  const { name, label, placeholder, tooltipProps, multiTextInputProps, disabled } = rest
+  const { name, label, placeholder, tooltipProps, multiTextInputProps, disabled, variableNamePath } = rest
   const value = get(formik?.values, name, '')
+  const variableName = variableNamePath ? get(formik?.values, variableNamePath, name) : name
 
   const { getMultiTypeInputWithAllowedValues } = useRenderMultiTypeInputWithAllowedValues({
     name,
@@ -74,12 +76,12 @@ function TextFieldInputSet(props: TextFieldInputSetView): JSX.Element {
           <ConfigureOptions
             value={value}
             type={'String'}
-            variableName={name}
+            variableName={variableName}
             showRequiredField={false}
             showDefaultField={false}
             showAdvanced={true}
             onChange={val => formik?.setFieldValue(name, val)}
-            style={{ marginTop: 'var(--spacing-6)' }}
+            style={label ? { marginTop: 'var(--spacing-6)' } : undefined}
             allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
             {...configureOptionsProps}
             isReadonly={disabled}

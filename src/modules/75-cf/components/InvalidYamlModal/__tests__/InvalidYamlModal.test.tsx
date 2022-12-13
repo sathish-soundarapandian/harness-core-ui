@@ -45,9 +45,9 @@ describe('InvalidYamlModal', () => {
 
     renderComponent({ handleRetry: handleRetryMock })
 
-    await waitFor(() => expect(screen.getByText('cf.gitSync.tryAgain')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('common.tryAgain')).toBeInTheDocument())
 
-    userEvent.click(screen.getByText('cf.gitSync.tryAgain'))
+    userEvent.click(screen.getByText('common.tryAgain'))
 
     expect(handleRetryMock).toHaveBeenCalled()
   })

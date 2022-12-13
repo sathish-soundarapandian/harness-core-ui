@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Button, IconName } from '@harness/uicore'
 import { Popover, Menu, Spinner } from '@blueprintjs/core'
 import { has, defaultTo } from 'lodash-es'
@@ -48,7 +48,20 @@ export default function ExecutionStepDetails(): React.ReactElement {
     lazy: !retryStep || has(allNodeMap, retryStep)
   })
   const originalStep = defaultTo(allNodeMap?.[selectedStepId], {})
-  const selectedStep = defaultTo(retryStep ? allNodeMap[retryStep] : originalStep, {})
+  const selectedStep = useMemo(() => {
+    if (!retryStep) {
+      return originalStep
+    }
+
+    const isRelated = originalStep?.interruptHistories?.some(
+      ({ interruptConfig }) => retryStep === interruptConfig?.retryInterruptConfig?.retryId
+    )
+    if (isRelated) {
+      return defaultTo(allNodeMap[retryStep], {})
+    }
+    return originalStep
+  }, [allNodeMap, originalStep, retryStep])
+
   const stepDetails = factory.getStepDetails(selectedStep.stepType as StepType)
   const interruptHistories = getInterruptHistoriesFromType(originalStep.interruptHistories, Interrupt.RETRY)
 

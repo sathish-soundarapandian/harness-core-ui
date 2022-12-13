@@ -81,7 +81,8 @@ const SSHSecretInput: React.FC<FormikSSHSecretInput> = ({
       connectorTypeContext: connectorTypeContext,
       handleInlineSSHSecretCreation: () => openCreateSSHCredModal()
     },
-    [name, onSuccess]
+    [name, onSuccess],
+    secretReference?.referenceString
   )
 
   const errorCheck = (): boolean =>

@@ -37,7 +37,6 @@ describe('RenderColumnFlag', () => {
       >
         <RenderColumnFlag
           gitSync={{ ...mockGitSync, isGitSyncEnabled: true }}
-          update={jest.fn()}
           toggleFeatureFlag={toggleFeatureFlag}
           cell={cellMock}
           governance={mockGovernance}

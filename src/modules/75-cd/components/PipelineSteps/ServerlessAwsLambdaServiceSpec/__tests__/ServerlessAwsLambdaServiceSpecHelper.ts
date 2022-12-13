@@ -39,7 +39,7 @@ const stagesMap = {
   Pipeline: {
     name: 'Deploy',
     type: 'Pipeline',
-    icon: 'pipeline',
+    icon: 'chained-pipeline',
     iconColor: 'var(--pipeline-blue-color)',
     isApproval: false,
     openExecutionStrategy: false
@@ -477,7 +477,7 @@ export const serverlessPipelineContext = {
     Pipeline: {
       name: 'Deploy',
       type: 'Pipeline',
-      icon: 'pipeline',
+      icon: 'chained-pipeline',
       iconColor: 'var(--pipeline-blue-color)',
       isApproval: false,
       openExecutionStrategy: false

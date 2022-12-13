@@ -19,29 +19,38 @@ import {
   SelectOption
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { debounce, defaultTo, isEmpty, noop } from 'lodash-es'
-import type { FormikProps } from 'formik'
+import { debounce, defaultTo, get, noop } from 'lodash-es'
+import type { FormikProps, FormikValues } from 'formik'
+import type { IItemRendererProps } from '@blueprintjs/select'
 
 import { EcsInfrastructure, useClusters } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useListAwsRegions } from 'services/portal'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { EntityReferenceResponse } from '@common/components/EntityReference/EntityReference.types'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import { connectorTypes } from '@pipeline/utils/constants'
-import {
-  ConnectorRefFormValueType,
-  getConnectorRefValue,
-  getSelectedConnectorValue,
-  SelectedConnectorType
-} from '@cd/utils/connectorUtils'
+import { connectorTypes, EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { checkIfQueryParamsisNotEmpty } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { getECSInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import css from './ECSInfraSpec.module.scss'
+
+export const resetFieldValue = (formik: FormikValues, fieldPath: string): void => {
+  const fieldValue = get(formik.values, fieldPath, '')
+  if (fieldValue?.length && getMultiTypeFromValue(fieldValue) === MultiTypeInputType.FIXED) {
+    formik.setFieldValue(fieldPath, '')
+  }
+}
 
 export interface ECSInfraSpecEditableProps {
   initialValues: EcsInfrastructure
@@ -61,8 +70,11 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
+
+  const [lastQueryData, setLastQueryData] = React.useState({ connectorRef: '', region: '' })
 
   React.useEffect(() => {
     subscribeForm({ tab: DeployTabs.INFRASTRUCTURE, form: formikRef })
@@ -84,26 +96,61 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
   const {
     data: awsClusters,
     refetch: refetchClusters,
-    loading: loadingClusters
+    loading: loadingClusters,
+    error: fetchClustersError
   } = useClusters({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      awsConnectorRef: initialValues.connectorRef,
-      region: initialValues.region
+      awsConnectorRef: lastQueryData.connectorRef,
+      region: lastQueryData.region
     },
-    lazy: !(initialValues.connectorRef && initialValues.region)
+    lazy: true
   })
 
   const clusters: SelectOption[] = React.useMemo(() => {
+    if (loadingClusters) {
+      return [{ label: 'Loading Clusters...', value: 'Loading Clusters...' }]
+    } else if (fetchClustersError) {
+      return []
+    }
     return defaultTo(awsClusters?.data, []).map(cluster => ({
       value: cluster,
       label: cluster
     }))
-  }, [awsClusters?.data])
+  }, [awsClusters?.data, loadingClusters, fetchClustersError])
+
+  React.useEffect(() => {
+    if (checkIfQueryParamsisNotEmpty(Object.values(lastQueryData))) {
+      refetchClusters()
+    }
+  }, [lastQueryData, refetchClusters])
+
+  const canFetchClusters = React.useCallback(
+    (connectorRef: string, region: string): boolean => {
+      return !!(lastQueryData.region !== region || lastQueryData.connectorRef !== connectorRef)
+    },
+    [lastQueryData]
+  )
+
+  const fetchClusters = React.useCallback(
+    (connectorRef = '', region = ''): void => {
+      if (canFetchClusters(connectorRef, region)) {
+        setLastQueryData({ connectorRef, region })
+      }
+    },
+    [canFetchClusters, lastQueryData]
+  )
 
   const validationSchema = getECSInfraValidationSchema(getString)
+
+  const itemRenderer = React.useCallback(
+    (item: SelectOption, itemProps: IItemRendererProps) => (
+      <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={loadingClusters} />
+    ),
+    [loadingClusters]
+  )
 
   return (
     <Layout.Vertical spacing="medium">
@@ -150,18 +197,11 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
                   type={connectorTypes.Aws}
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                   onChange={selectedConnector => {
-                    if (!isEmpty(formik.values.region)) {
-                      refetchClusters({
-                        queryParams: {
-                          accountIdentifier: accountId,
-                          orgIdentifier,
-                          projectIdentifier,
-                          awsConnectorRef: getSelectedConnectorValue(
-                            selectedConnector as unknown as SelectedConnectorType
-                          ),
-                          region: formik.values.region
-                        }
-                      })
+                    if (
+                      (formik.values.connectorRef as ConnectorRefFormValueType).value !==
+                      (selectedConnector as unknown as EntityReferenceResponse<ConnectorReferenceDTO>).record.identifier
+                    ) {
+                      resetFieldValue(formik, 'cluster')
                     }
                   }}
                 />
@@ -194,24 +234,16 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
                   selectItems={regions}
                   useValue
                   multiTypeInputProps={{
+                    expressions,
+                    allowableTypes,
                     selectProps: {
                       items: regions,
                       popoverClassName: css.regionPopover,
                       allowCreatingNewItems: true
                     },
                     onChange: selectedRegion => {
-                      if (!isEmpty(formik.values.connectorRef)) {
-                        refetchClusters({
-                          queryParams: {
-                            accountIdentifier: accountId,
-                            orgIdentifier,
-                            projectIdentifier,
-                            awsConnectorRef: getConnectorRefValue(
-                              formik.values.connectorRef as ConnectorRefFormValueType
-                            ),
-                            region: (selectedRegion as SelectOption).value as string
-                          }
-                        })
+                      if (formik.values.region !== (selectedRegion as SelectOption).value) {
+                        resetFieldValue(formik, 'cluster')
                       }
                     }
                   }}
@@ -220,7 +252,8 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
                   disabled={readonly}
                 />
                 {getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
+                  <SelectConfigureOptions
+                    options={regions}
                     value={formik.values?.region as string}
                     type="String"
                     variableName="region"
@@ -243,22 +276,47 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
                   selectItems={clusters}
                   useValue
                   multiTypeInputProps={{
+                    expressions,
+                    allowableTypes,
                     selectProps: {
                       items: clusters,
                       popoverClassName: css.regionPopover,
-                      allowCreatingNewItems: true
+                      allowCreatingNewItems: true,
+                      itemRenderer,
+                      noResults: (
+                        <Text lineClamp={1} width={500} height={100} padding="small">
+                          {getRBACErrorMessage(fetchClustersError as RBACError) ||
+                            getString('pipeline.noClustersFound')}
+                        </Text>
+                      )
+                    },
+                    onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                      if (
+                        e?.target?.type !== 'text' ||
+                        (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                      ) {
+                        return
+                      }
+                      if (!loadingClusters) {
+                        const connectorStringValue = getConnectorRefValue(
+                          formik.values.connectorRef as ConnectorRefFormValueType
+                        )
+                        fetchClusters(connectorStringValue, formik.values.region)
+                      }
                     }
                   }}
                   label={getString('common.cluster')}
-                  placeholder={
-                    loadingClusters
-                      ? getString('loading')
-                      : getString('cd.steps.common.selectOrEnterClusterPlaceholder')
-                  }
-                  disabled={loadingClusters || readonly}
+                  placeholder={getString('cd.steps.common.selectOrEnterClusterPlaceholder')}
+                  disabled={readonly}
                 />
                 {getMultiTypeFromValue(formik.values.cluster) === MultiTypeInputType.RUNTIME && !readonly && (
-                  <ConfigureOptions
+                  <SelectConfigureOptions
+                    options={clusters}
+                    fetchOptions={fetchClusters.bind(
+                      null,
+                      getConnectorRefValue(formik.values.connectorRef as ConnectorRefFormValueType),
+                      formik.values.region
+                    )}
                     value={formik.values.cluster as string}
                     type="String"
                     variableName="cluster"

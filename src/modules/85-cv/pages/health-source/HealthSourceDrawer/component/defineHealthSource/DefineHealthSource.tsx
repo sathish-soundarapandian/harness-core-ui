@@ -71,13 +71,11 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const { isEdit } = sourceData
 
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
-
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
   const isElkEnabled = useFeatureFlag(FeatureFlag.ELK_HEALTH_SOURCE)
-
   const isDataSourceTypeSelectorEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_AWS_PROMETHEUS)
-
   const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
+  const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
 
   const disabledByFF: string[] = useMemo(() => {
     const disabledConnectorsList = []
@@ -93,8 +91,12 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
     if (!isCloudWatchEnabled) {
       disabledConnectorsList.push(HealthSourceTypes.CloudWatch)
     }
+
+    if (!isSumoLogicEnabled) {
+      disabledConnectorsList.push(HealthSourceTypes.SumoLogic)
+    }
     return disabledConnectorsList
-  }, [isErrorTrackingEnabled, isElkEnabled, isCloudWatchEnabled])
+  }, [isErrorTrackingEnabled, isElkEnabled, isCloudWatchEnabled, isSumoLogicEnabled])
 
   const initialValues = useMemo(() => {
     return getInitialValues(sourceData, getString, isDataSourceTypeSelectorEnabled)

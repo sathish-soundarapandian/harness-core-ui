@@ -15,7 +15,7 @@ chaosTrialHomePage:
   description: Start 14 day Chaos Enterprise trial
 navLabels:
   chaosExperiments: Chaos Experiments
-  chaosHubs: Chaos Hubs
+  chaosHubs: ChaosHubs
 environments:
   pageTitle: '[{{projectName}}] Environments'
   create:
@@ -35,5 +35,4 @@ pipelineStep:
   expectedResilienceScoreLabel: Expected Resilience Score
   expectedResilienceScorePlaceholder: Enter expected resilience score
   description: Enter a description for the chaos step
-viewDetailedExecution: View Detailed Execution
 selectChaosExperiment: Select Chaos Experiment

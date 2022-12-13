@@ -10,6 +10,7 @@ import { Classes, Dialog, IDialogProps, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
 import {
   Button,
+  ButtonSize,
   ButtonVariation,
   Container,
   Icon,
@@ -72,6 +73,9 @@ import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext
 import type { Pipeline } from '@pipeline/utils/types'
 import useDiffDialog from '@common/hooks/useDiffDialog'
 import { PipelineOutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/PipelineOutOfSyncErrorStrip/PipelineOutOfSyncErrorStrip'
+import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -80,6 +84,7 @@ import { RightBar } from '../RightBar/RightBar'
 import StudioGitPopover from '../StudioGitPopover'
 import usePipelineErrors from './PipelineErrors/usePipelineErrors'
 import { getDuplicateStepIdentifierList } from './PipelineCanvasUtils'
+import PipelineCachedCopy from './PipelineCachedCopy/PipelineCachedCopy'
 import css from './PipelineCanvas.module.scss'
 
 interface OtherModalProps {
@@ -180,7 +185,8 @@ export function PipelineCanvas({
     storeMetadata,
     entityValidityDetails,
     templateError,
-    yamlSchemaErrorWrapper
+    yamlSchemaErrorWrapper,
+    cacheResponse: pipelineCacheResponse
   } = state
 
   const { getString } = useStrings()
@@ -193,6 +199,25 @@ export function PipelineCanvas({
     }> &
       GitQueryParams
   >()
+  const history = useHistory()
+  const pipelineGitXCache = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
+
+  // For remote pipeline queryParam will always as branch as selected branch except coming from list view
+  // While opeining studio from list view, selected branch can be any branch as in pipeline response
+  // We also have to discard Transition url which was without branch
+
+  React.useEffect(() => {
+    if (
+      originalPipeline?.identifier !== DefaultNewPipelineId &&
+      storeType === StoreType.REMOTE &&
+      !branch &&
+      gitDetails?.branch
+    ) {
+      history.replace(toPipelineList({ orgIdentifier, projectIdentifier, accountId, module }))
+      updateQueryParams({ branch: gitDetails?.branch })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [branch, gitDetails?.branch, module, originalPipeline?.identifier, projectIdentifier])
 
   const { showError, clear } = useToaster()
 
@@ -213,13 +238,12 @@ export function PipelineCanvas({
   //   }
   // })
 
-  const history = useHistory()
   const { supportingGitSimplification } = useAppStore()
   const { openPipelineErrorsModal } = usePipelineErrors()
   const isYaml = view === SelectedView.YAML
   const [isYamlError, setYamlError] = React.useState(false)
   const [blockNavigation, setBlockNavigation] = React.useState(false)
-  const [selectedBranch, setSelectedBranch] = React.useState(branch || '')
+  const [selectedBranch, setSelectedBranch] = React.useState(defaultTo(branch, ''))
   const [disableVisualView, setDisableVisualView] = React.useState(entityValidityDetails?.valid === false)
   const [useTemplate, setUseTemplate] = React.useState<boolean>(false)
   const [modalMode, setModalMode] = React.useState<'edit' | 'create'>('create')
@@ -255,12 +279,35 @@ export function PipelineCanvas({
     ? getString('common.viewAndExecutePermissions')
     : getString('common.readonlyPermissions')
 
-  const { openDialog: openUnsavedChangesDialog } = useConfirmationDialog({
-    cancelButtonText: getString('cancel'),
+  const customButtonContainer = (
+    <Container className={css.customButtons}>
+      <Button
+        text={getString('pipeline.discard')}
+        variation={ButtonVariation.SECONDARY}
+        size={ButtonSize.MEDIUM}
+        onClick={() => {
+          updatePipelineView({ ...pipelineView, isYamlEditable: false })
+          fetchPipeline({ forceFetch: true, forceUpdate: true })
+          closeUnsavedChangesDialog()
+        }}
+      />
+      <Button
+        text={getString('cancel')}
+        variation={ButtonVariation.TERTIARY}
+        size={ButtonSize.MEDIUM}
+        onClick={() => closeUnsavedChangesDialog()}
+      />
+    </Container>
+  )
+
+  const { openDialog: openUnsavedChangesDialog, closeDialog: closeUnsavedChangesDialog } = useConfirmationDialog({
+    className: css.paddingTop8,
+    customButtons: customButtonContainer,
     contentText: isYamlError ? getString('navigationYamlError') : getString('navigationCheckText'),
     titleText: isYamlError ? getString('navigationYamlErrorTitle') : getString('navigationCheckTitle'),
     confirmButtonText: getString('confirm'),
     intent: Intent.WARNING,
+    showCloseButton: false,
     onCloseDialog: async isConfirmed => {
       if (isConfirmed) {
         deletePipelineCache(gitDetails).then(() => {
@@ -268,7 +315,7 @@ export function PipelineCanvas({
             routes.toPipelineStudio({
               projectIdentifier,
               orgIdentifier,
-              pipelineIdentifier: pipeline?.identifier || '-1',
+              pipelineIdentifier: defaultTo(pipeline?.identifier, '-1'),
               accountId,
               module,
               branch: selectedBranch,
@@ -306,7 +353,7 @@ export function PipelineCanvas({
       } catch (e) {
         clear()
         setYamlError(true)
-        showError(e.message || getString('invalidYamlText'))
+        showError(defaultTo(e.message, getString('invalidYamlText')))
         return false
       }
     }
@@ -352,7 +399,7 @@ export function PipelineCanvas({
               initialValues={merge(pipeline, {
                 repo: repoName || gitDetails.repoIdentifier || '',
                 branch: branch || gitDetails.branch || '',
-                connectorRef: connectorRef || '',
+                connectorRef: defaultTo(connectorRef, ''),
                 storeType: defaultTo(storeType, StoreType.INLINE),
                 filePath: gitDetails.filePath
               })}
@@ -434,6 +481,11 @@ export function PipelineCanvas({
   }, [pipeline?.name])
 
   const onCloseCreate = React.useCallback(() => {
+    delete (pipeline as PipelineWithGitContextFormProps).repo
+    delete (pipeline as PipelineWithGitContextFormProps).branch
+    delete (pipeline as PipelineWithGitContextFormProps).connectorRef
+    delete (pipeline as PipelineWithGitContextFormProps).filePath
+    delete (pipeline as PipelineWithGitContextFormProps).storeType
     if (pipelineIdentifier === DefaultNewPipelineId || getOtherModal) {
       deletePipelineCache(gitDetails)
       history.push(toPipelineList({ orgIdentifier, projectIdentifier, accountId, module }))
@@ -515,10 +567,13 @@ export function PipelineCanvas({
       storeMetadata
     })
     const processNode = isCopied
-      ? produce(defaultTo(parse<any>(newTemplate?.yaml || '')?.template.spec, {}) as PipelineInfoConfig, draft => {
-          draft.name = defaultTo(pipeline?.name, '')
-          draft.identifier = defaultTo(pipeline?.identifier, '')
-        })
+      ? produce(
+          defaultTo(parse<any>(defaultTo(newTemplate?.yaml, ''))?.template.spec, {}) as PipelineInfoConfig,
+          draft => {
+            draft.name = defaultTo(pipeline?.name, '')
+            draft.identifier = defaultTo(pipeline?.identifier, '')
+          }
+        )
       : createTemplate(pipeline, newTemplate)
     processNode.description = pipeline.description
     processNode.tags = pipeline.tags
@@ -656,7 +711,7 @@ export function PipelineCanvas({
               projectIdentifier={projectIdentifier}
               accountId={accountId}
               module={module}
-              inputSetYAML={inputSetYaml || ''}
+              inputSetYAML={defaultTo(inputSetYaml, '')}
               inputSetSelected={getInputSetSelected()}
               connectorRef={connectorRef}
               repoIdentifier={isPipelineRemote ? repoName : repoIdentifier}
@@ -708,33 +763,38 @@ export function PipelineCanvas({
       if (isUpdated && branch !== selectedFilter.branch) {
         setBlockNavigation(true)
       } else if (branch !== selectedFilter.branch) {
-        deletePipelineCache({ repoIdentifier: selectedFilter.repo || '', branch: selectedFilter.branch || '' }).then(
-          () => {
-            history.push(
-              routes.toPipelineStudio({
-                projectIdentifier,
-                orgIdentifier,
-                pipelineIdentifier: pipelineIdentifier || '-1',
-                accountId,
-                module,
-                branch: selectedFilter.branch,
-                repoIdentifier: selectedFilter.repo,
-                ...(isPipelineRemote
-                  ? {
-                      repoIdentifier: repoName,
-                      repoName,
-                      connectorRef,
-                      storeType
-                    }
-                  : {})
-              })
-            )
-            // Avoid page reload when default branch is auto selected for GitX
-            if (!defaultSelected) {
-              location.reload()
-            }
+        deletePipelineCache({
+          repoIdentifier: defaultTo(selectedFilter.repo, ''),
+          branch: defaultTo(selectedFilter.branch, '')
+        }).then(() => {
+          history.push(
+            routes.toPipelineStudio({
+              projectIdentifier,
+              orgIdentifier,
+              pipelineIdentifier: defaultTo(pipelineIdentifier, '-1'),
+              accountId,
+              module,
+              branch: selectedFilter.branch,
+              repoIdentifier: selectedFilter.repo,
+              ...(isPipelineRemote
+                ? {
+                    repoIdentifier: repoName,
+                    repoName,
+                    connectorRef,
+                    storeType
+                  }
+                : {})
+            })
+          )
+          if (!defaultSelected) {
+            fetchPipeline({
+              forceFetch: true,
+              forceUpdate: true,
+              repoIdentifier: selectedFilter.repo,
+              branch: selectedFilter.branch
+            })
           }
-        )
+        })
       }
     },
     [
@@ -792,6 +852,11 @@ export function PipelineCanvas({
       >
         <NavigationCheck
           when={getOtherModal && pipeline.identifier !== ''}
+          onDiscardButtonClick={() => {
+            updatePipelineView({ ...pipelineView, isYamlEditable: false })
+            fetchPipeline({ forceFetch: true, forceUpdate: true })
+          }}
+          showDiscardBtn={true}
           shouldBlockNavigation={nextLocation => {
             let localUpdated = isUpdated
             const matchDefault = matchPath(nextLocation.pathname, {
@@ -864,6 +929,11 @@ export function PipelineCanvas({
                           <TagsPopover tags={pipeline.tags} />
                         </Container>
                       )}
+                      {pipeline.description && (
+                        <Container className={cx({ [css.tagsContainer]: isGitSyncEnabled })}>
+                          <DescriptionPopover text={pipeline.description} />
+                        </Container>
+                      )}
                       {isGitSyncEnabled && (
                         <StudioGitPopover
                           gitDetails={gitDetails}
@@ -893,9 +963,9 @@ export function PipelineCanvas({
                     <GitRemoteDetails
                       connectorRef={connectorRef}
                       repoName={repoName || gitDetails.repoName || gitDetails.repoIdentifier || ''}
-                      filePath={gitDetails.filePath || ''}
-                      fileUrl={gitDetails.fileUrl || ''}
-                      branch={branch || ''}
+                      filePath={defaultTo(gitDetails.filePath, '')}
+                      fileUrl={defaultTo(gitDetails.fileUrl, '')}
+                      branch={defaultTo(branch, '')}
                       onBranchChange={onGitBranchChange}
                       flags={{
                         readOnly: pipelineIdentifier === DefaultNewPipelineId
@@ -917,6 +987,7 @@ export function PipelineCanvas({
                   />
                   <div>
                     <div className={css.savePublishContainer}>
+                      {pipelineGitXCache && !isEmpty(pipelineCacheResponse) && <PipelineCachedCopy />}
                       {isReadonly && (
                         <div className={css.readonlyAccessTag}>
                           <Icon name="eye-open" size={16} />

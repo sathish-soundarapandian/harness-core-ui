@@ -26,7 +26,7 @@ exports[`Test Azure Infrastructure Spec behavior Should show errors if invalid v
           class="StyledProps--font StyledProps--main"
         >
           <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+            class="Layout--horizontal StyledProps--main"
           >
             <div
               class="bp3-form-group"
@@ -138,7 +138,7 @@ exports[`Test Azure Infrastructure Spec behavior Should show errors if invalid v
           class="StyledProps--font StyledProps--main"
         >
           <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+            class="Layout--horizontal StyledProps--main"
           >
             <div
               class="bp3-form-group"
@@ -250,7 +250,7 @@ exports[`Test Azure Infrastructure Spec behavior Should show errors if invalid v
           class="StyledProps--font StyledProps--main"
         >
           <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+            class="Layout--horizontal StyledProps--main"
           >
             <div
               class="bp3-form-group"
@@ -572,7 +572,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inp
           class="StyledProps--font StyledProps--main"
         >
           <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+            class="Layout--horizontal StyledProps--main"
           >
             <div
               class="bp3-form-group"
@@ -684,7 +684,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inp
           class="StyledProps--font StyledProps--main"
         >
           <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+            class="Layout--horizontal StyledProps--main"
           >
             <div
               class="bp3-form-group"
@@ -796,7 +796,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inp
           class="StyledProps--font StyledProps--main"
         >
           <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+            class="Layout--horizontal StyledProps--main"
           >
             <div
               class="bp3-form-group"

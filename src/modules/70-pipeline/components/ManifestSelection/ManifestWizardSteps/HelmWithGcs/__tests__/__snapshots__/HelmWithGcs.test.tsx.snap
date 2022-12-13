@@ -209,7 +209,7 @@ exports[`helm with http tests expand advanced section 1`] = `
                           name="folderPath"
                           placeholder="pipeline.manifestType.chartPathPlaceholder"
                           type="text"
-                          value=""
+                          value="/"
                         />
                       </div>
                       <span
@@ -1195,7 +1195,7 @@ exports[`helm with http tests renders correctly in edit case 1`] = `
                           name="folderPath"
                           placeholder="pipeline.manifestType.chartPathPlaceholder"
                           type="text"
-                          value=""
+                          value="/"
                         />
                       </div>
                       <span
@@ -1875,7 +1875,7 @@ exports[`helm with http tests renders while adding step first time 1`] = `
                           name="folderPath"
                           placeholder="pipeline.manifestType.chartPathPlaceholder"
                           type="text"
-                          value=""
+                          value="/"
                         />
                       </div>
                       <span
@@ -2555,7 +2555,7 @@ exports[`helm with http tests renders without crashing 1`] = `
                           name="folderPath"
                           placeholder="pipeline.manifestType.chartPathPlaceholder"
                           type="text"
-                          value=""
+                          value="/"
                         />
                       </div>
                       <span

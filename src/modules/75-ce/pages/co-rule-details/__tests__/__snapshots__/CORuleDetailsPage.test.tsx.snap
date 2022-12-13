@@ -7,6 +7,7 @@ exports[`Rule details page tests should render successfully 1`] = `
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--xlarge StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+      data-testid="page-header"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -308,6 +309,7 @@ exports[`Rule details page tests should render successfully 1`] = `
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody ruleDetailsBody"
       data-name="page-body"
+      data-testid="page-body"
     >
       <div
         class="Layout--horizontal StyledProps--main"
@@ -330,7 +332,7 @@ exports[`Rule details page tests should render successfully 1`] = `
                 class="bp3-popover-target"
               >
                 <button
-                  aria-label="projectsOrgs.landingDashboard.last30Days"
+                  aria-label="common.subscriptions.usage.last30days"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
                   type="button"
                 >
@@ -356,7 +358,7 @@ exports[`Rule details page tests should render successfully 1`] = `
                   <span
                     class="bp3-button-text"
                   >
-                    projectsOrgs.landingDashboard.last30Days
+                    common.subscriptions.usage.last30days
                   </span>
                   <span
                     class="bp3-icon bp3-icon-caret-down StyledProps--main"
@@ -958,6 +960,7 @@ exports[`Rule details page tests should render successfully 2`] = `
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--xlarge StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+      data-testid="page-header"
     >
       <div
         class="Layout--vertical StyledProps--main"
@@ -1274,6 +1277,7 @@ exports[`Rule details page tests should render successfully 2`] = `
     <div
       class="StyledProps--font StyledProps--main PageBody--pageBody ruleDetailsBody"
       data-name="page-body"
+      data-testid="page-body"
     >
       <div
         class="Layout--horizontal StyledProps--main"
@@ -1296,7 +1300,7 @@ exports[`Rule details page tests should render successfully 2`] = `
                 class="bp3-popover-target"
               >
                 <button
-                  aria-label="projectsOrgs.landingDashboard.last30Days"
+                  aria-label="common.subscriptions.usage.last30days"
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeRangeButton StyledProps--intent-primary StyledProps--padding-small Button--with-current-color Button--without-shadow Button--withLeftIcon Button--withRightIcon"
                   type="button"
                 >
@@ -1322,7 +1326,7 @@ exports[`Rule details page tests should render successfully 2`] = `
                   <span
                     class="bp3-button-text"
                   >
-                    projectsOrgs.landingDashboard.last30Days
+                    common.subscriptions.usage.last30days
                   </span>
                   <span
                     class="bp3-icon bp3-icon-caret-down StyledProps--main"

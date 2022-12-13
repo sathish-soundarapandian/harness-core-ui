@@ -248,6 +248,7 @@ export interface TFDataSpec {
   }
   varFiles?: TerraformVarFileWrapper[]
   exportTerraformPlanJson?: boolean
+  exportTerraformHumanReadablePlan?: boolean
 }
 
 export interface TFFormData extends StepElementConfig {
@@ -335,27 +336,31 @@ export const onSubmitTerraformData = (values: any): TFFormData => {
       if (values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.type === 'Harness') {
         configObject['backendConfig'] = { ...values?.spec?.configuration?.spec?.backendConfig }
       } else {
-        configObject['backendConfig'] = {
-          type: BackendConfigurationTypes.Remote,
-          ...values.spec?.configuration?.spec?.backendConfig,
-          spec: {
-            store: {
-              ...values.spec?.configuration?.spec?.backendConfig?.spec?.store,
-              type:
-                backendConfigConnectorValue?.connector?.type ||
-                values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.type,
-              spec: {
-                ...values.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec,
-                connectorRef: values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
-                  ? getMultiTypeFromValue(
-                      values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
-                    ) === MultiTypeInputType.RUNTIME || !backendConfigConnectorValue?.value
-                    ? values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
-                    : backendConfigConnectorValue?.value
-                  : ''
+        if (values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef) {
+          configObject['backendConfig'] = {
+            type: BackendConfigurationTypes.Remote,
+            ...values.spec?.configuration?.spec?.backendConfig,
+            spec: {
+              store: {
+                ...values.spec?.configuration?.spec?.backendConfig?.spec?.store,
+                type:
+                  backendConfigConnectorValue?.connector?.type ||
+                  values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.type,
+                spec: {
+                  ...values.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec,
+                  connectorRef: values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
+                    ? getMultiTypeFromValue(
+                        values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
+                      ) === MultiTypeInputType.RUNTIME || !backendConfigConnectorValue?.value
+                      ? values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
+                      : backendConfigConnectorValue?.value
+                    : ''
+                }
               }
             }
           }
+        } else {
+          unset(values?.spec?.configuration?.spec, 'backendConfig')
         }
       }
     } else {
@@ -477,26 +482,31 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
     if (values?.spec?.configuration?.backendConfig?.spec?.store?.type === 'Harness') {
       configObject['backendConfig'] = { ...values?.spec?.configuration?.backendConfig }
     } else {
-      configObject['backendConfig'] = {
-        type: BackendConfigurationTypes.Remote,
-        ...values.spec?.configuration?.backendConfig,
-        spec: {
-          store: {
-            ...values.spec?.configuration?.backendConfig?.spec?.store,
-            type:
-              backendConfigConnectorValue?.connector?.type ||
-              values?.spec?.configuration?.backendConfig?.spec?.store?.type,
-            spec: {
-              ...values.spec?.configuration?.backendConfig?.spec?.store?.spec,
-              connectorRef: values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
-                ? getMultiTypeFromValue(values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef) ===
-                    MultiTypeInputType.RUNTIME || !backendConfigConnectorValue?.value
-                  ? values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
-                  : backendConfigConnectorValue?.value
-                : ''
+      if (values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef) {
+        configObject['backendConfig'] = {
+          type: BackendConfigurationTypes.Remote,
+          ...values.spec?.configuration?.backendConfig,
+          spec: {
+            store: {
+              ...values.spec?.configuration?.backendConfig?.spec?.store,
+              type:
+                backendConfigConnectorValue?.connector?.type ||
+                values?.spec?.configuration?.backendConfig?.spec?.store?.type,
+              spec: {
+                ...values.spec?.configuration?.backendConfig?.spec?.store?.spec,
+                connectorRef: values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
+                  ? getMultiTypeFromValue(
+                      values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
+                    ) === MultiTypeInputType.RUNTIME || !backendConfigConnectorValue?.value
+                    ? values?.spec?.configuration?.backendConfig?.spec?.store?.spec?.connectorRef
+                    : backendConfigConnectorValue?.value
+                  : ''
+              }
             }
           }
         }
+      } else {
+        unset(values?.spec?.configuration, 'backendConfig')
       }
     }
   } else {
@@ -554,6 +564,12 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
   if (values?.spec?.configuration?.exportTerraformPlanJson) {
     configObject['exportTerraformPlanJson'] = values?.spec?.configuration?.exportTerraformPlanJson
       ? values?.spec?.configuration?.exportTerraformPlanJson
+      : false
+  }
+
+  if (values?.spec?.configuration?.exportTerraformHumanReadablePlan) {
+    configObject['exportTerraformHumanReadablePlan'] = values?.spec?.configuration?.exportTerraformHumanReadablePlan
+      ? values?.spec?.configuration?.exportTerraformHumanReadablePlan
       : false
   }
 

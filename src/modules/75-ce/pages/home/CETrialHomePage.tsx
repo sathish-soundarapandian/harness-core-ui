@@ -122,7 +122,9 @@ const CETrialHomePage: React.FC = () => {
   }
 
   useEffect(() => {
-    experience && showModal()
+    if (experience) {
+      microfrontendEnabled ? history.push(routes.toCEOverview({ accountId })) : showModal()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [experience])
 

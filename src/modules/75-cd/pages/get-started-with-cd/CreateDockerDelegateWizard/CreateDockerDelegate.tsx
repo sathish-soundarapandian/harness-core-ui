@@ -131,7 +131,8 @@ export const CreateDockerDelegate = ({
           }
         })) as any
         if (get(dockerYaml, 'responseMessages', []).length) {
-          showError(getString('somethingWentWrong'))
+          const errorMsg = dockerYaml.responseMessages?.[0]?.message || getString('somethingWentWrong')
+          showError(errorMsg)
         } else {
           setYaml(dockerYaml)
           setLoader(false)

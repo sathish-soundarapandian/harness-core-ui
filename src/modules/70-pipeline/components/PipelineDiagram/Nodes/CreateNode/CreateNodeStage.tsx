@@ -16,6 +16,8 @@ import css from './CreateNode.module.scss'
 interface CreateNodeStageProps {
   onMouseOver?: () => void
   onMouseLeave?: () => void
+  onDragLeave?: () => void
+  onDragOver?: () => void
   onDrop?: (event: React.DragEvent<HTMLDivElement>) => void
   fireEvent?: FireEventMethod
   onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
@@ -32,6 +34,7 @@ function CreateNodeStage(props: CreateNodeStageProps): React.ReactElement | null
       data-nodeid="add-parallel"
       data-testid="create-node-stage"
       onMouseOver={() => {
+        event?.stopPropagation()
         props.onMouseOver?.()
       }}
       onMouseLeave={() => {
@@ -41,6 +44,12 @@ function CreateNodeStage(props: CreateNodeStageProps): React.ReactElement | null
       onDragOver={event => {
         event.preventDefault()
         event.stopPropagation()
+        props.onDragOver?.()
+      }}
+      onDragLeave={event => {
+        event.preventDefault()
+        event.stopPropagation()
+        props.onDragLeave?.()
       }}
       onDrop={event => {
         props?.onDrop?.(event)

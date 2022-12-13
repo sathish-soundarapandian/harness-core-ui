@@ -1163,7 +1163,7 @@ exports[`Test Cloudformation create stack should be able to open and close inlin
                   <select
                     class="templateDropdown"
                     data-testid="tagsOptions"
-                    name="spec.configuration.templateFile.type"
+                    name="spec.configuration.tags.type"
                   >
                     <option
                       data-testid="inline"
@@ -2482,7 +2482,7 @@ exports[`Test Cloudformation create stack should be able to open optional dropdo
                   <select
                     class="templateDropdown"
                     data-testid="tagsOptions"
-                    name="spec.configuration.templateFile.type"
+                    name="spec.configuration.tags.type"
                   >
                     <option
                       data-testid="inline"
@@ -3909,7 +3909,7 @@ exports[`Test Cloudformation create stack should be able to open remote param mo
                   <select
                     class="templateDropdown"
                     data-testid="tagsOptions"
-                    name="spec.configuration.templateFile.type"
+                    name="spec.configuration.tags.type"
                   >
                     <option
                       data-testid="inline"

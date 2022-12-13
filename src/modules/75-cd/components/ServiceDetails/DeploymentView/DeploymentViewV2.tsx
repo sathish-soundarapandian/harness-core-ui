@@ -7,6 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { Color } from '@harness/design-system'
+import { defaultTo } from 'lodash-es'
 import { Container, Layout, Text, PageError } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
 import { PageSpinner, Table } from '@common/components'
@@ -17,6 +18,7 @@ import {
   getFullTableData,
   getPreviewTableData,
   getSummaryTableData,
+  isClusterData,
   RenderArtifactVersion,
   RenderEnvironment,
   RenderInfra,
@@ -68,6 +70,7 @@ export const DeploymentsV2 = (
   }>
 ): React.ReactElement => {
   const { tableType, loading = false, data, error, refetch } = props
+  const isCluster = isClusterData(defaultTo(data, []))
   const { getString } = useStrings()
 
   const tableDataOption: TableRowData[] = useMemo(() => {
@@ -96,7 +99,7 @@ export const DeploymentsV2 = (
         Cell: RenderEnvironment
       },
       {
-        Header: getString('cd.serviceDashboard.headers.infrastructures'),
+        Header: isCluster ? getString('common.cluster') : getString('cd.serviceDashboard.headers.infrastructures'),
         id: 'infra',
         width: columnsProp.infras.width[tableType],
         Cell: tableType == TableType.PREVIEW ? RenderInfraCount : RenderInfra
@@ -114,7 +117,7 @@ export const DeploymentsV2 = (
 
     return columnsView
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isCluster])
 
   if (loading || error || !(data || []).length || (tableType === TableType.PREVIEW && !tableDataOption.length)) {
     const component = (() => {

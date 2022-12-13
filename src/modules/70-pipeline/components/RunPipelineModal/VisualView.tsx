@@ -7,19 +7,26 @@
 
 import React, { Dispatch, FormEvent, SetStateAction } from 'react'
 import cx from 'classnames'
-import { FormikForm, Layout, Text } from '@harness/uicore'
+import type { GetDataError } from 'restful-react'
 import { get, isEmpty } from 'lodash-es'
+import { FormikForm, Layout, Text } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import type { PipelineInfoConfig, ResponsePMSPipelineResponseDTO } from 'services/pipeline-ng'
+import type {
+  Error,
+  Failure,
+  PipelineInfoConfig,
+  ResponseMessage,
+  ResponsePMSPipelineResponseDTO
+} from 'services/pipeline-ng'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import SelectExistingInputsOrProvideNew from './SelectExistingOrProvide'
 import { InputSetSelector } from '../InputSetSelector/InputSetSelector'
 import type { InputSetValue } from '../InputSetSelector/utils'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { StepViewType } from '../AbstractSteps/Step'
 import type { StageSelectionData } from '../../utils/runPipelineUtils'
-
 import css from './RunPipelineForm.module.scss'
 
 export type ExistingProvide = 'existing' | 'provide'
@@ -34,6 +41,7 @@ export interface VisualViewProps {
   executionIdentifier?: string
   hasRuntimeInputs: boolean
   template: PipelineInfoConfig
+  templateError?: GetDataError<Failure | Error> | null
   pipeline?: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
   currentPipeline?: {
@@ -62,6 +70,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     executionIdentifier,
     hasRuntimeInputs,
     template,
+    templateError,
     pipeline,
     currentPipeline,
     getTemplateError,
@@ -80,8 +89,12 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
   } = props
   const { getString } = useStrings()
 
-  const checkIfRuntimeInputsNotPresent = (): string | undefined => {
+  const checkIfRuntimeInputsNotPresent = (): JSX.Element | string | undefined => {
     if (executionView && isEmpty(template)) {
+      const templateErrorObj = templateError?.data as Error
+      if (!isEmpty(templateErrorObj?.responseMessages)) {
+        return <ErrorHandler responseMessages={templateErrorObj?.responseMessages as ResponseMessage[]} />
+      }
       return getString('pipeline.inputSets.noRuntimeInputsWhileExecution')
     } else if (!executionView && resolvedPipeline && currentPipeline && !hasRuntimeInputs && !getTemplateError) {
       /*

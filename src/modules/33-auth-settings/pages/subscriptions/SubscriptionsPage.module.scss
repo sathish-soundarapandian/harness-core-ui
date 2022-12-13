@@ -37,6 +37,11 @@
       background-color: var(--teal-50) !important;
       border-color: var(--teal-500) !important;
     }
+    &.sto {
+      box-shadow: unset !important;
+      background-color: var(--primary-1) !important;
+      border-color: var(--primary-5) !important;
+    }
   }
 
   :first-child {

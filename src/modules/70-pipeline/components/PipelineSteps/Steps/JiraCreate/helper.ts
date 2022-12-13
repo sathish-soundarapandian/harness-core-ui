@@ -196,3 +196,13 @@ export const getUserValuesOptions = (userOptions: JiraUserData[]): MultiSelectOp
     value: userOption.emailAddress || ''
   }))
 }
+
+export const processMultiSelectTypeInputRuntimeValues = (selectedFieldValue: string | object) => {
+  if (Array.isArray(selectedFieldValue)) {
+    return selectedFieldValue
+  } else if (typeof selectedFieldValue === 'string' && !!selectedFieldValue) {
+    const splitValues = selectedFieldValue?.split(',')
+    return splitValues.map(splitvalue => ({ label: splitvalue, value: splitvalue })) as MultiSelectOption[]
+  }
+  return []
+}

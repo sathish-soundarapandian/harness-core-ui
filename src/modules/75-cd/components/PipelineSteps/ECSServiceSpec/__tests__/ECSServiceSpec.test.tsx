@@ -10,7 +10,7 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
-import type { StringsMap } from 'framework/strings/StringsContext'
+import type { StringsMap } from 'stringTypes'
 import { queryByNameAttribute } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
@@ -24,11 +24,23 @@ import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineCon
 import { pipelineContextECSManifests } from '@pipeline/components/PipelineStudio/PipelineContext/__tests__/helper'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import { getYaml, mockBuildList, initialManifestRuntimeValues, ecsManifestTemplate } from './helpers/helper'
+import {
+  awsRegionsData,
+  bucketListData
+} from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ECSWithS3/__tests__/mocks'
+import {
+  getYaml,
+  mockBuildList,
+  initialManifestRuntimeValuesGitStore,
+  ecsManifestTemplateGitStore,
+  initialManifestRuntimeValuesS3Store,
+  ecsManifestTemplateS3Store
+} from './helpers/helper'
 import { ECSServiceSpec } from '../ECSServiceSpec'
 
 const fetchConnector = jest.fn().mockReturnValue({ data: connectorsData.data?.content?.[1] })
 const fetchConnectorList = (): Promise<unknown> => Promise.resolve(connectorsData)
+const fetchBuckets = jest.fn().mockReturnValue(bucketListData)
 
 jest.mock('services/cd-ng', () => ({
   getConnectorListV2: () => Promise.resolve(connectorsData),
@@ -42,7 +54,23 @@ jest.mock('services/cd-ng', () => ({
   getBuildDetailsForArtifactoryArtifactWithYamlPromise: () => Promise.resolve(mockBuildList),
   getBuildDetailsForDockerPromise: () => Promise.resolve(mockBuildList),
   getBuildDetailsForEcrPromise: () => Promise.resolve(mockBuildList),
-  getBuildDetailsForNexusArtifactPromise: () => Promise.resolve(mockBuildList)
+  getBuildDetailsForNexusArtifactPromise: () => Promise.resolve(mockBuildList),
+  useGetBucketsInManifests: jest.fn().mockImplementation(() => {
+    return { data: bucketListData, refetch: fetchBuckets, error: null, loading: false }
+  })
+}))
+
+jest.mock('services/portal', () => ({
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: awsRegionsData, refetch: jest.fn(), error: null, loading: false }
+  })
+}))
+
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(() => {
+    return { data: bucketListData, refetch: fetchBuckets, error: null, loading: false }
+  })
 }))
 
 const TEST_PATH = routes.toPipelineStudio({ ...projectPathProps, ...modulePathProps, ...pipelinePathProps })
@@ -111,19 +139,19 @@ describe('ECSInfraSpec tests', () => {
     expect(getByText('ScalableTarget_Manifest')).toBeInTheDocument()
   })
 
-  test('check Input Set view for manifest', async () => {
+  test('check Input Set view for manifest when manifestStore is Git', async () => {
     const { container, getByText, getAllByText } = render(
       <TestStepWidget
         testWrapperProps={{
           path: TEST_PATH,
           pathParams: TEST_PATH_PARAMS as unknown as Record<string, string>
         }}
-        initialValues={initialManifestRuntimeValues}
-        allValues={initialManifestRuntimeValues}
+        initialValues={initialManifestRuntimeValuesGitStore}
+        allValues={initialManifestRuntimeValuesGitStore}
         readonly={false}
         type={StepType.EcsService}
         stepViewType={StepViewType.InputSet}
-        template={ecsManifestTemplate}
+        template={ecsManifestTemplateGitStore}
         path={'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition'}
       />
     )
@@ -184,6 +212,95 @@ describe('ECSInfraSpec tests', () => {
     userEvent.click(submitBtn)
   })
 
+  test('check Input Set view for manifest when manifestStore is S3', async () => {
+    const { container, getByText } = render(
+      <TestStepWidget
+        testWrapperProps={{
+          path: TEST_PATH,
+          pathParams: TEST_PATH_PARAMS as unknown as Record<string, string>
+        }}
+        initialValues={initialManifestRuntimeValuesS3Store}
+        allValues={initialManifestRuntimeValuesS3Store}
+        readonly={false}
+        type={StepType.EcsService}
+        stepViewType={StepViewType.InputSet}
+        template={ecsManifestTemplateS3Store}
+        path={'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition'}
+      />
+    )
+
+    // Task Definition
+    const taskDefinitionRegionInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[0].manifest.spec.store.spec.region',
+      container
+    )
+    expect(taskDefinitionRegionInput).toBeInTheDocument()
+    const taskDefinitionBucketNameInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[0].manifest.spec.store.spec.bucketName',
+      container
+    )
+    expect(taskDefinitionBucketNameInput).toBeInTheDocument()
+    const taskDefinitionPathInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[0].manifest.spec.store.spec.paths[0]',
+      container
+    )
+    expect(taskDefinitionPathInput).toBeInTheDocument()
+
+    // Service Definition
+    const serviceDefinitionRegionInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[1].manifest.spec.store.spec.region',
+      container
+    )
+    expect(serviceDefinitionRegionInput).toBeInTheDocument()
+    const serviceDefinitionBucketNameInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[1].manifest.spec.store.spec.bucketName',
+      container
+    )
+    expect(serviceDefinitionBucketNameInput).toBeInTheDocument()
+    const serviceDefinitionPathInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[1].manifest.spec.store.spec.paths[0]',
+      container
+    )
+    expect(serviceDefinitionPathInput).toBeInTheDocument()
+
+    // Scalling Policy
+    const scallingPolicyRegionInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[2].manifest.spec.store.spec.region',
+      container
+    )
+    expect(scallingPolicyRegionInput).toBeInTheDocument()
+    const scallingPolicyBucketNameInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[2].manifest.spec.store.spec.bucketName',
+      container
+    )
+    expect(scallingPolicyBucketNameInput).toBeInTheDocument()
+    const scallingPolicyPathInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[2].manifest.spec.store.spec.paths[0]',
+      container
+    )
+    expect(scallingPolicyPathInput).toBeInTheDocument()
+
+    // Scalable Target
+    const scalableTargetRegionInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[3].manifest.spec.store.spec.region',
+      container
+    )
+    expect(scalableTargetRegionInput).toBeInTheDocument()
+    const scalableTargetBucketNameInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[3].manifest.spec.store.spec.bucketName',
+      container
+    )
+    expect(scalableTargetBucketNameInput).toBeInTheDocument()
+    const scalableTargetPathInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.manifests[3].manifest.spec.store.spec.paths[0]',
+      container
+    )
+    expect(scalableTargetPathInput).toBeInTheDocument()
+
+    const submitBtn = getByText('Submit')
+    userEvent.click(submitBtn)
+  })
+
   test('when template is empty object, no fields should be rendered', async () => {
     const { queryByText } = render(
       <TestStepWidget
@@ -191,8 +308,8 @@ describe('ECSInfraSpec tests', () => {
           path: TEST_PATH,
           pathParams: TEST_PATH_PARAMS as unknown as Record<string, string>
         }}
-        initialValues={initialManifestRuntimeValues}
-        allValues={initialManifestRuntimeValues}
+        initialValues={initialManifestRuntimeValuesGitStore}
+        allValues={initialManifestRuntimeValuesGitStore}
         readonly={false}
         type={StepType.EcsService}
         stepViewType={StepViewType.InputSet}
@@ -228,9 +345,15 @@ describe('ECSInfraSpec tests', () => {
     }
 
     const step = new ECSServiceSpec() as any
+
+    step.renderStep({
+      initialValues,
+      inputSetData: {
+        template: ecsManifestTemplateGitStore
+      }
+    })
     const errors = await step.validateInputSet({
       data: initialValues,
-      template: ecsManifestTemplate,
       getString,
       viewType: StepViewType.DeploymentForm
     })
@@ -269,9 +392,14 @@ describe('ECSInfraSpec tests', () => {
     }
 
     const step = new ECSServiceSpec() as any
+    step.renderStep({
+      initialValues,
+      inputSetData: {
+        template: primaryArtifactTemplate
+      }
+    })
     const errors = await step.validateInputSet({
       data: initialValues,
-      template: primaryArtifactTemplate,
       getString,
       viewType: StepViewType.DeploymentForm
     })
@@ -281,6 +409,60 @@ describe('ECSInfraSpec tests', () => {
     expect(errors.artifacts.primary.spec.tagRegex).toBe('fieldRequired')
   })
 
+  test('check primary artifact sources form errors when artifact type is S3', async () => {
+    const initialValues = {
+      artifacts: {
+        primary: {
+          type: ENABLED_ARTIFACT_TYPES.S3,
+          sources: [
+            {
+              spec: {
+                connectorRef: '',
+                imagePath: '',
+                tag: '',
+                tagRegex: ''
+              }
+            }
+          ]
+        }
+      }
+    }
+
+    const primaryArtifactSourceTemplate = {
+      artifacts: {
+        primary: {
+          type: ENABLED_ARTIFACT_TYPES.DockerRegistry,
+          sources: [
+            {
+              spec: {
+                connectorRef: RUNTIME_INPUT_VALUE,
+                imagePath: RUNTIME_INPUT_VALUE,
+                tag: RUNTIME_INPUT_VALUE,
+                tagRegex: RUNTIME_INPUT_VALUE
+              }
+            }
+          ]
+        }
+      }
+    }
+
+    const step = new ECSServiceSpec() as any
+    step.renderStep({
+      initialValues,
+      inputSetData: {
+        template: primaryArtifactSourceTemplate
+      }
+    })
+    const errors = await step.validateInputSet({
+      data: initialValues,
+      getString,
+      viewType: StepViewType.DeploymentForm
+    })
+    expect(errors.artifacts.primary.sources[0].spec.connectorRef).toBe('fieldRequired')
+    expect(errors.artifacts.primary.sources[0].spec.imagePath).toBe('fieldRequired')
+    expect(errors.artifacts.primary.sources[0].spec.tag).toBe('fieldRequired')
+    expect(errors.artifacts.primary.sources[0].spec.tagRegex).toBe('fieldRequired')
+  })
   test('check sidecar artifact form errors', async () => {
     const initialValues = {
       artifacts: {
@@ -321,9 +503,14 @@ describe('ECSInfraSpec tests', () => {
     }
 
     const step = new ECSServiceSpec() as any
+    step.renderStep({
+      initialValues,
+      inputSetData: {
+        template: sidecarArtifactTemplate
+      }
+    })
     const errors = await step.validateInputSet({
       data: initialValues,
-      template: sidecarArtifactTemplate,
       getString,
       viewType: StepViewType.DeploymentForm
     })

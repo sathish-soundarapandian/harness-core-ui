@@ -25,7 +25,7 @@ const eventProps = {
 const nodeProps = {
   allowAdd: true,
   getNode: jest.fn(() => (<></>) as any),
-  matrixNodeName: false,
+  matrixNodeName: 'name',
   isSelected: true,
   readonly: false,
   icon: 'barrier-open',

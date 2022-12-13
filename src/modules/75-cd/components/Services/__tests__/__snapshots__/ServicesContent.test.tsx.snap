@@ -5,6 +5,7 @@ exports[`ServicesContent render 1`] = `
   <div
     class="StyledProps--font StyledProps--main PageBody--pageBody pageBody"
     data-name="page-body"
+    data-testid="page-body"
   >
     <div
       class="Layout--vertical StyledProps--main container"

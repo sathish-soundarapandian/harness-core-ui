@@ -23,6 +23,8 @@ import { ConnectivityModeType } from '@common/components/ConnectivityMode/Connec
 import GcpAuthentication from './StepAuth/GcpAuthentication'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import ConnectivityModeStep from '../commonSteps/ConnectivityModeStep/ConnectivityModeStep'
+import gcpDelegate from './ConnectivityModeStepImages/gcpDelegate.svg'
+import gcpPlatform from './ConnectivityModeStepImages/gcpPlatform.svg'
 
 const CreateGcpConnector: React.FC<CreateConnectorModalProps> = props => {
   const { getString } = useStrings()
@@ -74,6 +76,8 @@ const CreateGcpConnector: React.FC<CreateConnectorModalProps> = props => {
           setConnectivityMode={props.setConnectivityMode}
           hideModal={props.onClose}
           onConnectorCreated={props.onSuccess}
+          delegateImage={gcpDelegate}
+          platformImage={gcpPlatform}
         />
         {props.connectivityMode === ConnectivityModeType.Delegate ? (
           <DelegateSelectorStep

@@ -11,7 +11,6 @@ import userEvent from '@testing-library/user-event'
 import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { DeploymentContextProvider } from '@cd/context/DeploymentContext/DeploymentContextProvider'
-import * as cdng from 'services/cd-ng'
 import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import { initialValues, multipleStepsInitialView } from './mocks'
 import { ExecutionPanel } from '../ExecutionPanel'
@@ -64,12 +63,14 @@ jest.mock('@pipeline/utils/templateUtils', () => ({
     })
 }))
 
-jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {
-  return { data: gitConfigs, refetch: jest.fn(), loading: false }
-})
-jest.spyOn(cdng, 'useGetSourceCodeManagers').mockImplementation((): any => {
-  return { data: sourceCodeManagers, refetch: jest.fn(), loading: false }
-})
+jest.mock('services/cd-ng-rq', () => ({
+  useListGitSyncQuery: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: jest.fn() }
+  }),
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
+}))
 
 jest.mock('@templates-library/components/TemplateSettingsModal/TemplateSettingsModal', () => ({
   TemplateSettingsModal: () => {

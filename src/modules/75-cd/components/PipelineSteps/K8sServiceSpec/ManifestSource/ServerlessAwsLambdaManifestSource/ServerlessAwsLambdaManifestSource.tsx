@@ -6,19 +6,22 @@
  */
 
 import React from 'react'
+import { get } from 'lodash-es'
 import cx from 'classnames'
 import { FormInput, Layout } from '@harness/uicore'
+
 import { useStrings } from 'framework/strings'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import List from '@common/components/List/List'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { ManifestDataType, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
-import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { S3ManifestStoreRuntimeView } from '@cd/components/PipelineSteps/ECSServiceSpec/ManifestSource/S3ManifestStoreRuntimeView'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
-const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
+const ServerlessLambdaGitStoreRuntimeView = (props: ManifestSourceRenderProps): React.ReactElement => {
   const { template, path, manifestPath, manifest, fromTrigger, readonly, formik, stageIdentifier } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -84,6 +87,11 @@ export class ServerlessAwsLambdaManifestSource extends ManifestSourceBase<Manife
       return null
     }
 
-    return <Content {...props} />
+    const manifestStoreType = get(props.template, `${props.manifestPath}.spec.store.type`, null)
+    if (manifestStoreType === ManifestStoreMap.S3) {
+      return <S3ManifestStoreRuntimeView {...props} pathFieldlabel="fileFolderPathText" />
+    }
+
+    return <ServerlessLambdaGitStoreRuntimeView {...props} />
   }
 }

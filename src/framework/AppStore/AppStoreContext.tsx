@@ -6,7 +6,7 @@
  */
 
 import React, { ReactElement, useEffect } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 
 import { defaultTo, fromPairs } from 'lodash-es'
 import { withFeatureFlags } from '@harnessio/ff-react-client-sdk'
@@ -29,9 +29,12 @@ import { useGetFeatureFlags } from 'services/portal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FeatureFlag } from '@common/featureFlags'
 import { useTelemetryInstance } from '@common/hooks/useTelemetryInstance'
+import type { Module } from 'framework/types/ModuleName'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import routes from '@common/RouteDefinitions'
 import type { Error } from 'services/cd-ng'
+import { getLocationPathName } from 'framework/utils/WindowLocation'
+import { getModuleToDefaultURLMap } from 'framework/LicenseStore/licenseStoreUtil'
 
 export type FeatureFlagMap = Partial<Record<FeatureFlag, boolean>>
 
@@ -88,7 +91,7 @@ const getIdentifiersFromSavedProj = (savedProject: SavedProjectDetails): SavedPr
 }
 
 const getRedirectionUrl = (accountId: string, source: string | undefined): string => {
-  const baseUrl = window.location.pathname.replace(/\/ng\//, '/')
+  const baseUrl = getLocationPathName().replace(/\/ng\//, '/')
   const dashboardUrl = `${baseUrl}#/account/${accountId}/dashboard`
   const onboardingUrl = `${baseUrl}#/account/${accountId}/onboarding`
   return source === 'signup' ? onboardingUrl : dashboardUrl
@@ -154,8 +157,19 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
     queryParams: { accountIdentifier: accountId }
   })
 
-  const { source } = useQueryParams<{ source?: string }>()
+  const { source, module } = useQueryParams<{ source?: string; module?: Module }>()
 
+  const isPurposePage = useRouteMatch(
+    routes.toPurpose({
+      accountId
+    })
+  )
+  const redirectUserToModuleHome = (featureFlagsMap: Partial<Record<FeatureFlag, boolean>>): void => {
+    if (featureFlagsMap.CREATE_DEFAULT_PROJECT && source === 'signup' && module && !isPurposePage) {
+      const moduleUrlWithDefaultProject = getModuleToDefaultURLMap(accountId, module)[module]
+      history.push(moduleUrlWithDefaultProject ? (moduleUrlWithDefaultProject as string) : routes.toHome({ accountId }))
+    }
+  }
   const showErrorAndRedirect = (getProjectResponse: Error): void => {
     if (projectIdentifierFromPath && orgIdentifierFromPath) {
       showError(getProjectResponse?.message)
@@ -205,6 +219,8 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
         ...prevState,
         featureFlags: featureFlagsMap
       }))
+
+      redirectUserToModuleHome(featureFlagsMap)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [legacyFeatureFlags])
@@ -227,6 +243,7 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
         ...prevState,
         featureFlags: featureFlagsMap
       }))
+      redirectUserToModuleHome(featureFlagsMap)
     }
   }, [featureFlags, loadingFeatureFlags])
 

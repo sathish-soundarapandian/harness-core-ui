@@ -9,6 +9,7 @@
 declare const styles: {
   readonly alignContainerRight: string
   readonly borderLeft: string
+  readonly bottomMargin: string
   readonly card: string
   readonly stepContainer: string
 }

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Container, Icon } from '@harness/uicore'
 import { debounce } from 'lodash-es'
 import cx from 'classnames'
@@ -15,7 +15,7 @@ import {
 } from '@common/navigation/ModuleConfigurationScreen/ModuleConfigurationScreen'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
-import { moduleToNavItemsMap } from '../util'
+import { filterNavModules, moduleToNavItemsMap } from '../util'
 import css from '../MainNav.module.scss'
 
 export const MODULES_WINDOW_SIZE = 3
@@ -65,14 +65,26 @@ const ModulesContainer = (): React.ReactElement => {
   const [moduleStartIndex, setModuleStartIndex] = useState<number>(0)
   const itemsRef = useRef<HTMLDivElement[]>([])
 
-  const { preference: modulesPreferenceData } = usePreferenceStore<ModulesPreferenceStoreData>(
-    PreferenceScope.USER,
-    MODULES_CONFIG_PREFERENCE_STORE_KEY
-  )
+  const { preference: modulesPreferenceData, setPreference: setModuleConfigPreference } =
+    usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
   const moduleMap = useNavModuleInfoMap()
-  const { selectedModules = [], orderedModules = [] } = modulesPreferenceData || {}
+  const [filterModulesExecuted, setFilterModulesExecuted] = useState<boolean>(false)
 
-  const modulesListHeight = 92 * Math.min(MODULES_WINDOW_SIZE, selectedModules.length)
+  const { selectedModules = [], orderedModules = [] } = modulesPreferenceData || {}
+  const modulesListHeight = 92 * Math.min(MODULES_WINDOW_SIZE, selectedModules?.length || 0)
+
+  useEffect(() => {
+    const { orderedModules: filteredOrderedModules, selectedModules: filteredSelectedModules } = filterNavModules(
+      orderedModules,
+      selectedModules,
+      moduleMap
+    )
+    setModuleConfigPreference({
+      orderedModules: filteredOrderedModules,
+      selectedModules: filteredSelectedModules
+    })
+    setFilterModulesExecuted(true)
+  }, [])
 
   const scrollModuleToView = (index: number) => {
     setTimeout(() => itemsRef.current[index].scrollIntoView({ block: 'nearest' }), 0)
@@ -95,6 +107,10 @@ const ModulesContainer = (): React.ReactElement => {
     setModuleStartIndex(firstVisibleModule === -1 ? 0 : firstVisibleModule)
   }, 100)
 
+  if (!filterModulesExecuted) {
+    return <></>
+  }
+
   const showChevronButtons = selectedModules.length > MODULES_WINDOW_SIZE
   return (
     <>
@@ -102,7 +118,7 @@ const ModulesContainer = (): React.ReactElement => {
       {showChevronButtons && <ChevronButton handleClick={handleUpClick} disabled={moduleStartIndex === 0} />}
       <Container onScroll={handleOnScroll} className={css.modules} style={{ height: modulesListHeight }}>
         {orderedModules
-          .filter(moduleName => moduleMap[moduleName].shouldVisible && selectedModules.indexOf(moduleName) > -1)
+          .filter(moduleName => moduleMap[moduleName]?.shouldVisible && selectedModules.indexOf(moduleName) > -1)
           .map((moduleName, i) => {
             const NavItem = moduleToNavItemsMap[moduleName]
 

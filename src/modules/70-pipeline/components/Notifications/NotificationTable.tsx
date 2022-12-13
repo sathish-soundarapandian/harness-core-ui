@@ -141,7 +141,18 @@ export const RenderColumnEventsContent: React.FC<{ data: PipelineEvent['type'][]
 
 // eslint-disable-next-line react/function-component-definition
 const RenderColumnEvents: Renderer<CellProps<NotificationRulesItem>> = ({ row }) => {
-  const data = row.original.notificationRules.pipelineEvents?.map(event => event.type)
+  let isAllEvent = false
+  let data = row.original.notificationRules.pipelineEvents?.map(event => {
+    if (event.type === PipelineEventType.ALL_EVENTS) {
+      isAllEvent = true
+    }
+    return event.type
+  })
+
+  // hide other events if All_Events is checked
+  if (isAllEvent) {
+    data = [PipelineEventType.ALL_EVENTS]
+  }
   return <RenderColumnEventsContent data={data as PipelineEvent['type'][]} />
 }
 

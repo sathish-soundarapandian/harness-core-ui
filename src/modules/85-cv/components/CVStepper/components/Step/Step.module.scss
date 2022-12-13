@@ -11,15 +11,19 @@
 }
 
 .borderLeft {
-  border-left: 2px solid var(--grey-200);
+  border-left: 1px solid var(--grey-200);
 }
 
 .alignContainerRight {
-  padding: 1em !important;
+  padding: var(--spacing-medium) var(--spacing-large) !important;
   margin: 0 !important;
-  margin-left: 16px !important;
+  margin-left: 18px !important;
 }
 
 .card {
   min-width: 100%;
+}
+
+.bottomMargin {
+  margin-bottom: var(--spacing-huge) !important;
 }

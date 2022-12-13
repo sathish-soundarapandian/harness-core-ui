@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, waitFor, screen } from '@testing-library/react'
+import { render, fireEvent, waitFor, screen, within } from '@testing-library/react'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import {
   PipelineContext,
@@ -108,5 +108,50 @@ describe('DeployServiceDefinition', () => {
     const confirmButton = (await screen.findAllByRole('button', { name: /confirm/i }))[0]
     fireEvent.click(confirmButton)
     await waitFor(() => expect(pipelineMockDataWithManifest.updateStage).toHaveBeenCalled(), { timeout: 3000 })
+  })
+
+  test('changing deployment type when gitops is enabled should disable gitops and update the type', async () => {
+    const pipelineMockDataWithManifest = getContextValue(mockStageReturnWithManifest)
+    const { getByText } = renderFunction(pipelineMockDataWithManifest)
+
+    const gitOpsCheckbox = getByText('common.gitOps')
+    expect(gitOpsCheckbox).toBeTruthy()
+    fireEvent.click(gitOpsCheckbox)
+
+    const deleteWarningDialog = findDialogContainer() as HTMLElement
+    await waitFor(() => expect(deleteWarningDialog).toBeTruthy())
+    fireEvent.click(within(deleteWarningDialog).getByText('confirm'))
+
+    await waitFor(() =>
+      expect(pipelineMockDataWithManifest.updatePipeline).toHaveBeenCalledWith(
+        expect.objectContaining({
+          gitOpsEnabled: true
+        })
+      )
+    )
+
+    fireEvent.click(getByText('pipeline.nativeHelm'))
+
+    await waitFor(() =>
+      expect(pipelineMockDataWithManifest.updatePipeline).toHaveBeenCalledWith(
+        expect.objectContaining({
+          gitOpsEnabled: false,
+          stages: [
+            {
+              stage: {
+                identifier: 'stage_id',
+                name: 'Stage Name',
+                spec: {
+                  serviceConfig: {
+                    serviceDefinition: { spec: {}, type: 'NativeHelm' },
+                    serviceRef: 'Service_1'
+                  }
+                }
+              }
+            }
+          ]
+        })
+      )
+    )
   })
 })

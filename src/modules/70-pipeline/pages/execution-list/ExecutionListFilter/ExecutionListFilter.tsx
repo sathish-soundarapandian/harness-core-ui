@@ -70,17 +70,17 @@ export function ExecutionListFilter(): React.ReactElement {
 
   const { data: servicesResponse, loading: isFetchingServices } = useGetServiceListForProject({
     queryParams: { accountId, orgIdentifier, projectIdentifier },
-    lazy: isFiltersDrawerOpen
+    lazy: !isFiltersDrawerOpen
   })
 
   const { data: deploymentTypeResponse, loading: isFetchingDeploymentTypes } = useGetServiceDefinitionTypes({
     queryParams: { accountId },
-    lazy: isFiltersDrawerOpen
+    lazy: !isFiltersDrawerOpen
   })
 
   const { data: environmentsResponse, loading: isFetchingEnvironments } = useGetEnvironmentListForProject({
     queryParams: { accountId, orgIdentifier, projectIdentifier },
-    lazy: isFiltersDrawerOpen
+    lazy: !isFiltersDrawerOpen
   })
 
   const [deploymentTypeSelectOptions, setDeploymentTypeSelectOptions] = React.useState<SelectOption[]>([])

@@ -235,3 +235,19 @@
     top: 22px;
   }
 }
+
+.runtimeSelectWithSubmenu {
+  span [data-icon='main-delete'] {
+    padding-right: var(--spacing-3) !important;
+  }
+}
+
+.nested-section-card {
+  width: 970px;
+  margin-top: var(--spacing-3);
+  padding: var(--spacing-7) !important;
+  &.notwide {
+    width: auto;
+  }
+  background-color: var(--white);
+}

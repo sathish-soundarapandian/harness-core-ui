@@ -166,7 +166,13 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
 
   const [openModal, hideModal] = useModalHook(() => {
     return (
-      <Dialog isOpen enforceFocus={false} onClose={hideModal} title={getString('cf.environments.apiKeys.addKeyTitle')}>
+      <Dialog
+        className={css.dialog}
+        isOpen
+        enforceFocus={false}
+        onClose={hideModal}
+        title={getString('cf.environments.apiKeys.addKeyTitle')}
+      >
         <Formik
           initialValues={initialValues}
           formName="addKeyDialog"
@@ -189,7 +195,7 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
                   className={css.nameTextbox}
                   label={getString('name')}
                   name="name"
-                  inputGroup={{ autoFocus: true }}
+                  inputGroup={{ autoFocus: true, 'aria-label': getString('cf.onboarding.enterKeyName') }}
                 />
 
                 {keyTypes.length > 1 && (

@@ -30,7 +30,6 @@ import {
   useGetManagementGroups
 } from 'services/cd-ng'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { ResourceGroup, Subscription, ManagementGroup, Tenant, ScopeTypes, ScopeTypeLabels } from './AzureArm.types'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -286,45 +285,43 @@ export const Scopes = ({ formik, readonly, expressions, allowableTypes, connecto
   }
 
   const dropDown = (name: string, label: keyof StringsMap, items: SelectOption[], loading: boolean): JSX.Element => (
-    <Layout.Vertical>
-      <Layout.Horizontal className={cx(stepCss.formGroup, stepCss.lg)}>
-        <SelectInputSetView
-          className={css.scopeDropdown}
-          label={getString(label)}
-          name={name}
-          disabled={readonly}
-          useValue
-          multiTypeInputProps={{
-            selectProps: {
-              allowCreatingNewItems: true,
-              items: items
-            },
-            expressions,
-            allowableTypes
+    <Layout.Horizontal className={cx(stepCss.formGroup, stepCss.lg)}>
+      <FormInput.MultiTypeInput
+        formik={formik}
+        className={css.scopeDropdown}
+        label={getString(label)}
+        name={name}
+        disabled={readonly}
+        useValue
+        multiTypeInputProps={{
+          selectProps: {
+            addClearBtn: !(loading || readonly),
+            allowCreatingNewItems: true,
+            items: items
+          },
+          expressions,
+          allowableTypes
+        }}
+        selectItems={items}
+        placeholder={loading ? getString('loading') : getString('select')}
+      />
+      {getMultiTypeFromValue(get(formik?.values, name)) === MultiTypeInputType.RUNTIME && !readonly && (
+        <SelectConfigureOptions
+          value={get(formik?.values, name) as string}
+          type={'String'}
+          variableName={name}
+          showRequiredField={false}
+          showDefaultField={false}
+          showAdvanced={true}
+          onChange={value => {
+            formik?.setFieldValue(name, value)
           }}
-          selectItems={items}
-          placeholder={loading ? getString('loading') : getString('select')}
-          fieldPath={name}
-          template={{}}
+          isReadonly={readonly}
+          options={items}
+          loading={loading}
         />
-        {getMultiTypeFromValue(get(formik?.values, name)) === MultiTypeInputType.RUNTIME && (
-          <SelectConfigureOptions
-            value={get(formik?.values, name)}
-            type="String"
-            variableName={name}
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={value => {
-              setFieldValue(name, value)
-            }}
-            isReadonly={readonly}
-            options={items}
-            loading={loading}
-          />
-        )}
-      </Layout.Horizontal>
-    </Layout.Vertical>
+      )}
+    </Layout.Horizontal>
   )
 
   return (

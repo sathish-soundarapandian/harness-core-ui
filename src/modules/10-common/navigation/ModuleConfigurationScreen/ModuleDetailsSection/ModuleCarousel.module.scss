@@ -46,5 +46,9 @@
       bottom: var(--spacing-large);
       left: 50%;
     }
+    .indicatorActive {
+      background-color: var(--primary-5) !important;
+      border-color: var(--primary-5) !important;
+    }
   }
 }

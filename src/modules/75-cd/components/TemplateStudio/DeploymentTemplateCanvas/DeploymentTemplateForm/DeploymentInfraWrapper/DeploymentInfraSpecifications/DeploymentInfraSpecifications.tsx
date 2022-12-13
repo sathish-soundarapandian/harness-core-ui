@@ -135,6 +135,11 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
               addVariableLabel={'variables.newVariable'}
               validationSchema={getDTInfraVariablesValidationField}
               isDrawerMode={true}
+              yamlProperties={(defaultTo(formValues?.variables, []) as AllNGVariables[]).map(variable => ({
+                fqn: `stage.spec.infrastructure.output.variable.${variable?.name}`,
+                variableName: variable?.name,
+                visible: true
+              }))}
             />
           </Layout.Horizontal>
         </Layout.Vertical>

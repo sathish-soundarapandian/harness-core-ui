@@ -157,6 +157,16 @@ RbacFactory.registerResourceTypeHandler(ResourceType.LOADBALANCER, {
   }
 })
 
+RbacFactory.registerResourceTypeHandler(ResourceType.CCM_CURRENCYPREFERENCE, {
+  icon: 'ccm-solid',
+  label: 'ce.currencyPreferences.sideNavText',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_CURRENCYPREFERENCE]: <LocaleString stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_CCM_CURRENCYPREFERENCE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />
+  }
+})
+
 featureFactory.registerFeaturesByModule('ce', {
   features: [FeatureIdentifier.PERSPECTIVES],
   renderMessage: (_, getString, additionalLicenseProps, usageAndLimitInfo) => {
@@ -359,6 +369,11 @@ const RedirectToNewNodeRecommendationDetailsRoute = (): React.ReactElement => {
   )
 }
 
+const RedirectToGovernanceRules = (): React.ReactElement => {
+  const params = useParams<AccountPathProps>()
+  return <Redirect to={routes.toCEGovernanceRules(params)} />
+}
+
 const licenseRedirectData: LicenseRedirectProps = {
   licenseStateName: LICENSE_STATE_NAMES.CCM_LICENSE_STATE,
   startTrialRedirect: RedirectToModuleTrialHome,
@@ -371,7 +386,9 @@ const getRequestOptions = (): Partial<RequestInit> => {
   const headers: RequestInit['headers'] = {}
 
   if (token && token.length > 0) {
-    headers.Authorization = `Bearer ${token}`
+    if (!window.noAuthHeader) {
+      headers.Authorization = `Bearer ${token}`
+    }
   }
 
   return { headers }
@@ -766,7 +783,12 @@ const CERoutes: React.FC = () => {
         }),
         routes.toCECORules({ ...accountPathProps, params: '' }),
         routes.toCommitmentOrchestration({ ...accountPathProps }),
-        routes.toCommitmentOrchestrationSetup({ ...accountPathProps })
+        routes.toCommitmentOrchestrationSetup({ ...accountPathProps }),
+        routes.toCEGovernanceRules({ ...accountPathProps }),
+        routes.toCEGovernanceEnforcements({ ...accountPathProps }),
+        routes.toCEGovernanceEvaluations({ ...accountPathProps }),
+        routes.toCEGovernanceRuleEditor({ ...accountPathProps, ruleId: ':ruleId' }),
+        routes.toCECurrencyPreferences({ ...accountPathProps })
       ]
     : []
 
@@ -830,7 +852,14 @@ const CERoutes: React.FC = () => {
         >
           <CloudIntegrationPage />
         </RouteWithLayout>
-
+        <RouteWithLayout
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CESideNavProps}
+          path={routes.toCEGovernance({ ...accountPathProps })}
+          exact
+        >
+          <RedirectToGovernanceRules />
+        </RouteWithLayout>
         {enableMicroFrontend ? (
           <RouteWithLayout path={[...mfePaths, routes.toCCMMFE({ ...accountPathProps })]} sidebarProps={CESideNavProps}>
             <ChildAppMounter<CCMUIAppCustomProps>
