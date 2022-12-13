@@ -175,8 +175,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
   const [schemaValidationErrors, setSchemaValidationErrors] = useState<Diagnostic[]>()
   const [currentCursorPosition, setCurrentCursorPosition] = useState<Position>()
-  const codeLensRegistrations = useRef<Set<IDisposable>>(new Set<IDisposable>())
-  const codeLensPositionMarkers = useRef<Map<number, number>>(new Map<number, number>())
+  const codeLensPositionMarkers = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
   const [pluginValuesSelected, setPluginValuesSelected] = useState<Record<string, any>>()
 
   let expressionCompletionDisposer: { dispose: () => void }
@@ -809,12 +808,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const showErrorFooter = showErrorPanel && !isEmpty(schemaValidationErrors)
 
-  const disposeExistingCodeLensRegistrations = useCallback(() => {
-    for (let registration of codeLensRegistrations.current.values()) {
-      registration.dispose()
-    }
-  }, [codeLensRegistrations])
-
   const addCodeLensRegistration = useCallback(
     ({
       fromLine,
@@ -828,7 +821,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const commandId = editorRef.current?.editor?.addCommand(
         0,
         () => {
-          const numberOfLinesInSelection = getSelectionRangeOnSettingsBtnClick(cursorPosition)
+          const numberOfLinesInSelection = getSelectionRangeOnSettingsBtnClick(cursorPosition, currentYaml)
           if (numberOfLinesInSelection) {
             highlightInsertedText(fromLine, toLineNum + numberOfLinesInSelection + 1)
           }
@@ -859,7 +852,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       })
       return registrationId
     },
-    [editorRef.current?.editor]
+    [editorRef.current?.editor, currentYaml]
   )
 
   const getClosestIndexToSearchToken = useCallback(
@@ -936,75 +929,76 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [currentCursorPosition, editorRef.current?.editor]
   )
 
-  const getSelectionRangeOnSettingsBtnClick = useCallback(
-    (cursorPosition: Position): number => {
-      if (cursorPosition) {
-        try {
-          const currentYAMLAsJSON = parse(currentYaml)
-          const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
-          const stageStepsForTheClosestIndex = findAllValuesForJSONPath(
-            currentYAMLAsJSON,
-            getStageYAMLPathForStageIndex(closestStageIndex)
-          ) as unknown[]
-          const stageStepsForThePrecedingIndex =
-            closestStageIndex > 0
-              ? (findAllValuesForJSONPath(
-                  currentYAMLAsJSON,
-                  getStageYAMLPathForStageIndex(closestStageIndex - 1)
-                ) as unknown[])
-              : {}
-          let closestStepIndex = 0
-          if (Array.isArray(stageStepsForThePrecedingIndex)) {
-            const stageStepsCountForThePrecedingIndex = (stageStepsForThePrecedingIndex as unknown[]).length
-            closestStepIndex = getClosestIndexToSearchToken(
-              cursorPosition,
-              'step:',
-              stageStepsCountForThePrecedingIndex,
-              stageStepsCountForThePrecedingIndex + stageStepsForTheClosestIndex.length
-            )
-          } else {
-            closestStepIndex = getClosestIndexToSearchToken(
-              cursorPosition,
-              'step:',
-              0,
-              stageStepsForTheClosestIndex.length
-            )
-          }
-          if (closestStepIndex === -1) {
-            return 0
-          }
-          const stepYAMLPath = `${getStageYAMLPathForStageIndex(closestStageIndex)}.${closestStepIndex}.step`
-          const stepValuesObj = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
-          setPluginValuesSelected(get(stepValuesObj, 'spec'))
-          const stepValueTokens = yamlStringify(stepValuesObj).split('\n').length
-          return stepValueTokens > 0 ? stepValueTokens - 1 : 0
-        } catch (e) {
-          // ignore error
+  const getSelectionRangeOnSettingsBtnClick = useCallback((cursorPosition: Position, latestYAML: string): number => {
+    if (cursorPosition) {
+      try {
+        const currentYAMLAsJSON = parse(latestYAML)
+        const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
+        const stageStepsForTheClosestIndex = findAllValuesForJSONPath(
+          currentYAMLAsJSON,
+          getStageYAMLPathForStageIndex(closestStageIndex)
+        ) as unknown[]
+        const stageStepsForThePrecedingIndex =
+          closestStageIndex > 0
+            ? (findAllValuesForJSONPath(
+                currentYAMLAsJSON,
+                getStageYAMLPathForStageIndex(closestStageIndex - 1)
+              ) as unknown[])
+            : {}
+        let closestStepIndex = 0
+        if (Array.isArray(stageStepsForThePrecedingIndex)) {
+          const stageStepsCountForThePrecedingIndex = (stageStepsForThePrecedingIndex as unknown[]).length
+          closestStepIndex = getClosestIndexToSearchToken(
+            cursorPosition,
+            'step:',
+            stageStepsCountForThePrecedingIndex,
+            stageStepsCountForThePrecedingIndex + stageStepsForTheClosestIndex.length
+          )
+        } else {
+          closestStepIndex = getClosestIndexToSearchToken(
+            cursorPosition,
+            'step:',
+            0,
+            stageStepsForTheClosestIndex.length
+          )
         }
+        if (closestStepIndex === -1) {
+          return 0
+        }
+        const stepYAMLPath = `${getStageYAMLPathForStageIndex(closestStageIndex)}.${closestStepIndex}.step`
+        const stepValuesObj = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
+        setPluginValuesSelected(get(stepValuesObj, 'spec'))
+        const stepValueTokens = yamlStringify(stepValuesObj).split('\n').length
+        return stepValueTokens > 0 ? stepValueTokens - 1 : 0
+      } catch (e) {
+        // ignore error
       }
-      return 0
-    },
-    [currentYaml]
-  )
+    }
+    return 0
+  }, [])
 
   useEffect(() => {
     const editor = editorRef.current?.editor
     if (shouldRenderPluginsPanel && editor) {
       const matchingPositions = findPositionsForMatchingKeys(editor, 'step:')
       if (matchingPositions.length) {
-        disposeExistingCodeLensRegistrations()
         matchingPositions.map((matchingPosition: Position) => {
-          const { lineNumber, column } = matchingPosition
-          if (!codeLensPositionMarkers.current.has(lineNumber)) {
-            codeLensPositionMarkers.current.set(lineNumber, column)
-            codeLensRegistrations.current.add(
-              addCodeLensRegistration({
-                fromLine: lineNumber,
-                toLineNum: lineNumber,
-                cursorPosition: matchingPosition
-              })
-            )
+          const { lineNumber } = matchingPosition
+          if (codeLensPositionMarkers.current.has(lineNumber)) {
+            const existingRegistrationId = codeLensPositionMarkers.current.get(lineNumber)
+            try {
+              existingRegistrationId?.dispose()
+            } catch (ex) {
+              //ignore excetion
+            }
+            codeLensPositionMarkers.current.delete(lineNumber)
           }
+          const registrationId = addCodeLensRegistration({
+            fromLine: lineNumber,
+            toLineNum: lineNumber,
+            cursorPosition: matchingPosition
+          })
+          codeLensPositionMarkers.current.set(lineNumber, registrationId)
         })
       }
     }
