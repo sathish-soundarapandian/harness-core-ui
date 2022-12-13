@@ -7,7 +7,6 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import cx from 'classnames'
-import { isEmpty } from 'lodash-es'
 import {
   Container,
   Layout,
@@ -135,7 +134,11 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                         <FormInput.Text name="connectorRef" label={'Connector'} />
                         <FormInput.Text name="image" label={'Image'} />
                         <FormInput.Text name="shell" label={'Shell'} />
-                        <FormInput.TextArea name="command" label={'Command'} textArea={{ style: { maxHeight: 150 } }} />
+                        <FormInput.TextArea
+                          name="command"
+                          label={'Command'}
+                          textArea={{ style: { height: '150px' } }}
+                        />
                         <Button style={{ height: '40px', width: '100px' }} type="submit">
                           {getString('add')}
                         </Button>
