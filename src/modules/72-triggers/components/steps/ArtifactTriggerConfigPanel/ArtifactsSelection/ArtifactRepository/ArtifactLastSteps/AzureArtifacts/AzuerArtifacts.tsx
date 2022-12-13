@@ -283,7 +283,7 @@ function FormComponent({
             disabled={!isFieldFixedAndNonEmpty(formik.values?.feed)}
             label={getString('pipeline.artifactsSelection.packageName')}
             placeholder={getString('pipeline.artifactsSelection.packageNamePlaceholder')}
-            name="package"
+            name="packageName"
             useValue
             multiTypeInputProps={{
               selectProps: {
@@ -354,7 +354,7 @@ export function AzureArtifacts(
       scope: formData.scope,
       feed: formData.feed,
       packageType: formData.packageType,
-      package: formData.package,
+      packageName: formData.packageName,
       ...projectData
     })
   }
@@ -367,7 +367,7 @@ export function AzureArtifacts(
     }),
     feed: Yup.string().required('pipeline.artifactsSelection.validation.feed'),
     packageType: Yup.string(),
-    package: Yup.string().required('pipeline.artifactsSelection.validation.packageName')
+    packageName: Yup.string().required('pipeline.artifactsSelection.validation.packageName')
   }
 
   const primarySchema = Yup.object().shape(schemaObject)
