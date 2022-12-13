@@ -1019,7 +1019,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }, [])
 
   const insertPluginIntoExistingYAML = useCallback(
-    (pluginInput: Record<string, any>) => {
+    (pluginInput: Record<string, any>): void => {
       if (!isEmpty(pluginInput) && pluginInput.shouldInsertYAML && currentCursorPosition) {
         try {
           const closestIndex = getClosestIndexToSearchToken(currentCursorPosition, 'stage:')
