@@ -60,8 +60,8 @@ export default function RouteDestinations(): React.ReactElement {
     NG_SETTINGS,
     CODE_ENABLED,
     IACM_ENABLED,
-    SSCA_ENABLED,
-    IDP_ENABLED
+    IDP_ENABLED,
+    SSCA_ENABLED
   } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
@@ -92,6 +92,7 @@ export default function RouteDestinations(): React.ReactElement {
       {CING_ENABLED ? CIRoutes.props.children : null}
       {CDNG_ENABLED ? CDRoutes.props.children : null}
       {isCVModuleEnabled ? CVRoutes.props.children : null}
+      {CVNG_ENABLED ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
       {IDP_ENABLED ? IDPRoutes.props.children : null}
       {licenseInformation['STO']?.status === 'ACTIVE' ? (

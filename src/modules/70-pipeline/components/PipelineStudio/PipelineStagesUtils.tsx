@@ -19,6 +19,7 @@ interface GetPipelineStagesArgs {
   isCIEnabled?: boolean
   isCDEnabled?: boolean
   isCFEnabled?: boolean
+  isSSCSEnabled?: boolean
   isSTOEnabled?: boolean
   isApprovalStageEnabled?: boolean
   isPipelineChainingEnabled?: boolean
@@ -33,6 +34,7 @@ export const getPipelineStages: (args: GetPipelineStagesArgs) => React.ReactElem
   isCDEnabled = false,
   isCFEnabled = false,
   isSTOEnabled = false,
+  isSSCSEnabled = false,
   isApprovalStageEnabled = false,
   isPipelineChainingEnabled = false,
   isIACMEnabled = false
@@ -48,6 +50,7 @@ export const getPipelineStages: (args: GetPipelineStagesArgs) => React.ReactElem
         {stagesCollection.getStage(StageType.PIPELINE, isPipelineChainingEnabled, getString)}
         {stagesCollection.getStage(StageType.CUSTOM, true, getString)}
         {stagesCollection.getStage(StageType.Template, false, getString)}
+        {stagesCollection.getStage(StageType.SSCS, isSSCSEnabled, getString)}
       </PipelineStages>
     )
   } else if (module === 'cf') {

@@ -42,6 +42,7 @@ import cv from '@cv/strings/strings.en.yaml'
 import iacm from '@iacm/strings/strings.en.yaml'
 import sto from '@sto/strings/strings.en.yaml'
 import gitops from '@gitops/strings/strings.en.yaml'
+import sscs from '@sscs/strings/strings.en.yaml'
 
 export default function languageLoader() {
   return {
@@ -76,6 +77,7 @@ export default function languageLoader() {
     cv,
     iacm,
     sto,
-    gitops
+    gitops,
+    sscs
   }
 }

@@ -26,8 +26,8 @@ export type NavModuleName =
   | ModuleName.STO
   | ModuleName.CODE
   | ModuleName.IACM
-  | ModuleName.SSCA
   | ModuleName.IDP
+  | ModuleName.SSCA
 
 // Default order of modules on side nav, please add modules to this list accordingly.
 // For any module to be visible on side nav, it has to be added in this list
@@ -41,8 +41,8 @@ export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
   ModuleName.STO,
   ModuleName.CHAOS,
   ModuleName.IACM,
-  ModuleName.SSCA,
-  ModuleName.IDP
+  ModuleName.IDP,
+  ModuleName.SSCA
 ]
 
 export interface useNavModuleInfoReturnType {
@@ -159,7 +159,7 @@ export interface GroupConfig {
 export const moduleGroupConfig: GroupConfig[] = [
   {
     label: 'common.moduleList.buildAndTest',
-    items: [ModuleName.CI, ModuleName.CHAOS, ModuleName.STO, ModuleName.IACM]
+    items: [ModuleName.CI, ModuleName.CHAOS, ModuleName.STO, ModuleName.IACM, ModuleName.SSCS]
   },
   {
     label: 'common.moduleList.deployChanges',

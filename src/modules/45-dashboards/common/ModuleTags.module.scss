@@ -57,11 +57,6 @@
   background: var(--ssca-background);
   border: 1px solid var(--ssca-border);
 }
-.idpTag {
-  color: var(--idp-foreground);
-  background: var(--idp-background);
-  border: 1px solid var(--idp-border);
-}
 
 .predefinedTags {
   // Continuous Delivery
@@ -93,6 +88,11 @@
   --sto-foreground: #1947ec;
   --sto-border: #4791ff;
   --sto-background: #ebefff;
+
+  // Software Supply Chain Security
+  --sscs-foreground: #1947ec;
+  --sscs-border: #4791ff;
+  --sscs-background: #ebefff;
 
   // Chaos Engineering
   --ce-foreground: #9a0041;

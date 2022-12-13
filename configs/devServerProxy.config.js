@@ -180,6 +180,9 @@ module.exports = {
   },
   '/ssca/api': {
     pathRewrite: { '^/ssca/api': '/api' },
-    target: process.env.SSCA_API_URL || 'https://localhost:8186'
+    target: process.env.SSCS_API_URL || 'http://34.132.21.138:60000',
+    router: 'http://34.132.21.138:60000',
+    changeOrigin: true,
+    secure: false
   }
 }

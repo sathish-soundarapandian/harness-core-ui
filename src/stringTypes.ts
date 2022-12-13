@@ -997,8 +997,6 @@ export interface StringsMap {
   'common.sourceBranchPlaceholder': string
   'common.specified': string
   'common.specify': string
-  'common.ssca': string
-  'common.sscaText': string
   'common.stable': string
   'common.stage': string
   'common.stageName': string

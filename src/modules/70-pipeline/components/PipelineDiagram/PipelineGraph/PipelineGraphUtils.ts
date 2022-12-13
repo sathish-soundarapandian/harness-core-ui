@@ -418,7 +418,8 @@ const NodeTypeToNodeMap: Record<string, string> = {
   Pipeline: NodeType.Default,
   Custom: NodeType.Default,
   Approval: NodeType.Default,
-  IACM: NodeType.Default
+  IACM: NodeType.Default,
+  SSCS: NodeType.Default
 }
 interface GetPipelineGraphDataParams {
   data: StageElementWrapperConfig[] | ExecutionWrapperConfig[]

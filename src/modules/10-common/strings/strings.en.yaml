@@ -1339,9 +1339,6 @@ artifacts:
 updated: Updated
 python: Python
 
-# SSCA module
-ssca: SSCA
-sscaText: Software Supply Chain Assurance
 tickets:
   selectConnector: '[Select] Ticket Provider Connector'
   selectProjectName: '[Select] Project Name'
@@ -1350,3 +1347,7 @@ tickets:
   tickets: 'Tickets'
   ticketComment: 'Append comment to ticket when Security Issue changes are detected (coming soon)'
   ticketExemption: 'Create a ticket when an Exemption is created (coming soon)'
+
+# SSCA module
+ssca: SSCA
+sscaText: Software Supply Chain Assurance

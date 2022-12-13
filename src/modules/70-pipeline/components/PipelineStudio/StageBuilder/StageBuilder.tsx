@@ -72,6 +72,7 @@ diagram.registerNode('Deployment', PipelineStageNode as unknown as React.FC<Base
 diagram.registerNode('CI', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
 diagram.registerNode('SecurityTests', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
 diagram.registerNode('IACM', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
+diagram.registerNode('SSCS', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
 diagram.registerNode('Approval', DiamondNodeWidget)
 diagram.registerNode('Barrier', IconNode)
 diagram.registerNode(NodeType.CreateNode, CreateNodeStage as unknown as React.FC<BaseReactComponentProps>)

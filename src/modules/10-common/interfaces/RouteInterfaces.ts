@@ -209,8 +209,8 @@ export type ModuleNameMatch =
   | ':module(sto)'
   | ':module(chaos)'
   | ':module(iacm)'
-  | ':module(ssca)'
   | ':module(idp)'
+  | ':module(ssca)'
 
 export type Module = ModuleName | ModuleNameMatch
 
