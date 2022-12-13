@@ -88,6 +88,7 @@ import {
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { countAllKeys } from '@common/utils/utils'
 import { AutoCompletionMap } from './YAMLAutoCompletionHelper'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
 import { CompletionItemKind } from 'vscode-languageserver-types'
@@ -1031,7 +1032,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const updatedPipelineJSON = set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps)
           setCurrentYaml(yamlStringify(updatedPipelineJSON))
           // +2 added for key "step" and "spec"
-          detectYAMLInsertion(Object.keys(sanitizedStepToInsert).length + 2, closestIndex)
+          detectYAMLInsertion(countAllKeys(sanitizedStepToInsert) + 2, closestIndex)
         } catch (e) {
           // ignore error
         }

@@ -227,3 +227,7 @@ export const getFixed = (value: number, places = 1): number => {
   }
   return parseFloat(value.toFixed(places))
 }
+
+export const countAllKeys = (obj: Record<string, any>): number => {
+  return JSON.stringify(obj)?.match(/[^\\]":/g)?.length ?? 0
+}
