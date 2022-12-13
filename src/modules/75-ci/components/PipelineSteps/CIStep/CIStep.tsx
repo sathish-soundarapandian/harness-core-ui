@@ -10,7 +10,7 @@ import { isEmpty, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import { FormInput, Text, Container, AllowedTypes } from '@harness/uicore'
+import { FormInput, Text, Container, AllowedTypes, SelectOption } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
@@ -44,6 +44,17 @@ import {
 import { renderMultiTypeInputWithAllowedValues, renderMultiTypeListInputSet } from './CIStepOptionalConfig'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
+export const generationTypeOptions: SelectOption[] = [{ label: 'Orchestrated', value: 'Orchestrated' }]
+
+export const artifactTypeOptions: SelectOption[] = [{ label: 'Repository', value: 'Repository' }]
+
+export const sbomGenerationToolOptions: SelectOption[] = [{ label: 'Syft', value: 'Syft' }]
+
+export const sbomFormatOptions = [
+  { label: 'SPDX v2.2', value: 'SPDX v2.2' },
+  { label: 'CycloneDX v1.3', value: 'CycloneDX v1.3' },
+  { label: 'CycloneDX v1.4', value: 'CycloneDX v1.4' }
+]
 interface CIStepProps {
   isNewStep?: boolean
   readonly?: boolean
@@ -660,6 +671,50 @@ export const CIStep: React.FC<CIStepProps> = props => {
                 allowedTypesForEntries: SupportedInputTypesForListItems
               })
             : null}
+        </Container>
+      ) : null}
+      {get(enableFields, 'spec.generationType') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <FormInput.Select
+            items={generationTypeOptions}
+            name={`${prefix}spec.generationType`}
+            label={getString('ci.sscs.generationType')}
+            placeholder={getString('ci.sscs.generationType')}
+            disabled={readonly}
+          />
+        </Container>
+      ) : null}
+      {get(enableFields, 'spec.artifactType') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <FormInput.Select
+            items={artifactTypeOptions}
+            name={`${prefix}spec.artifactType`}
+            label={getString('ci.sscs.artifactType')}
+            placeholder={getString('ci.sscs.artifactType')}
+            disabled={readonly}
+          />
+        </Container>
+      ) : null}
+      {get(enableFields, 'spec.generationType') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <FormInput.Select
+            items={sbomGenerationToolOptions}
+            name={`${prefix}spec.sbomGenerationTool`}
+            label={getString('ci.sscs.sbomGenerationTool')}
+            placeholder={getString('ci.sscs.sbomGenerationTool')}
+            disabled={readonly}
+          />
+        </Container>
+      ) : null}
+      {get(enableFields, 'spec.sbomFormat') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <FormInput.RadioGroup
+            items={sbomFormatOptions}
+            name={`${prefix}spec.sbomFormat`}
+            label={getString('ci.sscs.sbomFormat')}
+            disabled={readonly}
+            radioGroup={{ inline: true }}
+          />
         </Container>
       ) : null}
     </>

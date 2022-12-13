@@ -28,12 +28,14 @@ import { SaveCacheHarnessStep } from './SaveCacheHarnessStep/SaveCacheHarnessSte
 import { RestoreCacheHarnessStep } from './RestoreCacheHarnessStep/RestoreCacheHarnessStep'
 import { GHAPluginStep } from './GHAPluginStep/GHAPluginStep'
 import { BitrisePluginStep } from './BitrisePluginStep/BitrisePluginStep'
+import { SSCSGenerationStep } from './SSCSGenerationStep/SSCSGenerationStep'
 
 factory.registerStep(new RunStep())
 factory.registerStep(new BackgroundStep())
 factory.registerStep(new PluginStep())
 factory.registerStep(new ACRStep())
 factory.registerStep(new GCRStep())
+factory.registerStep(new SSCSGenerationStep())
 factory.registerStep(new ECRStep())
 factory.registerStep(new SaveCacheGCSStep())
 factory.registerStep(new RestoreCacheGCSStep())
