@@ -381,6 +381,14 @@ export const isAzureWebAppOrSshWinrmGenericDeploymentType = (
 
   return false
 }
+export const isCustomDTGenericDeploymentType = (deploymentType: string, repo: string | undefined): boolean => {
+  if (isCustomDeploymentType(deploymentType)) {
+    // default repository format should be Generic if none is previously selected
+    return repo ? repo === RepositoryFormatTypes.Generic : true
+  }
+
+  return false
+}
 
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
