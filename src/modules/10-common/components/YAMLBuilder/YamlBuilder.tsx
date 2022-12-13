@@ -913,13 +913,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         // highlight the inserted text
         highlightInsertedText(startingLineNum, endingLineNum)
 
-        // add "Settings" control
-        addCodeLensRegistration({
-          fromLine: startingLineNum,
-          toLineNum: endingLineNum,
-          cursorPosition: currentCursorPosition
-        })
-
         // Scroll to the end of the inserted text
         editor.setPosition({ column: contentInEndingLine.length + 1, lineNumber: endingLineForCursorPosition })
         editor.revealLineInCenter(endingLineForCursorPosition)
