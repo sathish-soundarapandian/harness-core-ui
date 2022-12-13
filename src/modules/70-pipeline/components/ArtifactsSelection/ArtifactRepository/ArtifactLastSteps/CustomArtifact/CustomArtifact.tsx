@@ -624,7 +624,7 @@ export function CustomArtifact(
   const isTemplateContext = context === ModalViewFor.Template
 
   const schemaObject = {
-    spec: Yup.object().when('type', {
+    spec: Yup.object().when('formType', {
       is: formFillingMethod.MANUAL,
       then: Yup.object().shape({
         version: Yup.string()
