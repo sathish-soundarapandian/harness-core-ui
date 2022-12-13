@@ -26,7 +26,7 @@ export const NameCell: CellType = ({ row }) => {
 
   return (
     <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }}>
-      <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_900}>
         {data.name}
       </Text>
     </Layout.Horizontal>
@@ -38,7 +38,7 @@ export const OriginatorCell: CellType = ({ row }) => {
 
   return (
     <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }}>
-      <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_700}>
         {data.Originator}
       </Text>
     </Layout.Horizontal>
@@ -50,7 +50,7 @@ export const StageNameCell: CellType = ({ row }) => {
 
   return (
     <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }}>
-      <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_700}>
         {data.StageName}
       </Text>
     </Layout.Horizontal>
@@ -62,7 +62,7 @@ export const VersionInfoCell: CellType = ({ row }) => {
 
   return (
     <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }}>
-      <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_900}>
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_700}>
         {data.VersionInfo}
       </Text>
     </Layout.Horizontal>
