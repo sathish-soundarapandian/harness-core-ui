@@ -41,6 +41,8 @@ import RecommendationFilters from '@ce/components/RecommendationFilters'
 import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
+import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
+import { Filter } from '@common/components/Filter/Filter'
 import CEHomePage from './pages/home/CEHomePage'
 import CECODashboardPage from './pages/co-dashboard/CECODashboardPage'
 import CECOCreateGatewayPage from './pages/co-create-gateway/CECOCreateGatewayPage'
@@ -869,7 +871,9 @@ const CERoutes: React.FC = () => {
                 AnomaliesFilter,
                 ConnectorReferenceField,
                 GatewayListFilters,
-                FeatureWarningBanner
+                FeatureWarningBanner,
+                Filter,
+                FilterSelector
               }}
               ChildApp={CcmMicroFrontendPath}
             />
