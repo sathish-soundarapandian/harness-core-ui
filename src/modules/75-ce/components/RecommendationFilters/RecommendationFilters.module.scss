@@ -126,7 +126,8 @@
     padding: var(--spacing-small);
     cursor: pointer;
 
-    &:hover {
+    &:hover,
+    &.listItemSelected {
       background-color: var(--primary-1) !important;
     }
   }

@@ -5,12 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Checkbox, Container, Icon, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Popover, Position, TagInput } from '@blueprintjs/core'
 import { Virtuoso } from 'react-virtuoso'
 import { xor } from 'lodash-es'
+import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
 import {
@@ -22,6 +23,8 @@ import {
 import type { QLCEViewFilterWrapper } from 'services/ce'
 
 import css from '../RecommendationFilters.module.scss'
+
+const LIMIT = 100
 
 interface LabelFilterDropdownProps {
   labelFilters: QLCEViewFilterWrapper[]
@@ -36,6 +39,8 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
 
   const [keysPopoverOpen, setKeysPopoverOpen] = useState(false)
   const [selectedLabelKey, setSelectedLabelKey] = useState<string>()
+  const [valuesList, setValuesList] = useState<string[]>([])
+  const [fetchMoreValues, setFetchMoreValues] = useState(true)
 
   const [labelKeysData] = useFetchPerspectiveFiltersValueQuery({
     variables: {
@@ -75,14 +80,26 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
           }
         } as unknown as QlceViewFilterWrapperInput
       ],
-      limit: 100,
-      offset: (page - 1) * 100
+      limit: LIMIT,
+      offset: (page - 1) * LIMIT
     },
     pause: !selectedLabelKey
   })
 
   const labelsKeys = labelKeysData.data?.perspectiveFilters?.values
-  const labelKeyValues = labelKeyValuesData.data?.perspectiveFilters?.values
+  const labelKeyValues = labelKeyValuesData.data?.perspectiveFilters?.values as string[]
+
+  useEffect(() => {
+    setFetchMoreValues(labelKeyValues?.length === LIMIT)
+
+    if (labelKeyValues?.length) {
+      if (page === 0) {
+        setValuesList(labelKeyValues)
+      } else {
+        setValuesList(prevVal => [...prevVal, ...labelKeyValues])
+      }
+    }
+  }, [JSON.stringify(labelKeyValues)])
 
   const filteredLabelKeys = labelsKeys?.filter(keys => keys?.toLowerCase()?.includes(searchText.toLowerCase()))
 
@@ -99,14 +116,12 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
   }, [JSON.stringify(labelFilters)])
 
   const onEndReaded = /* istanbul ignore next */ (): void => {
-    if (labelKeyValues?.length === page * 100) {
+    if (valuesList?.length === page * 100) {
       setPage(prevVal => prevVal + 1)
     }
   }
 
   const handleCheckboxClick = /* istanbul ignore next */ (key: string, value: string): void => {
-    setSearchText('')
-
     const isKeyInFilters = labelFilters.some(item => item.idFilter?.field?.fieldName === key)
 
     let newFilters: QLCEViewFilterWrapper[] = []
@@ -174,6 +189,7 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
       position={Position.BOTTOM}
       popoverClassName={css.popoverCtn}
       targetClassName={css.popoverTarget}
+      onClose={() => setSelectedLabelKey('')}
       content={
         <div className={css.keysListCtn}>
           {labelKeysData.fetching ? (
@@ -194,27 +210,25 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
                 }}
                 content={
                   <div className={css.valuesListCtn}>
-                    {labelKeyValuesData.fetching ? (
+                    {page === 1 && labelKeyValuesData.fetching ? (
                       <LoadingSpinner />
-                    ) : !labelKeyValues?.length ? (
+                    ) : !valuesList?.length ? (
                       <Text>{getString('common.filters.noResultsFound')}</Text>
                     ) : (
                       <Virtuoso
                         style={{ height: 300 }}
-                        data={labelKeyValues}
+                        data={valuesList}
                         overscan={{ main: 20, reverse: 20 }}
                         endReached={onEndReaded}
                         itemContent={
                           /* istanbul ignore next */ (_, value) => {
-                            const isChecked = labelFilters?.some(label =>
-                              label.idFilter?.values?.includes(String(value))
-                            )
+                            const isChecked = labelFilters?.some(label => label.idFilter?.values?.includes(value))
 
                             return (
                               <Container className={css.listValCtn}>
                                 <Checkbox
                                   checked={isChecked}
-                                  onClick={() => handleCheckboxClick(String(key), String(value))}
+                                  onClick={() => handleCheckboxClick(String(key), value)}
                                   labelElement={
                                     <Text lineClamp={1} color={Color.BLACK} tooltipProps={{ openOnTargetFocus: false }}>
                                       {value}
@@ -225,12 +239,19 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
                             )
                           }
                         }
+                        components={{
+                          Footer: () =>
+                            labelKeyValuesData.fetching && fetchMoreValues ? <LoadingSpinner size={18} /> : null
+                        }}
                       />
                     )}
                   </div>
                 }
               >
-                <Container className={css.listItemCtn} onClick={() => setSelectedLabelKey(String(key))}>
+                <Container
+                  className={cx(css.listItemCtn, { [css.listItemSelected]: key === selectedLabelKey })}
+                  onClick={() => setSelectedLabelKey(String(key))}
+                >
                   <Text lineClamp={1} color={Color.BLACK} tooltipProps={{ openOnTargetFocus: false }}>
                     {key}
                   </Text>
@@ -254,6 +275,6 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
 
 export default LabelFilterDropdown
 
-const LoadingSpinner: React.FC = () => (
-  <Icon name="spinner" size={24} padding={'small'} color={Color.BLUE_500} className={css.spinner} />
+const LoadingSpinner: React.FC<{ size?: number }> = ({ size = 24 }) => (
+  <Icon name="spinner" size={size} padding={'small'} color={Color.BLUE_500} className={css.spinner} />
 )

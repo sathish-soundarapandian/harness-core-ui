@@ -17,6 +17,7 @@ declare const styles: {
   readonly label: string
   readonly labelInput: string
   readonly listItemCtn: string
+  readonly listItemSelected: string
   readonly listValCtn: string
   readonly menuItem: string
   readonly popoverContainer: string
