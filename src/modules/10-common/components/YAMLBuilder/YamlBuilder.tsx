@@ -1040,15 +1040,17 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const currentPipelineJSON = parse(currentYaml)
           const existingSteps = findAllValuesForJSONPath(currentPipelineJSON, yamlStepToBeInsertedAt) as unknown[]
           let updatedSteps = existingSteps.slice(0) as unknown[]
-          const stepToInsert = wrapPlugInputInAStep(omit(pluginInput, 'shouldInsertYAML'))
+          const sanitizedStepToInsert = omit(pluginInput, 'shouldInsertYAML')
+          const finalStepToInsert = wrapPlugInputInAStep(sanitizedStepToInsert)
           if (Array.isArray(existingSteps) && existingSteps.length > 1) {
-            updatedSteps.unshift(stepToInsert)
+            updatedSteps.unshift(finalStepToInsert)
           } else {
-            updatedSteps = [stepToInsert]
+            updatedSteps = [finalStepToInsert]
           }
           const updatedPipelineJSON = set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps)
           setCurrentYaml(yamlStringify(updatedPipelineJSON))
-          detectYAMLInsertion(Object.keys(pluginInput).length, closestIndex)
+          // +2 added for key "step" and "spec"
+          detectYAMLInsertion(Object.keys(sanitizedStepToInsert).length + 2, closestIndex)
         } catch (e) {
           // ignore error
         }
