@@ -19,7 +19,7 @@ export const ConnectorSecretScope: { [scope: string]: string } = {
 }
 
 export enum ModalViewFor {
-  CD_Onboarding = 1
+  CD_Onboarding = 4
 }
 
 export const shouldHideHeaderAndNavBtns = (context: number | undefined): boolean =>

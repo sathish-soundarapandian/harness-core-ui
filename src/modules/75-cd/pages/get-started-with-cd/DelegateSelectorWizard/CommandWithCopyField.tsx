@@ -6,27 +6,17 @@
  */
 
 import React from 'react'
-import { Container, CopyToClipboard, Layout, Text } from '@harness/uicore'
+import { Container, CopyToClipboard, Text } from '@harness/uicore'
+import { StringKeys, useStrings } from 'framework/strings'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 
-function CommandWithCopyField({ label = '' }): JSX.Element {
+function CommandWithCopyField({ label }: { label: StringKeys }): JSX.Element {
+  const { getString } = useStrings()
   return (
-    <Layout.Horizontal flex={{ alignItems: 'center' }} padding={0}>
-      <Container
-        intent="primary"
-        font={{
-          align: 'center'
-        }}
-        flex
-        className={css.verificationField}
-        width={'80%'}
-      >
-        <Text style={{ marginRight: 'var(--spacing-xlarge)', paddingLeft: '5px' }} font="small">
-          {label}
-        </Text>
-        <CopyToClipboard content={label.slice(2)} showFeedback />
-      </Container>
-    </Layout.Horizontal>
+    <Container intent="primary" padding="small" flex className={css.copyCommandContainer}>
+      <Text style={{ marginRight: '24px' }}>{getString(label)}</Text>
+      <CopyToClipboard content={getString(label)} />
+    </Container>
   )
 }
 

@@ -17,6 +17,7 @@ declare const styles: {
   readonly checkItemsWrapper: string
   readonly collapseDiv: string
   readonly containerPadding: string
+  readonly copyCommandContainer: string
   readonly createPipelineBtn: string
   readonly cursor: string
   readonly danger: string

@@ -22,14 +22,14 @@ export const AzureK8sService = (): JSX.Element => {
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.kubectl')}
         </Text>
-        <CommandWithCopyField label={`$ ${getString('cd.azureCliCmd')}`} />
+        <CommandWithCopyField label={'cd.azureCliCmd'} />
       </li>
       <li>
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.clusterVerify')}
         </Text>
-        <CommandWithCopyField label={`$ ${getString('cd.azureCmd')}`} />
-        <CommandWithCopyField label={`$ ${getString('cd.kubectlNodes')}`} />
+        <CommandWithCopyField label={'cd.azureCmd'} />
+        <CommandWithCopyField label={'cd.kubectlNodes'} />
       </li>
     </ol>
   )

@@ -19,15 +19,15 @@ export const Minikube = (): JSX.Element => {
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.miniKube')}
         </Text>
-        <CommandWithCopyField label={`$ ${getString('cd.miniKubeCmd1')}`} />
-        <CommandWithCopyField label={`$ ${getString('cd.miniKubeCmd2')}`} />
-        <CommandWithCopyField label={`$ ${getString('cd.miniKubeCmd3')}`} />
+        <CommandWithCopyField label={'cd.miniKubeCmd1'} />
+        <CommandWithCopyField label={'cd.miniKubeCmd2'} />
+        <CommandWithCopyField label={'cd.miniKubeCmd3'} />
       </li>
       <li>
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.clusterVerify')}
         </Text>
-        <CommandWithCopyField label={`$ ${getString('cd.miniKubeCmd4')}`} />
+        <CommandWithCopyField label={'cd.miniKubeCmd4'} />
       </li>
     </ol>
   )

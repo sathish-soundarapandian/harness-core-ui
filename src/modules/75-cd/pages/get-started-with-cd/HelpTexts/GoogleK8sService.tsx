@@ -22,21 +22,22 @@ export const GoogleK8sService = (): JSX.Element => {
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.kubectl')}
         </Text>
-        <CommandWithCopyField label={`$ ${getString('cd.kubectlCommand')}`} />
+
+        <CommandWithCopyField label={'cd.kubectlCommand'} />
       </li>
       <li>
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.oauthPlugin')}
         </Text>
-        <CommandWithCopyField label={`$ ${getString('cd.oauthPluginCmd')}`} />
-        <CommandWithCopyField label={`$ ${getString('cd.pluginVersion')}`} />
+        <CommandWithCopyField label={'cd.oauthPluginCmd'} />
+        <CommandWithCopyField label={'cd.pluginVersion'} />
       </li>
       <li>
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.clusterVerify')}
         </Text>
-        <CommandWithCopyField label={`$ ${getString('cd.gcloudClusterCmd')}`} />
-        <CommandWithCopyField label={`$ ${getString('cd.kubectlNamespace')}`} />
+        <CommandWithCopyField label={'cd.gcloudClusterCmd'} />
+        <CommandWithCopyField label={'cd.kubectlNamespace'} />
       </li>
     </ol>
   )

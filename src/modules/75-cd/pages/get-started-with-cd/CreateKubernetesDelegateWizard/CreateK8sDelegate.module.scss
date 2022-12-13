@@ -304,3 +304,9 @@
 .cursor {
   cursor: pointer;
 }
+.copyCommandContainer {
+  box-shadow: 0px 0px 5px rgba(40, 41, 61, 0.0348285);
+  background: #effbff !important;
+  border-radius: 4px !important;
+  margin-bottom: var(--spacing-small) !important;
+}

@@ -22,8 +22,8 @@ export const AmazonElasticK8sService = (): JSX.Element => {
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.clusterVerify')}
         </Text>
-        <CommandWithCopyField label={`$ ${getString('cd.amazonElasticCmd')}`} />
-        <CommandWithCopyField label={`$ ${getString('cd.kubectlNamespace')}`} />
+        <CommandWithCopyField label={'cd.amazonElasticCmd'} />
+        <CommandWithCopyField label={'cd.kubectlNamespace'} />
       </li>
     </ol>
   )
