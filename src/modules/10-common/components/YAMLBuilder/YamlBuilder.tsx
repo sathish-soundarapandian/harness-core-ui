@@ -174,7 +174,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const editorVersionRef = useRef<number>()
   const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
   const [schemaValidationErrors, setSchemaValidationErrors] = useState<Diagnostic[]>()
-  const [currentCursorPosition, setCurrentCursorPosition] = useState<Position>()
+  const currentCursorPosition = useRef<Position>()
   const codeLensPositionMarkers = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
   const [pluginValuesSelected, setPluginValuesSelected] = useState<Record<string, any>>()
 
@@ -328,7 +328,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const autoCompleteYAML = useCallback((): void => {
     const editor = editorRef.current?.editor
     if (editor) {
-      const { lineNumber, column } = currentCursorPosition || {}
+      const { lineNumber, column } = currentCursorPosition.current || {}
       if (lineNumber && column) {
         const editorContent = editor.getModel()?.getValue() || ''
         const contextKey = editorContent.replace('\n', '')
@@ -362,7 +362,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         }
       }
     }
-  }, [currentCursorPosition, editorRef.current?.editor])
+  }, [currentCursorPosition.current, editorRef.current?.editor])
 
   const showNoPermissionError = useCallback(
     throttle(() => {
@@ -405,7 +405,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
     editor.onKeyDown((event: IKeyboardEvent) => handleEditorKeyDownEvent(event, editor))
     editor.onDidChangeCursorPosition((event: editor.ICursorPositionChangedEvent) => {
-      setCurrentCursorPosition(event.position)
+      currentCursorPosition.current = event.position
     })
   }
 
@@ -896,7 +896,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const detectYAMLInsertion = useCallback(
     (noOflinesInserted: number, closestStageIndexForYAMLInsertion): void => {
       const editor = editorRef.current?.editor
-      if (editor && currentCursorPosition) {
+      if (editor && currentCursorPosition.current) {
         const position =
           findPositionsForMatchingKeys(editor, 'steps')[closestStageIndexForYAMLInsertion] || ({} as Position)
         const endingLineForCursorPosition = position.lineNumber + (noOflinesInserted ? noOflinesInserted : 0)
@@ -914,7 +914,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         editor.focus()
       }
     },
-    [currentCursorPosition, editorRef.current?.editor]
+    [currentCursorPosition.current, editorRef.current?.editor]
   )
 
   const getSelectionRangeOnSettingsBtnClick = useCallback((cursorPosition: Position, latestYAML: string): number => {
@@ -1015,9 +1015,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const insertPluginIntoExistingYAML = useCallback(
     (pluginInput: Record<string, any>): void => {
-      if (!isEmpty(pluginInput) && pluginInput.shouldInsertYAML && currentCursorPosition) {
+      if (!isEmpty(pluginInput) && pluginInput.shouldInsertYAML && currentCursorPosition.current) {
         try {
-          const closestIndex = getClosestIndexToSearchToken(currentCursorPosition, 'stage:')
+          const closestIndex = getClosestIndexToSearchToken(currentCursorPosition.current, 'stage:')
           const yamlStepToBeInsertedAt = getStageYAMLPathForStageIndex(closestIndex)
           const currentPipelineJSON = parse(currentYaml)
           const existingSteps = findAllValuesForJSONPath(currentPipelineJSON, yamlStepToBeInsertedAt) as unknown[]
@@ -1038,7 +1038,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         }
       }
     },
-    [currentCursorPosition]
+    [currentCursorPosition, currentYaml]
   )
 
   return (
