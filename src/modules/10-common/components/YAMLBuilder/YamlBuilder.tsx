@@ -828,7 +828,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const commandId = editorRef.current?.editor?.addCommand(
         0,
         () => {
-          const numberOfLinesInSelection = getSelectionRangeOnClickOfSettingsBtn(cursorPosition)
+          const numberOfLinesInSelection = getSelectionRangeOnSettingsBtnClick(cursorPosition)
           if (numberOfLinesInSelection) {
             highlightInsertedText(fromLine, toLineNum + numberOfLinesInSelection + 1)
           }
@@ -863,20 +863,41 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   )
 
   const getClosestIndexToSearchToken = useCallback(
-    (sourcePosition: Position, searchToken: string, limitToFirstNResults?: number): number => {
+    (
+      sourcePosition: Position,
+      searchToken: string,
+      startIdxForLookup?: number,
+      noOfResultsToBeIncludedInLookup?: number
+    ): number => {
       const editor = editorRef.current?.editor
       if (editor) {
         const { lineNumber: currentCursorLineNum } = sourcePosition || {}
         if (currentCursorLineNum) {
           const allMatchesFound = findPositionsForMatchingKeys(editor, searchToken)
-          const matchesFound = (
-            limitToFirstNResults ? allMatchesFound.slice(0, limitToFirstNResults) : allMatchesFound
-          ).map((position: Position) => position.lineNumber)
-          const closestPosition = matchesFound.reduce(function (prev, curr) {
-            return Math.abs(curr - currentCursorLineNum) < Math.abs(prev - currentCursorLineNum) ? curr : prev
-          })
-          console.log(matchesFound.indexOf(closestPosition))
-          return matchesFound.indexOf(closestPosition)
+          const relevantMatches = (
+            startIdxForLookup && noOfResultsToBeIncludedInLookup
+              ? allMatchesFound.slice(startIdxForLookup, noOfResultsToBeIncludedInLookup)
+              : allMatchesFound
+          )
+            .map((position: Position) => position.lineNumber)
+            ?.sort(function (location1, location2) {
+              return location1 - location2
+            })
+          let closestPosition = -1
+          for (let matchItr = 0; matchItr < relevantMatches.length; matchItr++) {
+            if (matchItr === relevantMatches.length - 1 && currentCursorLineNum >= relevantMatches[matchItr]) {
+              closestPosition = matchItr
+              break
+            } else if (
+              currentCursorLineNum < relevantMatches[matchItr] ||
+              (currentCursorLineNum >= relevantMatches[matchItr] &&
+                currentCursorLineNum < relevantMatches[matchItr + 1])
+            ) {
+              closestPosition = matchItr
+              break
+            }
+          }
+          return closestPosition
         }
       }
       return 0
@@ -915,24 +936,48 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [currentCursorPosition, editorRef.current?.editor]
   )
 
-  const getSelectionRangeOnClickOfSettingsBtn = useCallback(
+  const getSelectionRangeOnSettingsBtnClick = useCallback(
     (cursorPosition: Position): number => {
       if (cursorPosition) {
         try {
           const currentYAMLAsJSON = parse(currentYaml)
           const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
-          const stageForTheFoundIndex = findAllValuesForJSONPath(
+          const stageStepsForTheClosestIndex = findAllValuesForJSONPath(
             currentYAMLAsJSON,
             getStageYAMLPathForStageIndex(closestStageIndex)
           ) as unknown[]
-          if (Array.isArray(stageForTheFoundIndex)) {
-            const closestStepIndex = getClosestIndexToSearchToken(cursorPosition, 'step:', stageForTheFoundIndex.length)
-            const stepYAMLPath = `${getStageYAMLPathForStageIndex(closestStageIndex)}.${closestStepIndex}.step`
-            const stepValuesObj = get(get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>, 'spec')
-            setPluginValuesSelected(stepValuesObj)
-            const stepValueTokens = yamlStringify(stepValuesObj).split('\n').length
-            return stepValueTokens > 0 ? stepValueTokens - 1 : 0
+          const stageStepsForThePrecedingIndex =
+            closestStageIndex > 0
+              ? (findAllValuesForJSONPath(
+                  currentYAMLAsJSON,
+                  getStageYAMLPathForStageIndex(closestStageIndex - 1)
+                ) as unknown[])
+              : {}
+          let closestStepIndex = 0
+          if (Array.isArray(stageStepsForThePrecedingIndex)) {
+            const stageStepsCountForThePrecedingIndex = (stageStepsForThePrecedingIndex as unknown[]).length
+            closestStepIndex = getClosestIndexToSearchToken(
+              cursorPosition,
+              'step:',
+              stageStepsCountForThePrecedingIndex,
+              stageStepsCountForThePrecedingIndex + stageStepsForTheClosestIndex.length
+            )
+          } else {
+            closestStepIndex = getClosestIndexToSearchToken(
+              cursorPosition,
+              'step:',
+              0,
+              stageStepsForTheClosestIndex.length
+            )
           }
+          if (closestStepIndex === -1) {
+            return 0
+          }
+          const stepYAMLPath = `${getStageYAMLPathForStageIndex(closestStageIndex)}.${closestStepIndex}.step`
+          const stepValuesObj = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
+          setPluginValuesSelected(get(stepValuesObj, 'spec'))
+          const stepValueTokens = yamlStringify(stepValuesObj).split('\n').length
+          return stepValueTokens > 0 ? stepValueTokens - 1 : 0
         } catch (e) {
           // ignore error
         }
