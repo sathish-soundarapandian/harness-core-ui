@@ -625,7 +625,9 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
         pipeline,
         templateQueryParams,
         storeMetadata,
-        supportingTemplatesGitx
+        supportingTemplatesGitx,
+        isPipelineGitCacheEnabled,
+        loadFromCache
       )
       const { resolvedCustomDeploymentDetailsByRef } = await getResolvedCustomDeploymentDetailsMap(
         pipeline,
