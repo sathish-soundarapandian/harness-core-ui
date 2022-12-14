@@ -1065,7 +1065,7 @@ export interface StringsMap {
   'common.warning': string
   'common.webhookURL': string
   'common.welcome': string
-  'common.whoIsActiveService': string
+  'common.whatIsActiveService': string
   'common.whose': string
   'common.with': string
   'common.without': string

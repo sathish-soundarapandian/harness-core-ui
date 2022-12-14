@@ -8,22 +8,28 @@
 import React from 'react'
 import type { Column } from 'react-table'
 import cx from 'classnames'
-import { Text, TableV2, Icon, Layout, Card, Heading, Button } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
-import { useHistory, useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash-es'
+import { Text, TableV2, Layout, Card, Heading, Button } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
-import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
-import routes from '@common/RouteDefinitions'
-import type { PipelineListPagePathParams, SortBy } from '../../../../70-pipeline/pages/pipeline-list/types'
-import { LastModifiedCell } from './ServiceLicenseTableCells'
-import { getRouteProps } from '../../../../70-pipeline/pages/pipeline-list/PipelineListUtils'
-
+import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
+import type { SortBy } from '../../../../70-pipeline/pages/pipeline-list/types'
+import {
+  LastModifiedNameCell,
+  OrganizationCell,
+  ProjectCell,
+  LastModifiedServiceIdCell,
+  ServiceInstancesCell,
+  LastDeployedCell,
+  LicenseConsumedCell
+} from './ServiceLicenseTableCells'
+import type { ResponsePageLicenseUsageDTO, PageLicenseUsageDTO, LicenseUsageDTO } from 'services/cd-ng'
 import css from '../../../../70-pipeline/pages/pipeline-list/PipelineListTable/PipelineListTable.module.scss'
 import pageCss from '../SubscriptionsPage.module.scss'
+import moment from 'moment'
 
 export interface ServiceLicenseTableProps {
-  data?: PagePMSPipelineSummaryResponse
+  data: PageLicenseUsageDTO
   gotoPage: (pageNumber: number) => void
   setSortBy: (sortBy: string[]) => void
   sortBy: string[]
@@ -35,13 +41,11 @@ export function ServiceLicenseTable({
   sortBy,
   setSortBy
 }: ServiceLicenseTableProps): React.ReactElement {
-  const history = useHistory()
   const { getString } = useStrings()
-  const pathParams = useParams<PipelineListPagePathParams>()
-  const { content = [], totalElements = 100, totalPages = 0, number = DEFAULT_PAGE_INDEX, size = 10 } = data
+  const { content = [], totalElements = 2, totalPages = 2, number = DEFAULT_PAGE_INDEX, size = 1 } = data
   const [currentSort, currentOrder] = sortBy
 
-  const columns: Column<PMSPipelineSummaryResponse>[] = React.useMemo(() => {
+  const columns: Column<LicenseUsageDTO>[] = React.useMemo(() => {
     const getServerSortProps = (id: string) => {
       return {
         enableServerSort: true,
@@ -57,100 +61,96 @@ export function ServiceLicenseTable({
         Header: getString('common.service'),
         accessor: 'name',
         width: '16%',
-        Cell: LastModifiedCell,
-        serverSortProps: getServerSortProps('name')
+        Cell: LastModifiedNameCell
       },
       {
         Header: getString('common.organizations'),
         accessor: 'storeType',
         width: '16%',
-        disableSortBy: true,
-        Cell: LastModifiedCell
+        Cell: OrganizationCell
       },
       {
         Header: getString('common.projects'),
         accessor: 'storeType1',
         width: '16%',
-        disableSortBy: true,
-        Cell: LastModifiedCell
+        Cell: ProjectCell
       },
       {
         Header: getString('common.serviceId'),
         accessor: 'executionSummaryInfo.lastExecutionTs',
-        width: '16%',
-        Cell: LastModifiedCell,
-        serverSortProps: getServerSortProps('executionSummaryInfo.lastExecutionTs')
+        width: '10%',
+        Cell: LastModifiedServiceIdCell
       },
       {
         Header: getString('common.servicesInstances'),
-        accessor: 'executionSummaryInfo.lastExecutionTs3',
-        width: '10%',
-        Cell: LastModifiedCell,
-        serverSortProps: getServerSortProps('executionSummaryInfo.lastExecutionTs')
+        accessor: 'servicesInstances',
+        width: '15%',
+        Cell: ServiceInstancesCell,
+        serverSortProps: getServerSortProps('common.servicesInstances')
       },
       {
         Header: getString('common.lastDeployed'),
-        accessor: 'executionSummaryInfo.lastExecutionTs2',
+        accessor: 'lastDeployed',
         width: '16%',
-        Cell: LastModifiedCell,
-        serverSortProps: getServerSortProps('executionSummaryInfo.lastExecutionTs')
+        Cell: LastDeployedCell,
+        serverSortProps: getServerSortProps('common.lastDeployed')
       },
       {
         Header: getString('common.licensesConsumed'),
-        accessor: 'lastUpdatedAt',
+        accessor: 'licensesConsumed',
         width: '10%',
-        Cell: LastModifiedCell,
-        serverSortProps: getServerSortProps('lastUpdatedAt')
+        Cell: LicenseConsumedCell,
+        serverSortProps: getServerSortProps('licensesConsumed')
       }
-    ] as unknown as Column<PMSPipelineSummaryResponse>[]
+    ] as unknown as Column<LicenseUsageDTO>[]
   }, [currentOrder, currentSort])
-
+  const activeServiceText = `${content.length}`
+  const timeValue = moment(content[0]?.timestamp).format('DD-MM-YYYY h:mm:ss')
   return (
     <Card className={pageCss.outterCard}>
-      <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
-        <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
-          <Layout.Vertical>
-            <Heading color={Color.BLACK} font={{ size: 'medium' }}>
-              {getString('common.activeServices')}
-            </Heading>
-            <p className={pageCss.activeServiceLink}>{getString('common.whoIsActiveService')}</p>
-          </Layout.Vertical>
-          <Button intent="primary" onClick={() => console.log('hello')}>
-            {getString('common.downloadCSV')}
-          </Button>
-        </Layout.Horizontal>
-        <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
-          <Layout.Vertical className={pageCss.badgesContainer}>
-            <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
-              <Text className={pageCss.badgeText}>
-                <String stringID={'pipeline.dashboardDeploymentsWidget.runningPipeline.singular'} />
-              </Text>
-            </div>
-          </Layout.Vertical>
+      {isEmpty(data) ? (
+        <p>No active ServiceFound</p>
+      ) : (
+        <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
           <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
-            <p>Filter</p>
+            <Layout.Vertical>
+              <Heading color={Color.BLACK} font={{ size: 'medium' }}>
+                {getString('common.activeServices')}
+              </Heading>
+              <p className={pageCss.activeServiceLink}>{getString('common.whatIsActiveService')}</p>
+            </Layout.Vertical>
+            {/* <Button intent="primary" onClick={() => console.log('hello')}>
+              {getString('common.downloadCSV')}
+            </Button> */}
           </Layout.Horizontal>
-        </Layout.Horizontal>
-        <TableV2
-          className={css.table}
-          columns={columns}
-          data={content}
-          pagination={
-            totalElements > size
-              ? {
-                  itemCount: totalElements,
-                  pageSize: size,
-                  pageCount: totalPages,
-                  pageIndex: number,
-                  gotoPage
-                }
-              : undefined
-          }
-          sortable
-          getRowClassName={() => css.tableRow}
-          onRowClick={rowDetails => history.push(routes.toPipelineStudio(getRouteProps(pathParams, rowDetails)))}
-        />
-      </Layout.Vertical>
+          <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
+            <Layout.Vertical className={pageCss.badgesContainer}>
+              <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
+                <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
+                <String stringID={'common.activeServices'} />
+                <Text className={pageCss.badgeText}>{timeValue}</Text>
+              </div>
+            </Layout.Vertical>
+          </Layout.Horizontal>
+          <TableV2
+            className={css.table}
+            columns={columns}
+            data={content}
+            pagination={
+              totalElements > size
+                ? {
+                    itemCount: totalElements,
+                    pageSize: size,
+                    pageCount: totalPages,
+                    pageIndex: number,
+                    gotoPage
+                  }
+                : undefined
+            }
+            sortable
+          />
+        </Layout.Vertical>
+      )}
     </Card>
   )
 }
