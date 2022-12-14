@@ -885,11 +885,13 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
 interface GetExecutionStageDiagramListenersParams {
   onMouseEnter: ({ data, event }: { data: any; event: any }) => void
   allNodeMap?: any
+  allChildNodeMap?: any
   onMouseLeave: () => void
   onStepSelect: (id: string, parentStageId?: string, stageExecId?: string) => void
 }
 export const getExecutionStageDiagramListeners = ({
   allNodeMap,
+  allChildNodeMap,
   onMouseEnter,
   onMouseLeave,
   onStepSelect
@@ -905,7 +907,7 @@ export const getExecutionStageDiagramListeners = ({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [Event.MouseEnterNode]: (event: any) => {
       const nodeID = defaultTo(event?.data?.nodeExecutionId, event?.data?.id)
-      const stageData = allNodeMap[nodeID]
+      const stageData = allNodeMap[nodeID] ?? allChildNodeMap[nodeID]
       const target = document.querySelector(`[data-nodeid="${event?.data?.id}"]`)
       if (stageData) {
         onMouseEnter({ data: { ...stageData, ...getNodeConditions(stageData) }, event: { ...event, target } })

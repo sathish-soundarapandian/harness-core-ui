@@ -9,7 +9,7 @@ import * as React from 'react'
 import cx from 'classnames'
 import { Icon, Layout, Text, Button, ButtonVariation, useToaster } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
+import { debounce, defaultTo, get, isEmpty, isUndefined } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
@@ -38,7 +38,7 @@ import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
 export function StepGroupNode(props: any): JSX.Element {
   const { replaceQueryParams } = useUpdateQueryParams<ExecutionPageQueryParams>()
-  const { queryParams } = useExecutionContext()
+  const { queryParams, selectedStageId } = useExecutionContext()
   const allowAdd = defaultTo(props.allowAdd, false)
   const { getString } = useStrings()
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
@@ -64,11 +64,20 @@ export function StepGroupNode(props: any): JSX.Element {
   )
 
   React.useEffect(() => {
-    if (props?.type === 'Pipeline') {
-      if (isExecutionRunning(props?.status)) setNodeCollapsed(false)
-      else setNodeCollapsed(true)
+    if (
+      props?.type === 'Pipeline' &&
+      isExecutionRunning(props?.status) &&
+      childPipelineData &&
+      childPipelineData?.length > 0
+    ) {
+      setNodeCollapsed(false)
     }
-  }, [props?.status])
+  }, [props?.status, childPipelineData])
+
+  React.useEffect(() => {
+    if (props?.type === 'Pipeline' && !isExecutionRunning(props?.status) && props?.id !== selectedStageId)
+      setNodeCollapsed(true)
+  }, [props?.status, selectedStageId])
 
   React.useEffect(() => {
     if (props?.childPipelineData?.length) setChildPipelineData(props?.childPipelineData)
@@ -110,17 +119,14 @@ export function StepGroupNode(props: any): JSX.Element {
               showPrimary(getString('pipeline.execution.emptyStepGroup'))
             }
             if (props?.type === 'Pipeline') {
-              if (
-                isExecutionNotStarted(props?.status) ||
-                isExecutionSkipped(props?.status) ||
-                isExecutionRunning(props?.status)
-              )
-                return
+              if (isExecutionNotStarted(props?.status) || isExecutionSkipped(props?.status)) return
               const params = {
                 ...queryParams,
-                stage: props?.id
+                stage: props?.id,
+                ...(childPipelineData && childPipelineData.length > 0 && { childStage: childPipelineData[0]?.id })
               }
-              delete params?.childStage
+              delete params?.step
+              if (isUndefined(childPipelineData) || isEmpty(childPipelineData)) delete params?.childStage
               replaceQueryParams(params)
             }
             setNodeCollapsed(false)

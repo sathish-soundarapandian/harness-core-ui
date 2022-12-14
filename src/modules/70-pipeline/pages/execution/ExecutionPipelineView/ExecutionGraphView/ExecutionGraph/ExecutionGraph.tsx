@@ -126,6 +126,7 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
     diagram.registerListeners(
       getExecutionStageDiagramListeners({
         allNodeMap: pipelineExecutionDetail?.pipelineExecutionSummary?.layoutNodeMap,
+        allChildNodeMap: pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary?.layoutNodeMap,
         onMouseLeave: () => {
           dynamicPopoverHandler?.hide()
           setStageSetupIdId('')
@@ -135,7 +136,11 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
           props.onSelectedStage(id, parentStageId, stageExecId)
       })
     )
-  }, [pipelineExecutionDetail?.pipelineExecutionSummary?.layoutNodeMap, dynamicPopoverHandler])
+  }, [
+    pipelineExecutionDetail?.pipelineExecutionSummary?.layoutNodeMap,
+    dynamicPopoverHandler,
+    pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary?.layoutNodeMap
+  ])
 
   React.useEffect(() => {
     if (stageSetupId) {
