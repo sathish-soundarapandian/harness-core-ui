@@ -35,6 +35,7 @@ import type { TooltipContext } from 'framework/tooltip/TooltipContext'
 // enums
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { CardVariant } from '@pipeline/utils/constants'
 
 // MFE prop types
 import type { GitOpsCustomMicroFrontendProps } from '@cd/interfaces/GitOps.types'
@@ -44,6 +45,11 @@ import type { TIUIAppCustomProps } from '@pipeline/pages/execution/ExecutionTest
 import type { ChaosCustomMicroFrontendProps } from '@chaos/interfaces/Chaos.types'
 import type { FFCustomMicroFrontendProps } from '@cf/FFCustomMicroFrontendProps.types'
 import type { getLocationPathName } from 'framework/utils/WindowLocation'
+
+// Service types
+export * as cdNg from 'services/cd-ng'
+export * as ci from 'services/ci'
+export * as pipelineNg from 'services/pipeline-ng'
 
 export interface Scope {
   accountId?: string
@@ -113,5 +119,6 @@ export {
   CCMUIAppCustomProps,
   TIUIAppCustomProps,
   ChaosCustomMicroFrontendProps,
-  FFCustomMicroFrontendProps
+  FFCustomMicroFrontendProps,
+  CardVariant
 }
