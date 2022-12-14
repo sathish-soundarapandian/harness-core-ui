@@ -464,7 +464,7 @@ export function AmazonMachineImage(
   })
 
   const handleValidate = (formData: AmazonMachineImageInitialValuesType) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData?.(
         {
           ...formData

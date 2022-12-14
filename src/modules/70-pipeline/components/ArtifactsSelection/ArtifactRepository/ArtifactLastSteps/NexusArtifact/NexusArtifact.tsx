@@ -467,7 +467,7 @@ export function Nexus3Artifact({
                   items={getAzureNexusRepoOptions(
                     selectedDeploymentType,
                     AZURE_WEB_APP_NG_NEXUS_PACKAGE,
-                    isTemplateContext
+                    hideHeaderAndNavBtns
                   )}
                   onChange={value => {
                     if (value.value === RepositoryFormatTypes.Maven) {

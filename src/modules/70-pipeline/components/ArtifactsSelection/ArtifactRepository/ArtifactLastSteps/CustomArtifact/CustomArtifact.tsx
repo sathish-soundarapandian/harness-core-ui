@@ -711,7 +711,7 @@ export function CustomArtifact(
   }
 
   const handleValidate = (formData: CustomArtifactSource) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData?.({ ...formData })
     }
   }
