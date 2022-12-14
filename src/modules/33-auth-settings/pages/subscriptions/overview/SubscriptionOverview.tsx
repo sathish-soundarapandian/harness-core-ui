@@ -5,27 +5,31 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useMemo } from 'react'
 
-import { Layout, shouldShowError } from '@harness/uicore'
+import { Layout } from '@harness/uicore'
 import type { ModuleName } from 'framework/types/ModuleName'
 
 import type { ModuleLicenseDTO } from 'services/cd-ng'
+import { useLisCDActiveServices, LisCDActiveServicesQueryParams } from 'services/cd-ng'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import SubscriptionDetailsCard from './SubscriptionDetailsCard'
 import SubscriptionUsageCard from './SubscriptionUsageCard'
 import { ServiceLicenseTable } from './ServiceLicenseTable'
-
 import type { TrialInformation } from '../SubscriptionsPage'
-import type { PipelineListPageQueryParams, PipelineListPagePathParams } from '@pipeline/pages/pipeline-list/types'
-import { useUpdateQueryParams, useQueryParams } from '@common/hooks'
-import { PagePMSPipelineSummaryResponse, PipelineFilterProperties, useGetPipelineList } from 'services/pipeline-ng'
+import { useUpdateQueryParams, useQueryParams, useMutateAsGet } from '@common/hooks'
 import { usePreferenceStore, PreferenceScope } from 'framework/PreferenceStore/PreferenceStoreContext'
-import { queryParamOptions, ProcessedPipelineListPageQueryParams } from '@pipeline/pages/pipeline-list/PipelineListPage'
-import { showError } from '@cf/pages/pipeline-studio/views/StageOverview/__tests__/StageOverviewTestHelper'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+
+// import { showError } from '@cf/pages/pipeline-studio/views/StageOverview/__tests__/StageOverviewTestHelper'
+// import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useParams } from 'react-router'
+// import type { PartiallyRequired } from '@pipeline/utils/types'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import type { PartiallyRequired } from '@pipeline/utils/types'
+import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
+import { DEFAULT_ACTIVE_SERVICE_LIST_TABLE_SORT } from './Constants'
 interface SubscriptionOverviewProps {
   accountName?: string
   licenseData?: ModuleLicenseDTO
@@ -33,63 +37,116 @@ interface SubscriptionOverviewProps {
   trialInformation: TrialInformation
   refetchGetLicense?: () => void
 }
+type ProcessedActiveServiceListPageQueryParams = PartiallyRequired<
+  LisCDActiveServicesQueryParams,
+  'page' | 'size' | 'sort'
+>
+const queryParamOptions = {
+  parseArrays: true,
+  decoder: queryParamDecodeAll(),
+  processQueryParams(params: LisCDActiveServicesQueryParams): ProcessedActiveServiceListPageQueryParams {
+    return {
+      ...params,
+      page: params.page ?? DEFAULT_PAGE_INDEX,
+      size: params.size ?? DEFAULT_PAGE_SIZE,
+      sort: params.sort ?? DEFAULT_ACTIVE_SERVICE_LIST_TABLE_SORT
+    }
+  }
+}
 
 const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
   const { accountName, licenseData, module, trialInformation, refetchGetLicense } = props
   const enabled = useFeatureFlag(FeatureFlag.VIEW_USAGE_ENABLED)
-  const [activeServiceLicenseList, setActiveServiceLicenseList] = useState<PagePMSPipelineSummaryResponse | undefined>()
-  const { updateQueryParams } = useUpdateQueryParams<Partial<PipelineListPageQueryParams>>()
+  const { updateQueryParams } = useUpdateQueryParams<Partial<LisCDActiveServicesQueryParams>>()
   const { preference: sortingPreference, setPreference: setSortingPreference } = usePreferenceStore<string | undefined>(
     PreferenceScope.USER,
     'PipelineSortingPreference'
   )
-  const pathParams = useParams<PipelineListPagePathParams>()
-  const { projectIdentifier, orgIdentifier, accountId } = pathParams
-  const { getRBACErrorMessage } = useRBACError()
-  const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
-  const sort = sortingPreference ? JSON.parse(sortingPreference) : queryParams.sort
-  const { searchTerm, repoIdentifier, branch, page, size, repoName } = queryParams
+  const { accountId } = useParams<AccountPathProps>()
+  // const { getRBACErrorMessage } = useRBACError()
+  const queryParams = useQueryParams<LisCDActiveServicesQueryParams>(queryParamOptions)
+  const { page, size } = queryParams
 
-  const fetchServiceLicenseTable = useCallback(async () => {
-    // try {
-
-    //   }
-    const filter: PipelineFilterProperties = {
-      filterType: 'ServiceLicenseTable',
-      repoName
-    }
-    const { status, data } = await loadServiceLicenseTable(filter, {
-      queryParams: {
-        accountIdentifier: accountId,
-        projectIdentifier,
-        orgIdentifier,
-        searchTerm,
-        page,
-        sort,
-        size,
-        ...(repoIdentifier &&
-          branch && {
-            repoIdentifier,
-            branch
-          })
-      }
-    })
-    if (status === 'SUCCESS') {
-      setActiveServiceLicenseList(data)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchServiceLicenseTable()
-  }, [fetchServiceLicenseTable])
-
-  const {
-    mutate: loadServiceLicenseTable,
-    error: serviceLicenseListLoadingError,
-    loading: isServiceLicenseListLoading
-  } = useGetPipelineList({
+  const sort = useMemo(
+    () => (sortingPreference ? JSON.parse(sortingPreference) : queryParams.sort),
+    [queryParams.sort, sortingPreference]
+  )
+  const { data: activeServiceList } = useMutateAsGet(useLisCDActiveServices, {
+    body: {
+      orgName: 'all',
+      projectName: 'all',
+      serviceName: 'all'
+    },
+    queryParams: {
+      accountIdentifier: accountId,
+      page,
+      sort,
+      size,
+      timestamp: '12345678'
+    },
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
+
+  const activeServiceList2 = {
+    status: 'SUCCESS',
+    data: {
+      content: [
+        {
+          className: '.cd.ActiveServiceDTO',
+          identifier: 'K8S_Service',
+          name: 'K8S Service',
+          orgName: 'Deleted',
+          projectName: 'Deleted',
+          instanceCount: 1,
+          lastDeployed: 1653423593332,
+          licensesConsumed: 1,
+          accountIdentifier: 'kmpySmUISimoRrJL6NL73w',
+          module: 'Continuous Deployment',
+          timestamp: 1655762159070
+        },
+        {
+          className: '.cd.ActiveServiceDTO',
+          identifier: 'SSHService',
+          name: 'SSHService',
+          orgName: 'Deleted',
+          projectName: 'Deleted',
+          instanceCount: 2,
+          lastDeployed: 1655761784716,
+          licensesConsumed: 1,
+          accountIdentifier: 'kmpySmUISimoRrJL6NL73w',
+          module: 'Continuous Deployment',
+          timestamp: 1655762159070
+        }
+      ],
+      pageable: {
+        sort: {
+          unsorted: false,
+          sorted: true,
+          empty: false
+        },
+        pageSize: 30,
+        pageNumber: 0,
+        offset: 0,
+        paged: true,
+        unpaged: false
+      },
+      last: true,
+      totalElements: 2,
+      totalPages: 1,
+      first: true,
+      numberOfElements: 2,
+      sort: {
+        unsorted: false,
+        sorted: true,
+        empty: false
+      },
+      number: 0,
+      size: 30,
+      empty: false
+    },
+    metaData: null,
+    correlationId: '4859e8a2-2e7f-4f49-9205-052f1ae813f3'
+  }
   return (
     <Layout.Vertical spacing="large" width={'90%'}>
       <SubscriptionDetailsCard
@@ -102,7 +159,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
       {enabled && licenseData && <SubscriptionUsageCard module={module} licenseData={licenseData} />}
       <ServiceLicenseTable
         gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
-        data={pipelineList || []}
+        data={activeServiceList2?.data || []}
         setSortBy={sortArray => {
           setSortingPreference(JSON.stringify(sortArray))
           updateQueryParams({ sort: sortArray })
