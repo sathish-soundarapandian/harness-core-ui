@@ -10,10 +10,10 @@ import { AllowedTypesWithRunTime, Layout, MultiTypeInputType, StepProps, Text } 
 
 import { FontVariation } from '@harness/design-system'
 import produce from 'immer'
-import { get, omit, set } from 'lodash-es'
+import { defaultTo, get, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
-import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, UserRepoResponse } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import K8sValuesManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/K8sValuesManifest/K8sValuesManifest'
@@ -22,7 +22,6 @@ import HelmWithGIT from '@pipeline/components/ManifestSelection/ManifestWizardSt
 import { ModalViewFor } from '@connectors/components/CreateConnector/CreateConnectorUtils'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
 import type { ConfigureServiceInterface } from '../ConfigureService'
-import { getFullRepoName } from '../../DeployProvisioningWizard/Constants'
 
 export type ManifestLastTypeProps = StepProps<ConnectorConfigDTO> &
   ManifestLastStepProps & {
@@ -53,15 +52,14 @@ export const ProvideManifest = (): React.ReactElement => {
 
   const { expressions } = useVariablesExpression()
   const connectorResponse = get(serviceData, 'data.connectorRef') as ConnectorConfigDTO
-  const connectorData = omit(connectorResponse, ['spec.url']) // omitting to not show repoDetails from component
   const scope = 'account'
   const prevStepData = {
     connectorRef: {
-      connector: connectorData,
-      label: connectorData.name,
-      value: `${scope}.${connectorData.identifier}`,
+      connector: connectorResponse,
+      label: connectorResponse.name,
+      value: `${scope}.${connectorResponse.identifier}`,
       scope,
-      live: connectorData?.status?.status === 'SUCCESS'
+      live: connectorResponse?.status?.status === 'SUCCESS'
     },
     selectedManifest: values?.manifestData?.type,
     store: values?.manifestStoreType
@@ -75,7 +73,8 @@ export const ProvideManifest = (): React.ReactElement => {
   const getManifestInitialValues = (): ManifestConfig => {
     const updatedinitialValieWithUserRepo = produce(values?.manifestConfig?.manifest as ManifestConfig, draft => {
       if (draft) {
-        values?.repository && set(draft, 'spec.store.spec.repoName', getFullRepoName(values?.repository))
+        values?.repository && set(draft, 'spec.store.spec.repoName', defaultTo(values?.repository?.name, ''))
+        set(draft, 'spec.store.spec.connectorRef', `${scope}.${connectorResponse.identifier}`)
       }
     })
     return updatedinitialValieWithUserRepo
@@ -95,7 +94,7 @@ export const ProvideManifest = (): React.ReactElement => {
       initialValues: getManifestInitialValues(),
       handleSubmit: (data: ManifestConfigWrapper) => {
         const updatedDataWithUserRepo = produce(data, draft => {
-          set(draft, 'manifest.spec.store.spec.repoName', getFullRepoName(values?.repository as UserRepoResponse))
+          set(draft, 'manifest.spec.store.spec.repoName', defaultTo(values?.repository?.name, ''))
         })
         setFieldValue('manifestConfig', updatedDataWithUserRepo)
       },

@@ -45,16 +45,14 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
       '-'
     )
   }
-  const successsFullConfiguration = React.useCallback((): JSX.Element => {
-    return (
-      <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing="small">
-        <Icon name="success-tick" />
-        <Text font="normal" color={Color.GREEN_700}>
-          {capitalize(getString('success'))}
-        </Text>
-      </Layout.Horizontal>
-    )
-  }, [getString])
+  const successsFullConfiguration = (
+    <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing="small">
+      <Icon name="success-tick" />
+      <Text font="normal" color={Color.GREEN_700}>
+        {capitalize(getString('success'))}
+      </Text>
+    </Layout.Horizontal>
+  )
 
   return (
     <Container className={css.container} width="50%">
@@ -106,7 +104,7 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
                 onClick={() => setSelectedSectionId(DeployProvisiongWizardStepId.DelegateSelector)}
               />
             </Layout.Horizontal>
-            {successsFullConfiguration()}
+            {successsFullConfiguration}
           </Layout.Horizontal>
           <Text style={{ lineHeight: '28px' }} font={{ variation: FontVariation.BODY1 }}>
             {getString('cd.getStartedWithCD.delegateRunAs')}
@@ -166,7 +164,7 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
             onClick={onSuccess}
             intent="success"
             variation={ButtonVariation.PRIMARY}
-            text={'Run Pipeline'}
+            text={getString('runPipeline')}
             padding="xlarge"
             size={ButtonSize.MEDIUM}
           />

@@ -21,6 +21,7 @@ import { ConnectivityModeType } from '@common/components/ConnectivityMode/Connec
 import StepDockerAuthentication from './StepAuth/StepDockerAuthentication'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import ConnectivityModeStep from '../commonSteps/ConnectivityModeStep/ConnectivityModeStep'
+import type { ModalViewFor } from '../CreateConnectorUtils'
 
 interface CreateDockerConnectorProps {
   onClose: () => void
@@ -35,7 +36,7 @@ interface CreateDockerConnectorProps {
   projectIdentifier: string
   connectivityMode?: ConnectivityModeType
   setConnectivityMode?: (val: ConnectivityModeType) => void
-  context?: number
+  context?: ModalViewFor
   formClassName?: string
 }
 const CreateDockerConnector: React.FC<CreateDockerConnectorProps> = props => {

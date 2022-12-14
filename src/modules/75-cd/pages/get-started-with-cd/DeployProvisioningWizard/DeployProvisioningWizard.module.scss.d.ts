@@ -20,6 +20,7 @@ declare const styles: {
   readonly borderBottom: string
   readonly borderBottomClass: string
   readonly bp3DialogHeader: string
+  readonly buttonWrapper: string
   readonly containerPadding: string
   readonly credentialsButton: string
   readonly crossIcon: string

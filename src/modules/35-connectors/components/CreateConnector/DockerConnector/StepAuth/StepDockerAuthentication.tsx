@@ -34,7 +34,7 @@ import { Category, ConnectorActions, ConnectorTypes } from '@common/constants/Tr
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
-import { shouldHideHeaderAndNavBtns } from '../../CreateConnectorUtils'
+import { ModalViewFor, shouldHideHeaderAndNavBtns } from '../../CreateConnectorUtils'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../CreateDockerConnector.module.scss'
 
@@ -53,7 +53,7 @@ interface DockerAuthenticationProps {
   orgIdentifier: string
   projectIdentifier: string
   helpPanelReferenceId?: string
-  context?: number
+  context?: ModalViewFor
   formClassName?: string
 }
 

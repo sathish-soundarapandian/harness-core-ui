@@ -217,16 +217,13 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     [loading, inputSetYaml, pipelineIdentifier]
   )
 
-  const deletionContentText = React.useMemo(
-    () => (
-      <Text color={Color.BLACK} padding="medium">
-        {`${getString('cd.getStartedWithCD.delegateRequiredWarning')} `}
-        <a rel="noreferrer" target="_blank" href={DOCUMENT_URL}>
-          {getString('pipeline.createPipeline.learnMore')}
-        </a>
-      </Text>
-    ),
-    [getString]
+  const deletionContentText = (
+    <Text color={Color.BLACK} padding="medium">
+      {`${getString('cd.getStartedWithCD.delegateRequiredWarning')} `}
+      <a rel="noreferrer" target="_blank" href={DOCUMENT_URL}>
+        {getString('pipeline.createPipeline.learnMore')}
+      </a>
+    </Text>
   )
 
   const { openDialog: showOnboaringExitWarning } = useConfirmationDialog({
@@ -483,6 +480,50 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   const onwizardStepClick = (name: DeployProvisiongWizardStepId): void => {
     wizardStepStatus.get(name) !== StepStatus.ToDo && setCurrentWizardStepId(name)
   }
+
+  const multiStepProgressMap = React.useMemo(
+    () =>
+      new Map([
+        [
+          0,
+          {
+            StepStatus: defaultTo(
+              wizardStepStatus.get(DeployProvisiongWizardStepId.SelectDeploymentType),
+              StepStatus.ToDo
+            ),
+            StepName: getString('cd.getStartedWithCD.selectDeploymentType'),
+            onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.SelectDeploymentType)
+          }
+        ],
+        [
+          1,
+          {
+            StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.DelegateSelector), StepStatus.ToDo),
+            StepName: getString('cd.getStartedWithCD.configureEnvironment'),
+            onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.DelegateSelector)
+          }
+        ],
+        [
+          2,
+          {
+            StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.ConfigureService), StepStatus.ToDo),
+            StepName: getString('cd.getStartedWithCD.configureService'),
+            onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.ConfigureService)
+          }
+        ],
+        [
+          3,
+          {
+            StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.RunPipeline), StepStatus.ToDo),
+            StepName: getString('runPipeline'),
+            onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.RunPipeline)
+          }
+        ]
+      ]),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [getString, wizardStepStatus]
+  )
+
   return stepRender ? (
     <Layout.Vertical
       flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
@@ -493,45 +534,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
         {/* header */}
         <Container className={css.header}>
           <MultiStepProgressIndicator
-            progressMap={
-              new Map([
-                [
-                  0,
-                  {
-                    StepStatus: defaultTo(
-                      wizardStepStatus.get(DeployProvisiongWizardStepId.SelectDeploymentType),
-                      'TODO'
-                    ),
-                    StepName: getString('cd.getStartedWithCD.selectDeploymentType'),
-                    onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.SelectDeploymentType)
-                  }
-                ],
-                [
-                  1,
-                  {
-                    StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.DelegateSelector), 'TODO'),
-                    StepName: getString('cd.getStartedWithCD.configureEnvironment'),
-                    onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.DelegateSelector)
-                  }
-                ],
-                [
-                  2,
-                  {
-                    StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.ConfigureService), 'TODO'),
-                    StepName: getString('cd.getStartedWithCD.configureService'),
-                    onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.ConfigureService)
-                  }
-                ],
-                [
-                  3,
-                  {
-                    StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.RunPipeline), 'TODO'),
-                    StepName: getString('runPipeline'),
-                    onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.RunPipeline)
-                  }
-                ]
-              ])
-            }
+            progressMap={multiStepProgressMap}
             textClassName={css.stepWizardText}
             barWidth={230}
           />

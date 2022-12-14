@@ -4896,7 +4896,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.provideManifest': string
   'cd.getStartedWithCD.reposubheading': string
-  'cd.getStartedWithCD.runDelegateSubTitle': string
+  'cd.getStartedWithCD.runDelegateSubtitle': string
   'cd.getStartedWithCD.selectArtifactRepo': string
   'cd.getStartedWithCD.selectAuthMethod': string
   'cd.getStartedWithCD.selectDeploymentType': string

@@ -122,7 +122,7 @@ export const SelectRepository = (props: SelectRepositoryProps): React.ReactEleme
             <FormError
               name={'repository'}
               errorMessage={getString('common.getStarted.plsChoose', {
-                field: `a ${getString('repository').toLowerCase()}`
+                field: getString('repository').toLowerCase()
               })}
             />
           </Container>

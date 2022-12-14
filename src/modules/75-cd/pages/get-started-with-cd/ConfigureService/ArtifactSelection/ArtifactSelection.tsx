@@ -7,8 +7,9 @@
 
 import React from 'react'
 import { capitalize, get, isEmpty, unset } from 'lodash-es'
-import type { IconName } from '@blueprintjs/core'
-import { Container, Icon, Layout, Text } from '@harness/uicore'
+import cx from 'classnames'
+import { IconName, Intent } from '@blueprintjs/core'
+import { Button, Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
@@ -25,14 +26,13 @@ import type { ConfigureServiceInterface } from '../ConfigureService'
 import {
   allowedArtifactTypesForOnboiarding,
   ArtifactIconByType,
-  BinaryLabels,
+  BinaryValue,
   BinaryOptions,
   ServiceDataType
 } from '../../CDOnboardingUtils'
 import ArtifactoryAuthStep from './ArtifactoryAuthStep'
 import { StepStatus } from '../../DeployProvisioningWizard/Constants'
 import ArtifactImagePath from './ArtifactImagePath'
-import ButtonWrapper from '../../ButtonWrapper/ButtonWrapper'
 import css from '../../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 import moduleCss from '../ConfigureService.module.scss'
 
@@ -94,7 +94,7 @@ const ArtifactSelection = ({ enableNextBtn, disableNextBtn }: ArtifactSelectionP
   }, [selectedArtifact])
 
   React.useEffect(() => {
-    if (values?.artifactToDeploy === BinaryLabels.NO) {
+    if (values?.artifactToDeploy === BinaryValue.NO) {
       enableNextBtn()
       return
     }
@@ -113,16 +113,17 @@ const ArtifactSelection = ({ enableNextBtn, disableNextBtn }: ArtifactSelectionP
             <Layout.Horizontal>
               {BinaryOptions.map(option => {
                 return (
-                  <ButtonWrapper
+                  <Button
                     key={option.label}
-                    option={option}
-                    label={capitalize(option.label)}
-                    onClick={(value: string) => {
-                      setFieldValue('artifactToDeploy', value)
+                    className={cx(css.buttonWrapper, css.radioButton)}
+                    text={capitalize(option.label)}
+                    onClick={_e => {
+                      setFieldValue('artifactToDeploy', option.value)
                     }}
-                    intent={values?.artifactToDeploy === option.label ? 'primary' : 'none'}
+                    intent={values?.artifactToDeploy === option.label ? Intent.PRIMARY : Intent.NONE}
                     margin={{ bottom: 'small' }}
-                    className={css.radioButton}
+                    round
+                    inline
                   />
                 )
               })}
@@ -131,7 +132,7 @@ const ArtifactSelection = ({ enableNextBtn, disableNextBtn }: ArtifactSelectionP
           <Container className={css.borderBottomClass} padding={{ top: 'large' }} />
         </>
       )}
-      {values?.artifactToDeploy === BinaryLabels.YES && (
+      {values?.artifactToDeploy === BinaryValue.YES && (
         <>
           {/* ARTIFACT TYPE SELECTION */}
           <Layout.Vertical padding={{ top: 'xxlarge' }}>
@@ -141,16 +142,17 @@ const ArtifactSelection = ({ enableNextBtn, disableNextBtn }: ArtifactSelectionP
             <Layout.Horizontal>
               {supportedArtifactTypes.map(option => {
                 return (
-                  <ButtonWrapper
+                  <Button
                     key={option.label}
-                    option={option}
-                    label={option.label}
-                    onClick={(value: string) => {
-                      setSelectedArtifact(value as ArtifactType)
+                    className={cx(css.buttonWrapper, css.radioButton)}
+                    text={option.label}
+                    onClick={_e => {
+                      setSelectedArtifact(option.value)
                     }}
-                    intent={values?.artifactType === option.value ? 'primary' : 'none'}
+                    intent={values?.artifactType === option.label ? Intent.PRIMARY : Intent.NONE}
                     margin={{ bottom: 'small' }}
-                    className={css.radioButton}
+                    round
+                    inline
                   />
                 )
               })}

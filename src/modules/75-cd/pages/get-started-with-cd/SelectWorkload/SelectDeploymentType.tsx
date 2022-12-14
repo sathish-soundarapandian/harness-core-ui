@@ -101,21 +101,14 @@ const SelectDeploymentTypeRef = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   })
 
-  useEffect(() => {
-    if (formikRef.current?.values) {
-      if (!forwardRef) {
-        return
+  React.useImperativeHandle(forwardRef, () => ({
+    submitForm() {
+      if (formikRef.current) {
+        return formikRef.current.submitForm()
       }
-      if (typeof forwardRef === 'function') {
-        return
-      }
-      if (formikRef.current.values) {
-        forwardRef.current = {
-          submitForm: formikRef?.current?.submitForm
-        }
-      }
+      return Promise.resolve()
     }
-  }, [formikRef?.current?.values, forwardRef])
+  }))
 
   const handleSubmit = (): void => {
     const updatedContextService = produce(newServiceState, draft => {
@@ -145,7 +138,7 @@ const SelectDeploymentTypeRef = (
               ServiceDeploymentType.Kubernetes
             )
           }}
-          formName="cd-deploymentType selection"
+          formName="select-deployment-type-cd"
           onSubmit={handleSubmit}
           validationSchema={Yup.object().shape({
             selectedDeploymentType: getServiceDeploymentTypeSchema(getString)

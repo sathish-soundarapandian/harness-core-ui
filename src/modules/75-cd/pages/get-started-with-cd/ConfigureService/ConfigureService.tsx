@@ -59,7 +59,7 @@ import { Connectors } from '@connectors/constants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import {
-  BinaryLabels,
+  BinaryValue,
   cleanServiceDataUtil,
   defaultManifestConfig,
   getUniqueEntityIdentifier,
@@ -235,7 +235,7 @@ const ConfigureServiceRef = (
         set(draft, 'serviceDefinition.spec.manifests[0]', manifestConfig)
         manifestType === 'K8sManifest' ? unset(draft, helmVersionPath) : set(draft, helmVersionPath, 'V2')
         // omit artifactConfig if artifact to deploy is no
-        formikRef.current?.values?.artifactToDeploy === BinaryLabels.YES
+        formikRef.current?.values?.artifactToDeploy === BinaryValue.YES
           ? set(draft, 'serviceDefinition.spec.artifacts', updatedArtifactObj)
           : unset(draft, 'serviceDefinition.spec.artifacts')
         set(draft, 'identifier', serviceIdentifier)
@@ -419,7 +419,7 @@ const ConfigureServiceRef = (
             text={getString('cd.getStartedWithCD.harnessFileStore')}
             onClick={() => {
               onManifestStoreSelection(ManifestStoreMap.Harness)
-              formikProps?.setFieldValue('artifactToDeploy', BinaryLabels.YES)
+              formikProps?.setFieldValue('artifactToDeploy', BinaryValue.YES)
             }}
             padding="large"
             intent={formikProps?.values?.manifestStoreType === ManifestStoreMap.Harness ? 'primary' : 'none'}
@@ -502,7 +502,7 @@ const ConfigureServiceRef = (
       repository: initialRepoValue,
       manifestData: isEmpty(manifestData) ? { type: allowableManifestTypes[0] } : manifestData,
       manifestStoreType,
-      artifactToDeploy: get(serviceData, 'data.artifactToDeploy') || BinaryLabels.YES,
+      artifactToDeploy: get(serviceData, 'data.artifactToDeploy') || BinaryValue.YES,
       artifactConfig,
       manifestConfig,
       artifactData,

@@ -53,7 +53,7 @@ export interface DelegateSuccessHandler {
   delegateYamlResponse?: RestResponseDelegateSetupDetails
 }
 
-export enum BinaryLabels {
+export enum BinaryValue {
   YES = 'yes',
   NO = 'no'
 }
@@ -72,8 +72,8 @@ const DEFAULT_STAGE_ID = 'Stage'
 const DEFAULT_STAGE_TYPE = 'Deployment'
 
 export const BinaryOptions = [
-  { label: BinaryLabels.YES, value: BinaryLabels.YES },
-  { label: BinaryLabels.NO, value: BinaryLabels.NO }
+  { label: BinaryValue.YES, value: BinaryValue.YES },
+  { label: BinaryValue.NO, value: BinaryValue.NO }
 ]
 export interface ServiceData {
   workloadType: string

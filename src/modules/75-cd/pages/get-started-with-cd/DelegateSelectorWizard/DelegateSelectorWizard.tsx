@@ -374,7 +374,7 @@ const DelegateSelectorWizardRef = (
               <HarnessDocTooltip tooltipId="cdOnboardingInstallDelegate" useStandAlone={true} />
             </Text>
             <Text font="normal" className={css.marginBottomClass}>
-              {getString('cd.getStartedWithCD.runDelegateSubTitle')}
+              {getString('cd.getStartedWithCD.runDelegateSubtitle')}
             </Text>
             <Button
               onClick={() => handleDelegateTypeChange(DelegateTypes.KUBERNETES_CLUSTER)}

@@ -302,3 +302,14 @@
   height: 560px;
   z-index: 1;
 }
+
+.buttonWrapper {
+  border: 1px solid var(--grey-100) !important;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
+  margin-right: var(--spacing-small) !important;
+  padding: var(--spacing-large) !important;
+  :global(.bp3-button-text) {
+    flex: none !important;
+  }
+}

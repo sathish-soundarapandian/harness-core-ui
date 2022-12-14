@@ -106,15 +106,12 @@ export function CDOnboardingProvider({
   const queryParamStateSelection = useWizardStepQueryParams()
   const setSelectedSectionId = (selectedSectionId: string): void => {
     queryParamStateSelection.setWizardStepQueryParamState({ sectionId: selectedSectionId })
+    updateSelectionState(selectedSectionId)
   }
 
   const updateSelectionState = (selectedSectionId: string): void => {
     dispatch(CDOnboardingContextActions.updateSectionId({ selectedSectionId }))
   }
-
-  React.useEffect(() => {
-    updateSelectionState(queryParamStateSelection.sectionId as string)
-  }, [queryParamStateSelection.sectionId])
 
   return (
     <CDOnboardingContext.Provider

@@ -54,9 +54,9 @@ import {
   OAUTH_PLACEHOLDER_VALUE,
   MAX_TIMEOUT_OAUTH
 } from '@connectors/components/CreateConnector/CreateConnectorUtils'
-
 import { getGitUrl } from '@pipeline/utils/CIUtils'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
+import { StringUtils } from '@common/exports'
 import {
   GitAuthenticationMethod,
   GitProvider,
@@ -67,7 +67,6 @@ import {
   DEFAULT_HARNESS_KMS,
   AccessTokenPermissionsDocLinks
 } from '../../DeployProvisioningWizard/Constants'
-
 import { getOAuthConnectorPayload } from '../../CDOnboardingUtils'
 import css from '../../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
@@ -154,7 +153,10 @@ const SelectGitProviderRef = (
                 gitProviderType: selectedGitProvider.type as ConnectorInfoDTO['type']
               }),
               'connector.spec.url',
-              getGitUrl(getString, selectedGitProvider?.type as ConnectorInfoDTO['type'])
+              defaultTo(
+                formikRef.current?.values?.url,
+                getGitUrl(getString, selectedGitProvider?.type as ConnectorInfoDTO['type'])
+              )
             )
           )
             .then((createOAuthCtrResponse: ResponseConnectorResponse) => {
@@ -360,14 +362,18 @@ const SelectGitProviderRef = (
 
   const getSCMConnectorPayload = React.useCallback(
     (secretId: string, type: GitProvider['type']): ConnectorInfoDTO => {
+      const connectorName = `${type}-onboarding`
       const commonConnectorPayload: ConnectorInfoDTO = {
-        name: type,
-        identifier: type,
+        name: connectorName,
+        identifier: StringUtils.getIdentifierFromName(connectorName),
         type: type as ConnectorInfoDTO['type'],
         spec: {
           executeOnDelegate: false,
           type: 'Account',
-          url: getGitUrl(getString, selectedGitProvider?.type as ConnectorInfoDTO['type']),
+          url: defaultTo(
+            formikRef.current?.values?.url,
+            getGitUrl(getString, selectedGitProvider?.type as ConnectorInfoDTO['type'])
+          ),
           authentication: {
             type: 'Http',
             spec: {}
@@ -386,6 +392,10 @@ const SelectGitProviderRef = (
             `${ACCOUNT_SCOPE_PREFIX}${secretId}`
           )
           updatedConnectorPayload = set(updatedConnectorPayload, 'spec.apiAccess.type', 'Token')
+          updatedConnectorPayload = set(updatedConnectorPayload, 'spec.authentication.spec.spec', {
+            username: formikRef.current?.values?.username,
+            passwordRef: `${ACCOUNT_SCOPE_PREFIX}${secretId}`
+          })
           updatedConnectorPayload = set(
             updatedConnectorPayload,
             'spec.apiAccess.spec.tokenRef',
@@ -600,11 +610,6 @@ const SelectGitProviderRef = (
           return (
             <Layout.Vertical width="100%">
               {renderTextField({
-                name: 'username',
-                label: 'username',
-                tooltipId: 'username'
-              })}
-              {renderTextField({
                 name: 'applicationPassword',
                 label: 'common.getStarted.appPassword',
                 tooltipId: 'applicationPassword',
@@ -642,14 +647,14 @@ const SelectGitProviderRef = (
       setFieldTouched?.('gitAuthenticationMethod', true)
       return
     }
+    if (!username) {
+      setFieldTouched?.('username', true)
+    }
     if (selectedGitProvider?.type === Connectors.GITHUB) {
       setFieldTouched?.('accessToken', !accessToken)
     } else if (selectedGitProvider?.type === Connectors.GITLAB) {
       setFieldTouched?.('accessKey', !accessKey)
     } else if (selectedGitProvider?.type === Connectors.BITBUCKET) {
-      if (!username) {
-        setFieldTouched?.('username', true)
-      }
       if (!applicationPassword) {
         setFieldTouched?.('applicationPassword', true)
       }
@@ -660,9 +665,9 @@ const SelectGitProviderRef = (
     const { accessToken, accessKey, applicationPassword, username } = formikRef.current?.values || {}
     switch (selectedGitProvider?.type) {
       case Connectors.GITHUB:
-        return authMethod === GitAuthenticationMethod.AccessToken && !!accessToken
+        return authMethod === GitAuthenticationMethod.AccessToken && !!accessToken && !!username
       case Connectors.GITLAB:
-        return authMethod === GitAuthenticationMethod.AccessKey && !!accessKey
+        return authMethod === GitAuthenticationMethod.AccessKey && !!accessKey && !!username
 
       case Connectors.BITBUCKET:
         return (
@@ -692,10 +697,13 @@ const SelectGitProviderRef = (
     let initialValues = {}
     switch (selectedGitProvider?.type) {
       case Connectors.GITHUB:
-        initialValues = { accessToken: defaultTo(gitValues?.accessToken, '') }
+        initialValues = {
+          accessToken: defaultTo(gitValues?.accessToken, ''),
+          username: defaultTo(gitValues?.username, '')
+        }
         break
       case Connectors.GITLAB:
-        initialValues = { accessKey: defaultTo(gitValues?.accessKey, '') }
+        initialValues = { accessKey: defaultTo(gitValues?.accessKey, ''), username: defaultTo(gitValues?.username, '') }
         break
       case Connectors.BITBUCKET:
         initialValues = {
@@ -710,10 +718,25 @@ const SelectGitProviderRef = (
 
   const getValidationSchema = React.useCallback(() => {
     let baseSchema
+
+    const urlAndNameSchema = {
+      url: Yup.string().test('isValidUrl', getString('validation.urlIsNotValid'), function (_url) {
+        if (!_url) return false
+        const trimmedUrl = _url?.trim() || ''
+        if (trimmedUrl.includes(' ')) {
+          return false
+        }
+        return trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://') ? true : false
+      }),
+      username: Yup.string()
+        .trim()
+        .required(getString('fieldRequired', { field: getString('username') }))
+    }
     switch (selectedGitProvider?.type) {
       case Connectors.GITHUB:
         baseSchema = Yup.object()
           .shape({
+            ...urlAndNameSchema,
             accessToken: Yup.string()
               .trim()
               .required(getString('fieldRequired', { field: getString('common.getStarted.accessTokenLabel') }))
@@ -723,6 +746,7 @@ const SelectGitProviderRef = (
       case Connectors.GITLAB:
         baseSchema = Yup.object()
           .shape({
+            ...urlAndNameSchema,
             accessKey: Yup.string()
               .trim()
               .required(getString('fieldRequired', { field: getString('common.accessKey') }))
@@ -732,9 +756,8 @@ const SelectGitProviderRef = (
       case Connectors.BITBUCKET:
         baseSchema = Yup.object()
           .shape({
-            username: Yup.string()
-              .trim()
-              .required(getString('fieldRequired', { field: getString('username') })),
+            ...urlAndNameSchema,
+
             applicationPassword: Yup.string()
               .trim()
               .required(getString('fieldRequired', { field: getString('common.getStarted.appPassword') }))
@@ -776,6 +799,35 @@ const SelectGitProviderRef = (
 
   //#endregion
 
+  const getUrlLabel = (connectorType: ConnectorInfoDTO['type']): string => {
+    switch (connectorType) {
+      case Connectors.GIT:
+        return getString('common.git.gitAccountUrl')
+      case Connectors.GITHUB:
+        return getString('common.git.gitHubAccountUrl')
+      case Connectors.GITLAB:
+        return getString('common.git.gitLabAccountUrl')
+      case Connectors.BITBUCKET:
+        return getString('common.git.bitbucketAccountUrl')
+      default:
+        return ''
+    }
+  }
+  const getUrlLabelPlaceholder = (connectorType: ConnectorInfoDTO['type']): string => {
+    switch (connectorType) {
+      case Connectors.GIT:
+      case Connectors.GITHUB:
+        return getString('common.git.gitHubUrlPlaceholder')
+
+      case Connectors.GITLAB:
+        return getString('common.git.gitLabUrlPlaceholder')
+
+      case Connectors.BITBUCKET:
+        return getString('common.git.bitbucketUrlPlaceholder')
+      default:
+        return ''
+    }
+  }
   return (
     <>
       <Layout.Vertical width="70%" padding={{ bottom: 'xxlarge' }}>
@@ -804,6 +856,15 @@ const SelectGitProviderRef = (
                         {getString('common.getStarted.authMethod')}
                       </Text>
                       <Layout.Vertical padding={{ top: 'medium' }}>
+                        <FormInput.Text
+                          name="url"
+                          label={
+                            <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                              {selectedGitProvider?.type && getUrlLabel(selectedGitProvider.type)}
+                            </Text>
+                          }
+                          placeholder={getUrlLabelPlaceholder(selectedGitProvider?.type || 'Github')}
+                        />
                         <Layout.Horizontal spacing="small">
                           <Button
                             className={css.authMethodBtn}
@@ -893,6 +954,12 @@ const SelectGitProviderRef = (
                       {shouldRenderAuthFormFields() && (
                         <Layout.Vertical padding={{ top: 'medium' }} flex={{ alignItems: 'flex-start' }}>
                           <Container padding={{ top: 'xsmall' }} width="100%">
+                            {renderTextField({
+                              name: 'username',
+                              label: 'username',
+                              tooltipId: 'onboardingUsername'
+                            })}
+
                             {renderNonOAuthView(formikProps)}
                           </Container>
                           <Button

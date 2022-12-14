@@ -516,7 +516,7 @@ azureWebAppSwapSlotDescription: Azure Swap environment slot with new instance.
 getStartedWithCD:
   onboardingTitle: Start your deployments journey with Harness CD
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
-  runDelegateSubTitle: You can install the Delegate in your target environment.
+  runDelegateSubtitle: You can install the Delegate in your target environment.
   delegateInstalled: Delegate installed successfully
   selectDeploymentType: Select deployment type
   deployToGitops: Do you want to deploy using GitOps?
