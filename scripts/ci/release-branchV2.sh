@@ -9,7 +9,7 @@ git checkout $BRANCH
 # bump minor version (0.1.0 -> 0.2.0)
 #yarn version --minor --no-git-tag-version --no-commit-hooks
 #git add package.json
-export VERSION_FILE=package.json
+export VERSION_FILE="package.json"
 # get branch name (0.2.0 -> 0.2.x)
 export VERSION=$(cat package.json | grep version | cut -d: -f2 | cut -d\" -f2 | cut -d. -f1,2).x
 echo $VERSION
