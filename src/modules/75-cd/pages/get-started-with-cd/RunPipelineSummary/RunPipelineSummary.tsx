@@ -26,7 +26,7 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
     setSelectedSectionId
   } = useCDOnboardingContext()
   const { getString } = useStrings()
-
+  const text = delegate?.delegateInstalled ? getString('connected') : getString('delegate.notConnected')
   const environmentEntites: Record<string, string> = {
     connector: delegate?.environmentEntities?.connector as string,
     environment: delegate?.environmentEntities?.environment as string,
@@ -109,11 +109,21 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
           <Text style={{ lineHeight: '28px' }} font={{ variation: FontVariation.BODY1 }}>
             {getString('cd.getStartedWithCD.delegateRunAs')}
           </Text>
-          <Container>
+
+          <Container flex={{ justifyContent: 'space-between' }}>
             <Text margin={{ left: 'medium' }} style={{ lineHeight: '28px' }} font="normal">
               {delegate?.delegateType as string}
             </Text>
-            {/* TODO:: is delegate installed text */}
+            <Text
+              icon="full-circle"
+              iconProps={{
+                size: 6,
+                color: delegate?.delegateInstalled ? Color.GREEN_600 : Color.GREY_400,
+                padding: 'small'
+              }}
+            >
+              {text}
+            </Text>
           </Container>
 
           <Text style={{ lineHeight: '28px' }} font={{ variation: FontVariation.BODY1 }}>
@@ -147,7 +157,7 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
                 onClick={() => setSelectedSectionId(DeployProvisiongWizardStepId.ConfigureService)}
               />
             </Layout.Horizontal>
-            {successsFullConfiguration()}
+            {successsFullConfiguration}
           </Layout.Horizontal>
           {Object.keys(serviceEntities).map(entity => {
             return (

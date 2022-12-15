@@ -15,11 +15,12 @@ import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { ManifestDataType, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import K8sValuesManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/K8sValuesManifest/K8sValuesManifest'
 import type { ManifestLastStepProps, ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import HelmWithGIT from '@pipeline/components/ManifestSelection/ManifestWizardSteps/HelmWithGIT/HelmWithGIT'
 import { ModalViewFor } from '@connectors/components/CreateConnector/CreateConnectorUtils'
+import { Connectors } from '@connectors/constants'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
 import type { ConfigureServiceInterface } from '../ConfigureService'
 
@@ -62,7 +63,7 @@ export const ProvideManifest = (): React.ReactElement => {
       live: connectorResponse?.status?.status === 'SUCCESS'
     },
     selectedManifest: values?.manifestData?.type,
-    store: values?.manifestStoreType
+    store: values?.manifestStoreType === Connectors.GITLAB ? ManifestStoreMap.GitLab : values?.manifestStoreType
   }
   const allowableTypes: AllowedTypesWithRunTime[] = [
     MultiTypeInputType.FIXED,

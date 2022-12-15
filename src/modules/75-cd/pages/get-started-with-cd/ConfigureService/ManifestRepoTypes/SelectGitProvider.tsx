@@ -712,7 +712,7 @@ const SelectGitProviderRef = (
         }
         break
     }
-    return initialValues
+    return { ...initialValues, url: defaultTo(gitValues?.url, '') }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGitProvider])
 
@@ -863,6 +863,12 @@ const SelectGitProviderRef = (
                               {selectedGitProvider?.type && getUrlLabel(selectedGitProvider.type)}
                             </Text>
                           }
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            if (e?.target?.value) {
+                              formikRef?.current?.setFieldValue('url', e.target.value)
+                              setTestConnectionStatus(TestStatus.NOT_INITIATED)
+                            }
+                          }}
                           placeholder={getUrlLabelPlaceholder(selectedGitProvider?.type || 'Github')}
                         />
                         <Layout.Horizontal spacing="small">
