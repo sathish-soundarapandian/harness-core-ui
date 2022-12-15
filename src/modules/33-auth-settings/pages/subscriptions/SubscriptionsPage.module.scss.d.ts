@@ -32,5 +32,6 @@ declare const styles: {
   readonly sto: string
   readonly subscriptionTabButton: string
   readonly subscriptionTabButtons: string
+  readonly table: string
 }
 export default styles

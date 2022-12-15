@@ -13,7 +13,7 @@ import { Color } from '@harness/design-system'
 import moment from 'moment'
 import { String, useStrings } from 'framework/strings'
 import type { PageActiveServiceDTO, LicenseUsageDTO } from 'services/cd-ng'
-import type { SortBy } from '../../../../70-pipeline/pages/pipeline-list/types'
+import type { SortBy } from '@pipeline/pages/pipeline-list/types'
 import {
   LastModifiedNameCell,
   OrganizationCell,
@@ -23,7 +23,6 @@ import {
   LastDeployedCell,
   LicenseConsumedCell
 } from './ServiceLicenseTableCells'
-import css from '../../../../70-pipeline/pages/pipeline-list/PipelineListTable/PipelineListTable.module.scss'
 import pageCss from '../SubscriptionsPage.module.scss'
 
 const DEFAULT_PAGE_INDEX = 0
@@ -112,7 +111,6 @@ export function ServiceLicenseTable({
   }, [currentOrder, currentSort])
   const activeServiceText = `${content.length}`
   const timeValue = moment(content[0]?.timestamp).format('DD-MM-YYYY h:mm:ss')
-  console.log(content.length, 'heiilo')
   return (
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
@@ -142,7 +140,7 @@ export function ServiceLicenseTable({
         </Layout.Horizontal>
         {content.length > 0 ? (
           <TableV2
-            className={css.table}
+            className={pageCss.table}
             columns={columns}
             data={content}
             pagination={

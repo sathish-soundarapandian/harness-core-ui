@@ -23,7 +23,7 @@ import SubscriptionUsageCard from './SubscriptionUsageCard'
 import { ServiceLicenseTable } from './ServiceLicenseTable'
 import type { TrialInformation } from '../SubscriptionsPage'
 
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
+
 
 type PartiallyRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
 interface SubscriptionOverviewProps {
@@ -34,6 +34,8 @@ interface SubscriptionOverviewProps {
   refetchGetLicense?: () => void
 }
 const DEFAULT_ACTIVE_SERVICE_LIST_TABLE_SORT = ['instanceCount', 'DESC']
+const DEFAULT_PAGE_INDEX = 0
+const DEFAULT_PAGE_SIZE = 20
 type ProcessedActiveServiceListPageQueryParams = PartiallyRequired<
   LisCDActiveServicesQueryParams,
   'page' | 'size' | 'sort'

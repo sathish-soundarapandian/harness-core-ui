@@ -537,7 +537,7 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
                   class="StyledProps--font StyledProps--main"
                 >
                    
-                  common.lastUpdated
+                  auditTrail.actions.updated
                    -
                 </p>
                 <p
@@ -1009,7 +1009,7 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
                   class="StyledProps--font StyledProps--main"
                 >
                    
-                  common.lastUpdated
+                  auditTrail.actions.updated
                    -
                 </p>
                 <p
@@ -1481,7 +1481,7 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
                   class="StyledProps--font StyledProps--main"
                 >
                    
-                  common.lastUpdated
+                  auditTrail.actions.updated
                    -
                 </p>
                 <p
@@ -1891,7 +1891,7 @@ exports[`Subscriptions Page it renders trial not started information 1`] = `
                   class="StyledProps--font StyledProps--main"
                 >
                    
-                  common.lastUpdated
+                  auditTrail.actions.updated
                    -
                 </p>
                 <p
@@ -2378,7 +2378,7 @@ exports[`Subscriptions Page it should update the license store 1`] = `
                   class="StyledProps--font StyledProps--main"
                 >
                    
-                  common.lastUpdated
+                  auditTrail.actions.updated
                    -
                 </p>
                 <p
