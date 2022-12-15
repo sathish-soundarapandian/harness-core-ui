@@ -19,10 +19,13 @@ SPLIT_VERSION=`echo "$VERSION" | awk -F'.' '{print $2}'`
 NEW_VERSION=$(( ${SPLIT_VERSION}+1 ))
 echo $NEW_VERSION
 
-sed -i "s:\"version\": \"0.${SPLIT_VERSION}.0\":\"version\": \"0.${NEW_VERSION}.0\":g" ${VERSION_FILE}
-git add ${VERSION_FILE}
-git commit -m "Branching to release/$VERSION. New version 0.${NEW_VERSION}.x"
-git push origin develop
+sed -i "s:\"0.${SPLIT_VERSION}.0\":\"0.${NEW_VERSION}.0\":g" ${VERSION_FILE}
+
+cat ${VERSION_FILE}
+
+#git add ${VERSION_FILE}
+#git commit -m "Branching to release/$VERSION. New version 0.${NEW_VERSION}.x"
+#git push origin develop
 
 #update jira
-. scripts/ci/jira-tagging-ngui-qa.sh
+#. scripts/ci/jira-tagging-ngui-qa.sh
