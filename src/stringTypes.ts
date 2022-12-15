@@ -39,7 +39,6 @@ export interface StringsMap {
   'common.accountSetting.connector.saveSettingSuccess': string
   'common.accountSettings': string
   'common.accountSetup': string
-  'common.activeServices': string
   'common.addAccountName': string
   'common.addAttribute': string
   'common.addName': string
@@ -813,7 +812,6 @@ export interface StringsMap {
   'common.selectWorkload': string
   'common.selectYourRepo': string
   'common.selected': string
-  'common.service': string
   'common.serviceCreated': string
   'common.serviceDetails': string
   'common.serviceId': string

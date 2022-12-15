@@ -1161,13 +1161,11 @@ timeRangeLimitWarning:
 viewAll: View all
 lastUpdatedAt: Last updated at
 tryAgain: Try Again
-service: SERVICE
 organizations: ORGANIZATIONS
 projects: PROJECTS
 serviceId: 'SERVICE ID'
 servicesInstances: 'SERVICE INSTANCES'
 lastDeployed: 'LAST DEPLOYED'
 licensesConsumed: 'LICENSES CONSUMED'
-activeServices: 'Active Services'
 downloadCSV: 'Download CSV'
 whatIsActiveService: What is an Active Service?

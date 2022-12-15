@@ -94,7 +94,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
       {enabled && licenseData && <SubscriptionUsageCard module={module} licenseData={licenseData} />}
       <ServiceLicenseTable
         gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
-        data={activeServiceList?.data || []}
+        data={activeServiceList?.data || {}}
         setSortBy={sortArray => {
           setSortingPreference(JSON.stringify(sortArray))
           updateQueryParams({ sort: sortArray })

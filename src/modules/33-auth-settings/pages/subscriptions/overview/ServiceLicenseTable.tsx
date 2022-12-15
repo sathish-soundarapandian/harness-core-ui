@@ -13,7 +13,7 @@ import { Text, TableV2, Layout, Card, Heading } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
 import { String, useStrings } from 'framework/strings'
-import type { PageLicenseUsageDTO, LicenseUsageDTO } from 'services/cd-ng'
+import type { PageActiveServiceDTO, LicenseUsageDTO } from 'services/cd-ng'
 import type { SortBy } from '../../../../70-pipeline/pages/pipeline-list/types'
 import {
   LastModifiedNameCell,
@@ -27,13 +27,15 @@ import {
 import css from '../../../../70-pipeline/pages/pipeline-list/PipelineListTable/PipelineListTable.module.scss'
 import pageCss from '../SubscriptionsPage.module.scss'
 
+const DEFAULT_PAGE_INDEX = 0
+const DEFAULT_PAGE_SIZE = 30
 export interface ServiceLicenseTableProps {
-  data: PageLicenseUsageDTO | []
+  data: PageActiveServiceDTO
   gotoPage: (pageNumber: number) => void
   setSortBy: (sortBy: string[]) => void
   sortBy: string[]
 }
-const DEFAULT_PAGE_INDEX = 0
+
 export function ServiceLicenseTable({
   data,
   gotoPage,
@@ -41,7 +43,13 @@ export function ServiceLicenseTable({
   setSortBy
 }: ServiceLicenseTableProps): React.ReactElement {
   const { getString } = useStrings()
-  const { content = [], totalElements = 2, totalPages = 2, number = DEFAULT_PAGE_INDEX, size = 1 } = data
+  const {
+    content = [],
+    totalElements = 0,
+    totalPages = 0,
+    number = DEFAULT_PAGE_INDEX,
+    size = DEFAULT_PAGE_SIZE
+  } = data
   const [currentSort, currentOrder] = sortBy
 
   const columns: Column<LicenseUsageDTO>[] = React.useMemo(() => {
@@ -57,7 +65,7 @@ export function ServiceLicenseTable({
     }
     return [
       {
-        Header: getString('common.service'),
+        Header: getString('common.purpose.service'),
         accessor: 'name',
         width: '16%',
         Cell: LastModifiedNameCell
@@ -111,16 +119,22 @@ export function ServiceLicenseTable({
         <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
           <Layout.Vertical>
             <Heading color={Color.BLACK} font={{ size: 'medium' }}>
-              {getString('common.activeServices')}
+              {getString('common.subscriptions.usage.services')}
             </Heading>
-            <p className={pageCss.activeServiceLink}>{getString('common.whatIsActiveService')}</p>
+            <Text
+              color={Color.PRIMARY_7}
+              tooltip={getString('common.subscriptions.usage.cdServiceTooltip')}
+              font={{ size: 'xsmall' }}
+            >
+              {getString('common.whatIsActiveService')}
+            </Text>
           </Layout.Vertical>
         </Layout.Horizontal>
         <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
           <Layout.Vertical className={pageCss.badgesContainer}>
             <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
               <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
-              <String stringID={'common.activeServices'} />
+              <String stringID={'common.subscriptions.usage.services'} />
               <Text className={pageCss.badgeText}>{timeValue}</Text>
             </div>
           </Layout.Vertical>
