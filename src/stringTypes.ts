@@ -485,7 +485,6 @@ export interface StringsMap {
   'common.lastDeployed': string
   'common.lastModified': string
   'common.lastModifiedTime': string
-  'common.lastUpdated': string
   'common.lastUpdatedAt': string
   'common.latest': string
   'common.launchFirstGen': string

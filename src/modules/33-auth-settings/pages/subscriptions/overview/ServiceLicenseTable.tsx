@@ -112,6 +112,7 @@ export function ServiceLicenseTable({
   }, [currentOrder, currentSort])
   const activeServiceText = `${content.length}`
   const timeValue = moment(content[0]?.timestamp).format('DD-MM-YYYY h:mm:ss')
+  console.log(content.length, 'heiilo')
   return (
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
@@ -134,7 +135,7 @@ export function ServiceLicenseTable({
             <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
               <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
               <String stringID={'common.subscriptions.usage.services'} />
-              <Text>&nbsp;{getString('common.lastUpdated')} -</Text>
+              <Text>&nbsp;{getString('auditTrail.actions.updated')} -</Text>
               <Text className={pageCss.badgeText}>{timeValue}</Text>
             </div>
           </Layout.Vertical>
