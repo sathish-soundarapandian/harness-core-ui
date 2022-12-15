@@ -24,7 +24,7 @@ sed -i "s:\"0.${SPLIT_VERSION}.0\":\"0.${NEW_VERSION}.0\":g" ${VERSION_FILE}
 cat ${VERSION_FILE}
 
 git add ${VERSION_FILE}
-git commit -m "Branching to release/$VERSION. New version 0.${NEW_VERSION}.x"
+git commit -m "Branching to release/${VERSION}. New version 0.${NEW_VERSION}.x"
 git push origin develop
 
 #update jira
