@@ -3635,14 +3635,6 @@ export interface EntityDetail {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -6040,14 +6032,6 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -6234,14 +6218,6 @@ export interface GitEntityFilterProperties {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -6499,14 +6475,6 @@ export interface GitFullSyncEntityInfoDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -6688,14 +6656,6 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -6998,14 +6958,6 @@ export interface GitSyncEntityDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -7181,14 +7133,6 @@ export interface GitSyncEntityListDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -7381,14 +7325,6 @@ export interface GitSyncErrorDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -10571,14 +10507,6 @@ export interface ReferencedByDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -11776,14 +11704,6 @@ export interface ResponseListEntityType {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -14847,15 +14767,10 @@ export interface StepData {
     | 'TerraformApply'
     | 'TerragruntDestroy'
     | 'TerragruntRollback'
-    | 'BasicAppSetup'
-    | 'BGAppSetup'
-    | 'CanaryAppSetup'
-    | 'AppResize'
-    | 'SwapRoutes'
-    | 'AppRollback'
-    | 'TanzuCommand'
     | 'AsgCanaryDeploy'
+}
 
+export interface StepElementConfig {
   description?: string
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
@@ -15103,44 +15018,6 @@ export type TanzuApplicationServiceInfrastructure = Infrastructure & {
 
 export type TanzuApplicationServiceSpec = ServiceSpec & {}
 
-export type TasAppResizeStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-  newAppInstances: TasInstanceSelectionWrapper
-  oldAppInstances?: TasInstanceSelectionWrapper
-}
-
-export type TasBGAppSetupStepInfo = StepSpecType & {
-  additionalRoutes?: string[]
-  delegateSelectors?: string[]
-  existingVersionToKeep: number
-  tasInstanceCountType: 'FromManifest' | 'MatchRunningInstances'
-  tempRoutes: string[]
-}
-
-export type TasBasicAppSetupStepInfo = StepSpecType & {
-  additionalRoutes?: string[]
-  delegateSelectors?: string[]
-  existingVersionToKeep: number
-  tasInstanceCountType: 'FromManifest' | 'MatchRunningInstances'
-}
-
-export type TasCanaryAppSetupStepInfo = StepSpecType & {
-  additionalRoutes?: string[]
-  delegateSelectors?: string[]
-  existingVersionToKeep: number
-  resizeStrategy: 'RESIZE_NEW_FIRST' | 'DOWNSIZE_OLD_FIRST'
-  tasInstanceCountType: 'FromManifest' | 'MatchRunningInstances'
-}
-
-export interface TasCommandScript {
-  store: StoreConfigWrapper
-}
-
-export type TasCommandStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-  script: TasCommandScript
-}
-
 export type TasConnector = ConnectorConfigDTO & {
   credential: TasCredential
   delegateSelectors?: string[]
@@ -15171,15 +15048,6 @@ export type TasInstanceInfoDTO = InstanceInfoDTO & {
   tasApplicationName: string
 }
 
-export interface TasInstanceSelectionWrapper {
-  spec?: TasInstanceValue
-  type?: 'Percentage' | 'Count'
-}
-
-export interface TasInstanceValue {
-  value: string //TODO:: CHECK
-}
-
 export type TasManifest = ManifestAttributes & {
   autoScalerPath?: string[]
   cfCliVersion?: 'V7'
@@ -15193,20 +15061,6 @@ export type TasManualDetails = TasCredentialSpec & {
   passwordRef: string
   username?: string
   usernameRef?: string
-}
-
-export type TasRollbackStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-}
-
-export type TasSwapRollbackStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-  upsizeInActiveApp?: boolean
-}
-
-export type TasSwapRoutesStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-  downSizeOldApplication: boolean
 }
 
 export interface TaskSelectorYaml {
@@ -16953,14 +16807,6 @@ export interface ListActivitiesQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -17128,14 +16974,6 @@ export interface ListActivitiesQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -17407,14 +17245,6 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -17582,14 +17412,6 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -32463,14 +32285,6 @@ export interface ListReferredByEntitiesQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -32699,14 +32513,6 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -35944,14 +35750,6 @@ export interface GetReferencedByQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -38442,14 +38240,6 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -38685,14 +38475,6 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'IACMStage'
       | 'IACMStep'
       | 'IACM'
-      | 'CanaryAppSetup'
-      | 'BGAppSetup'
-      | 'BasicAppSetup'
-      | 'AppResize'
-      | 'AppRollback'
-      | 'SwapRoutes'
-      | 'SwapRollback'
-      | 'TanzuCommand'
       | 'Container'
       | 'AsgCanaryDeploy'
       | 'ElastigroupBGStageSetup'
@@ -44620,14 +44402,6 @@ export interface GetStepYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -44923,14 +44697,6 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
@@ -49411,7 +49177,6 @@ export interface GetServiceListQueryParams {
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
-  includeAllServicesAccessibleAtScope?: boolean
 }
 
 export type GetServiceListProps = Omit<
@@ -58272,14 +58037,6 @@ export interface GetYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'TanzuCommand'
     | 'Container'
     | 'AsgCanaryDeploy'
     | 'ElastigroupBGStageSetup'
