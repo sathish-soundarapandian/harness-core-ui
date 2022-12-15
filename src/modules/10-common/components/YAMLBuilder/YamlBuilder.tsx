@@ -1061,7 +1061,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       </Layout.Vertical>
       {shouldRenderPluginsPanel ? (
         <PluginsPanel
-          height={height}
+          height={dynamicHeight}
           onPluginAdd={insertPluginIntoExistingYAML}
           existingPluginValues={pluginValuesSelected}
           shouldEnableFormView={!isEmpty(pluginValuesSelected)}

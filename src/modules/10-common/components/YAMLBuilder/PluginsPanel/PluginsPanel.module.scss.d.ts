@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly backBtn: string
   readonly installedBadge: string
   readonly mainTabPanel: string
   readonly overflow: string

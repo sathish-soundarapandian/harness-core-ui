@@ -6,7 +6,6 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import cx from 'classnames'
 import {
   Container,
   Layout,
@@ -14,13 +13,10 @@ import {
   Text,
   ExpandingSearchInput,
   Tab,
-  IconName,
   Icon,
-  IconProps,
   Button,
   Formik,
-  FormikForm,
-  FormInput
+  FormikForm
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -40,7 +36,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   const { height, onPluginAdd, existingPluginValues = {}, shouldEnableFormView = false } = props
   const { getString } = useStrings()
   const [showFormView, setShowFormView] = useState<boolean>(false)
-  const [selectedPlugin, setSelectedPlugin] = useState<string>('')
+  const [selectedPlugin, setSelectedPlugin] = useState<PluginInterface | undefined>()
 
   useEffect(() => {
     if (shouldEnableFormView) {
@@ -49,32 +45,25 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   }, [shouldEnableFormView])
 
   const renderPlugin = useCallback((plugin: PluginInterface): JSX.Element => {
-    const { name, description, pluginIcon, publisherIcon, className } = plugin
-    const pluginIconProps: IconProps = {
-      name: pluginIcon.name as IconName,
-      size: 18,
-      margin: { top: 'xsmall', right: 'small', bottom: 'small', left: 'xxlarge' },
-      ...(pluginIcon.color ? { color: pluginIcon.color } : {}),
-      className: cx(css.pluginIcon, { [className as string]: className })
-    }
+    const { name, description } = plugin
+    // const pluginIconProps: IconProps = {
+    //   name: pluginIcon.name as IconName,
+    //   size: 18,
+    //   margin: { top: 'xsmall', right: 'small', bottom: 'small', left: 'xxlarge' },
+    //   ...(pluginIcon.color ? { color: pluginIcon.color } : {}),
+    //   className: cx(css.pluginIcon, { [className as string]: className })
+    // }
     return (
       <Layout.Horizontal
         padding={{ top: 'large', bottom: 'large', right: 'large' }}
         className={css.plugin}
         width="100%"
         flex={{ justifyContent: 'space-between' }}
-        onClick={() => setSelectedPlugin(name)}
+        onClick={() => setSelectedPlugin(plugin)}
       >
         <Layout.Horizontal style={{ flex: 2 }}>
-          {/* {isInstalled ? (
-            <Container className={css.installedBadge}>
-              <Text font={{ variation: FontVariation.TINY }} color={Color.PRIMARY_7}>
-                {getString('common.installed').toUpperCase()}
-              </Text>
-            </Container>
-          ) : null} */}
           <Layout.Horizontal>
-            <Icon {...pluginIconProps} />
+            {/* <Icon {...pluginIconProps} /> */}
             <Layout.Vertical spacing="xsmall" width="100%">
               <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_7}>
                 {name}
@@ -86,7 +75,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
           </Layout.Horizontal>
         </Layout.Horizontal>
         <Layout.Horizontal flex={{ justifyContent: 'flex-end', alignItems: 'flex-start' }} style={{ flex: 1 }}>
-          <Icon name={publisherIcon as IconName} size={20} />
+          {/* <Icon name={publisherIcon as IconName} size={20} /> */}
           <Layout.Horizontal flex spacing="xsmall">
             <Icon name="main-tick" size={12} color={Color.PRIMARY_7} />
             <Text font={{ variation: FontVariation.TINY }} color={Color.PRIMARY_7}>
@@ -100,7 +89,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
 
   return (
     <Container className={css.tabs}>
-      <Tabs id={'pluginsPanel'} defaultSelectedTabId={'plugins'}>
+      <Tabs id={'pluginsPanel'} defaultSelectedTabId={'plugins'} className={css.tabs}>
         <Tab
           panelClassName={css.mainTabPanel}
           id="plugins"
@@ -114,54 +103,56 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
             </Text>
           }
           panel={
-            selectedPlugin || showFormView ? (
-              <Layout.Vertical spacing="medium" padding="medium">
-                <Formik
-                  initialValues={existingPluginValues}
-                  enableReinitialize={true}
-                  formName="configureOptionsForm"
-                  onSubmit={data => {
-                    try {
-                      onPluginAdd({ ...data, shouldInsertYAML: true })
-                    } catch (e) {
-                      //ignore error
-                    }
-                  }}
+            <Container style={{ height }}>
+              {selectedPlugin || showFormView ? (
+                <Layout.Vertical
+                  spacing="medium"
+                  padding="medium"
+                  height="100%"
+                  flex={{ justifyContent: 'space-between', alignItems: 'baseline' }}
                 >
-                  {_formik => {
-                    return (
-                      <FormikForm>
-                        <FormInput.Text name="connectorRef" label={'Connector'} />
-                        <FormInput.Text name="image" label={'Image'} />
-                        <FormInput.Text name="shell" label={'Shell'} />
-                        <FormInput.TextArea
-                          name="command"
-                          label={'Command'}
-                          textArea={{ style: { height: '150px' } }}
-                        />
-                        <Button style={{ height: '40px', width: '100px' }} type="submit">
-                          {getString('add')}
-                        </Button>
-                      </FormikForm>
-                    )
-                  }}
-                </Formik>
-              </Layout.Vertical>
-            ) : (
-              <Layout.Vertical>
-                <Container className={css.search}>
-                  <ExpandingSearchInput autoFocus={true} alwaysExpanded={true} />
-                </Container>
-                <Container
-                  className={css.overflow}
+                  <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
+                    <Icon name="arrow-left" onClick={() => setSelectedPlugin(undefined)} className={css.backBtn} />
+                    <Text font={{ variation: FontVariation.H5 }}>{selectedPlugin?.name}</Text>
+                  </Layout.Horizontal>
+                  <Formik
+                    initialValues={existingPluginValues}
+                    enableReinitialize={true}
+                    formName="pluginsForm"
+                    onSubmit={data => {
+                      try {
+                        onPluginAdd({ ...data, shouldInsertYAML: true })
+                      } catch (e) {
+                        //ignore error
+                      }
+                    }}
+                  >
+                    {_formik => {
+                      return (
+                        <FormikForm>
+                          <Button style={{ height: '40px', width: '100px' }} type="submit">
+                            {getString('add')}
+                          </Button>
+                        </FormikForm>
+                      )
+                    }}
+                  </Formik>
+                </Layout.Vertical>
+              ) : (
+                <Layout.Vertical
                   style={{
-                    height: `calc(${height} - 75px)`
+                    height
                   }}
                 >
-                  {Plugins.map((item: PluginInterface) => renderPlugin(item))}
-                </Container>
-              </Layout.Vertical>
-            )
+                  <Container className={css.search}>
+                    <ExpandingSearchInput autoFocus={true} alwaysExpanded={true} />
+                  </Container>
+                  <Container className={css.overflow}>
+                    {Plugins.map((item: PluginInterface) => renderPlugin(item))}
+                  </Container>
+                </Layout.Vertical>
+              )}
+            </Container>
           }
         />
       </Tabs>
