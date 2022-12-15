@@ -46,11 +46,6 @@ import type { ChaosCustomMicroFrontendProps } from '@chaos/interfaces/Chaos.type
 import type { FFCustomMicroFrontendProps } from '@cf/FFCustomMicroFrontendProps.types'
 import type { getLocationPathName } from 'framework/utils/WindowLocation'
 
-// Service types
-export * as cdNg from 'services/cd-ng'
-export * as ci from 'services/ci'
-export * as pipelineNg from 'services/pipeline-ng'
-
 export interface Scope {
   accountId?: string
   orgIdentifier?: string
