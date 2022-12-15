@@ -67,7 +67,7 @@ import {
   DEFAULT_HARNESS_KMS,
   AccessTokenPermissionsDocLinks
 } from '../../DeployProvisioningWizard/Constants'
-import { getOAuthConnectorPayload } from '../../CDOnboardingUtils'
+import { getOAuthConnectorPayload, ONBOARDING_PREFIX } from '../../CDOnboardingUtils'
 import css from '../../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
 export interface SelectGitProviderRefInstance {
@@ -362,7 +362,7 @@ const SelectGitProviderRef = (
 
   const getSCMConnectorPayload = React.useCallback(
     (secretId: string, type: GitProvider['type']): ConnectorInfoDTO => {
-      const connectorName = `${type}-onboarding`
+      const connectorName = `${type}_${ONBOARDING_PREFIX}`
       const commonConnectorPayload: ConnectorInfoDTO = {
         name: connectorName,
         identifier: StringUtils.getIdentifierFromName(connectorName),

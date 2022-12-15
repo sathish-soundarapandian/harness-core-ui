@@ -67,6 +67,7 @@ export enum DrawerMode {
 export const SAMPLE_MANIFEST_FOLDER = 'Sample Manifest Onboarding'
 export const DEFAULT_PIPELINE_NAME = 'Sample Pipeline'
 export const EMPTY_STRING = ''
+export const ONBOARDING_PREFIX = 'onboarding'
 
 const DEFAULT_STAGE_ID = 'Stage'
 const DEFAULT_STAGE_TYPE = 'Deployment'

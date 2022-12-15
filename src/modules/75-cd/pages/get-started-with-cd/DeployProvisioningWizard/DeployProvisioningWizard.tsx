@@ -283,13 +283,14 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       if (!repoName || !serviceRef || !environmentRef || !infraStructureRef) {
         return EMPTY_STRING
       }
+      const constructPipelineName = (name: string): string =>
+        `${getString('pipelineSteps.deploy.create.deployStageName')}_${StringUtils.getIdentifierFromName(name)}`
+
       const uniquePipelineId = getUniqueEntityIdentifier(repoName)
-      const userPipelineIdentifier = `${getString(
-        'pipelineSteps.deploy.create.deployStageName'
-      )}_${StringUtils.getIdentifierFromName(uniquePipelineId)}` // pipeline identifier cannot have spaces
+      const userPipelineIdentifier = constructPipelineName(uniquePipelineId)
 
       const payload = DEFAULT_PIPELINE_PAYLOAD
-      payload.pipeline.name = `${getString('buildText')}_${StringUtils.getIdentifierFromName(repoName)}`
+      payload.pipeline.name = constructPipelineName(repoName)
       payload.pipeline.identifier = userPipelineIdentifier
       payload.pipeline.projectIdentifier = projectIdentifier
       payload.pipeline.orgIdentifier = orgIdentifier
