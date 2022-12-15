@@ -10,8 +10,8 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Layout, Text } from '@harness/uicore'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import React, { ReactNode } from 'react'
-import type { LicenseUsageDTO } from 'services/cd-ng'
 import moment from 'moment'
+import type { LicenseUsageDTO } from 'services/cd-ng'
 
 export const LabeValue = ({ label, value }: { label: string; value: ReactNode }) => {
   return (

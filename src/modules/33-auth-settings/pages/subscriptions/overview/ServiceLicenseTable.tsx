@@ -9,10 +9,11 @@ import React from 'react'
 import type { Column } from 'react-table'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
-import { Text, TableV2, Layout, Card, Heading, Button } from '@harness/uicore'
+import { Text, TableV2, Layout, Card, Heading } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import moment from 'moment'
 import { String, useStrings } from 'framework/strings'
-import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
+import type { PageLicenseUsageDTO, LicenseUsageDTO } from 'services/cd-ng'
 import type { SortBy } from '../../../../70-pipeline/pages/pipeline-list/types'
 import {
   LastModifiedNameCell,
@@ -23,18 +24,16 @@ import {
   LastDeployedCell,
   LicenseConsumedCell
 } from './ServiceLicenseTableCells'
-import type { ResponsePageLicenseUsageDTO, PageLicenseUsageDTO, LicenseUsageDTO } from 'services/cd-ng'
 import css from '../../../../70-pipeline/pages/pipeline-list/PipelineListTable/PipelineListTable.module.scss'
 import pageCss from '../SubscriptionsPage.module.scss'
-import moment from 'moment'
 
 export interface ServiceLicenseTableProps {
-  data: PageLicenseUsageDTO
+  data: PageLicenseUsageDTO | []
   gotoPage: (pageNumber: number) => void
   setSortBy: (sortBy: string[]) => void
   sortBy: string[]
 }
-
+const DEFAULT_PAGE_INDEX = 0
 export function ServiceLicenseTable({
   data,
   gotoPage,
@@ -108,49 +107,42 @@ export function ServiceLicenseTable({
   const timeValue = moment(content[0]?.timestamp).format('DD-MM-YYYY h:mm:ss')
   return (
     <Card className={pageCss.outterCard}>
-      {isEmpty(data) ? (
-        <p>No active ServiceFound</p>
-      ) : (
-        <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
-          <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
-            <Layout.Vertical>
-              <Heading color={Color.BLACK} font={{ size: 'medium' }}>
-                {getString('common.activeServices')}
-              </Heading>
-              <p className={pageCss.activeServiceLink}>{getString('common.whatIsActiveService')}</p>
-            </Layout.Vertical>
-            {/* <Button intent="primary" onClick={() => console.log('hello')}>
-              {getString('common.downloadCSV')}
-            </Button> */}
-          </Layout.Horizontal>
-          <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
-            <Layout.Vertical className={pageCss.badgesContainer}>
-              <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
-                <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
-                <String stringID={'common.activeServices'} />
-                <Text className={pageCss.badgeText}>{timeValue}</Text>
-              </div>
-            </Layout.Vertical>
-          </Layout.Horizontal>
-          <TableV2
-            className={css.table}
-            columns={columns}
-            data={content}
-            pagination={
-              totalElements > size
-                ? {
-                    itemCount: totalElements,
-                    pageSize: size,
-                    pageCount: totalPages,
-                    pageIndex: number,
-                    gotoPage
-                  }
-                : undefined
-            }
-            sortable
-          />
-        </Layout.Vertical>
-      )}
+      <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
+        <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
+          <Layout.Vertical>
+            <Heading color={Color.BLACK} font={{ size: 'medium' }}>
+              {getString('common.activeServices')}
+            </Heading>
+            <p className={pageCss.activeServiceLink}>{getString('common.whatIsActiveService')}</p>
+          </Layout.Vertical>
+        </Layout.Horizontal>
+        <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
+          <Layout.Vertical className={pageCss.badgesContainer}>
+            <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
+              <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
+              <String stringID={'common.activeServices'} />
+              <Text className={pageCss.badgeText}>{timeValue}</Text>
+            </div>
+          </Layout.Vertical>
+        </Layout.Horizontal>
+        <TableV2
+          className={css.table}
+          columns={columns}
+          data={content}
+          pagination={
+            totalElements > size
+              ? {
+                  itemCount: totalElements,
+                  pageSize: size,
+                  pageCount: totalPages,
+                  pageIndex: number,
+                  gotoPage
+                }
+              : undefined
+          }
+          sortable
+        />
+      </Layout.Vertical>
     </Card>
   )
 }

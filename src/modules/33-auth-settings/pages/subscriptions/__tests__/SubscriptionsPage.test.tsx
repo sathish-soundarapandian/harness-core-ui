@@ -13,12 +13,13 @@ import {
   useGetAccountNG,
   useGetModuleLicensesByAccountAndModuleType,
   useExtendTrialLicense,
-  useSaveFeedback
+  useSaveFeedback,
+  useLisCDActiveServices
 } from 'services/cd-ng'
 import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
 import SubscriptionsPage from '../SubscriptionsPage'
-
+import activeServices from './mocks/activeServices.json'
 jest.mock('services/cd-ng')
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
@@ -46,6 +47,14 @@ const featureFlags = {
 }
 
 describe('Subscriptions Page', () => {
+  const useLisCDActiveServicesMock = useLisCDActiveServices as jest.MockedFunction<any>
+  const mutateListOfActiveServices = jest.fn().mockResolvedValue(activeServices)
+  useLisCDActiveServicesMock.mockReturnValue({
+    mutate: mutateListOfActiveServices,
+    loading: false,
+    cancel: jest.fn()
+  })
+
   test('it renders the subscriptions page', () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
       return {
