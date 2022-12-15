@@ -13,14 +13,13 @@ export VERSION_FILE="package.json"
 # get branch name (0.2.0 -> 0.2.x)
 export VERSION=$(cat package.json | grep version | cut -d: -f2 | cut -d\" -f2 | cut -d. -f1,2).x
 echo $VERSION
-Replace_Version=$(cat package.json | grep version)
-echo $Replace_Version
+
 
 SPLIT_VERSION=`echo "$VERSION" | awk -F'.' '{print $2}'`
 NEW_VERSION=$(( ${SPLIT_VERSION}+1 ))
 echo $NEW_VERSION
 
-sed -i "s:version=0.${SPLIT_VERSION}.0:version=0.${NEW_VERSION}.0:g" ${VERSION_FILE}
+sed -i "s:\"version\": \"0.${SPLIT_VERSION}.0\":\"version\": \"0.${NEW_VERSION}.0\":g" ${VERSION_FILE}
 git add ${VERSION_FILE}
 git commit -m "Branching to release/$VERSION. New version 0.${NEW_VERSION}.x"
 git push origin develop
