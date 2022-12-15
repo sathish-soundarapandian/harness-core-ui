@@ -3,8 +3,8 @@
 # that can be found in the licenses directory at the root of this repository, also available at
 # https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
 
-#export BRANCH=develop
-#git checkout $BRANCH
+export BRANCH=develop
+git checkout $BRANCH
 
 # bump minor version (0.1.0 -> 0.2.0)
 #yarn version --minor --no-git-tag-version --no-commit-hooks
@@ -23,9 +23,9 @@ sed -i "s:\"0.${SPLIT_VERSION}.0\":\"0.${NEW_VERSION}.0\":g" ${VERSION_FILE}
 
 cat ${VERSION_FILE}
 
-#git add ${VERSION_FILE}
-#git commit -m "Branching to release/$VERSION. New version 0.${NEW_VERSION}.x"
-#git push origin develop
+git add ${VERSION_FILE}
+git commit -m "Branching to release/$VERSION. New version 0.${NEW_VERSION}.x"
+git push origin develop
 
 #update jira
-#. scripts/ci/jira-tagging-ngui-qa.sh
+. scripts/ci/jira-tagging-ngui-qa.sh
