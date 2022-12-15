@@ -30,7 +30,6 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'
 import { setPageNumber } from '@common/utils/utils'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import { isAccountBasicRole } from '@rbac/utils/utils'
 import css from '../Roles.module.scss'
 
 const RolesList: React.FC = () => {
@@ -141,16 +140,14 @@ const RolesList: React.FC = () => {
         className={css.pageContainer}
       >
         <div className={css.masonry}>
-          {data?.data?.content?.map((roleResponse: RoleResponse) =>
-            isAccountBasicRole(roleResponse.role.identifier) ? null : (
-              <RoleCard
-                key={roleResponse.role.identifier}
-                data={roleResponse}
-                reloadRoles={refetch}
-                editRoleModal={editRoleModal}
-              />
-            )
-          )}
+          {data?.data?.content?.map((roleResponse: RoleResponse) => (
+            <RoleCard
+              key={roleResponse.role.identifier}
+              data={roleResponse}
+              reloadRoles={refetch}
+              editRoleModal={editRoleModal}
+            />
+          ))}
         </div>
         <Container className={css.pagination}>
           <Pagination

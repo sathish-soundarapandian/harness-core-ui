@@ -39,7 +39,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/exports'
 import { CopyText } from '@common/components/CopyText/CopyText'
 import routes from '@common/RouteDefinitions'
-import { InvitationStatus, handleInvitationResponse, isAccountBasicRole } from '@rbac/utils/utils'
+import { InvitationStatus, handleInvitationResponse } from '@rbac/utils/utils'
 import { getDefaultRole, getDetailsUrl } from '@projects-orgs/utils/utils'
 import { useGetCommunity } from '@common/utils/utils'
 import { EmailSchema } from '@common/utils/Validation'
@@ -129,22 +129,18 @@ const Collaborators: React.FC<CollaboratorModalData> = props => {
     []
   )
 
-  const [role, setRole] = useState<RoleOption>(
-    getDefaultRole({ accountIdentifier: accountId, orgIdentifier, projectIdentifier }, getString)
-  )
+  const [role, setRole] = useState<RoleOption>(getDefaultRole(getString))
 
   const roles: RoleOption[] = defaultTo(
     roleData?.data?.content?.reduce((acc: RoleOption[], response) => {
-      if (!isAccountBasicRole(response.role.identifier)) {
-        acc.push({
-          label: response.role.name,
-          value: response.role.identifier,
-          managed: defaultTo(response.harnessManaged, false)
-        })
-      }
+      acc.push({
+        label: response.role.name,
+        value: response.role.identifier,
+        managed: defaultTo(response.harnessManaged, false)
+      })
       return acc
     }, []),
-    []
+    [getDefaultRole(getString)]
   )
 
   const SendInvitation = async (values: MultiSelectOption[]): Promise<void> => {
@@ -154,15 +150,16 @@ const Collaborators: React.FC<CollaboratorModalData> = props => {
 
     const dataToSubmit: AddUsers = {
       emails: usersToSubmit,
-      roleBindings: isCommunity
-        ? []
-        : [
-            {
-              roleIdentifier: role.value.toString(),
-              roleName: role.label,
-              managedRole: role.managed
-            }
-          ]
+      roleBindings:
+        isCommunity || !role.value
+          ? []
+          : [
+              {
+                roleIdentifier: role.value.toString(),
+                roleName: role.label,
+                managedRole: role.managed
+              }
+            ]
     }
 
     try {
@@ -193,7 +190,7 @@ const Collaborators: React.FC<CollaboratorModalData> = props => {
       onSubmit={(values, { resetForm }) => {
         modalErrorHandler?.hide()
         SendInvitation(values.collaborators)
-        setRole(getDefaultRole({ accountIdentifier: accountId, orgIdentifier, projectIdentifier }, getString))
+        setRole(getDefaultRole(getString))
         resetForm({ values: { collaborators: [] } })
       }}
       enableReinitialize={true}
@@ -242,9 +239,12 @@ const Collaborators: React.FC<CollaboratorModalData> = props => {
                         <DropDown
                           items={roles}
                           value={role.value.toString()}
-                          onChange={item => {
+                          addClearBtn={true}
+                          onChange={(item, event) => {
+                            event?.preventDefault()
                             setRole(item as RoleOption)
                           }}
+                          placeholder={getString('rbac.usersPage.selectRole')}
                           isLabel={true}
                           filterable={false}
                           width={160}
@@ -286,7 +286,7 @@ const Collaborators: React.FC<CollaboratorModalData> = props => {
                   text={getString('add')}
                   variation={ButtonVariation.PRIMARY}
                   inline
-                  disabled={role.value === 'none' || formik.values.collaborators.length === 0 ? true : false}
+                  disabled={formik.values.collaborators.length === 0}
                   type="submit"
                   loading={loading}
                 />

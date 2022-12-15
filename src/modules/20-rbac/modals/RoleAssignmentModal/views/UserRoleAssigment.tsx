@@ -27,13 +27,7 @@ import { usePostRoleAssignments, RoleAssignment as RBACRoleAssignment } from 'se
 import { useStrings } from 'framework/strings'
 import { UserMetadataDTO, RoleAssignmentMetadataDTO, useGetUsers, useAddUsers, AddUsers } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
-  handleInvitationResponse,
-  getScopeBasedDefaultAssignment,
-  InvitationStatus,
-  isNewRoleAssignment,
-  isAccountBasicRole
-} from '@rbac/utils/utils'
+import { handleInvitationResponse, InvitationStatus, isNewRoleAssignment } from '@rbac/utils/utils'
 import { getIdentifierFromValue, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -41,7 +35,6 @@ import UserGroupsInput from '@rbac/components/UserGroupsInput/UserGroupsInput'
 import { useGetCommunity } from '@common/utils/utils'
 import UserItemRenderer from '@audit-trail/components/UserItemRenderer/UserItemRenderer'
 import UserTagRenderer from '@audit-trail/components/UserTagRenderer/UserTagRenderer'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { RoleAssignmentValues } from './RoleAssignment'
 import RoleAssignmentForm from './RoleAssignmentForm'
 
@@ -89,7 +82,6 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const { getString } = useStrings()
-  const { ACCOUNT_BASIC_ROLE } = useFeatureFlags()
   const isCommunity = useGetCommunity()
   const [query, setQuery] = useState<string>()
   const { showSuccess } = useToaster()
@@ -133,27 +125,10 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
   )
 
   const assignments: Assignment[] = defaultTo(
-    roleBindings?.reduce((acc: Assignment[], roleAssignment) => {
-      if (!isAccountBasicRole(roleAssignment.roleIdentifier)) {
-        acc.push({
-          role: {
-            label: roleAssignment.roleName,
-            value: roleAssignment.roleIdentifier,
-            managed: roleAssignment.managedRole,
-            managedRoleAssignment: roleAssignment.managedRoleAssignment,
-            assignmentIdentifier: roleAssignment.identifier
-          },
-          resourceGroup: {
-            label: defaultTo(roleAssignment.resourceGroupName, ''),
-            value: defaultTo(roleAssignment.resourceGroupIdentifier, ''),
-            managedRoleAssignment: roleAssignment.managedRoleAssignment,
-            assignmentIdentifier: roleAssignment.identifier
-          }
-        })
-      }
+    roleBindings?.reduce((acc: Assignment[]) => {
       return acc
     }, []),
-    getScopeBasedDefaultAssignment(scope, getString, isCommunity, !!ACCOUNT_BASIC_ROLE)
+    []
   )
 
   const handleRoleAssignment = async (values: UserRoleAssignmentValues): Promise<void> => {

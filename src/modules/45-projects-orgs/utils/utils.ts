@@ -6,8 +6,6 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
-import { getScopeFromDTO, ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import routes from '@common/RouteDefinitions'
 import type { StringKeys, StringsMap } from 'framework/strings/StringsContext'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -87,18 +85,8 @@ export const getModuleDescription = (module: ModuleName): StringKeys => {
   return 'projectsOrgs.blank'
 }
 
-export const getDefaultRole = (scope: ScopedObjectDTO, getString: (key: keyof StringsMap) => string): RoleOption => {
-  if (getScopeFromDTO(scope) === Scope.PROJECT) {
-    return { label: getString('common.projectViewer'), value: '_project_viewer', managed: true }
-  }
-  if (getScopeFromDTO(scope) === Scope.ORG) {
-    return {
-      label: getString('common.orgViewer'),
-      value: '_organization_viewer',
-      managed: true
-    }
-  }
-  return { label: getString('common.accViewer'), value: '_account_viewer', managed: true }
+export const getDefaultRole = (getString: (key: keyof StringsMap) => string): RoleOption => {
+  return { label: getString('rbac.usersPage.selectRole'), value: '', managed: true }
 }
 
 export const getDetailsUrl = ({ accountId, orgIdentifier, projectIdentifier }: ScopedDTO): string => {

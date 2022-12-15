@@ -184,66 +184,6 @@ export const getScopeLevelManagedResourceGroup = (
   }
 }
 
-export const isAccountBasicRole = (identifier: string): boolean => {
-  return identifier === '_account_basic'
-}
-
-export const getScopeBasedDefaultAssignment = (
-  scope: Scope,
-  getString: UseStringsReturn['getString'],
-  isCommunity: boolean,
-  disableDefaultAssignment: boolean
-): Assignment[] => {
-  if (isCommunity || disableDefaultAssignment) {
-    return []
-  } else {
-    const resourceGroup: ResourceGroupOption = {
-      managedRoleAssignment: true,
-      ...getScopeLevelManagedResourceGroup(scope, getString)
-    }
-    switch (scope) {
-      case Scope.ACCOUNT:
-        return [
-          {
-            role: {
-              label: getString('common.accViewer'),
-              value: '_account_viewer',
-              managed: true,
-              managedRoleAssignment: true
-            },
-            resourceGroup
-          }
-        ]
-      case Scope.ORG:
-        return [
-          {
-            role: {
-              label: getString('common.orgViewer'),
-              value: '_organization_viewer',
-              managed: true,
-              managedRoleAssignment: true
-            },
-            resourceGroup
-          }
-        ]
-      case Scope.PROJECT:
-        return [
-          {
-            role: {
-              label: getString('common.projectViewer'),
-              value: '_project_viewer',
-              managed: true,
-              managedRoleAssignment: true
-            },
-            resourceGroup
-          }
-        ]
-      default:
-        return []
-    }
-  }
-}
-
 export const isAssignmentFieldDisabled = (value: RoleOption | ResourceGroupOption): boolean => {
   if (value.assignmentIdentifier || value.managedRoleAssignment) {
     return true
@@ -269,23 +209,22 @@ export interface ErrorHandlerProps {
 export const getAssignments = (roleBindings: RoleAssignmentMetadataDTO[]): Assignment[] => {
   return defaultTo(
     roleBindings?.reduce((acc: Assignment[], roleAssignment) => {
-      if (!isAccountBasicRole(roleAssignment.roleIdentifier)) {
-        acc.push({
-          role: {
-            label: roleAssignment.roleName,
-            value: roleAssignment.roleIdentifier,
-            managed: roleAssignment.managedRole,
-            managedRoleAssignment: roleAssignment.managedRoleAssignment,
-            assignmentIdentifier: roleAssignment.identifier
-          },
-          resourceGroup: {
-            label: defaultTo(roleAssignment.resourceGroupName, ''),
-            value: defaultTo(roleAssignment.resourceGroupIdentifier, ''),
-            managedRoleAssignment: roleAssignment.managedRoleAssignment,
-            assignmentIdentifier: roleAssignment.identifier
-          }
-        })
-      }
+      acc.push({
+        role: {
+          label: roleAssignment.roleName,
+          value: roleAssignment.roleIdentifier,
+          managed: roleAssignment.managedRole,
+          managedRoleAssignment: roleAssignment.managedRoleAssignment,
+          assignmentIdentifier: roleAssignment.identifier
+        },
+        resourceGroup: {
+          label: defaultTo(roleAssignment.resourceGroupName, ''),
+          value: defaultTo(roleAssignment.resourceGroupIdentifier, ''),
+          managedRoleAssignment: roleAssignment.managedRoleAssignment,
+          assignmentIdentifier: roleAssignment.identifier
+        }
+      })
+
       return acc
     }, []),
     []
