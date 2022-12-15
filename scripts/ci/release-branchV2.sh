@@ -24,4 +24,4 @@ git commit -m "Branching to release/$VERSION. New version ${NEW_VERSION}"
 git push origin develop
 
 #update jira
-scripts/ci/jira-tagging-ngui-qa.sh
+. scripts/ci/jira-tagging-ngui-qa.sh
