@@ -58,7 +58,7 @@ do
     echo Updating JIRA: $KEY
     curl \
        -X PUT \
-       --data "{ \"fields\" : { \"${FIELD_ID}\" : \"${VERSION}\" }}" \
+       --data "{ \"fields\" : { \"${FIELD_ID}\" : \"0.${NEW_VERSION}.0\" }}" \
        -H "Content-Type: application/json" \
        https://harness.atlassian.net/rest/api/2/issue/${KEY} \
        --user $JIRA_USERNAME:$JIRA_PASSWORD
