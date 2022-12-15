@@ -485,6 +485,7 @@ export interface StringsMap {
   'common.lastDeployed': string
   'common.lastModified': string
   'common.lastModifiedTime': string
+  'common.lastUpdated': string
   'common.lastUpdatedAt': string
   'common.latest': string
   'common.launchFirstGen': string
@@ -543,6 +544,7 @@ export interface StringsMap {
   'common.newName': string
   'common.newVersion': string
   'common.noAPIKeys': string
+  'common.noActiveServiceData': string
   'common.noAvailableTags': string
   'common.noConnectorAvailable': string
   'common.noDelegateForTask': string

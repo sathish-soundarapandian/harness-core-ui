@@ -1160,6 +1160,7 @@ timeRangeLimitWarning:
   upgradeOffer: now for data retention upto 5 years.
 viewAll: View all
 lastUpdatedAt: Last updated at
+lastUpdated: Updated
 tryAgain: Try Again
 organizations: ORGANIZATIONS
 projects: PROJECTS
@@ -1169,3 +1170,4 @@ lastDeployed: 'LAST DEPLOYED'
 licensesConsumed: 'LICENSES CONSUMED'
 downloadCSV: 'Download CSV'
 whatIsActiveService: What is an Active Service?
+noActiveServiceData: No active Service Record found

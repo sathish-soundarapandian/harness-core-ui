@@ -8,8 +8,7 @@
 import React from 'react'
 import type { Column } from 'react-table'
 import cx from 'classnames'
-import { isEmpty } from 'lodash-es'
-import { Text, TableV2, Layout, Card, Heading } from '@harness/uicore'
+import { Text, TableV2, Layout, Card, Heading, NoDataCard } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
 import { String, useStrings } from 'framework/strings'
@@ -135,27 +134,36 @@ export function ServiceLicenseTable({
             <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
               <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
               <String stringID={'common.subscriptions.usage.services'} />
+              <Text>&nbsp;{getString('common.lastUpdated')} -</Text>
               <Text className={pageCss.badgeText}>{timeValue}</Text>
             </div>
           </Layout.Vertical>
         </Layout.Horizontal>
-        <TableV2
-          className={css.table}
-          columns={columns}
-          data={content}
-          pagination={
-            totalElements > size
-              ? {
-                  itemCount: totalElements,
-                  pageSize: size,
-                  pageCount: totalPages,
-                  pageIndex: number,
-                  gotoPage
-                }
-              : undefined
-          }
-          sortable
-        />
+        {content.length > 0 ? (
+          <TableV2
+            className={css.table}
+            columns={columns}
+            data={content}
+            pagination={
+              totalElements > size
+                ? {
+                    itemCount: totalElements,
+                    pageSize: size,
+                    pageCount: totalPages,
+                    pageIndex: number,
+                    gotoPage
+                  }
+                : undefined
+            }
+            sortable
+          />
+        ) : (
+          <NoDataCard
+            message={getString('common.noActiveServiceData')}
+            className={pageCss.noDataCard}
+            containerClassName={pageCss.noDataCardContainer}
+          />
+        )}
       </Layout.Vertical>
     </Card>
   )

@@ -24,6 +24,8 @@ declare const styles: {
   readonly moduleIcons: string
   readonly moduleSelectCard: string
   readonly moduleSelectCards: string
+  readonly noDataCard: string
+  readonly noDataCardContainer: string
   readonly outterCard: string
   readonly runningExecutions: string
   readonly selected: string
