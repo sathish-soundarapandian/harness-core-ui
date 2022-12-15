@@ -77,8 +77,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
       accountIdentifier: accountId,
       page,
       sort,
-      size,
-      timestamp: '12345678'
+      size
     },
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
