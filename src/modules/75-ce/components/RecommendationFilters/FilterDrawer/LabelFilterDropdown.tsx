@@ -5,12 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
-import { Checkbox, Container, Icon, Text } from '@harness/uicore'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Checkbox, Container, ExpandingSearchInput, Icon, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Popover, Position, TagInput } from '@blueprintjs/core'
 import { Virtuoso } from 'react-virtuoso'
-import { xor } from 'lodash-es'
+import { debounce, xor } from 'lodash-es'
 import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
@@ -35,6 +35,7 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
   const { getString } = useStrings()
 
   const [searchText, setSearchText] = useState('')
+  const [valuesSearchText, setValuesSearchText] = useState('')
   const [page, setPage] = useState(1)
 
   const [keysPopoverOpen, setKeysPopoverOpen] = useState(false)
@@ -76,7 +77,7 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
               identifierName: 'Label'
             },
             operator: QlceViewFilterOperator.In,
-            values: []
+            values: [valuesSearchText]
           }
         } as unknown as QlceViewFilterWrapperInput
       ],
@@ -92,12 +93,10 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
   useEffect(() => {
     setFetchMoreValues(labelKeyValues?.length === LIMIT)
 
-    if (labelKeyValues?.length) {
-      if (page === 0) {
-        setValuesList(labelKeyValues)
-      } else {
-        setValuesList(prevVal => [...prevVal, ...labelKeyValues])
-      }
+    if (page === 1 || valuesSearchText) {
+      setValuesList(labelKeyValues)
+    } else {
+      setValuesList(prevVal => [...prevVal, ...labelKeyValues])
     }
   }, [JSON.stringify(labelKeyValues)])
 
@@ -181,6 +180,14 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
     setLabelFilters(newFilters)
   }
 
+  const handleValuesSearch = useCallback(
+    debounce((text: string) => {
+      setPage(1)
+      setValuesSearchText(text)
+    }),
+    []
+  )
+
   return (
     <Popover
       usePortal
@@ -195,7 +202,7 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
           {labelKeysData.fetching ? (
             <LoadingSpinner />
           ) : !labelsKeys?.length ? (
-            <Text>{getString('common.filters.noResultsFound')}</Text>
+            <Text padding="small">{getString('common.filters.noResultsFound')}</Text>
           ) : (
             filteredLabelKeys?.map(key => (
               <Popover
@@ -210,10 +217,15 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
                 }}
                 content={
                   <div className={css.valuesListCtn}>
-                    {page === 1 && labelKeyValuesData.fetching ? (
-                      <LoadingSpinner />
+                    <Container padding="small">
+                      <ExpandingSearchInput alwaysExpanded onChange={handleValuesSearch} />
+                    </Container>
+                    {page == 1 && labelKeyValuesData.fetching ? (
+                      <Container className={css.valuesSpinner}>
+                        <LoadingSpinner />
+                      </Container>
                     ) : !valuesList?.length ? (
-                      <Text>{getString('common.filters.noResultsFound')}</Text>
+                      <Text padding="small">{getString('common.filters.noResultsFound')}</Text>
                     ) : (
                       <Virtuoso
                         style={{ height: 300 }}
@@ -276,5 +288,7 @@ const LabelFilterDropdown: React.FC<LabelFilterDropdownProps> = ({ setLabelFilte
 export default LabelFilterDropdown
 
 const LoadingSpinner: React.FC<{ size?: number }> = ({ size = 24 }) => (
-  <Icon name="spinner" size={size} padding={'small'} color={Color.BLUE_500} className={css.spinner} />
+  <Container className={css.spinner}>
+    <Icon name="spinner" size={size} padding={'small'} color={Color.BLUE_500} />
+  </Container>
 )

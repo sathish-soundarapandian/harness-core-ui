@@ -25,6 +25,7 @@ declare const styles: {
   readonly popoverTarget: string
   readonly spinner: string
   readonly valuesListCtn: string
+  readonly valuesSpinner: string
   readonly visible: string
 }
 export default styles

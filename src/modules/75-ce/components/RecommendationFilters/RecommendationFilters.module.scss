@@ -118,6 +118,10 @@
     min-width: 300px;
     height: 300px;
     overflow: auto;
+
+    .valuesSpinner {
+      height: calc(100% - 48px) !important;
+    }
   }
 
   .listItemCtn {
