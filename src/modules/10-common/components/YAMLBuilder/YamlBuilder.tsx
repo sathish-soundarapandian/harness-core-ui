@@ -1048,7 +1048,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           className={cx(
             displayBorder ? css.main : null,
             { [css.darkBg]: theme === 'DARK' },
-            { [css.borderWithErrorPanel]: showErrorFooter },
+            // { [css.borderWithErrorPanel]: showErrorFooter },
             { [css.borderWithPluginsPanel]: shouldRenderPluginsPanel }
           )}
         >

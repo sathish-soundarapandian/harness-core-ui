@@ -6,13 +6,12 @@
  */
 
 .yamlBuilder {
-  padding: var(--spacing-large);
   position: relative;
 
   .buttonsWrapper {
     position: absolute;
-    right: var(--spacing-xxxlarge);
-    top: var(--spacing-xxlarge);
+    right: calc(2 * var(--spacing-xxlarge));
+    top: var(--spacing-medium);
     display: flex;
     column-gap: var(--spacing-large);
     align-items: center;

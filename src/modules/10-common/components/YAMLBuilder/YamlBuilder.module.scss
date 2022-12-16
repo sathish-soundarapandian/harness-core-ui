@@ -7,20 +7,16 @@
 
 .main {
   background-color: var(--white);
-  border-radius: 5px;
-  border: 1px solid var(--grey-250);
 }
 
-.borderWithErrorPanel {
-  border-bottom-left-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
-  border-bottom: none !important;
-}
+// .borderWithErrorPanel {
+//   // border-bottom-left-radius: 0 !important;
+//   // border-bottom-right-radius: 0 !important;
+//   // border-bottom: none !important;
+// }
 
 .borderWithPluginsPanel {
-  border-top-right-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
-  border-right: none !important;
+  border-right: 3px solid var(--grey-100);
 }
 
 .filePath {
