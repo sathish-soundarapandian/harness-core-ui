@@ -61,7 +61,13 @@ const CreateGcpConnector: React.FC<CreateConnectorModalProps> = props => {
           connectorInfo={props.connectorInfo}
           gitDetails={props.gitDetails}
         />
-        <TestConnection name={getString('common.smtp.testConnection')} onClose={props.onClose} />
+        <TestConnection
+          name={getString('common.smtp.testConnection')}
+          onClose={props.onClose}
+          isEditMode={props.isEditMode}
+          orgIdentifier={props.orgIdentifier}
+          projectIdentifier={props.projectIdentifier}
+        />
       </StepWizard>
     </>
   )

@@ -30,6 +30,9 @@ interface TestConnectionProps {
 
 interface WizardProps {
   onClose: () => void
+  isEditMode: boolean
+  projectIdentifier?: string
+  orgIdentifier?: string
 }
 
 enum Status {
@@ -54,8 +57,8 @@ const TestConnection: React.FC<StepProps<TestConnectionProps> & WizardProps> = p
     identifier: prevStepData?.identifier || '',
     queryParams: {
       accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
+      orgIdentifier: props.orgIdentifier ? orgIdentifier : undefined,
+      projectIdentifier: props.projectIdentifier ? projectIdentifier : undefined
     },
     requestOptions: {
       headers: {
