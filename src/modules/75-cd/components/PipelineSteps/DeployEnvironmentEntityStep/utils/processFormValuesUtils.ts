@@ -71,7 +71,7 @@ export function processSingleEnvironmentFormValues(
                   : [
                       {
                         identifier: data.infrastructure,
-                        inputs: get(data, `infrastructureInputs.${data.environment}.${data.infrastructure}`)
+                        inputs: get(data, `infrastructureInputs.['${data.environment}'].${data.infrastructure}`)
                       }
                     ]
             }),

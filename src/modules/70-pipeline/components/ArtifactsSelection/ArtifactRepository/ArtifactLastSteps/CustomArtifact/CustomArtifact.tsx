@@ -180,7 +180,7 @@ function FormContent({
 
   return (
     <FormikForm>
-      <div className={cx(css.artifactForm, formClassName)}>
+      <div className={cx(css.artifactForm, css.customArtifactForm, formClassName)}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <ThumbnailSelect

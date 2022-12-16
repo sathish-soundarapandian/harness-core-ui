@@ -472,7 +472,8 @@ const RenderColumnEnable: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
       accountIdentifier: column.accountId,
       orgIdentifier: column.orgIdentifier,
       projectIdentifier: column.projectIdentifier,
-      targetIdentifier: column.pipelineIdentifier
+      targetIdentifier: column.pipelineIdentifier,
+      ignoreError: true
     },
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
   })

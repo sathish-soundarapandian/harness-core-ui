@@ -17,7 +17,7 @@ import type { CommonRecordsProps } from './types'
 import css from './CommonRecords.module.scss'
 
 export function CommonRecords(props: CommonRecordsProps): JSX.Element {
-  const { data, loading, error, fetchRecords, isQueryExecuted, query } = props
+  const { data, loading, error, fetchRecords, query } = props
   const { getString } = useStrings()
   let content = null
 
@@ -38,16 +38,6 @@ export function CommonRecords(props: CommonRecordsProps): JSX.Element {
     )
   } else if (loading) {
     content = <Icon name="steps-spinner" size={32} color={Color.GREY_600} className={css.centerElement} />
-  } else if (!isQueryExecuted) {
-    content = (
-      <Text
-        icon="timeline-line-chart"
-        className={cx(css.noQueryChart, css.centerElement)}
-        iconProps={{ size: 50, intent: 'success' }}
-      >
-        {getString('cv.monitoringSources.commonHealthSource.submitQueryToSeeRecords')}
-      </Text>
-    )
   } else if (!records?.length) {
     content = (
       <Container className={css.noRecords}>

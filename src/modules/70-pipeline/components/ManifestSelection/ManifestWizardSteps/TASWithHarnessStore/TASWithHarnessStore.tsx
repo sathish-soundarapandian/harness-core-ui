@@ -31,6 +31,7 @@ import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/Conf
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import { cfCliVersions, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import type { TASWithHarnessStorePropType, ManifestTypes } from '../../ManifestInterface'
+import { removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface TASWithHarnessStoreProps {
@@ -94,8 +95,14 @@ function TASWithHarnessStore({
                 files: formData.files
               }
             },
-            varsPaths: formData.varsPaths,
-            autoScalerPath: formData.autoScalerPath
+            varsPaths:
+              typeof formData?.varsPaths === 'string'
+                ? formData?.varsPaths
+                : removeEmptyFieldsFromStringArray(formData?.varsPaths),
+            autoScalerPath:
+              typeof formData?.autoScalerPath === 'string'
+                ? formData?.autoScalerPath
+                : removeEmptyFieldsFromStringArray(formData?.autoScalerPath)
           }
         }
       }

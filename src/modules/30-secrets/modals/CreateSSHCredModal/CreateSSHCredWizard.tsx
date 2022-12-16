@@ -27,6 +27,7 @@ export interface SSHCredSharedObj {
   detailsData?: DetailsForm
   authData?: SSHConfigFormData
   isEdit?: boolean
+  loading?: boolean
 }
 
 const CreateSSHCredWizard: React.FC<CreateSSHCredWizardProps & SSHCredSharedObj> = props => {

@@ -15,7 +15,6 @@ import {
   Button,
   Formik,
   Layout,
-  FormInput,
   ButtonVariation,
   SelectOption,
   Text,
@@ -26,7 +25,8 @@ import {
   Tabs,
   Tab,
   MultiTypeInputType,
-  AllowedTypesWithRunTime
+  AllowedTypesWithRunTime,
+  FormInput
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import {
@@ -49,6 +49,9 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
 import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
+import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getRefFromIdentifier } from '@common/utils/utils'
 import ServiceVariableOverride from './ServiceVariableOverride'
 import ServiceManifestOverride from './ServiceManifestOverride/ServiceManifestOverride'
 import { ServiceOverrideTab } from './ServiceOverridesUtils'
@@ -110,6 +113,8 @@ export default function AddEditServiceOverride({
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [isModified, setIsModified] = useState<boolean>(false)
   const [selectedTab, setSelectedTab] = useState(defaultTo(defaultTab, ServiceOverrideTab.VARIABLE))
+
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const selectedServiceOverride = serviceOverrides?.find(
     svcOverride => svcOverride.serviceRef === defaultTo(selectedService, formikRef.current?.values.serviceRef)
@@ -247,16 +252,18 @@ export default function AddEditServiceOverride({
   }, [])
   /**********************************************Service Override CRUD Operations ************************************************/
 
+  const environmentRef = getRefFromIdentifier(environmentIdentifier, orgIdentifier, projectIdentifier)
+
   const onSubmit = async (values: AddEditServiceOverrideFormProps): Promise<void> => {
     try {
       const response = await upsertServiceOverride({
-        environmentIdentifier,
+        environmentIdentifier: environmentRef,
         serviceIdentifier: values.serviceRef as string,
         orgIdentifier,
         projectIdentifier,
         yaml: yamlStringify({
           serviceOverrides: {
-            environmentRef: environmentIdentifier,
+            environmentRef: environmentRef,
             serviceRef: values.serviceRef,
             variables: getOverrideFormdata(values, 'variables'),
             manifests: getOverrideFormdata(values, 'manifests'),
@@ -280,7 +287,7 @@ export default function AddEditServiceOverride({
   const existingJSON = useMemo(() => {
     return {
       serviceOverrides: {
-        environmentRef: environmentIdentifier,
+        environmentRef: environmentRef,
         serviceRef: formikRef.current?.values.serviceRef,
         variables: getOverrideValues('variables'),
         manifests: getOverrideValues('manifests'),
@@ -336,7 +343,7 @@ export default function AddEditServiceOverride({
       formName="addEditServiceOverrideForm"
       initialValues={{
         serviceRef: selectedService,
-        environmentRef: environmentIdentifier,
+        environmentRef: environmentRef,
         variables: getOverrideObject('variables') as VariableOverride[],
         manifests: getOverrideObject('manifests') as ManifestConfigWrapper[],
         configFiles: getOverrideObject('configFiles') as ConfigFileWrapper[],
@@ -369,14 +376,29 @@ export default function AddEditServiceOverride({
             </Layout.Horizontal>
             {selectedView === SelectedView.VISUAL ? (
               <Container>
-                <FormInput.Select
-                  name="serviceRef"
-                  items={servicesOptions}
-                  label={getString('service')}
-                  placeholder={getString('common.selectName', { name: getString('service') })}
-                  onChange={item => handleServiceChange(item)}
-                  disabled={!isEmpty(selectedService)}
-                />
+                {!CDS_OrgAccountLevelServiceEnvEnvGroup ? (
+                  <FormInput.Select
+                    name="serviceRef"
+                    items={servicesOptions}
+                    label={getString('service')}
+                    placeholder={getString('common.selectName', { name: getString('service') })}
+                    onChange={item => handleServiceChange(item)}
+                    disabled={!isEmpty(selectedService)}
+                  />
+                ) : (
+                  <MultiTypeServiceField
+                    name="serviceRef"
+                    label={getString('service')}
+                    placeholder={getString('common.selectName', { name: getString('service') })}
+                    onChange={item => handleServiceChange(item)}
+                    disabled={!isEmpty(selectedService)}
+                    isNewConnectorLabelVisible={false}
+                    setRefValue
+                    multiTypeProps={{
+                      defaultValueToReset: ''
+                    }}
+                  />
+                )}
                 {!isEmpty(formikProps.values?.serviceRef) && (
                   <>
                     <Text>{getString('cd.overrideType')}</Text>

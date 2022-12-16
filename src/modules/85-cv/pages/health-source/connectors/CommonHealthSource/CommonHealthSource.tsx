@@ -49,6 +49,7 @@ export default function CommonHealthSource({
     [healthSourceData]
   )
 
+  // TODO this should be moved to memoized functions.
   const {
     createdMetrics,
     mappedMetrics,

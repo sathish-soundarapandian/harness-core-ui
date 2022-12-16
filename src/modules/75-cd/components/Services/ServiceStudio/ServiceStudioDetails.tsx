@@ -18,7 +18,7 @@ import {
   useToaster,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
-import { cloneDeep, defaultTo, get, omit, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, omit, set, unset } from 'lodash-es'
 import produce from 'immer'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
@@ -45,7 +45,7 @@ interface ServiceStudioDetailsProps {
 function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElement | null {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
-
+  const [hasYamlValidationErrors, setHasYamlValidationErrors] = React.useState<boolean>(false)
   const { tab } = useQueryParams<{ tab: string }>()
   const { updateQueryParams } = useUpdateQueryParams()
   const {
@@ -109,6 +109,11 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     if (!finalServiceData?.service?.name) {
       return
     }
+
+    if (!get(finalServiceData, 'service.serviceDefinition.type')) {
+      unset(finalServiceData?.service, 'serviceDefinition')
+    }
+
     const body = {
       ...omit(cloneDeep(finalServiceData?.service), 'serviceDefinition', 'gitOpsEnabled'),
       projectIdentifier,
@@ -160,7 +165,10 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     if (isServiceEntityModalView) {
       return (
         <>
-          <ServiceConfiguration serviceData={props.serviceData} />
+          <ServiceConfiguration
+            setHasYamlValidationErrors={setHasYamlValidationErrors}
+            serviceData={props.serviceData}
+          />
           <Layout.Horizontal
             className={css.stickyBtnContainer}
             spacing="medium"
@@ -168,7 +176,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
           >
             <Button
               variation={ButtonVariation.PRIMARY}
-              disabled={!isUpdated}
+              disabled={!isUpdated || hasYamlValidationErrors}
               text={getString('save')}
               onClick={saveAndPublishService}
               className={css.saveButton}
@@ -187,7 +195,12 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
           <Tab
             id={ServiceTabs.Configuration}
             title={getString('configuration')}
-            panel={<ServiceConfiguration serviceData={props.serviceData} />}
+            panel={
+              <ServiceConfiguration
+                setHasYamlValidationErrors={setHasYamlValidationErrors}
+                serviceData={props.serviceData}
+              />
+            }
           />
 
           <Tab id={ServiceTabs.REFERENCED_BY} title={getString('referencedBy')} panel={props.refercedByPanel} />
@@ -198,7 +211,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
             {isUpdated && !isReadonly && <div className={css.tagRender}>{getString('unsavedChanges')}</div>}
             <Button
               variation={ButtonVariation.PRIMARY}
-              disabled={!isUpdated}
+              disabled={!isUpdated || hasYamlValidationErrors}
               text={getString('save')}
               onClick={saveAndPublishService}
               className={css.saveButton}

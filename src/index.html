@@ -34,7 +34,9 @@
     </style>
     <!-- apiurl -->
     <script type="text/javascript">
-      window.browserRouterEnabled = window.location.href.toString().includes('browserRouterEnabled=true')
+      window.browserRouterEnabled =
+        'HARNESS_BROWSER_ROUTER_ENABLED' === 'true' ||
+        window.location.href.toString().includes('browserRouterEnabled=true')
       window.noAuthHeader = window.location.href.toString().includes('noAuthHeader=true')
       window.getApiBaseUrl = str => {
         let url = window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str

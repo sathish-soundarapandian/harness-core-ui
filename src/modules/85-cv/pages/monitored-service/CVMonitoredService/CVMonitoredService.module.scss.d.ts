@@ -13,6 +13,7 @@ declare const styles: {
   readonly healthScoreCard: string
   readonly healthScoreCardContainer: string
   readonly infrastructureIconPadding: string
+  readonly monitoredServiceLink: string
   readonly monitoredServiceName: string
   readonly noDataContainer: string
   readonly noServiceAvailableImage: string

@@ -16,6 +16,7 @@ declare const styles: {
   readonly connectorContainer: string
   readonly connectorForm: string
   readonly customArtifactContainer: string
+  readonly customArtifactForm: string
   readonly dockerSideCard: string
   readonly existingDocker: string
   readonly expanded: string
@@ -24,7 +25,6 @@ declare const styles: {
   readonly heading: string
   readonly imagePathContainer: string
   readonly inputWidth: string
-  readonly jenkinsFieldContainer: string
   readonly label: string
   readonly marginBottom: string
   readonly optionsViewContainer: string

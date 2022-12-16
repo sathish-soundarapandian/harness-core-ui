@@ -1,0 +1,50 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "connector": {
+      "name": "swaraj test 4",
+      "identifier": "swaraj_test_4",
+      "description": "",
+      "orgIdentifier": null,
+      "projectIdentifier": null,
+      "tags": {},
+      "type": "AzureKeyVault",
+      "spec": {
+        "clientId": "38fca8dd7-4dda-41d5-b106-e5d8712b733a",
+        "secretKey": "account.AzureClientSecretToken",
+        "tenantId": "b229bdsf2bb-fdsfdsfdsf5f33-4d22-bce0-730f6474e906",
+        "vaultName": "QAAutomationKeyVault",
+        "subscription": "20d6a917-dfsfdsfdsf-4b1b-9b2e-a3d624e9dcf0",
+        "delegateSelectors": [],
+        "default": false
+      }
+    },
+    "createdAt": 1670417352969,
+    "lastModifiedAt": 1670417640472,
+    "status": {
+      "status": "SUCCESS",
+      "errorSummary": null,
+      "errors": null,
+      "testedAt": 1670836377559,
+      "lastTestedAt": 0,
+      "lastConnectedAt": 1670836377559
+    },
+    "activityDetails": { "lastActivityTime": 1670417640501 },
+    "harnessManaged": false,
+    "gitDetails": {
+      "objectId": null,
+      "branch": null,
+      "repoIdentifier": null,
+      "rootFolder": null,
+      "filePath": null,
+      "repoName": null,
+      "commitId": null,
+      "fileUrl": null,
+      "repoUrl": null
+    },
+    "entityValidityDetails": { "valid": true, "invalidYaml": null },
+    "governanceMetadata": null
+  },
+  "metaData": null,
+  "correlationId": "3eafsdf6ed8f-ere9ba0-4047-a9a1-7fbdf20dc0c0f5"
+}

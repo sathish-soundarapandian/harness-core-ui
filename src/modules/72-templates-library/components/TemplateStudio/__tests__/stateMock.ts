@@ -8,7 +8,7 @@
 import { set } from 'lodash-es'
 import produce from 'immer'
 import type { TemplateContextInterface } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import type { JsonNode, NGTemplateInfoConfig } from 'services/template-ng'
+import type { JsonNode, NGTemplateInfoConfig, CacheResponseMetadata } from 'services/template-ng'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { DrawerTypes } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'
 
@@ -683,6 +683,7 @@ export const getTemplateContextMock = (type: TemplateType): TemplateContextInter
       gitDetails: {},
       entityValidityDetails: {},
       templateYaml: '',
+      cacheResponseMetadata: {} as CacheResponseMetadata,
       yamlHandler: {
         getLatestYaml: () => 'testyaml',
         getYAMLValidationErrorMap: () => new Map()

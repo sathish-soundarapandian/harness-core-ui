@@ -269,7 +269,8 @@ export default function TriggersDetailPage(): JSX.Element {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      targetIdentifier: pipelineIdentifier
+      targetIdentifier: pipelineIdentifier,
+      ignoreError: true
     },
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
   })

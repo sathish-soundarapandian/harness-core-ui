@@ -24,7 +24,6 @@ import type { CustomHealthMetricDefinition } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import CommonCustomMetric from '@cv/pages/health-source/common/CommonCustomMetric/CommonCustomMetric'
-import CustomMetricForm from './CustomMetricForm'
 import type { CommonCustomMetricFormikInterface } from '../../CommonHealthSource.types'
 import type { AddMetricForm, CustomMetricFormContainerProps } from './CustomMetricForm.types'
 import {
@@ -34,6 +33,7 @@ import {
 } from './CustomMetricFormContainer.utils'
 import { resetShowCustomMetric } from '../../CommonHealthSource.utils'
 import AddMetric from './components/AddMetric/AddMetric'
+import CustomMetricForm from './CustomMetricForm'
 import css from './CustomMetricForm.module.scss'
 
 export default function CustomMetricFormContainer(props: CustomMetricFormContainerProps): JSX.Element {
@@ -59,8 +59,9 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   const wrapperRef = useRef(null)
   useUpdateConfigFormikOnOutsideClick(wrapperRef, mappedMetrics, selectedMetric, formValues)
 
-  const enabledDefaultGroupName = !!healthSourceConfig?.sideNav?.enableDefaultGroupName
-  const enabledRecordsAndQuery = !!healthSourceConfig?.queryAndRecords?.enabled
+  const enabledDefaultGroupName = !!healthSourceConfig?.addQuery?.enableDefaultGroupName
+  const customMetricsConfig = healthSourceConfig?.customMetrics
+  const enabledRecordsAndQuery = !!healthSourceConfig?.customMetrics?.queryAndRecords?.enabled
   const {
     sourceData: { existingMetricDetails }
   } = useContext(SetupSourceTabsContext)
@@ -86,9 +87,6 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
     [isMetricThresholdEnabled]
   )
 
-  /**
-   * Hook that alerts clicks outside of the passed ref
-   */
   function useUpdateConfigFormikOnOutsideClick(
     ref: React.MutableRefObject<any>,
     mappedMetricsData: Map<string, CommonCustomMetricFormikInterface>,
@@ -195,6 +193,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
                 expressions={expressions}
                 isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
                 enabledRecordsAndQuery={enabledRecordsAndQuery}
+                customMetricsConfig={customMetricsConfig}
               />
             </Container>
           </CommonCustomMetric>

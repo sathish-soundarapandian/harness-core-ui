@@ -22,6 +22,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import { getRefFromIdentifier } from '@common/utils/utils'
 import InfrastructureList from './InfrastructureList/InfrastructureList'
 import InfrastructureModal from './InfrastructureModal'
 
@@ -36,12 +37,14 @@ export default function InfrastructureDefinition(): JSX.Element {
   const [selectedInfrastructure, setSelectedInfrastructure] = useState<string>('')
   const { isOpen: isModalOpen, close: hideModal, open: showModal } = useToggleOpen(false)
 
+  const environmentRef = getRefFromIdentifier(environmentIdentifier, orgIdentifier, projectIdentifier)
+
   const { data, loading, error, refetch } = useGetInfrastructureList({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      environmentIdentifier
+      environmentIdentifier: environmentRef
     }
   })
 
@@ -105,7 +108,7 @@ export default function InfrastructureDefinition(): JSX.Element {
           <InfrastructureModal
             hideModal={onClose}
             refetch={refetch}
-            environmentIdentifier={environmentIdentifier}
+            environmentIdentifier={environmentRef}
             selectedInfrastructure={selectedInfrastructure}
             getTemplate={getTemplate}
           />

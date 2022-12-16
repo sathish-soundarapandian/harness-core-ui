@@ -40,7 +40,7 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
     expect(container.querySelector('[class*="isSelected"]')?.innerHTML).toEqual('app1')
   })
 
-  test('Ensure onSelect and onDelete work in CommonMultiItemsSideNav', async () => {
+  test('Ensure onSelect work in CommonMultiItemsSideNav', async () => {
     const onSelectMock = jest.fn()
     const onRemoveMock = jest.fn()
     const { container, getByText } = render(
@@ -66,16 +66,6 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
     fireEvent.click(getByText('app2'))
     await waitFor(() => expect(container.querySelector('[class*="isSelected"]')?.innerHTML).toEqual('app2'))
     expect(onSelectMock).toHaveBeenCalledWith('app2', ['app1', 'app2', 'app3'], 1)
-
-    const deleteButtons = container.querySelectorAll('[data-icon="main-delete"]')
-    expect(deleteButtons.length).toBe(3)
-
-    // delete second app
-    fireEvent.click(deleteButtons[1])
-    await waitFor(() => expect(container.querySelectorAll('[data-icon="main-delete"]').length).toBe(2))
-    expect(onRemoveMock).toHaveBeenCalledWith('app2', 'app1', ['app1', 'app3'], 0)
-
-    expect(container.querySelector('[class*="isSelected"]')?.innerHTML).toEqual('app1')
   })
 
   test('Ensure that only when single app is there delete button does not exist in CommonMultiItemsSideNav', async () => {

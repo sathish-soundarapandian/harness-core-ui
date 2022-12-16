@@ -257,7 +257,7 @@ function FormComponent({
       <div className={cx(css.connectorForm, formClassName)}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <FormInput.SelectWithSubmenuTypeInput
             label={'Job Name'}
             name={'spec.jobName'}
@@ -273,7 +273,6 @@ function FormComponent({
             selectItems={jobDetails}
             selectWithSubmenuTypeInputProps={{
               expressions,
-              width: 500,
               selectWithSubmenuProps: {
                 items: jobDetails,
                 allowCreatingNewItems: true,
@@ -315,7 +314,7 @@ function FormComponent({
             />
           )}
         </div>
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             label={getString('pipeline.artifactPathLabel')}
             name="spec.artifactPath"
@@ -323,7 +322,6 @@ function FormComponent({
             placeholder={fetchingArtifacts ? getString('loading') : getString('pipeline.selectArtifactPathPlaceholder')}
             multiTypeInputProps={{
               onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.artifactPath', type),
-              width: 500,
               expressions,
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                 if (
@@ -375,7 +373,7 @@ function FormComponent({
             </div>
           )}
         </div>
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             label={getString('pipeline.jenkinsBuild')}
             name="spec.build"
@@ -383,7 +381,6 @@ function FormComponent({
             placeholder={fetchingBuild ? getString('loading') : getString('pipeline.selectJenkinsBuildsPlaceholder')}
             multiTypeInputProps={{
               onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.build', type),
-              width: 500,
               expressions,
               selectProps: {
                 allowCreatingNewItems: true,

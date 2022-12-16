@@ -16,7 +16,6 @@ const DefaultRenderer: React.FC = () => {
   const { getString } = useStrings()
   const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
-
   return (
     <Layout.Vertical padding={{ top: 'xlarge' }} className={css.started}>
       <Text font={{ size: 'small', weight: 'semi-bold' }} padding={{ bottom: 'xsmall' }}>

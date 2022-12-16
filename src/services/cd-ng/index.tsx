@@ -3616,6 +3616,14 @@ export interface EntityDetail {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
 }
 
@@ -6009,6 +6017,14 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
   )[]
   moduleType?:
@@ -6192,6 +6208,14 @@ export interface GitEntityFilterProperties {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
   )[]
   gitSyncConfigIdentifiers?: string[]
@@ -6214,6 +6238,40 @@ export interface GitEntityFilterProperties {
 
 export type GitErrorMetadataDTO = ErrorMetadataDTO & {
   branch?: string
+}
+
+export interface GitFileCacheClearCacheRequest {
+  accountIdentifier?: string
+  filepath?: string
+  gitProvider?: string
+  ref?: string
+  repoName?: string
+}
+
+export interface GitFileCacheClearCacheResponse {
+  [key: string]: any
+}
+
+export interface GitFileCacheUpdateKey {
+  accountIdentifier?: string
+  filepath?: string
+  gitProvider?: string
+  ref?: string
+  repoName?: string
+}
+
+export interface GitFileCacheUpdateRequest {
+  key?: GitFileCacheUpdateKey
+  values?: GitFileCacheUpdateValues
+}
+
+export interface GitFileCacheUpdateResponse {
+  [key: string]: any
+}
+
+export interface GitFileCacheUpdateValues {
+  updatedAt?: number
+  validUntil?: number
 }
 
 export interface GitFileContent {
@@ -6412,6 +6470,14 @@ export interface GitFullSyncEntityInfoDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
   errorMessage?: string
   filePath?: string
@@ -6590,6 +6656,14 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
@@ -6889,6 +6963,14 @@ export interface GitSyncEntityDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
   entityUrl?: string
   folderPath?: string
@@ -7061,6 +7143,14 @@ export interface GitSyncEntityListDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
@@ -7250,6 +7340,14 @@ export interface GitSyncErrorDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
@@ -7587,6 +7685,7 @@ export interface HelmManifestCommandFlag {
     | 'List'
     | 'Add'
     | 'Update'
+    | 'Version'
   flag?: string
 }
 
@@ -10426,6 +10525,14 @@ export interface ReferencedByDTO {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
 }
 
@@ -11154,6 +11261,20 @@ export interface ResponseGitBranchesResponseDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseGitFileCacheClearCacheResponse {
+  correlationId?: string
+  data?: GitFileCacheClearCacheResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseGitFileCacheUpdateResponse {
+  correlationId?: string
+  data?: GitFileCacheUpdateResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseGitFileContent {
   correlationId?: string
   data?: GitFileContent
@@ -11606,6 +11727,14 @@ export interface ResponseListEntityType {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
   )[]
   metaData?: { [key: string]: any }
@@ -12885,6 +13014,7 @@ export interface ResponseSetHelmCommandFlagType {
     | 'List'
     | 'Add'
     | 'Update'
+    | 'Version'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -14665,6 +14795,14 @@ export interface StepData {
     | 'TerraformApply'
     | 'TerragruntDestroy'
     | 'TerragruntRollback'
+    | 'SwapRollback'
+    | 'BasicAppSetup'
+    | 'BGAppSetup'
+    | 'CanaryAppSetup'
+    | 'AppResize'
+    | 'SwapRoutes'
+    | 'AppRollback'
+    | 'TanzuCommand'
 }
 
 export interface StepElementConfig {
@@ -14915,6 +15053,44 @@ export type TanzuApplicationServiceInfrastructure = Infrastructure & {
 
 export type TanzuApplicationServiceSpec = ServiceSpec & {}
 
+export type TasAppResizeStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  newAppInstances: TasInstanceSelectionWrapper
+  oldAppInstances?: TasInstanceSelectionWrapper
+}
+
+export type TasBGAppSetupStepInfo = StepSpecType & {
+  additionalRoutes?: string[]
+  delegateSelectors?: string[]
+  existingVersionToKeep: number
+  tasInstanceCountType: 'FromManifest' | 'MatchRunningInstances'
+  tempRoutes: string[]
+}
+
+export type TasBasicAppSetupStepInfo = StepSpecType & {
+  additionalRoutes?: string[]
+  delegateSelectors?: string[]
+  existingVersionToKeep: number
+  tasInstanceCountType: 'FromManifest' | 'MatchRunningInstances'
+}
+
+export type TasCanaryAppSetupStepInfo = StepSpecType & {
+  additionalRoutes?: string[]
+  delegateSelectors?: string[]
+  existingVersionToKeep: number
+  resizeStrategy: 'RESIZE_NEW_FIRST' | 'DOWNSIZE_OLD_FIRST'
+  tasInstanceCountType: 'FromManifest' | 'MatchRunningInstances'
+}
+
+export interface TasCommandScript {
+  store: StoreConfigWrapper
+}
+
+export type TasCommandStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  script: TasCommandScript
+}
+
 export type TasConnector = ConnectorConfigDTO & {
   credential: TasCredential
   delegateSelectors?: string[]
@@ -14945,6 +15121,15 @@ export type TasInstanceInfoDTO = InstanceInfoDTO & {
   tasApplicationName: string
 }
 
+export interface TasInstanceSelectionWrapper {
+  spec?: TasInstanceValue
+  type?: 'Percentage' | 'Count'
+}
+
+export interface TasInstanceValue {
+  value: string //TODO:: CHECK
+}
+
 export type TasManifest = ManifestAttributes & {
   autoScalerPath?: string[]
   cfCliVersion?: 'V7'
@@ -14958,6 +15143,20 @@ export type TasManualDetails = TasCredentialSpec & {
   passwordRef: string
   username?: string
   usernameRef?: string
+}
+
+export type TasRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type TasSwapRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  upsizeInActiveApp?: boolean
+}
+
+export type TasSwapRoutesStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  downSizeOldApplication: boolean
 }
 
 export interface TaskSelectorYaml {
@@ -15971,9 +16170,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = void
+export type SecretRequestWrapperRequestBody = SecretRequestWrapper
 
-export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
+export type SecretRequestWrapper2RequestBody = void
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -16704,6 +16903,14 @@ export interface ListActivitiesQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
   referredByEntityType?:
     | 'CreatePR'
@@ -16868,6 +17075,14 @@ export interface ListActivitiesQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
 }
 
@@ -17136,6 +17351,14 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
   referredByEntityType?:
     | 'CreatePR'
@@ -17300,6 +17523,14 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
 }
 
@@ -31887,6 +32118,14 @@ export interface ListReferredByEntitiesQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
   searchTerm?: string
   branch?: string
@@ -32112,6 +32351,14 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
   searchTerm?: string
 }
@@ -35346,6 +35593,14 @@ export interface GetReferencedByQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
   searchTerm?: string
 }
@@ -37100,6 +37355,136 @@ export const listFullSyncFilesPromise = (
     void
   >('POST', getConfig('ng/api'), `/git-full-sync/files`, props, signal)
 
+export interface ClearCacheQueryParams {
+  accountIdentifier?: string
+}
+
+export type ClearCacheProps = Omit<
+  MutateProps<
+    ResponseGitFileCacheClearCacheResponse,
+    Failure | Error,
+    ClearCacheQueryParams,
+    GitFileCacheClearCacheRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+export const ClearCache = (props: ClearCacheProps) => (
+  <Mutate<
+    ResponseGitFileCacheClearCacheResponse,
+    Failure | Error,
+    ClearCacheQueryParams,
+    GitFileCacheClearCacheRequest,
+    void
+  >
+    verb="DELETE"
+    path={`/git-service/git-file-cache`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseClearCacheProps = Omit<
+  UseMutateProps<
+    ResponseGitFileCacheClearCacheResponse,
+    Failure | Error,
+    ClearCacheQueryParams,
+    GitFileCacheClearCacheRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+export const useClearCache = (props: UseClearCacheProps) =>
+  useMutate<
+    ResponseGitFileCacheClearCacheResponse,
+    Failure | Error,
+    ClearCacheQueryParams,
+    GitFileCacheClearCacheRequest,
+    void
+  >('DELETE', `/git-service/git-file-cache`, { base: getConfig('ng/api'), ...props })
+
+export const clearCachePromise = (
+  props: MutateUsingFetchProps<
+    ResponseGitFileCacheClearCacheResponse,
+    Failure | Error,
+    ClearCacheQueryParams,
+    GitFileCacheClearCacheRequest,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseGitFileCacheClearCacheResponse,
+    Failure | Error,
+    ClearCacheQueryParams,
+    GitFileCacheClearCacheRequest,
+    void
+  >('DELETE', getConfig('ng/api'), `/git-service/git-file-cache`, props, signal)
+
+export interface UpdateCacheQueryParams {
+  accountIdentifier?: string
+}
+
+export type UpdateCacheProps = Omit<
+  MutateProps<
+    ResponseGitFileCacheUpdateResponse,
+    Failure | Error,
+    UpdateCacheQueryParams,
+    GitFileCacheUpdateRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+export const UpdateCache = (props: UpdateCacheProps) => (
+  <Mutate<ResponseGitFileCacheUpdateResponse, Failure | Error, UpdateCacheQueryParams, GitFileCacheUpdateRequest, void>
+    verb="PUT"
+    path={`/git-service/git-file-cache`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateCacheProps = Omit<
+  UseMutateProps<
+    ResponseGitFileCacheUpdateResponse,
+    Failure | Error,
+    UpdateCacheQueryParams,
+    GitFileCacheUpdateRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+export const useUpdateCache = (props: UseUpdateCacheProps) =>
+  useMutate<
+    ResponseGitFileCacheUpdateResponse,
+    Failure | Error,
+    UpdateCacheQueryParams,
+    GitFileCacheUpdateRequest,
+    void
+  >('PUT', `/git-service/git-file-cache`, { base: getConfig('ng/api'), ...props })
+
+export const updateCachePromise = (
+  props: MutateUsingFetchProps<
+    ResponseGitFileCacheUpdateResponse,
+    Failure | Error,
+    UpdateCacheQueryParams,
+    GitFileCacheUpdateRequest,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseGitFileCacheUpdateResponse,
+    Failure | Error,
+    UpdateCacheQueryParams,
+    GitFileCacheUpdateRequest,
+    void
+  >('PUT', getConfig('ng/api'), `/git-service/git-file-cache`, props, signal)
+
 export interface ListGitSyncQueryParams {
   projectIdentifier?: string
   orgIdentifier?: string
@@ -37703,6 +38088,14 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
 }
 
@@ -37935,6 +38328,14 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'IACMStage'
       | 'IACMStep'
       | 'IACM'
+      | 'CanaryAppSetup'
+      | 'BGAppSetup'
+      | 'BasicAppSetup'
+      | 'AppResize'
+      | 'AppRollback'
+      | 'SwapRoutes'
+      | 'SwapRollback'
+      | 'TanzuCommand'
       | 'Container'
   },
   signal?: RequestInit['signal']
@@ -43859,6 +44260,14 @@ export interface GetStepYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
   yamlGroup?: string
 }
@@ -44151,6 +44560,14 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
 }
 
@@ -45894,6 +46311,153 @@ export const updateScimGroupPromise = (
     'PUT',
     getConfig('ng/api'),
     `/scim/account/${accountIdentifier}/Groups/${groupIdentifier}`,
+    props,
+    signal
+  )
+
+export interface GetResourceTypesPathParams {
+  accountIdentifier: string
+}
+
+export type GetResourceTypesProps = Omit<GetProps<void, void, void, GetResourceTypesPathParams>, 'path'> &
+  GetResourceTypesPathParams
+
+/**
+ * Get All ResourceTypes supported by Application's SCIM 2.0 APIs.
+ */
+export const GetResourceTypes = ({ accountIdentifier, ...props }: GetResourceTypesProps) => (
+  <Get<void, void, void, GetResourceTypesPathParams>
+    path={`/scim/account/${accountIdentifier}/ResourceTypes`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetResourceTypesProps = Omit<UseGetProps<void, void, void, GetResourceTypesPathParams>, 'path'> &
+  GetResourceTypesPathParams
+
+/**
+ * Get All ResourceTypes supported by Application's SCIM 2.0 APIs.
+ */
+export const useGetResourceTypes = ({ accountIdentifier, ...props }: UseGetResourceTypesProps) =>
+  useGet<void, void, void, GetResourceTypesPathParams>(
+    (paramsInPath: GetResourceTypesPathParams) => `/scim/account/${paramsInPath.accountIdentifier}/ResourceTypes`,
+    { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+/**
+ * Get All ResourceTypes supported by Application's SCIM 2.0 APIs.
+ */
+export const getResourceTypesPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: GetUsingFetchProps<void, void, void, GetResourceTypesPathParams> & { accountIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<void, void, void, GetResourceTypesPathParams>(
+    getConfig('ng/api'),
+    `/scim/account/${accountIdentifier}/ResourceTypes`,
+    props,
+    signal
+  )
+
+export interface GetSchemasPathParams {
+  accountIdentifier: string
+}
+
+export type GetSchemasProps = Omit<GetProps<void, void, void, GetSchemasPathParams>, 'path'> & GetSchemasPathParams
+
+/**
+ *  Get All Schemas supported by Application's SCIM 2.0 APIs.
+ */
+export const GetSchemas = ({ accountIdentifier, ...props }: GetSchemasProps) => (
+  <Get<void, void, void, GetSchemasPathParams>
+    path={`/scim/account/${accountIdentifier}/Schemas`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetSchemasProps = Omit<UseGetProps<void, void, void, GetSchemasPathParams>, 'path'> &
+  GetSchemasPathParams
+
+/**
+ *  Get All Schemas supported by Application's SCIM 2.0 APIs.
+ */
+export const useGetSchemas = ({ accountIdentifier, ...props }: UseGetSchemasProps) =>
+  useGet<void, void, void, GetSchemasPathParams>(
+    (paramsInPath: GetSchemasPathParams) => `/scim/account/${paramsInPath.accountIdentifier}/Schemas`,
+    { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+/**
+ *  Get All Schemas supported by Application's SCIM 2.0 APIs.
+ */
+export const getSchemasPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: GetUsingFetchProps<void, void, void, GetSchemasPathParams> & { accountIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<void, void, void, GetSchemasPathParams>(
+    getConfig('ng/api'),
+    `/scim/account/${accountIdentifier}/Schemas`,
+    props,
+    signal
+  )
+
+export interface GetServiceProviderConfigPathParams {
+  accountIdentifier: string
+}
+
+export type GetServiceProviderConfigProps = Omit<
+  GetProps<void, void, void, GetServiceProviderConfigPathParams>,
+  'path'
+> &
+  GetServiceProviderConfigPathParams
+
+/**
+ * Get Service Provider Configuration supported by Application's SCIM 2.0 APIs.
+ */
+export const GetServiceProviderConfig = ({ accountIdentifier, ...props }: GetServiceProviderConfigProps) => (
+  <Get<void, void, void, GetServiceProviderConfigPathParams>
+    path={`/scim/account/${accountIdentifier}/ServiceProviderConfig`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetServiceProviderConfigProps = Omit<
+  UseGetProps<void, void, void, GetServiceProviderConfigPathParams>,
+  'path'
+> &
+  GetServiceProviderConfigPathParams
+
+/**
+ * Get Service Provider Configuration supported by Application's SCIM 2.0 APIs.
+ */
+export const useGetServiceProviderConfig = ({ accountIdentifier, ...props }: UseGetServiceProviderConfigProps) =>
+  useGet<void, void, void, GetServiceProviderConfigPathParams>(
+    (paramsInPath: GetServiceProviderConfigPathParams) =>
+      `/scim/account/${paramsInPath.accountIdentifier}/ServiceProviderConfig`,
+    { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+/**
+ * Get Service Provider Configuration supported by Application's SCIM 2.0 APIs.
+ */
+export const getServiceProviderConfigPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: GetUsingFetchProps<void, void, void, GetServiceProviderConfigPathParams> & { accountIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<void, void, void, GetServiceProviderConfigPathParams>(
+    getConfig('ng/api'),
+    `/scim/account/${accountIdentifier}/ServiceProviderConfig`,
     props,
     signal
   )
@@ -48481,6 +49045,7 @@ export interface GetServiceListQueryParams {
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
+  includeAllServicesAccessibleAtScope?: boolean
 }
 
 export type GetServiceListProps = Omit<
@@ -55679,7 +56244,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -55689,7 +56254,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -55702,7 +56267,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -55716,7 +56281,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -55728,7 +56293,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -55737,7 +56302,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -56130,7 +56695,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -56144,7 +56709,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >
     verb="POST"
@@ -56159,7 +56724,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -56173,7 +56738,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -56185,7 +56750,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -56194,7 +56759,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -56330,7 +56895,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -56345,7 +56910,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -56360,7 +56925,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -56375,7 +56940,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -56394,7 +56959,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -56403,7 +56968,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -56422,7 +56987,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -56437,7 +57002,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -56452,7 +57017,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -56467,7 +57032,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -56486,7 +57051,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -56495,7 +57060,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -57329,6 +57894,14 @@ export interface GetYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'TanzuCommand'
     | 'Container'
   subtype?:
     | 'K8sCluster'

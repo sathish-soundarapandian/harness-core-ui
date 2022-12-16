@@ -40,6 +40,11 @@ const versionAPIs = [
     id: 'ci'
   },
   {
+    label: 'Test Inteliigence',
+    url: 'ti-service/version',
+    id: 'ti'
+  },
+  {
     label: 'Security Tests',
     url: 'sto/api/v2/system/version',
     id: 'sto'

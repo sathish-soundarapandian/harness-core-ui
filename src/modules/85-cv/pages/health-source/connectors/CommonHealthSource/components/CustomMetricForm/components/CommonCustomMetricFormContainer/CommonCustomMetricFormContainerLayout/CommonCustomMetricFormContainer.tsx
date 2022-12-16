@@ -8,27 +8,31 @@
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
-import { HealthSourceRecordsRequest, useGetSampleRawRecord } from 'services/cv'
+import { Container } from '@harness/uicore'
+import { HealthSourceRecordsRequest, TimeSeries, useGetSampleMetricData, useGetSampleRawRecord } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import Card from '@cv/components/Card/Card'
-import { CommonQueryViewer } from '@cv/components/CommonQueryViewer/CommonQueryViewer'
 import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
+import { CommonQueryViewer } from '@cv/components/CommonQueryViewer/CommonQueryViewer'
 import type { CommonCustomMetricFormContainerProps } from './CommonCustomMetricFormContainer.types'
+import CommonChart from '../../CommonChart/CommonChart'
+import { shouldAutoBuildChart, shouldShowChartComponent } from './CommonCustomMetricFormContainer.utils'
 
 export default function CommonCustomMetricFormContainer(props: CommonCustomMetricFormContainerProps): JSX.Element {
   const { values } = useFormikContext<CommonCustomMetricFormikInterface>()
   const {
     sourceData: { product, sourceType }
   } = useContext(SetupSourceTabsContext)
-  const { connectorIdentifier, isTemplate, expressions, isConnectorRuntimeOrExpression } = props
+  const { connectorIdentifier, isTemplate, expressions, isConnectorRuntimeOrExpression, customMetricsConfig } = props
   const [records, setRecords] = useState<Record<string, any>[]>([])
   const [isQueryExecuted, setIsQueryExecuted] = useState(false)
+  const [healthSourceTimeSeriesData, setHealthSourceTimeSeriesData] = useState<TimeSeries[] | undefined>()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
+  const chartConfig = customMetricsConfig?.metricsChart
   const providerType = `${sourceType?.toUpperCase()}_${product?.value}`
 
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
-  // const sampleRecord = useMemo(() => (records?.length ? records[0] : null), [records])
+  const sampleRecord = useMemo(() => (records?.length ? records[0] : null), [records])
 
   const {
     mutate: queryHealthSource,
@@ -40,7 +44,36 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
     projectIdentifier
   })
 
-  const handleFetchRecords = useCallback(async () => {
+  const {
+    mutate: fetchHealthSourceTimeSeriesData,
+    loading: timeSeriesDataLoading,
+    error: timeseriesDataError
+  } = useGetSampleMetricData({
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier
+  })
+
+  const handleBuildChart = useCallback(() => {
+    const currentTime = new Date()
+    const startTime = currentTime.setHours(currentTime.getHours() - 2)
+
+    const fetchMetricsRecordsRequestBody = {
+      connectorIdentifier,
+      endTime: Date.now(),
+      startTime,
+      providerType: providerType as HealthSourceRecordsRequest['providerType'],
+      query
+    }
+
+    fetchHealthSourceTimeSeriesData(fetchMetricsRecordsRequestBody).then(data => {
+      setHealthSourceTimeSeriesData(data?.resource?.timeSeriesData)
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values, sampleRecord])
+
+  const handleFetchRecords = async (): Promise<void> => {
+    setIsQueryExecuted(true)
     const currentTime = new Date()
     const startTime = currentTime.setHours(currentTime.getHours() - 2)
 
@@ -51,15 +84,17 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
       providerType: providerType as HealthSourceRecordsRequest['providerType'],
       query
     }
-
     const recordsData = await queryHealthSource(fetchRecordsRequestBody)
-    setRecords(recordsData?.resource?.rawRecords as Record<string, any>[])
-    setIsQueryExecuted(true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connectorIdentifier, providerType, query])
+    if (recordsData) {
+      setRecords(recordsData?.resource?.rawRecords as Record<string, any>[])
+      if (shouldAutoBuildChart(chartConfig)) {
+        handleBuildChart()
+      }
+    }
+  }
 
   return (
-    <Card>
+    <Container padding={'small'} margin={'small'}>
       <CommonQueryViewer
         isQueryExecuted={isQueryExecuted}
         records={records}
@@ -72,6 +107,15 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
         expressions={expressions}
         isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
       />
-    </Card>
+      {/* Field Mappings component Can be added here along with build chart/ get message button */}
+      {shouldShowChartComponent(chartConfig, records) ? (
+        <CommonChart
+          timeSeriesDataLoading={timeSeriesDataLoading}
+          timeseriesDataError={timeseriesDataError}
+          healthSourceTimeSeriesData={healthSourceTimeSeriesData}
+        />
+      ) : null}
+      {/* Logs Table Can be added here */}
+    </Container>
   )
 }

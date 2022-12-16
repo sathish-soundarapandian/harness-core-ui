@@ -31,6 +31,10 @@ import {
   getColumsForProjectAndAccountLevel
 } from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/CreateCompositeSloForm.utils'
 import { SLOObjective, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import {
+  getSLORefIdWithOrgAndProject,
+  getSLOIdentifierWithOrgAndProject
+} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   useGetSLOHealthListViewV2,
@@ -98,19 +102,43 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
     if (dashboardWidgetsResponse?.data?.content) {
       if (isNumber(pageIndex) && !initializedPageNumbers.includes(pageIndex) && serviceLevelObjectivesDetails.length) {
         const selectedSlosOnPage =
-          content?.filter(item =>
-            serviceLevelObjectivesDetails?.map(details => details.serviceLevelObjectiveRef).includes(item.sloIdentifier)
-          ) || []
-        const selectedSlosNotOnPage = serviceLevelObjectivesDetails.filter(
-          item => !selectedSlosOnPage.map(slos => slos.sloIdentifier).includes(item.sloIdentifier || '')
-        )
+          (isAccountLevel
+            ? content?.filter(item =>
+                serviceLevelObjectivesDetails
+                  ?.map(details => getSLORefIdWithOrgAndProject(details))
+                  .includes(getSLOIdentifierWithOrgAndProject(item))
+              )
+            : content?.filter(item =>
+                serviceLevelObjectivesDetails
+                  ?.map(details => details.serviceLevelObjectiveRef)
+                  .includes(item.sloIdentifier)
+              )) || []
+        const selectedSlosNotOnPage = isAccountLevel
+          ? serviceLevelObjectivesDetails.filter(
+              item =>
+                !selectedSlosOnPage
+                  .map(slos => getSLOIdentifierWithOrgAndProject(slos))
+                  .includes(getSLORefIdWithOrgAndProject(item))
+            )
+          : serviceLevelObjectivesDetails.filter(
+              item => !selectedSlosOnPage.map(slos => slos.sloIdentifier).includes(item.sloIdentifier || '')
+            )
         setSelectedSlos([...selectedSlosOnPage, ...selectedSlosNotOnPage] as SLOHealthListView[])
         setInitializedPageNumbers(prv => [...prv, pageIndex])
       } else {
         setSelectedSlos(prvSelected => {
-          const listOfSloIdsOnPage = content?.map(item => item.sloIdentifier)
-          const selectedSlosNotOnPage = prvSelected.filter(item => !listOfSloIdsOnPage?.includes(item.sloIdentifier))
-          const selectedSlosOnPage = prvSelected.filter(item => listOfSloIdsOnPage?.includes(item.sloIdentifier))
+          const listOfSloIdsOnPage = isAccountLevel
+            ? content?.map(item => getSLOIdentifierWithOrgAndProject(item))
+            : content?.map(item => item.sloIdentifier)
+          const selectedSlosNotOnPage = prvSelected.filter(
+            item =>
+              !listOfSloIdsOnPage?.includes(
+                isAccountLevel ? getSLOIdentifierWithOrgAndProject(item) : item.sloIdentifier
+              )
+          )
+          const selectedSlosOnPage = prvSelected.filter(item =>
+            listOfSloIdsOnPage?.includes(isAccountLevel ? getSLOIdentifierWithOrgAndProject(item) : item.sloIdentifier)
+          )
           return [...selectedSlosNotOnPage, ...selectedSlosOnPage]
         })
       }
@@ -154,7 +182,14 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
       id: 'selectSlo',
       width: '50px',
       Cell: ({ row }: { row: Row<SLOHealthListView> }) => {
-        return <RenderCheckBoxes row={row} selectedSlos={selectedSlos} setSelectedSlos={setSelectedSlos} />
+        return (
+          <RenderCheckBoxes
+            row={row}
+            selectedSlos={selectedSlos}
+            setSelectedSlos={setSelectedSlos}
+            isAccountLevel={isAccountLevel}
+          />
+        )
       }
     },
     {

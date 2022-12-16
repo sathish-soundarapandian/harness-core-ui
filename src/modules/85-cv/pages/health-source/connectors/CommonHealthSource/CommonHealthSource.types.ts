@@ -9,22 +9,40 @@ import type { SelectOption } from '@harness/uicore'
 import type { FailMetricThresholdSpec, MetricThreshold, MetricThresholdSpec } from 'services/cv'
 import type { CriteriaPercentageType } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { HealthSourceTypes } from '../../types'
+import type { CHART_VISIBILITY_ENUM, FIELD_ENUM } from './CommonHealthSource.constants'
 
 export interface HealthSourcesConfig {
   [x: string]: HealthSourceConfig
 }
 
 export interface HealthSourceConfig {
+  addQuery: {
+    enableDefaultGroupName?: boolean
+  }
   customMetrics?: {
     enabled: boolean
-  }
-  queryAndRecords: {
-    enabled: boolean
+    queryAndRecords: {
+      enabled: boolean
+    }
+    fieldMappings?: FieldMapping[]
+    metricsChart?: {
+      enabled: boolean
+      chartVisibilityMode: CHART_VISIBILITY_ENUM
+    }
+    logsTable?: {
+      enabled: boolean
+    }
   }
   sideNav?: {
     shouldBeAbleToDeleteLastMetric: boolean
-    enableDefaultGroupName?: boolean
   }
+}
+
+export interface FieldMapping {
+  type: FIELD_ENUM
+  label: string
+  identifier: string
+  defaultValue: string
 }
 
 export interface HealthSourceSetupSource {

@@ -22,7 +22,7 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
             class="connectorForm"
           >
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -48,7 +48,6 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 500px;"
                   >
                     <div
                       class="bp3-popover-wrapper SelectWithSubmenu--main bp3-fill"
@@ -103,7 +102,7 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -129,7 +128,6 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 500px;"
                   >
                     <div
                       class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
@@ -208,7 +206,7 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -234,7 +232,6 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="width: 500px;"
                   >
                     <div
                       class="TextInput--main MultiTypeInput--input"
@@ -416,7 +413,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
             class="connectorForm"
           >
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -442,7 +439,6 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="width: 500px;"
                   >
                     <div
                       class="TextInput--main MultiTypeInput--input"
@@ -528,7 +524,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
               </span>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -554,7 +550,6 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="width: 500px;"
                   >
                     <div
                       class="TextInput--main MultiTypeInput--input"
@@ -643,7 +638,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -669,7 +664,6 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="width: 500px;"
                   >
                     <div
                       class="TextInput--main MultiTypeInput--input"
@@ -851,7 +845,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when jobName is p
             class="connectorForm"
           >
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -877,7 +871,6 @@ exports[`AmazonS3 tests renders fine for the existing artifact when jobName is p
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 500px;"
                   >
                     <div
                       class="bp3-popover-wrapper SelectWithSubmenu--main bp3-fill"
@@ -932,7 +925,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when jobName is p
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -958,7 +951,6 @@ exports[`AmazonS3 tests renders fine for the existing artifact when jobName is p
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 500px;"
                   >
                     <div
                       class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
@@ -1037,7 +1029,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when jobName is p
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -1063,7 +1055,6 @@ exports[`AmazonS3 tests renders fine for the existing artifact when jobName is p
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="width: 500px;"
                   >
                     <div
                       class="TextInput--main MultiTypeInput--input"

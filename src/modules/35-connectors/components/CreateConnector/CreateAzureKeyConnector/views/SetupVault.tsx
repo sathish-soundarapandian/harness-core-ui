@@ -72,7 +72,11 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
   const [loadingFormData, setLoadingFormData] = useState(isEditMode)
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding | undefined>()
 
-  const { mutate: getMetadata, loading } = useGetMetadata({
+  const {
+    mutate: getMetadata,
+    loading,
+    error: metaDataError
+  } = useGetMetadata({
     queryParams: { accountIdentifier: accountId }
   })
   const { mutate: createConnector, loading: creating } = useCreateConnector({
@@ -86,11 +90,13 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
   useEffect(() => {
     if (isEditMode && connectorInfo) {
       setupAzureKeyVaultNameFormData(connectorInfo).then(data => {
-        setInitialValues(data as SetupVaultFormData)
+        if (!metaDataError && vaultNameOptions && vaultNameOptions.length) {
+          setInitialValues(data as SetupVaultFormData)
+        }
         setLoadingFormData(false)
       })
     }
-  }, [isEditMode, connectorInfo])
+  }, [isEditMode, connectorInfo, metaDataError, vaultNameOptions])
   useConnectorWizard({ helpPanel: { referenceId: 'AzureKeyVaultSetupVault', contentWidth: 900 } })
 
   const handleFetchEngines = async (formData: ConnectorConfigDTO): Promise<void> => {
@@ -124,18 +130,17 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
       }
     }
   }
+  useEffect(() => {
+    if (metaDataError && modalErrorHandler) {
+      modalErrorHandler?.showDanger(getRBACErrorMessage(metaDataError))
+    }
+  }, [metaDataError, modalErrorHandler])
 
   useEffect(() => {
-    if (isEditMode && !loadingFormData && prevStepData) {
+    if (!loadingFormData && prevStepData) {
       handleFetchEngines(prevStepData as ConnectorConfigDTO)
     }
-  }, [isEditMode, loadingFormData, prevStepData])
-
-  useEffect(() => {
-    if (isEditMode && !loadingFormData && loading && connectorInfo) {
-      setVaultNameOptions([{ label: connectorInfo.spec.vaultName, value: connectorInfo.spec.vaultName }])
-    }
-  }, [isEditMode, loadingFormData, loading, connectorInfo])
+  }, [loadingFormData, prevStepData])
 
   const handleCreateOrEdit = async (formData: SetupVaultFormData): Promise<void> => {
     modalErrorHandler?.hide()
@@ -169,64 +174,66 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
     category: Category.CONNECTOR
   })
 
-  return loadingFormData ? (
-    <PageSpinner />
-  ) : (
+  return (
     <Container padding={{ top: 'medium' }}>
       <Text font={{ variation: FontVariation.H3 }}>{getString('connectors.azureKeyVault.labels.setupVault')}</Text>
       <Container margin={{ bottom: 'xlarge' }}>
         <ModalErrorHandler bind={setModalErrorHandler} />
       </Container>
-      <Formik
-        formName="azureKeyVaultForm"
-        enableReinitialize
-        initialValues={initialValues}
-        validationSchema={Yup.object().shape({
-          vaultName: Yup.string().required(getString('connectors.azureKeyVault.validation.vaultName'))
-        })}
-        onSubmit={formData => {
-          trackEvent(ConnectorActions.SetupVaultSubmit, {
-            category: Category.CONNECTOR
-          })
-          handleCreateOrEdit(formData)
-        }}
-      >
-        <FormikForm>
-          <Container height={490}>
-            <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-              <FormInput.Select
-                name="vaultName"
-                label={getString('connectors.azureKeyVault.labels.vaultName')}
-                items={vaultNameOptions}
-                disabled={vaultNameOptions.length === 0 || loading}
+      {loadingFormData || loading ? (
+        <PageSpinner />
+      ) : (
+        <Formik
+          formName="azureKeyVaultForm"
+          enableReinitialize
+          initialValues={initialValues}
+          validationSchema={Yup.object().shape({
+            vaultName: Yup.string().required(getString('connectors.azureKeyVault.validation.vaultName'))
+          })}
+          onSubmit={formData => {
+            trackEvent(ConnectorActions.SetupVaultSubmit, {
+              category: Category.CONNECTOR
+            })
+            handleCreateOrEdit(formData)
+          }}
+        >
+          <FormikForm>
+            <Container height={490}>
+              <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+                <FormInput.Select
+                  name="vaultName"
+                  label={getString('connectors.azureKeyVault.labels.vaultName')}
+                  items={vaultNameOptions}
+                  disabled={vaultNameOptions.length === 0 || loading}
+                />
+                <Button
+                  margin={{ top: 'large' }}
+                  intent="primary"
+                  text={getString('connectors.azureKeyVault.labels.fetchVault')}
+                  onClick={() => handleFetchEngines(prevStepData as ConnectorConfigDTO)}
+                  disabled={loading}
+                  loading={loading}
+                />
+              </Layout.Horizontal>
+            </Container>
+            <Layout.Horizontal spacing="medium">
+              <Button
+                variation={ButtonVariation.SECONDARY}
+                text={getString('back')}
+                icon="chevron-left"
+                onClick={() => previousStep?.(prevStepData)}
               />
               <Button
-                margin={{ top: 'large' }}
+                type="submit"
                 intent="primary"
-                text={getString('connectors.azureKeyVault.labels.fetchVault')}
-                onClick={() => handleFetchEngines(prevStepData as ConnectorConfigDTO)}
-                disabled={loading}
-                loading={loading}
+                rightIcon="chevron-right"
+                text={getString('saveAndContinue')}
+                disabled={creating || updating}
               />
             </Layout.Horizontal>
-          </Container>
-          <Layout.Horizontal spacing="medium">
-            <Button
-              variation={ButtonVariation.SECONDARY}
-              text={getString('back')}
-              icon="chevron-left"
-              onClick={() => previousStep?.(prevStepData)}
-            />
-            <Button
-              type="submit"
-              intent="primary"
-              rightIcon="chevron-right"
-              text={getString('saveAndContinue')}
-              disabled={creating || updating}
-            />
-          </Layout.Horizontal>
-        </FormikForm>
-      </Formik>
+          </FormikForm>
+        </Formik>
+      )}
     </Container>
   )
 }

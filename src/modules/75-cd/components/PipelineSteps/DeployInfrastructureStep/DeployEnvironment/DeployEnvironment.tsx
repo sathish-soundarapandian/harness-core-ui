@@ -92,7 +92,7 @@ function DeployEnvironment({
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
 
-  const { GLOBAL_SERVICE_ENV } = useFeatureFlags()
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const [environments, setEnvironments] = useState<EnvironmentResponseDTO[]>()
   const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO>()
   const [environmentsSelectOptions, setEnvironmentsSelectOptions] = useState<SelectOption[]>()
@@ -419,7 +419,7 @@ function DeployEnvironment({
       spacing="medium"
       flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
     >
-      {GLOBAL_SERVICE_ENV ? (
+      {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
         <MultiTypeEnvironmentField
           {...commonProps}
           placeholder={

@@ -45,8 +45,8 @@ export interface ServiceReferenceFieldProps extends Omit<IFormGroupProps, 'label
   label: string | React.ReactElement
   placeholder: string
   tooltipProps?: DataTooltipInterface
-  deploymentType: ServiceDeploymentType
-  gitOpsEnabled: boolean | undefined
+  deploymentType?: ServiceDeploymentType
+  gitOpsEnabled?: boolean
   style?: React.CSSProperties
   openAddNewModal?: () => void
   disabled?: boolean
@@ -145,7 +145,10 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     getString
   })
   const handleMultiSelectChange = (svcs: any): void => {
-    const services = svcs.map((svc: any) => ({ label: svc.identifier, value: svc.identifier }))
+    const services = svcs.map((svc: any) => ({
+      label: svc.identifier,
+      value: svc.scope !== Scope.PROJECT ? `${svc.scope}.${svc.identifier}` : svc.identifier
+    }))
     formik.setFieldValue(name, services)
     onMultiSelectChange(services)
   }

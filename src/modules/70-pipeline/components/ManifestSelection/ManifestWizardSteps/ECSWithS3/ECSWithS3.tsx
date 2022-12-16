@@ -163,9 +163,14 @@ export function ECSWithS3({
 
   const canFetchBuckets = useCallback(
     (region: string): boolean => {
+      // prevStepData?.connectorRef is passed to shouldFetchFieldOptions when connector selection is done in prev step
+      // prevStepData is passed to shouldFetchFieldOptions required when inline connector creation has been done in prev step
       return !!(
         lastQueryData.region !== region &&
-        shouldFetchFieldOptions({ connectorId: { ...prevStepData?.connectorRef } }, [region])
+        shouldFetchFieldOptions(
+          !isEmpty(prevStepData?.identifier) ? prevStepData : { connectorId: { ...prevStepData?.connectorRef } },
+          [region]
+        )
       )
     },
     [lastQueryData, prevStepData]
@@ -319,7 +324,9 @@ export function ECSWithS3({
             allowableTypes,
             selectProps: {
               noResults: (
-                <Text lineClamp={1}>{getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}</Text>
+                <Text lineClamp={1} width={400} height={100} padding="small">
+                  {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}
+                </Text>
               ),
               itemRenderer: itemRenderer,
               items: buckets,

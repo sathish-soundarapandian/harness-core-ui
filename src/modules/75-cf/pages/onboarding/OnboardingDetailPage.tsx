@@ -57,7 +57,7 @@ export const OnboardingDetailPage: React.FC = () => {
       const nextStep = currentStep + 1
       setCurrentStep(nextStep)
     } else {
-      history.push(routes.toCFOnboarding({ accountId: accountIdentifier, orgIdentifier, projectIdentifier }))
+      history.push(routes.toCFFeatureFlags({ accountId: accountIdentifier, orgIdentifier, projectIdentifier }))
     }
   }
 

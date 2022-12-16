@@ -273,7 +273,11 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
               }
             }
           }),
-          value: data.templateInputs ? JSON.stringify(data.templateInputs) : data.value,
+          value: data.templateInputs
+            ? JSON.stringify(data.templateInputs)
+            : data.valueType === 'Reference'
+            ? get(data, 'reference')
+            : get(data, 'value'),
           ...pick(data, ['secretManagerIdentifier', 'valueType'])
         } as SecretTextSpecDTO
       }
@@ -409,8 +413,9 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
           ...pick(secret?.spec, ['valueType', 'secretManagerIdentifier']),
           ...(editing &&
             secret &&
-            (secret?.spec as SecretTextSpecDTO)?.valueType === 'Reference' &&
-            pick(secret?.spec, ['value'])),
+            (secret?.spec as SecretTextSpecDTO)?.valueType === 'Reference' && {
+              reference: get(secret, 'spec.value')
+            }),
           ...(editing &&
             secret && {
               regions: convertPayloadtoRegionsMultiSelectData(get(secret, 'spec.additionalMetadata.values.regions'))
@@ -429,7 +434,23 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
           value:
             editing || type === 'SecretFile' || selectedSecretManager?.type === 'CustomSecretManager'
               ? Yup.string().trim()
-              : Yup.string().trim().required(getString('common.validation.valueIsRequired')),
+              : Yup.string()
+                  .trim()
+                  .when('valueType', {
+                    is: 'Inline',
+                    then: Yup.string().trim().required(getString('common.validation.valueIsRequired')),
+                    otherwise: Yup.string().trim()
+                  }),
+          reference:
+            editing || type === 'SecretFile' || selectedSecretManager?.type === 'CustomSecretManager'
+              ? Yup.string().trim()
+              : Yup.string()
+                  .trim()
+                  .when('valueType', {
+                    is: 'Reference',
+                    then: Yup.string().trim().required(getString('secrets.secret.referenceRqrd')),
+                    otherwise: Yup.string().trim()
+                  }),
           secretManagerIdentifier: Yup.string().required(getString('secrets.secret.validationKms')),
           templateInputs:
             selectedSecretManager?.type === 'CustomSecretManager'

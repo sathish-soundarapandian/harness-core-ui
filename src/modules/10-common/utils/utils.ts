@@ -231,3 +231,20 @@ export const getFixed = (value: number, places = 1): number => {
 export const countAllKeys = (obj: Record<string, any>): number => {
   return JSON.stringify(obj)?.match(/[^\\]":/g)?.length ?? 0
 }
+
+export const getRefFromIdentifier = (
+  identifier: string,
+  orgIdentifier?: string,
+  projectIdentifier?: string
+): string => {
+  if (projectIdentifier) {
+    return identifier
+  } else if (!orgIdentifier) {
+    return `account.${identifier}`
+  }
+  return `org.${identifier}`
+}
+
+export const getIdentifierFromScopedRef = (entity: string): string => {
+  return entity.indexOf('.') < 0 ? entity : entity.split('.')[1]
+}

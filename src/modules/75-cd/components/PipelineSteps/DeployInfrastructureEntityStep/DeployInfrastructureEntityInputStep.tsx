@@ -11,7 +11,7 @@ import { useFormikContext } from 'formik'
 import { Spinner } from '@blueprintjs/core'
 import { v4 as uuid } from 'uuid'
 
-import { AllowedTypes, Layout, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
+import { AllowedTypes, Layout, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 
@@ -327,7 +327,9 @@ export default function DeployInfrastructureEntityInputStep({
             multiTypeProps={{
               width: 300,
               height: 32,
-              allowableTypes
+              allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(
+                item => item !== MultiTypeInputType.EXPRESSION && item !== MultiTypeInputType.EXECUTION_TIME
+              ) as AllowedTypes
             }}
           />
         )}

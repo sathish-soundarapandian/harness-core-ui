@@ -27,6 +27,7 @@ import { getStepTypeByDeploymentType, StageType } from '@pipeline/utils/stageHel
 import { getPrCloneStrategyOptions } from '@pipeline/utils/constants'
 import { CodebaseTypes, isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import type { DeployStageConfig, InfraStructureDefinitionYaml } from '@pipeline/utils/DeployStageInterface'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 // eslint-disable-next-line no-restricted-imports
@@ -101,12 +102,20 @@ export const validateStep = ({
   const isTemplateStep = !!(originalStep?.step as unknown as TemplateStepNode)?.template
   const stepType = isTemplateStep ? StepType.Template : (originalStep?.step as StepElementConfig)?.type
   const pipelineStep = factory.getStep(stepType)
+  const delegateSelectorPath = 'spec.delegateSelectors'
   const errorResponse = pipelineStep?.validateInputSet({
     data: step,
     template: template,
     getString,
     viewType
   })
+  if (get(template, delegateSelectorPath) && isEmpty(get(step, delegateSelectorPath))) {
+    set(
+      errors,
+      `step.${delegateSelectorPath}`,
+      getString?.('common.validation.fieldIsRequired', { name: getString('delegate.DelegateSelector') })
+    )
+  }
   if (!isEmpty(errorResponse)) {
     const suffix = isTemplateStep ? '.template.templateInputs' : ''
     set(errors, `step${suffix}`, errorResponse)
@@ -292,7 +301,7 @@ export const validateStage = ({
       const serviceInputs = (stageConfig as DeployStageConfig).service?.serviceInputs
       if (
         serviceInputs &&
-        ((templateStageConfig as DeployStageConfig).service?.serviceInputs as unknown as string) !== RUNTIME_INPUT_VALUE
+        !isValueRuntimeInput((templateStageConfig as DeployStageConfig).service?.serviceInputs as unknown as string)
       ) {
         const serviceStep = factory.getStep(getStepTypeByDeploymentType(serviceInputs?.serviceDefinition?.type))
         const serviceStepErrorResponse = serviceStep?.validateInputSet({
@@ -334,7 +343,7 @@ export const validateStage = ({
       const serviceInputs = (stageConfig as DeployStageConfig).services?.values
       if (
         serviceInputs &&
-        ((templateStageConfig as DeployStageConfig).services?.values as unknown as string) !== RUNTIME_INPUT_VALUE
+        !isValueRuntimeInput((templateStageConfig as DeployStageConfig).services?.values as unknown as string)
       ) {
         serviceInputs.forEach((serviceInput: ServiceYamlV2, index: number) => {
           const serviceStep = factory.getStep(

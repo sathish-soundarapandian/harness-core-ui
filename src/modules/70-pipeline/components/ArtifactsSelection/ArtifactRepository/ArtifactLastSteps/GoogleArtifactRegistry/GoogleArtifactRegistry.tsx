@@ -55,7 +55,6 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../../ArtifactConnector.module.scss'
 
 export const repositoryType: SelectOption[] = [
@@ -188,18 +187,16 @@ function FormComponent(
       <div className={cx(css.artifactForm, formClassName)}>
         {isMultiArtifactSource && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
-        <div className={css.jenkinsFieldContainer}>
-          <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <FormInput.Select
-              items={repositoryType}
-              name="spec.repositoryType"
-              label={getString('repositoryType')}
-              placeholder={getString('pipeline.artifactsSelection.repositoryTypePlaceholder')}
-              disabled
-            />
-          </div>
+        <div className={css.imagePathContainer}>
+          <FormInput.Select
+            items={repositoryType}
+            name="spec.repositoryType"
+            label={getString('repositoryType')}
+            placeholder={getString('pipeline.artifactsSelection.repositoryTypePlaceholder')}
+            disabled
+          />
         </div>
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <FormInput.MultiTextInput
             name="spec.project"
             label={getString('projectLabel')}
@@ -224,7 +221,7 @@ function FormComponent(
             />
           )}
         </div>
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             label={getString('regionLabel')}
             name="spec.region"
@@ -232,7 +229,6 @@ function FormComponent(
             placeholder={getString('pipeline.regionPlaceholder')}
             multiTypeInputProps={{
               onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.region', type),
-              width: 500,
               expressions,
               selectProps: {
                 allowCreatingNewItems: true,
@@ -260,7 +256,7 @@ function FormComponent(
             </div>
           )}
         </div>
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <FormInput.MultiTextInput
             name="spec.repositoryName"
             label={getString('common.repositoryName')}
@@ -285,7 +281,7 @@ function FormComponent(
             />
           )}
         </div>
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <FormInput.MultiTextInput
             name="spec.package"
             label={getString('pipeline.testsReports.callgraphField.package')}
@@ -320,7 +316,7 @@ function FormComponent(
           />
         </div>
         {formik.values.versionType === 'value' ? (
-          <div className={css.jenkinsFieldContainer}>
+          <div className={css.imagePathContainer}>
             <FormInput.MultiTypeInput
               selectItems={getBuilds()}
               disabled={!isAllFieldsAreFixed()}
@@ -381,7 +377,7 @@ function FormComponent(
             )}
           </div>
         ) : (
-          <div className={css.jenkinsFieldContainer}>
+          <div className={css.imagePathContainer}>
             <FormInput.MultiTextInput
               name="spec.versionRegex"
               label={getString('pipeline.artifactsSelection.versionRegex')}

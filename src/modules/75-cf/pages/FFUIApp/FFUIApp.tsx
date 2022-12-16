@@ -16,12 +16,13 @@ import {
   useCreateEnvironment as useCDCreateEnvironment
 } from 'services/cd-ng'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { useConfirmAction } from '@common/hooks'
+import { useConfirmAction, useQueryParams } from '@common/hooks'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { Description } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
+import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import routes from '@common/RouteDefinitions'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
@@ -41,8 +42,8 @@ const FFUIApp: FC = () => (
       useCDDeleteEnvironment,
       useCDCreateEnvironment
     }}
-    customHooks={{ useConfirmAction, useActiveEnvironment, useLicenseStore, useSyncedEnvironment }}
-    customComponents={{ RbacOptionsMenuButton, ContainerSpinner, Description }}
+    customHooks={{ useConfirmAction, useActiveEnvironment, useLicenseStore, useQueryParams, useSyncedEnvironment }}
+    customComponents={{ RbacOptionsMenuButton, ContainerSpinner, Description, StringWithTooltip }}
     customRoutes={routes}
     customUtils={{ NameSchema, getIdentifierFromName, IdentifierSchema }}
     customEnums={{ FeatureIdentifier, trackingConstants }}

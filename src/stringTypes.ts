@@ -1576,7 +1576,6 @@ export interface StringsMap {
   'secrets.secret.inlineSecret': string
   'secrets.secret.labelFile': string
   'secrets.secret.labelSecretFile': string
-  'secrets.secret.labelSecretReference': string
   'secrets.secret.labelSecretType': string
   'secrets.secret.labelText': string
   'secrets.secret.messageSelectSM': string
@@ -1587,6 +1586,7 @@ export interface StringsMap {
   'secrets.secret.noSecretsFound': string
   'secrets.secret.placeholderSecretReference': string
   'secrets.secret.placeholderSecretValue': string
+  'secrets.secret.referenceRqrd': string
   'secrets.secret.referenceSecret': string
   'secrets.secret.referenceSecretVersionRqrd': string
   'secrets.secret.region': string
@@ -4178,6 +4178,7 @@ export interface StringsMap {
   'pipeline.stepConfigContent': string
   'pipeline.stepConfigHasChanges': string
   'pipeline.stepDescription.ACR': string
+  'pipeline.stepDescription.AppResize': string
   'pipeline.stepDescription.AzureSlotDeployment': string
   'pipeline.stepDescription.AzureTrafficShift': string
   'pipeline.stepDescription.Background': string
@@ -4237,6 +4238,10 @@ export interface StringsMap {
   'pipeline.stepDescription.ServiceNowImportSet': string
   'pipeline.stepDescription.ServiceNowUpdate': string
   'pipeline.stepDescription.ShellScriptProvision': string
+  'pipeline.stepDescription.SwapRollback': string
+  'pipeline.stepDescription.SwapRoute': string
+  'pipeline.stepDescription.TanzuCommandScript': string
+  'pipeline.stepDescription.TasRollback': string
   'pipeline.stepDescription.TerraformApply': string
   'pipeline.stepDescription.TerraformDestroy': string
   'pipeline.stepDescription.TerraformPlan': string
@@ -5203,6 +5208,13 @@ export interface StringsMap {
   'cd.steps.pdcStep.title': string
   'cd.steps.serverless.regionPlaceholder': string
   'cd.steps.serverless.stagePlaceholder': string
+  'cd.steps.tas.enableDownSizeOldApplication': string
+  'cd.steps.tas.enableUpsizeInActiveApp': string
+  'cd.steps.tas.minimumCountPercentage': string
+  'cd.steps.tas.newAppInstance': string
+  'cd.steps.tas.oldAppInstance': string
+  'cd.steps.tas.oldAppInstances': string
+  'cd.steps.tas.totalInstances': string
   'cd.steps.tasInfra.organizationError': string
   'cd.steps.tasInfra.organizationPlaceholder': string
   'cd.steps.tasInfra.space': string
@@ -6984,7 +6996,8 @@ export interface StringsMap {
   'ci.getStartedWithCI.chooseExistingYAML': string
   'ci.getStartedWithCI.chooseExistingYAMLHelptext': string
   'ci.getStartedWithCI.chooseStarterConfig': string
-  'ci.getStartedWithCI.cloneCodebaseHelpText': string
+  'ci.getStartedWithCI.cloneGitRepo': string
+  'ci.getStartedWithCI.cloneGitRepoHelpText': string
   'ci.getStartedWithCI.codeRepo': string
   'ci.getStartedWithCI.configInfra': string
   'ci.getStartedWithCI.configurationOption': string
@@ -7569,6 +7582,7 @@ export interface StringsMap {
   'cv.monitoringSources.buildYourQuery': string
   'cv.monitoringSources.commonHealthSource.addGroupName': string
   'cv.monitoringSources.commonHealthSource.addMetric': string
+  'cv.monitoringSources.commonHealthSource.chart': string
   'cv.monitoringSources.commonHealthSource.confirmDeleteMetric': string
   'cv.monitoringSources.commonHealthSource.defineQuery': string
   'cv.monitoringSources.commonHealthSource.defineQueryDescription': string
@@ -7576,6 +7590,7 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.metric': string
   'cv.monitoringSources.commonHealthSource.metricName': string
   'cv.monitoringSources.commonHealthSource.runQuery': string
+  'cv.monitoringSources.commonHealthSource.searchMetric': string
   'cv.monitoringSources.commonHealthSource.submitQueryToSeeRecords': string
   'cv.monitoringSources.datadog.manualInputQueryModal.modalTitle': string
   'cv.monitoringSources.datadog.newDatadogGroupName': string

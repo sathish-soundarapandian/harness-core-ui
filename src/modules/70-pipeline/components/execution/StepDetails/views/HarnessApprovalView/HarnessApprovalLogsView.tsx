@@ -93,7 +93,7 @@ export function HarnessApprovalLogsView(props: ConsoleViewStepDetailProps): Reac
   } else if (isWaitingAll && isCurrentUserAuthorized) {
     approveButtonNode = (
       <div className={css.approvalRow}>
-        <div>
+        <div className={css.approvalMessageContent}>
           {approvalData?.details?.approvalMessage || getString('pipeline.approvalStage.approvalStageLogsViewMessage')}
         </div>
         <Button

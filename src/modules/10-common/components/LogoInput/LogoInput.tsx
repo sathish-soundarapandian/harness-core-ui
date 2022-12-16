@@ -80,12 +80,14 @@ const LogoInput: FC<LogoInputProps & { formik: FormikContextType<any> }> = props
       className={classNames(css.logoInputGroup, className)}
     >
       <div
+        data-testid={`logo-input-${name}`}
         className={classNames(css.logoInput, { [css.disabled]: disabled, [css.hasLogo]: !!logo })}
         onClick={onLogoInputClick}
       >
         <input
           ref={inputRef}
           name={name}
+          id={name}
           type="file"
           style={{ display: 'none' }}
           accept={accept}
@@ -94,11 +96,16 @@ const LogoInput: FC<LogoInputProps & { formik: FormikContextType<any> }> = props
         />
         {logo ? (
           <>
-            <Icon name="main-trash" size={24} className={classNames(css.icon, css.trashIcon)} />
+            <Icon
+              data-testid="delete-icon"
+              name="main-trash"
+              size={24}
+              className={classNames(css.icon, css.trashIcon)}
+            />
             <ImagePreview src={logo} size={32} className={css.logo} />
           </>
         ) : (
-          <Icon name="upload-box" size={32} className={css.icon} />
+          <Icon data-testid="upload-icon" name="upload-box" size={32} className={css.icon} />
         )}
       </div>
     </FormGroup>

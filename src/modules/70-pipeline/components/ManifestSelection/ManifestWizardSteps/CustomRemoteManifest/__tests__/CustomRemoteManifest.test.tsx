@@ -36,6 +36,10 @@ jest.mock('services/portal', () => ({
   ])
 }))
 
+jest.mock('services/cd-ng', () => ({
+  useHelmCmdFlags: jest.fn().mockImplementation(() => ({ data: { data: ['Template', 'Fetch'] }, refetch: jest.fn() }))
+}))
+
 const props = {
   stepName: 'Manifest details',
   expressions: [],
@@ -58,7 +62,9 @@ const initialValues = {
   extractionScript: '',
   skipResourceVersioning: false,
   valuesPaths: [],
-  delegateSelectors: []
+  delegateSelectors: [],
+  helmVersion: 'V2',
+  commandFlags: [{ commandType: undefined, flag: undefined, id: 'id' }]
 }
 
 describe('Custom remote tests', () => {
@@ -162,6 +168,8 @@ describe('Custom remote tests', () => {
         type: ManifestDataType.K8sManifest,
         spec: {
           skipResourceVersioning: false,
+          helmVersion: 'V2',
+          commandFlags: [{ commandType: undefined, flag: undefined, id: 'id' }],
           valuesPaths: ['test-path'],
           store: {
             spec: {
@@ -200,6 +208,8 @@ describe('Custom remote tests', () => {
         identifier: 'test',
         spec: {
           skipResourceVersioning: RUNTIME_INPUT_VALUE,
+          commandFlags: [{ commandType: undefined, flag: undefined, id: 'id' }],
+          helmVersion: 'V2',
           valuesPaths: ['values-path'],
           store: {
             spec: {
@@ -233,7 +243,7 @@ describe('Custom remote tests', () => {
     expect(skipResourceVersioning.value).toBe('<+input>')
   })
 
-  test('expand advanced section - when type is HelmChart', () => {
+  test('expand advanced section - when type is HelmChart', async () => {
     const defaultProps = {
       ...props,
       prevStepData: {
@@ -244,7 +254,7 @@ describe('Custom remote tests', () => {
       handleSubmit: jest.fn()
     }
 
-    const { container, getByText } = render(
+    const { container, getByText, getByPlaceholderText } = render(
       <TestWrapper>
         <CustomRemoteManifest {...defaultProps} />
       </TestWrapper>
@@ -252,6 +262,10 @@ describe('Custom remote tests', () => {
     const valuesPathsText = queryByText(container, 'pipeline.manifestType.valuesYamlPath')
     expect(valuesPathsText).toBeDefined()
     userEvent.click(getByText('advancedTitle'))
+
+    //check command flag dropdown
+    const defaultSelectDropdown = getByPlaceholderText('- pipeline.fieldPlaceholders.commandType -')
+    await waitFor(() => expect(defaultSelectDropdown).toBeInTheDocument())
     expect(container).toMatchSnapshot()
   })
 

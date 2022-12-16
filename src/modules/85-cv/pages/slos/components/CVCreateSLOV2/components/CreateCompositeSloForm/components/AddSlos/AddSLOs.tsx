@@ -30,6 +30,10 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SLOObjective, SLOV2Form, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import {
+  getSLORefIdWithOrgAndProject,
+  getSLOIdentifierWithOrgAndProject
+} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import type { ResponsePageSLOHealthListView, ServiceLevelObjectiveDetailsDTO, SLOHealthListView } from 'services/cv'
 import {
   createRequestBodyForSLOHealthListViewV2,
@@ -91,9 +95,13 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
       const updatedSLODetails = formikProps?.values?.serviceLevelObjectivesDetails?.map(sloDetail => {
         return {
           ...sloDetail,
-          ...(dashboardWidgetsResponse?.data?.content?.find(
-            item => item.sloIdentifier === sloDetail.serviceLevelObjectiveRef
-          ) as SLOHealthListView)
+          ...(isAccountLevel
+            ? (dashboardWidgetsResponse?.data?.content?.find(
+                item => getSLOIdentifierWithOrgAndProject(item) === getSLORefIdWithOrgAndProject(sloDetail)
+              ) as SLOHealthListView)
+            : dashboardWidgetsResponse?.data?.content?.find(
+                item => item.sloIdentifier === sloDetail.serviceLevelObjectiveRef
+              ))
         }
       })
       formikProps.setFieldValue(SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS, updatedSLODetails)
@@ -182,8 +190,11 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
             accountId,
             projectIdentifier,
             orgIdentifier,
-            serviceLevelObjectiveRef,
-            serviceLevelObjectivesDetails
+            serviceLevelObjectiveRef: isAccountLevel
+              ? getSLORefIdWithOrgAndProject(row.original)
+              : serviceLevelObjectiveRef,
+            serviceLevelObjectivesDetails,
+            isAccountLevel
           })
           formikProps.setFieldValue(SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS, updatedSLODetailsList)
         }

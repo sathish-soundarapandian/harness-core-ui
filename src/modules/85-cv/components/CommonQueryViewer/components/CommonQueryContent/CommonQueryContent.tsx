@@ -53,6 +53,7 @@ export function CommonQueryContent(props: QueryContentProps): JSX.Element {
           <FormInput.TextArea
             name={textAreaName || CommonHealthSourceFieldNames.QUERY}
             className={cx(css.formQueryBox)}
+            placeholder={getString('cv.monitoringSources.commonHealthSource.submitQueryToSeeRecords')}
           />
           <Layout.Horizontal spacing={'large'}>
             <Button

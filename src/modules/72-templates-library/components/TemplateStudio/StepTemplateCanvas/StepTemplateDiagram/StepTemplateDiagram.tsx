@@ -36,9 +36,8 @@ export const StepTemplateDiagram = (): JSX.Element => {
   const { templateIdentifier } = useParams<TemplateStudioPathProps>()
   const [stepPaletteModuleInfos, setStepPaletteModuleInfos] = React.useState<StepPalleteModuleInfo[]>([])
   const { module } = useParams<ModulePathParams>()
-  const { CDNG_ENABLED, CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const [isStepSelectorOpen, setIsStepSelectorOpen] = React.useState<boolean>()
-
+  const { CDNG_ENABLED, CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const openStepSelector = React.useCallback(() => {
     setIsStepSelectorOpen(true)
   }, [setIsStepSelectorOpen])

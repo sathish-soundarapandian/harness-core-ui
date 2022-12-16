@@ -22,76 +22,72 @@ exports[`GoogleArtifactRegistry tests renders fine for the NEW artifact 1`] = `
             class="artifactForm"
           >
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
-                class="formGroup sm"
+                class="bp3-form-group bp3-disabled"
+                data-id="spec.repositoryType-0"
               >
-                <div
-                  class="bp3-form-group bp3-disabled"
-                  data-id="spec.repositoryType-0"
+                <label
+                  class="bp3-label"
+                  for="spec.repositoryType"
                 >
-                  <label
-                    class="bp3-label"
-                    for="spec.repositoryType"
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="imagePath_spec.repositoryType"
                   >
-                    <span
-                      class="Tooltip--acenter"
-                      data-tooltip-id="imagePath_spec.repositoryType"
-                    >
-                      repositoryType
-                    </span>
-                     
-                    <span
-                      class="bp3-text-muted"
-                    />
-                  </label>
+                    repositoryType
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
                   <div
-                    class="bp3-form-content"
+                    class="bp3-popover-wrapper Select--main bp3-fill"
                   >
                     <div
-                      class="bp3-popover-wrapper Select--main bp3-fill"
+                      class="bp3-popover-target"
                     >
                       <div
-                        class="bp3-popover-target"
+                        class="bp3-input-group bp3-disabled"
                       >
-                        <div
-                          class="bp3-input-group bp3-disabled"
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          disabled=""
+                          name="spec.repositoryType"
+                          placeholder="- pipeline.artifactsSelection.repositoryTypePlaceholder -"
+                          style="padding-right: 0px;"
+                          type="text"
+                          value="docker"
+                        />
+                        <span
+                          class="bp3-input-action"
                         >
-                          <input
-                            autocomplete="off"
-                            class="bp3-input"
-                            disabled=""
-                            name="spec.repositoryType"
-                            placeholder="- pipeline.artifactsSelection.repositoryTypePlaceholder -"
-                            style="padding-right: 0px;"
-                            type="text"
-                            value="docker"
-                          />
                           <span
-                            class="bp3-input-action"
+                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                            icon="chevron-down"
                           >
-                            <span
-                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                              icon="chevron-down"
+                            <svg
+                              data-icon="chevron-down"
+                              height="14"
+                              viewBox="0 0 16 16"
+                              width="14"
                             >
-                              <svg
-                                data-icon="chevron-down"
-                                height="14"
-                                viewBox="0 0 16 16"
-                                width="14"
-                              >
-                                <desc>
-                                  chevron-down
-                                </desc>
-                                <path
-                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                  fill-rule="evenodd"
-                                />
-                              </svg>
-                            </span>
+                              <desc>
+                                chevron-down
+                              </desc>
+                              <path
+                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
                           </span>
-                        </div>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -99,7 +95,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the NEW artifact 1`] = `
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -171,7 +167,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the NEW artifact 1`] = `
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -197,7 +193,6 @@ exports[`GoogleArtifactRegistry tests renders fine for the NEW artifact 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 500px;"
                   >
                     <div
                       class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
@@ -276,7 +271,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the NEW artifact 1`] = `
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -348,7 +343,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the NEW artifact 1`] = `
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -486,7 +481,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the NEW artifact 1`] = `
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group bp3-disabled"
@@ -683,76 +678,72 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as regex 
             class="artifactForm"
           >
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
-                class="formGroup sm"
+                class="bp3-form-group bp3-disabled"
+                data-id="spec.repositoryType-0"
               >
-                <div
-                  class="bp3-form-group bp3-disabled"
-                  data-id="spec.repositoryType-0"
+                <label
+                  class="bp3-label"
+                  for="spec.repositoryType"
                 >
-                  <label
-                    class="bp3-label"
-                    for="spec.repositoryType"
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="imagePath_spec.repositoryType"
                   >
-                    <span
-                      class="Tooltip--acenter"
-                      data-tooltip-id="imagePath_spec.repositoryType"
-                    >
-                      repositoryType
-                    </span>
-                     
-                    <span
-                      class="bp3-text-muted"
-                    />
-                  </label>
+                    repositoryType
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
                   <div
-                    class="bp3-form-content"
+                    class="bp3-popover-wrapper Select--main bp3-fill"
                   >
                     <div
-                      class="bp3-popover-wrapper Select--main bp3-fill"
+                      class="bp3-popover-target"
                     >
                       <div
-                        class="bp3-popover-target"
+                        class="bp3-input-group bp3-disabled"
                       >
-                        <div
-                          class="bp3-input-group bp3-disabled"
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          disabled=""
+                          name="spec.repositoryType"
+                          placeholder="- pipeline.artifactsSelection.repositoryTypePlaceholder -"
+                          style="padding-right: 0px;"
+                          type="text"
+                          value="docker"
+                        />
+                        <span
+                          class="bp3-input-action"
                         >
-                          <input
-                            autocomplete="off"
-                            class="bp3-input"
-                            disabled=""
-                            name="spec.repositoryType"
-                            placeholder="- pipeline.artifactsSelection.repositoryTypePlaceholder -"
-                            style="padding-right: 0px;"
-                            type="text"
-                            value="docker"
-                          />
                           <span
-                            class="bp3-input-action"
+                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                            icon="chevron-down"
                           >
-                            <span
-                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                              icon="chevron-down"
+                            <svg
+                              data-icon="chevron-down"
+                              height="14"
+                              viewBox="0 0 16 16"
+                              width="14"
                             >
-                              <svg
-                                data-icon="chevron-down"
-                                height="14"
-                                viewBox="0 0 16 16"
-                                width="14"
-                              >
-                                <desc>
-                                  chevron-down
-                                </desc>
-                                <path
-                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                  fill-rule="evenodd"
-                                />
-                              </svg>
-                            </span>
+                              <desc>
+                                chevron-down
+                              </desc>
+                              <path
+                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
                           </span>
-                        </div>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -760,7 +751,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as regex 
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -832,7 +823,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as regex 
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -858,7 +849,6 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as regex 
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 500px;"
                   >
                     <div
                       class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
@@ -953,7 +943,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as regex 
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -1025,7 +1015,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as regex 
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -1163,7 +1153,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as regex 
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -1328,76 +1318,72 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as value 
             class="artifactForm"
           >
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
-                class="formGroup sm"
+                class="bp3-form-group bp3-disabled"
+                data-id="spec.repositoryType-0"
               >
-                <div
-                  class="bp3-form-group bp3-disabled"
-                  data-id="spec.repositoryType-0"
+                <label
+                  class="bp3-label"
+                  for="spec.repositoryType"
                 >
-                  <label
-                    class="bp3-label"
-                    for="spec.repositoryType"
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="imagePath_spec.repositoryType"
                   >
-                    <span
-                      class="Tooltip--acenter"
-                      data-tooltip-id="imagePath_spec.repositoryType"
-                    >
-                      repositoryType
-                    </span>
-                     
-                    <span
-                      class="bp3-text-muted"
-                    />
-                  </label>
+                    repositoryType
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
                   <div
-                    class="bp3-form-content"
+                    class="bp3-popover-wrapper Select--main bp3-fill"
                   >
                     <div
-                      class="bp3-popover-wrapper Select--main bp3-fill"
+                      class="bp3-popover-target"
                     >
                       <div
-                        class="bp3-popover-target"
+                        class="bp3-input-group bp3-disabled"
                       >
-                        <div
-                          class="bp3-input-group bp3-disabled"
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          disabled=""
+                          name="spec.repositoryType"
+                          placeholder="- pipeline.artifactsSelection.repositoryTypePlaceholder -"
+                          style="padding-right: 0px;"
+                          type="text"
+                          value="docker"
+                        />
+                        <span
+                          class="bp3-input-action"
                         >
-                          <input
-                            autocomplete="off"
-                            class="bp3-input"
-                            disabled=""
-                            name="spec.repositoryType"
-                            placeholder="- pipeline.artifactsSelection.repositoryTypePlaceholder -"
-                            style="padding-right: 0px;"
-                            type="text"
-                            value="docker"
-                          />
                           <span
-                            class="bp3-input-action"
+                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                            icon="chevron-down"
                           >
-                            <span
-                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                              icon="chevron-down"
+                            <svg
+                              data-icon="chevron-down"
+                              height="14"
+                              viewBox="0 0 16 16"
+                              width="14"
                             >
-                              <svg
-                                data-icon="chevron-down"
-                                height="14"
-                                viewBox="0 0 16 16"
-                                width="14"
-                              >
-                                <desc>
-                                  chevron-down
-                                </desc>
-                                <path
-                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                  fill-rule="evenodd"
-                                />
-                              </svg>
-                            </span>
+                              <desc>
+                                chevron-down
+                              </desc>
+                              <path
+                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
                           </span>
-                        </div>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -1405,7 +1391,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as value 
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -1477,7 +1463,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as value 
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -1503,7 +1489,6 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as value 
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 500px;"
                   >
                     <div
                       class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
@@ -1598,7 +1583,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as value 
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -1670,7 +1655,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as value 
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -1808,7 +1793,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as value 
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group bp3-disabled"

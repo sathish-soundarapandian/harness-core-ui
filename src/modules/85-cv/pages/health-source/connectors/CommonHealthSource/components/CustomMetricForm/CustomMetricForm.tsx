@@ -10,6 +10,7 @@ import { Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import CommonCustomMetricFormContainer from './components/CommonCustomMetricFormContainer/CommonCustomMetricFormContainerLayout/CommonCustomMetricFormContainer'
+import type { HealthSourcesConfig } from '../../CommonHealthSource.types'
 import css from '../../CommonHealthSource.module.scss'
 
 interface CustomMetricFormProps {
@@ -18,10 +19,18 @@ interface CustomMetricFormProps {
   connectorIdentifier: string
   isConnectorRuntimeOrExpression?: boolean
   enabledRecordsAndQuery?: boolean
+  customMetricsConfig?: HealthSourcesConfig['x']['customMetrics']
 }
 
 export default function CustomMetricForm(props: CustomMetricFormProps): JSX.Element {
-  const { isTemplate, expressions, connectorIdentifier, isConnectorRuntimeOrExpression, enabledRecordsAndQuery } = props
+  const {
+    isTemplate,
+    expressions,
+    connectorIdentifier,
+    isConnectorRuntimeOrExpression,
+    enabledRecordsAndQuery,
+    customMetricsConfig
+  } = props
   const { getString } = useStrings()
 
   return (
@@ -47,6 +56,7 @@ export default function CustomMetricForm(props: CustomMetricFormProps): JSX.Elem
           isTemplate={isTemplate}
           expressions={expressions}
           isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+          customMetricsConfig={customMetricsConfig}
         />
       ) : null}
     </Container>

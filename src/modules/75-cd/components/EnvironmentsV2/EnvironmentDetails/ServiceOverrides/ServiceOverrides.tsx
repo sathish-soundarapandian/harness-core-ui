@@ -54,6 +54,8 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { usePermission } from '@rbac/hooks/usePermission'
 import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
 import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getRefFromIdentifier } from '@common/utils/utils'
 import { ServiceOverrideTab } from './ServiceOverridesUtils'
 import AddEditServiceOverride from './AddEditServiceOverride'
 import ServiceManifestOverridesList from './ServiceManifestOverride/ServiceManifestOverridesList'
@@ -85,11 +87,15 @@ export function ServiceOverrides(): React.ReactElement {
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [selectedTab, setSelectedTab] = useState(ServiceOverrideTab.VARIABLE)
 
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+
   const allowableTypes: AllowedTypesWithRunTime[] = [
     MultiTypeInputType.FIXED,
     MultiTypeInputType.RUNTIME,
     MultiTypeInputType.EXPRESSION
   ]
+
+  const environmentRef = getRefFromIdentifier(environmentIdentifier, orgIdentifier, projectIdentifier)
 
   const memoizedQueryParam = useMemo(
     () => ({
@@ -100,7 +106,7 @@ export function ServiceOverrides(): React.ReactElement {
     [accountId, orgIdentifier, projectIdentifier]
   )
   const { data: services, loading: servicesLoading } = useGetServiceList({
-    queryParams: memoizedQueryParam
+    queryParams: { ...memoizedQueryParam, includeAllServicesAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup }
   })
   const {
     data: serviceOverridesData,
@@ -109,7 +115,7 @@ export function ServiceOverrides(): React.ReactElement {
   } = useGetServiceOverridesList({
     queryParams: {
       ...memoizedQueryParam,
-      environmentIdentifier
+      environmentIdentifier: environmentRef
     },
     lazy: servicesLoading || !!get(services, 'data.empty', null)
   })
@@ -132,7 +138,7 @@ export function ServiceOverrides(): React.ReactElement {
         const response = await deleteServiceOverridePromise({
           queryParams: {
             ...memoizedQueryParam,
-            environmentIdentifier,
+            environmentIdentifier: environmentRef,
             serviceIdentifier: serviceRef
           },
           body: null as any
@@ -168,7 +174,7 @@ export function ServiceOverrides(): React.ReactElement {
           body: {
             orgIdentifier,
             projectIdentifier,
-            environmentIdentifier,
+            environmentIdentifier: environmentRef,
             serviceIdentifier: serviceRef,
             yaml: yamlStringify({
               ...parsedYaml,

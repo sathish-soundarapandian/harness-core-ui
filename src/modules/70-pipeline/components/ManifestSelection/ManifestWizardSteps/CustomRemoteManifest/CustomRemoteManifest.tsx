@@ -29,16 +29,16 @@ import { defaultTo, get, set } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
-import { FormMultiTypeCheckboxField } from '@common/components'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { CustomManifestManifestDataType, ManifestTypes } from '../../ManifestInterface'
-import { cfCliVersions, ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
+import { ManifestDataType, ManifestIdentifierValidation, cfCliVersions } from '../../Manifesthelper'
+import CustomRemoteAdvancedStepSection from './CustomRemoteAdvancedStepSection'
 import DragnDropPaths from '../../DragnDropPaths'
-import { filePathWidth, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
+import { filePathWidth, handleCommandFlagsSubmitData, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface CustomRemoteManifestPropType {
@@ -50,6 +50,7 @@ interface CustomRemoteManifestPropType {
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
+  deploymentType?: string
 }
 
 const showValuesPaths = (selectedManifest: ManifestTypes): boolean => {
@@ -68,6 +69,11 @@ const showSkipResourceVersion = (selectedManifest: ManifestTypes): boolean => {
     selectedManifest
   )
 }
+
+const showHelmVersion = (selectedManifest: ManifestTypes): boolean => {
+  return [ManifestDataType.HelmChart].includes(selectedManifest)
+}
+
 type PathsInterface = { path: string; uuid: string }
 
 function CustomRemoteManifest({
@@ -80,7 +86,8 @@ function CustomRemoteManifest({
   prevStepData,
   previousStep,
   manifestIdsList,
-  isReadonly
+  isReadonly,
+  deploymentType
 }: StepProps<ConnectorConfigDTO> & CustomRemoteManifestPropType): React.ReactElement {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -96,6 +103,7 @@ function CustomRemoteManifest({
         ...specValues,
         identifier: initialValues.identifier,
         skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning'),
+        helmVersion: get(initialValues, 'spec.helmVersion'),
         valuesPaths:
           typeof valuesPaths === 'string'
             ? valuesPaths
@@ -110,6 +118,11 @@ function CustomRemoteManifest({
                 path,
                 uuid: uuid(path, nameSpace())
               })),
+
+        commandFlags: initialValues.spec?.commandFlags?.map((commandFlag: { commandType: string; flag: string }) => ({
+          commandType: commandFlag.commandType,
+          flag: commandFlag.flag
+        })) || [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
         ...(showTASAdditionalPaths(selectedManifest as ManifestTypes) && {
           cfCliVersion: get(initialValues, 'spec.cfCliVersion'),
           varsPaths:
@@ -136,6 +149,8 @@ function CustomRemoteManifest({
       skipResourceVersioning: false,
       valuesPaths: [{ path: '', uuid: uuid('', nameSpace()) } as PathsInterface],
       paramsPaths: [{ path: '', uuid: uuid('', nameSpace()) } as PathsInterface],
+      helmVersion: 'V2',
+      commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
       delegateSelectors: [],
       ...(showTASAdditionalPaths(selectedManifest as ManifestTypes) && { cfCliVersion: 'V7' })
     }
@@ -163,6 +178,9 @@ function CustomRemoteManifest({
       if (showSkipResourceVersion(selectedManifest as ManifestTypes)) {
         set(manifestObj, 'manifest.spec.skipResourceVersioning', formData?.skipResourceVersioning)
       }
+      if (showHelmVersion(selectedManifest as ManifestTypes)) {
+        set(manifestObj, 'manifest.spec.helmVersion', formData?.helmVersion)
+      }
       if (showValuesPaths(selectedManifest as ManifestTypes)) {
         set(
           manifestObj,
@@ -181,6 +199,7 @@ function CustomRemoteManifest({
             : defaultTo(formData.paramsPaths as Array<{ path: string }>, []).map((path: { path: string }) => path.path)
         )
       }
+      handleCommandFlagsSubmitData(manifestObj, formData)
 
       /* istanbul ignore else */ if (showTASAdditionalPaths(selectedManifest as ManifestTypes)) {
         set(
@@ -489,33 +508,16 @@ function CustomRemoteManifest({
                         addDomId={true}
                         summary={getString('advancedTitle')}
                         details={
-                          <Layout.Horizontal
-                            width={'50%'}
-                            flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
-                            margin={{ bottom: 'huge' }}
-                          >
-                            <FormMultiTypeCheckboxField
-                              name="skipResourceVersioning"
-                              label={getString('skipResourceVersion')}
-                              multiTypeTextbox={{ expressions, allowableTypes }}
-                              className={css.checkbox}
-                            />
-                            {getMultiTypeFromValue(get(formik, 'values.skipResourceVersioning')) ===
-                              MultiTypeInputType.RUNTIME && (
-                              <ConfigureOptions
-                                value={get(formik, 'values.skipResourceVersioning', '') as string}
-                                type="String"
-                                variableName="skipResourceVersioning"
-                                showRequiredField={false}
-                                showDefaultField={false}
-                                showAdvanced={true}
-                                onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
-                                style={{ alignSelf: 'center', marginTop: 11 }}
-                                className={css.addmarginTop}
-                                isReadonly={isReadonly}
-                              />
-                            )}
-                          </Layout.Horizontal>
+                          <CustomRemoteAdvancedStepSection
+                            formik={formik}
+                            expressions={expressions}
+                            allowableTypes={allowableTypes}
+                            helmVersion={formik.values?.helmVersion}
+                            deploymentType={deploymentType as string}
+                            helmStore={prevStepData?.store ?? ''}
+                            initialValues={initialValues}
+                            selectedManifest={selectedManifest}
+                          />
                         }
                       />
                     </Accordion>

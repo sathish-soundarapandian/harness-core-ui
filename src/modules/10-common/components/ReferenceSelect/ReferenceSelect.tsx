@@ -338,7 +338,6 @@ export const MultiReferenceSelectPlaceholder: FC<MultiReferenceSelectPlaceholder
                 return (
                   <Container
                     padding={{ top: 'xsmall', right: 'small', bottom: 'xsmall', left: 'small' }}
-                    width={'33%'}
                     background={Color.PRIMARY_2}
                     key={scope}
                     onClick={() => {

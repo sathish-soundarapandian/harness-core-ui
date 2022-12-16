@@ -67,8 +67,8 @@ export function getReferenceFieldProps({
                 description: environment.environment?.description,
                 tags: environment.environment?.tags,
                 type: environment.environment?.type,
-                projectIdentifier: projectIdentifier,
-                orgIdentifier: orgIdentifier
+                orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
+                projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined
               }
             }))
             done(environmentsList)

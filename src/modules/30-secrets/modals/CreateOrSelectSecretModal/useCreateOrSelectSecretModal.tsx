@@ -15,7 +15,7 @@ import { useStrings } from 'framework/strings'
 import { getReference } from '@common/utils/utils'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 import CreateOrSelectSecret from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
-import { SecretTypeEnum } from '@secrets/components/SecretReference/SecretReference'
+import { SecretRef, SecretTypeEnum } from '@secrets/components/SecretReference/SecretReference'
 import type { ConnectorInfoDTO, ResponsePageSecretResponseWrapper, SecretResponseWrapper } from 'services/cd-ng'
 import { ReferenceSelectDialogTitle } from '@common/components/ReferenceSelect/ReferenceSelect'
 
@@ -30,8 +30,8 @@ export interface UseCreateOrSelectSecretModalProps {
   onSuccess?: (secret: SecretReference) => void
   secretsListMockData?: ResponsePageSecretResponseWrapper
   connectorTypeContext?: ConnectorInfoDTO['type']
-  handleInlineSSHSecretCreation?: () => void
-  handleInlineWinRmSecretCreation?: () => void
+  handleInlineSSHSecretCreation?: (secret?: SecretRef) => void
+  handleInlineWinRmSecretCreation?: (secret?: SecretRef) => void
   scope?: ScopedObjectDTO
 }
 
@@ -137,12 +137,12 @@ const useCreateOrSelectSecretModal = (
             hideModal()
           }}
           connectorTypeContext={props.connectorTypeContext}
-          handleInlineSSHSecretCreation={() => {
-            props.handleInlineSSHSecretCreation?.()
+          handleInlineSSHSecretCreation={secret => {
+            props.handleInlineSSHSecretCreation?.(secret)
             hideModal()
           }}
-          handleInlineWinRmSecretCreation={() => {
-            props.handleInlineWinRmSecretCreation?.()
+          handleInlineWinRmSecretCreation={secret => {
+            props.handleInlineWinRmSecretCreation?.(secret)
             hideModal()
           }}
           secretType={secretType}

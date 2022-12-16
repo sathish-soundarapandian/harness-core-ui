@@ -19,9 +19,19 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import RbacButton from '@rbac/components/Button/Button'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { usePermission } from '@rbac/hooks/usePermission'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetSchemaYaml, useGetPipeline, useGetPipelineList } from 'services/pipeline-ng'
-import { useGetListOfBranchesWithStatus, useGetOrganizationList, useGetProjectList } from 'services/cd-ng'
+import {
+  useGetListOfBranchesWithStatus,
+  useGetOrganizationList,
+  useGetProjectList,
+  useGetConnectorListV2
+} from 'services/cd-ng'
+import RepositorySelect from '@common/components/RepositorySelect/RepositorySelect'
+import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
+import { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
+import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import SessionToken from 'framework/utils/SessionToken'
 import { useAnyEnterpriseLicense, useCurrentEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
@@ -69,7 +79,8 @@ export const GovernanceRemoteComponentMounter = props => {
             useGetPipeline,
             useGetOrganizationList,
             useGetProjectList,
-            isOnPrem
+            isOnPrem,
+            useGetConnectorListV2
           }}
           components={{
             NGBreadcrumbs,
@@ -77,7 +88,12 @@ export const GovernanceRemoteComponentMounter = props => {
             RbacOptionsMenuButton,
             GitFilters,
             GitSyncStoreProvider,
-            OverviewChartsWithToggle
+            OverviewChartsWithToggle,
+            RepositorySelect,
+            RepoBranchSelectV2,
+            InlineRemoteSelect,
+            GitRemoteDetails,
+            ErrorHandler
           }}
         >
           {component}

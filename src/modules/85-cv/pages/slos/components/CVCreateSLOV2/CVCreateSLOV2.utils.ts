@@ -16,16 +16,18 @@ import type {
   SLOTargetDTO
 } from 'services/cv'
 import { PeriodLengthTypes, PeriodTypes } from '../CVCreateSLO/CVCreateSLO.types'
-import { SLOObjective, SLOV2Form, SLOV2FormFields } from './CVCreateSLOV2.types'
+import { GetSLOIdentifierWithOrgAndProjectProps, SLOObjective, SLOV2Form, SLOV2FormFields } from './CVCreateSLOV2.types'
 import { serviceLevelObjectiveKeys } from './components/CreateCompositeSloForm/CreateCompositeSloForm.constant'
 
 export const filterServiceLevelObjectivesDetailsFromSLOObjective = (
   serviceLevelObjectivesDetails?: SLOObjective[]
 ): ServiceLevelObjectiveDetailsDTO[] =>
   serviceLevelObjectivesDetails
-    ? serviceLevelObjectivesDetails.map(
-        sloDetail => pick(sloDetail, [...serviceLevelObjectiveKeys]) as ServiceLevelObjectiveDetailsDTO
-      )
+    ? serviceLevelObjectivesDetails.map(sloDetail => {
+        const formData = { ...sloDetail, ...sloDetail?.projectParams }
+        const keysTobeSendInRequestBody = [...serviceLevelObjectiveKeys]
+        return pick(formData, keysTobeSendInRequestBody) as ServiceLevelObjectiveDetailsDTO
+      })
     : []
 
 export const getSLOV2InitialFormData = (
@@ -189,3 +191,11 @@ export const getSLOV2FormValidationSchema = (getString: UseStringsReturn['getStr
       .required(REQUIRED)
   })
 }
+
+export const getSLOIdentifierWithOrgAndProject = (item: GetSLOIdentifierWithOrgAndProjectProps) =>
+  item.sloIdentifier
+    ? `${item.sloIdentifier}.${item.projectParams?.orgIdentifier}.${item.projectParams?.projectIdentifier}`
+    : ''
+
+export const getSLORefIdWithOrgAndProject = (item: Partial<ServiceLevelObjectiveDetailsDTO>) =>
+  `${item.serviceLevelObjectiveRef}.${item.orgIdentifier}.${item.projectIdentifier}`

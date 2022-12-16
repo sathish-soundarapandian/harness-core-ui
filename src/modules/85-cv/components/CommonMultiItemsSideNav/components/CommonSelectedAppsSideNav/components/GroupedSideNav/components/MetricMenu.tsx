@@ -87,13 +87,13 @@ export default function MetricMenu({
       />
       <Menu>
         <Menu.Item
-          data-testid={`sideNav-edit`}
+          data-testid="sideNav-edit"
           icon="edit"
           text={editLabel ?? <String stringID="edit" />}
           onClick={onEdit}
         />
         <Menu.Item
-          data-testid={`sideNav-delete`}
+          data-testid="sideNav-delete"
           icon="trash"
           text={deleteLabel ?? <String stringID="delete" />}
           onClick={(e: React.MouseEvent) => {

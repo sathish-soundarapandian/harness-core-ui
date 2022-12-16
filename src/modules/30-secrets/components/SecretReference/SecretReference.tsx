@@ -11,6 +11,7 @@ import { Color } from '@harness/design-system'
 import { Select } from '@blueprintjs/select'
 import { MenuItem } from '@blueprintjs/core'
 import cx from 'classnames'
+
 import {
   ListSecretsV2QueryParams,
   Failure,
@@ -63,8 +64,8 @@ export interface SecretReferenceProps extends SceretTypeDropDownProps {
   mock?: ResponsePageSecretResponseWrapper
   connectorTypeContext?: ConnectorInfoDTO['type']
   onCancel?: () => void
-  handleInlineSSHSecretCreation?: () => void
-  handleInlineWinRmSecretCreation?: () => void
+  handleInlineSSHSecretCreation?: (record?: SecretRef) => void
+  handleInlineWinRmSecretCreation?: (record?: SecretRef) => void
   selectedSecret?: string
 }
 
@@ -199,6 +200,23 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
     }
     return undefined
   }, [selectedSecret])
+
+  const handleEdit = (item: EntityReferenceResponse<SecretRef>) => {
+    switch (item.record.type) {
+      case 'SSHKey':
+        return props.handleInlineSSHSecretCreation?.(item.record)
+      case 'WinRmCredentials':
+        return props.handleInlineWinRmSecretCreation?.(item.record)
+      case 'SecretFile':
+      case 'SecretText':
+        return openCreateSecretModal(item.record.type, {
+          identifier: item.identifier,
+          projectIdentifier: item.record.projectIdentifier,
+          orgIdentifier: item.record.orgIdentifier
+        } as SecretIdentifiers)
+    }
+  }
+
   return (
     <Container className={css.secretRefContainer}>
       <EntityReference<SecretRef>
@@ -293,13 +311,7 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
                   minimal
                   className={css.editBtn}
                   data-testid={`${name}-edit`}
-                  onClick={() =>
-                    openCreateSecretModal(item.record.type, {
-                      identifier: item.identifier,
-                      projectIdentifier: item.record.projectIdentifier,
-                      orgIdentifier: item.record.orgIdentifier
-                    } as SecretIdentifiers)
-                  }
+                  onClick={() => handleEdit(item)}
                   permission={{
                     permission: PermissionIdentifier.UPDATE_SECRET,
                     resource: {

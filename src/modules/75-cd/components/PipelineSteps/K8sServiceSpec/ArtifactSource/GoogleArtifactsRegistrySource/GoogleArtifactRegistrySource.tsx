@@ -28,6 +28,7 @@ import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRe
 import { TriggerDefaultFieldList } from '@triggers/components/Triggers/utils'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -343,7 +344,13 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   items: getBuildDetails(),
                   allowCreatingNewItems: true
                 },
-                onFocus: () => {
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
+                  }
                   refetchBuildDetails()
                 }
               }}

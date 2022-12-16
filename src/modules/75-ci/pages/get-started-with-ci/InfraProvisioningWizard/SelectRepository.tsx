@@ -263,7 +263,7 @@ const SelectRepositoryRef = (
         {getString('common.selectYourRepo')}
       </Text>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }} spacing="small">
-        <Label className={css.toggleLabel}>{getString('cloneCodebaseLabel')}</Label>
+        <Label className={css.toggleLabel}>{getString('ci.getStartedWithCI.cloneGitRepo')}</Label>
         <Toggle
           checked={enableCloneCodebase}
           onToggle={val => {
@@ -273,7 +273,7 @@ const SelectRepositoryRef = (
       </Layout.Horizontal>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small" padding={{ bottom: 'xsmall' }}>
         <Icon name="code-info" size={24} className={css.infoIcon} />
-        <Text font={{ variation: FontVariation.BODY }}>{getString('ci.getStartedWithCI.cloneCodebaseHelpText')}</Text>
+        <Text font={{ variation: FontVariation.BODY }}>{getString('ci.getStartedWithCI.cloneGitRepoHelpText')}</Text>
       </Layout.Horizontal>
       {enableCloneCodebase ? (
         <>

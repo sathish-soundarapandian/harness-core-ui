@@ -22,6 +22,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
+import { getRefFromIdentifier } from '@common/utils/utils'
 import { InfrastructureMenu, InfrastructureName, LastUpdatedBy, withInfrastructure } from './InfrastructureListColumns'
 
 import EmptyInfrastructure from '../images/EmptyInfrastructure.svg'
@@ -49,7 +50,7 @@ export default function InfrastructureList({
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      environmentIdentifier
+      environmentIdentifier: getRefFromIdentifier(environmentIdentifier, orgIdentifier, projectIdentifier)
     }
   })
 

@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { Collapse, Divider } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
@@ -19,11 +19,11 @@ import {
   Layout,
   TagsPopover,
   Button,
-  ButtonSize
+  ButtonSize,
+  SelectOption
 } from '@harness/uicore'
-
 import { useStrings } from 'framework/strings'
-import type { ServiceSpec } from 'services/cd-ng'
+import type { NGEnvironmentInfoConfig, ServiceSpec } from 'services/cd-ng'
 
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -34,6 +34,7 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { getStepTypeByDeploymentType } from '@pipeline/utils/stageHelpers'
 
+import { getIdentifierFromName } from '@common/utils/StringUtils'
 import type {
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState,
@@ -58,6 +59,21 @@ export interface EnvironmentEntityCardProps extends EnvironmentData, Required<De
   initialValues: DeployEnvironmentEntityFormState
 }
 
+const getScopedRefUsingIdentifier = (
+  values: any,
+  environment: NGEnvironmentInfoConfig & {
+    yaml: string
+  }
+): string => {
+  const envRef = get(values, 'environment')
+  if (envRef) {
+    return envRef
+  }
+  return get(values, 'environments', []).find(
+    (env: SelectOption) => getIdentifierFromName(env.label) === environment?.identifier
+  )?.value
+}
+
 export function EnvironmentEntityCard({
   environment,
   environmentInputs,
@@ -74,6 +90,7 @@ export function EnvironmentEntityCard({
   const { getString } = useStrings()
   const { values, setFieldValue } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { name, identifier, tags } = environment
+  const scopedEnvRef = getScopedRefUsingIdentifier(values, environment)
   const filterPrefix = useMemo(() => `environmentFilters.${identifier}`, [identifier])
 
   const handleFilterRadio = (selectedRadioValue: InlineEntityFiltersRadioType): void => {
@@ -164,12 +181,12 @@ export function EnvironmentEntityCard({
                 </Text>
                 <StepWidget<ServiceSpec>
                   factory={factory}
-                  initialValues={values.environmentInputs?.[identifier] || {}}
+                  initialValues={values.environmentInputs?.[scopedEnvRef] || {}}
                   allowableTypes={allowableTypes}
                   template={environmentInputs}
                   type={getStepTypeByDeploymentType(deploymentType)}
                   stepViewType={StepViewType.TemplateUsage}
-                  path={`environmentInputs.${identifier}`}
+                  path={`environmentInputs.['${scopedEnvRef}']`}
                   readonly={readonly}
                   customStepProps={{
                     stageIdentifier
@@ -185,12 +202,12 @@ export function EnvironmentEntityCard({
                 </Text>
                 <StepWidget<ServiceSpec>
                   factory={factory}
-                  initialValues={values.environmentInputs?.[identifier]?.overrides || {}}
+                  initialValues={values.environmentInputs?.[scopedEnvRef]?.overrides || {}}
                   allowableTypes={allowableTypes}
                   template={environmentInputs.overrides}
                   type={getStepTypeByDeploymentType(deploymentType)}
                   stepViewType={StepViewType.TemplateUsage}
-                  path={`environmentInputs.${identifier}.overrides`}
+                  path={`environmentInputs.['${scopedEnvRef}'].overrides`}
                   readonly={readonly}
                   customStepProps={{
                     stageIdentifier
@@ -219,7 +236,7 @@ export function EnvironmentEntityCard({
                     initialValues={initialValues}
                     readonly={readonly}
                     allowableTypes={allowableTypes}
-                    environmentIdentifier={identifier}
+                    environmentIdentifier={scopedEnvRef}
                     isMultiCluster
                   />
                 ) : (
@@ -227,7 +244,7 @@ export function EnvironmentEntityCard({
                     initialValues={initialValues}
                     readonly={readonly}
                     allowableTypes={allowableTypes}
-                    environmentIdentifier={identifier}
+                    environmentIdentifier={scopedEnvRef}
                     isMultiInfrastructure
                     deploymentType={deploymentType}
                     customDeploymentRef={customDeploymentRef}

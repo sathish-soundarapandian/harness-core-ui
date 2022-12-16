@@ -5,9 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { HealthSourcesConfig } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+
 export interface CommonCustomMetricFormContainerProps {
   connectorIdentifier: any
   isTemplate?: boolean
   expressions?: string[]
   isConnectorRuntimeOrExpression?: boolean
+  customMetricsConfig?: HealthSourcesConfig['x']['customMetrics']
 }

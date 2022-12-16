@@ -63,13 +63,23 @@ export default function ProjectsSideNav(): React.ReactElement {
               onSelect={data => {
                 updateAppStore({ selectedProject: data })
                 // changing project
-                history.push(
-                  compile(routeMatch.path)({
-                    ...routeMatch.params,
-                    projectIdentifier: data.identifier,
-                    orgIdentifier: data.orgIdentifier
-                  })
-                )
+                if (NEW_LEFT_NAVBAR_SETTINGS) {
+                  history.push(
+                    routes.toProjectDetails({
+                      accountId: params.accountId,
+                      orgIdentifier: data.orgIdentifier || '',
+                      projectIdentifier: data.identifier
+                    })
+                  )
+                } else {
+                  history.push(
+                    compile(routeMatch.path)({
+                      ...routeMatch.params,
+                      projectIdentifier: data.identifier,
+                      orgIdentifier: data.orgIdentifier
+                    })
+                  )
+                }
               }}
             />
           </Container>

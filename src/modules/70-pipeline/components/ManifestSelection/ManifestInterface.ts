@@ -277,6 +277,8 @@ export interface CustomManifestManifestDataType {
   autoScalerPath?: Array<{ path: string }> | string
   cfCliVersion?: CLIVersionOptions
   skipResourceVersioning?: boolean
+  helmVersion: HelmVersionOptions
+  commandFlags: Array<CommandFlags>
 }
 
 export interface ECSWithS3DataType {

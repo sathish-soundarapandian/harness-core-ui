@@ -39,6 +39,7 @@ describe('Create SSH Cred Modal', () => {
 
     expect(Object.keys(result.current).indexOf('openCreateSSHCredModal')).not.toBe(-1)
     expect(Object.keys(result.current).indexOf('closeCreateSSHCredModal')).not.toBe(-1)
+    expect(result.current.openCreateSSHCredModal).toBeDefined()
 
     const dialog = await waitFor(() => {
       result.current.openCreateSSHCredModal({
@@ -66,8 +67,6 @@ describe('Create SSH Cred Modal', () => {
       } as SecretDTOV2)
     })
     expect(dialog).toBe(undefined)
-
-    expect(result.current.openCreateSSHCredModal).toBeDefined()
   })
 
   test('should render form create view', async () => {
@@ -79,12 +78,11 @@ describe('Create SSH Cred Modal', () => {
         }),
       { wrapper }
     )
+    expect(result.current.openCreateSSHCredModal).toBeDefined()
 
     const dialog = await waitFor(() => {
       result.current.openCreateSSHCredModal(undefined)
     })
     expect(dialog).toBe(undefined)
-
-    expect(result.current.openCreateSSHCredModal).toBeDefined()
   })
 })

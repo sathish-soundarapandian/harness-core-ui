@@ -178,7 +178,7 @@ export default function DeployInfrastructure({
               [environmentIdentifier]: {
                 [values.infrastructure]: get(
                   values.infrastructureInputs,
-                  `${environmentIdentifier}.${values.infrastructure}`,
+                  `['${environmentIdentifier}'].${values.infrastructure}`,
                   infrastructure?.infrastructureInputs
                 )
               }
@@ -209,7 +209,7 @@ export default function DeployInfrastructure({
 
                 set(
                   p.infrastructureInputs,
-                  `${environmentIdentifier}.${infrastructure.infrastructureDefinition.identifier}`,
+                  `['${environmentIdentifier}'].${infrastructure.infrastructureDefinition.identifier}`,
                   infrastructureInputs
                 )
               } else {
@@ -223,7 +223,6 @@ export default function DeployInfrastructure({
               infrastructureInputs: {}
             }
           )
-
           setValues({
             ...values,
             // set value of unique path created to handle infrastructures if some infrastructures are already selected, else select All
@@ -291,7 +290,7 @@ export default function DeployInfrastructure({
             value: newInfrastructureInfo.identifier
           })
         } else {
-          set(draft, `infrastructures.${environmentIdentifier}`, [
+          set(draft, `infrastructures.['${environmentIdentifier}']`, [
             {
               label: newInfrastructureInfo.name,
               value: newInfrastructureInfo.identifier
@@ -349,10 +348,10 @@ export default function DeployInfrastructure({
             }}
             onChange={items => {
               if (items?.at(0)?.value === 'All') {
-                setFieldValue(`infrastructures.${environmentIdentifier}`, undefined)
+                setFieldValue(`infrastructures.['${environmentIdentifier}']`, undefined)
                 setSelectedInfrastructures([])
               } else {
-                setFieldValue(`infrastructures.${environmentIdentifier}`, items)
+                setFieldValue(`infrastructures.['${environmentIdentifier}']`, items)
                 setSelectedInfrastructures(getSelectedInfrastructuresFromOptions(items))
               }
             }}

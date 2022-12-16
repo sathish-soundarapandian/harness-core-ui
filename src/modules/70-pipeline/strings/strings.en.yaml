@@ -1127,6 +1127,11 @@ stepDescription:
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
   ElastigroupRollback: Rollback for the Elastigroup steps
   ElastigroupSetup: Elastigroup setup step
+  SwapRoute: Swap Route for Tanzu Application Service
+  SwapRollback: Swap Rolback for Tanzu Application Service
+  TasRollback: Rollback for the TAS steps
+  AppResize: Update the number of instances for this app
+  TanzuCommandScript: Command Scripts to run any CF CLI command or script at any point in your Harness TAS Pipelines
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
@@ -1517,7 +1522,7 @@ triggeredByCron: Triggered on {{start}} by cron {{triggeredBy}}
 configureArtifactSource: Configure Artifact Source
 pipelineCachedCopy:
   cachedCopyText: Cached Copy
-  reloadPipeline: Reload Pipeline?
-  reloadPipelineContent: Are you sure you want to load the pipeline from Git? You will lose all your unsaved changes.
+  reloadPipeline: Reload {{pageType}}?
+  reloadPipelineContent: Are you sure you want to load the {{pageType}} from Git? You will lose all your unsaved changes.
   cacheInProgress: Cache update in progress
   cacheUpdateFailed: Cache Update Failed

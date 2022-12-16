@@ -3877,7 +3877,6 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
                         >
                           <div
                             class="StyledProps--font StyledProps--main pointer StyledProps--padding-top-xsmall StyledProps--padding-right-small StyledProps--padding-bottom-xsmall StyledProps--padding-left-small StyledProps--background-primary2 StyledProps--border"
-                            style="width: 33%;"
                           >
                             <div
                               class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center"
@@ -3896,7 +3895,6 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
                           </div>
                           <div
                             class="StyledProps--font StyledProps--main pointer StyledProps--padding-top-xsmall StyledProps--padding-right-small StyledProps--padding-bottom-xsmall StyledProps--padding-left-small StyledProps--background-primary2 StyledProps--border"
-                            style="width: 33%;"
                           >
                             <div
                               class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center"
@@ -3915,7 +3913,6 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
                           </div>
                           <div
                             class="StyledProps--font StyledProps--main pointer StyledProps--padding-top-xsmall StyledProps--padding-right-small StyledProps--padding-bottom-xsmall StyledProps--padding-left-small StyledProps--background-primary2 StyledProps--border"
-                            style="width: 33%;"
                           >
                             <div
                               class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center"

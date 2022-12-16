@@ -204,7 +204,7 @@ export default function FailureStrategyPanel(props: FailureStrategyPanelProps): 
             label={getString('pipeline.failureStrategies.performAction')}
             allowedStrategies={difference(
               allowedStrategiesAsPerStep(stageType)[mode],
-              isNgExecutionInputFFEnabled ? [Strategy.ProceedWithDefaultValues] : []
+              isNgExecutionInputFFEnabled ? [] : [Strategy.ProceedWithDefaultValues]
             )}
             disabled={isReadonly}
           />

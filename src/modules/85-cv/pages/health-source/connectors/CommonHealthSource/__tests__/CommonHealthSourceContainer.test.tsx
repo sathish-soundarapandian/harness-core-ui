@@ -48,11 +48,14 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
       healthSourceIdentifier: 'a'
     },
     healthSourceConfig: {
-      customMetrics: {
-        enabled: true
+      addQuery: {
+        enableDefaultGroupName: false
       },
-      queryAndRecords: {
-        enabled: true
+      customMetrics: {
+        enabled: true,
+        queryAndRecords: {
+          enabled: true
+        }
       },
       sideNav: {
         shouldBeAbleToDeleteLastMetric: false

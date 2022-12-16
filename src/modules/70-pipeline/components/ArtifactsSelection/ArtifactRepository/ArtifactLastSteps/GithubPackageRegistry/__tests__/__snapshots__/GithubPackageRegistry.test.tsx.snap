@@ -22,7 +22,7 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
             class="connectorForm"
           >
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="formGroup xxlg"
@@ -99,7 +99,7 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -171,7 +171,7 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -341,7 +341,7 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -538,7 +538,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
             class="connectorForm"
           >
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="formGroup xxlg"
@@ -615,7 +615,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -687,7 +687,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -857,7 +857,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -1022,7 +1022,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
             class="connectorForm"
           >
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="formGroup xxlg"
@@ -1099,7 +1099,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -1171,7 +1171,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
@@ -1341,7 +1341,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
               </div>
             </div>
             <div
-              class="jenkinsFieldContainer"
+              class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"

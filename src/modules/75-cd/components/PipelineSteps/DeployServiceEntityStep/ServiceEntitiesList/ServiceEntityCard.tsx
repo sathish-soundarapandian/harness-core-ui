@@ -6,7 +6,17 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Card, Icon, Text, AllowedTypes, ButtonSize, Layout } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  Card,
+  Icon,
+  Text,
+  AllowedTypes,
+  ButtonSize,
+  Layout,
+  SelectOption
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Collapse } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
@@ -21,10 +31,13 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { ServiceSpec } from 'services/cd-ng'
+import type { NGServiceV2InfoConfig, ServiceSpec } from 'services/cd-ng'
 import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
 
 import { useDeepCompareEffect } from '@common/hooks'
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import { getIdentifierFromName } from '@common/utils/StringUtils'
 import type { FormState, ServiceData } from '../DeployServiceEntityUtils'
 import css from './ServiceEntitiesList.module.scss'
 
@@ -38,6 +51,21 @@ export interface ServiceEntityCardProps extends ServiceData {
   onDeleteClick(svc: ServiceData): void
   cardClassName?: string
   isPropogateFromStage: boolean
+}
+
+const getScopedRefUsingIdentifier = (
+  formik: any,
+  service: NGServiceV2InfoConfig & {
+    yaml: string
+  }
+): string => {
+  const serviceRef = get(formik?.values, 'service')
+  if (serviceRef) {
+    return serviceRef
+  }
+  return get(formik?.values, 'services', []).find(
+    (svc: SelectOption) => getIdentifierFromName(svc.label) === service?.identifier
+  )?.value
 }
 
 export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactElement {
@@ -58,9 +86,9 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
   const { getString } = useStrings()
   const { MULTI_SERVICE_INFRA } = useFeatureFlags()
   const formik = useFormikContext<FormState>()
-  const serviceIdentifier = service.identifier
+  const scopedServiceRef = getScopedRefUsingIdentifier(formik, service)
   const [template, setTemplate] = React.useState<any>(serviceInputs?.serviceDefinition?.spec)
-  const arifactsSpecPath = `serviceInputs.${serviceIdentifier}.serviceDefinition.spec`
+  const arifactsSpecPath = `serviceInputs.['${scopedServiceRef}'].serviceDefinition.spec`
 
   const type = service.serviceDefinition?.type as ServiceDeploymentType
 
@@ -103,7 +131,7 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
             <Button
               icon="Edit"
               data-testid={`edit-service-${service.identifier}`}
-              disabled={readonly}
+              disabled={readonly || getScopeFromValue(scopedServiceRef as string) !== Scope.PROJECT}
               onClick={() => onEditClick({ service, serviceInputs })}
               minimal
               aria-label={getString('editService')}
@@ -119,7 +147,7 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
           </Layout.Horizontal>
         )}
       </div>
-      {serviceInputs && MULTI_SERVICE_INFRA && get(formik?.values, `serviceInputs.${serviceIdentifier}`) ? (
+      {serviceInputs && MULTI_SERVICE_INFRA && formik?.values?.serviceInputs?.[scopedServiceRef as string] ? (
         <>
           <div className={css.toggleWrapper}>
             <Button
@@ -155,7 +183,7 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
                   readonly={readonly}
                   customStepProps={{
                     stageIdentifier,
-                    serviceIdentifier
+                    serviceIdentifier: scopedServiceRef
                   }}
                 />
               </StageFormContextProvider>

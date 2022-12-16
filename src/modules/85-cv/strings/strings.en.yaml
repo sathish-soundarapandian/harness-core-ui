@@ -211,12 +211,14 @@ monitoringSources:
   totalMappedQueries: '{{total}} {{query}} mapped'
   commonHealthSource:
     metric: HealthSource Metric
+    chart: Chart
     addMetric: Add metric
     metricName: Metric name
     addGroupName: Add group Name
     runQuery: Run Query
     confirmDeleteMetric: 'Are you sure you want to delete metric {{name}}'
-    submitQueryToSeeRecords: 'Submit query to see records.'
+    submitQueryToSeeRecords: Run query to see records ...
+    searchMetric: Search ...
     defineQuery: Define Query
     defineQueryDescription: Queries can only be defined for a single timeseries. The expressions can be added directly or built with query builder.
     defineQuerySubDescription: Learn how to find the query to monitor your data source with Harness.

@@ -103,6 +103,7 @@ export default function ServerlessArtifactoryRepository(
         erroObj?.fieldId && erroObj?.error ? `${erroObj?.fieldId} ${erroObj?.error}` : getString('somethingWentWrong')
       setConnectorRepos([{ label: errorMessage, value: errorMessage }])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [artifactRepoLoading, artifactRepoError])
 
   useEffect(() => {
@@ -144,7 +145,7 @@ export default function ServerlessArtifactoryRepository(
 
   const getFieldHelperText = () => {
     if (
-      getMultiTypeFromValue(formik?.values.repository as string) === MultiTypeInputType.FIXED &&
+      getMultiTypeFromValue(get(formik?.values, fieldName)) === MultiTypeInputType.FIXED &&
       (getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME || connectorRef?.length === 0)
     ) {
       return getString('pipeline.artifactRepositoryDependencyRequired')
@@ -172,7 +173,7 @@ export default function ServerlessArtifactoryRepository(
           expressions,
           allowableTypes,
           selectProps: {
-            defaultSelectedItem: formik?.values?.repository as SelectOption,
+            defaultSelectedItem: get(formik?.values, fieldName) as SelectOption,
             noResults: <NoRepositoryResults error={artifactRepoError} />,
             items: connectorRepos,
             addClearBtn: !isReadonly,

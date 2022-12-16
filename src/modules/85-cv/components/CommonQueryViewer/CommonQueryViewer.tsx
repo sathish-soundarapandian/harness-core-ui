@@ -6,17 +6,14 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import cx from 'classnames'
-import { Container, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
+import { Container, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { useStrings } from 'framework/strings'
 import { CommonHealthSourceFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import CVMultiTypeQuery from '../CVMultiTypeQuery/CVMultiTypeQuery'
-import type { CommonQueryViewerProps } from './types'
 import { CommonQueryViewDialog } from './components/CommonQueryViewerDialog/CommonQueryViewDialog'
-import { CommonRecords } from '../CommonRecords/CommonRecords'
 import { CommonQueryContent } from './components/CommonQueryContent/CommonQueryContent'
-import css from './CommonQueryViewer.module.scss'
+import { CommonRecords } from '../CommonRecords/CommonRecords'
+import type { CommonQueryViewerProps } from './types'
 
 export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
   const {
@@ -28,13 +25,11 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
     query,
     isQueryExecuted,
     postFetchingRecords,
-    dataTooltipId,
     isTemplate,
     expressions,
     isConnectorRuntimeOrExpression
   } = props
 
-  const { getString } = useStrings()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const isQueryRuntimeOrExpression = getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
 
@@ -54,12 +49,7 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
   }
 
   return (
-    <Container className={cx(css.main, className)}>
-      {!isTemplate && (
-        <Text className={css.labelText} font={{ weight: 'semi-bold', size: 'medium' }} tooltipProps={{ dataTooltipId }}>
-          {getString('cv.query')}
-        </Text>
-      )}
+    <Container className={className}>
       {isTemplate ? (
         <CVMultiTypeQuery
           name={CommonHealthSourceFieldNames.QUERY}
@@ -81,15 +71,9 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
           handleFetchRecords={handleFetchRecords}
         />
       )}
-
-      <CommonRecords
-        fetchRecords={handleFetchRecords}
-        loading={loading}
-        data={records}
-        error={error}
-        query={query}
-        isQueryExecuted={isQueryRuntimeOrExpression ? !isQueryRuntimeOrExpression : isQueryExecuted}
-      />
+      {isQueryExecuted ? (
+        <CommonRecords fetchRecords={handleFetchRecords} loading={loading} data={records} error={error} query={query} />
+      ) : null}
       <CommonQueryViewDialog
         isOpen={isDialogOpen}
         onHide={() => setIsDialogOpen(false)}
@@ -99,8 +83,6 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
         data={records}
         error={error}
         isQueryExecuted={isQueryExecuted}
-        isQueryRuntimeOrExpression={isQueryRuntimeOrExpression}
-        isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
       />
     </Container>
   )

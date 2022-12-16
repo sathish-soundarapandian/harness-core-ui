@@ -38,7 +38,7 @@ const TestComponent: React.FC = () => {
   )
 }
 describe('module select test', () => {
-  test('free trial btn ', async () => {
+  test('free trial btn', async () => {
     const { getByText } = render(
       <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
         <TestComponent />
@@ -57,7 +57,7 @@ describe('module select test', () => {
 
     expect(dialog).toMatchSnapshot()
   })
-  test('free plan btn ', async () => {
+  test('free plan btn', async () => {
     jest.spyOn(featureFlags, 'useFeatureFlags').mockImplementation(() => ({
       CDNG_ENABLED: true,
       CVNG_ENABLED: true,

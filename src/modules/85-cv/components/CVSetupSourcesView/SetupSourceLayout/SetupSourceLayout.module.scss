@@ -21,6 +21,7 @@ $footer-cta-height: 50px;
     .leftPanel {
       width: clamp(250px, 300px, 300px);
       float: left;
+      border-right: 1px solid var(--grey-200);
     }
     .rightPanel {
       width: 120px;

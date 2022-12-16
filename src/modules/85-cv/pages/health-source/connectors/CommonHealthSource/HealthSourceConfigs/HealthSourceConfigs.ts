@@ -5,30 +5,40 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { CHART_VISIBILITY_ENUM } from '../CommonHealthSource.constants'
 import type { HealthSourcesConfig } from '../CommonHealthSource.types'
 
 export const healthSourcesConfig: HealthSourcesConfig = {
   SumoLogic_METRICS: {
-    customMetrics: {
-      enabled: true
+    addQuery: {
+      enableDefaultGroupName: false
     },
-    queryAndRecords: {
-      enabled: true
+    customMetrics: {
+      enabled: true,
+      queryAndRecords: {
+        enabled: true
+      },
+      metricsChart: {
+        enabled: true,
+        chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO
+      }
     },
     sideNav: {
       shouldBeAbleToDeleteLastMetric: false
     }
   },
   SumoLogic_LOGS: {
-    customMetrics: {
-      enabled: true
+    addQuery: {
+      enableDefaultGroupName: true
     },
-    queryAndRecords: {
-      enabled: true
+    customMetrics: {
+      enabled: true,
+      queryAndRecords: {
+        enabled: true
+      }
     },
     sideNav: {
-      shouldBeAbleToDeleteLastMetric: false,
-      enableDefaultGroupName: true
+      shouldBeAbleToDeleteLastMetric: false
     }
   }
 }

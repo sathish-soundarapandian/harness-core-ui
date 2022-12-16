@@ -132,7 +132,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
                   await updateSLO(sloPayloadRef.current as ServiceLevelObjectiveV2DTO)
                   sloPayloadRef.current = null
                   showSuccess(getString('cv.slos.sloUpdated'))
-                  history.push(routes.toCVSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }))
+                  handleRedirect()
                 } catch (error) {
                   showError(getErrorMessage(error))
                   closeModal()

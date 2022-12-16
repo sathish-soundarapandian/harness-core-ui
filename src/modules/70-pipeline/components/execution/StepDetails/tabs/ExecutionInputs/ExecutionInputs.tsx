@@ -44,7 +44,6 @@ import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { NodeType, NonSelectableNodes } from '@pipeline/utils/executionUtils'
 import { StageFormInternal } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
-import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import { validateStage } from '@pipeline/components/PipelineStudio/StepUtil'
 import css from './ExecutionInputs.module.scss'
 
@@ -62,7 +61,6 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
   const [hasSubmitted, setHasSubmitted] = useState(false)
 
   const nodeExecutionId = defaultTo(step.uuid, '')
-  const isDone = isExecutionComplete(step.status)
   const { data, loading } = useGetExecutionInputTemplate({
     nodeExecutionId,
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier },
@@ -90,6 +88,8 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
   const fieldYaml = parse<{ step: StepElementConfig; stage: StageElementConfig }>(
     defaultTo(get(data, 'data.fieldYaml'), '{}')
   )
+  const isDone = !isEmpty(userInput)
+
   const finalUserInput = defaultTo(isStageForm ? userInput : userInput.step, {})
   const parsedStep = defaultTo(template.step, {})
   const parsedStage = defaultTo(template, {}) as StageElementWrapperConfig

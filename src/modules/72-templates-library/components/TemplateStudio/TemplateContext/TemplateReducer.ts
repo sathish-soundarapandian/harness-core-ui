@@ -9,6 +9,7 @@ import { clone } from 'lodash-es'
 import type { IDrawerProps } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
 import type {
+  CacheResponseMetadata,
   EntityGitDetails,
   EntityValidityDetails,
   Error as TemplateError,
@@ -59,6 +60,7 @@ export interface TemplateReducerState {
   gitDetails: EntityGitDetails
   storeMetadata?: StoreMetadata
   entityValidityDetails: EntityValidityDetails
+  cacheResponseMetadata: CacheResponseMetadata
   templateYaml: string
   templateError?: GetDataError<Failure | Error> | null
   templateInputsErrorNodeSummary?: ErrorNodeSummary
@@ -88,6 +90,7 @@ export const initialState: TemplateReducerState = {
   gitDetails: {},
   storeMetadata: {},
   entityValidityDetails: {},
+  cacheResponseMetadata: {} as CacheResponseMetadata,
   templateYaml: ''
 }
 

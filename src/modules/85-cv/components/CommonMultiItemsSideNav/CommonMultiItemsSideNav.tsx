@@ -144,7 +144,7 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
         filterProps={{
           onFilter: setFilter,
           className: css.metricsFilter,
-          placeholder: getString('search')
+          placeholder: getString('cv.monitoringSources.commonHealthSource.searchMetric')
         }}
       />
     </Container>

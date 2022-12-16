@@ -79,12 +79,12 @@ export default function DeployEnvironmentEntityInputStep({
   const environmentValue = get(initialValues, `environment.environmentRef`)
   const environmentValues: EnvironmentYamlV2[] = get(initialValues, pathToEnvironments)
 
-  const { GLOBAL_SERVICE_ENV } = useFeatureFlags()
   // environmentsSelectedType is to handle deployToAll/runtime envs
   // 'all' is for deployToAll, 'runtime' when envs is marked runtime
   const [environmentsSelectedType, setEnvironmentsSelectedType] = useState<'all' | 'runtime' | 'other' | undefined>(
     get(formik.values, pathForDeployToAll) === true ? 'all' : undefined
   )
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const getEnvironmentIdentifiers = useCallback(() => {
     if (environmentValue) {
@@ -276,7 +276,7 @@ export default function DeployEnvironmentEntityInputStep({
     <>
       <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
         {getMultiTypeFromValue(inputSetData?.template?.environment?.environmentRef) === MultiTypeInputType.RUNTIME ? (
-          GLOBAL_SERVICE_ENV ? (
+          CDS_OrgAccountLevelServiceEnvEnvGroup ? (
             <MultiTypeEnvironmentField
               {...commonProps}
               placeholder={placeHolderForEnvironment}
@@ -311,7 +311,7 @@ export default function DeployEnvironmentEntityInputStep({
           and we are deploying to all environments from pipeline studio.
           Then we should hide this field and just update the formik values */}
         {isMultiEnvironment && deployToAllEnvironments !== true ? (
-          GLOBAL_SERVICE_ENV ? (
+          CDS_OrgAccountLevelServiceEnvEnvGroup ? (
             <MultiTypeEnvironmentField
               {...commonProps}
               placeholder={placeHolderForEnvironments}

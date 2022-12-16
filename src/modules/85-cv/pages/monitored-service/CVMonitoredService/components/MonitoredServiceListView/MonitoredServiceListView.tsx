@@ -66,12 +66,14 @@ const RenderServiceName: Renderer<CellProps<MonitoredServiceListItemDTO>> = ({ r
             identifier,
             module: 'cv'
           })}
+          className={css.monitoredServiceLink}
         >
           <Text
             color={Color.PRIMARY_7}
             className={css.monitoredServiceName}
             title={serviceName}
             font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+            tooltip={serviceName}
           >
             {serviceName}
           </Text>

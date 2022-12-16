@@ -22,6 +22,7 @@ import { Color } from '@harness/design-system'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { JiraFieldNG } from 'services/cd-ng'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { FormMultiTypeTextAreaField } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
@@ -55,11 +56,12 @@ interface MappedComponentInterface {
 
 export const shouldShowTextField = (selectedField: JiraFieldNG): boolean => {
   if (
-    selectedField.schema.type === 'string' ||
-    selectedField.schema.type === 'date' ||
-    selectedField.schema.type === 'datetime' ||
-    selectedField.schema.type === 'number' ||
-    selectedField.schema.type === 'issuelink'
+    (selectedField.schema.type === 'string' ||
+      selectedField.schema.type === 'date' ||
+      selectedField.schema.type === 'datetime' ||
+      selectedField.schema.type === 'number' ||
+      selectedField.schema.type === 'issuelink') &&
+    selectedField.name !== 'Description'
   ) {
     return true
   }
@@ -198,6 +200,30 @@ function GetMappedFieldComponent({
         formikFieldPath={formikFieldPath}
         index={index}
       />
+    )
+  } else if (selectedField.name === 'Description') {
+    return (
+      <div
+        onKeyDown={
+          /* istanbul ignore next */ event => {
+            if (event.key === 'Enter') {
+              event.stopPropagation()
+            }
+          }
+        }
+      >
+        <FormMultiTypeTextAreaField
+          className={css.descriptionField}
+          label={selectedField.name}
+          disabled={isApprovalStepFieldDisabled(props.readonly)}
+          name={formikFieldPath}
+          multiTypeTextArea={{
+            expressions,
+            allowableTypes
+          }}
+          placeholder={selectedField.name}
+        />
+      </div>
     )
   }
   return null

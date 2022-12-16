@@ -77,11 +77,13 @@ export function getSelectedRenderer(selected: any): JSX.Element {
 
 function generateInitialValues(selected: SelectOption[] | string): (string | Item)[] | string {
   if (isArray(selected)) {
-    return selected.map((svc: SelectOption) => ({
-      label: svc.value as string,
-      value: svc.value as string,
-      scope: getScopeFromValue(svc.value as string)
-    }))
+    return selected
+      .filter(env => env.label !== 'All')
+      .map((svc: SelectOption) => ({
+        label: svc.value as string,
+        value: svc.value as string,
+        scope: getScopeFromValue(svc.value as string)
+      }))
   }
   return selected
 }
@@ -138,7 +140,10 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
     getString
   })
   const handleMultiSelectChange = (envs: any): void => {
-    const environments = envs.map((env: any) => ({ label: env.identifier, value: env.identifier }))
+    const environments = envs.map((env: any) => ({
+      label: env.identifier,
+      value: env.scope !== Scope.PROJECT ? `${env.scope}.${env.identifier}` : env.identifier
+    }))
     formik.setFieldValue(name, environments)
     onMultiSelectChange(environments)
   }

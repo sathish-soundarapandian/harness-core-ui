@@ -13,7 +13,6 @@ declare const styles: {
   readonly chartContainer: string
   readonly formQueryBox: string
   readonly labelText: string
-  readonly main: string
   readonly noQueryChart: string
   readonly noRecords: string
   readonly queryAndRecords: string

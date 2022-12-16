@@ -78,7 +78,6 @@ describe('Subscriptions Page', () => {
         <SubscriptionsPage />
       </TestWrapper>
     )
-
     expect(getByText('common.subscriptions.title')).toBeTruthy()
     expect(getByText('common.subscriptions.expiryCountdown')).toBeTruthy()
     expect(getByText('common.subscriptions.trial')).toBeTruthy()

@@ -413,6 +413,7 @@ export const onSubmitTerraformData = (values: any): TFFormData => {
     return {
       ...values,
       spec: {
+        ...values.spec,
         provisionerIdentifier: values.spec?.provisionerIdentifier,
         configuration: {
           type: values?.spec?.configuration?.type,

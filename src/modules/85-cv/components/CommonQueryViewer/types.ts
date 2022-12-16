@@ -57,10 +57,6 @@ export interface CommonQueryViewDialogProps extends RecordsProps {
   query?: string
   fetchRecords: () => void
   isOpen: boolean
-  fetchEntityName?: string
-  isConnectorRuntimeOrExpression?: boolean
-  queryNotExecutedMessage?: string
-  isQueryRuntimeOrExpression?: boolean
 }
 
 export const DrawerProps: IDrawerProps = {

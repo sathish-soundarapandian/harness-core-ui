@@ -45,6 +45,7 @@ export const useCreateWinRmCredModal = (props: UseCreateWinRmCredModalProps): Us
   const projectPathParams = useParams<ProjectPathProps>()
   const [view, setView] = useState(Views.CREATE)
   const [winrmData, setwinrmData] = useState<WinRmCredSharedObj>()
+  const [loading, setLoading] = useState(false)
 
   const [showModal, hideModal] = useModalHook(
     () => (
@@ -75,12 +76,13 @@ export const useCreateWinRmCredModal = (props: UseCreateWinRmCredModalProps): Us
               props.onClose?.()
               hideModal()
             }}
+            loading={loading}
           />
         )}
         <Button minimal icon="cross" iconProps={{ size: 18 }} onClick={hideModal} className={css.crossIcon} />
       </Dialog>
     ),
-    [view, winrmData]
+    [view, winrmData, loading]
   )
 
   const open = useCallback(
@@ -89,8 +91,12 @@ export const useCreateWinRmCredModal = (props: UseCreateWinRmCredModalProps): Us
         projectPathParams,
         getScopeFromValue((_winrmData?.spec as WinRmCredentialsSpecDTO)?.auth.spec?.spec?.password)
       )
+      showModal()
 
       if (_winrmData) {
+        setView(Views.EDIT)
+        setLoading(true)
+
         const response = await getSecretReferencesForWinRm(_winrmData, params)
         setwinrmData({
           detailsData: {
@@ -122,9 +128,8 @@ export const useCreateWinRmCredModal = (props: UseCreateWinRmCredModalProps): Us
             password: response.passwordSecret
           }
         })
-        setView(Views.EDIT)
+        setLoading(false)
       } else setView(Views.CREATE)
-      showModal()
     },
     [showModal]
   )

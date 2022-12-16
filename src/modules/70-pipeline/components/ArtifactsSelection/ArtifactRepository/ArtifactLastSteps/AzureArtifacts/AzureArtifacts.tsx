@@ -441,7 +441,7 @@ function FormComponent({
           />
         </div>
         {formik.values.versionType === 'value' ? (
-          <div className={css.jenkinsFieldContainer}>
+          <div className={css.imagePathContainer}>
             <FormInput.MultiTypeInput
               selectItems={getItems(fetchingVersions, 'Versions', versionItems)}
               disabled={isVersionFieldDisabled()}
@@ -501,7 +501,7 @@ function FormComponent({
             )}
           </div>
         ) : (
-          <div className={css.jenkinsFieldContainer}>
+          <div className={css.imagePathContainer}>
             <FormInput.MultiTextInput
               name="versionRegex"
               label={getString('pipeline.artifactsSelection.versionRegex')}

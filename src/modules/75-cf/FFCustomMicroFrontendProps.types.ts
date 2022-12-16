@@ -12,7 +12,7 @@ import type {
   useGetEnvironment,
   useGetEnvironmentListForProject
 } from 'services/cd-ng'
-import type { useConfirmAction } from '@common/hooks'
+import type { useConfirmAction, useQueryParams } from '@common/hooks'
 import type { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
 import type RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import type routes from '@common/RouteDefinitions'
@@ -20,6 +20,7 @@ import type { ContainerSpinner } from '@common/components/ContainerSpinner/Conta
 import type { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import type { Description } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import type { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import type StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import type { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { getIdentifierFromName } from '@common/utils/StringUtils'
 import type * as trackingConstants from '@common/constants/TrackingConstants'
@@ -34,6 +35,7 @@ export interface FFCustomMicroFrontendProps {
   }
   customHooks: {
     useConfirmAction: typeof useConfirmAction
+    useQueryParams: typeof useQueryParams
     useLicenseStore: typeof useLicenseStore
     useSyncedEnvironment: typeof useSyncedEnvironment
     useActiveEnvironment: typeof useActiveEnvironment
@@ -42,6 +44,7 @@ export interface FFCustomMicroFrontendProps {
     RbacOptionsMenuButton: typeof RbacOptionsMenuButton
     ContainerSpinner: typeof ContainerSpinner
     Description: typeof Description
+    StringWithTooltip: typeof StringWithTooltip
   }
   customRoutes: typeof routes
   customUtils: {

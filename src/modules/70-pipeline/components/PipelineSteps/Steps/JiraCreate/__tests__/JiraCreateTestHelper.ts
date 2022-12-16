@@ -445,6 +445,18 @@ export const getJiraOptionalFieldRendererProps = (): JiraFieldsRendererProps => 
         array: true
       },
       required: false
+    },
+    {
+      name: 'Description',
+      value: '',
+      key: 'Description',
+      allowedValues: [],
+      schema: {
+        typeStr: '',
+        type: 'string',
+        array: true
+      },
+      required: false
     }
   ],
   readonly: false,

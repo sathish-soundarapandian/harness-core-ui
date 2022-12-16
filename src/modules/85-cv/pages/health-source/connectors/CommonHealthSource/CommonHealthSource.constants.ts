@@ -41,3 +41,14 @@ export const CommonHealthSourceFieldNames = {
   HIGHER_BASELINE_DEVIATION: 'higherBaselineDeviation',
   LOWER_BASELINE_DEVIATION: 'lowerBaselineDeviation'
 }
+
+export enum FIELD_ENUM {
+  JSON_SELECTOR = 'JsonSelector',
+  TEXT_INPUT = 'TextInput',
+  DROPDOWN = 'Dropdown'
+}
+
+export enum CHART_VISIBILITY_ENUM {
+  AUTO = 'auto',
+  DEFAULT = 'default'
+}

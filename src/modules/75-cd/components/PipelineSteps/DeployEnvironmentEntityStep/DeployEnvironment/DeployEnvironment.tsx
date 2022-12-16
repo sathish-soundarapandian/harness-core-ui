@@ -32,7 +32,13 @@ import { useStrings } from 'framework/strings'
 
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
-import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
+import {
+  getIdentifierFromScopedRef,
+  isMultiTypeExpression,
+  isMultiTypeFixed,
+  isMultiTypeRuntime,
+  isValueRuntimeInput
+} from '@common/utils/utils'
 
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -116,7 +122,7 @@ export default function DeployEnvironment({
   const uniquePathForEnvironments = React.useRef(`_pseudo_field_${uuid()}`)
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
 
-  const { GLOBAL_SERVICE_ENV } = useFeatureFlags()
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   // State
   const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(getAllFixedEnvironments(initialValues))
@@ -202,7 +208,8 @@ export default function DeployEnvironment({
       if (values && environmentsData.length > 0) {
         if (values.environment && !values.environmentInputs?.[values.environment]) {
           const environment = environmentsData.find(
-            environmentData => environmentData.environment.identifier === values.environment
+            environmentData =>
+              environmentData.environment.identifier === getIdentifierFromScopedRef(values.environment as string)
           )
 
           setValues({
@@ -216,19 +223,16 @@ export default function DeployEnvironment({
           const updatedEnvironments = values.environments.reduce<EnvironmentWithInputs>(
             (p, c) => {
               const environment = environmentsData.find(
-                environmentData => environmentData.environment.identifier === c.value
+                environmentData =>
+                  environmentData.environment.identifier === getIdentifierFromScopedRef(c.value as string)
               )
 
               if (environment) {
-                p.environments.push({ label: environment.environment.name, value: environment.environment.identifier })
+                p.environments.push({ label: environment.environment.name, value: c.value })
                 // if environment input is not found, add it, else use the existing one
-                const environmentInputs = get(
-                  values.environmentInputs,
-                  [environment.environment.identifier],
-                  environment?.environmentInputs
-                )
+                const environmentInputs = get(values.environmentInputs, [c.value], environment?.environmentInputs)
 
-                p.environmentInputs[environment.environment.identifier] = environmentInputs
+                p.environmentInputs[c.value as string] = environmentInputs
               } else {
                 p.environments.push(c)
               }
@@ -244,7 +248,9 @@ export default function DeployEnvironment({
             // set value of unique path created to handle environments if some environments are already selected, else select All
             [uniquePathForEnvironments.current]: selectedEnvironments.map(envId => ({
               label: defaultTo(
-                environmentsList.find(environmentInList => environmentInList.identifier === envId)?.name,
+                environmentsList.find(
+                  environmentInList => environmentInList.identifier === getIdentifierFromScopedRef(envId)
+                )?.name,
                 envId
               ),
               value: envId
@@ -381,6 +387,17 @@ export default function DeployEnvironment({
     disabled: disabled
   }
 
+  const onMultiSelectChangeForEnvironments = (items: SelectOption[]) => {
+    setFieldTouched(uniquePathForEnvironments.current, true)
+    if (items?.at(0)?.value === 'All') {
+      setFieldValue(`environments`, undefined)
+      setSelectedEnvironments([])
+    } else {
+      setFieldValue(`environments`, items)
+      setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
+    }
+  }
+
   return (
     <>
       <Layout.Horizontal
@@ -390,7 +407,7 @@ export default function DeployEnvironment({
         margin={{ bottom: isMultiEnvironment ? 'medium' : 'none' }}
       >
         {isMultiEnvironment ? (
-          GLOBAL_SERVICE_ENV && !isUnderEnvGroup ? (
+          CDS_OrgAccountLevelServiceEnvEnvGroup && !isUnderEnvGroup ? (
             /*** This condition is added as entities one step down the entity tree
               will be following the parent scope so no need of the new component here ***/
             <MultiTypeEnvironmentField
@@ -398,20 +415,10 @@ export default function DeployEnvironment({
               placeholder={placeHolderForEnvironments}
               openAddNewModal={openAddNewModal}
               isMultiSelect
-              onMultiSelectChange={(items: SelectOption[]) => {
-                setFieldTouched(uniquePathForEnvironments.current, true)
-                if (items?.at(0)?.value === 'All') {
-                  setFieldValue(`environments`, undefined)
-                  setSelectedEnvironments([])
-                } else {
-                  unstable_batchedUpdates(() => {
-                    setFieldValue(`environments`, items)
-                    if (isValueRuntimeInput(items)) {
-                      setFieldValue(gitOpsEnabled ? 'clusters' : 'infrastructures', RUNTIME_INPUT_VALUE)
-                    }
-                  })
-                  setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
-                }
+              onMultiSelectChange={onMultiSelectChangeForEnvironments}
+              multitypeInputValue={environmentsType}
+              onChange={(item: SelectOption[]) => {
+                onMultiSelectChangeForEnvironments(item)
               }}
               width={300}
               multiTypeProps={{
@@ -430,16 +437,7 @@ export default function DeployEnvironment({
                 disabled,
                 isAllSelectionSupported: isUnderEnvGroup
               }}
-              onChange={items => {
-                setFieldTouched(uniquePathForEnvironments.current, true)
-                if (items?.at(0)?.value === 'All') {
-                  setFieldValue(`environments`, undefined)
-                  setSelectedEnvironments([])
-                } else {
-                  setFieldValue(`environments`, items)
-                  setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
-                }
-              }}
+              onChange={onMultiSelectChangeForEnvironments}
               multiTypeProps={{
                 onTypeChange: setEnvironmentsType,
                 width: 280,
@@ -447,7 +445,7 @@ export default function DeployEnvironment({
               }}
             />
           )
-        ) : !GLOBAL_SERVICE_ENV ? (
+        ) : !CDS_OrgAccountLevelServiceEnvEnvGroup ? (
           <FormInput.MultiTypeInput
             {...commonProps}
             useValue

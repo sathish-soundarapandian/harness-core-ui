@@ -11,7 +11,7 @@ import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import type { EnvironmentYamlV2 } from 'services/cd-ng'
 
-import { isValueRuntimeInput } from '@common/utils/utils'
+import { getIdentifierFromScopedRef, isValueRuntimeInput } from '@common/utils/utils'
 
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
@@ -31,7 +31,7 @@ export const createEnvTemplate = (
       : undefined
 
     const templateFromEnvironmentData = environmentsData.find(
-      envTemplate => envTemplate.environment.identifier === envId
+      envTemplate => envTemplate.environment.identifier === getIdentifierFromScopedRef(envId)
     )
 
     const newEnvironmentInputsTemplate = defaultTo(
@@ -64,7 +64,7 @@ export const createEnvValues = (
 ): EnvironmentYamlV2[] => {
   return environmentIdentifiers.map(environmentIdentifier => {
     const valueFromEnvironmentsData = environmentsData.find(
-      envValue => envValue.environment.identifier === environmentIdentifier
+      envValue => envValue.environment.identifier === getIdentifierFromScopedRef(environmentIdentifier)
     )
 
     // Start - Retain form values

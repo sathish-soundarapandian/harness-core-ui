@@ -189,7 +189,7 @@ function FormComponent({
       <div className={cx(css.connectorForm, formClassName)}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             name="spec.region"
             selectItems={regions}
@@ -221,7 +221,7 @@ function FormComponent({
             </div>
           )}
         </div>
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <MultiTypeTagSelector
             name="spec.tags"
             className="tags-select"
@@ -251,7 +251,7 @@ function FormComponent({
             </div>
           )}
         </div>
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <MultiTypeTagSelector
             name="spec.filters"
             className="tags-select"
@@ -290,7 +290,7 @@ function FormComponent({
           />
         </div>
         {formik.values.versionType === 'value' ? (
-          <div className={css.jenkinsFieldContainer}>
+          <div className={css.imagePathContainer}>
             <FormInput.MultiTypeInput
               selectItems={getVersions()}
               disabled={isReadonly}
@@ -339,7 +339,7 @@ function FormComponent({
             )}
           </div>
         ) : (
-          <div className={css.jenkinsFieldContainer}>
+          <div className={css.imagePathContainer}>
             <FormInput.MultiTextInput
               name="spec.versionRegex"
               label={getString('pipeline.artifactsSelection.versionRegex')}

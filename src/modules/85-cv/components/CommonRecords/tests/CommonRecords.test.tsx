@@ -48,18 +48,10 @@ describe('Unit tests for CommonRecords component', () => {
     expect(getByText('mockError')).not.toBeNull()
   })
 
-  test('Verify that Query not executed state is rendering correctly for Records', async () => {
-    jest.spyOn(cvService, 'useGetStackdriverLogSampleData').mockReturnValue({} as any)
-    const fetchRecordsMock = jest.fn()
-    const { getByText } = render(<WrapperComponent fetchRecords={fetchRecordsMock} isQueryExecuted={false} />)
-
-    expect(getByText('cv.monitoringSources.commonHealthSource.submitQueryToSeeRecords')).not.toBeNull()
-  })
-
   test('Verify that No Records state is rendering correctly for Records', async () => {
     jest.spyOn(cvService, 'useGetStackdriverLogSampleData').mockReturnValue({} as any)
     const fetchRecordsMock = jest.fn()
-    const { getByText } = render(<WrapperComponent fetchRecords={fetchRecordsMock} data={[]} isQueryExecuted={true} />)
+    const { getByText } = render(<WrapperComponent fetchRecords={fetchRecordsMock} data={[]} />)
     expect(getByText('cv.monitoringSources.gcoLogs.noRecordsForQuery')).not.toBeNull()
   })
 
@@ -103,7 +95,6 @@ describe('Unit tests for CommonRecords component', () => {
             receiveTimestamp: '2021-06-10T09:19:40.198475585Z'
           }
         ]}
-        isQueryExecuted={true}
       />
     )
     expect(container.getElementsByClassName('recordContainer').length).toBe(1)

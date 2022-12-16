@@ -14,7 +14,9 @@ const accountId = 'accountId'
 
 export const getUserJourneysCall = `/cv/api/user-journey?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&offset=0&pageSize=100`
 export const getUserJourneysCallForNewerProject = `/cv/api/user-journey?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}&offset=0&pageSize=100`
+export const getAccountLevelUserJourneysCall = `/cv/api/user-journey?routingId=${accountId}&accountId=${accountId}&offset=0&pageSize=100`
 export const listSLOsCall = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10*`
+export const accountLevelListSLOsCall = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&pageNumber=0&pageSize=10*`
 export const listSLOsCallForNewerProject = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}&pageNumber=0&pageSize=10&filter=`
 export const listSLOsCallWithUserJourneyNewOne = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&userJourneyIdentifiers=newone&filter=`
 export const listSLOsCallWithUserJourneySecondJourney = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&userJourneyIdentifiers=Second_Journey&filter=`
@@ -31,6 +33,7 @@ export const listMonitoredServicesForSLOs = `/cv/api/slo-dashboard/monitored-ser
 export const listMonitoredServicesForNewerProject = `/cv/api/monitored-service/all/time-series-health-sources?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}`
 export const getSLOMetrics = `/cv/api/monitored-service/cvng_prod/health-source/${healthSource}/slo-metrics?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getSliGraph = `/cv/api/monitored-service/cvng_prod/sli/onboarding-graph?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
+export const getAccountLevelOnboardingGraph = `/cv/api/slo/v2/composite-slo/onboarding-graph?*`
 export const getServiceLevelObjective = `/cv/api/slo/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getServiceLevelObjectiveV2 = `cv/api/slo/v2/Composite_SLO_1?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1`
 export const getSLODetails = `/cv/api/slo-dashboard/widget/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
@@ -69,7 +72,7 @@ export const getSLODetailsForSLO_4 = `/cv/api/slo-dashboard/widget/SLO_4?routing
 export const createNotification = `/cv/api/notification-rule?routingId=${accountId}&accountId=${accountId}`
 export const getServicesCall = `/ng/api/services?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getEnvironmentsCall = `/ng/api/environments?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
-
+export const createSloV2 = `/cv/api/slo/v2?*`
 export const listSLOsCallResponse = {
   status: 'SUCCESS',
   data: { totalPages: 0, totalItems: 0, pageItemCount: 0, pageSize: 4, content: [], pageIndex: 0, empty: false },
@@ -1700,4 +1703,206 @@ export const getEnvironmentsCallResponse = {
   },
   metaData: null,
   correlationId: 'd5ad5f5f-c3da-4b4d-bf7f-1573a294683f'
+}
+
+export const accountLevelSLOListResponse = {
+  status: 'SUCCESS',
+  data: {
+    totalPages: 1,
+    totalItems: 5,
+    pageItemCount: 5,
+    pageSize: 10,
+    content: [
+      {
+        sloIdentifier: 'simple1',
+        name: 'Simple1',
+        orgName: 'cvng',
+        projectName: 'Testing',
+        monitoredServiceIdentifier: 'service1_qa',
+        monitoredServiceName: 'service1_qa',
+        healthSourceIdentifier: 'Prom2',
+        healthSourceName: 'Prom2',
+        serviceIdentifier: 'service1',
+        serviceName: 'service1',
+        environmentIdentifier: 'qa',
+        environmentName: 'qa',
+        tags: {},
+        userJourneys: [{ identifier: 'g1' }],
+        burnRate: 31.43801652892562,
+        errorBudgetRemainingPercentage: -57.1900826446281,
+        errorBudgetRemaining: -692,
+        totalErrorBudget: 1210,
+        sloTargetType: 'Rolling',
+        sliType: 'Availability',
+        sloType: 'Simple',
+        sloTargetPercentage: 88.0,
+        noOfActiveAlerts: 0,
+        projectParams: {
+          accountIdentifier: '-k53qRQAQ1O7DBLb9ACnjQ',
+          orgIdentifier: 'cvng',
+          projectIdentifier: 'Testing'
+        },
+        errorBudgetRisk: 'EXHAUSTED'
+      },
+      {
+        sloIdentifier: 'simple1',
+        name: 'Simple1',
+        orgName: 'default',
+        projectName: 'demo_composite_slo',
+        monitoredServiceIdentifier: 'service1_env1',
+        monitoredServiceName: 'service1_env1',
+        healthSourceIdentifier: 'prom2',
+        healthSourceName: 'prom2',
+        serviceIdentifier: 'service1',
+        serviceName: 'service1',
+        environmentIdentifier: 'env1',
+        environmentName: 'env1',
+        tags: {},
+        userJourneys: [{ identifier: 't1' }],
+        burnRate: 6.944444444444445,
+        errorBudgetRemainingPercentage: 44.44444444444444,
+        errorBudgetRemaining: 1344,
+        totalErrorBudget: 3024,
+        sloTargetType: 'Rolling',
+        sliType: 'Availability',
+        sloType: 'Simple',
+        sloTargetPercentage: 70.0,
+        noOfActiveAlerts: 0,
+        projectParams: {
+          accountIdentifier: '-k53qRQAQ1O7DBLb9ACnjQ',
+          orgIdentifier: 'default',
+          projectIdentifier: 'demo_composite_slo'
+        },
+        errorBudgetRisk: 'NEED_ATTENTION'
+      },
+      {
+        sloIdentifier: 'simple2',
+        name: 'Simple2',
+        orgName: 'default',
+        projectName: 'demo_composite_slo',
+        monitoredServiceIdentifier: 'service1_env1',
+        monitoredServiceName: 'service1_env1',
+        healthSourceIdentifier: 'prom3',
+        healthSourceName: 'prom3',
+        serviceIdentifier: 'service1',
+        serviceName: 'service1',
+        environmentIdentifier: 'env1',
+        environmentName: 'env1',
+        tags: {},
+        userJourneys: [{ identifier: 't1' }],
+        burnRate: 11.901218820861677,
+        errorBudgetRemainingPercentage: 4.790249433106576,
+        errorBudgetRemaining: 169,
+        totalErrorBudget: 3528,
+        sloTargetType: 'Rolling',
+        sliType: 'Availability',
+        sloType: 'Simple',
+        sloTargetPercentage: 65.0,
+        noOfActiveAlerts: 0,
+        projectParams: {
+          accountIdentifier: '-k53qRQAQ1O7DBLb9ACnjQ',
+          orgIdentifier: 'default',
+          projectIdentifier: 'demo_composite_slo'
+        },
+        errorBudgetRisk: 'UNHEALTHY'
+      },
+      {
+        sloIdentifier: 'Simple3',
+        name: 'Simple3',
+        orgName: 'cvng',
+        projectName: 'Testing',
+        monitoredServiceIdentifier: 'service1_qa',
+        monitoredServiceName: 'service1_qa',
+        healthSourceIdentifier: 'Prom2',
+        healthSourceName: 'Prom2',
+        serviceIdentifier: 'service1',
+        serviceName: 'service1',
+        environmentIdentifier: 'qa',
+        environmentName: 'qa',
+        tags: {},
+        userJourneys: [{ identifier: 'g1' }],
+        burnRate: 21.0218253968254,
+        errorBudgetRemainingPercentage: -5.109126984126984,
+        errorBudgetRemaining: -103,
+        totalErrorBudget: 2016,
+        sloTargetType: 'Rolling',
+        sliType: 'Latency',
+        sloType: 'Simple',
+        sloTargetPercentage: 80.0,
+        noOfActiveAlerts: 0,
+        projectParams: {
+          accountIdentifier: '-k53qRQAQ1O7DBLb9ACnjQ',
+          orgIdentifier: 'cvng',
+          projectIdentifier: 'Testing'
+        },
+        errorBudgetRisk: 'EXHAUSTED'
+      }
+    ],
+    pageIndex: 0,
+    empty: false
+  },
+  correlationId: '5cbec2fb-abfc-484c-b31e-bf98da966486'
+}
+
+export const createCompositeSLOPayload = {
+  name: 'SLO-1',
+  type: 'Composite',
+  identifier: 'SLO1',
+  userJourneyRefs: ['newone'],
+  notificationRuleRefs: [],
+  sloTarget: { sloTargetPercentage: 99, type: 'Rolling', spec: { periodLength: '7d' } },
+  spec: {
+    serviceLevelObjectivesDetails: [
+      {
+        accountId: 'accountId',
+        orgIdentifier: 'cvng',
+        projectIdentifier: 'Testing',
+        serviceLevelObjectiveRef: 'simple1',
+        weightagePercentage: 50
+      },
+      {
+        accountId: 'accountId',
+        orgIdentifier: 'default',
+        projectIdentifier: 'demo_composite_slo',
+        serviceLevelObjectiveRef: 'simple1',
+        weightagePercentage: 50
+      }
+    ]
+  }
+}
+
+export const createProjectLevelCompositeSLOPayload = {
+  name: 'SLO-1',
+  type: 'Composite',
+  identifier: 'SLO1',
+  userJourneyRefs: ['newone'],
+  orgIdentifier: 'default',
+  projectIdentifier: 'project1',
+  notificationRuleRefs: [],
+  sloTarget: { sloTargetPercentage: 99, type: 'Rolling', spec: { periodLength: '7d' } },
+  spec: {
+    serviceLevelObjectivesDetails: [
+      {
+        accountId: 'accountId',
+        orgIdentifier: 'default',
+        projectIdentifier: 'project1',
+        serviceLevelObjectiveRef: 'SLO1',
+        weightagePercentage: 33.3
+      },
+      {
+        accountId: 'accountId',
+        orgIdentifier: 'default',
+        projectIdentifier: 'project1',
+        serviceLevelObjectiveRef: 'SLO4',
+        weightagePercentage: 33.3
+      },
+      {
+        accountId: 'accountId',
+        orgIdentifier: 'default',
+        projectIdentifier: 'project1',
+        serviceLevelObjectiveRef: 'SLO3',
+        weightagePercentage: 33.4
+      }
+    ]
+  }
 }

@@ -16,8 +16,7 @@ import { CommonQueryViewDialogProps, DrawerProps } from '../../types'
 import css from './CommonQueryViewDialog.module.scss'
 
 export function CommonQueryViewDialog(props: CommonQueryViewDialogProps): JSX.Element {
-  const { onHide, query, loading, data, error, fetchRecords, isQueryExecuted, isOpen, isQueryRuntimeOrExpression } =
-    props
+  const { onHide, query, loading, data, error, fetchRecords, isOpen } = props
   const { getString } = useStrings()
   return (
     <Drawer {...DrawerProps} isOpen={isOpen} onClose={onHide} className={css.queryViewDialog}>
@@ -30,14 +29,7 @@ export function CommonQueryViewDialog(props: CommonQueryViewDialogProps): JSX.El
           disabled={isEmpty(query) || loading}
           className={css.runQueryButton}
         />
-        <CommonRecords
-          fetchRecords={fetchRecords}
-          loading={loading}
-          data={data}
-          error={error}
-          query={query}
-          isQueryExecuted={isQueryRuntimeOrExpression ? !isQueryRuntimeOrExpression : isQueryExecuted}
-        />
+        <CommonRecords fetchRecords={fetchRecords} loading={loading} data={data} error={error} query={query} />
       </Container>
     </Drawer>
   )

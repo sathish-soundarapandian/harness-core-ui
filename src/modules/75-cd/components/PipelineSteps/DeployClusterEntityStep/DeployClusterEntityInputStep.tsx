@@ -237,7 +237,9 @@ export default function DeployClusterEntityInputStep({
             multiTypeProps={{
               width: 300,
               height: 32,
-              allowableTypes
+              allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(
+                item => item !== MultiTypeInputType.EXPRESSION && item !== MultiTypeInputType.EXECUTION_TIME
+              ) as AllowedTypes
             }}
           />
         )}

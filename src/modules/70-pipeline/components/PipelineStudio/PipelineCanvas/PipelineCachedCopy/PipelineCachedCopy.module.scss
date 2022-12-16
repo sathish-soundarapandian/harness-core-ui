@@ -5,27 +5,27 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.reloadFromCache {
+.cachedcopy {
   cursor: pointer;
-  .cachedcopy {
-    background-color: var(--grey-100);
-    padding: var(--spacing-xsmall);
-  }
-  .dialogStyles {
-    :global {
-      .ModalDialog--body {
-        padding: 0 !important;
+  background-color: var(--grey-100);
+  padding: var(--spacing-xsmall);
+  border-radius: var(--spacing-xsmall);
+  margin-right: var(--spacing-medium);
+}
+.dialogStyles {
+  :global {
+    .ModalDialog--body {
+      padding: 0 !important;
 
-        &::before,
-        &::after {
-          margin: 0 !important;
-        }
-      }
-
-      .ModalDialog--bodyContent {
-        padding: 0 !important;
+      &::before,
+      &::after {
+        margin: 0 !important;
       }
     }
-    overflow: hidden;
+
+    .ModalDialog--bodyContent {
+      padding: 0 !important;
+    }
   }
+  overflow: hidden;
 }

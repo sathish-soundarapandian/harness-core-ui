@@ -88,8 +88,8 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
           ) : null}
           {formik?.values['valueType'] === 'Reference' ? (
             <FormInput.Text
-              name="value"
-              label={getString('secrets.secret.labelSecretReference')}
+              name="reference"
+              label={getString('secrets.secret.referenceSecret')}
               placeholder={getString('secrets.secret.placeholderSecretReference')}
             />
           ) : null}

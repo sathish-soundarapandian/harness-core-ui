@@ -220,7 +220,7 @@ resourceSelectorErrorMessage: Add atleast one specific resource for the followin
 accessControlTitle:
   users: 'Access Control: Users'
   userGroups: 'Access Control: User Groups'
-  serviceAccounts: 'Access Control: Service Acccounts'
+  serviceAccounts: 'Access Control: Service Accounts'
   resourceGroups: 'Access Control: Resource Groups'
   roles: 'Access Control: Roles'
 planEnforcement:

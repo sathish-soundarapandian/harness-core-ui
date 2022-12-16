@@ -13,7 +13,8 @@ import type {
   RollingSLOTargetSpec,
   WeeklyCalendarSpec,
   CalenderSLOTargetSpec,
-  SLOHealthListView
+  SLOHealthListView,
+  ProjectParams
 } from 'services/cv'
 
 export const enum SLOV2FormFields {
@@ -69,4 +70,9 @@ export interface SLOV2Form {
   [SLOV2FormFields.SLO_TARGET_PERCENTAGE]: SLOTargetDTO['sloTargetPercentage']
   [SLOV2FormFields.NOTIFICATION_RULE_REFS]: ServiceLevelObjectiveV2DTO['notificationRuleRefs']
   [SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS]?: SLOObjective[]
+}
+
+export interface GetSLOIdentifierWithOrgAndProjectProps {
+  sloIdentifier?: string
+  projectParams?: ProjectParams
 }

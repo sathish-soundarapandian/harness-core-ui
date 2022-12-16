@@ -409,7 +409,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             },
             selectProps: {
               noResults: (
-                <Text lineClamp={1} width={500} height={100} padding="small">
+                <Text lineClamp={1} width={400} height={100} padding="small">
                   {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBucketsFound')}
                 </Text>
               ),
@@ -502,7 +502,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             allowableTypes,
             selectProps: {
               noResults: (
-                <Text lineClamp={1} width={500} height={100} padding="small">
+                <Text lineClamp={1} width={400} height={100} padding="small">
                   {getRBACErrorMessage(filePathError as RBACError) || getString('pipeline.noFilePathsFound')}
                 </Text>
               ),
@@ -586,7 +586,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                     selectProps: {
                       items: regions,
                       noResults: (
-                        <Text lineClamp={1} width={500} height={100}>
+                        <Text lineClamp={1} width={400} height={100}>
                           {getRBACErrorMessage(errorRegions as RBACError) || getString('pipeline.noRegions')}
                         </Text>
                       )

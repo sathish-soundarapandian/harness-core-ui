@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep, isEmpty } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 import type { MultiItemsSideNavProps } from '../MultiItemsSideNav/MultiItemsSideNav'
 import type { GroupedCreatedMetrics } from './components/CommonSelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
 
@@ -83,18 +83,22 @@ export const getFilteredGroupedCreatedMetric = (
   filteredGroupMetric?: GroupedCreatedMetrics,
   filter?: string
 ): GroupedCreatedMetrics => {
-  const cloneFilteredGroupMetric = cloneDeep(filteredGroupMetric || {})
-  if (filter && !isEmpty(cloneFilteredGroupMetric)) {
-    const entryFilteredGroupMetric = Object.entries(cloneFilteredGroupMetric)
+  const fiteredData: GroupedCreatedMetrics = {}
+  if (filter && !isEmpty(filteredGroupMetric)) {
+    const entryFilteredGroupMetric = Object.entries(filteredGroupMetric as GroupedCreatedMetrics)
     entryFilteredGroupMetric?.forEach(groupItem => {
       const [label, items] = groupItem
-      const filteredMetric = items?.filter(metric =>
+      const filteredMetrics = items?.filter(metric =>
         metric?.metricName?.toLocaleLowerCase()?.includes(filter?.toLocaleLowerCase())
       )
-      cloneFilteredGroupMetric[label] = filteredMetric
+      if (filteredMetrics?.length) {
+        fiteredData[label] = filteredMetrics
+      }
     })
+    return fiteredData
+  } else {
+    return filteredGroupMetric as GroupedCreatedMetrics
   }
-  return cloneFilteredGroupMetric
 }
 
 export function getUpdatedMetric(

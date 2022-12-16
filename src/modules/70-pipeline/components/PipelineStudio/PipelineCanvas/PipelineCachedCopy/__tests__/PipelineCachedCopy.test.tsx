@@ -12,6 +12,7 @@ import {
   PipelineContext,
   PipelineContextInterface
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import type { CacheResponseMetadata } from 'services/pipeline-ng'
 import PipelineCachedCopy from '../PipelineCachedCopy'
 import { getDummyPipelineCanvasContextValue } from '../../__tests__/PipelineCanvasTestHelper'
 
@@ -36,11 +37,16 @@ const cacheResponseContextValue: PipelineContextInterface = {
 }
 
 describe('Test Pipeline gitx cache Copy', () => {
+  const commonProps = {
+    reloadContent: 'pipeline',
+    reloadFromCache: jest.fn(),
+    cacheResponse: cacheResponseContextValue.state.cacheResponse as CacheResponseMetadata
+  }
   test('should render correctly', () => {
     const { container } = render(
       <TestWrapper defaultFeatureFlagValues={{ PIE_NG_GITX_CACHING: true }}>
         <PipelineContext.Provider value={cacheResponseContextValue}>
-          <PipelineCachedCopy />
+          <PipelineCachedCopy {...commonProps} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -51,7 +57,7 @@ describe('Test Pipeline gitx cache Copy', () => {
     const { container } = render(
       <TestWrapper defaultFeatureFlagValues={{ PIE_NG_GITX_CACHING: true }}>
         <PipelineContext.Provider value={cacheResponseContextValue}>
-          <PipelineCachedCopy />
+          <PipelineCachedCopy {...commonProps} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -68,7 +74,7 @@ describe('Test Pipeline gitx cache Copy', () => {
     render(
       <TestWrapper defaultFeatureFlagValues={{ PIE_NG_GITX_CACHING: true }}>
         <PipelineContext.Provider value={cacheResponseContextValue}>
-          <PipelineCachedCopy />
+          <PipelineCachedCopy {...commonProps} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -80,10 +86,15 @@ describe('Test Pipeline gitx cache Copy', () => {
   })
 
   test('reload the data from cache', async () => {
+    const reloadFromCache = jest.fn()
     const { container } = render(
       <TestWrapper defaultFeatureFlagValues={{ PIE_NG_GITX_CACHING: true }}>
         <PipelineContext.Provider value={cacheResponseContextValue}>
-          <PipelineCachedCopy />
+          <PipelineCachedCopy
+            reloadContent="pipeline"
+            reloadFromCache={reloadFromCache}
+            cacheResponse={cacheResponseContextValue.state.cacheResponse as CacheResponseMetadata}
+          />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -100,7 +111,6 @@ describe('Test Pipeline gitx cache Copy', () => {
     expect(cancelButton).toBeDefined()
 
     fireEvent.click(confirmReload)
-    await waitFor(() => expect(cacheResponseContextValue.updatePipelineView).toHaveBeenCalled())
-    await waitFor(() => expect(cacheResponseContextValue.fetchPipeline).toHaveBeenCalled())
+    await waitFor(() => expect(reloadFromCache).toHaveBeenCalled())
   })
 })

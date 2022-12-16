@@ -58,6 +58,7 @@ import {
   isCustomDeploymentType,
   isServerlessDeploymentType,
   isSshOrWinrmDeploymentType,
+  isTASDeploymentType,
   repositoryFormats,
   RepositoryFormatTypes
 } from '@pipeline/utils/stageHelpers'
@@ -117,19 +118,21 @@ function Artifactory({
   const isSSHWinRmDeploymentType = isSshOrWinrmDeploymentType(selectedDeploymentType)
   const isAzureWebAppDeploymentTypeSelected = isAzureWebAppDeploymentType(selectedDeploymentType)
   const isCustomDeploymentTypeSelected = isCustomDeploymentType(selectedDeploymentType)
+  const isTasDeploymentTypeSelected = isTASDeploymentType(selectedDeploymentType)
+
+  const showRepositoryFormatForAllowedTypes =
+    isSSHWinRmDeploymentType ||
+    isAzureWebAppDeploymentTypeSelected ||
+    isCustomDeploymentTypeSelected ||
+    isTasDeploymentTypeSelected
   const [repositoryFormat, setRepositoryFormat] = useState<string | undefined>(
-    isServerlessDeploymentTypeSelected ||
-      isSSHWinRmDeploymentType ||
-      isAzureWebAppDeploymentTypeSelected ||
-      isCustomDeploymentTypeSelected
+    showRepositoryFormatForAllowedTypes || isServerlessDeploymentTypeSelected
       ? RepositoryFormatTypes.Generic
       : RepositoryFormatTypes.Docker
   )
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [artifactPaths, setArtifactPaths] = useState<SelectOption[]>([])
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const showRepositoryFormatForAllowedTypes =
-    isAzureWebAppDeploymentTypeSelected || isSSHWinRmDeploymentType || isCustomDeploymentTypeSelected
   const isAzureWebAppGenericTypeSelected = isAzureWebAppOrSshWinrmGenericDeploymentType(
     selectedDeploymentType,
     getRepositoryFormat(initialValues)

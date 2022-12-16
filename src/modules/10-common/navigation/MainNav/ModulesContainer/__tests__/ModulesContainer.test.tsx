@@ -48,6 +48,7 @@ describe('Modules containter test', () => {
         <ModulesContainer />
       </TestWrapper>
     )
+
     // checking length of nav items
     expect(container.querySelectorAll('[class*="navItem"]').length).toBe(3)
     // selected modules should be defined

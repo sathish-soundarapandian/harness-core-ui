@@ -322,7 +322,7 @@ export const isMultiArtifactSourceEnabled = (
   isMultiArtifactSource: boolean,
   stage: DeploymentStageElementConfig
 ): boolean => {
-  return isMultiArtifactSource && isEmpty(stage?.spec?.serviceConfig?.serviceDefinition?.spec?.artifacts?.primary?.type)
+  return isMultiArtifactSource && isEmpty(stage?.spec?.serviceConfig?.serviceDefinition?.type)
 }
 
 export const shouldFetchFieldData = (fieldList: string[]) => {

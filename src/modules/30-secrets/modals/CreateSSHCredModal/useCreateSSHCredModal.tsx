@@ -45,6 +45,7 @@ const useCreateSSHCredModal = (props: UseCreateSSHCredModalProps): UseCreateSSHC
   const projectPathParams = useParams<ProjectPathProps>()
   const [view, setView] = useState(Views.CREATE)
   const [sshData, setSSHData] = useState<SSHCredSharedObj>()
+  const [loading, setLoading] = useState(false)
 
   const [showModal, hideModal] = useModalHook(
     () => (
@@ -68,6 +69,7 @@ const useCreateSSHCredModal = (props: UseCreateSSHCredModalProps): UseCreateSSHC
         ) : (
           <CreateSSHCredWizard
             {...props}
+            loading={loading}
             isEdit={true}
             detailsData={sshData?.detailsData}
             authData={sshData?.authData}
@@ -80,7 +82,7 @@ const useCreateSSHCredModal = (props: UseCreateSSHCredModalProps): UseCreateSSHC
         <Button minimal icon="cross" iconProps={{ size: 18 }} onClick={hideModal} className={css.crossIcon} />
       </Dialog>
     ),
-    [view, sshData]
+    [view, sshData, loading]
   )
 
   const open = useCallback(
@@ -89,8 +91,12 @@ const useCreateSSHCredModal = (props: UseCreateSSHCredModalProps): UseCreateSSHC
         projectPathParams,
         getScopeFromValue((_sshData?.spec as SSHKeySpecDTO)?.auth.spec?.spec?.password)
       )
+      showModal()
 
       if (_sshData) {
+        setView(Views.EDIT)
+        setLoading(true)
+
         const response = await getSecretReferencesforSSH(_sshData, params)
         setSSHData({
           detailsData: {
@@ -115,9 +121,8 @@ const useCreateSSHCredModal = (props: UseCreateSSHCredModalProps): UseCreateSSHC
             encryptedPassphrase: response.encryptedPassphraseSecret
           }
         })
-        setView(Views.EDIT)
+        setLoading(false)
       } else setView(Views.CREATE)
-      showModal()
     },
     [showModal]
   )

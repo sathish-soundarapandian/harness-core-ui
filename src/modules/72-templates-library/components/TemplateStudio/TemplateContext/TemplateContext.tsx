@@ -18,6 +18,7 @@ import { useLocalStorage } from '@common/hooks'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import {
+  CacheResponseMetadata,
   EntityGitDetails,
   EntityValidityDetails,
   ErrorNodeSummary,
@@ -71,6 +72,7 @@ interface TemplatePayload {
   gitDetails?: EntityGitDetails
   storeMetadata?: StoreMetadata
   entityValidityDetails?: EntityValidityDetails
+  cacheResponseMetadata?: CacheResponseMetadata
   templateYaml?: string
   lastPublishedVersion?: string
   templateInputsErrorNodeSummary?: ErrorNodeSummary
@@ -98,6 +100,7 @@ export interface FetchTemplateBoundProps {
   versionLabel?: string
   gitDetails: EntityGitDetails
   templateType: string
+  isGitCacheEnabled?: boolean
 }
 
 export interface FetchTemplateUnboundProps {
@@ -107,17 +110,21 @@ export interface FetchTemplateUnboundProps {
   repoIdentifier?: string
   repoName?: string
   branch?: string
+  loadFromCache?: boolean
 }
 
 const getTemplateYaml = (
   queryParams: GetTemplateQueryParams,
   templateIdentifier: string,
+  isGitCacheEnabled: boolean,
+  loadFromCache: boolean,
   signal?: AbortSignal
 ): Promise<TemplateResponse> => {
   return getTemplatePromise(
     {
       queryParams,
-      templateIdentifier
+      templateIdentifier,
+      requestOptions: { headers: { ...(isGitCacheEnabled && loadFromCache ? { 'Load-From-Cache': 'true' } : {}) } }
     },
     signal
   )
@@ -185,9 +192,14 @@ const getTemplatesByIdentifier = (
 }
 
 const getTemplateErrorNodeSummary = (
-  queryParams: ValidateTemplateInputsQueryParams
+  queryParams: ValidateTemplateInputsQueryParams,
+  isGitCacheEnabled: boolean,
+  loadFromCache: boolean
 ): Promise<ErrorNodeSummary | undefined> => {
-  return validateTemplateInputsPromise({ queryParams })
+  return validateTemplateInputsPromise({
+    queryParams,
+    requestOptions: { headers: { ...(isGitCacheEnabled && loadFromCache ? { 'Load-From-Cache': 'true' } : {}) } }
+  })
     .then(response => {
       if (response && response.status === 'SUCCESS') {
         if (response.data?.validYaml === false && response.data.errorNodeSummary) {
@@ -251,6 +263,7 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
           templateWithGitDetails?.entityValidityDetails,
           defaultTo(data?.entityValidityDetails, {})
         ),
+        cacheResponseMetadata: (templateWithGitDetails as TemplateResponse)?.cacheResponseMetadata,
         storeMetadata,
         templateYaml: data?.templateYaml,
         templateInputsErrorNodeSummary,
@@ -273,6 +286,7 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
         templateWithGitDetails?.entityValidityDetails,
         defaultTo(data?.entityValidityDetails, {})
       ),
+      cacheResponseMetadata: (templateWithGitDetails as TemplateResponse)?.cacheResponseMetadata,
       templateYaml: templateYamlStr,
       templateInputsErrorNodeSummary
     }
@@ -290,6 +304,7 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
         gitDetails: payload.gitDetails,
         storeMetadata: payload.storeMetadata,
         entityValidityDetails: payload.entityValidityDetails,
+        cacheResponseMetadata: payload.cacheResponseMetadata,
         templateYaml: payload.templateYaml,
         templateInputsErrorNodeSummary,
         templateYamlError: undefined
@@ -310,6 +325,7 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
         gitDetails: templateWithGitDetails?.gitDetails ?? {},
         storeMetadata,
         entityValidityDetails: defaultTo(templateWithGitDetails?.entityValidityDetails, {}),
+        cacheResponseMetadata: (templateWithGitDetails as TemplateResponse)?.cacheResponseMetadata,
         templateYaml: templateYamlStr,
         templateInputsErrorNodeSummary,
         templateYamlError: undefined
@@ -320,8 +336,16 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
 }
 
 const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTemplateUnboundProps): Promise<void> => {
-  const { dispatch, queryParams, templateIdentifier, versionLabel = '', gitDetails, templateType } = props
-  const { forceFetch = false, forceUpdate = false, signal, repoName, branch } = params
+  const {
+    dispatch,
+    queryParams,
+    templateIdentifier,
+    versionLabel = '',
+    gitDetails,
+    templateType,
+    isGitCacheEnabled
+  } = props
+  const { forceFetch = false, forceUpdate = false, signal, repoName, branch, loadFromCache = true } = params
   let id = getId(
     queryParams.accountIdentifier,
     defaultTo(queryParams.orgIdentifier, ''),
@@ -358,17 +382,23 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
             ...(repoName && branch ? { repoName, branch } : {})
           },
           templateIdentifier,
+          !!isGitCacheEnabled,
+          loadFromCache,
           signal
         )
 
-        const templateInputsErrorNodeSummary = await getTemplateErrorNodeSummary({
-          ...queryParams,
-          templateIdentifier,
-          versionLabel,
-          repoIdentifier: templateWithGitDetails.gitDetails?.repoName,
-          branch: templateWithGitDetails.gitDetails?.branch,
-          getDefaultFromOtherRepo: true
-        })
+        const templateInputsErrorNodeSummary = await getTemplateErrorNodeSummary(
+          {
+            ...queryParams,
+            templateIdentifier,
+            versionLabel,
+            repoIdentifier: templateWithGitDetails.gitDetails?.repoName,
+            branch: templateWithGitDetails.gitDetails?.branch,
+            getDefaultFromOtherRepo: true
+          },
+          !!isGitCacheEnabled,
+          loadFromCache
+        )
 
         id = getId(
           queryParams.accountIdentifier,
@@ -478,6 +508,7 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
             filePath: data?.gitDetails?.filePath
           },
           entityValidityDetails: defaultTo(data?.entityValidityDetails, {}),
+          cacheResponseMetadata: data?.cacheResponseMetadata,
           templateYaml: defaultTo(data?.templateYaml, '')
         })
       )
@@ -489,8 +520,16 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
 }
 
 const _fetchTemplateV1 = async (props: FetchTemplateBoundProps, params: FetchTemplateUnboundProps): Promise<void> => {
-  const { dispatch, queryParams, templateIdentifier, versionLabel = '', gitDetails, templateType } = props
-  const { forceFetch = false, forceUpdate = false, signal, repoIdentifier, branch } = params
+  const {
+    dispatch,
+    queryParams,
+    templateIdentifier,
+    versionLabel = '',
+    gitDetails,
+    templateType,
+    isGitCacheEnabled
+  } = props
+  const { forceFetch = false, forceUpdate = false, signal, repoIdentifier, branch, loadFromCache = true } = params
   let id = getId(
     queryParams.accountIdentifier,
     defaultTo(queryParams.orgIdentifier, ''),
@@ -505,14 +544,18 @@ const _fetchTemplateV1 = async (props: FetchTemplateBoundProps, params: FetchTem
     let data: TemplatePayload = await IdbTemplate.get(IdbTemplateStoreName, id)
     if ((!data || forceFetch) && templateIdentifier !== DefaultNewTemplateId) {
       try {
-        const templateInputsErrorNodeSummary = await getTemplateErrorNodeSummary({
-          ...queryParams,
-          templateIdentifier,
-          versionLabel,
-          repoIdentifier,
-          branch,
-          getDefaultFromOtherRepo: true
-        })
+        const templateInputsErrorNodeSummary = await getTemplateErrorNodeSummary(
+          {
+            ...queryParams,
+            templateIdentifier,
+            versionLabel,
+            repoIdentifier,
+            branch,
+            getDefaultFromOtherRepo: true
+          },
+          !!isGitCacheEnabled,
+          loadFromCache
+        )
 
         const templatesList: TemplateSummaryResponse[] = await getTemplatesByIdentifier(
           {
@@ -596,6 +639,7 @@ const _fetchTemplateV1 = async (props: FetchTemplateBoundProps, params: FetchTem
           stableVersion: DefaultNewVersionLabel,
           gitDetails: defaultTo(data?.gitDetails, {}),
           entityValidityDetails: defaultTo(data?.entityValidityDetails, {}),
+          cacheResponseMetadata: data?.cacheResponseMetadata,
           templateYaml: defaultTo(data?.templateYaml, '')
         })
       )
@@ -879,7 +923,7 @@ export const TemplateProvider: React.FC<{
   const { repoIdentifier, branch } = queryParams
   const { supportingTemplatesGitx } = useAppStore()
   const { licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, CDNG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CING_ENABLED, CDNG_ENABLED, CFNG_ENABLED, PIE_NG_GITX_CACHING } = useFeatureFlags()
   const { getString } = useStrings()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const isMounted = React.useRef(false)
@@ -913,7 +957,8 @@ export const TemplateProvider: React.FC<{
       repoIdentifier,
       branch
     },
-    templateType
+    templateType,
+    isGitCacheEnabled: !!PIE_NG_GITX_CACHING
   })
 
   const fetchTemplateV2 = _fetchTemplateV2.bind(null, {
@@ -924,7 +969,8 @@ export const TemplateProvider: React.FC<{
     gitDetails: {
       branch
     },
-    templateType
+    templateType,
+    isGitCacheEnabled: !!PIE_NG_GITX_CACHING
   })
 
   const fetchTemplate = supportingTemplatesGitx ? fetchTemplateV2 : fetchTemplateV1
@@ -1002,7 +1048,6 @@ export const TemplateProvider: React.FC<{
   const setIntermittentLoading = React.useCallback((isIntermittentLoading: boolean) => {
     dispatch(TemplateContextActions.setIntermittentLoading({ isIntermittentLoading }))
   }, [])
-
   const renderPipelineStage = (args: Omit<PipelineStagesProps, 'children'>) =>
     getPipelineStages({
       args,

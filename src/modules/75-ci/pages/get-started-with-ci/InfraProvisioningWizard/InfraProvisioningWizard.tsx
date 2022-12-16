@@ -515,7 +515,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         ),
         onClickBack: () => {
           setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectRepository)
-          updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.InProgress)
+          updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.ToDo)
           updateStepStatus([InfraProvisiongWizardStepId.ConfigurePipeline], StepStatus.ToDo)
         },
         onClickNext: () => {

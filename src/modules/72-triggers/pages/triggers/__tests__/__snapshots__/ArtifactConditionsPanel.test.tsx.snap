@@ -48,7 +48,6 @@ exports[`ArtifactConditionsPanel Triggers tests Initial Render 1`] = `
                 data-id="buildOperator-0"
                 style="align-self: center;"
               >
-                
                 <div
                   class="bp3-form-content"
                 >
@@ -103,7 +102,6 @@ exports[`ArtifactConditionsPanel Triggers tests Initial Render 1`] = `
                 data-id="buildValue-1"
                 style="align-self: center;"
               >
-                
                 <div
                   class="bp3-form-content"
                 >

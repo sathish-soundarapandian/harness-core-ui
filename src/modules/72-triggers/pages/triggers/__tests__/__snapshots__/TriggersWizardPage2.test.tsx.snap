@@ -4735,7 +4735,6 @@ exports[`Manifest Trigger Tests on edit -with event conditions payload 1`] = `
                           class="bp3-form-group operatorContainer"
                           style="align-self: center;"
                         >
-                          
                           <div
                             class="bp3-form-content"
                           >
@@ -4789,7 +4788,6 @@ exports[`Manifest Trigger Tests on edit -with event conditions payload 1`] = `
                           class="bp3-form-group textContainer"
                           style="align-self: center;"
                         >
-                          
                           <div
                             class="bp3-form-content"
                           >

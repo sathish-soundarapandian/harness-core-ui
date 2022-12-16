@@ -121,7 +121,9 @@ exports[`HarnessApprovalLogsView - Success Render proper in case of successful A
   <div
     class="approvalRow"
   >
-    <div>
+    <div
+      class="approvalMessageContent"
+    >
       pipeline.approvalStage.approvalStageLogsViewMessage
     </div>
     <button

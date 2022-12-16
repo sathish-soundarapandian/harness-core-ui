@@ -38,7 +38,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
-  const { NG_SETTINGS, GITOPS_ONPREM_ENABLED, GLOBAL_SERVICE_ENV } = useFeatureFlags()
+  const { NG_SETTINGS, GITOPS_ONPREM_ENABLED, CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
   const hideGitopsOnPrem = !gitopsOnPremEnabled && isOnPrem()
 
@@ -106,7 +106,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   ]
 
   const options: ResourceOption[] = items || [
-    ...(GLOBAL_SERVICE_ENV
+    ...(CDS_OrgAccountLevelServiceEnvEnvGroup
       ? ([
           {
             label: <String stringID="services" />,

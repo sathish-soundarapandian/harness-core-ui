@@ -8,7 +8,7 @@
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { defaultTo, set } from 'lodash-es'
 import type { EnvironmentYamlV2 } from 'services/cd-ng'
-import { isValueRuntimeInput } from '@common/utils/utils'
+import { getIdentifierFromScopedRef, isValueRuntimeInput } from '@common/utils/utils'
 import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState, FilterYaml } from '../types'
 
 export function processFiltersInitialValues(
@@ -144,44 +144,44 @@ export function getEnvironmentsFormStateFromInitialValues(
   } else {
     defaultTo(environments, []).map((environment: EnvironmentYamlV2, index: number) => {
       set(formState, `environments.${index}`, {
-        label: environment.environmentRef,
+        label: getIdentifierFromScopedRef(environment.environmentRef),
         value: environment.environmentRef
       })
 
-      set(formState, `environmentInputs.${environment.environmentRef}`, environment.environmentInputs)
+      set(formState, `environmentInputs.['${environment.environmentRef}']`, environment.environmentInputs)
 
       const environmentFilters = processFiltersInitialValues((environment as any).filters)
       if (environmentFilters.length) {
-        set(formState, `environmentFilters.${environment.environmentRef}`, environmentFilters)
+        set(formState, `environmentFilters.['${environment.environmentRef}']`, environmentFilters)
       } else {
         if (gitOpsEnabled) {
           if (Array.isArray(environment.gitOpsClusters)) {
             environment.gitOpsClusters.map((gitOpsCluster, clusterIndex) => {
-              set(formState, `clusters.${environment.environmentRef}.${clusterIndex}`, {
+              set(formState, `clusters.['${environment.environmentRef}'].${clusterIndex}`, {
                 label: gitOpsCluster.identifier,
                 value: gitOpsCluster.identifier
               })
             })
           } else {
-            set(formState, `clusters.${environment.environmentRef}`, environment.gitOpsClusters)
+            set(formState, `clusters.['${environment.environmentRef}']`, environment.gitOpsClusters)
           }
         } else {
           if (environment.deployToAll !== true) {
             if (Array.isArray(environment.infrastructureDefinitions)) {
               environment.infrastructureDefinitions.map((infrastructure, infrastructureIndex) => {
-                set(formState, `infrastructures.${environment.environmentRef}.${infrastructureIndex}`, {
+                set(formState, `infrastructures.['${environment.environmentRef}'].${infrastructureIndex}`, {
                   label: infrastructure.identifier,
                   value: infrastructure.identifier
                 })
 
                 set(
                   formState,
-                  `infrastructureInputs.${environment.environmentRef}.${infrastructure.identifier}`,
+                  `infrastructureInputs.['${environment.environmentRef}'].${infrastructure.identifier}`,
                   infrastructure.inputs
                 )
               })
             } else {
-              set(formState, `infrastructures.${environment.environmentRef}`, environment.infrastructureDefinitions)
+              set(formState, `infrastructures.['${environment.environmentRef}']`, environment.infrastructureDefinitions)
             }
           }
         }

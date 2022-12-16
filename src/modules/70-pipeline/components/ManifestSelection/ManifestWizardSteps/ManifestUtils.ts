@@ -13,6 +13,7 @@ import type { ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import { GitRepoName, ManifestStoreMap } from '../Manifesthelper'
 import type {
   CommandFlags,
+  CustomManifestManifestDataType,
   HelmHarnessFileStoreFormData,
   HelmWithGcsDataType,
   HelmWithGITDataType,
@@ -28,6 +29,7 @@ type formDataType =
   | HelmWithHTTPDataType
   | HelmWithOCIDataType
   | HelmHarnessFileStoreFormData
+  | CustomManifestManifestDataType
 
 const getRepoNameBasedonScope = (initialValues: ManifestConfig, prevStepData: any): string => {
   const connectorScope = getScopeFromValue(initialValues?.spec.store?.spec.connectorRef)

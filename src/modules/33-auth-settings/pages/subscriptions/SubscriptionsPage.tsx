@@ -89,7 +89,6 @@ const SubscriptionsPage: React.FC = () => {
   const ACTIVE_MODULE_SELECT_CARDS = MODULE_SELECT_CARDS.reduce(
     (accumulator: ModuleSelectCard[], card: ModuleSelectCard) => {
       const { module } = card
-
       switch (module) {
         case ModuleName.CD:
           CDNG_ENABLED && accumulator.push(card)

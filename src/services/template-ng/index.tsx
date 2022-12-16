@@ -4652,6 +4652,7 @@ export interface GetTemplateQueryParams {
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
   repoName?: string
+  loadFromFallbackBranch?: boolean
 }
 
 export interface GetTemplatePathParams {

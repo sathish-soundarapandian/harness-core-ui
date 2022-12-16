@@ -19,12 +19,12 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 export default function DashboardHomeSideNav(): React.ReactElement {
   const params = useParams<AccountPathProps>()
   const { getString } = useStrings()
-  const GLOBAL_SERVICE_ENV = useFeatureFlag(FeatureFlag.GLOBAL_SERVICE_ENV)
+  const CDS_OrgAccountLevelServiceEnvEnvGroup = useFeatureFlag(FeatureFlag.CDS_OrgAccountLevelServiceEnvEnvGroup)
 
   return (
     <Layout.Vertical spacing="small" margin={{ top: 'xxxlarge' }}>
       <SidebarLink label={getString('common.welcome')} to={routes.toMainDashboard(params)} />
-      {GLOBAL_SERVICE_ENV && (
+      {CDS_OrgAccountLevelServiceEnvEnvGroup && (
         <>
           <SidebarLink label={getString('services')} to={routes.toServices({ ...params })} />
           <SidebarLink label={getString('environments')} to={routes.toEnvironment({ ...params })} />
