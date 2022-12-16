@@ -836,7 +836,6 @@ export interface Error {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
-    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -1189,7 +1188,6 @@ export interface ErrorMetadata {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
-    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -1569,7 +1567,6 @@ export interface Failure {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
-    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -1594,7 +1591,7 @@ export interface FailureStrategyActionConfig {
     | 'StepGroupRollback'
     | 'PipelineRollback'
     | 'ManualIntervention'
-    | 'ProceedWithDefaultValues'
+    | 'ProceedWithDefaultValue'
 }
 
 export interface FailureStrategyConfig {
@@ -1719,6 +1716,15 @@ export type InitializeStepInfo = StepSpecType & {
     [key: string]: StrategyExpansionData
   }
   variables?: NGVariable[]
+}
+
+export interface Input {
+  allowed_values?: string[]
+  default?: string
+  description?: string
+  name?: string
+  required?: boolean
+  secret?: boolean
 }
 
 export interface InputSetError {
@@ -1902,7 +1908,7 @@ export interface OnFailureConfig {
     | 'Verification'
     | 'DelegateProvisioning'
     | 'PolicyEvaluationFailure'
-    | 'InputTimeoutError'
+    | 'ExecutionInputTimeoutError'
   )[]
 }
 
@@ -1961,6 +1967,16 @@ export type PVCVolume = PodVolume & {
   mountPath: string
   name: string
   readOnly?: boolean
+}
+
+export interface PageResponsePluginMetadataResponse {
+  content?: PluginMetadataResponse[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
 }
 
 export type ParallelStepElementConfig = ExecutionWrapperConfig[]
@@ -2082,6 +2098,17 @@ export interface Platform {
   os?: 'Linux' | 'MacOS' | 'Windows'
 }
 
+export interface PluginMetadataResponse {
+  description?: string
+  image?: string
+  inputs?: Input[]
+  kind?: string
+  logo?: string
+  name?: string
+  repo?: string
+  uses?: string
+}
+
 export type PluginStepInfo = StepSpecType & {
   connectorRef: string
   entrypoint?: string[]
@@ -2122,7 +2149,7 @@ export interface PodsSetupInfo {
 }
 
 export type ProceedWithDefaultValuesFailureActionConfig = FailureStrategyActionConfig & {
-  type: 'ProceedWithDefaultValues'
+  type: 'ProceedWithDefaultValue'
 }
 
 export interface ReferenceDTO {
@@ -2190,6 +2217,13 @@ export interface ResponseCIPipelineModuleInfo {
 export interface ResponseCIUsageResult {
   correlationId?: string
   data?: CIUsageResult
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseDTOPageResponsePluginMetadataResponse {
+  correlationId?: string
+  data?: PageResponsePluginMetadataResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2579,7 +2613,6 @@ export interface ResponseMessage {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
-    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
@@ -2599,7 +2632,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
-    | 'INPUT_TIMEOUT_FAILURE'
+    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -3834,7 +3867,6 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -3881,7 +3913,6 @@ export interface GetStepYamlSchemaQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
-    | 'ShellScriptProvision'
   yamlGroup?: string
 }
 
@@ -4221,3 +4252,67 @@ export const getMergedPartialYamlSchemaPromise = (
     YamlSchemaDetailsWrapperRequestBody,
     void
   >('POST', getConfig('ci'), `/partial-yaml-schema/merged`, props, signal)
+
+export interface ListPluginsQueryParams {
+  /**
+   * Page number of navigation. The default value is 0.
+   */
+  pageIndex?: number
+  /**
+   * Number of entries per page. The default value is 100.
+   */
+  pageSize?: number
+  /**
+   * This would be used to filter plugins. Any plugin having the specified string in its Name will be filtered.
+   */
+  searchTerm?: string
+}
+
+export type ListPluginsProps = Omit<
+  GetProps<ResponseDTOPageResponsePluginMetadataResponse, Failure | Error, ListPluginsQueryParams, void>,
+  'path'
+>
+
+/**
+ * List metadata for available plugins
+ */
+export const ListPlugins = (props: ListPluginsProps) => (
+  <Get<ResponseDTOPageResponsePluginMetadataResponse, Failure | Error, ListPluginsQueryParams, void>
+    path={`/v1/plugins`}
+    base={getConfig('ci')}
+    {...props}
+  />
+)
+
+export type UseListPluginsProps = Omit<
+  UseGetProps<ResponseDTOPageResponsePluginMetadataResponse, Failure | Error, ListPluginsQueryParams, void>,
+  'path'
+>
+
+/**
+ * List metadata for available plugins
+ */
+export const useListPlugins = (props: UseListPluginsProps) =>
+  useGet<ResponseDTOPageResponsePluginMetadataResponse, Failure | Error, ListPluginsQueryParams, void>(`/v1/plugins`, {
+    base: getConfig('ci'),
+    ...props
+  })
+
+/**
+ * List metadata for available plugins
+ */
+export const listPluginsPromise = (
+  props: GetUsingFetchProps<
+    ResponseDTOPageResponsePluginMetadataResponse,
+    Failure | Error,
+    ListPluginsQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseDTOPageResponsePluginMetadataResponse, Failure | Error, ListPluginsQueryParams, void>(
+    getConfig('ci'),
+    `/v1/plugins`,
+    props,
+    signal
+  )

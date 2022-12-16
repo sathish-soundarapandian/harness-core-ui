@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { capitalize } from 'lodash-es'
 import {
   Container,
@@ -18,14 +18,14 @@ import {
   Button,
   Formik,
   FormikForm,
-  ButtonVariation
+  ButtonVariation,
+  PageSpinner
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { PluginInterface } from './plugins'
-import { Plugins } from './plugins'
 
 import css from './PluginsPanel.module.scss'
+import { PluginMetadataResponse, useListPlugins } from 'services/ci'
 
 interface PluginsPanelInterface {
   existingPluginValues?: Record<string, any>
@@ -37,9 +37,17 @@ interface PluginsPanelInterface {
 export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   const { height, onPluginAdd, existingPluginValues = {} } = props
   const { getString } = useStrings()
-  const [selectedPlugin, setSelectedPlugin] = useState<PluginInterface | undefined>()
+  const [selectedPlugin, setSelectedPlugin] = useState<PluginMetadataResponse | undefined>()
+  const { data, loading, error } = useListPlugins({ queryParams: { pageIndex: 0, pageSize: 50, searchTerm: 'git' } })
+  const [plugins, setPlugins] = useState<PluginMetadataResponse[]>([])
 
-  const renderPlugin = useCallback((plugin: PluginInterface): JSX.Element => {
+  useEffect(() => {
+    if (!error && !loading) {
+      setPlugins(data?.data?.content || [])
+    }
+  }, [data, loading, error])
+
+  const renderPlugin = useCallback((plugin: PluginMetadataResponse): JSX.Element => {
     const { name, description, kind } = plugin
     return (
       <Layout.Horizontal
@@ -69,7 +77,9 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
 
   const { name: pluginName, repo: pluginDocumentationLink } = selectedPlugin || {}
 
-  return (
+  return loading ? (
+    <PageSpinner />
+  ) : (
     <Container className={css.tabs}>
       <Tabs id={'pluginsPanel'} defaultSelectedTabId={'plugins'} className={css.tabs}>
         <Tab
@@ -134,7 +144,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                     <ExpandingSearchInput autoFocus={true} alwaysExpanded={true} />
                   </Container>
                   <Container className={css.overflow}>
-                    {Plugins.map((item: PluginInterface) => renderPlugin(item))}
+                    {plugins.map((item: PluginMetadataResponse) => renderPlugin(item))}
                   </Container>
                 </Layout.Vertical>
               )}
