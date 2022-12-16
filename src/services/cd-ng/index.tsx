@@ -49391,6 +49391,7 @@ export const getServicePromise = (
   )
 
 export interface GetServiceListQueryParams {
+  includeAllServicesAccessibleAtScope?: boolean
   page?: number
   size?: number
   accountIdentifier: string

@@ -8,12 +8,12 @@
 import React from 'react'
 import type { Column } from 'react-table'
 import cx from 'classnames'
-import { Text, TableV2, Layout, Card, Heading, NoDataCard } from '@harness/uicore'
+import { Text, TableV2, Layout, Card, Heading } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
 import { String, useStrings } from 'framework/strings'
 import type { PageActiveServiceDTO, LicenseUsageDTO } from 'services/cd-ng'
-import type { SortBy } from '@pipeline/pages/pipeline-list/types'
+import type { SortBy } from './types'
 import {
   LastModifiedNameCell,
   OrganizationCell,
@@ -66,30 +66,34 @@ export function ServiceLicenseTable({
         Header: getString('common.purpose.service'),
         accessor: 'name',
         width: '16%',
+        disableSortBy: true,
         Cell: LastModifiedNameCell
       },
       {
         Header: getString('common.organizations'),
         accessor: 'storeType',
+        disableSortBy: true,
         width: '16%',
         Cell: OrganizationCell
       },
       {
         Header: getString('common.projects'),
         accessor: 'storeType1',
+        disableSortBy: true,
         width: '16%',
         Cell: ProjectCell
       },
       {
         Header: getString('common.serviceId'),
         accessor: 'executionSummaryInfo.lastExecutionTs',
-        width: '10%',
+        disableSortBy: true,
+        width: '15%',
         Cell: LastModifiedServiceIdCell
       },
       {
         Header: getString('common.servicesInstances'),
         accessor: 'servicesInstances',
-        width: '15%',
+        width: '10%',
         Cell: ServiceInstancesCell,
         serverSortProps: getServerSortProps('common.servicesInstances')
       },
@@ -138,31 +142,23 @@ export function ServiceLicenseTable({
             </div>
           </Layout.Vertical>
         </Layout.Horizontal>
-        {content.length > 0 ? (
-          <TableV2
-            className={pageCss.table}
-            columns={columns}
-            data={content}
-            pagination={
-              totalElements > size
-                ? {
-                    itemCount: totalElements,
-                    pageSize: size,
-                    pageCount: totalPages,
-                    pageIndex: number,
-                    gotoPage
-                  }
-                : undefined
-            }
-            sortable
-          />
-        ) : (
-          <NoDataCard
-            message={getString('common.noActiveServiceData')}
-            className={pageCss.noDataCard}
-            containerClassName={pageCss.noDataCardContainer}
-          />
-        )}
+        <TableV2
+          className={pageCss.table}
+          columns={columns}
+          data={content}
+          pagination={
+            totalElements > size
+              ? {
+                  itemCount: totalElements,
+                  pageSize: size,
+                  pageCount: totalPages,
+                  pageIndex: number,
+                  gotoPage
+                }
+              : undefined
+          }
+          sortable
+        />
       </Layout.Vertical>
     </Card>
   )

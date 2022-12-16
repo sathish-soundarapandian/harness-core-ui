@@ -21,6 +21,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import SubscriptionsPage from '../SubscriptionsPage'
 import activeServices from './mocks/activeServices.json'
 jest.mock('services/cd-ng')
+const useLisCDActiveServicesMock = useLisCDActiveServices as jest.MockedFunction<any>
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
@@ -29,6 +30,13 @@ useExtendTrialLicenseMock.mockImplementation(() => {
     mutate: jest.fn()
   }
 })
+useLisCDActiveServicesMock.mockImplementation(() => {
+  return {
+    activeServices,
+    refetch: jest.fn()
+  }
+})
+
 const useSaveFeedbackMock = useSaveFeedback as jest.MockedFunction<any>
 useSaveFeedbackMock.mockImplementation(() => {
   return {
@@ -48,12 +56,12 @@ const featureFlags = {
 
 describe('Subscriptions Page', () => {
   const useLisCDActiveServicesMock = useLisCDActiveServices as jest.MockedFunction<any>
-  const mutateListOfActiveServices = jest.fn().mockResolvedValue(activeServices)
-  useLisCDActiveServicesMock.mockReturnValue({
-    mutate: mutateListOfActiveServices,
-    loading: false,
-    cancel: jest.fn()
-  })
+  // const mutateListOfActiveServices = jest.fn().mockResolvedValue(activeServices)
+  // useLisCDActiveServicesMock.mockReturnValue({
+  //   mutate: mutateListOfActiveServices,
+  //   loading: false,
+  //   cancel: jest.fn()
+  // })
 
   test('it renders the subscriptions page', () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
