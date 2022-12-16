@@ -13,13 +13,7 @@ import { CompletionItemKind } from 'vscode-languageserver-types'
 
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
-import {
-  StepViewType,
-  ValidateInputSetProps,
-  Step,
-  StepProps,
-  InputSetData
-} from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import {
   ServiceSpec,
   getConnectorListV2Promise,
@@ -67,7 +61,6 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
     RegExp,
     (path: string, yaml: string, params: Record<string, unknown>) => Promise<CompletionItemInterface[]>
   > = new Map()
-  protected inputSetData: InputSetData<K8SDirectServiceStep> | undefined = undefined
 
   constructor() {
     super()
@@ -460,12 +453,12 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
 
   validateInputSet({
     data,
+    template,
     getString,
     viewType
   }: ValidateInputSetProps<K8SDirectServiceStep>): FormikErrors<K8SDirectServiceStep> {
     const errors: FormikErrors<K8SDirectServiceStep> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-    const template = this.inputSetData?.template
 
     /** Manifest fields validation */
     this.validateManifestInputSetFields({
@@ -509,8 +502,6 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
   renderStep(props: StepProps<K8SDirectServiceStep>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, factory, customStepProps, readonly, allowableTypes } =
       props
-
-    this.inputSetData = inputSetData
 
     if (stepViewType === StepViewType.InputVariable) {
       return (

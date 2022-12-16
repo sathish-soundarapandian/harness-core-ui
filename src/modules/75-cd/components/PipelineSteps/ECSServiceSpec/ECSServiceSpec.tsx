@@ -33,13 +33,7 @@ import {
   allowedArtifactTypes,
   ENABLED_ARTIFACT_TYPES
 } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import {
-  StepViewType,
-  ValidateInputSetProps,
-  Step,
-  StepProps,
-  InputSetData
-} from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import type { K8SDirectServiceStep } from '@pipeline/factories/ArtifactTriggerInputFactory/types'
@@ -65,7 +59,6 @@ const ecsAllowedArtifactTypes: Array<ArtifactType> = allowedArtifactTypes.ECS
 export class ECSServiceSpec extends Step<ServiceSpec> {
   protected type = StepType.EcsService
   protected defaultValues: ServiceSpec = {}
-  protected inputSetData: InputSetData<K8SDirectServiceStep> | undefined = undefined
 
   protected stepIcon: IconName = 'service-amazon-ecs'
   protected stepName = 'Deployment Service'
@@ -576,12 +569,12 @@ export class ECSServiceSpec extends Step<ServiceSpec> {
 
   validateInputSet({
     data,
+    template,
     getString,
     viewType
   }: ValidateInputSetProps<K8SDirectServiceStep>): FormikErrors<K8SDirectServiceStep> {
     const errors: FormikErrors<K8SDirectServiceStep> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-    const template = this.inputSetData?.template
 
     /** Manifest fields validation */
     this.validateManifestInputSetFields({
@@ -625,8 +618,6 @@ export class ECSServiceSpec extends Step<ServiceSpec> {
   renderStep(props: StepProps<K8SDirectServiceStep>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, factory, customStepProps, readonly, allowableTypes } =
       props
-
-    this.inputSetData = inputSetData
 
     if (stepViewType === StepViewType.InputVariable) {
       return (
