@@ -21,34 +21,23 @@
   }
 }
 
-.installedBadge {
-  height: fit-content;
-  transform: rotate(-90deg);
-  transform-origin: 10px 10px;
-  display: flex;
-  align-items: center;
-  background: var(--grey-100) !important;
-  padding: var(--spacing-2) var(--spacing-4) !important;
-  align-self: flex-end;
-  position: relative;
-  top: var(--spacing-6);
-  border-left: 1px solid var(--grey-150);
-}
-
 .plugin {
   border-bottom: 1px solid var(--grey-100);
   cursor: pointer;
 }
 
-.overflow {
-  overflow-y: scroll;
-}
-
 .pluginIcon {
+  border-radius: 18px;
+  border: 1px solid var(--grey-100);
   background: var(--white) !important;
   box-shadow: 0px 0px 1px rgb(40 41 61 / 4%), 0px 2px 4px rgb(96 97 112 / 16%);
-  border-radius: 15px;
-  padding: 6px 6px 6px 8px !important;
+  height: 30px;
+  width: 30px;
+  padding: var(--spacing-xsmall) !important;
+}
+
+.overflow {
+  overflow-y: scroll;
 }
 
 .padding1 {
@@ -65,4 +54,12 @@
 
 .backBtn {
   cursor: pointer;
+}
+
+.docsLink {
+  color: var(--primary-7) !important;
+}
+
+.pluginDetailsPanel {
+  border-top: 1px solid var(--grey-100);
 }

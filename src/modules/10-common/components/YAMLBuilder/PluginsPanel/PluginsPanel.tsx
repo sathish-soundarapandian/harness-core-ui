@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback, useState } from 'react'
+import { capitalize } from 'lodash-es'
 import {
   Container,
   Layout,
@@ -39,17 +40,10 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   const [selectedPlugin, setSelectedPlugin] = useState<PluginInterface | undefined>()
 
   const renderPlugin = useCallback((plugin: PluginInterface): JSX.Element => {
-    const { name, description } = plugin
-    // const pluginIconProps: IconProps = {
-    //   name: pluginIcon.name as IconName,
-    //   size: 18,
-    //   margin: { top: 'xsmall', right: 'small', bottom: 'small', left: 'xxlarge' },
-    //   ...(pluginIcon.color ? { color: pluginIcon.color } : {}),
-    //   className: cx(css.pluginIcon, { [className as string]: className })
-    // }
+    const { name, description, kind } = plugin
     return (
       <Layout.Horizontal
-        padding={{ top: 'large', bottom: 'large', right: 'large' }}
+        padding={{ top: 'large', bottom: 'large', right: 'xlarge', left: 'xlarge' }}
         className={css.plugin}
         width="100%"
         flex={{ justifyContent: 'space-between' }}
@@ -57,8 +51,8 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
       >
         <Layout.Horizontal style={{ flex: 2 }}>
           <Layout.Horizontal>
-            {/* <Icon {...pluginIconProps} /> */}
-            <Layout.Vertical spacing="xsmall" width="100%">
+            <Icon name={'gear'} size={20} className={css.pluginIcon} />
+            <Layout.Vertical spacing="xsmall" width="100%" padding={{ left: 'small' }}>
               <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_7}>
                 {name}
               </Text>
@@ -68,15 +62,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
             </Layout.Vertical>
           </Layout.Horizontal>
         </Layout.Horizontal>
-        <Layout.Horizontal flex={{ justifyContent: 'flex-end', alignItems: 'flex-start' }} style={{ flex: 1 }}>
-          {/* <Icon name={publisherIcon as IconName} size={20} /> */}
-          <Layout.Horizontal flex spacing="xsmall">
-            <Icon name="main-tick" size={12} color={Color.PRIMARY_7} />
-            <Text font={{ variation: FontVariation.TINY }} color={Color.PRIMARY_7}>
-              {getString('common.verified').toLowerCase()}
-            </Text>
-          </Layout.Horizontal>
-        </Layout.Horizontal>
+        <Text font={{ variation: FontVariation.TINY }}>{`by ${capitalize(kind)}`}</Text>
       </Layout.Horizontal>
     )
   }, [])
@@ -103,9 +89,10 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
               {pluginName ? (
                 <Layout.Vertical
                   spacing="medium"
-                  padding="medium"
+                  padding={{ left: 'xxlarge', top: 'large', bottom: 'xxlarge', right: 'xxlarge' }}
                   height="100%"
                   flex={{ justifyContent: 'space-between', alignItems: 'baseline' }}
+                  className={css.pluginDetailsPanel}
                 >
                   <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
                     <Icon name="arrow-left" onClick={() => setSelectedPlugin(undefined)} className={css.backBtn} />
@@ -126,20 +113,16 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                     {_formik => {
                       return (
                         <FormikForm>
-                          <Button style={{ height: '40px', width: '100px' }} type="submit">
-                            {getString('add')}
-                          </Button>
-                          {pluginDocumentationLink ? (
-                            <Button
-                              variation={ButtonVariation.LINK}
-                              text={<Text>{getString('common.seeDocumentation')}</Text>}
-                              onClick={e => {
-                                e.preventDefault()
-                                e.stopPropagation()
-                                window.open(pluginDocumentationLink, '_blank')
-                              }}
-                            />
-                          ) : null}
+                          <Layout.Horizontal flex spacing="xlarge">
+                            <Button type="submit" variation={ButtonVariation.PRIMARY}>
+                              {getString('add')}
+                            </Button>
+                            {pluginDocumentationLink ? (
+                              <a href={pluginDocumentationLink} target="_blank" rel="noopener noreferrer">
+                                <Text className={css.docsLink}>{getString('common.seeDocumentation')}</Text>
+                              </a>
+                            ) : null}
+                          </Layout.Horizontal>
                         </FormikForm>
                       )
                     }}
