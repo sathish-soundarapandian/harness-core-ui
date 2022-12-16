@@ -896,10 +896,19 @@ exports[`UsersPage Test Invite a User 1`] = `
                 >
                   rbac.roleBindings
                 </span>
+              </div>
+              <div
+                class="FieldArray--noData"
+              >
+                <div
+                  class="FieldArray--text"
+                >
+                  rbac.usersPage.noDataText
+                </div>
                 <button
                   aria-label="Add"
-                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
-                  data-id="btn-add"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon"
+                  data-id="btn-add-no-data"
                   type="button"
                 >
                   <span
@@ -928,129 +937,6 @@ exports[`UsersPage Test Invite a User 1`] = `
                   </span>
                 </button>
               </div>
-              <table
-                cellspacing="0"
-              >
-                <thead>
-                  <tr>
-                    <th>
-                      roles
-                    </th>
-                    <th>
-                      resourceGroups
-                    </th>
-                    <th />
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-end"
-                      >
-                        <div
-                          class="bp3-popover-wrapper Select--main bp3-fill"
-                        >
-                          <div
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="bp3-input-group bp3-disabled"
-                            >
-                              <input
-                                autocomplete="off"
-                                class="bp3-input"
-                                disabled=""
-                                placeholder="rbac.usersPage.selectRole"
-                                style="padding-right: 0px;"
-                                type="text"
-                                value="common.accViewer"
-                              />
-                              <span
-                                class="bp3-input-action"
-                              >
-                                <span
-                                  class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                                  icon="chevron-down"
-                                >
-                                  <svg
-                                    data-icon="chevron-down"
-                                    height="14"
-                                    viewBox="0 0 16 16"
-                                    width="14"
-                                  >
-                                    <desc>
-                                      chevron-down
-                                    </desc>
-                                    <path
-                                      d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                      fill-rule="evenodd"
-                                    />
-                                  </svg>
-                                </span>
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div
-                        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-end"
-                      >
-                        <div
-                          class="bp3-popover-wrapper Select--main bp3-fill"
-                        >
-                          <div
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="bp3-input-group bp3-disabled"
-                            >
-                              <input
-                                autocomplete="off"
-                                class="bp3-input"
-                                data-testid="resourceGroup-0"
-                                disabled=""
-                                placeholder="rbac.usersPage.selectResourceGroup"
-                                style="padding-right: 0px;"
-                                type="text"
-                                value="rbac.allAccountResources"
-                              />
-                              <span
-                                class="bp3-input-action"
-                              >
-                                <span
-                                  class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                                  icon="chevron-down"
-                                >
-                                  <svg
-                                    data-icon="chevron-down"
-                                    height="14"
-                                    viewBox="0 0 16 16"
-                                    width="14"
-                                  >
-                                    <desc>
-                                      chevron-down
-                                    </desc>
-                                    <path
-                                      d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                      fill-rule="evenodd"
-                                    />
-                                  </svg>
-                                </span>
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td
-                      class="FieldArray--deleteColumn"
-                    />
-                  </tr>
-                </tbody>
-              </table>
             </div>
           </div>
           <div

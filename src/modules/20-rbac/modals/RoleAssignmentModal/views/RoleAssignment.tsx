@@ -132,6 +132,7 @@ const RoleAssignment: React.FC<RoleAssignmentData> = ({
                 }
                 formik={formik}
                 onSuccess={onSuccess}
+                assignDefaultRole={false}
               />
             )}
 

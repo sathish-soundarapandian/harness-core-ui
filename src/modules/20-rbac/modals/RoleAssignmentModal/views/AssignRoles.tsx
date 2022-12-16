@@ -22,8 +22,12 @@ import { useToaster } from '@common/components'
 import { usePostRoleAssignments, RoleAssignment as RBACRoleAssignment } from 'services/rbac'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { isNewRoleAssignment, PrincipalType } from '@rbac/utils/utils'
-import { getIdentifierFromValue, getPrincipalScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { getScopeBasedDefaultAssignment, isNewRoleAssignment, PrincipalType } from '@rbac/utils/utils'
+import {
+  getIdentifierFromValue,
+  getScopeFromDTO,
+  getPrincipalScopeFromValue
+} from '@common/components/EntityReference/EntityReference'
 import UserGroupsInput from '@rbac/components/UserGroupsInput/UserGroupsInput'
 import { useGetCommunity } from '@common/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -50,6 +54,7 @@ interface FormData {
 const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
   const { onSubmit, onRoleAssignmentSuccess, onCancel } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const isCommunity = useGetCommunity()
@@ -58,6 +63,8 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
   const { mutate: createRoleAssignment, loading: saving } = usePostRoleAssignments({
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
   })
+
+  const assignments: Assignment[] = getScopeBasedDefaultAssignment(scope, getString, isCommunity, false)
 
   const handleRoleAssignment = async (values: UserGroupRoleAssignmentValues): Promise<void> => {
     /* istanbul ignore next */ if (values.assignments.length === 0) {
@@ -106,7 +113,7 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
   return (
     <Formik<UserGroupRoleAssignmentValues>
       initialValues={{
-        assignments: [],
+        assignments: assignments,
         userGroups: []
       }}
       formName="UserGroupRoleAssignmentForm"
@@ -140,6 +147,7 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
                   formik as FormikProps<UserGroupRoleAssignmentValues | UserRoleAssignmentValues | RoleAssignmentValues>
                 }
                 onSuccess={onRoleAssignmentSuccess}
+                assignDefaultRole={false}
               />
             )}
             <Layout.Horizontal spacing="small" padding={{ top: 'large' }}>

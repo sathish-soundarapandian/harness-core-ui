@@ -96,7 +96,7 @@ exports[`Collaborators test Render Collaborators  1`] = `
                               data-testid="dropdown-value"
                               style="--text-line-clamp: 1;"
                             >
-                              Project Viewer
+                              rbac.usersPage.selectRole
                             </p>
                           </div>
                           <div

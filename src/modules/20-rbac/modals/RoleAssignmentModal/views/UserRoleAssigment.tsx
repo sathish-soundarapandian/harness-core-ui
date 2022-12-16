@@ -262,6 +262,7 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
                 noRoleAssignmentsText={getString('rbac.usersPage.noDataText')}
                 formik={formik as FormikProps<UserRoleAssignmentValues | RoleAssignmentValues>}
                 onSuccess={onSuccess}
+                assignDefaultRole={true}
               />
             )}
             <Layout.Horizontal spacing="small" padding={{ top: 'large' }}>
