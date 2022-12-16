@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
   Container,
   Layout,
@@ -16,7 +16,8 @@ import {
   Icon,
   Button,
   Formik,
-  FormikForm
+  FormikForm,
+  ButtonVariation
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -33,16 +34,9 @@ interface PluginsPanelInterface {
 }
 
 export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
-  const { height, onPluginAdd, existingPluginValues = {}, shouldEnableFormView = false } = props
+  const { height, onPluginAdd, existingPluginValues = {} } = props
   const { getString } = useStrings()
-  const [showFormView, setShowFormView] = useState<boolean>(false)
   const [selectedPlugin, setSelectedPlugin] = useState<PluginInterface | undefined>()
-
-  useEffect(() => {
-    if (shouldEnableFormView) {
-      setShowFormView(shouldEnableFormView)
-    }
-  }, [shouldEnableFormView])
 
   const renderPlugin = useCallback((plugin: PluginInterface): JSX.Element => {
     const { name, description } = plugin
@@ -87,6 +81,8 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     )
   }, [])
 
+  const { name: pluginName, repo: pluginDocumentationLink } = selectedPlugin || {}
+
   return (
     <Container className={css.tabs}>
       <Tabs id={'pluginsPanel'} defaultSelectedTabId={'plugins'} className={css.tabs}>
@@ -104,7 +100,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
           }
           panel={
             <Container style={{ height }}>
-              {selectedPlugin || showFormView ? (
+              {pluginName ? (
                 <Layout.Vertical
                   spacing="medium"
                   padding="medium"
@@ -113,7 +109,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                 >
                   <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
                     <Icon name="arrow-left" onClick={() => setSelectedPlugin(undefined)} className={css.backBtn} />
-                    <Text font={{ variation: FontVariation.H5 }}>{selectedPlugin?.name}</Text>
+                    <Text font={{ variation: FontVariation.H5 }}>{pluginName}</Text>
                   </Layout.Horizontal>
                   <Formik
                     initialValues={existingPluginValues}
@@ -133,17 +129,24 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                           <Button style={{ height: '40px', width: '100px' }} type="submit">
                             {getString('add')}
                           </Button>
+                          {pluginDocumentationLink ? (
+                            <Button
+                              variation={ButtonVariation.LINK}
+                              text={<Text>{getString('common.seeDocumentation')}</Text>}
+                              onClick={e => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                window.open(pluginDocumentationLink, '_blank')
+                              }}
+                            />
+                          ) : null}
                         </FormikForm>
                       )
                     }}
                   </Formik>
                 </Layout.Vertical>
               ) : (
-                <Layout.Vertical
-                  style={{
-                    height
-                  }}
-                >
+                <Layout.Vertical>
                   <Container className={css.search}>
                     <ExpandingSearchInput autoFocus={true} alwaysExpanded={true} />
                   </Container>

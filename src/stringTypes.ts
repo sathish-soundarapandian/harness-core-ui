@@ -790,6 +790,7 @@ export interface StringsMap {
   'common.secretKey': string
   'common.secrets': string
   'common.seeDetails': string
+  'common.seeDocumentation': string
   'common.seeWhatChanged': string
   'common.selectAChannel': string
   'common.selectAVersion.description': string

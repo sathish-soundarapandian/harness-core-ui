@@ -1064,7 +1064,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           height={dynamicHeight}
           onPluginAdd={insertPluginIntoExistingYAML}
           existingPluginValues={pluginValuesSelected}
-          shouldEnableFormView={!isEmpty(pluginValuesSelected)}
         />
       ) : null}
     </Layout.Horizontal>
