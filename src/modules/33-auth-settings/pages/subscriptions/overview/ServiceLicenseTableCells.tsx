@@ -7,7 +7,7 @@
  */
 
 import { Color, FontVariation } from '@harness/design-system'
-import { Layout, Text, Link } from '@harness/uicore'
+import { Layout, Text } from '@harness/uicore'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import React, { ReactNode } from 'react'
 import moment from 'moment'
@@ -63,9 +63,9 @@ export const ProjectCell: CellType = ({ row }) => {
 export const LastModifiedServiceIdCell: CellType = ({ row }) => {
   const data = row.original
   return (
-    <Link color={Color.GREY_900} font={{ size: 'small' }}>
+    <Text color={Color.GREY_900} font={{ size: 'small' }}>
       {data.identifier}
-    </Link>
+    </Text>
   )
 }
 export const ServiceInstancesCell: CellType = ({ row }) => {

@@ -92,7 +92,7 @@ export function ServiceLicenseTable({
       },
       {
         Header: getString('common.servicesInstances'),
-        accessor: 'servicesInstances',
+        accessor: 'serviceInstances',
         width: '20%',
         Cell: ServiceInstancesCell,
         serverSortProps: getServerSortProps('common.servicesInstances')
