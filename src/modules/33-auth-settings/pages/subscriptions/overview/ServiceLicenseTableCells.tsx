@@ -13,19 +13,6 @@ import React, { ReactNode } from 'react'
 import moment from 'moment'
 import type { ActiveServiceDTO } from 'services/cd-ng'
 
-export const LabeValue = ({ label, value }: { label: string; value: ReactNode }) => {
-  return (
-    <Layout.Horizontal spacing="xsmall">
-      <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
-        {label}:
-      </Text>
-      <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
-        {value}
-      </Text>
-    </Layout.Horizontal>
-  )
-}
-
 type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance<D> & {
   column: ColumnInstance<D>
   row: Row<D>

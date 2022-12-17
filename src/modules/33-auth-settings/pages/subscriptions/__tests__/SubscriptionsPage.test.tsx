@@ -9,19 +9,20 @@ import React from 'react'
 import moment from 'moment'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import userEvent from '@testing-library/user-event'
 import {
   useGetAccountNG,
   useGetModuleLicensesByAccountAndModuleType,
   useExtendTrialLicense,
-  useSaveFeedback,
-  useLisCDActiveServices
+  useSaveFeedback
 } from 'services/cd-ng'
 import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
 import SubscriptionsPage from '../SubscriptionsPage'
 import activeServices from './mocks/activeServices.json'
+import activeServicesEmpty from './mocks/activeServicesEmpty.json'
 jest.mock('services/cd-ng')
-const useLisCDActiveServicesMock = useLisCDActiveServices as jest.MockedFunction<any>
+// const useLisCDActiveServicesMock = useLisCDActiveServices as jest.MockedFunction<any>
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
@@ -30,12 +31,12 @@ useExtendTrialLicenseMock.mockImplementation(() => {
     mutate: jest.fn()
   }
 })
-useLisCDActiveServicesMock.mockImplementation(() => {
-  return {
-    activeServices,
-    refetch: jest.fn()
-  }
-})
+// useLisCDActiveServicesMock.mockImplementation(() => {
+//   return {
+//     activeServices,
+//     refetch: jest.fn()
+//   }
+// })
 
 const useSaveFeedbackMock = useSaveFeedback as jest.MockedFunction<any>
 useSaveFeedbackMock.mockImplementation(() => {
@@ -55,7 +56,13 @@ const featureFlags = {
 }
 
 describe('Subscriptions Page', () => {
-  test('it renders the subscriptions page', () => {
+  jest.mock('@common/hooks', () => ({
+    ...(jest.requireActual('@common/hooks') as any),
+    useMutateAsGet: jest.fn().mockImplementation(() => {
+      return { data: activeServices, refetch: jest.fn(), error: null, loading: false }
+    })
+  }))
+  test('it renders the subscriptions page', async () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
       return {
         data: {
@@ -91,6 +98,53 @@ describe('Subscriptions Page', () => {
     expect(getByText('common.subscriptions.expiryCountdown')).toBeTruthy()
     expect(getByText('common.subscriptions.trial')).toBeTruthy()
     expect(container).toMatchSnapshot()
+    expect(getByText('common.licensesConsumed')).toBeTruthy()
+    userEvent.click(getByText('common.licensesConsumed'))
+  })
+  test('it renders the subscriptions page without data for table', async () => {
+    jest.mock('@common/hooks', () => ({
+      ...(jest.requireActual('@common/hooks') as any),
+      useMutateAsGet: jest.fn().mockImplementation(() => {
+        return { data: activeServicesEmpty, refetch: jest.fn(), error: null, loading: false }
+      })
+    }))
+    useGetModuleLicenseInfoMock.mockImplementation(() => {
+      return {
+        data: {
+          data: [
+            {
+              edition: Editions.ENTERPRISE
+            }
+          ],
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
+    })
+
+    useGetAccountMock.mockImplementation(() => {
+      return {
+        data: {
+          data: {
+            accountId: '123'
+          },
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
+    })
+
+    const { container, getByText } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+        <SubscriptionsPage />
+      </TestWrapper>
+    )
+    expect(getByText('common.subscriptions.title')).toBeTruthy()
+    expect(getByText('common.subscriptions.expiryCountdown')).toBeTruthy()
+    expect(getByText('common.subscriptions.trial')).toBeTruthy()
+    expect(container).toMatchSnapshot()
+    expect(getByText('common.licensesConsumed')).toBeTruthy()
+    userEvent.click(getByText('common.licensesConsumed'))
   })
 
   test('it renders the correct card in the subscriptions page', () => {
