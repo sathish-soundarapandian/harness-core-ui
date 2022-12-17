@@ -90,7 +90,16 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
           const { name } = input
           return name ? (
             <Layout.Horizontal padding="xmall">
-              <FormInput.Text name={name} label={name} style={{ width: '100%' }}></FormInput.Text>
+              <FormInput.Text
+                name={name}
+                label={
+                  <Layout.Horizontal spacing="small">
+                    <Text font={{ variation: FontVariation.FORM_LABEL }}>{capitalize(name.split('_').join(' '))}</Text>
+                    <Icon name="info" color={Color.PRIMARY_7} size={10} />
+                  </Layout.Horizontal>
+                }
+                style={{ width: '100%' }}
+              ></FormInput.Text>
             </Layout.Horizontal>
           ) : null
         })}
