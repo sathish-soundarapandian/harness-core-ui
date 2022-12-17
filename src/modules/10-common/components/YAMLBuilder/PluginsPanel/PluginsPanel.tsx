@@ -58,13 +58,13 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
         onClick={() => setSelectedPlugin(plugin)}
       >
         <Layout.Horizontal style={{ flex: 2 }}>
-          <Layout.Horizontal>
+          <Layout.Horizontal width="100%">
             <Icon name={'gear'} size={20} className={css.pluginIcon} />
             <Layout.Vertical spacing="xsmall" width="100%" padding={{ left: 'small' }}>
               <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_7}>
                 {name}
               </Text>
-              <Text font={{ variation: FontVariation.TINY }} lineClamp={1} width="15vw">
+              <Text font={{ variation: FontVariation.TINY }} lineClamp={1} width="85%">
                 {description}
               </Text>
             </Layout.Vertical>
