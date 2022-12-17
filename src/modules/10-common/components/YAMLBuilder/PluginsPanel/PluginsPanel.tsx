@@ -18,8 +18,7 @@ import {
   Button,
   Formik,
   FormikForm,
-  ButtonVariation,
-  PageSpinner
+  ButtonVariation
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -38,8 +37,15 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   const { height, onPluginAdd, existingPluginValues = {} } = props
   const { getString } = useStrings()
   const [selectedPlugin, setSelectedPlugin] = useState<PluginMetadataResponse | undefined>()
-  const { data, loading, error } = useListPlugins({ queryParams: { pageIndex: 0, pageSize: 50, searchTerm: 'git' } })
   const [plugins, setPlugins] = useState<PluginMetadataResponse[]>([])
+  const [query, setQuery] = useState<string>()
+
+  const defaultQueryParams = { pageIndex: 0, pageSize: 200 }
+  const { data, loading, error, refetch } = useListPlugins({ queryParams: defaultQueryParams })
+
+  useEffect(() => {
+    refetch({ queryParams: { ...defaultQueryParams, searchTerm: query } })
+  }, [query])
 
   useEffect(() => {
     if (!error && !loading) {
@@ -75,11 +81,41 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     )
   }, [])
 
+  const renderPluginsPanel = useCallback((): JSX.Element => {
+    if (loading) {
+      return (
+        <Container flex={{ justifyContent: 'space-evenly' }} padding="large">
+          <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
+        </Container>
+      )
+    }
+    if (Array.isArray(plugins) && plugins.length > 0) {
+      return (
+        <Container className={css.overflow}>
+          {plugins.map((item: PluginMetadataResponse) => renderPlugin(item))}
+        </Container>
+      )
+    }
+    if (query) {
+      return (
+        <Container flex={{ justifyContent: 'space-evenly' }} padding="large">
+          <Text>{getString('noSearchResultsFoundPeriod')}</Text>
+        </Container>
+      )
+    }
+    if (error) {
+      return (
+        <Container flex={{ justifyContent: 'space-evenly' }} padding="large">
+          <Text>{getString('errorTitle')}</Text>
+        </Container>
+      )
+    }
+    return <></>
+  }, [loading, plugins, error, query])
+
   const { name: pluginName, repo: pluginDocumentationLink } = selectedPlugin || {}
 
-  return loading ? (
-    <PageSpinner />
-  ) : (
+  return (
     <Container className={css.tabs}>
       <Tabs id={'pluginsPanel'} defaultSelectedTabId={'plugins'} className={css.tabs}>
         <Tab
@@ -141,11 +177,14 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
               ) : (
                 <Layout.Vertical>
                   <Container className={css.search}>
-                    <ExpandingSearchInput autoFocus={true} alwaysExpanded={true} />
+                    <ExpandingSearchInput
+                      autoFocus={true}
+                      alwaysExpanded={true}
+                      defaultValue={query}
+                      onChange={setQuery}
+                    />
                   </Container>
-                  <Container className={css.overflow}>
-                    {plugins.map((item: PluginMetadataResponse) => renderPlugin(item))}
-                  </Container>
+                  {renderPluginsPanel()}
                 </Layout.Vertical>
               )}
             </Container>
