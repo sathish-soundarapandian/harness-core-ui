@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { capitalize } from 'lodash-es'
+import { capitalize, isEmpty } from 'lodash-es'
 import { Classes, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import { Input, PluginMetadataResponse, useListPlugins } from 'services/ci'
 import {
@@ -157,7 +157,12 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     return <></>
   }, [loading, plugins, error, query])
 
-  const { name: pluginName, repo: pluginDocumentationLink } = selectedPlugin || {}
+  const { name: pluginName, repo: pluginDocumentationLink, inputs: formFields } = selectedPlugin || {}
+
+  const generateFormikInitialValues = (inputs: Input[]): Record<string, any> => {
+    const result = new Map(inputs.map(i => [i.name, i.default]))
+    return Object.fromEntries(result)
+  }
 
   return (
     <Container className={css.tabs}>
@@ -189,7 +194,14 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                   </Layout.Horizontal>
                   <Container className={css.form}>
                     <Formik
-                      initialValues={existingPluginValues}
+                      // initialValues={
+                      //   !isEmpty(existingPluginValues)
+                      //     ? existingPluginValues
+                      //     : formFields
+                      //     ? generateFormikInitialValues(formFields)
+                      //     : {}
+                      // }
+                      initialValues={formFields ? generateFormikInitialValues(formFields) : {}}
                       enableReinitialize={true}
                       formName="pluginsForm"
                       onSubmit={data => {
