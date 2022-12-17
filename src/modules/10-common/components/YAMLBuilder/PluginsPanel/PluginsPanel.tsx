@@ -7,6 +7,8 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { capitalize } from 'lodash-es'
+import { Classes, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
+import { Input, PluginMetadataResponse, useListPlugins } from 'services/ci'
 import {
   Container,
   Layout,
@@ -19,13 +21,13 @@ import {
   Formik,
   FormikForm,
   ButtonVariation,
-  FormInput
+  FormInput,
+  Popover
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 
 import css from './PluginsPanel.module.scss'
-import { Input, PluginMetadataResponse, useListPlugins } from 'services/ci'
 
 interface PluginsPanelInterface {
   existingPluginValues?: Record<string, any>
@@ -87,15 +89,31 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     return (
       <Layout.Vertical height="100%">
         {inputs.map((input: Input) => {
-          const { name } = input
+          const { name, description } = input
           return name ? (
             <Layout.Horizontal padding="xmall">
               <FormInput.Text
                 name={name}
                 label={
-                  <Layout.Horizontal spacing="small">
+                  <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
                     <Text font={{ variation: FontVariation.FORM_LABEL }}>{capitalize(name.split('_').join(' '))}</Text>
-                    <Icon name="info" color={Color.PRIMARY_7} size={10} />
+                    {description ? (
+                      <Popover
+                        interactionKind={PopoverInteractionKind.HOVER}
+                        boundary="viewport"
+                        position={PopoverPosition.RIGHT}
+                        popoverClassName={Classes.DARK}
+                        content={
+                          <Container padding="medium">
+                            <Text font={{ variation: FontVariation.TINY }} color={Color.WHITE}>
+                              {description}
+                            </Text>
+                          </Container>
+                        }
+                      >
+                        <Icon name="info" color={Color.PRIMARY_7} size={10} padding={{ bottom: 'small' }} />
+                      </Popover>
+                    ) : null}
                   </Layout.Horizontal>
                 }
                 style={{ width: '100%' }}
