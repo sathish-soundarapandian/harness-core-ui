@@ -37,7 +37,8 @@ import {
   getConnectorIdValue,
   getFinalArtifactObj,
   resetTag,
-  shouldFetchFieldOptions
+  shouldFetchFieldOptions,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
@@ -67,7 +68,7 @@ export function ECRArtifact({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const [tagList, setTagList] = React.useState([])
   const [regions, setRegions] = React.useState<SelectOption[]>([])
@@ -188,7 +189,7 @@ export function ECRArtifact({
   }
 
   const handleValidate = (formData: ImagePathTypes & { connectorId?: string }) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData({
         ...prevStepData,
         ...formData,
@@ -199,7 +200,7 @@ export function ECRArtifact({
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>
@@ -275,7 +276,7 @@ export function ECRArtifact({
               />
             </div>
 
-            {!isTemplateContext && (
+            {!hideHeaderAndNavBtns && (
               <Layout.Horizontal spacing="medium">
                 <Button
                   variation={ButtonVariation.SECONDARY}

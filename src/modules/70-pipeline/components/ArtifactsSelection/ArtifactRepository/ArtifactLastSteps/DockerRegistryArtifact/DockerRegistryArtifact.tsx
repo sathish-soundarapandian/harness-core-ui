@@ -22,7 +22,8 @@ import {
   getArtifactFormData,
   getConnectorIdValue,
   getFinalArtifactObj,
-  shouldFetchFieldOptions
+  shouldFetchFieldOptions,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
@@ -54,7 +55,7 @@ export function DockerRegistryArtifact({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const schemaObject = {
     imagePath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.imagePath')),
@@ -142,7 +143,7 @@ export function DockerRegistryArtifact({
   }
 
   const handleValidate = (formData: ImagePathTypes) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData({
         ...formData,
         tag: defaultTo(formData?.tag?.value, formData?.tag),
@@ -153,7 +154,7 @@ export function DockerRegistryArtifact({
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>
@@ -193,7 +194,7 @@ export function DockerRegistryArtifact({
                 tagDisabled={isTagDisabled(formik?.values)}
               />
             </div>
-            {!isTemplateContext && (
+            {!hideHeaderAndNavBtns && (
               <Layout.Horizontal spacing="medium">
                 <Button
                   variation={ButtonVariation.SECONDARY}

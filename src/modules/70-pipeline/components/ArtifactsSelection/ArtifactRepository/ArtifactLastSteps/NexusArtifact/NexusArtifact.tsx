@@ -38,7 +38,8 @@ import {
   checkIfQueryParamsisNotEmpty,
   getArtifactFormData,
   getConnectorIdValue,
-  shouldFetchFieldOptions
+  shouldFetchFieldOptions,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   ArtifactType,
@@ -95,7 +96,7 @@ export function Nexus3Artifact({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { AZURE_WEB_APP_NG_NEXUS_PACKAGE } = useFeatureFlags()
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -425,7 +426,7 @@ export function Nexus3Artifact({
   }
 
   const handleValidate = (formData: Nexus2InitialValuesType & { connectorId?: string }) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData({
         ...prevStepData,
         ...formData,
@@ -436,7 +437,7 @@ export function Nexus3Artifact({
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>
@@ -466,7 +467,7 @@ export function Nexus3Artifact({
                   items={getAzureNexusRepoOptions(
                     selectedDeploymentType,
                     AZURE_WEB_APP_NG_NEXUS_PACKAGE,
-                    isTemplateContext
+                    hideHeaderAndNavBtns
                   )}
                   onChange={value => {
                     if (value.value === RepositoryFormatTypes.Maven) {
@@ -826,7 +827,7 @@ export function Nexus3Artifact({
                 isImagePath={false}
               />
             </div>
-            {!isTemplateContext && (
+            {!hideHeaderAndNavBtns && (
               <Layout.Horizontal spacing="medium">
                 <Button
                   variation={ButtonVariation.SECONDARY}

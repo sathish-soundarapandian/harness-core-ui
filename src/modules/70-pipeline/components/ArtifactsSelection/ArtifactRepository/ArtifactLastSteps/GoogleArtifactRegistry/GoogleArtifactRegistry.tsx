@@ -31,7 +31,8 @@ import {
   getConnectorIdValue,
   getArtifactFormData,
   helperTextData,
-  isFieldFixedAndNonEmpty
+  isFieldFixedAndNonEmpty,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   ArtifactType,
@@ -100,7 +101,7 @@ function FormComponent(
   const projectValue = getGenuineValue(formik.values.spec.project || initialValues?.spec?.project)
   const regionValue = getGenuineValue(formik.values.spec.region || initialValues?.spec?.region)
   const repositoryNameValue = getGenuineValue(formik.values?.spec.repositoryName || initialValues?.spec?.repositoryName)
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const {
     data: buildDetails,
@@ -404,7 +405,7 @@ function FormComponent(
           </div>
         )}
       </div>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Layout.Horizontal spacing="medium">
           <Button
             variation={ButtonVariation.SECONDARY}
@@ -430,7 +431,7 @@ export function GoogleArtifactRegistry(
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const getInitialValues = (): GoogleArtifactRegistryInitialValuesType => {
     return getArtifactFormData(
@@ -469,7 +470,7 @@ export function GoogleArtifactRegistry(
   }
 
   const handleValidate = (formData: GoogleArtifactRegistryInitialValuesType) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData(
         {
           ...formData
@@ -522,7 +523,7 @@ export function GoogleArtifactRegistry(
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>

@@ -39,7 +39,11 @@ import {
   useGetBuildsForJenkins,
   BuildDetails
 } from 'services/cd-ng'
-import { getConnectorIdValue, getArtifactFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import {
+  getConnectorIdValue,
+  getArtifactFormData,
+  shouldHideHeaderAndNavBtns
+} from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
   JenkinsArtifactProps,
@@ -85,7 +89,7 @@ function FormComponent({
   const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
   const jobNameValue = formik.values?.spec?.jobName
   const artifactValue = getGenuineValue(formik.values?.spec?.artifactPath)
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const {
     refetch: refetchJobs,
@@ -434,7 +438,7 @@ function FormComponent({
           )}
         </div>
       </div>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Layout.Horizontal spacing="medium">
           <Button
             variation={ButtonVariation.SECONDARY}
@@ -458,7 +462,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const getInitialValues = (): JenkinsArtifactType => {
     return getArtifactFormData(
@@ -484,7 +488,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
   }
 
   const handleValidate = (formData: JenkinsArtifactType) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData(
         {
           ...formData
@@ -518,7 +522,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>

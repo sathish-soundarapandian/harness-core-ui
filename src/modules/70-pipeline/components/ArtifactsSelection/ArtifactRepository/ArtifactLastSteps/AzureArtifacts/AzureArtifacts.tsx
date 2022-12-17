@@ -44,7 +44,8 @@ import {
   getConnectorIdValue,
   getArtifactFormData,
   helperTextData,
-  isFieldFixedAndNonEmpty
+  isFieldFixedAndNonEmpty,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
@@ -89,7 +90,7 @@ function FormComponent({
   }
 
   const connectorRefValue = defaultTo(getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier), '')
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const projectValue = defaultTo(getGenuineValue(formik.values.project), '')
   const feedValue = defaultTo(getGenuineValue(formik.values.feed), '')
   const packageValue = defaultTo(getGenuineValue(formik.values.package), '')
@@ -528,7 +529,7 @@ function FormComponent({
           </div>
         )}
       </div>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Layout.Horizontal spacing="medium">
           <Button
             variation={ButtonVariation.SECONDARY}
@@ -554,7 +555,7 @@ export function AzureArtifacts(
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const getInitialValues = (): AzureArtifactsInitialValues => {
     return getArtifactFormData(
@@ -565,7 +566,7 @@ export function AzureArtifacts(
   }
 
   const handleValidate = (formData: AzureArtifactsInitialValues) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData(
         {
           ...formData
@@ -642,7 +643,7 @@ export function AzureArtifacts(
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>

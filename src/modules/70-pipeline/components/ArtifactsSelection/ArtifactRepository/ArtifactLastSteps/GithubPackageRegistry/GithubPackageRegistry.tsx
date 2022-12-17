@@ -28,7 +28,11 @@ import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
-import { getConnectorIdValue, getArtifactFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import {
+  getConnectorIdValue,
+  getArtifactFormData,
+  shouldHideHeaderAndNavBtns
+} from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   ArtifactType,
   GithubPackageRegistryProps,
@@ -73,7 +77,7 @@ function FormComponent({
   initialValues
 }: any) {
   const { getString } = useStrings()
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const commonParams = {
@@ -389,7 +393,7 @@ function FormComponent({
           </div>
         )}
       </div>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Layout.Horizontal spacing="medium">
           <Button
             variation={ButtonVariation.SECONDARY}
@@ -415,7 +419,7 @@ export function GithubPackageRegistry(
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const getInitialValues = (): GithubPackageRegistryInitialValuesType => {
     return getArtifactFormData(
       initialValues,
@@ -451,7 +455,7 @@ export function GithubPackageRegistry(
   }
 
   const handleValidate = (formData: GithubPackageRegistryInitialValuesType) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData(
         {
           ...formData
@@ -502,7 +506,7 @@ export function GithubPackageRegistry(
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>

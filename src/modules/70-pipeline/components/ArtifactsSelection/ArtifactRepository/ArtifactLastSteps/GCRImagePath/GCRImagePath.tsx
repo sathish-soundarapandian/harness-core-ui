@@ -38,7 +38,8 @@ import {
   getFinalArtifactObj,
   RegistryHostNames,
   resetTag,
-  shouldFetchFieldOptions
+  shouldFetchFieldOptions,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
@@ -95,7 +96,7 @@ export function GCRImagePath({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const [tagList, setTagList] = useState([])
   const [lastQueryData, setLastQueryData] = useState({ imagePath: '', registryHostname: '' })
@@ -161,7 +162,7 @@ export function GCRImagePath({
   }
 
   const handleValidate = (formData: ImagePathTypes & { connectorId?: string }) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData({
         ...prevStepData,
         ...formData,
@@ -186,7 +187,7 @@ export function GCRImagePath({
   ))
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>
@@ -264,7 +265,7 @@ export function GCRImagePath({
                 tagDisabled={isTagDisabled(formik?.values)}
               />
             </div>
-            {!isTemplateContext && (
+            {!hideHeaderAndNavBtns && (
               <Layout.Horizontal spacing="medium">
                 <Button
                   variation={ButtonVariation.SECONDARY}

@@ -17,6 +17,12 @@ export const ConnectorSecretScope: { [scope: string]: string } = {
   [Scope.ORG]: 'org.',
   [Scope.ACCOUNT]: 'account.'
 }
+export enum ModalViewFor {
+  CD_Onboarding = 4
+}
+
+export const shouldHideHeaderAndNavBtns = (context: ModalViewFor | undefined): boolean =>
+  context === ModalViewFor.CD_Onboarding
 
 export function getScopingStringFromSecretRef(connecterConfig: ConnectorConfigDTO): string | undefined {
   return connecterConfig &&

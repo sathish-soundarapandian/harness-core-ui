@@ -33,7 +33,8 @@ import {
   getConnectorIdValue,
   getArtifactFormData,
   amiFilters,
-  getInSelectOptionForm
+  getInSelectOptionForm,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   AmazonMachineImageInitialValuesType,
@@ -69,7 +70,7 @@ function FormComponent({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [tags, setTags] = useState<SelectOption[]>([])
 
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const { data: regionData } = useListAwsRegions({
     queryParams: {
@@ -366,7 +367,7 @@ function FormComponent({
           </div>
         )}
       </div>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Layout.Horizontal spacing="medium">
           <Button
             variation={ButtonVariation.SECONDARY}
@@ -392,7 +393,7 @@ export function AmazonMachineImage(
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, artifactIdentifiers, selectedArtifact } = props
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const getInitialValues = (): AmazonMachineImageInitialValuesType => {
     const clonedInitialValues = cloneDeep(initialValues)
@@ -463,7 +464,7 @@ export function AmazonMachineImage(
   })
 
   const handleValidate = (formData: AmazonMachineImageInitialValuesType) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData?.(
         {
           ...formData
@@ -475,7 +476,7 @@ export function AmazonMachineImage(
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>

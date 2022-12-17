@@ -49,7 +49,8 @@ import {
   resetTag,
   shouldFetchFieldOptions,
   helperTextData,
-  getConnectorRefQueryData
+  getConnectorRefQueryData,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   getHelpeTextForTags,
@@ -109,7 +110,7 @@ function Artifactory({
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
@@ -364,7 +365,7 @@ function Artifactory({
   }
 
   const handleValidate = (formData: ImagePathTypes & { connectorId?: string }) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData({
         ...prevStepData,
         ...formData,
@@ -438,7 +439,7 @@ function Artifactory({
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>
@@ -728,7 +729,7 @@ function Artifactory({
                   />
                 </div>
               </div>
-              {!isTemplateContext && (
+              {!hideHeaderAndNavBtns && (
                 <Layout.Horizontal spacing="medium">
                   <Button
                     variation={ButtonVariation.SECONDARY}
