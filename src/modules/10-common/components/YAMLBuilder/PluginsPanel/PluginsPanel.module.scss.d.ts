@@ -9,12 +9,14 @@
 declare const styles: {
   readonly backBtn: string
   readonly docsLink: string
+  readonly form: string
   readonly mainTabPanel: string
   readonly overflow: string
   readonly padding1: string
   readonly padding2: string
   readonly plugin: string
   readonly pluginDetailsPanel: string
+  readonly pluginFields: string
   readonly pluginIcon: string
   readonly search: string
   readonly tabs: string

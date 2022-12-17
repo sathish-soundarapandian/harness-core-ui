@@ -64,3 +64,25 @@
 .pluginDetailsPanel {
   border-top: 1px solid var(--grey-100);
 }
+
+.pluginFields {
+  height: 100%;
+  width: 80%;
+  overflow-y: scroll;
+}
+
+.form {
+  height: 95%;
+  width: 100%;
+  :global {
+    .OverlaySpinner--overlaySpinner {
+      height: 100% !important;
+      .FormikForm--main {
+        height: 100%;
+        & > div {
+          height: 100%;
+        }
+      }
+    }
+  }
+}

@@ -18,13 +18,14 @@ import {
   Button,
   Formik,
   FormikForm,
-  ButtonVariation
+  ButtonVariation,
+  FormInput
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 
 import css from './PluginsPanel.module.scss'
-import { PluginMetadataResponse, useListPlugins } from 'services/ci'
+import { Input, PluginMetadataResponse, useListPlugins } from 'services/ci'
 
 interface PluginsPanelInterface {
   existingPluginValues?: Record<string, any>
@@ -81,6 +82,22 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     )
   }, [])
 
+  const renderPluginForm = useCallback((): JSX.Element => {
+    const { inputs = [] } = selectedPlugin || {}
+    return (
+      <Layout.Vertical height="100%">
+        {inputs.map((input: Input) => {
+          const { name } = input
+          return name ? (
+            <Layout.Horizontal padding="xmall">
+              <FormInput.Text name={name} label={name} style={{ width: '100%' }}></FormInput.Text>
+            </Layout.Horizontal>
+          ) : null
+        })}
+      </Layout.Vertical>
+    )
+  }, [selectedPlugin])
+
   const renderPluginsPanel = useCallback((): JSX.Element => {
     if (loading) {
       return (
@@ -131,48 +148,56 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
             </Text>
           }
           panel={
-            <Container style={{ height }}>
+            <Container style={{ height }} className={css.pluginDetailsPanel}>
               {pluginName ? (
                 <Layout.Vertical
                   spacing="medium"
-                  padding={{ left: 'xxlarge', top: 'large', bottom: 'xxlarge', right: 'xxlarge' }}
-                  height="100%"
-                  flex={{ justifyContent: 'space-between', alignItems: 'baseline' }}
-                  className={css.pluginDetailsPanel}
+                  margin={{ left: 'xxlarge', top: 'large', right: 'xxlarge', bottom: 'xxlarge' }}
+                  height="95%"
+                  flex={{ alignItems: 'baseline', justifyContent: 'flex-start' }}
                 >
                   <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
                     <Icon name="arrow-left" onClick={() => setSelectedPlugin(undefined)} className={css.backBtn} />
                     <Text font={{ variation: FontVariation.H5 }}>{pluginName}</Text>
                   </Layout.Horizontal>
-                  <Formik
-                    initialValues={existingPluginValues}
-                    enableReinitialize={true}
-                    formName="pluginsForm"
-                    onSubmit={data => {
-                      try {
-                        onPluginAdd({ ...data, shouldInsertYAML: true })
-                      } catch (e) {
-                        //ignore error
-                      }
-                    }}
-                  >
-                    {_formik => {
-                      return (
-                        <FormikForm>
-                          <Layout.Horizontal flex spacing="xlarge">
-                            <Button type="submit" variation={ButtonVariation.PRIMARY}>
-                              {getString('add')}
-                            </Button>
-                            {pluginDocumentationLink ? (
-                              <a href={pluginDocumentationLink} target="_blank" rel="noopener noreferrer">
-                                <Text className={css.docsLink}>{getString('common.seeDocumentation')}</Text>
-                              </a>
-                            ) : null}
-                          </Layout.Horizontal>
-                        </FormikForm>
-                      )
-                    }}
-                  </Formik>
+                  <Container className={css.form}>
+                    <Formik
+                      initialValues={existingPluginValues}
+                      enableReinitialize={true}
+                      formName="pluginsForm"
+                      onSubmit={data => {
+                        try {
+                          onPluginAdd({ ...data, shouldInsertYAML: true })
+                        } catch (e) {
+                          //ignore error
+                        }
+                      }}
+                    >
+                      {_formik => {
+                        return (
+                          <FormikForm>
+                            <Layout.Vertical
+                              height="100%"
+                              flex={{ justifyContent: 'space-between', alignItems: 'baseline' }}
+                              spacing="small"
+                            >
+                              <Container className={css.pluginFields}>{renderPluginForm()}</Container>
+                              <Layout.Horizontal flex spacing="xlarge">
+                                <Button type="submit" variation={ButtonVariation.PRIMARY}>
+                                  {getString('add')}
+                                </Button>
+                                {pluginDocumentationLink ? (
+                                  <a href={pluginDocumentationLink} target="_blank" rel="noopener noreferrer">
+                                    <Text className={css.docsLink}>{getString('common.seeDocumentation')}</Text>
+                                  </a>
+                                ) : null}
+                              </Layout.Horizontal>
+                            </Layout.Vertical>
+                          </FormikForm>
+                        )
+                      }}
+                    </Formik>
+                  </Container>
                 </Layout.Vertical>
               ) : (
                 <Layout.Vertical>
