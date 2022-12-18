@@ -1161,3 +1161,13 @@ timeRangeLimitWarning:
 viewAll: View all
 lastUpdatedAt: Last updated at
 tryAgain: Try Again
+reload: Reload
+organizations: ORGANIZATIONS
+projects: PROJECTS
+serviceId: 'SERVICE ID'
+servicesInstances: 'SERVICE INSTANCES'
+lastDeployed: 'LAST DEPLOYED'
+licensesConsumed: 'LICENSES CONSUMED'
+downloadCSV: 'Download CSV'
+whatIsActiveService: What is an Active Service?
+noActiveServiceData: No active Service Record found
