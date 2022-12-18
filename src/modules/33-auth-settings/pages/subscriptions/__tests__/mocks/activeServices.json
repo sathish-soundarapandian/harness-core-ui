@@ -1,0 +1,60 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "content": [
+      {
+        "className": ".cd.ActiveServiceDTO",
+        "identifier": "K8S_Service",
+        "name": "K8S Service",
+        "orgName": "Deleted",
+        "projectName": "Deleted",
+        "instanceCount": 1,
+        "lastDeployed": 1653423593332,
+        "licensesConsumed": 1,
+        "accountIdentifier": "kmpySmUISimoRrJL6NL73w",
+        "module": "Continuous Deployment",
+        "timestamp": 1655762159070
+      },
+      {
+        "className": ".cd.ActiveServiceDTO",
+        "identifier": "SSHService",
+        "name": "SSHService",
+        "orgName": "Deleted",
+        "projectName": "Deleted",
+        "instanceCount": 2,
+        "lastDeployed": 1655761784716,
+        "licensesConsumed": 1,
+        "accountIdentifier": "kmpySmUISimoRrJL6NL73w",
+        "module": "Continuous Deployment",
+        "timestamp": 1655762159070
+      }
+    ],
+    "pageable": {
+      "sort": {
+        "unsorted": false,
+        "sorted": true,
+        "empty": false
+      },
+      "pageSize": 30,
+      "pageNumber": 0,
+      "offset": 0,
+      "paged": true,
+      "unpaged": false
+    },
+    "last": true,
+    "totalElements": 2,
+    "totalPages": 1,
+    "first": true,
+    "numberOfElements": 2,
+    "sort": {
+      "unsorted": false,
+      "sorted": true,
+      "empty": false
+    },
+    "number": 0,
+    "size": 30,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "4859e8a2-2e7f-4f49-9205-052f1ae813f3"
+}
