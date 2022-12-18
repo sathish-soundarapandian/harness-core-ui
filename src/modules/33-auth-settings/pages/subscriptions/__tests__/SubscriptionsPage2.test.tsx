@@ -7,7 +7,7 @@
 
 import React from 'react'
 import moment from 'moment'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import userEvent from '@testing-library/user-event'
 import {
@@ -16,10 +16,8 @@ import {
   useExtendTrialLicense,
   useSaveFeedback
 } from 'services/cd-ng'
-import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
-import { ModuleName } from 'framework/types/ModuleName'
+import { Editions } from '@common/constants/SubscriptionTypes'
 import SubscriptionsPage from '../SubscriptionsPage'
-import activeServices from './mocks/activeServices.json'
 import activeServicesEmpty from './mocks/activeServicesEmpty.json'
 jest.mock('services/cd-ng')
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>

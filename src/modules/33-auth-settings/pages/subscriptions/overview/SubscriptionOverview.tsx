@@ -10,7 +10,6 @@ import React, { useMemo } from 'react'
 import { Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import type { ModuleName } from 'framework/types/ModuleName'
-
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import { useLisCDActiveServices, LisCDActiveServicesQueryParams } from 'services/cd-ng'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -32,7 +31,7 @@ interface SubscriptionOverviewProps {
   trialInformation: TrialInformation
   refetchGetLicense?: () => void
 }
-const DEFAULT_ACTIVE_SERVICE_LIST_TABLE_SORT = []
+const DEFAULT_ACTIVE_SERVICE_LIST_TABLE_SORT = ['serviceInstance', 'DESC']
 const DEFAULT_PAGE_INDEX = 0
 const DEFAULT_PAGE_SIZE = 20
 type ProcessedActiveServiceListPageQueryParams = PartiallyRequired<
@@ -47,7 +46,7 @@ const queryParamOptions = {
       ...params,
       page: params.page ?? DEFAULT_PAGE_INDEX,
       size: params.size ?? DEFAULT_PAGE_SIZE,
-      sort: params.sort ?? DEFAULT_ACTIVE_SERVICE_LIST_TABLE_SORT
+      sort: DEFAULT_ACTIVE_SERVICE_LIST_TABLE_SORT
     }
   }
 }
