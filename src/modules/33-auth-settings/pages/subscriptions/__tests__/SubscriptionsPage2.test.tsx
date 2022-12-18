@@ -18,7 +18,6 @@ import {
 } from 'services/cd-ng'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import SubscriptionsPage from '../SubscriptionsPage'
-import activeServicesEmpty from './mocks/activeServicesEmpty.json'
 jest.mock('services/cd-ng')
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>

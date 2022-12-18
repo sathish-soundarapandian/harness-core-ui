@@ -9830,8 +9830,22 @@ export interface PageInvite {
   totalPages?: number
 }
 
-export interface PageLicenseUsageDTO {
-  content?: LicenseUsageDTO[]
+export interface ActiveServiceDTO {
+  accountIdentifier?: string
+  identifier: string
+  instanceCount?: number
+  lastDeployed?: number
+  licensesConsumed?: number
+  module?: string
+  name?: string
+  orgName?: string
+  projectName?: string
+  timestamp?: number
+}
+
+
+export interface PageActiveServiceDTO {
+  content?: ActiveServiceDTO[]
   empty?: boolean
   first?: boolean
   last?: boolean

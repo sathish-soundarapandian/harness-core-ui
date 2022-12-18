@@ -11,7 +11,7 @@ import { Text } from '@harness/uicore'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import React from 'react'
 import moment from 'moment'
-import type { PageLicenseUsageDTO } from 'services/cd-ng'
+import type { ActiveServiceDTO } from 'services/cd-ng'
 
 type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance<D> & {
   column: ColumnInstance<D>
@@ -20,7 +20,7 @@ type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance
   value: CellValue<V>
 }
 
-type CellType = Renderer<CellTypeWithActions<PageLicenseUsageDTO>>
+type CellType = Renderer<CellTypeWithActions<ActiveServiceDTO>>
 
 export const LastModifiedNameCell: CellType = ({ row }) => {
   const data = row.original

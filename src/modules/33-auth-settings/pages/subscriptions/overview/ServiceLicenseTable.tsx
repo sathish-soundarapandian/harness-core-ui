@@ -12,7 +12,7 @@ import { Text, TableV2, Layout, Card, Heading } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
 import { String, useStrings } from 'framework/strings'
-import type { PageLicenseUsageDTO, LicenseUsageDTO } from 'services/cd-ng'
+import type { PageActiveServiceDTO, LicenseUsageDTO } from 'services/cd-ng'
 import type { SortBy } from './types'
 import {
   LastModifiedNameCell,
@@ -28,7 +28,7 @@ import pageCss from '../SubscriptionsPage.module.scss'
 const DEFAULT_PAGE_INDEX = 0
 const DEFAULT_PAGE_SIZE = 30
 export interface ServiceLicenseTableProps {
-  data: PageLicenseUsageDTO
+  data: PageActiveServiceDTO
   gotoPage: (pageNumber: number) => void
   setSortBy: (sortBy: string[]) => void
   sortBy: string[]
