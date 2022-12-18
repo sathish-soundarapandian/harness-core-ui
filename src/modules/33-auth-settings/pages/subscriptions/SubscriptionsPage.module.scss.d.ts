@@ -7,6 +7,10 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly activeServiceLink: string
+  readonly badge: string
+  readonly badgeText: string
+  readonly badgesContainer: string
   readonly banner: string
   readonly bannerIcon: string
   readonly cd: string
@@ -16,13 +20,18 @@ declare const styles: {
   readonly cv: string
   readonly expired: string
   readonly expiryCountdown: string
+  readonly failed24HrsExecutionsBadge: string
   readonly moduleIcons: string
   readonly moduleSelectCard: string
   readonly moduleSelectCards: string
+  readonly noDataCard: string
+  readonly noDataCardContainer: string
   readonly outterCard: string
+  readonly runningExecutions: string
   readonly selected: string
   readonly sto: string
   readonly subscriptionTabButton: string
   readonly subscriptionTabButtons: string
+  readonly table: string
 }
 export default styles
