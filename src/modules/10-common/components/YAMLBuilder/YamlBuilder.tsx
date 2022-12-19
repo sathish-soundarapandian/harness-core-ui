@@ -25,7 +25,6 @@ import {
   isNil,
   isUndefined,
   get,
-  omit,
   set
 } from 'lodash-es'
 import { Layout, Text, Collapse } from '@harness/uicore'
@@ -92,7 +91,7 @@ import { countAllKeys } from '@common/utils/utils'
 import { AutoCompletionMap } from './YAMLAutoCompletionHelper'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { PluginsPanel } from './PluginsPanel/PluginsPanel'
+import { PluginAddUpdateMetadata, PluginsPanel } from './PluginsPanel/PluginsPanel'
 
 // Please do not remove this, read this https://eemeli.org/yaml/#scalar-options
 scalarOptions.str.fold.lineWidth = 100000
@@ -1009,30 +1008,36 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [editorRef.current?.editor]
   )
 
-  const wrapPlugInputInAStep = useCallback((pluginInput: Record<string, any>): Record<string, any> => {
-    return { step: { spec: pluginInput } }
-  }, [])
+  const wrapPlugInputInAStep = useCallback(
+    (pluginName: string, pluginInput: Record<string, any>): Record<string, any> => {
+      return { step: { name: pluginName, spec: pluginInput } }
+    },
+    []
+  )
 
-  const insertPluginIntoExistingYAML = useCallback(
-    (pluginInput: Record<string, any>): void => {
-      if (!isEmpty(pluginInput) && pluginInput.shouldInsertYAML && currentCursorPosition.current) {
+  const addupdatePluginIntoExistingYAML = useCallback(
+    (pluginMetadata: PluginAddUpdateMetadata, isPluginEdit?: boolean): void => {
+      const { pluginData, pluginName, shouldInsertYAML } = pluginMetadata
+      if (!isEmpty(pluginData) && shouldInsertYAML && currentCursorPosition.current) {
         try {
-          const closestIndex = getClosestIndexToSearchToken(currentCursorPosition.current, 'stage:')
-          const yamlStepToBeInsertedAt = getStageYAMLPathForStageIndex(closestIndex)
+          const closestStageIndex = getClosestIndexToSearchToken(currentCursorPosition.current, 'stage:')
+          const yamlStepToBeInsertedAt = getStageYAMLPathForStageIndex(closestStageIndex)
           const currentPipelineJSON = parse(currentYaml)
           const existingSteps = findAllValuesForJSONPath(currentPipelineJSON, yamlStepToBeInsertedAt) as unknown[]
           let updatedSteps = existingSteps.slice(0) as unknown[]
-          const sanitizedStepToInsert = omit(pluginInput, 'shouldInsertYAML')
-          const finalStepToInsert = wrapPlugInputInAStep(sanitizedStepToInsert)
-          if (Array.isArray(existingSteps) && existingSteps.length > 1) {
-            updatedSteps.unshift(finalStepToInsert)
+          const finalStepToInsert = wrapPlugInputInAStep(pluginName, pluginData)
+          if (isPluginEdit) {
           } else {
-            updatedSteps = [finalStepToInsert]
+            if (Array.isArray(existingSteps) && existingSteps.length > 0) {
+              updatedSteps.unshift(finalStepToInsert)
+            } else {
+              updatedSteps = [finalStepToInsert]
+            }
           }
           const updatedPipelineJSON = set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps)
           setCurrentYaml(yamlStringify(updatedPipelineJSON))
-          // +2 added for key "step" and "spec"
-          detectYAMLInsertion(countAllKeys(sanitizedStepToInsert) + 2, closestIndex)
+          const totalKeysInserted = countAllKeys(finalStepToInsert)
+          detectYAMLInsertion(totalKeysInserted, closestStageIndex)
         } catch (e) {
           // ignore error
         }
@@ -1062,7 +1067,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       {shouldRenderPluginsPanel ? (
         <PluginsPanel
           height={dynamicHeight}
-          onPluginAdd={insertPluginIntoExistingYAML}
+          onPluginAddUpdate={addupdatePluginIntoExistingYAML}
+          onPluginDiscard={() => setPluginValuesSelected(undefined)}
           existingPluginValues={pluginValuesSelected}
         />
       ) : null}

@@ -29,19 +29,27 @@ import { useStrings } from 'framework/strings'
 
 import css from './PluginsPanel.module.scss'
 
+export interface PluginAddUpdateMetadata {
+  pluginData: Record<string, any>
+  pluginName: string
+  shouldInsertYAML: boolean
+}
+
 interface PluginsPanelInterface {
   existingPluginValues?: Record<string, any>
-  onPluginAdd: (pluginInput: Record<string, any>) => void
+  onPluginAddUpdate: (pluginMetadata: PluginAddUpdateMetadata, isEdit?: boolean) => void
+  onPluginDiscard: () => void
   height?: React.CSSProperties['height']
   shouldEnableFormView?: boolean
 }
 
 export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
-  const { height, onPluginAdd, existingPluginValues = {} } = props
+  const { height, onPluginAddUpdate, onPluginDiscard, existingPluginValues = {} } = props
   const { getString } = useStrings()
   const [selectedPlugin, setSelectedPlugin] = useState<PluginMetadataResponse | undefined>()
   const [plugins, setPlugins] = useState<PluginMetadataResponse[]>([])
   const [query, setQuery] = useState<string>()
+  const isEdit = !isEmpty(existingPluginValues)
 
   const defaultQueryParams = { pageIndex: 0, pageSize: 200 }
   const { data, loading, error, refetch } = useListPlugins({ queryParams: defaultQueryParams })
@@ -189,24 +197,29 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                   flex={{ alignItems: 'baseline', justifyContent: 'flex-start' }}
                 >
                   <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
-                    <Icon name="arrow-left" onClick={() => setSelectedPlugin(undefined)} className={css.backBtn} />
+                    <Icon
+                      name="arrow-left"
+                      onClick={() => {
+                        setSelectedPlugin(undefined)
+                        onPluginDiscard()
+                      }}
+                      className={css.backBtn}
+                    />
                     <Text font={{ variation: FontVariation.H5 }}>{pluginName}</Text>
                   </Layout.Horizontal>
                   <Container className={css.form}>
                     <Formik
-                      // initialValues={
-                      //   !isEmpty(existingPluginValues)
-                      //     ? existingPluginValues
-                      //     : formFields
-                      //     ? generateFormikInitialValues(formFields)
-                      //     : {}
-                      // }
-                      initialValues={formFields ? generateFormikInitialValues(formFields) : {}}
+                      initialValues={
+                        isEdit ? existingPluginValues : formFields ? generateFormikInitialValues(formFields) : {}
+                      }
                       enableReinitialize={true}
                       formName="pluginsForm"
                       onSubmit={data => {
                         try {
-                          onPluginAdd({ ...data, shouldInsertYAML: true })
+                          onPluginAddUpdate(
+                            { pluginName, pluginData: data, shouldInsertYAML: true } as PluginAddUpdateMetadata,
+                            isEdit
+                          )
                         } catch (e) {
                           //ignore error
                         }
@@ -223,7 +236,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                               <Container className={css.pluginFields}>{renderPluginForm()}</Container>
                               <Layout.Horizontal flex spacing="xlarge">
                                 <Button type="submit" variation={ButtonVariation.PRIMARY}>
-                                  {getString('add')}
+                                  {isEdit ? getString('update') : getString('add')}
                                 </Button>
                                 {pluginDocumentationLink ? (
                                   <a href={pluginDocumentationLink} target="_blank" rel="noopener noreferrer">
