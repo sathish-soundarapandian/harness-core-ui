@@ -173,12 +173,12 @@ const SelectRepositoryRef = (
   )
 
   useEffect(() => {
-    if (fetchingRepositories) {
+    if (fetchingRepositories && enableCloneCodebase) {
       disableNextBtn()
     } else {
       enableNextBtn()
     }
-  }, [fetchingRepositories])
+  }, [fetchingRepositories, enableCloneCodebase])
 
   useEffect(() => {
     if (query) {
