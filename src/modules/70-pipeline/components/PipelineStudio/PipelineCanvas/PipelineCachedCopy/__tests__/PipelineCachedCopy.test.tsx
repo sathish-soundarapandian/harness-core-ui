@@ -40,7 +40,7 @@ describe('Test Pipeline gitx cache Copy', () => {
     const { container } = render(
       <TestWrapper defaultFeatureFlagValues={{ PIE_NG_GITX_CACHING: true }}>
         <PipelineContext.Provider value={cacheResponseContextValue}>
-          <PipelineCachedCopy />
+          <PipelineCachedCopy updateLoadCacheStatus={jest.fn()} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -51,7 +51,7 @@ describe('Test Pipeline gitx cache Copy', () => {
     const { container } = render(
       <TestWrapper defaultFeatureFlagValues={{ PIE_NG_GITX_CACHING: true }}>
         <PipelineContext.Provider value={cacheResponseContextValue}>
-          <PipelineCachedCopy />
+          <PipelineCachedCopy updateLoadCacheStatus={jest.fn()} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -68,7 +68,7 @@ describe('Test Pipeline gitx cache Copy', () => {
     render(
       <TestWrapper defaultFeatureFlagValues={{ PIE_NG_GITX_CACHING: true }}>
         <PipelineContext.Provider value={cacheResponseContextValue}>
-          <PipelineCachedCopy />
+          <PipelineCachedCopy updateLoadCacheStatus={jest.fn()} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -83,7 +83,7 @@ describe('Test Pipeline gitx cache Copy', () => {
     const { container } = render(
       <TestWrapper defaultFeatureFlagValues={{ PIE_NG_GITX_CACHING: true }}>
         <PipelineContext.Provider value={cacheResponseContextValue}>
-          <PipelineCachedCopy />
+          <PipelineCachedCopy updateLoadCacheStatus={jest.fn()} />
         </PipelineContext.Provider>
       </TestWrapper>
     )

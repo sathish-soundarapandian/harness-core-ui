@@ -199,7 +199,7 @@ export function PipelineCanvas({
       GitQueryParams
   >()
   const history = useHistory()
-  const pipelineGitXCache = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
+  const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
   // For remote pipeline queryParam will always as branch as selected branch except coming from list view
   // While opeining studio from list view, selected branch can be any branch as in pipeline response
@@ -241,6 +241,7 @@ export function PipelineCanvas({
   const { openPipelineErrorsModal } = usePipelineErrors()
   const isYaml = view === SelectedView.YAML
   const [isYamlError, setYamlError] = React.useState(false)
+  const [loadFromCache, setLoadFromCache] = React.useState(true)
   const [blockNavigation, setBlockNavigation] = React.useState(false)
   const [selectedBranch, setSelectedBranch] = React.useState(defaultTo(branch, ''))
   const [disableVisualView, setDisableVisualView] = React.useState(entityValidityDetails?.valid === false)
@@ -979,7 +980,9 @@ export function PipelineCanvas({
                   />
                   <div>
                     <div className={css.savePublishContainer}>
-                      {pipelineGitXCache && !isEmpty(pipelineCacheResponse) && <PipelineCachedCopy />}
+                      {isPipelineGitCacheEnabled && !isEmpty(pipelineCacheResponse) && (
+                        <PipelineCachedCopy updateLoadCacheStatus={() => setLoadFromCache(false)} />
+                      )}
                       {isReadonly && (
                         <div className={css.readonlyAccessTag}>
                           <Icon name="eye-open" size={16} />
@@ -1051,7 +1054,10 @@ export function PipelineCanvas({
               )}
             </div>
           )}
-          <PipelineOutOfSyncErrorStrip updateRootEntity={updateEntity} />
+          <PipelineOutOfSyncErrorStrip
+            updateRootEntity={updateEntity}
+            loadFromcache={isPipelineGitCacheEnabled && loadFromCache}
+          />
           {remoteFetchError ? (
             handleFetchFailure(
               'pipeline',

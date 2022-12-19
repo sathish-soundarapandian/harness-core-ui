@@ -11,16 +11,18 @@ import { Intent } from '@harness/design-system'
 import { Tooltip } from '@blueprintjs/core'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { getReadableDateTime } from '@common/utils/dateUtils'
+import { formatDatetoLocale } from '@common/utils/dateUtils'
 import type { CacheResponseMetadata } from 'services/pipeline-ng'
-import { StringUtils } from '@common/exports'
 import { usePipelineContext } from '../../PipelineContext/PipelineContext'
 import css from './PipelineCachedCopy.module.scss'
 
-enum CacheState {
-  VALID_CACHE = 'VALID_CACHE',
-  STALE_CACHE = 'STALE_CACHE',
-  UNKNOWN = 'UNKNOWN'
+// enum CacheState {
+//   VALID_CACHE = 'VALID_CACHE',
+//   STALE_CACHE = 'STALE_CACHE',
+//   UNKNOWN = 'UNKNOWN'
+// }
+interface PipelineCachedCopyInterface {
+  updateLoadCacheStatus: () => void
 }
 const cacheStateToIconMap: Record<CacheResponseMetadata['cacheState'], IconName> = {
   VALID_CACHE: 'success-tick',
@@ -28,7 +30,7 @@ const cacheStateToIconMap: Record<CacheResponseMetadata['cacheState'], IconName>
   UNKNOWN: 'danger-icon'
 }
 
-function PipelineCachedCopy(): React.ReactElement {
+function PipelineCachedCopy({ updateLoadCacheStatus }: PipelineCachedCopyInterface): React.ReactElement {
   const { getString } = useStrings()
   const { isOpen: isModalOpen, close: hideModal, open: showModal } = useToggleOpen(false)
   const { isOpen: isErrorModalOpen, close: hideErrorModal, open: showErrorModal } = useToggleOpen(false)
@@ -46,6 +48,7 @@ function PipelineCachedCopy(): React.ReactElement {
   }, [remoteFetchError])
 
   function reloadPipeline(): void {
+    updateLoadCacheStatus()
     updatePipelineView({ ...pipelineView, isYamlEditable: false })
     fetchPipeline({ forceFetch: true, forceUpdate: true, loadFromCache: false })
   }
@@ -53,12 +56,12 @@ function PipelineCachedCopy(): React.ReactElement {
   function getTooltipContent(): JSX.Element {
     return (
       <>
+        {/* Commenting this temporarily, as the reload of cache on pipeline studio initial render is not supported yet
         {cacheResponse.cacheState === CacheState.STALE_CACHE && (
           <div>{getString('pipeline.pipelineCachedCopy.cacheInProgress')}</div>
-        )}
+        )} */}
         <div>
-          <span>{getString('common.lastUpdatedAt')}</span>:{' '}
-          {getReadableDateTime(cacheResponse.lastUpdatedAt, StringUtils.DEFAULT_DATE_FORMAT)}
+          <span>{getString('common.lastUpdatedAt')}</span>: {formatDatetoLocale(cacheResponse.lastUpdatedAt)}
         </div>
       </>
     )
