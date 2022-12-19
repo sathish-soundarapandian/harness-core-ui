@@ -13,6 +13,9 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { FocusStyleManager } from '@blueprintjs/core'
 import { PageSpinner, useToaster, MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY } from '@harness/uicore'
 import { HELP_PANEL_STORAGE_KEY } from '@harness/help-panel'
+import { HarnessReactAPIClient as NG_API_Client } from '@harnessio/react-ng-manager-client'
+import { HarnessReactAPIClient as PMS_API_Client } from '@harnessio/react-pipeline-service-client'
+import { noop } from 'lodash-es'
 import { setAutoFreeze, enableMapSet } from 'immer'
 import SessionToken from 'framework/utils/SessionToken'
 import { queryClient } from 'services/queryClient'
@@ -122,7 +125,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     }
   }
 
-  const globalResponseHandler = (response: Response): void => {
+  const globalResponseHandler = React.useCallback((response: Response): void => {
     if (!response.ok) {
       switch (response.status) {
         case 401: {
@@ -170,13 +173,35 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
       }
     }
     checkAndRefreshToken()
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useGlobalEventListener('PROMISE_API_RESPONSE', ({ detail }) => {
     if (detail && detail.response) {
       globalResponseHandler(detail.response)
     }
   })
+
+  useEffect(() => {
+    // Initializing open-api clints
+    new NG_API_Client({
+      responseInterceptor: globalResponseHandler,
+      requestInterceptor: noop,
+      getHeaders: () => {
+        return { token: SessionToken.getToken(), 'Harness-Account': accountId }
+      },
+      setHeaders: noop
+    })
+
+    new PMS_API_Client({
+      responseInterceptor: globalResponseHandler,
+      requestInterceptor: noop,
+      getHeaders: () => {
+        return { token: SessionToken.getToken(), 'Harness-Account': accountId }
+      },
+      setHeaders: noop
+    })
+  }, [globalResponseHandler])
 
   return (
     <RestfulProvider

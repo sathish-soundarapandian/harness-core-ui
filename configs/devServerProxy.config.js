@@ -12,6 +12,9 @@ console.log('\nProxy env vars')
 console.table({ baseUrl, targetLocalHost })
 
 module.exports = {
+  '/v1': {
+    target: targetLocalHost ? 'https://localhost:7090' : `${baseUrl}`
+  },
   '/ng/api': {
     pathRewrite: { '^/ng/api': '' },
     target: targetLocalHost ? 'https://localhost:7090' : `${baseUrl}/ng/api`
