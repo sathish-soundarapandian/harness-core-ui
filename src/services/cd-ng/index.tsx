@@ -12729,7 +12729,7 @@ export interface ResponsePageInvite {
 
 export interface ResponsePageLicenseUsageDTO {
   correlationId?: string
-  data?: PageLicenseUsageDTO
+  data?: PageActiveServiceDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
