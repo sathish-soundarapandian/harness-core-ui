@@ -4,7 +4,42 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
+.table {
+  margin: var(--spacing-large);
+  [role='cell'] {
+    padding-right: var(--spacing-small);
+  }
+}
+.badgesContainer {
+  height: 56px;
+  display: flex;
+  margin-bottom: 15px;
 
+  .badge {
+    display: flex;
+    height: 32px;
+    border-radius: 8px;
+    padding: 8px 10px;
+    background-color: var(--yellow-50);
+    align-items: center;
+    margin-right: 8px;
+
+    .badgeText {
+      margin-left: var(--spacing-small);
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 16px;
+      letter-spacing: 0.2px;
+      color: var(--primary-7);
+    }
+  }
+  .failed24HrsExecutionsBadge {
+    background-color: var(--red-50);
+  }
+  .runningExecutions {
+    background-color: var(--primary-1);
+  }
+}
 .moduleSelectCards {
   margin-bottom: 25px !important;
   .moduleSelectCard {
@@ -94,4 +129,17 @@
 
 .outterCard {
   min-width: 1000px;
+}
+
+.activeServiceLink {
+  margin-top: 0px !important;
+  color: var(--primary-7);
+}
+
+.noDataCard {
+  margin-top: 0px !important;
+  justify-content: center !important;
+}
+.noDataCardContainer {
+  max-height: 100px !important;
 }
