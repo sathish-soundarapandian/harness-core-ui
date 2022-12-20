@@ -49,7 +49,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   const [selectedPlugin, setSelectedPlugin] = useState<PluginMetadataResponse | undefined>()
   const [plugins, setPlugins] = useState<PluginMetadataResponse[]>([])
   const [query, setQuery] = useState<string>()
-  const isEdit = !isEmpty(existingPluginValues)
+  const isPluginUpdateaAction = !isEmpty(existingPluginValues)
 
   const defaultQueryParams = { pageIndex: 0, pageSize: 200 }
   const { data, loading, error, refetch } = useListPlugins({ queryParams: defaultQueryParams })
@@ -210,7 +210,11 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                   <Container className={css.form}>
                     <Formik
                       initialValues={
-                        isEdit ? existingPluginValues : formFields ? generateFormikInitialValues(formFields) : {}
+                        isPluginUpdateaAction
+                          ? existingPluginValues
+                          : formFields
+                          ? generateFormikInitialValues(formFields)
+                          : {}
                       }
                       enableReinitialize={true}
                       formName="pluginsForm"
@@ -218,7 +222,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                         try {
                           onPluginAddUpdate(
                             { pluginName, pluginData: data, shouldInsertYAML: true } as PluginAddUpdateMetadata,
-                            isEdit
+                            isPluginUpdateaAction
                           )
                         } catch (e) {
                           //ignore error
@@ -236,7 +240,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                               <Container className={css.pluginFields}>{renderPluginForm()}</Container>
                               <Layout.Horizontal flex spacing="xlarge">
                                 <Button type="submit" variation={ButtonVariation.PRIMARY}>
-                                  {isEdit ? getString('update') : getString('add')}
+                                  {isPluginUpdateaAction ? getString('update') : getString('add')}
                                 </Button>
                                 {pluginDocumentationLink ? (
                                   <a href={pluginDocumentationLink} target="_blank" rel="noopener noreferrer">
