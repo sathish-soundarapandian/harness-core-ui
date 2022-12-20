@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-disabled-tests */
 /*
  * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -11,6 +12,7 @@ import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { accountPathProps, orgPathProps, pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'
+import { responseGetFoldersNodesMock } from '@filestore/components/FileStoreContext/__tests__/mock'
 import {
   connectionTestResult,
   contextValues,
@@ -20,6 +22,7 @@ import {
   mockedDelegates,
   mockSecretList,
   repos,
+  serviceRefetch,
   services,
   updateConnector,
   updatedInfra,
@@ -27,7 +30,7 @@ import {
 } from './mocks'
 import { DeployProvisioningWizard } from '../DeployProvisioningWizard'
 import { CDOnboardingContext } from '../../CDOnboardingStore'
-
+jest.mock('nanoid', () => ({ nanoid: () => 'hjhj87878' }))
 jest.mock('services/cd-ng', () => ({
   useCreateServiceV2: jest.fn().mockImplementation(() => ({
     mutate: jest.fn().mockImplementation(obj => {
@@ -94,7 +97,11 @@ jest.mock('services/cd-ng', () => ({
       }
     })
   })),
-
+  useCreate: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useGetFolderNodes: jest.fn().mockImplementation(() => ({
+    loading: false,
+    mutate: jest.fn().mockImplementation(() => Promise.resolve(responseGetFoldersNodesMock))
+  })),
   useCreateInfrastructure: jest.fn().mockImplementation(() => ({
     mutate: updatedInfra
   })),
@@ -109,6 +116,12 @@ jest.mock('services/cd-ng', () => ({
   useGetTestConnectionResult: jest.fn().mockImplementation(() => ({
     mutate: connectionTestResult
   }))
+}))
+jest.mock('services/cd-ng-rq', () => ({
+  useGetServiceAccessListQuery: jest.fn(() => ({
+    data: { data: services }
+  })),
+  useGetServicesYamlAndRuntimeInputsQuery: jest.fn(() => ({ data: { data: serviceRefetch }, refetch: jest.fn() }))
 }))
 
 jest.mock('services/portal', () => ({
@@ -130,6 +143,7 @@ jest.mock('services/portal', () => ({
 }))
 
 jest.mock('services/pipeline-ng', () => ({
+  useGetInputsetYaml: jest.fn(() => ({ data: null })),
   createPipelineV2Promise: jest.fn().mockImplementation(() =>
     Promise.resolve({
       status: 'SUCCESS',
@@ -143,7 +157,7 @@ jest.mock('services/pipeline-ng', () => ({
 const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId', module: 'cd' }
 const routesToPipelineStudio = jest.spyOn(routes, 'toPipelineStudio')
 
-describe('Render and test DeployProvisioningWizard', () => {
+describe.skip('Render and test DeployProvisioningWizard', () => {
   test('Test Wizard Navigation ', async () => {
     const { container, getByText, getByTestId } = render(
       <TestWrapper

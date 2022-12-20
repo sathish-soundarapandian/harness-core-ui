@@ -7,11 +7,10 @@
 
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { v4 as uuid } from 'uuid'
 import { Button, Container, Layout, PageSpinner, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import { get, set } from 'lodash-es'
+import { get, isEmpty, set } from 'lodash-es'
 import { DelegateSetupDetails, getDelegateTokensPromise, GetDelegateTokensQueryParams } from 'services/cd-ng'
 import {
   validateDockerDelegatePromise,
@@ -28,7 +27,9 @@ import { DelegateTypes } from '@delegates/constants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import StepProcessing from '../CreateKubernetesDelegateWizard/StepProcessing'
-import type { DelegateSuccessHandler } from '../CDOnboardingUtils'
+import { DelegateSuccessHandler, generateDelegateName } from '../CDOnboardingUtils'
+import { RightDrawer } from '../ConfigureService/ManifestRepoTypes/RightDrawer/RightDrawer'
+import { useCDOnboardingContext } from '../CDOnboardingStore'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 
 export interface CreateDockerDelegateProps {
@@ -42,6 +43,9 @@ export const CreateDockerDelegate = ({
   successRef,
   delegateNameRef
 }: CreateDockerDelegateProps): JSX.Element => {
+  const {
+    state: { delegate: delegateData }
+  } = useCDOnboardingContext()
   const [yaml, setYaml] = React.useState<string>('')
   const [delegateName, setDelegateName] = React.useState<string>('')
   const [isYamlVisible, setYamlVisible] = React.useState<boolean>(false)
@@ -75,30 +79,36 @@ export const CreateDockerDelegate = ({
         status: 'ACTIVE'
       } as GetDelegateTokensQueryParams
     })
+
     if (get(delegateTokens, 'responseMessages', []).length) {
       showError(getString('somethingWentWrong'))
     } else {
+      const existingDelegate = get(delegateData, 'environmentEntities.delegate', null) // delegateName from context
       const delegateToken = get(delegateTokens, 'resource[0].name')
-      const delegateName1 = `sample-${uuid()}-delegate`
+      const delegateName1 = existingDelegate || generateDelegateName()
       setDelegateName(delegateName1)
       delegateNameRef.current = delegateName1
-      trackEvent(CDOnboardingActions.StartOnboardingDelegateCreation, {
-        category: Category.DELEGATE,
-        data: {
-          delegateName: delegateName1,
-          delegateType: delegateType
-        }
-      })
-      const validateDockerDelegateNameResponse = await validateDockerDelegatePromise({
-        queryParams: {
-          accountId,
-          projectIdentifier,
-          orgIdentifier,
-          delegateName: delegateName1,
-          tokenName: delegateToken
-        } as ValidateDockerDelegateQueryParams
-      })
-      const isNameUnique = !get(validateDockerDelegateNameResponse, 'responseMessages[0]', null)
+      !existingDelegate &&
+        trackEvent(CDOnboardingActions.StartOnboardingDelegateCreation, {
+          category: Category.DELEGATE,
+          data: {
+            delegateName: delegateName1,
+            delegateType: delegateType
+          }
+        })
+      const validateDockerDelegateNameResponse =
+        !existingDelegate &&
+        (await validateDockerDelegatePromise({
+          queryParams: {
+            accountId,
+            projectIdentifier,
+            orgIdentifier,
+            delegateName: delegateName1,
+            tokenName: delegateToken
+          } as ValidateDockerDelegateQueryParams
+        }))
+      const isNameUnique =
+        !get(validateDockerDelegateNameResponse, 'responseMessages[0]', null) || Boolean(existingDelegate)
       if (!isNameUnique) {
         showError(getString('somethingWentWrong'))
       } else {
@@ -117,39 +127,45 @@ export const CreateDockerDelegate = ({
         }
         set(createParams, 'delegateType', delegateType)
 
-        trackEvent(CDOnboardingActions.SetupOnboardingDelegate, {
-          category: Category.DELEGATE,
-          data: createParams
-        })
+        !existingDelegate &&
+          trackEvent(CDOnboardingActions.SetupOnboardingDelegate, {
+            category: Category.DELEGATE,
+            data: createParams
+          })
 
-        const dockerYaml = (await generateDockerDelegateYAMLPromise({
-          queryParams: {
-            accountId
-          },
-          body: {
-            ...createParams
-          }
-        })) as any
+        const dockerYaml =
+          delegateData?.delegateYAMLResponse ||
+          ((await generateDockerDelegateYAMLPromise({
+            queryParams: {
+              accountId
+            },
+            body: {
+              ...createParams
+            }
+          })) as any)
         if (get(dockerYaml, 'responseMessages', []).length) {
           const errorMsg = dockerYaml.responseMessages?.[0]?.message || getString('somethingWentWrong')
           showError(errorMsg)
         } else {
           setYaml(dockerYaml)
           setLoader(false)
-          await createDelegateGroupPromise({
-            queryParams: {
-              accountId
-            },
-            body: {
-              ...createParams,
-              delegateType
-            }
-          })
-          onSuccessHandler({ delegateCreated: true })
-          trackEvent(CDOnboardingActions.SaveCreateOnboardingDelegate, {
-            category: Category.DELEGATE,
-            data: { ...createParams, generatedYaml: dockerYaml }
-          })
+          !existingDelegate &&
+            (await createDelegateGroupPromise({
+              queryParams: {
+                accountId
+              },
+              body: {
+                ...createParams,
+                delegateType
+              }
+            }))
+
+          onSuccessHandler({ delegateCreated: true, delegateYamlResponse: dockerYaml })
+          !existingDelegate &&
+            trackEvent(CDOnboardingActions.SaveCreateOnboardingDelegate, {
+              category: Category.DELEGATE,
+              data: { ...createParams, generatedYaml: dockerYaml }
+            })
         }
       }
     }
@@ -161,22 +177,28 @@ export const CreateDockerDelegate = ({
   if (showPageLoader) {
     return (
       <Container className={css.spinner}>
-        <PageSpinner message={getString('cd.loadingDelegate')} />
+        <PageSpinner
+          message={
+            isEmpty(delegateData?.delegateYAMLResponse)
+              ? getString('cd.loadingDelegate')
+              : getString('cd.fetchingDelegate')
+          }
+        />
       </Container>
     )
   }
 
   return (
     <>
-      <Layout.Vertical>
-        <Text font="normal" className={css.subHeading}>
+      <Layout.Vertical className={css.marginBottomClass}>
+        <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
           {getString('cd.instructionsDelegate')}
         </Text>
         <ul className={css.progress}>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
               <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
-                {getString('cd.downloadYAML')}
+                {getString('connectors.ceK8.providePermissionsStep.downloadYamlBtnText')}
               </Text>
               <Layout.Horizontal className={css.spacing}>
                 <Button
@@ -204,22 +226,23 @@ export const CreateDockerDelegate = ({
                   outlined
                 />
               </Layout.Horizontal>
-              <Layout.Vertical width="568px">
-                {isYamlVisible ? (
-                  <div className={css.collapseDiv}>
-                    <YamlBuilder
-                      entityType="Delegates"
-                      fileName={dockerFileName}
-                      isReadOnlyMode={true}
-                      isEditModeSupported={false}
-                      hideErrorMesageOnReadOnlyMode={true}
-                      existingYaml={yaml}
-                      height="462px"
-                      theme="DARK"
-                    />
-                  </div>
-                ) : null}
-              </Layout.Vertical>
+              {isYamlVisible ? (
+                <>
+                  <RightDrawer isOpen={isYamlVisible} setIsOpen={setYamlVisible}>
+                    <div className={css.collapseDiv}>
+                      <YamlBuilder
+                        entityType="Delegates"
+                        fileName={dockerFileName}
+                        isReadOnlyMode={true}
+                        isEditModeSupported={false}
+                        hideErrorMesageOnReadOnlyMode={true}
+                        existingYaml={yaml}
+                        height="100vh"
+                      />
+                    </div>
+                  </RightDrawer>
+                </>
+              ) : null}
               <div className={css.spacing} />
             </Layout.Vertical>
           </li>
@@ -235,7 +258,7 @@ export const CreateDockerDelegate = ({
               </Layout.Horizontal>
               <Layout.Horizontal className={css.descriptionVerificationWrapper}>
                 <Text font="normal" width={408}>
-                  {getString('delegates.delegateCreation.docker.verifyDesc2')}
+                  {getString('cd.delegateInstallCommand')}
                 </Text>
               </Layout.Horizontal>
               <Layout.Horizontal className={css.verificationFieldWrapper}>

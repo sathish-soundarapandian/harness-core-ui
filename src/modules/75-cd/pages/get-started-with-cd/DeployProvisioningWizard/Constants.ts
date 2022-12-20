@@ -37,10 +37,10 @@ export enum ProvisioningStatus {
 }
 
 export enum DeployProvisiongWizardStepId {
-  SelectArtifact = 'SELECT_ARTIFACT',
-  SelectWorkload = 'SELECT_WORKLOAD',
-  SelectInfrastructure = 'SELECT_INFRASTRUCTURE',
-  CreatePipeline = 'CREATE_PIPELINE'
+  SelectDeploymentType = 'SELECT_DEPLOYMENT_TYPE',
+  DelegateSelector = 'ENVIRONMENT_DELEGATE_SELECTOR',
+  ConfigureService = 'CONFIGURE_SERVICE',
+  RunPipeline = 'RUN_PIPELINE'
 }
 
 export enum StepStatus {
@@ -245,7 +245,7 @@ export const ACCOUNT_SCOPE_PREFIX = 'account.'
 export const OAUTH_REDIRECT_URL_PREFIX = `${location.protocol}//${location.host}/gateway/`
 
 export const getFullRepoName = (repository: UserRepoResponse): string => {
-  const { name: repositoryName, namespace } = repository
+  const { name: repositoryName = '', namespace = '' } = repository
   return namespace && repositoryName ? `${namespace}/${repositoryName}` : repositoryName ?? ''
 }
 

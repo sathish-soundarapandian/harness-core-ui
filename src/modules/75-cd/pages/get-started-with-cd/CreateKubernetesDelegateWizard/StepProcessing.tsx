@@ -7,7 +7,7 @@
 
 import React, { useState, FC } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, Icon, Text, useToaster } from '@harness/uicore'
+import { Layout, Icon, Text, useToaster, Button, ButtonVariation } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 
@@ -44,7 +44,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
   const {
     data,
     loading,
-    refetch: verifyHeartBeat
+    refetch: verifyHeartbeat
   } = useGetDelegatesHeartbeatDetailsV2({
     queryParams: {
       accountId,
@@ -71,14 +71,14 @@ const StepProcessing: FC<StepDelegateData> = props => {
     ) {
       const timerId = window.setTimeout(() => {
         setCounter(counter + POLL_INTERVAL)
-        verifyHeartBeat()
+        verifyHeartbeat()
       }, POLL_INTERVAL)
 
       if (counter >= TIME_OUT * (replicas || 1)) {
         window.clearTimeout(timerId)
         setVerifyHeartBeat(true)
         setShowError(true)
-        trackEvent(CDOnboardingActions.HeartBeatFailedOnboardingYAML, {
+        trackEvent(CDOnboardingActions.HeartbeatFailedOnboardingYAML, {
           category: Category.DELEGATE,
           data: { name: name, delegateType: delegateType }
         })
@@ -97,7 +97,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
       onSuccessHandler && onSuccessHandler({ delegateCreated: true, delegateInstalled: true })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, verifyHeartBeat, loading, onSuccessHandler])
+  }, [data, verifyHeartbeat, loading, onSuccessHandler])
 
   if (showError) {
     return (
@@ -106,7 +106,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
           <Icon size={10} color={Color.RED_400} name="circle-cross" className={css.checkIcon} />
           <Text font={{ weight: 'bold' }}>{getString('delegate.successVerification.heartbeatReceived')}</Text>
           <Icon size={10} color={Color.GREY_200} name="command-artifact-check" className={css.checkIcon} />
-          <Text font={{ weight: 'bold' }}>{getString('delegate.successVerification.delegateInstalled')}</Text>
+          <Text font={{ weight: 'bold' }}>{getString('cd.getStartedWithCD.delegateInstalled')}</Text>
         </Layout.Horizontal>
         <div className={css.spacing} />
 
@@ -121,13 +121,24 @@ const StepProcessing: FC<StepDelegateData> = props => {
             <Layout.Vertical width={'83%'}>
               <Text className={css.textPadding}>{getString('cd.delegateFailText1')}</Text>
               <Text className={css.textPadding}>{getString('cd.delegateFailText2')}</Text>
-              <Text
-                className={css.textPadding}
-                onClick={() => setTroubleShootVisible(!isTroubleShootVisible)}
-                color={Color.BLUE_700}
-              >
-                {getString('delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot')}
-              </Text>
+              <Layout.Horizontal className={css.textPadding}>
+                <Button
+                  variation={ButtonVariation.SECONDARY}
+                  onClick={() => {
+                    verifyHeartbeat()
+                    setShowError(false)
+                  }}
+                >
+                  {`${getString('retry')} ${getString('connection')}`}
+                </Button>
+                <Button
+                  variation={ButtonVariation.LINK}
+                  padding={{ left: 'small' }}
+                  onClick={() => setTroubleShootVisible(!isTroubleShootVisible)}
+                >
+                  {getString('delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot')}
+                </Button>
+              </Layout.Horizontal>
             </Layout.Vertical>
             <img className={css.buildImg} title={getString('common.getStarted.buildPipeline')} src={delegateErrorURL} />
           </Layout.Horizontal>
@@ -152,7 +163,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
         <div className={css.spacing} />
 
         <Layout.Vertical className={css.success}>
-          <Layout.Horizontal width={'100%'}>
+          <Layout.Horizontal width={'100%'} flex={{ justifyContent: 'center', alignItems: 'center' }}>
             <img
               className={css.buildImg}
               title={getString('common.getStarted.buildPipeline')}
@@ -160,10 +171,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
             />
             <Layout.Vertical width={'83%'}>
               <Text className={css.successPadding} color={Color.GREEN_900}>
-                {getString('cd.delegateSuccess')}
-              </Text>
-              <Text className={css.textPadding} color={Color.GREEN_900}>
-                {getString('cd.pipelineCreation')}
+                {getString('cd.getStartedWithCD.delegateSuccess')}
               </Text>
             </Layout.Vertical>
           </Layout.Horizontal>
@@ -175,7 +183,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
     <Layout.Vertical>
       <Layout.Horizontal>
         <Icon size={16} name="steps-spinner" style={{ marginRight: '12px' }} />
-        <Text font="small">{getString('delegate.successVerification.checkDelegateInstalled')}</Text>
+        <Text font="small">{getString('cd.getStartedWithCD.checkDelegateInstalled')}</Text>
       </Layout.Horizontal>
     </Layout.Vertical>
   )

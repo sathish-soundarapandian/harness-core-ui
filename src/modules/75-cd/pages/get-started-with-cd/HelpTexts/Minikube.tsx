@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { Container, Text } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import CommandWithCopyField from '../DelegateSelectorWizard/CommandWithCopyField'
 import css from '../GetStartedWithCD.module.scss'
 
 export const Minikube = (): JSX.Element => {
@@ -19,23 +19,15 @@ export const Minikube = (): JSX.Element => {
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.miniKube')}
         </Text>
-        <Container background={Color.WHITE} padding={{ left: 'medium', top: 'small', bottom: 'small' }}>
-          <Text className={css.containerItemCss} font={{ variation: FontVariation.SMALL }}>
-            {getString('cd.miniKubeCmd1')}
-          </Text>
-          <Text className={css.containerItemCss} font={{ variation: FontVariation.SMALL }}>
-            {getString('cd.miniKubeCmd2')}
-          </Text>
-          <Text font={{ variation: FontVariation.SMALL }}>{getString('cd.miniKubeCmd3')}</Text>
-        </Container>
+        <CommandWithCopyField label={'cd.miniKubeCmd1'} />
+        <CommandWithCopyField label={'cd.miniKubeCmd2'} />
+        <CommandWithCopyField label={'cd.miniKubeCmd3'} />
       </li>
       <li>
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.clusterVerify')}
         </Text>
-        <Container background={Color.WHITE} padding={{ left: 'medium', top: 'small', bottom: 'small' }}>
-          <Text font={{ variation: FontVariation.SMALL }}>{getString('cd.miniKubeCmd4')}</Text>
-        </Container>
+        <CommandWithCopyField label={'cd.miniKubeCmd4'} />
       </li>
     </ol>
   )
