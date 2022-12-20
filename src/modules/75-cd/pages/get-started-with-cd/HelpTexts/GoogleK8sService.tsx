@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { Container, Text } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import CommandWithCopyField from '../DelegateSelectorWizard/CommandWithCopyField'
 import css from '../GetStartedWithCD.module.scss'
 
 export const GoogleK8sService = (): JSX.Element => {
@@ -22,31 +22,22 @@ export const GoogleK8sService = (): JSX.Element => {
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.kubectl')}
         </Text>
-        <Container background={Color.WHITE} padding={{ left: 'medium', top: 'small', bottom: 'small' }}>
-          <Text font={{ variation: FontVariation.SMALL }}>{getString('cd.kubectlCommand')}</Text>
-        </Container>
+
+        <CommandWithCopyField label={'cd.kubectlCommand'} />
       </li>
       <li>
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.oauthPlugin')}
         </Text>
-        <Container background={Color.WHITE} padding={{ left: 'medium', top: 'small', bottom: 'small' }}>
-          <Text className={css.containerItemCss} font={{ variation: FontVariation.SMALL }}>
-            {getString('cd.oauthPluginCmd')}
-          </Text>
-          <Text font={{ variation: FontVariation.SMALL }}>{getString('cd.pluginVersion')}</Text>
-        </Container>
+        <CommandWithCopyField label={'cd.oauthPluginCmd'} />
+        <CommandWithCopyField label={'cd.pluginVersion'} />
       </li>
       <li>
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.clusterVerify')}
         </Text>
-        <Container background={Color.WHITE} padding={{ left: 'medium', top: 'small', bottom: 'small' }}>
-          <Text className={css.containerItemCss} font={{ variation: FontVariation.SMALL }}>
-            {getString('cd.gcloudClusterCmd')}
-          </Text>
-          <Text font={{ variation: FontVariation.SMALL }}>{getString('cd.kubectlNamespace')}</Text>
-        </Container>
+        <CommandWithCopyField label={'cd.gcloudClusterCmd'} />
+        <CommandWithCopyField label={'cd.kubectlNamespace'} />
       </li>
     </ol>
   )

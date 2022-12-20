@@ -773,6 +773,10 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/get-started`
   ),
+  toCDOnboardingWizard: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/cd-onboarding`
+  ),
   toPipelineStudio: withAccountId(
     ({
       orgIdentifier,

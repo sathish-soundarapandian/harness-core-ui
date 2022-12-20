@@ -11,7 +11,6 @@
   padding-left: 60px !important;
   padding-top: var(--spacing-huge) !important;
   padding-bottom: var(--spacing-medium) !important;
-  background-color: var(--primary-1) !important;
   box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.08), 0px 0.5px 2px rgba(96, 97, 112, 0.16);
 }
 
@@ -20,9 +19,9 @@
   padding-bottom: 56px !important;
 }
 .footer {
-  border-top: 1px solid var(--grey-200);
-  position: absolute;
-  top: 90%;
+  position: fixed;
+  bottom: 0;
+  width: 100% !important;
 }
 
 .artifactTypeCard {
@@ -79,11 +78,33 @@
   width: 818px;
   border-bottom: 1px solid var(--grey-200);
 }
+.borderBottomClass {
+  margin-top: 20px !important;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--grey-200);
+}
 
 .authMethodBtn {
   border: 1px solid var(--grey-100) !important;
   box-sizing: border-box;
   box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
+  margin-right: var(--spacing-4) !important;
+  padding: var(--spacing-large) !important;
+  :global(.bp3-button-text) {
+    flex: none !important;
+  }
+}
+
+.radioButton {
+  :global {
+    .RadioButton--pillChecked {
+      background-color: var(--primary-7) !important;
+    }
+    .RadioButton--asPill {
+      border: 1px solid var(--grey-100) !important;
+      box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
+    }
+  }
 }
 
 .main {
@@ -119,7 +140,11 @@
   width: fit-content;
   margin-bottom: var(--spacing-medium) !important;
 }
-
+.provisioningFailed {
+  width: fit-content !important;
+  background-color: var(--red-50) !important;
+  border-radius: 4px;
+}
 .repositories {
   max-height: 63vh;
   height: fit-content;
@@ -151,14 +176,17 @@
 }
 
 .repositorySearch {
-  [class*='bp3-input'] {
-    height: 42px;
-    width: 675px;
-    border-radius: 6px;
-    padding-left: var(--spacing-xxxlarge) !important;
+  width: 70% !important;
+  div[data-testid='dropdown-button'] {
+    background-color: var(--white) !important;
   }
 }
 
+.dropdownPopover {
+  :global(.bp3-menu) {
+    min-width: 130px !important;
+  }
+}
 .accordionPadding {
   padding-top: var(--spacing-medium);
   padding-bottom: var(--spacing-small);
@@ -214,4 +242,73 @@
   width: fit-content !important;
   background-color: var(--green-50) !important;
   border-radius: 4px;
+}
+.verticalSeparation {
+  border-right: 1px solid var(--grey-200);
+  margin: 0 var(--spacing-4) !important;
+}
+
+.uppercase {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.step-wizard-text {
+  margin-left: 20px !important;
+  max-width: 200px !important;
+  cursor: pointer;
+}
+.delegateOverviewWrapper {
+  padding-right: 10% !important;
+}
+.disable {
+  cursor: not-allowed !important;
+}
+
+.modal-card {
+  max-height: fit-content;
+  min-height: 150px;
+  height: calc(100% - 48px);
+
+  &.bp3-dialog-header {
+    color: var(--grey-700);
+  }
+
+  .modal-content {
+    width: 100%;
+    padding: var(--spacing-large);
+  }
+}
+
+.runPipelineDialog {
+  padding: 0 !important;
+  width: 872px;
+  height: 'fit-content';
+  overflow: 'auto';
+}
+
+.crossIcon {
+  position: absolute;
+  right: var(--spacing-small);
+  top: 12px;
+}
+
+.helpPanelContainer {
+  position: absolute;
+  bottom: var(--spacing-xxlarge);
+  right: var(--spacing-xxlarge);
+  min-width: 400px;
+  height: 560px;
+  z-index: 1;
+}
+
+.buttonWrapper {
+  border: 1px solid var(--grey-100) !important;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
+  margin-right: var(--spacing-small) !important;
+  padding: var(--spacing-large) !important;
+  :global(.bp3-button-text) {
+    flex: none !important;
+  }
 }

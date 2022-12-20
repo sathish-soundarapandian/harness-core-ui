@@ -13,7 +13,7 @@ import {
   Icon,
   Container,
   Formik,
-  FormikForm as Form,
+  FormikForm,
   Accordion,
   FormInput,
   useToaster,
@@ -276,7 +276,7 @@ const SelectInfrastructureRef = (
         {formikProps => {
           formikRef.current = formikProps
           return (
-            <Form>
+            <FormikForm>
               <Container className={css.workloadType}>
                 <CardSelect
                   data={InfrastructureTypes}
@@ -360,7 +360,7 @@ const SelectInfrastructureRef = (
                   />
                 </Accordion>
               ) : null}
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>
