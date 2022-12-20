@@ -459,9 +459,12 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
 
     return {
       artifactPath: getFinalQueryParamValue(
-        getImagePath(
-          artifact?.spec?.artifactPath,
-          get(initialValues, `artifacts.${artifactPath}.spec.artifactPath`, '')
+        getDefaultQueryParam(
+          getValidInitialValuePath(
+            get(artifacts, `${artifactPath}.spec.artifactPath`, ''),
+            artifact?.spec?.artifactPath
+          ),
+          get(initialValues?.artifacts, `${artifactPath}.spec.artifactPath`, '')
         )
       ),
       connectorRef: getFinalQueryParamValue(connectorRefValue),
