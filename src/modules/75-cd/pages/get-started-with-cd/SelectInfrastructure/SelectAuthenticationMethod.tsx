@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, ButtonVariation, Container, FormInput, Icon, Layout, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Container, FormikForm, FormInput, Icon, Layout, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Form, FormikProps } from 'formik'
+import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -182,7 +182,9 @@ const SelectAuthenticationMethodRef = (
     accountId,
     isEditMode: false,
     isGitSyncEnabled: false,
-    afterSuccessHandler
+    afterSuccessHandler,
+    skipGovernanceCheck: true,
+    hideSuccessToast: true
   })
 
   useEffect(() => {
@@ -404,7 +406,7 @@ const SelectAuthenticationMethodRef = (
 
   return (
     <Layout.Vertical width="70%">
-      <Form>
+      <FormikForm>
         <Layout.Vertical>
           <FormInput.Text
             label={getString('name')}
@@ -498,7 +500,7 @@ const SelectAuthenticationMethodRef = (
             </>
           ) : null}
         </Layout.Vertical>
-      </Form>
+      </FormikForm>
     </Layout.Vertical>
   )
 }

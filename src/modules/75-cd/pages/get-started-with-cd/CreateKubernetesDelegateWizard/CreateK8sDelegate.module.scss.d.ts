@@ -17,7 +17,9 @@ declare const styles: {
   readonly checkItemsWrapper: string
   readonly collapseDiv: string
   readonly containerPadding: string
+  readonly copyCommandContainer: string
   readonly createPipelineBtn: string
+  readonly cursor: string
   readonly danger: string
   readonly dangerColor: string
   readonly dangerDialog: string
@@ -48,10 +50,11 @@ declare const styles: {
   readonly success: string
   readonly successDialog: string
   readonly successPadding: string
-  readonly tabs: string
+  readonly tabsContainer: string
   readonly textPadding: string
   readonly titleYamlVerification: string
   readonly troubleShoot: string
+  readonly troubleShootTitle: string
   readonly verificationField: string
   readonly verificationFieldWrapper: string
 }

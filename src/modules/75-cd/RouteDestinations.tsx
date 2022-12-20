@@ -10,7 +10,7 @@ import { Route, useParams, Redirect } from 'react-router-dom'
 import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { RouteWithLayout } from '@common/router'
-import { MinimalLayout } from '@common/layouts'
+import { EmptyLayout, MinimalLayout } from '@common/layouts'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import {
   accountPathProps,
@@ -88,6 +88,7 @@ import manifestSourceBaseFactory from './factory/ManifestSourceFactory/ManifestS
 import { getBannerText } from './utils/renderMessageUtils'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 import GetStartedWithCD from './pages/get-started-with-cd/GetStartedWithCD'
+import CDOnboardingWizard from './pages/get-started-with-cd/CDOnboardingWizard'
 
 RbacFactory.registerResourceCategory(ResourceCategory.GITOPS, {
   icon: 'gitops-blue-circle',
@@ -277,10 +278,20 @@ export default (
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CDSideNavProps}
-      pageName={PAGE_NAME.GetStartedWithCI}
+      pageName={PAGE_NAME.GetStartedWithCD}
       path={routes.toGetStartedWithCD({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+      layout={MinimalLayout}
     >
       <GetStartedWithCD />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      layout={EmptyLayout}
+      licenseRedirectData={licenseRedirectData}
+      path={routes.toCDOnboardingWizard({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+      pageName={PAGE_NAME.CDOnboardingWizard}
+    >
+      <CDOnboardingWizard />
     </RouteWithLayout>
     <RouteWithLayout
       licenseRedirectData={licenseRedirectData}

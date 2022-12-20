@@ -36,7 +36,8 @@ export const contextValues = {
   },
   saveServiceData: jest.fn(),
   saveEnvironmentData: jest.fn(),
-  saveInfrastructureData: jest.fn()
+  saveInfrastructureData: jest.fn(),
+  setSelectedSectionId: jest.fn()
 }
 
 export const services = {
@@ -65,6 +66,27 @@ export const services = {
     ]
   }
 }
+
+export const serviceRefetch = [
+  {
+    service: {
+      identifier: 'svc_1',
+      name: 'Service 1'
+    }
+  },
+  {
+    service: {
+      identifier: 'svc_2',
+      name: 'Service 2'
+    }
+  },
+  {
+    service: {
+      identifier: 'svc_3',
+      name: 'Service 3'
+    }
+  }
+]
 
 export const environments = {
   status: 'SUCCESS',
@@ -129,7 +151,7 @@ export const repos = [
   },
   {
     namespace: 'harness',
-    name: 'adithyaTestRepo'
+    name: 'testRepo'
   },
   {
     namespace: 'harness',
@@ -287,3 +309,49 @@ export const connectionTestResult = jest.fn(() => {
     correlationId: '27c02970-0353-417d-87b3-e0c235f22591'
   })
 })
+
+export const mockFolderList = {
+  status: 'SUCCESS',
+  data: {
+    content: [
+      {
+        accountIdentifier: 'px7xd_BFRCi-pfWPYXVjvw',
+        orgIdentifier: 'default',
+        projectIdentifier: 'asdasd',
+        identifier: 'Sample_Manifest_Onboarding',
+        name: 'Sample Manifest Onboarding',
+        type: 'FOLDER',
+        parentIdentifier: 'Root',
+        path: '/Sample Manifest Onboarding',
+        lastModifiedAt: 1669491070143
+      }
+    ],
+    pageable: {
+      sort: {
+        sorted: false,
+        unsorted: true,
+        empty: true
+      },
+      pageSize: 50,
+      pageNumber: 0,
+      offset: 0,
+      paged: true,
+      unpaged: false
+    },
+    last: true,
+    totalPages: 1,
+    totalElements: 1,
+    sort: {
+      sorted: false,
+      unsorted: true,
+      empty: true
+    },
+    number: 0,
+    first: true,
+    numberOfElements: 1,
+    size: 50,
+    empty: false
+  },
+  metaData: null,
+  correlationId: 'be482c92-d488-49cb-a27e-ba375fe7f6f6'
+}

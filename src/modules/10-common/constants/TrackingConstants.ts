@@ -270,15 +270,22 @@ export enum CIOnboardingActions {
 }
 
 export enum CDOnboardingActions {
-  delegateInstallWizardStart = 'delegate_install wizard_start',
-  delegateInstallWizardEnd = 'delegate_install wizard_end',
-  StartOnboardingDelegateCreation = 'Start Onboarding Delegate Creation',
-  SetupOnboardingDelegate = 'Setup Onboarding Delegate',
-  SaveCreateOnboardingDelegate = 'Save Create Onboarding Delegate',
-  BackOnboardingDelgateCreation = 'Back Onboarding Delegate Creation',
-  DownloadOnboardingYAML = 'Download Onboarding YAML File',
-  HeartbeatVerifiedOnboardingYAML = 'HeartBeat Verified Onboarding YAML',
-  HeartBeatFailedOnboardingYAML = 'HeartBeat Failed Onboarding YAML'
+  GetStartedClicked = 'Clicked on Get Started for CD',
+  StartOnboardingDelegateCreation = 'Start onboarding Delegate creation',
+  SetupOnboardingDelegate = 'Setup onboarding Delegate',
+  SaveCreateOnboardingDelegate = 'Save create onboarding Delegate',
+  DownloadOnboardingYAML = 'Download onboarding YAML File',
+  HeartbeatVerifiedOnboardingYAML = 'Heartbeat verified onboarding YAML',
+  HeartbeatFailedOnboardingYAML = 'Heartbeat failed onboarding YAML',
+  EnvironmentEntitiesCreation = 'Harness environment entities created',
+  SelectManifestType = 'Manifest type selection',
+  SelectManifestStore = 'Manifest store selection',
+  SelectArtifactType = 'Select artifact type',
+  MovetoConfigureEnvironment = 'Move to Configure Environment Step',
+  SelectDeploymentType = 'Select deployment type',
+  MoveToServiceSelection = 'Move to Service Selection Step',
+  MoveToDeploymentSelection = 'Move to Deployment type',
+  MoveToPipelineSummary = 'Move to Pipeline summary page '
 }
 
 export enum CFOverviewActions {
