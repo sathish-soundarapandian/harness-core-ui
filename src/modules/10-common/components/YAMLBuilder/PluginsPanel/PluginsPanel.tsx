@@ -37,7 +37,7 @@ export interface PluginAddUpdateMetadata {
 
 interface PluginsPanelInterface {
   existingPluginValues?: Record<string, any>
-  onPluginAddUpdate: (pluginMetadata: PluginAddUpdateMetadata, isEdit?: boolean) => void
+  onPluginAddUpdate: (pluginMetadata: PluginAddUpdateMetadata, isEdit: boolean) => void
   onPluginDiscard: () => void
   height?: React.CSSProperties['height']
   shouldEnableFormView?: boolean
@@ -49,7 +49,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   const [selectedPlugin, setSelectedPlugin] = useState<PluginMetadataResponse | undefined>()
   const [plugins, setPlugins] = useState<PluginMetadataResponse[]>([])
   const [query, setQuery] = useState<string>()
-  const isPluginUpdateaAction = !isEmpty(existingPluginValues)
+  const isPluginUpdateAction = !isEmpty(existingPluginValues)
 
   const defaultQueryParams = { pageIndex: 0, pageSize: 200 }
   const { data, loading, error, refetch } = useListPlugins({ queryParams: defaultQueryParams })
@@ -210,7 +210,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                   <Container className={css.form}>
                     <Formik
                       initialValues={
-                        isPluginUpdateaAction
+                        isPluginUpdateAction
                           ? existingPluginValues
                           : formFields
                           ? generateFormikInitialValues(formFields)
@@ -222,7 +222,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                         try {
                           onPluginAddUpdate(
                             { pluginName, pluginData: data, shouldInsertYAML: true } as PluginAddUpdateMetadata,
-                            isPluginUpdateaAction
+                            isPluginUpdateAction
                           )
                         } catch (e) {
                           //ignore error
@@ -240,7 +240,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                               <Container className={css.pluginFields}>{renderPluginForm()}</Container>
                               <Layout.Horizontal flex spacing="xlarge">
                                 <Button type="submit" variation={ButtonVariation.PRIMARY}>
-                                  {isPluginUpdateaAction ? getString('update') : getString('add')}
+                                  {isPluginUpdateAction ? getString('update') : getString('add')}
                                 </Button>
                                 {pluginDocumentationLink ? (
                                   <a href={pluginDocumentationLink} target="_blank" rel="noopener noreferrer">

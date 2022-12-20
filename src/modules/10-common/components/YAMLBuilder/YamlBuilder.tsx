@@ -174,7 +174,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
   const [schemaValidationErrors, setSchemaValidationErrors] = useState<Diagnostic[]>()
   const currentCursorPosition = useRef<Position>()
-  const codeLensPositionMarkers = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
+  const codeLensRegistrations = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
   const [pluginValuesSelected, setPluginValuesSelected] = useState<Record<string, any>>()
 
   let expressionCompletionDisposer: { dispose: () => void }
@@ -817,6 +817,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         () => {
           const numberOfLinesInSelection = getSelectionRangeOnSettingsBtnClick(cursorPosition, currentYaml)
           if (numberOfLinesInSelection) {
+            currentCursorPosition.current = cursorPosition
             highlightInsertedText(fromLine, toLineNum + numberOfLinesInSelection + 1)
           }
         },
@@ -892,28 +893,71 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [editorRef.current?.editor]
   )
 
+  const getClosestStepIndex = useCallback(
+    (cursorPosition: Position, precedingStepsCount: number, stepsCountForClosestIndex: number): number => {
+      let closestStepIndex = -1
+      if (precedingStepsCount > 0) {
+        closestStepIndex = getClosestIndexToSearchToken(
+          cursorPosition,
+          'step:',
+          precedingStepsCount,
+          precedingStepsCount + stepsCountForClosestIndex
+        )
+      } else {
+        closestStepIndex = getClosestIndexToSearchToken(cursorPosition, 'step:', 0, stepsCountForClosestIndex)
+      }
+      return closestStepIndex === -1 ? 0 : closestStepIndex
+    },
+    []
+  )
+
   const detectYAMLInsertion = useCallback(
-    (noOflinesInserted: number, closestStageIndexForYAMLInsertion): void => {
+    ({
+      noOflinesInserted,
+      closestStageIndex,
+      isPluginUpdate,
+      closestStepIndex
+    }: {
+      noOflinesInserted: number
+      closestStageIndex: number
+      isPluginUpdate: boolean
+      closestStepIndex: number
+    }): void => {
       const editor = editorRef.current?.editor
-      if (editor && currentCursorPosition.current) {
-        const position =
-          findPositionsForMatchingKeys(editor, 'steps')[closestStageIndexForYAMLInsertion] || ({} as Position)
-        const endingLineForCursorPosition = position.lineNumber + (noOflinesInserted ? noOflinesInserted : 0)
-        const contentInStartingLine = editor.getModel()?.getLineContent(position.lineNumber)?.trim() || ''
-        const contentInEndingLine = editor.getModel()?.getLineContent(endingLineForCursorPosition) || ''
-        const startingLineNum = position.lineNumber + (contentInStartingLine ? 1 : 0)
-        const endingLineNum = contentInStartingLine ? endingLineForCursorPosition + 1 : endingLineForCursorPosition
+      if (editor) {
+        let position: Position
+        if (isPluginUpdate) {
+          position = findPositionsForMatchingKeys(editor, 'step:')[closestStepIndex] || ({} as Position)
+          const { lineNumber: startingLineNum } = position
+          const endingLineNum = startingLineNum + noOflinesInserted > 0 ? startingLineNum + noOflinesInserted - 1 : 0
+          const contentInEndingLine = editor.getModel()?.getLineContent(endingLineNum) || ''
 
-        // highlight the inserted text
-        highlightInsertedText(startingLineNum, endingLineNum)
+          // highlight the inserted text
+          highlightInsertedText(startingLineNum, endingLineNum + 1)
 
-        // Scroll to the end of the inserted text
-        editor.setPosition({ column: contentInEndingLine.length + 1, lineNumber: endingLineForCursorPosition })
-        editor.revealLineInCenter(endingLineForCursorPosition)
-        editor.focus()
+          // Scroll to the end of the inserted text
+          editor.setPosition({ column: contentInEndingLine.length + 1, lineNumber: endingLineNum })
+          editor.revealLineInCenter(endingLineNum)
+          editor.focus()
+        } else {
+          position = findPositionsForMatchingKeys(editor, 'steps')[closestStageIndex] || ({} as Position)
+          const endingLineForCursorPosition = position.lineNumber + noOflinesInserted
+          const contentInStartingLine = editor.getModel()?.getLineContent(position.lineNumber)?.trim() || ''
+          const contentInEndingLine = editor.getModel()?.getLineContent(endingLineForCursorPosition) || ''
+          const startingLineNum = position.lineNumber + (contentInStartingLine ? 1 : 0)
+          const endingLineNum = contentInStartingLine ? endingLineForCursorPosition + 1 : endingLineForCursorPosition
+
+          // highlight the inserted text
+          highlightInsertedText(startingLineNum, endingLineNum)
+
+          // Scroll to the end of the inserted text
+          editor.setPosition({ column: contentInEndingLine.length + 1, lineNumber: endingLineForCursorPosition })
+          editor.revealLineInCenter(endingLineForCursorPosition)
+          editor.focus()
+        }
       }
     },
-    [currentCursorPosition.current, editorRef.current?.editor]
+    [editorRef.current?.editor]
   )
 
   const getSelectionRangeOnSettingsBtnClick = useCallback((cursorPosition: Position, latestYAML: string): number => {
@@ -971,21 +1015,21 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       if (matchingPositions.length) {
         matchingPositions.map((matchingPosition: Position) => {
           const { lineNumber } = matchingPosition
-          if (codeLensPositionMarkers.current.has(lineNumber)) {
-            const existingRegistrationId = codeLensPositionMarkers.current.get(lineNumber)
+          if (codeLensRegistrations.current.has(lineNumber)) {
+            const existingRegistrationId = codeLensRegistrations.current.get(lineNumber)
             try {
               existingRegistrationId?.dispose()
             } catch (ex) {
               //ignore excetion
             }
-            codeLensPositionMarkers.current.delete(lineNumber)
+            codeLensRegistrations.current.delete(lineNumber)
           }
           const registrationId = addCodeLensRegistration({
             fromLine: lineNumber,
             toLineNum: lineNumber,
             cursorPosition: matchingPosition
           })
-          codeLensPositionMarkers.current.set(lineNumber, registrationId)
+          codeLensRegistrations.current.set(lineNumber, registrationId)
         })
       }
     }
@@ -1010,23 +1054,46 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const wrapPlugInputInAStep = useCallback(
     (pluginName: string, pluginInput: Record<string, any>): Record<string, any> => {
-      return { step: { name: pluginName, spec: pluginInput } }
+      return {
+        //TODO @vardan - confirm step name, identifier and type with Backend
+        step: { name: pluginName, identifier: pluginName.split(' ').join('_'), type: 'Plugin', spec: pluginInput }
+      }
     },
     []
   )
 
   const addupdatePluginIntoExistingYAML = useCallback(
-    (pluginMetadata: PluginAddUpdateMetadata, isPluginEdit?: boolean): void => {
+    (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean): void => {
       const { pluginData, pluginName, shouldInsertYAML } = pluginMetadata
-      if (!isEmpty(pluginData) && shouldInsertYAML && currentCursorPosition.current) {
+      const cursorPosition = currentCursorPosition.current
+      if (!isEmpty(pluginData) && shouldInsertYAML && cursorPosition) {
         try {
-          const closestStageIndex = getClosestIndexToSearchToken(currentCursorPosition.current, 'stage:')
+          let closestStepIndex: number = 0
+          const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
           const yamlStepToBeInsertedAt = getStageYAMLPathForStageIndex(closestStageIndex)
           const currentPipelineJSON = parse(currentYaml)
           const existingSteps = findAllValuesForJSONPath(currentPipelineJSON, yamlStepToBeInsertedAt) as unknown[]
           let updatedSteps = existingSteps.slice(0) as unknown[]
           const finalStepToInsert = wrapPlugInputInAStep(pluginName, pluginData)
-          if (isPluginEdit) {
+          if (isPluginUpdate) {
+            const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
+            const stageStepsForTheClosestIndex = findAllValuesForJSONPath(
+              currentPipelineJSON,
+              getStageYAMLPathForStageIndex(closestStageIndex)
+            ) as unknown[]
+            const stageStepsForThePrecedingIndex =
+              closestStageIndex > 0
+                ? (findAllValuesForJSONPath(
+                    currentPipelineJSON,
+                    getStageYAMLPathForStageIndex(closestStageIndex - 1)
+                  ) as unknown[])
+                : []
+            closestStepIndex = getClosestStepIndex(
+              cursorPosition,
+              stageStepsForThePrecedingIndex.length,
+              stageStepsForTheClosestIndex.length
+            )
+            updatedSteps[closestStepIndex] = finalStepToInsert
           } else {
             if (Array.isArray(existingSteps) && existingSteps.length > 0) {
               updatedSteps.unshift(finalStepToInsert)
@@ -1036,8 +1103,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           }
           const updatedPipelineJSON = set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps)
           setCurrentYaml(yamlStringify(updatedPipelineJSON))
-          const totalKeysInserted = countAllKeys(finalStepToInsert)
-          detectYAMLInsertion(totalKeysInserted, closestStageIndex)
+          detectYAMLInsertion({
+            noOflinesInserted: countAllKeys(finalStepToInsert),
+            closestStageIndex,
+            isPluginUpdate,
+            closestStepIndex
+          })
         } catch (e) {
           // ignore error
         }
