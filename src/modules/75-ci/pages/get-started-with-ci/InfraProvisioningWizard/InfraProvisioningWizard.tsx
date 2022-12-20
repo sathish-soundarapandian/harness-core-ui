@@ -112,7 +112,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
 
   useEffect(() => {
     setConfiguredGitConnector(selectGitProviderRef.current?.validatedConnector)
-  }, [selectGitProviderRef.current])
+  }, [selectGitProviderRef.current?.validatedConnector])
 
   useEffect(() => {
     setConfiguredGitConnector(preSelectedGitConnector)

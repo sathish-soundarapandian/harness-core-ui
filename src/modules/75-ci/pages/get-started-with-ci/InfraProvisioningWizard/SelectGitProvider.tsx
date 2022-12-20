@@ -291,7 +291,7 @@ const SelectGitProviderRef = (
         disableNextBtn()
       }
     }
-  }, [authMethod, disableNextBtn, enableNextBtn, gitProvider?.type, oAuthStatus, testConnectionStatus])
+  }, [authMethod, gitProvider?.type, oAuthStatus, testConnectionStatus])
 
   const setForwardRef = ({
     values,
