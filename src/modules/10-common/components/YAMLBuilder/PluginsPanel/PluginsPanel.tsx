@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { capitalize, isEmpty } from 'lodash-es'
+import { capitalize, get, isEmpty } from 'lodash-es'
 import { Classes, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import { Input, PluginMetadataResponse, useListPlugins } from 'services/ci'
 import {
@@ -36,7 +36,7 @@ export interface PluginAddUpdateMetadata {
 }
 
 interface PluginsPanelInterface {
-  existingPluginValues?: Record<string, any>
+  selectedPluginFromYAMLView?: Record<string, any>
   onPluginAddUpdate: (pluginMetadata: PluginAddUpdateMetadata, isEdit: boolean) => void
   onPluginDiscard: () => void
   height?: React.CSSProperties['height']
@@ -44,15 +44,24 @@ interface PluginsPanelInterface {
 }
 
 export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
-  const { height, onPluginAddUpdate, onPluginDiscard, existingPluginValues = {} } = props
+  const { height, onPluginAddUpdate, onPluginDiscard, selectedPluginFromYAMLView = {} } = props
   const { getString } = useStrings()
-  const [selectedPlugin, setSelectedPlugin] = useState<PluginMetadataResponse | undefined>()
+  const [plugin, setPlugin] = useState<PluginMetadataResponse | undefined>()
   const [plugins, setPlugins] = useState<PluginMetadataResponse[]>([])
   const [query, setQuery] = useState<string>()
-  const isPluginUpdateAction = !isEmpty(existingPluginValues)
+  const isPluginUpdateAction = !isEmpty(selectedPluginFromYAMLView)
 
   const defaultQueryParams = { pageIndex: 0, pageSize: 200 }
   const { data, loading, error, refetch } = useListPlugins({ queryParams: defaultQueryParams })
+
+  useEffect(() => {
+    if (!isEmpty(selectedPluginFromYAMLView)) {
+      setQuery(get(selectedPluginFromYAMLView, 'name'))
+      if (plugin) {
+        onBackArrowClick()
+      }
+    }
+  }, [selectedPluginFromYAMLView, plugin])
 
   useEffect(() => {
     refetch({ queryParams: { ...defaultQueryParams, searchTerm: query } })
@@ -72,7 +81,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
         className={css.plugin}
         width="100%"
         flex={{ justifyContent: 'space-between' }}
-        onClick={() => setSelectedPlugin(plugin)}
+        onClick={() => setPlugin(plugin)}
       >
         <Layout.Horizontal style={{ flex: 2 }}>
           <Layout.Horizontal width="100%">
@@ -93,7 +102,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   }, [])
 
   const renderPluginForm = useCallback((): JSX.Element => {
-    const { inputs = [] } = selectedPlugin || {}
+    const { inputs = [] } = plugin || {}
     return (
       <Layout.Vertical height="100%">
         {inputs.map((input: Input) => {
@@ -131,7 +140,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
         })}
       </Layout.Vertical>
     )
-  }, [selectedPlugin])
+  }, [plugin])
 
   const renderPluginsPanel = useCallback((): JSX.Element => {
     if (loading) {
@@ -165,12 +174,17 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     return <></>
   }, [loading, plugins, error, query])
 
-  const { name: pluginName, repo: pluginDocumentationLink, inputs: formFields } = selectedPlugin || {}
+  const { name: pluginName, repo: pluginDocumentationLink, inputs: formFields } = plugin || {}
 
   const generateFormikInitialValues = (inputs: Input[]): Record<string, any> => {
     const result = new Map(inputs.map(i => [i.name, i.default]))
     return Object.fromEntries(result)
   }
+
+  const onBackArrowClick = useCallback((): void => {
+    setPlugin(undefined)
+    onPluginDiscard()
+  }, [])
 
   return (
     <Container className={css.tabs}>
@@ -197,21 +211,14 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                   flex={{ alignItems: 'baseline', justifyContent: 'flex-start' }}
                 >
                   <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small">
-                    <Icon
-                      name="arrow-left"
-                      onClick={() => {
-                        setSelectedPlugin(undefined)
-                        onPluginDiscard()
-                      }}
-                      className={css.backBtn}
-                    />
+                    <Icon name="arrow-left" onClick={onBackArrowClick} className={css.backBtn} />
                     <Text font={{ variation: FontVariation.H5 }}>{pluginName}</Text>
                   </Layout.Horizontal>
                   <Container className={css.form}>
                     <Formik
                       initialValues={
                         isPluginUpdateAction
-                          ? existingPluginValues
+                          ? get(selectedPluginFromYAMLView, 'spec')
                           : formFields
                           ? generateFormikInitialValues(formFields)
                           : {}

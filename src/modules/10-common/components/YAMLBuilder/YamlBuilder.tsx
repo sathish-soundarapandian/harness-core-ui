@@ -175,7 +175,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const [schemaValidationErrors, setSchemaValidationErrors] = useState<Diagnostic[]>()
   const currentCursorPosition = useRef<Position>()
   const codeLensRegistrations = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
-  const [pluginValuesSelected, setPluginValuesSelected] = useState<Record<string, any>>()
+  const [selectedPlugin, setSelectedPlugin] = useState<Record<string, any>>()
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -1001,9 +1001,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           return 0
         }
         const stepYAMLPath = `${getStageYAMLPathForStageIndex(closestStageIndex)}.${closestStepIndex}.step`
-        const stepValuesObj = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
-        setPluginValuesSelected(get(stepValuesObj, 'spec'))
-        const stepValueTokens = yamlStringify(stepValuesObj).split('\n').length
+        const pluginAsStep = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
+        setSelectedPlugin(pluginAsStep)
+        const stepValueTokens = yamlStringify(pluginAsStep).split('\n').length
         return stepValueTokens > 0 ? stepValueTokens - 1 : 0
       } catch (e) {
         // ignore error
@@ -1145,8 +1145,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         <PluginsPanel
           height={dynamicHeight}
           onPluginAddUpdate={addupdatePluginIntoExistingYAML}
-          onPluginDiscard={() => setPluginValuesSelected(undefined)}
-          existingPluginValues={pluginValuesSelected}
+          onPluginDiscard={() => setSelectedPlugin(undefined)}
+          selectedPluginFromYAMLView={selectedPlugin}
         />
       ) : null}
     </Layout.Horizontal>
