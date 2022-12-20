@@ -916,18 +916,22 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       noOflinesInserted,
       closestStageIndex,
       isPluginUpdate,
-      closestStepIndex
+      closestStepIndex,
+      startStepIndex
     }: {
       noOflinesInserted: number
       closestStageIndex: number
       isPluginUpdate: boolean
       closestStepIndex: number
+      startStepIndex: number
     }): void => {
       const editor = editorRef.current?.editor
       if (editor) {
         let position: Position
         if (isPluginUpdate) {
-          position = findPositionsForMatchingKeys(editor, 'step:')[closestStepIndex] || ({} as Position)
+          const allMatches = findPositionsForMatchingKeys(editor, 'step:') || []
+          const allMatchesInClosestStageIndex = allMatches.slice(startStepIndex)
+          position = allMatchesInClosestStageIndex[closestStepIndex]
           const { lineNumber: startingLineNum } = position
           const endingLineNum = startingLineNum + noOflinesInserted > 0 ? startingLineNum + noOflinesInserted - 1 : 0
           const contentInEndingLine = editor.getModel()?.getLineContent(endingLineNum) || ''
@@ -940,7 +944,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           editor.revealLineInCenter(endingLineNum)
           editor.focus()
         } else {
-          position = findPositionsForMatchingKeys(editor, 'steps')[closestStageIndex] || ({} as Position)
+          position = findPositionsForMatchingKeys(editor, 'steps')[closestStageIndex]
           const endingLineForCursorPosition = position.lineNumber + noOflinesInserted
           const contentInStartingLine = editor.getModel()?.getLineContent(position.lineNumber)?.trim() || ''
           const contentInEndingLine = editor.getModel()?.getLineContent(endingLineForCursorPosition) || ''
@@ -1075,19 +1079,19 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const existingSteps = findAllValuesForJSONPath(currentPipelineJSON, yamlStepToBeInsertedAt) as unknown[]
           let updatedSteps = existingSteps.slice(0) as unknown[]
           const finalStepToInsert = wrapPlugInputInAStep(pluginName, pluginData)
+          const stageStepsForThePrecedingIndex =
+            closestStageIndex > 0
+              ? (findAllValuesForJSONPath(
+                  currentPipelineJSON,
+                  getStageYAMLPathForStageIndex(closestStageIndex - 1)
+                ) as unknown[])
+              : []
           if (isPluginUpdate) {
             const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
             const stageStepsForTheClosestIndex = findAllValuesForJSONPath(
               currentPipelineJSON,
               getStageYAMLPathForStageIndex(closestStageIndex)
             ) as unknown[]
-            const stageStepsForThePrecedingIndex =
-              closestStageIndex > 0
-                ? (findAllValuesForJSONPath(
-                    currentPipelineJSON,
-                    getStageYAMLPathForStageIndex(closestStageIndex - 1)
-                  ) as unknown[])
-                : []
             closestStepIndex = getClosestStepIndex(
               cursorPosition,
               stageStepsForThePrecedingIndex.length,
@@ -1107,7 +1111,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             noOflinesInserted: countAllKeys(finalStepToInsert),
             closestStageIndex,
             isPluginUpdate,
-            closestStepIndex
+            closestStepIndex,
+            startStepIndex: stageStepsForThePrecedingIndex.length
           })
         } catch (e) {
           // ignore error
