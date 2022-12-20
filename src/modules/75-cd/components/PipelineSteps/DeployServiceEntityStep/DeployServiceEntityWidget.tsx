@@ -95,6 +95,7 @@ const DIALOG_PROPS: Omit<IDialogProps, 'isOpen'> = {
 function getInitialValues(data: DeployServiceEntityData): FormState {
   if (data.service && data.service.serviceRef) {
     return {
+      category: 'single',
       service: data.service.serviceRef,
       serviceInputs:
         getMultiTypeFromValue(data.service.serviceRef) === MultiTypeInputType.FIXED
@@ -112,14 +113,16 @@ function getInitialValues(data: DeployServiceEntityData): FormState {
           (p, c) => ({ ...p, [defaultTo(c.serviceRef, '')]: c.serviceInputs }),
           {}
         ),
-        parallel: !!get(data, 'services.metadata.parallel', true)
+        parallel: !!get(data, 'services.metadata.parallel', true),
+        category: 'multi'
       }
     }
 
     return {
       services: data.services.values,
       serviceInputs: {},
-      parallel: !!get(data, 'services.metadata.parallel', true)
+      parallel: !!get(data, 'services.metadata.parallel', true),
+      category: 'multi'
     }
   }
 
@@ -224,6 +227,7 @@ export default function DeployServiceEntityWidget({
           setValues({
             ...values,
             ...serviceOrServices,
+            category: 'single',
             // if service input is not found, add it, else use the existing one
             serviceInputs: {
               [serviceOrServices.service]: get(
@@ -256,7 +260,7 @@ export default function DeployServiceEntityWidget({
             { services: [], serviceInputs: {}, parallel: values.parallel }
           )
 
-          setValues(updatedServices)
+          setValues({ ...updatedServices, category: 'multi' })
         }
       }
     },
@@ -406,6 +410,7 @@ export default function DeployServiceEntityWidget({
       const newValues = produce(formikRef.current.values, draft => {
         draft.services = singleSvc ? [{ label: singleSvc.name, value: singleSvc.identifier }] : []
         delete draft.service
+        draft.category = 'multi'
       })
       updateValuesInFomikAndPropogate(newValues)
     }
@@ -418,6 +423,7 @@ export default function DeployServiceEntityWidget({
     if (formikRef.current && confirmed) {
       const newValues = produce(formikRef.current.values, draft => {
         draft.service = ''
+        draft.category = 'single'
         delete draft.services
       })
       updateValuesInFomikAndPropogate(newValues)
@@ -476,7 +482,7 @@ export default function DeployServiceEntityWidget({
           formikRef.current = formik
           const { values } = formik
 
-          const isMultiSvc = !isNil(values.services)
+          const isMultiSvc = values.category === 'multi'
           const isFixed = isMultiSvc ? Array.isArray(values.services) : serviceInputType === MultiTypeInputType.FIXED
           let placeHolderForServices =
             Array.isArray(values.services) && values.services

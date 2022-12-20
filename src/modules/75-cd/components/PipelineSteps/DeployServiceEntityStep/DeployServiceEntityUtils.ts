@@ -47,6 +47,8 @@ export interface FormState {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   serviceInputs?: Record<string, any>
   parallel?: boolean
+  /** category is required to handle runtime input to fixed changes */
+  category?: 'single' | 'multi'
 }
 
 export interface DeployServiceEntityCustomProps {
