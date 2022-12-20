@@ -17,9 +17,9 @@ import {
   Layout,
   MultiTypeInputType,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Formik, FormikProps } from 'formik'
-import { Color } from '@wings-software/design-system'
+import { Color } from '@harness/design-system'
 import { useToaster } from '@common/components'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -72,7 +72,7 @@ export function VariablesInputModal({
       orgIdentifier: template.orgIdentifier,
       projectIdentifier: template.projectIdentifier,
       versionLabel: defaultTo(template.versionLabel, ''),
-      ...getGitQueryParamsWithParentScope(storeMetadata, params, repoIdentifier, branch)
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch })
     }
   })
 

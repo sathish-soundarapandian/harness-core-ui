@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { noop } from 'lodash-es'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import TemplateVariablesCard, {
   TemplateVariablesCardProps

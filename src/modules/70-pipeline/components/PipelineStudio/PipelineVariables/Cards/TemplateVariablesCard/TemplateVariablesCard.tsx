@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { Card, AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
+import { Card, AllowedTypes, NestedAccordionPanel, Text } from '@harness/uicore'
 import cx from 'classnames'
-import { Color, FontVariation } from '@wings-software/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import type { NGVariable } from 'services/pipeline-ng'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
