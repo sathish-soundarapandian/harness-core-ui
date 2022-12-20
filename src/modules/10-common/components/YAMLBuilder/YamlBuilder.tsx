@@ -893,18 +893,18 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [editorRef.current?.editor]
   )
 
-  const getClosestStepIndex = useCallback(
-    (cursorPosition: Position, precedingStepsCount: number, stepsCountForClosestIndex: number): number => {
+  const getClosestStepIndexInCurrentStage = useCallback(
+    (cursorPosition: Position, precedingStageStepsCount: number, currentStageStepsCount: number): number => {
       let closestStepIndex = -1
-      if (precedingStepsCount > 0) {
+      if (precedingStageStepsCount > 0) {
         closestStepIndex = getClosestIndexToSearchToken(
           cursorPosition,
           'step:',
-          precedingStepsCount,
-          precedingStepsCount + stepsCountForClosestIndex
+          precedingStageStepsCount,
+          precedingStageStepsCount + currentStageStepsCount
         )
       } else {
-        closestStepIndex = getClosestIndexToSearchToken(cursorPosition, 'step:', 0, stepsCountForClosestIndex)
+        closestStepIndex = getClosestIndexToSearchToken(cursorPosition, 'step:', 0, currentStageStepsCount)
       }
       return closestStepIndex === -1 ? 0 : closestStepIndex
     },
@@ -1072,47 +1072,48 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const cursorPosition = currentCursorPosition.current
       if (!isEmpty(pluginData) && shouldInsertYAML && cursorPosition) {
         try {
-          let closestStepIndex: number = 0
           const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
           const yamlStepToBeInsertedAt = getStageYAMLPathForStageIndex(closestStageIndex)
           const currentPipelineJSON = parse(currentYaml)
           const existingSteps = findAllValuesForJSONPath(currentPipelineJSON, yamlStepToBeInsertedAt) as unknown[]
           let updatedSteps = existingSteps.slice(0) as unknown[]
-          const finalStepToInsert = wrapPlugInputInAStep(pluginName, pluginData)
-          const stageStepsForThePrecedingIndex =
+          const pluginValuesAsStep = wrapPlugInputInAStep(pluginName, pluginData)
+          const stepCountInPrecedingStage = (
             closestStageIndex > 0
               ? (findAllValuesForJSONPath(
                   currentPipelineJSON,
                   getStageYAMLPathForStageIndex(closestStageIndex - 1)
                 ) as unknown[])
               : []
+          ).length
+          let closestStepIndexInCurrentStage: number = 0
           if (isPluginUpdate) {
-            const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
-            const stageStepsForTheClosestIndex = findAllValuesForJSONPath(
+            const currentStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
+            const stepsInCurrentStage = findAllValuesForJSONPath(
               currentPipelineJSON,
-              getStageYAMLPathForStageIndex(closestStageIndex)
+              getStageYAMLPathForStageIndex(currentStageIndex)
             ) as unknown[]
-            closestStepIndex = getClosestStepIndex(
+            closestStepIndexInCurrentStage = getClosestStepIndexInCurrentStage(
               cursorPosition,
-              stageStepsForThePrecedingIndex.length,
-              stageStepsForTheClosestIndex.length
+              stepCountInPrecedingStage,
+              stepsInCurrentStage.length
             )
-            updatedSteps[closestStepIndex] = finalStepToInsert
+            updatedSteps[closestStepIndexInCurrentStage] = pluginValuesAsStep
           } else {
             if (Array.isArray(existingSteps) && existingSteps.length > 0) {
-              updatedSteps.unshift(finalStepToInsert)
+              updatedSteps.unshift(pluginValuesAsStep)
             } else {
-              updatedSteps = [finalStepToInsert]
+              updatedSteps = [pluginValuesAsStep]
             }
           }
           const updatedPipelineJSON = set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps)
           setCurrentYaml(yamlStringify(updatedPipelineJSON))
           detectYAMLInsertion({
-            noOflinesInserted: countAllKeys(finalStepToInsert),
+            noOflinesInserted: countAllKeys(pluginValuesAsStep),
             closestStageIndex,
             isPluginUpdate,
-            closestStepIndex,
-            startStepIndex: stageStepsForThePrecedingIndex.length
+            closestStepIndex: closestStepIndexInCurrentStage,
+            startStepIndex: stepCountInPrecedingStage
           })
         } catch (e) {
           // ignore error
