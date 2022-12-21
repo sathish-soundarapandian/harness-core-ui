@@ -6,10 +6,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Color, FontVariation } from '@harness/design-system'
-import { Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
+import { Text } from '@harness/uicore'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
-import React, { ReactNode } from 'react'
+import React from 'react'
 import moment from 'moment'
 import type { ActiveServiceDTO } from 'services/cd-ng'
 

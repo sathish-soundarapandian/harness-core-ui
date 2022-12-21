@@ -8,7 +8,7 @@
 import React from 'react'
 import type { Column } from 'react-table'
 import cx from 'classnames'
-import { Text, TableV2, Layout, Card, Heading } from '@harness/uicore'
+import { Text, TableV2, Layout, Card, Heading, NoDataCard } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
 import { String, useStrings } from 'framework/strings'
@@ -162,7 +162,7 @@ export function ServiceLicenseTable({
           />
         ) : (
           <NoDataCard
-            message={getString('noActiveServiceData')}
+            message={getString('common.noActiveServiceData')}
             className={pageCss.noDataCard}
             containerClassName={pageCss.noDataCardContainer}
           />
