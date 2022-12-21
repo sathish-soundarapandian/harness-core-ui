@@ -33,7 +33,7 @@ import css from './SettingsList.module.scss'
 const SettingsList = () => {
   const { getString } = useStrings()
   const [hasRBACViewPermission] = usePermission({
-    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    permissions: [PermissionIdentifier.VIEW_ACCOUNT],
     resource: {
       resourceType: ResourceType.SETTING
     }
@@ -175,7 +175,7 @@ const SettingsList = () => {
           }}
         </Formik>
       ) : (
-        <RBACTooltip permission={PermissionIdentifier.VIEW_CORE_SETTING} resourceType={ResourceType.SETTING} />
+        <RBACTooltip permission={PermissionIdentifier.VIEW_ACCOUNT} resourceType={ResourceType.SETTING} />
       )}
     </>
   )

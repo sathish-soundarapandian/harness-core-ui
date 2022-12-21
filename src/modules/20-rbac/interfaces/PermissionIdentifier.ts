@@ -163,7 +163,6 @@ export enum PermissionIdentifier {
   APPROVE_STO_EXEMPTION = 'sto_exemption_approve',
 
   // Default Settings
-  VIEW_CORE_SETTING = 'core_setting_view',
   EDIT_CORE_SETTING = 'core_setting_edit',
   // CCM Permissions
   VIEW_CCM_OVERVIEW = 'ccm_overview_view',
