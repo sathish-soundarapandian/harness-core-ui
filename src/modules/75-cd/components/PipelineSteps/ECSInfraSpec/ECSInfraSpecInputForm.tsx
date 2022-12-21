@@ -177,7 +177,7 @@ const ECSInfraSpecInputForm = ({
             onChange={selectedConnector => {
               if (
                 (get(formik?.values, connectorFieldName) as ConnectorRefFormValueType).value !==
-                (selectedConnector as unknown as EntityReferenceResponse<ConnectorReferenceDTO>).record.identifier
+                (selectedConnector as unknown as EntityReferenceResponse<ConnectorReferenceDTO>)?.record?.identifier
               ) {
                 resetFieldValue(clusterFieldName, formik)
               }
