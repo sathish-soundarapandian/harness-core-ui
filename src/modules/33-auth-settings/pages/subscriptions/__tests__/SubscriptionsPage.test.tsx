@@ -8,8 +8,8 @@
 import React from 'react'
 import moment from 'moment'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
 import userEvent from '@testing-library/user-event'
+import { TestWrapper } from '@common/utils/testUtils'
 import {
   useGetAccountNG,
   useGetModuleLicensesByAccountAndModuleType,
@@ -20,7 +20,6 @@ import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
 import SubscriptionsPage from '../SubscriptionsPage'
 import activeServices from './mocks/activeServices.json'
-import activeServicesEmpty from './mocks/activeServicesEmpty.json'
 jest.mock('services/cd-ng')
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
