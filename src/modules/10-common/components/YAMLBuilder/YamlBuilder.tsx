@@ -662,13 +662,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             fontSize: 13,
             minimap: {
               enabled: false
-            }
+            },
+            codeLens: codeLensRegistrations.current.size > 0
           } as MonacoEditorProps['options']
         }
         ref={editorRef}
       />
     ),
-    [dynamicWidth, height, currentYaml, onYamlChange]
+    [dynamicWidth, height, currentYaml, onYamlChange, codeLensRegistrations.current]
   )
 
   const throttledOnResize = throttle(() => {
@@ -696,10 +697,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const commandId = editorRef.current?.editor?.addCommand(
         0,
         () => {
-          const numberOfLinesInSelection = getSelectionRangeOnSettingsBtnClick(cursorPosition, currentYaml)
-          if (numberOfLinesInSelection) {
-            currentCursorPosition.current = cursorPosition
-            highlightInsertedYAML(fromLine, toLineNum + numberOfLinesInSelection + 1)
+          try {
+            const numberOfLinesInSelection = getSelectionRangeOnSettingsBtnClick(cursorPosition, currentYaml)
+            if (numberOfLinesInSelection) {
+              currentCursorPosition.current = cursorPosition
+              highlightInsertedYAML(fromLine, toLineNum + numberOfLinesInSelection + 1)
+            }
+          } catch (e) {
+            //ignore error
           }
         },
         ''
@@ -722,7 +727,13 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
                 }
               }
             ],
-            dispose: () => {}
+            dispose: () => {
+              try {
+                registrationId.dispose()
+              } catch (e) {
+                // ignore error
+              }
+            }
           }
         }
       })
@@ -989,7 +1000,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
               updatedSteps = [pluginValuesAsStep]
             }
           }
-          setCurrentYaml(yamlStringify(set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps)))
+          const updatedYAML = yamlStringify(set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps))
+          onYamlChange(updatedYAML)
+          setCurrentYaml(updatedYAML)
           spotLightInsertedYAML({
             noOflinesInserted: countAllKeysInObject(pluginValuesAsStep),
             closestStageIndex,
