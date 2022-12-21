@@ -1060,11 +1060,24 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     (pluginName: string, pluginInput: Record<string, any>): Record<string, any> => {
       return {
         //TODO @vardan - confirm step name, identifier and type with Backend
-        step: { name: pluginName, identifier: pluginName.split(' ').join('_'), type: 'Plugin', spec: pluginInput }
+        step: {
+          name: pluginName,
+          identifier: pluginName.split(' ').join('_'),
+          type: 'Plugin',
+          spec: sanitizePluginValues(pluginInput)
+        }
       }
     },
     []
   )
+
+  const sanitizePluginValues = useCallback((unSanitizedObj: Record<string, any>): Record<string, any> => {
+    try {
+      return JSON.parse(JSON.stringify(unSanitizedObj).replace(/\:null/gi, ':""'))
+    } catch (e) {
+      return unSanitizedObj
+    }
+  }, [])
 
   const addupdatePluginIntoExistingYAML = useCallback(
     (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean): void => {
