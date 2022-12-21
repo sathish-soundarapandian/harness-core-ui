@@ -861,26 +861,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
                 getStageYAMLPathForStageIndex(closestStageIndex - 1)
               ) as unknown[])
             : {}
-        let closestStepIndex = 0
-        if (Array.isArray(stageStepsForThePrecedingIndex)) {
-          const stageStepsCountForThePrecedingIndex = (stageStepsForThePrecedingIndex as unknown[]).length
-          closestStepIndex = getClosestIndexToSearchToken(
-            cursorPosition,
-            'step:',
-            stageStepsCountForThePrecedingIndex,
-            stageStepsCountForThePrecedingIndex + stageStepsForTheClosestIndex.length
-          )
-        } else {
-          closestStepIndex = getClosestIndexToSearchToken(
-            cursorPosition,
-            'step:',
-            0,
-            stageStepsForTheClosestIndex.length
-          )
-        }
-        if (closestStepIndex === -1) {
-          return 0
-        }
+        const stageStepsCountForThePrecedingIndex = (stageStepsForThePrecedingIndex as unknown[]).length
+        const closestStepIndex = getClosestStepIndexInCurrentStage(
+          cursorPosition,
+          stageStepsCountForThePrecedingIndex,
+          stageStepsForTheClosestIndex.length
+        )
         const stepYAMLPath = `${getStageYAMLPathForStageIndex(closestStageIndex)}.${closestStepIndex}.step`
         const pluginAsStep = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
         setSelectedPlugin(pluginAsStep)
