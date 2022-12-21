@@ -142,23 +142,31 @@ export function ServiceLicenseTable({
             </div>
           </Layout.Vertical>
         </Layout.Horizontal>
-        <TableV2
-          className={pageCss.table}
-          columns={columns}
-          data={content}
-          pagination={
-            totalElements > size
-              ? {
-                  itemCount: totalElements,
-                  pageSize: size,
-                  pageCount: totalPages,
-                  pageIndex: number,
-                  gotoPage
-                }
-              : undefined
-          }
-          sortable
-        />
+        {content.length > 0 ? (
+          <TableV2
+            className={pageCss.table}
+            columns={columns}
+            data={content}
+            pagination={
+              totalElements > size
+                ? {
+                    itemCount: totalElements,
+                    pageSize: size,
+                    pageCount: totalPages,
+                    pageIndex: number,
+                    gotoPage
+                  }
+                : undefined
+            }
+            sortable
+          />
+        ) : (
+          <NoDataCard
+            message={getString('noActiveServiceData')}
+            className={pageCss.noDataCard}
+            containerClassName={pageCss.noDataCardContainer}
+          />
+        )}
       </Layout.Vertical>
     </Card>
   )
