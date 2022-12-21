@@ -8,7 +8,6 @@
 import React from 'react'
 import moment from 'moment'
 import { render } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   useGetAccountNG,
