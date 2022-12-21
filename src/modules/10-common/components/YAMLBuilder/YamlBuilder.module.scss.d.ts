@@ -13,10 +13,6 @@ declare const styles: {
   readonly editor: string
   readonly entityTag: string
   readonly errorList: string
-  readonly errorPanel: string
-  readonly errorPanelCollapse: string
-  readonly errorPanelHeader: string
-  readonly errorRow: string
   readonly errorSummary: string
   readonly filePath: string
   readonly flexCenter: string
@@ -26,7 +22,6 @@ declare const styles: {
   readonly layout: string
   readonly lightBg: string
   readonly main: string
-  readonly noStyleUl: string
   readonly pluginDecorator: string
   readonly splitPanel: string
   readonly summaryPopover: string

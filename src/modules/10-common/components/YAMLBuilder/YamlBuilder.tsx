@@ -13,13 +13,24 @@ import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
 import { IKeyboardEvent, languages, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor, IDisposable } from 'monaco-editor/esm/vs/editor/editor.api'
-import type { Diagnostic } from 'vscode-languageserver-types'
-import { debounce, isEmpty, throttle, defaultTo, attempt, every, isEqualWith, isNil, get, set } from 'lodash-es'
-import { Layout } from '@harness/uicore'
+import {
+  debounce,
+  isEmpty,
+  throttle,
+  defaultTo,
+  attempt,
+  every,
+  isEqualWith,
+  isNil,
+  get,
+  set,
+  truncate
+} from 'lodash-es'
+import { Icon, Layout } from '@harness/uicore'
 import {} from 'lodash-es'
 import { useToaster } from '@common/exports'
 import { useParams } from 'react-router-dom'
-import { Intent } from '@blueprintjs/core'
+import { Intent, Popover, PopoverInteractionKind, Position as PopoverPosition } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import cx from 'classnames'
 import { scalarOptions, defaultOptions, parse } from 'yaml'
@@ -30,11 +41,7 @@ import type {
   CompletionItemInterface,
   Theme
 } from '@common/interfaces/YAMLBuilderProps'
-import {
-  findAllValuesForJSONPath,
-  getSchemaWithLanguageSettings,
-  validateYAMLWithSchema
-} from '@common/utils/YamlUtils'
+import { findAllValuesForJSONPath, getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
 import {
   getYAMLFromEditor,
@@ -69,7 +76,8 @@ import {
   META_EVENT_KEY_CODE,
   SHIFT_EVENT_KEY_CODE,
   navigationKeysMap,
-  allowedKeysInEditModeMap
+  allowedKeysInEditModeMap,
+  MAX_ERR_MSSG_LENGTH
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -140,23 +148,20 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   setUpEditor(theme)
   const params = useParams()
   const [currentYaml, setCurrentYaml] = useState<string>(defaultTo(existingYaml, ''))
+  const [currentJSON, setCurrentJSON] = useState<object>()
   const [initialSelectionRemoved, setInitialSelectionRemoved] = useState<boolean>(
     !defaultTo(existingYaml, existingJSON)
   )
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
   const { innerWidth } = window
   const [dynamicWidth, setDynamicWidth] = useState<number>(innerWidth - 2 * MIN_SNIPPET_SECTION_WIDTH)
-  const [dynamicHeight, setDynamicHeight] = useState<React.CSSProperties['height']>(
-    defaultTo(height, DEFAULT_EDITOR_HEIGHT)
-  )
+  const [dynamicHeight] = useState<React.CSSProperties['height']>(defaultTo(height, DEFAULT_EDITOR_HEIGHT))
 
   const editorRef = useRef<ReactMonacoEditor>(null)
   const yamlRef = useRef<string | undefined>('')
   const yamlValidationErrorsRef = useRef<Map<number, string>>()
   yamlValidationErrorsRef.current = yamlValidationErrors
   const editorVersionRef = useRef<number>()
-  const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
-  const [schemaValidationErrors, setSchemaValidationErrors] = useState<Diagnostic[]>()
   const currentCursorPosition = useRef<Position>()
   const codeLensRegistrations = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
   const [selectedPlugin, setSelectedPlugin] = useState<Record<string, any>>()
@@ -224,21 +229,17 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   /* #region Bootstrap editor with schema */
 
-  // useEffect(() => {
-  //   //for optimization, restrict setting value to editor if previous and current json inputs are the same.
-  //   //except when editor is reset/cleared, by setting empty json object as input
-  //   if (
-  //     every([existingJSON, isEmpty(existingJSON), isEmpty(currentJSON)]) ||
-  //     JSON.stringify(existingJSON) !== JSON.stringify(currentJSON)
-  //   ) {
-  //     attempt(verifyIncomingJSON, existingJSON)
-  //     setCurrentJSON(existingJSON)
-  //   }
-  // }, [existingJSON])
-
   useEffect(() => {
-    verifyIncomingJSON(existingJSON)
-  }, [JSON.stringify(existingJSON)])
+    //for optimization, restrict setting value to editor if previous and current json inputs are the same.
+    //except when editor is reset/cleared, by setting empty json object as input
+    if (
+      every([existingJSON, isEmpty(existingJSON), isEmpty(currentJSON)]) ||
+      JSON.stringify(existingJSON) !== JSON.stringify(currentJSON)
+    ) {
+      attempt(verifyIncomingJSON, existingJSON)
+      setCurrentJSON(existingJSON)
+    }
+  }, [existingJSON])
 
   useEffect(() => {
     if (existingYaml) {
@@ -271,23 +272,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   /* #region Handle various interactions with the editor */
 
-  const validateYAMLAgainstSchema = useCallback(
-    (updatedYaml: string): void => {
-      if (schema) {
-        validateYAMLWithSchema(updatedYaml, getSchemaWithLanguageSettings(schema)).then((errors: Diagnostic[]) => {
-          setSchemaValidationErrors(errors)
-          if (isEmpty(errors)) {
-            setShouldShowErrorPanel(false)
-          }
-        })
-      } else {
-        setSchemaValidationErrors([])
-        setShouldShowErrorPanel(false)
-      }
-    },
-    [schema]
-  )
-
   const onYamlChange = useCallback(
     debounce((updatedYaml: string): void => {
       setCurrentYaml(updatedYaml)
@@ -299,9 +283,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         schema,
         errorMessage: yamlError
       })
-      if (updatedYaml && schema) {
-        validateYAMLAgainstSchema(updatedYaml)
-      }
       onChange?.(!(updatedYaml === ''))
     }, 500),
     [setYamlValidationErrors, showError, schema, yamlError, setCurrentYaml, onChange]
@@ -605,6 +586,25 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }
 
+  const getErrorSummary = (errorMap?: Map<number, string>): React.ReactElement => {
+    const errors: React.ReactElement[] = []
+    errorMap?.forEach((value, key) => {
+      const error = (
+        <li className={css.item} title={value} key={key}>
+          {getString('yamlBuilder.lineNumberLabel')}&nbsp;
+          {key + 1},&nbsp;
+          {truncate(value, { length: MAX_ERR_MSSG_LENGTH })}
+        </li>
+      )
+      errors.push(error)
+    })
+    return (
+      <div className={css.errorSummary}>
+        <ol className={css.errorList}>{errors}</ol>
+      </div>
+    )
+  }
+
   const renderHeader = useCallback(
     (): JSX.Element => (
       <div className={cx(css.header)}>
@@ -616,6 +616,21 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
               {showCopyIcon ? <CopyToClipboard content={defaultTo(yamlRef.current, '')} showFeedback={true} /> : null}
             </Container>
           ) : null}
+        </div>
+        <div className={cx(css.flexCenter, css.validationStatus)}>
+          {!isReadOnlyMode && yamlValidationErrors && yamlValidationErrors.size > 0 && (
+            <Popover
+              interactionKind={PopoverInteractionKind.HOVER}
+              position={PopoverPosition.TOP}
+              content={getErrorSummary(yamlValidationErrors)}
+              popoverClassName={css.summaryPopover}
+            >
+              <div>
+                <Icon name="main-issue-filled" size={14} className={css.validationIcon} />
+                <span className={css.invalidYaml}>{getString('invalidText')}</span>
+              </div>
+            </Popover>
+          )}
         </div>
       </div>
     ),
@@ -629,17 +644,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       setInitialSelectionRemoved(true)
     }
   }, [currentYaml])
-
-  useEffect(() => {
-    if (height) {
-      if (shouldShowErrorPanel && !isEmpty(schemaValidationErrors)) {
-        const heightWithErrorPanel: React.CSSProperties['height'] = 'calc(80vh - 250px)'
-        setDynamicHeight(heightWithErrorPanel)
-      } else {
-        setDynamicHeight(height)
-      }
-    }
-  }, [shouldShowErrorPanel, height, schemaValidationErrors])
 
   const renderEditor = useCallback(
     (): JSX.Element => (
