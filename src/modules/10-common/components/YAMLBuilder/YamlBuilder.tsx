@@ -699,7 +699,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const numberOfLinesInSelection = getSelectionRangeOnSettingsBtnClick(cursorPosition, currentYaml)
           if (numberOfLinesInSelection) {
             currentCursorPosition.current = cursorPosition
-            highlightInsertedText(fromLine, toLineNum + numberOfLinesInSelection + 1)
+            highlightInsertedYAML(fromLine, toLineNum + numberOfLinesInSelection + 1)
           }
         },
         ''
@@ -792,7 +792,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     []
   )
 
-  const detectYAMLInsertion = useCallback(
+  const spotLightInsertedYAML = useCallback(
     ({
       noOflinesInserted,
       closestStageIndex,
@@ -818,7 +818,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const contentInEndingLine = editor.getModel()?.getLineContent(endingLineNum) || ''
 
           // highlight the inserted text
-          highlightInsertedText(startingLineNum, endingLineNum + 1)
+          highlightInsertedYAML(startingLineNum, endingLineNum + 1)
 
           // Scroll to the end of the inserted text
           editor.setPosition({ column: contentInEndingLine.length + 1, lineNumber: endingLineNum })
@@ -833,7 +833,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const endingLineNum = contentInStartingLine ? endingLineForCursorPosition + 1 : endingLineForCursorPosition
 
           // highlight the inserted text
-          highlightInsertedText(startingLineNum, endingLineNum)
+          highlightInsertedYAML(startingLineNum, endingLineNum)
 
           // Scroll to the end of the inserted text
           editor.setPosition({ column: contentInEndingLine.length + 1, lineNumber: endingLineForCursorPosition })
@@ -908,7 +908,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }, [currentYaml, editorRef.current?.editor, shouldRenderPluginsPanel, codeLensRegistrations.current])
 
-  const highlightInsertedText = useCallback(
+  const highlightInsertedYAML = useCallback(
     (fromLine: number, toLineNum: number): void => {
       const pluginInputDecoration: editor.IModelDeltaDecoration = {
         range: new monaco.Range(fromLine, 1, toLineNum, 1),
@@ -988,9 +988,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
               updatedSteps = [pluginValuesAsStep]
             }
           }
-          const updatedPipelineJSON = set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps)
-          setCurrentYaml(yamlStringify(updatedPipelineJSON))
-          detectYAMLInsertion({
+          setCurrentYaml(yamlStringify(set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps)))
+          spotLightInsertedYAML({
             noOflinesInserted: countAllKeysInObject(pluginValuesAsStep),
             closestStageIndex,
             isPluginUpdate,
