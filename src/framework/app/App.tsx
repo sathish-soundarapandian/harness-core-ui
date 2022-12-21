@@ -125,7 +125,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     }
   }
 
-  const globalResponseHandler = React.useCallback((response: Response): void => {
+  const globalResponseHandler = (response: Response): void => {
     if (!response.ok) {
       switch (response.status) {
         case 401: {
@@ -173,8 +173,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
       }
     }
     checkAndRefreshToken()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }
 
   useGlobalEventListener('PROMISE_API_RESPONSE', ({ detail }) => {
     if (detail && detail.response) {
@@ -183,7 +182,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   })
 
   useEffect(() => {
-    // Initializing open-api clints
+    // Initializing open-api clients
     new NG_API_Client({
       responseInterceptor: globalResponseHandler,
       requestInterceptor: noop,

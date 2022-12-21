@@ -9,8 +9,8 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { StepProps, ModalErrorHandlerBinding } from '@harness/uicore'
 import { pick } from 'lodash-es'
+import { useCreateOrganizationMutation, Organization as OrganizationQuery } from '@harnessio/react-ng-manager-client'
 import type { Organization } from 'services/cd-ng'
-import { usePostOrganization } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useToaster, PageSpinner } from '@common/components'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -24,29 +24,23 @@ const CreateOrganization: React.FC<StepProps<Organization> & OrgModalData> = pro
   const { accountId } = useParams<AccountPathProps>()
   const { showSuccess } = useToaster()
   const { getString } = useStrings()
-  const { mutate: createOrganization, loading: saving } = usePostOrganization({
+  const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
+
+  const { mutate: createOrganization, isLoading: loading } = useCreateOrganizationMutation({
     queryParams: {
       accountIdentifier: accountId
     }
   })
-  const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
 
   const onComplete = async (values: Organization): Promise<void> => {
-    const dataToSubmit: Organization = pick<Organization, keyof Organization>(values, [
-      'name',
-      'description',
-      'identifier',
-      'tags'
-    ])
+    const dataToSubmit: OrganizationQuery = {
+      slug: values?.identifier || '',
+      ...pick(values, ['name', 'description', 'tags'])
+    }
     try {
-      await createOrganization(
-        { organization: dataToSubmit },
-        {
-          queryParams: {
-            accountIdentifier: accountId
-          }
-        }
-      )
+      createOrganization({
+        body: { org: dataToSubmit }
+      })
       nextStep?.(values)
       showSuccess(getString('projectsOrgs.orgCreateSuccess'))
       onSuccess?.(values)
@@ -65,7 +59,7 @@ const CreateOrganization: React.FC<StepProps<Organization> & OrgModalData> = pro
         setModalErrorHandler={setModalErrorHandler}
         onComplete={onComplete}
       />
-      {saving ? <PageSpinner message={getString('projectsOrgs.createOrgLoader')} /> : null}
+      {loading ? <PageSpinner message={getString('projectsOrgs.createOrgLoader')} /> : null}
     </>
   )
 }

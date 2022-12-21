@@ -9,7 +9,8 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { StepProps, ModalErrorHandlerBinding, useToaster } from '@harness/uicore'
 import { pick } from 'lodash-es'
-import { Organization, useGetOrganization, usePutOrganization } from 'services/cd-ng'
+import { useUpdateOrganizationMutation, Organization as OrganizationQuery } from '@harnessio/react-ng-manager-client'
+import { Organization, useGetOrganization } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -32,13 +33,9 @@ const EditOrganization: React.FC<StepProps<Organization> & EditModalData> = prop
   const { getString } = useStrings()
   const orgIdentifier = isStep ? prevStepData?.identifier : identifier
 
-  const { mutate: editOrganization, loading: saving } = usePutOrganization({
-    identifier: orgIdentifier || '',
+  const { mutate: editOrganization, isLoading: editingOrg } = useUpdateOrganizationMutation({
     queryParams: {
       accountIdentifier: accountId
-    },
-    requestOptions: {
-      headers: { 'If-Match': version as string }
     }
   })
   const { data, loading, error, response } = useGetOrganization({
@@ -55,21 +52,17 @@ const EditOrganization: React.FC<StepProps<Organization> & EditModalData> = prop
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
 
   const onComplete = async (values: Organization): Promise<void> => {
-    const dataToSubmit: Organization = pick<Organization, keyof Organization>(values, [
-      'name',
-      'description',
-      'identifier',
-      'tags'
-    ])
+    const dataToSubmit: OrganizationQuery = {
+      slug: values?.identifier || '',
+      ...pick(values, ['name', 'description', 'tags'])
+    }
+
     try {
-      await editOrganization(
-        { organization: dataToSubmit },
-        {
-          queryParams: {
-            accountIdentifier: accountId
-          }
-        }
-      )
+      await editOrganization({
+        org: dataToSubmit.slug,
+        body: { org: dataToSubmit },
+        headers: { 'If-Match': version as string }
+      })
       nextStep?.(values)
       showSuccess(getString('projectsOrgs.orgEditSuccess'))
       onSuccess?.(values)
@@ -85,7 +78,7 @@ const EditOrganization: React.FC<StepProps<Organization> & EditModalData> = prop
         title={getString('projectsOrgs.editTitle')}
         enableEdit={false}
         submitTitle={isStep ? getString('saveAndContinue') : getString('projectsOrgs.saveAndClose')}
-        disableSubmit={saving}
+        disableSubmit={editingOrg}
         disablePreview={!isStep}
         setModalErrorHandler={setModalErrorHandler}
         onComplete={onComplete}

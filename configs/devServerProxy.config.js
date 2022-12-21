@@ -13,7 +13,7 @@ console.table({ baseUrl, targetLocalHost })
 
 module.exports = {
   '/v1': {
-    target: targetLocalHost ? 'https://localhost:7090' : `${baseUrl}`
+    target: `${baseUrl}` // localhost is not supported for OpenAPI yet
   },
   '/ng/api': {
     pathRewrite: { '^/ng/api': '' },

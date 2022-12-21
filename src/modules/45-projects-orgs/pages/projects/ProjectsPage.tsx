@@ -86,7 +86,7 @@ const ProjectsListPage: React.FC = () => {
       }
     },
     {
-      staleTime: 60 * 1000 * 15
+      staleTime: 60 * 1000
     }
   )
 
