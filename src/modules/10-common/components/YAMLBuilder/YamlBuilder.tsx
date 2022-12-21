@@ -155,7 +155,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
   const { innerWidth } = window
   const [dynamicWidth, setDynamicWidth] = useState<number>(innerWidth - 2 * MIN_SNIPPET_SECTION_WIDTH)
-  const [dynamicHeight] = useState<React.CSSProperties['height']>(defaultTo(height, DEFAULT_EDITOR_HEIGHT))
 
   const editorRef = useRef<ReactMonacoEditor>(null)
   const yamlRef = useRef<string | undefined>('')
@@ -183,6 +182,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         getLatestYaml: () => yamlRef.current,
         setLatestYaml: (json: Record<string, any>) => {
           attempt(verifyIncomingJSON, json)
+          setCurrentJSON(json)
         },
         getYAMLValidationErrorMap: () => yamlValidationErrorsRef.current
       } as YamlBuilderHandlerBinding),
@@ -649,7 +649,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     (): JSX.Element => (
       <MonacoEditor
         width={dynamicWidth}
-        height={dynamicHeight}
+        height={defaultTo(height, DEFAULT_EDITOR_HEIGHT)}
         language="yaml"
         value={currentYaml}
         onChange={onYamlChange}
@@ -668,7 +668,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         ref={editorRef}
       />
     ),
-    [dynamicWidth, dynamicHeight, currentYaml, onYamlChange]
+    [dynamicWidth, height, currentYaml, onYamlChange]
   )
 
   const throttledOnResize = throttle(() => {
@@ -1035,7 +1035,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       </Layout.Vertical>
       {shouldRenderPluginsPanel ? (
         <PluginsPanel
-          height={dynamicHeight}
+          height={height}
           onPluginAddUpdate={addupdatePluginIntoExistingYAML}
           onPluginDiscard={() => setSelectedPlugin(undefined)}
           selectedPluginFromYAMLView={selectedPlugin}
