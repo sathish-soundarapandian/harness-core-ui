@@ -638,6 +638,18 @@ export interface AcrResponseDTO {
 export interface ActiveProjectsCountDTO {
   count?: number
 }
+export interface ActiveServiceDTO {
+  accountIdentifier?: string
+  identifier: string
+  instanceCount?: number
+  lastDeployed?: number
+  licensesConsumed?: number
+  module?: string
+  name?: string
+  orgName?: string
+  projectName?: string
+  timestamp?: number
+}
 
 export interface ActiveServiceInstanceSummary {
   changeRate?: number
@@ -9523,6 +9535,20 @@ export interface Page {
   totalPages?: number
 }
 
+export interface PageActiveServiceDTO {
+  content?: ActiveServiceDTO[]
+  empty?: boolean
+  first?: boolean
+  last?: boolean
+  number?: number
+  numberOfElements?: number
+  pageable?: Pageable
+  size?: number
+  sort?: Sort
+  totalElements?: number
+  totalPages?: number
+}
+
 export interface PageActivity {
   content?: Activity[]
   empty?: boolean
@@ -12650,7 +12676,7 @@ export interface ResponsePageInvite {
 
 export interface ResponsePageLicenseUsageDTO {
   correlationId?: string
-  data?: PageLicenseUsageDTO
+  data?: PageActiveServiceDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
