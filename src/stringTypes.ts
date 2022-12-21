@@ -700,6 +700,7 @@ export interface StringsMap {
   'common.refreshPage': string
   'common.reject': string
   'common.releaseName': string
+  'common.reload': string
   'common.remove': string
   'common.removeThisVariable': string
   'common.repo_provider.awscodecommit': string
