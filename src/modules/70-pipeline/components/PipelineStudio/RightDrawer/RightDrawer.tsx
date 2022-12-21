@@ -352,7 +352,10 @@ const applyChanges = async (
   updatePipelineView: (data: PipelineViewData) => void,
   pipelineView: PipelineViewData,
   setSelectedStepId: (selectedStepId: string | undefined) => void,
-  trackEvent: TrackEvent
+  trackEvent: TrackEvent,
+  isRollback: boolean,
+  selectedStage: StageElementWrapper<StageElementConfig> | undefined,
+  updateStage: (stage: StageElementConfig) => Promise<void>
 ): Promise<void> => {
   if (checkDuplicateStep(formikRef, data, getString)) {
     return
@@ -361,13 +364,25 @@ const applyChanges = async (
   if (!isEmpty(formikRef.current?.getErrors())) {
     return
   } else {
-    updatePipelineView({
-      ...pipelineView,
-      isDrawerOpened: false,
-      drawerData: {
-        type: DrawerTypes.AddStep
-      }
-    })
+    onSubmitStep(
+      cloneDeep(formikRef.current?.getValues()) as any,
+      pipelineView.drawerData.type,
+      data,
+      trackEvent,
+      selectedStage,
+      updatePipelineView,
+      updateStage,
+      produce(pipelineView, draft => {
+        if (draft) {
+          set(draft, 'isDrawerOpened', false)
+          set(draft, 'drawerData', {
+            type: DrawerTypes.AddStep
+          })
+        }
+      }),
+      isRollback
+    )
+
     setSelectedStepId(undefined)
     if (data?.stepConfig?.isStepGroup) {
       trackEvent(StepActions.AddEditStepGroup, {
@@ -517,7 +532,18 @@ export function RightDrawer(): React.ReactElement {
         disabled={isIntermittentLoading}
         discardChanges={discardChanges}
         applyChanges={() =>
-          applyChanges(formikRef, data, getString, updatePipelineView, pipelineView, setSelectedStepId, trackEvent)
+          applyChanges(
+            formikRef,
+            data,
+            getString,
+            updatePipelineView,
+            pipelineView,
+            setSelectedStepId,
+            trackEvent,
+            !!isRollbackToggled,
+            selectedStage,
+            updateStage
+          )
         }
       ></RightDrawerTitle>
     )
@@ -666,7 +692,18 @@ export function RightDrawer(): React.ReactElement {
     showCloseButton: false,
     onCloseDialog: isConfirmed => {
       if (isConfirmed) {
-        applyChanges(formikRef, data, getString, updatePipelineView, pipelineView, setSelectedStepId, trackEvent)
+        applyChanges(
+          formikRef,
+          data,
+          getString,
+          updatePipelineView,
+          pipelineView,
+          setSelectedStepId,
+          trackEvent,
+          !!isRollbackToggled,
+          selectedStage,
+          updateStage
+        )
       }
     },
     className: css.dialogWrapper

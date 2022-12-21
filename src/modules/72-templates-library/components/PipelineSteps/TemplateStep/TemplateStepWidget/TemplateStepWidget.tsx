@@ -196,9 +196,7 @@ function TemplateStepWidget(
   return (
     <div className={stepCss.stepPanel}>
       <Formik<TemplateStepNode>
-        onSubmit={values => {
-          onUpdate?.(values)
-        }}
+        onSubmit={noop}
         initialValues={formValues}
         formName="templateStepWidget"
         validationSchema={Yup.object().shape({
