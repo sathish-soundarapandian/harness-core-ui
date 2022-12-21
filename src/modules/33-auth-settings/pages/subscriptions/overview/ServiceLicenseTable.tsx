@@ -113,7 +113,7 @@ export function ServiceLicenseTable({
       }
     ] as unknown as Column<ActiveServiceDTO>[]
   }, [currentOrder, currentSort])
-  const activeServiceText = `${content.length}`
+  const activeServiceText = `${totalElements}`
   const timeValue = moment(content[0]?.timestamp).format('DD-MM-YYYY h:mm:ss')
   return (
     <Card className={pageCss.outterCard}>
