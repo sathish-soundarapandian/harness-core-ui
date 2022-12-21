@@ -91,15 +91,17 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         refetchGetLicense={refetchGetLicense}
       />
       {enabled && licenseData && <SubscriptionUsageCard module={module} licenseData={licenseData} />}
-      <ServiceLicenseTable
-        gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
-        data={activeServiceList?.data || {}}
-        setSortBy={sortArray => {
-          setSortingPreference(JSON.stringify(sortArray))
-          updateQueryParams({ sort: sortArray })
-        }}
-        sortBy={sort}
-      />
+      {module === 'CD' ? (
+        <ServiceLicenseTable
+          gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
+          data={activeServiceList?.data || {}}
+          setSortBy={sortArray => {
+            setSortingPreference(JSON.stringify(sortArray))
+            updateQueryParams({ sort: sortArray })
+          }}
+          sortBy={sort}
+        />
+      ) : null}
     </Layout.Vertical>
   )
 }
