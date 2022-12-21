@@ -49,29 +49,61 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   const [plugin, setPlugin] = useState<PluginMetadataResponse | undefined>()
   const [plugins, setPlugins] = useState<PluginMetadataResponse[]>([])
   const [query, setQuery] = useState<string>()
-  const isPluginUpdateAction = !isEmpty(selectedPluginFromYAMLView)
+  const [isPluginUpdateAction, setIsPluginUpdateAction] = useState<boolean>(false)
 
   const defaultQueryParams = { pageIndex: 0, pageSize: 200 }
   const { data, loading, error, refetch } = useListPlugins({ queryParams: defaultQueryParams })
 
   useEffect(() => {
     if (!isEmpty(selectedPluginFromYAMLView)) {
-      setQuery(get(selectedPluginFromYAMLView, 'name'))
-      if (plugin) {
-        onBackArrowClick()
+      setIsPluginUpdateAction(true)
+      const pluginNameFromYAML = get(selectedPluginFromYAMLView, 'name', '')
+      if (pluginNameFromYAML) {
+        setQuery(pluginNameFromYAML)
+        // first look up for matching plugin names in existing plugins list
+        const matchingPlugin = plugins.filter((item: PluginMetadataResponse) => item.name === pluginNameFromYAML)?.[0]
+        if (matchingPlugin) {
+          setPlugin(matchingPlugin)
+        } else {
+          // if not found, make an api call to fetch it
+          searchPlugins(pluginNameFromYAML)
+        }
       }
     }
-  }, [selectedPluginFromYAMLView, plugin])
-
-  useEffect(() => {
-    refetch({ queryParams: { ...defaultQueryParams, searchTerm: query } })
-  }, [query])
+  }, [selectedPluginFromYAMLView])
 
   useEffect(() => {
     if (!error && !loading) {
       setPlugins(data?.data?.content || [])
     }
   }, [data, loading, error])
+
+  useEffect(() => {
+    if (query && !isEmpty(selectedPluginFromYAMLView)) {
+      const pluginNameFromYAML = get(selectedPluginFromYAMLView, 'name', '')
+      const matchingPlugin = plugins.filter((item: PluginMetadataResponse) => item.name === pluginNameFromYAML)?.[0]
+      setPlugin(matchingPlugin)
+    }
+  }, [query, plugins, selectedPluginFromYAMLView])
+
+  const { name: pluginName, repo: pluginDocumentationLink, inputs: formFields } = plugin || {}
+
+  const generateFormikInitialValues = useCallback((inputs: Input[]): Record<string, any> => {
+    const result = new Map(inputs.map(i => [i.name, i.default]))
+    return Object.fromEntries(result)
+  }, [])
+
+  const onBackArrowClick = useCallback((): void => {
+    onPluginDiscard()
+    setPlugin(undefined)
+    setIsPluginUpdateAction(false)
+    setQuery('')
+    searchPlugins('')
+  }, [])
+
+  const searchPlugins = useCallback((searchTerm: string) => {
+    refetch({ queryParams: { ...defaultQueryParams, searchTerm } })
+  }, [])
 
   const renderPlugin = useCallback((plugin: PluginMetadataResponse): JSX.Element => {
     const { name, description, kind } = plugin
@@ -174,18 +206,6 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     return <></>
   }, [loading, plugins, error, query])
 
-  const { name: pluginName, repo: pluginDocumentationLink, inputs: formFields } = plugin || {}
-
-  const generateFormikInitialValues = (inputs: Input[]): Record<string, any> => {
-    const result = new Map(inputs.map(i => [i.name, i.default]))
-    return Object.fromEntries(result)
-  }
-
-  const onBackArrowClick = useCallback((): void => {
-    setPlugin(undefined)
-    onPluginDiscard()
-  }, [])
-
   return (
     <Container className={css.tabs}>
       <Tabs id={'pluginsPanel'} defaultSelectedTabId={'plugins'} className={css.tabs}>
@@ -269,7 +289,10 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                       autoFocus={true}
                       alwaysExpanded={true}
                       defaultValue={query}
-                      onChange={setQuery}
+                      onChange={(searchTerm: string) => {
+                        searchPlugins(searchTerm)
+                        setQuery(searchTerm)
+                      }}
                     />
                   </Container>
                   {renderPluginsPanel()}
