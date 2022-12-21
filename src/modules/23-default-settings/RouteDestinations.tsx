@@ -86,7 +86,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.SETTING, {
   labelSingular: 'common.singularLabels.defaultSetting',
   category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
   permissionLabels: {
-    [PermissionIdentifier.EDIT_CORE_SETTING]: <String stringID="rbac.permissionLabels.createEdit" />
+    [PermissionIdentifier.EDIT_CORE_SETTING]: <String stringID="rbac.permissionLabels.edit" />
   }
 })
 
