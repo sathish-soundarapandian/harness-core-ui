@@ -94,6 +94,45 @@ describe('Subscriptions Page', () => {
     userEvent.click(getByText('common.licensesConsumed'))
   })
 
+  test('it renders the correct card in the subscriptions page', () => {
+    useGetModuleLicenseInfoMock.mockImplementation(() => {
+      return {
+        data: {
+          data: [
+            {
+              edition: Editions.ENTERPRISE
+            }
+          ],
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
+    })
+
+    useGetAccountMock.mockImplementation(() => {
+      return {
+        data: {
+          data: {
+            accountId: '123'
+          },
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
+    })
+
+    const { container, getByText } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CI }}>
+        <SubscriptionsPage />
+      </TestWrapper>
+    )
+
+    expect(getByText('common.subscriptions.title')).toBeTruthy()
+    expect(getByText('common.subscriptions.expiryCountdown')).toBeTruthy()
+    expect(getByText('common.subscriptions.trial')).toBeTruthy()
+    expect(container).toMatchSnapshot()
+  })
+
   test('it renders a page error when the account call fails', () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
       return {
