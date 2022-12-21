@@ -948,7 +948,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }, [])
 
-  const addupdatePluginIntoExistingYAML = useCallback(
+  const addUpdatePluginIntoExistingYAML = useCallback(
     (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean): void => {
       const { pluginData, pluginName, shouldInsertYAML } = pluginMetadata
       const cursorPosition = currentCursorPosition.current
@@ -957,7 +957,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
           const yamlStepToBeInsertedAt = getStageYAMLPathForStageIndex(closestStageIndex)
           const currentPipelineJSON = parse(currentYaml)
-          const existingSteps = findAllValuesForJSONPath(currentPipelineJSON, yamlStepToBeInsertedAt) as unknown[]
+          const existingSteps =
+            (findAllValuesForJSONPath(currentPipelineJSON, yamlStepToBeInsertedAt) as unknown[]) || []
           let updatedSteps = existingSteps.slice(0) as unknown[]
           const pluginValuesAsStep = wrapPlugInputInAStep(pluginName, pluginData)
           const stepCountInPrecedingStage = (
@@ -1023,7 +1024,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       {shouldRenderPluginsPanel ? (
         <PluginsPanel
           height={height}
-          onPluginAddUpdate={addupdatePluginIntoExistingYAML}
+          onPluginAddUpdate={addUpdatePluginIntoExistingYAML}
           onPluginDiscard={() => setSelectedPlugin(undefined)}
           selectedPluginFromYAMLView={selectedPlugin}
         />
