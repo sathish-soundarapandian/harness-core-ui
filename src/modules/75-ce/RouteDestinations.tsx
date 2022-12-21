@@ -43,7 +43,6 @@ import { ConnectorReferenceField } from '@connectors/components/ConnectorReferen
 import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
-import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import CEHomePage from './pages/home/CEHomePage'
 import CECODashboardPage from './pages/co-dashboard/CECODashboardPage'
 import CECOCreateGatewayPage from './pages/co-create-gateway/CECOCreateGatewayPage'
@@ -874,8 +873,7 @@ const CERoutes: React.FC = () => {
                 ConnectorReferenceField,
                 GatewayListFilters,
                 FeatureWarningBanner,
-                FeatureWarningTooltip,
-                ErrorHandler
+                FeatureWarningTooltip
               }}
               customHooks={{
                 useTestConnectionModal

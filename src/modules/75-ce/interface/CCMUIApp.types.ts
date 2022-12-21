@@ -14,7 +14,6 @@ import type { GatewayListFiltersProps } from '@ce/components/COGatewayList/Gatew
 import type FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 import type { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import type useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
-import type { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 
 export interface CCMUIAppCustomProps {
   customComponents: {
@@ -25,7 +24,6 @@ export interface CCMUIAppCustomProps {
     GatewayListFilters: React.ComponentType<GatewayListFiltersProps>
     FeatureWarningBanner: typeof FeatureWarningBanner
     FeatureWarningTooltip: typeof FeatureWarningTooltip
-    ErrorHandler: typeof ErrorHandler
   }
   customHooks: {
     useTestConnectionModal: typeof useTestConnectionModal
