@@ -32,7 +32,7 @@ interface SubscriptionOverviewProps {
   trialInformation: TrialInformation
   refetchGetLicense?: () => void
 }
-const DEFAULT_ACTIVE_SERVICE_LIST_TABLE_SORT = ['serviceInstance', 'DESC']
+const DEFAULT_ACTIVE_SERVICE_LIST_TABLE_SORT = ['serviceInstances', 'DESC']
 const DEFAULT_PAGE_INDEX = 0
 const DEFAULT_PAGE_SIZE = 20
 type ProcessedActiveServiceListPageQueryParams = PartiallyRequired<
