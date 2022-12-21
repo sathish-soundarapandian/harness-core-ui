@@ -530,16 +530,14 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
                 <p
                   class="StyledProps--font StyledProps--main badgeText"
                 >
-                  2
-                   
+                  2   
                 </p>
                 <span>
                   common.subscriptions.usage.services
                 </span>
                 <p
                   class="StyledProps--font StyledProps--main"
-                >
-                   
+                >  
                   auditTrail.actions.updated
                    -
                 </p>
@@ -1316,15 +1314,13 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
                   class="StyledProps--font StyledProps--main badgeText"
                 >
                   2
-                   
                 </p>
                 <span>
                   common.subscriptions.usage.services
                 </span>
                 <p
                   class="StyledProps--font StyledProps--main"
-                >
-                   
+                >    
                   auditTrail.actions.updated
                    -
                 </p>
@@ -2101,15 +2097,13 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
                   class="StyledProps--font StyledProps--main badgeText"
                 >
                   2
-                   
                 </p>
                 <span>
                   common.subscriptions.usage.services
                 </span>
                 <p
                   class="StyledProps--font StyledProps--main"
-                >
-                   
+                >  
                   auditTrail.actions.updated
                    -
                 </p>
@@ -2823,16 +2817,14 @@ exports[`Subscriptions Page it renders trial not started information 1`] = `
                 <p
                   class="StyledProps--font StyledProps--main badgeText"
                 >
-                  2
-                   
+                  2  
                 </p>
                 <span>
                   common.subscriptions.usage.services
                 </span>
                 <p
                   class="StyledProps--font StyledProps--main"
-                >
-                   
+                >   
                   auditTrail.actions.updated
                    -
                 </p>
@@ -3623,16 +3615,14 @@ exports[`Subscriptions Page it should update the license store 1`] = `
                 <p
                   class="StyledProps--font StyledProps--main badgeText"
                 >
-                  2
-                   
+                  2   
                 </p>
                 <span>
                   common.subscriptions.usage.services
                 </span>
                 <p
                   class="StyledProps--font StyledProps--main"
-                >
-                   
+                > 
                   auditTrail.actions.updated
                    -
                 </p>
