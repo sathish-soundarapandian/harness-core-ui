@@ -593,6 +593,7 @@ export interface StringsMap {
   'common.plans.subscription': string
   'common.plans.title': string
   'common.platformServiceVersions': string
+  'common.plugins': string
   'common.plusAddName': string
   'common.plusNewName': string
   'common.plusNumber': string
@@ -789,6 +790,7 @@ export interface StringsMap {
   'common.secretKey': string
   'common.secrets': string
   'common.seeDetails': string
+  'common.seeDocumentation': string
   'common.seeWhatChanged': string
   'common.selectAChannel': string
   'common.selectAVersion.description': string
@@ -7068,7 +7070,6 @@ export interface StringsMap {
   'ci.getStartedWithCI.carousel.labels.harnessCIFeatures': string
   'ci.getStartedWithCI.carousel.labels.integration': string
   'ci.getStartedWithCI.carousel.labels.useCaching': string
-  'ci.getStartedWithCI.carousel.labels.usePlugins': string
   'ci.getStartedWithCI.chooseDiffInfra': string
   'ci.getStartedWithCI.chooseExistingYAML': string
   'ci.getStartedWithCI.chooseExistingYAMLHelptext': string

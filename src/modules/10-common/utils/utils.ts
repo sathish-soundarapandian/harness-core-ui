@@ -244,3 +244,7 @@ export const getRefFromIdentifier = (
 export const getIdentifierFromScopedRef = (entity: string): string => {
   return entity.indexOf('.') < 0 ? entity : entity.split('.')[1]
 }
+
+export const countAllKeysInObject = (obj: Record<string, any>): number => {
+  return JSON.stringify(obj)?.match(/[^\\]":/g)?.length ?? 0
+}

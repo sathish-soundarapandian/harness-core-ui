@@ -160,11 +160,34 @@ const getSchemaWithLanguageSettings = (schema: Record<string, any>): Record<stri
   }
 }
 
+const findAllValuesForJSONPath = (jsonObject: Record<string, any>, jsonPath: string): unknown | unknown[] => {
+  const tokens: string[] = jsonPath.split('.')
+  let value: string
+  for (let i = 0; i < tokens.length; i++) {
+    const currentToken = tokens[i]
+    //'*' wildcard match could endup with multiple matches in the json
+    if (currentToken === '*' && Array.isArray(value)) {
+      const matchingValues: string[] = []
+      for (let j = 0; j < value.length; j++) {
+        matchingValues.push(findAllValuesForJSONPath(`pipeline.stages.${j}.stage.spec.execution`) as string)
+      }
+      return matchingValues
+    } else {
+      value = i === 0 ? jsonObject[currentToken] : value[currentToken]
+      if (!value) {
+        break
+      }
+    }
+  }
+  return value
+}
+
 export {
   validateYAML,
   validateYAMLWithSchema,
   validateJSONWithSchema,
   getSchemaWithLanguageSettings,
   DEFAULT_YAML_PATH,
-  findLeafToParentPath
+  findLeafToParentPath,
+  findAllValuesForJSONPath
 }

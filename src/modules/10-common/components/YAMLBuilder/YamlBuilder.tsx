@@ -10,26 +10,39 @@ import type { MonacoEditorProps } from 'react-monaco-editor'
 //@ts-ignore
 import ReactMonacoEditor from 'react-monaco-editor'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
-import '@harness/monaco-yaml/lib/esm/monaco.contribution'
-import { IKeyboardEvent, languages } from 'monaco-editor/esm/vs/editor/editor.api'
-import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
-import { debounce, isEmpty, truncate, throttle, defaultTo, attempt, every, isEqualWith, isNil, get } from 'lodash-es'
+import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
+import { IKeyboardEvent, languages, Position } from 'monaco-editor/esm/vs/editor/editor.api'
+import type { editor, IDisposable } from 'monaco-editor/esm/vs/editor/editor.api'
+import type { Diagnostic } from 'vscode-languageserver-types'
+import { debounce, isEmpty, throttle, defaultTo, attempt, every, isEqualWith, isNil, get, set } from 'lodash-es'
+import { Layout } from '@harness/uicore'
+import {} from 'lodash-es'
 import { useToaster } from '@common/exports'
 import { useParams } from 'react-router-dom'
-import { Intent, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
+import { Intent } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import cx from 'classnames'
 import { scalarOptions, defaultOptions, parse } from 'yaml'
-import { Tag, Icon, Container, useConfirmationDialog } from '@harness/uicore'
+import { Tag, Container, useConfirmationDialog } from '@harness/uicore'
 import type {
   YamlBuilderProps,
   YamlBuilderHandlerBinding,
   CompletionItemInterface,
   Theme
 } from '@common/interfaces/YAMLBuilderProps'
-import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
+import {
+  findAllValuesForJSONPath,
+  getSchemaWithLanguageSettings,
+  validateYAMLWithSchema
+} from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
-import { getYAMLFromEditor, getMetaDataForKeyboardEventProcessing, verifyYAML } from './YAMLBuilderUtils'
+import {
+  getYAMLFromEditor,
+  getMetaDataForKeyboardEventProcessing,
+  verifyYAML,
+  findPositionsForMatchingKeys,
+  getStageYAMLPathForStageIndex
+} from './YAMLBuilderUtils'
 
 import css from './YamlBuilder.module.scss'
 import './resizer.scss'
@@ -52,7 +65,6 @@ import {
   KEY_CODE_FOR_PERIOD,
   KEY_CODE_FOR_SPACE,
   KEY_CODE_FOR_CHAR_Z,
-  MAX_ERR_MSSG_LENGTH,
   CONTROL_EVENT_KEY_CODE,
   META_EVENT_KEY_CODE,
   SHIFT_EVENT_KEY_CODE,
@@ -61,8 +73,10 @@ import {
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { countAllKeysInObject } from '@common/utils/utils'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
 import { CompletionItemKind } from 'vscode-languageserver-types'
+import { PluginAddUpdateMetadata, PluginsPanel } from '../PluginsPanel/PluginsPanel'
 
 // Please do not remove this, read this https://eemeli.org/yaml/#scalar-options
 scalarOptions.str.fold.lineWidth = 100000
@@ -118,6 +132,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     openDialogProp,
     showCopyIcon = true,
     comparableYaml,
+    showPluginsPanel = false,
     displayBorder = true
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
@@ -125,19 +140,26 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   setUpEditor(theme)
   const params = useParams()
   const [currentYaml, setCurrentYaml] = useState<string>(defaultTo(existingYaml, ''))
-  const [currentJSON, setCurrentJSON] = useState<object>()
   const [initialSelectionRemoved, setInitialSelectionRemoved] = useState<boolean>(
     !defaultTo(existingYaml, existingJSON)
   )
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
   const { innerWidth } = window
   const [dynamicWidth, setDynamicWidth] = useState<number>(innerWidth - 2 * MIN_SNIPPET_SECTION_WIDTH)
+  const [dynamicHeight, setDynamicHeight] = useState<React.CSSProperties['height']>(
+    defaultTo(height, DEFAULT_EDITOR_HEIGHT)
+  )
 
   const editorRef = useRef<ReactMonacoEditor>(null)
   const yamlRef = useRef<string | undefined>('')
   const yamlValidationErrorsRef = useRef<Map<number, string>>()
   yamlValidationErrorsRef.current = yamlValidationErrors
   const editorVersionRef = useRef<number>()
+  const [shouldShowErrorPanel, setShouldShowErrorPanel] = useState<boolean>(false)
+  const [schemaValidationErrors, setSchemaValidationErrors] = useState<Diagnostic[]>()
+  const currentCursorPosition = useRef<Position>()
+  const codeLensRegistrations = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
+  const [selectedPlugin, setSelectedPlugin] = useState<Record<string, any>>()
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -148,13 +170,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const yamlError = getString('yamlBuilder.yamlError')
 
+  const shouldRenderPluginsPanel: boolean = !isReadOnlyMode && isEditModeSupported && showPluginsPanel
+
   const handler = React.useMemo(
     () =>
       ({
         getLatestYaml: () => yamlRef.current,
         setLatestYaml: (json: Record<string, any>) => {
           attempt(verifyIncomingJSON, json)
-          setCurrentJSON(json)
         },
         getYAMLValidationErrorMap: () => yamlValidationErrorsRef.current
       } as YamlBuilderHandlerBinding),
@@ -201,17 +224,21 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   /* #region Bootstrap editor with schema */
 
+  // useEffect(() => {
+  //   //for optimization, restrict setting value to editor if previous and current json inputs are the same.
+  //   //except when editor is reset/cleared, by setting empty json object as input
+  //   if (
+  //     every([existingJSON, isEmpty(existingJSON), isEmpty(currentJSON)]) ||
+  //     JSON.stringify(existingJSON) !== JSON.stringify(currentJSON)
+  //   ) {
+  //     attempt(verifyIncomingJSON, existingJSON)
+  //     setCurrentJSON(existingJSON)
+  //   }
+  // }, [existingJSON])
+
   useEffect(() => {
-    //for optimization, restrict setting value to editor if previous and current json inputs are the same.
-    //except when editor is reset/cleared, by setting empty json object as input
-    if (
-      every([existingJSON, isEmpty(existingJSON), isEmpty(currentJSON)]) ||
-      JSON.stringify(existingJSON) !== JSON.stringify(currentJSON)
-    ) {
-      attempt(verifyIncomingJSON, existingJSON)
-      setCurrentJSON(existingJSON)
-    }
-  }, [existingJSON])
+    verifyIncomingJSON(existingJSON)
+  }, [JSON.stringify(existingJSON)])
 
   useEffect(() => {
     if (existingYaml) {
@@ -244,6 +271,23 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   /* #region Handle various interactions with the editor */
 
+  const validateYAMLAgainstSchema = useCallback(
+    (updatedYaml: string): void => {
+      if (schema) {
+        validateYAMLWithSchema(updatedYaml, getSchemaWithLanguageSettings(schema)).then((errors: Diagnostic[]) => {
+          setSchemaValidationErrors(errors)
+          if (isEmpty(errors)) {
+            setShouldShowErrorPanel(false)
+          }
+        })
+      } else {
+        setSchemaValidationErrors([])
+        setShouldShowErrorPanel(false)
+      }
+    },
+    [schema]
+  )
+
   const onYamlChange = useCallback(
     debounce((updatedYaml: string): void => {
       setCurrentYaml(updatedYaml)
@@ -255,6 +299,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         schema,
         errorMessage: yamlError
       })
+      if (updatedYaml && schema) {
+        validateYAMLAgainstSchema(updatedYaml)
+      }
       onChange?.(!(updatedYaml === ''))
     }, 500),
     [setYamlValidationErrors, showError, schema, yamlError, setCurrentYaml, onChange]
@@ -300,6 +347,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       editor?.focus()
     }
     editor.onKeyDown((event: IKeyboardEvent) => handleEditorKeyDownEvent(event, editor))
+    editor.onDidChangeCursorPosition((event: editor.ICursorPositionChangedEvent) => {
+      currentCursorPosition.current = event.position
+    })
   }
 
   const disposePreviousSuggestions = (): void => {
@@ -555,25 +605,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }
 
-  const getErrorSummary = (errorMap?: Map<number, string>): React.ReactElement => {
-    const errors: React.ReactElement[] = []
-    errorMap?.forEach((value, key) => {
-      const error = (
-        <li className={css.item} title={value} key={key}>
-          {getString('yamlBuilder.lineNumberLabel')}&nbsp;
-          {key + 1},&nbsp;
-          {truncate(value, { length: MAX_ERR_MSSG_LENGTH })}
-        </li>
-      )
-      errors.push(error)
-    })
-    return (
-      <div className={css.errorSummary}>
-        <ol className={css.errorList}>{errors}</ol>
-      </div>
-    )
-  }
-
   const renderHeader = useCallback(
     (): JSX.Element => (
       <div className={cx(css.header)}>
@@ -585,21 +616,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
               {showCopyIcon ? <CopyToClipboard content={defaultTo(yamlRef.current, '')} showFeedback={true} /> : null}
             </Container>
           ) : null}
-        </div>
-        <div className={cx(css.flexCenter, css.validationStatus)}>
-          {!isReadOnlyMode && yamlValidationErrors && yamlValidationErrors.size > 0 && (
-            <Popover
-              interactionKind={PopoverInteractionKind.HOVER}
-              position={Position.TOP}
-              content={getErrorSummary(yamlValidationErrors)}
-              popoverClassName={css.summaryPopover}
-            >
-              <div>
-                <Icon name="main-issue-filled" size={14} className={css.validationIcon} />
-                <span className={css.invalidYaml}>{getString('invalidText')}</span>
-              </div>
-            </Popover>
-          )}
         </div>
       </div>
     ),
@@ -614,11 +630,22 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }, [currentYaml])
 
+  useEffect(() => {
+    if (height) {
+      if (shouldShowErrorPanel && !isEmpty(schemaValidationErrors)) {
+        const heightWithErrorPanel: React.CSSProperties['height'] = 'calc(80vh - 250px)'
+        setDynamicHeight(heightWithErrorPanel)
+      } else {
+        setDynamicHeight(height)
+      }
+    }
+  }, [shouldShowErrorPanel, height, schemaValidationErrors])
+
   const renderEditor = useCallback(
     (): JSX.Element => (
       <MonacoEditor
         width={dynamicWidth}
-        height={defaultTo(height, DEFAULT_EDITOR_HEIGHT)}
+        height={dynamicHeight}
         language="yaml"
         value={currentYaml}
         onChange={onYamlChange}
@@ -637,7 +664,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         ref={editorRef}
       />
     ),
-    [dynamicWidth, height, currentYaml, onYamlChange]
+    [dynamicWidth, dynamicHeight, currentYaml, onYamlChange]
   )
 
   const throttledOnResize = throttle(() => {
@@ -652,13 +679,365 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }, [])
 
+  const addCodeLensRegistration = useCallback(
+    ({
+      fromLine,
+      toLineNum,
+      cursorPosition
+    }: {
+      fromLine: number
+      toLineNum: number
+      cursorPosition: Position
+    }): IDisposable => {
+      const commandId = editorRef.current?.editor?.addCommand(
+        0,
+        () => {
+          const numberOfLinesInSelection = getSelectionRangeOnSettingsBtnClick(cursorPosition, currentYaml)
+          if (numberOfLinesInSelection) {
+            currentCursorPosition.current = cursorPosition
+            highlightInsertedText(fromLine, toLineNum + numberOfLinesInSelection + 1)
+          }
+        },
+        ''
+      )
+      const registrationId: IDisposable = monaco.languages.registerCodeLensProvider('yaml', {
+        provideCodeLenses: function (_model: unknown, _token: unknown) {
+          return {
+            lenses: [
+              {
+                range: {
+                  startLineNumber: fromLine,
+                  startColumn: 1,
+                  endLineNumber: toLineNum,
+                  endColumn: 1
+                },
+                id: 'plugin-settings',
+                command: {
+                  id: commandId,
+                  title: 'Settings'
+                }
+              }
+            ],
+            dispose: () => {}
+          }
+        }
+      })
+      return registrationId
+    },
+    [editorRef.current?.editor, currentYaml]
+  )
+
+  const getClosestIndexToSearchToken = useCallback(
+    (
+      sourcePosition: Position,
+      searchToken: string,
+      startIdxForLookup?: number,
+      noOfResultsToBeIncludedInLookup?: number
+    ): number => {
+      const editor = editorRef.current?.editor
+      if (editor) {
+        const { lineNumber: currentCursorLineNum } = sourcePosition || {}
+        if (currentCursorLineNum) {
+          const allMatchesFound = findPositionsForMatchingKeys(editor, searchToken)
+          const relevantMatches = (
+            startIdxForLookup && noOfResultsToBeIncludedInLookup
+              ? allMatchesFound.slice(startIdxForLookup, noOfResultsToBeIncludedInLookup)
+              : allMatchesFound
+          )
+            .map((position: Position) => position.lineNumber)
+            ?.sort(function (location1, location2) {
+              return location1 - location2
+            })
+          let closestPosition = -1
+          for (let matchItr = 0; matchItr < relevantMatches.length; matchItr++) {
+            if (matchItr === relevantMatches.length - 1 && currentCursorLineNum >= relevantMatches[matchItr]) {
+              closestPosition = matchItr
+              break
+            } else if (
+              currentCursorLineNum < relevantMatches[matchItr] ||
+              (currentCursorLineNum >= relevantMatches[matchItr] &&
+                currentCursorLineNum < relevantMatches[matchItr + 1])
+            ) {
+              closestPosition = matchItr
+              break
+            }
+          }
+          return closestPosition
+        }
+      }
+      return 0
+    },
+    [editorRef.current?.editor]
+  )
+
+  const getClosestStepIndexInCurrentStage = useCallback(
+    (cursorPosition: Position, precedingStageStepsCount: number, currentStageStepsCount: number): number => {
+      let closestStepIndex = -1
+      if (precedingStageStepsCount > 0) {
+        closestStepIndex = getClosestIndexToSearchToken(
+          cursorPosition,
+          'step:',
+          precedingStageStepsCount,
+          precedingStageStepsCount + currentStageStepsCount
+        )
+      } else {
+        closestStepIndex = getClosestIndexToSearchToken(cursorPosition, 'step:', 0, currentStageStepsCount)
+      }
+      return closestStepIndex === -1 ? 0 : closestStepIndex
+    },
+    []
+  )
+
+  const detectYAMLInsertion = useCallback(
+    ({
+      noOflinesInserted,
+      closestStageIndex,
+      isPluginUpdate,
+      closestStepIndex,
+      startStepIndex
+    }: {
+      noOflinesInserted: number
+      closestStageIndex: number
+      isPluginUpdate: boolean
+      closestStepIndex: number
+      startStepIndex: number
+    }): void => {
+      const editor = editorRef.current?.editor
+      if (editor) {
+        let position: Position
+        if (isPluginUpdate) {
+          const allMatches = findPositionsForMatchingKeys(editor, 'step:') || []
+          const allMatchesInClosestStageIndex = allMatches.slice(startStepIndex)
+          position = allMatchesInClosestStageIndex[closestStepIndex]
+          const { lineNumber: startingLineNum } = position
+          const endingLineNum = startingLineNum + noOflinesInserted > 0 ? startingLineNum + noOflinesInserted - 1 : 0
+          const contentInEndingLine = editor.getModel()?.getLineContent(endingLineNum) || ''
+
+          // highlight the inserted text
+          highlightInsertedText(startingLineNum, endingLineNum + 1)
+
+          // Scroll to the end of the inserted text
+          editor.setPosition({ column: contentInEndingLine.length + 1, lineNumber: endingLineNum })
+          editor.revealLineInCenter(endingLineNum)
+          editor.focus()
+        } else {
+          position = findPositionsForMatchingKeys(editor, 'steps')[closestStageIndex]
+          const endingLineForCursorPosition = position.lineNumber + noOflinesInserted
+          const contentInStartingLine = editor.getModel()?.getLineContent(position.lineNumber)?.trim() || ''
+          const contentInEndingLine = editor.getModel()?.getLineContent(endingLineForCursorPosition) || ''
+          const startingLineNum = position.lineNumber + (contentInStartingLine ? 1 : 0)
+          const endingLineNum = contentInStartingLine ? endingLineForCursorPosition + 1 : endingLineForCursorPosition
+
+          // highlight the inserted text
+          highlightInsertedText(startingLineNum, endingLineNum)
+
+          // Scroll to the end of the inserted text
+          editor.setPosition({ column: contentInEndingLine.length + 1, lineNumber: endingLineForCursorPosition })
+          editor.revealLineInCenter(endingLineForCursorPosition)
+          editor.focus()
+        }
+      }
+    },
+    [editorRef.current?.editor]
+  )
+
+  const getSelectionRangeOnSettingsBtnClick = useCallback((cursorPosition: Position, latestYAML: string): number => {
+    if (cursorPosition) {
+      try {
+        const currentYAMLAsJSON = parse(latestYAML)
+        const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
+        const stageStepsForTheClosestIndex = findAllValuesForJSONPath(
+          currentYAMLAsJSON,
+          getStageYAMLPathForStageIndex(closestStageIndex)
+        ) as unknown[]
+        const stageStepsForThePrecedingIndex =
+          closestStageIndex > 0
+            ? (findAllValuesForJSONPath(
+                currentYAMLAsJSON,
+                getStageYAMLPathForStageIndex(closestStageIndex - 1)
+              ) as unknown[])
+            : {}
+        let closestStepIndex = 0
+        if (Array.isArray(stageStepsForThePrecedingIndex)) {
+          const stageStepsCountForThePrecedingIndex = (stageStepsForThePrecedingIndex as unknown[]).length
+          closestStepIndex = getClosestIndexToSearchToken(
+            cursorPosition,
+            'step:',
+            stageStepsCountForThePrecedingIndex,
+            stageStepsCountForThePrecedingIndex + stageStepsForTheClosestIndex.length
+          )
+        } else {
+          closestStepIndex = getClosestIndexToSearchToken(
+            cursorPosition,
+            'step:',
+            0,
+            stageStepsForTheClosestIndex.length
+          )
+        }
+        if (closestStepIndex === -1) {
+          return 0
+        }
+        const stepYAMLPath = `${getStageYAMLPathForStageIndex(closestStageIndex)}.${closestStepIndex}.step`
+        const pluginAsStep = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
+        setSelectedPlugin(pluginAsStep)
+        const stepValueTokens = yamlStringify(pluginAsStep).split('\n').length
+        return stepValueTokens > 0 ? stepValueTokens - 1 : 0
+      } catch (e) {
+        // ignore error
+      }
+    }
+    return 0
+  }, [])
+
+  useEffect(() => {
+    const editor = editorRef.current?.editor
+    if (shouldRenderPluginsPanel && editor) {
+      const matchingPositions = findPositionsForMatchingKeys(editor, 'step:')
+      if (matchingPositions.length) {
+        matchingPositions.map((matchingPosition: Position) => {
+          const { lineNumber } = matchingPosition
+          if (codeLensRegistrations.current.has(lineNumber)) {
+            const existingRegistrationId = codeLensRegistrations.current.get(lineNumber)
+            try {
+              existingRegistrationId?.dispose()
+            } catch (ex) {
+              //ignore excetion
+            }
+            codeLensRegistrations.current.delete(lineNumber)
+          }
+          const registrationId = addCodeLensRegistration({
+            fromLine: lineNumber,
+            toLineNum: lineNumber,
+            cursorPosition: matchingPosition
+          })
+          codeLensRegistrations.current.set(lineNumber, registrationId)
+        })
+      }
+    }
+  }, [currentYaml, editorRef.current?.editor, shouldRenderPluginsPanel])
+
+  const highlightInsertedText = useCallback(
+    (fromLine: number, toLineNum: number): void => {
+      const pluginInputDecoration: editor.IModelDeltaDecoration = {
+        range: new monaco.Range(fromLine, 1, toLineNum, 1),
+        options: {
+          isWholeLine: false,
+          className: css.pluginDecorator
+        }
+      }
+      const decorations = editorRef.current?.editor?.deltaDecorations([], [pluginInputDecoration])
+      if (decorations) {
+        setTimeout(() => editorRef.current?.editor?.deltaDecorations(decorations, []), 10000)
+      }
+    },
+    [editorRef.current?.editor]
+  )
+
+  const wrapPlugInputInAStep = useCallback(
+    (pluginName: string, pluginInput: Record<string, any>): Record<string, any> => {
+      return {
+        //TODO @vardan - confirm step name, identifier and type with Backend
+        step: {
+          name: pluginName,
+          identifier: pluginName.split(' ').join('_'),
+          type: 'Plugin',
+          spec: sanitizePluginValues(pluginInput)
+        }
+      }
+    },
+    []
+  )
+
+  const sanitizePluginValues = useCallback((unSanitizedObj: Record<string, any>): Record<string, any> => {
+    try {
+      return JSON.parse(JSON.stringify(unSanitizedObj).replace(/\:null/gi, ':""'))
+    } catch (e) {
+      return unSanitizedObj
+    }
+  }, [])
+
+  const addupdatePluginIntoExistingYAML = useCallback(
+    (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean): void => {
+      const { pluginData, pluginName, shouldInsertYAML } = pluginMetadata
+      const cursorPosition = currentCursorPosition.current
+      if (!isEmpty(pluginData) && shouldInsertYAML && cursorPosition) {
+        try {
+          const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
+          const yamlStepToBeInsertedAt = getStageYAMLPathForStageIndex(closestStageIndex)
+          const currentPipelineJSON = parse(currentYaml)
+          const existingSteps = findAllValuesForJSONPath(currentPipelineJSON, yamlStepToBeInsertedAt) as unknown[]
+          let updatedSteps = existingSteps.slice(0) as unknown[]
+          const pluginValuesAsStep = wrapPlugInputInAStep(pluginName, pluginData)
+          const stepCountInPrecedingStage = (
+            closestStageIndex > 0
+              ? (findAllValuesForJSONPath(
+                  currentPipelineJSON,
+                  getStageYAMLPathForStageIndex(closestStageIndex - 1)
+                ) as unknown[])
+              : []
+          ).length
+          let closestStepIndexInCurrentStage: number = 0
+          if (isPluginUpdate) {
+            const currentStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
+            const stepsInCurrentStage = findAllValuesForJSONPath(
+              currentPipelineJSON,
+              getStageYAMLPathForStageIndex(currentStageIndex)
+            ) as unknown[]
+            closestStepIndexInCurrentStage = getClosestStepIndexInCurrentStage(
+              cursorPosition,
+              stepCountInPrecedingStage,
+              stepsInCurrentStage.length
+            )
+            updatedSteps[closestStepIndexInCurrentStage] = pluginValuesAsStep
+          } else {
+            if (Array.isArray(existingSteps) && existingSteps.length > 0) {
+              updatedSteps.unshift(pluginValuesAsStep)
+            } else {
+              updatedSteps = [pluginValuesAsStep]
+            }
+          }
+          const updatedPipelineJSON = set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps)
+          setCurrentYaml(yamlStringify(updatedPipelineJSON))
+          detectYAMLInsertion({
+            noOflinesInserted: countAllKeysInObject(pluginValuesAsStep),
+            closestStageIndex,
+            isPluginUpdate,
+            closestStepIndex: closestStepIndexInCurrentStage,
+            startStepIndex: stepCountInPrecedingStage
+          })
+        } catch (e) {
+          // ignore error
+        }
+      }
+    },
+    [currentCursorPosition, currentYaml]
+  )
+
   return (
-    <div className={cx(displayBorder ? css.main : null, { [css.darkBg]: theme === 'DARK' })}>
-      <div className={css.editor}>
-        {defaultTo(renderCustomHeader, renderHeader)()}
-        {renderEditor()}
-      </div>
-    </div>
+    <Layout.Horizontal>
+      <Layout.Vertical>
+        <div
+          className={cx(
+            displayBorder ? css.main : null,
+            { [css.darkBg]: theme === 'DARK' },
+            { [css.borderWithPluginsPanel]: shouldRenderPluginsPanel }
+          )}
+        >
+          <div className={css.editor}>
+            {defaultTo(renderCustomHeader, renderHeader)()}
+            {renderEditor()}
+          </div>
+        </div>
+      </Layout.Vertical>
+      {shouldRenderPluginsPanel ? (
+        <PluginsPanel
+          height={dynamicHeight}
+          onPluginAddUpdate={addupdatePluginIntoExistingYAML}
+          onPluginDiscard={() => setSelectedPlugin(undefined)}
+          selectedPluginFromYAMLView={selectedPlugin}
+        />
+      ) : null}
+    </Layout.Horizontal>
   )
 }
 

@@ -9,6 +9,7 @@ import React from 'react'
 import type { DetailedReactHTMLElement } from 'react'
 import type { Diagnostic } from 'vscode-languageserver-types'
 import { parse } from 'yaml'
+import type { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 
 import { findLeafToParentPath, getSchemaWithLanguageSettings, validateYAMLWithSchema } from '../../utils/YamlUtils'
 import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
@@ -66,7 +67,7 @@ const getMetaDataForKeyboardEventProcessing = ({
       const parentToCurrentPropertyPath = findLeafToParentPath(jsonEquivalentOfYAMLInEditor, currentProperty)
       return { currentProperty, yamlInEditor, parentToCurrentPropertyPath }
     } catch (e) {
-      onErrorCallback?.(e)
+      onErrorCallback?.(e as Record<string, any>)
     }
   }
 }
@@ -136,10 +137,23 @@ const verifyYAML = (args: {
   setYamlValidationErrors(undefined)
 }
 
+const findPositionsForMatchingKeys = (editor: editor.IStandaloneCodeEditor, textToFind: string): Position[] => {
+  const matches = editor?.getModel()?.findMatches(textToFind, true, false, false, null, true) as editor.FindMatch[]
+  return matches?.map((match: editor.FindMatch) => {
+    const { endLineNumber, endColumn } = match.range
+    return { lineNumber: endLineNumber, column: endColumn } as Position
+  })
+}
+
+const getStageYAMLPathForStageIndex = (stageIndex: number): string =>
+  `pipeline.stages.${stageIndex}.stage.spec.execution.steps`
+
 export {
   getYAMLFromEditor,
   getMetaDataForKeyboardEventProcessing,
   getYAMLValidationErrors,
   getValidationErrorMessagesForToaster,
-  verifyYAML
+  verifyYAML,
+  findPositionsForMatchingKeys,
+  getStageYAMLPathForStageIndex
 }

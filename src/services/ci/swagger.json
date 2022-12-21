@@ -1029,6 +1029,88 @@
           }
         }
       }
+    },
+    "/v1/plugins": {
+      "get": {
+        "tags": ["Plugin schema"],
+        "summary": "List metadata for available plugins",
+        "operationId": "listPlugins",
+        "parameters": [
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Page number of navigation. The default value is 0.",
+            "type": "integer",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of entries per page. The default value is 100.",
+            "type": "integer",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "This would be used to filter plugins. Any plugin having the specified string in its Name will be filtered.",
+            "type": "string",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Failure"
+                }
+              },
+              "application/yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Failure"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              },
+              "application/yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "List of available plugins",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/ResponseDTOPageResponsePluginMetadataResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -7319,6 +7401,116 @@
         },
         "data": {
           "$ref": "#/definitions/JsonNode"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "Input": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "secret": {
+          "type": "boolean"
+        },
+        "default": {
+          "type": "string"
+        },
+        "allowed_values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "PageResponsePluginMetadataResponse": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalItems": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageItemCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PluginMetadataResponse"
+          }
+        },
+        "pageIndex": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "empty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "PluginMetadataResponse": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "logo": {
+          "type": "string"
+        },
+        "repo": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "uses": {
+          "type": "string"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Input"
+          }
+        }
+      }
+    },
+    "ResponseDTOPageResponsePluginMetadataResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/PageResponsePluginMetadataResponse"
         },
         "metaData": {
           "type": "object"

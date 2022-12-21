@@ -162,6 +162,10 @@ function PipelineYamlView(): React.ReactElement {
     }
   }, [userPreferenceEditMode])
 
+  const shouldShowReadOnlyMode = isReadonly || !isYamlEditable
+
+  const shouldShowPluginsPanel = !shouldShowReadOnlyMode
+
   return (
     <div className={css.yamlBuilder}>
       <>
@@ -178,8 +182,10 @@ function PipelineYamlView(): React.ReactElement {
               )
             }}
             yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}
-            height={'calc(100vh - 200px)'}
-            width="calc(100vw - 400px)"
+            height={'calc(100vh - 150px)'}
+            width={shouldShowPluginsPanel ? '50vw' : 'calc(80vw + 10px)'}
+            onEnableEditMode={enableEditMode}
+            showPluginsPanel={shouldShowPluginsPanel}
             invocationMap={stepsFactory.getInvocationMap()}
             schema={pipelineSchema?.data}
             isEditModeSupported={!isReadonly}
