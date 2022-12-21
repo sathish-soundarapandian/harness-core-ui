@@ -8,6 +8,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { capitalize, get, isEmpty } from 'lodash-es'
 import { Classes, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
+import * as Yup from 'yup'
 import { Color, FontVariation } from '@harness/design-system'
 import {
   Container,
@@ -94,6 +95,24 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     return Object.fromEntries(result)
   }, [])
 
+  const generateValidationSchema = useCallback((inputs: Input[]) => {
+    let validationSchema = {}
+    inputs.map((item: Input) => {
+      const { name, required } = item
+      if (required && name) {
+        validationSchema = {
+          ...validationSchema,
+          ...(required && {
+            [name]: Yup.string()
+              .trim()
+              .required(getString('common.validation.fieldIsRequired', { name: generateFriendlyPluginName(name) }))
+          })
+        }
+      }
+    })
+    return Yup.object().shape({ ...validationSchema })
+  }, [])
+
   const onBackArrowClick = useCallback((): void => {
     onPluginDiscard()
     setPlugin(undefined)
@@ -120,7 +139,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
           <Layout.Horizontal width="100%">
             <Icon name={'gear'} size={20} className={css.pluginIcon} />
             <Layout.Vertical spacing="xsmall" width="100%" padding={{ left: 'small' }}>
-              <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_7}>
+              <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_7} width="95%">
                 {name}
               </Text>
               <Text font={{ variation: FontVariation.TINY }} lineClamp={1} width="85%">
@@ -134,40 +153,48 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     )
   }, [])
 
+  const generateFriendlyPluginName = useCallback((_pluginName: string): string => {
+    return capitalize(_pluginName.split('_').join(' '))
+  }, [])
+
   const renderPluginForm = useCallback((): JSX.Element => {
     const { inputs = [] } = plugin || {}
     return (
       <Layout.Vertical height="100%">
         {inputs.map((input: Input) => {
-          const { name, description } = input
+          const { name, description, secret } = input
           return name ? (
             <Layout.Horizontal padding="xmall">
-              <FormInput.Text
-                name={name}
-                label={
-                  <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
-                    <Text font={{ variation: FontVariation.FORM_LABEL }}>{capitalize(name.split('_').join(' '))}</Text>
-                    {description ? (
-                      <Popover
-                        interactionKind={PopoverInteractionKind.HOVER}
-                        boundary="viewport"
-                        position={PopoverPosition.RIGHT}
-                        popoverClassName={Classes.DARK}
-                        content={
-                          <Container padding="medium">
-                            <Text font={{ variation: FontVariation.TINY }} color={Color.WHITE}>
-                              {description}
-                            </Text>
-                          </Container>
-                        }
-                      >
-                        <Icon name="info" color={Color.PRIMARY_7} size={10} padding={{ bottom: 'small' }} />
-                      </Popover>
-                    ) : null}
-                  </Layout.Horizontal>
-                }
-                style={{ width: '100%' }}
-              ></FormInput.Text>
+              {secret ? (
+                <FormInput.Text
+                  name={name}
+                  label={
+                    <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
+                      <Text font={{ variation: FontVariation.FORM_LABEL }}>{generateFriendlyPluginName(name)}</Text>
+                      {description ? (
+                        <Popover
+                          interactionKind={PopoverInteractionKind.HOVER}
+                          boundary="viewport"
+                          position={PopoverPosition.RIGHT}
+                          popoverClassName={Classes.DARK}
+                          content={
+                            <Container padding="medium">
+                              <Text font={{ variation: FontVariation.TINY }} color={Color.WHITE}>
+                                {description}
+                              </Text>
+                            </Container>
+                          }
+                        >
+                          <Icon name="info" color={Color.PRIMARY_7} size={10} padding={{ bottom: 'small' }} />
+                        </Popover>
+                      ) : null}
+                    </Layout.Horizontal>
+                  }
+                  style={{ width: '100%' }}
+                ></FormInput.Text>
+              ) : (
+                <></>
+              )}
             </Layout.Horizontal>
           ) : null
         })}
@@ -244,6 +271,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                           ? generateFormikInitialValues(formFields)
                           : {}
                       }
+                      validationSchema={formFields ? generateValidationSchema(formFields) : {}}
                       enableReinitialize={true}
                       formName="pluginsForm"
                       onSubmit={formValues => {
