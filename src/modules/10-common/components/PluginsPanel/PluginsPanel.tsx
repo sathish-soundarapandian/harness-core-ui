@@ -285,7 +285,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                         }
                       }}
                     >
-                      {_formik => {
+                      {formikProps => {
                         return (
                           <FormikForm>
                             <Layout.Vertical
@@ -295,7 +295,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                             >
                               <Container className={css.pluginFields}>{renderPluginForm()}</Container>
                               <Layout.Horizontal flex spacing="xlarge">
-                                <Button type="submit" variation={ButtonVariation.PRIMARY}>
+                                <Button type="submit" variation={ButtonVariation.PRIMARY} disabled={!formikProps.dirty}>
                                   {isPluginUpdateAction ? getString('update') : getString('add')}
                                 </Button>
                                 {pluginDocumentationLink ? (
