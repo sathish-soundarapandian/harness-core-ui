@@ -1,6 +1,6 @@
 {
   "name": "@harness/microfrontends",
-  "version": "1.23.0",
+  "version": "1.24.0",
   "description": "",
   "types": "dist/microfrontends/index.d.ts",
   "main": "dist/microfrontends/index.js",
@@ -19,5 +19,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": []
+  "keywords": [],
+  "dependencies": {
+    "@harness/microfrontends": "file:.yalc/@harness/microfrontends"
+  }
 }

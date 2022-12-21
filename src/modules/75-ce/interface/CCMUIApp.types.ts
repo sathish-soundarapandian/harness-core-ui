@@ -12,6 +12,9 @@ import type { AnomalyFiltersProps } from '@ce/components/AnomaliesFilter/Anomali
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { GatewayListFiltersProps } from '@ce/components/COGatewayList/GatewayListFilters'
 import type FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
+import type { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
+import type useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
+import type { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 
 export interface CCMUIAppCustomProps {
   customComponents: {
@@ -21,5 +24,10 @@ export interface CCMUIAppCustomProps {
     ConnectorReferenceField: React.ComponentType<ConnectorReferenceFieldProps>
     GatewayListFilters: React.ComponentType<GatewayListFiltersProps>
     FeatureWarningBanner: typeof FeatureWarningBanner
+    FeatureWarningTooltip: typeof FeatureWarningTooltip
+    ErrorHandler: typeof ErrorHandler
+  }
+  customHooks: {
+    useTestConnectionModal: typeof useTestConnectionModal
   }
 }

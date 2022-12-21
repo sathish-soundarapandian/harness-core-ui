@@ -41,6 +41,9 @@ import RecommendationFilters from '@ce/components/RecommendationFilters'
 import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
+import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
+import useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import CEHomePage from './pages/home/CEHomePage'
 import CECODashboardPage from './pages/co-dashboard/CECODashboardPage'
 import CECOCreateGatewayPage from './pages/co-create-gateway/CECOCreateGatewayPage'
@@ -684,6 +687,15 @@ const CENonMFERoutes = (
     >
       <CommitmentOrchestrationSetup />
     </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCECloudIntegration({ ...accountPathProps })}
+      pageName={PAGE_NAME.CECloudIntegration}
+      exact
+    >
+      <CloudIntegrationPage />
+    </RouteWithLayout>
   </>
 )
 
@@ -788,7 +800,8 @@ const CERoutes: React.FC = () => {
         routes.toCEGovernanceEnforcements({ ...accountPathProps }),
         routes.toCEGovernanceEvaluations({ ...accountPathProps }),
         routes.toCEGovernanceRuleEditor({ ...accountPathProps, ruleId: ':ruleId' }),
-        routes.toCECurrencyPreferences({ ...accountPathProps })
+        routes.toCECurrencyPreferences({ ...accountPathProps }),
+        routes.toCECloudIntegration({ ...accountPathProps })
       ]
     : []
 
@@ -846,15 +859,6 @@ const CERoutes: React.FC = () => {
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CESideNavProps}
-          path={routes.toCECloudIntegration({ ...accountPathProps })}
-          pageName={PAGE_NAME.CECloudIntegration}
-          exact
-        >
-          <CloudIntegrationPage />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
           path={routes.toCEGovernance({ ...accountPathProps })}
           exact
         >
@@ -869,7 +873,12 @@ const CERoutes: React.FC = () => {
                 AnomaliesFilter,
                 ConnectorReferenceField,
                 GatewayListFilters,
-                FeatureWarningBanner
+                FeatureWarningBanner,
+                FeatureWarningTooltip,
+                ErrorHandler
+              }}
+              customHooks={{
+                useTestConnectionModal
               }}
               ChildApp={CcmMicroFrontendPath}
             />
