@@ -902,12 +902,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const { lineNumber } = matchingPosition
           if (codeLensRegistrations.current.has(lineNumber)) {
             const existingRegistrationId = codeLensRegistrations.current.get(lineNumber)
-            try {
-              existingRegistrationId?.dispose()
-            } catch (ex) {
-              //ignore excetion
+            if (existingRegistrationId) {
+              try {
+                existingRegistrationId.dispose()
+              } catch (ex) {
+                //ignore excetion
+              }
+              codeLensRegistrations.current.delete(lineNumber)
             }
-            codeLensRegistrations.current.delete(lineNumber)
           }
           const registrationId = addCodeLensRegistration({
             fromLine: lineNumber,
@@ -918,7 +920,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         })
       }
     }
-  }, [currentYaml, editorRef.current?.editor, shouldRenderPluginsPanel])
+  }, [currentYaml, editorRef.current?.editor, shouldRenderPluginsPanel, codeLensRegistrations.current])
 
   const highlightInsertedText = useCallback(
     (fromLine: number, toLineNum: number): void => {
