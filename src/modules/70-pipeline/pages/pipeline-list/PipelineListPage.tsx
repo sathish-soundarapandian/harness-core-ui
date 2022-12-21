@@ -50,11 +50,11 @@ import { PipelineListTable } from './PipelineListTable/PipelineListTable'
 import type { PipelineListPagePathParams, PipelineListPageQueryParams } from './types'
 import css from './PipelineListPage.module.scss'
 
-export type ProcessedPipelineListPageQueryParams = PartiallyRequired<
+type ProcessedPipelineListPageQueryParams = PartiallyRequired<
   PipelineListPageQueryParams,
   'page' | 'size' | 'sort'
 >
-export const queryParamOptions = {
+const queryParamOptions = {
   parseArrays: true,
   decoder: queryParamDecodeAll(),
   processQueryParams(params: PipelineListPageQueryParams): ProcessedPipelineListPageQueryParams {
