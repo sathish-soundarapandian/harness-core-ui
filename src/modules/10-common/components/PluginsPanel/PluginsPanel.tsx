@@ -103,11 +103,9 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
       if (required && name) {
         validationSchema = {
           ...validationSchema,
-          ...(required && {
-            [name]: Yup.string()
-              .trim()
-              .required(getString('common.validation.fieldIsRequired', { name: generateFriendlyPluginName(name) }))
-          })
+          [name]: Yup.string()
+            .trim()
+            .required(getString('common.validation.fieldIsRequired', { name: generateFriendlyPluginName(name) }))
         }
       }
     })
