@@ -26,8 +26,9 @@ import {
   Popover
 } from '@harness/uicore'
 import { Input, PluginMetadataResponse, useListPlugins } from 'services/ci'
-
 import { useStrings } from 'framework/strings'
+// eslint-disable-next-line no-restricted-imports
+import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 
 import css from './PluginsPanel.module.scss'
 
@@ -157,43 +158,48 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     return capitalize(_pluginName.split('_').join(' '))
   }, [])
 
+  const generateLabelForPluginField = useCallback((formField: Input): JSX.Element | string => {
+    const { name, description } = formField
+    return (
+      <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
+        {name ? <Text font={{ variation: FontVariation.FORM_LABEL }}>{generateFriendlyPluginName(name)}</Text> : null}
+        {description ? (
+          <Popover
+            interactionKind={PopoverInteractionKind.HOVER}
+            boundary="viewport"
+            position={PopoverPosition.RIGHT}
+            popoverClassName={Classes.DARK}
+            content={
+              <Container padding="medium">
+                <Text font={{ variation: FontVariation.TINY }} color={Color.WHITE}>
+                  {description}
+                </Text>
+              </Container>
+            }
+          >
+            <Icon name="info" color={Color.PRIMARY_7} size={10} padding={{ bottom: 'small' }} />
+          </Popover>
+        ) : null}
+      </Layout.Horizontal>
+    )
+  }, [])
+
   const renderPluginForm = useCallback((): JSX.Element => {
     const { inputs = [] } = plugin || {}
     return (
       <Layout.Vertical height="100%">
         {inputs.map((input: Input) => {
-          const { name, description, secret } = input
+          const { name, secret } = input
           return name ? (
             <Layout.Horizontal padding="xmall">
               {secret ? (
+                <MultiTypeSecretInput name={name} label={generateLabelForPluginField(input) as string} />
+              ) : (
                 <FormInput.Text
                   name={name}
-                  label={
-                    <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
-                      <Text font={{ variation: FontVariation.FORM_LABEL }}>{generateFriendlyPluginName(name)}</Text>
-                      {description ? (
-                        <Popover
-                          interactionKind={PopoverInteractionKind.HOVER}
-                          boundary="viewport"
-                          position={PopoverPosition.RIGHT}
-                          popoverClassName={Classes.DARK}
-                          content={
-                            <Container padding="medium">
-                              <Text font={{ variation: FontVariation.TINY }} color={Color.WHITE}>
-                                {description}
-                              </Text>
-                            </Container>
-                          }
-                        >
-                          <Icon name="info" color={Color.PRIMARY_7} size={10} padding={{ bottom: 'small' }} />
-                        </Popover>
-                      ) : null}
-                    </Layout.Horizontal>
-                  }
+                  label={generateLabelForPluginField(input)}
                   style={{ width: '100%' }}
                 ></FormInput.Text>
-              ) : (
-                <></>
               )}
             </Layout.Horizontal>
           ) : null
@@ -295,7 +301,11 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                             >
                               <Container className={css.pluginFields}>{renderPluginForm()}</Container>
                               <Layout.Horizontal flex spacing="xlarge">
-                                <Button type="submit" variation={ButtonVariation.PRIMARY} disabled={!formikProps.dirty}>
+                                <Button
+                                  type="submit"
+                                  variation={ButtonVariation.PRIMARY}
+                                  disabled={isPluginUpdateAction && !formikProps.dirty}
+                                >
                                   {isPluginUpdateAction ? getString('update') : getString('add')}
                                 </Button>
                                 {pluginDocumentationLink ? (
