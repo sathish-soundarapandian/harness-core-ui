@@ -153,7 +153,7 @@ export function StepCommands(
       return activeTab === StepCommandTabs.StepConfiguration && stepRef.current
         ? stepObj.processFormData(stepRef.current.values)
         : activeTab === StepCommandTabs.Advanced && advancedConfRef.current
-        ? advancedConfRef.current.values
+        ? { ...(advancedConfRef.current.values as Partial<Values>), tab: TabTypes.Advanced }
         : {}
     },
     resetForm() {

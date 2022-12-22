@@ -9,7 +9,7 @@ import React from 'react'
 import type { FormikProps } from 'formik'
 import { Formik, FormikForm, Accordion, AccordionHandle } from '@harness/uicore'
 import * as Yup from 'yup'
-import { debounce, defaultTo, isEmpty } from 'lodash-es'
+import { debounce, defaultTo, isEmpty, noop } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
 import {
@@ -77,9 +77,7 @@ export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: Step
         when,
         strategy
       }}
-      onSubmit={data => {
-        onUpdate({ ...data, tab: TabTypes.Advanced })
-      }}
+      onSubmit={noop}
       validate={debouncedUpdate}
       formName="pipelineAdvancedSteps"
       validationSchema={Yup.object().shape({

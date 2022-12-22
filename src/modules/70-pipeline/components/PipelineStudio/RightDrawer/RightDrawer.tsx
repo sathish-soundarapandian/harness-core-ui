@@ -365,7 +365,7 @@ const applyChanges = async (
     return
   } else {
     onSubmitStep(
-      cloneDeep(formikRef.current?.getValues()) as any,
+      formikRef.current?.getValues() as Partial<Values>,
       pipelineView.drawerData.type,
       data,
       trackEvent,

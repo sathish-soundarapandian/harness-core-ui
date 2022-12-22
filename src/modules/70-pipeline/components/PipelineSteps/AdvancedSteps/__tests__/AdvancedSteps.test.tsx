@@ -6,11 +6,10 @@
  */
 
 import React from 'react'
-import { render, act } from '@testing-library/react'
+import { render } from '@testing-library/react'
 
 import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import type { StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 
 import { AdvancedStepsWithRef } from '../AdvancedSteps'
 
@@ -44,35 +43,5 @@ describe('<AdvancedSteps /> tests', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
-  })
-
-  // this test can be removed if we remove obSubmit handler
-  test('submit works', async () => {
-    const ref = React.createRef<StepFormikRef<unknown>>()
-    const onSubmit = jest.fn()
-
-    render(
-      <TestWrapper>
-        <AdvancedStepsWithRef
-          helpPanelVisible
-          isStepGroup={false}
-          step={{} as any}
-          isReadonly={false}
-          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
-          stepsFactory={{ getStep: jest.fn() } as any}
-          ref={ref}
-          onUpdate={onSubmit}
-        />
-      </TestWrapper>
-    )
-
-    await act(() => ref.current?.submitForm()!)
-
-    expect(onSubmit).toHaveBeenCalledWith({
-      delegateSelectors: [],
-      failureStrategies: [],
-      when: undefined,
-      tab: 'ADVANCED'
-    })
   })
 })
