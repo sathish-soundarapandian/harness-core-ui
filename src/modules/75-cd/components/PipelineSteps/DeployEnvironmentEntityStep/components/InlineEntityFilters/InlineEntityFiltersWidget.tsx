@@ -9,7 +9,7 @@ import React, { BaseSyntheticEvent, PropsWithChildren, ReactNode, useState } fro
 import cx from 'classnames'
 import { useFormikContext } from 'formik'
 import { get } from 'lodash-es'
-import { Card, Container, Text } from '@harness/uicore'
+import { AllowedTypes, Card, Container, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { RadioGroup } from '@blueprintjs/core'
 
@@ -21,9 +21,9 @@ import { FeatureFlag } from '@common/featureFlags'
 import { InlineEntityFiltersProps, InlineEntityFiltersRadioType } from './InlineEntityFiltersUtils'
 import EntityFilterList from './EntityFiltersList/EntityFilterList'
 
-import css from './InlineEntityFilters.module.scss'
+import css from './InlineEntityFiltersWidget.module.scss'
 
-export default function InlineEntityFilters<T>({
+export default function InlineEntityFiltersWidget<T>({
   filterPrefix,
   readonly,
   entityStringKey,
@@ -31,10 +31,16 @@ export default function InlineEntityFilters<T>({
   showCard,
   hasTopMargin,
   baseComponent,
-  entityFilterListProps,
+  entityFilterProps,
   gridAreaProps,
+  allowableTypes,
   children
-}: PropsWithChildren<InlineEntityFiltersProps>): React.ReactElement {
+}: PropsWithChildren<
+  InlineEntityFiltersProps & {
+    readonly: boolean
+    allowableTypes: AllowedTypes
+  }
+>): React.ReactElement {
   const { getString } = useStrings()
   const { values } = useFormikContext<T>()
   const [radioValue, setRadioValue] = useState(
@@ -81,7 +87,12 @@ export default function InlineEntityFilters<T>({
         {radioValue === InlineEntityFiltersRadioType.MANUAL && baseComponent}
 
         {radioValue === InlineEntityFiltersRadioType.FILTERS && (
-          <EntityFilterList<T> filterPrefix={filterPrefix} readonly={readonly} {...entityFilterListProps} />
+          <EntityFilterList<T>
+            filterPrefix={filterPrefix}
+            readonly={readonly}
+            allowableTypes={allowableTypes}
+            {...entityFilterProps}
+          />
         )}
 
         {radioValue === InlineEntityFiltersRadioType.MANUAL && inlineEntityFilterChildren}

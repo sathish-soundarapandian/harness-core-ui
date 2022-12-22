@@ -477,7 +477,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.contains('section', 'Serverless Lambda Deploy').click()
     cy.contains('p', 'Serverless Lambda Deploy Step').should('be.visible')
     cy.get('input[name="name"]').type('Serverless Deploy Step 2')
-    cy.contains('div', 'Optional configurations').click()
+    cy.contains('div', 'Optional Configuration').click()
     cy.contains('p', 'Serverless Deploy Command Options').should('be.visible')
     cy.contains('span', 'Apply Changes').click()
     cy.contains('p', 'Serverless Deploy Step 2').should('be.visible')

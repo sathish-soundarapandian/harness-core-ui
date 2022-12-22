@@ -87,6 +87,15 @@ describe('ConfigureOptionsUtils tests', () => {
           default: ['a', 'b', 'c']
         })
       })
+
+      test('works when default value is *', () => {
+        expect(parseInput('<+input>.default(*)')).toEqual({
+          allowedValues: null,
+          executionInput: false,
+          regex: null,
+          default: '*'
+        })
+      })
     })
 
     // eslint-disable-next-line jest/no-disabled-tests

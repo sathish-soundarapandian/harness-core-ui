@@ -179,7 +179,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         error: null,
         cancel: () => null
       })
-      const mutateFn = jest.fn()
+      const mutateFn = jest.fn().mockImplementation(() => Promise.resolve())
       jest
         .spyOn(cvServices, 'useGetSampleLogData')
         .mockReturnValue({ mutate: mutateFn, loading: false, error: null } as any)
@@ -392,13 +392,15 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         ).toBeInTheDocument()
       )
 
-      const retryButton = screen.getByText(/retry/)
-
-      act(() => {
-        userEvent.click(retryButton)
+      expect(mutateFn).toHaveBeenCalledTimes(1)
+      expect(mutateFn).toHaveBeenCalledWith({
+        connectorIdentifier: 'Sumo_logic',
+        endTime: expect.any(Number),
+        healthSourceQueryParams: { serviceInstanceField: '_sourcehost' },
+        providerType: 'SUMOLOGIC_LOG',
+        query: 'select *',
+        startTime: expect.any(Number)
       })
-
-      expect(mutateFn).toHaveBeenCalledTimes(2)
     })
   })
 })

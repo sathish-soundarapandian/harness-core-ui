@@ -1,7 +1,17 @@
-import React, { useContext, useState } from 'react'
-import { AllowedTypes, ExpressionAndRuntimeType, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import React, { useContext, useEffect, useState } from 'react'
+import {
+  AllowedTypes,
+  ExpressionAndRuntimeType,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE
+} from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
+import {
+  getIsConnectorRuntimeOrExpression,
+  getIsQueryRuntimeOrExpression
+} from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
 import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import JsonSelectorButton, { JsonSelectorButtonProps } from './JsonSelectorButton'
@@ -10,8 +20,7 @@ interface JsonDrawerMultiTypeProps {
   name: string
   label: string
   value: string
-  key: string
-  allowedTypes?: AllowedTypes
+  key?: string
   displayText: string
   disabled?: boolean
   className?: string
@@ -22,39 +31,52 @@ const JsonDrawerMultiType = ({
   name,
   value,
   onClick,
-  key,
   displayText,
   label,
-  allowedTypes,
   disabled,
   className
 }: JsonDrawerMultiTypeProps): JSX.Element => {
-  const [multiType, setMultiType] = useState(() => getMultiTypeFromValue(value))
+  const [multiType, setMultiType] = useState(() => {
+    return getMultiTypeFromValue(value)
+  })
 
-  const { expressions } = useContext(SetupSourceTabsContext)
-  const { setFieldValue } = useFormikContext<CommonCustomMetricFormikInterface>()
+  const { expressions, sourceData } = useContext(SetupSourceTabsContext)
+  const { values, setFieldValue } = useFormikContext<CommonCustomMetricFormikInterface>()
 
-  // useEffect(() => {
-  //   console.log('multiType in effect', multiType)
-  // }, [])
+  const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(sourceData.connectorRef)
+  const isQueryRuntimeOrExpression = getIsQueryRuntimeOrExpression(values.query)
+
+  const allowedTypes =
+    isConnectorRuntimeOrExpression || isQueryRuntimeOrExpression
+      ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+      : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+
+  useEffect(() => {
+    if ((isConnectorRuntimeOrExpression || isQueryRuntimeOrExpression) && multiType === MultiTypeInputType.FIXED) {
+      setMultiType(MultiTypeInputType.RUNTIME)
+      setFieldValue(name, RUNTIME_INPUT_VALUE)
+    }
+  }, [isConnectorRuntimeOrExpression, isQueryRuntimeOrExpression])
 
   return (
     <ExpressionAndRuntimeType<JsonSelectorButtonProps>
       name={name}
       value={value}
-      key={`${multiType}-${key}`}
-      allowableTypes={allowedTypes}
+      key={`${multiType}`}
+      allowableTypes={allowedTypes as AllowedTypes}
       expressions={expressions}
       multitypeInputValue={multiType}
       onChange={(updatedValue, _, type): void => {
         if (type !== multiType) {
-          setMultiType?.(multiType)
+          setMultiType?.(type)
         }
 
         if (isMultiTypeRuntime(type)) {
           setFieldValue(name, updatedValue)
         } else if (type === MultiTypeInputType.EXPRESSION) {
-          setFieldValue(name, '<+example>')
+          setMultiType?.(MultiTypeInputType.EXPRESSION)
+        } else if (type === MultiTypeInputType.FIXED) {
+          setFieldValue(name, undefined)
         }
       }}
       fixedTypeComponentProps={{

@@ -49,6 +49,7 @@ export const changeTimelineResponse = {
     categoryTimeline: {
       Deployment: mockTimeData,
       Infrastructure: mockTimeData,
+      FeatureFlag: mockTimeData,
       Alert: mockTimeData
     }
   },
@@ -111,13 +112,13 @@ export const mockDeploymentPayload = [
     endTime: 1632145143825,
     icon: { height: 16, url: 'test-file-stub', width: 16 },
     startTime: 1632132806325,
-    tooltip: { message: '2 Deployments', sideBorderColor: 'var(--green-400)' }
+    tooltip: { message: '2 deploymentsText', sideBorderColor: 'var(--green-400)' }
   },
   {
     endTime: 1632157481325,
     icon: { height: 18, url: 'test-file-stub', width: 18 },
     startTime: 1632145143825,
-    tooltip: { message: '4 Deployments', sideBorderColor: 'var(--green-400)' }
+    tooltip: { message: '4 deploymentsText', sideBorderColor: 'var(--green-400)' }
   },
   {
     endTime: 1632169818825,
@@ -129,7 +130,7 @@ export const mockDeploymentPayload = [
     endTime: 1632182156325,
     icon: { height: 18, url: 'test-file-stub', width: 18 },
     startTime: 1632169818825,
-    tooltip: { message: '3 Deployments', sideBorderColor: 'var(--green-400)' }
+    tooltip: { message: '3 deploymentsText', sideBorderColor: 'var(--green-400)' }
   },
   {
     endTime: 1632194493825,
@@ -153,7 +154,7 @@ export const mockDeploymentPayload = [
     endTime: 1632243843825,
     icon: { height: 16, url: 'test-file-stub', width: 16 },
     startTime: 1632231506325,
-    tooltip: { message: '2 Deployments', sideBorderColor: 'var(--green-400)' }
+    tooltip: { message: '2 deploymentsText', sideBorderColor: 'var(--green-400)' }
   },
   {
     endTime: 1632256181325,
@@ -165,25 +166,25 @@ export const mockDeploymentPayload = [
     endTime: 1632268518825,
     icon: { height: 16, url: 'test-file-stub', width: 16 },
     startTime: 1632256181325,
-    tooltip: { message: '2 Deployments', sideBorderColor: 'var(--green-400)' }
+    tooltip: { message: '2 deploymentsText', sideBorderColor: 'var(--green-400)' }
   },
   {
     endTime: 1632280856325,
     icon: { height: 18, url: 'test-file-stub', width: 18 },
     startTime: 1632268518825,
-    tooltip: { message: '3 Deployments', sideBorderColor: 'var(--green-400)' }
+    tooltip: { message: '3 deploymentsText', sideBorderColor: 'var(--green-400)' }
   },
   {
     endTime: 1632293193825,
     icon: { height: 16, url: 'test-file-stub', width: 16 },
     startTime: 1632280856325,
-    tooltip: { message: '2 Deployments', sideBorderColor: 'var(--green-400)' }
+    tooltip: { message: '2 deploymentsText', sideBorderColor: 'var(--green-400)' }
   },
   {
     endTime: 1632305531325,
     icon: { height: 16, url: 'test-file-stub', width: 16 },
     startTime: 1632293193825,
-    tooltip: { message: '2 Deployments', sideBorderColor: 'var(--green-400)' }
+    tooltip: { message: '2 deploymentsText', sideBorderColor: 'var(--green-400)' }
   }
 ]
 
@@ -277,6 +278,99 @@ export const mockIncidentPayload = [
     icon: { height: 16, url: 'test-file-stub', width: 16 },
     startTime: 1632293193825,
     tooltip: { message: '2 cv.changeSource.tooltip.incidents', sideBorderColor: 'var(--purple-400)' }
+  }
+]
+
+export const mockFeatureFlagPayload = [
+  {
+    endTime: 1632021768825,
+    icon: { fillColor: '#EE8625', height: 9, url: 'diamond', width: 9 },
+    startTime: 1632009431325,
+    tooltip: { message: '1 common.moduleTitles.cf change', sideBorderColor: '#EE8625' }
+  },
+  {
+    endTime: 1632071118825,
+    icon: { fillColor: '#EE8625', height: 9, url: 'diamond', width: 9 },
+    startTime: 1632058781325,
+    tooltip: { message: '1 common.moduleTitles.cf change', sideBorderColor: '#EE8625' }
+  },
+  {
+    endTime: 1632145143825,
+    icon: { height: 16, url: 'test-file-stub', width: 16 },
+    startTime: 1632132806325,
+    tooltip: { message: '2 common.moduleTitles.cf changes', sideBorderColor: '#EE8625' }
+  },
+  {
+    endTime: 1632157481325,
+    icon: { height: 18, url: 'test-file-stub', width: 18 },
+    startTime: 1632145143825,
+    tooltip: { message: '4 common.moduleTitles.cf changes', sideBorderColor: '#EE8625' }
+  },
+  {
+    endTime: 1632169818825,
+    icon: { fillColor: '#EE8625', height: 9, url: 'diamond', width: 9 },
+    startTime: 1632157481325,
+    tooltip: { message: '1 common.moduleTitles.cf change', sideBorderColor: '#EE8625' }
+  },
+  {
+    endTime: 1632182156325,
+    icon: { height: 18, url: 'test-file-stub', width: 18 },
+    startTime: 1632169818825,
+    tooltip: { message: '3 common.moduleTitles.cf changes', sideBorderColor: '#EE8625' }
+  },
+  {
+    endTime: 1632194493825,
+    icon: { fillColor: '#EE8625', height: 9, url: 'diamond', width: 9 },
+    startTime: 1632182156325,
+    tooltip: { message: '1 common.moduleTitles.cf change', sideBorderColor: '#EE8625' }
+  },
+  {
+    endTime: 1632206831325,
+    icon: { fillColor: '#EE8625', height: 9, url: 'diamond', width: 9 },
+    startTime: 1632194493825,
+    tooltip: { message: '1 common.moduleTitles.cf change', sideBorderColor: '#EE8625' }
+  },
+  {
+    endTime: 1632231506325,
+    icon: { fillColor: '#EE8625', height: 9, url: 'diamond', width: 9 },
+    startTime: 1632219168825,
+    tooltip: { message: '1 common.moduleTitles.cf change', sideBorderColor: '#EE8625' }
+  },
+  {
+    endTime: 1632243843825,
+    icon: { height: 16, url: 'test-file-stub', width: 16 },
+    startTime: 1632231506325,
+    tooltip: { message: '2 common.moduleTitles.cf changes', sideBorderColor: '#EE8625' }
+  },
+  {
+    endTime: 1632256181325,
+    icon: { fillColor: '#EE8625', height: 9, url: 'diamond', width: 9 },
+    startTime: 1632243843825,
+    tooltip: { message: '1 common.moduleTitles.cf change', sideBorderColor: '#EE8625' }
+  },
+  {
+    endTime: 1632268518825,
+    icon: { height: 16, url: 'test-file-stub', width: 16 },
+    startTime: 1632256181325,
+    tooltip: { message: '2 common.moduleTitles.cf changes', sideBorderColor: '#EE8625' }
+  },
+  {
+    endTime: 1632280856325,
+    icon: { height: 18, url: 'test-file-stub', width: 18 },
+    startTime: 1632268518825,
+    tooltip: { message: '3 common.moduleTitles.cf changes', sideBorderColor: '#EE8625' }
+  },
+  {
+    endTime: 1632293193825,
+    icon: { height: 16, url: 'test-file-stub', width: 16 },
+    startTime: 1632280856325,
+    tooltip: { message: '2 common.moduleTitles.cf changes', sideBorderColor: '#EE8625' }
+  },
+  {
+    endTime: 1632305531325,
+    icon: { height: 16, url: 'test-file-stub', width: 16 },
+    startTime: 1632293193825,
+    tooltip: { message: '2 common.moduleTitles.cf changes', sideBorderColor: '#EE8625' }
   }
 ]
 
@@ -374,13 +468,15 @@ export const mockInfraPayload = [
 ]
 
 export const infoCardDataSingleValue = [
-  { count: 1, key: 'Deployments', message: '1 deploymentText' },
-  { count: 1, key: 'Incidents', message: '1 cv.changeSource.incident' },
-  { count: 1, key: 'Infrastructure', message: '1 infrastructureText change' }
+  { count: 1, key: 'Deployment', message: '1 deploymentText' },
+  { count: 1, key: 'Infrastructure', message: '1 infrastructureText change' },
+  { count: 1, key: 'FeatureFlag', message: '1 common.moduleTitles.cf change' },
+  { count: 1, key: 'Alert', message: '1 cv.changeSource.incident' }
 ]
 
 export const infoCardDataMultipleValue = [
-  { count: 9, key: 'Deployments', message: '9 Deployments' },
-  { count: 9, key: 'Incidents', message: '9 cv.changeSource.tooltip.incidents' },
-  { count: 9, key: 'Infrastructure', message: '9 infrastructureText changes' }
+  { count: 9, key: 'Deployment', message: '9 deploymentsText' },
+  { count: 9, key: 'Infrastructure', message: '9 infrastructureText changes' },
+  { count: 9, key: 'FeatureFlag', message: '9 common.moduleTitles.cf changes' },
+  { count: 9, key: 'Alert', message: '9 cv.changeSource.tooltip.incidents' }
 ]

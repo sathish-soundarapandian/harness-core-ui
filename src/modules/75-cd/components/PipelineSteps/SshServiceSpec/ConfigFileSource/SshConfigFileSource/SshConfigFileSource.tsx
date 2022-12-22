@@ -21,6 +21,6 @@ export class SshConfigFileSource extends ConfigFileSourceBase<ConfigFileSourceRe
     if (!props.isConfigFileRuntime) {
       return null
     }
-    return <SshValuesYamlConfigFileContent {...props} pathFieldlabel="fileFolderPathText" />
+    return <SshValuesYamlConfigFileContent {...props} />
   }
 }

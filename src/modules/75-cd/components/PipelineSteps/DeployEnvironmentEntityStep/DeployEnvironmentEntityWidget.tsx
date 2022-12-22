@@ -35,16 +35,18 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import type { DeployEnvironmentEntityCustomStepProps, DeployEnvironmentEntityFormState } from './types'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
 import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
 import { getValidationSchema } from './utils/utils'
 
-import InlineEntityFilters from './components/InlineEntityFilters/InlineEntityFilters'
 import {
-  EntityFilterType,
-  EntityType,
+  InlineEntityFiltersProps,
   InlineEntityFiltersRadioType
 } from './components/InlineEntityFilters/InlineEntityFiltersUtils'
 
@@ -347,41 +349,35 @@ export default function DeployEnvironmentEntityWidget({
                     scope={scope}
                   />
                 ) : isMultiEnvironment ? (
-                  <InlineEntityFilters
-                    filterPrefix={'environmentFilters.fixedScenario'}
-                    entityStringKey="environments"
-                    onRadioValueChange={handleFilterRadio}
+                  <StepWidget<InlineEntityFiltersProps>
+                    type={StepType.InlineEntityFilters}
+                    factory={factory}
+                    stepViewType={StepViewType.Edit}
                     readonly={readonly}
-                    baseComponent={
-                      <DeployEnvironment
-                        initialValues={initialValues}
-                        readonly={readonly}
-                        allowableTypes={allowableTypes}
-                        isMultiEnvironment
-                        stageIdentifier={stageIdentifier}
-                        deploymentType={deploymentType}
-                        customDeploymentRef={customDeploymentRef}
-                        gitOpsEnabled={gitOpsEnabled}
-                      />
-                    }
-                    entityFilterListProps={{
-                      entities: [
-                        EntityType.ENVIRONMENTS,
-                        gitOpsEnabled ? EntityType.CLUSTERS : EntityType.INFRASTRUCTURES
-                      ],
-                      filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
-                      placeholderProps: {
-                        entity: getString('common.filterOnName', {
-                          name:
-                            'environments or ' + getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
-                        }),
-                        tags: getString('common.filterOnName', { name: getString('typeLabel') })
+                    allowableTypes={allowableTypes}
+                    initialValues={{
+                      filterPrefix: 'environmentFilters.fixedScenario',
+                      entityStringKey: 'environments',
+                      onRadioValueChange: handleFilterRadio,
+                      baseComponent: (
+                        <DeployEnvironment
+                          initialValues={initialValues}
+                          readonly={readonly}
+                          allowableTypes={allowableTypes}
+                          isMultiEnvironment
+                          stageIdentifier={stageIdentifier}
+                          deploymentType={deploymentType}
+                          customDeploymentRef={customDeploymentRef}
+                          gitOpsEnabled={gitOpsEnabled}
+                        />
+                      ),
+                      entityFilterProps: {
+                        entities: ['environments', gitOpsEnabled ? 'gitOpsClusters' : 'infrastructures']
                       },
-                      allowableTypes
-                    }}
-                    gridAreaProps={{
-                      headerAndRadio: 'input-field',
-                      content: 'main-content'
+                      gridAreaProps: {
+                        headerAndRadio: 'input-field',
+                        content: 'main-content'
+                      }
                     }}
                   />
                 ) : (

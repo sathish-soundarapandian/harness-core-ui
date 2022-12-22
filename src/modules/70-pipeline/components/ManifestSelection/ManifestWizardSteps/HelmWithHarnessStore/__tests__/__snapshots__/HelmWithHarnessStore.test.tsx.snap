@@ -214,7 +214,7 @@ exports[`Harness File Store with HelmChart Manifest tests initial rendering 1`] 
                       >
                         <div
                           aria-describedby="rbd-hidden-text-0-hidden-text-0"
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
+                          class="Layout--horizontal StyledProps--main draggable StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
                           data-rbd-drag-handle-context-id="0"
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="0"
@@ -343,9 +343,6 @@ exports[`Harness File Store with HelmChart Manifest tests initial rendering 1`] 
                                       <div
                                         class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
-                                        <div
-                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
-                                        />
                                         <div
                                           class="bp3-popover-wrapper typeSelectorWrapper"
                                         >
@@ -515,7 +512,7 @@ exports[`Harness File Store with HelmChart Manifest tests initial rendering 1`] 
                       >
                         <div
                           aria-describedby="rbd-hidden-text-1-hidden-text-3"
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
+                          class="Layout--horizontal StyledProps--main draggable StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
                           data-rbd-drag-handle-context-id="1"
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="1"
@@ -644,9 +641,6 @@ exports[`Harness File Store with HelmChart Manifest tests initial rendering 1`] 
                                       <div
                                         class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
-                                        <div
-                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
-                                        />
                                         <div
                                           class="bp3-popover-wrapper typeSelectorWrapper"
                                         >
@@ -1059,7 +1053,7 @@ exports[`Harness File Store with HelmChart Manifest tests when fields are runtim
                       >
                         <div
                           aria-describedby="rbd-hidden-text-2-hidden-text-6"
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
+                          class="Layout--horizontal StyledProps--main draggable StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
                           data-rbd-drag-handle-context-id="2"
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="2"
@@ -1188,9 +1182,6 @@ exports[`Harness File Store with HelmChart Manifest tests when fields are runtim
                                       <div
                                         class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
-                                        <div
-                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
-                                        />
                                         <div
                                           class="bp3-popover-wrapper typeSelectorWrapper"
                                         >
@@ -1360,7 +1351,7 @@ exports[`Harness File Store with HelmChart Manifest tests when fields are runtim
                       >
                         <div
                           aria-describedby="rbd-hidden-text-3-hidden-text-9"
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
+                          class="Layout--horizontal StyledProps--main draggable StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
                           data-rbd-drag-handle-context-id="3"
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="3"
@@ -1489,9 +1480,6 @@ exports[`Harness File Store with HelmChart Manifest tests when fields are runtim
                                       <div
                                         class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
-                                        <div
-                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
-                                        />
                                         <div
                                           class="bp3-popover-wrapper typeSelectorWrapper"
                                         >

@@ -33,6 +33,8 @@ import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/compon
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
@@ -519,10 +521,16 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
                 branch: defaultTo(branch, ''),
                 getDefaultFromOtherRepo: true
               }}
+              templateProps={{
+                isTemplatizedView: true,
+                templateValue: get(template, `artifacts.${artifactPath}.spec.connectorRef`)
+              }}
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.region`, template) && (
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.region`}
+              template={template}
               name={`${path}.artifacts.${artifactPath}.spec.region`}
               selectItems={regions}
               useValue
@@ -549,7 +557,9 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
           )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.bucketName`, template) && (
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.bucketName`}
+              template={template}
               selectItems={getBuckets()}
               label={getString('pipeline.manifestType.bucketName')}
               placeholder={loading ? getString('loading') : getString('pipeline.manifestType.bucketPlaceHolder')}
@@ -567,7 +577,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
                 },
                 selectProps: {
                   noResults: (
-                    <Text lineClamp={1} width={500} height={100} padding="small">
+                    <Text lineClamp={1} width={500} padding="small">
                       {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBucketsFound')}
                     </Text>
                   ),
@@ -592,7 +602,9 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
           )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.filePath`, template) && (
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.filePath`}
+              template={template}
               selectItems={getFilePaths()}
               label={getString('common.git.filePath')}
               placeholder={loading ? getString('loading') : getString('pipeline.manifestType.pathPlaceholder')}
@@ -605,7 +617,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
                 allowableTypes,
                 selectProps: {
                   noResults: (
-                    <Text lineClamp={1} width={500} height={100} padding="small">
+                    <Text lineClamp={1} width={500} padding="small">
                       {getRBACErrorMessage(filePathError as RBACError) || getString('pipeline.noFilePathsFound')}
                     </Text>
                   ),
@@ -630,7 +642,9 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
           )}
 
           {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template) && (
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.filePathRegex`}
+              template={template}
               label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
               name={`${path}.artifacts.${artifactPath}.spec.filePathRegex`}
               placeholder={getString('pipeline.artifactsSelection.filePathRegexPlaceholder')}

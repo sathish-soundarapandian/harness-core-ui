@@ -7,21 +7,29 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly accordionBtn: string
+  readonly cdExecutionSummary: string
   readonly checkbox: string
   readonly divider: string
+  readonly environmentsText: string
   readonly execution: string
   readonly icon: string
   readonly iconWrapper: string
   readonly matrixLabel: string
   readonly matrixStage: string
   readonly matrixStageList: string
+  readonly matrixSummary: string
   readonly menu: string
+  readonly multiSvcEnv: string
   readonly prState: string
   readonly selectiveStageExecution: string
   readonly separator: string
   readonly service: string
+  readonly servicesText: string
+  readonly showAllBtn: string
   readonly stage: string
   readonly stageInfo: string
+  readonly stageLink: string
   readonly table: string
   readonly tags: string
   readonly toggleAccordion: string

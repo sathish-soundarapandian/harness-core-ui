@@ -15,32 +15,26 @@ import {
   logsTableDefaultConfigs,
   FIELD_ENUM
 } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
-import { formatJSONPath } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJson.utils'
 import JsonSelectorButton from './LogsTableComponent/components/JsonSelectorButton'
+import JsonDrawerMultiType from './LogsTableComponent/components/JsonDrawerMultiType'
 import css from './JsonSelectorWithDrawer.module.scss'
 
 interface JsonSelectorWithDrawerProps {
   fieldMappings?: FieldMapping[]
   jsonData?: Record<string, any>
   disableFields?: boolean
-  isTemplate?: boolean
-  expressions?: string[]
   allowedTypes?: AllowedTypes
 }
 
 export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProps): JSX.Element | null {
   const { getString } = useStrings()
 
+  // TODO: Update this during templates story
   // const { isTemplate } = useContext(SetupSourceTabsContext)
+  const isTemplate = false
+  const { values, setFieldValue } = useFormikContext<CommonCustomMetricFormikInterface>()
 
   const { fieldMappings, disableFields, jsonData } = props
-
-  // const allowedTypes =
-  //   isConnectorRuntimeOrExpression || isQueryRuntimeOrExpression
-  //     ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
-  //     : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
-
-  const { values, setFieldValue } = useFormikContext<CommonCustomMetricFormikInterface>()
 
   const isDisabled = disableFields
 
@@ -64,11 +58,9 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
           {!isEmpty(jsonData) ? (
             <JsonSelector
               json={jsonData || {}}
+              showSelectButton
               onPathSelect={(pathSelected: JsonRawSelectedPathType) => {
-                const pathArray = [...pathSelected.path, pathSelected.key]
-                const selectedPath = formatJSONPath(pathArray)
-                drawerProps?.formikFieldUpdateFn(selectedPath)
-
+                drawerProps?.formikFieldUpdateFn(pathSelected.key)
                 hideHealthSourceDrawer()
               }}
             />
@@ -107,14 +99,26 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
         return (
           <Layout.Vertical key={field.identifier} spacing={'small'} style={{ marginBottom: 'var(--spacing-medium)' }}>
             <Text style={{ fontSize: 13, fontWeight: 'normal' }}>{field.label}</Text>
-
-            <JsonSelectorButton
-              className={css.jsonSelectorButton}
-              displayText={(values[field.identifier] as string) || field.label}
-              onClick={() => openDrawer(field.identifier, field.label)}
-              disabled={isDisabled}
-              icon="plus"
-            />
+            {isTemplate ? (
+              <JsonDrawerMultiType
+                label={field.label}
+                name={field.identifier}
+                displayText={(values[field.identifier] as string) || field.label}
+                onClick={() => openDrawer(field.identifier, field.label)}
+                value={values[field.identifier] as string}
+                key={values[field.identifier] as string}
+                disabled={isDisabled}
+                className={css.jsonSelectorButton}
+              />
+            ) : (
+              <JsonSelectorButton
+                className={css.jsonSelectorButton}
+                displayText={(values[field.identifier] as string) || field.label}
+                onClick={() => openDrawer(field.identifier, field.label)}
+                disabled={isDisabled}
+                icon="plus"
+              />
+            )}
           </Layout.Vertical>
         )
       })}

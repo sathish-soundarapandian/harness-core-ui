@@ -106,7 +106,7 @@ export const resetShowCustomMetric = (
 export function getIsLogsTableVisible(healthSourceConfig: HealthSourceConfig): boolean {
   const { customMetrics } = healthSourceConfig || {}
 
-  if (!customMetrics?.enabled || !customMetrics?.fieldMappings) {
+  if (!customMetrics?.enabled || !customMetrics?.logsTable?.enabled || !customMetrics?.fieldMappings) {
     return false
   }
 

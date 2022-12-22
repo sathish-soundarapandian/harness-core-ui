@@ -151,7 +151,7 @@ configureOptions:
   validationErrors:
     regExIsRequired: 'Regex value is required'
     defaultRegExValid: Default value should validate with regex provided
-    defaultAllowedValid: Default value should be from allowed value
+    defaultAllowedValid: Default value should be from allowed values
     regExNotValid: 'Regex value is not valid'
     jexlExpressionRequired: '{{ $.common.jexlExpression }} is required'
     minOneAllowedValue: 'Minimum one allowed value'
@@ -586,6 +586,7 @@ confirmText: Are you sure?
 paste: Paste
 artifactTag: tag
 clientId: Client Id
+filter: Filter
 filters:
   saveNewFilter: Save New Filter
   unsavedFilter: Unsaved Filter
@@ -945,6 +946,7 @@ azureConnector: Azure Connector
 environmentList: Environment List
 environmentGroup:
   label: Environment Group
+  nameWithLabel: '{{name}} (Environment Group)'
   new: New Environment Group
   createNew: Create new Environment Group
   created: Environment Group created successfully
@@ -1164,3 +1166,12 @@ tryAgain: Try Again
 reload: Reload
 plugins: Plugins
 seeDocumentation: See Documentation
+organizations: ORGANIZATIONS
+projects: PROJECTS
+serviceId: 'SERVICE ID'
+servicesInstances: 'SERVICE INSTANCES'
+lastDeployed: 'LAST DEPLOYED'
+licensesConsumed: 'LICENSES CONSUMED'
+downloadCSV: 'Download CSV'
+whatIsActiveService: What is an Active Service?
+noActiveServiceData: No active Service Record found

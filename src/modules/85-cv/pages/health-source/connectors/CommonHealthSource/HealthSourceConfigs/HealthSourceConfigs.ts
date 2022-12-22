@@ -17,15 +17,22 @@ export const healthSourcesConfig: HealthSourcesConfig = {
     customMetrics: {
       enabled: true,
       queryAndRecords: {
-        enabled: true
+        enabled: true,
+        titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics'
       },
       metricsChart: {
         enabled: true,
         chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO
       }
     },
+    metricPacks: {
+      enabled: false
+    },
     sideNav: {
-      shouldBeAbleToDeleteLastMetric: false
+      shouldBeAbleToDeleteLastMetric: true
+    },
+    metricThresholds: {
+      enabled: true
     }
   },
   SumoLogic_LOGS: {
@@ -43,13 +50,23 @@ export const healthSourcesConfig: HealthSourcesConfig = {
           defaultValue: '_sourcehost'
         }
       ],
-      queryAndRecords: {
+      logsTable: {
         enabled: true
+      },
+      queryAndRecords: {
+        enabled: true,
+        titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQuerySubDescription'
       }
     },
 
     sideNav: {
       shouldBeAbleToDeleteLastMetric: false
+    },
+    metricPacks: {
+      enabled: false
+    },
+    metricThresholds: {
+      enabled: false
     }
   }
 }

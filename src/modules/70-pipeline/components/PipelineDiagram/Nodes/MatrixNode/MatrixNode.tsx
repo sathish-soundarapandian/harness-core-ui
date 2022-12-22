@@ -90,7 +90,7 @@ export function MatrixNode(props: any): JSX.Element {
     'data.data.moduleInfo.stepParameters.services.values.__encodedValue.valueDoc.value.length',
     1
   )
-  const numOfEnvironment =
+  const numOfEnvironments =
     get(props, 'data.data.moduleInfo.stepParameters.environments.values.__encodedValue.valueDoc.value.length') ||
     get(
       props,
@@ -193,7 +193,7 @@ export function MatrixNode(props: any): JSX.Element {
             isParallelNode={props?.isParallelNode}
             nodeType={
               isMultiSvcOrMultiEnv(subType)
-                ? getString('pipeline.numOfServicesAndEnv', { numOfServices, numOfEnvironment })
+                ? getString('pipeline.numOfServicesAndEnv', { numOfServices, numOfEnvironments })
                 : props?.data?.nodeType
             }
             subType={subType}

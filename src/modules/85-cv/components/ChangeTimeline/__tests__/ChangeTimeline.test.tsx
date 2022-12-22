@@ -122,6 +122,7 @@ describe('Render ChangeTimeline', () => {
         } as any)
     )
     const { container } = render(<WrapperComponent {...defaultProps} />)
+    expect(container).toMatchSnapshot()
     await waitFor(() => expect(container.querySelector('[data-testid="timelineLoading"]')).toBeTruthy())
   })
 

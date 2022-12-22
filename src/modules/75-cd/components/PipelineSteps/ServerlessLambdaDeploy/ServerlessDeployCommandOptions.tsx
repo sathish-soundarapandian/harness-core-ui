@@ -77,7 +77,7 @@ export function ServerlessDeployCommandOptions(props: ServerlessDeployCommandOpt
     <Accordion className={stepCss.accordion}>
       <Accordion.Panel
         id={'commandOptions'}
-        summary={getString('pipelineSteps.optionalConfiguration')}
+        summary={getString('common.optionalConfig')}
         details={
           <ServerlessCommandFlagOperations
             isReadonly={isReadonly}

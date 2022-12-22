@@ -85,13 +85,10 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
         return getString('connectors.testConnectionStep.url.nexus')
       case Connectors.ARTIFACTORY:
         return getString('connectors.testConnectionStep.url.artifactory')
-
       case Connectors.APP_DYNAMICS:
         return getString('connectors.testConnectionStep.url.appD')
-
       case Connectors.SPLUNK:
         return getString('connectors.testConnectionStep.url.splunk')
-
       case Connectors.VAULT:
         return getString('connectors.testConnectionStep.url.vault')
       case 'Gcr':
@@ -263,6 +260,15 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
       }
     }
 
+    const getEditButtonText = () => {
+      switch (props.type) {
+        case Connectors.PDC:
+          return getString('connectors.pdc.editHosts')
+        default:
+          return getString('editCredentials')
+      }
+    }
+
     const { mutate: reloadTestConnection, loading } = useGetTestConnectionResult({
       identifier: connectorInfo && connectorInfo.identifier ? connectorInfo.identifier : prevStepData?.identifier || '',
       queryParams: {
@@ -350,7 +356,7 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
             <Layout.Horizontal spacing="small">
               {props.isStep ? (
                 <Button
-                  text={getString('editCredentials')}
+                  text={getEditButtonText()}
                   variation={ButtonVariation.SECONDARY}
                   size={ButtonSize.SMALL}
                   onClick={() => {

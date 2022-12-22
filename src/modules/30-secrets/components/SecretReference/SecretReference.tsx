@@ -195,7 +195,7 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
     }
   })
   const selectedSecretLocal = useMemo(() => {
-    if (selectedSecret === 'string') {
+    if (typeof selectedSecret === 'string' && selectedSecret) {
       return { scope: getScopeFromValue(selectedSecret), identifier: getIdentifierFromValue(selectedSecret) }
     }
     return undefined

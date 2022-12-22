@@ -9,10 +9,13 @@
 declare const styles: {
   readonly contentWrap: string
   readonly editorRow: string
+  readonly editorRowV2: string
   readonly jsonSelector: string
   readonly lineNumber: string
   readonly lineNumbersCol: string
   readonly panel: string
+  readonly panelV2: string
+  readonly rowContainer: string
   readonly selectableKey: string
 }
 export default styles

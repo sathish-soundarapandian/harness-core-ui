@@ -26,6 +26,7 @@ export interface StepWidgetProps<T = unknown, U = unknown> extends Omit<StepProp
   onChange?: (data: any) => void
   readonly?: boolean
   allowableTypes: AllowedTypes
+  children?: React.ReactNode
 }
 
 export function StepWidget<T = unknown, U = unknown>(

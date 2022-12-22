@@ -47,6 +47,7 @@ export interface CommonQueryViewerProps {
   dataTooltipId?: string
   isConnectorRuntimeOrExpression?: boolean
   queryTextareaName?: string
+  querySectionTitle?: string
 }
 
 export interface CommonQueryViewDialogProps extends RecordsProps {

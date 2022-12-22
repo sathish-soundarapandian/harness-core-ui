@@ -15,11 +15,17 @@ import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
+
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 
-import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
+import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+
 import type {
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState,
@@ -28,10 +34,8 @@ import type {
 } from '../types'
 
 import DeployEnvironment from '../DeployEnvironment/DeployEnvironment'
-import InlineEntityFilters from '../components/InlineEntityFilters/InlineEntityFilters'
 import {
-  EntityFilterType,
-  EntityType,
+  InlineEntityFiltersProps,
   InlineEntityFiltersRadioType
 } from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
 
@@ -126,35 +130,33 @@ export function EnvironmentGroupCard({
         <Container margin={{ top: 'medium', bottom: 'medium' }}>
           <Divider />
         </Container>
-        <InlineEntityFilters
-          filterPrefix={filterPrefix}
-          entityStringKey="environments"
-          onRadioValueChange={handleFilterRadio}
+        <StepWidget<InlineEntityFiltersProps>
+          type={StepType.InlineEntityFilters}
+          factory={factory}
+          stepViewType={StepViewType.Edit}
           readonly={readonly}
-          baseComponent={
-            <DeployEnvironment
-              initialValues={initialValues}
-              readonly={readonly}
-              allowableTypes={allowableTypes}
-              isMultiEnvironment
-              isUnderEnvGroup
-              stageIdentifier={stageIdentifier}
-              deploymentType={deploymentType}
-              customDeploymentRef={customDeploymentRef}
-              gitOpsEnabled={gitOpsEnabled}
-              envGroupIdentifier={getScopedValueFromDTO(envGroup as EnvironmentGroupConfig)}
-            />
-          }
-          entityFilterListProps={{
-            entities: [EntityType.ENVIRONMENTS, gitOpsEnabled ? EntityType.CLUSTERS : EntityType.INFRASTRUCTURES],
-            filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
-            placeholderProps: {
-              entity: getString('common.filterOnName', {
-                name: 'environments or ' + getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
-              }),
-              tags: getString('common.filterOnName', { name: getString('typeLabel') })
-            },
-            allowableTypes
+          allowableTypes={allowableTypes}
+          initialValues={{
+            filterPrefix,
+            entityStringKey: 'environments',
+            onRadioValueChange: handleFilterRadio,
+            baseComponent: (
+              <DeployEnvironment
+                initialValues={initialValues}
+                readonly={readonly}
+                allowableTypes={allowableTypes}
+                isMultiEnvironment
+                isUnderEnvGroup
+                stageIdentifier={stageIdentifier}
+                deploymentType={deploymentType}
+                customDeploymentRef={customDeploymentRef}
+                gitOpsEnabled={gitOpsEnabled}
+                envGroupIdentifier={getScopedValueFromDTO(envGroup as EnvironmentGroupConfig)}
+              />
+            ),
+            entityFilterProps: {
+              entities: ['environments', gitOpsEnabled ? 'gitOpsClusters' : 'infrastructures']
+            }
           }}
         />
       </>

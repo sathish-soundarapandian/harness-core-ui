@@ -227,6 +227,7 @@ export interface StringsMap {
   'common.disable': string
   'common.discard': string
   'common.download': string
+  'common.downloadCSV': string
   'common.duplicateId': string
   'common.duration.3months': string
   'common.duration.6months': string
@@ -251,6 +252,7 @@ export interface StringsMap {
   'common.environmentGroup.edit': string
   'common.environmentGroup.filters.environmentGroupNamePlaceholder': string
   'common.environmentGroup.label': string
+  'common.environmentGroup.nameWithLabel': string
   'common.environmentGroup.new': string
   'common.environmentGroup.noEnvironment': string
   'common.environmentGroup.updated': string
@@ -305,6 +307,7 @@ export interface StringsMap {
   'common.fetchingBranches': string
   'common.file': string
   'common.files': string
+  'common.filter': string
   'common.filterOnName': string
   'common.filters.clearFilters': string
   'common.filters.noFilterSaved': string
@@ -481,6 +484,7 @@ export interface StringsMap {
   'common.last7days': string
   'common.lastConnected': string
   'common.lastConnectedOn': string
+  'common.lastDeployed': string
   'common.lastModified': string
   'common.lastModifiedTime': string
   'common.lastUpdatedAt': string
@@ -488,6 +492,7 @@ export interface StringsMap {
   'common.launchFirstGen': string
   'common.letsGetYouStarted': string
   'common.levelUp': string
+  'common.licensesConsumed': string
   'common.link': string
   'common.loadBalancer': string
   'common.loading': string
@@ -540,6 +545,7 @@ export interface StringsMap {
   'common.newName': string
   'common.newVersion': string
   'common.noAPIKeys': string
+  'common.noActiveServiceData': string
   'common.noAvailableTags': string
   'common.noConnectorAvailable': string
   'common.noDelegateForTask': string
@@ -565,6 +571,7 @@ export interface StringsMap {
   'common.org': string
   'common.orgSetup': string
   'common.orgViewer': string
+  'common.organizations': string
   'common.other': string
   'common.overSubscribed': string
   'common.override': string
@@ -625,6 +632,7 @@ export interface StringsMap {
   'common.production': string
   'common.projectSetup': string
   'common.projectViewer': string
+  'common.projects': string
   'common.provisioner': string
   'common.purpose.cd.1stGen.description': string
   'common.purpose.cd.1stGen.title': string
@@ -812,6 +820,7 @@ export interface StringsMap {
   'common.selected': string
   'common.serviceCreated': string
   'common.serviceDetails': string
+  'common.serviceId': string
   'common.serviceInputs': string
   'common.serviceName': string
   'common.serviceOverrides': string
@@ -819,6 +828,7 @@ export interface StringsMap {
   'common.serviceReliabilityManagement': string
   'common.serviceType': string
   'common.serviceUpdated': string
+  'common.servicesInstances': string
   'common.setAsDefault': string
   'common.setAsStable': string
   'common.settingCategory.general': string
@@ -1059,6 +1069,7 @@ export interface StringsMap {
   'common.warning': string
   'common.webhookURL': string
   'common.welcome': string
+  'common.whatIsActiveService': string
   'common.whose': string
   'common.with': string
   'common.without': string
@@ -2644,7 +2655,6 @@ export interface StringsMap {
   'connectors.pdc.hostsUpload2': string
   'connectors.pdc.manuallyHosts': string
   'connectors.pdc.selectLabel': string
-  'connectors.pdc.testConnection.step1': string
   'connectors.pdc.uploadJson': string
   'connectors.pdc.validateHosts': string
   'connectors.pdc.validateHostsJson': string
@@ -2728,6 +2738,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.k8s': string
   'connectors.testConnectionStep.validationText.nexus': string
   'connectors.testConnectionStep.validationText.pagerduty': string
+  'connectors.testConnectionStep.validationText.pdc': string
   'connectors.testConnectionStep.validationText.serviceNow': string
   'connectors.testConnectionStep.validationText.splunk': string
   'connectors.testConnectionStep.validationText.spot': string
@@ -3932,6 +3943,8 @@ export interface StringsMap {
   'pipeline.noRunsText': string
   'pipeline.nodes': string
   'pipeline.nodesLabel': string
+  'pipeline.numOfEnvs': string
+  'pipeline.numOfServices': string
   'pipeline.numOfServicesAndEnv': string
   'pipeline.numOfStage': string
   'pipeline.numOfStages': string
@@ -3980,9 +3993,11 @@ export interface StringsMap {
   'pipeline.pipelineCachedCopy.reloadPipeline': string
   'pipeline.pipelineCachedCopy.reloadPipelineContent': string
   'pipeline.pipelineCachedCopy.updateAvailable': string
+  'pipeline.pipelineChaining.childPipelineID': string
   'pipeline.pipelineChaining.newOutput': string
   'pipeline.pipelineChaining.noPipelineSelected': string
   'pipeline.pipelineChaining.noProjectSelected': string
+  'pipeline.pipelineChaining.outputAlreadyExists': string
   'pipeline.pipelineChaining.outputTabSummaryDetail': string
   'pipeline.pipelineChaining.pipelineOutputs': string
   'pipeline.pipelineChaining.removeOutput': string
@@ -4964,6 +4979,13 @@ export interface StringsMap {
   'cd.infrastructure.sshWinRmAzure.hostConnectionType': string
   'cd.infrastructure.sshWinRmAzure.noTagsAzure': string
   'cd.infrastructure.updated': string
+  'cd.inlineEntityFilters.enterFilterIdentifier': string
+  'cd.inlineEntityFilters.filterIdentifier': string
+  'cd.inlineEntityFilters.validation.chooseAllOrAny': string
+  'cd.inlineEntityFilters.validation.filterIdentifierAlreadyExists': string
+  'cd.inlineEntityFilters.validation.filterIdentifierRequired': string
+  'cd.inlineEntityFilters.validation.selectAtleastOneEntity': string
+  'cd.inlineEntityFilters.validation.tagsAreRequired': string
   'cd.installAdapterHelperText': string
   'cd.installCluster': string
   'cd.installDelegate': string
@@ -5119,6 +5141,8 @@ export interface StringsMap {
   'cd.serviceDashboard.deployedBy': string
   'cd.serviceDashboard.deploymentDetails': string
   'cd.serviceDashboard.deploymentSlot': string
+  'cd.serviceDashboard.ec2InstanceId': string
+  'cd.serviceDashboard.elastigroupId': string
   'cd.serviceDashboard.envName': string
   'cd.serviceDashboard.executionId': string
   'cd.serviceDashboard.frequency': string
@@ -7663,7 +7687,7 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.chart': string
   'cv.monitoringSources.commonHealthSource.confirmDeleteMetric': string
   'cv.monitoringSources.commonHealthSource.defineQuery': string
-  'cv.monitoringSources.commonHealthSource.defineQueryDescription': string
+  'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics': string
   'cv.monitoringSources.commonHealthSource.defineQuerySubDescription': string
   'cv.monitoringSources.commonHealthSource.logsTable.ServiceInstance': string
   'cv.monitoringSources.commonHealthSource.logsTable.jsonSelectorDrawerTitlePrefix': string
@@ -7674,6 +7698,7 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.logsTable.title': string
   'cv.monitoringSources.commonHealthSource.metric': string
   'cv.monitoringSources.commonHealthSource.metricName': string
+  'cv.monitoringSources.commonHealthSource.querySectionSecondaryTitle': string
   'cv.monitoringSources.commonHealthSource.runQuery': string
   'cv.monitoringSources.commonHealthSource.searchMetric': string
   'cv.monitoringSources.commonHealthSource.submitQueryToSeeRecords': string
@@ -8111,7 +8136,6 @@ export interface StringsMap {
   'sto.noSecurityIssues': string
   'sto.noSecurityResults': string
   'sto.scans': string
-  'sto.securityReview': string
   'sto.securityStage.description': string
   'sto.stepDescription.ZeroNorth': string
   'sto.stoExemption': string

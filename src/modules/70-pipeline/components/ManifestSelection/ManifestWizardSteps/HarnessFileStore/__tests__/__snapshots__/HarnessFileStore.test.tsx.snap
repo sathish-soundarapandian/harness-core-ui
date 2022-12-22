@@ -142,7 +142,7 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                       >
                         <div
                           aria-describedby="rbd-hidden-text-4-hidden-text-12"
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
+                          class="Layout--horizontal StyledProps--main draggable StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
                           data-rbd-drag-handle-context-id="4"
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="4"
@@ -271,9 +271,6 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                                       <div
                                         class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
-                                        <div
-                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
-                                        />
                                         <div
                                           class="bp3-popover-wrapper typeSelectorWrapper"
                                         >
@@ -443,7 +440,7 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                       >
                         <div
                           aria-describedby="rbd-hidden-text-5-hidden-text-15"
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
+                          class="Layout--horizontal StyledProps--main draggable StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
                           data-rbd-drag-handle-context-id="5"
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="5"
@@ -572,9 +569,6 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                                       <div
                                         class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
-                                        <div
-                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
-                                        />
                                         <div
                                           class="bp3-popover-wrapper typeSelectorWrapper"
                                         >
@@ -915,7 +909,7 @@ exports[`Harness File Store tests initial rendering 1`] = `
                       >
                         <div
                           aria-describedby="rbd-hidden-text-0-hidden-text-0"
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
+                          class="Layout--horizontal StyledProps--main draggable StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
                           data-rbd-drag-handle-context-id="0"
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="0"
@@ -1044,9 +1038,6 @@ exports[`Harness File Store tests initial rendering 1`] = `
                                       <div
                                         class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
-                                        <div
-                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
-                                        />
                                         <div
                                           class="bp3-popover-wrapper typeSelectorWrapper"
                                         >
@@ -1216,7 +1207,7 @@ exports[`Harness File Store tests initial rendering 1`] = `
                       >
                         <div
                           aria-describedby="rbd-hidden-text-1-hidden-text-3"
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
+                          class="Layout--horizontal StyledProps--main draggable StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
                           data-rbd-drag-handle-context-id="1"
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="1"
@@ -1345,9 +1336,6 @@ exports[`Harness File Store tests initial rendering 1`] = `
                                       <div
                                         class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
-                                        <div
-                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
-                                        />
                                         <div
                                           class="bp3-popover-wrapper typeSelectorWrapper"
                                         >
@@ -1688,7 +1676,7 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                       >
                         <div
                           aria-describedby="rbd-hidden-text-2-hidden-text-6"
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
+                          class="Layout--horizontal StyledProps--main draggable StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
                           data-rbd-drag-handle-context-id="2"
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="2"
@@ -1817,9 +1805,6 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                                       <div
                                         class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
-                                        <div
-                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
-                                        />
                                         <div
                                           class="bp3-popover-wrapper typeSelectorWrapper"
                                         >
@@ -1989,7 +1974,7 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                       >
                         <div
                           aria-describedby="rbd-hidden-text-3-hidden-text-9"
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
+                          class="Layout--horizontal StyledProps--main draggable StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
                           data-rbd-drag-handle-context-id="3"
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="3"
@@ -2118,9 +2103,6 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                                       <div
                                         class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
-                                        <div
-                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
-                                        />
                                         <div
                                           class="bp3-popover-wrapper typeSelectorWrapper"
                                         >

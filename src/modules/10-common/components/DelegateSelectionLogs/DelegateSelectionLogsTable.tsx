@@ -30,7 +30,9 @@ const RenderMessage: Renderer<CellProps<DelegateSelectionLogParams>> = ({ row })
   const rowdata = row.original
   return (
     <Layout.Vertical spacing="xsmall" padding="medium" style={{ paddingLeft: 0 }} data-testid={rowdata.message}>
-      <Text color={Color.GREY_800}>{rowdata.message}</Text>
+      <Text color={Color.GREY_800} className={css.messageContainer}>
+        {rowdata.message}
+      </Text>
       <Text lineClamp={1} color={Color.GREY_400} font={FontVariation.SMALL}>
         {rowdata.eventTimestamp ? (
           <String stringID="loggedAt" useRichText vars={{ time: formatDatetoLocale(rowdata.eventTimestamp) }} />

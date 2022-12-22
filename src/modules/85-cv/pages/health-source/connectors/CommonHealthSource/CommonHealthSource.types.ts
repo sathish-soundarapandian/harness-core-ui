@@ -6,7 +6,13 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
-import type { FailMetricThresholdSpec, MetricThreshold, MetricThresholdSpec } from 'services/cv'
+import type { StringKeys } from 'framework/strings'
+import type {
+  FailMetricThresholdSpec,
+  MetricThreshold,
+  MetricThresholdSpec,
+  TimeSeriesMetricPackDTO
+} from 'services/cv'
 import type { CriteriaPercentageType } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { HealthSourceTypes } from '../../types'
 import type { CHART_VISIBILITY_ENUM, FIELD_ENUM } from './CommonHealthSource.constants'
@@ -31,6 +37,7 @@ export interface HealthSourceConfig {
     enabled: boolean
     queryAndRecords: {
       enabled: boolean
+      titleStringKey: StringKeys
     }
     fieldMappings?: FieldMapping[]
     metricsChart?: {
@@ -41,8 +48,14 @@ export interface HealthSourceConfig {
       enabled: boolean
     }
   }
+  metricPacks: {
+    enabled: boolean
+  }
   sideNav?: {
     shouldBeAbleToDeleteLastMetric: boolean
+  }
+  metricThresholds?: {
+    enabled: boolean
   }
 }
 
@@ -137,4 +150,22 @@ export type HealthSourceMetricThresholdType = Omit<MetricThreshold, 'groupName'>
   criteria: MetricThreshold['criteria'] & CriteriaPercentageType
   metricType?: string
   spec?: MetricThresholdSpec & FailMetricThresholdSpec
+}
+
+export interface GroupedMetric {
+  groupName?: SelectOption | string
+  metricName?: string
+  index?: number
+  continuousVerification?: boolean
+}
+
+export interface GroupedCreatedMetrics {
+  [Key: string]: GroupedMetric[]
+}
+
+export interface CommonMetricThresholdProviderProps {
+  formikValues: CommonHealthSourceConfigurations
+  groupedCreatedMetrics: GroupedCreatedMetrics
+  metricPacks: TimeSeriesMetricPackDTO[]
+  isOnlyCustomMetricHealthSource?: boolean
 }

@@ -16,6 +16,8 @@ import IncidentWithTwoChanges from '@cv/assets/ChangeTimelineSymbol/Incident/Inc
 import IncidentWithNChanges from '@cv/assets/ChangeTimelineSymbol/Incident/IncidentWithNChange.svg'
 import InfraWithTwoChanges from '@cv/assets/ChangeTimelineSymbol/Infra/InfraWithTwoChange.svg'
 import InfraWithNChanges from '@cv/assets/ChangeTimelineSymbol/Infra/InfraWithNChange.svg'
+import FeatureFlagWithTwoChanges from '@cv/assets/ChangeTimelineSymbol/FeatureFlag/FeatureFlagWithTwoChange.svg'
+import FeatureFlagWithNChanges from '@cv/assets/ChangeTimelineSymbol/FeatureFlag/FeatureFlagWithNChange.svg'
 import {
   getTimeInHrs,
   isChangesInTheRange
@@ -27,25 +29,29 @@ import type { ChangesInfoCardData } from './ChangeTimeline.types'
 
 export const getChangeSoureIconColor = (type = '', isChartSymbol = false): string => {
   switch (type) {
-    case ChangeSourceTypes.Deployments:
+    case ChangeSourceTypes.Deployment:
       return isChartSymbol ? 'var(--green-400)' : Color.GREEN_400
     case ChangeSourceTypes.Infrastructure:
       return isChartSymbol ? 'var(--primary-4)' : Color.PRIMARY_4
-    case ChangeSourceTypes.Incidents:
+    case ChangeSourceTypes.Alert:
       return isChartSymbol ? 'var(--purple-400)' : Color.PURPLE_400
+    case ChangeSourceTypes.FeatureFlag:
+      return isChartSymbol ? '#EE8625' : Color.ORANGE_800
     default:
       return Color.GREY_200
   }
 }
 
-const getSymbolBytypeForTwoCluster = (type: string) => {
+const getSymbolByTypeForTwoCluster = (type: string) => {
   switch (type) {
-    case ChangeSourceTypes.Deployments:
+    case ChangeSourceTypes.Deployment:
       return DeploymentWithTwoChanges
     case ChangeSourceTypes.Infrastructure:
       return InfraWithTwoChanges
-    case ChangeSourceTypes.Incidents:
+    case ChangeSourceTypes.Alert:
       return IncidentWithTwoChanges
+    case ChangeSourceTypes.FeatureFlag:
+      return FeatureFlagWithTwoChanges
     default:
       return 'diamond'
   }
@@ -55,24 +61,28 @@ export const getColorForChangeEventType = (type: ChangeEventDTO['type']): string
   switch (type) {
     case 'HarnessCD':
     case 'HarnessCDNextGen':
-      return getChangeSoureIconColor(ChangeSourceTypes.Deployments, true)
+      return getChangeSoureIconColor(ChangeSourceTypes.Deployment, true)
     case 'PagerDuty':
-      return getChangeSoureIconColor(ChangeSourceTypes.Incidents, true)
+      return getChangeSoureIconColor(ChangeSourceTypes.Alert, true)
     case 'K8sCluster':
       return getChangeSoureIconColor(ChangeSourceTypes.Infrastructure, true)
+    case 'HARNESS_FF':
+      return getChangeSoureIconColor(ChangeSourceTypes.FeatureFlag, true)
     default:
       return ''
   }
 }
 
-const getSymbolBytypeForGreaterThanTwoCluster = (type: string) => {
+const getSymbolByTypeForGreaterThanTwoCluster = (type: string) => {
   switch (type) {
-    case ChangeSourceTypes.Deployments:
+    case ChangeSourceTypes.Deployment:
       return DeploymentWithNChanges
     case ChangeSourceTypes.Infrastructure:
       return InfraWithNChanges
-    case ChangeSourceTypes.Incidents:
+    case ChangeSourceTypes.Alert:
       return IncidentWithNChanges
+    case ChangeSourceTypes.FeatureFlag:
+      return FeatureFlagWithNChanges
     default:
       return 'diamond'
   }
@@ -80,9 +90,9 @@ const getSymbolBytypeForGreaterThanTwoCluster = (type: string) => {
 
 const getSymbolAndColorByChangeType = (count: number, type: ChangeSourceTypes): TimelineData['icon'] => {
   if (count === 2) {
-    return { height: 16, width: 16, url: getSymbolBytypeForTwoCluster(type) }
+    return { height: 16, width: 16, url: getSymbolByTypeForTwoCluster(type) }
   } else if (count > 2) {
-    return { height: 18, width: 18, url: getSymbolBytypeForGreaterThanTwoCluster(type) }
+    return { height: 18, width: 18, url: getSymbolByTypeForGreaterThanTwoCluster(type) }
   }
   return { height: 9, width: 9, fillColor: getChangeSoureIconColor(type, true), url: 'diamond' }
 }
@@ -93,54 +103,95 @@ export const createTooltipLabel = (
   getString: UseStringsReturn['getString']
 ): string => {
   switch (type) {
-    case ChangeSourceTypes.Deployments:
-      return `${count} ${count > 1 ? type : getString('deploymentText')}`
+    case ChangeSourceTypes.Deployment:
+      return `${count} ${count !== 1 ? getString('deploymentsText') : getString('deploymentText')}`
     case ChangeSourceTypes.Infrastructure:
-      return `${count} ${getString('infrastructureText')} ${count > 1 ? getString('changes') : getString('change')}`
-    case ChangeSourceTypes.Incidents:
+      return `${count} ${getString('infrastructureText')} ${count !== 1 ? getString('changes') : getString('change')}`
+    case ChangeSourceTypes.Alert:
       return `${count} ${
-        count > 1 ? getString('cv.changeSource.tooltip.incidents') : getString('cv.changeSource.incident')
+        count !== 1 ? getString('cv.changeSource.tooltip.incidents') : getString('cv.changeSource.incident')
+      }`
+    case ChangeSourceTypes.FeatureFlag:
+      return `${count} ${getString('common.moduleTitles.cf')} ${
+        count !== 1 ? getString('changes') : getString('change')
       }`
     default:
       return ''
   }
 }
 
+export const labelByCategory = (categoryType: string, getString: UseStringsReturn['getString']): string => {
+  switch (categoryType) {
+    case ChangeSourceTypes.Infrastructure:
+      return getString('infrastructureText')
+    case ChangeSourceTypes.Deployment:
+      return getString('deploymentsText')
+    case ChangeSourceTypes.FeatureFlag:
+      return getString('common.purpose.cf.continuous')
+    case ChangeSourceTypes.Alert:
+      return getString('cv.changeSource.tooltip.incidents')
+    default:
+      return ''
+  }
+}
+
 export const createChangeInfoCardData = (
-  startTime: number | undefined,
-  endTime: number | undefined,
-  Deployment: TimeRangeDetail[],
-  Infrastructure: TimeRangeDetail[],
-  Alert: TimeRangeDetail[],
-  getString: UseStringsReturn['getString']
+  getString: UseStringsReturn['getString'],
+  ffIntegration?: boolean,
+  startTime?: number,
+  endTime?: number,
+  categoryTimeline?: { [key: string]: TimeRangeDetail[] }
 ): ChangesInfoCardData[] => {
-  if (startTime && endTime) {
-    const filterDeployment = Deployment?.filter((item: TimeRangeDetail) =>
-      isChangesInTheRange(item, startTime, endTime)
-    )
-    const filterInfra = Infrastructure?.filter((item: TimeRangeDetail) => isChangesInTheRange(item, startTime, endTime))
-    const filterIncident = Alert?.filter((item: TimeRangeDetail) => isChangesInTheRange(item, startTime, endTime))
-    return [
-      {
-        key: ChangeSourceTypes.Deployments,
-        count: sumBy(filterDeployment, 'count'),
-        message: createTooltipLabel(sumBy(filterDeployment, 'count'), ChangeSourceTypes.Deployments, getString)
-      },
-      {
-        key: ChangeSourceTypes.Incidents,
-        count: sumBy(filterIncident, 'count'),
-        message: createTooltipLabel(sumBy(filterIncident, 'count'), ChangeSourceTypes.Incidents, getString)
-      },
-      {
-        key: ChangeSourceTypes.Infrastructure,
-        count: sumBy(filterInfra, 'count'),
-        message: createTooltipLabel(sumBy(filterInfra, 'count'), ChangeSourceTypes.Infrastructure, getString)
-      }
-    ]
+  if (startTime && endTime && categoryTimeline) {
+    if (ffIntegration) {
+      return Object.entries(categoryTimeline).map(category => {
+        return {
+          key: category[0] as ChangeSourceTypes,
+          count: sumBy(filterChangeSourceType(category[1], startTime, endTime), 'count'),
+          message: createTooltipLabel(
+            sumBy(filterChangeSourceType(category[1], startTime, endTime), 'count'),
+            category[0] as ChangeSourceTypes,
+            getString
+          )
+        }
+      })
+    } else {
+      const { Deployment, Infrastructure, Alert } = categoryTimeline
+      const filterDeployment = Deployment?.filter((item: TimeRangeDetail) =>
+        isChangesInTheRange(item, startTime, endTime)
+      )
+      const filterInfra = Infrastructure?.filter((item: TimeRangeDetail) =>
+        isChangesInTheRange(item, startTime, endTime)
+      )
+      const filterIncident = Alert?.filter((item: TimeRangeDetail) => isChangesInTheRange(item, startTime, endTime))
+      return [
+        {
+          key: ChangeSourceTypes.Deployment,
+          count: sumBy(filterDeployment, 'count'),
+          message: createTooltipLabel(sumBy(filterDeployment, 'count'), ChangeSourceTypes.Deployment, getString)
+        },
+        {
+          key: ChangeSourceTypes.Alert,
+          count: sumBy(filterIncident, 'count'),
+          message: createTooltipLabel(sumBy(filterIncident, 'count'), ChangeSourceTypes.Alert, getString)
+        },
+        {
+          key: ChangeSourceTypes.Infrastructure,
+          count: sumBy(filterInfra, 'count'),
+          message: createTooltipLabel(sumBy(filterInfra, 'count'), ChangeSourceTypes.Infrastructure, getString)
+        }
+      ]
+    }
   } else {
     return []
   }
 }
+
+const filterChangeSourceType = (
+  changeSource: TimeRangeDetail[],
+  startTime: number,
+  endTime: number
+): TimeRangeDetail[] => changeSource?.filter((item: TimeRangeDetail) => isChangesInTheRange(item, startTime, endTime))
 
 export const nearestMinutes = (interval: number, someMoment: moment.Moment) => {
   const roundedMinutes = Math.ceil(someMoment.clone().minute() / interval) * interval

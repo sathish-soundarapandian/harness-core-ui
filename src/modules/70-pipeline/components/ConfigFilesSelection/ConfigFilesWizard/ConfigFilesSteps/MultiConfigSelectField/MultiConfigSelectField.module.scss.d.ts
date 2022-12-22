@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly containerLinkText: string
+  readonly draggable: string
   readonly fieldExpressionHelperWrapper: string
   readonly fieldWrapper: string
   readonly formGroup: string
@@ -15,7 +16,6 @@ declare const styles: {
   readonly group: string
   readonly listFieldsWrapper: string
   readonly minimalCard: string
-  readonly multiConfigBtnWrapper: string
   readonly multiSelectContainerWrapper: string
   readonly multiSelectField: string
   readonly multiSelectWrapper: string

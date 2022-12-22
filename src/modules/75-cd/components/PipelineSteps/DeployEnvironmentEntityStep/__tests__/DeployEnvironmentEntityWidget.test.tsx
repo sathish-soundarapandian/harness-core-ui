@@ -44,12 +44,11 @@ jest.mock('../DeployEnvironment/DeployEnvironment', () => ({
   }
 }))
 
-jest.mock('../components/InlineEntityFilters/InlineEntityFilters', () => ({
-  __esModule: true,
-  default: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+jest.mock('@pipeline/components/AbstractSteps/StepWidget', () => ({
+  ...(jest.requireActual('@pipeline/components/AbstractSteps/StepWidget') as any),
+  StepWidget: () => {
     const formik = useFormikContext()
-    return <div data-testid="mock-inline-entity-filters">{JSON.stringify(formik.values)}</div>
+    return <div className="step-widget-mock">{JSON.stringify(formik.values)}</div>
   }
 }))
 

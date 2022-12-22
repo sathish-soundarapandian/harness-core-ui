@@ -33,6 +33,8 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { getStepTypeByDeploymentType } from '@pipeline/utils/stageHelpers'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+
 import { getIdentifierFromName } from '@common/utils/StringUtils'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -41,10 +43,8 @@ import type {
 } from '../types'
 import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
 import DeployCluster from '../DeployCluster/DeployCluster'
-import InlineEntityFilters from '../components/InlineEntityFilters/InlineEntityFilters'
 import {
-  EntityFilterType,
-  EntityType,
+  InlineEntityFiltersProps,
   InlineEntityFiltersRadioType
 } from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
 
@@ -223,44 +223,42 @@ export function EnvironmentEntityCard({
           <Container margin={{ top: 'medium', bottom: 'medium' }}>
             <Divider />
           </Container>
-          <InlineEntityFilters
-            filterPrefix={filterPrefix}
-            entityStringKey={gitOpsEnabled ? 'common.clusters' : 'common.infrastructures'}
-            onRadioValueChange={handleFilterRadio}
+          <StepWidget<InlineEntityFiltersProps>
+            type={StepType.InlineEntityFilters}
+            factory={factory}
+            stepViewType={StepViewType.Edit}
             readonly={readonly}
-            baseComponent={
-              <>
-                {gitOpsEnabled ? (
-                  <DeployCluster
-                    initialValues={initialValues}
-                    readonly={readonly}
-                    allowableTypes={allowableTypes}
-                    environmentIdentifier={scopedEnvRef}
-                    isMultiCluster
-                  />
-                ) : (
-                  <DeployInfrastructure
-                    initialValues={initialValues}
-                    readonly={readonly}
-                    allowableTypes={allowableTypes}
-                    environmentIdentifier={scopedEnvRef}
-                    isMultiInfrastructure
-                    deploymentType={deploymentType}
-                    customDeploymentRef={customDeploymentRef}
-                  />
-                )}
-              </>
-            }
-            entityFilterListProps={{
-              entities: [gitOpsEnabled ? EntityType.CLUSTERS : EntityType.INFRASTRUCTURES],
-              filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
-              placeholderProps: {
-                entity: getString('common.filterOnName', {
-                  name: getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
-                }),
-                tags: getString('common.filterOnName', { name: getString('typeLabel') })
-              },
-              allowableTypes
+            allowableTypes={allowableTypes}
+            initialValues={{
+              filterPrefix,
+              entityStringKey: gitOpsEnabled ? 'common.clusters' : 'common.infrastructures',
+              onRadioValueChange: handleFilterRadio,
+              baseComponent: (
+                <>
+                  {gitOpsEnabled ? (
+                    <DeployCluster
+                      initialValues={initialValues}
+                      readonly={readonly}
+                      allowableTypes={allowableTypes}
+                      environmentIdentifier={scopedEnvRef}
+                      isMultiCluster
+                    />
+                  ) : (
+                    <DeployInfrastructure
+                      initialValues={initialValues}
+                      readonly={readonly}
+                      allowableTypes={allowableTypes}
+                      environmentIdentifier={scopedEnvRef}
+                      isMultiInfrastructure
+                      deploymentType={deploymentType}
+                      customDeploymentRef={customDeploymentRef}
+                    />
+                  )}
+                </>
+              ),
+              entityFilterProps: {
+                entities: [gitOpsEnabled ? 'gitOpsClusters' : 'infrastructures']
+              }
             }}
           />
         </>

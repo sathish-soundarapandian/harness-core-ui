@@ -148,7 +148,8 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
         if (
           formAllowedValues?.length > 0 &&
           !isEmpty(data.defaultValue) &&
-          formAllowedValues.indexOf(data.defaultValue as string) === -1
+          !formAllowedValues.includes(data.defaultValue as string) &&
+          data.validation === Validation.AllowedValues
         ) {
           formikRef.current?.setFieldError(
             'defaultValue',

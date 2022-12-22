@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
 import { Container, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { TimeSeries, useGetSampleMetricData, useGetSampleRawRecord, QueryRecordsRequest } from 'services/cv'
+import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CommonQueryViewer } from '@cv/components/CommonQueryViewer/CommonQueryViewer'
 import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
@@ -33,7 +34,9 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
 
   const { product, sourceType } = sourceData || {}
 
-  const { connectorIdentifier, isTemplate, expressions, isConnectorRuntimeOrExpression, healthSourceConfig } = props
+  const { connectorIdentifier, expressions, isConnectorRuntimeOrExpression, healthSourceConfig } = props
+
+  const { getString } = useStrings()
 
   const [records, setRecords] = useState<Record<string, any>[]>([])
   const [isQueryExecuted, setIsQueryExecuted] = useState(false)
@@ -112,6 +115,11 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
         query={query}
         dataTooltipId={'healthSourceQuery'}
         isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+        // Refactor this after passing healthSourceConfig in context
+        querySectionTitle={getString(
+          healthSourceConfig?.customMetrics?.queryAndRecords?.titleStringKey ||
+            'cv.monitoringSources.commonHealthSource.querySectionSecondaryTitle'
+        )}
       />
       {/* Field Mappings component Can be added here along with build chart/ get message button */}
       {shouldShowChartComponent(chartConfig, records, fetchingSampleRecordLoading) ? (
@@ -124,14 +132,13 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
       {/* Logs Table Can be added here */}
       {isLogsTableVisible && (
         <LogsTableContainer
-          query={values.query}
           fieldMappings={healthSourceConfig?.customMetrics?.fieldMappings}
           providerType={getProviderType(sourceData) as QueryRecordsRequest['providerType']}
           connectorIdentifier={connectorIdentifier}
-          isTemplate={isTemplate}
           expressions={expressions}
           isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
           sampleRecords={records}
+          isRecordsLoading={fetchingSampleRecordLoading}
           disableLogFields={Boolean(fetchingSampleRecordLoading || error || !records?.length)}
         />
       )}

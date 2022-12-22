@@ -76,6 +76,9 @@ describe('Unit tests for CommonCustomMetricFormContainer', () => {
     healthSourceConfig: {
       addQuery: {
         label: 'Logs'
+      },
+      metricPacks: {
+        enabled: false
       }
     }
   }
@@ -106,6 +109,9 @@ describe('Unit tests for CommonCustomMetricFormContainer', () => {
       healthSourceConfig: {
         addQuery: {
           label: 'Logs'
+        },
+        metricPacks: {
+          enabled: false
         }
       }
     }

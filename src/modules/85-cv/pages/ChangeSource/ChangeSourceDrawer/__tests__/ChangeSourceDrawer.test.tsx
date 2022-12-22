@@ -41,7 +41,6 @@ jest.mock('services/cd-ng', () => ({
 }))
 
 describe('Test Change Source Drawer', () => {
-  // eslint-disable-next-line jest/no-disabled-tests
   test('ChangeSource Drawer renders in create mode', async () => {
     const { container, getByText } = render(
       <TestWrapper>
@@ -66,7 +65,6 @@ describe('Test Change Source Drawer', () => {
     await waitFor(() => expect(getByText('cv.changeSource.selectChangeSourceName')).toBeTruthy())
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
   test('ChangeSource Drawer renders in edit mode for HarnessCD', async () => {
     const { container, getByText } = render(
       <TestWrapper>
@@ -104,7 +102,7 @@ describe('Test Change Source Drawer', () => {
     })
     await waitFor(() => expect(onSuccess).toHaveBeenCalledWith(onSuccessHarnessCD))
   })
-  // eslint-disable-next-line jest/no-disabled-tests
+
   test('ChangeSource Drawer renders in create mode for PagerDuty', async () => {
     jest.spyOn(cvServices, 'useGetServicesFromPagerDuty').mockImplementation(
       () =>
@@ -147,7 +145,7 @@ describe('Test Change Source Drawer', () => {
     // Service not select error
     await waitFor(() => expect(getByText('cv.changeSource.PageDuty.selectPagerDutyService')).toBeTruthy())
   })
-  // eslint-disable-next-line jest/no-disabled-tests
+
   test('ChangeSource Drawer renders in edit mode for PagerDuty', async () => {
     jest.spyOn(cvServices, 'useGetServicesFromPagerDuty').mockImplementation(
       () =>

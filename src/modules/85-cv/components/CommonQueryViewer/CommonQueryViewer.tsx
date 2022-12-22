@@ -31,7 +31,8 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
     isQueryExecuted,
     postFetchingRecords,
     isConnectorRuntimeOrExpression,
-    dataTooltipId
+    dataTooltipId,
+    querySectionTitle
   } = props
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -47,12 +48,15 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
     }
   }
 
+  // const primaryTitle =
+
   return (
     <Container className={cx(className)}>
       <CustomMetricsSectionHeader
         sectionTitle={getString('cv.monitoringSources.commonHealthSource.defineQuery')}
         sectionSubTitle={`
-        ${getString('cv.monitoringSources.commonHealthSource.defineQueryDescription')} \n
+        ${querySectionTitle}
+        
         ${getString('cv.monitoringSources.commonHealthSource.defineQuerySubDescription')}
         `}
       />

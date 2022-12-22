@@ -193,7 +193,11 @@ export function parseInput(input: string): ParsedInput | null {
       // slice the function name along with surrounding parenthesis
       const fnArgs = fn.slice(InpuSetFunction.DEFAULT.length + 1).slice(0, -1)
 
-      parsedInput[InpuSetFunction.DEFAULT] = yamlParse(fnArgs)
+      try {
+        parsedInput[InpuSetFunction.DEFAULT] = yamlParse(fnArgs)
+      } catch (_) {
+        parsedInput[InpuSetFunction.DEFAULT] = fnArgs
+      }
     }
   })
 

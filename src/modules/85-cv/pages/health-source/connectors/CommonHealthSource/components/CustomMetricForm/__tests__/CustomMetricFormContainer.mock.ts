@@ -82,6 +82,9 @@ export const mockedCustomMetricsFormForLogsTable = {
       ],
       queryAndRecords: {
         enabled: true
+      },
+      logsTable: {
+        enabled: true
       }
     },
     sideNav: {

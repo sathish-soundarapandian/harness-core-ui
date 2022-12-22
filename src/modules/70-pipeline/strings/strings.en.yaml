@@ -368,7 +368,7 @@ manifestType:
   valuesYamlPath: Values.yaml
   addValuesYamlPath: Add Values.yaml
   varsYAMLPath: Vars.yaml path
-  addVarsYAMLPath: Auto Vars.yaml path
+  addVarsYAMLPath: Add Vars.yaml
   autoScalerYAMLPath: AutoScaler.yaml
   addAutoScalerYAMLPath: Add AutoScaler.yaml
   cfCliVersion: CLI Version
@@ -824,10 +824,12 @@ pipelineChaining:
   selectPipeline: Select Pipeline
   noProjectSelected: Project is not selected
   noPipelineSelected: Pipeline is not selected
+  childPipelineID: Child Pipeline ID
   pipelineOutputs: Pipeline Outputs
   outputTabSummaryDetail: Define outputs from child pipeline that you can use in other stages in parent pipeline.
   newOutput: New Output
   removeOutput: Remove this output
+  outputAlreadyExists: Output with same name already exists
 aboutYourStage:
   stageNamePlaceholder: Enter Stage Name
 infraSpecifications:
@@ -1243,7 +1245,9 @@ runstageError: '{{count}} Error(s): Unable to run stages.'
 stageDependencyError: 'Stage {{stageId}} has a ‘useFromStage’ dependency on Stage {{dependentStage}}. Please select Stage {{dependentStage}} to run Stage {{stageId}}.'
 noApprovalInstanceCreated: Approval instance not created, no details to display
 approvalTypeRequired: Approval type is required
-numOfServicesAndEnv: '{{numOfServices}} Service(s), {{numOfEnvironment}} Environment(s)'
+numOfServices: '{{numOfServices}} Services'
+numOfEnvs: '{{numOfEnvironments}} Environments'
+numOfServicesAndEnv: '{{numOfServices}} Service(s), {{numOfEnvironments}} Environment(s)'
 executionList:
   servicesDeployedText: 'Services deployed ({{size}})'
   servicesDeployed: 'Services deployed'

@@ -7,16 +7,16 @@
 
 import React, { CSSProperties, ReactChild } from 'react'
 import {
-  MultiTypeInputType,
-  getMultiTypeFromValue,
-  RUNTIME_INPUT_VALUE,
-  FormikTooltipContext,
-  DataTooltipInterface,
-  HarnessDocTooltip,
-  FormInput,
-  EXECUTION_TIME_INPUT_VALUE,
+  AllowedTypes,
   Container,
-  AllowedTypes
+  DataTooltipInterface,
+  EXECUTION_TIME_INPUT_VALUE,
+  FormikTooltipContext,
+  FormInput,
+  getMultiTypeFromValue,
+  HarnessDocTooltip,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE
 } from '@harness/uicore'
 import { IFormGroupProps, Intent, FormGroup } from '@blueprintjs/core'
 import { FormikContextType, connect } from 'formik'
@@ -24,7 +24,7 @@ import cx from 'classnames'
 import { get } from 'lodash-es'
 import { errorCheck } from '@common/utils/formikHelpers'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
-import { isMultiTypeRuntime } from '@common/utils/utils'
+import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 
 import css from './MultiConfigSelectField.module.scss'
 
@@ -51,7 +51,6 @@ export interface MultiTypeFieldSelectorProps extends Omit<IFormGroupProps, 'labe
   value?: string
   localId?: string
   changed?: boolean
-  values?: string | string[]
   isFieldInput?: boolean
   hasParentValidation?: boolean
 }
@@ -82,7 +81,6 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
     defaultType,
     changed,
     localId,
-    values,
     isFieldInput = false,
     ...restProps
   } = props
@@ -96,8 +94,7 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
   const dataTooltipId =
     props.tooltipProps?.dataTooltipId || (tooltipContext?.formName ? `${tooltipContext?.formName}_${name}` : '')
 
-  const value: string = get(formik?.values, name, '')
-
+  const value: string | string[] = get(formik?.values, name, defaultValueToReset)
   const [type, setType] = React.useState(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
 
   React.useEffect(() => {
@@ -117,8 +114,9 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
   }
 
   if (
-    isMultiTypeRuntime(type) &&
-    !isMultiTypeRuntime(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
+    (isMultiTypeRuntime(type) &&
+      !isMultiTypeRuntime(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))) ||
+    (isValueRuntimeInput(value) && !isMultiTypeRuntime(type))
   ) {
     setType(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
   }
@@ -173,7 +171,6 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
         ) : null}
         {disableTypeSelection ? null : (
           <Container flex className={css.multiSelectContainerWrapper}>
-            <Container className={css.multiConfigBtnWrapper} />
             <MultiTypeSelectorButton
               allowedTypes={allowedTypes}
               type={type}

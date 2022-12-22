@@ -9,6 +9,7 @@
 declare const styles: {
   readonly accordion: string
   readonly actionButtons: string
+  readonly childPipelineDetails: string
   readonly content: string
   readonly outputPanel: string
   readonly pipelineStageOverviewWrapper: string

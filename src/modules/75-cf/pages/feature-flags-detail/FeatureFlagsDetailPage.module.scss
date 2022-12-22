@@ -23,7 +23,7 @@
 }
 
 .page-layout {
-  height: 100%;
+  height: var(--page-min-height, 100vh);
   display: grid;
   grid-template-columns: 460px 1fr;
   overflow-y: hidden;

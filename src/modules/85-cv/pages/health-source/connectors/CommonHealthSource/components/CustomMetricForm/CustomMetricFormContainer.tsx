@@ -69,6 +69,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorRef) !== MultiTypeInputType.FIXED
 
   const [groupNames, setGroupName] = useState<SelectOption[]>(initializeGroupNames(mappedMetrics, getString))
+
   const [showCustomMetric, setShowCustomMetric] = useState(
     !!Array.from(defaultTo(healthSourceData?.customMetricsMap, []))?.length &&
       healthSourceConfig?.customMetrics?.enabled

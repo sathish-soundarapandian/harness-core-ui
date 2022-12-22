@@ -10,5 +10,6 @@ declare const styles: {
   readonly card: string
   readonly delegateName: string
   readonly main: string
+  readonly messageContainer: string
 }
 export default styles

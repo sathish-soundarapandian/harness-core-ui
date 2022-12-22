@@ -28,6 +28,7 @@ import { DeployEnvironmentGroupStep } from './DeployEnvironmentGroupStep/DeployE
 import { DeployInfrastructureStep } from './DeployInfrastructureStep/DeployInfrastructureStep'
 import { DeployInfrastructureEntityStep } from './DeployInfrastructureEntityStep/DeployInfrastructureEntityStep'
 import { DeployClusterEntityStep } from './DeployClusterEntityStep/DeployClusterEntityStep'
+import { InlineEntityFiltersStep } from './DeployEnvironmentEntityStep/components/InlineEntityFilters/InlineEntityFiltersStep'
 import { DeployServiceStep } from './DeployServiceStep/DeployServiceStep'
 import { HelmDeploy } from './HelmDeploy/HelmDeploy'
 import { HelmRollback } from './HelmRollback/HelmRollback'
@@ -101,6 +102,7 @@ import { TASBasicAppSetupStep } from './TASBasicAppSetupStep/TASBasicAppSetupSte
 import { TasBGAppSetupStep } from './TasBGAppSetup/TasBGAppSetup'
 import { TasCanaryAppSetupStep } from './TasCanaryAppSetup/TasCanaryAppSetup'
 import { AsgCanaryDeleteStep } from './AsgCanaryDeleteStep/AsgCanaryDeleteStep'
+import { AsgCanaryDeployStep } from './AsgCanaryDeploy/AsgCanaryDeployStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -129,6 +131,7 @@ factory.registerStep(new DeployEnvironmentGroupStep())
 factory.registerStep(new DeployInfrastructureStep())
 factory.registerStep(new DeployInfrastructureEntityStep())
 factory.registerStep(new DeployClusterEntityStep())
+factory.registerStep(new InlineEntityFiltersStep())
 factory.registerStep(new DeployServiceStep())
 factory.registerStep(new DeployServiceEntityStep())
 factory.registerStep(new GenericServiceSpec())
@@ -196,3 +199,4 @@ factory.registerStep(new TASBasicAppSetupStep())
 factory.registerStep(new TasBGAppSetupStep())
 factory.registerStep(new TasCanaryAppSetupStep())
 factory.registerStep(new AsgCanaryDeleteStep())
+factory.registerStep(new AsgCanaryDeployStep())

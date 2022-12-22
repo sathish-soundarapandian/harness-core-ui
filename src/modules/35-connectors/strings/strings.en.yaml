@@ -195,6 +195,7 @@ testConnectionStep:
     customSM: Validating Custom Secret Manager authentication and permissions
     spot: Validating the Spot connector authentication and permissions
     tas: Validating the Tanzu Application Service Cloud Provider details
+    pdc: Validating the PDC hosts connectivity
 validation:
   serviceNowUrl: 'ServiceNow URL is required.'
   personalAccessToken: Personal Access Token is required
@@ -947,8 +948,6 @@ pdc:
   errorUploading: 'Uploading file error'
   errorParsingJsonFile: 'File format not supported. Please provide a valid json file.'
   editHosts: 'Edit hosts'
-  testConnection:
-    step1: 'Validating the PDC hosts connectivity'
 policyEvaluations:
   failedToSave: Connector cannot be saved due to the policy evaluation failures
   warning: Connector saved with policy warnings

@@ -206,7 +206,7 @@ exports[`Test ServerlessDeployStep - Edit view Serverless Deploy Step rendering 
               <div
                 class="Accordion--label"
               >
-                pipelineSteps.optionalConfiguration
+                common.optionalConfig
               </div>
               <div
                 class="Accordion--chevron"
@@ -433,7 +433,7 @@ exports[`Test ServerlessDeployStep - Edit view Serverless Deploy Step rendering 
               <div
                 class="Accordion--label"
               >
-                pipelineSteps.optionalConfiguration
+                common.optionalConfig
               </div>
               <div
                 class="Accordion--chevron"
@@ -662,7 +662,7 @@ exports[`Test ServerlessDeployStep - Edit view Serverless Deploy Step rendering 
               <div
                 class="Accordion--label"
               >
-                pipelineSteps.optionalConfiguration
+                common.optionalConfig
               </div>
               <div
                 class="Accordion--chevron"
@@ -930,7 +930,7 @@ exports[`Test ServerlessDeployStep - Edit view Serverless Deploy Step rendering 
               <div
                 class="Accordion--label"
               >
-                pipelineSteps.optionalConfiguration
+                common.optionalConfig
               </div>
               <div
                 class="Accordion--chevron"
@@ -1077,7 +1077,7 @@ exports[`Test ServerlessDeployStep - InputSet view when path under inputSetData 
           <div
             class="Accordion--label"
           >
-            pipelineSteps.optionalConfiguration
+            common.optionalConfig
           </div>
           <div
             class="Accordion--chevron"

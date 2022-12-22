@@ -29,6 +29,7 @@
 }
 
 .layoutVerticalSpacing {
+  position: relative;
   margin-top: var(--spacing-main) !important;
   .vertical-spacing-input {
     margin-bottom: var(--spacing-small);
@@ -36,6 +37,11 @@
   :global {
     .bp3-form-group {
       margin-bottom: 0;
+    }
+    span .bp3-button {
+      position: absolute;
+      left: 340px;
+      bottom: 8px;
     }
   }
 }

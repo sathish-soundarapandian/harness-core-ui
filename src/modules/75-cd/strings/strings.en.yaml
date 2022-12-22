@@ -344,6 +344,8 @@ serviceDashboard:
   taskArn: Task ARN
   awsRegion: AWS Region
   containerList: Container List
+  elastigroupId: Elastigroup Id
+  ec2InstanceId: EC2 Instance Id
 noEnvironment:
   title: No Environments Available
   message: Create an environment and let’s start configuring the deployment
@@ -722,3 +724,12 @@ ElastigroupBGStageSetup:
   configureStageListener: Configure your Stage Listener
   listenerColon: 'Listener :'
   ruleColon: 'Rule :'
+inlineEntityFilters:
+  filterIdentifier: Filter identifier
+  enterFilterIdentifier: Enter filter identifier
+  validation:
+    filterIdentifierRequired: Filter identifier is required
+    filterIdentifierAlreadyExists: Filter with same identifier already exists
+    selectAtleastOneEntity: Atlteast 1 entity is required
+    tagsAreRequired: Tags are required
+    chooseAllOrAny: Please choose one of All or Any

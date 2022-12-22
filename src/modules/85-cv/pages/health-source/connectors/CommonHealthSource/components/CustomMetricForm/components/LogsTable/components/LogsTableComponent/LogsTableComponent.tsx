@@ -3,7 +3,9 @@ import type { GetDataError } from 'restful-react'
 import type { Column } from 'react-table'
 import moment from 'moment'
 import { Container, NoDataCard, PageError, TableV2, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import noData from '@cv/assets/noData.svg'
 import type { LogRecord } from 'services/cv'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import css from '../../LogsTable.module.scss'
@@ -12,7 +14,7 @@ interface LogsTableComponentProps {
   loading?: boolean
   error?: GetDataError<unknown> | null
   fetchSampleRecords: () => void
-  sampleData?: LogRecord[]
+  sampleData?: LogRecord[] | null
 }
 
 export default function LogsTableComponent(props: LogsTableComponentProps): JSX.Element | null {
@@ -21,7 +23,11 @@ export default function LogsTableComponent(props: LogsTableComponentProps): JSX.
   const { getString } = useStrings()
 
   if (error) {
-    return <PageError message={getErrorMessage(error)} onClick={() => fetchSampleRecords()} />
+    return (
+      <Container className={css.noRecords}>
+        <PageError message={getErrorMessage(error)} onClick={fetchSampleRecords} />
+      </Container>
+    )
   }
 
   if (loading || !sampleData) {
@@ -32,12 +38,10 @@ export default function LogsTableComponent(props: LogsTableComponentProps): JSX.
     return (
       <Container className={css.noRecords}>
         <NoDataCard
-          icon="warning-sign"
           message={getString('cv.monitoringSources.commonHealthSource.logsTable.noSampleAvailable')}
-          onClick={() => {
-            fetchSampleRecords()
-          }}
-          buttonText={getString('retry')}
+          image={noData}
+          imageClassName={css.noDataImage}
+          containerClassName={css.noData}
         />
       </Container>
     )
@@ -49,22 +53,30 @@ export default function LogsTableComponent(props: LogsTableComponentProps): JSX.
       id: 'timestamp',
       accessor: row => {
         {
-          const dateTime = moment(row.timestamp).format('MMMM D, YYYY hh:mm A')
-          return <Text tooltip={dateTime}>{dateTime}</Text>
+          const dateTime = moment(row.timestamp).format('MMM D, YYYY hh:mm:ss A')
+          return <Text color={Color.GREY_800}>{dateTime}</Text>
         }
       },
-      width: '20%'
+      width: '24%'
     },
     {
       Header: getString('cv.monitoringSources.commonHealthSource.logsTable.ServiceInstance'),
       id: 'serviceInstance',
-      accessor: row => <Text tooltip={row.serviceInstance}>{row.serviceInstance}</Text>,
-      width: '20%'
+      accessor: row => (
+        <Text color={Color.GREY_800} tooltip={row.serviceInstance}>
+          {row.serviceInstance}
+        </Text>
+      ),
+      width: '18%'
     },
     {
       Header: getString('message'),
       id: 'message',
-      accessor: row => <Text tooltip={row.message}>{row.message}</Text>,
+      accessor: row => (
+        <Text color={Color.GREY_800} tooltip={row.message}>
+          {row.message}
+        </Text>
+      ),
       width: '60%'
     }
   ]

@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { noop } from 'lodash-es'
-import { Formik, FormikForm } from '@harness/uicore'
+import { Container, Formik, FormikForm } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -21,6 +21,8 @@ import type {
 } from './CommonHealthSource.types'
 import CustomMetricFormContainer from './components/CustomMetricForm/CustomMetricFormContainer'
 import { initHealthSourceCustomForm, transformCommonHealthSourceToSetupSource } from './CommonHealthSource.utils'
+import { getCanShowMetricThresholds } from '../../common/MetricThresholds/MetricThresholds.utils'
+import MetricThresholdProvider from './components/MetricThresholds/MetricThresholdProvider'
 import css from './CommonHealthSource.module.scss'
 
 export interface CommonHealthSourceProps {
@@ -78,6 +80,13 @@ export default function CommonHealthSource({
     failFastThresholds
   }
 
+  const isShowMetricThreshold = getCanShowMetricThresholds({
+    isMetricThresholdConfigEnabled: Boolean(healthSourceConfig?.metricThresholds?.enabled),
+    isMetricThresholdFFEnabled: isMetricThresholdEnabled,
+    isMetricPacksEnabled: Boolean(healthSourceConfig?.metricPacks?.enabled),
+    groupedCreatedMetrics
+  })
+
   return (
     <Formik<CommonHealthSourceConfigurations>
       enableReinitialize
@@ -124,8 +133,19 @@ export default function CommonHealthSource({
                   )
                 }}
               </Formik>
+              {/* ⭐️ Metric threshold section  */}
+
+              {isShowMetricThreshold && (
+                <MetricThresholdProvider
+                  formikValues={formik.values}
+                  groupedCreatedMetrics={groupedCreatedMetrics}
+                  metricPacks={[]}
+                  isOnlyCustomMetricHealthSource={!healthSourceConfig?.metricPacks?.enabled}
+                />
+              )}
             </FormikForm>
-            {/* Metric threshold section can be added here */}
+            {/* Empty space at bottom */}
+            <Container height={200} />
             <DrawerFooter
               isSubmit
               onPrevious={() => onPrevious(formik.values)}

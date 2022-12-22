@@ -33,6 +33,8 @@ import { useStrings } from 'framework/strings'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -43,8 +45,12 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
+
+import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -56,12 +62,11 @@ import AddEditEnvironmentModal from '../../DeployInfrastructureStep/AddEditEnvir
 import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
 import DeployCluster from '../DeployCluster/DeployCluster'
 
-import InlineEntityFilters from '../components/InlineEntityFilters/InlineEntityFilters'
 import {
-  EntityFilterType,
-  EntityType,
+  InlineEntityFiltersProps,
   InlineEntityFiltersRadioType
 } from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
+
 import css from './DeployEnvironment.module.scss'
 
 interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomStepProps> {
@@ -546,52 +551,50 @@ export default function DeployEnvironment({
 
         {/* This component is specifically for filters */}
         {isRuntime && !readonly && (isMultiEnvironment ? true : gitOpsEnabled) && (
-          <InlineEntityFilters
-            filterPrefix={filterPrefix}
-            entityStringKey={gitOpsEnabled ? 'common.clusters' : 'common.infrastructures'}
-            onRadioValueChange={handleFilterRadio}
+          <StepWidget<InlineEntityFiltersProps>
+            type={StepType.InlineEntityFilters}
+            factory={factory}
+            stepViewType={StepViewType.Edit}
             readonly={readonly}
-            showCard
-            hasTopMargin
-            baseComponent={
-              <>
-                {gitOpsEnabled ? (
-                  <DeployCluster
-                    initialValues={{
-                      environments: RUNTIME_INPUT_VALUE as any
-                    }}
-                    readonly
-                    allowableTypes={allowableTypes}
-                    isMultiCluster
-                    environmentIdentifier={''}
-                    lazyCluster
-                  />
-                ) : (
-                  <DeployInfrastructure
-                    initialValues={{
-                      environments: RUNTIME_INPUT_VALUE as any
-                    }}
-                    readonly
-                    allowableTypes={allowableTypes}
-                    environmentIdentifier={''}
-                    isMultiInfrastructure
-                    deploymentType={deploymentType}
-                    customDeploymentRef={customDeploymentRef}
-                    lazyInfrastructure
-                  />
-                )}
-              </>
-            }
-            entityFilterListProps={{
-              entities: [gitOpsEnabled ? EntityType.CLUSTERS : EntityType.INFRASTRUCTURES],
-              filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
-              placeholderProps: {
-                entity: getString('common.filterOnName', {
-                  name: getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
-                }),
-                tags: getString('common.filterOnName', { name: getString('typeLabel') })
-              },
-              allowableTypes
+            allowableTypes={allowableTypes}
+            initialValues={{
+              filterPrefix,
+              entityStringKey: gitOpsEnabled ? 'common.clusters' : 'common.infrastructures',
+              onRadioValueChange: handleFilterRadio,
+              showCard: true,
+              hasTopMargin: true,
+              baseComponent: (
+                <>
+                  {gitOpsEnabled ? (
+                    <DeployCluster
+                      initialValues={{
+                        environments: RUNTIME_INPUT_VALUE as any
+                      }}
+                      readonly
+                      allowableTypes={allowableTypes}
+                      isMultiCluster
+                      environmentIdentifier={''}
+                      lazyCluster
+                    />
+                  ) : (
+                    <DeployInfrastructure
+                      initialValues={{
+                        environments: RUNTIME_INPUT_VALUE as any
+                      }}
+                      readonly
+                      allowableTypes={allowableTypes}
+                      environmentIdentifier={''}
+                      isMultiInfrastructure
+                      deploymentType={deploymentType}
+                      customDeploymentRef={customDeploymentRef}
+                      lazyInfrastructure
+                    />
+                  )}
+                </>
+              ),
+              entityFilterProps: {
+                entities: [gitOpsEnabled ? 'gitOpsClusters' : 'infrastructures']
+              }
             }}
           />
         )}

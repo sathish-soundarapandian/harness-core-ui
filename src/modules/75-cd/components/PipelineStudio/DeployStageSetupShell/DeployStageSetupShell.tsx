@@ -134,6 +134,7 @@ export default function DeployStageSetupShell(): JSX.Element {
         if (isNewService) {
           isEmpty(get(draft, 'stage.spec.service.serviceRef')) &&
             isEmpty(get(draft, 'stage.spec.services.values')) &&
+            isEmpty(get(draft, 'stage.spec.service.useFromStage')) &&
             set(draft, 'stage.spec.service', {
               serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
               serviceInputs: scope === Scope.PROJECT ? undefined : RUNTIME_INPUT_VALUE

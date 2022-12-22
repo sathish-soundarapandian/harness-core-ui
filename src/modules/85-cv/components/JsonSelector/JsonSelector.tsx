@@ -7,8 +7,9 @@
 
 import React from 'react'
 import classnames from 'classnames'
-import { Container } from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Container } from '@harness/uicore'
 import { isUndefined } from 'lodash-es'
+import { useStrings } from 'framework/strings'
 import type { JsonRawSelectedPathType } from './JsonSelectorType'
 import css from './JsonSelector.module.scss'
 
@@ -16,6 +17,7 @@ export interface JsonSelectorProps {
   json: Record<string, any>
   className?: string
   onPathSelect?: (path: JsonRawSelectedPathType) => void
+  showSelectButton?: boolean
 }
 
 const MAX_NESTING_LEVEL = 100
@@ -62,8 +64,10 @@ const ident = (nestingLevel: number): string => {
   return ret
 }
 
-const JsonSelector: React.FC<JsonSelectorProps> = ({ json, className, onPathSelect }) => {
+const JsonSelector: React.FC<JsonSelectorProps> = ({ json, className, onPathSelect, showSelectButton }) => {
   const rows: Array<any> = calculateRows(json)
+
+  const { getString } = useStrings()
 
   const onSelect = (row: JsonRawSelectedPathType): void => {
     if (onPathSelect) {
@@ -80,12 +84,21 @@ const JsonSelector: React.FC<JsonSelectorProps> = ({ json, className, onPathSele
           </div>
         ))}
       </div>
-      <div className={css.panel}>
+      <div
+        className={classnames(css.panel, {
+          [css.panelV2]: showSelectButton
+        })}
+      >
         <div className={css.contentWrap}>
           {rows.map((row, index) => (
-            <div key={index} className={css.editorRow}>
+            <div
+              key={index}
+              className={classnames(css.editorRow, {
+                [css.editorRowV2]: showSelectButton
+              })}
+            >
               {!!row && (
-                <React.Fragment>
+                <>
                   <span>{ident(row.path.length)}</span>
                   {isUndefined(row.value) && <span>{row.key}</span>}
                   {!isUndefined(row.value) && (
@@ -94,9 +107,18 @@ const JsonSelector: React.FC<JsonSelectorProps> = ({ json, className, onPathSele
                         {row.key}
                       </span>
                       :&nbsp;{row.value}
+                      {showSelectButton && (
+                        <Button
+                          onClick={() => onSelect(row)}
+                          variation={ButtonVariation.SECONDARY}
+                          size={ButtonSize.SMALL}
+                        >
+                          {getString('select')}
+                        </Button>
+                      )}
                     </span>
                   )}
-                </React.Fragment>
+                </>
               )}
             </div>
           ))}

@@ -6,9 +6,17 @@
  */
 
 export enum ChangeSourceTypes {
-  Deployments = 'Deployments',
+  Deployment = 'Deployment',
   Infrastructure = 'Infrastructure',
-  Incidents = 'Incidents'
+  FeatureFlag = 'FeatureFlag',
+  Alert = 'Alert'
+}
+
+export const defaultCategoryTimeline = {
+  Deployment: [],
+  Infrastructure: [],
+  FeatureFlag: [],
+  Alert: []
 }
 
 export const TOTAL_DATA_POINTS = 48

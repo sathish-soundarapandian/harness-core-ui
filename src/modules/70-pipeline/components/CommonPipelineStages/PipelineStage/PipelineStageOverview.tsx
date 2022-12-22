@@ -10,14 +10,15 @@ import cx from 'classnames'
 import * as Yup from 'yup'
 import { Formik, FormikProps } from 'formik'
 import { cloneDeep, debounce, noop, get } from 'lodash-es'
-import { Accordion, Card, Container, Text, FormikForm, HarnessDocTooltip } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Accordion, Card, Container, Text, FormikForm, HarnessDocTooltip, Icon } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
+import { Link, useParams } from 'react-router-dom'
 import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import type { StageElementConfig, StringNGVariable } from 'services/cd-ng'
-import type { ApprovalStageElementConfig, PipelineStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import type { PipelineStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
@@ -29,6 +30,8 @@ import type { CustomVariableEditableExtraProps } from '@pipeline/components/Pipe
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import type { AllNGVariables } from '@pipeline/utils/types'
+import type { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
 import { PipelineStageTabs } from './utils'
 import css from './PipelineStageOverview.module.scss'
 
@@ -49,6 +52,7 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
     updateStage,
     getStageFromPipeline
   } = usePipelineContext()
+  const { accountId, module } = useParams<AccountPathProps & ModulePathParams>()
   const { stage } = getStageFromPipeline<PipelineStageElementConfig>(selectedStageId || '')
   const { variablesPipeline, metadataMap } = usePipelineVariables()
   const cloneOriginalData = cloneDeep(stage)
@@ -57,6 +61,10 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const formikRef = useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = useContext(StageErrorContext)
+
+  const pipelineIdentifier = get(stage?.stage as PipelineStageElementConfig, 'spec.pipeline', '')
+  const projectIdentifier = get(stage?.stage as PipelineStageElementConfig, 'spec.project', '')
+  const orgIdentifier = get(stage?.stage as PipelineStageElementConfig, 'spec.org', '')
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateStageDebounced = useCallback(
@@ -95,7 +103,7 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
               }
               if (cloneOriginalData) {
                 updateStageDebounced({
-                  ...(cloneOriginalData.stage as ApprovalStageElementConfig),
+                  ...(cloneOriginalData.stage as PipelineStageElementConfig),
                   name: get(values, 'name', ''),
                   identifier: get(values, 'identifier', ''),
                   description: get(values, 'description', ''),
@@ -134,6 +142,28 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
             }}
           </Formik>
         </Container>
+        <Text font={{ variation: FontVariation.H5 }} margin={{ bottom: 'small', top: 'medium', left: 'small' }}>
+          {getString('common.pipeline')}
+        </Text>
+        <Card className={css.sectionCard}>
+          <Link
+            to={routes.toPipelineStudio({
+              orgIdentifier,
+              projectIdentifier,
+              pipelineIdentifier,
+              accountId,
+              module
+            })}
+            target="_blank"
+            className={css.childPipelineDetails}
+          >
+            <Icon name="chained-pipeline" color={Color.PRIMARY_7} size={20} margin={{ right: 'xsmall' }} />
+            <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
+              {`${getString('pipeline.pipelineChaining.childPipelineID')}: ${pipelineIdentifier}`}
+            </Text>
+            <Icon name="launch" color={Color.PRIMARY_7} size={16} margin={{ left: 'small' }} />
+          </Link>
+        </Card>
         <Accordion activeId={allNGVariables.length > 0 ? 'advanced' : ''} className={css.accordion}>
           <Accordion.Panel
             id="advanced"

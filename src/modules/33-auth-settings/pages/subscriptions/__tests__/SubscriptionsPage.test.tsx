@@ -8,6 +8,7 @@
 import React from 'react'
 import moment from 'moment'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   useGetAccountNG,
@@ -18,7 +19,7 @@ import {
 import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
 import SubscriptionsPage from '../SubscriptionsPage'
-
+import activeServices from './mocks/activeServices.json'
 jest.mock('services/cd-ng')
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
@@ -34,7 +35,12 @@ useSaveFeedbackMock.mockImplementation(() => {
     mutate: jest.fn()
   }
 })
-
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(() => {
+    return { data: activeServices, refetch: jest.fn(), error: null, loading: false }
+  })
+}))
 moment.now = jest.fn(() => 1482363367071)
 
 const featureFlags = {
@@ -46,7 +52,7 @@ const featureFlags = {
 }
 
 describe('Subscriptions Page', () => {
-  test('it renders the subscriptions page', () => {
+  test('it renders the subscriptions page', async () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
       return {
         data: {
@@ -82,6 +88,8 @@ describe('Subscriptions Page', () => {
     expect(getByText('common.subscriptions.expiryCountdown')).toBeTruthy()
     expect(getByText('common.subscriptions.trial')).toBeTruthy()
     expect(container).toMatchSnapshot()
+    expect(getByText('common.licensesConsumed')).toBeTruthy()
+    userEvent.click(getByText('common.licensesConsumed'))
   })
 
   test('it renders the correct card in the subscriptions page', () => {

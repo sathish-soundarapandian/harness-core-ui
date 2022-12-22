@@ -133,7 +133,7 @@ exports[`Monitored Service Summary Card Service data available 1`] = `
             />
           </svg>
         </span>
-        10 Deployments
+        10 deploymentsText
       </p>
       <p
         class="StyledProps--font StyledProps--main infrastructureIconPadding StyledProps--font-variation-small StyledProps--color StyledProps--color-grey100"

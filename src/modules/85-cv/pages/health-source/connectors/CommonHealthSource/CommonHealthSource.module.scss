@@ -10,8 +10,6 @@
 }
 
 .formFullheight {
-  height: calc(100vh - 120px);
-  min-height: calc(100% - 120px);
   position: relative;
   overflow-y: scroll;
 }

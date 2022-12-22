@@ -14,14 +14,7 @@ import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState, F
 export function processFiltersInitialValues(
   filters?: FilterYaml[]
 ): NonNullable<DeployEnvironmentEntityFormState['environmentGroupFilters']> {
-  return defaultTo(filters, []).map((filter: FilterYaml) => ({
-    ...filter,
-    entities: filter?.entities?.map(entity => ({
-      // ? Can we use getString here?
-      label: entity === 'environments' ? 'Environments' : entity === 'gitOpsClusters' ? 'Clusters' : 'Infrastructures',
-      value: entity
-    }))
-  }))
+  return defaultTo(filters, [])
 }
 
 export function processSingleEnvironmentInitialValues(

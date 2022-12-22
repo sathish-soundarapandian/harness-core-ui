@@ -30,7 +30,7 @@ export default function ChangeSourceCard(props: ChangeSourceCardInterface): JSX.
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
-  const ffIntegration = useFeatureFlag(FeatureFlag.SRM_FF_INTEGRATION)
+  const ffIntegration = useFeatureFlag(FeatureFlag.SRM_INTERNAL_CHANGE_SOURCE_FF)
 
   const monitoredServiceParams = monitoredServiceIdentifier
     ? { monitoredServiceIdentifier: monitoredServiceIdentifier }

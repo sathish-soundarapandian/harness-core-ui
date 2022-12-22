@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { AllowedTypes } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
+import type { AddEditEntityFilterProps } from './AddEditEntityFilterModal/AddEditEntityFilterModal.types'
 
 export enum InlineEntityFiltersRadioType {
   MANUAL = 'manual',
@@ -15,51 +15,14 @@ export enum InlineEntityFiltersRadioType {
 
 export interface InlineEntityFiltersProps {
   filterPrefix: string
-  readonly: boolean
   entityStringKey: StringKeys
   onRadioValueChange?(selectedRadioValue: InlineEntityFiltersRadioType): void
   showCard?: boolean
   hasTopMargin?: boolean
   baseComponent: React.ReactElement
-  entityFilterListProps: {
-    entities: EntityType[]
-    filters: EntityFilterType[]
-    defaultFilterType?: EntityFilterType
-    placeholderProps: {
-      entity: string
-      tags: string
-    }
-    allowableTypes: AllowedTypes
-  }
+  entityFilterProps: AddEditEntityFilterProps
   gridAreaProps?: {
     headerAndRadio: string
     content: string
   }
-}
-
-export enum EntityType {
-  ENVIRONMENTS = 'environments',
-  INFRASTRUCTURES = 'infrastructures',
-  CLUSTERS = 'gitOpsClusters'
-}
-
-export enum EntityFilterType {
-  ALL = 'all',
-  TAGS = 'tags'
-}
-
-export const entityTypeStringsMap: Record<EntityType, StringKeys> = {
-  environments: 'environments',
-  infrastructures: 'common.infrastructures',
-  gitOpsClusters: 'common.clusters'
-}
-
-export const entityFilterTypeStringsMap: Record<EntityFilterType, StringKeys> = {
-  all: 'all',
-  tags: 'tagsLabel'
-}
-
-export type EntityFilterListProps = InlineEntityFiltersProps['entityFilterListProps'] & {
-  filterPrefix: string
-  readonly: boolean
 }

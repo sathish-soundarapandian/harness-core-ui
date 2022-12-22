@@ -41,7 +41,7 @@ describe('JsonSelectorWithDrawer', () => {
       userEvent.click(screen.getByText(/propertyName/))
     })
 
-    await waitFor(() => expect(screen.getByText("$.['propertyName']")).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('propertyName')).toBeInTheDocument())
   })
 
   test('should not render anything if invalid config is passed', async () => {

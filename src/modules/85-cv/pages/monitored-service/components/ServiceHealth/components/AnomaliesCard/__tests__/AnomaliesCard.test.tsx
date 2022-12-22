@@ -84,7 +84,7 @@ describe('Unit tests for AnomaliesCard', () => {
         showOnlyChanges: true,
         changeTimelineSummary: [
           {
-            key: ChangeSourceTypes.Deployments,
+            key: ChangeSourceTypes.Deployment,
             count: 0,
             message: ''
           }
@@ -112,7 +112,7 @@ describe('Unit tests for AnomaliesCard', () => {
         showOnlyChanges: true,
         changeTimelineSummary: [
           {
-            key: ChangeSourceTypes.Deployments,
+            key: ChangeSourceTypes.Deployment,
             count: 10,
             message: 'MESSAGE'
           }

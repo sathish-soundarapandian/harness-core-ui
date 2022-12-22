@@ -48,10 +48,10 @@ export default function STOSideNav(): React.ReactElement {
         <React.Fragment>
           <>
             <SidebarLink label={getString('overview')} to={routes.toSTOProjectOverview(params)} />
-            <SidebarLink label={getString('common.purpose.sto.continuous')} to={routes.toDeployments(params)} />
+            <SidebarLink label={getString('common.pipelineExecution')} to={routes.toDeployments(params)} />
             <SidebarLink label={getString('pipelines')} to={routes.toPipelines(params)} />
             <SidebarLink label={getString('sto.targets.testTargets')} to={routes.toSTOProjectTargets(params)} />
-            <SidebarLink label={getString('sto.securityReview')} to={routes.toSTOProjectSecurityReview(params)} />
+            <SidebarLink label={getString('sto.exemptions')} to={routes.toSTOProjectSecurityReview(params)} />
             <ProjectSetupMenu module="sto" />
           </>
         </React.Fragment>

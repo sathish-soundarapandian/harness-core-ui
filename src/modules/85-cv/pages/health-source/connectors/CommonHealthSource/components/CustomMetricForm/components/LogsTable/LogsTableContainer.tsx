@@ -1,12 +1,11 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
 import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { QueryRecordsRequest, RestResponseLogRecordsResponse, useGetSampleLogData } from 'services/cv'
+import { LogRecord, QueryRecordsRequest, useGetSampleLogData } from 'services/cv'
 import { useStrings } from 'framework/strings'
-import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import {
   getFieldsDefaultValuesFromConfig,
   getRequestBodyForSampleLogs
@@ -20,11 +19,10 @@ import LogsTableComponent from './components/LogsTableComponent/LogsTableCompone
 import CustomMetricsSectionHeader from '../CustomMetricsSectionHeader'
 
 interface CommonHealthSourceLogsTable {
-  query: string
   connectorIdentifier: string
   providerType: QueryRecordsRequest['providerType']
   fieldMappings?: FieldMapping[]
-  isTemplate?: boolean
+  isRecordsLoading?: boolean
   expressions?: string[]
   isConnectorRuntimeOrExpression?: boolean
   disableLogFields?: boolean
@@ -32,13 +30,15 @@ interface CommonHealthSourceLogsTable {
 }
 
 export default function LogsTableContainer(props: CommonHealthSourceLogsTable): JSX.Element {
-  const { query, fieldMappings, connectorIdentifier, providerType, sampleRecords, disableLogFields } = props
+  const { fieldMappings, connectorIdentifier, providerType, sampleRecords, disableLogFields, isRecordsLoading } = props
 
   const { values, setValues } = useFormikContext<CommonCustomMetricFormikInterface>()
 
-  const [logsSampleData, setLogsSampleData] = useState<RestResponseLogRecordsResponse>()
+  const { query, serviceInstance } = values
 
-  const { isTemplate } = useContext(SetupSourceTabsContext)
+  const [logsSampleData, setLogsSampleData] = useState<LogRecord[] | null>(null)
+
+  // const { isTemplate } = useContext(SetupSourceTabsContext)
 
   // const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(sourceData.connectorRef)
 
@@ -56,17 +56,20 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
     projectIdentifier
   })
 
-  const isLogFieldsDisabled = disableLogFields || !query || !sampleRecords || logsLoading
+  useEffect(() => {
+    if (isRecordsLoading || logsLoading) {
+      setLogsSampleData(null)
+    }
+  }, [isRecordsLoading, logsLoading])
+
+  const isLogFieldsDisabled = disableLogFields || !query || isEmpty(sampleRecords) || logsLoading
 
   const { getString } = useStrings()
 
   useEffect(() => {
-    if (!isTemplate) {
-      const defaultValuesToUpdateFormik = getFieldsDefaultValuesFromConfig(values, fieldMappings)
-
-      if (!isEmpty(defaultValuesToUpdateFormik)) {
-        setValues({ ...values, ...defaultValuesToUpdateFormik })
-      }
+    const defaultValuesToUpdateFormik = getFieldsDefaultValuesFromConfig(values, fieldMappings)
+    if (!isEmpty(defaultValuesToUpdateFormik)) {
+      setValues({ ...values, ...defaultValuesToUpdateFormik })
     }
   }, [values])
 
@@ -83,19 +86,19 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
   //   }
   // }, [isQueryRuntimeOrExpression, isConnectorRuntimeOrExpression, isTemplate, fieldMappings, values.query, setValues])
 
-  const handleFetchSampleLogs = useCallback(async () => {
+  const handleFetchSampleLogs = () => {
     const fetchSampleLogsPayload = getRequestBodyForSampleLogs(providerType, {
       connectorIdentifier,
       query,
-      serviceInstance: values?.serviceInstance as string
+      serviceInstance: serviceInstance as string
     })
 
-    const sampleData = await fetchSampleLogs(fetchSampleLogsPayload as QueryRecordsRequest)
-
-    if (sampleData) {
-      setLogsSampleData(sampleData)
-    }
-  }, [fetchSampleLogs, providerType, query, connectorIdentifier, values])
+    fetchSampleLogs(fetchSampleLogsPayload as QueryRecordsRequest).then(sampleData => {
+      if (sampleData?.resource?.logRecords) {
+        setLogsSampleData(sampleData.resource.logRecords)
+      }
+    })
+  }
 
   return (
     <Container margin={{ top: 'medium' }}>
@@ -124,7 +127,7 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
         loading={logsLoading}
         error={logsError}
         fetchSampleRecords={handleFetchSampleLogs}
-        sampleData={logsSampleData?.resource?.logRecords}
+        sampleData={logsSampleData}
       />
     </Container>
   )

@@ -7,35 +7,14 @@
 
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
-import type { EnvironmentYamlV2, EnvSwaggerObjectWrapper, NGTag } from 'services/cd-ng'
+import type { EnvironmentYamlV2 } from 'services/cd-ng'
 import { isValueRuntimeInput } from '@common/utils/utils'
-import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState, FilterSpec, FilterYaml } from '../types'
-
-export type TagsFilter = FilterSpec & {
-  matchType: 'all' | 'any'
-  tags: NGTag[]
-}
+import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState, FilterYaml } from '../types'
 
 export function processFiltersFormValues(
   filters?: DeployEnvironmentEntityFormState['environmentGroupFilters']
 ): FilterYaml[] {
-  return defaultTo(filters, []).map(filter => {
-    const filterEntities = defaultTo(filter.entities, [])?.map(
-      opt => opt.value as NonNullable<EnvSwaggerObjectWrapper['envFilterEntityType']>
-    )
-    const filterSpec = defaultTo(filter.spec, {} as TagsFilter)
-
-    return {
-      type: filter.type,
-      entities: filterEntities,
-      spec: {
-        ...(filter.type === 'tags' && {
-          tags: filterSpec.tags,
-          matchType: isValueRuntimeInput(filterSpec.tags) ? RUNTIME_INPUT_VALUE : filterSpec.matchType
-        })
-      } as TagsFilter
-    }
-  })
+  return defaultTo(filters, [])
 }
 
 export function processSingleEnvironmentFormValues(

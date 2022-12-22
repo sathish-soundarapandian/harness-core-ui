@@ -16,7 +16,8 @@ import {
   mockIncidentPayload,
   mockInfraPayload,
   infoCardDataMultipleValue,
-  infoCardDataSingleValue
+  infoCardDataSingleValue,
+  mockFeatureFlagPayload
 } from './ChangeTimeline.mock'
 import {
   createTooltipLabel,
@@ -29,32 +30,29 @@ import { ChangeSourceTypes } from '../ChangeTimeline.constants'
 function getString(key: StringKeys): StringKeys {
   return key
 }
-describe('Verify Util funcitons', () => {
+describe('Verify Util functions', () => {
   test('Should create Change InfoCard Data', () => {
     const singleValue = { startTime: 1632009431325, endTime: 1632021768825, count: 1 }
     const multipleValue = { startTime: 1632009431325, endTime: 1632157481325, count: 9 }
-    const { Deployment, Infrastructure, Alert } = changeTimelineResponse.resource.categoryTimeline
     const changeInfoCardDataSingleValue = createChangeInfoCardData(
+      getString,
+      true,
       singleValue.startTime,
       singleValue.endTime,
-      Deployment,
-      Infrastructure,
-      Alert,
-      getString
+      changeTimelineResponse.resource.categoryTimeline
     )
     expect(changeInfoCardDataSingleValue).toEqual(infoCardDataSingleValue)
     const changeInfoCardDataMultipleValue = createChangeInfoCardData(
+      getString,
+      true,
       multipleValue.startTime,
       multipleValue.endTime,
-      Deployment,
-      Infrastructure,
-      Alert,
-      getString
+      changeTimelineResponse.resource.categoryTimeline
     )
     expect(changeInfoCardDataMultipleValue).toEqual(infoCardDataMultipleValue)
   })
 
-  test('should return correct start and endtime for getStartAndEndTime', () => {
+  test('should return correct start and end time for getStartAndEndTime', () => {
     Date.now = jest.fn(() => datetimeMock)
     expect(getStartAndEndTime(TimePeriodEnum.FOUR_HOURS)).toEqual({
       endTimeRoundedOffToNearest30min: datetimeMock,
@@ -82,25 +80,31 @@ describe('Verify Util funcitons', () => {
     const categoryTimeline = {
       Alert: mockTimeData,
       Deployment: mockTimeData,
+      FeatureFlag: mockTimeData,
       Infrastructure: mockTimeData
     }
     expect(
-      createTimelineSeriesData(ChangeSourceTypes.Deployments, (val: string) => val, categoryTimeline?.Deployment)
+      createTimelineSeriesData(ChangeSourceTypes.Deployment, (val: string) => val, categoryTimeline?.Deployment)
     ).toEqual(mockDeploymentPayload)
+    expect(createTimelineSeriesData(ChangeSourceTypes.Alert, (val: string) => val, categoryTimeline?.Alert)).toEqual(
+      mockIncidentPayload
+    )
     expect(
-      createTimelineSeriesData(ChangeSourceTypes.Incidents, (val: string) => val, categoryTimeline?.Alert)
-    ).toEqual(mockIncidentPayload)
+      createTimelineSeriesData(ChangeSourceTypes.FeatureFlag, (val: string) => val, categoryTimeline?.FeatureFlag)
+    ).toEqual(mockFeatureFlagPayload)
     expect(
       createTimelineSeriesData(ChangeSourceTypes.Infrastructure, (val: string) => val, categoryTimeline?.Infrastructure)
     ).toEqual(mockInfraPayload)
   })
 
-  test('Shoudl valdiate createTooltipLabel', () => {
-    expect(createTooltipLabel(1, ChangeSourceTypes.Deployments, getString)).toEqual('1 deploymentText')
-    expect(createTooltipLabel(4, ChangeSourceTypes.Deployments, getString)).toEqual('4 Deployments')
-    expect(createTooltipLabel(1, ChangeSourceTypes.Incidents, getString)).toEqual('1 cv.changeSource.incident')
-    expect(createTooltipLabel(4, ChangeSourceTypes.Incidents, getString)).toEqual('4 cv.changeSource.tooltip.incidents')
+  test('Should validate createTooltipLabel', () => {
+    expect(createTooltipLabel(1, ChangeSourceTypes.Deployment, getString)).toEqual('1 deploymentText')
+    expect(createTooltipLabel(4, ChangeSourceTypes.Deployment, getString)).toEqual('4 deploymentsText')
+    expect(createTooltipLabel(1, ChangeSourceTypes.Alert, getString)).toEqual('1 cv.changeSource.incident')
+    expect(createTooltipLabel(4, ChangeSourceTypes.Alert, getString)).toEqual('4 cv.changeSource.tooltip.incidents')
     expect(createTooltipLabel(1, ChangeSourceTypes.Infrastructure, getString)).toEqual('1 infrastructureText change')
     expect(createTooltipLabel(4, ChangeSourceTypes.Infrastructure, getString)).toEqual('4 infrastructureText changes')
+    expect(createTooltipLabel(1, ChangeSourceTypes.FeatureFlag, getString)).toEqual('1 common.moduleTitles.cf change')
+    expect(createTooltipLabel(4, ChangeSourceTypes.FeatureFlag, getString)).toEqual('4 common.moduleTitles.cf changes')
   })
 })

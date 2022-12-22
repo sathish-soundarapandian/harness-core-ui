@@ -26,15 +26,13 @@ import {
   set,
   truncate
 } from 'lodash-es'
-import { Icon, Layout } from '@harness/uicore'
-import {} from 'lodash-es'
+import { Icon, Layout, Tag, Container, useConfirmationDialog } from '@harness/uicore'
 import { useToaster } from '@common/exports'
 import { useParams } from 'react-router-dom'
 import { Intent, Popover, PopoverInteractionKind, Position as PopoverPosition } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import cx from 'classnames'
 import { scalarOptions, defaultOptions, parse } from 'yaml'
-import { Tag, Container, useConfirmationDialog } from '@harness/uicore'
 import type {
   YamlBuilderProps,
   YamlBuilderHandlerBinding,

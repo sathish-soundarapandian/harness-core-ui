@@ -437,6 +437,7 @@ export interface Account {
   globalDelegateAccount?: boolean
   harnessSupportAccessAllowed?: boolean
   immutableDelegateEnabled?: boolean
+  importantDelegateTaskLimit?: number
   lastUpdatedAt: number
   lastUpdatedBy?: EmbeddedUser
   licenseId?: string
@@ -445,6 +446,7 @@ export interface Account {
   migratedToClusterUrl?: string
   nextGenEnabled?: boolean
   oauthEnabled?: boolean
+  optionalDelegateTaskLimit?: number
   povAccount?: boolean
   productLed?: boolean
   ringName?: string
@@ -1928,7 +1930,6 @@ export interface Capacity {
 }
 
 export interface CapacitySpec {
-  instances?: number
   type?: string
 }
 
@@ -3718,6 +3719,7 @@ export interface EntityReference {
 
 export type EntityReferredByInfraSetupUsageDetail = SetupUsageDetail & {
   environmentIdentifier?: string
+  environmentName?: string
 }
 
 export type EntityReferredByPipelineSetupUsageDetail = SetupUsageDetail & {
@@ -14934,6 +14936,10 @@ export interface StepData {
     | 'BGAppSetup'
     | 'CanaryAppSetup'
     | 'TanzuCommand'
+    | 'SwapRollback'
+    | 'SwapRoutes'
+    | 'AppResize'
+    | 'AppRollback'
     | 'ElastigroupBGStageSetup'
     | 'ElastigroupSwapRoute'
 }
@@ -19083,8 +19089,8 @@ export const updateApiKeyPromise = (
 export interface GetACRRegistriesBySubscriptionQueryParams {
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   subscriptionId: string
 }
 
@@ -19135,8 +19141,8 @@ export const getACRRegistriesBySubscriptionPromise = (
 export interface GetACRRepositoriesQueryParams {
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   subscriptionId: string
 }
 
@@ -19205,8 +19211,8 @@ export interface GetBuildDetailsForACRRepositoryQueryParams {
   repository?: string
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -19268,8 +19274,8 @@ export interface GetBuildDetailsForAcrArtifactWithYamlQueryParams {
   repository?: string
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   pipelineIdentifier?: string
   fqnPath: string
   branch?: string
@@ -19360,8 +19366,8 @@ export const getBuildDetailsForAcrArtifactWithYamlPromise = (
 export interface GetAzureSubscriptionsForAcrArtifactQueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   fqnPath: string
   serviceId?: string
 }
@@ -19418,8 +19424,8 @@ export const getAzureSubscriptionsForAcrArtifactPromise = (
 export interface GetACRRegistriesForServiceQueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   subscriptionId?: string
   fqnPath: string
   serviceId?: string
@@ -19472,8 +19478,8 @@ export const getACRRegistriesForServicePromise = (
 export interface GetACRRepositoriesForServiceQueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   subscriptionId?: string
   registry?: string
   fqnPath: string
@@ -19977,8 +19983,8 @@ export interface GetArtifactsBuildsDetailsForArtifactoryQueryParams {
   filePath?: string
   maxVersions: number
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type GetArtifactsBuildsDetailsForArtifactoryProps = Omit<
@@ -20054,8 +20060,8 @@ export interface GetBuildDetailsForArtifactoryArtifactQueryParams {
   repositoryUrl?: string
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -20525,8 +20531,8 @@ export const getRepositoriesDetailsForArtifactoryPromise = (
 export interface ValidateArtifactServerForArtifactoryQueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type ValidateArtifactServerForArtifactoryProps = Omit<
@@ -21618,8 +21624,8 @@ export interface GetLabelsForDockerQueryParams {
   imagePath?: string
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type GetLabelsForDockerProps = Omit<
@@ -21693,8 +21699,8 @@ export interface GetLastSuccessfulBuildForDockerQueryParams {
   imagePath?: string
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type GetLastSuccessfulBuildForDockerProps = Omit<
@@ -21774,8 +21780,8 @@ export interface ValidateArtifactForDockerQueryParams {
   imagePath?: string
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type ValidateArtifactForDockerProps = Omit<
@@ -21846,8 +21852,8 @@ export const validateArtifactForDockerPromise = (
 export interface ValidateArtifactServerForDockerQueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type ValidateArtifactServerForDockerProps = Omit<
@@ -21898,8 +21904,8 @@ export interface ValidateArtifactImageForDockerQueryParams {
   imagePath?: string
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type ValidateArtifactImageForDockerProps = Omit<
@@ -21951,8 +21957,8 @@ export interface GetBuildDetailsForEcrQueryParams {
   region: string
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -22199,8 +22205,8 @@ export interface GetLastSuccessfulBuildForEcrQueryParams {
   imagePath: string
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type GetLastSuccessfulBuildForEcrProps = Omit<
@@ -22281,8 +22287,8 @@ export interface ValidateArtifactForEcrQueryParams {
   region: string
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type ValidateArtifactForEcrProps = Omit<
@@ -22343,8 +22349,8 @@ export interface ValidateArtifactServerForEcrQueryParams {
   connectorRef: string
   region: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type ValidateArtifactServerForEcrProps = Omit<
@@ -22396,8 +22402,8 @@ export interface ValidateArtifactImageForEcrQueryParams {
   region: string
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type ValidateArtifactImageForEcrProps = Omit<
@@ -22664,8 +22670,8 @@ export interface GetBuildDetailsForGcrQueryParams {
   registryHostname: string
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -22819,8 +22825,8 @@ export interface GetLastSuccessfulBuildForGcrQueryParams {
   imagePath: string
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type GetLastSuccessfulBuildForGcrProps = Omit<
@@ -22963,8 +22969,8 @@ export interface ValidateArtifactServerForGcrQueryParams {
   connectorRef: string
   registryHostname: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type ValidateArtifactServerForGcrProps = Omit<
@@ -23016,8 +23022,8 @@ export interface ValidateArtifactImageForGcrQueryParams {
   registryHostname: string
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type ValidateArtifactImageForGcrProps = Omit<
@@ -24250,8 +24256,8 @@ export interface GetBuildDetailsForNexusArtifactQueryParams {
   packageName?: string
   group?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -24423,8 +24429,8 @@ export interface GetLastSuccessfulBuildForNexusArtifactQueryParams {
   repositoryUrl?: string
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type GetLastSuccessfulBuildForNexusArtifactProps = Omit<
@@ -24596,8 +24602,8 @@ export const getRepositoriesPromise = (
 export interface ValidateArtifactServerForNexusQueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type ValidateArtifactServerForNexusProps = Omit<
@@ -26174,8 +26180,8 @@ export const regionsForAwsPromise = (
 export interface TagsQueryParams {
   awsConnectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   region: string
 }
 
@@ -26268,8 +26274,8 @@ export const tagsV2Promise = (
 export interface VpcsQueryParams {
   awsConnectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   region: string
 }
 

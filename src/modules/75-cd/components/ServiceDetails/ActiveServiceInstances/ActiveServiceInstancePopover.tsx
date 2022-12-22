@@ -17,6 +17,7 @@ import {
   AzureWebAppInstanceInfoDTO,
   CustomDeploymentInstanceInfoDTO,
   EcsInstanceInfoDTO,
+  SpotInstanceInfoDTO,
   Failure,
   GetActiveInstancesByServiceIdEnvIdAndBuildIdsQueryParams,
   GetInstancesDetailsQueryParams,
@@ -26,7 +27,8 @@ import {
   NativeHelmInstanceInfoDTO,
   ServiceDefinition,
   useGetActiveInstancesByServiceIdEnvIdAndBuildIds,
-  useGetInstancesDetails
+  useGetInstancesDetails,
+  SpotInfrastructureDetails
 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { getReadableDateTime } from '@common/utils/dateUtils'
@@ -255,6 +257,14 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
             value: (instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.taskArn || ''
           }
         ]
+      case ServiceDeploymentType.Elastigroup:
+        return [
+          ...defaultInstanceInfoData,
+          {
+            label: getString('cd.serviceDashboard.ec2InstanceId'),
+            value: (instanceData.instanceInfoDTO as SpotInstanceInfoDTO)?.ec2InstanceId || ''
+          }
+        ]
       case ServiceDeploymentType.CustomDeployment:
         return [
           ...customDeploymentInstanceInfoData,
@@ -290,6 +300,13 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
 
   const getInfrastructureSectionValues = (deploymentType: ServiceDefinition['type']) => {
     switch (deploymentType) {
+      case ServiceDeploymentType.Elastigroup:
+        return [
+          {
+            label: getString('cd.serviceDashboard.elastigroupId'),
+            value: (instanceData.infrastructureDetails as SpotInfrastructureDetails)?.elastigroupId || ''
+          }
+        ]
       case ServiceDeploymentType.ECS:
         return [
           {

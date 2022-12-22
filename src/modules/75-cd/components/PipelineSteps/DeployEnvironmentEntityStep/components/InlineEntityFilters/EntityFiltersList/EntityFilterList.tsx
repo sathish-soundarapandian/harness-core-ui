@@ -5,160 +5,162 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useState } from 'react'
 import { FieldArray, useFormikContext } from 'formik'
 import { get } from 'lodash-es'
 
-import { Button, ButtonSize, ButtonVariation, Container, FormInput, Text } from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 
-import { FormMultiTypeKVTagInput } from '@common/components/MutliTypeKVTagInput/MultiTypeKVTagInput'
-import { isValueRuntimeInput } from '@common/utils/utils'
-
+import { EntityFilterListProps, renderFilterSpec } from './EntityFilterListUtils'
+import { defaultEntityFilter } from '../AddEditEntityFilterModal/AddEditEntityFilterModalUtils'
 import {
-  EntityFilterListProps,
-  EntityFilterType,
+  AddEditEntityFilterModalState,
   entityFilterTypeStringsMap,
   entityTypeStringsMap
-} from '../InlineEntityFiltersUtils'
+} from '../AddEditEntityFilterModal/AddEditEntityFilterModal.types'
+import AddEditEntityFilterModal from '../AddEditEntityFilterModal/AddEditEntityFilterModal'
+import type { FilterYaml } from '../../../types'
 
 import css from './EntityFilterList.module.scss'
 
 export default function EntityFilterList<T>({
   filterPrefix,
   readonly,
-  entities,
-  filters,
-  defaultFilterType = EntityFilterType.ALL,
-  placeholderProps,
-  allowableTypes
+  allowableTypes,
+  ...entityFilterProps
 }: EntityFilterListProps): React.ReactElement {
   const { getString } = useStrings()
   const { values } = useFormikContext<T>()
-  const entityFilterList = get(values, filterPrefix)
-
-  const entityItems = useMemo(() => {
-    return entities.map(entity => ({
-      label: getString(entityTypeStringsMap[entity]),
-      value: entity.toString()
-    }))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entities])
-
-  const filterItems = useMemo(() => {
-    return filters.map(filter => ({
-      label: getString(entityFilterTypeStringsMap[filter]),
-      value: filter.toString()
-    }))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters])
+  const entityFilterList = get(values, filterPrefix, []) as FilterYaml[]
+  const allEntityFilterIdentifiers = entityFilterList.map(entityFilter => entityFilter.identifier)
+  const [addEditEntityFilterModalState, setAddEditEntityFilterModalState] = useState<AddEditEntityFilterModalState>({
+    isOpen: false,
+    index: -1,
+    initialValues: {
+      ...defaultEntityFilter
+    }
+  })
 
   return (
     <FieldArray
       name={filterPrefix}
-      render={({ push, remove }) => {
-        function handleAdd(): void {
-          push({
-            type: defaultFilterType,
-            spec: {
-              matchType: 'all'
-            }
-          })
-        }
-
+      render={({ push, replace, remove }) => {
         function handleRemove(index: number): void {
           remove(index)
         }
 
+        const onClose = (index?: number, filter?: FilterYaml): void => {
+          if (filter && index) {
+            if (index > -1) {
+              replace(index, filter)
+            } else {
+              push(filter)
+            }
+          }
+          setAddEditEntityFilterModalState({
+            isOpen: false,
+            index: -1,
+            initialValues: {
+              ...defaultEntityFilter
+            }
+          })
+        }
+
         return (
-          <Container className={css.filterGrid}>
-            {Array.isArray(entityFilterList) && (
-              <>
-                {entityFilterList.length > 0 ? (
-                  <>
-                    <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-                      {getString('common.filterOnName', { name: getString('entities') }).toUpperCase()}
-                    </Text>
-                    <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-                      {getString('typeLabel').toUpperCase()}
-                    </Text>
-                    <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-                      {getString('common.condition').toUpperCase()}
-                    </Text>
-                    <span />
-                    <span />
-                  </>
-                ) : null}
-
-                {entityFilterList.map((entityFilter, index) => {
-                  if (!entityFilter) {
-                    return null
-                  }
-
-                  const isOfTypeTags = get(values, `${filterPrefix}.[${index}].type`) === EntityFilterType.TAGS
-                  const isTagRuntime = isValueRuntimeInput(get(values, `${filterPrefix}.[${index}].spec.tags`))
-                  const filteredOnEntities = get(values, `${filterPrefix}.[${index}].entities`)
-
-                  return (
+          <>
+            <Container className={css.filterGrid}>
+              {Array.isArray(entityFilterList) && (
+                <>
+                  {entityFilterList.length > 0 && (
                     <>
-                      <FormInput.MultiSelect
-                        name={`${filterPrefix}.[${index}].entities`}
-                        items={entityItems}
-                        className={css.tagInputRenderer}
-                        multiSelectProps={{
-                          placeholder: filteredOnEntities?.length ? '' : placeholderProps.entity
-                        }}
-                      />
-
-                      <FormInput.Select name={`${filterPrefix}.[${index}].type`} items={filterItems} />
-
-                      {isOfTypeTags ? (
-                        <FormMultiTypeKVTagInput
-                          name={`${filterPrefix}.[${index}].spec.tags`}
-                          tagsProps={{ placeholder: placeholderProps.tags }}
-                          multiTypeProps={{
-                            allowableTypes
-                          }}
-                          enableConfigureOptions
-                        />
-                      ) : (
-                        '-'
-                      )}
-
-                      {isOfTypeTags && !isTagRuntime ? (
-                        <FormInput.RadioGroup
-                          name={`${filterPrefix}.[${index}].spec.matchType`}
-                          className={css.radioGroup}
-                          radioGroup={{ inline: true, disabled: readonly }}
-                          disabled={readonly}
-                          items={[
-                            { label: getString('all'), value: 'all' },
-                            { label: getString('common.any'), value: 'any' }
-                          ]}
-                        />
-                      ) : (
-                        <span />
-                      )}
-
-                      <Button icon="main-trash" minimal onClick={() => handleRemove(index)} />
+                      <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+                        {getString('common.ID').toUpperCase()}
+                      </Text>
+                      <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+                        {getString('common.filterOnName', { name: getString('entities') }).toUpperCase()}
+                      </Text>
+                      <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+                        {getString('typeLabel').toUpperCase()}
+                      </Text>
+                      <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+                        {getString('common.condition').toUpperCase()}
+                      </Text>
+                      <span />
                     </>
-                  )
-                })}
-              </>
-            )}
-            <Button
-              icon="plus"
-              disabled={readonly}
-              size={ButtonSize.SMALL}
-              variation={ButtonVariation.LINK}
-              minimal
-              onClick={handleAdd}
-              text={getString('common.addName', { name: getString('filters.filtersLabel') })}
-              flex={{ justifyContent: 'flex-start' }}
+                  )}
+
+                  {entityFilterList.map((entityFilter, index) => {
+                    if (!entityFilter) {
+                      return null
+                    }
+
+                    const { identifier, entities, type, spec } = entityFilter
+
+                    return (
+                      <>
+                        <Text lineClamp={1}>{identifier}</Text>
+                        <Layout.Vertical>
+                          {entities?.map(entity => getString(entityTypeStringsMap[entity])).join(', ')}
+                        </Layout.Vertical>
+                        <Text>{getString(entityFilterTypeStringsMap[type])}</Text>
+                        <Layout.Horizontal>{renderFilterSpec(spec, getString)}</Layout.Horizontal>
+                        <Layout.Horizontal spacing="small">
+                          <Button
+                            variation={ButtonVariation.ICON}
+                            icon="edit"
+                            data-testid={`edit-filter-${identifier}`}
+                            disabled={readonly}
+                            onClick={() =>
+                              setAddEditEntityFilterModalState({
+                                isOpen: true,
+                                index,
+                                initialValues: { ...entityFilter }
+                              })
+                            }
+                          />
+                          <Button
+                            variation={ButtonVariation.ICON}
+                            icon="remove-minus"
+                            data-testid={`delete-environment-${identifier}`}
+                            disabled={readonly}
+                            onClick={() => handleRemove(index)}
+                          />
+                        </Layout.Horizontal>
+                      </>
+                    )
+                  })}
+                </>
+              )}
+              <Button
+                icon="plus"
+                disabled={readonly}
+                size={ButtonSize.SMALL}
+                variation={ButtonVariation.LINK}
+                minimal
+                onClick={() =>
+                  setAddEditEntityFilterModalState({
+                    isOpen: true,
+                    index: -1,
+                    initialValues: {
+                      ...defaultEntityFilter
+                    }
+                  })
+                }
+                text={getString('common.addName', { name: getString('filters.filtersLabel') })}
+                flex={{ justifyContent: 'flex-start' }}
+              />
+            </Container>
+            <AddEditEntityFilterModal
+              onClose={onClose}
+              allEntityFilterIdentifiers={allEntityFilterIdentifiers}
+              allowableTypes={allowableTypes}
+              {...addEditEntityFilterModalState}
+              {...entityFilterProps}
             />
-          </Container>
+          </>
         )
       }}
     />
