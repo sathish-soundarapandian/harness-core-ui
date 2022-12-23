@@ -518,7 +518,6 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
                 formik?.setFieldValue(name, val)
                 onChange?.(val, MultiTypeInputValue.STRING, MultiTypeInputType.RUNTIME)
               }}
-              style={{ marginLeft: 'var(--spacing-medium)' }}
               {...configureOptionsProps}
               isReadonly={props.disabled}
               connectorReferenceFieldProps={{
