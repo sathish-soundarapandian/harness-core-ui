@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, ReactNode, useMemo, useRef, useState } from 'react'
+import React, { CSSProperties, FC, ReactNode, useMemo, useRef, useState } from 'react'
 import {
   Button,
   ExpressionAndRuntimeTypeProps,
@@ -67,7 +67,7 @@ export interface ReferenceSelectProps<T extends MinimalObject>
   hideModal?: boolean
   selectedRenderer?: JSX.Element
   editRenderer?: JSX.Element
-  width?: number
+  width?: CSSProperties['width']
   isNewConnectorLabelVisible?: boolean
   onChange: (record: T, scope: Scope) => void
   disabled?: boolean
