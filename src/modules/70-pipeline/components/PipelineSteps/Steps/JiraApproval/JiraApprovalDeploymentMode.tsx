@@ -44,7 +44,6 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
         <TimeoutFieldInputSetView
           name={`${prefix}timeout`}
           label={getString('pipelineSteps.timeoutLabel')}
-          className={css.deploymentViewMedium}
           multiTypeDurationProps={{
             configureOptionsProps: {
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -68,7 +67,7 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          width={385}
+          width={320}
           setRefValue
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeProps={{
@@ -99,7 +98,6 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
-          className={css.deploymentViewMedium}
           fieldPath="spec.issueKey"
           template={template}
         />
@@ -107,7 +105,7 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
 
       {getMultiTypeFromValue(template?.spec?.approvalCriteria?.spec?.expression) === MultiTypeInputType.RUNTIME ? (
         <FormMultiTypeTextAreaField
-          className={css.deploymentViewMedium}
+          className={css.defaultFieldWidth}
           label={getString('pipeline.approvalCriteria.jexlExpressionLabelApproval')}
           name={`${prefix}spec.approvalCriteria.spec.expression`}
           disabled={isApprovalStepFieldDisabled(readonly)}
@@ -123,7 +121,7 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
 
       {getMultiTypeFromValue(template?.spec?.rejectionCriteria?.spec?.expression) === MultiTypeInputType.RUNTIME ? (
         <FormMultiTypeTextAreaField
-          className={css.deploymentViewMedium}
+          className={css.defaultFieldWidth}
           label={getString('pipeline.approvalCriteria.jexlExpressionLabelRejection')}
           name={`${prefix}spec.rejectionCriteria.spec.expression`}
           disabled={isApprovalStepFieldDisabled(readonly)}

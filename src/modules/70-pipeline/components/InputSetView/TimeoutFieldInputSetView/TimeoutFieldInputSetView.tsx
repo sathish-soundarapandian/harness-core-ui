@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType, Container, getMultiTypeFromValue, Layout } from '@harness/uicore'
+import { MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import { defaultTo, get } from 'lodash-es'
+import classNames from 'classnames'
 import {
   FormMultiTypeDurationField,
   FormMultiTypeDurationProps
@@ -15,6 +16,7 @@ import {
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useRenderMultiTypeInputWithAllowedValues } from '../utils/utils'
+import css from '../InputSetView.module.scss'
 
 interface TimeoutFieldInputSetViewProps extends Omit<FormMultiTypeDurationProps, 'label'> {
   label: string
@@ -36,35 +38,32 @@ export function TimeoutFieldInputSetView(props: TimeoutFieldInputSetViewProps): 
     allowedTypes: defaultTo(multiTypeDurationProps?.allowableTypes, [MultiTypeInputType.FIXED]),
     template: template,
     readonly: disabled,
-    tooltipProps: tooltipProps,
-    className
+    tooltipProps: tooltipProps
   })
 
   if (shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, template)) {
     return (
-      <Container className={className}>
-        <Layout.Horizontal spacing={'medium'}>
-          {getMultiTypeInputWithAllowedValues()}
-          {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
-            <ConfigureOptions
-              value={value}
-              type={'String'}
-              variableName={name}
-              showRequiredField={false}
-              showDefaultField={false}
-              showAdvanced={true}
-              onChange={val => formik?.setFieldValue(name, val)}
-              allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-              style={label ? { marginTop: 'var(--spacing-6)' } : undefined}
-              {...configureOptionsProps}
-              isExecutionTimeFieldDisabled
-              isReadonly={disabled}
-            />
-          )}
-        </Layout.Horizontal>
-      </Container>
+      <div className={classNames(css.fieldAndOptions, className)}>
+        {getMultiTypeInputWithAllowedValues()}
+        {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            value={value}
+            type={'String'}
+            variableName={name}
+            showRequiredField={false}
+            showDefaultField={false}
+            showAdvanced={true}
+            onChange={val => formik?.setFieldValue(name, val)}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
+            style={label ? { marginTop: 'var(--spacing-6)' } : undefined}
+            {...configureOptionsProps}
+            isExecutionTimeFieldDisabled
+            isReadonly={disabled}
+          />
+        )}
+      </div>
     )
   }
 
-  return <FormMultiTypeDurationField {...rest} />
+  return <FormMultiTypeDurationField {...rest} style={{ ...rest.style, width: '320px' }} />
 }

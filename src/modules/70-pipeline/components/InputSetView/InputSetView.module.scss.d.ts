@@ -7,10 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly connector: string
-  readonly connectorLabel: string
-  readonly defaultFieldWidth: string
-  readonly marginTop: string
-  readonly tooltip: string
+  readonly fieldAndOptions: string
 }
 export default styles

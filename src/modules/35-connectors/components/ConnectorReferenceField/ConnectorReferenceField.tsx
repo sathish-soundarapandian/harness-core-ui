@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { CSSProperties, useState } from 'react'
 import { FormGroup, IFormGroupProps, Intent, PopoverInteractionKind } from '@blueprintjs/core'
 import {
   Layout,
@@ -119,7 +119,7 @@ export interface ConnectorReferenceFieldProps extends Omit<IFormGroupProps, 'lab
   orgIdentifier?: string
   gitScope?: GitFilterScope
   defaultScope?: Scope
-  width?: number
+  width?: CSSProperties['width']
   type?: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
   category?: GetConnectorListQueryParams['category']
   error?: string

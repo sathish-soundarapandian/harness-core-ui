@@ -63,12 +63,15 @@
 .custom-variables {
   padding: 0 var(--spacing-large);
 }
+
 .padSmall {
   padding: var(--spacing-small);
 }
+
 .inputWidth {
-  width: 50% !important;
+  width: 362px !important; // field width (320px) + configure options button width (42px)
 }
+
 .nested-accordions {
   box-shadow: none !important;
 
@@ -226,9 +229,10 @@
 .artifactsAccordion {
   margin-top: var(--spacing-medium) !important;
 }
+
 .inputFieldLayout {
   display: grid;
-  grid-template-columns: 400px 20px;
+  grid-template-columns: 320px 42px;
   margin-top: var(--spacing-large);
   .configureOptions {
     position: relative;

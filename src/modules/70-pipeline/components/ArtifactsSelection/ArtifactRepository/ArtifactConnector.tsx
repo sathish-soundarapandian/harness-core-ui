@@ -110,7 +110,6 @@ export function ArtifactConnector(props: StepProps<ConnectorConfigDTO> & Artifac
           <FormikForm>
             <div className={css.connectorForm}>
               <Layout.Horizontal
-                spacing={'medium'}
                 flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
                 className={css.connectorContainer}
               >
