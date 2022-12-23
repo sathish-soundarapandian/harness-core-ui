@@ -1,0 +1,67 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 2,
+    "pageItemCount": 2,
+    "pageSize": 100,
+    "content": [
+      {
+        "connector": {
+          "name": "dockerAleks",
+          "identifier": "dockerAleks",
+          "description": "",
+          "orgIdentifier": null,
+          "projectIdentifier": null,
+          "tags": [],
+          "type": "DockerRegistry",
+          "spec": {
+            "dockerRegistryUrl": "https://index.docker.io/v2/",
+            "auth": {
+              "type": "UsernamePassword",
+              "spec": { "username": "aradisavljevic", "passwordRef": "account.dockerAlekspasswordRef" }
+            }
+          }
+        },
+        "createdAt": 1604593248928,
+        "lastModifiedAt": 1604593253377,
+        "status": {
+          "status": "SUCCESS",
+          "errorMessage": "",
+          "lastTestedAt": 1604593253375,
+          "lastConnectedAt": 1604593253375
+        }
+      },
+      {
+        "connector": {
+          "name": "harnessimage",
+          "identifier": "harnessimage",
+          "description": "harnessimage",
+          "orgIdentifier": null,
+          "projectIdentifier": null,
+          "tags": [],
+          "type": "DockerRegistry",
+          "spec": {
+            "dockerRegistryUrl": "https://index.docker.io/v2/",
+            "auth": {
+              "type": "UsernamePassword",
+              "spec": { "username": "harnessdev", "passwordRef": "account.harnessdevdockerpassword" }
+            }
+          }
+        },
+        "createdAt": 1604415523887,
+        "lastModifiedAt": 1604415527763,
+        "status": {
+          "status": "SUCCESS",
+          "errorMessage": "",
+          "lastTestedAt": 1604415527762,
+          "lastConnectedAt": 1604415527762
+        }
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "b4a0e6b7-30d7-4688-94ec-9130a3e1b229"
+}
