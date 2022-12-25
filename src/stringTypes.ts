@@ -4448,7 +4448,6 @@ export interface StringsMap {
   'pipeline.warningForInvalidYAMLDiscard': string
   'freezeWindows.deploymentFreeze': string
   'freezeWindows.freezeNotifications.rejectedDeployments': string
-  'freezeWindows.freezeNotifications.rejectedInvocations': string
   'freezeWindows.freezeNotifications.windowEnabled': string
   'freezeWindows.freezeStudio.activeFreeze': string
   'freezeWindows.freezeStudio.allOrganizations': string

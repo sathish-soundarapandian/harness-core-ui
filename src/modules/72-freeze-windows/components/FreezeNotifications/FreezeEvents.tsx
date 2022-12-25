@@ -15,8 +15,7 @@ import css from '@pipeline/components/Notifications/useNotificationModal.module.
 
 export enum EventType {
   FREEZE_WINDOW_ENABLED = 'FreezeWindowEnabled',
-  DEPLOYMENT_REJECTED_DUE_TO_FREEZE = 'DeploymentRejectedDueToFreeze',
-  TRIGGER_INVOCATION_REJECTED_DUE_TO_FREEZE = 'TriggerInvocationRejectedDueToFreeze'
+  DEPLOYMENT_REJECTED_DUE_TO_FREEZE = 'DeploymentRejectedDueToFreeze'
 }
 
 const getEventItems = (getString: UseStringsReturn['getString']) => [
@@ -27,10 +26,6 @@ const getEventItems = (getString: UseStringsReturn['getString']) => [
   {
     label: getString('freezeWindows.freezeNotifications.rejectedDeployments'),
     value: EventType.DEPLOYMENT_REJECTED_DUE_TO_FREEZE
-  },
-  {
-    label: getString('freezeWindows.freezeNotifications.rejectedInvocations'),
-    value: EventType.TRIGGER_INVOCATION_REJECTED_DUE_TO_FREEZE
   }
 ]
 

@@ -47,7 +47,8 @@ export const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
       flex={{ justifyContent: 'space-between', alignItems: 'start' }}
       data-testid={`config-view-mode_${index}`}
     >
-      <Layout.Vertical>
+      {/* 100px if for action buttons(84) + spacing(16) */}
+      <Layout.Vertical style={{ maxWidth: 'calc(100% - 100px)' }}>
         <Heading
           color={Color.GREY_800}
           level={3}
