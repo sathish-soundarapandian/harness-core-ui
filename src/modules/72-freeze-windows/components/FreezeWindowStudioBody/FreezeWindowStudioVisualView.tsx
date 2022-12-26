@@ -11,7 +11,7 @@ import type { FormikProps } from 'formik'
 import { Icon, Tab, Tabs } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
-import type { ResourcesInterface, FreezeObj, ValidationErrorType } from '@freeze-windows/types'
+import type { ResourcesInterface, ValidationErrorType } from '@freeze-windows/types'
 import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import { FreezeStudioOverviewSectionWithRef } from '../FreezeWindowStudioOverview/FreezeStudioOverviewSection'
 import { FreezeStudioConfigSectionWithRef } from '../FreezeWindowStudioConfigSection/FreezeStudioConfigSection'
@@ -29,7 +29,11 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
   const { updateQueryParams } = useUpdateQueryParams<{ sectionId?: string | null }>()
   const { sectionId } = useQueryParams<{ sectionId?: string | null }>()
   const { isReadOnly, isActiveFreeze } = React.useContext(FreezeWindowContext)
-  const formikRef = React.useRef<FormikProps<FreezeObj>>()
+  const formikRef = React.useRef<
+    FormikProps<{ entity?: Array<Record<string, any>> }> & {
+      onTabChange: (formikValues: { entity?: Array<Record<string, any>> }) => void
+    }
+  >()
   const [validationErrors, setValidationErrors] = React.useState<ValidationErrorType>({})
 
   React.useEffect(() => {
@@ -46,6 +50,7 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
         setValidationErrors(formErrors as ValidationErrorType)
         return
       } else {
+        tabId === FreezeWindowTabs.FREEZE_CONFIG ? formik.onTabChange(formik.values) : null
         setValidationErrors({})
       }
     }
