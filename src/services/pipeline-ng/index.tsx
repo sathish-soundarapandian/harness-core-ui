@@ -3794,12 +3794,6 @@ export interface PipelineSaveResponse {
 }
 
 export type PipelineStageConfig = StageInfoConfig & {
-  expressionMode?:
-    | 'UNKNOWN_MODE'
-    | 'RETURN_NULL_IF_UNRESOLVED'
-    | 'RETURN_ORIGINAL_EXPRESSION_IF_UNRESOLVED'
-    | 'THROW_EXCEPTION_IF_UNRESOLVED'
-    | 'UNRECOGNIZED'
   inputSetReferences?: string[]
   inputs?: JsonNode
   org: string

@@ -11,6 +11,7 @@ import { defaultTo } from 'lodash-es'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useDeepCompareEffect } from '@common/hooks'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { SVGComponent } from '../../PipelineGraph/PipelineGraph'
 import { PipelineGraphRecursive } from '../../PipelineGraph/PipelineGraphNode'
 import {
@@ -111,7 +112,7 @@ const getCalculatedStyles = (
     }
   })
 
-  return { height: finalHeight, width: width - (type === 'Pipeline' ? 40 : 80) } // 80 is link gap that we dont need for last stepgroup node
+  return { height: finalHeight, width: width - (type === StageType.PIPELINE ? 40 : 80) } // 80 is link gap that we dont need for last stepgroup node
 }
 
 function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
@@ -137,7 +138,7 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
 
   const stagePath = getStagePathFromPipeline(props?.identifier || '', 'pipeline.stages')
   useLayoutEffect(() => {
-    if (props?.type === 'Pipeline') setState(props.data as PipelineGraphState[])
+    if (props?.type === StageType.PIPELINE) setState(props.data as PipelineGraphState[])
     else if (props?.data?.length) {
       setState(
         getPipelineGraphData({

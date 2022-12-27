@@ -138,11 +138,46 @@ const setStageIds = ({
       setAutoSelectedStageId(runningStage)
       setSelectedStageId(runningStage)
       if (runningChildStage) {
-        setAutoSelectedChildStageId(runningChildStage)
-        setSelectedChildStageId(runningChildStage)
+        if (
+          isNodeTypeMatrixOrFor(
+            data.data?.childGraph?.pipelineExecutionSummary?.layoutNodeMap?.[runningChildStage]?.nodeType
+          )
+        ) {
+          const childNodeExecid = get(
+            data,
+            [
+              'data',
+              'childGraph',
+              'pipelineExecutionSummary',
+              'layoutNodeMap',
+              runningChildStage,
+              'edgeLayoutList',
+              'currentNodeChildren',
+              0
+            ],
+            runningChildStage
+          ) as string // UNIQUE ID--> stageNodeExecutionID
+          const childNodeId = get(
+            data,
+            ['data', 'childGraph', 'pipelineExecutionSummary', 'layoutNodeMap', childNodeExecid, 'nodeUuid'],
+            ''
+          ) as string // COMMMON--> stageNodeID
+          setAutoSelectedChildStageId(childNodeId)
+          setSelectedChildStageId(childNodeId)
+          setAutoStageNodeExecutionId(childNodeExecid)
+          setSelectedStageExecutionId(childNodeExecid)
+        } else {
+          setAutoSelectedChildStageId(runningChildStage)
+          setSelectedChildStageId(runningChildStage)
+          setAutoStageNodeExecutionId('')
+          setSelectedStageExecutionId('')
+        }
+      } else {
+        setAutoSelectedChildStageId('')
+        setSelectedChildStageId('')
+        setAutoStageNodeExecutionId('')
+        setSelectedStageExecutionId('')
       }
-      setAutoStageNodeExecutionId('')
-      setSelectedStageExecutionId('')
     }
   }
 

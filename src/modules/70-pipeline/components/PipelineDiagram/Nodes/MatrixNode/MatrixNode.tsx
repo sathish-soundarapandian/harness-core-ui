@@ -341,6 +341,7 @@ export function MatrixNode(props: any): JSX.Element {
                               showMarkers={false}
                               name={node.name}
                               matrixNodeName={node.matrixNodeName}
+                              parentStageId={props?.parentStageId}
                             />
                           ) : null}
                         </React.Fragment>

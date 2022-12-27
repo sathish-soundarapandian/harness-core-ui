@@ -11,7 +11,7 @@ import { Icon, Layout, Text, Button, ButtonVariation, useToaster } from '@harnes
 import { FontVariation, Color } from '@harness/design-system'
 import { debounce, defaultTo, get, isEmpty, isUndefined } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
-import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
+import { isNodeTypeMatrixOrFor, STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import {
   isExecutionRunning,
@@ -26,6 +26,7 @@ import routes from '@common/RouteDefinitions'
 import { useUpdateQueryParams } from '@common/hooks'
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
 import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
 import SVGMarker from '../SVGMarker'
@@ -43,7 +44,7 @@ export function StepGroupNode(props: any): JSX.Element {
   const allowAdd = defaultTo(props.allowAdd, false)
   const { getString } = useStrings()
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
-  const [isNodeCollapsed, setNodeCollapsed] = React.useState(props?.type === 'Pipeline')
+  const [isNodeCollapsed, setNodeCollapsed] = React.useState(props?.type === StageType.PIPELINE)
   const [childPipelineData, setChildPipelineData] = React.useState<PipelineGraphState[]>([])
   const [executionMetaData, setExecutionMetaData] = React.useState<ExecutionGraph['executionMetadata'] | undefined>(
     undefined
@@ -66,7 +67,7 @@ export function StepGroupNode(props: any): JSX.Element {
 
   React.useEffect(() => {
     if (
-      props?.type === 'Pipeline' &&
+      props?.type === StageType.PIPELINE &&
       (isExecutionRunning(props?.status) || isExecutionComplete(props?.status)) &&
       isNodeCollapsed &&
       childPipelineData &&
@@ -77,7 +78,7 @@ export function StepGroupNode(props: any): JSX.Element {
   }, [props?.status, childPipelineData])
 
   React.useEffect(() => {
-    if (props?.type === 'Pipeline' && !isExecutionRunning(props?.status) && props?.id !== selectedStageId)
+    if (props?.type === StageType.PIPELINE && !isExecutionRunning(props?.status) && props?.id !== selectedStageId)
       setNodeCollapsed(true)
   }, [props?.status, selectedStageId])
 
@@ -103,31 +104,47 @@ export function StepGroupNode(props: any): JSX.Element {
 
   React.useEffect(() => {
     // collapse stepGroup in execution view till data loads
-    if (props?.type !== 'Pipeline') setNodeCollapsed(stepsData?.length === 0 && isExecutionView)
+    if (props?.type !== StageType.PIPELINE) setNodeCollapsed(stepsData?.length === 0 && isExecutionView)
   }, [stepsData])
 
   const debounceHideVisibility = debounce(() => {
     setVisibilityOfAdd(false)
   }, 300)
   const nodeType = Object.keys(props?.data?.stepGroup?.strategy || {})[0]
-  const showExecutionMetaDataForChainedPipeline = props?.type === 'Pipeline' && !!executionMetaData
+  const showExecutionMetaDataForChainedPipeline = props?.type === StageType.PIPELINE && !!executionMetaData
 
   return (
     <>
       {isNodeCollapsed && DefaultNode ? (
         <DefaultNode
           onClick={() => {
-            if (props?.type !== 'Pipeline' && isEmpty(stepsData) && isExecutionView) {
+            if (props?.type !== StageType.PIPELINE && isEmpty(stepsData) && isExecutionView) {
               showPrimary(getString('pipeline.execution.emptyStepGroup'))
             }
-            if (props?.type === 'Pipeline') {
+            if (props?.type === StageType.PIPELINE) {
               if (isExecutionNotStarted(props?.status) || isExecutionSkipped(props?.status)) return
               const params = {
                 ...queryParams,
                 stage: props?.id,
-                ...(childPipelineData && childPipelineData.length > 0 && { childStage: childPipelineData[0]?.id })
+                ...(childPipelineData &&
+                  childPipelineData.length > 0 &&
+                  (isNodeTypeMatrixOrFor(childPipelineData[0]?.type)
+                    ? {
+                        childStage: get(
+                          childPipelineData,
+                          [0, 'data', 'children', 0, 'stageNodeId'],
+                          childPipelineData[0]?.id
+                        ) as string,
+                        stageExecId: get(
+                          childPipelineData,
+                          [0, 'data', 'children', 0, 'id'],
+                          childPipelineData[0]?.id
+                        ) as string
+                      }
+                    : { childStage: childPipelineData[0]?.id }))
               }
               delete params?.step
+              if (!isNodeTypeMatrixOrFor(childPipelineData[0]?.type)) delete params?.stageExecId
               if (isUndefined(childPipelineData) || isEmpty(childPipelineData)) delete params?.childStage
               replaceQueryParams(params)
               // Once the childPipelineData is available after refresh, the node will uncollapse.
@@ -137,8 +154,8 @@ export function StepGroupNode(props: any): JSX.Element {
           }}
           {...props}
           isNodeCollapsed={true}
-          icon={props?.type === 'Pipeline' ? 'chained-pipeline' : 'step-group'}
-          selectedNodeId={props?.type === 'Pipeline' ? selectedStageId : props?.selectedNodeId} // In order to apply selected node background color on collapsing the node after execution is completed
+          icon={props?.type === StageType.PIPELINE ? 'chained-pipeline' : 'step-group'}
+          selectedNodeId={props?.type === StageType.PIPELINE ? selectedStageId : props?.selectedNodeId} // In order to apply selected node background color on collapsing the node after execution is completed
         />
       ) : (
         <div style={{ position: 'relative' }}>
@@ -311,7 +328,7 @@ export function StepGroupNode(props: any): JSX.Element {
             <div className={css.stepGroupBody}>
               <StepGroupGraph
                 {...props}
-                data={props?.type === 'Pipeline' ? childPipelineData : stepsData}
+                data={props?.type === StageType.PIPELINE ? childPipelineData : stepsData}
                 isNodeCollapsed={isNodeCollapsed}
                 parentIdentifier={props?.identifier}
                 hideLinks={props?.identifier === STATIC_SERVICE_GROUP_NAME}
