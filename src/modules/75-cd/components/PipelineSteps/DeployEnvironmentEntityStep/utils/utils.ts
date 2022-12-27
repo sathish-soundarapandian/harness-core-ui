@@ -6,7 +6,7 @@
  */
 
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import { isEqual, isNil } from 'lodash-es'
+import { isEmpty, isEqual, isNil } from 'lodash-es'
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
 import { isValueRuntimeInput } from '@common/utils/utils'
@@ -156,7 +156,8 @@ export function getValidationSchema(getString: UseStringsReturn['getString'], gi
         } else if (valueObj.category === 'multi') {
           if (
             !(Array.isArray(valueObj.environments) && valueObj.environments.length) &&
-            !isValueRuntimeInput(valueObj.environments as unknown as string)
+            !isValueRuntimeInput(valueObj.environments as unknown as string) &&
+            isEmpty(valueObj.environmentFilters?.['fixedScenario'])
           ) {
             return this.createError({
               path: 'environments',

@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { StringsMap } from 'stringTypes'
-import type { ApprovalInstanceResponse } from 'services/pipeline-ng'
+import type { ApprovalInstanceResponse, ExecutionGraph } from 'services/pipeline-ng'
 import { Duration } from '@common/exports'
 import { ApprovalStatus } from '@pipeline/utils/approvalUtils'
 import { String } from 'framework/strings'
@@ -24,6 +24,7 @@ import css from './CustomApprovalTab.module.scss'
 export interface CustomApprovalTabProps extends StepExecutionTimeInfo {
   approvalData: ApprovalInstanceResponse
   isWaiting: boolean
+  executionMetadata: ExecutionGraph['executionMetadata']
 }
 
 const statusToStringIdMap = {
@@ -48,7 +49,7 @@ function CustomApprovalMessage({ status }: { status: keyof typeof ApprovalStatus
 }
 
 export function CustomApprovalTab(props: CustomApprovalTabProps): React.ReactElement {
-  const { approvalData, isWaiting, startTs, endTs, stepParameters } = props
+  const { approvalData, isWaiting, startTs, endTs, stepParameters, executionMetadata } = props
   const wasFailed = !isWaiting && approvalData?.status === ApprovalStatus.FAILED
 
   return (
@@ -86,7 +87,7 @@ export function CustomApprovalTab(props: CustomApprovalTabProps): React.ReactEle
       )}
 
       <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
-        <StepDetails step={{ startTs, endTs, stepParameters }} />
+        <StepDetails step={{ startTs, endTs, stepParameters }} executionMetadata={executionMetadata} />
       </Container>
 
       <div className={cx(css.customApproval, css.applyTopPadding)}>

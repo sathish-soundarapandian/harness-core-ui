@@ -19,6 +19,13 @@
 .kubernetes {
   border-radius: 20px !important;
   color: var(--black);
+  :global {
+    span {
+      svg > path {
+        fill: none !important;
+      }
+    }
+  }
 }
 
 .dangerColor {
@@ -35,6 +42,7 @@
   height: auto;
   width: 100% !important;
   padding-left: 10px !important;
+  padding-bottom: 10px !important;
 }
 .success {
   background-color: rgba(228, 247, 225, 1) !important;
@@ -226,7 +234,6 @@
   }
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .troubleShoot {
@@ -273,10 +280,18 @@
 .createPipelineBtn {
   margin-left: 20px !important;
 }
-
-.tabs {
-  position: absolute;
-  top: 157px;
+.troubleShootTitle {
+  border-bottom: 1px solid var(--grey-300);
+}
+.tabsContainer {
+  padding: var(--spacing-medium) !important;
+  padding-block: 0 !important;
+  :global {
+    .bp3-tab[aria-selected='true'] {
+      color: var(--primary-7);
+      font-weight: 500;
+    }
+  }
 }
 
 .hover {
@@ -285,4 +300,13 @@
 
 .hover:hover {
   text-decoration: underline;
+}
+.cursor {
+  cursor: pointer;
+}
+.copyCommandContainer {
+  box-shadow: 0px 0px 5px rgba(40, 41, 61, 0.0348285);
+  background: #effbff !important;
+  border-radius: 4px !important;
+  margin-bottom: var(--spacing-small) !important;
 }

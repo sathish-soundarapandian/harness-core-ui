@@ -58,12 +58,7 @@ export function MultiTypeDelegateSelector(props: ConnectedMultiTypeDelegateSelec
 
   const { getString } = useStrings()
 
-  const {
-    intent = hasError ? Intent.DANGER : Intent.NONE,
-    helperText = hasError ? get(formik.errors, name) : null,
-    disabled,
-    ...rest
-  } = restProps
+  const { intent = hasError ? Intent.DANGER : Intent.NONE, disabled, ...rest } = restProps
 
   const handleDelegateSelectorFixedValueChange = React.useCallback((tags: string[]) => {
     formik.setFieldValue(name, compact(tags))
@@ -79,7 +74,6 @@ export function MultiTypeDelegateSelector(props: ConnectedMultiTypeDelegateSelec
       labelFor={name}
       label={label ? <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} /> : label}
       intent={intent}
-      helperText={helperText}
     >
       <Container className={css.fieldSelectorContainer}>
         <MultiTypeFieldSelector

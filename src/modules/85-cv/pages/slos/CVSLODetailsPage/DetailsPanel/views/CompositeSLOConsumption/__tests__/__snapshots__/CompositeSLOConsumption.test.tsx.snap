@@ -295,7 +295,8 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
               style="width: 150px;"
             >
               <a
-                href="/account/undefined/cv/orgs/undefined/projects/undefined/slos/slo_1?sloType=Simple"
+                href="/account/undefined/cv/orgs//projects//slos/slo_1?sloType=Simple"
+                target="_blank"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
@@ -314,7 +315,8 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
                 class="Layout--vertical StyledProps--main StyledProps--padding-left-small"
               >
                 <a
-                  href="/account/undefined/cv/orgs/undefined/projects/undefined/monitoringservices/edit/prommock_gcpl"
+                  href="/account/undefined/cv/orgs//projects//monitoringservices/edit/prommock_gcpl"
+                  target="_blank"
                 >
                   <p
                     class="StyledProps--font StyledProps--main titleInSloTable StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
@@ -419,7 +421,8 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
               style="width: 150px;"
             >
               <a
-                href="/account/undefined/cv/orgs/undefined/projects/undefined/slos/slo_1?sloType=Simple"
+                href="/account/undefined/cv/orgs//projects//slos/slo_1?sloType=Simple"
+                target="_blank"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
@@ -438,7 +441,8 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
                 class="Layout--vertical StyledProps--main StyledProps--padding-left-small"
               >
                 <a
-                  href="/account/undefined/cv/orgs/undefined/projects/undefined/monitoringservices/edit/prommock_env"
+                  href="/account/undefined/cv/orgs//projects//monitoringservices/edit/prommock_env"
+                  target="_blank"
                 >
                   <p
                     class="StyledProps--font StyledProps--main titleInSloTable StyledProps--color StyledProps--color-primary7 StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"

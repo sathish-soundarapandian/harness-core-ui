@@ -180,12 +180,6 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
 
   const licenseData = data?.data
 
-  const updatedLicenseInfo = licenseData && {
-    ...licenseInformation?.[moduleType],
-    ...pick(licenseData, ['licenseType', 'edition']),
-    expiryTime: licenseData.maxExpiryTime
-  }
-
   const { openSubscribeModal } = useSubscribeModal({
     // refresh to fetch new license after subscribe
     onClose: () => {
@@ -194,13 +188,17 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
   })
   const isSelfService = licenseInformation?.[moduleType]?.selfService === true
   const isSelfServiceEnabled = !isOnPrem() && isSelfService
+
   useEffect(() => {
-    refetchLicense()
+    refetchLicense()?.then(() => {
+      const updatedLicenseInfo = licenseData && {
+        ...licenseInformation?.[moduleType],
+        ...pick(licenseData, ['licenseType', 'edition']),
+        expiryTime: licenseData.maxExpiryTime
+      }
+      handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, updatedLicenseInfo)
+    })
   }, [])
-  useEffect(() => {
-    handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, updatedLicenseInfo)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [licenseData])
 
   function getPlanCalculatedProps(plan: PlanProp): PlanCalculatedProps {
     let isCurrentPlan, isTrial, isPaid

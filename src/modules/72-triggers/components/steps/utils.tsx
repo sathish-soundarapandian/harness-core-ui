@@ -7,10 +7,11 @@
 
 import React, { SetStateAction, Dispatch } from 'react'
 import cx from 'classnames'
-import { FormInput, SelectOption, Text, Container } from '@harness/uicore'
+import { FormInput, SelectOption, Text, Container, MultiTypeInputType } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { isEmpty, isUndefined, sortBy } from 'lodash-es'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
+import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { eventTypes } from '../Triggers/WebhookTrigger/utils'
 import ConnectorSection from '../ConnectorSection/ConnectorSection'
 import { GitSourceProviders } from '../Triggers/utils'
@@ -49,7 +50,8 @@ export const renderNonCustomEventFields = ({
   eventOptions,
   getString,
   actionsOptions,
-  actions
+  actions,
+  isGitWebhookPollingEnabled
 }: {
   sourceRepo?: string
   formikProps: any
@@ -58,6 +60,7 @@ export const renderNonCustomEventFields = ({
   getString: UseStringsReturn['getString']
   actionsOptions: SelectOption[]
   actions: SelectOption[]
+  isGitWebhookPollingEnabled: boolean
 }): JSX.Element => {
   return (
     <>
@@ -147,6 +150,21 @@ export const renderNonCustomEventFields = ({
               />
               <Text className={css.autoAbortDescription}>{getAutoAbortDescription({ event, getString })}</Text>
             </>
+          )}
+          {isGitWebhookPollingEnabled && sourceRepo === GitSourceProviders.GITHUB.value && (
+            <FormMultiTypeDurationField
+              name="pollInterval"
+              label={getString('triggers.triggerConfigurationPanel.pollingFrequency')}
+              tooltipProps={{
+                dataTooltipId: 'pollInterval'
+              }}
+              multiTypeDurationProps={{
+                enableConfigureOptions: false,
+                allowableTypes: [MultiTypeInputType.FIXED],
+                width: 324
+              }}
+              placeholder={getString('triggers.triggerConfigurationPanel.pollingFrequencyPlaceholder')}
+            />
           )}
         </>
       )}

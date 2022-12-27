@@ -45,7 +45,7 @@ export function DialogEmptyState({
         </>
       ) : (
         <>
-          <img src={emptyInstanceDetail} alt={getString('cd.environmentDetailPage.selectInfraMsg')} />
+          <img src={emptyInstanceDetail} alt={getString('cd.environmentDetailPage.selectArtifactMsg')} />
           <Text>{message}</Text>
         </>
       )}

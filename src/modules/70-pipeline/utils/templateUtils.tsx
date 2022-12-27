@@ -172,13 +172,14 @@ const getPromisesForTemplateList = (
 const getPromisesForTemplateGet = (
   params: GetTemplateQueryParams,
   templateRefs: string[],
-  storeMetadata?: StoreMetadata
+  storeMetadata?: StoreMetadata,
+  isPipelineGitCacheEnabled?: boolean,
+  loadFromCache?: boolean
 ): Promise<ResponseTemplateResponse>[] => {
   const promises: Promise<ResponseTemplateResponse>[] = []
   templateRefs.forEach(templateRef => {
     const templateIdentifier = getIdentifierFromValue(templateRef)
     const scope = getScopeFromValue(templateRef)
-
     promises.push(
       getTemplatePromise({
         templateIdentifier,
@@ -186,11 +187,21 @@ const getPromisesForTemplateGet = (
           ...params,
           projectIdentifier: scope === Scope.PROJECT ? params.projectIdentifier : undefined,
           orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? params.orgIdentifier : undefined,
-          ...getGitQueryParamsWithParentScope(storeMetadata, {
-            accountId: params.accountIdentifier,
-            orgIdentifier: defaultTo(params.orgIdentifier, ''),
-            projectIdentifier: defaultTo(params.projectIdentifier, '')
+          ...getGitQueryParamsWithParentScope({
+            storeMetadata,
+            params: {
+              accountId: params.accountIdentifier,
+              orgIdentifier: defaultTo(params.orgIdentifier, ''),
+              projectIdentifier: defaultTo(params.projectIdentifier, '')
+            },
+            repoIdentifier: params.repoIdentifier,
+            branch: params.branch
           })
+        },
+        requestOptions: {
+          headers: {
+            ...(isPipelineGitCacheEnabled && loadFromCache ? { 'Load-From-Cache': 'true' } : {})
+          }
         }
       })
     )
@@ -230,14 +241,16 @@ export const getTemplateTypesByRef = (
   params: GetTemplateListQueryParams | GetTemplateQueryParams,
   templateRefs: string[],
   storeMetadata?: StoreMetadata,
-  supportingTemplatesGitx?: boolean
+  supportingTemplatesGitx?: boolean,
+  isPipelineGitCacheEnabled?: boolean,
+  loadFromCache?: boolean
 ): Promise<{
   templateTypes: { [key: string]: string }
   templateServiceData: TemplateServiceDataType
   templateIcons: TemplateIcons
 }> => {
   return supportingTemplatesGitx
-    ? getTemplateTypesByRefV2(params, templateRefs, storeMetadata)
+    ? getTemplateTypesByRefV2(params, templateRefs, storeMetadata, isPipelineGitCacheEnabled, loadFromCache)
     : getTemplateTypesByRefV1(params as GetTemplateListQueryParams, templateRefs)
 }
 
@@ -290,13 +303,21 @@ export const getTemplateTypesByRefV1 = (
 export const getTemplateTypesByRefV2 = (
   params: GetTemplateQueryParams,
   templateRefs: string[],
-  storeMetadata?: StoreMetadata
+  storeMetadata?: StoreMetadata,
+  isPipelineGitCacheEnabled?: boolean,
+  loadFromCache?: boolean
 ): Promise<{
   templateTypes: { [key: string]: string }
   templateServiceData: TemplateServiceDataType
   templateIcons: TemplateIcons
 }> => {
-  const promises = getPromisesForTemplateGet(omit(params, 'templateListType'), templateRefs, storeMetadata)
+  const promises = getPromisesForTemplateGet(
+    omit(params, 'templateListType'),
+    templateRefs,
+    storeMetadata,
+    isPipelineGitCacheEnabled,
+    loadFromCache
+  )
   return Promise.all(promises)
     .then(responses => {
       const templateServiceData = {}

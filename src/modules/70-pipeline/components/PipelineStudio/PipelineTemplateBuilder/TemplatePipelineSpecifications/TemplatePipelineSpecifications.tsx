@@ -80,7 +80,12 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: templateVersionLabel,
-      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params: queryParams,
+        repoIdentifier: gitDetails.repoIdentifier,
+        branch: gitDetails.branch
+      })
     }
   })
 
@@ -101,7 +106,12 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, pipelineScope),
       pipelineIdentifier: pipeline.identifier,
-      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params: queryParams,
+        repoIdentifier: gitDetails.repoIdentifier,
+        branch: gitDetails.branch
+      })
     },
     body: { originalEntityYaml },
     lazy: true

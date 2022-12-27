@@ -21,7 +21,7 @@ import css from './HarnessApprovalLogsView.module.scss'
 
 export function HarnessApprovalLogsView(props: ConsoleViewStepDetailProps): React.ReactElement {
   const { getString } = useStrings()
-  const step = props.step
+  const { step, executionMetadata } = props
 
   const isWaiting = isExecutionWaiting(step.status)
   const approvalInstanceId = get(step, 'executableResponses[0].async.callbackIds[0]') || ''
@@ -70,6 +70,7 @@ export function HarnessApprovalLogsView(props: ConsoleViewStepDetailProps): Reac
               hideApproveRejectModal()
             }}
             stepParameters={step.stepParameters}
+            executionMetadata={executionMetadata}
           />
         </Layout.Vertical>
       </Dialog>
@@ -93,7 +94,7 @@ export function HarnessApprovalLogsView(props: ConsoleViewStepDetailProps): Reac
   } else if (isWaitingAll && isCurrentUserAuthorized) {
     approveButtonNode = (
       <div className={css.approvalRow}>
-        <div>
+        <div className={css.approvalMessageContent}>
           {approvalData?.details?.approvalMessage || getString('pipeline.approvalStage.approvalStageLogsViewMessage')}
         </div>
         <Button

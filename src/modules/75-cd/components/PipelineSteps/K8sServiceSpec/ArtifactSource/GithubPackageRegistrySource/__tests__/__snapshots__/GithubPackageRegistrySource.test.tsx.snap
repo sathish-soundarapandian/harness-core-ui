@@ -83,6 +83,7 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -154,6 +155,7 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -255,6 +257,7 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -356,6 +359,7 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -469,6 +473,7 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -540,6 +545,7 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -641,6 +647,7 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -710,6 +717,7 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"

@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Command Flags Panel Test renders empty command flags panel correctly 1`] = `
+<div>
+  <div>
+    <div
+      class="commandFlags"
+    >
+      <div
+        class="Layout--vertical StyledProps--main"
+      >
+        <span>
+          <button
+            aria-label="add"
+            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--variation Button--variation-primary"
+            type="button"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              add
+            </span>
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;

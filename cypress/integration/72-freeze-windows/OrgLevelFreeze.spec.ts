@@ -268,6 +268,7 @@ describe('Org Level Freeze', () => {
           filterType: All
   status: Disabled
   orgIdentifier: default
+  description: ""
 `)
     })
   })

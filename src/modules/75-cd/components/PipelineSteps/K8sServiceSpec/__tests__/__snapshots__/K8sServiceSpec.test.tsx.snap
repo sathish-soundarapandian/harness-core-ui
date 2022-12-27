@@ -90,6 +90,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -160,6 +161,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -259,6 +261,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -357,6 +360,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -479,6 +483,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -548,6 +553,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -642,6 +648,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
                   </div>
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                     disabled=""
                   >
                     <span
@@ -743,6 +750,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -813,6 +821,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -907,6 +916,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
                   </div>
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                     disabled=""
                   >
                     <span
@@ -1023,6 +1033,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1147,6 +1158,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1217,6 +1229,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1290,6 +1303,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1467,69 +1481,76 @@ exports[`StepWidget tests renders ServiceStep for Service Tab  1`] = `
           <div
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
           >
-            <section />
-            <button
-              aria-label="pipeline.artifactsSelection.addPrimaryArtifact"
-              class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
-              id="add-artifact"
-              type="button"
+            <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
             >
-              <span
-                class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
-                icon="plus"
+              <button
+                aria-label="pipeline.artifactsSelection.addPrimaryArtifact"
+                class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
+                id="add-artifact"
+                type="button"
               >
-                <svg
-                  data-icon="plus"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  width="16"
+                <span
+                  class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+                  icon="plus"
                 >
-                  <desc>
-                    plus
-                  </desc>
-                  <path
-                    d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-              <span
-                class="bp3-button-text"
-              >
-                pipeline.artifactsSelection.addPrimaryArtifact
-              </span>
-            </button>
-            <button
-              aria-label="pipeline.artifactsSelection.addSidecar"
-              class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
-              id="add-artifact"
-              type="button"
+                  <svg
+                    data-icon="plus"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    width="16"
+                  >
+                    <desc>
+                      plus
+                    </desc>
+                    <path
+                      d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="bp3-button-text"
+                >
+                  pipeline.artifactsSelection.addPrimaryArtifact
+                </span>
+              </button>
+            </div>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
             >
-              <span
-                class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
-                icon="plus"
+              <button
+                aria-label="pipeline.artifactsSelection.addSidecar"
+                class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
+                id="add-artifact"
+                type="button"
               >
-                <svg
-                  data-icon="plus"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  width="16"
+                <span
+                  class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+                  icon="plus"
                 >
-                  <desc>
-                    plus
-                  </desc>
-                  <path
-                    d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-              <span
-                class="bp3-button-text"
-              >
-                pipeline.artifactsSelection.addSidecar
-              </span>
-            </button>
+                  <svg
+                    data-icon="plus"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    width="16"
+                  >
+                    <desc>
+                      plus
+                    </desc>
+                    <path
+                      d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="bp3-button-text"
+                >
+                  pipeline.artifactsSelection.addSidecar
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

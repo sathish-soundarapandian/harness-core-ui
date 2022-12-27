@@ -123,6 +123,9 @@ export interface TriggerQueryParams {
 export interface ExecutionPathProps extends PipelinePathProps {
   executionIdentifier: string
   source: 'deployments' | 'executions' | 'builds' | ':source(deployments|executions|builds)'
+  stage?: string
+  step?: string
+  stageExecId?: string
 }
 
 export interface BuildPathProps extends ProjectPathProps {

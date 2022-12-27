@@ -74,13 +74,9 @@ export default function GroupedSideNav({
             <CollapseListPanel
               collapseHeaderProps={{
                 heading: (
-                  <Text
-                    className={cx(css.selectedApp, css.collapseHeading)}
-                    color={Color.GREY_900}
-                    font={{ weight: 'semi-bold', size: 'normal' }}
-                  >
-                    {label || getString('cv.addGroupName')}
-                  </Text>
+                  <Container className={css.groupContainer}>
+                    <Text className={css.groupName}>{label || getString('cv.addGroupName')}</Text>
+                  </Container>
                 ),
                 collapsedIcon: 'main-chevron-right',
                 expandedIcon: 'main-chevron-down'
@@ -92,19 +88,16 @@ export default function GroupedSideNav({
                 return (
                   <Container
                     key={selectedApp.metricName}
-                    className={css.seletedAppContainer}
+                    className={cx(
+                      css.selectedAppContainer,
+                      selectedItem && selectedApp.metricName === selectedItem ? css.isSelected : false
+                    )}
                     onClick={() => {
                       onSelect?.(selectedApp?.metricName || '', selectedApp.index as number)
                     }}
                     data-testid={`sideNav-${selectedApp.metricName}`}
                   >
-                    <Text
-                      className={cx(
-                        css.selectedApp,
-                        selectedItem && selectedApp.metricName === selectedItem ? css.isSelected : false
-                      )}
-                      lineClamp={1}
-                    >
+                    <Text className={css.metricName} lineClamp={1}>
                       {selectedApp.metricName}
                     </Text>
                     <Container>

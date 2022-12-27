@@ -53,7 +53,8 @@ import {
   checkIfQueryParamsisNotEmpty,
   defaultArtifactInitialValues,
   getConnectorIdValue,
-  shouldFetchFieldOptions
+  shouldFetchFieldOptions,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
@@ -86,7 +87,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const [regions, setRegions] = React.useState<SelectOption[]>([])
   const [lastQueryData, setLastQueryData] = React.useState({ region: undefined, bucketName: '' })
@@ -336,7 +337,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   }
 
   const handleValidate = (formData: AmazonS3InitialValuesType & { connectorId?: string }) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData({
         ...prevStepData,
         ...formData,
@@ -409,7 +410,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             },
             selectProps: {
               noResults: (
-                <Text lineClamp={1} width={500} height={100} padding="small">
+                <Text lineClamp={1} width={400} padding="small">
                   {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBucketsFound')}
                 </Text>
               ),
@@ -502,7 +503,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             allowableTypes,
             selectProps: {
               noResults: (
-                <Text lineClamp={1} width={500} height={100} padding="small">
+                <Text lineClamp={1} width={400} padding="small">
                   {getRBACErrorMessage(filePathError as RBACError) || getString('pipeline.noFilePathsFound')}
                 </Text>
               ),
@@ -524,7 +525,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             }
           }}
         />
-        {getMultiTypeFromValue(formik.values?.bucketName) === MultiTypeInputType.RUNTIME && (
+        {getMultiTypeFromValue(formik.values?.filePath) === MultiTypeInputType.RUNTIME && (
           <div className={css.configureOptions}>
             <SelectConfigureOptions
               options={filePaths}
@@ -548,7 +549,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>
@@ -568,7 +569,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
       >
         {formik => (
           <FormikForm>
-            <div className={cx(css.connectorForm, formClassName)}>
+            <div className={cx(css.artifactForm, formClassName)}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
@@ -586,7 +587,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                     selectProps: {
                       items: regions,
                       noResults: (
-                        <Text lineClamp={1} width={500} height={100}>
+                        <Text lineClamp={1} width={400} height={100}>
                           {getRBACErrorMessage(errorRegions as RBACError) || getString('pipeline.noRegions')}
                         </Text>
                       )
@@ -675,7 +676,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                 </div>
               )}
             </div>
-            {!isTemplateContext && (
+            {!hideHeaderAndNavBtns && (
               <Layout.Horizontal spacing="medium">
                 <Button
                   variation={ButtonVariation.SECONDARY}

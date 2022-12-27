@@ -694,6 +694,7 @@ exports[`Terraform Var Store tests on edit mode for tf var store  1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1149,6 +1150,7 @@ exports[`Terraform Var Store tests on edit mode for tf var store  2`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1604,6 +1606,7 @@ exports[`Terraform Var Store tests select one of the types 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"

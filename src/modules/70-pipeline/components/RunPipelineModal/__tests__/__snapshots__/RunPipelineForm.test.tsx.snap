@@ -111,6 +111,7 @@ exports[`EXECUTION VIEW should should have the values prefilled and fields as di
                                   </div>
                                   <button
                                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                    data-testid="multi-type-button"
                                     disabled=""
                                   >
                                     <span
@@ -642,6 +643,7 @@ exports[`STUDIO MODE Valid input set enables Run button if it was disabled due t
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -1178,6 +1180,7 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -1793,6 +1796,7 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"

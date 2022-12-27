@@ -15,6 +15,7 @@ import { accountPathProps, executionPathProps, pipelineModuleParams } from '@com
 import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import { ManualInterventionTab } from '../ManualInterventionTab'
 import data from './data.json'
+import executionMetadata from './executionMetadata.json'
 
 const mutate = jest.fn()
 jest.mock('services/pipeline-ng', () => ({
@@ -55,7 +56,11 @@ describe('<ManualInterventionTab /> tests', () => {
   test('snapshot test', () => {
     const { container } = render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
-        <ManualInterventionTab step={data as any} allowedStrategies={AllStrategies} />
+        <ManualInterventionTab
+          step={data as any}
+          allowedStrategies={AllStrategies}
+          executionMetadata={executionMetadata}
+        />
       </TestWrapper>
     )
 
@@ -65,7 +70,11 @@ describe('<ManualInterventionTab /> tests', () => {
   test.each(AllStrategies)('interrupt %s works', async strategy => {
     const { container } = render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
-        <ManualInterventionTab step={data as any} allowedStrategies={AllStrategies} />
+        <ManualInterventionTab
+          step={data as any}
+          allowedStrategies={AllStrategies}
+          executionMetadata={executionMetadata}
+        />
       </TestWrapper>
     )
 
@@ -94,7 +103,11 @@ describe('<ManualInterventionTab /> tests', () => {
 
     render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
-        <ManualInterventionTab step={data as any} allowedStrategies={AllStrategies} />
+        <ManualInterventionTab
+          step={data as any}
+          allowedStrategies={AllStrategies}
+          executionMetadata={executionMetadata}
+        />
       </TestWrapper>
     )
 

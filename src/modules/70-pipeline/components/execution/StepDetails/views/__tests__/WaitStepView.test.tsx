@@ -13,6 +13,7 @@ import { TestWrapper, UseGetMockData } from '@common/utils/testUtils'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 
 import { WaitStepView } from '../WaitStepView/WaitStepView'
+import { executionMetadata } from './mock'
 let mockDate: jest.SpyInstance<unknown> | undefined
 let mocktime: jest.SpyInstance<unknown> | undefined
 
@@ -121,7 +122,7 @@ describe('Wait Step View Test', () => {
     const data = step(ExecutionStatusEnum.Success)
     const { container } = render(
       <TestWrapper>
-        <WaitStepView step={data} isStageExecutionInputConfigured={false} />
+        <WaitStepView step={data} isStageExecutionInputConfigured={false} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
 
@@ -132,7 +133,7 @@ describe('Wait Step View Test', () => {
     const data = step(ExecutionStatusEnum.InterventionWaiting)
     const { container } = render(
       <TestWrapper>
-        <WaitStepView step={data} isStageExecutionInputConfigured={false} />
+        <WaitStepView step={data} isStageExecutionInputConfigured={false} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
 

@@ -168,6 +168,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                     disabled={inputSetData?.readonly}
                     template={template}
                     fieldPath={`variables[${index}].value`}
+                    variableNamePath={`${basePath}[${index}].name`}
                   />
                 </>
               )}

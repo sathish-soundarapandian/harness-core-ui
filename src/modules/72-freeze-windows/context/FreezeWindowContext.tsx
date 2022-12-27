@@ -126,6 +126,8 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
     }
     if (!loadingFreezeObj && !freezeObjError && freezeObjData?.data?.yaml) {
       const freezeObj = parse(freezeObjData?.data?.yaml)?.freeze
+      // BE has a bug, they send null in YAML
+      freezeObj.description = freezeObj.description || ''
       updateFreeze({ ...freezeObj, oldFreezeObj: { ...freezeObj } })
       setIsActiveFreeze(
         getFreezeStatus(freezeObjData.data, freezeObjData.data?.status === 'Enabled') === FreezeStatus['ACTIVE']

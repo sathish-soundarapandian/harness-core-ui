@@ -23,12 +23,14 @@ declare const styles: {
   readonly instanceDetailTitle: string
   readonly instanceDetailView: string
   readonly instanceEmptyState: string
+  readonly instanceHeaderStyle: string
   readonly instanceViewHeader: string
   readonly lastDeploymentText: string
   readonly latestArtifact: string
   readonly latestBadgeStyle: string
   readonly loadingContainer: string
   readonly main: string
+  readonly marginBottom1: string
   readonly nextButton: string
   readonly nonCollapseRow: string
   readonly overflow: string

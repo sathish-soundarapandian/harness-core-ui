@@ -68,6 +68,7 @@ exports[`FormMultiTypeConnectorField tests renders drawer mode for addition of c
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -332,6 +333,7 @@ exports[`FormMultiTypeConnectorField tests renders without crashing 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

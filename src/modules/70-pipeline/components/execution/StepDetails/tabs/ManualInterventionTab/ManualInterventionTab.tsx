@@ -6,8 +6,7 @@
  */
 
 import React from 'react'
-import { chunk } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { chunk, defaultTo } from 'lodash-es'
 import { Thumbnail, useToaster } from '@harness/uicore'
 import cx from 'classnames'
 
@@ -15,29 +14,29 @@ import { String, useStrings } from 'framework/strings'
 import {
   useHandleManualInterventionInterrupt,
   ExecutionNode,
-  HandleManualInterventionInterruptQueryParams
+  HandleManualInterventionInterruptQueryParams,
+  ExecutionGraph
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { StrategyType, strategyIconMap, stringsMap } from '@pipeline/utils/FailureStrategyUtils'
-import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 
 import css from './ManualInterventionTab.module.scss'
 
 export interface ManualInterventionTabProps {
   step: ExecutionNode
   allowedStrategies: StrategyType[]
+  executionMetadata: ExecutionGraph['executionMetadata']
 }
 
 export function ManualInterventionTab(props: ManualInterventionTabProps): React.ReactElement {
-  const { allowedStrategies, step } = props
-  const { orgIdentifier, projectIdentifier, executionIdentifier, accountId } =
-    useParams<PipelineType<ExecutionPathProps>>()
+  const { allowedStrategies, step, executionMetadata } = props
+  const { orgIdentifier, projectIdentifier, planExecutionId, accountId } = defaultTo(executionMetadata, {})
   const {
     mutate: handleInterrupt,
     loading,
     error
   } = useHandleManualInterventionInterrupt({
-    planExecutionId: executionIdentifier,
+    planExecutionId,
     nodeExecutionId: step.uuid || /* istanbul ignore next */ ''
   })
   const { showError } = useToaster()

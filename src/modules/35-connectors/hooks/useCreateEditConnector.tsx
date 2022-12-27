@@ -27,6 +27,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
 import { doesGovernanceHasErrorOrWarning } from '@governance/utils'
+import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 export interface BuildPayloadProps {
   projectIdentifier?: string
   orgIdentifier?: string
@@ -40,6 +41,9 @@ interface UseCreateEditConnector {
   isGitSyncEnabled: boolean
   afterSuccessHandler: (data: UseSaveSuccessResponse) => void
   gitDetails?: EntityGitDetails
+  onErrorHandler?: (data: ResponseMessage) => void
+  skipGovernanceCheck?: boolean
+  hideSuccessToast?: boolean
 }
 interface OnInitiateConnectorCreateEditProps<T> {
   buildPayload: (data: T & BuildPayloadProps) => Connector
@@ -53,7 +57,11 @@ export default function useCreateEditConnector<T>(props: UseCreateEditConnector)
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
 
-  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
+  const { skipGovernanceCheck = false, hideSuccessToast = false } = props
+  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal({
+    ...connectorGovernanceModalProps(),
+    skipGovernanceCheck
+  })
   const [connectorPayload, setConnectorPayload] = useState<Connector>({})
   const [connectorResponse, setConnectorResponse] = useState<UseSaveSuccessResponse>()
   const [connectorData, setConnectorData] = useState<T & BuildPayloadProps>({} as T & BuildPayloadProps)
@@ -169,15 +177,18 @@ export default function useCreateEditConnector<T>(props: UseCreateEditConnector)
             handleCreateOrEdit(connectorFormData, { payload: payload }) /* Handling non-git flow */
               .then(res => {
                 if (res.status === 'SUCCESS') {
-                  props.isEditMode
-                    ? showSuccess(getString('connectors.updatedSuccessfully'))
-                    : showSuccess(getString('connectors.createdSuccessfully'))
+                  if (!hideSuccessToast) {
+                    props.isEditMode
+                      ? showSuccess(getString('connectors.updatedSuccessfully'))
+                      : showSuccess(getString('connectors.createdSuccessfully'))
+                  }
                   res.nextCallback?.()
                 }
               })
               .catch(e => {
                 if (shouldShowError(e)) {
                   showError(getRBACErrorMessage(e))
+                  props?.onErrorHandler?.(e)
                 }
               })
           }

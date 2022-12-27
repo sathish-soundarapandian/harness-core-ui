@@ -6,6 +6,7 @@
  */
 
 import { isUndefined } from 'lodash-es'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import type { GitSyncEntityDTO } from 'services/cd-ng'
 
 export function getIdentifierFromName(str: string): string {
@@ -112,4 +113,9 @@ export const joinAsASentence = (items: string[]): string => {
   const itemsClone = [...items]
   const last = itemsClone.pop()
   return `${itemsClone.join(', ')} and ${last}`
+}
+
+export const getScopeAppendedToIdentifier = (identifier: string, scope: string): string => {
+  const scopedReference = scope !== Scope.PROJECT ? `${scope}.${identifier}` : identifier
+  return scopedReference
 }

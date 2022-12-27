@@ -31,7 +31,6 @@ import {
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
-import { CardVariant } from '@pipeline/utils/constants'
 import {
   startOfDay,
   TimeRangeSelector,
@@ -278,7 +277,6 @@ export const CDDashboardPage: React.FC = () => {
               >
                 {data?.data?.failure?.map(d => (
                   <ExecutionCard
-                    variant={CardVariant.Minimal}
                     key={d.planExecutionId}
                     pipelineExecution={executionStatusInfoToExecutionSummary(d, DashboardSelected.OVERVIEW)}
                   />
@@ -296,7 +294,6 @@ export const CDDashboardPage: React.FC = () => {
               >
                 {activeDeployments.map(d => (
                   <ExecutionCard
-                    variant={CardVariant.Minimal}
                     key={d.planExecutionId}
                     pipelineExecution={executionStatusInfoToExecutionSummary(d, DashboardSelected.OVERVIEW)}
                   />

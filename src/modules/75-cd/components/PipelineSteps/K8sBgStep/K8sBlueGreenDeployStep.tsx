@@ -246,6 +246,7 @@ export class K8sBlueGreenDeployStep extends PipelineStep<K8sBGDeployData> {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
+    this._hasCommandFlagSelectionVisible = true
   }
   renderStep(props: StepProps<K8sBGDeployData>): JSX.Element {
     const {

@@ -17,7 +17,7 @@ import css from './StoreView.module.scss'
 
 export default function StoreView(): React.ReactElement {
   const { getString } = useStrings()
-  const { currentNode, loading, isModalView, activeTab, setActiveTab } = useContext(FileStoreContext)
+  const { currentNode, loading, isModalView, activeTab, setActiveTab, isClosedNode } = useContext(FileStoreContext)
 
   React.useEffect(() => {
     if (activeTab === FILE_VIEW_TAB.DETAILS) {
@@ -30,7 +30,11 @@ export default function StoreView(): React.ReactElement {
     return <PageSpinner />
   }
 
-  if (currentNode?.type === FileStoreNodeTypes.FOLDER && !currentNode?.children?.length) {
+  if (
+    currentNode?.type === FileStoreNodeTypes.FOLDER &&
+    !currentNode?.children?.length &&
+    !isClosedNode(currentNode.identifier)
+  ) {
     return (
       <Container style={{ width: '100%' }}>
         <EmptyNodeView title={getString('filestore.noFilesInFolderTitle')} />

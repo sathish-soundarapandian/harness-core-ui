@@ -92,6 +92,7 @@ exports[`Validate MonitoredServiceInputsetVariables   should render MonitoredSer
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -163,6 +164,7 @@ exports[`Validate MonitoredServiceInputsetVariables   should render MonitoredSer
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

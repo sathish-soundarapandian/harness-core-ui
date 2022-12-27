@@ -496,7 +496,6 @@ exports[`CIDashboardPage snapshot test should render properly 1`] = `
           <div
             class="bp3-card bp3-elevation-0 Card--card card"
             data-disabled="false"
-            data-variant="Minimal"
           >
             <div
               class=""
@@ -664,7 +663,6 @@ exports[`CIDashboardPage snapshot test should render properly 1`] = `
           <div
             class="bp3-card bp3-elevation-0 Card--card card"
             data-disabled="false"
-            data-variant="Minimal"
           >
             <div
               class=""
@@ -872,7 +870,6 @@ exports[`CIDashboardPage snapshot test should render properly 1`] = `
           <div
             class="bp3-card bp3-elevation-0 Card--card card"
             data-disabled="false"
-            data-variant="Minimal"
           >
             <div
               class=""

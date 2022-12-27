@@ -85,6 +85,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot test of kubernetes
                     </button>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -149,6 +150,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot test of kubernetes
                   </div>
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                     disabled=""
                   >
                     <span
@@ -216,6 +218,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot test of kubernetes
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -280,6 +283,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot test of kubernetes
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -342,6 +346,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot test of kubernetes
                 </div>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span
@@ -467,6 +472,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot with manifest 1`] 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -537,6 +543,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot with manifest 1`] 
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -610,6 +617,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot with manifest 1`] 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -680,6 +688,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot with manifest 1`] 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -748,6 +757,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot with manifest 1`] 
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -850,6 +860,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot without manifest 1
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -920,6 +931,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot without manifest 1
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -993,6 +1005,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot without manifest 1
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1063,6 +1076,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot without manifest 1
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1131,6 +1145,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot without manifest 1
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

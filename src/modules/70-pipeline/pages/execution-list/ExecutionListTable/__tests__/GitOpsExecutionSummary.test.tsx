@@ -53,8 +53,16 @@ describe('GitOpsExecutionSummary', () => {
           stageInfo={{
             gitOpsAppSummary: {
               applications: [
-                { agentIdentifier: 'AGENT_1', identifier: 'ID_1', name: 'NAME_1' },
-                { agentIdentifier: 'AGENT_2', identifier: 'ID_2', name: 'NAME_2' },
+                {
+                  agentIdentifier: 'AGENT_1',
+                  identifier: 'ID_1',
+                  name: 'NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1'
+                },
+                {
+                  agentIdentifier: 'AGENT_2',
+                  identifier: 'ID_2',
+                  name: 'NAME_2 NAME_2 NAME_2 NAME_2 NAME_2 NAME_2 NAME_2 NAME_2 NAME_2'
+                },
                 { agentIdentifier: 'AGENT_3', identifier: 'ID_3', name: 'NAME_3' }
               ]
             }

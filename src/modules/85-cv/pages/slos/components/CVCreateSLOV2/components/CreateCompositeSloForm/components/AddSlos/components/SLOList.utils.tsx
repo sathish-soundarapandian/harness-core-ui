@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
+import { defaultTo } from 'lodash-es'
 import { Layout, Text, Checkbox } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { Renderer, CellProps, Row } from 'react-table'
-import type { ServiceLevelObjectiveDetailsDTO, SLOHealthListView } from 'services/cv'
+import { getSLOIdentifierWithOrgAndProject } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
+import type { ServiceLevelObjectiveDetailsDTO, SLOConsumptionBreakdown, SLOHealthListView } from 'services/cv'
 import css from './SLOList.module.scss'
 
 export const getUpdatedSLOObjectives = (
@@ -20,12 +22,16 @@ export const getUpdatedSLOObjectives = (
 ): ServiceLevelObjectiveDetailsDTO[] => {
   const selectedSlosLength = selectedSlos.length
   const weight = Number(100 / selectedSlosLength).toFixed(1)
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const lastWeight = Number(100 - Number(weight) * (selectedSlosLength - 1)).toFixed(1)
   const updatedSLOObjective = selectedSlos.map((item, index) => {
+    const orgAndProjectIdentifiers = {
+      orgIdentifier: isAccountLevel ? defaultTo(item?.projectParams?.orgIdentifier, '') : orgIdentifier,
+      projectIdentifier: isAccountLevel ? defaultTo(item?.projectParams?.projectIdentifier, '') : projectIdentifier
+    }
     return {
       accountId,
-      orgIdentifier,
-      projectIdentifier,
+      ...orgAndProjectIdentifiers,
       serviceLevelObjectiveRef: item?.sloIdentifier,
       ...item,
       weightagePercentage: index === selectedSlosLength - 1 ? Number(lastWeight) : Number(weight)
@@ -77,16 +83,19 @@ export const RenderMonitoredService: Renderer<CellProps<SLOHealthListView>> = ({
 export const RenderUserJourney: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
   const slo = row.original
   const { userJourneys = [] } = slo || {}
-  return userJourneys?.map(userJourney => (
-    <Text
-      key={userJourney.identifier}
-      className={css.titleInSloTable}
-      title={userJourney.name}
-      font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
-    >
-      {userJourney.name}
-    </Text>
-  ))
+  return userJourneys?.map(userJourney => {
+    const { name, identifier } = userJourney
+    return (
+      <Text
+        key={identifier}
+        className={css.titleInSloTable}
+        title={name}
+        font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+      >
+        {name || identifier}
+      </Text>
+    )
+  })
 }
 
 export const RenderTags: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
@@ -117,7 +126,7 @@ export const RenderTarget: Renderer<CellProps<SLOHealthListView>> = ({ row }) =>
   )
 }
 
-export const RenderSLIType: Renderer<CellProps<SLOHealthListView>> = ({ row }) => {
+export const RenderSLIType: Renderer<CellProps<SLOHealthListView | SLOConsumptionBreakdown>> = ({ row }) => {
   const slo = row.original
   return (
     <Text className={css.titleInSloTable} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
@@ -130,14 +139,21 @@ export const onSelectCheckBox = (
   checked: boolean,
   slo: SLOHealthListView,
   selectedSlos: SLOHealthListView[],
-  setSelectedSlos: React.Dispatch<React.SetStateAction<SLOHealthListView[]>>
+  setSelectedSlos: React.Dispatch<React.SetStateAction<SLOHealthListView[]>>,
+  isAccountLevel?: boolean
 ): void => {
   const clonedSelectedSlos = [...selectedSlos]
   if (checked) {
     clonedSelectedSlos.push(slo)
     setSelectedSlos(clonedSelectedSlos)
   } else {
-    setSelectedSlos(clonedSelectedSlos.filter(item => item.name !== slo.name))
+    setSelectedSlos(
+      isAccountLevel
+        ? clonedSelectedSlos.filter(
+            item => getSLOIdentifierWithOrgAndProject(item) !== getSLOIdentifierWithOrgAndProject(slo)
+          )
+        : clonedSelectedSlos.filter(item => item.sloIdentifier !== slo.sloIdentifier)
+    )
   }
 }
 
@@ -145,16 +161,19 @@ interface RenderCheckBoxesInterface {
   row: Row<SLOHealthListView>
   selectedSlos: SLOHealthListView[]
   setSelectedSlos: React.Dispatch<React.SetStateAction<SLOHealthListView[]>>
+  isAccountLevel?: boolean
 }
 
-export const RenderCheckBoxes = ({ row, selectedSlos, setSelectedSlos }: RenderCheckBoxesInterface) => {
+export const RenderCheckBoxes = ({ row, selectedSlos, setSelectedSlos, isAccountLevel }: RenderCheckBoxesInterface) => {
   const sloData = row.original
-  const isChecked = Boolean([...selectedSlos].find(item => item.name === sloData.name))
+  const isChecked = isAccountLevel
+    ? selectedSlos.some(item => getSLOIdentifierWithOrgAndProject(item) === getSLOIdentifierWithOrgAndProject(sloData))
+    : selectedSlos.some(item => item.name === sloData.name)
   return (
     <Checkbox
       checked={isChecked}
       onChange={(event: React.FormEvent<HTMLInputElement>) => {
-        onSelectCheckBox(event.currentTarget.checked, sloData, selectedSlos, setSelectedSlos)
+        onSelectCheckBox(event.currentTarget.checked, sloData, selectedSlos, setSelectedSlos, isAccountLevel)
       }}
     />
   )

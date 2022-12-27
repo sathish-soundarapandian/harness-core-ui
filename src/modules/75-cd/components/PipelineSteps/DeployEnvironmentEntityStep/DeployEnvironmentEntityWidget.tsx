@@ -35,11 +35,20 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import type { DeployEnvironmentEntityCustomStepProps, DeployEnvironmentEntityFormState } from './types'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
 import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
 import { getValidationSchema } from './utils/utils'
+
+import {
+  InlineEntityFiltersProps,
+  InlineEntityFiltersRadioType
+} from './components/InlineEntityFilters/InlineEntityFiltersUtils'
 
 import css from './DeployEnvironmentEntityStep.module.scss'
 
@@ -126,6 +135,8 @@ export default function DeployEnvironmentEntityWidget({
               ? (RUNTIME_INPUT_VALUE as any)
               : [{ label: environment, value: environment }]
             : []
+
+        draft.environmentFilters = {}
 
         delete draft.environment
         delete draft.environmentGroup
@@ -261,6 +272,12 @@ export default function DeployEnvironmentEntityWidget({
     }
   }
 
+  const handleFilterRadio = (selectedRadioValue: InlineEntityFiltersRadioType): void => {
+    if (selectedRadioValue === InlineEntityFiltersRadioType.MANUAL) {
+      formikRef.current?.setFieldValue('environmentFilters.fixedScenario', undefined)
+    }
+  }
+
   return (
     <>
       <Formik<DeployEnvironmentEntityFormState>
@@ -330,6 +347,38 @@ export default function DeployEnvironmentEntityWidget({
                     customDeploymentRef={customDeploymentRef}
                     gitOpsEnabled={gitOpsEnabled}
                     scope={scope}
+                  />
+                ) : isMultiEnvironment ? (
+                  <StepWidget<InlineEntityFiltersProps>
+                    type={StepType.InlineEntityFilters}
+                    factory={factory}
+                    stepViewType={StepViewType.Edit}
+                    readonly={readonly}
+                    allowableTypes={allowableTypes}
+                    initialValues={{
+                      filterPrefix: 'environmentFilters.fixedScenario',
+                      entityStringKey: 'environments',
+                      onRadioValueChange: handleFilterRadio,
+                      baseComponent: (
+                        <DeployEnvironment
+                          initialValues={initialValues}
+                          readonly={readonly}
+                          allowableTypes={allowableTypes}
+                          isMultiEnvironment
+                          stageIdentifier={stageIdentifier}
+                          deploymentType={deploymentType}
+                          customDeploymentRef={customDeploymentRef}
+                          gitOpsEnabled={gitOpsEnabled}
+                        />
+                      ),
+                      entityFilterProps: {
+                        entities: ['environments', gitOpsEnabled ? 'gitOpsClusters' : 'infrastructures']
+                      },
+                      gridAreaProps: {
+                        headerAndRadio: 'input-field',
+                        content: 'main-content'
+                      }
+                    }}
                   />
                 ) : (
                   <DeployEnvironment

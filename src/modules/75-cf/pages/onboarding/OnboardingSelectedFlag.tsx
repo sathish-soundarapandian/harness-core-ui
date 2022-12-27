@@ -33,7 +33,7 @@ export const OnboardingSelectedFlag: React.FC<OnboardingSelectedFlagProps> = ({ 
           {selectedFlag.name}
         </Text>
         <span>{getString('common.with')}</span>
-        <IdentifierText identifier={selectedFlag.identifier} allowCopy lineClamp={1} />
+        <IdentifierText identifier={selectedFlag.identifier} allowCopy />
       </Layout.Horizontal>
     </Text>
   )

@@ -213,6 +213,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -285,6 +286,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -408,6 +410,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -529,6 +532,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -875,6 +879,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -947,6 +952,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1070,6 +1076,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1191,6 +1198,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -1537,6 +1545,7 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1609,6 +1618,7 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1732,6 +1742,7 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1859,6 +1870,7 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"

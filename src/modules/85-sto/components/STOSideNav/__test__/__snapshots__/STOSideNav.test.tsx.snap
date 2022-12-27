@@ -38,7 +38,7 @@ exports[`STO side nav tests renders project path 1`] = `
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        common.purpose.sto.continuous
+        common.pipelineExecution
       </p>
     </a>
     <a
@@ -68,7 +68,7 @@ exports[`STO side nav tests renders project path 1`] = `
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        sto.securityReview
+        sto.exemptions
       </p>
     </a>
     <div>

@@ -129,6 +129,7 @@ exports[`UpdateReleaseREpoInput tests renders input sets 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -315,6 +316,7 @@ exports[`UpdateReleaseREpoInput tests renders input sets 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -527,6 +529,7 @@ exports[`UpdateReleaseREpoInput tests renders runtime inputs 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

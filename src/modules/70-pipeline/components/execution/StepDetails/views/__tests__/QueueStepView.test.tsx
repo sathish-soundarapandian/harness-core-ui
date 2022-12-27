@@ -10,6 +10,7 @@ import { render } from '@testing-library/react'
 import { ExecutionNode, ResourceConstraintDetail, useGetResourceConstraintsExecutionInfo } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { QueueStepView } from '../QueueStepView/QueueStepView'
+import { executionMetadata } from './mock'
 
 const step: ExecutionNode = {
   uuid: 'WRx4GOK2RYO3Q4CL1eklhg',
@@ -80,7 +81,7 @@ describe('Queue Step View Test', () => {
     mockData([])
     const { container } = render(
       <TestWrapper>
-        <QueueStepView step={step} />
+        <QueueStepView step={step} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -111,7 +112,7 @@ describe('Queue Step View Test', () => {
     ])
     render(
       <TestWrapper pathParams={{ executionIdentifier: 'PLAN_EXECUTION_1' }}>
-        <QueueStepView step={step} />
+        <QueueStepView step={step} executionMetadata={{ ...executionMetadata, planExecutionId: 'PLAN_EXECUTION_1' }} />
       </TestWrapper>
     )
     expect(document.getElementsByClassName('detailsTab')[0]).toMatchSnapshot('2 resource constraints')

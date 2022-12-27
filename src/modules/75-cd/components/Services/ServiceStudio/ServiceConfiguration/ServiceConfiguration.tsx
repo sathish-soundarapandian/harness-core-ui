@@ -7,7 +7,7 @@
 
 import React, { useCallback, useState } from 'react'
 import { VisualYamlToggle, VisualYamlSelectedView as SelectedView, Tag, ButtonVariation } from '@harness/uicore'
-import { cloneDeep, defaultTo, set } from 'lodash-es'
+import { cloneDeep, defaultTo, isEmpty, isEqual, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import produce from 'immer'
@@ -30,6 +30,7 @@ import css from './ServiceConfiguration.module.scss'
 
 interface ServiceConfigurationProps {
   serviceData: NGServiceConfig
+  setHasYamlValidationErrors: (hasErrors: boolean) => void
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -44,7 +45,10 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   }
 }
 
-function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React.ReactElement | null {
+function ServiceConfiguration({
+  serviceData,
+  setHasYamlValidationErrors
+}: ServiceConfigurationProps): React.ReactElement | null {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const {
     state: {
@@ -91,12 +95,23 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
   const onYamlChange = useCallback(
     (yamlChanged: boolean): void => {
       if (yamlChanged) {
-        const newServiceData = getUpdatedPipelineYaml()
+        const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
+        const serviceSetYamlVisual = parse(yaml).service
+        if (
+          !isEmpty(serviceSetYamlVisual.serviceDefinition.spec) ||
+          !isEmpty(serviceSetYamlVisual.serviceDefinition.type)
+        ) {
+          requestAnimationFrame(() => {
+            setHasYamlValidationErrors(!isEmpty(yamlHandler?.getYAMLValidationErrorMap()))
+          })
+        }
 
-        newServiceData && updatePipeline(newServiceData)
+        const newServiceData = getUpdatedPipelineYaml()
+        const isYamlUpdated = !isEqual(service, newServiceData)
+        newServiceData && isYamlUpdated && updatePipeline(newServiceData)
       }
     },
-    [getUpdatedPipelineYaml, updatePipeline]
+    [getUpdatedPipelineYaml, service, setHasYamlValidationErrors, updatePipeline, yamlHandler]
   )
 
   const handleModeSwitch = useCallback(
@@ -134,6 +149,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
         <div className={css.yamlBuilder}>
           <YamlBuilderMemo
             {...yamlBuilderReadOnlyModeProps}
+            fileName={`${serviceData.service?.name}.yaml`}
             key={isYamlEditable.toString()}
             isReadOnlyMode={isReadonly || !isYamlEditable}
             onChange={onYamlChange}

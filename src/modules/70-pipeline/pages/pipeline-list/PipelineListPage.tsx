@@ -8,29 +8,25 @@
 import { Color } from '@harness/design-system'
 import {
   Button,
+  ButtonVariation,
   ExpandingSearchInput,
   ExpandingSearchInputHandle,
   HarnessDocTooltip,
   Layout,
-  PageSpinner,
   Text,
   useToggleOpen
 } from '@harness/uicore'
 import { defaultTo, isEmpty, pick } from 'lodash-es'
 import React, { useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
 import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { RepoFilter } from '@common/components/RepoFilter/RepoFilter'
 import { Page, useToaster } from '@common/exports'
 import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import { ClonePipelineForm } from '@pipeline/components/ClonePipelineForm/ClonePipelineForm'
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, DEFAULT_PIPELINE_LIST_TABLE_SORT } from '@pipeline/utils/constants'
-import type { PartiallyRequired } from '@pipeline/utils/types'
+import { getModuleRunType } from '@pipeline/utils/runPipelineUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
@@ -43,65 +39,57 @@ import {
   useGetRepositoryList,
   useSoftDeletePipeline
 } from 'services/pipeline-ng'
+import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
+import RepoFilter from '@common/components/RepoFilter/RepoFilter'
+import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { CreatePipeline } from './CreatePipeline/CreatePipeline'
-import { PipelineListEmpty } from './PipelineListEmpty/PipelineListEmpty'
-import { PipelineListFilter } from './PipelineListFilter/PipelineListFilter'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
-import type { PipelineListPagePathParams, PipelineListPageQueryParams } from './types'
+import { getEmptyStateIllustration, queryParamOptions } from './PipelineListUtils'
+import type {
+  PipelineListPagePathParams,
+  PipelineListPageQueryParams,
+  ProcessedPipelineListPageQueryParams
+} from './types'
+import { PipelineListFilter } from './PipelineListFilter/PipelineListFilter'
 import css from './PipelineListPage.module.scss'
 
-type ProcessedPipelineListPageQueryParams = PartiallyRequired<PipelineListPageQueryParams, 'page' | 'size' | 'sort'>
-const queryParamOptions = {
-  parseArrays: true,
-  decoder: queryParamDecodeAll(),
-  processQueryParams(params: PipelineListPageQueryParams): ProcessedPipelineListPageQueryParams {
-    return {
-      ...params,
-      page: params.page ?? DEFAULT_PAGE_INDEX,
-      size: params.size ?? DEFAULT_PAGE_SIZE,
-      sort: params.sort ?? DEFAULT_PIPELINE_LIST_TABLE_SORT
-    }
-  }
-}
-
-function PipelineListView(): React.ReactElement {
+function _PipelineListPage(): React.ReactElement {
   const { getString } = useStrings()
   const searchRef = useRef({} as ExpandingSearchInputHandle)
   const [appliedFilter, setAppliedFilter] = useState<FilterDTO | undefined>() // selected filter
+  const [pipelineToClone, setPipelineToClone] = useState<PMSPipelineSummaryResponse>()
   const { getRBACErrorMessage } = useRBACError()
   const { showSuccess, showError } = useToaster()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
-  const [pipelineToClone, setPipelineToClone] = useState<PMSPipelineSummaryResponse>()
   const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
   const { searchTerm, repoIdentifier, branch, page, size, repoName } = queryParams
   const pathParams = useParams<PipelineListPagePathParams>()
-  const { projectIdentifier, orgIdentifier, accountId } = pathParams
+  const { projectIdentifier, orgIdentifier, accountId, module } = pathParams
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<PipelineListPageQueryParams>>()
   const { preference: sortingPreference, setPreference: setSortingPreference } = usePreferenceStore<string | undefined>(
     PreferenceScope.USER,
     'PipelineSortingPreference'
   )
-  const { globalFreezes } = useGlobalFreezeBanner()
-  useDocumentTitle([getString('pipelines')])
-
-  const {
-    open: openClonePipelineModal,
-    isOpen: isClonePipelineModalOpen,
-    close: closeClonePipelineModal
-  } = useToggleOpen()
-
   const sort = useMemo(
     () => (sortingPreference ? JSON.parse(sortingPreference) : queryParams.sort),
     [queryParams.sort, sortingPreference]
   )
 
-  const {
-    data: pipelineList,
-    refetch: refetchPipelineList,
-    error: pipelineListLoadingError,
-    loading: isPipelineListLoading
-  } = useMutateAsGet(useGetPipelineList, {
+  useDocumentTitle([getString('pipelines')])
+
+  const clonePipelineModalToggle = useToggleOpen()
+
+  const repoListQuery = useGetRepositoryList({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: isGitSyncEnabled
+  })
+  const { globalFreezes } = useGlobalFreezeBanner()
+  const pipelinesQuery = useMutateAsGet(useGetPipelineList, {
     body: {
       filterType: 'PipelineSetup',
       repoName,
@@ -132,22 +120,6 @@ function PipelineListView(): React.ReactElement {
     }
   })
 
-  const {
-    data: repoListData,
-    error: repoListError,
-    loading: loadingRepoList,
-    refetch: refetchRepoList
-  } = useGetRepositoryList({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
-    },
-    lazy: isGitSyncEnabled
-  })
-
-  const repositories = repoListData?.data?.repositories
-
   const onChangeRepo = (_repoName: string): void => {
     updateQueryParams({ repoName: (_repoName || []) as string })
   }
@@ -168,7 +140,7 @@ function PipelineListView(): React.ReactElement {
 
   const onClonePipeline = (originalPipeline: PMSPipelineSummaryResponse): void => {
     setPipelineToClone(originalPipeline)
-    openClonePipelineModal()
+    clonePipelineModalToggle.open()
   }
 
   const onDeletePipeline = async (commitMsg: string, pipeline: PMSPipelineSummaryResponse): Promise<void> => {
@@ -196,11 +168,13 @@ function PipelineListView(): React.ReactElement {
       } else {
         throw getString('somethingWentWrong')
       }
-      refetchPipelineList()
+      pipelinesQuery.refetch()
     } catch (err) {
       showError(getRBACErrorMessage(err), undefined, 'pipeline.delete.pipeline.error')
     }
   }
+
+  const hasFilter = !!(appliedFilter || searchTerm)
 
   return (
     <>
@@ -215,7 +189,7 @@ function PipelineListView(): React.ReactElement {
       />
       <Page.SubHeader className={css.subHeader}>
         <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-          <CreatePipeline refetchPipelineList={refetchPipelineList} />
+          <CreatePipeline onSuccess={pipelinesQuery.refetch} />
           {isGitSyncEnabled ? (
             <GitFilters
               onChange={handleRepoChange}
@@ -229,10 +203,10 @@ function PipelineListView(): React.ReactElement {
             <RepoFilter
               onChange={onChangeRepo}
               value={repoName}
-              repositories={repositories}
-              isError={!isEmpty(repoListError)}
-              isLoadingRepos={loadingRepoList}
-              onRefetch={refetchRepoList}
+              repositories={repoListQuery.data?.data?.repositories}
+              isError={!isEmpty(repoListQuery.error)}
+              isLoadingRepos={repoListQuery.loading}
+              onRefetch={repoListQuery.refetch}
             />
           )}
         </Layout.Horizontal>
@@ -255,24 +229,44 @@ function PipelineListView(): React.ReactElement {
           />
         </Layout.Horizontal>
       </Page.SubHeader>
+
       <GlobalFreezeBanner globalFreezes={globalFreezes} />
+
       <Page.Body
         className={css.pageBody}
-        error={pipelineListLoadingError?.message}
-        retryOnError={() => refetchPipelineList()}
+        loading={pipelinesQuery.loading || isDeletingPipeline}
+        error={pipelinesQuery.error?.message}
+        retryOnError={pipelinesQuery.refetch}
+        noData={{
+          when: () => !pipelinesQuery.data?.data?.content?.length,
+          image: getEmptyStateIllustration(hasFilter, module),
+          messageTitle: hasFilter
+            ? getString('common.filters.noResultsFound')
+            : getString('pipeline.noPipelinesLabel', { moduleRunType: getModuleRunType(module) }),
+          message: hasFilter
+            ? getString('common.filters.noMatchingFilterData')
+            : getString('pipeline-list.aboutPipeline'),
+          button: hasFilter ? (
+            <Button
+              text={getString('common.filters.clearFilters')}
+              variation={ButtonVariation.LINK}
+              onClick={resetFilter}
+            />
+          ) : (
+            <CreatePipeline onSuccess={pipelinesQuery.refetch} />
+          )
+        }}
       >
-        {isPipelineListLoading || isDeletingPipeline ? (
-          <PageSpinner />
-        ) : pipelineList?.data?.content?.length ? (
+        {pipelinesQuery.data?.data && (
           <>
             <div className={css.tableTitle}>
               <Text color={Color.GREY_800} font={{ weight: 'bold' }}>
-                {`${getString('total')}: ${pipelineList?.data?.totalElements}`}
+                {`${getString('total')}: ${pipelinesQuery.data?.data?.totalElements}`}
               </Text>
               <Button
                 intent="primary"
                 icon="refresh"
-                onClick={() => refetchPipelineList()}
+                onClick={pipelinesQuery.refetch}
                 minimal
                 tooltipProps={{ isDark: true }}
                 tooltip={getString('common.refresh')}
@@ -280,7 +274,7 @@ function PipelineListView(): React.ReactElement {
             </div>
             <PipelineListTable
               gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
-              data={pipelineList?.data}
+              data={pipelinesQuery.data.data}
               onDeletePipeline={onDeletePipeline}
               onClonePipeline={onClonePipeline}
               setSortBy={sortArray => {
@@ -291,18 +285,12 @@ function PipelineListView(): React.ReactElement {
             />
             {pipelineToClone && (
               <ClonePipelineForm
-                isOpen={isClonePipelineModalOpen}
-                onClose={closeClonePipelineModal}
+                isOpen={clonePipelineModalToggle.isOpen}
+                onClose={clonePipelineModalToggle.close}
                 originalPipeline={pipelineToClone}
               />
             )}
           </>
-        ) : (
-          <PipelineListEmpty
-            hasFilter={!!(appliedFilter || searchTerm)}
-            resetFilter={resetFilter}
-            createPipeline={<CreatePipeline refetchPipelineList={refetchPipelineList} />}
-          />
         )}
       </Page.Body>
     </>
@@ -316,9 +304,10 @@ export function PipelineListPage(): React.ReactElement {
   if (isGitSyncEnabled) {
     return (
       <GitSyncStoreProvider>
-        <PipelineListView />
+        <_PipelineListPage />
       </GitSyncStoreProvider>
     )
   }
-  return <PipelineListView />
+
+  return <_PipelineListPage />
 }

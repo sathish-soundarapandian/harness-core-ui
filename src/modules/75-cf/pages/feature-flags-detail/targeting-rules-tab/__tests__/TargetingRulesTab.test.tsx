@@ -10,6 +10,7 @@ import userEvent from '@testing-library/user-event'
 
 import React from 'react'
 import * as uuid from 'uuid'
+import { cloneDeep } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -420,11 +421,13 @@ describe('TargetingRulesTab', () => {
 
     test('it should not submit form if percentage rollout added but fields incorrect', async () => {
       const saveChangesMock = jest.fn()
+      const mockFeatureWith3Variations = cloneDeep(mockFeature)
+      mockFeatureWith3Variations.variations.push({ identifier: 'option3', value: 'option3', name: 'option3' })
 
       jest.spyOn(usePatchFeatureFlagMock, 'default').mockReturnValue({ saveChanges: saveChangesMock, loading: false })
       renderComponent({
         featureFlagData: {
-          ...mockFeature,
+          ...mockFeatureWith3Variations,
           envProperties: {
             pipelineConfigured: false,
             pipelineDetails: undefined,
@@ -467,7 +470,7 @@ describe('TargetingRulesTab', () => {
       userEvent.click(saveButton)
 
       await waitFor(() => {
-        expect(screen.getAllByText('cf.featureFlags.rules.validation.valueMustAddTo100')).toHaveLength(2)
+        expect(screen.getAllByText('cf.featureFlags.rules.validation.valueMustAddTo100')).toHaveLength(3)
         expect(screen.getByText('cf.featureFlags.rules.validation.selectTargetGroup')).toBeInTheDocument()
         expect(saveChangesMock).not.toBeCalled()
       })

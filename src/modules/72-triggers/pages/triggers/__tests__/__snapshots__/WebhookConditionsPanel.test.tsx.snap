@@ -68,7 +68,6 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
                   data-id="sourceBranchOperator-0"
                   style="align-self: center;"
                 >
-                  
                   <div
                     class="bp3-form-content"
                   >
@@ -123,7 +122,6 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
                   data-id="sourceBranchValue-1"
                   style="align-self: center;"
                 >
-                  
                   <div
                     class="bp3-form-content"
                   >
@@ -156,7 +154,6 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
                   data-id="targetBranchOperator-2"
                   style="align-self: center;"
                 >
-                  
                   <div
                     class="bp3-form-content"
                   >
@@ -211,7 +208,6 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
                   data-id="targetBranchValue-3"
                   style="align-self: center;"
                 >
-                  
                   <div
                     class="bp3-form-content"
                   >
@@ -244,7 +240,6 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
                   data-id="changedFilesOperator-4"
                   style="align-self: center;"
                 >
-                  
                   <div
                     class="bp3-form-content"
                   >
@@ -299,7 +294,6 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
                   data-id="changedFilesValue-5"
                   style="align-self: center;"
                 >
-                  
                   <div
                     class="bp3-form-content"
                   >
@@ -480,7 +474,6 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
                   data-id="sourceBranchOperator-0"
                   style="align-self: center;"
                 >
-                  
                   <div
                     class="bp3-form-content"
                   >
@@ -535,7 +528,6 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
                   data-id="sourceBranchValue-1"
                   style="align-self: center;"
                 >
-                  
                   <div
                     class="bp3-form-content"
                   >
@@ -568,7 +560,6 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
                   data-id="targetBranchOperator-2"
                   style="align-self: center;"
                 >
-                  
                   <div
                     class="bp3-form-content"
                   >
@@ -623,7 +614,6 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
                   data-id="targetBranchValue-3"
                   style="align-self: center;"
                 >
-                  
                   <div
                     class="bp3-form-content"
                   >
@@ -656,7 +646,6 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
                   data-id="changedFilesOperator-4"
                   style="align-self: center;"
                 >
-                  
                   <div
                     class="bp3-form-content"
                   >
@@ -711,7 +700,6 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
                   data-id="changedFilesValue-5"
                   style="align-self: center;"
                 >
-                  
                   <div
                     class="bp3-form-content"
                   >

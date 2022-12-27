@@ -30,12 +30,12 @@ const RuleRow: FC<RuleRowProps> = ({ namePrefix, targetAttributeItems, onDelete,
         <FormInput.Select
           name={`${namePrefix}.attribute`}
           items={targetAttributeItems}
-          selectProps={{ inputProps: { 'aria-label': getString('cf.segmentDetail.attribute') }, usePortal: false }}
+          selectProps={{ inputProps: { 'aria-label': getString('cf.segmentDetail.attribute') }, usePortal: true }}
         />
         <FormInput.Select
           name={`${namePrefix}.op`}
           items={operators}
-          selectProps={{ inputProps: { 'aria-label': getString('cf.segmentDetail.operator') } }}
+          selectProps={{ inputProps: { 'aria-label': getString('cf.segmentDetail.operator') }, usePortal: true }}
         />
         {selectedOp === 'in' ? (
           <FormInput.TagInput

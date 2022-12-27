@@ -59,7 +59,7 @@ export const MapStepTypeToIcon: { [key: string]: HarnessIconName } = {
   Deployment: 'pipeline-deploy',
   CI: 'pipeline-build-select',
   Approval: 'approval-stage-icon',
-  Pipeline: 'pipeline',
+  Pipeline: 'chained-pipeline',
   Custom: 'custom-stage-icon'
 }
 

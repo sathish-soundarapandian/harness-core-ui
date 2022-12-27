@@ -131,6 +131,7 @@ exports[`ConditionalExecution matches snapshot when no data 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -295,6 +296,7 @@ exports[`ConditionalExecution matches snapshot with data 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"

@@ -175,6 +175,7 @@ exports[`RightBar Renders all ci codebase inputs as runtime inputs 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -338,6 +339,7 @@ exports[`RightBar Renders all ci codebase inputs as runtime inputs 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -462,6 +464,7 @@ exports[`RightBar Renders all ci codebase inputs as runtime inputs 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -586,6 +589,7 @@ exports[`RightBar Renders all ci codebase inputs as runtime inputs 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -725,6 +729,7 @@ exports[`RightBar Renders all ci codebase inputs as runtime inputs 1`] = `
                                       >
                                         <button
                                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                                          data-testid="multi-type-button"
                                         >
                                           <span
                                             class="bp3-icon StyledProps--main"
@@ -847,6 +852,7 @@ exports[`RightBar Renders all ci codebase inputs as runtime inputs 1`] = `
                                       >
                                         <button
                                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                                          data-testid="multi-type-button"
                                         >
                                           <span
                                             class="bp3-icon StyledProps--main"
@@ -1125,6 +1131,7 @@ exports[`RightBar Renders all ci codebase on edit values 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1283,6 +1290,7 @@ exports[`RightBar Renders all ci codebase on edit values 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -1416,6 +1424,7 @@ exports[`RightBar Renders all ci codebase on edit values 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -1549,6 +1558,7 @@ exports[`RightBar Renders all ci codebase on edit values 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -1648,6 +1658,7 @@ exports[`RightBar Renders all ci codebase on edit values 1`] = `
                                       >
                                         <button
                                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                          data-testid="multi-type-button"
                                         >
                                           <span
                                             class="bp3-icon StyledProps--main"
@@ -1730,6 +1741,7 @@ exports[`RightBar Renders all ci codebase on edit values 1`] = `
                                       >
                                         <button
                                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                          data-testid="multi-type-button"
                                         >
                                           <span
                                             class="bp3-icon StyledProps--main"
@@ -1973,6 +1985,7 @@ exports[`RightBar Renders all ci codebase on edit values 2`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2131,6 +2144,7 @@ exports[`RightBar Renders all ci codebase on edit values 2`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -2264,6 +2278,7 @@ exports[`RightBar Renders all ci codebase on edit values 2`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -2397,6 +2412,7 @@ exports[`RightBar Renders all ci codebase on edit values 2`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -2496,6 +2512,7 @@ exports[`RightBar Renders all ci codebase on edit values 2`] = `
                                       >
                                         <button
                                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                          data-testid="multi-type-button"
                                         >
                                           <span
                                             class="bp3-icon StyledProps--main"
@@ -2578,6 +2595,7 @@ exports[`RightBar Renders all ci codebase on edit values 2`] = `
                                       >
                                         <button
                                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                          data-testid="multi-type-button"
                                         >
                                           <span
                                             class="bp3-icon StyledProps--main"
@@ -2849,6 +2867,7 @@ exports[`RightBar Renders validation errors 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3007,6 +3026,7 @@ exports[`RightBar Renders validation errors 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -3140,6 +3160,7 @@ exports[`RightBar Renders validation errors 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -3273,6 +3294,7 @@ exports[`RightBar Renders validation errors 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -3372,6 +3394,7 @@ exports[`RightBar Renders validation errors 1`] = `
                                       >
                                         <button
                                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                          data-testid="multi-type-button"
                                         >
                                           <span
                                             class="bp3-icon StyledProps--main"
@@ -3454,6 +3477,7 @@ exports[`RightBar Renders validation errors 1`] = `
                                       >
                                         <button
                                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                          data-testid="multi-type-button"
                                         >
                                           <span
                                             class="bp3-icon StyledProps--main"

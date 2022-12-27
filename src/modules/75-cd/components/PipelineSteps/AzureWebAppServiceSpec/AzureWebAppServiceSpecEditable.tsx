@@ -67,7 +67,8 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
   const isNewService = isNewServiceEnvEntity(!!NG_SVC_ENV_REDESIGN, stage?.stage as DeploymentStageElementConfig)
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
     !!NG_ARTIFACT_SOURCES,
-    stage?.stage as DeploymentStageElementConfig
+    stage?.stage as DeploymentStageElementConfig,
+    isServiceEntityPage
   )
 
   const updateStageData = async (newStage: any): Promise<void> => {

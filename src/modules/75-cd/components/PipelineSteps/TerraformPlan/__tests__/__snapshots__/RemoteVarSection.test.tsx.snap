@@ -105,6 +105,7 @@ exports[`Config section tests render with artifactory data 1`] = `
             >
               <button
                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                data-testid="multi-type-button"
               >
                 <span
                   class="bp3-icon StyledProps--main"

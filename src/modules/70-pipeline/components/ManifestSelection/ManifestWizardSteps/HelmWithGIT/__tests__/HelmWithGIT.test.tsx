@@ -55,14 +55,20 @@ describe('helm with GIT tests', () => {
     const initialValues = {
       identifier: '',
       gitFetchType: 'Branch',
-      spec: {},
-      type: ManifestDataType.HelmChart,
-      branch: 'master',
-      folderPath: './',
-      helmVersion: 'V2',
-      repoName: 'reponame',
-      skipResourceVersioning: false,
-      commandFlags: [{ commandType: undefined, flag: undefined, id: 'id' }]
+      spec: {
+        helmVersion: 'V2',
+        skipResourceVersioning: false,
+        commandFlags: [{ commandType: undefined, flag: undefined, id: 'id' }],
+        store: {
+          spec: {
+            gitFetchType: 'Branch',
+            branch: 'master',
+            folderPath: './',
+            repoName: 'reponame'
+          }
+        }
+      },
+      type: ManifestDataType.HelmChart
     }
 
     const { container } = render(

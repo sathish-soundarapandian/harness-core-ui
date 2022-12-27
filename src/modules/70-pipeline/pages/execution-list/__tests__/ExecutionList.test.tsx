@@ -380,4 +380,15 @@ describe('Execution List', () => {
     request.queryParams.branch = 'main'
     expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
   })
+
+  test('sorting should fetch the executions with sorted column and order', async () => {
+    renderExecutionPage()
+    const pipelineName = await screen.findByText('filters.executions.pipelineName')
+    userEvent.click(pipelineName)
+    jest.runOnlyPendingTimers()
+
+    const request = commonRequest()
+    request.queryParams.sort = 'name,ASC'
+    expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
+  })
 })

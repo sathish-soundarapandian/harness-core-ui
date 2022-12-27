@@ -9,7 +9,7 @@ import React from 'react'
 import { act, findAllByRole, findByText, fireEvent, render, waitFor } from '@testing-library/react'
 import { Container } from '@harness/uicore'
 import * as cvService from 'services/cv'
-import { TestWrapper } from '@common/utils/testUtils'
+import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { RiskValues } from '@cv/utils/CommonUtils'
 import { mockedHealthScoreData } from '@cv/pages/monitored-service/components/ServiceHealth/__tests__/ServiceHealth.mock'
 import { changeSummaryWithPositiveChange } from '@cv/pages/monitored-service/CVMonitoredService/__test__/CVMonitoredService.mock'
@@ -267,7 +267,8 @@ describe('Unit tests for CVChanges', () => {
       fireEvent.click(changeTypeDropdown!)
     })
 
-    const typeToSelectType = await findByText(container, 'deploymentText')
+    const popoverContainer = findPopoverContainer()
+    const typeToSelectType = await findByText(popoverContainer as HTMLElement, 'deploymentsText')
 
     expect(typeToSelectType).toBeInTheDocument()
     act(() => {
@@ -288,7 +289,8 @@ describe('Unit tests for CVChanges', () => {
       fireEvent.click(changeTypeDropdown!)
     })
 
-    const typeChangeFilter = await findByText(container, 'deploymentText')
+    const popoverContainer = findPopoverContainer()
+    const typeChangeFilter = await findByText(popoverContainer as HTMLElement, 'deploymentsText')
 
     expect(typeChangeFilter).toBeInTheDocument()
     act(() => {

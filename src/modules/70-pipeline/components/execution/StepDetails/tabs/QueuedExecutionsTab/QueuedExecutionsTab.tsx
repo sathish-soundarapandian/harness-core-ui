@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { capitalize } from 'lodash-es'
+import { capitalize, defaultTo } from 'lodash-es'
 import classnames from 'classnames'
 import { useParams, NavLink } from 'react-router-dom'
 import moment from 'moment'
@@ -17,6 +17,7 @@ import routes from '@common/RouteDefinitions'
 import { useStrings, StringKeys } from 'framework/strings'
 import type { Module } from 'framework/types/ModuleName'
 import {
+  ExecutionGraph,
   ExecutionNode,
   ResourceConstraintDetail,
   ResponseResourceConstraintExecutionInfo,
@@ -24,11 +25,13 @@ import {
 } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import stepDetailsTabCss from '../StepDetailsTab/StepDetailsTab.module.scss'
 import css from './QueuedExecutionsTab.module.scss'
 
 export interface ExecutionStepDetailsTabProps {
   step: ExecutionNode
+  executionMetadata: ExecutionGraph['executionMetadata']
 }
 
 type getStringType = (key: StringKeys, vars?: Record<string, any>) => string
@@ -49,9 +52,10 @@ const renderState = (getString: getStringType, state?: string, isCurrent?: boole
 const renderData = (
   resourceConstraintsData: ResponseResourceConstraintExecutionInfo | null,
   getString: getStringType,
-  params: Record<string, string>,
+  executionMetadata: ExecutionGraph['executionMetadata'],
+  module: string,
   queryParams: GitQueryParams
-) => {
+): React.ReactNode => {
   const resourceConstraints = resourceConstraintsData?.data?.resourceConstraints || []
   if (!resourceConstraints.length) {
     return (
@@ -61,7 +65,13 @@ const renderData = (
       </div>
     )
   }
-  const { executionIdentifier, orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, module } = params
+  const {
+    planExecutionId: executionIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier,
+    accountId
+  } = defaultTo(executionMetadata, {})
   const { connectorRef, repoName, branch, storeType } = queryParams
 
   return (
@@ -96,7 +106,7 @@ const renderData = (
                     to={route}
                     onClick={e => {
                       e.preventDefault()
-                      const baseUrl = window.location.href.split('#')[0]
+                      const baseUrl = windowLocationUrlPartBeforeHash()
                       window.open(`${baseUrl}#${route}`)
                     }}
                   >
@@ -118,11 +128,12 @@ const renderData = (
 
 export function QueuedExecutionsTab(props: ExecutionStepDetailsTabProps): React.ReactElement {
   const { getString } = useStrings()
-  const params = useParams<Record<string, string>>()
+  const { module } = useParams<Record<string, string>>()
   const queryParams = useQueryParams<GitQueryParams>()
 
-  const { step } = props
+  const { step, executionMetadata } = props
   const resourceUnit = step?.stepParameters?.spec?.key
+  const { accountId } = defaultTo(executionMetadata, {})
 
   const {
     data: resourceConstraintsData,
@@ -137,7 +148,7 @@ export function QueuedExecutionsTab(props: ExecutionStepDetailsTabProps): React.
       fetchResourceConstraints({
         queryParams: {
           resourceUnit,
-          accountId: params.accountId
+          accountId
         }
       })
     }
@@ -154,7 +165,7 @@ export function QueuedExecutionsTab(props: ExecutionStepDetailsTabProps): React.
       </div>
       {
         <section className={css.contentSection}>
-          {renderData(resourceConstraintsData, getString, params, queryParams)}
+          {renderData(resourceConstraintsData, getString, executionMetadata, module, queryParams)}
         </section>
       }
     </div>

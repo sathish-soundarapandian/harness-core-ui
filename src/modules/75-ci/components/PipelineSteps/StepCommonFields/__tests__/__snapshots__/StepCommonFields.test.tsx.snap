@@ -71,6 +71,7 @@ exports[`<StepCommonFields /> tests Should render properly with no data 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -172,6 +173,7 @@ exports[`<StepCommonFields /> tests Should render properly with no data 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -256,6 +258,7 @@ exports[`<StepCommonFields /> tests Should render properly with no data 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -350,6 +353,7 @@ exports[`<StepCommonFields /> tests Should render properly with no data 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -452,6 +456,7 @@ exports[`<StepCommonFields /> tests Should render properly with passed initial v
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -553,6 +558,7 @@ exports[`<StepCommonFields /> tests Should render properly with passed initial v
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -637,6 +643,7 @@ exports[`<StepCommonFields /> tests Should render properly with passed initial v
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -731,6 +738,7 @@ exports[`<StepCommonFields /> tests Should render properly with passed initial v
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"

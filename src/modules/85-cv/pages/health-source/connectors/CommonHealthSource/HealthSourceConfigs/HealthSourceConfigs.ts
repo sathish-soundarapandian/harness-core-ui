@@ -5,24 +5,68 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { CHART_VISIBILITY_ENUM, FIELD_ENUM } from '../CommonHealthSource.constants'
 import type { HealthSourcesConfig } from '../CommonHealthSource.types'
 
 export const healthSourcesConfig: HealthSourcesConfig = {
   SumoLogic_METRICS: {
+    addQuery: {
+      label: 'Metric',
+      enableDefaultGroupName: false
+    },
     customMetrics: {
-      enabled: true
+      enabled: true,
+      queryAndRecords: {
+        enabled: true,
+        titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics'
+      },
+      metricsChart: {
+        enabled: true,
+        chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO
+      }
+    },
+    metricPacks: {
+      enabled: false
     },
     sideNav: {
       shouldBeAbleToDeleteLastMetric: true
+    },
+    metricThresholds: {
+      enabled: true
     }
   },
   SumoLogic_LOGS: {
-    customMetrics: {
-      enabled: true
-    },
-    sideNav: {
-      shouldBeAbleToDeleteLastMetric: true,
+    addQuery: {
+      label: 'Log',
       enableDefaultGroupName: true
+    },
+    customMetrics: {
+      enabled: true,
+      fieldMappings: [
+        {
+          type: 'JsonSelector' as FIELD_ENUM.JSON_SELECTOR,
+          label: 'Identifier service path',
+          identifier: 'serviceInstance',
+          defaultValue: '_sourcehost'
+        }
+      ],
+      logsTable: {
+        enabled: true
+      },
+      queryAndRecords: {
+        enabled: true,
+        titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQuerySubDescription'
+      }
+    },
+
+    sideNav: {
+      shouldBeAbleToDeleteLastMetric: false
+    },
+    metricPacks: {
+      enabled: false
+    },
+    metricThresholds: {
+      enabled: false
     }
   }
 }

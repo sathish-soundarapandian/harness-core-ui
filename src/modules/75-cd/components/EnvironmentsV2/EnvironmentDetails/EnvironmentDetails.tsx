@@ -77,7 +77,9 @@ export default function EnvironmentDetails(): React.ReactElement {
   const formikRef = useRef<FormikProps<NGEnvironmentInfoConfig>>()
 
   const [selectedTabId, setSelectedTabId] = useState<EnvironmentDetailsTab>(
-    EnvironmentDetailsTab[EnvironmentDetailsTab[defaultTo(sectionId, 'CONFIGURATION')]]
+    EnvironmentDetailsTab[
+      EnvironmentDetailsTab[defaultTo(sectionId, environmentSummaryEnabled ? 'SUMMARY' : 'CONFIGURATION')]
+    ]
   )
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [updateLoading, setUpdateLoading] = useState(false)
@@ -116,7 +118,10 @@ export default function EnvironmentDetails(): React.ReactElement {
         type: defaultTo(values.type, 'Production')
       }
       const response = await updateEnvironmentV2Promise({
-        body: { ...bodyWithoutYaml, yaml: yamlStringify({ environment: values }) },
+        body: {
+          ...bodyWithoutYaml,
+          yaml: yamlStringify({ environment: values })
+        },
         queryParams: {
           accountIdentifier: accountId
         },
@@ -201,8 +206,8 @@ export default function EnvironmentDetails(): React.ReactElement {
                 description,
                 tags: defaultTo(tags, {}),
                 type: defaultTo(type, ''),
-                orgIdentifier: defaultTo(orgIdentifier, ''),
-                projectIdentifier: defaultTo(projectIdentifier, ''),
+                orgIdentifier: orgIdentifier,
+                projectIdentifier: projectIdentifier,
                 variables,
                 overrides
               } as NGEnvironmentInfoConfig

@@ -187,6 +187,7 @@ function StageBuilder(): JSX.Element {
       pipeline,
       pipelineView: {
         isSplitViewOpen,
+        isDrawerOpened,
         splitViewData: { type = SplitViewTypes.StageView }
       },
       pipelineView,
@@ -611,7 +612,7 @@ function StageBuilder(): JSX.Element {
           </div>
         </SplitPane>
       </div>
-      {module === 'cd' ? (
+      {module === 'cd' && !isDrawerOpened ? (
         <HelpPanel referenceId={referenceId(sectionId)} type={HelpPanelType.FLOATING_CONTAINER} />
       ) : null}
     </Layout.Horizontal>

@@ -181,6 +181,7 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
           variableName="tag"
           showRequiredField={false}
           showDefaultField={true}
+          isReadonly={readonly}
           showAdvanced={true}
           isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
           onChange={value => {

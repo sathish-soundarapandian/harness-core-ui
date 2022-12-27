@@ -67,7 +67,8 @@ export enum ServiceDeploymentType {
   ECS = 'ECS',
   Elastigroup = 'Elastigroup',
   SshWinRmAws = 'SshWinRmAws',
-  SshWinRmAzure = 'SshWinRmAzure'
+  SshWinRmAzure = 'SshWinRmAzure',
+  Asg = 'Asg'
 }
 
 export enum RepositoryFormatTypes {
@@ -382,6 +383,27 @@ export const isAzureWebAppOrSshWinrmGenericDeploymentType = (
   return false
 }
 
+export const isTASDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.TAS
+}
+
+export const isCustomDTGenericDeploymentType = (deploymentType: string, repo: string | undefined): boolean => {
+  if (isCustomDeploymentType(deploymentType)) {
+    // default repository format should be Generic if none is previously selected
+    return repo ? repo === RepositoryFormatTypes.Generic : true
+  }
+
+  return false
+}
+
+export const isTasGenericDeploymentType = (deploymentType: string, repo: string | undefined): boolean => {
+  if (isTASDeploymentType(deploymentType)) {
+    // default repository format should be Generic if none is previously selected
+    return repo ? repo === RepositoryFormatTypes.Generic : true
+  }
+
+  return false
+}
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
@@ -389,9 +411,10 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
   [ServiceDeploymentType.Pdc]: 'Infrastructure definition',
   [ServiceDeploymentType.WinRm]: 'WinRM',
-  [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details', //todospt
+  [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details',
   [ServiceDeploymentType.SshWinRmAws]: 'Amazon Web Services Details',
-  [ServiceDeploymentType.SshWinRmAzure]: 'Azure Infrastructure details'
+  [ServiceDeploymentType.SshWinRmAzure]: 'Azure Infrastructure details',
+  [ServiceDeploymentType.TAS]: 'Tanzu Application Service Infrastructure Details'
 }
 
 export const getSelectedDeploymentType = (
@@ -623,7 +646,9 @@ export const deleteStageInfo = (stage?: DeploymentStageElementConfig): void => {
 export const infraDefinitionTypeMapping: { [key: string]: string } = {
   ServerlessAwsLambda: StepType.ServerlessAwsInfra,
   ECS: StepType.EcsInfra,
-  CustomDeployment: StepType.CustomDeployment
+  CustomDeployment: StepType.CustomDeployment,
+  TAS: StepType.TasInfra,
+  Asg: StepType.AsgInfraSpec
 }
 
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {
@@ -642,6 +667,10 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.CustomDeploymentServiceSpec
     case ServiceDeploymentType.Elastigroup:
       return StepType.ElastigroupService
+    case ServiceDeploymentType.TAS:
+      return StepType.TasService
+    case ServiceDeploymentType.Asg:
+      return StepType.Asg
     default:
       return StepType.K8sServiceSpec
   }
@@ -677,8 +706,14 @@ export const getVariablesHeaderTooltipId = (selectedDeploymentType: ServiceDefin
   return `${selectedDeploymentType}DeploymentTypeVariables`
 }
 
-export const getAzureNexusRepoOptions = (deploymentType: string, azureFlag?: boolean): SelectOption[] => {
-  return isSSHWinRMDeploymentType(deploymentType) || (isAzureWebAppDeploymentType(deploymentType) && azureFlag)
+export const getAzureNexusRepoOptions = (
+  deploymentType: string,
+  azureFlag?: boolean,
+  isTemplateContext?: boolean
+): SelectOption[] => {
+  return !!isTemplateContext ||
+    isSSHWinRMDeploymentType(deploymentType) ||
+    (isAzureWebAppDeploymentType(deploymentType) && azureFlag)
     ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
     : k8sRepositoryFormatTypes
 }

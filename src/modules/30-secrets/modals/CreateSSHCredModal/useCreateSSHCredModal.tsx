@@ -20,9 +20,8 @@ import type {
   SSHKeyReferenceCredentialDTO,
   SSHKeySpecDTO
 } from 'services/cd-ng'
-import { getSecretReferencesforSSH } from '@secrets/utils/SSHAuthUtils'
+import { getSecretReferencesForSSH } from '@secrets/utils/SSHAuthUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getScopeBasedProjectPathParams, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import CreateSSHCredWizard, { SSHCredSharedObj } from './CreateSSHCredWizard'
 import css from './useCreateSSHCredModal.module.scss'
 
@@ -45,6 +44,7 @@ const useCreateSSHCredModal = (props: UseCreateSSHCredModalProps): UseCreateSSHC
   const projectPathParams = useParams<ProjectPathProps>()
   const [view, setView] = useState(Views.CREATE)
   const [sshData, setSSHData] = useState<SSHCredSharedObj>()
+  const [loading, setLoading] = useState(false)
 
   const [showModal, hideModal] = useModalHook(
     () => (
@@ -68,6 +68,7 @@ const useCreateSSHCredModal = (props: UseCreateSSHCredModalProps): UseCreateSSHC
         ) : (
           <CreateSSHCredWizard
             {...props}
+            loading={loading}
             isEdit={true}
             detailsData={sshData?.detailsData}
             authData={sshData?.authData}
@@ -80,18 +81,18 @@ const useCreateSSHCredModal = (props: UseCreateSSHCredModalProps): UseCreateSSHC
         <Button minimal icon="cross" iconProps={{ size: 18 }} onClick={hideModal} className={css.crossIcon} />
       </Dialog>
     ),
-    [view, sshData]
+    [view, sshData, loading]
   )
 
   const open = useCallback(
     async (_sshData?: SecretDTOV2) => {
-      const params = getScopeBasedProjectPathParams(
-        projectPathParams,
-        getScopeFromValue((_sshData?.spec as SSHKeySpecDTO)?.auth.spec?.spec?.password)
-      )
+      showModal()
 
       if (_sshData) {
-        const response = await getSecretReferencesforSSH(_sshData, params)
+        setView(Views.EDIT)
+        setLoading(true)
+
+        const response = await getSecretReferencesForSSH(_sshData, projectPathParams)
         setSSHData({
           detailsData: {
             ...pick(_sshData, 'name', 'identifier', 'description', 'tags')
@@ -115,9 +116,8 @@ const useCreateSSHCredModal = (props: UseCreateSSHCredModalProps): UseCreateSSHC
             encryptedPassphrase: response.encryptedPassphraseSecret
           }
         })
-        setView(Views.EDIT)
+        setLoading(false)
       } else setView(Views.CREATE)
-      showModal()
     },
     [showModal]
   )

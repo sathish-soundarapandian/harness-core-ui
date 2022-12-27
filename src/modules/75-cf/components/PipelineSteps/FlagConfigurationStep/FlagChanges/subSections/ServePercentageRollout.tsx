@@ -5,13 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useMemo, useState } from 'react'
 import * as Yup from 'yup'
 import { get } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { FormError } from '@harness/uicore'
 import type { Segment, Variation } from 'services/cf'
 import PercentageRollout from '@cf/components/PercentageRollout/PercentageRollout'
+import usePercentageRolloutEqualiser from '@cf/hooks/usePercentageRolloutEqualiser'
 import type { UseStringsReturn } from 'framework/strings'
 import { useStrings } from 'framework/strings'
 import SubSection, { SubSectionProps } from '../SubSection'
@@ -88,14 +89,15 @@ const ServePercentageRollout: FC<ServePercentageRolloutProps> = ({
       }
     })
 
-    if (!initialLoad && variations?.length % 2) {
-      setField(
-        `spec.distribution.variations[${variations?.length - 1}].weight`,
-        Math.ceil(100 / variations?.length || 1)
-      )
-    }
     setInitialLoad(false)
   }, [variations, setInitialLoad])
+
+  const variationWeightIds = useMemo<string[]>(
+    () => variations.map((_, index) => prefix(`spec.distribution.variations[${index}].weight`)),
+    [prefix, variations]
+  )
+
+  usePercentageRolloutEqualiser(variationWeightIds)
 
   return (
     <SubSection data-testid="flagChanges-servePercentageRollout" {...props}>

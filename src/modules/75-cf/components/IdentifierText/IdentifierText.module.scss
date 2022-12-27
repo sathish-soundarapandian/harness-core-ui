@@ -8,6 +8,7 @@
 .container-border {
   border-radius: var(--spacing-xsmall);
   border: 1px solid var(--grey-200);
+  display: inline-flex !important;
 }
 
 .copy-button {

@@ -12,13 +12,7 @@ import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/ui
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import type { FormikErrors } from 'formik'
-import {
-  StepViewType,
-  ValidateInputSetProps,
-  Step,
-  StepProps,
-  InputSetData
-} from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import {
   ServiceSpec,
   getConnectorListV2Promise,
@@ -66,7 +60,6 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
 
   protected stepIcon: IconName = 'service-kubernetes'
   protected stepName = 'Deplyment Service'
-  protected inputSetData: InputSetData<K8SDirectServiceStep> | undefined = undefined
   protected stepPaletteVisible = false
   protected _hasStepVariables = true
   protected invocationMap: Map<
@@ -734,12 +727,12 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
 
   validateInputSet({
     data,
+    template,
     getString,
     viewType
   }: ValidateInputSetProps<K8SDirectServiceStep>): FormikErrors<K8SDirectServiceStep> {
     const errors: FormikErrors<K8SDirectServiceStep> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-    const template = this.inputSetData?.template
 
     /** Manifest fields validation */
     this.validateManifestInputSetFields({
@@ -783,7 +776,6 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
   renderStep(props: StepProps<K8SDirectServiceStep>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, factory, customStepProps, readonly, allowableTypes } =
       props
-    this.inputSetData = inputSetData
     if (stepViewType === StepViewType.InputVariable) {
       return (
         <GenericServiceSpecVariablesForm

@@ -188,7 +188,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     }
     data.hostFilter = {
       type: 'All',
-      spec: {} //todoremoveempty
+      spec: {}
     }
     formikRef.current?.setValues({ ...initialValues, ...data })
   }, [isPreconfiguredHosts])
@@ -198,7 +198,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     if (hostsScope === HostScope.ALL) {
       data.hostFilter = {
         type: hostsScope,
-        spec: {} //todoremoveempty
+        spec: {}
       }
     } else if (hostsScope === HostScope.HOST_ATTRIBUTES) {
       data.hostFilter = {
@@ -475,7 +475,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                     : value.hosts
                 data.hostFilter = {
                   type: 'All',
-                  spec: {} //todoremoveempty
+                  spec: {}
                 }
               } else {
                 data.connectorRef = value.connectorRef
@@ -493,7 +493,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                               ? parseAttributes(value.attributeFilters || '')
                               : value.attributeFilters
                         } as HostNamesFilter | HostAttributesFilter)
-                      : {} //todoremoveempty
+                      : {}
                 }
               }
               delayedOnUpdate(data)
@@ -755,7 +755,7 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
     credentialsRef: '',
     hostFilter: {
       type: 'All',
-      spec: {} //todoremoveempty
+      spec: {}
     }
   }
 

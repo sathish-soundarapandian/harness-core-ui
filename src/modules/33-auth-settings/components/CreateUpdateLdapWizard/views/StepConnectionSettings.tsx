@@ -79,6 +79,11 @@ export const StepConnectionSettings: React.FC<
       then: Yup.number()
         .typeError(getString('authSettings.ldap.connSettings.validateReferralHops.number'))
         .required(getString('authSettings.ldap.connSettings.validateReferralHops.required'))
+        .test(
+          'Positive number',
+          getString('authSettings.ldap.connSettings.validateReferralHops.number'),
+          value => value > 0
+        )
     }),
     [connectionSettingsFields.CONNECT_TIMEOUT]: Yup.number()
       .typeError(getString('authSettings.ldap.connSettings.validateConnectionTimeout.number'))

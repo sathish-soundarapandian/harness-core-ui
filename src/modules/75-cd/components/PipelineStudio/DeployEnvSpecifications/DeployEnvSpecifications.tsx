@@ -16,7 +16,7 @@ import { useStrings } from 'framework/strings'
 import type { StageElementConfig } from 'services/cd-ng'
 
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
@@ -43,6 +43,8 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
   const { getString } = useStrings()
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
+
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const isMultiInfra = useFeatureFlag(FeatureFlag.MULTI_SERVICE_INFRA)
 
@@ -148,14 +150,19 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     }
 
     return {
-      environment: { environmentRef: scope !== Scope.PROJECT ? RUNTIME_INPUT_VALUE : '' }
+      environment: {
+        environmentRef: scope !== Scope.PROJECT && !CDS_OrgAccountLevelServiceEnvEnvGroup ? RUNTIME_INPUT_VALUE : ''
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage?.stage?.spec])
 
   const filteredAllowableTypes = useMemo(
-    () => (scope === Scope.PROJECT ? allowableTypes : getAllowableTypesWithoutFixedValue(allowableTypes)),
-    [scope, allowableTypes]
+    () =>
+      scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
+        ? allowableTypes
+        : getAllowableTypesWithoutFixedValue(allowableTypes),
+    [scope, CDS_OrgAccountLevelServiceEnvEnvGroup, allowableTypes]
   )
 
   return (
@@ -192,9 +199,10 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
                   ...(get(stage, 'stage.spec.environment', false) && {
                     environment: get(stage, 'stage.spec.environment')
                   }),
-                  ...(scope !== Scope.PROJECT && {
-                    environment: { environmentRef: RUNTIME_INPUT_VALUE }
-                  }),
+                  ...(scope !== Scope.PROJECT &&
+                    !CDS_OrgAccountLevelServiceEnvEnvGroup && {
+                      environment: { environmentRef: RUNTIME_INPUT_VALUE }
+                    }),
                   ...(get(stage, 'stage.spec.environmentGroup', false) && {
                     environmentGroup: get(stage, 'stage.spec.environmentGroup')
                   })

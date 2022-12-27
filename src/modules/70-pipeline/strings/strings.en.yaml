@@ -339,6 +339,8 @@ manifestType:
   kustomizePathRequired: Kustomize Path is required
   kustomizeFolderPathRequired: Kustomize Folder Path is required
   pathRequired: File Path is required
+  varsPathRequired: Vars Path is required
+  autoScalerPathRequired: Autoscaler Path is required
   bucketNameRequired: Bucket Name is required
   path: '{{$.common.path}}'
   osTemplatePath: Template File Path
@@ -365,6 +367,11 @@ manifestType:
   serverlessConfigFilePathPlaceholder: Enter Serverless Config File Path
   valuesYamlPath: Values.yaml
   addValuesYamlPath: Add Values.yaml
+  varsYAMLPath: Vars.yaml path
+  addVarsYAMLPath: Add Vars.yaml
+  autoScalerYAMLPath: AutoScaler.yaml
+  addAutoScalerYAMLPath: Add AutoScaler.yaml
+  cfCliVersion: CLI Version
   customRemoteExtractionScript: Custom Remote Manifest Extraction Script
   customRemoteExtractedFileLocation: Extracted Manifest File Location
   customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location
@@ -399,7 +406,14 @@ manifestTypeLabels:
   EcsServiceDefinition: 'ECS Service Definition'
   EcsScalingPolicyDefinition: 'ECS Scaling Policy'
   EcsScalableTargetDefinition: 'ECS Scalable Target'
+  AsgLaunchTemplate: ASG Launch Template
+  AsgConfiguration: ASG Configuration
+  AsgScalingPolicy: ASG Scaling Policy
+  AsgScheduledUpdateGroupAction: ASG Scheduled Group Update Action
   ReleaseRepo: Release Repo Manifest
+  TASManifest: TAS Manifest
+  VarsYAML: Vars
+  Autoscaler: AutoScaler
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'
 failureStrategies:
@@ -808,10 +822,14 @@ pipelineSteps:
   approvalStageDescription: Approve or reject changes during Pipeline progress.
 pipelineChaining:
   selectPipeline: Select Pipeline
+  noProjectSelected: Project is not selected
+  noPipelineSelected: Pipeline is not selected
+  childPipelineID: Child Pipeline ID
   pipelineOutputs: Pipeline Outputs
   outputTabSummaryDetail: Define outputs from child pipeline that you can use in other stages in parent pipeline.
   newOutput: New Output
   removeOutput: Remove this output
+  outputAlreadyExists: Output with same name already exists
 aboutYourStage:
   stageNamePlaceholder: Enter Stage Name
 infraSpecifications:
@@ -892,6 +910,11 @@ artifactsSelection:
     imageNamePlaceholder: Enter Image Path
     enterTagRegex: Enter Tag Regex
   validation:
+    connectorForJobname: Connector is required to fetch job name
+    jobConnectorRequired: Job name and connector are required to fetch
+    script: Script is required
+    artifactsArrayPath: Artifact array path is required
+    versionPath: Version path is required
     noBuild: No build found with given details
     noPackage: No package found with given details
     noFeeds: No feeds found with given details
@@ -1030,6 +1053,7 @@ noRegions: No regions found
 noBuckets: No buckets found with given region
 noBucketsFound: No buckets found
 noFilePathsFound: No file paths found
+noClustersFound: No clusters found
 gitRepo: Git Repo
 buildRepo: Build Repo
 failureTypetext: Select Failure Type
@@ -1049,6 +1073,7 @@ stepDescription:
   K8sApply: Deploy individual Kubernetes workloads from your stage's Service.
   K8sCanaryDelete: Clean up the workload deployed by the Canary Deployment step.
   K8sDelete: Delete Kubernetes resources by name, manifest path, and release name.
+  AdvancedCommandFlags: Command Flags
   K8sRollingDeploy: Use a rolling update to schedule new pods on nodes with available resources. This step uses the number of replicas you specified in the Deployment manifest.
   Plugin: Use Docker containers to perform predefined tasks like deploy code, publish artifacts, send notifications, and more.
   Run: Execute one or more commands on a container image in a CI stage.
@@ -1086,8 +1111,8 @@ stepDescription:
   ServerlessLambdaDeploy: Create the Lambda functions defined in this Stage.
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
   createPR: Create PR
-  mergePR: Merge PR
-  updateReleaseRepo: Update Release Repo
+  mergePR: Merge the PR created by the GitOps Update Release Repo step
+  updateReleaseRepo: Create the PR with your updated JSON files
   fetchLinkedApps: Fetch Linked Apps
   fetchInstanceScript: Fetch Instances
   AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
@@ -1104,6 +1129,18 @@ stepDescription:
   GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
   ElastigroupRollback: Rollback for the Elastigroup steps
+  ElastigroupSetup: Elastigroup setup step
+  SwapRoute: Swap Route for Tanzu Application Service
+  SwapRollback: Swap Rolback for Tanzu Application Service
+  TasRollback: Rollback for the TAS steps
+  AppResize: Update the number of instances for this app
+  TanzuCommandScript: Command Scripts to run any CF CLI command or script at any point in your Harness TAS Pipelines
+  TASBasicAppSetup: TAS basic setup step
+  TASBGAppSetup: TAS blue green setup step
+  TASCanaryAppSetup: TAS canary setup step
+  ElastigroupDeploy: Elastigroup Deploy step
+  ElastigroupSwapRoute: Elastigroup Swap Route
+  ElastigroupBGStageSetup: Elastigroup Blue/Green Step
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
@@ -1209,7 +1246,9 @@ runstageError: '{{count}} Error(s): Unable to run stages.'
 stageDependencyError: 'Stage {{stageId}} has a ‘useFromStage’ dependency on Stage {{dependentStage}}. Please select Stage {{dependentStage}} to run Stage {{stageId}}.'
 noApprovalInstanceCreated: Approval instance not created, no details to display
 approvalTypeRequired: Approval type is required
-numOfServicesAndEnv: '{{numOfServices}} Service(s), {{numOfEnvironment}} Environment(s)'
+numOfServices: '{{numOfServices}} Services'
+numOfEnvs: '{{numOfEnvironments}} Environments'
+numOfServicesAndEnv: '{{numOfServices}} Service(s), {{numOfEnvironments}} Environment(s)'
 executionList:
   servicesDeployedText: 'Services deployed ({{size}})'
   servicesDeployed: 'Services deployed'
@@ -1232,6 +1271,9 @@ dashboardDeploymentsWidget:
   runningPipeline:
     singular: Currently running pipeline
     plural: Currently running pipelines
+  activePipeline:
+    singular: Currently active pipeline
+    plural: Currently active pipelines
 runtimeInputNotSupported: '{{field}} cannot be runtime inputs'
 runPipeline:
   ciCodebaseConfig: CI Codebase Configuration is missing. Codebase is required when the pipeline contains a CI stage that is set to clone codebase.
@@ -1289,6 +1331,7 @@ serviceDeploymentTypes:
   serverlessAwsType: Serverless Aws Lambda
   customDeploy: Custom Deployment
   spotElastigroup: Spot Elastigroup
+  asg: AWS ASG
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
@@ -1484,15 +1527,19 @@ customDeployment:
 step:
   validation:
     namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
-runDisabledOnFreeze: Cannot run pipeline due to an active freeze
+runDisabledOnFreeze: An active freeze is applicable on this pipeline. Any deployment stage on this pipeline will be aborted.
 viewFreeze: View freeze details
 triggeredBy: Triggered by {{triggerType}}
 manuallyTriggered: This execution was triggered manually
 triggeredByThirdParty: Triggered by a third party system
 triggeredByCron: Triggered on {{start}} by cron {{triggeredBy}}
+configureArtifactSource: Configure Artifact Source
 pipelineCachedCopy:
   cachedCopyText: Cached Copy
-  reloadPipeline: Reload Pipeline?
-  reloadPipelineContent: Are you sure you want to load the pipeline from Git? You will lose all your unsaved changes.
+  reloadPipeline: Reload {{pageType}}?
+  reloadPipelineContent: Are you sure you want to load the {{pageType}} from Git? You will lose all your unsaved changes.
   cacheInProgress: Cache update in progress
   cacheUpdateFailed: Cache Update Failed
+  updateAvailable: Update Available
+  cacheUpdateAvailable: Cache {{$.pipeline.pipelineCachedCopy.updateAvailable}}
+  newCacheVersion: New Cache version is available, click reload to view details.

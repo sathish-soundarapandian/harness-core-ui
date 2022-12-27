@@ -5,55 +5,72 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useModalHook } from '@harness/use-modal'
-import { Button, Dialog, SelectOption } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  Container,
+  Dialog,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  SelectOption
+} from '@harness/uicore'
 import { Formik, useFormikContext } from 'formik'
-import { defaultTo } from 'lodash-es'
+import { cloneDeep, defaultTo } from 'lodash-es'
+import type { CustomHealthMetricDefinition } from 'services/cv'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
-import type { CustomHealthMetricDefinition } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import CommonCustomMetric from '@cv/pages/health-source/common/CommonCustomMetric/CommonCustomMetric'
-import CustomMetricForm from './CustomMetricForm'
-import type { NonCustomFeildsInterface } from '../../../AppDynamics/AppDHealthSource.types'
-import { getMetricNameFilteredNonCustomFields } from '../../../MonitoredServiceConnector.utils'
-import type { CommonHealthSourceFormikInterface } from '../../CommonHealthSource.types'
+import type { CommonCustomMetricFormikInterface } from '../../CommonHealthSource.types'
 import type { AddMetricForm, CustomMetricFormContainerProps } from './CustomMetricForm.types'
-import { resetShowCustomMetric } from '../../CommonHealthSource.utils'
 import {
   getAddMetricInitialValues,
+  getHealthSourceConfigDetails,
   initHealthSourceCustomFormValue,
   validateAddMetricForm
 } from './CustomMetricFormContainer.utils'
-import AddMetric from './components/AddMetric'
+import { resetShowCustomMetric } from '../../CommonHealthSource.utils'
+import AddMetric from './components/AddMetric/AddMetric'
+import CustomMetricForm from './CustomMetricForm'
+import { useCommonHealthSource } from './components/CommonHealthSourceContext/useCommonHealthSource'
+import { CommonHealthSourceContextFields } from '../../CommonHealthSource.constants'
+import css from './CustomMetricForm.module.scss'
 
 export default function CustomMetricFormContainer(props: CustomMetricFormContainerProps): JSX.Element {
   const { getString } = useStrings()
   const {
     mappedMetrics,
     selectedMetric,
-    setMappedMetrics,
     isMetricThresholdEnabled,
-    nonCustomFeilds,
-    setNonCustomFeilds,
     createdMetrics,
-    setCreatedMetrics,
-    setGroupedCreatedMetrics,
     healthSourceConfig,
     healthSourceData,
-    groupedCreatedMetrics
+    groupedCreatedMetrics,
+    isTemplate,
+    expressions,
+    connectorIdentifier: connectorRef
   } = props
 
-  const { values: formValues, setValues, isValid } = useFormikContext<CommonHealthSourceFormikInterface>()
-  const enabledDefaultGroupName = !!healthSourceConfig?.sideNav?.enableDefaultGroupName
+  const { values: formValues, setValues, isValid } = useFormikContext<CommonCustomMetricFormikInterface>()
+  const wrapperRef = useRef(null)
+  useUpdateConfigFormikOnOutsideClick(wrapperRef, mappedMetrics, selectedMetric, formValues)
+
+  const { enabledDefaultGroupName, fieldLabel, shouldBeAbleToDeleteLastMetric, enabledRecordsAndQuery } =
+    getHealthSourceConfigDetails(healthSourceConfig)
+
   const {
     sourceData: { existingMetricDetails }
   } = useContext(SetupSourceTabsContext)
+  const { updateParentFormik } = useCommonHealthSource()
+  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorRef) !== MultiTypeInputType.FIXED
+
   const [groupNames, setGroupName] = useState<SelectOption[]>(initializeGroupNames(mappedMetrics, getString))
+
   const [showCustomMetric, setShowCustomMetric] = useState(
-    !!Array.from(defaultTo(healthSourceData?.mappedServicesAndEnvs, []))?.length &&
+    !!Array.from(defaultTo(healthSourceData?.customMetricsMap, []))?.length &&
       healthSourceConfig?.customMetrics?.enabled
   )
 
@@ -66,18 +83,42 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   const filterRemovedMetricNameThresholds = useCallback(
     (deletedMetricName: string) => {
       if (isMetricThresholdEnabled && deletedMetricName) {
-        const updatedNonCustomFields = getMetricNameFilteredNonCustomFields<NonCustomFeildsInterface>(
-          isMetricThresholdEnabled,
-          nonCustomFeilds,
-          deletedMetricName
-        )
-
-        setNonCustomFeilds(updatedNonCustomFields)
+        // TODO implement this later
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isMetricThresholdEnabled, nonCustomFeilds]
+    [isMetricThresholdEnabled]
   )
+
+  function useUpdateConfigFormikOnOutsideClick(
+    ref: React.MutableRefObject<any>,
+    mappedMetricsData: Map<string, CommonCustomMetricFormikInterface>,
+    selectedMetricName: string,
+    formValuesData: CommonCustomMetricFormikInterface
+  ): void {
+    useEffect(() => {
+      /**
+       * update Parent formik when clicked outside.
+       */
+      function handleClickOutside(event: { target: unknown }): void {
+        if (ref.current && !ref.current.contains(event.target)) {
+          const clonedMappedMetricsData = cloneDeep(mappedMetricsData)
+          const hasEmptySet = clonedMappedMetricsData.has('')
+          clonedMappedMetricsData.set(selectedMetricName, formValuesData)
+          if (hasEmptySet) {
+            clonedMappedMetricsData.delete('')
+          }
+          updateParentFormik(CommonHealthSourceContextFields.CustomMetricsMap, clonedMappedMetricsData)
+          updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, selectedMetricName)
+        }
+      }
+      // Bind the event listener
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener('mousedown', handleClickOutside)
+      }
+    }, [mappedMetricsData, ref, selectedMetricName, formValuesData])
+  }
 
   useEffect(() => {
     resetShowCustomMetric(selectedMetric, mappedMetrics, setShowCustomMetric)
@@ -92,7 +133,10 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
         canEscapeKeyClose
         canOutsideClickClose
         enforceFocus={false}
-        onClose={hideModal}
+        onClose={() => {
+          hideModal()
+          updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, createdMetrics[0])
+        }}
       >
         <Formik<AddMetricForm>
           initialValues={getAddMetricInitialValues(formValues, enabledDefaultGroupName)}
@@ -102,9 +146,14 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
             hideModal()
             setShowCustomMetric(true)
           }}
-          onReset={hideModal}
+          onReset={() => {
+            hideModal()
+            mappedMetrics.delete('')
+            updateParentFormik(CommonHealthSourceContextFields.CustomMetricsMap, mappedMetrics)
+            updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, createdMetrics[0])
+          }}
           validate={data => {
-            return validateAddMetricForm(data, getString)
+            return validateAddMetricForm(data, getString, createdMetrics)
           }}
           validateOnChange
           validateOnBlur
@@ -116,6 +165,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
                 currentSelectedMetricDetail={currentSelectedMetricDetail}
                 groupNames={groupNames}
                 setGroupName={setGroupName}
+                fieldLabel={fieldLabel}
               />
             )
           }}
@@ -126,37 +176,55 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   )
 
   return (
-    <CardWithOuterTitle
-      title={getString('cv.healthSource.connectors.customMetricsWithoutOptional')}
-      dataTooltipId={'customMetricsTitle'}
-    >
+    <>
       {showCustomMetric ? (
-        <CommonCustomMetric
-          isValidInput={isValid}
-          setMappedMetrics={setMappedMetrics}
-          selectedMetric={selectedMetric}
-          formikValues={formValues}
-          mappedMetrics={mappedMetrics}
-          createdMetrics={createdMetrics}
-          groupedCreatedMetrics={groupedCreatedMetrics}
-          setCreatedMetrics={setCreatedMetrics}
-          setGroupedCreatedMetrics={setGroupedCreatedMetrics}
-          defaultMetricName={'appdMetric'}
-          tooptipMessage={getString('cv.monitoringSources.gcoLogs.addQueryTooltip')}
-          addFieldLabel={getString('cv.monitoringSources.addMetric')}
-          initCustomForm={initHealthSourceCustomFormValue()}
-          shouldBeAbleToDeleteLastMetric={healthSourceConfig?.sideNav?.shouldBeAbleToDeleteLastMetric}
-          isMetricThresholdEnabled={isMetricThresholdEnabled}
-          filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
-          openEditMetricModal={openModal}
+        <CardWithOuterTitle
+          title={getString('cv.healthSource.connectors.customMetricsWithoutOptional')}
+          dataTooltipId={'customMetricsTitle'}
+          cardSectionClassName={css.customMetricContainer}
         >
-          <CustomMetricForm />
-        </CommonCustomMetric>
+          <CommonCustomMetric
+            isValidInput={isValid}
+            selectedMetric={selectedMetric}
+            formikValues={formValues}
+            mappedMetrics={mappedMetrics}
+            createdMetrics={createdMetrics}
+            groupedCreatedMetrics={groupedCreatedMetrics}
+            defaultMetricName={'healthSourceMetric'}
+            tooptipMessage={getString('cv.monitoringSources.gcoLogs.addQueryTooltip')}
+            addFieldLabel={getString('common.addName', {
+              name: fieldLabel
+            })}
+            initCustomForm={initHealthSourceCustomFormValue()}
+            shouldBeAbleToDeleteLastMetric={shouldBeAbleToDeleteLastMetric}
+            isMetricThresholdEnabled={isMetricThresholdEnabled}
+            filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
+            openEditMetricModal={openModal}
+          >
+            <Container ref={wrapperRef}>
+              <CustomMetricForm
+                connectorIdentifier={connectorRef}
+                isTemplate={isTemplate}
+                expressions={expressions}
+                isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+                enabledRecordsAndQuery={enabledRecordsAndQuery}
+                healthSourceConfig={healthSourceConfig}
+              />
+            </Container>
+          </CommonCustomMetric>
+        </CardWithOuterTitle>
       ) : (
-        <Button icon="plus" minimal intent="primary" onClick={openModal}>
-          {getString('cv.monitoringSources.addMetric')}
+        <Button
+          icon="plus"
+          variation={ButtonVariation.SECONDARY}
+          onClick={openModal}
+          margin={{ left: 'medium', bottom: 'small', top: 'medium' }}
+        >
+          {getString('common.addName', {
+            name: fieldLabel
+          })}
         </Button>
       )}
-    </CardWithOuterTitle>
+    </>
   )
 }

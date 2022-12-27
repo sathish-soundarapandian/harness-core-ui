@@ -29,6 +29,22 @@ export function getScopeFromDTO<T extends ScopedObjectDTO>(obj: T): Scope {
   return Scope.ACCOUNT
 }
 
+export function getScopedValueFromDTO<T extends ScopedValueObjectDTO>(obj: T): string {
+  if (obj.projectIdentifier) {
+    return obj.identifier as string
+  } else if (obj.orgIdentifier) {
+    return `org.${obj.identifier}`
+  }
+  return `account.${obj.identifier}`
+}
+
+export interface ScopedValueObjectDTO {
+  identifier?: string
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
 export interface ScopedObjectDTO {
   accountIdentifier?: string
   orgIdentifier?: string

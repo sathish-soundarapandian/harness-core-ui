@@ -173,6 +173,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view  1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -396,6 +397,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view as new step 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -480,6 +482,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view for inputset 1`] = 
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -583,6 +586,7 @@ exports[`Test K8sBlueGreenDeployStep should render null for StepviewType.templat
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"

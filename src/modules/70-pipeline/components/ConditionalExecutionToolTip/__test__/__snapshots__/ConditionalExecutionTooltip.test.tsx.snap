@@ -87,11 +87,15 @@ exports[`ConditionalExecutionToolTip matches snapshot 1`] = `
           pipeline.conditionalExecution.toolTip.resolvedVariables
         </p>
         <p
-          class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey900"
+          class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey900 StyledProps--flex StyledProps--flex-justifyContent-start"
           style="word-break: break-word;"
         >
           some expression
-           = 
+          <div
+            style="padding-left: 2px; padding-right: 2px;"
+          >
+            =
+          </div>
           some value
         </p>
       </div>

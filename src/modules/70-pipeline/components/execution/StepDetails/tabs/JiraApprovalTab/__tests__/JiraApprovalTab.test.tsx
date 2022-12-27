@@ -9,6 +9,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
+import executionMetadata from '@pipeline/components/execution/StepDetails/common/ExecutionContent/PolicyEvaluationContent/__mocks__/executionMetadata.json'
 import { JiraApprovalTab } from '../JiraApprovalTab'
 import approvalData from './JiraAprovalData.json'
 
@@ -24,7 +25,7 @@ describe('<JiraApprovalTab/> tests', () => {
   test('isWaiting test', () => {
     const { container } = render(
       <TestWrapper>
-        <JiraApprovalTab isWaiting={true} approvalData={approvalData as any} />
+        <JiraApprovalTab isWaiting={true} approvalData={approvalData as any} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
 
@@ -34,7 +35,7 @@ describe('<JiraApprovalTab/> tests', () => {
   test('not isWaiting test', () => {
     const { container } = render(
       <TestWrapper>
-        <JiraApprovalTab isWaiting={false} approvalData={approvalData as any} />
+        <JiraApprovalTab isWaiting={false} approvalData={approvalData as any} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
 
@@ -46,7 +47,7 @@ describe('<JiraApprovalTab/> tests', () => {
     rejectedData.status = 'REJECTED'
     const { container } = render(
       <TestWrapper>
-        <JiraApprovalTab isWaiting={false} approvalData={rejectedData as any} />
+        <JiraApprovalTab isWaiting={false} approvalData={rejectedData as any} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
 

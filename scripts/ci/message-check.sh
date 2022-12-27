@@ -9,7 +9,7 @@ if [ "$?" -ne 0 ]
 then
   exit 1
 fi
-COMMIT_CONTENT="\[feat]|\[fix]|\[techdebt]|\[refactor]|feat|fix|techdebt|refactor"
+COMMIT_CONTENT="\[feat]|\[fix]|\[techdebt]|\[refactor]|\[test]|\[chore]|feat|fix|techdebt|refactor|test|chore"
 PR_MESSAGE=`echo "${ghprbPullTitle}" | grep -iE "^(${COMMIT_CONTENT}[\ ]*):[\ ]*\[(${PROJECTS})-[0-9]+][:\ ]*"`
 echo "PR message is : ${PR_MESSAGE}"
 

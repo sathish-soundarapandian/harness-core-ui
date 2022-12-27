@@ -45,6 +45,12 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetBuildsForJenkinsServiceV2: jest.fn().mockImplementation(() => {
     return { data: mockBuildResponse, refetch: refetchJenkinsBuild, error: null, loading: false }
+  }),
+  useGetBuildsForJenkins: jest.fn().mockImplementation(() => {
+    return { data: mockBuildResponse, refetch: refetchJenkinsBuild, error: null, loading: false }
+  }),
+  useGetJobDetailsForJenkins: jest.fn().mockImplementation(() => {
+    return { data: mockJobResponse.data, refetch: refetchJobs, error: null, loading: false }
   })
 }))
 

@@ -17,10 +17,10 @@ import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 
 interface CreatePipelineProps {
-  refetchPipelineList: () => void
+  onSuccess: () => void
 }
 
-export function CreatePipeline({ refetchPipelineList }: CreatePipelineProps): ReactElement {
+export function CreatePipeline({ onSuccess }: CreatePipelineProps): ReactElement {
   const { getString } = useStrings()
   const pathParams = useParams<PipelineListPagePathParams>()
   const history = useHistory()
@@ -31,7 +31,7 @@ export function CreatePipeline({ refetchPipelineList }: CreatePipelineProps): Re
   const { showImportResourceModal } = useImportResource({
     resourceType: ResourceType.PIPELINES,
     modalTitle: getString('common.importEntityFromGit', { resourceType: getString('common.pipeline') }),
-    onSuccess: refetchPipelineList
+    onSuccess
   })
 
   return (

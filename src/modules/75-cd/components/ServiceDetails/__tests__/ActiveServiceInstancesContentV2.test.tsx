@@ -23,48 +23,71 @@ const mockData = {
     instanceGroupedByArtifactList: [
       {
         artifactVersion: 'artifact-1',
+        artifactPath: 'stable',
         instanceGroupedByEnvironmentList: [
           {
             envId: 'env-1',
             envName: 'env-1',
+            lastDeployedAt: 1656913346474,
             instanceGroupedByInfraList: [
               {
                 infraIdentifier: 'infra-1',
                 infraName: 'infra-1',
-                count: 12,
-                lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ1',
-                lastPipelineExecutionName: 'Pipeline-1',
-                lastDeployedAt: '1656913346474'
+                lastDeployedAt: 1656913346474,
+                instanceGroupedByPipelineExecutionList: [
+                  {
+                    count: 12,
+                    lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ1',
+                    lastPipelineExecutionName: 'Pipeline-1',
+                    lastDeployedAt: 1656913346474
+                  }
+                ]
               },
               {
                 infraIdentifier: 'infra-2',
                 infraName: 'infra-2',
-                count: 2,
-                lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ2',
-                lastPipelineExecutionName: 'Pipeline-2',
-                lastDeployedAt: '1156913346474'
+                lastDeployedAt: 1156913346474,
+                instanceGroupedByPipelineExecutionList: [
+                  {
+                    count: 2,
+                    lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ2',
+                    lastDeployedAt: 1156913346474,
+                    lastPipelineExecutionName: 'Pipeline-2'
+                  }
+                ]
               }
             ]
           },
           {
             envId: 'env-2',
             envName: 'env-2',
+            lastDeployedAt: 1556913346474,
             instanceGroupedByInfraList: [
               {
                 infraIdentifier: 'infra-3',
                 infraName: 'infra-3',
-                count: 1,
-                lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ3',
-                lastPipelineExecutionName: 'Pipeline-3',
-                lastDeployedAt: '1556913346474'
+                lastDeployedAt: 1556913346474,
+                instanceGroupedByPipelineExecutionList: [
+                  {
+                    count: 1,
+                    lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ3',
+                    lastDeployedAt: 1556913346474,
+                    lastPipelineExecutionName: 'Pipeline-3'
+                  }
+                ]
               },
               {
                 infraIdentifier: 'infra-4',
                 infraName: 'infra-4',
-                count: 2,
-                lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ4',
-                lastPipelineExecutionName: 'Pipeline-4',
-                lastDeployedAt: '1256913346474'
+                lastDeployedAt: 1256913346474,
+                instanceGroupedByPipelineExecutionList: [
+                  {
+                    count: 2,
+                    lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ4',
+                    lastPipelineExecutionName: 'Pipeline-4',
+                    lastDeployedAt: 1256913346474
+                  }
+                ]
               }
             ]
           }
@@ -72,48 +95,71 @@ const mockData = {
       },
       {
         artifactVersion: 'perl',
+        artifactPath: 'library/nginx',
         instanceGroupedByEnvironmentList: [
           {
             envId: 'env-3',
             envName: 'NewEnv',
+            lastDeployedAt: 1456913346474,
             instanceGroupedByInfraList: [
               {
                 infraIdentifier: 'infra-5',
                 infraName: 'infra-5',
-                count: 1,
-                lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ5',
-                lastPipelineExecutionName: 'Pipeline-5',
-                lastDeployedAt: '1456913346474'
+                lastDeployedAt: 1456913346474,
+                instanceGroupedByPipelineExecutionList: [
+                  {
+                    count: 1,
+                    lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ5',
+                    lastDeployedAt: 1456913346474,
+                    lastPipelineExecutionName: 'Pipeline-5'
+                  }
+                ]
               },
               {
                 infraIdentifier: 'infra-6',
                 infraName: 'infra-6',
-                count: 2,
-                lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ6',
-                lastPipelineExecutionName: 'Pipeline-6',
-                lastDeployedAt: '1356913346474'
+                lastDeployedAt: 1356913346474,
+                instanceGroupedByPipelineExecutionList: [
+                  {
+                    count: 2,
+                    lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ6',
+                    lastDeployedAt: 1356913346474,
+                    lastPipelineExecutionName: 'Pipeline-6'
+                  }
+                ]
               }
             ]
           },
           {
             envId: 'env-4',
             envName: 'env-4',
+            lastDeployedAt: 1856913346474,
             instanceGroupedByInfraList: [
               {
                 infraIdentifier: 'infra-7',
                 infraName: 'infra-7',
-                count: 1,
-                lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ7',
-                lastPipelineExecutionName: 'Pipeline-7',
-                lastDeployedAt: '1756913346474'
+                lastDeployedAt: 1756913346474,
+                instanceGroupedByPipelineExecutionList: [
+                  {
+                    count: 1,
+                    lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ7',
+                    lastPipelineExecutionName: 'Pipeline-7',
+                    lastDeployedAt: 1756913346474
+                  }
+                ]
               },
               {
                 infraIdentifier: 'infra-8',
                 infraName: 'infra-8',
-                count: 2,
-                lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ8',
-                lastPipelineExecutionName: 'Pipeline-8',
-                lastDeployedAt: '1856913346474'
+                lastDeployedAt: 1856913346474,
+                instanceGroupedByPipelineExecutionList: [
+                  {
+                    count: 2,
+                    lastPipelineExecutionId: 'IRr8j_YKQHiLb8RrgGcgTQ8',
+                    lastDeployedAt: 1856913346474,
+                    lastPipelineExecutionName: 'Pipeline-8'
+                  }
+                ]
               }
             ]
           }
@@ -121,7 +167,7 @@ const mockData = {
       }
     ]
   }
-}
+} as cdngServices.ResponseInstanceGroupedByService
 const noData = {
   status: 'SUCCESS',
   data: {}

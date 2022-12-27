@@ -626,6 +626,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode - submit data 1`] = 
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -776,6 +777,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode - submit data 1`] = 
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -926,6 +928,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode - submit data 1`] = 
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -1489,6 +1492,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode 1`] = `
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -1639,6 +1643,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode 1`] = `
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -1789,6 +1794,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep in Edit mode 1`] = `
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -2352,6 +2358,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -2533,6 +2540,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -3127,6 +3135,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -3308,6 +3317,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -3489,6 +3499,7 @@ exports[`CustomSMConfigStep CustomSMConfigStep when onDelegate is false in selec
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"

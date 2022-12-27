@@ -250,11 +250,13 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
   const DelegateCards: DelegateCardInterface[] = [
     {
       type: DelegateTypes.DELEGATE_OUT_CLUSTER,
-      info: getString('connectors.k8.delegateOutClusterInfo')
+      info: getString('connectors.k8.delegateOutClusterInfo'),
+      icon: 'app-kubernetes'
     },
     {
       type: DelegateTypes.DELEGATE_IN_CLUSTER,
-      info: getString('connectors.k8.delegateInClusterInfo')
+      info: getString('connectors.k8.delegateInClusterInfo'),
+      icon: 'delegates-blue'
     }
   ]
 
@@ -400,6 +402,9 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
       >
         {getString('details')}
       </Text>
+      <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} color={Color.GREY_600}>
+        {getString('connectors.k8.delegateSelector')}
+      </Text>
       <Formik
         initialValues={{
           ...initialValues,
@@ -413,7 +418,18 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
           <>
             <Container className={css.clusterWrapper}>
               <ThumbnailSelect
-                items={DelegateCards.map(card => ({ label: card.info, value: card.type }))}
+                items={DelegateCards.map(card => ({
+                  label: (
+                    <Text
+                      font={{ size: 'small', weight: 'bold' }}
+                      icon={card.icon}
+                      iconProps={{ size: 23, margin: { right: 'xsmall' } }}
+                    >
+                      {card.info}
+                    </Text>
+                  ),
+                  value: card.type
+                }))}
                 name="delegateType"
                 size="large"
                 onChange={type => {
@@ -423,6 +439,7 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
                     type === DelegateTypes.DELEGATE_OUT_CLUSTER ? AuthTypes.USER_PASSWORD : ''
                   )
                 }}
+                className={css.delegateCard}
               />
 
               {DelegateTypes.DELEGATE_OUT_CLUSTER === formikProps.values.delegateType ? (

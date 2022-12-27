@@ -10,7 +10,7 @@ import type { FormikValues } from 'formik'
 import { defaultTo, get, isEmpty, merge } from 'lodash-es'
 import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import type { ArtifactConfig, ConnectorConfigDTO, PrimaryArtifact, SidecarArtifact } from 'services/cd-ng'
-import { ENABLED_ARTIFACT_TYPES } from './ArtifactHelper'
+import { ENABLED_ARTIFACT_TYPES, ModalViewFor } from './ArtifactHelper'
 import {
   ArtifactTagHelperText,
   ArtifactType,
@@ -605,3 +605,5 @@ export const getInSelectOptionForm = (data: { [key: string]: any } | string) => 
       })
     : data
 }
+export const shouldHideHeaderAndNavBtns = (context: number): boolean =>
+  [ModalViewFor.Template, ModalViewFor.CD_Onboarding].includes(context)

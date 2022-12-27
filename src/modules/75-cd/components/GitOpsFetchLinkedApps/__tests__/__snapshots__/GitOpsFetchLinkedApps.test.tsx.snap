@@ -83,6 +83,7 @@ exports[`Gitops Fetch Linked App Step - Input Set it should render input set: In
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -315,6 +316,7 @@ exports[`Gitops Fetch Linked App Step it should render as new step - stepViewTyp
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -506,6 +508,7 @@ exports[`Gitops Fetch Linked App Step render Runtime input: Edit Case - with run
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

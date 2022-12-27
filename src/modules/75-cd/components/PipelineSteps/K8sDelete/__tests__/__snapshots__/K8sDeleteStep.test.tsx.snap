@@ -267,6 +267,7 @@ exports[`Test K8sDeleteStep should render edit view -with ManifestPaths selected
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -540,6 +541,7 @@ exports[`Test K8sDeleteStep should render edit view -with ReleaseName selected 1
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -846,6 +848,7 @@ exports[`Test K8sDeleteStep should render edit view -with ResourceName selected 
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1117,6 +1120,7 @@ exports[`Test K8sDeleteStep should render edit view as new step 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1322,6 +1326,7 @@ exports[`Test K8sDeleteStep should render edit view as new step 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1453,6 +1458,7 @@ exports[`Test K8sDeleteStep should render null for StepviewType.template 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1626,6 +1632,7 @@ exports[`Test K8sDeleteStep validate input set in deployment form - only timeout
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"

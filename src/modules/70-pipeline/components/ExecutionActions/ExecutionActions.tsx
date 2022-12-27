@@ -374,21 +374,18 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
               />
             )}
             {isExecutionListView && (
-              <Menu.Item
-                className={css.link}
-                text={<Link to={executionDetailsView}>{getString('pipeline.viewExecution')}</Link>}
-              />
+              <Link to={executionDetailsView} className={css.link}>
+                <Menu.Item tagName="div" text={getString('pipeline.viewExecution')} />
+              </Link>
             )}
-            <Menu.Item
-              hidden={!showEditButton}
-              disabled={!canEdit}
-              className={css.link}
-              text={
-                <Link to={pipelineDetailsView}>
-                  {canEdit ? getString('editPipeline') : getString('pipeline.viewPipeline')}
-                </Link>
-              }
-            />
+            {showEditButton && (
+              <Link to={pipelineDetailsView} className={css.link}>
+                <Menu.Item
+                  tagName="div"
+                  text={canEdit ? getString('editPipeline') : getString('pipeline.viewPipeline')}
+                />
+              </Link>
+            )}
             {!stageId && (
               <RbacMenuItem
                 featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}

@@ -6,9 +6,33 @@
  */
 
 .main {
-  padding: var(--spacing-medium) !important;
-  padding-left: var(--spacing-xlarge) !important;
   overflow-y: scroll;
+
+  :global {
+    .CollapseHeader--leftSection {
+      padding-left: var(--spacing-large) !important;
+      border: 1px solid var(--grey-200);
+      width: 100%;
+    }
+  }
+
+  & div[class*='Collapse'] {
+    padding: 0;
+    margin: 0;
+
+    // spacing for adjacent collapsible
+    + div[class*='Collapse'][class*='main'] {
+      margin-top: 0;
+    }
+
+    div[class*='CollapseHeader'] {
+      padding-top: 0 !important;
+    }
+
+    span[data-icon='main-chevron-down'] {
+      color: var(--primary-7);
+    }
+  }
 
   .navHeader {
     margin-bottom: var(--spacing-medium) !important;
@@ -21,32 +45,50 @@
     }
   }
 
-  .collapseHeading {
-    padding-left: var(--spacing-medium) !important;
-    // border-left: 3px solid var(--primary-6);
+  .groupContainer {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-none) var(--spacing-small) var(--spacing-none) var(--spacing-small);
+    height: 50px;
+    background: var(--white);
+  }
+
+  .selectedAppContainer {
+    cursor: pointer;
+    border-top: 1px solid var(--grey-200);
+    border-left: 1px solid var(--grey-200);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-none) var(--spacing-medium) var(--spacing-none) var(--spacing-xxxlarge);
+    height: 50px;
+    background: var(--white);
+    box-shadow: inset 0px -1px 0px var(--grey-200);
+  }
+
+  .groupName {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 24px;
+    color: var(--black);
     text-transform: capitalize;
   }
 
-  .seletedAppContainer {
-    cursor: pointer;
-    padding: var(--spacing-small) 0 !important;
-    border-top: 1px solid var(--grey-300);
-    overflow: hidden;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .metricName {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 18px;
+    text-transform: capitalize;
+    color: var(--primary-7);
+  }
 
-    [data-icon='main-delete'] {
-      cursor: pointer;
-    }
-
-    .selectedApp {
-      color: var(--black) !important;
-      border-left: 3px solid var(--grey-300);
-      padding-left: var(--spacing-small) !important;
-    }
-    .isSelected {
-      border-left: 3px solid var(--primary-6);
-    }
+  .isSelected {
+    background: var(--primary-1) !important;
   }
 }

@@ -103,6 +103,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -714,6 +715,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can select multip
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"

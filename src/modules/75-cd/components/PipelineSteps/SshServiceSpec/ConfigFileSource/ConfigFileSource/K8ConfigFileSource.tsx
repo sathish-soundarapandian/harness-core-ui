@@ -19,6 +19,6 @@ export class K8sConfigFileSource extends ConfigFileSourceBase<ConfigFileSourceRe
     if (!props.isConfigFileRuntime) {
       return null
     }
-    return <K8sValuesYamlConfigFileContent {...props} pathFieldlabel="fileFolderPathText" />
+    return <K8sValuesYamlConfigFileContent {...props} />
   }
 }

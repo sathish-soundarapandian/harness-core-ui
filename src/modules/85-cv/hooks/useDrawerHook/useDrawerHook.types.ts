@@ -14,7 +14,8 @@ export interface UseDrawerInterface {
 }
 
 export interface UseDrawerPropsInterface {
-  drawerOptions?: IDrawerProps
+  drawerOptions?: Partial<IDrawerProps>
   createHeader?: (data?: any) => JSX.Element
   createDrawerContent: (props: any) => JSX.Element
+  className?: string
 }

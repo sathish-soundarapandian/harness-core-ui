@@ -7,29 +7,14 @@
 
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
-import type { EnvironmentYamlV2, EnvSwaggerObjectWrapper, NGTag } from 'services/cd-ng'
+import type { EnvironmentYamlV2 } from 'services/cd-ng'
 import { isValueRuntimeInput } from '@common/utils/utils'
-import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState, FilterSpec, FilterYaml } from '../types'
-
-export type TagsFilter = FilterSpec & {
-  matchType: 'all' | 'any'
-  tags: NGTag[]
-}
+import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState, FilterYaml } from '../types'
 
 export function processFiltersFormValues(
   filters?: DeployEnvironmentEntityFormState['environmentGroupFilters']
 ): FilterYaml[] {
-  return defaultTo(filters, []).map(filter => {
-    return {
-      ...filter,
-      entities: filter.entities.map(opt => opt.value as NonNullable<EnvSwaggerObjectWrapper['envFilterEntityType']>),
-      spec: {
-        ...filter.spec,
-        tags: filter.spec.tags,
-        matchType: isValueRuntimeInput(filter.spec.tags) ? RUNTIME_INPUT_VALUE : filter.spec.matchType
-      } as TagsFilter
-    }
-  })
+  return defaultTo(filters, [])
 }
 
 export function processSingleEnvironmentFormValues(
@@ -65,7 +50,7 @@ export function processSingleEnvironmentFormValues(
                   : [
                       {
                         identifier: data.infrastructure,
-                        inputs: get(data, `infrastructureInputs.${data.environment}.${data.infrastructure}`)
+                        inputs: get(data, `infrastructureInputs.['${data.environment}'].${data.infrastructure}`)
                       }
                     ]
             }),
@@ -212,7 +197,20 @@ export function processMultiEnvironmentFormValues(
   gitOpsEnabled: boolean
 ): DeployEnvironmentEntityConfig {
   const filters = processFiltersFormValues(data?.environmentFilters?.runtime)
+  const fixedEnvfilters = processFiltersFormValues(data?.environmentFilters?.fixedScenario)
   const environmentValues = getEnvironmentsFormValuesFromFormState(data, gitOpsEnabled)
+
+  if (fixedEnvfilters.length) {
+    return {
+      environments: {
+        metadata: {
+          parallel: data.parallel
+        },
+        filters: fixedEnvfilters
+        // TODO: remove this on BE swagger update
+      } as any
+    }
+  }
 
   if (!isNil(data.environments)) {
     return {

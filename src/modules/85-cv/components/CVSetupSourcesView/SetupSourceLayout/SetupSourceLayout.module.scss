@@ -21,6 +21,7 @@ $footer-cta-height: 50px;
     .leftPanel {
       width: clamp(250px, 300px, 300px);
       float: left;
+      border-right: 1px solid var(--grey-200);
     }
     .rightPanel {
       width: 120px;
@@ -30,10 +31,9 @@ $footer-cta-height: 50px;
       flex: 1;
       clear: left;
       clear: right;
-      margin: $footer-cta-height var(--spacing-medium);
       margin-bottom: 0;
       overflow-y: scroll;
-      padding: 2px !important;
+      padding: var(--spacing-xxsmall) var(--spacing-none) var(--spacing-xxsmall) var(--spacing-xxsmall) !important;
     }
   }
 }

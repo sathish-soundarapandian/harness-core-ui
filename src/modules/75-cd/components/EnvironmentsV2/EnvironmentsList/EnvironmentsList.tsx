@@ -13,6 +13,7 @@ import { defaultTo, get } from 'lodash-es'
 import { TableV2, useToaster } from '@harness/uicore'
 import { EnvironmentResponse, useDeleteEnvironmentV2 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -34,6 +35,7 @@ export default function EnvironmentsList({ response, refetch }: any) {
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const history = useHistory()
+  const { CDC_ENVIRONMENT_DASHBOARD_NG } = useFeatureFlags()
 
   const { mutate: deleteItem } = useDeleteEnvironmentV2({
     queryParams: {
@@ -112,7 +114,9 @@ export default function EnvironmentsList({ response, refetch }: any) {
             projectIdentifier,
             module,
             environmentIdentifier: get(row, 'environment.identifier', ''),
-            sectionId: EnvironmentDetailsTab.CONFIGURATION
+            sectionId: CDC_ENVIRONMENT_DASHBOARD_NG
+              ? EnvironmentDetailsTab.SUMMARY
+              : EnvironmentDetailsTab.CONFIGURATION
           })
         )
       }}

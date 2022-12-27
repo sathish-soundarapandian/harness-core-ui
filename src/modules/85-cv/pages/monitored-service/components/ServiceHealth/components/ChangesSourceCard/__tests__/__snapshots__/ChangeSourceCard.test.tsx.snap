@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test ChangeSourcecard should render with above 100 positive change 1`] = `
+exports[`Test ChangeSourceCard should render with above 100 positive change 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main tickersRow"
@@ -15,7 +15,7 @@ exports[`Test ChangeSourcecard should render with above 100 positive change 1`] 
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
         >
-          45k
+          60k
         </p>
         <div
           class="ticker tickerTopAlign"
@@ -107,7 +107,7 @@ exports[`Test ChangeSourcecard should render with above 100 positive change 1`] 
               <p
                 class="StyledProps--font StyledProps--main tickerLabel StyledProps--font-size-small StyledProps--font-weight-bold"
               >
-                deploymentText
+                deploymentsText
               </p>
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-primary4"
@@ -165,6 +165,63 @@ exports[`Test ChangeSourcecard should render with above 100 positive change 1`] 
                 class="StyledProps--font StyledProps--main tickerLabel StyledProps--font-size-small StyledProps--font-weight-bold"
               >
                 infrastructureText
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-primary4"
+              >
+                100+ %
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main ticker"
+    >
+      <div
+        class="tickerContainer"
+        data-test="ticker"
+      >
+        <p
+          class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+        >
+          15k
+        </p>
+        <div
+          class="ticker tickerTopAlign"
+        >
+          <div
+            class="iconContainer"
+          >
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary4"
+              data-icon="main-caret-up"
+            >
+              <svg
+                height="6"
+                viewBox="0 0 14 9"
+                width="6"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M13.7 7.2L7.9.4C7.7.2 7.4 0 7 0s-.7.2-.9.4L.3 7.2c-.2.2-.3.4-.3.7C0 8.5.5 9 1.2 9h11.7c.6 0 1.1-.5 1.1-1.1 0-.3-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="tickerValue"
+            data-test="tickerValue"
+          >
+            <div
+              class="StyledProps--font StyledProps--main tickerValue"
+            >
+              <p
+                class="StyledProps--font StyledProps--main tickerLabel StyledProps--font-size-small StyledProps--font-weight-bold"
+              >
+                common.purpose.cf.continuous
               </p>
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-primary4"
@@ -237,7 +294,7 @@ exports[`Test ChangeSourcecard should render with above 100 positive change 1`] 
 </div>
 `;
 
-exports[`Test ChangeSourcecard should render with negative change 1`] = `
+exports[`Test ChangeSourceCard should render with negative change 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main tickersRow"
@@ -252,7 +309,7 @@ exports[`Test ChangeSourcecard should render with negative change 1`] = `
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
         >
-          30
+          40
         </p>
         <div
           class="ticker tickerTopAlign"
@@ -344,7 +401,7 @@ exports[`Test ChangeSourcecard should render with negative change 1`] = `
               <p
                 class="StyledProps--font StyledProps--main tickerLabel StyledProps--font-size-small StyledProps--font-weight-bold"
               >
-                deploymentText
+                deploymentsText
               </p>
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-primary4"
@@ -402,6 +459,63 @@ exports[`Test ChangeSourcecard should render with negative change 1`] = `
                 class="StyledProps--font StyledProps--main tickerLabel StyledProps--font-size-small StyledProps--font-weight-bold"
               >
                 infrastructureText
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-primary4"
+              >
+                33.3%
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main ticker"
+    >
+      <div
+        class="tickerContainer"
+        data-test="ticker"
+      >
+        <p
+          class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+        >
+          10
+        </p>
+        <div
+          class="ticker tickerTopAlign"
+        >
+          <div
+            class="iconContainer"
+          >
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary4"
+              data-icon="main-caret-down"
+            >
+              <svg
+                height="6"
+                viewBox="0 0 14 9"
+                width="6"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M14 1.1c0-.6-.5-1.1-1.2-1.1H1.2C.5 0 0 .5 0 1.1c0 .3.1.5.3.7l5.8 6.8c.2.2.5.4.9.4s.7-.2.9-.4l5.8-6.8c.2-.2.3-.4.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="tickerValue"
+            data-test="tickerValue"
+          >
+            <div
+              class="StyledProps--font StyledProps--main tickerValue"
+            >
+              <p
+                class="StyledProps--font StyledProps--main tickerLabel StyledProps--font-size-small StyledProps--font-weight-bold"
+              >
+                common.purpose.cf.continuous
               </p>
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-primary4"
@@ -474,7 +588,7 @@ exports[`Test ChangeSourcecard should render with negative change 1`] = `
 </div>
 `;
 
-exports[`Test ChangeSourcecard should render with positive change 1`] = `
+exports[`Test ChangeSourceCard should render with positive change 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main tickersRow"
@@ -489,7 +603,7 @@ exports[`Test ChangeSourcecard should render with positive change 1`] = `
         <p
           class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
         >
-          45
+          60
         </p>
         <div
           class="ticker tickerTopAlign"
@@ -581,7 +695,7 @@ exports[`Test ChangeSourcecard should render with positive change 1`] = `
               <p
                 class="StyledProps--font StyledProps--main tickerLabel StyledProps--font-size-small StyledProps--font-weight-bold"
               >
-                deploymentText
+                deploymentsText
               </p>
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-primary4"
@@ -669,6 +783,63 @@ exports[`Test ChangeSourcecard should render with positive change 1`] = `
             class="iconContainer"
           >
             <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary4"
+              data-icon="main-caret-up"
+            >
+              <svg
+                height="6"
+                viewBox="0 0 14 9"
+                width="6"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M13.7 7.2L7.9.4C7.7.2 7.4 0 7 0s-.7.2-.9.4L.3 7.2c-.2.2-.3.4-.3.7C0 8.5.5 9 1.2 9h11.7c.6 0 1.1-.5 1.1-1.1 0-.3-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="tickerValue"
+            data-test="tickerValue"
+          >
+            <div
+              class="StyledProps--font StyledProps--main tickerValue"
+            >
+              <p
+                class="StyledProps--font StyledProps--main tickerLabel StyledProps--font-size-small StyledProps--font-weight-bold"
+              >
+                common.purpose.cf.continuous
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-primary4"
+              >
+                50%
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main ticker"
+    >
+      <div
+        class="tickerContainer"
+        data-test="ticker"
+      >
+        <p
+          class="StyledProps--font StyledProps--main tickerCount StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--margin-right-small"
+        >
+          15
+        </p>
+        <div
+          class="ticker tickerTopAlign"
+        >
+          <div
+            class="iconContainer"
+          >
+            <span
               class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-green600"
               data-icon="main-caret-up"
             >
@@ -711,7 +882,7 @@ exports[`Test ChangeSourcecard should render with positive change 1`] = `
 </div>
 `;
 
-exports[`Test ChangeSourcecard validate error state 1`] = `
+exports[`Test ChangeSourceCard validate error state 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main tickersRow"
@@ -732,7 +903,7 @@ exports[`Test ChangeSourcecard validate error state 1`] = `
 </div>
 `;
 
-exports[`Test ChangeSourcecard validate loading 1`] = `
+exports[`Test ChangeSourceCard validate loading 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main tickersRow"
@@ -743,6 +914,27 @@ exports[`Test ChangeSourcecard validate loading 1`] = `
       <div
         class="StyledProps--font StyledProps--main loadingContainer"
       >
+        <div
+          class="StyledProps--font StyledProps--main loadingBlock"
+          data-testid="loading-block"
+        >
+          <div
+            class="StyledProps--font StyledProps--main bp3-skeleton StyledProps--margin-right-small"
+            style="width: 30px; height: 30px;"
+          />
+          <div
+            class="StyledProps--font StyledProps--main"
+          >
+            <div
+              class="StyledProps--font StyledProps--main bp3-skeleton StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+              style="width: 72px; height: 5px;"
+            />
+            <div
+              class="StyledProps--font StyledProps--main bp3-skeleton"
+              style="width: 28px; height: 5px;"
+            />
+          </div>
+        </div>
         <div
           class="StyledProps--font StyledProps--main loadingBlock"
           data-testid="loading-block"

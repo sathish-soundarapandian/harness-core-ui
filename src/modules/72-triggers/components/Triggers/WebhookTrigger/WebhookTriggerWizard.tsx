@@ -84,6 +84,8 @@ import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/util
 import TabWizard from '@triggers/components/TabWizard/TabWizard'
 
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
 import {
   ConnectorRefInterface,
@@ -124,6 +126,7 @@ export default function WebhookTriggerWizard(
   props: TriggerProps<any> & { children: JSX.Element[] }
 ): React.ReactElement {
   const { isNewTrigger, baseType, triggerData, type: sourceRepo } = props
+  const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.CD_GIT_WEBHOOK_POLLING)
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
@@ -336,7 +339,9 @@ export default function WebhookTriggerWizard(
       resolvedPipeline,
       anyAction: false,
       autoAbortPreviousExecutions: false,
-      pipelineBranchName: getDefaultPipelineReferenceBranch(baseType)
+      pipelineBranchName: getDefaultPipelineReferenceBranch(baseType) || branch,
+      // setDefaultValue only when polling is enabled and for Github Webhook Trigger
+      ...(isGitWebhookPollingEnabled && sourceRepo === GitSourceProviders.GITHUB.value && { pollInterval: '0' })
     }
   }
 
@@ -561,6 +566,7 @@ export default function WebhookTriggerWizard(
             inputYaml,
             inputSetRefs = [],
             source: {
+              pollInterval,
               spec: {
                 type: sourceRepoForYaml,
                 spec: {
@@ -657,7 +663,8 @@ export default function WebhookTriggerWizard(
           ),
           jexlCondition,
           pipelineBranchName,
-          inputSetRefs
+          inputSetRefs,
+          pollInterval
         }
 
         // connectorRef in Visual UI is an object (with the label), but in YAML is a string
@@ -806,9 +813,14 @@ export default function WebhookTriggerWizard(
       secureToken,
       autoAbortPreviousExecutions = false,
       pipelineBranchName = getDefaultPipelineReferenceBranch(event),
-      encryptedWebhookSecretIdentifier: { referenceString } = { referenceString: '' }
+      encryptedWebhookSecretIdentifier,
+      pollInterval
     } = val
     const inputSetRefs = get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
+    const referenceString =
+      typeof encryptedWebhookSecretIdentifier === 'string'
+        ? encryptedWebhookSecretIdentifier
+        : encryptedWebhookSecretIdentifier?.referenceString ?? ''
 
     const stringifyPipelineRuntimeInput = yamlStringify({
       pipeline: clearNullUndefined(pipelineRuntimeInput)
@@ -881,6 +893,8 @@ export default function WebhookTriggerWizard(
         pipelineIdentifier,
         source: {
           type: formikValueTriggerType as unknown as NGTriggerSourceV2['type'],
+          ...(isGitWebhookPollingEnabled &&
+            formikValueSourceRepo === GitSourceProviders.GITHUB.value && { pollInterval }),
           spec: {
             type: formikValueSourceRepo, // Github
             spec: {
@@ -1364,7 +1378,11 @@ export default function WebhookTriggerWizard(
       formikInitialProps={{
         initialValues,
         onSubmit: onSubmit,
-        validationSchema: getValidationSchema(getString, isGithubWebhookAuthenticationEnabled),
+        validationSchema: getValidationSchema(
+          getString,
+          isGitWebhookPollingEnabled,
+          isGithubWebhookAuthenticationEnabled
+        ),
         validate: validateTriggerPipeline,
         enableReinitialize: true
       }}

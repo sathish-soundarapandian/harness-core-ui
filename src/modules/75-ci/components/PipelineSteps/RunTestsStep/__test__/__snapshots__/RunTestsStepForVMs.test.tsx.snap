@@ -166,6 +166,7 @@ exports[`RunTests Step Edit View should render properly for AWS VMs build infra 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -277,6 +278,7 @@ exports[`RunTests Step Edit View should render properly for AWS VMs build infra 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -388,6 +390,7 @@ exports[`RunTests Step Edit View should render properly for AWS VMs build infra 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"

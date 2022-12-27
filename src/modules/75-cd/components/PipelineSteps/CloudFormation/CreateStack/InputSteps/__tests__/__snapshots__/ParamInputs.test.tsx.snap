@@ -101,6 +101,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -207,6 +208,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -312,6 +314,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -531,6 +534,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -602,6 +606,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -673,6 +678,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -778,6 +784,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -974,6 +981,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1080,6 +1088,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -1185,6 +1194,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -1381,6 +1391,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1487,6 +1498,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -1592,6 +1604,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"

@@ -52,10 +52,11 @@ export const getPipelineStages: (args: GetPipelineStagesArgs) => React.ReactElem
     return (
       <PipelineStages {...args}>
         {stagesCollection.getStage(StageType.FEATURE, isCFEnabled, getString)}
-        {/* {stagesCollection.getStage(StageType.DEPLOY, isCDEnabled, getString)}
-        {stagesCollection.getStage(StageType.BUILD, isCIEnabled, getString)} */}
-        {stagesCollection.getStage(StageType.PIPELINE, isPipelineChainingEnabled, getString)}
+        {stagesCollection.getStage(StageType.DEPLOY, isCDEnabled, getString)}
+        {stagesCollection.getStage(StageType.BUILD, isCIEnabled, getString)}
         {stagesCollection.getStage(StageType.APPROVAL, isApprovalStageEnabled, getString)}
+        {stagesCollection.getStage(StageType.SECURITY, isSTOEnabled, getString)}
+        {stagesCollection.getStage(StageType.PIPELINE, isPipelineChainingEnabled, getString)}
         {stagesCollection.getStage(StageType.CUSTOM, true, getString)}
         {stagesCollection.getStage(StageType.Template, false, getString)}
       </PipelineStages>

@@ -12,6 +12,7 @@ declare const styles: {
   readonly card: string
   readonly cardRow: string
   readonly clusterWrapper: string
+  readonly delegateCard: string
   readonly formFieldWidth: string
   readonly formRow: string
   readonly headingStepTwo: string

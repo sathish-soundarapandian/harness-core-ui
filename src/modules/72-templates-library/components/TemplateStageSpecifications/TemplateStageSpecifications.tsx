@@ -90,7 +90,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: templateVersionLabel,
-      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
     }
   })
 
@@ -111,7 +111,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: defaultTo(stage?.stage?.template?.versionLabel, ''),
-      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
     }
   })
 

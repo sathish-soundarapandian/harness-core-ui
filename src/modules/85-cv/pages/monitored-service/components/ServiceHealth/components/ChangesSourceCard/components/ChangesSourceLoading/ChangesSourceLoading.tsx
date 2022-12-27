@@ -27,7 +27,7 @@ export default function ChangesSourceLoading(): JSX.Element {
   const loadingBlocks = useMemo(() => {
     const loadingFields: JSX.Element[] = []
     for (let i = 1; i <= NUM_OF_LOADING_BLOCKS_TO_SHOW; i++) {
-      loadingFields.push(<LoadingBlock />)
+      loadingFields.push(<LoadingBlock key={i} />)
     }
     return loadingFields
   }, [])

@@ -5,7 +5,6 @@ securityStage:
   description: Scan code, artifacts, and infrastructure for security vulnerabilities.
 targets:
   testTargets: Test Targets
-securityReview: Security Review
 issues: Issues
 scans: Scans
 exemptions: Exemptions

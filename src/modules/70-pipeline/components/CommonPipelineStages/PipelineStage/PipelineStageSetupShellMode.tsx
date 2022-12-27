@@ -44,11 +44,19 @@ export function PipelineStageSetupShellMode(): React.ReactElement {
   const { stage: selectedStage } = getStageFromPipeline<StageElementConfig>(selectedStageId)
 
   const handleTabChange = (nextTab: PipelineStageTabs): void => {
-    checkErrorsForTab(selectedTabId).then(_ => {
-      updatePipeline(pipeline)
+    const nextTabIdx = TabsHeadingOrder.indexOf(nextTab)
+    const currentTabIdx = TabsHeadingOrder.indexOf(selectedTabId)
+
+    if (nextTabIdx < currentTabIdx) {
       setSelectedTabId(nextTab)
       setSelectedSectionId(nextTab)
-    })
+    } else {
+      checkErrorsForTab(selectedTabId).then(_ => {
+        updatePipeline(pipeline)
+        setSelectedTabId(nextTab)
+        setSelectedSectionId(nextTab)
+      })
+    }
   }
 
   const actionBtns: React.ReactElement = (
@@ -89,7 +97,7 @@ export function PipelineStageSetupShellMode(): React.ReactElement {
     <section ref={layoutRef} key={selectedStageId} className={approvalStepCss.approvalStageSetupShellWrapper}>
       <Tabs
         id="pipelineStageSetupShell"
-        onChange={(tabId: PipelineStageTabs) => setSelectedTabId(tabId)}
+        onChange={(tabId: PipelineStageTabs) => handleTabChange(tabId)}
         selectedTabId={selectedTabId}
         data-tabId={selectedTabId}
       >
@@ -136,7 +144,7 @@ export function PipelineStageSetupShellMode(): React.ReactElement {
           id={PipelineStageTabs.OUTPUTS}
           title={
             <span className={approvalStepCss.tab}>
-              <Icon name="template-inputs" height={20} size={20} color={'black'} />
+              <Icon name="pipeline-outputs" height={20} size={20} color={'black'} />
               {getString('connectors.ceAws.crossAccountRoleExtention.step3.p2')}
             </span>
           }

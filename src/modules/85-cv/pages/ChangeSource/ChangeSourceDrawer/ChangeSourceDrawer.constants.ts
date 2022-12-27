@@ -12,18 +12,20 @@ export enum ChangeSourceTypes {
   HarnessCD = 'HarnessCD',
   HarnessCDNextGen = 'HarnessCDNextGen',
   PagerDuty = 'PagerDuty',
-  K8sCluster = 'K8sCluster'
+  K8sCluster = 'K8sCluster',
+  HARNESS_FF = 'HARNESS_FF'
 }
 
 export const ChangeSourceCategoryName = {
   DEPLOYMENT: 'Deployment',
   INFRASTRUCTURE: 'Infrastructure',
   ALERT: 'Alert',
+  FEATURE_FLAG: 'FeatureFlag',
   INCIDENTS: 'Incidents'
 }
 
 export const ChangeSourceCategoryOptions = [
-  { label: 'deploymentText', value: ChangeSourceCategoryName.DEPLOYMENT },
+  { label: 'deploymentsText', value: ChangeSourceCategoryName.DEPLOYMENT },
   { label: 'infrastructureText', value: ChangeSourceCategoryName.INFRASTRUCTURE },
   { label: 'cv.changeSource.incident', value: ChangeSourceCategoryName.ALERT }
 ]

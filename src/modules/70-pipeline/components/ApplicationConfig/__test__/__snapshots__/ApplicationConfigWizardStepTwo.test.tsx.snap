@@ -139,6 +139,7 @@ exports[`ApplicationConfigWizardStepTwo move to stepTwo 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -194,6 +195,7 @@ exports[`ApplicationConfigWizardStepTwo move to stepTwo 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -358,6 +360,7 @@ exports[`ApplicationConfigWizardStepTwo runtime inputs 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -500,6 +503,7 @@ exports[`ApplicationConfigWizardStepTwo runtime inputs 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -555,6 +559,7 @@ exports[`ApplicationConfigWizardStepTwo runtime inputs 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"

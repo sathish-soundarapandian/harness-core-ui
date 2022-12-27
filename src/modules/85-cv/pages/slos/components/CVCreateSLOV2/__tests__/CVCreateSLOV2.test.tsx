@@ -74,7 +74,10 @@ describe('CVCreateSloV2', () => {
 
   test('CVCreateSLOV2 when isComposite is false', async () => {
     const { container } = render(
-      <TestWrapper>
+      <TestWrapper
+        path="/account/:accountId/cv/dashboard/orgs/:orgIdentifier/projects/:projectIdentifier/slos"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
         <CVCreateSLOV2 isComposite={false} />
       </TestWrapper>
     )
@@ -133,7 +136,9 @@ describe('CVCreateSloV2', () => {
 
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
-    userEvent.type(sloName!, 'composite slo 1')
+    act(() => {
+      userEvent.type(sloName!, 'composite slo 1')
+    })
 
     // Cancel should open modal
     act(() => {
@@ -348,16 +353,16 @@ describe('CVCreateSloV2', () => {
 
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
-    userEvent.clear(sloName!)
-    userEvent.type(sloName!, 'updated composite slo')
 
     act(() => {
+      userEvent.clear(sloName!)
+      userEvent.type(sloName!, 'updated composite slo')
       userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
     })
 
     fireEvent.change(container.querySelector('[name="SLOTargetPercentage"]')!, { target: { value: 99 } })
 
-    await act(() => {
+    act(() => {
       userEvent.click(screen.getByText('save'))
     })
 
@@ -382,11 +387,12 @@ describe('CVCreateSloV2', () => {
       </TestWrapper>
     )
 
-    const sloName = container.querySelector('input[name ="name"]')
-    waitFor(() => expect(sloName).toBeInTheDocument())
-    userEvent.clear(sloName!)
-    userEvent.type(sloName!, 'updated composite slo')
-
+    act(() => {
+      const sloName = container.querySelector('input[name ="name"]')
+      waitFor(() => expect(sloName).toBeInTheDocument())
+      userEvent.clear(sloName!)
+      userEvent.type(sloName!, 'updated composite slo')
+    })
     act(() => {
       userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
     })
@@ -420,9 +426,10 @@ describe('CVCreateSloV2', () => {
 
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
-    userEvent.clear(sloName!)
-    userEvent.type(sloName!, 'updated composite slo')
-
+    act(() => {
+      userEvent.clear(sloName!)
+      userEvent.type(sloName!, 'updated composite slo')
+    })
     await act(() => {
       userEvent.click(screen.getByText('save'))
     })
@@ -450,9 +457,10 @@ describe('CVCreateSloV2', () => {
 
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
-    userEvent.clear(sloName!)
-    userEvent.type(sloName!, 'updated composite slo')
-
+    act(() => {
+      userEvent.clear(sloName!)
+      userEvent.type(sloName!, 'updated composite slo')
+    })
     expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
     act(() => {
       userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
@@ -483,9 +491,10 @@ describe('CVCreateSloV2', () => {
 
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
-    userEvent.clear(sloName!)
-    userEvent.type(sloName!, 'updated composite slo')
-
+    act(() => {
+      userEvent.clear(sloName!)
+      userEvent.type(sloName!, 'updated composite slo')
+    })
     expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
     act(() => {
       userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
@@ -516,9 +525,10 @@ describe('CVCreateSloV2', () => {
 
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
-    userEvent.clear(sloName!)
-    userEvent.type(sloName!, 'updated composite slo')
-
+    act(() => {
+      userEvent.clear(sloName!)
+      userEvent.type(sloName!, 'updated composite slo')
+    })
     expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
     act(() => {
       userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)

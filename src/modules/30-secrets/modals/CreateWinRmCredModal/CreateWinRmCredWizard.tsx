@@ -27,6 +27,7 @@ export interface WinRmCredSharedObj {
   detailsData?: DetailsForm
   authData?: WinRmConfigFormData
   isEdit?: boolean
+  loading?: boolean
 }
 
 const CreateWinRmCredWizard: React.FC<CreateWinRmCredWizardProps & WinRmCredSharedObj> = props => {

@@ -27,8 +27,15 @@ import type { StepType } from '../PipelineSteps/PipelineStepInterface'
 import css from './ExecutionStepDetails.module.scss'
 
 export default function ExecutionStepDetails(): React.ReactElement {
-  const { allNodeMap, addNewNodeToMap, queryParams, selectedStepId, selectedStageId, pipelineStagesMap } =
-    useExecutionContext()
+  const {
+    allNodeMap,
+    addNewNodeToMap,
+    queryParams,
+    selectedStepId,
+    selectedStageId,
+    pipelineStagesMap,
+    pipelineExecutionDetail
+  } = useExecutionContext()
   const { retryStep } = queryParams
   const { getString } = useStrings()
   const { updateQueryParams } = useUpdateQueryParams<ExecutionPageQueryParams>()
@@ -169,6 +176,10 @@ export default function ExecutionStepDetails(): React.ReactElement {
         <StepDetails
           key={selectedStep.uuid}
           step={selectedStep}
+          executionMetadata={defaultTo(
+            pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata,
+            defaultTo(pipelineExecutionDetail?.executionGraph?.executionMetadata, {})
+          )}
           stageType={stageType}
           isStageExecutionInputConfigured={isStage && selectedStep.executionInputConfigured}
         />

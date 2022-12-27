@@ -13,6 +13,7 @@ import type { ExecutionNode } from 'services/pipeline-ng'
 import { getDefaultReducerState } from '@pipeline/components/LogsContent/LogsState/utils'
 import type { UseActionCreatorReturn } from '@pipeline/components/LogsContent/LogsState/actions'
 import { JiraCreateUpdateView } from '../JiraCreateUpdateView/JiraCreateUpdateView'
+import { executionMetadata } from './mock'
 
 const actions: UseActionCreatorReturn = {
   createSections: jest.fn(),
@@ -76,7 +77,7 @@ describe('Jiracreateupdate view test ', () => {
   test('output snapshot if array is present of outcomes', () => {
     const { container } = render(
       <TestWrapper>
-        <JiraCreateUpdateView step={stepArrayProps}></JiraCreateUpdateView>
+        <JiraCreateUpdateView step={stepArrayProps} executionMetadata={executionMetadata}></JiraCreateUpdateView>
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -86,7 +87,7 @@ describe('Jiracreateupdate view test ', () => {
     jest.spyOn(loadAsh, 'get').mockReturnValue({ key: 'test', url: '' })
     const { container } = render(
       <TestWrapper>
-        <JiraCreateUpdateView step={stepProps}></JiraCreateUpdateView>
+        <JiraCreateUpdateView step={stepProps} executionMetadata={executionMetadata}></JiraCreateUpdateView>
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

@@ -433,6 +433,7 @@ export class K8sApplyStep extends PipelineStep<K8sApplyData> {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
+    this._hasCommandFlagSelectionVisible = true
   }
   renderStep(props: StepProps<K8sApplyData>): JSX.Element {
     const {

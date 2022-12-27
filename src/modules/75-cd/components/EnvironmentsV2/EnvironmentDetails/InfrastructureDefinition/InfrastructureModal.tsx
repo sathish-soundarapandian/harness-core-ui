@@ -84,6 +84,7 @@ import type {
 import { getTemplateRefVersionLabelObject } from '@pipeline/utils/templateUtils'
 import { useDeepCompareEffect } from '@common/hooks'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import ReconcileInfraDialogWrapper from './ReconcileHandler/ReconcileInfraDialogWrapper'
 import css from './InfrastructureDefinition.module.scss'
 
@@ -289,7 +290,12 @@ function BootstrapDeployInfraDefinition({
         getScopeFromValue(defaultTo(stageCustomDeploymentData?.templateRef, ''))
       ),
       versionLabel: defaultTo(stageCustomDeploymentData?.versionLabel, ''),
-      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params: queryParams,
+        repoIdentifier: gitDetails.repoIdentifier,
+        branch: gitDetails.branch
+      })
     },
     lazy: !shouldFetchCustomDeploymentTemplate
   })
@@ -635,6 +641,8 @@ function BootstrapDeployInfraDefinition({
 
   const refreshYAMLBuilder = React.useMemo(() => JSON.stringify({ ...stage, isYamlEditable }), [stage, isYamlEditable])
 
+  const scope = getScopeFromValue(environmentIdentifier)
+
   return (
     <>
       <Layout.Vertical
@@ -712,8 +720,8 @@ function BootstrapDeployInfraDefinition({
                 existingJSON={{
                   infrastructureDefinition: {
                     ...formikRef.current?.values,
-                    orgIdentifier,
-                    projectIdentifier,
+                    orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
+                    projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
                     environmentRef: environmentIdentifier,
                     deploymentType: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.serviceConfig
                       ?.serviceDefinition?.type,
@@ -774,8 +782,8 @@ function BootstrapDeployInfraDefinition({
                 .then(() => {
                   onSubmit({
                     ...formikRef.current?.values,
-                    orgIdentifier,
-                    projectIdentifier,
+                    orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
+                    projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
                     environmentRef: environmentIdentifier,
                     deploymentType: (pipeline.stages?.[0].stage?.spec as DeployStageConfig)?.serviceConfig
                       ?.serviceDefinition?.type,

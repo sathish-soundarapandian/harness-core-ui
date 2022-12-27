@@ -13,6 +13,7 @@ import type { SecretDTOV2 } from 'services/cd-ng'
 import { NameIdDescriptionTags } from '@common/components'
 import { StringUtils } from '@common/exports'
 import { useStrings } from 'framework/strings'
+import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { SSHCredSharedObj } from '../CreateSSHCredWizard'
 import css from './StepDetails.module.scss'
 
@@ -23,9 +24,18 @@ const StepSSHDetails: React.FC<StepProps<SSHCredSharedObj> & SSHCredSharedObj> =
   nextStep,
   detailsData,
   authData,
-  isEdit
+  isEdit,
+  loading
 }) => {
   const { getString } = useStrings()
+
+  if (loading) {
+    return (
+      <Container className={css.spinnerContainer}>
+        <ContainerSpinner />
+      </Container>
+    )
+  }
   return (
     <Container padding="small" height={500}>
       <Text margin={{ bottom: 'xlarge' }} font={{ size: 'medium' }} color={Color.BLACK}>
@@ -63,7 +73,7 @@ const StepSSHDetails: React.FC<StepProps<SSHCredSharedObj> & SSHCredSharedObj> =
                   formikProps={formikProps}
                   identifierProps={{
                     inputName: 'name',
-                    isIdentifierEditable: isEdit || prevStepData?.isEdit ? false : true
+                    isIdentifierEditable: !(isEdit || prevStepData?.isEdit)
                   }}
                 />
               </Container>

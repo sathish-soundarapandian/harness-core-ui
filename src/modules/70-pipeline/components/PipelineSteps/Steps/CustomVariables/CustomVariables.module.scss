@@ -20,6 +20,14 @@
       margin-top: var(--spacing-medium);
     }
   }
+  .secret-width {
+    :global(.bp3-button) {
+      width: 264px;
+    }
+  }
+  :global(.bp3-popover-target) {
+    width: 180px !important;
+  }
 
   .subHeader {
     display: grid;

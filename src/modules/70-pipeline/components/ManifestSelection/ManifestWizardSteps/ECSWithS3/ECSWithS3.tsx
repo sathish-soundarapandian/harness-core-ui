@@ -41,6 +41,7 @@ import {
 import { useListAwsRegions } from 'services/portal'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import {
@@ -162,9 +163,14 @@ export function ECSWithS3({
 
   const canFetchBuckets = useCallback(
     (region: string): boolean => {
+      // prevStepData?.connectorRef is passed to shouldFetchFieldOptions when connector selection is done in prev step
+      // prevStepData is passed to shouldFetchFieldOptions required when inline connector creation has been done in prev step
       return !!(
         lastQueryData.region !== region &&
-        shouldFetchFieldOptions({ connectorId: { ...prevStepData?.connectorRef } }, [region])
+        shouldFetchFieldOptions(
+          !isEmpty(prevStepData?.identifier) ? prevStepData : { connectorId: { ...prevStepData?.connectorRef } },
+          [region]
+        )
       )
     },
     [lastQueryData, prevStepData]
@@ -177,6 +183,15 @@ export function ECSWithS3({
       }
     },
     [canFetchBuckets]
+  )
+
+  const fetchBucketsByRegion = React.useCallback(
+    (formik: FormikProps<ECSWithS3DataType>) => {
+      if (!loading && formik.values?.region) {
+        fetchBuckets(formik.values.region)
+      }
+    },
+    [loading, fetchBuckets]
   )
 
   const itemRenderer = useCallback(
@@ -309,7 +324,9 @@ export function ECSWithS3({
             allowableTypes,
             selectProps: {
               noResults: (
-                <Text lineClamp={1}>{getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}</Text>
+                <Text lineClamp={1} width={400} height={100} padding="small">
+                  {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}
+                </Text>
               ),
               itemRenderer: itemRenderer,
               items: buckets,
@@ -322,14 +339,14 @@ export function ECSWithS3({
               ) {
                 return
               }
-              if (!loading && formik.values?.region) {
-                fetchBuckets(formik.values.region)
-              }
+              fetchBucketsByRegion(formik)
             }
           }}
         />
         {getMultiTypeFromValue(formik.values?.bucketName) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
+          <SelectConfigureOptions
+            options={buckets}
+            fetchOptions={fetchBucketsByRegion.bind(null, formik)}
             style={{ alignSelf: 'center', marginBottom: 3 }}
             value={formik.values?.bucketName as string}
             type="String"
@@ -424,7 +441,8 @@ export function ECSWithS3({
                     label={getString('regionLabel')}
                   />
                   {getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
+                    <SelectConfigureOptions
+                      options={regions}
                       style={{ alignSelf: 'center', marginBottom: 3 }}
                       value={formik.values?.region as string}
                       type="String"

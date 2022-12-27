@@ -15,7 +15,7 @@ import { PipelineStage } from './PipelineStage'
 const getStageAttributes = (_getString: UseStringsReturn['getString']): StageAttributes => ({
   name: 'Pipeline',
   type: StageType.PIPELINE,
-  icon: 'pipeline',
+  icon: 'chained-pipeline',
   iconColor: 'var(--pipeline-blue-color)',
   isApproval: false,
   openExecutionStrategy: false

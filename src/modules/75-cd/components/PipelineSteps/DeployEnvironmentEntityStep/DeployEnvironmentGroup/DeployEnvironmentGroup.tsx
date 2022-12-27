@@ -29,7 +29,6 @@ import { useStrings } from 'framework/strings'
 import type { EnvironmentGroupResponseDTO } from 'services/cd-ng'
 
 import type { Scope } from '@common/interfaces/SecretsInterface'
-import { isValueRuntimeInput } from '@common/utils/utils'
 
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -37,8 +36,16 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 
 import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
 
+import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+
 import CreateEnvironmentGroupModal from '@cd/components/EnvironmentGroups/CreateEnvironmentGroupModal'
 
+import { MultiTypeEnvironmentGroupField } from '@pipeline/components/FormMultiTypeEnvironmentGroupField/FormMultiTypeEnvironmentGroupField'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import type {
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState,
@@ -50,10 +57,8 @@ import EnvironmentGroupsList from '../EnvironmentGroupsList/EnvironmentGroupsLis
 import DeployEnvironment from '../DeployEnvironment/DeployEnvironment'
 import DeployCluster from '../DeployCluster/DeployCluster'
 import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
-import InlineEntityFilters from '../components/InlineEntityFilters/InlineEntityFilters'
 import {
-  EntityFilterType,
-  EntityType,
+  InlineEntityFiltersProps,
   InlineEntityFiltersRadioType
 } from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
 
@@ -105,6 +110,8 @@ export default function DeployEnvironmentGroup({
   const isFixed = getMultiTypeFromValue(values.environmentGroup) === MultiTypeInputType.FIXED
   const isRuntime = getMultiTypeFromValue(values.environmentGroup) === MultiTypeInputType.RUNTIME
   const filterPrefix = 'environmentGroupFilters'
+
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   // API
   const {
@@ -200,27 +207,43 @@ export default function DeployEnvironmentGroup({
         flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
         className={css.inputField}
       >
-        <FormInput.MultiTypeInput
-          tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
-          label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
-          name="environmentGroup"
-          useValue
-          disabled={disabled}
-          placeholder={placeHolderForEnvironmentGroup}
-          multiTypeInputProps={{
-            width: 300,
-            selectProps: { items: selectOptions },
-            allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
-            defaultValueToReset: '',
-            onChange: item => {
-              setSelectedEnvironmentGroups(getSelectedEnvironmentGroupsFromOptions([item as SelectOption]))
-              if (isValueRuntimeInput(item)) {
-                setFieldValue('environments', RUNTIME_INPUT_VALUE)
+        {!CDS_OrgAccountLevelServiceEnvEnvGroup ? (
+          <FormInput.MultiTypeInput
+            tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
+            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
+            name="environmentGroup"
+            useValue
+            disabled={disabled}
+            placeholder={placeHolderForEnvironmentGroup}
+            multiTypeInputProps={{
+              width: 300,
+              selectProps: { items: selectOptions },
+              allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
+              defaultValueToReset: '',
+              onChange: item => {
+                setSelectedEnvironmentGroups(getSelectedEnvironmentGroupsFromOptions([item as SelectOption]))
               }
-            }
-          }}
-          selectItems={selectOptions}
-        />
+            }}
+            selectItems={selectOptions}
+          />
+        ) : (
+          <MultiTypeEnvironmentGroupField
+            tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
+            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
+            name="environmentGroup"
+            setRefValue
+            disabled={disabled}
+            placeholder={placeHolderForEnvironmentGroup}
+            onChange={item => {
+              setSelectedEnvironmentGroups([item])
+            }}
+            multiTypeProps={{
+              width: 300,
+              allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
+              defaultValueToReset: ''
+            }}
+          />
+        )}
         {isFixed && (
           <RbacButton
             margin={{ top: 'xlarge' }}
@@ -244,7 +267,10 @@ export default function DeployEnvironmentGroup({
             loading={loadingEnvironmentGroupsList || updatingEnvironmentGroupsList}
             environmentGroupsList={environmentGroupsList.filter(envGroupInList =>
               envGroupInList.envGroup?.identifier
-                ? selectedEnvironmentGroups.includes(envGroupInList.envGroup.identifier)
+                ? selectedEnvironmentGroups.some(
+                    selectedEnv =>
+                      selectedEnv === getScopedValueFromDTO(envGroupInList?.envGroup as EnvironmentGroupConfig)
+                  )
                 : false
             )}
             readonly={readonly}
@@ -261,86 +287,84 @@ export default function DeployEnvironmentGroup({
 
         {/* This component is specifically for filters */}
         {isRuntime && !readonly && (
-          <InlineEntityFilters
-            filterPrefix={filterPrefix}
-            entityStringKey="environments"
-            onRadioValueChange={handleFilterRadio}
+          <StepWidget<InlineEntityFiltersProps>
+            type={StepType.InlineEntityFilters}
+            factory={factory}
+            stepViewType={StepViewType.Edit}
             readonly={readonly}
-            showCard
-            baseComponent={
-              <DeployEnvironment
-                initialValues={{
-                  environments: RUNTIME_INPUT_VALUE as any
-                }}
-                readonly
-                allowableTypes={allowableTypes}
-                isMultiEnvironment
-                isUnderEnvGroup
-                stageIdentifier={stageIdentifier}
-                deploymentType={deploymentType}
-                customDeploymentRef={customDeploymentRef}
-                gitOpsEnabled={gitOpsEnabled}
-              />
-            }
-            entityFilterListProps={{
-              entities: [EntityType.ENVIRONMENTS, gitOpsEnabled ? EntityType.CLUSTERS : EntityType.INFRASTRUCTURES],
-              filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
-              placeholderProps: {
-                entity: getString('common.filterOnName', {
-                  name: 'environments or' + getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
-                }),
-                tags: getString('common.filterOnName', { name: getString('typeLabel') })
+            allowableTypes={allowableTypes}
+            initialValues={{
+              filterPrefix,
+              entityStringKey: 'environments',
+              onRadioValueChange: handleFilterRadio,
+              showCard: true,
+              baseComponent: (
+                <DeployEnvironment
+                  initialValues={{
+                    environments: RUNTIME_INPUT_VALUE as any
+                  }}
+                  readonly
+                  allowableTypes={allowableTypes}
+                  isMultiEnvironment
+                  isUnderEnvGroup
+                  stageIdentifier={stageIdentifier}
+                  deploymentType={deploymentType}
+                  customDeploymentRef={customDeploymentRef}
+                  gitOpsEnabled={gitOpsEnabled}
+                />
+              ),
+              entityFilterProps: {
+                entities: ['environments', gitOpsEnabled ? 'gitOpsClusters' : 'infrastructures']
               }
             }}
           >
-            <InlineEntityFilters
-              filterPrefix={'infraClusterFilters'}
-              entityStringKey={gitOpsEnabled ? 'common.clusters' : 'common.infrastructures'}
-              onRadioValueChange={handleInfraClustersFilterRadio}
+            <StepWidget<InlineEntityFiltersProps>
+              type={StepType.InlineEntityFilters}
+              factory={factory}
+              stepViewType={StepViewType.Edit}
               readonly={readonly}
-              showCard
-              hasTopMargin
-              baseComponent={
-                <>
-                  {gitOpsEnabled ? (
-                    <DeployCluster
-                      initialValues={{
-                        environments: RUNTIME_INPUT_VALUE as any
-                      }}
-                      readonly
-                      allowableTypes={allowableTypes}
-                      isMultiCluster
-                      environmentIdentifier={''}
-                      lazyCluster
-                    />
-                  ) : (
-                    <DeployInfrastructure
-                      initialValues={{
-                        environments: RUNTIME_INPUT_VALUE as any
-                      }}
-                      readonly
-                      allowableTypes={allowableTypes}
-                      environmentIdentifier={''}
-                      isMultiInfrastructure
-                      deploymentType={deploymentType}
-                      customDeploymentRef={customDeploymentRef}
-                      lazyInfrastructure
-                    />
-                  )}
-                </>
-              }
-              entityFilterListProps={{
-                entities: [gitOpsEnabled ? EntityType.CLUSTERS : EntityType.INFRASTRUCTURES],
-                filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
-                placeholderProps: {
-                  entity: getString('common.filterOnName', {
-                    name: getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
-                  }),
-                  tags: getString('common.filterOnName', { name: getString('typeLabel') })
+              allowableTypes={allowableTypes}
+              initialValues={{
+                filterPrefix: 'infraClusterFilters',
+                entityStringKey: gitOpsEnabled ? 'common.clusters' : 'common.infrastructures',
+                onRadioValueChange: handleInfraClustersFilterRadio,
+                showCard: true,
+                hasTopMargin: true,
+                baseComponent: (
+                  <>
+                    {gitOpsEnabled ? (
+                      <DeployCluster
+                        initialValues={{
+                          environments: RUNTIME_INPUT_VALUE as any
+                        }}
+                        readonly
+                        allowableTypes={allowableTypes}
+                        isMultiCluster
+                        environmentIdentifier={''}
+                        lazyCluster
+                      />
+                    ) : (
+                      <DeployInfrastructure
+                        initialValues={{
+                          environments: RUNTIME_INPUT_VALUE as any
+                        }}
+                        readonly
+                        allowableTypes={allowableTypes}
+                        environmentIdentifier={''}
+                        isMultiInfrastructure
+                        deploymentType={deploymentType}
+                        customDeploymentRef={customDeploymentRef}
+                        lazyInfrastructure
+                      />
+                    )}
+                  </>
+                ),
+                entityFilterProps: {
+                  entities: [gitOpsEnabled ? 'gitOpsClusters' : 'infrastructures']
                 }
               }}
             />
-          </InlineEntityFilters>
+          </StepWidget>
         )}
 
         <ModalDialog

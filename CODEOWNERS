@@ -54,6 +54,7 @@ src/modules/70-pipeline/components/HomePageByModule @harness/ui-plg
 src/modules/70-pipeline/components/TrialModalTemplate @harness/ui-plg
 src/modules/70-pipeline/interfaces/STOApp.ts @harness/ui-sto
 src/modules/70-pipeline/pages/execution/ExecutionSecurityView @harness/ui-sto
+src/modules/70-pipeline/components/PipelineInputSetForm/EnvironmentsInputSetForm @vkbansal-harness @AshwinBhatkal-Harness
 src/modules/72-templates-library @harness/ui-templates
 src/modules/72-freeze-windows @harness/ui-pipeline
 src/modules/75-cd @harness/ui-pipeline

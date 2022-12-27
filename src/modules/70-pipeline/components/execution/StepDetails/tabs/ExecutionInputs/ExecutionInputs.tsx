@@ -6,7 +6,6 @@
  */
 
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import {
   MultiTypeInputType,
@@ -24,6 +23,7 @@ import { Intent, Spinner } from '@blueprintjs/core'
 import type { FormikErrors } from 'formik'
 
 import {
+  ExecutionGraph,
   ExecutionNode,
   StageElementConfig,
   StageElementWrapperConfig,
@@ -32,7 +32,6 @@ import {
   useSubmitExecutionInput
 } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
-import type { ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import pipelineFactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -44,25 +43,25 @@ import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { NodeType, NonSelectableNodes } from '@pipeline/utils/executionUtils'
 import { StageFormInternal } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
-import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import { validateStage } from '@pipeline/components/PipelineStudio/StepUtil'
+import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import css from './ExecutionInputs.module.scss'
 
 export interface ExecutionInputsProps {
   step: ExecutionNode
+  executionMetadata: ExecutionGraph['executionMetadata']
   factory?: AbstractStepFactory
 }
 
 export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement {
-  const { step, factory = pipelineFactory } = props
-  const { accountId, projectIdentifier, orgIdentifier, executionIdentifier } = useParams<ExecutionPathProps>()
+  const { step, factory = pipelineFactory, executionMetadata } = props
+  const { accountId, projectIdentifier, orgIdentifier, planExecutionId } = defaultTo(executionMetadata, {})
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const [hasSubmitted, setHasSubmitted] = useState(false)
 
   const nodeExecutionId = defaultTo(step.uuid, '')
-  const isDone = isExecutionComplete(step.status)
   const { data, loading } = useGetExecutionInputTemplate({
     nodeExecutionId,
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier },
@@ -90,6 +89,8 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
   const fieldYaml = parse<{ step: StepElementConfig; stage: StageElementConfig }>(
     defaultTo(get(data, 'data.fieldYaml'), '{}')
   )
+  const isDone = !isEmpty(userInput) || isExecutionComplete(step.status)
+
   const finalUserInput = defaultTo(isStageForm ? userInput : userInput.step, {})
   const parsedStep = defaultTo(template.step, {})
   const parsedStage = defaultTo(template, {}) as StageElementWrapperConfig
@@ -102,7 +103,7 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
     close: closeAbortConfirmation
   } = useToggleOpen()
   const { mutate: abortPipeline } = useHandleInterrupt({
-    planExecutionId: executionIdentifier,
+    planExecutionId,
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,

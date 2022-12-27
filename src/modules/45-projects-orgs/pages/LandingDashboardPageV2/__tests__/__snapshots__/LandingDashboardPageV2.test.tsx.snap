@@ -37,6 +37,70 @@ exports[`landing dashboard page tests time range update 1`] = `
           dummyRangeOne
         </div>
       </div>
+      <div
+        class="Layout--vertical StyledProps--main right"
+      >
+        <div
+          class="StyledProps--font StyledProps--main container"
+        >
+          <div
+            class="bp3-tabs Tabs--main Tabs--horizontal"
+          >
+            <div
+              class="bp3-tab-list"
+              role="tablist"
+            >
+              <div
+                class="bp3-tab-indicator-wrapper"
+                style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+              >
+                <div
+                  class="bp3-tab-indicator"
+                />
+              </div>
+              <div
+                aria-controls="bp3-tab-panel_preferenceCardTabs_recents"
+                aria-disabled="false"
+                aria-expanded="true"
+                aria-selected="true"
+                class="bp3-tab"
+                data-tab-id="recents"
+                id="bp3-tab-title_preferenceCardTabs_recents"
+                role="tab"
+                tabindex="0"
+              >
+                common.recents
+              </div>
+              <div
+                aria-controls="bp3-tab-panel_preferenceCardTabs_favorites"
+                aria-disabled="false"
+                aria-expanded="false"
+                aria-selected="false"
+                class="bp3-tab"
+                data-tab-id="favorites"
+                id="bp3-tab-title_preferenceCardTabs_favorites"
+                role="tab"
+                tabindex="0"
+              >
+                common.favorites
+              </div>
+            </div>
+            <div
+              aria-hidden="false"
+              aria-labelledby="bp3-tab-title_preferenceCardTabs_recents"
+              class="bp3-tab-panel"
+              id="bp3-tab-panel_preferenceCardTabs_recents"
+              role="tabpanel"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small StyledProps--padding-small"
+              >
+                common.noRecentProjects
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

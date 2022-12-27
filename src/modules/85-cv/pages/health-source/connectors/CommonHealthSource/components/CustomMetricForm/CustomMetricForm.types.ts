@@ -5,15 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption } from '@harness/uicore'
-import type { Dispatch, SetStateAction } from 'react'
+import type { MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type { GroupedCreatedMetrics } from '@cv/components/CommonMultiItemsSideNav/components/CommonSelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
 import type {
   CreatedMetricsWithSelectedIndex,
   CustomSelectedAndMappedMetrics
 } from '@cv/pages/health-source/common/CommonCustomMetric/CommonCustomMetric.types'
-import type { NonCustomFeildsInterface } from '../../../AppDynamics/AppDHealthSource.types'
-import type { HealthSourceConfig, HealthSourceInitialData } from '../../CommonHealthSource.types'
+import type {
+  CommonCustomMetricFormikInterface,
+  FieldMapping,
+  HealthSourceConfig,
+  HealthSourceInitialData
+} from '../../CommonHealthSource.types'
 
 export interface AddMetricForm {
   identifier: string
@@ -21,20 +24,24 @@ export interface AddMetricForm {
   groupName: SelectOption | string
 }
 
+export interface GetMultiTypeRecordInitialValueParams {
+  filteredFieldsMapping?: FieldMapping[]
+  isTemplate?: boolean
+  formValues: CommonCustomMetricFormikInterface
+}
+
 export interface CustomMetricFormContainerProps {
   connectorIdentifier: string
   isMetricThresholdEnabled: boolean
   mappedMetrics: CustomSelectedAndMappedMetrics['mappedMetrics']
   selectedMetric: CustomSelectedAndMappedMetrics['selectedMetric']
-  setMappedMetrics: Dispatch<SetStateAction<CustomSelectedAndMappedMetrics>>
   createdMetrics: CreatedMetricsWithSelectedIndex['createdMetrics']
   groupedCreatedMetrics: GroupedCreatedMetrics
-  setCreatedMetrics: Dispatch<SetStateAction<CreatedMetricsWithSelectedIndex>>
-  setGroupedCreatedMetrics: Dispatch<SetStateAction<GroupedCreatedMetrics>>
-  nonCustomFeilds: NonCustomFeildsInterface
-  setNonCustomFeilds: Dispatch<SetStateAction<NonCustomFeildsInterface>>
   isTemplate?: boolean
   expressions?: string[]
   healthSourceConfig: HealthSourceConfig
   healthSourceData: HealthSourceInitialData
+  setConfigurationsFormikFieldValue: (key: string, data: any) => void
 }
+
+export type LogFieldsMultiTypeState = Record<Partial<keyof CommonCustomMetricFormikInterface>, MultiTypeInputType>

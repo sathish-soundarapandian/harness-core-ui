@@ -6,20 +6,19 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, Text, Layout, Icon } from '@harness/uicore'
+import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
 import { Classes, Switch } from '@blueprintjs/core'
 import { String, useStrings } from 'framework/strings'
 import type { PlatformEntry } from '@cf/components/LanguageSelection/LanguageSelection'
-import { ApiKey, Feature, useGetAllFeatures, GetAllFeaturesQueryParams } from 'services/cf'
+import { ApiKey, Feature, useGetAllFeatures } from 'services/cf'
 import { useToggleFeatureFlag } from '@cf/hooks/useToggleFeatureFlag'
-import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
 import css from './ValidatingYourFlagView.module.scss'
 
 const POLLING_INTERVAL_IN_MS = 30000
-const INITIAL_INTERVAL_IN_MS = 240000
+const MAX_TRIES = 8
 
 export interface TestYourFlagViewProps {
   flagInfo: Feature
@@ -27,11 +26,15 @@ export interface TestYourFlagViewProps {
   apiKey: ApiKey
   environmentIdentifier?: string
   testDone: boolean
-  setTestDone: React.Dispatch<React.SetStateAction<boolean>>
+  setTestDone: (done: boolean) => void
 }
 
-export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = props => {
-  const { flagInfo, environmentIdentifier } = props
+export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = ({
+  flagInfo,
+  environmentIdentifier,
+  testDone,
+  setTestDone
+}) => {
   const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
   const { getString } = useStrings()
   const toggleFeatureFlag = useToggleFeatureFlag({
@@ -41,58 +44,66 @@ export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = props => {
     environmentIdentifier: environmentIdentifier as string
   })
 
-  const featureQueryParams: GetAllFeaturesQueryParams = {
-    accountIdentifier,
-    orgIdentifier,
-    projectIdentifier,
-    metrics: true,
-    environmentIdentifier: environmentIdentifier as string,
-    pageSize: CF_DEFAULT_PAGE_SIZE,
-    pageNumber: 0
-  }
-
-  const { data: featuresData, loading, refetch } = useGetAllFeatures({ queryParams: featureQueryParams, debounce: 250 })
+  const { data: featuresData, refetch } = useGetAllFeatures({
+    queryParams: {
+      accountIdentifier,
+      orgIdentifier,
+      projectIdentifier,
+      metrics: true,
+      environmentIdentifier: environmentIdentifier as string,
+      pageSize: 1,
+      pageNumber: 0,
+      featureIdentifiers: flagInfo.identifier
+    },
+    lazy: true
+  })
 
   const [toggledOn, setToggledOn] = useState(false)
   const [fetching, setFetching] = useState(false)
   const [verified, setVerified] = useState(false)
 
-  const [timeNow] = useState<Date>(new Date())
+  const [tries, setTries] = useState(0)
 
-  useEffect(() => {
-    if (!props.testDone) {
-      const pollingTimer = setTimeout(function () {
-        refetch()
-      }, POLLING_INTERVAL_IN_MS)
-      return () => clearTimeout(pollingTimer)
-    }
-  }, [loading, refetch, props.testDone, featuresData, fetching])
+  const [startTime] = useState<number>(Date.now())
 
+  // determine when to start polling
   useEffect(() => {
-    if (featuresData && !props.testDone) {
+    if (toggledOn && !testDone) {
       setFetching(true)
-      //We must initially load the for 4 minutes as this is how long the api takes to return
-      //the correct information to us
-      const initialTimer = setTimeout(function () {
-        setFetching(false)
-        props.setTestDone(true)
-      }, INITIAL_INTERVAL_IN_MS)
-      const lastAccess = featuresData.features?.[0].status?.lastAccess
-
-      if (featuresData.features?.[0].status?.status === 'active') {
-        //flag must be validated within the getting started flow
-        //anything older than that we don't care about
-        if (lastAccess) {
-          if (lastAccess > timeNow.getTime()) {
-            setVerified(true)
-          }
-        }
-      } else {
-        setVerified(false)
-      }
-      return () => clearTimeout(initialTimer)
+      setTries(0)
     }
-  }, [props.testDone, featuresData, props])
+  }, [toggledOn, testDone])
+
+  // determine whether to poll or timeout
+  useEffect(() => {
+    if (fetching && !verified) {
+      if (tries < MAX_TRIES) {
+        const pollingTimer = setTimeout(() => {
+          setTries(currentTries => currentTries + 1)
+          refetch()
+        }, POLLING_INTERVAL_IN_MS)
+
+        return () => clearTimeout(pollingTimer)
+      } else {
+        setFetching(false)
+        setVerified(false)
+        setTestDone(true)
+      }
+    }
+  }, [refetch, fetching, setTestDone, verified, tries])
+
+  useEffect(() => {
+    // flag must be validated within the getting started flow
+    // anything older than that we don't care about
+    if (
+      featuresData?.features?.[0].status?.status === 'active' &&
+      featuresData?.features?.[0].status?.lastAccess > startTime
+    ) {
+      setFetching(false)
+      setVerified(true)
+      setTestDone(true)
+    }
+  }, [featuresData, startTime, setTestDone])
 
   return (
     <Container className={css.listenToEventContainer}>
@@ -111,7 +122,7 @@ export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = props => {
             onChange={() => {
               if (toggledOn) {
                 toggleFeatureFlag.off(flagInfo.identifier)
-                props.setTestDone(false)
+                setTestDone(false)
               } else {
                 toggleFeatureFlag.on(flagInfo.identifier)
               }

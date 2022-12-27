@@ -51,6 +51,7 @@ export interface FlatValidWebhookFormikValuesInterface {
   pipelineBranchName?: string
   inputSetRefs?: string[]
   encryptedWebhookSecretIdentifier?: SecretReference
+  pollInterval?: string
 }
 export interface TriggerTypeSourceInterface {
   triggerType: NGTriggerSourceV2['type']

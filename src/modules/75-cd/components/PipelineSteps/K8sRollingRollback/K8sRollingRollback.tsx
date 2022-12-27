@@ -234,6 +234,7 @@ export class K8sRollingRollbackStep extends PipelineStep<K8sRollingRollbackData>
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
+    this._hasCommandFlagSelectionVisible = true
   }
 
   renderStep(props: StepProps<K8sRollingRollbackData>): JSX.Element {

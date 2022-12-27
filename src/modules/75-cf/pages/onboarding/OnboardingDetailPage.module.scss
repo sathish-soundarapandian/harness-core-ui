@@ -5,7 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.scroll-overflow-y {
+.mainContent {
+  overflow: hidden;
+  height: var(--page-min-height);
+}
+
+.onboardingContainer {
   overflow-y: scroll;
 }
 

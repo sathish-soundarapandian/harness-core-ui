@@ -30,7 +30,9 @@ import {
   SidecarArtifact,
   useGetJobDetailsForJenkinsServiceV2,
   useGetArtifactPathForJenkinsServiceV2,
-  useGetBuildsForJenkinsServiceV2
+  useGetBuildsForJenkinsServiceV2,
+  useGetJobDetailsForJenkins,
+  useGetBuildsForJenkins
 } from 'services/cd-ng'
 
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
@@ -77,7 +79,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     artifactPath,
     serviceIdentifier,
     stepViewType,
-    artifacts
+    artifacts,
+    useArtifactV1Data = false
   } = props
 
   const { getString } = useStrings()
@@ -130,11 +133,26 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     return encodeURIComponent(value)
   }
 
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
-    refetch: refetchJobs,
-    data: jobsResponse,
-    loading: fetchingJobs,
-    error: fetchingJobsError
+    refetch: refetchV1Jobs,
+    data: jobsV1Response,
+    loading: fetchingV1Jobs,
+    error: fetchingV1JobsError
+  } = useGetJobDetailsForJenkins({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: connectorRefValue?.toString()
+    }
+  })
+
+  const {
+    refetch: refetchV2Jobs,
+    data: jobsV2Response,
+    loading: fetchingV2Jobs,
+    error: fetchingV2JobsError
   } = useMutateAsGet(useGetJobDetailsForJenkinsServiceV2, {
     lazy: true,
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
@@ -162,6 +180,20 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       )
     }
   })
+
+  const { refetchJobs, jobsResponse, fetchingJobs, fetchingJobsError } = useArtifactV1Data
+    ? {
+        refetchJobs: refetchV1Jobs,
+        jobsResponse: jobsV1Response,
+        fetchingJobs: fetchingV1Jobs,
+        fetchingJobsError: fetchingV1JobsError
+      }
+    : {
+        refetchJobs: refetchV2Jobs,
+        jobsResponse: jobsV2Response,
+        fetchingJobs: fetchingV2Jobs,
+        fetchingJobsError: fetchingV2JobsError
+      }
 
   const {
     refetch: refetchArtifactPaths,
@@ -196,9 +228,22 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   })
 
   const {
-    refetch: refetchJenkinsBuild,
-    data: jenkinsBuildResponse,
-    loading: fetchingBuild
+    refetch: refetchJenkinsBuildV1,
+    data: jenkinsBuildResponseV1,
+    loading: fetchingBuildV1
+  } = useGetBuildsForJenkins({
+    queryParams: {
+      ...commonParams,
+      connectorRef: connectorRefValue?.toString(),
+      artifactPath: artifactPathValue
+    },
+    jobName: jobNameValue ? getEncodedValue(jobNameValue) : ''
+  })
+
+  const {
+    refetch: refetchJenkinsBuildV2,
+    data: jenkinsBuildResponseV2,
+    loading: fetchingBuildV2
   } = useMutateAsGet(useGetBuildsForJenkinsServiceV2, {
     lazy: true,
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
@@ -227,6 +272,18 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       )
     }
   })
+
+  const { refetchJenkinsBuild, jenkinsBuildResponse, fetchingBuild } = useArtifactV1Data
+    ? {
+        refetchJenkinsBuild: refetchJenkinsBuildV1,
+        jenkinsBuildResponse: jenkinsBuildResponseV1,
+        fetchingBuild: fetchingBuildV1
+      }
+    : {
+        refetchJenkinsBuild: refetchJenkinsBuildV2,
+        jenkinsBuildResponse: jenkinsBuildResponseV2,
+        fetchingBuild: fetchingBuildV2
+      }
 
   useEffect(() => {
     if (refetchingAllowedTypes?.includes(getMultiTypeFromValue(connectorRefValue))) {

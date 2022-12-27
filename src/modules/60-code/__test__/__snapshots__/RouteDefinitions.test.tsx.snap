@@ -43,6 +43,12 @@ exports[`RouteDefinitions routes should render links correctly 1`] = `
       /account/harness/code/default/test/repo1/pulls/1001
     </p>
     <p>
+      /account/harness/code/default/test/repo1/pulls/1001/commits
+    </p>
+    <p>
+      /account/harness/code/default/test/repo1/pulls/1001/diffs
+    </p>
+    <p>
       /account/harness/code/default/test/repo1/pulls/compare/main...develop
     </p>
     <p>

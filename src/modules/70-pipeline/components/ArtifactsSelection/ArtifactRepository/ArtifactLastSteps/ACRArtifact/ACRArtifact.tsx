@@ -51,7 +51,8 @@ import {
   getFinalArtifactObj,
   helperTextData,
   resetTag,
-  shouldFetchFieldOptions
+  shouldFetchFieldOptions,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ACRArtifactType,
@@ -80,7 +81,7 @@ export function ACRArtifact({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const loadingItems = [{ label: 'Loading...', value: 'Loading Loading...' }]
 
@@ -443,7 +444,7 @@ export function ACRArtifact({
   }
 
   const handleValidate = (formData: ACRArtifactType & { connectorId?: string }) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData({
         ...prevStepData,
         ...formData,
@@ -498,7 +499,7 @@ export function ACRArtifact({
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>
@@ -524,7 +525,7 @@ export function ACRArtifact({
           formikRef.current = formik
           return (
             <FormikForm>
-              <div className={cx(css.connectorForm, formClassName)}>
+              <div className={cx(css.artifactForm, formClassName)}>
                 {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
                 {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
                 <div className={css.imagePathContainer}>
@@ -875,7 +876,7 @@ export function ACRArtifact({
                 ) : null}
               </div>
 
-              {!isTemplateContext && (
+              {!hideHeaderAndNavBtns && (
                 <Layout.Horizontal spacing="medium">
                   <Button
                     variation={ButtonVariation.SECONDARY}

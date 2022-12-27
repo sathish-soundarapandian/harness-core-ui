@@ -91,6 +91,7 @@ exports[`GoogleArtifactRegistrySource tests clicking on Region Name field should
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -204,6 +205,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -275,6 +277,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -376,6 +379,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -445,6 +449,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -514,6 +519,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -583,6 +589,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -696,6 +703,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -767,6 +775,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -868,6 +877,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -937,6 +947,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1006,6 +1017,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1107,6 +1119,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"

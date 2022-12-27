@@ -6,11 +6,11 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
+import { pipelines } from '@pipeline/components/PipelineModalListView/__tests__/pipelinelistMocks'
 import PipelineResourceModal from '../PipelineResourceModal'
-import mockData from './pipelineMockData.json'
 
 const props = {
   searchTerm: '',
@@ -22,35 +22,36 @@ const props = {
 }
 
 const params = {
-  accountId: 'testAcc',
-  orgIdentifier: 'testOrg',
-  projectIdentifier: 'test',
-  pipelineIdentifier: 'pipeline1',
+  accountId: 'accountId',
+  orgIdentifier: 'orgIdentifier',
+  projectIdentifier: 'projectIdentifier',
+  pipelineIdentifier: 'pipelineIdentifier',
   module: 'cd'
 }
-const mockGetCallFunction = jest.fn()
 jest.mock('@common/utils/dateUtils', () => ({
   formatDatetoLocale: (x: number) => x
 }))
 jest.useFakeTimers()
 
 jest.mock('services/pipeline-ng', () => ({
-  useGetPipelineList: jest.fn().mockImplementation(args => {
-    mockGetCallFunction(args)
-    return { mutate: jest.fn(() => Promise.resolve(mockData)), cancel: jest.fn(), loading: false }
-  })
+  useGetPipelineList: jest.fn(() => ({
+    mutate: jest.fn().mockResolvedValue(pipelines),
+    cancel: jest.fn(),
+    loading: false
+  }))
 }))
 
 describe('PipelineModal List View', () => {
   test('render list view', async () => {
-    const { getByText, container } = render(
+    render(
       <TestWrapper pathParams={params} defaultAppStoreValues={defaultAppStoreValues}>
         <PipelineResourceModal {...props}></PipelineResourceModal>
       </TestWrapper>
     )
-    await waitFor(() => getByText('common.pipeline'))
-    jest.runOnlyPendingTimers()
-
-    expect(container).toMatchSnapshot()
+    expect(
+      await screen.findByRole('link', {
+        name: /Sonar Develop/i
+      })
+    ).toBeInTheDocument()
   })
 })

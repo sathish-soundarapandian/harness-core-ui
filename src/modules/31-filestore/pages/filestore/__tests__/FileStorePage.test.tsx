@@ -76,7 +76,7 @@ describe('Define file store component', () => {
   const fsContext = getDummyFileStoreContextValue()
 
   test('should render filters', async () => {
-    const { container } = render(<WrapperComponent isModalView={false} />)
+    const { container } = render(<WrapperComponent isModalView={false} contextProps={{ ...fsContext }} />)
     expect(container).toBeTruthy()
 
     const filterBtn = container.querySelector('[id="ngfilterbtn"]') as HTMLButtonElement
@@ -96,6 +96,7 @@ describe('Define file store component', () => {
     const { container } = render(
       <WrapperComponent
         contextProps={{
+          ...getDummyFileStoreContextValue(),
           isModalView: true,
           isCachedNode: jest.fn().mockReturnValue(true),
           tempNodes: [fsContext.currentNode]
@@ -109,6 +110,7 @@ describe('Define file store component', () => {
     const { container } = render(
       <WrapperComponent
         contextProps={{
+          ...getDummyFileStoreContextValue(),
           isModalView: true,
           isCachedNode: jest.fn().mockReturnValue(false),
           unsavedNodes: [fsContext.currentNode]

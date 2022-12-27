@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { useParams, NavLink } from 'react-router-dom'
+import cx from 'classnames'
 import { Container, Text, FlexExpander, Layout } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { delegateTypeToIcon } from '@common/utils/delegateUtils'
@@ -32,12 +33,14 @@ interface DelegateOverviewProps {
   delegate: DelegateGroupDetails
   delegateProfile?: DelegateProfileDetails
   showConnectivityStatus?: boolean
+  className?: string
 }
 
 export const DelegateOverview: React.FC<DelegateOverviewProps> = ({
   delegate,
   delegateProfile,
-  showConnectivityStatus
+  showConnectivityStatus,
+  className = ''
 }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<
@@ -54,7 +57,7 @@ export const DelegateOverview: React.FC<DelegateOverviewProps> = ({
     <SectionContainer>
       <SectionContainerTitle>{getString('overview')}</SectionContainerTitle>
 
-      <Container className={css.delegateDetailsContainer}>
+      <Container className={cx(css.delegateDetailsContainer, className)}>
         <Container flex style={{ borderBottom: '0.5px solid #dce0e7' }}>
           <SectionLabelValuePair label={getString('delegate.delegateName')} value={delegate.groupName} />
 

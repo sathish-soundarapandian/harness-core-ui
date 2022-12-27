@@ -93,7 +93,7 @@ function HelmWithOCI({
     return {
       identifier: '',
       helmVersion: 'V380',
-      basePath: '',
+      basePath: '/',
       chartName: '',
       chartVersion: '',
       skipResourceVersioning: false,
@@ -152,16 +152,6 @@ function HelmWithOCI({
             .notOneOf(['latest'], getString('pipeline.manifestType.oci.chartVersionValidation')),
           chartName: Yup.string().trim().required(getString('pipeline.manifestType.http.chartNameRequired')),
           helmVersion: Yup.string().trim().required(getString('pipeline.manifestType.helmVersionRequired')),
-          valuesPaths: Yup.lazy((value): Yup.Schema<unknown> => {
-            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-              return Yup.array().of(
-                Yup.object().shape({
-                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
-                })
-              )
-            }
-            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
-          }),
           commandFlags: Yup.array().of(
             Yup.object().shape({
               flag: Yup.string().when('commandType', {

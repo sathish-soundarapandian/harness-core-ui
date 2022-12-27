@@ -264,7 +264,10 @@ const ElastigroupInfraSpecEditable: React.FC<ElastigroupInfraSpecEditableProps> 
                 margin={{ bottom: 'medium', top: 16 }}
                 spacing="medium"
               >
-                <Text font={{ variation: FontVariation.FORM_SUB_SECTION }}>
+                <Text
+                  font={{ variation: FontVariation.FORM_SUB_SECTION }}
+                  tooltipProps={{ dataTooltipId: 'elastigroupConfig' }}
+                >
                   {getString('cd.steps.elastigroup.elastigroupConfig')}
                 </Text>
               </Layout.Vertical>

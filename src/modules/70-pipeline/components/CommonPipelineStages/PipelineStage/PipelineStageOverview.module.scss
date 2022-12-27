@@ -25,3 +25,29 @@
 .outputPanel {
   width: 924px;
 }
+
+.accordion {
+  margin-top: var(--spacing-7);
+  > div {
+    padding: 0 !important;
+  }
+  :global(.bp3-collapse-body > div) {
+    padding: 0;
+  }
+}
+
+.variableSectionCard {
+  width: 1024px;
+  margin-top: var(--spacing-small);
+  .tabSubHeading {
+    font-size: var(--font-size-normal);
+    color: var(--grey-700);
+    margin-bottom: var(--spacing-5);
+    font-weight: 600;
+  }
+}
+
+.childPipelineDetails {
+  display: flex;
+  align-items: center;
+}

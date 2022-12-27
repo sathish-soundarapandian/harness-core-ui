@@ -4555,6 +4555,7 @@ exports[`Create Github connector Wizard should render form for edit http and aut
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -5371,6 +5372,7 @@ exports[`Create Github connector Wizard should render form for edit http and aut
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"

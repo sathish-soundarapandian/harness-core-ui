@@ -165,7 +165,7 @@ export class ShellScriptProvisionStep extends PipelineStep<ShellScriptProvisionD
   protected stepName = 'Shell Script Provision'
   protected stepIcon: IconName = 'script'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ShellScriptProvision'
-  protected referenceId = 'shellScriptProvisionHelpPanel' //todossp
+  protected referenceId = 'shellScriptProvisionHelpPanel'
   protected isHarnessSpecific = false
   protected invocationMap: Map<
     RegExp,

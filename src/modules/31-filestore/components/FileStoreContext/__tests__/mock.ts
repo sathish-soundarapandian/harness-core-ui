@@ -6,6 +6,7 @@
  */
 
 import type { FileStoreContextState } from '@filestore/components/FileStoreContext/FileStoreContext'
+import { SORT_TYPE } from '@filestore/interfaces/FileStore'
 
 export const contextFSMock = {
   currentNode: {
@@ -56,6 +57,30 @@ export const contextFSMock = {
       content: null,
       size: 3,
       parentName: 'Root'
+    },
+    {
+      identifier: 'asd13',
+      parentIdentifier: 'Root',
+      name: 'asd13',
+      type: 'FILE',
+      path: '/asd13',
+      lastModifiedAt: 16646080289996,
+      lastModifiedBy: {
+        name: 'autouser1@harness.io',
+        email: 'autouser1@harness.io'
+      },
+      fileUsage: 'MANIFEST_FILE',
+      description: 'desc',
+      tags: [
+        {
+          key: 'asd',
+          value: ''
+        }
+      ],
+      mimeType: 'txt',
+      content: null,
+      size: 3,
+      parentName: 'Root'
     }
   ],
   loading: false,
@@ -69,7 +94,10 @@ export const contextFSMock = {
     projectIdentifier: 'proj1'
   },
   deletedNode: '',
-  unsavedNodes: []
+  unsavedNodes: [],
+  sortNode: [{ identifier: 'Root', sortType: SORT_TYPE.ALPHABETICAL }],
+  globalSort: SORT_TYPE.ALPHABETICAL,
+  closedNode: ''
 }
 
 export const getDummyFileStoreContextValue = (): FileStoreContextState => {
@@ -88,7 +116,72 @@ export const getDummyFileStoreContextValue = (): FileStoreContextState => {
     addDeletedNode: jest.fn(),
     removeFromTempNodes: jest.fn(),
     isCachedNode: jest.fn(),
-    handleSetIsUnsaved: jest.fn()
+    handleSetIsUnsaved: jest.fn(),
+    handleCloseNode: jest.fn(),
+    isClosedNode: jest.fn(),
+    updateSortNode: jest.fn(),
+    getSortTypeById: jest.fn(),
+    updateGlobalSort: jest.fn()
+  } as any
+}
+
+export const getDummyFileStoreContextValueWithFolderChildren = (): FileStoreContextState => {
+  return {
+    ...contextFSMock,
+    currentNode: {
+      identifier: 'Root',
+      parentIdentifier: '',
+      name: '/',
+      type: 'FOLDER',
+      path: '/',
+      lastModifiedAt: null,
+      lastModifiedBy: null,
+      children: [
+        {
+          identifier: 'asd12',
+          parentIdentifier: 'Root',
+          name: 'asd12',
+          type: 'FILE',
+          path: '/asd12',
+          lastModifiedAt: 1664608028996,
+          lastModifiedBy: {
+            name: 'autouser1@harness.io',
+            email: 'autouser1@harness.io'
+          },
+          fileUsage: 'MANIFEST_FILE',
+          description: 'desc',
+          tags: [
+            {
+              key: 'asd',
+              value: ''
+            }
+          ],
+          mimeType: 'txt',
+          content: 'asd',
+          size: 3,
+          initialContent: 'asd'
+        }
+      ]
+    },
+    setCurrentNode: jest.fn(),
+    setFileStore: jest.fn(),
+    updateFileStore: jest.fn(),
+    getNode: jest.fn(),
+    setLoading: jest.fn(),
+    setActiveTab: jest.fn(),
+    updateCurrentNode: jest.fn(),
+    setTempNodes: jest.fn(),
+    setUnsavedNodes: jest.fn(),
+    updateTempNodes: jest.fn(),
+    addDeletedNode: jest.fn(),
+    removeFromTempNodes: jest.fn(),
+    isCachedNode: jest.fn(),
+    handleSetIsUnsaved: jest.fn(),
+    handleCloseNode: jest.fn(),
+    isClosedNode: jest.fn(),
+    updateSortNode: jest.fn(),
+    getSortTypeById: jest.fn(),
+    updateGlobalSort: jest.fn()
   } as any
 }
 

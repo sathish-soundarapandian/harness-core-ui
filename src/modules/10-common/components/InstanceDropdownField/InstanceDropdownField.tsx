@@ -87,7 +87,7 @@ export function getInstanceDropdownSchema(
           if (getMultiTypeFromValue(value as unknown as string) !== MultiTypeInputType.FIXED) {
             return true
           }
-          if (required && isNil(value)) {
+          if (required && (isNil(value) || value === '')) {
             return this.createError({
               message: requiredErrorMessage || getString('common.instanceValidation.required')
             })
@@ -102,7 +102,7 @@ export function getInstanceDropdownSchema(
           }
         } else if (type === InstanceTypes.Percentage) {
           const value = this.parent?.spec?.percentage
-          if (required && isNil(value)) {
+          if (required && (isNil(value) || value === '')) {
             return this.createError({
               message: requiredErrorMessage || getString('common.instanceValidation.required')
             })
@@ -166,8 +166,8 @@ export const InstanceDropdownField: React.FC<InstanceDropdownFieldProps> = ({
           placeholder: isPercentageType
             ? getString('instanceFieldOptions.percentagePlaceHolder')
             : getString('instanceFieldOptions.instanceHolder'),
-          ...textProps,
-          min: 1
+          min: 1,
+          ...textProps
         }}
         onChange={(val, _valType, typeInput) => {
           let finalValue: string | number | undefined
@@ -226,8 +226,13 @@ export interface FormInstanceDropdownFieldProps extends Omit<InstanceDropdownFie
   readonly?: boolean
   enableConfigureOptions?: boolean
   configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
+  defaultValue?: InstanceFieldValue
 }
 
+const defaultInitialValue = {
+  type: InstanceTypes.Instances,
+  spec: { count: 0 }
+}
 const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (props): JSX.Element => {
   const {
     label,
@@ -241,6 +246,7 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
     readonly,
     enableConfigureOptions = false,
     configureOptionsProps,
+    defaultValue,
     ...restProps
   } = props
   const hasError = errorCheck(`${name}.type`, formik)
@@ -251,7 +257,7 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
     ...rest
   } = restProps
 
-  const value: InstanceFieldValue = get(formik?.values, name, { type: InstanceTypes.Instances, spec: { count: 0 } })
+  const value: InstanceFieldValue = get(formik?.values, name, defaultValue || defaultInitialValue)
   const valueForConfigureOptions = (value?.spec?.count as string) || (value?.spec?.percentage as string)
 
   const tooltipContext = React.useContext(FormikTooltipContext)

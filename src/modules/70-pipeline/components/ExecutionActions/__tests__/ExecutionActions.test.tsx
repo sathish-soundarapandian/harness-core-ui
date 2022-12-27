@@ -6,10 +6,8 @@
  */
 
 import React from 'react'
-import { render, fireEvent, findByText, act, RenderResult, waitFor, screen } from '@testing-library/react'
-import { renderHook } from '@testing-library/react-hooks'
+import { render, fireEvent, findByText, act, RenderResult, waitFor, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { useStrings } from 'framework/strings'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useFeaturesLib from '@common/hooks/useFeatures'
 import routes from '@common/RouteDefinitions'
@@ -257,7 +255,7 @@ describe('<ExecutionActions /> tests', () => {
     expect(result!.container).toMatchSnapshot('repeat button should be disabled as cd, ci are not allowed')
   })
 
-  test('do not show the edit buttonif prop is false', () => {
+  test('do not show the edit button if prop is false', () => {
     const mutate = jest.fn()
     ;(useHandleInterrupt as jest.Mock).mockImplementation(() => ({
       mutate,
@@ -265,30 +263,27 @@ describe('<ExecutionActions /> tests', () => {
       data: null
     }))
 
-    let result: RenderResult
+    const { baseElement } = render(
+      <TestWrapper path={TEST_PATH} pathParams={pathParams}>
+        <ExecutionActions
+          source="executions"
+          params={pathParams as any}
+          executionStatus="Expired"
+          refetch={jest.fn()}
+          showEditButton={false}
+        />
+      </TestWrapper>
+    )
 
-    act(() => {
-      result = render(
-        <TestWrapper path={TEST_PATH} pathParams={pathParams}>
-          <ExecutionActions
-            source="executions"
-            params={pathParams as any}
-            executionStatus="Expired"
-            refetch={jest.fn()}
-            showEditButton={false}
-          />
-        </TestWrapper>
-      )
-    })
     userEvent.click(
       screen.getByRole('button', {
         name: /execution menu actions/i
       })
     )
-    const menuItems = result!.baseElement.querySelectorAll('.bp3-menu-item')
-    const viewPipelineMenuItem = Array.from(menuItems).find(item => item.textContent === 'editPipeline')
-    expect(viewPipelineMenuItem).toBeInTheDocument()
-    expect(viewPipelineMenuItem).toHaveAttribute('hidden')
+
+    const menu = baseElement.querySelector('.bp3-menu')
+    expect(menu).toBeInTheDocument()
+    expect(within(menu as HTMLElement).queryByText('editPipeline')).not.toBeInTheDocument()
   })
 
   test('when showEditButton is true and canEdit is false, View Pipeline button should appear', () => {
@@ -315,12 +310,7 @@ describe('<ExecutionActions /> tests', () => {
     expect(viewPipelineBtn.parentElement?.parentElement).not.toHaveAttribute('hidden')
   })
 
-  test('Open in new tab button visible on Execution History', () => {
-    const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
-      <TestWrapper>{children}</TestWrapper>
-    )
-    const { result } = renderHook(() => useStrings(), { wrapper })
-
+  test('renders View Execution link if isExecutionListView prop is true', () => {
     const { orgIdentifier, pipelineIdentifier, executionIdentifier, projectIdentifier, accountId } = pathParams
     const module: Module = pathParams.module as Module
 
@@ -334,7 +324,7 @@ describe('<ExecutionActions /> tests', () => {
       source: 'executions'
     })
 
-    const { getByText } = render(
+    const { baseElement } = render(
       <TestWrapper path={pipelineDeploymentListPage} pathParams={pathParams}>
         <ExecutionActions
           params={pathParams as any}
@@ -353,17 +343,13 @@ describe('<ExecutionActions /> tests', () => {
       })
     )
 
-    const openInNewTabButton = getByText(result.current.getString('pipeline.viewExecution')) as HTMLAnchorElement
-    expect(openInNewTabButton).toHaveAttribute('href', executionPipelineViewRoute)
+    const viewExecutionLink = baseElement.querySelector(`[href="${executionPipelineViewRoute}"]`) as HTMLAnchorElement
+    expect(viewExecutionLink).toBeInTheDocument()
+    expect(within(viewExecutionLink).getByText('pipeline.viewExecution')).toBeInTheDocument()
   })
 
-  test('Open in new tab button unavailable on Pipeline View page', () => {
-    const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
-      <TestWrapper>{children}</TestWrapper>
-    )
-    const { result } = renderHook(() => useStrings(), { wrapper })
-
-    const { queryByText } = render(
+  test('should not render View Execution item if isExecutionListView prop is false', () => {
+    render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
         <ExecutionActions
           params={pathParams as any}
@@ -371,6 +357,7 @@ describe('<ExecutionActions /> tests', () => {
           refetch={jest.fn()}
           source="executions"
           showEditButton={false}
+          isExecutionListView={false}
         />
       </TestWrapper>
     )
@@ -381,7 +368,6 @@ describe('<ExecutionActions /> tests', () => {
       })
     )
 
-    const openInNewTabButton = queryByText(result.current.getString('pipeline.openInNewTab'))
-    expect(openInNewTabButton).not.toBeInTheDocument()
+    expect(screen.queryByText('pipeline.viewExecution')).not.toBeInTheDocument()
   })
 })

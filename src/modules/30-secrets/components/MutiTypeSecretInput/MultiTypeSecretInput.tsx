@@ -36,6 +36,7 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import { getReference } from '@common/utils/utils'
 import { useCreateWinRmCredModal } from '@secrets/modals/CreateWinRmCredModal/useCreateWinRmCredModal'
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { SecretRef } from '@secrets/components/SecretReference/SecretReference'
 import css from './MultiTypeSecretInput.module.scss'
 
 export function getMultiTypeSecretInputType(serviceType: string): SecretResponseWrapper['secret']['type'] {
@@ -147,8 +148,8 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
         onSuccess?.(secret)
       },
       secretsListMockData,
-      handleInlineSSHSecretCreation: () => openCreateSSHCredModal(),
-      handleInlineWinRmSecretCreation: () => openCreateWinRmCredModal()
+      handleInlineSSHSecretCreation: (record?: SecretRef) => openCreateSSHCredModal(record),
+      handleInlineWinRmSecretCreation: (record?: SecretRef) => openCreateWinRmCredModal(record)
     },
     [name, onSuccess],
     value

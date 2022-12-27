@@ -31,7 +31,8 @@ import {
   getConnectorIdValue,
   getArtifactFormData,
   helperTextData,
-  isFieldFixedAndNonEmpty
+  isFieldFixedAndNonEmpty,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   ArtifactType,
@@ -55,7 +56,6 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../../ArtifactConnector.module.scss'
 
 export const repositoryType: SelectOption[] = [
@@ -101,7 +101,7 @@ function FormComponent(
   const projectValue = getGenuineValue(formik.values.spec.project || initialValues?.spec?.project)
   const regionValue = getGenuineValue(formik.values.spec.region || initialValues?.spec?.region)
   const repositoryNameValue = getGenuineValue(formik.values?.spec.repositoryName || initialValues?.spec?.repositoryName)
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const {
     data: buildDetails,
@@ -188,18 +188,16 @@ function FormComponent(
       <div className={cx(css.artifactForm, formClassName)}>
         {isMultiArtifactSource && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
-        <div className={css.jenkinsFieldContainer}>
-          <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <FormInput.Select
-              items={repositoryType}
-              name="spec.repositoryType"
-              label={getString('repositoryType')}
-              placeholder={getString('pipeline.artifactsSelection.repositoryTypePlaceholder')}
-              disabled
-            />
-          </div>
+        <div className={css.imagePathContainer}>
+          <FormInput.Select
+            items={repositoryType}
+            name="spec.repositoryType"
+            label={getString('repositoryType')}
+            placeholder={getString('pipeline.artifactsSelection.repositoryTypePlaceholder')}
+            disabled
+          />
         </div>
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <FormInput.MultiTextInput
             name="spec.project"
             label={getString('projectLabel')}
@@ -224,7 +222,7 @@ function FormComponent(
             />
           )}
         </div>
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             label={getString('regionLabel')}
             name="spec.region"
@@ -232,12 +230,12 @@ function FormComponent(
             placeholder={getString('pipeline.regionPlaceholder')}
             multiTypeInputProps={{
               onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.region', type),
-              width: 500,
               expressions,
               selectProps: {
                 allowCreatingNewItems: true,
                 addClearBtn: !isReadonly,
-                items: regions
+                items: regions,
+                usePortal: false
               },
               allowableTypes
             }}
@@ -260,7 +258,7 @@ function FormComponent(
             </div>
           )}
         </div>
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <FormInput.MultiTextInput
             name="spec.repositoryName"
             label={getString('common.repositoryName')}
@@ -285,7 +283,7 @@ function FormComponent(
             />
           )}
         </div>
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <FormInput.MultiTextInput
             name="spec.package"
             label={getString('pipeline.testsReports.callgraphField.package')}
@@ -320,7 +318,7 @@ function FormComponent(
           />
         </div>
         {formik.values.versionType === 'value' ? (
-          <div className={css.jenkinsFieldContainer}>
+          <div className={css.imagePathContainer}>
             <FormInput.MultiTypeInput
               selectItems={getBuilds()}
               disabled={!isAllFieldsAreFixed()}
@@ -342,7 +340,8 @@ function FormComponent(
                   ),
                   itemRenderer: itemRenderer,
                   items: getBuilds(),
-                  allowCreatingNewItems: true
+                  allowCreatingNewItems: true,
+                  usePortal: false
                 },
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (
@@ -381,7 +380,7 @@ function FormComponent(
             )}
           </div>
         ) : (
-          <div className={css.jenkinsFieldContainer}>
+          <div className={css.imagePathContainer}>
             <FormInput.MultiTextInput
               name="spec.versionRegex"
               label={getString('pipeline.artifactsSelection.versionRegex')}
@@ -408,7 +407,7 @@ function FormComponent(
           </div>
         )}
       </div>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Layout.Horizontal spacing="medium">
           <Button
             variation={ButtonVariation.SECONDARY}
@@ -434,7 +433,7 @@ export function GoogleArtifactRegistry(
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const getInitialValues = (): GoogleArtifactRegistryInitialValuesType => {
     return getArtifactFormData(
@@ -473,7 +472,7 @@ export function GoogleArtifactRegistry(
   }
 
   const handleValidate = (formData: GoogleArtifactRegistryInitialValuesType) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData(
         {
           ...formData
@@ -526,7 +525,7 @@ export function GoogleArtifactRegistry(
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>

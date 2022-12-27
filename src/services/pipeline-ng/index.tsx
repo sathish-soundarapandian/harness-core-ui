@@ -954,6 +954,7 @@ export interface ContainerResource {
 }
 
 export type ContainerStepInfo = StepSpecType & {
+  command: string
   connectorRef?: string
   delegateSelectors?: string[]
   entrypoint?: string[]
@@ -961,11 +962,13 @@ export type ContainerStepInfo = StepSpecType & {
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
   infrastructure: ContainerStepInfra
   metadata?: string
+  outputVariables?: OutputNGVariable[]
   privileged?: boolean
   resources: ContainerResource
   retry?: number
   runAsUser?: number
   settings?: ParameterFieldMapStringJsonNode
+  shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh'
   uses?: string
 }
 
@@ -2040,6 +2043,11 @@ export interface ExecutionWrapperConfig {
   parallel?: ParallelStepElementConfig
   step?: StepElementConfig
   stepGroup?: StepGroupElementConfig
+}
+
+export interface ExecutionsCount {
+  newCount?: number
+  totalCount?: number
 }
 
 export interface ExecutorInfoDTO {
@@ -3303,6 +3311,11 @@ export interface OrgProjectIdentifier {
   projectIdentifier?: string
 }
 
+export interface OutputNGVariable {
+  description?: string
+  name?: string
+}
+
 export type OverlayInputSetErrorWrapper = ErrorMetadataDTO & {
   invalidReferences?: {
     [key: string]: string
@@ -4180,6 +4193,13 @@ export interface ResponseExecutionInputVariablesResponse {
 export interface ResponseExecutionNode {
   correlationId?: string
   data?: ExecutionNode
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseExecutionsCount {
+  correlationId?: string
+  data?: ExecutionsCount
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -6006,6 +6026,8 @@ export interface PipelineExecutionInterrupt {
 export type FilterDTORequestBody = FilterDTO
 
 export type FilterPropertiesRequestBody = FilterProperties
+
+export type LandingDashboardRequestPMSRequestBody = LandingDashboardRequestPMS
 
 export type MergeInputSetRequestRequestBody = MergeInputSetRequest
 
@@ -8170,6 +8192,85 @@ export const yamlDiffForInputSetPromise = (
     YamlDiffForInputSetPathParams
   >(getConfig('pipeline/api'), `/inputSets/${inputSetIdentifier}/yaml-diff`, props, signal)
 
+export interface GetExecutionsCountQueryParams {
+  accountIdentifier: string
+  startTime: number
+  endTime: number
+}
+
+export type GetExecutionsCountProps = Omit<
+  MutateProps<
+    ResponseExecutionsCount,
+    Failure | Error,
+    GetExecutionsCountQueryParams,
+    LandingDashboardRequestPMSRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get pipeline executions count
+ */
+export const GetExecutionsCount = (props: GetExecutionsCountProps) => (
+  <Mutate<
+    ResponseExecutionsCount,
+    Failure | Error,
+    GetExecutionsCountQueryParams,
+    LandingDashboardRequestPMSRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/landingDashboards/executionsCount`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetExecutionsCountProps = Omit<
+  UseMutateProps<
+    ResponseExecutionsCount,
+    Failure | Error,
+    GetExecutionsCountQueryParams,
+    LandingDashboardRequestPMSRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get pipeline executions count
+ */
+export const useGetExecutionsCount = (props: UseGetExecutionsCountProps) =>
+  useMutate<
+    ResponseExecutionsCount,
+    Failure | Error,
+    GetExecutionsCountQueryParams,
+    LandingDashboardRequestPMSRequestBody,
+    void
+  >('POST', `/landingDashboards/executionsCount`, { base: getConfig('pipeline/api'), ...props })
+
+/**
+ * Get pipeline executions count
+ */
+export const getExecutionsCountPromise = (
+  props: MutateUsingFetchProps<
+    ResponseExecutionsCount,
+    Failure | Error,
+    GetExecutionsCountQueryParams,
+    LandingDashboardRequestPMSRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseExecutionsCount,
+    Failure | Error,
+    GetExecutionsCountQueryParams,
+    LandingDashboardRequestPMSRequestBody,
+    void
+  >('POST', getConfig('pipeline/api'), `/landingDashboards/executionsCount`, props, signal)
+
 export interface GetPipelinesCountQueryParams {
   accountIdentifier: string
   startTime: number
@@ -8177,7 +8278,13 @@ export interface GetPipelinesCountQueryParams {
 }
 
 export type GetPipelinesCountProps = Omit<
-  MutateProps<ResponsePipelinesCount, Failure | Error, GetPipelinesCountQueryParams, LandingDashboardRequestPMS, void>,
+  MutateProps<
+    ResponsePipelinesCount,
+    Failure | Error,
+    GetPipelinesCountQueryParams,
+    LandingDashboardRequestPMSRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -8185,7 +8292,13 @@ export type GetPipelinesCountProps = Omit<
  * Get pipelines count
  */
 export const GetPipelinesCount = (props: GetPipelinesCountProps) => (
-  <Mutate<ResponsePipelinesCount, Failure | Error, GetPipelinesCountQueryParams, LandingDashboardRequestPMS, void>
+  <Mutate<
+    ResponsePipelinesCount,
+    Failure | Error,
+    GetPipelinesCountQueryParams,
+    LandingDashboardRequestPMSRequestBody,
+    void
+  >
     verb="POST"
     path={`/landingDashboards/pipelinesCount`}
     base={getConfig('pipeline/api')}
@@ -8198,7 +8311,7 @@ export type UseGetPipelinesCountProps = Omit<
     ResponsePipelinesCount,
     Failure | Error,
     GetPipelinesCountQueryParams,
-    LandingDashboardRequestPMS,
+    LandingDashboardRequestPMSRequestBody,
     void
   >,
   'path' | 'verb'
@@ -8208,11 +8321,13 @@ export type UseGetPipelinesCountProps = Omit<
  * Get pipelines count
  */
 export const useGetPipelinesCount = (props: UseGetPipelinesCountProps) =>
-  useMutate<ResponsePipelinesCount, Failure | Error, GetPipelinesCountQueryParams, LandingDashboardRequestPMS, void>(
-    'POST',
-    `/landingDashboards/pipelinesCount`,
-    { base: getConfig('pipeline/api'), ...props }
-  )
+  useMutate<
+    ResponsePipelinesCount,
+    Failure | Error,
+    GetPipelinesCountQueryParams,
+    LandingDashboardRequestPMSRequestBody,
+    void
+  >('POST', `/landingDashboards/pipelinesCount`, { base: getConfig('pipeline/api'), ...props })
 
 /**
  * Get pipelines count
@@ -8222,7 +8337,7 @@ export const getPipelinesCountPromise = (
     ResponsePipelinesCount,
     Failure | Error,
     GetPipelinesCountQueryParams,
-    LandingDashboardRequestPMS,
+    LandingDashboardRequestPMSRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -8231,7 +8346,7 @@ export const getPipelinesCountPromise = (
     ResponsePipelinesCount,
     Failure | Error,
     GetPipelinesCountQueryParams,
-    LandingDashboardRequestPMS,
+    LandingDashboardRequestPMSRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/landingDashboards/pipelinesCount`, props, signal)
 
@@ -15118,6 +15233,20 @@ export interface GetSchemaYamlQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'Container'
+    | 'IACM'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
+    | 'AsgCanaryDeploy'
+    | 'AsgCanaryDelete'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'TanzuCommand'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -15381,6 +15510,20 @@ export interface GetStepYamlSchemaQueryParams {
     | 'IACMStage'
     | 'IACMStep'
     | 'IACM'
+    | 'Container'
+    | 'IACM'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
+    | 'AsgCanaryDeploy'
+    | 'AsgCanaryDelete'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'TanzuCommand'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

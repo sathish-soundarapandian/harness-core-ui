@@ -35,26 +35,32 @@ export const rowData = {
 
 export const changeSummary = {
   categoryCountMap: {
-    Deployment: { count: 0, countInPrecedingWindow: 0 },
-    Infrastructure: { count: 0, countInPrecedingWindow: 0 },
-    Alert: { count: 0, countInPrecedingWindow: 0 }
-  }
+    Deployment: { count: 0, countInPrecedingWindow: 0, percentageChange: 0 },
+    Infrastructure: { count: 0, countInPrecedingWindow: 0, percentageChange: 0 },
+    FeatureFlag: { count: 0, countInPrecedingWindow: 0, percentageChange: 0 },
+    Alert: { count: 0, countInPrecedingWindow: 0, percentageChange: 0 }
+  },
+  total: { count: 0, countInPrecedingWindow: 0, percentageChange: 0 }
 }
 
 export const changeSummaryWithPositiveChange = {
   categoryCountMap: {
-    Deployment: { count: 15, countInPrecedingWindow: 10 },
-    Infrastructure: { count: 15, countInPrecedingWindow: 10 },
-    Alert: { count: 15, countInPrecedingWindow: 10 }
-  }
+    Deployment: { count: 15, countInPrecedingWindow: 10, percentageChange: 50 },
+    Infrastructure: { count: 15, countInPrecedingWindow: 10, percentageChange: 50 },
+    FeatureFlag: { count: 15, countInPrecedingWindow: 10, percentageChange: 50 },
+    Alert: { count: 15, countInPrecedingWindow: 10, percentageChange: 50 }
+  },
+  total: { count: 60, countInPrecedingWindow: 40, percentageChange: 50 }
 }
 
 export const changeSummaryWithNegativeChange = {
   categoryCountMap: {
-    Deployment: { count: 10, countInPrecedingWindow: 15 },
-    Infrastructure: { count: 10, countInPrecedingWindow: 15 },
-    Alert: { count: 10, countInPrecedingWindow: 15 }
-  }
+    Deployment: { count: 10, countInPrecedingWindow: 15, percentageChange: -33.3 },
+    Infrastructure: { count: 10, countInPrecedingWindow: 15, percentageChange: -33.3 },
+    FeatureFlag: { count: 10, countInPrecedingWindow: 15, percentageChange: -33.3 },
+    Alert: { count: 10, countInPrecedingWindow: 15, percentageChange: -33.3 }
+  },
+  total: { count: 40, countInPrecedingWindow: 60, percentageChange: -33.3 }
 }
 
 export const serviceCountData: CountServiceDTO = {
@@ -72,6 +78,7 @@ const MSListContent: MonitoredServiceListItemDTO[] = [
     environmentRef: 'new_env_test',
     type: 'Application',
     healthMonitoringEnabled: true,
+    serviceLicenseEnabled: true,
     historicalTrend: {
       healthScores: [{ riskStatus: RiskValues.NO_DATA }]
     },
@@ -85,6 +92,7 @@ const MSListContent: MonitoredServiceListItemDTO[] = [
     environmentRef: 'AppDTestEnv1',
     serviceName: 'ServiceName 2',
     environmentName: 'EnvironmentName 2',
+    serviceLicenseEnabled: true,
     type: 'Application',
     healthMonitoringEnabled: true,
     historicalTrend: {
@@ -100,6 +108,7 @@ const MSListContent: MonitoredServiceListItemDTO[] = [
     environmentRef: 'AppDTestEnv2',
     serviceName: 'ServiceName 3',
     environmentName: 'EnvironmentName 3',
+    serviceLicenseEnabled: true,
     type: 'Application',
     healthMonitoringEnabled: true,
     historicalTrend: {
@@ -110,6 +119,44 @@ const MSListContent: MonitoredServiceListItemDTO[] = [
   }
 ]
 
+const MSListContentMock2: MonitoredServiceListItemDTO[] = [
+  {
+    name: 'delete me test',
+    identifier: 'delete_me_test',
+    serviceRef: 'AppDService',
+    serviceName: 'ServiceName 1',
+    environmentName: 'EnvironmentName 1',
+    environmentRef: 'new_env_test',
+    type: 'Application',
+    healthMonitoringEnabled: true,
+    serviceLicenseEnabled: false,
+    historicalTrend: {
+      healthScores: [{ riskStatus: RiskValues.NO_DATA }]
+    },
+    currentHealthScore: { riskStatus: RiskValues.HEALTHY, healthScore: 100 },
+    tags: { hi: '', new: '', yes: '', again: '', now: '', why: '' }
+  }
+]
+
+const MSListContentEnforcementMock: MonitoredServiceListItemDTO[] = [
+  {
+    name: 'delete me test',
+    identifier: 'delete_me_test',
+    serviceRef: 'AppDService',
+    serviceName: 'ServiceName 1',
+    environmentName: 'EnvironmentName 1',
+    environmentRef: 'new_env_test',
+    type: 'Application',
+    healthMonitoringEnabled: true,
+    serviceLicenseEnabled: false,
+    historicalTrend: {
+      healthScores: [{ riskStatus: RiskValues.NO_DATA }]
+    },
+    currentHealthScore: { riskStatus: RiskValues.HEALTHY, healthScore: 100 },
+    tags: { hi: '', new: '', yes: '', again: '', now: '', why: '' }
+  }
+]
+
 export const MSListData: ResponsePageMonitoredServiceListItemDTO = {
   data: {
     totalPages: 1,
@@ -117,6 +164,28 @@ export const MSListData: ResponsePageMonitoredServiceListItemDTO = {
     pageItemCount: serviceCountData.allServicesCount,
     pageSize: 10,
     content: MSListContent,
+    pageIndex: 0
+  }
+}
+
+export const MSListDataMock: ResponsePageMonitoredServiceListItemDTO = {
+  data: {
+    totalPages: 1,
+    totalItems: serviceCountData.allServicesCount,
+    pageItemCount: serviceCountData.allServicesCount,
+    pageSize: 10,
+    content: MSListContentMock2,
+    pageIndex: 0
+  }
+}
+
+export const MSListDataEnforcementMock: ResponsePageMonitoredServiceListItemDTO = {
+  data: {
+    totalPages: 1,
+    totalItems: serviceCountData.allServicesCount,
+    pageItemCount: serviceCountData.allServicesCount,
+    pageSize: 10,
+    content: MSListContentEnforcementMock,
     pageIndex: 0
   }
 }
@@ -189,6 +258,7 @@ export const monitoredServiceMockData = {
   monitoredService: {
     orgIdentifier: 'default',
     projectIdentifier: 'Demo',
+    enabled: true,
     identifier: 'monitored-service',
     name: 'Monitoring service 102 new',
     type: 'Application',
@@ -237,6 +307,14 @@ export const monitoredServiceMockData = {
   }
 }
 
+export const monitoredServiceMockData2 = {
+  ...monitoredServiceMockData,
+  monitoredService: {
+    ...monitoredServiceMockData.monitoredService,
+    enabled: false
+  }
+}
+
 export const monitoredService: MonitoredServiceListItemDTO = {
   name: 'name',
   identifier: 'identifier',
@@ -271,5 +349,13 @@ export const monitoredService: MonitoredServiceListItemDTO = {
         countInPrecedingWindow: 0
       }
     }
+  }
+}
+
+export const checkFeatureReturnMock = {
+  enabled: true,
+  featureDetail: {
+    count: 1,
+    limit: 5
   }
 }

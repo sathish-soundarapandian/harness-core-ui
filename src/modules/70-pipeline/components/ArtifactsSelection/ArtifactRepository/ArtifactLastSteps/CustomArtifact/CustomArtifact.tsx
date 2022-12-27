@@ -43,7 +43,8 @@ import {
   getArtifactFormData,
   isFieldFixedAndNonEmpty,
   helperTextData,
-  shellScriptType
+  shellScriptType,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -84,7 +85,7 @@ function FormContent({
   formClassName
 }: any): React.ReactElement {
   const { getString } = useStrings()
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -180,7 +181,7 @@ function FormContent({
 
   return (
     <FormikForm>
-      <div className={cx(css.artifactForm, formClassName)}>
+      <div className={cx(css.artifactForm, css.customArtifactForm, formClassName)}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <ThumbnailSelect
@@ -595,7 +596,7 @@ function FormContent({
           </>
         ) : null}
       </div>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Layout.Horizontal spacing="medium">
           <Button
             variation={ButtonVariation.SECONDARY}
@@ -621,10 +622,9 @@ export function CustomArtifact(
   const { context, initialValues, artifactIdentifiers, selectedArtifact, handleSubmit, prevStepData } = props
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
-
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const schemaObject = {
-    spec: Yup.object().when('type', {
+    spec: Yup.object().when('formType', {
       is: formFillingMethod.MANUAL,
       then: Yup.object().shape({
         version: Yup.string()
@@ -709,9 +709,15 @@ export function CustomArtifact(
     handleSubmit(filteredFormData)
   }
 
+  const handleValidate = (formData: CustomArtifactSource) => {
+    if (hideHeaderAndNavBtns) {
+      submitFormData?.({ ...formData })
+    }
+  }
+
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>
@@ -720,6 +726,7 @@ export function CustomArtifact(
         initialValues={getInitialValues()}
         formName="imagePath"
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData?.({ ...formData })
         }}

@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { render, getByText, fireEvent, waitFor } from '@testing-library/react'
+import { noop } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   PipelineContext,
@@ -64,7 +65,7 @@ describe('Service Configuration', () => {
         }}
       >
         <PipelineContext.Provider value={pipelineMockData}>
-          <ServiceConfiguration serviceData={serviceConfigProps} />
+          <ServiceConfiguration setHasYamlValidationErrors={noop} serviceData={serviceConfigProps} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -82,7 +83,7 @@ describe('Service Configuration', () => {
         }}
       >
         <PipelineContext.Provider value={pipelineMockData}>
-          <ServiceConfiguration serviceData={serviceConfigProps} />
+          <ServiceConfiguration setHasYamlValidationErrors={noop} serviceData={serviceConfigProps} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -108,7 +109,7 @@ describe('Service Configuration', () => {
         }}
       >
         <PipelineContext.Provider value={pipelineMockData}>
-          <ServiceConfiguration serviceData={serviceConfigProps} />
+          <ServiceConfiguration setHasYamlValidationErrors={noop} serviceData={serviceConfigProps} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -133,7 +134,7 @@ describe('Service Configuration', () => {
         }}
       >
         <PipelineContext.Provider value={pipelineMockData}>
-          <ServiceConfiguration serviceData={serviceConfigProps} />
+          <ServiceConfiguration setHasYamlValidationErrors={noop} serviceData={serviceConfigProps} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -156,7 +157,7 @@ describe('Service Configuration', () => {
       >
         <ServiceContext.Provider value={serviceContextData as ServiceContextValues}>
           <PipelineContext.Provider value={pipelineMockData}>
-            <ServiceConfiguration serviceData={serviceConfigProps} />
+            <ServiceConfiguration setHasYamlValidationErrors={noop} serviceData={serviceConfigProps} />
           </PipelineContext.Provider>
         </ServiceContext.Provider>
       </TestWrapper>

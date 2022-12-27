@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { Card, HarnessDocTooltip } from '@harness/uicore'
 import cx from 'classnames'
+import { defaultTo } from 'lodash-es'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import { getSelectedDeploymentType, getVariablesHeaderTooltipId } from '@pipeline/utils/stageHelpers'
@@ -41,7 +42,6 @@ const ElastigroupServiceSpecEditable: React.FC<ElastigroupServiceSpecFormProps> 
 }) => {
   const { getString } = useStrings()
   const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
-  const [loading, setLoading] = useState(false)
 
   const {
     state: {
@@ -59,13 +59,13 @@ const ElastigroupServiceSpecEditable: React.FC<ElastigroupServiceSpecFormProps> 
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
     !!NG_ARTIFACT_SOURCES,
-    stage?.stage as DeploymentStageElementConfig
+    stage?.stage as DeploymentStageElementConfig,
+    isServiceEntityPage
   )
   const isNewService = isNewServiceEnvEntity(!!NG_SVC_ENV_REDESIGN, stage?.stage as DeploymentStageElementConfig)
 
   const updateStageData = async (newStage: any): Promise<void> => {
-    setLoading(true)
-    await updateStage(newStage).then(() => setLoading(false))
+    await updateStage(newStage)
   }
 
   return (
@@ -89,7 +89,7 @@ const ElastigroupServiceSpecEditable: React.FC<ElastigroupServiceSpecFormProps> 
               isPropagating={isPropagating}
               deploymentType={selectedDeploymentType}
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={readonly || loading}
+              readonly={defaultTo(readonly, true)}
               updateStage={updateStageData}
             />
           </Card>

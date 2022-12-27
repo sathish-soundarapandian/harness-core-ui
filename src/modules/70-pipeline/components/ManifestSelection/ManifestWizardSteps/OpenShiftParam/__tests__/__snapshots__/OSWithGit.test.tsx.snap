@@ -180,6 +180,7 @@ exports[`Open shift params with git tests renders form in edit mode 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -567,6 +568,7 @@ exports[`Open shift params with git tests renders without crashing 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -736,6 +738,7 @@ exports[`Open shift params with git tests renders without crashing 1`] = `
                                   >
                                     <button
                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      data-testid="multi-type-button"
                                     >
                                       <span
                                         class="bp3-icon StyledProps--main"

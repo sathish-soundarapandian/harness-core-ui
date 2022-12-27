@@ -158,6 +158,7 @@ exports[`Test Cloudformation create stack should be able to open and close inlin
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -231,6 +232,7 @@ exports[`Test Cloudformation create stack should be able to open and close inlin
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -315,6 +317,7 @@ exports[`Test Cloudformation create stack should be able to open and close inlin
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -458,6 +461,7 @@ exports[`Test Cloudformation create stack should be able to open and close inlin
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -664,6 +668,7 @@ exports[`Test Cloudformation create stack should be able to open and close inlin
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -961,6 +966,7 @@ exports[`Test Cloudformation create stack should be able to open and close inlin
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -1585,6 +1591,7 @@ exports[`Test Cloudformation create stack should be able to open optional dropdo
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -1658,6 +1665,7 @@ exports[`Test Cloudformation create stack should be able to open optional dropdo
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -1742,6 +1750,7 @@ exports[`Test Cloudformation create stack should be able to open optional dropdo
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1885,6 +1894,7 @@ exports[`Test Cloudformation create stack should be able to open optional dropdo
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -2091,6 +2101,7 @@ exports[`Test Cloudformation create stack should be able to open optional dropdo
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -2280,6 +2291,7 @@ exports[`Test Cloudformation create stack should be able to open optional dropdo
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -2904,6 +2916,7 @@ exports[`Test Cloudformation create stack should be able to open remote param mo
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -2977,6 +2990,7 @@ exports[`Test Cloudformation create stack should be able to open remote param mo
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -3061,6 +3075,7 @@ exports[`Test Cloudformation create stack should be able to open remote param mo
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -3204,6 +3219,7 @@ exports[`Test Cloudformation create stack should be able to open remote param mo
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -3410,6 +3426,7 @@ exports[`Test Cloudformation create stack should be able to open remote param mo
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -3707,6 +3724,7 @@ exports[`Test Cloudformation create stack should be able to open remote param mo
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -4331,6 +4349,7 @@ exports[`Test Cloudformation create stack should be able to submit 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -4404,6 +4423,7 @@ exports[`Test Cloudformation create stack should be able to submit 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -4488,6 +4508,7 @@ exports[`Test Cloudformation create stack should be able to submit 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -4631,6 +4652,7 @@ exports[`Test Cloudformation create stack should be able to submit 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -4785,6 +4807,7 @@ exports[`Test Cloudformation create stack should be able to submit 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -5003,6 +5026,7 @@ exports[`Test Cloudformation create stack should open and close remote template 
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -5076,6 +5100,7 @@ exports[`Test Cloudformation create stack should open and close remote template 
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -5179,6 +5204,7 @@ exports[`Test Cloudformation create stack should open and close remote template 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -5288,6 +5314,7 @@ exports[`Test Cloudformation create stack should open and close remote template 
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -5442,6 +5469,7 @@ exports[`Test Cloudformation create stack should open and close remote template 
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -5658,6 +5686,7 @@ exports[`Test Cloudformation create stack should render edit view as new step 1`
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -5731,6 +5760,7 @@ exports[`Test Cloudformation create stack should render edit view as new step 1`
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -5834,6 +5864,7 @@ exports[`Test Cloudformation create stack should render edit view as new step 1`
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -5943,6 +5974,7 @@ exports[`Test Cloudformation create stack should render edit view as new step 1`
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -6097,6 +6129,7 @@ exports[`Test Cloudformation create stack should render edit view as new step 1`
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -6315,6 +6348,7 @@ exports[`Test Cloudformation create stack should render edit view as new step wi
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -6388,6 +6422,7 @@ exports[`Test Cloudformation create stack should render edit view as new step wi
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -6472,6 +6507,7 @@ exports[`Test Cloudformation create stack should render edit view as new step wi
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -6615,6 +6651,7 @@ exports[`Test Cloudformation create stack should render edit view as new step wi
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -6821,6 +6858,7 @@ exports[`Test Cloudformation create stack should render edit view as new step wi
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -7046,6 +7084,7 @@ exports[`Test Cloudformation create stack should render runtime components 1`] =
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -7158,6 +7197,7 @@ exports[`Test Cloudformation create stack should render runtime components 1`] =
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -7276,6 +7316,7 @@ exports[`Test Cloudformation create stack should render runtime components 1`] =
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -7391,6 +7432,7 @@ exports[`Test Cloudformation create stack should render runtime components 1`] =
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -7584,6 +7626,7 @@ exports[`Test Cloudformation create stack should render runtime components 1`] =
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -7868,6 +7911,7 @@ exports[`Test Cloudformation create stack should show api aws statues loading st
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -7941,6 +7985,7 @@ exports[`Test Cloudformation create stack should show api aws statues loading st
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -8044,6 +8089,7 @@ exports[`Test Cloudformation create stack should show api aws statues loading st
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -8153,6 +8199,7 @@ exports[`Test Cloudformation create stack should show api aws statues loading st
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -8357,6 +8404,7 @@ exports[`Test Cloudformation create stack should show api aws statues loading st
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -8573,6 +8621,7 @@ exports[`Test Cloudformation create stack should show api capabilities loading s
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -8646,6 +8695,7 @@ exports[`Test Cloudformation create stack should show api capabilities loading s
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -8749,6 +8799,7 @@ exports[`Test Cloudformation create stack should show api capabilities loading s
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -8858,6 +8909,7 @@ exports[`Test Cloudformation create stack should show api capabilities loading s
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -9062,6 +9114,7 @@ exports[`Test Cloudformation create stack should show api capabilities loading s
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -9278,6 +9331,7 @@ exports[`Test Cloudformation create stack should show api regions loading state 
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -9351,6 +9405,7 @@ exports[`Test Cloudformation create stack should show api regions loading state 
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -9454,6 +9509,7 @@ exports[`Test Cloudformation create stack should show api regions loading state 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -9563,6 +9619,7 @@ exports[`Test Cloudformation create stack should show api regions loading state 
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -9767,6 +9824,7 @@ exports[`Test Cloudformation create stack should show api regions loading state 
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

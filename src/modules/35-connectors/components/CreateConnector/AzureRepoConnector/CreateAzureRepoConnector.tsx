@@ -19,11 +19,14 @@ import { useStrings } from 'framework/strings'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import { buildAzureRepoPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import azureDelegate from '@connectors/components/CreateConnector/AzureConnector/ConnectivityModeStepImages/azureDelegate.svg'
+import azurePlatform from '@connectors/components/CreateConnector/AzureConnector/ConnectivityModeStepImages/azurePlatform.svg'
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '../commonSteps/GitDetailsStep'
 import StepAzureRepoAuthentication from './StepAuth/StepAzureRepoAuthentication'
 import ConnectivityModeStep from '../commonSteps/ConnectivityModeStep/ConnectivityModeStep'
+
 import css from './CreateAzureRepoConnector.module.scss'
 
 const CreateAzureRepoConnector = (props: CreateConnectorModalProps): JSX.Element => {
@@ -84,6 +87,8 @@ const CreateAzureRepoConnector = (props: CreateConnectorModalProps): JSX.Element
         hideModal={props.onClose}
         onConnectorCreated={props.onSuccess}
         helpPanelReferenceId="ConnectorConnectToTheProvider"
+        platformImage={azurePlatform}
+        delegateImage={azureDelegate}
       />
       {props.connectivityMode === ConnectivityModeType.Delegate ? (
         <DelegateSelectorStep

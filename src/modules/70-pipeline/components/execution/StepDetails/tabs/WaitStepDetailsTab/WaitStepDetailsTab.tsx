@@ -6,7 +6,6 @@
  */
 
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { Thumbnail, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
@@ -17,10 +16,10 @@ import {
   useMarkWaitStep,
   ExecutionNode,
   WaitStepRequestDto,
-  ResponseWaitStepExecutionDetailsDto
+  ResponseWaitStepExecutionDetailsDto,
+  ExecutionGraph
 } from 'services/pipeline-ng'
 import { WaitActions, waitActionsIconMap, waitActionsStringMap } from '@pipeline/utils/FailureStrategyUtils'
-import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -31,6 +30,7 @@ export interface WaitStepDetailsTabProps {
   step: ExecutionNode
   executionDetails: ResponseWaitStepExecutionDetailsDto | null | undefined
   loading: boolean
+  executionMetadata: ExecutionGraph['executionMetadata']
 }
 
 interface WaitStepMarkState {
@@ -105,10 +105,9 @@ function WaitStepDetails({ step, executionDetails }: WaitStepDetailsProps): JSX.
 }
 
 export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactElement {
-  const { step = {}, executionDetails, loading } = props
+  const { step = {}, executionDetails, loading, executionMetadata } = props
   const { getString } = useStrings()
-  const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier } =
-    useParams<PipelineType<ExecutionPathProps>>()
+  const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier } = defaultTo(executionMetadata, {})
   const [markState, setMarkState] = useState<WaitStepMarkState>({
     isMarked: false,
     markedAs: undefined

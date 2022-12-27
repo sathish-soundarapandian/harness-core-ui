@@ -312,6 +312,7 @@ exports[`Test cloudformation remote wizard step one should click each repo optio
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -725,6 +726,7 @@ exports[`Test cloudformation remote wizard step one should click each repo optio
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1138,6 +1140,7 @@ exports[`Test cloudformation remote wizard step one should click each repo optio
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1551,6 +1554,7 @@ exports[`Test cloudformation remote wizard step one should click each repo optio
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2034,6 +2038,7 @@ exports[`Test cloudformation remote wizard step one should render error when sub
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2528,6 +2533,7 @@ exports[`Test cloudformation remote wizard step one should render parameter deta
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3052,6 +3058,7 @@ exports[`Test cloudformation remote wizard step one should render parameter deta
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3170,6 +3177,7 @@ exports[`Test cloudformation remote wizard step one should render parameter deta
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -3601,6 +3609,7 @@ exports[`Test cloudformation remote wizard step one should render parameter deta
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3726,6 +3735,7 @@ exports[`Test cloudformation remote wizard step one should render parameter deta
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -4214,6 +4224,7 @@ exports[`Test cloudformation remote wizard step one should render submit step on
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -4667,6 +4678,7 @@ exports[`Test cloudformation remote wizard step one should render with initial d
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -5079,6 +5091,7 @@ exports[`Test cloudformation remote wizard step one should render with no initia
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -5442,6 +5455,7 @@ exports[`Test cloudformation remote wizard step one should render with runtime d
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"

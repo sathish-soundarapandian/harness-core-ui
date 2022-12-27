@@ -175,6 +175,11 @@ allowpaths:
   - /aws/regions
   - /slo-dashboard/widget/{identifier}/consumption
   - /slo/v2/composite-slo/onboarding-graph
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/log-records
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/metric-records
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/records
+  - /usage/CV
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/logRecords
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

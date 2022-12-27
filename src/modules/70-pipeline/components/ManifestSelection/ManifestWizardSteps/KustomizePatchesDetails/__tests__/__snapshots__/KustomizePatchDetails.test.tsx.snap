@@ -188,6 +188,7 @@ exports[`Kustomizepatch Details tests initial rendering 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -348,6 +349,7 @@ exports[`Kustomizepatch Details tests initial rendering 1`] = `
                                 >
                                   <button
                                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                    data-testid="multi-type-button"
                                   >
                                     <span
                                       class="bp3-icon StyledProps--main"
@@ -650,6 +652,7 @@ exports[`Kustomizepatch Details tests renders form in edit mode 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"

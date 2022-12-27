@@ -194,6 +194,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -335,6 +336,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
                             >
                               <button
                                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                data-testid="multi-type-button"
                               >
                                 <span
                                   class="bp3-icon StyledProps--main"
@@ -562,7 +564,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                       >
                         <div
                           aria-describedby="rbd-hidden-text-0-hidden-text-0"
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
+                          class="Layout--horizontal StyledProps--main draggable StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--flex-alignItems-center StyledProps--margin-top-small"
                           data-rbd-drag-handle-context-id="0"
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="0"
@@ -818,6 +820,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -959,6 +962,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                             >
                               <button
                                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                data-testid="multi-type-button"
                               >
                                 <span
                                   class="bp3-icon StyledProps--main"
@@ -1221,6 +1225,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -1553,6 +1558,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1694,6 +1700,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                             >
                               <button
                                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                data-testid="multi-type-button"
                               >
                                 <span
                                   class="bp3-icon StyledProps--main"
@@ -1956,6 +1963,7 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -2288,6 +2296,7 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2429,6 +2438,7 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                             >
                               <button
                                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                data-testid="multi-type-button"
                               >
                                 <span
                                   class="bp3-icon StyledProps--main"

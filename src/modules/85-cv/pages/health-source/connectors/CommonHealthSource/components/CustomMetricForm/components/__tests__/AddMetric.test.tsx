@@ -10,7 +10,7 @@ import { Formik, FormikForm } from '@harness/uicore'
 import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { CustomHealthMetricDefinition } from 'services/cv'
-import AddMetric, { AddMetricProps } from '../AddMetric'
+import AddMetric, { AddMetricProps } from '../AddMetric/AddMetric'
 
 function WrapperComponent(props: AddMetricProps): JSX.Element {
   return (
@@ -29,7 +29,8 @@ describe('Unit tests for AddMetric', () => {
     enableDefaultGroupName: false,
     currentSelectedMetricDetail: {} as CustomHealthMetricDefinition,
     groupNames: [{ label: 'group1', value: 'group1' }],
-    setGroupName: jest.fn()
+    setGroupName: jest.fn(),
+    fieldLabel: 'Metric'
   }
   test('Ensure AddMetric component loads with groupName when default groupName is disabled in Health source config', async () => {
     const { container } = render(<WrapperComponent {...props} />)

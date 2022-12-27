@@ -145,6 +145,7 @@ exports[`<ExecutionInputs /> tests stage inputs submit works 1`] = `
                                   >
                                     <button
                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      data-testid="multi-type-button"
                                     >
                                       <span
                                         class="bp3-icon StyledProps--main"
@@ -273,6 +274,7 @@ exports[`<ExecutionInputs /> tests step inputs completed 1`] = `
                         </div>
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                           disabled=""
                         >
                           <span
@@ -375,6 +377,7 @@ exports[`<ExecutionInputs /> tests step inputs submit works 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"

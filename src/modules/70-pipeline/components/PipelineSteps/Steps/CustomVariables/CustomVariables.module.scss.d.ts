@@ -24,6 +24,7 @@ declare const styles: {
   readonly icon: string
   readonly runtimeInputButton: string
   readonly secretContainer: string
+  readonly secretWidth: string
   readonly selectedSearchText: string
   readonly selectedSearchTextValueRow: string
   readonly subHeader: string

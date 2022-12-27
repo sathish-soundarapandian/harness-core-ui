@@ -7,12 +7,13 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly collapseHeading: string
   readonly collapsePanel: string
+  readonly groupContainer: string
+  readonly groupName: string
   readonly isSelected: string
   readonly main: string
+  readonly metricName: string
   readonly navHeader: string
-  readonly selectedApp: string
-  readonly seletedAppContainer: string
+  readonly selectedAppContainer: string
 }
 export default styles

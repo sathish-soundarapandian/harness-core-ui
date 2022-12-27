@@ -103,6 +103,7 @@ exports[`CustomApproval tests Basic snapshot - inputset mode but no runtime valu
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -275,6 +276,7 @@ exports[`CustomApproval tests Basic snapshot - inputset mode but no runtime valu
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -351,6 +353,7 @@ exports[`CustomApproval tests Basic snapshot - inputset mode but no runtime valu
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -537,6 +540,7 @@ exports[`CustomApproval tests Basic snapshot - inputset mode but no runtime valu
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -726,6 +730,7 @@ exports[`CustomApproval tests Basic snapshot - inputset mode but no runtime valu
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -946,6 +951,7 @@ exports[`CustomApproval tests Edit stage - readonly with runtime values: edit st
               </div>
               <button
                 class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                data-testid="multi-type-button"
                 disabled=""
               >
                 <span
@@ -1187,6 +1193,7 @@ exports[`CustomApproval tests Edit stage - readonly with runtime values: edit st
               </div>
               <button
                 class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                data-testid="multi-type-button"
                 disabled=""
               >
                 <span
@@ -1290,6 +1297,7 @@ exports[`CustomApproval tests Edit stage - readonly with runtime values: edit st
               </div>
               <button
                 class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                data-testid="multi-type-button"
                 disabled=""
               >
                 <span
@@ -1499,6 +1507,7 @@ exports[`CustomApproval tests Edit stage - readonly with runtime values: edit st
                       </div>
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                         disabled=""
                       >
                         <span
@@ -1656,6 +1665,7 @@ exports[`CustomApproval tests Edit stage - readonly with runtime values: edit st
                       </div>
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                         disabled=""
                       >
                         <span
@@ -2281,6 +2291,7 @@ exports[`CustomApproval tests Edit stage - readonly: edit stage view readonly 1`
               </div>
               <button
                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                data-testid="multi-type-button"
                 disabled=""
               >
                 <span
@@ -2482,6 +2493,7 @@ exports[`CustomApproval tests Edit stage - readonly: edit stage view readonly 1`
               </div>
               <button
                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                data-testid="multi-type-button"
                 disabled=""
               >
                 <span
@@ -2547,6 +2559,7 @@ exports[`CustomApproval tests Edit stage - readonly: edit stage view readonly 1`
               </div>
               <button
                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                data-testid="multi-type-button"
                 disabled=""
               >
                 <span
@@ -2722,6 +2735,7 @@ exports[`CustomApproval tests Edit stage - readonly: edit stage view readonly 1`
                       </div>
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                         disabled=""
                       >
                         <span
@@ -2879,6 +2893,7 @@ exports[`CustomApproval tests Edit stage - readonly: edit stage view readonly 1`
                       </div>
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                         disabled=""
                       >
                         <span

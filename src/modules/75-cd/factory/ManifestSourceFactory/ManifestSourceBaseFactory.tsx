@@ -17,9 +17,16 @@ import { EcsTaskDefinitionManifestSource } from '@cd/components/PipelineSteps/EC
 import { EcsServiceDefinitionManifestSource } from '@cd/components/PipelineSteps/ECSServiceSpec/ManifestSource/EcsServiceDefinitionManifestSource/EcsServiceDefinitionManifestSource'
 import { EcsScalableTargetDefinitionManifestSource } from '@cd/components/PipelineSteps/ECSServiceSpec/ManifestSource/EcsScalableTargetDefinitionManifestSource/EcsScalableTargetDefinitionManifestSource'
 import { EcsScalingPolicyDefinitionManifestSource } from '@cd/components/PipelineSteps/ECSServiceSpec/ManifestSource/EcsScalingPolicyDefinitionManifestSource/EcsScalingPolicyDefinitionManifestSource'
+import { AsgLaunchTemplateManifestSource } from '@cd/components/PipelineSteps/ASGServiceSpec/ManifestSource/AsgLaunchTemplateManifestSource/AsgLaunchTemplateManifestSource'
+import { AsgConfigurationManifestSource } from '@cd/components/PipelineSteps/ASGServiceSpec/ManifestSource/AsgConfigurationManifestSource/AsgConfigurationManifestSource'
+import { AsgScalingPolicyManifestSource } from '@cd/components/PipelineSteps/ASGServiceSpec/ManifestSource/AsgScalingPolicyManifestSource/AsgScalingPolicyManifestSource'
+import { AsgScheduledGroupUpdateActionManifestSource } from '@cd/components/PipelineSteps/ASGServiceSpec/ManifestSource/AsgScheduledUpdateGroupActionManifestSource/AsgScheduledUpdateGroupActionManifestSource'
 import { ReleaseRepoManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ReleaseRepoManifestSource/ReleaseRepoManifestSource'
 import { DeploymentRepoManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/DeploymentRepoManifestSource/DeploymentRepoManifestSource'
 
+import { TASManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/TASManifestSource/TASManifestSource'
+import { TASAutoScalerSource } from '@cd/components/PipelineSteps/TasServiceSpec/ManifestSource/TASAutoScalerSource/TASAutoScalerSource'
+import { TASVarsSource } from '@cd/components/PipelineSteps/TasServiceSpec/ManifestSource/TASVarsSource/TASVarsSource'
 import type { ManifestSourceBase } from './ManifestSourceBase'
 
 export class ManifestSourceBaseFactory {
@@ -57,7 +64,14 @@ manifestSourceBaseFactory.registerManifestSource(new EcsTaskDefinitionManifestSo
 manifestSourceBaseFactory.registerManifestSource(new EcsServiceDefinitionManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new EcsScalableTargetDefinitionManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new EcsScalingPolicyDefinitionManifestSource())
+manifestSourceBaseFactory.registerManifestSource(new AsgLaunchTemplateManifestSource())
+manifestSourceBaseFactory.registerManifestSource(new AsgConfigurationManifestSource())
+manifestSourceBaseFactory.registerManifestSource(new AsgScalingPolicyManifestSource())
+manifestSourceBaseFactory.registerManifestSource(new AsgScheduledGroupUpdateActionManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new ReleaseRepoManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new DeploymentRepoManifestSource())
+manifestSourceBaseFactory.registerManifestSource(new TASManifestSource())
+manifestSourceBaseFactory.registerManifestSource(new TASAutoScalerSource())
+manifestSourceBaseFactory.registerManifestSource(new TASVarsSource())
 
 export default manifestSourceBaseFactory

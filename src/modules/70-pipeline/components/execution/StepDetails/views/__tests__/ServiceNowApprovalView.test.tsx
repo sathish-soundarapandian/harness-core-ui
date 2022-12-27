@@ -10,7 +10,12 @@ import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { useGetApprovalInstance } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ServiceNowApprovalView } from '../ServiceNowApprovalView/ServiceNowApprovalView'
-import { mockServiceNowApprovalData, mockServiceNowApprovalDataLoading, mockServiceNowApprovalDataError } from './mock'
+import {
+  mockServiceNowApprovalData,
+  mockServiceNowApprovalDataLoading,
+  mockServiceNowApprovalDataError,
+  executionMetadata
+} from './mock'
 
 jest.mock('services/pipeline-ng', () => ({
   useGetApprovalInstance: jest.fn()
@@ -23,14 +28,14 @@ describe('LOADING', () => {
     useGetApprovalInstance.mockImplementation(() => mockServiceNowApprovalDataLoading)
   })
   test('show spinner in loading state', () => {
-    const { container } = render(<ServiceNowApprovalView step={{}} />)
+    const { container } = render(<ServiceNowApprovalView step={{}} executionMetadata={executionMetadata} />)
 
     const spinner = container.querySelector('.bp3-spinner')
     expect(spinner).toBeTruthy()
   })
 
   test('show spinner when auth data is loading', () => {
-    const { container } = render(<ServiceNowApprovalView step={{}} />)
+    const { container } = render(<ServiceNowApprovalView step={{}} executionMetadata={executionMetadata} />)
 
     const spinner = container.querySelector('.bp3-spinner')
     expect(spinner).toBeTruthy()
@@ -53,6 +58,7 @@ describe('SUCCESS', () => {
             // @ts-ignore
             executableResponses: [{ async: { callbackIds: ['approvalInstanceId'] } }]
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -72,6 +78,7 @@ describe('SUCCESS', () => {
           step={{
             status: 'ResourceWaiting'
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -91,7 +98,7 @@ describe('ERROR', () => {
   test('show tabs when data is present and authorized', async () => {
     const { container } = render(
       <TestWrapper>
-        <ServiceNowApprovalView step={{}} />
+        <ServiceNowApprovalView step={{}} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
     await waitFor(() => expect(container.querySelector('.bp3-icon-error')).toBeTruthy())

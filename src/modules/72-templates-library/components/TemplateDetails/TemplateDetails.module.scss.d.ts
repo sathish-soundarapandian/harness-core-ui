@@ -11,6 +11,7 @@ declare const styles: {
   readonly dropdown: string
   readonly errorHandler: string
   readonly errorPanel: string
+  readonly gitCacheContainer: string
   readonly innerTabsContainer: string
   readonly openInStudio: string
   readonly referencedByBody: string

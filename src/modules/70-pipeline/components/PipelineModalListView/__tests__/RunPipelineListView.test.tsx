@@ -6,21 +6,44 @@
  */
 
 import React from 'react'
-import { render, waitFor, act, fireEvent } from '@testing-library/react'
+import { screen, render, RenderResult } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
+import { useGetPipelineList } from 'services/pipeline-ng'
 import PipelineModalList from '../PipelineModalListView'
-import { EmptyResponse, mockData, mockDataWithGitDetails } from './RunPipelineListViewMocks'
+import { pipelines, pipelinesEmpty, pipelinesWithGitDetails } from './pipelinelistMocks'
 
-const params = {
-  accountId: 'testAcc',
-  orgIdentifier: 'testOrg',
-  projectIdentifier: 'test',
-  pipelineIdentifier: 'pipeline1',
-  module: 'cd'
-}
+const useGetPipelineListMutate = jest.fn().mockResolvedValue(pipelines)
+
+const getModuleParams = (module = 'cd') => ({
+  accountId: 'accountId',
+  orgIdentifier: 'orgIdentifier',
+  projectIdentifier: 'projectIdentifier',
+  pipelineIdentifier: 'pipelineIdentifier',
+  module
+})
+
+const TEST_PATH = routes.toDeployments({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })
+
+const renderRunPipelineListView = (module = 'cd'): RenderResult =>
+  render(
+    <TestWrapper
+      path={TEST_PATH}
+      pathParams={getModuleParams(module)}
+      defaultAppStoreValues={{
+        ...defaultAppStoreValues,
+        isGitSyncEnabled: true,
+        isGitSimplificationEnabled: true,
+        supportingGitSimplification: true,
+        gitSyncEnabledOnlyForFF: false
+      }}
+    >
+      <PipelineModalList onClose={jest.fn()} />
+    </TestWrapper>
+  )
 
 jest.mock('services/cd-ng', () => ({
   useGetListOfBranchesWithStatus: () => ({
@@ -45,85 +68,74 @@ jest.mock('services/cd-ng-rq', () => ({
   })
 }))
 
-const TEST_PATH = routes.toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })
+jest.mock('services/pipeline-ng', () => ({
+  useGetPipelineList: jest.fn(() => ({
+    mutate: useGetPipelineListMutate,
+    cancel: jest.fn(),
+    loading: false
+  }))
+}))
 
 describe('PipelineModal List View', () => {
-  test('render list view', async () => {
-    jest.mock('services/pipeline-ng', () => ({
-      useGetPipelineList: () => mockData
-    }))
-    const { getByTestId, container } = render(
-      <TestWrapper path={TEST_PATH} pathParams={params} defaultAppStoreValues={defaultAppStoreValues}>
-        <PipelineModalList onClose={jest.fn()} mockData={mockData} />
-      </TestWrapper>
-    )
-    await waitFor(() => getByTestId(params.pipelineIdentifier))
-    expect(container).toMatchSnapshot()
+  test('render list view and search', async () => {
+    const useGetPipelineListMock = useGetPipelineList as jest.MockedFunction<any>
+    const mutateListOfPipelines = jest.fn().mockResolvedValue(pipelines)
+    useGetPipelineListMock.mockReturnValue({
+      mutate: mutateListOfPipelines,
+      loading: false,
+      cancel: jest.fn()
+    })
+
+    renderRunPipelineListView()
+    expect(
+      await screen.findByRole('link', {
+        name: /Sonar Develop/i
+      })
+    ).toBeInTheDocument()
+
+    userEvent.type(screen.getByRole('searchbox'), 'searchTerm')
+    expect(useGetPipelineListMock).toHaveBeenCalled()
   })
 
   test('CD - render empty data', async () => {
-    jest.mock('services/pipeline-ng', () => ({
-      useGetPipelineList: () => EmptyResponse
-    }))
-    const { queryByText } = render(
-      <TestWrapper path={TEST_PATH} pathParams={params} defaultAppStoreValues={defaultAppStoreValues}>
-        <PipelineModalList onClose={jest.fn()} mockData={EmptyResponse} />
-      </TestWrapper>
-    )
+    const useGetPipelineListMock = useGetPipelineList as jest.MockedFunction<any>
+    const mutateListOfPipelines = jest.fn().mockResolvedValue(pipelinesEmpty)
+    useGetPipelineListMock.mockReturnValue({
+      mutate: mutateListOfPipelines,
+      loading: false,
+      cancel: jest.fn()
+    })
+    renderRunPipelineListView()
 
-    await waitFor(() => expect(queryByText('pipeline.noRunsText')).toBeTruthy())
+    expect(await screen.findByText('pipeline.noPipelinesLabel')).toBeInTheDocument()
   })
 
   test('CI - render empty data', async () => {
-    jest.mock('services/pipeline-ng', () => ({
-      useGetPipelineList: () => EmptyResponse
-    }))
-    const { queryByText } = render(
-      <TestWrapper
-        path={TEST_PATH}
-        pathParams={{ ...params, module: 'ci' }}
-        defaultAppStoreValues={defaultAppStoreValues}
-      >
-        <PipelineModalList onClose={jest.fn()} mockData={EmptyResponse} />
-      </TestWrapper>
-    )
+    const useGetPipelineListMock = useGetPipelineList as jest.MockedFunction<any>
+    const mutateListOfPipelines = jest.fn().mockResolvedValue(pipelinesEmpty)
+    useGetPipelineListMock.mockReturnValue({
+      mutate: mutateListOfPipelines,
+      loading: false,
+      cancel: jest.fn()
+    })
+    renderRunPipelineListView('ci')
 
-    await waitFor(() => expect(queryByText('pipeline.noRunsText')).toBeTruthy())
+    expect(await screen.findByText('pipeline.noPipelinesLabel')).toBeInTheDocument()
   })
 
   test('render data with git sync enabled', async () => {
-    jest.mock('services/pipeline-ng', () => ({
-      useGetPipelineList: () => mockDataWithGitDetails
-    }))
-    const { queryByDisplayValue } = render(
-      <TestWrapper
-        path={TEST_PATH}
-        pathParams={params}
-        defaultAppStoreValues={{ ...defaultAppStoreValues, isGitSyncEnabled: true }}
-      >
-        <PipelineModalList onClose={jest.fn()} mockData={mockDataWithGitDetails} />
-      </TestWrapper>
-    )
+    const useGetPipelineListMock = useGetPipelineList as jest.MockedFunction<any>
+    const mutateListOfPipelines = jest.fn().mockResolvedValue(pipelinesWithGitDetails)
+    useGetPipelineListMock.mockReturnValue({
+      mutate: mutateListOfPipelines,
+      loading: false,
+      cancel: jest.fn()
+    })
+
+    renderRunPipelineListView()
 
     // Git filters are seen
-    await waitFor(() => expect(queryByDisplayValue('common.gitSync.defaultBranches')).toBeTruthy())
-    await waitFor(() => expect(queryByDisplayValue('common.gitSync.allRepositories')).toBeTruthy())
-  })
-
-  test('if search works', async () => {
-    jest.mock('services/pipeline-ng', () => ({
-      useGetPipelineList: () => mockData
-    }))
-    const { getByPlaceholderText } = render(
-      <TestWrapper path={TEST_PATH} pathParams={params} defaultAppStoreValues={{ ...defaultAppStoreValues }}>
-        <PipelineModalList onClose={jest.fn()} mockData={mockData} />
-      </TestWrapper>
-    )
-
-    act(() => {
-      fireEvent.change(getByPlaceholderText('search'), { target: { value: 'searchstring' } })
-    })
-    // fetch pipelines called after search
-    await waitFor(() => expect(mockData.mutate).toBeCalled())
+    expect(await screen.findByDisplayValue('common.gitSync.defaultBranches')).toBeInTheDocument()
+    expect(await screen.findByDisplayValue('common.gitSync.allRepositories')).toBeInTheDocument()
   })
 })

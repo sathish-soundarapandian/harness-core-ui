@@ -131,6 +131,7 @@ exports[`Azure Slot Deployment step Should render edit view as edit step 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -205,6 +206,7 @@ exports[`Azure Slot Deployment step Should render edit view as edit step 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -276,6 +278,7 @@ exports[`Azure Slot Deployment step Should render edit view as edit step 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -440,6 +443,7 @@ exports[`Azure Slot Deployment step Should render edit view as edit step with ru
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -552,6 +556,7 @@ exports[`Azure Slot Deployment step Should render edit view as edit step with ru
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -661,6 +666,7 @@ exports[`Azure Slot Deployment step Should render edit view as edit step with ru
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -879,6 +885,7 @@ exports[`Azure Slot Deployment step Should render edit view as new step 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -953,6 +960,7 @@ exports[`Azure Slot Deployment step Should render edit view as new step 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -1024,6 +1032,7 @@ exports[`Azure Slot Deployment step Should render edit view as new step 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -1113,6 +1122,7 @@ exports[`Azure Slot Deployment step Should render input set view 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -1192,6 +1202,7 @@ exports[`Azure Slot Deployment step Should render input set view 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1272,6 +1283,7 @@ exports[`Azure Slot Deployment step Should render input set view 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"

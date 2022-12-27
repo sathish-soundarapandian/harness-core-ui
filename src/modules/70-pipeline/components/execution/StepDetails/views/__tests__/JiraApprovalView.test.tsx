@@ -10,7 +10,7 @@ import { render, waitFor, act, fireEvent } from '@testing-library/react'
 import { useGetApprovalInstance } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { JiraApprovalView } from '../JiraApprovalView/JiraApprovalView'
-import { mockJiraApprovalDataLoading, mockJiraApprovalData, mockJiraApprovalDataError } from './mock'
+import { mockJiraApprovalDataLoading, mockJiraApprovalData, mockJiraApprovalDataError, executionMetadata } from './mock'
 
 jest.mock('services/pipeline-ng', () => ({
   useGetApprovalInstance: jest.fn()
@@ -24,7 +24,7 @@ describe('LOADING', () => {
   })
 
   test('show spinner in loading state', () => {
-    const { container } = render(<JiraApprovalView step={{}} />)
+    const { container } = render(<JiraApprovalView step={{}} executionMetadata={executionMetadata} />)
 
     const spinner = container.querySelector('.bp3-spinner')
     expect(spinner).toBeTruthy()
@@ -47,6 +47,7 @@ describe('SUCCESS', () => {
             // @ts-ignore
             executableResponses: [{ async: { callbackIds: ['approvalInstanceId'] } }]
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -66,6 +67,7 @@ describe('SUCCESS', () => {
           step={{
             status: 'ResourceWaiting'
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -85,7 +87,7 @@ describe('ERROR', () => {
   test('show tabs when data is present and authorized', async () => {
     const { container } = render(
       <TestWrapper>
-        <JiraApprovalView step={{}} />
+        <JiraApprovalView step={{}} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
     await waitFor(() => expect(container.querySelector('.bp3-icon-error')).toBeTruthy())

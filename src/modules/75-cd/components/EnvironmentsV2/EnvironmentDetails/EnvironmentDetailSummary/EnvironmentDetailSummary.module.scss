@@ -177,16 +177,14 @@
 }
 
 .paddedInfraContainer {
-  display: flex;
   background: var(--green-50) !important;
   padding: var(--spacing-2) 6px !important;
-  border-radius: var(--spacing-2);
+  border-radius: 4px;
   width: fit-content;
   margin-right: var(--spacing-3) !important;
 
   p {
     font-weight: 700 !important;
-    color: var(--green-900) !important;
   }
 }
 
@@ -204,6 +202,7 @@
   background: var(--green-600) !important;
   border-radius: 5px;
   margin-right: var(--spacing-2) !important;
+  margin-top: var(--spacing-1) !important;
 }
 
 .fullViewTableStyle {
@@ -399,4 +398,16 @@
 .separatorStyle {
   margin-top: 14px;
   border-top: 1px solid var(--grey-200);
+}
+
+.instanceHeaderStyle {
+  display: grid !important;
+  grid-template-columns: 28% 42% 30%;
+  padding-top: var(--spacing-medium) !important;
+  padding-bottom: var(--spacing-medium) !important;
+  margin-left: var(--spacing-2) !important;
+}
+
+.marginBottom1 {
+  margin-bottom: 1px !important;
 }

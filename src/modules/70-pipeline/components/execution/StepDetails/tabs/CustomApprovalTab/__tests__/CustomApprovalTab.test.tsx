@@ -9,6 +9,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
+import executionMetadata from '@pipeline/components/execution/StepDetails/common/ExecutionContent/PolicyEvaluationContent/__mocks__/executionMetadata.json'
 import { CustomApprovalTab } from '../CustomApprovalTab'
 import approvalData from './CustomAprovalData.json'
 
@@ -24,7 +25,7 @@ describe('<CustomApprovalTab/> tests', () => {
   test('is in waiting state', () => {
     const { container } = render(
       <TestWrapper>
-        <CustomApprovalTab isWaiting={true} approvalData={approvalData as any} />
+        <CustomApprovalTab isWaiting={true} approvalData={approvalData as any} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
 
@@ -34,7 +35,7 @@ describe('<CustomApprovalTab/> tests', () => {
   test('not in waiting state ', () => {
     const { container } = render(
       <TestWrapper>
-        <CustomApprovalTab isWaiting={false} approvalData={approvalData as any} />
+        <CustomApprovalTab isWaiting={false} approvalData={approvalData as any} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
 
@@ -46,7 +47,7 @@ describe('<CustomApprovalTab/> tests', () => {
     rejectedData.status = 'REJECTED'
     const { container } = render(
       <TestWrapper>
-        <CustomApprovalTab isWaiting={false} approvalData={rejectedData as any} />
+        <CustomApprovalTab isWaiting={false} approvalData={rejectedData as any} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
 
@@ -58,7 +59,7 @@ describe('<CustomApprovalTab/> tests', () => {
     rejectedData.status = 'FAILED'
     const { container } = render(
       <TestWrapper>
-        <CustomApprovalTab isWaiting={false} approvalData={rejectedData as any} />
+        <CustomApprovalTab isWaiting={false} approvalData={rejectedData as any} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
 
@@ -70,7 +71,7 @@ describe('<CustomApprovalTab/> tests', () => {
     rejectedData.status = 'EXPIRED'
     const { container } = render(
       <TestWrapper>
-        <CustomApprovalTab isWaiting={false} approvalData={rejectedData as any} />
+        <CustomApprovalTab isWaiting={false} approvalData={rejectedData as any} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
 

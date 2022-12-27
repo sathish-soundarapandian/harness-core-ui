@@ -16,9 +16,8 @@ import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-
 import { useGetEnvironmentGroupList } from 'services/cd-ng'
-
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { EnvironmentGroupData } from '../types'
 export interface UseGetEnvironmentGroupsDataReturn {
   environmentGroupsList: EnvironmentGroupData[]
@@ -34,6 +33,7 @@ export function useGetEnvironmentGroupsData(scope?: Scope): UseGetEnvironmentGro
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
 
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   // State
   const [environmentGroupsList, setEnvironmentGroupsList] = useState<EnvironmentGroupData[]>([])
 
@@ -47,7 +47,8 @@ export function useGetEnvironmentGroupsData(scope?: Scope): UseGetEnvironmentGro
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
-      orgIdentifier
+      orgIdentifier,
+      includeAllEnvGroupsAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
     },
     body: { filterType: 'EnvironmentGroup' },
     lazy: !isNil(scope) && scope !== Scope.PROJECT

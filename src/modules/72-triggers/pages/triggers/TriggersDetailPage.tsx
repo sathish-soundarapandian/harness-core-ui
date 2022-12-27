@@ -44,7 +44,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import DetailPageCard, { ContentType, Content } from '@common/components/DetailPageCard/DetailPageCard'
 import routes from '@common/RouteDefinitions'
-import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -236,18 +236,15 @@ const renderSwitch = ({
 
 export default function TriggersDetailPage(): JSX.Element {
   const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
-
   const [selectedView, setSelectedView] = React.useState<SelectedView>(SelectedView.VISUAL)
-
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, triggerIdentifier, module } = useParams<
-    PipelineType<{
-      projectIdentifier: string
-      orgIdentifier: string
-      accountId: string
-      pipelineIdentifier: string
-      triggerIdentifier: string
-    }>
+    PipelineType<
+      PipelinePathProps & {
+        triggerIdentifier: string
+      }
+    >
   >()
+  const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
   const {
     data: triggerResponse,
@@ -269,7 +266,14 @@ export default function TriggersDetailPage(): JSX.Element {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      targetIdentifier: pipelineIdentifier
+      targetIdentifier: pipelineIdentifier,
+      ignoreError: true,
+      ...(isNewGitSyncRemotePipeline && {
+        branch,
+        connectorRef,
+        repoName,
+        storeType
+      })
     },
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
   })
@@ -376,8 +380,6 @@ export default function TriggersDetailPage(): JSX.Element {
   const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
 
   const isTriggerRbacDisabled = !isExecutable || isPipelineInvalid
-
-  const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
   let pipelineInputSet
   if (isNewGitSyncRemotePipeline) {

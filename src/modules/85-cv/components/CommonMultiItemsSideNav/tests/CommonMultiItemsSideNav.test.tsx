@@ -6,139 +6,166 @@
  */
 
 import React from 'react'
+import * as Formik from 'formik'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
 import { CommonMultiItemsSideNav } from '../CommonMultiItemsSideNav'
 import { getFilteredGroupedCreatedMetric, getSelectedMetricIndex } from '../CommonMultiItemsSideNav.utils'
+import { groupedCreatedMetrics } from './CommonMultiItemsSideNav.mock'
 
 describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
   const defaultMetricName = 'metric-1'
   const tooptipMessage = 'Please fill all required fields'
   const addFieldLabel = 'Add Query'
+  const useFormikContextMock = jest.spyOn(Formik, 'useFormikContext')
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+
+    useFormikContextMock.mockReturnValue({
+      values: {}
+    } as unknown as any)
+  })
 
   test('Ensure that all passed in metrics are rendered in CommonMultiItemsSideNav', async () => {
     const { container, getByText } = render(
       <TestWrapper>
-        <CommonMultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['app1', 'app2', 'app3']}
-          onRemoveMetric={jest.fn()}
-          onSelectMetric={jest.fn()}
-          isValidInput={true}
-          renamedMetric="app1"
-          openEditMetricModal={jest.fn()}
-        />
+        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+          <CommonMultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['appdMetric 101', 'appdMetric 102']}
+            onRemoveMetric={jest.fn()}
+            onSelectMetric={jest.fn()}
+            isValidInput={true}
+            renamedMetric="appdMetric 101"
+            openEditMetricModal={jest.fn()}
+            defaultSelectedMetric={'appdMetric 101'}
+            groupedCreatedMetrics={groupedCreatedMetrics}
+          />
+        </CommonHealthSourceProvider>
       </TestWrapper>
     )
+    await waitFor(() => expect(getByText('appdMetric 101')).not.toBeNull())
+    await waitFor(() => expect(getByText('appdMetric 102')).not.toBeNull())
 
-    await waitFor(() => expect(getByText('app1')).not.toBeNull())
-    await waitFor(() => expect(getByText('app2')).not.toBeNull())
-    await waitFor(() => expect(getByText('app3')).not.toBeNull())
-
-    expect(container.querySelector('[class*="isSelected"]')?.innerHTML).toEqual('app1')
+    expect(container.querySelector('[class*="isSelected"]')?.textContent).toEqual('appdMetric 101')
   })
 
-  test('Ensure onSelect and onDelete work in CommonMultiItemsSideNav', async () => {
+  test('Ensure onSelect work in CommonMultiItemsSideNav', async () => {
     const onSelectMock = jest.fn()
     const onRemoveMock = jest.fn()
     const { container, getByText } = render(
       <TestWrapper>
-        <CommonMultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['app1', 'app2', 'app3']}
-          onRemoveMetric={onRemoveMock}
-          onSelectMetric={onSelectMock}
-          isValidInput={true}
-          renamedMetric="app1"
-          openEditMetricModal={jest.fn()}
-        />
+        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+          <CommonMultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['appdMetric 101', 'appdMetric 102']}
+            onRemoveMetric={onRemoveMock}
+            onSelectMetric={onSelectMock}
+            isValidInput={true}
+            renamedMetric="appdMetric 101"
+            defaultSelectedMetric={'appdMetric 101'}
+            openEditMetricModal={jest.fn()}
+            groupedCreatedMetrics={groupedCreatedMetrics}
+          />
+        </CommonHealthSourceProvider>
       </TestWrapper>
     )
 
-    await waitFor(() => expect(getByText('app1')).not.toBeNull())
-    expect(container.querySelector('[class*="isSelected"]')?.innerHTML).toEqual('app1')
+    await waitFor(() => expect(getByText('appdMetric 101')).not.toBeNull())
+    expect(container.querySelector('[class*="isSelected"]')?.textContent).toEqual('appdMetric 101')
 
     // select second app
-    fireEvent.click(getByText('app2'))
-    await waitFor(() => expect(container.querySelector('[class*="isSelected"]')?.innerHTML).toEqual('app2'))
-    expect(onSelectMock).toHaveBeenCalledWith('app2', ['app1', 'app2', 'app3'], 1)
-
-    const deleteButtons = container.querySelectorAll('[data-icon="main-delete"]')
-    expect(deleteButtons.length).toBe(3)
-
-    // delete second app
-    fireEvent.click(deleteButtons[1])
-    await waitFor(() => expect(container.querySelectorAll('[data-icon="main-delete"]').length).toBe(2))
-    expect(onRemoveMock).toHaveBeenCalledWith('app2', 'app1', ['app1', 'app3'], 0)
-
-    expect(container.querySelector('[class*="isSelected"]')?.innerHTML).toEqual('app1')
+    fireEvent.click(getByText('appdMetric 102'))
+    await waitFor(() => expect(container.querySelector('[class*="isSelected"]')?.textContent).toEqual('appdMetric 102'))
+    expect(onSelectMock).toHaveBeenCalledWith('appdMetric 102', ['appdMetric 101', 'appdMetric 102'], undefined)
   })
 
   test('Ensure that only when single app is there delete button does not exist in CommonMultiItemsSideNav', async () => {
     const { container, getByText } = render(
       <TestWrapper>
-        <CommonMultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['app1']}
-          onRemoveMetric={jest.fn()}
-          onSelectMetric={jest.fn()}
-          isValidInput={true}
-          renamedMetric="app1"
-          openEditMetricModal={jest.fn()}
-        />
+        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+          <CommonMultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['appdMetric 101']}
+            onRemoveMetric={jest.fn()}
+            onSelectMetric={jest.fn()}
+            isValidInput={true}
+            renamedMetric="appdMetric 101"
+            openEditMetricModal={jest.fn()}
+            defaultSelectedMetric={'appdMetric 101'}
+            groupedCreatedMetrics={{
+              'Group 1': [{ groupName: { label: 'Group 1', value: 'Group 1' }, metricName: 'appdMetric 101' }]
+            }}
+          />
+        </CommonHealthSourceProvider>
       </TestWrapper>
     )
 
-    await waitFor(() => expect(getByText('app1')).not.toBeNull())
-    expect(container.querySelector('[class*="isSelected"]')?.innerHTML).toEqual('app1')
+    await waitFor(() => expect(getByText('appdMetric 101')).not.toBeNull())
+    expect(container.querySelector('[class*="isSelected"]')?.textContent).toEqual('appdMetric 101')
     expect(container.querySelectorAll('[data-icon="main-delete"]').length).toBe(0)
   })
 
   test('Ensure that when selected app name changes, the nav shows that change in CommonMultiItemsSideNav', async () => {
     const { container, getByText, rerender } = render(
       <TestWrapper>
-        <CommonMultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['app1']}
-          onRemoveMetric={jest.fn()}
-          onSelectMetric={jest.fn()}
-          isValidInput={true}
-          renamedMetric="app1"
-          openEditMetricModal={jest.fn()}
-        />
+        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+          <CommonMultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['appdMetric 101']}
+            onRemoveMetric={jest.fn()}
+            onSelectMetric={jest.fn()}
+            isValidInput={true}
+            renamedMetric="appdMetric 101"
+            openEditMetricModal={jest.fn()}
+            defaultSelectedMetric={'appdMetric 101'}
+            groupedCreatedMetrics={{
+              'Group 1': [{ groupName: { label: 'Group 1', value: 'Group 1' }, metricName: 'appdMetric 101' }]
+            }}
+          />
+        </CommonHealthSourceProvider>
       </TestWrapper>
     )
 
-    await waitFor(() => expect(getByText('app1')).not.toBeNull())
-    expect(container.querySelector('[class*="isSelected"]')?.innerHTML).toEqual('app1')
+    await waitFor(() => expect(getByText('appdMetric 101')).not.toBeNull())
+    expect(container.querySelector('[class*="isSelected"]')?.textContent).toEqual('appdMetric 101')
     expect(container.querySelectorAll('[data-icon="main-delete"]').length).toBe(0)
 
     rerender(
       <TestWrapper>
-        <CommonMultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['app1']}
-          onRemoveMetric={jest.fn()}
-          onSelectMetric={jest.fn()}
-          isValidInput={true}
-          renamedMetric="solo-dolo"
-          openEditMetricModal={jest.fn()}
-        />
+        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+          <CommonMultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['solo-dolo']}
+            onRemoveMetric={jest.fn()}
+            onSelectMetric={jest.fn()}
+            isValidInput={true}
+            renamedMetric="solo-dolo"
+            openEditMetricModal={jest.fn()}
+            defaultSelectedMetric={'solo-dolo'}
+            groupedCreatedMetrics={{
+              'Group 1': [{ groupName: { label: 'Group 1', value: 'Group 1' }, metricName: 'solo-dolo' }]
+            }}
+          />
+        </CommonHealthSourceProvider>
       </TestWrapper>
     )
 
     await waitFor(() => expect(getByText('solo-dolo')).not.toBeNull())
-    expect(container.querySelector('[class*="isSelected"]')?.innerHTML).toEqual('solo-dolo')
+    expect(container.querySelector('[class*="isSelected"]')?.textContent).toEqual('solo-dolo')
+    expect(container.querySelector('[data-testid="sideNav-solo-dolo"]')?.textContent).toEqual('solo-dolo')
     expect(container.querySelectorAll('[data-icon="main-delete"]').length).toBe(0)
   })
 
@@ -146,22 +173,28 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
     const onSelectMock = jest.fn()
     const { container, getByText } = render(
       <TestWrapper>
-        <CommonMultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['app1']}
-          onRemoveMetric={jest.fn()}
-          onSelectMetric={onSelectMock}
-          isValidInput={true}
-          renamedMetric="app1"
-          openEditMetricModal={jest.fn()}
-        />
+        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+          <CommonMultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['appdMetric 101']}
+            onRemoveMetric={jest.fn()}
+            onSelectMetric={onSelectMock}
+            isValidInput={true}
+            renamedMetric="appdMetric 101"
+            openEditMetricModal={jest.fn()}
+            defaultSelectedMetric={'appdMetric 101'}
+            groupedCreatedMetrics={{
+              'Group 1': [{ groupName: { label: 'Group 1', value: 'Group 1' }, metricName: 'appdMetric 101' }]
+            }}
+          />
+        </CommonHealthSourceProvider>
       </TestWrapper>
     )
 
-    await waitFor(() => expect(getByText('app1')).not.toBeNull())
-    expect(container.querySelector('[class*="isSelected"]')?.innerHTML).toEqual('app1')
+    await waitFor(() => expect(getByText('appdMetric 101')).not.toBeNull())
+    expect(container.querySelector('[class*="isSelected"]')?.textContent).toEqual('appdMetric 101')
   })
 
   test('valide getSelectedMetricIndex utils for CommonMultiItemsSideNav', () => {

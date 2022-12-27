@@ -81,7 +81,7 @@ function TemplateStepWidget(
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: stepTemplateVersionLabel,
-      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
     }
   })
 
@@ -101,7 +101,7 @@ function TemplateStepWidget(
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: stepTemplateVersionLabel,
-      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
     }
   })
 
@@ -196,9 +196,7 @@ function TemplateStepWidget(
   return (
     <div className={stepCss.stepPanel}>
       <Formik<TemplateStepNode>
-        onSubmit={values => {
-          onUpdate?.(values)
-        }}
+        onSubmit={noop}
         initialValues={formValues}
         formName="templateStepWidget"
         validationSchema={Yup.object().shape({

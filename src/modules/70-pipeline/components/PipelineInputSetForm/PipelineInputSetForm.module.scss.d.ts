@@ -18,6 +18,7 @@ declare const styles: {
   readonly nestedAccordions: string
   readonly noMarginLeft: string
   readonly pipelineStageForm: string
+  readonly runTimeWidth: string
   readonly stagesTreeBulletCircle: string
   readonly stagesTreeBulletSquare: string
   readonly strategyContainer: string

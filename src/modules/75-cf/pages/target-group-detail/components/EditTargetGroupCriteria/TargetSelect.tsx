@@ -49,6 +49,7 @@ const TargetSelect: FC<TargetSelectProps> = ({ environmentIdentifier, fieldName,
       label={label}
       className={css.input}
       items={targetOptions}
+      usePortal
       multiSelectProps={{
         allowCreatingNewItems: false,
         placeholder: getString('cf.segmentDetail.searchTarget'),

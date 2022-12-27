@@ -34,7 +34,8 @@ jest.mock('services/pipeline-rq', () => ({
 const OutOfSyncErrorStripMock = jest.spyOn(OutOfSyncErrorStrip, 'OutOfSyncErrorStrip')
 
 const baseProps: PipelineOutOfSyncErrorStripProps = {
-  updateRootEntity: jest.fn()
+  updateRootEntity: jest.fn(),
+  loadFromcache: true
 }
 
 describe('<PipelineOutOfSyncErrorStrip /> tests', () => {

@@ -52,7 +52,7 @@ import {
   ActiveServiceInfo,
   PipelineExecutionInfo
 } from 'services/dashboard-service'
-import { FailedStatus, useErrorHandler } from '@pipeline/components/Dashboards/shared'
+import { useErrorHandler } from '@pipeline/components/Dashboards/shared'
 import DashboardAPIErrorWidget from '@projects-orgs/components/DashboardAPIErrorWidget/DashboardAPIErrorWidget'
 import DashboardNoDataWidget from '@projects-orgs/components/DashboardNoDataWidget/DashboardNoDataWidget'
 
@@ -108,6 +108,8 @@ function EmptyCard({ children }: { children: React.ReactElement }): JSX.Element 
   )
 }
 
+const FailedStatus = ['Failed', 'Aborted', 'Expired', 'Errored', 'ApprovalRejected']
+
 const makeKey = (item: PipelineExecutionInfo) => {
   const accountInfo = item.accountInfo?.accountIdentifier
   const orgInfo = item.orgInfo?.orgIdentifier
@@ -117,10 +119,14 @@ const makeKey = (item: PipelineExecutionInfo) => {
 
 function DeployOverviewPopover({
   overview,
-  status
+  status,
+  startTime,
+  endTime
 }: {
   overview: PipelineExecutionInfo[]
   status: string[]
+  startTime: number
+  endTime: number
 }): JSX.Element {
   const { getString } = useStrings()
 
@@ -135,7 +141,7 @@ function DeployOverviewPopover({
     const orgIdentifier = defaultTo(item.orgInfo?.orgIdentifier, '')
     const accountId = defaultTo(item.accountInfo?.accountIdentifier, '')
     const route = routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'cd' })
-    const filterQuery = isEqual(status, Object.keys(FailedStatus))
+    const filterQuery = isEqual(status, FailedStatus)
       ? {
           status,
           timeRange: {
@@ -143,7 +149,13 @@ function DeployOverviewPopover({
             endTime: Date.now()
           }
         }
-      : { status }
+      : {
+          status,
+          timeRange: {
+            startTime,
+            endTime
+          }
+        }
     const search = qs.stringify({ filters: { ...filterQuery } })
     window.open(`#${route + '?' + search}`)
   }
@@ -202,7 +214,12 @@ const showBadgesCard = (deploymentsOverview: DeploymentsOverview): boolean => {
   return nonZeroDeploymentsOverviewKeys.length > 0
 }
 
-const getBadge = (type: string, deployStat: PipelineExecutionInfo[]): JSX.Element | null => {
+const getBadge = (
+  type: string,
+  deployStat: PipelineExecutionInfo[],
+  startTime: number,
+  endTime: number
+): JSX.Element | null => {
   const stat = deployStat.length
   if (stat <= 0) {
     return null
@@ -222,7 +239,12 @@ const getBadge = (type: string, deployStat: PipelineExecutionInfo[]): JSX.Elemen
               )}
             </Text>
           </div>
-          <DeployOverviewPopover overview={deployStat} status={['InterventionWaiting']} />
+          <DeployOverviewPopover
+            overview={deployStat}
+            status={['InterventionWaiting']}
+            startTime={startTime}
+            endTime={endTime}
+          />
         </Popover>
       )
     case 'pendingApprovalExecutions':
@@ -239,7 +261,12 @@ const getBadge = (type: string, deployStat: PipelineExecutionInfo[]): JSX.Elemen
               )}
             </Text>
           </div>
-          <DeployOverviewPopover overview={deployStat} status={['ApprovalWaiting']} />
+          <DeployOverviewPopover
+            overview={deployStat}
+            status={['ApprovalWaiting']}
+            startTime={startTime}
+            endTime={endTime}
+          />
         </Popover>
       )
     case 'failed24HrsExecutions':
@@ -256,7 +283,7 @@ const getBadge = (type: string, deployStat: PipelineExecutionInfo[]): JSX.Elemen
               )}
             </Text>
           </div>
-          <DeployOverviewPopover overview={deployStat} status={Object.keys(FailedStatus)} />
+          <DeployOverviewPopover overview={deployStat} status={FailedStatus} startTime={startTime} endTime={endTime} />
         </Popover>
       )
     case 'runningExecutions':
@@ -267,13 +294,18 @@ const getBadge = (type: string, deployStat: PipelineExecutionInfo[]): JSX.Elemen
             <Text className={css.badgeText}>
               {`${stat} `}
               {stat > 1 ? (
-                <String stringID={'pipeline.dashboardDeploymentsWidget.runningPipeline.plural'} />
+                <String stringID={'pipeline.dashboardDeploymentsWidget.activePipeline.plural'} />
               ) : (
-                <String stringID={'pipeline.dashboardDeploymentsWidget.runningPipeline.singular'} />
+                <String stringID={'pipeline.dashboardDeploymentsWidget.activePipeline.singular'} />
               )}
             </Text>
           </div>
-          <DeployOverviewPopover overview={deployStat} status={['Running']} />
+          <DeployOverviewPopover
+            overview={deployStat}
+            status={['Running', 'TaskWaiting', 'Paused', 'AsyncWaiting', 'TimedWaiting', 'Pausing']}
+            startTime={startTime}
+            endTime={endTime}
+          />
         </Popover>
       )
     default:
@@ -604,7 +636,7 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
           {response?.deploymentsOverview &&
             Object.keys(response?.deploymentsOverview).map(key =>
               // eslint-disable-next-line
-              getBadge(key, (response?.deploymentsOverview as any)[key])
+              getBadge(key, (response?.deploymentsOverview as any)[key], range[0], range[1])
             )}
         </Card>
       )}

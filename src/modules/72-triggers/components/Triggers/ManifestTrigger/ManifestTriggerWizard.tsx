@@ -683,7 +683,7 @@ export default function ManifestTriggerWizard(
       originalPipeline,
       resolvedPipeline,
       inputSetTemplateYamlObj,
-      pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew)
+      pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew) || branch
     }
   }
 

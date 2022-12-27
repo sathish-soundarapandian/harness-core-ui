@@ -19,6 +19,7 @@ import { RightBar } from '@freeze-windows/components/RightBar/RightBar'
 import { FreezeWindowStudioHeader } from '@freeze-windows/components/FreezeWindowStudioHeader/FreezeWindowStudioHeader'
 import { FreezeWindowStudioSubHeader } from '@freeze-windows/components/FreezeWindowStudioSubHeader/FreezeWindowStudioSubHeader'
 import { FreezeWindowStudioBody } from '@freeze-windows/components/FreezeWindowStudioBody/FreezeWindowStudioBody'
+import { DefaultFreezeId } from '@freeze-windows/context/FreezeWindowReducer'
 
 const _FreezeWindowStudioPage = (): React.ReactElement => {
   const {
@@ -71,7 +72,7 @@ const _FreezeWindowStudioPage = (): React.ReactElement => {
   return (
     <>
       <NavigationCheck
-        when={freezeObj.identifier !== ''}
+        when={freezeObj.identifier !== DefaultFreezeId}
         shouldBlockNavigation={nextLocation => {
           const matchDefault = matchPath(nextLocation.pathname, {
             path: routes.toFreezeWindowStudio(PATH_PARAMS[freezeWindowLevel]),

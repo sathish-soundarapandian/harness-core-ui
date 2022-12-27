@@ -1,0 +1,109 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.main {
+  padding: var(--spacing-small) !important;
+
+  .queryContainer {
+    position: relative;
+    .queryIcons {
+      justify-content: flex-end;
+      width: 68px !important;
+      position: absolute;
+      top: 5px;
+
+      .action {
+        padding: var(--spacing-xsmall) var(--spacing-small) !important;
+        box-shadow: none !important;
+        border: 1px solid var(--grey-200) !important;
+      }
+    }
+  }
+}
+
+.formQueryBox textarea {
+  width: 100%;
+  border-radius: 8px;
+  resize: vertical;
+  min-height: 200px;
+  padding: var(--spacing-medium) !important;
+}
+
+.tooManyRecords {
+  background: var(--red-100) !important;
+  padding: var(--spacing-xsmall) var(--spacing-small) !important;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  span {
+    margin-right: var(--spacing-xsmall) !important;
+  }
+}
+
+.queryAndRecords {
+  margin-top: var(--spacing-large) !important;
+
+  .noRecords {
+    > div {
+      height: unset !important;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .centerElement {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .noQueryChart {
+    white-space: nowrap !important;
+  }
+  .chartContainer {
+    position: relative;
+    height: 387px !important;
+    width: 100% !important;
+    border: 1px solid var(--grey-200);
+    border-radius: var(--spacing-3);
+    overflow-y: scroll;
+
+    .chart > div {
+      padding: var(--spacing-large) 15px !important;
+      padding-right: 25px !important;
+      background-color: var(--white);
+    }
+  }
+}
+
+.recordContainer [class*='panel'] {
+  border: none !important;
+  border-radius: 0 !important;
+
+  pre {
+    color: var(--black) !important;
+  }
+
+  &:nth-of-type(2n - 1) {
+    background-color: var(--grey-100) !important;
+  }
+}
+
+.labelText {
+  color: var(--black) !important;
+  margin-bottom: var(--spacing-small) !important;
+}
+
+.queryViewDialog {
+  padding: var(--spacing-large) !important;
+  .chartContainer {
+    height: 580px !important;
+  }
+}

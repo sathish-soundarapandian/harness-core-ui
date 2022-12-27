@@ -61,6 +61,7 @@ exports[`Test K8sCanaryDeleteStep inputset with path 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -271,6 +272,7 @@ exports[`Test K8sCanaryDeleteStep should render edit view  1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -490,6 +492,7 @@ exports[`Test K8sCanaryDeleteStep should render edit view as new step 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -578,6 +581,7 @@ exports[`Test K8sCanaryDeleteStep should render edit view for inputset 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -712,6 +716,7 @@ exports[`Test K8sCanaryDeleteStep should render null for StepviewType.template 1
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

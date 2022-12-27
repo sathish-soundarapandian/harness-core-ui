@@ -28,6 +28,7 @@ import { DeployEnvironmentGroupStep } from './DeployEnvironmentGroupStep/DeployE
 import { DeployInfrastructureStep } from './DeployInfrastructureStep/DeployInfrastructureStep'
 import { DeployInfrastructureEntityStep } from './DeployInfrastructureEntityStep/DeployInfrastructureEntityStep'
 import { DeployClusterEntityStep } from './DeployClusterEntityStep/DeployClusterEntityStep'
+import { InlineEntityFiltersStep } from './DeployEnvironmentEntityStep/components/InlineEntityFilters/InlineEntityFiltersStep'
 import { DeployServiceStep } from './DeployServiceStep/DeployServiceStep'
 import { HelmDeploy } from './HelmDeploy/HelmDeploy'
 import { HelmRollback } from './HelmRollback/HelmRollback'
@@ -61,7 +62,9 @@ import { AzureSlotDeployment } from './AzureSlotDeployment/AzureSlotDeployment'
 import { AzureTrafficShift } from './AzureTrafficShift/AzureTrafficShift'
 import { AzureSwapSlot } from './AzureWebAppSwapSlot/AzureWebAppSwapSlot'
 import { AzureWebAppServiceSpec } from './AzureWebAppServiceSpec/AzureWebAppServiceSpec'
+import { ASGServiceSpec } from './ASGServiceSpec/ASGServiceSpec'
 import { ECSInfraSpec } from './ECSInfraSpec/ECSInfraSpec'
+import { AsgInfraSpec } from './AsgInfraSpec/AsgInfraSpec'
 import { ECSServiceSpec } from './ECSServiceSpec/ECSServiceSpec'
 import { ECSRollingDeployStep } from './ECSRollingDeployStep/ECSRollingDeployStep'
 import { ECSRollingRollbackStep } from './ECSRollingRollbackStep/ECSRollingRollbackStep'
@@ -84,6 +87,22 @@ import { ElastigroupInfrastructureSpec } from './ElastigroupInfraSpec/Elastigrou
 import { ElastigroupServiceSpec } from './ElastigroupServiceSpec/ElastigroupServiceSpec'
 import { EmailStep } from './EmailStep/EmailStep'
 import { ElastigroupRollbackStep } from './ElastigroupRollbackStep/ElastigroupRollbackStep'
+import { ElastigroupSetupStep } from './ElastigroupSetupStep/ElastigroupSetupStep'
+import { TasServiceSpec } from './TasServiceSpec/TasServiceSpec'
+import { TASInfrastructureSpec } from './TASInfrastructureStep/TASInfrastructureStep'
+import { SwapRollbackStep } from './SwapRollbackStep/SwapRollback'
+import { SwapRouteStep } from './SwapRouteStep/SwapRouteStep'
+import { TASRollbackStep } from './TasRollbackStep/TasRollbackStep'
+import { TanzuCommandStep } from './TanzuCommandStep/TanzuCommand'
+import { ElastigroupDeploy } from './ElastigroupDeploy/ElastigroupDeploy'
+import { ElastigroupSwapRouteStep } from './ElastigroupSwapRouteStep/ElastigroupSwapRouteStep'
+import { ElastigroupBGStageSetupStep } from './ElastigroupBGStageSetupStep/ElastigroupBGStageSetupStep'
+import { AppResizeStep } from './AppResizeStep/AppResizeStep'
+import { TASBasicAppSetupStep } from './TASBasicAppSetupStep/TASBasicAppSetupStep'
+import { TasBGAppSetupStep } from './TasBGAppSetup/TasBGAppSetup'
+import { TasCanaryAppSetupStep } from './TasCanaryAppSetup/TasCanaryAppSetup'
+import { AsgCanaryDeleteStep } from './AsgCanaryDeleteStep/AsgCanaryDeleteStep'
+import { AsgCanaryDeployStep } from './AsgCanaryDeploy/AsgCanaryDeployStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -112,6 +131,7 @@ factory.registerStep(new DeployEnvironmentGroupStep())
 factory.registerStep(new DeployInfrastructureStep())
 factory.registerStep(new DeployInfrastructureEntityStep())
 factory.registerStep(new DeployClusterEntityStep())
+factory.registerStep(new InlineEntityFiltersStep())
 factory.registerStep(new DeployServiceStep())
 factory.registerStep(new DeployServiceEntityStep())
 factory.registerStep(new GenericServiceSpec())
@@ -144,6 +164,7 @@ factory.registerStep(new AzureSlotDeployment())
 factory.registerStep(new AzureTrafficShift())
 factory.registerStep(new AzureSwapSlot())
 factory.registerStep(new ECSInfraSpec())
+factory.registerStep(new AsgInfraSpec())
 factory.registerStep(new ECSServiceSpec())
 factory.registerStep(new ECSRollingDeployStep())
 factory.registerStep(new ECSRollingRollbackStep())
@@ -162,3 +183,20 @@ factory.registerStep(new ShellScriptProvisionStep())
 factory.registerStep(new ElastigroupInfrastructureSpec())
 factory.registerStep(new ElastigroupServiceSpec())
 factory.registerStep(new ElastigroupRollbackStep())
+factory.registerStep(new ElastigroupSetupStep())
+factory.registerStep(new TasServiceSpec())
+factory.registerStep(new TASInfrastructureSpec())
+factory.registerStep(new ASGServiceSpec())
+factory.registerStep(new SwapRollbackStep())
+factory.registerStep(new SwapRouteStep())
+factory.registerStep(new TASRollbackStep())
+factory.registerStep(new TanzuCommandStep())
+factory.registerStep(new ElastigroupDeploy())
+factory.registerStep(new ElastigroupSwapRouteStep())
+factory.registerStep(new ElastigroupBGStageSetupStep())
+factory.registerStep(new AppResizeStep())
+factory.registerStep(new TASBasicAppSetupStep())
+factory.registerStep(new TasBGAppSetupStep())
+factory.registerStep(new TasCanaryAppSetupStep())
+factory.registerStep(new AsgCanaryDeleteStep())
+factory.registerStep(new AsgCanaryDeployStep())

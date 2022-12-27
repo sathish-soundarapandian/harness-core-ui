@@ -12,6 +12,7 @@ import type { ExecutionNode } from 'services/pipeline-ng'
 import { getDefaultReducerState } from '@pipeline/components/LogsContent/LogsState/utils'
 import type { UseActionCreatorReturn } from '@pipeline/components/LogsContent/LogsState/actions'
 import { ServiceNowImportSetView } from '../ServiceNowImportSetView/ServiceNowImportSetView'
+import { executionMetadata } from './mock'
 
 const stepProps = {
   outcomes: {
@@ -91,7 +92,7 @@ describe('ServiceNowImportSet View Test ', () => {
   test('snapshot for displaying import set details', () => {
     const { container } = render(
       <TestWrapper>
-        <ServiceNowImportSetView step={stepProps}></ServiceNowImportSetView>
+        <ServiceNowImportSetView step={stepProps} executionMetadata={executionMetadata}></ServiceNowImportSetView>
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

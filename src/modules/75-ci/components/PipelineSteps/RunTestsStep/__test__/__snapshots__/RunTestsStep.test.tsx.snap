@@ -166,6 +166,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -277,6 +278,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -357,6 +359,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -468,6 +471,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -631,6 +635,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1076,6 +1081,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                                   >
                                     <button
                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      data-testid="multi-type-button"
                                     >
                                       <span
                                         class="bp3-icon StyledProps--main"
@@ -1139,6 +1145,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                                 >
                                   <button
                                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                    data-testid="multi-type-button"
                                   >
                                     <span
                                       class="bp3-icon StyledProps--main"
@@ -1221,6 +1228,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                                   >
                                     <button
                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      data-testid="multi-type-button"
                                     >
                                       <span
                                         class="bp3-icon StyledProps--main"
@@ -1535,6 +1543,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                                   >
                                     <button
                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      data-testid="multi-type-button"
                                     >
                                       <span
                                         class="bp3-icon StyledProps--main"
@@ -1653,6 +1662,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                                   >
                                     <button
                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      data-testid="multi-type-button"
                                     >
                                       <span
                                         class="bp3-icon StyledProps--main"
@@ -1739,6 +1749,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                                   >
                                     <button
                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      data-testid="multi-type-button"
                                     >
                                       <span
                                         class="bp3-icon StyledProps--main"
@@ -1839,6 +1850,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -1922,6 +1934,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -2015,6 +2028,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                                 >
                                   <button
                                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                    data-testid="multi-type-button"
                                   >
                                     <span
                                       class="bp3-icon StyledProps--main"
@@ -2232,6 +2246,7 @@ exports[`RunTests Step Edit View renders runtime inputs 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2359,6 +2374,7 @@ exports[`RunTests Step Edit View renders runtime inputs 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2478,6 +2494,7 @@ exports[`RunTests Step Edit View renders runtime inputs 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2624,6 +2641,7 @@ exports[`RunTests Step Edit View renders runtime inputs 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2735,6 +2753,7 @@ exports[`RunTests Step Edit View renders runtime inputs 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2818,6 +2837,7 @@ exports[`RunTests Step Edit View renders runtime inputs 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2944,6 +2964,7 @@ exports[`RunTests Step Edit View renders runtime inputs 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -3208,6 +3229,7 @@ exports[`RunTests Step Edit View should render properly 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -3319,6 +3341,7 @@ exports[`RunTests Step Edit View should render properly 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -3399,6 +3422,7 @@ exports[`RunTests Step Edit View should render properly 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -3510,6 +3534,7 @@ exports[`RunTests Step Edit View should render properly 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -3621,6 +3646,7 @@ exports[`RunTests Step Edit View should render properly 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -3876,6 +3902,7 @@ exports[`RunTests Step InputSet View should render all fields 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -3987,6 +4014,7 @@ exports[`RunTests Step InputSet View should render all fields 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -4067,6 +4095,7 @@ exports[`RunTests Step InputSet View should render all fields 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -4143,6 +4172,7 @@ exports[`RunTests Step InputSet View should render all fields 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -4230,6 +4260,7 @@ exports[`RunTests Step InputSet View should render all fields 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -4293,6 +4324,7 @@ exports[`RunTests Step InputSet View should render all fields 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -4383,6 +4415,7 @@ exports[`RunTests Step InputSet View should render all fields 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -4518,6 +4551,7 @@ exports[`RunTests Step InputSet View should render all fields 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -4941,6 +4975,7 @@ exports[`RunTests Step InputSet View should render all fields 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -5190,6 +5225,7 @@ exports[`RunTests Step InputSet View should render all fields 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -5277,6 +5313,7 @@ exports[`RunTests Step InputSet View should render all fields 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -5376,6 +5413,7 @@ exports[`RunTests Step InputSet View should render all fields 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"

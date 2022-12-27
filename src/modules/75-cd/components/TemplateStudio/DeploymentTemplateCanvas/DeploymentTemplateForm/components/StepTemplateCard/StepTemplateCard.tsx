@@ -77,8 +77,8 @@ export function StepTemplateCard(props: StepTemplateCardProps): React.ReactEleme
           !isNil(step) && (
             <Icon
               name={step.getIconName?.()}
+              {...(!isNil(step?.getIconColor?.()) ? { color: step.getIconColor() } : {})}
               size={defaultTo(step.getIconSize?.(), 25)}
-              color={step.getIconColor?.()}
             />
           )
         )}

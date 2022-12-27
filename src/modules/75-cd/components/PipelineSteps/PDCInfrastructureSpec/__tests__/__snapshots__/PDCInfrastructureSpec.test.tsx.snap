@@ -98,6 +98,7 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -204,6 +205,7 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"

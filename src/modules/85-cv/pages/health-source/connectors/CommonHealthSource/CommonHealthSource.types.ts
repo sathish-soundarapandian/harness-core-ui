@@ -6,42 +6,75 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
+import type { StringKeys } from 'framework/strings'
 import type {
   FailMetricThresholdSpec,
   MetricThreshold,
   MetricThresholdSpec,
   TimeSeriesMetricPackDTO
 } from 'services/cv'
-import type { CustomSelectedAndMappedMetrics } from '../../common/CommonCustomMetric/CommonCustomMetric.types'
 import type { CriteriaPercentageType } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { HealthSourceTypes } from '../../types'
+import type { CHART_VISIBILITY_ENUM, FIELD_ENUM } from './CommonHealthSource.constants'
 
 export interface HealthSourcesConfig {
   [x: string]: HealthSourceConfig
 }
 
+export interface FieldMapping {
+  type: FIELD_ENUM
+  label: string
+  identifier: keyof CommonCustomMetricFormikInterface
+  defaultValue: string
+}
+
 export interface HealthSourceConfig {
-  customMetrics: {
+  addQuery: {
+    enableDefaultGroupName?: boolean
+    label: string
+  }
+  customMetrics?: {
+    enabled: boolean
+    queryAndRecords: {
+      enabled: boolean
+      titleStringKey: StringKeys
+    }
+    fieldMappings?: FieldMapping[]
+    metricsChart?: {
+      enabled: boolean
+      chartVisibilityMode: CHART_VISIBILITY_ENUM
+    }
+    logsTable?: {
+      enabled: boolean
+    }
+  }
+  metricPacks: {
     enabled: boolean
   }
-  sideNav: {
+  sideNav?: {
     shouldBeAbleToDeleteLastMetric: boolean
-    enableDefaultGroupName?: boolean
+  }
+  metricThresholds?: {
+    enabled: boolean
   }
 }
 
 export interface HealthSourceSetupSource {
-  isEdit: boolean
-  mappedServicesAndEnvs: Map<string, CommonHealthSourceFormikInterface>
   healthSourceIdentifier: string
   healthSourceName: string
   product: SelectOption
   connectorRef?: { value: string } | string
-  ignoreThresholds: HealthSourceMetricThresholdType[]
-  failFastThresholds: HealthSourceMetricThresholdType[]
   region?: string
   dataSourceType?: string
   workspaceId?: string
+
+  // Custom metrics section
+  customMetricsMap: Map<string, CommonCustomMetricFormikInterface>
+  selectedMetric: string
+
+  // metrics threshold section
+  ignoreThresholds: HealthSourceMetricThresholdType[]
+  failFastThresholds: HealthSourceMetricThresholdType[]
 }
 
 export interface HealthSourceInitialData {
@@ -52,41 +85,42 @@ export interface HealthSourceInitialData {
   product: string
   type: HealthSourceTypes
 
-  // Won't be passed in backend , will be used in UI layer
-  isEdit: boolean
-
   // Configurations Page
-  applicationName?: string
-  tierName?: string
-  region?: string
-  index?: string
-  metricPacks?: TimeSeriesMetricPackDTO[]
-
-  // Won't be passed in backend , will be used in UI layer
-  showCustomMetric?: boolean
+  // non custom metric section
 
   // Custom Metric section
-  mappedServicesAndEnvs: Map<string, CommonHealthSourceFormikInterface>
+  customMetricsMap: Map<string, CommonCustomMetricFormikInterface>
+  selectedMetric?: string
+
+  // metric thresholds
+  ignoreThresholds?: HealthSourceMetricThresholdType[]
+  failFastThresholds?: HealthSourceMetricThresholdType[]
 }
 
-export interface CommonHealthSourceFormikInterface {
+export interface CommonHealthSourceConfigurations {
+  // non custom metric section
+
+  // Custom Metric section
+  customMetricsMap: Map<string, CommonCustomMetricFormikInterface>
+  selectedMetric: string
+
+  // metric thresholds
+  ignoreThresholds: HealthSourceMetricThresholdType[]
+  failFastThresholds: HealthSourceMetricThresholdType[]
+}
+
+export interface CommonCustomMetricFormikInterface {
   identifier: string
   metricName: string
   groupName: SelectOption | string
 
   // Define Query
-  isManualQuery: boolean
   query: string
-  logIndexes?: string
 
-  // metric Chart Mapping
-  metricJsonPath?: string
+  //Metric Chart Mapping & Log fields Mappings
+  valueJsonPath?: string // for logs its log message and for metrics its metric path
   timestampJsonPath?: string
   timestampFormat?: string
-
-  //field Mappings
-  serviceInstance?: string
-  identifyMessage?: string
 
   // Assign
   sli?: boolean
@@ -94,52 +128,16 @@ export interface CommonHealthSourceFormikInterface {
   healthScore?: boolean
 
   // Risk
+  // TODO - define RiskCategoryEnum
   riskCategory?: string
 
   // Deviation compare to baseline
   lowerBaselineDeviation?: boolean
   higherBaselineDeviation?: boolean
 
-  //Map service instance identifier
-  serviceInstanceRisk?: string | SelectOption
-
-  // metric thresholds
-  ignoreThresholds: HealthSourceMetricThresholdType[]
-  failFastThresholds: HealthSourceMetricThresholdType[]
-}
-
-export interface PersistMappedMetricsType {
-  mappedMetrics: Map<string, CommonHealthSourceFormikInterface>
-  selectedMetric: string
-  metricThresholds: MetricThresholdsState
-  formikValues: CommonHealthSourceFormikInterface
-  setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
-}
-
-export const CommonHealthSourceFieldNames = {
-  METRIC_NAME: 'metricName',
-  METRIC_IDENTIFIER: 'identifier',
-  GROUP_NAME: 'groupName',
-
-  SLI: 'sli',
-  HEALTH_SCORE: 'healthScore',
-  CONTINUOUS_VERIFICATION: 'continuousVerification',
-
-  RISK_CATEGORY: 'riskCategory',
-  HIGHER_BASELINE_DEVIATION: 'higherBaselineDeviation',
-  LOWER_BASELINE_DEVIATION: 'lowerBaselineDeviation',
-
-  BASE_URL: 'baseURL',
-  PATH: 'pathURL',
-
-  QUERY: 'query',
-  QUERY_TYPE: 'queryType',
-  REQUEST_METHOD: 'requestMethod',
-
-  METRIC_VALUE: 'metricValue',
-  TIMESTAMP_LOCATOR: 'timestamp',
-  TIMESTAMP_FORMAT: 'timestampFormat',
-  SERVICE_INSTANCE: 'serviceInstanceIdentifier'
+  //TODO - figure out how this can be controlled by config to
+  // show dropdown/input/Json path selector
+  serviceInstance?: string | SelectOption
 }
 
 // Metric Thresholds
@@ -152,4 +150,22 @@ export type HealthSourceMetricThresholdType = Omit<MetricThreshold, 'groupName'>
   criteria: MetricThreshold['criteria'] & CriteriaPercentageType
   metricType?: string
   spec?: MetricThresholdSpec & FailMetricThresholdSpec
+}
+
+export interface GroupedMetric {
+  groupName?: SelectOption | string
+  metricName?: string
+  index?: number
+  continuousVerification?: boolean
+}
+
+export interface GroupedCreatedMetrics {
+  [Key: string]: GroupedMetric[]
+}
+
+export interface CommonMetricThresholdProviderProps {
+  formikValues: CommonHealthSourceConfigurations
+  groupedCreatedMetrics: GroupedCreatedMetrics
+  metricPacks: TimeSeriesMetricPackDTO[]
+  isOnlyCustomMetricHealthSource?: boolean
 }

@@ -517,6 +517,9 @@ exports[`<TemplateDetails /> tests should match snapshot - when reference by tab
                 </div>
               </div>
             </div>
+            <div
+              class="gitCacheContainer"
+            />
           </div>
         </div>
       </div>
@@ -960,6 +963,9 @@ exports[`<TemplateDetails /> tests should match snapshot 1`] = `
                 </div>
               </div>
             </div>
+            <div
+              class="gitCacheContainer"
+            />
           </div>
         </div>
       </div>

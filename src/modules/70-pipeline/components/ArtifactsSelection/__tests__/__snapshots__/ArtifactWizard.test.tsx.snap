@@ -1068,6 +1068,7 @@ exports[`Artifact WizardStep tests new connector view works correctly in select 
                             >
                               <button
                                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                data-testid="multi-type-button"
                               >
                                 <span
                                   class="bp3-icon StyledProps--main"

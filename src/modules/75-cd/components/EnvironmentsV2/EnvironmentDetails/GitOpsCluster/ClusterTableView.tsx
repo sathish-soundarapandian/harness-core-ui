@@ -40,12 +40,13 @@ interface ClusterTableViewProps {
 }
 
 const RenderClusterRef: Renderer<CellProps<ClusterResponse>> = ({ row }) => {
-  const data = row.original.clusterRef as any
+  const clusterName = row.original.name as string
+  const clusterRef = row.original.clusterRef as string
   const { getString } = useStrings()
   return (
     <Layout.Vertical>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small" margin={{ bottom: 'small' }}>
-        <Text color={Color.BLACK}>{data}</Text>
+        <Text color={Color.BLACK}>{clusterName || clusterRef}</Text>
         {row.original.tags && !isEmpty(row.original.tags) ? (
           <TagsPopover
             className={css.tagsPopover}
@@ -56,7 +57,7 @@ const RenderClusterRef: Renderer<CellProps<ClusterResponse>> = ({ row }) => {
       </Layout.Horizontal>
 
       <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
-        {getString('common.ID')}: {data}
+        {getString('common.ID')}: {clusterRef}
       </Text>
     </Layout.Vertical>
   )

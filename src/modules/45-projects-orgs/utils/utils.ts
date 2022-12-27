@@ -11,6 +11,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import routes from '@common/RouteDefinitions'
 import type { StringKeys, StringsMap } from 'framework/strings/StringsContext'
 import { ModuleName } from 'framework/types/ModuleName'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 
 interface RoleOption extends SelectOption {
   managed: boolean
@@ -103,14 +104,14 @@ export const getDefaultRole = (scope: ScopedObjectDTO, getString: (key: keyof St
 
 export const getDetailsUrl = ({ accountId, orgIdentifier, projectIdentifier }: ScopedDTO): string => {
   if (projectIdentifier && orgIdentifier) {
-    return `${window.location.href.split('#')[0]}#${routes.toProjectDetails({
+    return `${windowLocationUrlPartBeforeHash()}#${routes.toProjectDetails({
       accountId,
       orgIdentifier,
       projectIdentifier
     })}`
   }
   if (orgIdentifier) {
-    return `${window.location.href.split('#')[0]}#${routes.toOrganizationDetails({ accountId, orgIdentifier })}`
+    return `${windowLocationUrlPartBeforeHash()}#${routes.toOrganizationDetails({ accountId, orgIdentifier })}`
   }
   return ''
 }

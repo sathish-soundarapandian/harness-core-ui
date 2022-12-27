@@ -88,6 +88,7 @@ exports[`Custom Variables can add a string variable 1`] = `
                   >
                     <button
                       class="MultiTypeInput--miniBtn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -331,6 +332,7 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -541,6 +543,7 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -809,6 +812,7 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1019,6 +1023,7 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1239,6 +1244,7 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1591,6 +1597,7 @@ exports[`Custom Variables should render variables 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1801,6 +1808,7 @@ exports[`Custom Variables should render variables 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -2021,6 +2029,7 @@ exports[`Custom Variables should render variables 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"

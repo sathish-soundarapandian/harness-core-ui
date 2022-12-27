@@ -99,6 +99,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -203,6 +204,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -334,6 +336,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -408,6 +411,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -493,6 +497,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -611,6 +616,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -698,6 +704,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -802,6 +809,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -889,6 +897,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -988,6 +997,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -1446,6 +1456,7 @@ exports[`Git Clone Step Step Render initial render 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1550,6 +1561,7 @@ exports[`Git Clone Step Step Render initial render 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1625,6 +1637,7 @@ exports[`Git Clone Step Step Render initial render 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1725,6 +1738,7 @@ exports[`Git Clone Step Step Render initial render 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -1810,6 +1824,7 @@ exports[`Git Clone Step Step Render initial render 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2044,6 +2059,7 @@ exports[`Git Clone Step Step Render should render onEdit fixed values properly 1
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2199,6 +2215,7 @@ exports[`Git Clone Step Step Render should render onEdit fixed values properly 1
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2274,6 +2291,7 @@ exports[`Git Clone Step Step Render should render onEdit fixed values properly 1
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2385,6 +2403,7 @@ exports[`Git Clone Step Step Render should render onEdit fixed values properly 1
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -2456,6 +2475,7 @@ exports[`Git Clone Step Step Render should render onEdit fixed values properly 1
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -2541,6 +2561,7 @@ exports[`Git Clone Step Step Render should render onEdit fixed values properly 1
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2785,6 +2806,7 @@ exports[`Git Clone Step Step Render should render onEdit runtime input values pr
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2905,6 +2927,7 @@ exports[`Git Clone Step Step Render should render onEdit runtime input values pr
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3013,6 +3036,7 @@ exports[`Git Clone Step Step Render should render onEdit runtime input values pr
                       </div>
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                        data-testid="multi-type-button"
                         disabled=""
                       >
                         <span
@@ -3133,6 +3157,7 @@ exports[`Git Clone Step Step Render should render onEdit runtime input values pr
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -3222,6 +3247,7 @@ exports[`Git Clone Step Step Render should render onEdit runtime input values pr
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"

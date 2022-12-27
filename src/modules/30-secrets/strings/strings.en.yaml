@@ -70,10 +70,9 @@ secret:
   secretCreated: Secret Created
   secretActivity: Secret Activity
   labelSecretFile: 'Select File'
-  labelSecretReference: 'Reference Secret Identifier'
   messageSelectSM: 'Please select a Secret Manager'
   placeholderSecretValue: 'Add your secret value'
-  placeholderSecretReference: 'Add the Identifier of the secret to reference'
+  placeholderSecretReference: 'Add your value of the reference secret'
   validationNameChars: 'Name can only contain alphanumerics, _, and $'
   validationKms: 'Secret Manager is required'
   validationIdentifier: 'Id is required'
@@ -91,6 +90,7 @@ secret:
   successMessage: Secret '{{name}}' {{action}} successfully
   configureRegion: 'Configure Region'
   region: 'Regions'
+  referenceRqrd: 'Reference is required'
   referenceSecretVersionRqrd: 'Reference Secret version is required'
 secretsTitle: 'Resources: Secrets'
 createSecret: Create a Secret

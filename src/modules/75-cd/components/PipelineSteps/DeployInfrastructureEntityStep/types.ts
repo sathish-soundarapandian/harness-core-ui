@@ -21,4 +21,5 @@ export interface DeployInfrastructureEntityCustomInputStepProps extends DeployIn
   customDeploymentRef?: TemplateLinkConfig
   showEnvironmentsSelectionInputField?: boolean
   areEnvironmentFiltersAdded?: boolean
+  scope?: string
 }

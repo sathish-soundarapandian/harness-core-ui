@@ -13,7 +13,7 @@ import { FontVariation, Color } from '@harness/design-system'
 import { defaultTo, get } from 'lodash-es'
 import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
-import { String, useStrings } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import type { PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { StoreType } from '@common/constants/GitSyncTypes'
@@ -44,14 +44,20 @@ export const TabsHeadingOrder = [
 
 export const PipelineNameIdTagCell: Renderer<CellProps<PMSPipelineSummaryResponse>> = ({ row }) => {
   const data = row.original
+  const { getString } = useStrings()
   return (
     <Layout.Horizontal spacing="xsmall">
       <Layout.Vertical>
-        <Text font={{ variation: FontVariation.H6 }} lineClamp={1} color={Color.BLACK}>
+        <Text font={{ variation: FontVariation.H6 }} lineClamp={1} color={Color.BLACK} className={css.nameIdPopover}>
           {data?.name}
         </Text>
-        <Text font={{ variation: FontVariation.BODY }} lineClamp={1} color={Color.GREY_600}>
-          <String stringID="idLabel" vars={{ id: data?.identifier }} />
+        <Text
+          font={{ variation: FontVariation.SMALL }}
+          lineClamp={1}
+          color={Color.GREY_600}
+          className={css.nameIdPopover}
+        >
+          {getString('idLabel', { id: data?.identifier })}
         </Text>
       </Layout.Vertical>
       {Object.keys(get(data, 'tags', {})).length > 0 && (

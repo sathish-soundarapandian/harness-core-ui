@@ -39,6 +39,7 @@ import {
   healthSourceTypeMappingForReferenceField
 } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
+import { initConfigurationsForm } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import { ConnectorRefFieldName, HEALTHSOURCE_LIST } from './DefineHealthSource.constant'
 import {
   getFeatureOption,
@@ -226,6 +227,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
           if (sourceData.selectedDashboards && values?.connectorRef !== sourceData?.connectorRef) {
             formValues = { ...values, selectedDashboards: new Map() }
           }
+          // formValues shoudl always be of defineHealthSource
           onNext(formValues, { tabStatus: 'SUCCESS' })
         }}
       >
@@ -353,7 +355,15 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
                       value={formik?.values?.product}
                       name="product"
                       disabled={isEdit || featureOption.length === 1}
-                      onChange={product => formik.setFieldValue('product', product)}
+                      onChange={product => {
+                        // resetting the configurations page whenever product is changed
+                        const newValues = {
+                          ...formik.values,
+                          product,
+                          ...initConfigurationsForm
+                        }
+                        formik.setValues(newValues)
+                      }}
                     />
                   </Container>
 

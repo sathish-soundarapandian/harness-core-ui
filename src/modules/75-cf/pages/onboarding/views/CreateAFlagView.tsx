@@ -107,13 +107,13 @@ export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({ selectedFlag, 
   }
 
   return (
-    <Container>
+    <>
       <Layout.Vertical spacing="medium">
         <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
           {getString('cf.featureFlags.flagsDescription')}
         </Text>
         <Container width="max-content">
-          <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
+          <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600} padding={{ bottom: 'xsmall' }}>
             {getString('cf.onboarding.flagInputLabel')}
           </Text>
           <Select
@@ -147,6 +147,6 @@ export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({ selectedFlag, 
           <OnboardingSelectedFlag flagCreated={flagCreated} selectedFlag={selectedFlag} />
         </Layout.Horizontal>
       )}
-    </Container>
+    </>
   )
 }

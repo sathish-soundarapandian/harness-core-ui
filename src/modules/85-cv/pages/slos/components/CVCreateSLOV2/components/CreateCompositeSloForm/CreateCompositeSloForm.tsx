@@ -46,6 +46,8 @@ export const CreateCompositeSloForm = ({
   const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<
     ProjectPathProps & { identifier: string }
   >()
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
+  const queryParams = isAccountLevel ? { accountId } : { accountId, orgIdentifier, projectIdentifier }
   const { getString } = useStrings()
   const formikProps = useFormikContext<SLOV2Form>()
   const [notificationPage, setNotificationPage] = useState(0)
@@ -72,8 +74,8 @@ export const CreateCompositeSloForm = ({
     error: dashboardWidgetsError
   } = useMutateAsGet(useGetSLOHealthListViewV2, {
     lazy: true,
-    queryParams: { accountId, orgIdentifier, projectIdentifier, pageNumber: 0, pageSize: 20 },
-    body: { compositeSLOIdentifier: identifier }
+    queryParams: { ...queryParams, pageNumber: 0, pageSize: 20 },
+    body: { compositeSLOIdentifier: identifier, childResource: isAccountLevel }
   })
 
   const {
@@ -104,7 +106,7 @@ export const CreateCompositeSloForm = ({
   useEffect(() => {
     if (formikProps.values.serviceLevelObjectivesDetails?.length) {
       onBoardingGraphRefetch({
-        queryParams: { accountId, orgIdentifier, projectIdentifier },
+        queryParams: { ...queryParams },
         body: {
           serviceLevelObjectivesDetails: filterServiceLevelObjectivesDetailsFromSLOObjective(
             formikProps.values.serviceLevelObjectivesDetails

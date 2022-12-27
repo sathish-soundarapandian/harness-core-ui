@@ -1,0 +1,7 @@
+{
+  "accountId": "TEST_ACCOUNT_ID",
+  "pipelineIdentifier": "TEST_PIPELINE",
+  "orgIdentifier": "TEST_ORG",
+  "projectIdentifier": "TEST_PROJECT",
+  "planExecutionId": "TEST_EXECUTION"
+}

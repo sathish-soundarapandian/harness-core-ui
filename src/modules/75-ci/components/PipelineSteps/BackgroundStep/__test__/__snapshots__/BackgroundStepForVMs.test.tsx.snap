@@ -170,6 +170,7 @@ exports[`Background Step Edit View edit mode works 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -277,6 +278,7 @@ exports[`Background Step Edit View edit mode works 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -424,6 +426,7 @@ exports[`Background Step Edit View edit mode works 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -513,6 +516,7 @@ exports[`Background Step Edit View edit mode works 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -602,6 +606,7 @@ exports[`Background Step Edit View edit mode works 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -1012,6 +1017,7 @@ exports[`Background Step Edit View renders runtime inputs 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1154,6 +1160,7 @@ exports[`Background Step Edit View renders runtime inputs 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1257,6 +1264,7 @@ exports[`Background Step Edit View renders runtime inputs 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -1670,6 +1678,7 @@ exports[`Background Step Edit View should render properly 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1777,6 +1786,7 @@ exports[`Background Step Edit View should render properly 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2152,6 +2162,7 @@ exports[`Background Step Edit View should render properly 1`] = `
                                   >
                                     <button
                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      data-testid="multi-type-button"
                                     >
                                       <span
                                         class="bp3-icon StyledProps--main"
@@ -2237,6 +2248,7 @@ exports[`Background Step Edit View should render properly 1`] = `
                                   >
                                     <button
                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      data-testid="multi-type-button"
                                     >
                                       <span
                                         class="bp3-icon StyledProps--main"
@@ -2654,6 +2666,7 @@ exports[`Background Step Edit View should render properly 1`] = `
                                   >
                                     <button
                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      data-testid="multi-type-button"
                                     >
                                       <span
                                         class="bp3-icon StyledProps--main"
@@ -2858,6 +2871,7 @@ exports[`Background Step Edit View should render properly for AWS VMs build infr
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2965,6 +2979,7 @@ exports[`Background Step Edit View should render properly for AWS VMs build infr
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -3350,6 +3365,7 @@ exports[`Background Step InputSet View should render all fields 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -3461,6 +3477,7 @@ exports[`Background Step InputSet View should render all fields 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -3541,6 +3558,7 @@ exports[`Background Step InputSet View should render all fields 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -3682,6 +3700,7 @@ exports[`Background Step InputSet View should render all fields 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3913,6 +3932,7 @@ exports[`Background Step InputSet View should render all fields 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -4058,6 +4078,7 @@ exports[`Background Step InputSet View should render all fields 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -4412,6 +4433,7 @@ exports[`Background Step InputSet View should render all fields 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -4499,6 +4521,7 @@ exports[`Background Step InputSet View should render all fields 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"

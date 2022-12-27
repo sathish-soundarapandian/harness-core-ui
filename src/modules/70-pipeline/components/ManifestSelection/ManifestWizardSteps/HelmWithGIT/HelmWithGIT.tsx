@@ -29,6 +29,8 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import { shouldHideHeaderAndNavBtns } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import type { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 import type { HelmWithGITDataType } from '../../ManifestInterface'
 import {
@@ -60,6 +62,7 @@ interface HelmWithGITPropType {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   deploymentType?: string
+  context?: ModalViewFor
 }
 
 function HelmWithGIT({
@@ -72,10 +75,11 @@ function HelmWithGIT({
   previousStep,
   manifestIdsList,
   isReadonly = false,
-  deploymentType
+  deploymentType,
+  context
 }: StepProps<ConnectorConfigDTO> & HelmWithGITPropType): React.ReactElement {
   const { getString } = useStrings()
-
+  const hideHeaderAndNavBtns = context ? shouldHideHeaderAndNavBtns(context) : false
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
   const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
@@ -121,7 +125,7 @@ function HelmWithGIT({
       branch: undefined,
       commitId: undefined,
       gitFetchType: 'Branch',
-      folderPath: '',
+      folderPath: '/',
       helmVersion: 'V2',
       skipResourceVersioning: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
@@ -168,11 +172,28 @@ function HelmWithGIT({
     handleCommandFlagsSubmitData(manifestObj, formData)
     handleSubmit(manifestObj)
   }
+  const handleValidate = (formData: HelmWithGITDataType) => {
+    if (hideHeaderAndNavBtns) {
+      submitFormData({
+        ...prevStepData,
+        ...formData,
+        connectorRef: prevStepData?.connectorRef
+          ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+            ? prevStepData?.connectorRef
+            : prevStepData?.connectorRef?.value
+          : prevStepData?.identifier
+          ? prevStepData?.identifier
+          : ''
+      })
+    }
+  }
   return (
     <Layout.Vertical spacing="xxlarge" padding="small" className={css.manifestStore}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {stepName}
-      </Text>
+      {!hideHeaderAndNavBtns && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {stepName}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         formName="helmWithGit"
@@ -197,16 +218,6 @@ function HelmWithGIT({
             return !isEmpty(value) && value?.length > 0
           }),
           helmVersion: Yup.string().trim().required(getString('pipeline.manifestType.helmVersionRequired')),
-          valuesPaths: Yup.lazy((value): Yup.Schema<unknown> => {
-            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-              return Yup.array().of(
-                Yup.object().shape({
-                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
-                })
-              )
-            }
-            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
-          }),
           commandFlags: Yup.array().of(
             Yup.object().shape({
               flag: Yup.string().when('commandType', {
@@ -216,6 +227,7 @@ function HelmWithGIT({
             })
           )
         })}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
@@ -402,21 +414,22 @@ function HelmWithGIT({
                 />
               </Accordion>
             </div>
-
-            <Layout.Horizontal spacing="medium" className={css.saveBtn}>
-              <Button
-                text={getString('back')}
-                icon="chevron-left"
-                variation={ButtonVariation.SECONDARY}
-                onClick={() => previousStep?.(prevStepData)}
-              />
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                type="submit"
-                text={getString('submit')}
-                rightIcon="chevron-right"
-              />
-            </Layout.Horizontal>
+            {!hideHeaderAndNavBtns && (
+              <Layout.Horizontal spacing="medium" className={css.saveBtn}>
+                <Button
+                  text={getString('back')}
+                  icon="chevron-left"
+                  variation={ButtonVariation.SECONDARY}
+                  onClick={() => previousStep?.(prevStepData)}
+                />
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  type="submit"
+                  text={getString('submit')}
+                  rightIcon="chevron-right"
+                />
+              </Layout.Horizontal>
+            )}
           </FormikForm>
         )}
       </Formik>

@@ -27,4 +27,5 @@ export interface ResetOnDeleteProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  isAccountLevel?: boolean
 }

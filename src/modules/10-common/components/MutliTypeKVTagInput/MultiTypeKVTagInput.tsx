@@ -95,6 +95,7 @@ export interface FormMultiTypeKVTagInputProps extends Omit<IFormGroupProps, 'lab
   enableConfigureOptions?: boolean
   configureOptionsProps?: Omit<ConfigureOptionsProps, 'name' | 'type' | 'value' | 'onChange'>
   onChange?: (value: string[]) => void
+  isArray?: boolean
 }
 
 export function FormMultiTypeKVTagInput(props: FormMultiTypeKVTagInputProps): React.ReactElement {

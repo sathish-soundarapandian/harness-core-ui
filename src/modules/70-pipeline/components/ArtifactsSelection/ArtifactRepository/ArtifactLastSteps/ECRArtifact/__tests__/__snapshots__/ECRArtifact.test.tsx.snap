@@ -19,7 +19,7 @@ exports[`ECR Artifact tests renders correctly in edit case 1`] = `
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="dockerSideCard"
@@ -141,6 +141,7 @@ exports[`ECR Artifact tests renders correctly in edit case 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -213,6 +214,7 @@ exports[`ECR Artifact tests renders correctly in edit case 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -334,6 +336,7 @@ exports[`ECR Artifact tests renders correctly in edit case 1`] = `
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -486,7 +489,7 @@ exports[`ECR Artifact tests renders while adding step first time 1`] = `
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="dockerSideCard"
@@ -608,6 +611,7 @@ exports[`ECR Artifact tests renders while adding step first time 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -680,6 +684,7 @@ exports[`ECR Artifact tests renders while adding step first time 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -801,6 +806,7 @@ exports[`ECR Artifact tests renders while adding step first time 1`] = `
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -953,7 +959,7 @@ exports[`ECR Artifact tests renders without crashing 1`] = `
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="dockerSideCard"
@@ -1075,6 +1081,7 @@ exports[`ECR Artifact tests renders without crashing 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1147,6 +1154,7 @@ exports[`ECR Artifact tests renders without crashing 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1268,6 +1276,7 @@ exports[`ECR Artifact tests renders without crashing 1`] = `
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span

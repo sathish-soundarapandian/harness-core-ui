@@ -11,7 +11,7 @@ import cx from 'classnames'
 import qs from 'qs'
 
 import type { ResponseMessage } from 'services/cd-ng'
-import type { ExecutionNode } from 'services/pipeline-ng'
+import type { ExecutionGraph, ExecutionNode } from 'services/pipeline-ng'
 import { String } from 'framework/strings'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { LogsContentWithErrorBoundary as LogsContent } from '@pipeline/components/LogsContent/LogsContent'
@@ -24,11 +24,12 @@ import css from './StepDetailsTab.module.scss'
 
 export interface ExecutionStepDetailsTabProps {
   step: ExecutionNode
+  executionMetadata: ExecutionGraph['executionMetadata']
   labels?: StepLabels[]
 }
 
 export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.ReactElement {
-  const { step, labels } = props
+  const { step, executionMetadata, labels } = props
   const { pathname } = useLocation()
   const queryParams = useQueryParams<ExecutionQueryParams>()
 
@@ -48,7 +49,7 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
           <p>{errorMessage}</p>
         </div>
       ) : null}
-      <StepDetails step={step} labels={labels} />
+      <StepDetails step={step} labels={labels} executionMetadata={executionMetadata} />
       <LogsContent mode="step-details" toConsoleView={logUrl} />
     </div>
   )

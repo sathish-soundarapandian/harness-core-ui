@@ -183,6 +183,7 @@ exports[`Repo Details testing renders with initialValues for branch 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -255,6 +256,7 @@ exports[`Repo Details testing renders with initialValues for branch 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -534,6 +536,7 @@ exports[`Repo Details testing renders with initialValues for commitId 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -606,6 +609,7 @@ exports[`Repo Details testing renders with initialValues for commitId 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -885,6 +889,7 @@ exports[`Repo Details testing renders without crashing 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -957,6 +962,7 @@ exports[`Repo Details testing renders without crashing 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1236,6 +1242,7 @@ exports[`Repo Details testing renders without crashing when isreadonly is true 1
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1308,6 +1315,7 @@ exports[`Repo Details testing renders without crashing when isreadonly is true 1
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1591,6 +1599,7 @@ exports[`Repo Details testing runtime values for branch and paths 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1701,6 +1710,7 @@ exports[`Repo Details testing runtime values for branch and paths 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2018,6 +2028,7 @@ exports[`Repo Details testing runtime values for commitId and paths 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2128,6 +2139,7 @@ exports[`Repo Details testing runtime values for commitId and paths 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"

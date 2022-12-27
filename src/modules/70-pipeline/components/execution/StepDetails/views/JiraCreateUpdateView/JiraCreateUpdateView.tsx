@@ -33,7 +33,7 @@ export interface JiraCreateUpdateViewProps extends StepDetailProps {
 }
 
 export function JiraCreateUpdateView(props: JiraCreateUpdateViewProps): React.ReactElement | null {
-  const { step } = props
+  const { step, executionMetadata } = props
   const issue = get(step, 'outcomes.issue', {}) as JiraIssueKeyNG
   const { getString } = useStrings()
   const manuallySelected = React.useRef(false)
@@ -77,13 +77,13 @@ export function JiraCreateUpdateView(props: JiraCreateUpdateViewProps): React.Re
         <Tabs.Tab
           id={ApprovalStepTab.STEP_EXECUTION_INPUTS}
           title={getString('pipeline.runtimeInputs')}
-          panel={<ExecutionInputs step={step} />}
+          panel={<ExecutionInputs step={step} executionMetadata={executionMetadata} />}
         />
       ) : null}
       <Tabs.Tab
         id={ApprovalStepTab.STEP_DETAILS}
         title={getString('details')}
-        panel={<StepDetailsTab step={step} labels={labels} />}
+        panel={<StepDetailsTab step={step} executionMetadata={executionMetadata} labels={labels} />}
       />
       <Tabs.Tab
         id={ApprovalStepTab.INPUT}

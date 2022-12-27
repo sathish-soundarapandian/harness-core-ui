@@ -7,16 +7,15 @@
 
 import React, { useState } from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { Collapse, Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { ExecutionNode } from 'services/pipeline-ng'
+import type { ExecutionGraph, ExecutionNode } from 'services/pipeline-ng'
 
 import { useDeepCompareEffect } from '@common/hooks'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 
 import EvaluationStatusLabel, { EvaluationStatus } from './EvaluationStatusLabel/EvaluationStatusLabel'
@@ -38,7 +37,13 @@ export interface EvaluatedPolicy {
   error?: string
 }
 
-export function PolicyEvaluationContent({ step }: { step: ExecutionNode }) {
+export function PolicyEvaluationContent({
+  step,
+  executionMetadata
+}: {
+  step: ExecutionNode
+  executionMetadata: ExecutionGraph['executionMetadata']
+}) {
   const { getString } = useStrings()
   const [evaluationCounts, setEvaluationCounts] = useState<EvaluationCounts>({
     error: 0,
@@ -86,6 +91,7 @@ export function PolicyEvaluationContent({ step }: { step: ExecutionNode }) {
                 key={id}
                 policySet={policySetDetails[id]}
                 policyStepEvaluationId={policyStepEvaluationId as string}
+                executionMetadata={executionMetadata}
               />
             )
           })}
@@ -97,12 +103,14 @@ export function PolicyEvaluationContent({ step }: { step: ExecutionNode }) {
 
 function PolicySetInfo({
   policySet,
-  policyStepEvaluationId
+  policyStepEvaluationId,
+  executionMetadata
 }: {
   policySet: { [key: string]: any }
   policyStepEvaluationId: string
+  executionMetadata: ExecutionGraph['executionMetadata']
 }) {
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { orgIdentifier, projectIdentifier, accountId } = defaultTo(executionMetadata, {})
   const { getString } = useStrings()
   const { module } = useModuleInfo()
 
@@ -160,6 +168,7 @@ function PolicySetInfo({
                   policy={policies[id]}
                   numberInList={index + 1}
                   policyStepEvaluationId={policyStepEvaluationId}
+                  executionMetadata={executionMetadata}
                 />
               )
             })}
@@ -173,13 +182,15 @@ function PolicySetInfo({
 export function PolicyInfo({
   policy,
   numberInList,
-  policyStepEvaluationId
+  policyStepEvaluationId,
+  executionMetadata
 }: {
   policy: EvaluatedPolicy
   numberInList: number
   policyStepEvaluationId: string
+  executionMetadata: ExecutionGraph['executionMetadata']
 }) {
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { orgIdentifier, projectIdentifier, accountId } = defaultTo(executionMetadata, {})
   const { getString } = useStrings()
   const { module } = useModuleInfo()
 

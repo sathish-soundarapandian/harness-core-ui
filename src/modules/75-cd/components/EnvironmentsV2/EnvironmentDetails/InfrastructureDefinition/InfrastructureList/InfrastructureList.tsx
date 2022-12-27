@@ -21,7 +21,6 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-
 import { InfrastructureMenu, InfrastructureName, LastUpdatedBy, withInfrastructure } from './InfrastructureListColumns'
 
 import EmptyInfrastructure from '../images/EmptyInfrastructure.svg'

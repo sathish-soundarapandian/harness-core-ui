@@ -15,6 +15,7 @@ declare const styles: {
   readonly filestore: string
   readonly freezeWindows: string
   readonly gitOpsEntities: string
+  readonly gitOpsIcon: string
   readonly secrets: string
   readonly smtp: string
   readonly templates: string

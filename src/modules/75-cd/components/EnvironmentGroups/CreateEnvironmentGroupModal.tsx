@@ -41,7 +41,6 @@ import { useToaster } from '@common/exports'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-
 import { cleanData, EnvironmentGroupDetailsTab } from './utils'
 import ModalEnvironmentList from './ModalEnvironmentList'
 

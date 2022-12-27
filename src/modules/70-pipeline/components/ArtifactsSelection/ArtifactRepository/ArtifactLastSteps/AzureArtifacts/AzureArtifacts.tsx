@@ -19,6 +19,7 @@ import {
   FormInput,
   FormikForm
 } from '@harness/uicore'
+import cx from 'classnames'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
@@ -43,7 +44,8 @@ import {
   getConnectorIdValue,
   getArtifactFormData,
   helperTextData,
-  isFieldFixedAndNonEmpty
+  isFieldFixedAndNonEmpty,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
@@ -73,7 +75,8 @@ function FormComponent({
   previousStep,
   isReadonly = false,
   formik,
-  isMultiArtifactSource
+  isMultiArtifactSource,
+  formClassName = ''
 }: any): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -87,6 +90,7 @@ function FormComponent({
   }
 
   const connectorRefValue = defaultTo(getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier), '')
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const projectValue = defaultTo(getGenuineValue(formik.values.project), '')
   const feedValue = defaultTo(getGenuineValue(formik.values.feed), '')
   const packageValue = defaultTo(getGenuineValue(formik.values.package), '')
@@ -249,7 +253,7 @@ function FormComponent({
 
   return (
     <FormikForm>
-      <div className={css.connectorForm}>
+      <div className={cx(css.artifactForm, formClassName)}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.imagePathContainer}>
@@ -438,7 +442,7 @@ function FormComponent({
           />
         </div>
         {formik.values.versionType === 'value' ? (
-          <div className={css.jenkinsFieldContainer}>
+          <div className={css.imagePathContainer}>
             <FormInput.MultiTypeInput
               selectItems={getItems(fetchingVersions, 'Versions', versionItems)}
               disabled={isVersionFieldDisabled()}
@@ -498,7 +502,7 @@ function FormComponent({
             )}
           </div>
         ) : (
-          <div className={css.jenkinsFieldContainer}>
+          <div className={css.imagePathContainer}>
             <FormInput.MultiTextInput
               name="versionRegex"
               label={getString('pipeline.artifactsSelection.versionRegex')}
@@ -525,20 +529,22 @@ function FormComponent({
           </div>
         )}
       </div>
-      <Layout.Horizontal spacing="medium">
-        <Button
-          variation={ButtonVariation.SECONDARY}
-          text={getString('back')}
-          icon="chevron-left"
-          onClick={() => previousStep?.(prevStepData)}
-        />
-        <Button
-          variation={ButtonVariation.PRIMARY}
-          type="submit"
-          text={getString('submit')}
-          rightIcon="chevron-right"
-        />
-      </Layout.Horizontal>
+      {!hideHeaderAndNavBtns && (
+        <Layout.Horizontal spacing="medium">
+          <Button
+            variation={ButtonVariation.SECONDARY}
+            text={getString('back')}
+            icon="chevron-left"
+            onClick={() => previousStep?.(prevStepData)}
+          />
+          <Button
+            variation={ButtonVariation.PRIMARY}
+            type="submit"
+            text={getString('submit')}
+            rightIcon="chevron-right"
+          />
+        </Layout.Horizontal>
+      )}
     </FormikForm>
   )
 }
@@ -549,6 +555,7 @@ export function AzureArtifacts(
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const getInitialValues = (): AzureArtifactsInitialValues => {
     return getArtifactFormData(
@@ -556,6 +563,17 @@ export function AzureArtifacts(
       selectedArtifact as ArtifactType,
       isIdentifierAllowed
     ) as AzureArtifactsInitialValues
+  }
+
+  const handleValidate = (formData: AzureArtifactsInitialValues) => {
+    if (hideHeaderAndNavBtns) {
+      submitFormData(
+        {
+          ...formData
+        },
+        getConnectorIdValue(prevStepData)
+      )
+    }
   }
 
   const submitFormData = (formData: AzureArtifactsInitialValues, connectorId?: string): void => {
@@ -625,13 +643,16 @@ export function AzureArtifacts(
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.artifactsSelection.artifactDetails')}
-      </Text>
+      {!hideHeaderAndNavBtns && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {getString('pipeline.artifactsSelection.artifactDetails')}
+        </Text>
+      )}
       <Formik
         initialValues={getInitialValues()}
         formName="imagePath"
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData(
             {

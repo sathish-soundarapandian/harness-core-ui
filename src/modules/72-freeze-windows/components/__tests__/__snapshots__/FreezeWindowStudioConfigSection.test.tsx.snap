@@ -753,6 +753,7 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
   >
     <div
       class="Layout--vertical StyledProps--main"
+      style="max-width: calc(100% - 100px);"
     >
       <h3
         class="StyledProps--font StyledProps--font-h3 StyledProps--main StyledProps--color StyledProps--color-grey800"

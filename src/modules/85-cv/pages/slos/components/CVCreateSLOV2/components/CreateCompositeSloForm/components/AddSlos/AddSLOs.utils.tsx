@@ -12,6 +12,7 @@ import type { Renderer, CellProps } from 'react-table'
 import { PeriodTypes, PeriodLengthTypes } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
 import type { SLODashboardApiFilter, SLOTargetFilterDTO } from 'services/cv'
 import type { SLOObjective, SLOV2Form } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import { getSLORefIdWithOrgAndProject } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import { SLOType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import type {
   GetDistributionUpdatedProps,
@@ -208,11 +209,12 @@ export const resetOnDelete = ({
   serviceLevelObjectiveRef,
   accountId,
   orgIdentifier,
-  projectIdentifier
+  projectIdentifier,
+  isAccountLevel
 }: ResetOnDeleteProps): SLOObjective[] => {
-  const filterServiceLevelObjective = serviceLevelObjectivesDetails?.filter(
-    item => item.serviceLevelObjectiveRef !== serviceLevelObjectiveRef
-  )
+  const filterServiceLevelObjective = isAccountLevel
+    ? serviceLevelObjectivesDetails?.filter(item => getSLORefIdWithOrgAndProject(item) !== serviceLevelObjectiveRef)
+    : serviceLevelObjectivesDetails?.filter(item => item.serviceLevelObjectiveRef !== serviceLevelObjectiveRef)
   const nonManuallyUpdatdWeightsSlo = filterServiceLevelObjective?.filter(item => !item.isManuallyUpdated) || []
   const manuallyUpdatdWeightsSlo = filterServiceLevelObjective?.filter(item => item.isManuallyUpdated) || []
   const sumofMauallyUpdatedSLO = manuallyUpdatdWeightsSlo?.reduce((total, num) => {

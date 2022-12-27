@@ -28,7 +28,7 @@ import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isEqual, merge, omit } from 'lodash-es'
 import produce from 'immer'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
-import type { Error, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { CacheResponseMetadata, Error, PipelineInfoConfig } from 'services/pipeline-ng'
 import { EntityGitDetails, InputSetSummaryResponse, useGetInputsetYaml } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -199,7 +199,7 @@ export function PipelineCanvas({
       GitQueryParams
   >()
   const history = useHistory()
-  const pipelineGitXCache = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
+  const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
   // For remote pipeline queryParam will always as branch as selected branch except coming from list view
   // While opeining studio from list view, selected branch can be any branch as in pipeline response
@@ -241,6 +241,7 @@ export function PipelineCanvas({
   const { openPipelineErrorsModal } = usePipelineErrors()
   const isYaml = view === SelectedView.YAML
   const [isYamlError, setYamlError] = React.useState(false)
+  const [loadFromCache, setLoadFromCache] = React.useState(true)
   const [blockNavigation, setBlockNavigation] = React.useState(false)
   const [selectedBranch, setSelectedBranch] = React.useState(defaultTo(branch, ''))
   const [disableVisualView, setDisableVisualView] = React.useState(entityValidityDetails?.valid === false)
@@ -677,11 +678,28 @@ export function PipelineCanvas({
     replaceQueryParams({ repoIdentifier, branch, connectorRef, storeType, repoName }, { skipNulls: true }, true)
   }
 
+  const allowOpeningRunPipelineModal: boolean = React.useMemo(() => {
+    /**
+     * This is done because Run Pipeline modal was opening twice for Remote Pipelines.
+     * For remote pipeline when we land on Pipeline Studio from Deployments page, there is no branch initially,
+     * because pipeline in list view does not have branch, so there is no branch in url initially and then we update branch in the url.
+     * Because of all this, useModalHook for opening Run Pipeline modal runs twice and modal visibly opens twice.
+     * To Prevent the issue, added a check which waits for branch name to appear in url when pipeline is of Remote type,
+     */
+    let shouldOpenRunPipelineModal = false
+    if (!isPipelineRemote) {
+      shouldOpenRunPipelineModal = true
+    } else if (isPipelineRemote && !isEmpty(branch)) {
+      shouldOpenRunPipelineModal = true
+    }
+    return shouldOpenRunPipelineModal
+  }, [branch, isPipelineRemote])
+
   React.useEffect(() => {
-    if (runPipeline) {
+    if (runPipeline && allowOpeningRunPipelineModal) {
       openRunPipelineModal()
     }
-  }, [runPipeline])
+  }, [runPipeline, allowOpeningRunPipelineModal])
 
   React.useEffect(() => {
     isPipelineRemote &&
@@ -815,7 +833,7 @@ export function PipelineCanvas({
   if (isLoading) {
     return (
       <React.Fragment>
-        <PageSpinner fixed />
+        <PageSpinner />
         <div /> {/* this empty div is required for rendering layout correctly */}
       </React.Fragment>
     )
@@ -979,7 +997,18 @@ export function PipelineCanvas({
                   />
                   <div>
                     <div className={css.savePublishContainer}>
-                      {pipelineGitXCache && !isEmpty(pipelineCacheResponse) && <PipelineCachedCopy />}
+                      {isPipelineGitCacheEnabled && !isEmpty(pipelineCacheResponse) && (
+                        <PipelineCachedCopy
+                          reloadContent={getString('common.pipeline')}
+                          cacheResponse={pipelineCacheResponse as CacheResponseMetadata}
+                          reloadFromCache={() => {
+                            setLoadFromCache(false)
+                            updatePipelineView({ ...pipelineView, isYamlEditable: false })
+                            fetchPipeline({ forceFetch: true, forceUpdate: true, loadFromCache: false })
+                          }}
+                          fetchError={remoteFetchError}
+                        />
+                      )}
                       {isReadonly && (
                         <div className={css.readonlyAccessTag}>
                           <Icon name="eye-open" size={16} />
@@ -1051,7 +1080,10 @@ export function PipelineCanvas({
               )}
             </div>
           )}
-          <PipelineOutOfSyncErrorStrip updateRootEntity={updateEntity} />
+          <PipelineOutOfSyncErrorStrip
+            updateRootEntity={updateEntity}
+            loadFromcache={isPipelineGitCacheEnabled && loadFromCache}
+          />
           {remoteFetchError ? (
             handleFetchFailure(
               'pipeline',

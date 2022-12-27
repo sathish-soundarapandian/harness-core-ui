@@ -113,7 +113,7 @@ describe('ECSInfraSpec tests', () => {
     const usEastNVirginiaOption = await findByText(regionSelectListMenu as HTMLElement, 'US East (N. Virginia)')
     expect(usEastNVirginiaOption).not.toBeNull()
     userEvent.click(usEastNVirginiaOption)
-    await waitFor(() => expect(fetchClusters).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(fetchClusters).toHaveBeenCalledTimes(0))
     // Choose cluster
     const clusterDropdownIcon = allDropDownIcons[2]
     userEvent.click(clusterDropdownIcon!)

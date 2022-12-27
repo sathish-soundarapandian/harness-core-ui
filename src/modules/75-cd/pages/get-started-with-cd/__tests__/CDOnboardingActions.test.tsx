@@ -12,7 +12,12 @@ import {
   CDOnboardingReducer,
   initialState
 } from '../CDOnboardingActions'
-
+jest.mock('nanoid', () => ({
+  customAlphabet: () => {
+    const retnFn = (): string => 'bsadfd'
+    return retnFn
+  }
+}))
 describe('CDOnboardingactions test', () => {
   test('CDOnboardingActions Initialize', () => {
     const newState = CDOnboardingReducer(initialState, {

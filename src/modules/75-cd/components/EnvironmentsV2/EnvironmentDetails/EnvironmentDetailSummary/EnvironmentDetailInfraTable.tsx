@@ -24,6 +24,7 @@ import type { InstanceGroupedByInfrastructureV2, InstanceGroupedByPipelineExecut
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import { numberFormatter } from '@common/utils/utils'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { DialogEmptyState } from './EnvironmentDetailsUtils'
 
 import css from './EnvironmentDetailSummary.module.scss'
@@ -153,7 +154,12 @@ export const RenderInfra: Renderer<CellProps<TableRowData>> = ({
 }) => {
   return showInfra ? (
     <Container className={css.paddedInfraContainer}>
-      <Text font={{ size: 'small' }} lineClamp={1} tooltipProps={{ isDark: true }}>
+      <Text
+        font={{ variation: FontVariation.SMALL }}
+        lineClamp={1}
+        tooltipProps={{ isDark: true }}
+        color={Color.GREEN_900}
+      >
         {infraName ? infraName : '-'}
       </Text>
     </Container>
@@ -174,14 +180,14 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
     }
   }
 }) => {
-  const totalVisibleInstance = tableType === InfraViewTableType.SUMMARY ? 8 : 26
+  const totalVisibleInstance = tableType === InfraViewTableType.SUMMARY ? 8 : 18
   return totalInstanceCount ? (
     <Container className={cx(css.paddedContainer, css.hexContainer)} flex={{ justifyContent: 'flex-start' }}>
       {Array(Math.min(totalInstanceCount, totalVisibleInstance))
         .fill(null)
         .map((_, index) => (
           <Popover
-            interactionKind={PopoverInteractionKind.CLICK}
+            interactionKind={PopoverInteractionKind.HOVER}
             key={`${serviceFilter}_${buildId}_${index}`}
             modifiers={{ preventOverflow: { escapeWithReference: true } }}
             position={Position.TOP}
@@ -251,8 +257,7 @@ const RenderPipelineExecution: Renderer<CellProps<TableRowData>> = ({
         storeType: pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType
       })
 
-      const baseUrl = window.location.href.split('#')[0]
-      window.open(`${baseUrl}#${route}`)
+      window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
     } else {
       showError(getString('cd.serviceDashboard.noLastDeployment'))
     }
@@ -341,7 +346,7 @@ export const EnvironmentDetailInfraTable = (
       {
         Header: (
           <Text lineClamp={1} color={Color.GREY_600}>
-            {'INFRA / CLUSTER'}
+            {getString('cd.environmentDetailPage.infraSlashCluster')}
           </Text>
         ),
         id: 'infra',
@@ -355,7 +360,7 @@ export const EnvironmentDetailInfraTable = (
         Cell: RenderInstances
       },
       {
-        Header: getString('cd.serviceDashboard.headers.instances'),
+        Header: getString('cd.serviceDashboard.headers.pipelineExecution'),
         id: 'pipelineExecution',
         width: columnsProperties.pipelineExecution.width,
         Cell: RenderPipelineExecution
@@ -384,7 +389,7 @@ export const EnvironmentDetailInfraTable = (
       <DialogEmptyState
         isSearchApplied={false}
         resetSearch={noop}
-        message={getString('cd.environmentDetailPage.selectInfraMsg')}
+        message={getString('cd.environmentDetailPage.selectArtifactMsg')}
       />
     )
   }

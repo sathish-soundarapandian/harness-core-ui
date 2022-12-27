@@ -7,6 +7,7 @@ responseBody: Response Body
 statusCode: Status Code
 failures: Failures
 initiated: Initiated
+processing: Processing...
 verifications: Verifications
 verificationStatus: Verification Status
 preProductionTests: Pre Production Tests
@@ -37,7 +38,7 @@ urlCopied: URL Copied
 unit: Unit
 anomalousMetrics: Anomalous metrics
 proceedToEdit: Proceed to Edit
-filter: Filter
+filter: '{{$.common.filter}}'
 allMetrics: All Metrics
 selectNamespace: Select Namespace
 riskTimeline: Risk Timeline
@@ -211,10 +212,26 @@ monitoringSources:
   totalMappedQueries: '{{total}} {{query}} mapped'
   commonHealthSource:
     metric: HealthSource Metric
+    chart: Chart
     addMetric: Add metric
-    metricName: Metric name
+    metricName: '{{name}} name'
     addGroupName: Add group Name
+    runQuery: Run Query
     confirmDeleteMetric: 'Are you sure you want to delete metric {{name}}'
+    submitQueryToSeeRecords: Run query to see records ...
+    searchMetric: Search ...
+    defineQuery: Define Query
+    defineQueryDescriptionMetrics: Queries can only be defined for a single timeseries.
+    defineQuerySubDescription: Learn how to find the query to monitor your data source with Harness.
+    querySectionSecondaryTitle: Query Section
+    logsTable:
+      title: Field Mapping
+      subTitle: Choose the data to display the logs from the fields below
+      sampleLogButtonText: Get sample log messages
+      noSampleAvailable: No sample data available
+      timestamp: Timestamp
+      ServiceInstance: Service Instance
+      jsonSelectorDrawerTitlePrefix: Select path for
   appD:
     advancedOptional: Advanced (Optional)
     ignoreThresholds: Ignore Thresholds
@@ -495,6 +512,7 @@ cvTrialHomePage:
       description: Start 14 day CV Enterprise trial
 monitoredServices:
   title: '{{ $.common.monitoredServices }}'
+  listToggleSwitchDisableMessage: Nice work! You've reached our plan limits. Upgrade to enable SLO and service health for a monitored service.
   heading: Monitored Service
   filterlabel: 'Environment:'
   youHaveNoMonitoredServices: You have no monitored services
@@ -556,6 +574,7 @@ monitoredServices:
   monitoredServiceTabs:
     serviceHealth: Service Health
     configurations: Configurations
+    disabledText: Enable the monitored service to view the tab
   table:
     lastestHealthTrend: Health trend (Last 24h)
     serviceHealthScore: service Health Score
@@ -1021,3 +1040,7 @@ codeErrorsAgentsHeading: Agents running on your machines connected to Code Error
 codeErrorsAgentsTokens: '{{projectName}} Code Error Tokens'
 CVStepper:
   StepError: Required fields are missing or incorrect data
+licenseBanner:
+  freePlanUsageMessage: You have used {{activeServicesCount}}/{{totalServices}} Services included in the free plan
+  teamPlanUsageMessage: You have used {{activeServicesCount}}/{{totalServices}} Services included in the team plan
+  limitExceedMessage: You have reached your service subscription limit. Consider increasing your limits to keep using services

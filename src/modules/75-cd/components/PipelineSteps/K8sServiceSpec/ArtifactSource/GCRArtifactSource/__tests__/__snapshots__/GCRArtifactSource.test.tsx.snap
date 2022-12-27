@@ -76,6 +76,7 @@ exports[`GCR Artifact Source tests snapshot test for Sidecar GCR artifact source
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -178,6 +179,7 @@ exports[`GCR Artifact Source tests snapshot test for Sidecar GCR artifact source
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"

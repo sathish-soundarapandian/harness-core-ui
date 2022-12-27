@@ -33,7 +33,7 @@ export const getDefaultDrawerProps = ({
   }
 }
 
-export const getParsedDrawerOptions = (defaultOptions: IDrawerProps, options: IDrawerProps | undefined) => {
+export const getParsedDrawerOptions = (defaultOptions: IDrawerProps, options?: Partial<IDrawerProps>) => {
   if (options) {
     return merge(defaultOptions, options)
   } else {

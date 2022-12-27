@@ -159,6 +159,7 @@ exports[`Test TerraformDestroy add new terraform var file 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -304,6 +305,7 @@ exports[`Test TerraformDestroy add new terraform var file 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -437,6 +439,7 @@ exports[`Test TerraformDestroy add new terraform var file 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -771,6 +774,7 @@ exports[`Test TerraformDestroy add new terraform var file 1`] = `
                                   >
                                     <button
                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      data-testid="multi-type-button"
                                     >
                                       <span
                                         class="bp3-icon StyledProps--main"
@@ -950,6 +954,7 @@ exports[`Test TerraformDestroy add new terraform var file 1`] = `
                                       >
                                         <button
                                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                          data-testid="multi-type-button"
                                         >
                                           <span
                                             class="bp3-icon StyledProps--main"
@@ -1193,6 +1198,7 @@ exports[`Test TerraformDestroy expand backend Spec config 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -1338,6 +1344,7 @@ exports[`Test TerraformDestroy expand backend Spec config 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -1471,6 +1478,7 @@ exports[`Test TerraformDestroy expand backend Spec config 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -1746,6 +1754,7 @@ exports[`Test TerraformDestroy expand backend Spec config 1`] = `
                                   >
                                     <button
                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      data-testid="multi-type-button"
                                     >
                                       <span
                                         class="bp3-icon StyledProps--main"
@@ -1835,6 +1844,7 @@ exports[`Test TerraformDestroy expand backend Spec config 1`] = `
                                   >
                                     <button
                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      data-testid="multi-type-button"
                                     >
                                       <span
                                         class="bp3-icon StyledProps--main"
@@ -2014,6 +2024,7 @@ exports[`Test TerraformDestroy expand backend Spec config 1`] = `
                                       >
                                         <button
                                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                          data-testid="multi-type-button"
                                         >
                                           <span
                                             class="bp3-icon StyledProps--main"
@@ -2257,6 +2268,7 @@ exports[`Test TerraformDestroy should render edit view as edit step - Inline 1`]
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -2402,6 +2414,7 @@ exports[`Test TerraformDestroy should render edit view as edit step - Inline 1`]
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -2535,6 +2548,7 @@ exports[`Test TerraformDestroy should render edit view as edit step - Inline 1`]
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -2869,6 +2883,7 @@ exports[`Test TerraformDestroy should render edit view as edit step - Inline 1`]
                                   >
                                     <button
                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      data-testid="multi-type-button"
                                     >
                                       <span
                                         class="bp3-icon StyledProps--main"
@@ -3048,6 +3063,7 @@ exports[`Test TerraformDestroy should render edit view as edit step - Inline 1`]
                                       >
                                         <button
                                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                          data-testid="multi-type-button"
                                         >
                                           <span
                                             class="bp3-icon StyledProps--main"
@@ -3291,6 +3307,7 @@ exports[`Test TerraformDestroy should render edit view as edit step - inheritfro
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -3436,6 +3453,7 @@ exports[`Test TerraformDestroy should render edit view as edit step - inheritfro
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -3623,6 +3641,7 @@ exports[`Test TerraformDestroy should render edit view as edit step - inheritfro
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -3768,6 +3787,7 @@ exports[`Test TerraformDestroy should render edit view as edit step - inheritfro
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -3953,6 +3973,7 @@ exports[`Test TerraformDestroy should render edit view as new step 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -4098,6 +4119,7 @@ exports[`Test TerraformDestroy should render edit view as new step 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -4191,6 +4213,7 @@ exports[`Test TerraformDestroy should render inputSet View 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -4268,6 +4291,7 @@ exports[`Test TerraformDestroy should render inputSet View 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -4536,6 +4560,7 @@ exports[`Test TerraformDestroy should submit form for inheritfromplan config 1`]
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -4681,6 +4706,7 @@ exports[`Test TerraformDestroy should submit form for inheritfromplan config 1`]
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

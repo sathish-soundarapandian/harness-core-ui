@@ -21,6 +21,7 @@ import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesS
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { useServiceContext } from '@cd/context/ServiceContext'
 import { isMultiArtifactSourceEnabled, setupMode } from '../../PipelineStepsUtil'
 import type { SshWinRmServiceInputFormProps } from '../SshServiceSpecInterface'
 import css from '../SshServiceSpec.module.scss'
@@ -42,10 +43,13 @@ const SshServiceSpecEditable: React.FC<SshWinRmServiceInputFormProps> = ({
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType = deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating)
+  const { isServiceEntityPage } = useServiceContext()
+
   const isMultiArtifactSourceFeatureFlag = useFeatureFlag(FeatureFlag.NG_ARTIFACT_SOURCES)
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
     !!isMultiArtifactSourceFeatureFlag,
-    stage?.stage as DeploymentStageElementConfig
+    stage?.stage as DeploymentStageElementConfig,
+    isServiceEntityPage
   )
   return (
     <div className={css.serviceDefinition}>

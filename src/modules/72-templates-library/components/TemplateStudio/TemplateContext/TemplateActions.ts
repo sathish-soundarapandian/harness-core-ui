@@ -8,6 +8,7 @@
 import type { GetDataError } from 'restful-react'
 import type { Failure } from 'services/cd-ng'
 import type {
+  CacheResponseMetadata,
   EntityGitDetails,
   EntityValidityDetails,
   Error as TemplateError,
@@ -56,6 +57,7 @@ export interface ActionResponse {
   gitDetails?: EntityGitDetails
   storeMetadata?: StoreMetadata
   entityValidityDetails?: EntityValidityDetails
+  cacheResponseMetadata?: CacheResponseMetadata
   templateYaml?: string
   templateError?: GetDataError<Failure | Error> | null
   templateInputsErrorNodeSummary?: ErrorNodeSummary

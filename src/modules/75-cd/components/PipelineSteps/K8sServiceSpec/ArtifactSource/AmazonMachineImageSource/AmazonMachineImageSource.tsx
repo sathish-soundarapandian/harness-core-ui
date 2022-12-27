@@ -82,7 +82,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   )
 
   const filterValue = getDefaultQueryParam(
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.filter`, ''), artifact?.spec?.filter),
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.filters`, ''), artifact?.spec?.filters),
     get(initialValues?.artifacts, `${artifactPath}.spec.filters`, '')
   )
 

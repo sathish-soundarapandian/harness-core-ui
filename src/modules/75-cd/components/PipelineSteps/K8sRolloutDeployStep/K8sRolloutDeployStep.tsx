@@ -252,6 +252,7 @@ export class K8RolloutDeployStep extends PipelineStep<K8RolloutDeployData> {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
+    this._hasCommandFlagSelectionVisible = true
   }
   renderStep(props: StepProps<K8RolloutDeployData>): JSX.Element {
     const {

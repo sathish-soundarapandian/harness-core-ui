@@ -210,7 +210,7 @@ const FlagActivationDetails: React.FC<FlagActivationDetailsProps> = props => {
             {featureFlag.name}
           </Text>
         </Heading>
-        <IdentifierText identifier={featureFlag.identifier} allowCopy lineClamp={1} />
+        <IdentifierText identifier={featureFlag.identifier} allowCopy />
         {featureFlag.description && (
           <Text margin={{ bottom: 'small' }} color={Color.GREY_800} font={{ variation: FontVariation.SMALL }}>
             {featureFlag.description}

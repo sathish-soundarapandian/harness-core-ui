@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LandingDashboardDeploymentsWidget tests deployment badges 1`] = `
+<div
+  class="bp3-popover-content"
+>
+  <table
+    class="bp3-html-table bp3-small popoverTable"
+  >
+    <thead>
+      <tr>
+        <th>
+          PROJECTSTEXT
+        </th>
+        <th>
+          DEPLOYMENTSTEXT
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div
+            class="Layout--vertical StyledProps--main"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey1000"
+              style="max-width: 200px; --text-line-clamp: 1;"
+            >
+              test1
+            </p>
+          </div>
+        </td>
+        <td>
+          <p
+            class="StyledProps--font StyledProps--main executionCount StyledProps--color StyledProps--color-primary7"
+          >
+            1
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div
+            class="Layout--vertical StyledProps--main"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey1000"
+              style="max-width: 200px; --text-line-clamp: 1;"
+            >
+              test2
+            </p>
+          </div>
+        </td>
+        <td>
+          <p
+            class="StyledProps--font StyledProps--main executionCount StyledProps--color StyledProps--color-primary7"
+          >
+            2
+          </p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

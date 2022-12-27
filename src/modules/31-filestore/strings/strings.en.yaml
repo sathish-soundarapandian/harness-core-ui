@@ -28,3 +28,10 @@ errors:
 filter:
   fileUsagePlaceholder: 'Type to view suggestions'
 searchResult: 'Search result: {{count}}'
+sort:
+  byAlphabeticalAz: 'Alphabetical A-Z'
+  byAlphabeticalZa: 'Alphabetical Z-A'
+  firstModified: 'First Modified'
+  nodeBy: 'Sort node by'
+  byFolderType: 'Folder type'
+  byFileType: 'File type'

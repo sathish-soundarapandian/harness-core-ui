@@ -279,9 +279,11 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
                         >
                           <div
                             class="logoInput"
+                            data-testid="logo-input-iconFile"
                           >
                             <input
                               accept="image/jpg,image/jpeg,image/png,image/svg+xml"
+                              id="iconFile"
                               name="iconFile"
                               style="display: none;"
                               type="file"
@@ -289,6 +291,7 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
                             <span
                               class="bp3-icon StyledProps--main icon"
                               data-icon="upload-box"
+                              data-testid="upload-icon"
                             >
                               <svg
                                 fill="none"
@@ -802,9 +805,11 @@ exports[`Git experience git experience snapshot 1`] = `
                         >
                           <div
                             class="logoInput"
+                            data-testid="logo-input-iconFile"
                           >
                             <input
                               accept="image/jpg,image/jpeg,image/png,image/svg+xml"
+                              id="iconFile"
                               name="iconFile"
                               style="display: none;"
                               type="file"
@@ -812,6 +817,7 @@ exports[`Git experience git experience snapshot 1`] = `
                             <span
                               class="bp3-icon StyledProps--main icon"
                               data-icon="upload-box"
+                              data-testid="upload-icon"
                             >
                               <svg
                                 fill="none"

@@ -88,14 +88,12 @@ exports[`Freeze Window Studio Sub Header it should render CreateNewFreezeWindow,
                     class="bp3-popover-target"
                   >
                     <div
-                      class="bp3-editable-text bp3-disabled InputWithIdentifier--idValue"
+                      class="bp3-editable-text bp3-disabled bp3-editable-text-placeholder InputWithIdentifier--idValue"
                     >
                       <span
                         class="bp3-editable-text-content"
                         style="height: 1px; line-height: 1px; min-width: 0;"
-                      >
-                        -1
-                      </span>
+                      />
                     </div>
                   </span>
                 </span>

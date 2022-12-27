@@ -8,6 +8,7 @@
 import React, { FormEvent, useCallback, useEffect, useMemo, useRef, useState, useContext } from 'react'
 import cx from 'classnames'
 import { Formik, Layout, PageSpinner, FormikForm, Container, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { isEmpty, defaultTo, get, set, debounce, noop, memoize, remove, isUndefined, isNil } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
@@ -66,8 +67,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   >()
   const {
     state: {
-      selectionState: { selectedStageId = '' },
-      pipeline: pipelineFromContext
+      selectionState: { selectedStageId = '' }
     },
     allowableTypes,
     updateStage,
@@ -107,7 +107,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   const { setPipeline: updatePipelineInVariablesContext, selectedInputSetsContext } = usePipelineVariables()
   const [existingProvide, setExistingProvide] = useState<ExistingProvide>('existing')
   const [inputTabFormValues, setInputTabFormValues] = React.useState<PipelineInfoConfig | undefined>(
-    pipelineFromContext
+    {} as PipelineInfoConfig
   )
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
   const tempPipelineInputs = useRef<PipelineInfoConfig | undefined>(undefined)
@@ -436,8 +436,8 @@ function PipelineInputSetFormBasic(): React.ReactElement {
           return (
             <FormikForm>
               {noRuntimeInputs ? (
-                <Layout.Horizontal padding="medium" margin="medium">
-                  <Text>{noRuntimeInputs}</Text>
+                <Layout.Horizontal margin={{ left: 'medium', bottom: 'medium' }}>
+                  <Text font={{ variation: FontVariation.H6, weight: 'light' }}>{noRuntimeInputs}</Text>
                 </Layout.Horizontal>
               ) : (
                 <>
@@ -483,7 +483,9 @@ function PipelineInputSetFormBasic(): React.ReactElement {
                         readonly={existingProvide === 'existing'}
                         path=""
                         viewType={StepViewType.TemplateUsage}
-                        maybeContainerClass={existingProvide === 'provide' ? css.inputSetFormRunPipeline : ''}
+                        maybeContainerClass={
+                          existingProvide === 'provide' && hasInputSets ? css.inputSetFormRunPipeline : ''
+                        }
                         selectedStageData={{} as StageSelectionData}
                         allowableTypes={allowableTypes}
                       />

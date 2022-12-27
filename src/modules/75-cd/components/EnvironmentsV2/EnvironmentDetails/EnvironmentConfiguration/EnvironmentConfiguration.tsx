@@ -518,8 +518,8 @@ export default function EnvironmentConfiguration({
                 description: formikProps.values.description,
                 tags: defaultTo(formikProps.values.tags, {}),
                 type: defaultTo(formikProps.values.type, 'Production'),
-                orgIdentifier: defaultTo(formikProps.values.orgIdentifier, ''),
-                projectIdentifier: defaultTo(formikProps.values.projectIdentifier, ''),
+                orgIdentifier: formikProps.values.orgIdentifier,
+                projectIdentifier: formikProps.values.projectIdentifier,
                 variables: defaultTo(formikProps.values.variables, []),
                 overrides: !isEmpty(formikProps.values.overrides)
                   ? {

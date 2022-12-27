@@ -38,6 +38,9 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { UseStringsReturn } from 'framework/strings'
+import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { useQueryParams } from '@common/hooks'
 import {
   getTriggerIcon,
   GitSourceProviders,
@@ -465,6 +468,8 @@ const RenderColumnEnable: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
   }
 }) => {
   const data = row.original
+  const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
+  const { branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
 
   const { mutate: updateTrigger, loading: updateTriggerLoading } = useUpdateTrigger({
     triggerIdentifier: data.identifier as string,
@@ -472,7 +477,14 @@ const RenderColumnEnable: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
       accountIdentifier: column.accountId,
       orgIdentifier: column.orgIdentifier,
       projectIdentifier: column.projectIdentifier,
-      targetIdentifier: column.pipelineIdentifier
+      targetIdentifier: column.pipelineIdentifier,
+      ignoreError: true,
+      ...(isNewGitSyncRemotePipeline && {
+        branch,
+        connectorRef,
+        repoName,
+        storeType
+      })
     },
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
   })

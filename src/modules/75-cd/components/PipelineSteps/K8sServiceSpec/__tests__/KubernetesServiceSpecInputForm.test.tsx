@@ -65,7 +65,17 @@ jest.mock('services/cd-ng', () => ({
   useGetBucketListForS3: () =>
     jest.fn().mockImplementation(() => ({ data: { data: {} }, refetch: jest.fn(), loading: false })),
   useGetGCSBucketList: () =>
-    jest.fn().mockImplementation(() => ({ data: { data: {} }, refetch: jest.fn(), loading: false }))
+    jest.fn().mockImplementation(() => ({ data: { data: {} }, refetch: jest.fn(), loading: false })),
+  useGetBuildDetailsForDocker: jest.fn().mockImplementation(() => {
+    return { data: { data: { buildDetailsList: [] } }, refetch: jest.fn(), error: null }
+  }),
+  useGetBuildDetailsForGcr: jest.fn().mockImplementation(() => {
+    return { data: { buildDetailsList: [] }, refetch: jest.fn(), error: null, loading: false }
+  }),
+  useGetBuildDetailsForEcr: () =>
+    jest.fn().mockImplementation(() => {
+      return { data: { data: { buildDetailsList: [] } }, refetch: jest.fn(), error: null }
+    })
 }))
 
 jest.mock('services/pipeline-ng', () => ({

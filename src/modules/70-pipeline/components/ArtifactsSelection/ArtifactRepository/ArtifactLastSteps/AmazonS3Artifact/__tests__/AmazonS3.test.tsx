@@ -423,7 +423,7 @@ describe('AmazonS3 tests', () => {
     const modals = document.getElementsByClassName('bp3-dialog')
     expect(modals.length).toBe(0)
 
-    // Configure options testing for bucketName and filePath fields
+    // Configure options testing for region, bucketName and filePath fields
     const cogRegion = document.getElementById('configureOptions_region')
     userEvent.click(cogRegion!)
     await waitFor(() => expect(modals.length).toBe(1))
@@ -451,6 +451,55 @@ describe('AmazonS3 tests', () => {
           connectorRef: 'testConnector',
           region: '<+input>.regex(<+input>.includes(/test/))',
           bucketName: '<+input>.regex(<+input>.includes(/test/))',
+          filePath: '<+input>.regex(<+input>.includes(/test/))'
+        }
+      })
+    })
+  })
+
+  test(`configure values should work fine for filePath when region and bucketName are fixed inputs`, async () => {
+    const initialValues = {
+      spec: {
+        identifier: '',
+        region: 'us-gov-west-1',
+        bucketName: 'cdng-terraform-state',
+        tagType: TagTypes.Value,
+        filePath: RUNTIME_INPUT_VALUE
+      },
+      type: 'AmazonS3'
+    }
+    const { container } = render(
+      <TestWrapper>
+        <AmazonS3 initialValues={initialValues as any} {...props} />
+      </TestWrapper>
+    )
+
+    const regionInput = queryByAttribute('name', container, 'region') as HTMLInputElement
+    const bucketNameInput = queryByAttribute('name', container, 'bucketName') as HTMLInputElement
+    const filePathInput = queryByAttribute('name', container, 'filePath') as HTMLInputElement
+    expect(regionInput).not.toBeNull()
+    expect(bucketNameInput).not.toBeNull()
+    expect(filePathInput).not.toBeNull()
+
+    const modals = document.getElementsByClassName('bp3-dialog')
+    expect(modals.length).toBe(0)
+
+    // Configure options testing for filePath field
+    const cogFilePath = document.getElementById('configureOptions_filePath')
+    userEvent.click(cogFilePath!)
+    await waitFor(() => expect(modals.length).toBe(1))
+    const filePathCOGModal = modals[0] as HTMLElement
+    await doConfigureOptionsTesting(filePathCOGModal, filePathInput)
+
+    const submitBtn = getElementByText(container, 'submit')
+    fireEvent.click(submitBtn)
+    await waitFor(() => {
+      expect(onSubmit).toBeCalled()
+      expect(onSubmit).toHaveBeenCalledWith({
+        spec: {
+          connectorRef: 'testConnector',
+          region: 'us-gov-west-1',
+          bucketName: 'cdng-terraform-state',
           filePath: '<+input>.regex(<+input>.includes(/test/))'
         }
       })

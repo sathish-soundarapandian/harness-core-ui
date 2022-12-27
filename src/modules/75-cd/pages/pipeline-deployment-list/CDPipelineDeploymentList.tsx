@@ -62,7 +62,6 @@ export default function CDPipelineDeploymentList(): React.ReactElement {
       <HelpPanel referenceId="ExecutionHistory" type={HelpPanelType.FLOATING_CONTAINER} />
       <ExecutionList
         showHealthAndExecution
-        repoName={repoName}
         showBranchFilter
         onRunPipeline={onRunPipeline}
         isPipelineInvalid={isPipelineInvalid}

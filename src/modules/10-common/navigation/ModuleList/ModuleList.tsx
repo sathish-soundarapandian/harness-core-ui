@@ -199,6 +199,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
                     orderedModules
                   })
                   close()
+                  setActiveModuleCarousel(undefined)
                 }}
               />
             ))}

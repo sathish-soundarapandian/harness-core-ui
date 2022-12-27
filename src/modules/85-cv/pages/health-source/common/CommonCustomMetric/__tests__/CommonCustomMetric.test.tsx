@@ -10,63 +10,59 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { Formik, FormInput } from '@harness/uicore'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { TestWrapper } from '@common/utils/testUtils'
-import useCommonGroupedSideNaveHook from '@cv/hooks/CommonGroupedSideNaveHook/useCommonGroupedSideNaveHook'
+import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
 import CustomMetric from '../CommonCustomMetric'
+import { initGroupedCreatedMetrics, initializeSelectedMetricsMap } from '../CommonCustomMetric.utils'
 
+const updateParentFormik = jest.fn()
 const WrapperComponent = () => {
   const INIT = { metricName: 'Metric Name', groupName: { label: 'Group 1', value: 'Group 1' } }
-  const mappedServicesAndEnvs = new Map()
-  mappedServicesAndEnvs.set('Metric Name', INIT)
+  const customMetricsMap = new Map()
+  customMetricsMap.set('Metric Name', INIT)
 
-  const {
-    createdMetrics,
-    mappedMetrics,
-    selectedMetric,
-    groupedCreatedMetrics,
-    setMappedMetrics,
-    setCreatedMetrics,
-    setGroupedCreatedMetrics
-  } = useCommonGroupedSideNaveHook({
-    defaultCustomMetricName: 'cv.monitoringSources.appD.defaultAppDMetricName',
-    initCustomMetricData: INIT as any,
-    mappedServicesAndEnvs
-  })
+  const { selectedMetric, mappedMetrics } = initializeSelectedMetricsMap(
+    'cv.monitoringSources.appD.defaultAppDMetricName',
+    INIT as any,
+    customMetricsMap
+  )
   const formInit = mappedMetrics.get(selectedMetric)
+
   return (
-    <Formik initialValues={formInit} onSubmit={jest.fn()} formName="runtimeInputsTest">
-      {formik => {
-        return (
-          <CustomMetric
-            isValidInput={true}
-            setMappedMetrics={setMappedMetrics}
-            selectedMetric={selectedMetric}
-            formikValues={formik.values as any}
-            mappedMetrics={mappedMetrics}
-            createdMetrics={createdMetrics}
-            groupedCreatedMetrics={groupedCreatedMetrics}
-            setCreatedMetrics={setCreatedMetrics}
-            setGroupedCreatedMetrics={setGroupedCreatedMetrics}
-            defaultMetricName={'appdMetric'}
-            tooptipMessage={'cv.monitoringSources.gcoLogs.addQueryTooltip'}
-            addFieldLabel={'cv.monitoringSources.addMetric'}
-            initCustomForm={INIT as any}
-            shouldBeAbleToDeleteLastMetric
-            openEditMetricModal={jest.fn()}
-          >
-            <>
-              <FormInput.Text name={'metricName'} />
-              <FormInput.Select
-                name={'groupName'}
-                items={[
-                  { label: 'Group 1', value: 'Group 1' },
-                  { label: 'Group 2', value: 'Group 2' }
-                ]}
-              />
-            </>
-          </CustomMetric>
-        )
-      }}
-    </Formik>
+    <CommonHealthSourceProvider updateParentFormik={updateParentFormik}>
+      <Formik initialValues={formInit} onSubmit={jest.fn()} formName="runtimeInputsTest">
+        {formik => {
+          const createdMetrics = Array.from(customMetricsMap?.keys()) || ['health source metric']
+          const groupedCreatedMetrics = initGroupedCreatedMetrics(customMetricsMap, str => str)
+          return (
+            <CustomMetric
+              isValidInput={true}
+              selectedMetric={selectedMetric}
+              formikValues={formik.values as any}
+              mappedMetrics={customMetricsMap}
+              createdMetrics={createdMetrics}
+              groupedCreatedMetrics={groupedCreatedMetrics}
+              defaultMetricName={'appdMetric'}
+              tooptipMessage={'cv.monitoringSources.gcoLogs.addQueryTooltip'}
+              addFieldLabel={'cv.monitoringSources.addMetric'}
+              initCustomForm={INIT as any}
+              shouldBeAbleToDeleteLastMetric
+              openEditMetricModal={jest.fn()}
+            >
+              <>
+                <FormInput.Text name={'metricName'} />
+                <FormInput.Select
+                  name={'groupName'}
+                  items={[
+                    { label: 'Group 1', value: 'Group 1' },
+                    { label: 'Group 2', value: 'Group 2' }
+                  ]}
+                />
+              </>
+            </CustomMetric>
+          )
+        }}
+      </Formik>
+    </CommonHealthSourceProvider>
   )
 }
 
@@ -77,6 +73,7 @@ describe('Test case', () => {
         <WrapperComponent />
       </TestWrapper>
     )
+
     fireEvent.click(getByText('cv.monitoringSources.addMetric'))
 
     await fillAtForm([
@@ -94,7 +91,8 @@ describe('Test case', () => {
       }
     ])
 
-    await waitFor(() => expect(getAllByTestId('sideNav-options').length).toEqual(2))
+    expect(updateParentFormik).toHaveBeenCalled()
+    await waitFor(() => expect(getAllByTestId('sideNav-options').length).toEqual(1))
     const metricSideNav = getAllByTestId('sideNav-options')[0]
 
     metricSideNav.click()

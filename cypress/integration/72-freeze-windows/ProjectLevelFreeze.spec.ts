@@ -245,6 +245,7 @@ describe('Project Level Freeze', () => {
   status: Disabled
   orgIdentifier: default
   projectIdentifier: project1
+  description: ""
 `)
     })
   })

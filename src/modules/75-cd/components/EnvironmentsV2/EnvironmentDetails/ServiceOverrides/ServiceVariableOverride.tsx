@@ -25,8 +25,9 @@ import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import type { NGServiceConfig, ServiceResponse } from 'services/cd-ng'
+import type { NGServiceConfig, ServiceResponse, ServiceResponseDTO } from 'services/cd-ng'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { getVariableTypeOptions, VariableType } from './ServiceOverridesUtils'
 import type { VariableOverride } from './ServiceOverridesInterface'
 import ServiceVariablesOverridesList from './ServiceVariablesOverrides/ServiceVariablesOverridesList'
@@ -66,7 +67,9 @@ function ServiceVariableOverride({
 
   const getVariableOptions = (): VariableOptionsProps[] => {
     if (!isEmpty(selectedService)) {
-      const serviceSelected = serviceList.find(serviceObj => serviceObj.service?.identifier === selectedService)
+      const serviceSelected = serviceList.find(
+        serviceObj => getScopedValueFromDTO(serviceObj.service as ServiceResponseDTO) === selectedService
+      )
       if (serviceSelected) {
         const parsedServiceYaml = yamlParse<NGServiceConfig>(defaultTo(serviceSelected?.service?.yaml, '')).service
         const serviceVars = defaultTo(parsedServiceYaml?.serviceDefinition?.spec?.variables, [])

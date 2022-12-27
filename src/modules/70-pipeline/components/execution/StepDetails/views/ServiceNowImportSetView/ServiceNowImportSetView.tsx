@@ -38,7 +38,7 @@ interface ServiceNowImportSetViewProps extends StepDetailProps {
 }
 
 export function ServiceNowImportSetView(props: ServiceNowImportSetViewProps): React.ReactElement | null {
-  const { step } = props
+  const { step, executionMetadata } = props
   const transformMapOutcomes = get(step, 'outcomes.output.transformMapOutcomes', []) as TransformMapOutcomeType[]
   const { getString } = useStrings()
   const manuallySelected = React.useRef(false)
@@ -90,13 +90,13 @@ export function ServiceNowImportSetView(props: ServiceNowImportSetViewProps): Re
         <Tabs.Tab
           id={StepDetailTab.STEP_EXECUTION_INPUTS}
           title={getString('pipeline.runtimeInputs')}
-          panel={<ExecutionInputs step={step} />}
+          panel={<ExecutionInputs step={step} executionMetadata={executionMetadata} />}
         />
       ) : null}
       <Tabs.Tab
         id={StepDetailTab.STEP_DETAILS}
         title={getString('details')}
-        panel={<StepDetailsTab step={step} labels={labels} />}
+        panel={<StepDetailsTab step={step} executionMetadata={executionMetadata} labels={labels} />}
       />
       <Tabs.Tab
         id={StepDetailTab.INPUT}

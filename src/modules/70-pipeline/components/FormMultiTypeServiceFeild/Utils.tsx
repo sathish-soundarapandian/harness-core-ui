@@ -64,8 +64,8 @@ export function getReferenceFieldProps({
                 name: defaultTo(service.service?.name, ''),
                 description: service.service?.description,
                 tags: service.service?.tags,
-                projectIdentifier: projectIdentifier,
-                orgIdentifier: orgIdentifier
+                orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
+                projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined
               }
             }))
             done(servicesList)

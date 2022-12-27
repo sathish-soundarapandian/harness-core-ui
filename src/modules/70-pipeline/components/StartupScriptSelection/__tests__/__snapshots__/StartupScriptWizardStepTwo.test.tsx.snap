@@ -141,6 +141,7 @@ exports[`StartupScriptWizardStepTwo move to stepTwo 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -212,6 +213,7 @@ exports[`StartupScriptWizardStepTwo move to stepTwo 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -382,6 +384,7 @@ exports[`StartupScriptWizardStepTwo runtime inputs 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -562,6 +565,7 @@ exports[`StartupScriptWizardStepTwo runtime inputs 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -671,6 +675,7 @@ exports[`StartupScriptWizardStepTwo runtime inputs 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"

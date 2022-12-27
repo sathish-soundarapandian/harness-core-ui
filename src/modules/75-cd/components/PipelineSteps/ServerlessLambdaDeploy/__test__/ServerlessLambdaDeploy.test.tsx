@@ -152,7 +152,7 @@ describe('Test ServerlessDeployStep - Edit view', () => {
       />
     )
 
-    const accordionHeder = await findByText('pipelineSteps.optionalConfiguration')
+    const accordionHeder = await findByText('common.optionalConfig')
     expect(accordionHeder).toBeTruthy()
     userEvent.click(accordionHeder)
     const commandOptionsDetailsDiv = getByTestId('commandOptions-details')
@@ -211,7 +211,7 @@ describe('Test ServerlessDeployStep - InputSet view', () => {
         path="stage.execution.spec.steps[0].step"
       />
     )
-    const accordionHeder = await findByText('pipelineSteps.optionalConfiguration')
+    const accordionHeder = await findByText('common.optionalConfig')
     expect(accordionHeder).toBeTruthy()
     userEvent.click(accordionHeder)
     const commandOptionsDetailsDiv = getByTestId('commandOptions-details')
@@ -250,7 +250,7 @@ describe('Test ServerlessDeployStep - InputSet view', () => {
         ref={ref}
       />
     )
-    const accordionHeder = await findByText('pipelineSteps.optionalConfiguration')
+    const accordionHeder = await findByText('common.optionalConfig')
     expect(accordionHeder).toBeTruthy()
     await act(async () => {
       fireEvent.click(accordionHeder)
@@ -301,7 +301,7 @@ describe('ServerlessDeploy step tests - DeploymentForm', () => {
         ref={ref}
       />
     )
-    const accordionHeder = await findByText('pipelineSteps.optionalConfiguration')
+    const accordionHeder = await findByText('common.optionalConfig')
     expect(accordionHeder).toBeTruthy()
     await act(async () => {
       fireEvent.click(accordionHeder)

@@ -32,6 +32,7 @@ import { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, useGetGCSBuc
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/components'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 
 import type { HelmWithGcsDataType } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
@@ -86,7 +87,10 @@ function HelmWithGcs({
     value: item
   }))
 
-  const onBucketNameFocus = (): void => {
+  const onBucketNameFocus = (e: React.FocusEvent<HTMLInputElement>): void => {
+    if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
+      return
+    }
     if (!bucketData?.data) {
       refetchBuckets({
         queryParams: {
@@ -131,7 +135,7 @@ function HelmWithGcs({
       chartVersion: '',
       skipResourceVersioning: false,
       bucketName: '',
-      folderPath: '',
+      folderPath: '/',
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
     }
   }
@@ -178,16 +182,6 @@ function HelmWithGcs({
           chartName: Yup.string().trim().required(getString('pipeline.manifestType.http.chartNameRequired')),
           helmVersion: Yup.string().trim().required(getString('pipeline.manifestType.helmVersionRequired')),
           bucketName: Yup.mixed().required(getString('pipeline.manifestType.bucketNameRequired')),
-          valuesPaths: Yup.lazy((value): Yup.Schema<unknown> => {
-            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-              return Yup.array().of(
-                Yup.object().shape({
-                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
-                })
-              )
-            }
-            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
-          }),
           commandFlags: Yup.array().of(
             Yup.object().shape({
               flag: Yup.string().when('commandType', {

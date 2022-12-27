@@ -103,3 +103,9 @@ export interface HandleCriteriaPercentageUpdateParams {
   selectedValue: MetricThresholdCriteria['type']
   replaceFn: (value: MetricThresholdType) => void
 }
+
+export interface MetricThresholdsForCustomMetricProps {
+  metricName: string
+  metricThresholds: MetricThresholdType[]
+  isMetricThresholdEnabled: boolean
+}

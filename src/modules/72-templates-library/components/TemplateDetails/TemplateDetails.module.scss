@@ -30,6 +30,7 @@
     }
   }
   .tabsContainer {
+    position: relative;
     flex-grow: 1;
     overflow: hidden;
 
@@ -46,13 +47,17 @@
         background-color: var(--white);
         padding: 0 var(--spacing-xlarge);
         box-shadow: var(--elevation-2);
-        z-index: 1;
       }
       .bp3-tab {
         font-size: 12px !important;
         margin-right: var(--spacing-5) !important;
       }
     }
+  }
+  .gitCacheContainer {
+    position: absolute;
+    top: var(--spacing-small);
+    right: var(--spacing-small);
   }
   .innerTabsContainer {
     flex-grow: 1;

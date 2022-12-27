@@ -204,7 +204,7 @@ export function StageAdvancedInputSetForm({
       <div id={`Stage.${stageIdentifier}.Advanced`} className={cx(css.accordionSummary)}>
         <div className={css.inputheader}>{getString('advancedTitle')}</div>
         {!isEmpty(/* istanbul ignore next */ delegateSelectors) && (
-          <div className={cx(css.nestedAccordions, stepCss.formGroup, stepCss.md)}>
+          <div className={cx(css.nestedAccordions, stepCss.formGroup, css.runTimeWidth)}>
             <DelegateSelectorPanel
               isReadonly={readonly || false}
               allowableTypes={allowableTypes}
@@ -214,7 +214,7 @@ export function StageAdvancedInputSetForm({
         )}
 
         {!isEmpty(/* istanbul ignore next */ deploymentStageTemplate?.when?.condition) && (
-          <div className={cx(css.nestedAccordions, stepCss.formGroup, stepCss.md)}>
+          <div className={cx(css.nestedAccordions, stepCss.formGroup, css.runTimeWidth)}>
             <ConditionalExecutionForm
               readonly={readonly}
               path={`${path}.when.condition`}
@@ -223,7 +223,7 @@ export function StageAdvancedInputSetForm({
           </div>
         )}
         {!isEmpty(deploymentStageTemplate?.strategy) && (
-          <div className={cx(css.nestedAccordions, stepCss.formGroup, stepCss.md)}>
+          <div className={cx(css.nestedAccordions, stepCss.formGroup, css.runTimeWidth)}>
             <StrategyForm readonly={readonly} path={`${path}.strategy`} />
           </div>
         )}

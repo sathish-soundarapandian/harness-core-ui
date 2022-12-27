@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+
 export const getSamlEndpoint = (accountId: string): string => {
-  let url = window.location.href.split('/#')[0]?.replace('/ng', '')
+  let url = `${windowLocationUrlPartBeforeHash()?.replace('/ng/', '')}`
 
   if (window.apiUrl) {
     if (window.apiUrl.startsWith('/')) {

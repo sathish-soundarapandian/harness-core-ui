@@ -113,7 +113,6 @@ const ProjectDetails: React.FC = () => {
   }
   const { openDialog } = useDeleteProjectDialog(projectData || { identifier: '', name: '' }, onDeleted)
   useDocumentTitle(getString('projectsText'))
-
   const getModuleInfoCards = (): React.ReactElement | React.ReactElement[] => {
     if (!projectData?.modules?.length) {
       return (

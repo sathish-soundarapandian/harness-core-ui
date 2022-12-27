@@ -31,7 +31,7 @@ export interface QueueStepViewProps extends StepDetailProps {
 }
 
 export function QueueStepView(props: QueueStepViewProps): React.ReactElement | null {
-  const { step } = props
+  const { step, executionMetadata } = props
   const { getString } = useStrings()
   const manuallySelected = React.useRef(false)
   const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
@@ -61,15 +61,19 @@ export function QueueStepView(props: QueueStepViewProps): React.ReactElement | n
           <Tab
             id={StepDetailTab.STEP_EXECUTION_INPUTS}
             title={getString('pipeline.runtimeInputs')}
-            panel={<ExecutionInputs step={step} />}
+            panel={<ExecutionInputs step={step} executionMetadata={executionMetadata} />}
           />
         ) : null}
         <Tab
           id={StepDetailTab.QUEUED_EXECUTIONS}
           title={getString('pipeline.queueStep.queuedExecutions')}
-          panel={<QueuedExecutionsTab step={step} />}
+          panel={<QueuedExecutionsTab step={step} executionMetadata={executionMetadata} />}
         />
-        <Tab id={StepDetailTab.STEP_DETAILS} title={getString('details')} panel={<StepDetailsTab step={step} />} />
+        <Tab
+          id={StepDetailTab.STEP_DETAILS}
+          title={getString('details')}
+          panel={<StepDetailsTab step={step} executionMetadata={executionMetadata} />}
+        />
         <Tab
           id={StepDetailTab.INPUT}
           title={getString('common.input')}

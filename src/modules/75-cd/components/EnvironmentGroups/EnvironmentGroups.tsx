@@ -110,7 +110,7 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
         size: parseInt(params.size || '10', 10),
         searchTerm: params.searchTerm,
         filters: filtersInQueryParams
-      }
+      } as EnvironmentGroupListQueryParams
     }
   })
 

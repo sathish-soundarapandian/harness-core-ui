@@ -6,9 +6,20 @@
  */
 
 import { Color } from '@harness/design-system'
+import EmptySearchResults from '@common/images/EmptySearchResults.svg'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import type { PMSPipelineSummaryResponse } from 'services/pipeline-ng'
-import type { PipelineListPagePathParams } from './types'
+import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, DEFAULT_PIPELINE_LIST_TABLE_SORT } from '@pipeline/utils/constants'
+import type { Module } from '@common/interfaces/RouteInterfaces'
+import CFPipelineIllustration from './images/cf-pipeline-illustration.svg'
+import CDPipelineIllustration from './images/cd-pipeline-illustration.svg'
+import CIPipelineIllustration from './images/ci-pipeline-illustration.svg'
+import type {
+  PipelineListPagePathParams,
+  PipelineListPageQueryParams,
+  ProcessedPipelineListPageQueryParams
+} from './types'
 
 export const getStatusColor = (data: PMSPipelineSummaryResponse): string => {
   switch (data.recentExecutionsInfo?.[0]?.status) {
@@ -23,7 +34,7 @@ export const getStatusColor = (data: PMSPipelineSummaryResponse): string => {
   }
 }
 
-export function getRouteProps(pathParams: PipelineListPagePathParams, pipeline?: PMSPipelineSummaryResponse) {
+export const getRouteProps = (pathParams: PipelineListPagePathParams, pipeline?: PMSPipelineSummaryResponse) => {
   return {
     projectIdentifier: pathParams.projectIdentifier,
     orgIdentifier: pathParams.orgIdentifier,
@@ -36,4 +47,35 @@ export function getRouteProps(pathParams: PipelineListPagePathParams, pipeline?:
     connectorRef: pipeline?.connectorRef,
     storeType: pipeline?.storeType as StoreType
   }
+}
+
+export const queryParamOptions = {
+  parseArrays: true,
+  decoder: queryParamDecodeAll(),
+  processQueryParams(params: PipelineListPageQueryParams): ProcessedPipelineListPageQueryParams {
+    return {
+      ...params,
+      page: params.page ?? DEFAULT_PAGE_INDEX,
+      size: params.size ?? DEFAULT_PAGE_SIZE,
+      sort: params.sort ?? DEFAULT_PIPELINE_LIST_TABLE_SORT
+    }
+  }
+}
+
+export const getEmptyStateIllustration = (hasFilter: boolean, module?: Module): string => {
+  if (hasFilter) {
+    return EmptySearchResults
+  }
+
+  if (!module) {
+    return CDPipelineIllustration
+  }
+
+  const illustration: Partial<Record<Module, string>> = {
+    ci: CIPipelineIllustration,
+    cd: CDPipelineIllustration,
+    cf: CFPipelineIllustration
+  }
+
+  return illustration[module] || CDPipelineIllustration
 }

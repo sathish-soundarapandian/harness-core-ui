@@ -42,6 +42,7 @@ export interface GetServiceAccessListQueryQueryParams {
     | 'Ssh'
     | 'WinRm'
     | 'TAS'
+    | 'Asg'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string

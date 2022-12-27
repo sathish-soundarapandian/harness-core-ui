@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { Container, Text } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import CommandWithCopyField from '../DelegateSelectorWizard/CommandWithCopyField'
 import css from '../GetStartedWithCD.module.scss'
 
 export const AzureK8sService = (): JSX.Element => {
@@ -22,20 +22,14 @@ export const AzureK8sService = (): JSX.Element => {
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.kubectl')}
         </Text>
-        <Container background={Color.WHITE} padding={{ left: 'medium', top: 'small', bottom: 'small' }}>
-          <Text font={{ variation: FontVariation.SMALL }}>{getString('cd.azureCliCmd')}</Text>
-        </Container>
+        <CommandWithCopyField label={'cd.azureCliCmd'} />
       </li>
       <li>
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.clusterVerify')}
         </Text>
-        <Container background={Color.WHITE} padding={{ left: 'medium', top: 'small', bottom: 'small' }}>
-          <Text className={css.containerItemCss} font={{ variation: FontVariation.SMALL }}>
-            {getString('cd.azureCmd')}
-          </Text>
-          <Text font={{ variation: FontVariation.SMALL }}>{getString('cd.kubectlNodes')}</Text>
-        </Container>
+        <CommandWithCopyField label={'cd.azureCmd'} />
+        <CommandWithCopyField label={'cd.kubectlNodes'} />
       </li>
     </ol>
   )

@@ -22,22 +22,24 @@ export default function MetricLineChart({
   options,
   loading,
   error,
-  series
+  series,
+  chartConfig
 }: {
   options?: any[]
   loading: boolean
   error: GetDataError<Failure | Error> | null
   series?: SeriesLineOptions[]
+  chartConfig?: Highcharts.Options
 }): JSX.Element {
   const { getString } = useStrings()
 
   const chartSeriesValues = useMemo(() => {
-    return getChartSeriesValues(series, options)
-  }, [options, series])
+    return getChartSeriesValues(series, options, chartConfig)
+  }, [chartConfig, options, series])
 
   if (loading) {
     return (
-      <Container>
+      <Container data-testid="loading" height={300}>
         <Icon name="spinner" margin={{ bottom: 'medium' }} size={24} />
       </Container>
     )
@@ -45,7 +47,7 @@ export default function MetricLineChart({
 
   if (error) {
     return (
-      <Text padding={{ bottom: 'medium' }} font={{ variation: FontVariation.FORM_MESSAGE_DANGER }}>
+      <Text data-testid="error" padding={{ bottom: 'medium' }} font={{ variation: FontVariation.FORM_MESSAGE_DANGER }}>
         {getErrorMessage(error)}
       </Text>
     )
@@ -60,7 +62,7 @@ export default function MetricLineChart({
   }
 
   return (
-    <Container>
+    <Container data-testid="chart">
       {(options?.length || series) && <HighchartsReact highcharts={Highcharts} options={chartSeriesValues} />}
     </Container>
   )

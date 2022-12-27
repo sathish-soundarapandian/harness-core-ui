@@ -79,6 +79,7 @@ exports[`Elastigroup - inputSet/runtime view Runtime view to render - with initi
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -406,6 +407,7 @@ exports[`ElastigroupInfraSpec tests render elastigroupInfra with empty initial v
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -434,11 +436,16 @@ exports[`ElastigroupInfraSpec tests render elastigroupInfra with empty initial v
           <div
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-bottom-medium"
           >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-form-sub-section"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="elastigroupConfig"
             >
-              cd.steps.elastigroup.elastigroupConfig
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-sub-section"
+              >
+                cd.steps.elastigroup.elastigroupConfig
+              </p>
+            </div>
           </div>
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"

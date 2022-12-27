@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { render, queryByAttribute, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -9,6 +16,7 @@ import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/Step
 import { ShellScriptStep } from '@cd/components/PipelineSteps/ShellScriptStep/ShellScriptStep'
 import { useSubmitExecutionInput, useGetExecutionInputTemplate, useHandleInterrupt } from 'services/pipeline-ng'
 
+import executionMetadata from '@pipeline/components/execution/StepDetails/common/ExecutionContent/PolicyEvaluationContent/__mocks__/executionMetadata.json'
 import { ExecutionInputs } from '../ExecutionInputs'
 
 jest.mock('services/pipeline-ng', () => ({
@@ -38,7 +46,11 @@ describe('<ExecutionInputs /> tests', () => {
       })
       const { container, findByTestId } = render(
         <TestWrapper>
-          <ExecutionInputs step={{ stepType: 'APPROVAL_STAGE' }} factory={factory} />
+          <ExecutionInputs
+            step={{ stepType: 'APPROVAL_STAGE' }}
+            factory={factory}
+            executionMetadata={executionMetadata}
+          />
         </TestWrapper>
       )
 
@@ -77,7 +89,11 @@ describe('<ExecutionInputs /> tests', () => {
       })
       const { container } = render(
         <TestWrapper>
-          <ExecutionInputs step={{ stepType: 'ShellScript', status: 'Success' }} factory={factory} />
+          <ExecutionInputs
+            step={{ stepType: 'ShellScript', status: 'Success' }}
+            factory={factory}
+            executionMetadata={executionMetadata}
+          />
         </TestWrapper>
       )
 
@@ -91,7 +107,11 @@ describe('<ExecutionInputs /> tests', () => {
       })
       const { container } = render(
         <TestWrapper>
-          <ExecutionInputs step={{ stepType: 'ShellScript', status: 'Success' }} factory={factory} />
+          <ExecutionInputs
+            step={{ stepType: 'ShellScript', status: 'Success' }}
+            factory={factory}
+            executionMetadata={executionMetadata}
+          />
         </TestWrapper>
       )
 
@@ -115,7 +135,7 @@ describe('<ExecutionInputs /> tests', () => {
       })
       const { container, findByTestId } = render(
         <TestWrapper>
-          <ExecutionInputs step={{ stepType: 'ShellScript' }} factory={factory} />
+          <ExecutionInputs step={{ stepType: 'ShellScript' }} factory={factory} executionMetadata={executionMetadata} />
         </TestWrapper>
       )
 
@@ -153,7 +173,11 @@ describe('<ExecutionInputs /> tests', () => {
       })
       const { container } = render(
         <TestWrapper>
-          <ExecutionInputs step={{ stepType: 'ShellScript', status: 'Success' }} factory={factory} />
+          <ExecutionInputs
+            step={{ stepType: 'ShellScript', status: 'Success' }}
+            factory={factory}
+            executionMetadata={executionMetadata}
+          />
         </TestWrapper>
       )
 
@@ -175,7 +199,7 @@ describe('<ExecutionInputs /> tests', () => {
       })
       const { findByTestId, findByText } = render(
         <TestWrapper>
-          <ExecutionInputs step={{ stepType: 'ShellScript' }} />
+          <ExecutionInputs step={{ stepType: 'ShellScript' }} executionMetadata={executionMetadata} />
         </TestWrapper>
       )
 

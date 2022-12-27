@@ -83,6 +83,7 @@ exports[`Queue Step - Input Set it should render input set: Input Set - view 1`]
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -162,6 +163,7 @@ exports[`Queue Step - Input Set it should render input set: Input Set - view 1`]
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -267,6 +269,7 @@ exports[`Queue Step - Input Set it should render input set: Input Set - view 1`]
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -470,6 +473,7 @@ exports[`Queue Step it should render as new step - stepViewType Edit: Create Cas
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -544,6 +548,7 @@ exports[`Queue Step it should render as new step - stepViewType Edit: Create Cas
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -806,6 +811,7 @@ exports[`Queue Step renders RunTime Inputs: Edit Case - with runtime inputs 1`] 
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -918,6 +924,7 @@ exports[`Queue Step renders RunTime Inputs: Edit Case - with runtime inputs 1`] 
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

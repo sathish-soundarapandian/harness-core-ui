@@ -102,7 +102,10 @@ export function TextWithSearchMarkersAndLinks(props: TextWithSearchMarkersProps)
   return (
     <span className={className}>
       {tokens.map((token, i) => {
-        let content: React.ReactChild = token.content
+        // Change the html entities back to actual characters
+        // as we are no longer using dangerouslySetInnerHTML.
+        // React will take care of rendering them properly.
+        let content: React.ReactChild = token.content.replace(/&lt;/g, '<').replace(/&amp;/g, '&')
         const matches = searchText ? defaultTo(content.match(searchRegex), []) : []
 
         content = (

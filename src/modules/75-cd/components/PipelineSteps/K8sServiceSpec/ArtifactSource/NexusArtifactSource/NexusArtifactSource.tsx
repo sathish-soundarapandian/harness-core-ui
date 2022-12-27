@@ -445,6 +445,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 type="String"
                 variableName="repository"
                 showRequiredField={false}
+                isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                 showAdvanced={true}
@@ -475,6 +476,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 type="String"
                 variableName="groupId"
                 showRequiredField={false}
+                isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                 showAdvanced={true}
@@ -505,6 +507,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 type="String"
                 variableName="artifactId"
                 showRequiredField={false}
+                isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                 showAdvanced={true}
@@ -535,6 +538,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 type="String"
                 variableName="extension"
                 showRequiredField={false}
+                isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                 showAdvanced={true}
@@ -565,6 +569,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 type="String"
                 variableName="classifier"
                 showRequiredField={false}
+                isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                 showAdvanced={true}
@@ -595,6 +600,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 type="String"
                 variableName="packageName"
                 showRequiredField={false}
+                isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                 showAdvanced={true}
@@ -625,6 +631,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 type="String"
                 variableName="group"
                 showRequiredField={false}
+                isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                 showAdvanced={true}
@@ -657,6 +664,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 type="String"
                 variableName="repositoryPort"
                 showRequiredField={false}
+                isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                 showAdvanced={true}
@@ -688,6 +696,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 type="String"
                 variableName="repositoryUrl"
                 showRequiredField={false}
+                isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                 showAdvanced={true}
@@ -759,6 +768,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 type="String"
                 variableName="tagRegex"
                 showRequiredField={false}
+                isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                 showAdvanced={true}

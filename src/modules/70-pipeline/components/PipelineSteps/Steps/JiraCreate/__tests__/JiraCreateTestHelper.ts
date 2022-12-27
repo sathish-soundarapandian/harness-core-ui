@@ -445,6 +445,18 @@ export const getJiraOptionalFieldRendererProps = (): JiraFieldsRendererProps => 
         array: true
       },
       required: false
+    },
+    {
+      name: 'Description',
+      value: '',
+      key: 'Description',
+      allowedValues: [],
+      schema: {
+        typeStr: '',
+        type: 'string',
+        array: true
+      },
+      required: false
     }
   ],
   readonly: false,
@@ -501,6 +513,82 @@ export const getJiraUserFieldRendererProps = (): JiraFieldsRendererProps => ({
       schema: {
         typeStr: '',
         type: 'user'
+      },
+      required: false
+    }
+  ]
+})
+
+export const getJiraFieldRendererRuntimeProps = (): JiraFieldsRendererProps => ({
+  connectorRef: 'account.connectRef',
+  deploymentMode: true,
+  template: {
+    identifier: 'test',
+    type: 'JiraCreate',
+    name: 'JiraCreate',
+    spec: {
+      fields: [
+        {
+          name: 'NextGen',
+          value: '<+input>'
+        }
+      ]
+    } as any
+  },
+  fieldPrefix: 'stages[0].stage.spec.execution.steps[0].step.',
+  formik: {
+    initialValues: {
+      identifier: 'jira_create',
+      stages: [
+        {
+          stage: {
+            identifier: 'stage',
+            type: 'Custom',
+            spec: {
+              execution: {
+                steps: [
+                  {
+                    step: {
+                      spec: {
+                        fields: [
+                          {
+                            name: 'NextGen',
+                            value: ''
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    setErrors: jest.fn(),
+    errors: {},
+    setFieldTouched: jest.fn(),
+    setFieldValue: jest.fn()
+  },
+  selectedFields: [
+    {
+      name: 'NextGen',
+      value: '',
+      key: 'NextGen',
+      allowedValues: [
+        {
+          id: '1',
+          value: 'No'
+        },
+        {
+          id: '2',
+          value: 'Yes'
+        }
+      ],
+      schema: {
+        typeStr: 'option',
+        type: 'option'
       },
       required: false
     }

@@ -22,14 +22,15 @@ import {
 interface UseCommonGroupedSideNaveHookInterface {
   defaultCustomMetricName: string
   initCustomMetricData: any
-  mappedServicesAndEnvs: Map<string, any>
+  customMetricsMap: Map<string, any>
+  selectedMetricData?: string
 }
 
 export default function useCommonGroupedSideNaveHook(props: UseCommonGroupedSideNaveHookInterface) {
   const { getString } = useStrings()
-  const { defaultCustomMetricName, initCustomMetricData, mappedServicesAndEnvs } = props
+  const { defaultCustomMetricName, initCustomMetricData, customMetricsMap, selectedMetricData } = props
   const [{ selectedMetric, mappedMetrics }, setMappedMetrics] = useState<CustomSelectedAndMappedMetrics>(() =>
-    initializeSelectedMetricsMap(defaultCustomMetricName, initCustomMetricData, mappedServicesAndEnvs)
+    initializeSelectedMetricsMap(defaultCustomMetricName, initCustomMetricData, customMetricsMap, selectedMetricData)
   )
 
   const [{ createdMetrics, selectedMetricIndex }, setCreatedMetrics] = useState<CreatedMetricsWithSelectedIndex>(() =>

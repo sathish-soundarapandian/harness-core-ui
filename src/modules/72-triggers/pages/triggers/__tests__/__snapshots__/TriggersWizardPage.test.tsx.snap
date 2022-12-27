@@ -2427,6 +2427,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                             >
                                               <button
                                                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                data-testid="multi-type-button"
                                               >
                                                 <span
                                                   class="bp3-icon StyledProps--main"
@@ -2506,6 +2507,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                             >
                                               <button
                                                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                data-testid="multi-type-button"
                                               >
                                                 <span
                                                   class="bp3-icon StyledProps--main"
@@ -2618,6 +2620,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                             >
                                               <button
                                                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                data-testid="multi-type-button"
                                               >
                                                 <span
                                                   class="bp3-icon StyledProps--main"
@@ -2779,6 +2782,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                               >
                                                 <button
                                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                  data-testid="multi-type-button"
                                                 >
                                                   <span
                                                     class="bp3-icon StyledProps--main"
@@ -2924,6 +2928,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                                   >
                                                     <button
                                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                      data-testid="multi-type-button"
                                                     >
                                                       <span
                                                         class="bp3-icon StyledProps--main"
@@ -3052,6 +3057,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                                           >
                                                             <button
                                                               class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                                                              data-testid="multi-type-button"
                                                             >
                                                               <span
                                                                 class="bp3-icon StyledProps--main"
@@ -4303,6 +4309,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                                 >
                                   <button
                                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                    data-testid="multi-type-button"
                                   >
                                     <span
                                       class="bp3-icon StyledProps--main"
@@ -5429,6 +5436,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                                 >
                                   <button
                                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                    data-testid="multi-type-button"
                                   >
                                     <span
                                       class="bp3-icon StyledProps--main"

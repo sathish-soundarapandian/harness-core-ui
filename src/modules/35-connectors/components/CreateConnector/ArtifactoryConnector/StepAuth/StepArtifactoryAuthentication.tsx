@@ -18,6 +18,7 @@ import {
   ButtonVariation
 } from '@harness/uicore'
 import * as Yup from 'yup'
+import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { setupArtifactoryFormData, useGetHelpPanel } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { ConnectorConfigDTO, ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
@@ -31,6 +32,7 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
+import { ModalViewFor, shouldHideHeaderAndNavBtns } from '../../CreateConnectorUtils'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../../NexusConnector/StepAuth/StepNexusConnector.module.scss'
 
@@ -48,9 +50,11 @@ interface ArtifactoryAuthenticationProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  context?: ModalViewFor
+  formClassName?: string
 }
 
-interface ArtifactoryFormInterface {
+export interface ArtifactoryFormInterface {
   artifactoryServerUrl: string
   authType: string
   username: TextReferenceInterface | void
@@ -67,10 +71,11 @@ const defaultInitialFormData: ArtifactoryFormInterface = {
 const StepArtifactoryAuthentication: React.FC<
   StepProps<StepArtifactoryAuthenticationProps> & ArtifactoryAuthenticationProps
 > = props => {
-  const { prevStepData, nextStep, accountId } = props
+  const { prevStepData, nextStep, accountId, context, formClassName = '' } = props
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(true && props.isEditMode)
   const { getString } = useStrings()
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const authOptions: SelectOption[] = [
     {
@@ -121,13 +126,23 @@ const StepArtifactoryAuthentication: React.FC<
       }
     : undefined
 
+  const handleValidate = (formData: ConnectorConfigDTO): void => {
+    if (hideHeaderAndNavBtns) {
+      handleSubmit({
+        ...formData
+      })
+    }
+  }
+
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (
     <Layout.Vertical spacing="small" className={css.stepDetails}>
-      <Text font={{ variation: FontVariation.H3 }} tooltipProps={{ dataTooltipId: 'artifactRepositoryDetails' }}>
-        {getString('details')}
-      </Text>
+      {!hideHeaderAndNavBtns && (
+        <Text font={{ variation: FontVariation.H3 }} tooltipProps={{ dataTooltipId: 'artifactRepositoryDetails' }}>
+          {getString('details')}
+        </Text>
+      )}
       <Formik
         initialValues={{
           ...initialValues,
@@ -148,11 +163,12 @@ const StepArtifactoryAuthentication: React.FC<
             otherwise: Yup.object().nullable()
           })
         })}
+        validate={handleValidate}
         onSubmit={handleSubmit}
       >
         {formikProps => (
           <>
-            <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} className={css.secondStep}>
+            <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} className={cx(css.secondStep, formClassName)}>
               <Container className={css.formRow}>
                 <FormInput.Text
                   className={css.urlInput}
@@ -188,22 +204,24 @@ const StepArtifactoryAuthentication: React.FC<
                 </Container>
               ) : null}
             </Layout.Vertical>
-            <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">
-              <Button
-                text={getString('back')}
-                icon="chevron-left"
-                variation={ButtonVariation.SECONDARY}
-                onClick={() => props?.previousStep?.(props?.prevStepData)}
-                data-name="artifactoryBackButton"
-              />
-              <Button
-                type="submit"
-                variation={ButtonVariation.PRIMARY}
-                onClick={formikProps.submitForm}
-                text={getString('continue')}
-                rightIcon="chevron-right"
-              />
-            </Layout.Horizontal>
+            {!hideHeaderAndNavBtns && (
+              <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">
+                <Button
+                  text={getString('back')}
+                  icon="chevron-left"
+                  variation={ButtonVariation.SECONDARY}
+                  onClick={() => props?.previousStep?.(props?.prevStepData)}
+                  data-name="artifactoryBackButton"
+                />
+                <Button
+                  type="submit"
+                  variation={ButtonVariation.PRIMARY}
+                  onClick={formikProps.submitForm}
+                  text={getString('continue')}
+                  rightIcon="chevron-right"
+                />
+              </Layout.Horizontal>
+            )}
           </>
         )}
       </Formik>

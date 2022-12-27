@@ -135,6 +135,8 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
           const serviceYaml = defaultTo(row.serviceYaml, '{}')
           const service = yamlParse<Pick<ServiceData, 'service'>>(serviceYaml).service
           service.yaml = serviceYaml
+          set(service, 'orgIdentifier', row.orgIdentifier)
+          set(service, 'projectIdentifier', row.projectIdentifier)
           const serviceInputs = yamlParse<Pick<ServiceData, 'serviceInputs'>>(
             defaultTo(row.inputSetTemplateYaml, '{}')
           ).serviceInputs

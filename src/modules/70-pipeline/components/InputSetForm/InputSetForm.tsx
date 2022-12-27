@@ -49,7 +49,7 @@ import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
-import { parse } from '@common/utils/YamlHelperMethods'
+import { memoizedParse, parse } from '@common/utils/YamlHelperMethods'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetDTO, InputSetType, Pipeline, InputSet } from '@pipeline/utils/types'
@@ -59,6 +59,7 @@ import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import GitPopover from '../GitPopover/GitPopover'
 import FormikInputSetForm from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
+import { PipelineVariablesContextProvider } from '../PipelineVariablesContext/PipelineVariablesContext'
 import css from './InputSetForm.module.scss'
 
 const getDefaultInputSet = (
@@ -146,7 +147,7 @@ const getInputSet = (
   )
 }
 
-export function InputSetForm(props: InputSetFormProps): React.ReactElement {
+function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const { executionView, inputSetInitialValue, isNewInModal, className, onCancel, onCreateSuccess = noop } = props
   const { getString } = useStrings()
   const [isEdit, setIsEdit] = React.useState(false)
@@ -416,28 +417,35 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
 
   const child = React.useCallback(
     () => (
-      <FormikInputSetForm
-        inputSet={isNewInModal && inputSetInitialValue ? merge(inputSet, inputSetInitialValue) : inputSet}
-        template={template}
-        pipeline={pipeline}
-        resolvedTemplatesPipelineYaml={pipeline?.data?.resolvedTemplatesPipelineYaml}
-        handleSubmit={handleSubmit}
-        formErrors={formErrors}
-        setFormErrors={setFormErrors}
-        yamlHandler={yamlHandler}
-        setYamlHandler={setYamlHandler}
-        formikRef={formikRef}
-        selectedView={selectedView}
-        executionView={executionView}
-        isEdit={isEdit}
-        isGitSyncEnabled={isGitSyncEnabled}
-        supportingGitSimplification={supportingGitSimplification}
-        className={className}
-        onCancel={onCancel}
-        filePath={filePath}
-        inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
-      />
+      <PipelineVariablesContextProvider
+        pipeline={memoizedParse<Pipeline>(defaultTo(pipeline?.data?.yamlPipeline, ''))?.pipeline as PipelineInfoConfig}
+        enablePipelineTemplatesResolution={true}
+        storeMetadata={{ storeType, connectorRef, repoName, branch, filePath }}
+      >
+        <FormikInputSetForm
+          inputSet={isNewInModal && inputSetInitialValue ? merge(inputSet, inputSetInitialValue) : inputSet}
+          template={template}
+          pipeline={pipeline}
+          resolvedTemplatesPipelineYaml={pipeline?.data?.resolvedTemplatesPipelineYaml}
+          handleSubmit={handleSubmit}
+          formErrors={formErrors}
+          setFormErrors={setFormErrors}
+          yamlHandler={yamlHandler}
+          setYamlHandler={setYamlHandler}
+          formikRef={formikRef}
+          selectedView={selectedView}
+          executionView={executionView}
+          isEdit={isEdit}
+          isGitSyncEnabled={isGitSyncEnabled}
+          supportingGitSimplification={supportingGitSimplification}
+          className={className}
+          onCancel={onCancel}
+          filePath={filePath}
+          inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
+        />
+      </PipelineVariablesContextProvider>
     ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       inputSet,
       template,

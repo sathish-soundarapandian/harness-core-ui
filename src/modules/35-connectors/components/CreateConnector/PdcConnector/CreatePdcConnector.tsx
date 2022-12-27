@@ -13,8 +13,8 @@ import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER, CreateConnectorModal
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { buildPdcPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useStrings } from 'framework/strings'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import PdcDetails from './StepDetails/PdcDetails'
-import TestConnection from './StepDetails/TestConnection'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 
 const CreateGcpConnector: React.FC<CreateConnectorModalProps> = props => {
@@ -61,7 +61,15 @@ const CreateGcpConnector: React.FC<CreateConnectorModalProps> = props => {
           connectorInfo={props.connectorInfo}
           gitDetails={props.gitDetails}
         />
-        <TestConnection name={getString('common.smtp.testConnection')} onClose={props.onClose} />
+        <ConnectorTestConnection
+          name={getString('common.smtp.testConnection')}
+          onClose={props.onClose}
+          connectorInfo={props.connectorInfo}
+          gitDetails={props.gitDetails}
+          type={Connectors.PDC}
+          isStep={true}
+          isLastStep={true}
+        />
       </StepWizard>
     </>
   )

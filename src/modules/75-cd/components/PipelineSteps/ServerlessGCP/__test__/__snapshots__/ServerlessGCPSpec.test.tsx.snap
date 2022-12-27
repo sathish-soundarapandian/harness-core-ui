@@ -79,6 +79,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view for inputset vi
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -158,6 +159,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view for inputset vi
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -344,6 +346,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view with empty init
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -417,6 +420,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view with empty init
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -545,6 +549,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view with runtime va
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -656,6 +661,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view with runtime va
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -888,6 +894,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view with values  1`
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -961,6 +968,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view with values  1`
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"

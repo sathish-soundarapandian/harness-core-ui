@@ -49,7 +49,8 @@ import {
   resetTag,
   shouldFetchFieldOptions,
   helperTextData,
-  getConnectorRefQueryData
+  getConnectorRefQueryData,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   getHelpeTextForTags,
@@ -58,6 +59,7 @@ import {
   isCustomDeploymentType,
   isServerlessDeploymentType,
   isSshOrWinrmDeploymentType,
+  isTASDeploymentType,
   repositoryFormats,
   RepositoryFormatTypes
 } from '@pipeline/utils/stageHelpers'
@@ -70,6 +72,8 @@ import type {
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults, selectItemsMapper } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
@@ -109,7 +113,7 @@ function Artifactory({
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
@@ -117,19 +121,22 @@ function Artifactory({
   const isSSHWinRmDeploymentType = isSshOrWinrmDeploymentType(selectedDeploymentType)
   const isAzureWebAppDeploymentTypeSelected = isAzureWebAppDeploymentType(selectedDeploymentType)
   const isCustomDeploymentTypeSelected = isCustomDeploymentType(selectedDeploymentType)
+  const isTasDeploymentTypeSelected = isTASDeploymentType(selectedDeploymentType)
+  const CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY = useFeatureFlag(FeatureFlag.CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY)
+
+  const showRepositoryFormatForAllowedTypes =
+    isSSHWinRmDeploymentType ||
+    isAzureWebAppDeploymentTypeSelected ||
+    isCustomDeploymentTypeSelected ||
+    isTasDeploymentTypeSelected
   const [repositoryFormat, setRepositoryFormat] = useState<string | undefined>(
-    isServerlessDeploymentTypeSelected ||
-      isSSHWinRmDeploymentType ||
-      isAzureWebAppDeploymentTypeSelected ||
-      isCustomDeploymentTypeSelected
+    showRepositoryFormatForAllowedTypes || isServerlessDeploymentTypeSelected
       ? RepositoryFormatTypes.Generic
       : RepositoryFormatTypes.Docker
   )
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [artifactPaths, setArtifactPaths] = useState<SelectOption[]>([])
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const showRepositoryFormatForAllowedTypes =
-    isAzureWebAppDeploymentTypeSelected || isSSHWinRmDeploymentType || isCustomDeploymentTypeSelected
   const isAzureWebAppGenericTypeSelected = isAzureWebAppOrSshWinrmGenericDeploymentType(
     selectedDeploymentType,
     getRepositoryFormat(initialValues)
@@ -171,6 +178,9 @@ function Artifactory({
     tag: Yup.mixed().when('tagType', {
       is: 'value',
       then: Yup.mixed().required(getString('pipeline.artifactsSelection.validation.tag'))
+    }),
+    ...(CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY && {
+      repositoryUrl: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryUrl'))
     })
   }
 
@@ -364,7 +374,7 @@ function Artifactory({
   }
 
   const handleValidate = (formData: ImagePathTypes & { connectorId?: string }) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData({
         ...prevStepData,
         ...formData,
@@ -438,7 +448,7 @@ function Artifactory({
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>
@@ -466,7 +476,7 @@ function Artifactory({
           }
           return (
             <FormikForm>
-              <div className={cx(css.connectorForm, formClassName)}>
+              <div className={cx(css.artifactForm, formClassName)}>
                 {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
                 {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
                 {showRepositoryFormatForAllowedTypes && (
@@ -612,12 +622,12 @@ function Artifactory({
                     <FormInput.MultiTextInput
                       label={getString('repositoryUrlLabel')}
                       name="repositoryUrl"
-                      isOptional
                       placeholder={getString('pipeline.repositoryUrlPlaceholder')}
                       multiTextInputProps={{
                         expressions,
                         allowableTypes
                       }}
+                      isOptional={!CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY}
                     />
                     {getMultiTypeFromValue(formik.values.repositoryUrl) === MultiTypeInputType.RUNTIME && (
                       <div className={css.configureOptions}>
@@ -728,7 +738,7 @@ function Artifactory({
                   />
                 </div>
               </div>
-              {!isTemplateContext && (
+              {!hideHeaderAndNavBtns && (
                 <Layout.Horizontal spacing="medium">
                   <Button
                     variation={ButtonVariation.SECONDARY}

@@ -144,7 +144,8 @@ describe('ECSRunTaskStepEdit tests', () => {
         timeout: '',
         type: StepType.EcsRunTask,
         spec: {
-          waitForSteadyState: undefined
+          waitForSteadyState: undefined,
+          taskDefinitionType: 'taskDefinition'
         }
       })
     )
@@ -244,6 +245,87 @@ describe('ECSRunTaskStepEdit tests', () => {
               paths: ['test-path']
             }
           },
+          runTaskRequestDefinition: {
+            type: 'Git',
+            spec: {
+              branch: 'testBranch',
+              connectorRef: 'account.Git_CTR',
+              gitFetchType: 'Branch',
+              paths: ['test-path']
+            }
+          }
+        },
+        type: StepType.EcsRunTask
+      })
+    )
+  })
+
+  test('add name, timeout, Task Definition ARN, Run Task Request Definition to step and submit', async () => {
+    const { container, getByText, queryByDisplayValue } = render(
+      <TestWrapper>
+        <ECSRunTaskStepEditRef
+          initialValues={emptyInitialValues}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          isNewStep={true}
+          readonly={false}
+          stepViewType={StepViewType.Edit}
+          onUpdate={onUpdate}
+          ref={formikRef}
+        />
+      </TestWrapper>
+    )
+
+    // Name
+    const nameInput = queryByNameAttribute('name', container) as HTMLInputElement
+    expect(nameInput).toBeInTheDocument()
+    expect(nameInput.value).toBe('')
+    act((): void => {
+      fireEvent.change(nameInput, { target: { value: 'Test Name' } })
+    })
+    expect(nameInput.value).toBe('Test Name')
+
+    // Timeout
+    const timeoutInput = queryByNameAttribute('timeout', container) as HTMLInputElement
+    expect(timeoutInput).toBeInTheDocument()
+    expect(timeoutInput.value).toBe('')
+    act(() => {
+      fireEvent.change(timeoutInput, { target: { value: '20m' } })
+    })
+    expect(timeoutInput.value).toBe('20m')
+
+    // Initially, ECS Run Task Definition Radio should be chosen and + Task Definition button should appear
+    const taskDefinitionRadioOption = queryByDisplayValue('taskDefinition')
+    expect(taskDefinitionRadioOption).toBeChecked()
+    const addTaskDefinitionBtn = getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    expect(addTaskDefinitionBtn).toBeInTheDocument()
+    // Task Definition ARN
+    const ecsRunTaskDefinitionARNRadioOption = getByText('ECS Run Task Definition ARN')
+    userEvent.click(ecsRunTaskDefinitionARNRadioOption)
+    const ecsRunTaskDefinitionARNInput = queryByNameAttribute('spec.taskDefinitionArn', container)
+    await waitFor(() => expect(ecsRunTaskDefinitionARNInput).toBeInTheDocument())
+    fireEvent.change(ecsRunTaskDefinitionARNInput!, { target: { value: 'task:arn:8081' } })
+
+    const dialogList = document.getElementsByClassName('bp3-dialog')
+    // Run Task Request Definition
+    const addRunTaskRequestDefinitionBtn = getByText('cd.steps.ecsRunTaskStep.runTaskRequestDefinition')
+    userEvent.click(addRunTaskRequestDefinitionBtn)
+    await waitFor(() => expect(dialogList.length).toBe(1))
+    const runTaskRequestDefinitionPortal = dialogList[0] as HTMLElement
+    // Test manifest store tiles, choose Git and fill in Connector field
+    await testTaskDefinitionSecondStep(runTaskRequestDefinitionPortal)
+    // Fill in required field and submit manifest
+    await testTaskDefinitionLastStep(runTaskRequestDefinitionPortal)
+    await waitFor(() => expect(dialogList.length).toBe(0))
+    act(() => {
+      formikRef.current?.submitForm()
+    })
+    await waitFor(() =>
+      expect(onUpdate).toHaveBeenCalledWith({
+        identifier: 'Test_Name',
+        name: 'Test Name',
+        timeout: '20m',
+        spec: {
+          taskDefinitionArn: 'task:arn:8081',
           runTaskRequestDefinition: {
             type: 'Git',
             spec: {

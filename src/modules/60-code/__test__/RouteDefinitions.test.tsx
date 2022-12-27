@@ -52,6 +52,20 @@ describe('RouteDefinitions', () => {
         <p>{routes.toCODEBranches({ repoPath: 'harness/default/test/repo1' })}</p>
         <p>{routes.toCODEPullRequests({ repoPath: 'harness/default/test/repo1' })}</p>
         <p>{routes.toCODEPullRequest({ repoPath: 'harness/default/test/repo1', pullRequestId: '1001' })}</p>
+        <p>
+          {routes.toCODEPullRequest({
+            repoPath: 'harness/default/test/repo1',
+            pullRequestId: '1001',
+            pullRequestSection: 'commits'
+          })}
+        </p>
+        <p>
+          {routes.toCODEPullRequest({
+            repoPath: 'harness/default/test/repo1',
+            pullRequestId: '1001',
+            pullRequestSection: 'diffs'
+          })}
+        </p>
         <p>{routes.toCODECompare({ repoPath: 'harness/default/test/repo1', diffRefs: 'main...develop' })}</p>
         <p>{routes.toCODESettings({ repoPath: 'harness/default/test/repo1' })}</p>
         <p>{routes.toCODECreateWebhook({ repoPath: 'harness/default/test/repo1' })}</p>

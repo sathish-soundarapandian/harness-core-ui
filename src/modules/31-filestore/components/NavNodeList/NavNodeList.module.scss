@@ -31,3 +31,18 @@
     fill: var(--grey-0) !important;
   }
 }
+
+.nodeCollapseContainer {
+  position: relative;
+  .nodeCollapseItem {
+    position: absolute;
+    left: -10px;
+    top: 10px;
+  }
+  .nodeCollapseNormal {
+    left: -10px;
+  }
+  .nodeCollapseActive {
+    left: -15px;
+  }
+}

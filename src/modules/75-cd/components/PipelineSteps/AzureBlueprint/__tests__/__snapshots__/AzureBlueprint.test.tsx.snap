@@ -156,6 +156,7 @@ exports[`Test Azure Blueprint step should render azure blueprint view as new ste
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -267,6 +268,7 @@ exports[`Test Azure Blueprint step should render azure blueprint view as new ste
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -404,6 +406,7 @@ exports[`Test Azure Blueprint step should render azure blueprint view as new ste
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

@@ -24,8 +24,9 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { cloneDeep, defaultTo, isEqual } from 'lodash-es'
+import { cloneDeep, defaultTo, isEqual, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -38,7 +39,11 @@ import {
   useGetBuildsForJenkins,
   BuildDetails
 } from 'services/cd-ng'
-import { getConnectorIdValue, getArtifactFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import {
+  getConnectorIdValue,
+  getArtifactFormData,
+  shouldHideHeaderAndNavBtns
+} from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
   JenkinsArtifactProps,
@@ -46,8 +51,11 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
+import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
 
 function FormComponent({
@@ -79,7 +87,9 @@ function FormComponent({
   }
 
   const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
-  const isTemplateContext = context === ModalViewFor.Template
+  const jobNameValue = formik.values?.spec?.jobName
+  const artifactValue = getGenuineValue(formik.values?.spec?.artifactPath)
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const {
     refetch: refetchJobs,
@@ -87,7 +97,7 @@ function FormComponent({
     loading: fetchingJobs,
     error: fetchingJobsError
   } = useGetJobDetailsForJenkins({
-    lazy: true,
+    lazy: getMultiTypeFromValue(prevStepData?.connectorId) === MultiTypeInputType.RUNTIME,
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString()
@@ -97,36 +107,31 @@ function FormComponent({
   const {
     refetch: refetchartifactPaths,
     data: artifactPathsResponse,
-    loading: fetchingArtifacts
+    loading: fetchingArtifacts,
+    error: errorFetchingPath
   } = useGetArtifactPathForJenkins({
+    lazy: true,
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString()
     },
-    jobName: encodeURIComponent(encodeURIComponent(initialValues?.spec?.jobName as string))
+    jobName: encodeURIComponent(encodeURIComponent(jobNameValue?.label || ''))
   })
 
   const {
     refetch: refetchJenkinsBuild,
     data: jenkinsBuildResponse,
-    loading: fetchingBuild
+    loading: fetchingBuild,
+    error: errorFetchingBuild
   } = useGetBuildsForJenkins({
+    lazy: true,
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString(),
-      artifactPath: initialValues?.spec?.artifactPath || ''
+      artifactPath: artifactValue || ''
     },
-    jobName: encodeURIComponent(encodeURIComponent(initialValues?.spec?.jobName as string))
+    jobName: encodeURIComponent(encodeURIComponent(jobNameValue?.label || ''))
   })
-
-  useEffect(() => {
-    refetchJobs({
-      queryParams: {
-        ...commonParams,
-        connectorRef: connectorRefValue?.toString()
-      }
-    })
-  }, [prevStepData])
 
   useEffect(() => {
     if (artifactPathsResponse?.data) {
@@ -237,12 +242,26 @@ function FormComponent({
     }
   }, [jobsResponse])
 
+  const artifactPathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingArtifacts} />
+  ))
+
+  const buildItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingBuild} />
+  ))
+
+  const canFetchBuildsOrArtifacts =
+    getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.RUNTIME ||
+    getMultiTypeFromValue(jobNameValue) === MultiTypeInputType.RUNTIME ||
+    !jobNameValue ||
+    !connectorRefValue
+
   return (
     <FormikForm>
-      <div className={cx(css.connectorForm, formClassName)}>
+      <div className={cx(css.artifactForm, formClassName)}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <FormInput.SelectWithSubmenuTypeInput
             label={'Job Name'}
             name={'spec.jobName'}
@@ -258,7 +277,6 @@ function FormComponent({
             selectItems={jobDetails}
             selectWithSubmenuTypeInputProps={{
               expressions,
-              width: 500,
               selectWithSubmenuProps: {
                 items: jobDetails,
                 allowCreatingNewItems: true,
@@ -268,27 +286,6 @@ function FormComponent({
                     getMultiTypeFromValue(primaryValue) === MultiTypeInputType.RUNTIME
                       ? (primaryValue as unknown as string)
                       : primaryValue.label
-                  if (getMultiTypeFromValue(primaryValue) === MultiTypeInputType.FIXED && primaryValue?.label?.length) {
-                    refetchartifactPaths({
-                      queryParams: {
-                        ...commonParams,
-                        connectorRef: connectorRefValue?.toString()
-                      },
-                      pathParams: {
-                        jobName: encodeURIComponent(encodeURIComponent(primaryValue?.label))
-                      }
-                    })
-                    refetchJenkinsBuild({
-                      queryParams: {
-                        ...commonParams,
-                        connectorRef: connectorRefValue?.toString(),
-                        artifactPath: ''
-                      },
-                      pathParams: {
-                        jobName: encodeURIComponent(encodeURIComponent(selectedJobName.current || ''))
-                      }
-                    })
-                  }
                 },
                 onSubmenuOpen: (item?: SelectWithSubmenuOption) => {
                   lastOpenedJob.current = item?.value
@@ -321,7 +318,7 @@ function FormComponent({
             />
           )}
         </div>
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             label={getString('pipeline.artifactPathLabel')}
             name="spec.artifactPath"
@@ -329,29 +326,35 @@ function FormComponent({
             placeholder={fetchingArtifacts ? getString('loading') : getString('pipeline.selectArtifactPathPlaceholder')}
             multiTypeInputProps={{
               onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.artifactPath', type),
-              width: 500,
               expressions,
-              onChange: (newFilePath: any) => {
+              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                 if (
-                  getMultiTypeFromValue(selectedJobName.current as any) !== MultiTypeInputType.RUNTIME &&
-                  getMultiTypeFromValue(newFilePath.value) === MultiTypeInputType.FIXED
+                  e?.target?.type !== 'text' ||
+                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                  canFetchBuildsOrArtifacts
                 ) {
-                  refetchJenkinsBuild({
-                    queryParams: {
-                      ...commonParams,
-                      connectorRef: connectorRefValue?.toString(),
-                      artifactPath: newFilePath.value
-                    },
-                    pathParams: {
-                      jobName: encodeURIComponent(encodeURIComponent(selectedJobName.current || ''))
-                    }
-                  })
+                  return
                 }
+                refetchartifactPaths()
               },
               selectProps: {
                 allowCreatingNewItems: true,
                 addClearBtn: !isReadonly,
-                items: defaultTo(artifactPath, [])
+                items: defaultTo(artifactPath, []),
+                noResults: (
+                  <NoTagResults
+                    tagError={errorFetchingPath}
+                    isServerlessDeploymentTypeSelected={false}
+                    defaultErrorText={
+                      fetchingArtifacts
+                        ? getString('loading')
+                        : canFetchBuildsOrArtifacts
+                        ? `${getString('pipeline.artifactsSelection.validation.jobConnectorRequired')} artifactPath`
+                        : getString('common.filters.noResultsFound')
+                    }
+                  />
+                ),
+                itemRenderer: artifactPathItemRenderer
               },
               allowableTypes
             }}
@@ -374,7 +377,7 @@ function FormComponent({
             </div>
           )}
         </div>
-        <div className={css.jenkinsFieldContainer}>
+        <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             label={getString('pipeline.jenkinsBuild')}
             name="spec.build"
@@ -382,12 +385,36 @@ function FormComponent({
             placeholder={fetchingBuild ? getString('loading') : getString('pipeline.selectJenkinsBuildsPlaceholder')}
             multiTypeInputProps={{
               onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.build', type),
-              width: 500,
               expressions,
               selectProps: {
                 allowCreatingNewItems: true,
                 addClearBtn: !isReadonly,
-                items: defaultTo(build, [])
+                items: defaultTo(build, []),
+                loadingItems: fetchingBuild,
+                itemRenderer: buildItemRenderer,
+                noResults: (
+                  <NoTagResults
+                    tagError={errorFetchingBuild}
+                    isServerlessDeploymentTypeSelected={false}
+                    defaultErrorText={
+                      fetchingBuild
+                        ? getString('loading')
+                        : canFetchBuildsOrArtifacts
+                        ? `${getString('pipeline.artifactsSelection.validation.jobConnectorRequired')} build`
+                        : getString('common.filters.noResultsFound')
+                    }
+                  />
+                )
+              },
+              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                if (
+                  e?.target?.type !== 'text' ||
+                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                  canFetchBuildsOrArtifacts
+                ) {
+                  return
+                }
+                refetchJenkinsBuild()
               },
               allowableTypes
             }}
@@ -411,7 +438,7 @@ function FormComponent({
           )}
         </div>
       </div>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Layout.Horizontal spacing="medium">
           <Button
             variation={ButtonVariation.SECONDARY}
@@ -435,7 +462,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
   const { getString } = useStrings()
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const getInitialValues = (): JenkinsArtifactType => {
     return getArtifactFormData(
@@ -461,7 +488,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
   }
 
   const handleValidate = (formData: JenkinsArtifactType) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData(
         {
           ...formData
@@ -495,7 +522,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>

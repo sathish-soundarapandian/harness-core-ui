@@ -8,9 +8,8 @@
 import React, { useState } from 'react'
 import { Intent, TextArea } from '@blueprintjs/core'
 import { Text, useConfirmationDialog } from '@harness/uicore'
-import type { EntityGitDetails } from 'services/pipeline-ng'
+import type { EntityGitDetails, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
-import type { PipelineDTO } from '@pipeline/components/PipelineModalListView/RunPipelineListView'
 import type { InputSetLocal } from '../inputSet-list/InputSetListView'
 
 const useGetEntityText = (entityType: string): string => {
@@ -67,6 +66,11 @@ export function DeleteConfirmDialogContent({
   )
 }
 
+export interface PipelineDTO extends PMSPipelineSummaryResponse {
+  admin?: string
+  collaborators?: string
+  status?: string
+}
 interface DeleteMetaData {
   versions?: string[]
 }

@@ -10,7 +10,12 @@ import { render, waitFor, act, fireEvent } from '@testing-library/react'
 import { useGetApprovalInstance } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { CustomApprovalView } from '../CustomApprovalView/CustomApprovalView'
-import { mockCustomApprovalDataLoading, mockCustomApprovalData, mockCustomApprovalDataError } from './mock'
+import {
+  mockCustomApprovalDataLoading,
+  mockCustomApprovalData,
+  mockCustomApprovalDataError,
+  executionMetadata
+} from './mock'
 
 jest.mock('services/pipeline-ng', () => ({
   useGetApprovalInstance: jest.fn()
@@ -24,7 +29,7 @@ describe('LOADING', () => {
   })
 
   test('show spinner in loading state', () => {
-    const { container } = render(<CustomApprovalView step={{}} />)
+    const { container } = render(<CustomApprovalView step={{}} executionMetadata={executionMetadata} />)
 
     const spinner = container.querySelector('.bp3-spinner')
     expect(spinner).toBeTruthy()
@@ -47,6 +52,7 @@ describe('SUCCESS', () => {
             // @ts-ignore
             executableResponses: [{ async: { callbackIds: ['approvalInstanceId'] } }]
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -64,6 +70,7 @@ describe('SUCCESS', () => {
           step={{
             status: 'Aborted'
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -76,6 +83,7 @@ describe('SUCCESS', () => {
           step={{
             status: 'ResourceWaiting'
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -95,7 +103,7 @@ describe('ERROR', () => {
   test('show tabs when data is present and authorized', async () => {
     const { container } = render(
       <TestWrapper>
-        <CustomApprovalView step={{}} />
+        <CustomApprovalView step={{}} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
     await waitFor(() => expect(container.querySelector('.bp3-icon-error')).toBeTruthy())

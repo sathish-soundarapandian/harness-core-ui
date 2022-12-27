@@ -32,7 +32,7 @@ export default function SLOTargetNotifications(props: SLOTargetNotificationsProp
     if (!notificationsInTable.length && initialNotificationsTableData.length) {
       setNotificationsInTable(initialNotificationsTableData)
     }
-  }, [initialNotificationsTableData, notificationsInTable.length])
+  }, [initialNotificationsTableData])
 
   const handleCreateNotification = useCallback(
     (latestNotification: RestResponseNotificationRuleResponse) => {

@@ -80,6 +80,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
                     </button>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -141,6 +142,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
                 </div>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span
@@ -200,6 +202,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
                 </div>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span
@@ -259,6 +262,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
                 </div>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span
@@ -368,6 +372,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
                     </button>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -429,6 +434,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
                 </div>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span
@@ -488,6 +494,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
                 </div>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span
@@ -547,6 +554,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
                 </div>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span
@@ -656,6 +664,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
                     </button>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -717,6 +726,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
                 </div>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span
@@ -776,6 +786,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
                 </div>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span
@@ -835,6 +846,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
                 </div>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span

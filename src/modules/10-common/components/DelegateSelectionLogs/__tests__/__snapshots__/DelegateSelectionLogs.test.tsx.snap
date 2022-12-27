@@ -186,7 +186,7 @@ exports[`<ExecutionStepDetails /> tests renders normal step 1`] = `
                   style="padding-left: 0px;"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
+                    class="StyledProps--font StyledProps--main messageContainer StyledProps--color StyledProps--color-grey800"
                   >
                     Delegate assigned for task execution
                   </p>
@@ -231,7 +231,7 @@ exports[`<ExecutionStepDetails /> tests renders normal step 1`] = `
                   style="padding-left: 0px;"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
+                    class="StyledProps--font StyledProps--main messageContainer StyledProps--color StyledProps--color-grey800"
                   >
                     Successfully matched required delegate capabilities
                   </p>

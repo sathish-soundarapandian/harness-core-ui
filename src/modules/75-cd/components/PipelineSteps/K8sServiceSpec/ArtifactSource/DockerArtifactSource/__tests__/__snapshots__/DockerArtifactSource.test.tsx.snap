@@ -96,6 +96,7 @@ exports[`Docker Artifact Source tests snapshot test for Sidecar Docker artifact 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -198,6 +199,7 @@ exports[`Docker Artifact Source tests snapshot test for Sidecar Docker artifact 
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -268,6 +270,7 @@ exports[`Docker Artifact Source tests snapshot test for Sidecar Docker artifact 
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -367,6 +370,7 @@ exports[`Docker Artifact Source tests snapshot test for Sidecar Docker artifact 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"

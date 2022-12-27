@@ -227,6 +227,7 @@ export interface StringsMap {
   'common.disable': string
   'common.discard': string
   'common.download': string
+  'common.downloadCSV': string
   'common.duplicateId': string
   'common.duration.3months': string
   'common.duration.6months': string
@@ -251,6 +252,7 @@ export interface StringsMap {
   'common.environmentGroup.edit': string
   'common.environmentGroup.filters.environmentGroupNamePlaceholder': string
   'common.environmentGroup.label': string
+  'common.environmentGroup.nameWithLabel': string
   'common.environmentGroup.new': string
   'common.environmentGroup.noEnvironment': string
   'common.environmentGroup.updated': string
@@ -290,6 +292,7 @@ export interface StringsMap {
   'common.extendTrial.heading': string
   'common.failureRate': string
   'common.false': string
+  'common.favorites': string
   'common.feature.keepGettingShipDone.requestUpgrade': string
   'common.feature.keepGettingShipDone.title': string
   'common.feature.levelUp.description': string
@@ -305,6 +308,7 @@ export interface StringsMap {
   'common.fetchingBranches': string
   'common.file': string
   'common.files': string
+  'common.filter': string
   'common.filterOnName': string
   'common.filters.clearFilters': string
   'common.filters.noFilterSaved': string
@@ -435,6 +439,7 @@ export interface StringsMap {
   'common.gitSync.unSynced.message2': string
   'common.gitSync.unableToCreatePR': string
   'common.gitSync.updateResource': string
+  'common.gitopsAgents': string
   'common.gnupgKeys': string
   'common.goBack': string
   'common.governance': string
@@ -481,6 +486,7 @@ export interface StringsMap {
   'common.last7days': string
   'common.lastConnected': string
   'common.lastConnectedOn': string
+  'common.lastDeployed': string
   'common.lastModified': string
   'common.lastModifiedTime': string
   'common.lastUpdatedAt': string
@@ -488,6 +494,7 @@ export interface StringsMap {
   'common.launchFirstGen': string
   'common.letsGetYouStarted': string
   'common.levelUp': string
+  'common.licensesConsumed': string
   'common.link': string
   'common.loadBalancer': string
   'common.loading': string
@@ -540,11 +547,13 @@ export interface StringsMap {
   'common.newName': string
   'common.newVersion': string
   'common.noAPIKeys': string
+  'common.noActiveServiceData': string
   'common.noAvailableTags': string
   'common.noConnectorAvailable': string
   'common.noDelegateForTask': string
   'common.noDeployments': string
   'common.noInfo': string
+  'common.noRecentProjects': string
   'common.noRefData': string
   'common.noSearchResultsFound': string
   'common.noexpiration': string
@@ -565,6 +574,7 @@ export interface StringsMap {
   'common.org': string
   'common.orgSetup': string
   'common.orgViewer': string
+  'common.organizations': string
   'common.other': string
   'common.overSubscribed': string
   'common.override': string
@@ -624,6 +634,7 @@ export interface StringsMap {
   'common.production': string
   'common.projectSetup': string
   'common.projectViewer': string
+  'common.projects': string
   'common.provisioner': string
   'common.purpose.cd.1stGen.description': string
   'common.purpose.cd.1stGen.title': string
@@ -685,6 +696,7 @@ export interface StringsMap {
   'common.pwsh': string
   'common.readOnly': string
   'common.readonlyPermissions': string
+  'common.recents': string
   'common.recommended': string
   'common.referenceButtonText': string
   'common.referenceTextWarning': string
@@ -694,6 +706,7 @@ export interface StringsMap {
   'common.refreshPage': string
   'common.reject': string
   'common.releaseName': string
+  'common.reload': string
   'common.remove': string
   'common.removeThisVariable': string
   'common.repo_provider.awscodecommit': string
@@ -809,6 +822,7 @@ export interface StringsMap {
   'common.selected': string
   'common.serviceCreated': string
   'common.serviceDetails': string
+  'common.serviceId': string
   'common.serviceInputs': string
   'common.serviceName': string
   'common.serviceOverrides': string
@@ -816,6 +830,7 @@ export interface StringsMap {
   'common.serviceReliabilityManagement': string
   'common.serviceType': string
   'common.serviceUpdated': string
+  'common.servicesInstances': string
   'common.setAsDefault': string
   'common.setAsStable': string
   'common.settingCategory.general': string
@@ -1056,6 +1071,7 @@ export interface StringsMap {
   'common.warning': string
   'common.webhookURL': string
   'common.welcome': string
+  'common.whatIsActiveService': string
   'common.whose': string
   'common.with': string
   'common.without': string
@@ -1572,7 +1588,6 @@ export interface StringsMap {
   'secrets.secret.inlineSecret': string
   'secrets.secret.labelFile': string
   'secrets.secret.labelSecretFile': string
-  'secrets.secret.labelSecretReference': string
   'secrets.secret.labelSecretType': string
   'secrets.secret.labelText': string
   'secrets.secret.messageSelectSM': string
@@ -1583,6 +1598,7 @@ export interface StringsMap {
   'secrets.secret.noSecretsFound': string
   'secrets.secret.placeholderSecretReference': string
   'secrets.secret.placeholderSecretValue': string
+  'secrets.secret.referenceRqrd': string
   'secrets.secret.referenceSecret': string
   'secrets.secret.referenceSecretVersionRqrd': string
   'secrets.secret.region': string
@@ -1645,6 +1661,12 @@ export interface StringsMap {
   'filestore.noFilesInStore': string
   'filestore.noFilesTitle': string
   'filestore.searchResult': string
+  'filestore.sort.byAlphabeticalAz': string
+  'filestore.sort.byAlphabeticalZa': string
+  'filestore.sort.byFileType': string
+  'filestore.sort.byFolderType': string
+  'filestore.sort.firstModified': string
+  'filestore.sort.nodeBy': string
   'filestore.uploadFileFolder': string
   'filestore.view.fileName': string
   'filestore.view.fileUsage': string
@@ -2571,6 +2593,7 @@ export interface StringsMap {
   'connectors.k8.clientSecretOptional': string
   'connectors.k8.delegateInClusterInfo': string
   'connectors.k8.delegateOutClusterInfo': string
+  'connectors.k8.delegateSelector': string
   'connectors.k8.masterUrlLabel': string
   'connectors.k8.placeholder.masterUrl': string
   'connectors.k8.serviceAccountKey': string
@@ -2634,7 +2657,6 @@ export interface StringsMap {
   'connectors.pdc.hostsUpload2': string
   'connectors.pdc.manuallyHosts': string
   'connectors.pdc.selectLabel': string
-  'connectors.pdc.testConnection.step1': string
   'connectors.pdc.uploadJson': string
   'connectors.pdc.validateHosts': string
   'connectors.pdc.validateHostsJson': string
@@ -2718,6 +2740,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.k8s': string
   'connectors.testConnectionStep.validationText.nexus': string
   'connectors.testConnectionStep.validationText.pagerduty': string
+  'connectors.testConnectionStep.validationText.pdc': string
   'connectors.testConnectionStep.validationText.serviceNow': string
   'connectors.testConnectionStep.validationText.splunk': string
   'connectors.testConnectionStep.validationText.spot': string
@@ -3227,10 +3250,13 @@ export interface StringsMap {
   'pipeline.artifactsSelection.validation.artifactId': string
   'pipeline.artifactsSelection.validation.artifactPath': string
   'pipeline.artifactsSelection.validation.artifactPathFilter': string
+  'pipeline.artifactsSelection.validation.artifactsArrayPath': string
+  'pipeline.artifactsSelection.validation.connectorForJobname': string
   'pipeline.artifactsSelection.validation.filePathRegex': string
   'pipeline.artifactsSelection.validation.group': string
   'pipeline.artifactsSelection.validation.groupId': string
   'pipeline.artifactsSelection.validation.imagePath': string
+  'pipeline.artifactsSelection.validation.jobConnectorRequired': string
   'pipeline.artifactsSelection.validation.noBuild': string
   'pipeline.artifactsSelection.validation.noFeeds': string
   'pipeline.artifactsSelection.validation.noPackage': string
@@ -3242,9 +3268,11 @@ export interface StringsMap {
   'pipeline.artifactsSelection.validation.repositoryPort': string
   'pipeline.artifactsSelection.validation.repositoryType': string
   'pipeline.artifactsSelection.validation.repositoryUrl': string
+  'pipeline.artifactsSelection.validation.script': string
   'pipeline.artifactsSelection.validation.sidecarId': string
   'pipeline.artifactsSelection.validation.tag': string
   'pipeline.artifactsSelection.validation.tagRegex': string
+  'pipeline.artifactsSelection.validation.versionPath': string
   'pipeline.artifactsSelection.validation.versionRegex': string
   'pipeline.artifactsSelection.versionDetails': string
   'pipeline.artifactsSelection.versionPath': string
@@ -3346,6 +3374,7 @@ export interface StringsMap {
   'pipeline.configFiles.source': string
   'pipeline.configFiles.title': string
   'pipeline.configSource': string
+  'pipeline.configureArtifactSource': string
   'pipeline.createANewPipeline': string
   'pipeline.createPipeline.choosePipelineSetupHeader': string
   'pipeline.createPipeline.learnMore': string
@@ -3383,6 +3412,8 @@ export interface StringsMap {
   'pipeline.customDeployment.seeOnlyTemplatesFor': string
   'pipeline.customDeployment.updateInfraVariablesTitle': string
   'pipeline.customDeployment.validations.nameUnique': string
+  'pipeline.dashboardDeploymentsWidget.activePipeline.plural': string
+  'pipeline.dashboardDeploymentsWidget.activePipeline.singular': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.plural': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.singular': string
   'pipeline.dashboardDeploymentsWidget.pendingApproval.plural': string
@@ -3784,9 +3815,13 @@ export interface StringsMap {
   'pipeline.loopingStrategy.warningText': string
   'pipeline.manifestToConnectorLabelMap.AWSLabel': string
   'pipeline.manifestType.InheritFromManifest': string
+  'pipeline.manifestType.addAutoScalerYAMLPath': string
   'pipeline.manifestType.addManifestLabel': string
   'pipeline.manifestType.addValuesYamlPath': string
+  'pipeline.manifestType.addVarsYAMLPath': string
   'pipeline.manifestType.attachPath': string
+  'pipeline.manifestType.autoScalerPathRequired': string
+  'pipeline.manifestType.autoScalerYAMLPath': string
   'pipeline.manifestType.azureRepoConnectorLabel': string
   'pipeline.manifestType.basePath': string
   'pipeline.manifestType.basePathPlaceholder': string
@@ -3796,6 +3831,7 @@ export interface StringsMap {
   'pipeline.manifestType.bucketNamePlaceholder': string
   'pipeline.manifestType.bucketNameRequired': string
   'pipeline.manifestType.bucketPlaceHolder': string
+  'pipeline.manifestType.cfCliVersion': string
   'pipeline.manifestType.chartPathPlaceholder': string
   'pipeline.manifestType.chartPathRequired': string
   'pipeline.manifestType.commandFlagRequired': string
@@ -3857,6 +3893,13 @@ export interface StringsMap {
   'pipeline.manifestType.specifyManifestRepoType': string
   'pipeline.manifestType.specifyManifestStore': string
   'pipeline.manifestType.valuesYamlPath': string
+  'pipeline.manifestType.varsPathRequired': string
+  'pipeline.manifestType.varsYAMLPath': string
+  'pipeline.manifestTypeLabels.AsgConfiguration': string
+  'pipeline.manifestTypeLabels.AsgLaunchTemplate': string
+  'pipeline.manifestTypeLabels.AsgScalingPolicy': string
+  'pipeline.manifestTypeLabels.AsgScheduledUpdateGroupAction': string
+  'pipeline.manifestTypeLabels.Autoscaler': string
   'pipeline.manifestTypeLabels.AwsSAM': string
   'pipeline.manifestTypeLabels.AzureFunctions': string
   'pipeline.manifestTypeLabels.EcsScalableTargetDefinition': string
@@ -3873,7 +3916,9 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.ServerlessAwsLambda': string
   'pipeline.manifestTypeLabels.ServerlessAzure': string
   'pipeline.manifestTypeLabels.ServerlessGCP': string
+  'pipeline.manifestTypeLabels.TASManifest': string
   'pipeline.manifestTypeLabels.ValuesYaml': string
+  'pipeline.manifestTypeLabels.VarsYAML': string
   'pipeline.manuallyTriggered': string
   'pipeline.mostRecentDirection': string
   'pipeline.moveStage.description': string
@@ -3890,6 +3935,7 @@ export interface StringsMap {
   'pipeline.noArtifactPaths': string
   'pipeline.noBuckets': string
   'pipeline.noBucketsFound': string
+  'pipeline.noClustersFound': string
   'pipeline.noFilePathsFound': string
   'pipeline.noPipelinesLabel': string
   'pipeline.noPipelinesText': string
@@ -3899,6 +3945,8 @@ export interface StringsMap {
   'pipeline.noRunsText': string
   'pipeline.nodes': string
   'pipeline.nodesLabel': string
+  'pipeline.numOfEnvs': string
+  'pipeline.numOfServices': string
   'pipeline.numOfServicesAndEnv': string
   'pipeline.numOfStage': string
   'pipeline.numOfStages': string
@@ -3940,11 +3988,18 @@ export interface StringsMap {
   'pipeline.phasesForm.phases': string
   'pipeline.phasesForm.useVerification': string
   'pipeline.pipelineCachedCopy.cacheInProgress': string
+  'pipeline.pipelineCachedCopy.cacheUpdateAvailable': string
   'pipeline.pipelineCachedCopy.cacheUpdateFailed': string
   'pipeline.pipelineCachedCopy.cachedCopyText': string
+  'pipeline.pipelineCachedCopy.newCacheVersion': string
   'pipeline.pipelineCachedCopy.reloadPipeline': string
   'pipeline.pipelineCachedCopy.reloadPipelineContent': string
+  'pipeline.pipelineCachedCopy.updateAvailable': string
+  'pipeline.pipelineChaining.childPipelineID': string
   'pipeline.pipelineChaining.newOutput': string
+  'pipeline.pipelineChaining.noPipelineSelected': string
+  'pipeline.pipelineChaining.noProjectSelected': string
+  'pipeline.pipelineChaining.outputAlreadyExists': string
   'pipeline.pipelineChaining.outputTabSummaryDetail': string
   'pipeline.pipelineChaining.pipelineOutputs': string
   'pipeline.pipelineChaining.removeOutput': string
@@ -4045,6 +4100,7 @@ export interface StringsMap {
   'pipeline.serviceDependencyText': string
   'pipeline.serviceDeploymentTypes.amazonAmi': string
   'pipeline.serviceDeploymentTypes.amazonEcs': string
+  'pipeline.serviceDeploymentTypes.asg': string
   'pipeline.serviceDeploymentTypes.awsCodeDeploy': string
   'pipeline.serviceDeploymentTypes.awsLambda': string
   'pipeline.serviceDeploymentTypes.awsSAM': string
@@ -4150,6 +4206,8 @@ export interface StringsMap {
   'pipeline.stepConfigContent': string
   'pipeline.stepConfigHasChanges': string
   'pipeline.stepDescription.ACR': string
+  'pipeline.stepDescription.AdvancedCommandFlags': string
+  'pipeline.stepDescription.AppResize': string
   'pipeline.stepDescription.AzureSlotDeployment': string
   'pipeline.stepDescription.AzureTrafficShift': string
   'pipeline.stepDescription.Background': string
@@ -4165,7 +4223,11 @@ export interface StringsMap {
   'pipeline.stepDescription.ECSRollingDeploy': string
   'pipeline.stepDescription.ECSRollingRollback': string
   'pipeline.stepDescription.ECSRunTask': string
+  'pipeline.stepDescription.ElastigroupBGStageSetup': string
+  'pipeline.stepDescription.ElastigroupDeploy': string
   'pipeline.stepDescription.ElastigroupRollback': string
+  'pipeline.stepDescription.ElastigroupSetup': string
+  'pipeline.stepDescription.ElastigroupSwapRoute': string
   'pipeline.stepDescription.Email': string
   'pipeline.stepDescription.FlagConfiguration': string
   'pipeline.stepDescription.GCR': string
@@ -4208,6 +4270,13 @@ export interface StringsMap {
   'pipeline.stepDescription.ServiceNowImportSet': string
   'pipeline.stepDescription.ServiceNowUpdate': string
   'pipeline.stepDescription.ShellScriptProvision': string
+  'pipeline.stepDescription.SwapRollback': string
+  'pipeline.stepDescription.SwapRoute': string
+  'pipeline.stepDescription.TASBGAppSetup': string
+  'pipeline.stepDescription.TASBasicAppSetup': string
+  'pipeline.stepDescription.TASCanaryAppSetup': string
+  'pipeline.stepDescription.TanzuCommandScript': string
+  'pipeline.stepDescription.TasRollback': string
   'pipeline.stepDescription.TerraformApply': string
   'pipeline.stepDescription.TerraformDestroy': string
   'pipeline.stepDescription.TerraformPlan': string
@@ -4379,7 +4448,6 @@ export interface StringsMap {
   'pipeline.warningForInvalidYAMLDiscard': string
   'freezeWindows.deploymentFreeze': string
   'freezeWindows.freezeNotifications.rejectedDeployments': string
-  'freezeWindows.freezeNotifications.rejectedInvocations': string
   'freezeWindows.freezeNotifications.windowEnabled': string
   'freezeWindows.freezeStudio.activeFreeze': string
   'freezeWindows.freezeStudio.allOrganizations': string
@@ -4582,6 +4650,7 @@ export interface StringsMap {
   'triggers.triggerConfigurationPanel.listenOnNewWebhook': string
   'triggers.triggerConfigurationPanel.payloadType': string
   'triggers.triggerConfigurationPanel.pollingFrequency': string
+  'triggers.triggerConfigurationPanel.pollingFrequencyPlaceholder': string
   'triggers.triggerConfigurationPanel.title': string
   'triggers.triggerCouldNotBeSavedContent': string
   'triggers.triggerCouldNotBeSavedGenericError': string
@@ -4606,6 +4675,21 @@ export interface StringsMap {
   'triggers.validation.repositoryFormat': string
   'triggers.validation.selectedArtifact': string
   'triggers.validation.triggerName': string
+  'cd.ElastigroupBGStageSetup.awsLoadBalancer': string
+  'cd.ElastigroupBGStageSetup.awsLoadBalancerConfig': string
+  'cd.ElastigroupBGStageSetup.configureProductionListener': string
+  'cd.ElastigroupBGStageSetup.configureStageListener': string
+  'cd.ElastigroupBGStageSetup.connectedCloudProvider': string
+  'cd.ElastigroupBGStageSetup.listenerColon': string
+  'cd.ElastigroupBGStageSetup.ruleColon': string
+  'cd.ElastigroupStep.appName': string
+  'cd.ElastigroupStep.desiredInstances': string
+  'cd.ElastigroupStep.maxInstances': string
+  'cd.ElastigroupStep.minInstances': string
+  'cd.ElastigroupStep.valueCannotBe': string
+  'cd.ElastigroupStep.valueCannotBeGreaterThan': string
+  'cd.ElastigroupStep.valueCannotBeLessThan': string
+  'cd.ElastigroupSwap.downsizeOldElastigroup': string
   'cd.GitOpsServerDelete': string
   'cd.IdEmptyError': string
   'cd.aboutGitOpsServer': string
@@ -4633,6 +4717,7 @@ export interface StringsMap {
   'cd.artifactRepoTooltip': string
   'cd.artifactSource.artifactRepositoryTypeIsRequired': string
   'cd.artifactVersion': string
+  'cd.asgCanaryDeleteStepDescription': string
   'cd.attributeFilters': string
   'cd.awsCli': string
   'cd.azureArm.description': string
@@ -4764,7 +4849,6 @@ export interface StringsMap {
   'cd.deletedSuccessfully': string
   'cd.deploymentSteps': string
   'cd.deploymentTemplates': string
-  'cd.downloadYAML': string
   'cd.duplicateGitOpsServerIdError': string
   'cd.duplicateIdError': string
   'cd.duplicateStep': string
@@ -4791,7 +4875,7 @@ export interface StringsMap {
   'cd.environmentDetailPage.noInstancesToShow': string
   'cd.environmentDetailPage.noServiceArtifactMsg': string
   'cd.environmentDetailPage.seeFull': string
-  'cd.environmentDetailPage.selectInfraMsg': string
+  'cd.environmentDetailPage.selectArtifactMsg': string
   'cd.environmentDetailPage.viewInTable': string
   'cd.environmentUpdated': string
   'cd.exportTerraformHumanReadablePlan': string
@@ -4804,34 +4888,77 @@ export interface StringsMap {
   'cd.featureRestriction.banners.serviceLevelUpTeamEnterprise': string
   'cd.featureRestriction.banners.serviceOveruseTeamEnterprise': string
   'cd.featureRestriction.banners.serviceWarningActive': string
+  'cd.fetchingDelegate': string
+  'cd.fetchingRepository': string
   'cd.filePathPlaceholder': string
   'cd.filePathRequired': string
   'cd.gCloud': string
   'cd.gcloudClusterCmd': string
+  'cd.getStartedWithCD.allSet': string
   'cd.getStartedWithCD.artifactLocation': string
   'cd.getStartedWithCD.artifactManifest': string
   'cd.getStartedWithCD.artifactManifestContent': string
+  'cd.getStartedWithCD.artifactStorage': string
+  'cd.getStartedWithCD.artifactToDeploy': string
   'cd.getStartedWithCD.awsElasticK8s': string
   'cd.getStartedWithCD.azureK8s': string
+  'cd.getStartedWithCD.checkDelegateInstalled': string
+  'cd.getStartedWithCD.closeOnboarding.subtitle': string
+  'cd.getStartedWithCD.closeOnboarding.title': string
   'cd.getStartedWithCD.codeRepos': string
+  'cd.getStartedWithCD.configureEnvironment': string
   'cd.getStartedWithCD.configureRepo': string
+  'cd.getStartedWithCD.configureService': string
+  'cd.getStartedWithCD.connectHarnessEnv': string
+  'cd.getStartedWithCD.connectTo': string
+  'cd.getStartedWithCD.delegateDescription': string
   'cd.getStartedWithCD.delegateInfo1': string
   'cd.getStartedWithCD.delegateInfo2': string
+  'cd.getStartedWithCD.delegateInstalled': string
+  'cd.getStartedWithCD.delegateNotConnected': string
   'cd.getStartedWithCD.delegateRequiredWarning': string
+  'cd.getStartedWithCD.delegateRunAs': string
+  'cd.getStartedWithCD.delegateSuccess': string
+  'cd.getStartedWithCD.deployToGitops': string
+  'cd.getStartedWithCD.deploymentType': string
   'cd.getStartedWithCD.directK8s': string
+  'cd.getStartedWithCD.entityCreationTitle': string
   'cd.getStartedWithCD.envName': string
+  'cd.getStartedWithCD.environmentDetails': string
+  'cd.getStartedWithCD.gitopsRedirect.subtitle': string
+  'cd.getStartedWithCD.gitopsRedirect.title': string
   'cd.getStartedWithCD.googleK8s': string
+  'cd.getStartedWithCD.harnessFileStore': string
+  'cd.getStartedWithCD.helm': string
+  'cd.getStartedWithCD.helpAndTroubleshoot': string
+  'cd.getStartedWithCD.hideDelegateDetails': string
+  'cd.getStartedWithCD.inHarnessFileStore': string
   'cd.getStartedWithCD.inManifest': string
   'cd.getStartedWithCD.inManifestContent': string
   'cd.getStartedWithCD.infraName': string
+  'cd.getStartedWithCD.installDelegateToTargetEnv': string
   'cd.getStartedWithCD.manifestFile': string
+  'cd.getStartedWithCD.manifestStorage': string
+  'cd.getStartedWithCD.manifestStoreLabel': string
+  'cd.getStartedWithCD.manifestTypeSelection': string
+  'cd.getStartedWithCD.onBoardingSubTitle': string
+  'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.provideManifest': string
   'cd.getStartedWithCD.reposubheading': string
+  'cd.getStartedWithCD.runDelegateSubtitle': string
+  'cd.getStartedWithCD.selectArtifactRepo': string
+  'cd.getStartedWithCD.selectAuthMethod': string
+  'cd.getStartedWithCD.selectDeploymentType': string
   'cd.getStartedWithCD.serverless': string
+  'cd.getStartedWithCD.serviceConfiguration': string
   'cd.getStartedWithCD.serviceDeploy': string
   'cd.getStartedWithCD.serviceHeading': string
+  'cd.getStartedWithCD.serviceName': string
   'cd.getStartedWithCD.setupDelegate': string
   'cd.getStartedWithCD.setupaNewDelegate': string
+  'cd.getStartedWithCD.successFull': string
+  'cd.getStartedWithCD.testConnection': string
+  'cd.getStartedWithCD.viewDelegateDetails': string
   'cd.getStartedWithCD.workloadDeploy': string
   'cd.gitFetchTypeRequired': string
   'cd.gitOps': string
@@ -4855,6 +4982,13 @@ export interface StringsMap {
   'cd.infrastructure.sshWinRmAzure.hostConnectionType': string
   'cd.infrastructure.sshWinRmAzure.noTagsAzure': string
   'cd.infrastructure.updated': string
+  'cd.inlineEntityFilters.enterFilterIdentifier': string
+  'cd.inlineEntityFilters.filterIdentifier': string
+  'cd.inlineEntityFilters.validation.chooseAllOrAny': string
+  'cd.inlineEntityFilters.validation.filterIdentifierAlreadyExists': string
+  'cd.inlineEntityFilters.validation.filterIdentifierRequired': string
+  'cd.inlineEntityFilters.validation.selectAtleastOneEntity': string
+  'cd.inlineEntityFilters.validation.tagsAreRequired': string
   'cd.installAdapterHelperText': string
   'cd.installCluster': string
   'cd.installDelegate': string
@@ -4892,6 +5026,7 @@ export interface StringsMap {
   'cd.notReachable': string
   'cd.oauthPlugin': string
   'cd.oauthPluginCmd': string
+  'cd.oldService': string
   'cd.overrideType': string
   'cd.overrideValue': string
   'cd.overrideYaml': string
@@ -5009,6 +5144,8 @@ export interface StringsMap {
   'cd.serviceDashboard.deployedBy': string
   'cd.serviceDashboard.deploymentDetails': string
   'cd.serviceDashboard.deploymentSlot': string
+  'cd.serviceDashboard.ec2InstanceId': string
+  'cd.serviceDashboard.elastigroupId': string
   'cd.serviceDashboard.envName': string
   'cd.serviceDashboard.executionId': string
   'cd.serviceDashboard.frequency': string
@@ -5134,6 +5271,8 @@ export interface StringsMap {
   'cd.steps.ecsBGCreateServiceStep.sectionHeaders.configureProductionService': string
   'cd.steps.ecsBGCreateServiceStep.sectionHeaders.configureStageService': string
   'cd.steps.ecsRunTaskStep.ecsRunTaskDefinition': string
+  'cd.steps.ecsRunTaskStep.ecsRunTaskDefinitionArn': string
+  'cd.steps.ecsRunTaskStep.ecsRunTaskDefinitionArnPlaceholder': string
   'cd.steps.ecsRunTaskStep.ecsRunTaskRequestDefinition': string
   'cd.steps.ecsRunTaskStep.runTaskDefinition': string
   'cd.steps.ecsRunTaskStep.runTaskRequestDefinition': string
@@ -5167,6 +5306,28 @@ export interface StringsMap {
   'cd.steps.pdcStep.title': string
   'cd.steps.serverless.regionPlaceholder': string
   'cd.steps.serverless.stagePlaceholder': string
+  'cd.steps.tas.additionalRoutes': string
+  'cd.steps.tas.downScaleOldFirstLabel': string
+  'cd.steps.tas.enableDownSizeOldApplication': string
+  'cd.steps.tas.enableUpsizeInActiveApp': string
+  'cd.steps.tas.existingVersionToKeep': string
+  'cd.steps.tas.matchRunningInstances': string
+  'cd.steps.tas.minimumCountPercentage': string
+  'cd.steps.tas.newAppInstance': string
+  'cd.steps.tas.oldAppInstance': string
+  'cd.steps.tas.oldAppInstances': string
+  'cd.steps.tas.readFromManifest': string
+  'cd.steps.tas.tempRouteMandatory': string
+  'cd.steps.tas.tempRoutes': string
+  'cd.steps.tas.totalInstances': string
+  'cd.steps.tas.typeAndEnterForRouteAdd': string
+  'cd.steps.tas.upscaleNewFirstLabel': string
+  'cd.steps.tas.upsizeInactiveService': string
+  'cd.steps.tasInfra.organizationError': string
+  'cd.steps.tasInfra.organizationPlaceholder': string
+  'cd.steps.tasInfra.space': string
+  'cd.steps.tasInfra.spacePlaceholder': string
+  'cd.steps.tasInfra.spacesError': string
   'cd.successfullyLinkedClusters': string
   'cd.terraformVarFiles': string
   'cd.testConnectionStepName': string
@@ -6668,6 +6829,7 @@ export interface StringsMap {
   'cf.onboarding.selectLanguage': string
   'cf.onboarding.selectOrCreateEnvironment': string
   'cf.onboarding.selectOrCreateFlag': string
+  'cf.onboarding.selectOrTypeEnv': string
   'cf.onboarding.selectedLanguageAndEnv': string
   'cf.onboarding.setUpApp': string
   'cf.onboarding.setUpYourCode': string
@@ -6943,7 +7105,8 @@ export interface StringsMap {
   'ci.getStartedWithCI.chooseExistingYAML': string
   'ci.getStartedWithCI.chooseExistingYAMLHelptext': string
   'ci.getStartedWithCI.chooseStarterConfig': string
-  'ci.getStartedWithCI.cloneCodebaseHelpText': string
+  'ci.getStartedWithCI.cloneGitRepo': string
+  'ci.getStartedWithCI.cloneGitRepoHelpText': string
   'ci.getStartedWithCI.codeRepo': string
   'ci.getStartedWithCI.configInfra': string
   'ci.getStartedWithCI.configurationOption': string
@@ -7350,6 +7513,9 @@ export interface StringsMap {
   'cv.lastSuccessfulRun': string
   'cv.learnMore': string
   'cv.left': string
+  'cv.licenseBanner.freePlanUsageMessage': string
+  'cv.licenseBanner.limitExceedMessage': string
+  'cv.licenseBanner.teamPlanUsageMessage': string
   'cv.logCluster': string
   'cv.logs.eventMarkedAs': string
   'cv.logs.eventPriorityUpdate': string
@@ -7397,11 +7563,13 @@ export interface StringsMap {
   'cv.monitoredServices.filterlabel': string
   'cv.monitoredServices.heading': string
   'cv.monitoredServices.healthScoreDataNotAvailable': string
+  'cv.monitoredServices.listToggleSwitchDisableMessage': string
   'cv.monitoredServices.monitoredServiceCreated': string
   'cv.monitoredServices.monitoredServiceDeleted': string
   'cv.monitoredServices.monitoredServiceDetails': string
   'cv.monitoredServices.monitoredServiceName': string
   'cv.monitoredServices.monitoredServiceTabs.configurations': string
+  'cv.monitoredServices.monitoredServiceTabs.disabledText': string
   'cv.monitoredServices.monitoredServiceTabs.serviceHealth': string
   'cv.monitoredServices.monitoredServiceToggle': string
   'cv.monitoredServices.monitoredServiceUpdated': string
@@ -7523,9 +7691,24 @@ export interface StringsMap {
   'cv.monitoringSources.buildYourQuery': string
   'cv.monitoringSources.commonHealthSource.addGroupName': string
   'cv.monitoringSources.commonHealthSource.addMetric': string
+  'cv.monitoringSources.commonHealthSource.chart': string
   'cv.monitoringSources.commonHealthSource.confirmDeleteMetric': string
+  'cv.monitoringSources.commonHealthSource.defineQuery': string
+  'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics': string
+  'cv.monitoringSources.commonHealthSource.defineQuerySubDescription': string
+  'cv.monitoringSources.commonHealthSource.logsTable.ServiceInstance': string
+  'cv.monitoringSources.commonHealthSource.logsTable.jsonSelectorDrawerTitlePrefix': string
+  'cv.monitoringSources.commonHealthSource.logsTable.noSampleAvailable': string
+  'cv.monitoringSources.commonHealthSource.logsTable.sampleLogButtonText': string
+  'cv.monitoringSources.commonHealthSource.logsTable.subTitle': string
+  'cv.monitoringSources.commonHealthSource.logsTable.timestamp': string
+  'cv.monitoringSources.commonHealthSource.logsTable.title': string
   'cv.monitoringSources.commonHealthSource.metric': string
   'cv.monitoringSources.commonHealthSource.metricName': string
+  'cv.monitoringSources.commonHealthSource.querySectionSecondaryTitle': string
+  'cv.monitoringSources.commonHealthSource.runQuery': string
+  'cv.monitoringSources.commonHealthSource.searchMetric': string
+  'cv.monitoringSources.commonHealthSource.submitQueryToSeeRecords': string
   'cv.monitoringSources.datadog.manualInputQueryModal.modalTitle': string
   'cv.monitoringSources.datadog.newDatadogGroupName': string
   'cv.monitoringSources.datadog.noMetricsWidgets': string
@@ -7779,6 +7962,7 @@ export interface StringsMap {
   'cv.preProductionTests': string
   'cv.previousErrorBudgetResetHistory': string
   'cv.proceedToEdit': string
+  'cv.processing': string
   'cv.quarterly': string
   'cv.queries': string
   'cv.query': string
@@ -7959,7 +8143,6 @@ export interface StringsMap {
   'sto.noSecurityIssues': string
   'sto.noSecurityResults': string
   'sto.scans': string
-  'sto.securityReview': string
   'sto.securityStage.description': string
   'sto.stepDescription.ZeroNorth': string
   'sto.stoExemption': string

@@ -192,7 +192,7 @@ export function mapToExecutionStatus(status?: string): ExecutionStatus | undefin
       return 'ApprovalRejected'
     case 'SUCCESS':
       return 'Success'
-    case 'AbortedByFreeze':
+    case 'ABORTEDBYFREEZE':
       return 'AbortedByFreeze'
   }
 }

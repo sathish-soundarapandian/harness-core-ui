@@ -72,6 +72,7 @@ exports[`OverrideYamlValues runtimefields tests Render runtime fields if gitfetc
             >
               <button
                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                data-testid="multi-type-button"
               >
                 <span
                   class="bp3-icon StyledProps--main"
@@ -179,6 +180,7 @@ exports[`OverrideYamlValues runtimefields tests Render runtime fields in run pip
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -245,6 +247,7 @@ exports[`OverrideYamlValues runtimefields tests Render runtime fields in run pip
             >
               <button
                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                data-testid="multi-type-button"
               >
                 <span
                   class="bp3-icon StyledProps--main"

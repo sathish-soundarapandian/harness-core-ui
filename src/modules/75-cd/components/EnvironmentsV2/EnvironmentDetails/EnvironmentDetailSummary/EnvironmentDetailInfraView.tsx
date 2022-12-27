@@ -6,9 +6,10 @@
  */
 
 import React from 'react'
-import { Collapse, Container, Layout, Text } from '@harness/uicore'
+import { Collapse, Container, Icon, Layout, Text } from '@harness/uicore'
 import cx from 'classnames'
-import { FontVariation } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
+import { capitalize } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { InstanceGroupedByInfrastructureV2 } from 'services/cd-ng'
 import { EnvironmentDetailInfraTable, InfraViewTableType } from './EnvironmentDetailInfraTable'
@@ -31,28 +32,21 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
   const headers = React.useMemo(() => {
     const headersArray = [
       {
-        label: getString('cd.environmentDetailPage.infraSlashCluster'),
-        flexGrow: 23
+        label: getString('cd.environmentDetailPage.infraSlashCluster')
       },
       {
-        label: getString('cd.serviceDashboard.headers.instances'),
-        flexGrow: 32
+        label: getString('cd.serviceDashboard.headers.instances')
       },
       {
-        label: getString('cd.serviceDashboard.headers.pipelineExecution'),
-        flexGrow: 24
+        label: getString('cd.serviceDashboard.headers.pipelineExecution')
       }
     ]
 
     return (
-      <Layout.Horizontal flex padding={{ top: 'medium', bottom: 'medium' }}>
+      <Layout.Horizontal className={css.instanceHeaderStyle}>
         {headersArray.map((header, index) => {
           return (
-            <Text
-              key={index}
-              font={{ variation: FontVariation.TABLE_HEADERS }}
-              style={{ flex: header.flexGrow, textTransform: 'uppercase' }}
-            >
+            <Text key={index} font={{ variation: FontVariation.TABLE_HEADERS }} style={{ textTransform: 'uppercase' }}>
               {header.label}
             </Text>
           )
@@ -62,80 +56,99 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const singleArray = dataInfra.flat()
+  const instanceGroupedList = dataInfra.flat()
 
-  const list = React.useMemo(() => {
-    if (!singleArray.length) {
-      return (
-        <DialogEmptyState
-          isSearchApplied={isSearchApplied}
-          resetSearch={resetSearch}
-          message={getString('cd.environmentDetailPage.selectInfraMsg')}
-        />
-      )
-    }
+  const InfraViewHeader = (
+    <Layout.Horizontal
+      margin={{ top: 'medium', bottom: 'small' }}
+      flex={{ alignItems: 'center', justifyContent: 'start' }}
+      spacing="small"
+    >
+      <Icon name="services" color={Color.GREY_1000} />
+      <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
+        {capitalize(getString('service').toLowerCase()) + ':'}
+      </Text>
+      <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1}>
+        {serviceFilter}
+      </Text>
+      <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_600}>
+        {' | '}
+      </Text>
+      <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
+        {capitalize(getString('cd.serviceDashboard.artifact')) + ':'}
+      </Text>
+      <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1}>
+        {artifactFilter}
+      </Text>
+    </Layout.Horizontal>
+  )
+
+  if (!instanceGroupedList.length) {
     return (
-      <Container>
-        <div className={cx('separator', css.separatorStyle)} />
-        <Text
-          icon="services"
-          font={{ variation: FontVariation.SMALL_BOLD }}
-          style={{ marginTop: 12 }}
-        >{`${serviceFilter}, ${artifactFilter}`}</Text>
-        {headers}
-        <Container style={{ overflowY: 'auto', maxHeight: '590px' }}>
-          {singleArray.map((infra, index) => {
-            if (infra.instanceGroupedByPipelineExecutionList?.length === 1) {
-              return (
-                <Container className={css.nonCollapseRow}>
-                  <EnvironmentDetailInfraTable
-                    tableType={InfraViewTableType.FULL}
-                    tableStyle={css.infraViewTableStyle}
-                    data={[infra]}
-                    artifactFilter={artifactFilter}
-                    envFilter={envFilter}
-                    serviceFilter={serviceFilter}
-                  />
-                </Container>
-              )
-            }
-            return (
-              <Collapse
-                key={index}
-                collapseClassName={css.collapseBody}
-                collapseHeaderClassName={css.collapseHeader}
-                heading={
-                  <EnvironmentDetailInfraTable
-                    tableType={InfraViewTableType.SUMMARY}
-                    tableStyle={css.infraViewTableStyle}
-                    data={[infra]}
-                    artifactFilter={artifactFilter}
-                    envFilter={envFilter}
-                    serviceFilter={serviceFilter}
-                  />
-                }
-                keepChildrenMounted={true}
-                expandedHeading={<>{/* empty element on purpose */}</>}
-                collapsedIcon={'main-chevron-right'}
-                expandedIcon={'main-chevron-down'}
-              >
-                {
-                  <EnvironmentDetailInfraTable
-                    tableType={InfraViewTableType.FULL}
-                    tableStyle={css.infraViewTableStyle}
-                    data={[infra]}
-                    artifactFilter={artifactFilter}
-                    envFilter={envFilter}
-                    serviceFilter={serviceFilter}
-                  />
-                }
-              </Collapse>
-            )
-          })}
-        </Container>
-      </Container>
+      <DialogEmptyState
+        isSearchApplied={isSearchApplied}
+        resetSearch={resetSearch}
+        message={getString('cd.environmentDetailPage.selectArtifactMsg')}
+      />
     )
-  }, [artifactFilter, envFilter, getString, headers, isSearchApplied, resetSearch, serviceFilter, singleArray])
+  }
 
-  return list
+  return (
+    <Container>
+      <div className={cx('separator', css.separatorStyle)} />
+      {InfraViewHeader}
+      {headers}
+      <Container style={{ overflowY: 'auto', maxHeight: '582px' }}>
+        {instanceGroupedList.map((infra, index) => {
+          if (infra.instanceGroupedByPipelineExecutionList?.length === 1) {
+            return (
+              <Container className={css.nonCollapseRow}>
+                <EnvironmentDetailInfraTable
+                  tableType={InfraViewTableType.FULL}
+                  tableStyle={css.infraViewTableStyle}
+                  data={[infra]}
+                  artifactFilter={artifactFilter}
+                  envFilter={envFilter}
+                  serviceFilter={serviceFilter}
+                />
+              </Container>
+            )
+          }
+          return (
+            <Collapse
+              key={index}
+              collapseClassName={css.collapseBody}
+              collapseHeaderClassName={css.collapseHeader}
+              heading={
+                <EnvironmentDetailInfraTable
+                  tableType={InfraViewTableType.SUMMARY}
+                  tableStyle={css.infraViewTableStyle}
+                  data={[infra]}
+                  artifactFilter={artifactFilter}
+                  envFilter={envFilter}
+                  serviceFilter={serviceFilter}
+                />
+              }
+              keepChildrenMounted={true}
+              expandedHeading={<>{/* empty element on purpose */}</>}
+              collapsedIcon={'main-chevron-right'}
+              expandedIcon={'main-chevron-down'}
+              transitionDuration={0}
+            >
+              {
+                <EnvironmentDetailInfraTable
+                  tableType={InfraViewTableType.FULL}
+                  tableStyle={css.infraViewTableStyle}
+                  data={[infra]}
+                  artifactFilter={artifactFilter}
+                  envFilter={envFilter}
+                  serviceFilter={serviceFilter}
+                />
+              }
+            </Collapse>
+          )
+        })}
+      </Container>
+    </Container>
+  )
 }

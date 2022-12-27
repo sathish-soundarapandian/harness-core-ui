@@ -62,7 +62,8 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
   const isNewService = isNewServiceEnvEntity(!!NG_SVC_ENV_REDESIGN, stage?.stage as DeploymentStageElementConfig)
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
     !!NG_ARTIFACT_SOURCES,
-    stage?.stage as DeploymentStageElementConfig
+    stage?.stage as DeploymentStageElementConfig,
+    isServiceEntityPage
   )
 
   return (

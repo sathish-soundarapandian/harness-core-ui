@@ -20,7 +20,7 @@ function GitOpsExecutionSummary({ stageInfo, limit = 1 }: { stageInfo: Record<st
   const { orgIdentifier, projectIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
   const gitOpsApplications = stageInfo.gitOpsAppSummary?.applications || []
 
-  const linkNode = (app: Application, index: number, color: Color) => {
+  const linkNode = (app: Application, index: number, color: Color, lineClamp = 1) => {
     return (
       <Link
         key={app.identifier || app.name}
@@ -34,7 +34,13 @@ function GitOpsExecutionSummary({ stageInfo, limit = 1 }: { stageInfo: Record<st
           agentId: app.agentIdentifier
         })}
       >
-        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={color} key={app.identifier || index}>
+        <Text
+          font={{ variation: FontVariation.SMALL_SEMI }}
+          color={color}
+          key={app.identifier || index}
+          style={{ maxWidth: '200px' }}
+          lineClamp={lineClamp}
+        >
           {app.name}
         </Text>
       </Link>
@@ -67,7 +73,7 @@ function GitOpsExecutionSummary({ stageInfo, limit = 1 }: { stageInfo: Record<st
                 <Layout.Vertical spacing="small" padding="medium" style={{ maxWidth: 500 }}>
                   {gitOpsApplications
                     .slice(limit)
-                    .map((app: Application, index: number) => linkNode(app, index, Color.WHITE))}
+                    .map((app: Application, index: number) => linkNode(app, index, Color.WHITE, 3))}
                 </Layout.Vertical>
               }
             >

@@ -61,6 +61,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -140,6 +141,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -413,6 +415,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view 2`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -493,6 +496,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view 2`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -604,6 +608,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view 2`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -664,6 +669,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view 2`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -856,6 +862,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view as edit step with a
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -941,6 +948,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view as edit step with a
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1090,6 +1098,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view as edit step with a
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -1203,6 +1212,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view as edit step with a
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1389,6 +1399,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view as new step 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -1469,6 +1480,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view as new step 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1580,6 +1592,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view as new step 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -1640,6 +1653,7 @@ exports[`Test K8sBlueGreenDeployStep should render edit view as new step 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1728,6 +1742,7 @@ exports[`Test K8sBlueGreenDeployStep should render inputSet view and test valida
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1806,6 +1821,7 @@ exports[`Test K8sBlueGreenDeployStep should render inputSet view and test valida
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1949,6 +1965,7 @@ exports[`Test K8sBlueGreenDeployStep should render null for StepviewType.templat
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -2029,6 +2046,7 @@ exports[`Test K8sBlueGreenDeployStep should render null for StepviewType.templat
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -2140,6 +2158,7 @@ exports[`Test K8sBlueGreenDeployStep should render null for StepviewType.templat
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -2200,6 +2219,7 @@ exports[`Test K8sBlueGreenDeployStep should render null for StepviewType.templat
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -2420,6 +2440,7 @@ exports[`Test K8sBlueGreenDeployStep should submit with valid payload for instan
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -2500,6 +2521,7 @@ exports[`Test K8sBlueGreenDeployStep should submit with valid payload for instan
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -2611,6 +2633,7 @@ exports[`Test K8sBlueGreenDeployStep should submit with valid payload for instan
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -2672,6 +2695,7 @@ exports[`Test K8sBlueGreenDeployStep should submit with valid payload for instan
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -2864,6 +2888,7 @@ exports[`Test K8sBlueGreenDeployStep should submit with valid payload for instan
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -2944,6 +2969,7 @@ exports[`Test K8sBlueGreenDeployStep should submit with valid payload for instan
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -3055,6 +3081,7 @@ exports[`Test K8sBlueGreenDeployStep should submit with valid payload for instan
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -3115,6 +3142,7 @@ exports[`Test K8sBlueGreenDeployStep should submit with valid payload for instan
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -3307,6 +3335,7 @@ exports[`Test K8sBlueGreenDeployStep should submit with valid payload for instan
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -3387,6 +3416,7 @@ exports[`Test K8sBlueGreenDeployStep should submit with valid payload for instan
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -3498,6 +3528,7 @@ exports[`Test K8sBlueGreenDeployStep should submit with valid payload for instan
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -3558,6 +3589,7 @@ exports[`Test K8sBlueGreenDeployStep should submit with valid payload for instan
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -3781,6 +3813,7 @@ exports[`Test K8sBlueGreenDeployStep should throw validation error without insta
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -3861,6 +3894,7 @@ exports[`Test K8sBlueGreenDeployStep should throw validation error without insta
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -3972,6 +4006,7 @@ exports[`Test K8sBlueGreenDeployStep should throw validation error without insta
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -4032,6 +4067,7 @@ exports[`Test K8sBlueGreenDeployStep should throw validation error without insta
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"

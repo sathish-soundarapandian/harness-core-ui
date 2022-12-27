@@ -90,8 +90,8 @@ export function YamlDiffView({
           accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
-          ...getGitQueryParamsWithParentScope(
-            {
+          ...getGitQueryParamsWithParentScope({
+            storeMetadata: {
               branch: templateResponse?.gitDetails?.branch,
               connectorRef: templateResponse?.connectorRef,
               repoName: templateResponse?.gitDetails?.repoName,
@@ -99,7 +99,7 @@ export function YamlDiffView({
               storeType: templateResponse?.storeType
             },
             params
-          )
+          })
         },
         body: { yaml: originalEntityYaml }
       })
@@ -126,8 +126,8 @@ export function YamlDiffView({
           ...getScopeBasedProjectPathParams(params, scope),
           templateIdentifier: getIdentifierFromValue(templateRef),
           versionLabel: defaultTo(templateResponse?.versionLabel, ''),
-          ...getGitQueryParamsWithParentScope(
-            {
+          ...getGitQueryParamsWithParentScope({
+            storeMetadata: {
               branch: templateResponse?.gitDetails?.branch,
               connectorRef: templateResponse?.connectorRef,
               repoName: templateResponse?.gitDetails?.repoName,
@@ -135,7 +135,7 @@ export function YamlDiffView({
               storeType: templateResponse?.storeType
             },
             params
-          )
+          })
         }
       })
       if (response && response.status === 'SUCCESS') {

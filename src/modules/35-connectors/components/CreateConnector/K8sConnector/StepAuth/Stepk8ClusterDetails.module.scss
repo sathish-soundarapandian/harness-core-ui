@@ -39,7 +39,7 @@
       }
 
       .selectedCard {
-        background-color: #dceeff;
+        background-color: rgb(220, 238, 255);
       }
 
       :global {
@@ -86,6 +86,12 @@
             width: 92%;
           }
         }
+      }
+    }
+
+    .delegateCard {
+      :global(.Thumbnail--squareCard) {
+        padding-left: var(--spacing-medium) !important;
       }
     }
   }

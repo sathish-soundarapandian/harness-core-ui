@@ -33,7 +33,7 @@ export interface ServiceNowCreateUpdateViewProps extends StepDetailProps {
 }
 
 export function ServiceNowCreateUpdateView(props: ServiceNowCreateUpdateViewProps): React.ReactElement | null {
-  const { step } = props
+  const { step, executionMetadata } = props
   const ticket = get(step, 'outcomes.ticket', {}) as { ticketNumber: string; ticketUrl: string }
   const { getString } = useStrings()
   const manuallySelected = React.useRef(false)
@@ -78,13 +78,13 @@ export function ServiceNowCreateUpdateView(props: ServiceNowCreateUpdateViewProp
         <Tabs.Tab
           id={ApprovalStepTab.STEP_EXECUTION_INPUTS}
           title={getString('pipeline.runtimeInputs')}
-          panel={<ExecutionInputs step={step} />}
+          panel={<ExecutionInputs step={step} executionMetadata={executionMetadata} />}
         />
       ) : null}
       <Tabs.Tab
         id={ApprovalStepTab.STEP_DETAILS}
         title={getString('details')}
-        panel={<StepDetailsTab step={step} labels={labels} />}
+        panel={<StepDetailsTab step={step} executionMetadata={executionMetadata} labels={labels} />}
       />
       <Tabs.Tab
         id={ApprovalStepTab.INPUT}

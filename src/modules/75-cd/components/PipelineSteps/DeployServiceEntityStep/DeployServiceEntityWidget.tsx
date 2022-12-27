@@ -50,14 +50,17 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { isMultiTypeRuntime } from '@common/utils/utils'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { queryClient } from 'services/queryClient'
+import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { useDeepCompareEffect } from '@common/hooks'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
@@ -158,7 +161,7 @@ export default function DeployServiceEntityWidget({
   const [allServices, setAllServices] = useState(
     setupModeType === setupMode.DIFFERENT ? getAllFixedServices(initialValues) : ['']
   )
-  const { MULTI_SERVICE_INFRA, GLOBAL_SERVICE_ENV } = useFeatureFlags()
+  const { MULTI_SERVICE_INFRA, CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const {
     state: {
       selectionState: { selectedStageId }
@@ -189,6 +192,7 @@ export default function DeployServiceEntityWidget({
     deploymentType: deploymentType as ServiceDefinition['type'],
     ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {})
   })
+
   useEffect(() => {
     subscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
     return () => unSubscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
@@ -218,8 +222,7 @@ export default function DeployServiceEntityWidget({
       if (formikRef.current && servicesData.length > 0) {
         const { setValues, values } = formikRef.current
         if (serviceOrServices.service) {
-          const service = servicesData.find(svc => svc.service.identifier === serviceOrServices.service)
-
+          const service = servicesData.find(svc => getScopedValueFromDTO(svc.service) === serviceOrServices.service)
           setValues({
             ...values,
             ...serviceOrServices,
@@ -236,14 +239,14 @@ export default function DeployServiceEntityWidget({
         } else if (Array.isArray(serviceOrServices.services)) {
           const updatedServices = serviceOrServices.services.reduce<ServicesWithInputs>(
             (p, c) => {
-              const service = servicesData.find(svc => svc.service.identifier === c.value)
+              const service = servicesData.find(svc => getScopedValueFromDTO(svc.service) === c.value)
 
               if (service) {
-                p.services.push({ label: service.service.name, value: service.service.identifier })
+                p.services.push({ label: service.service.name, value: c.value })
                 // if service input is not found, add it, else use the existing one
-                const serviceInputs = get(values.serviceInputs, [service.service.identifier], service?.serviceInputs)
+                const serviceInputs = get(values.serviceInputs, [c.value], service?.serviceInputs)
 
-                p.serviceInputs[service.service.identifier] = serviceInputs
+                p.serviceInputs[c.value as string] = serviceInputs
               } else {
                 p.services.push(c)
               }
@@ -315,11 +318,13 @@ export default function DeployServiceEntityWidget({
     if (formikRef.current) {
       queryClient.invalidateQueries(['getServicesYamlAndRuntimeInputs'])
       const { values, setValues } = formikRef.current
+
+      const scope = getScopeFromValue(values?.service as string)
       const body = {
         queryParams: {
           accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier
+          orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
+          projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined
         },
         serviceIdentifier: updatedService.identifier,
         pathParams: { serviceIdentifier: updatedService.identifier },
@@ -466,7 +471,7 @@ export default function DeployServiceEntityWidget({
         onSubmit={noop}
         validate={handleUpdate}
         initialValues={getInitialValues(initialValues)}
-        validationSchema={getValidationSchema(getString)}
+        validationSchema={setupModeType === setupMode.DIFFERENT && getValidationSchema(getString)}
       >
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.SERVICE }))
@@ -504,7 +509,7 @@ export default function DeployServiceEntityWidget({
                       >
                         {isMultiSvc ? (
                           <>
-                            {!GLOBAL_SERVICE_ENV ? (
+                            {!CDS_OrgAccountLevelServiceEnvEnvGroup ? (
                               <FormMultiTypeMultiSelectDropDown
                                 tooltipProps={{ dataTooltipId: 'specifyYourService' }}
                                 label={defaultTo(
@@ -521,10 +526,8 @@ export default function DeployServiceEntityWidget({
                                 }}
                                 multiTypeProps={{
                                   width: 300,
-                                  expressions,
-                                  allowableTypes
+                                  allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
                                 }}
-                                enableConfigureOptions
                               />
                             ) : (
                               <MultiTypeServiceField
@@ -539,11 +542,12 @@ export default function DeployServiceEntityWidget({
                                 placeholder={placeHolderForServices}
                                 openAddNewModal={openAddNewModal}
                                 isMultiSelect={true}
+                                isNewConnectorLabelVisible
                                 onMultiSelectChange={handleMultiSelectChange}
                                 width={300}
                                 multiTypeProps={{
                                   expressions,
-                                  allowableTypes,
+                                  allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
                                   onTypeChange: setServiceInputType
                                 }}
                               />
@@ -551,7 +555,7 @@ export default function DeployServiceEntityWidget({
                           </>
                         ) : (
                           <div className={css.inputFieldLayout}>
-                            {GLOBAL_SERVICE_ENV ? (
+                            {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
                               <MultiTypeServiceField
                                 name="service"
                                 label={defaultTo(
@@ -564,6 +568,7 @@ export default function DeployServiceEntityWidget({
                                 setRefValue={true}
                                 disabled={readonly || (isFixed && loading)}
                                 openAddNewModal={openAddNewModal}
+                                isNewConnectorLabelVisible
                                 onChange={handleSingleSelectChange}
                                 width={300}
                                 multiTypeProps={{
@@ -594,21 +599,6 @@ export default function DeployServiceEntityWidget({
                                   onChange: handleSingleSelectChange
                                 }}
                                 selectItems={selectOptions}
-                              />
-                            )}
-                            {getMultiTypeFromValue(formik?.values.service) === MultiTypeInputType.RUNTIME && (
-                              <ConfigureOptions
-                                className={css.configureOptions}
-                                style={{ alignSelf: 'center' }}
-                                value={defaultTo(formik?.values.service, '')}
-                                type="String"
-                                variableName="service"
-                                showRequiredField={false}
-                                showDefaultField={true}
-                                showAdvanced={true}
-                                onChange={value => {
-                                  formik.setFieldValue('service', value)
-                                }}
                               />
                             )}
                           </div>

@@ -19,7 +19,7 @@ exports[`DockerRegistry Image Path Artifact tests renders correctly in edit case
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="dockerSideCard"
@@ -109,6 +109,7 @@ exports[`DockerRegistry Image Path Artifact tests renders correctly in edit case
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -230,6 +231,7 @@ exports[`DockerRegistry Image Path Artifact tests renders correctly in edit case
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -382,7 +384,7 @@ exports[`DockerRegistry Image Path Artifact tests renders while adding step firs
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="dockerSideCard"
@@ -472,6 +474,7 @@ exports[`DockerRegistry Image Path Artifact tests renders while adding step firs
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -593,6 +596,7 @@ exports[`DockerRegistry Image Path Artifact tests renders while adding step firs
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span
@@ -745,7 +749,7 @@ exports[`DockerRegistry Image Path Artifact tests renders without crashing 1`] =
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="dockerSideCard"
@@ -835,6 +839,7 @@ exports[`DockerRegistry Image Path Artifact tests renders without crashing 1`] =
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -956,6 +961,7 @@ exports[`DockerRegistry Image Path Artifact tests renders without crashing 1`] =
                     </div>
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                       disabled=""
                     >
                       <span

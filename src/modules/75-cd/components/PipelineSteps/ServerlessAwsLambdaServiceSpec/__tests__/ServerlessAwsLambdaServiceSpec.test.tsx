@@ -54,6 +54,17 @@ jest.mock('services/cd-ng', () => ({
       loading: false
     }
   }),
+  useGetImagePathsForArtifactory: jest.fn().mockImplementation(() => {
+    return {
+      data: {},
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
+  }),
+  useGetBuildDetailsForArtifactoryArtifact: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: jest.fn(), error: null, loading: false }
+  }),
   useGetRepositoriesDetailsForArtifactory: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
   }),

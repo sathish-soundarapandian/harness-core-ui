@@ -6,11 +6,11 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
+import { fireEvent, render, waitFor } from '@testing-library/react'
+import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import * as dashboardService from 'services/dashboard-service'
-import { deploymentStatsSummaryResponse, noDeploymentData } from '../mocks'
+import { deploymentStatsSummaryResponse, deploymentStatsSummaryWithOverviewResponse, noDeploymentData } from '../mocks'
 import LandingDashboardDeploymentsWidget from '../LandingDashboardDeploymentsWidget'
 
 jest.mock('services/dashboard-service', () => ({
@@ -108,5 +108,33 @@ describe('LandingDashboardDeploymentsWidget tests', () => {
 
     // no deployments should be visible
     expect(getByText('No Deployments')).toBeTruthy()
+  })
+
+  test('deployment badges', async () => {
+    jest.spyOn(dashboardService, 'useGetDeploymentStatsOverview').mockImplementation((): any => {
+      return {
+        data: deploymentStatsSummaryWithOverviewResponse,
+        refetch: jest.fn(),
+        error: null,
+        loading: false
+      }
+    })
+    const { getByText } = render(
+      <TestWrapper path={routes.toLandingDashboard({ accountId: ':accountId' })} pathParams={{ accountId: 'dummy' }}>
+        <LandingDashboardDeploymentsWidget />
+      </TestWrapper>
+    )
+
+    const activePipelineBadge = getByText('pipeline.dashboardDeploymentsWidget.activePipeline.plural')
+    expect(activePipelineBadge).toBeTruthy()
+    expect(getByText('pipeline.dashboardDeploymentsWidget.failed24Hrs.singular')).toBeTruthy()
+
+    fireEvent.mouseOver(activePipelineBadge)
+    await waitFor(() => {
+      expect(getByText('test2')).toBeInTheDocument()
+    })
+    const popover = findPopoverContainer()
+    expect(popover).not.toBeNull()
+    expect(popover).toMatchSnapshot()
   })
 })

@@ -26,8 +26,9 @@
   color: var(--grey-800);
 }
 
-.grid {
+.gridDisplay {
   display: grid;
+  max-width: fit-content;
   grid-auto-flow: column;
   justify-content: start;
 }

@@ -6,10 +6,11 @@
  */
 
 .main {
-  margin-top: var(--spacing-large) !important;
-  height: 100vh !important;
+  height: 100% !important;
+  border-right: 1px solid var(--grey-200);
 
   .metricsFilter {
-    margin-left: 0 !important;
+    margin-left: var(--spacing-medium) !important;
+    height: 36px;
   }
 }

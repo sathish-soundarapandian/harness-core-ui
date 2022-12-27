@@ -447,7 +447,7 @@ const getHelmHttpSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRo
     }
   ]
 }
-//todoOci
+
 const getOCIHelmSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
   return [
     {

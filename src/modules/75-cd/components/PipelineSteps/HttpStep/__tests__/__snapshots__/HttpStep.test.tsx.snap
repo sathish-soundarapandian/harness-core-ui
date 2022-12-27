@@ -162,6 +162,7 @@ exports[`Http Step edit mode works 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -240,6 +241,7 @@ exports[`Http Step edit mode works 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -377,6 +379,7 @@ exports[`Http Step edit mode works 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -456,6 +459,7 @@ exports[`Http Step edit mode works 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -645,6 +649,7 @@ exports[`Http Step renders input sets 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -724,6 +729,7 @@ exports[`Http Step renders input sets 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -836,6 +842,7 @@ exports[`Http Step renders input sets 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -909,6 +916,7 @@ exports[`Http Step renders input sets 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -989,6 +997,7 @@ exports[`Http Step renders input sets 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1114,6 +1123,7 @@ exports[`Http Step renders input sets 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1241,6 +1251,7 @@ exports[`Http Step renders input sets 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1454,6 +1465,7 @@ exports[`Http Step renders runtime inputs 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1532,6 +1544,7 @@ exports[`Http Step renders runtime inputs 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1641,6 +1654,7 @@ exports[`Http Step renders runtime inputs 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1754,6 +1768,7 @@ exports[`Http Step renders runtime inputs 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -2010,6 +2025,7 @@ exports[`Http Step should render edit view as new step 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -2084,6 +2100,7 @@ exports[`Http Step should render edit view as new step 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -2187,6 +2204,7 @@ exports[`Http Step should render edit view as new step 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -2255,6 +2273,7 @@ exports[`Http Step should render edit view as new step 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"

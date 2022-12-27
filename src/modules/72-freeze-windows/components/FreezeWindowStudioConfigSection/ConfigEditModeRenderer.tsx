@@ -49,6 +49,8 @@ export const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
                 namePrefix={`entity[${index}]`}
                 values={formikProps.values?.entity?.[index] || {}}
                 setFieldValue={formikProps.setFieldValue}
+                formikValues={formikProps.values}
+                setValues={formikProps.setValues}
                 organizations={resources.orgs || []}
                 fetchProjectsForOrgId={resources.fetchProjectsForOrgId}
               />
@@ -58,6 +60,8 @@ export const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
                 getString={getString}
                 namePrefix={`entity[${index}]`}
                 values={formikProps.values?.entity?.[index] || {}}
+                formikValues={formikProps.values}
+                setValues={formikProps.setValues}
                 setFieldValue={formikProps.setFieldValue}
                 resources={resources}
               />

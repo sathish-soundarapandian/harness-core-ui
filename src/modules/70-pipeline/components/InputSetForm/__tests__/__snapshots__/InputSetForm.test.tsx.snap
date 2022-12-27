@@ -1051,6 +1051,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
                                                 >
                                                   <button
                                                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                    data-testid="multi-type-button"
                                                   >
                                                     <span
                                                       class="bp3-icon StyledProps--main"
@@ -1132,6 +1133,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
                                                 >
                                                   <button
                                                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                    data-testid="multi-type-button"
                                                   >
                                                     <span
                                                       class="bp3-icon StyledProps--main"
@@ -1213,6 +1215,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
                                                 >
                                                   <button
                                                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                    data-testid="multi-type-button"
                                                   >
                                                     <span
                                                       class="bp3-icon StyledProps--main"
@@ -1864,6 +1867,7 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
                                                 >
                                                   <button
                                                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                    data-testid="multi-type-button"
                                                   >
                                                     <span
                                                       class="bp3-icon StyledProps--main"
@@ -1945,6 +1949,7 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
                                                 >
                                                   <button
                                                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                    data-testid="multi-type-button"
                                                   >
                                                     <span
                                                       class="bp3-icon StyledProps--main"
@@ -2026,6 +2031,7 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
                                                 >
                                                   <button
                                                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                    data-testid="multi-type-button"
                                                   >
                                                     <span
                                                       class="bp3-icon StyledProps--main"

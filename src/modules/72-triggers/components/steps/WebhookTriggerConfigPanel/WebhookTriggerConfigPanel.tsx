@@ -14,6 +14,8 @@ import { useGetGitTriggerEventDetails } from 'services/pipeline-ng'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { getSourceRepoOptions, GitSourceProviders } from '@triggers/components/Triggers/utils'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { clearEventsAndActions, getEventAndActions, renderNonCustomEventFields } from '../utils'
 import WebhookSecretInputWithDialog from './WebhookSecretInputWithDialog'
 import css from './WebhookTriggerConfigPanel.module.scss'
@@ -89,6 +91,8 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
     }
   }, [event, formikProps.errors])
 
+  const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.CD_GIT_WEBHOOK_POLLING)
+
   return (
     <Layout.Vertical className={css.webhookConfigurationContainer} padding="xxlarge">
       {loading && (
@@ -139,7 +143,8 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
               eventOptions,
               getString,
               actionsOptions,
-              actions
+              actions,
+              isGitWebhookPollingEnabled
             })}
           {sourceRepo === GitSourceProviders.GITHUB.value && <WebhookSecretInputWithDialog formikProps={formikProps} />}
         </section>

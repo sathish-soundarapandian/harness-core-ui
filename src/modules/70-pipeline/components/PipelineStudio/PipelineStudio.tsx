@@ -81,9 +81,7 @@ export default function PipelineStudio(): React.ReactElement {
   }
   const { licenseInformation } = useLicenseStore()
   const { CDNG_ENABLED, CING_ENABLED, CFNG_ENABLED, PIE_NG_GITX_CACHING, PIPELINE_CHAINING } = useFeatureFlags()
-
   const { getString } = useStrings()
-
   return (
     <PipelineProvider
       stagesMap={stagesCollection.getAllStagesAttributes(getString)}

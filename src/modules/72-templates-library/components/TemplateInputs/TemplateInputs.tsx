@@ -96,7 +96,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
       orgIdentifier: template.orgIdentifier,
       projectIdentifier: template.projectIdentifier,
       versionLabel: defaultTo(template.versionLabel, ''),
-      ...getGitQueryParamsWithParentScope(storeMetadata, params, repo, branch)
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier: repo, branch })
     }
   })
 

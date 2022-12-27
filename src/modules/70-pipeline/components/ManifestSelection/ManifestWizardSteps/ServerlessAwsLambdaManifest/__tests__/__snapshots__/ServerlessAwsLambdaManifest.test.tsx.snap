@@ -188,6 +188,7 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -333,6 +334,7 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -445,6 +447,7 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                                   >
                                     <button
                                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      data-testid="multi-type-button"
                                     >
                                       <span
                                         class="bp3-icon StyledProps--main"
@@ -735,6 +738,7 @@ exports[`Manifest Details tests initial rendering 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -880,6 +884,7 @@ exports[`Manifest Details tests initial rendering 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -1204,6 +1209,7 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -1349,6 +1355,7 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -1673,6 +1680,7 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -1818,6 +1826,7 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -2142,6 +2151,7 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -2287,6 +2297,7 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -2615,6 +2626,7 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -3078,6 +3090,7 @@ exports[`Manifest Details tests when connectionType is of repo 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -3223,6 +3236,7 @@ exports[`Manifest Details tests when connectionType is of repo 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -3551,6 +3565,7 @@ exports[`Manifest Details tests when gitfetchtype is Commit and commitId is Runt
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -3730,6 +3745,7 @@ exports[`Manifest Details tests when gitfetchtype is Commit and commitId is Runt
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -4054,6 +4070,7 @@ exports[`Manifest Details tests when prevStepData is not passed in props 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -4199,6 +4216,7 @@ exports[`Manifest Details tests when prevStepData is not passed in props 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -4523,6 +4541,7 @@ exports[`Manifest Details tests when prevStepData is passed with connectorRef as
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -4668,6 +4687,7 @@ exports[`Manifest Details tests when prevStepData is passed with connectorRef as
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -4992,6 +5012,7 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -5137,6 +5158,7 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"

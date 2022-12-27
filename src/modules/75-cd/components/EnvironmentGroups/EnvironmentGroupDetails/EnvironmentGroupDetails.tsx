@@ -266,8 +266,8 @@ export default function EnvironmentGroupDetails() {
                 identifier: defaultTo(identifier, ''),
                 description: defaultTo(description, ''),
                 tags: defaultTo(tags, {}),
-                orgIdentifier: defaultTo(orgIdentifier, ''),
-                projectIdentifier: defaultTo(projectIdentifier, ''),
+                orgIdentifier: orgIdentifier,
+                projectIdentifier: projectIdentifier,
                 envIdentifiers: defaultTo(envIdentifiers, [])
               } as EnvironmentGroupResponseDTO
             }

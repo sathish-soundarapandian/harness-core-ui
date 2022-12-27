@@ -14,6 +14,8 @@ import { AllowedTypes, getMultiTypeFromValue, Layout, MultiTypeInputType } from 
 
 import { useStrings } from 'framework/strings'
 
+import { MultiTypeEnvironmentGroupField } from '@pipeline/components/FormMultiTypeEnvironmentGroupField/FormMultiTypeEnvironmentGroupField'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import type { DeployEnvironmentEntityConfig } from '../DeployEnvironmentEntityStep/types'
 import { useGetEnvironmentGroupsData } from '../DeployEnvironmentEntityStep/DeployEnvironmentGroup/useGetEnvironmentGroupsData'
@@ -38,6 +40,8 @@ export default function DeployEnvironmentGroupInputStep({
   const formik = useFormikContext<DeployEnvironmentEntityConfig>()
 
   const pathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   // API
   const {
@@ -65,23 +69,42 @@ export default function DeployEnvironmentGroupInputStep({
     <>
       {getMultiTypeFromValue(inputSetData?.template?.environmentGroup?.envGroupRef) === MultiTypeInputType.RUNTIME && (
         <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
-          <ExperimentalInput
-            tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
-            name={`${pathPrefix}environmentGroup.envGroupRef`}
-            placeholder={getString('cd.pipelineSteps.environmentTab.selectEnvironmentGroup')}
-            selectItems={selectOptions}
-            useValue
-            multiTypeInputProps={{
-              allowableTypes: allowableTypes,
-              selectProps: {
-                items: selectOptions
-              }
-            }}
-            disabled={inputSetData?.readonly}
-            className={css.inputWidth}
-            formik={formik}
-          />
+          {!CDS_OrgAccountLevelServiceEnvEnvGroup ? (
+            <ExperimentalInput
+              tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
+              label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
+              name={`${pathPrefix}environmentGroup.envGroupRef`}
+              placeholder={getString('cd.pipelineSteps.environmentTab.selectEnvironmentGroup')}
+              selectItems={selectOptions}
+              useValue
+              multiTypeInputProps={{
+                allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(
+                  item => item !== MultiTypeInputType.EXPRESSION && item !== MultiTypeInputType.EXECUTION_TIME
+                ) as AllowedTypes,
+                selectProps: {
+                  items: selectOptions
+                }
+              }}
+              disabled={inputSetData?.readonly}
+              className={css.inputWidth}
+              formik={formik}
+            />
+          ) : (
+            <MultiTypeEnvironmentGroupField
+              tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
+              label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
+              name={`${pathPrefix}environmentGroup.envGroupRef`}
+              placeholder={getString('cd.pipelineSteps.environmentTab.selectEnvironmentGroup')}
+              setRefValue
+              multiTypeProps={{
+                allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(
+                  item => item !== MultiTypeInputType.EXPRESSION && item !== MultiTypeInputType.EXECUTION_TIME
+                ) as AllowedTypes
+              }}
+              disabled={inputSetData?.readonly}
+              className={css.inputWidth}
+            />
+          )}
           {loading ? <Spinner className={css.inputSetSpinner} size={16} /> : null}
         </Layout.Horizontal>
       )}

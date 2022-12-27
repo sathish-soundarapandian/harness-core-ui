@@ -23,7 +23,7 @@
   margin-bottom: 8px !important;
   box-shadow: 0px 0px 1px rgb(40 41 61 / 8%), 0px 0.5px 2px rgb(96 97 112 / 16%);
   border-top: 0px;
-  padding: 8px 16px 16px 16px !important;
+  padding: 8px 16px 8px 16px !important;
   background: var(--white);
 
   :global(.TableV2--table) {
@@ -52,5 +52,23 @@
 .searchIconStyle {
   & > input:focus {
     width: 200px !important;
+  }
+}
+
+.nonCollapseRow {
+  width: calc(100% - 4px);
+  min-height: var(--spacing-10);
+  box-shadow: 0px 0px 1px rgb(40 41 61 / 8%), 0px 0.5px 2px rgb(96 97 112 / 16%);
+  border-top: 0px;
+  border-radius: var(--spacing-2);
+  margin-bottom: var(--spacing-3) !important;
+  background: var(--white) !important;
+
+  > div {
+    padding-top: 0px !important;
+  }
+
+  div[class*='TableV2--table'] {
+    padding: var(--spacing-3) var(--spacing-5) var(--spacing-2) 35px;
   }
 }

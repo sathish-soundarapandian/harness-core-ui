@@ -19,7 +19,7 @@ exports[`AmazonS3 tests bucket name field is Runtime input when connectorId from
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="imagePathContainer"
@@ -101,6 +101,7 @@ exports[`AmazonS3 tests bucket name field is Runtime input when connectorId from
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -177,6 +178,7 @@ exports[`AmazonS3 tests bucket name field is Runtime input when connectorId from
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -339,6 +341,7 @@ exports[`AmazonS3 tests bucket name field is Runtime input when connectorId from
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -454,7 +457,7 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="imagePathContainer"
@@ -536,6 +539,7 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -640,6 +644,7 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -795,6 +800,7 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -910,7 +916,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="imagePathContainer"
@@ -992,6 +998,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1068,6 +1075,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1234,6 +1242,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1388,7 +1397,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePath is 
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="imagePathContainer"
@@ -1470,6 +1479,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePath is 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1590,6 +1600,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePath is 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1761,6 +1772,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePath is 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1876,7 +1888,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePathRege
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="imagePathContainer"
@@ -1958,6 +1970,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePathRege
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2078,6 +2091,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePathRege
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2201,6 +2215,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePathRege
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"

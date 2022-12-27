@@ -23,7 +23,7 @@ import {
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { defaultTo, get, merge } from 'lodash-es'
+import { defaultTo, get, isEmpty, merge } from 'lodash-es'
 import { useListAwsRegions } from 'services/portal'
 import { ConnectorConfigDTO, useGetBuildDetailsForEcr } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -37,7 +37,8 @@ import {
   getConnectorIdValue,
   getFinalArtifactObj,
   resetTag,
-  shouldFetchFieldOptions
+  shouldFetchFieldOptions,
+  shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
@@ -67,7 +68,7 @@ export function ECRArtifact({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
-  const isTemplateContext = context === ModalViewFor.Template
+  const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const [tagList, setTagList] = React.useState([])
   const [regions, setRegions] = React.useState<SelectOption[]>([])
@@ -174,7 +175,7 @@ export function ECRArtifact({
       isIdentifierAllowed
     ) as ImagePathTypes
     const specValues = get(initialValues, 'spec', null)
-    if (getMultiTypeFromValue(specValues?.region) === MultiTypeInputType.FIXED) {
+    if (getMultiTypeFromValue(specValues?.region) === MultiTypeInputType.FIXED && !isEmpty(regions)) {
       values.region = regions.find(regionData => regionData.value === specValues?.region)
     }
     return values
@@ -188,7 +189,7 @@ export function ECRArtifact({
   }
 
   const handleValidate = (formData: ImagePathTypes & { connectorId?: string }) => {
-    if (isTemplateContext) {
+    if (hideHeaderAndNavBtns) {
       submitFormData({
         ...prevStepData,
         ...formData,
@@ -199,7 +200,7 @@ export function ECRArtifact({
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
-      {!isTemplateContext && (
+      {!hideHeaderAndNavBtns && (
         <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
           {getString('pipeline.artifactsSelection.artifactDetails')}
         </Text>
@@ -220,7 +221,7 @@ export function ECRArtifact({
       >
         {formik => (
           <FormikForm>
-            <div className={cx(css.connectorForm, formClassName)}>
+            <div className={cx(css.artifactForm, formClassName)}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
@@ -275,7 +276,7 @@ export function ECRArtifact({
               />
             </div>
 
-            {!isTemplateContext && (
+            {!hideHeaderAndNavBtns && (
               <Layout.Horizontal spacing="medium">
                 <Button
                   variation={ButtonVariation.SECONDARY}

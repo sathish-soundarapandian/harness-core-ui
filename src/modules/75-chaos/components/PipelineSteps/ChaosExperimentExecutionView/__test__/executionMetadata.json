@@ -1,0 +1,7 @@
+{
+  "accountId": "acc",
+  "pipelineIdentifier": "pipeline",
+  "orgIdentifier": "org",
+  "projectIdentifier": "project",
+  "planExecutionId": "execution"
+}

@@ -15,7 +15,8 @@ import {
   mockAuthData,
   mockAuthDataLoading,
   mockApprovalData,
-  mockApprovalDataError
+  mockApprovalDataError,
+  executionMetadata
 } from './mock'
 
 jest.mock('services/pipeline-ng', () => ({
@@ -35,14 +36,14 @@ describe('LOADING', () => {
   })
 
   test('show spinner in loading state', () => {
-    const { container } = render(<HarnessApprovalView step={{}} />)
+    const { container } = render(<HarnessApprovalView step={{}} executionMetadata={executionMetadata} />)
 
     const spinner = container.querySelector('.bp3-spinner')
     expect(spinner).toBeTruthy()
   })
 
   test('show spinner when auth data is loading', () => {
-    const { container } = render(<HarnessApprovalView step={{}} />)
+    const { container } = render(<HarnessApprovalView step={{}} executionMetadata={executionMetadata} />)
 
     const spinner = container.querySelector('.bp3-spinner')
     expect(spinner).toBeTruthy()
@@ -55,6 +56,7 @@ describe('LOADING', () => {
           step={{
             status: 'ResourceWaiting'
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -82,6 +84,7 @@ describe('SUCCESS', () => {
             // @ts-ignore
             executableResponses: [{ async: { callbackIds: ['approvalInstanceId'] } }]
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -112,7 +115,7 @@ describe('ERROR', () => {
   test('show tabs when data is present and authorized', async () => {
     const { container } = render(
       <TestWrapper>
-        <HarnessApprovalView step={{}} />
+        <HarnessApprovalView step={{}} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
 

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import {
   AllowedTypes,
   Container,
@@ -61,9 +61,13 @@ function PrimaryArtifactRef({
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier },
     serviceIdentifier
   })
-  const artifactSources = defaultTo(
-    artifactSourceResponse?.data?.sourceIdentifiers?.map(source => ({ label: source, value: source })),
-    []
+  const artifactSources = useMemo(
+    () =>
+      defaultTo(
+        artifactSourceResponse?.data?.sourceIdentifiers?.map(source => ({ label: source, value: source })),
+        []
+      ),
+    [artifactSourceResponse?.data?.sourceIdentifiers]
   )
 
   useEffect(() => {
@@ -98,6 +102,17 @@ function PrimaryArtifactRef({
             )
           }
           updateStageFormTemplate([idSourceMap], `${path}.artifacts.primary.sources`)
+        }
+      } else {
+        // This is to select single artifact source by default even when there is no runtime inputs in Artifact source
+        const primaryRefFormikValue = get(formik?.values, `${path}.artifacts.primary.primaryArtifactRef`)
+        if (isEmpty(primaryRefFormikValue) && shouldSetDefaultArtifactSource) {
+          formik?.setValues(
+            produce(formik?.values, (draft: any) => {
+              set(draft, `${path}.artifacts.primary.primaryArtifactRef`, artifactSources[0].value)
+              set(draft, `${path}.artifacts.primary.sources`, undefined)
+            })
+          )
         }
       }
     }

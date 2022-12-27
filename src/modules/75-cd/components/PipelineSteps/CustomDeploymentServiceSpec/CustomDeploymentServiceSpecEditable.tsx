@@ -18,6 +18,7 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useServiceContext } from '@cd/context/ServiceContext'
 import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
 import type { CustomDeploymentServiceInputFormProps } from './CustomDeploymentServiceSpecInterface'
 import css from './CustomDeploymentServiceSpec.module.scss'
@@ -39,9 +40,12 @@ const CustomDeploymentServiceSpecEditable: React.FC<CustomDeploymentServiceInput
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType = deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating)
+  const { isServiceEntityPage } = useServiceContext()
+
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
     !!NG_ARTIFACT_SOURCES,
-    stage?.stage as DeploymentStageElementConfig
+    stage?.stage as DeploymentStageElementConfig,
+    isServiceEntityPage
   )
 
   return (

@@ -164,6 +164,7 @@ exports[`Validate HealthSourceInputsetForm should render HealthSourceInputsetFor
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -235,6 +236,7 @@ exports[`Validate HealthSourceInputsetForm should render HealthSourceInputsetFor
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -418,6 +420,7 @@ exports[`Validate HealthSourceInputsetForm should render HealthSourceInputsetFor
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -489,6 +492,7 @@ exports[`Validate HealthSourceInputsetForm should render HealthSourceInputsetFor
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -568,6 +572,7 @@ exports[`Validate HealthSourceInputsetForm should render HealthSourceInputsetFor
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -639,6 +644,7 @@ exports[`Validate HealthSourceInputsetForm should render HealthSourceInputsetFor
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"

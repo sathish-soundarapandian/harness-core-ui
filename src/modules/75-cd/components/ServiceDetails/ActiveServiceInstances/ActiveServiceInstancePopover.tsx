@@ -12,11 +12,12 @@ import cx from 'classnames'
 import { Card, getErrorInfoFromErrorObject, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Spinner } from '@blueprintjs/core'
-import { capitalize } from 'lodash-es'
+import { capitalize, defaultTo } from 'lodash-es'
 import {
   AzureWebAppInstanceInfoDTO,
   CustomDeploymentInstanceInfoDTO,
   EcsInstanceInfoDTO,
+  SpotInstanceInfoDTO,
   Failure,
   GetActiveInstancesByServiceIdEnvIdAndBuildIdsQueryParams,
   GetInstancesDetailsQueryParams,
@@ -26,7 +27,8 @@ import {
   NativeHelmInstanceInfoDTO,
   ServiceDefinition,
   useGetActiveInstancesByServiceIdEnvIdAndBuildIds,
-  useGetInstancesDetails
+  useGetInstancesDetails,
+  SpotInfrastructureDetails
 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { getReadableDateTime } from '@common/utils/dateUtils'
@@ -45,6 +47,7 @@ export interface ActiveServiceInstancePopoverProps {
   infraIdentifier?: string
   clusterId?: string
   pipelineExecutionId?: string
+  lastDeployedAt?: number
 }
 
 interface SectionProps {
@@ -109,9 +112,10 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     instanceNum = 0,
     serviceIdentifier = '',
     isEnvDetail = false,
-    pipelineExecutionId = '',
+    pipelineExecutionId,
     infraIdentifier,
-    clusterId
+    clusterId,
+    lastDeployedAt
   } = props
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { getString } = useStrings()
@@ -122,7 +126,11 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     projectIdentifier,
     serviceId: serviceId || serviceIdentifier,
     envId,
-    buildIds: [buildId]
+    buildIds: [buildId],
+    clusterIdentifier: clusterId,
+    infraIdentifier,
+    lastDeployedAt,
+    pipelineExecutionId
   }
 
   const queryParamsEnv: GetInstancesDetailsQueryParams = {
@@ -133,7 +141,7 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     envId,
     infraIdentifier,
     clusterIdentifier: clusterId,
-    pipelineExecutionId,
+    pipelineExecutionId: defaultTo(pipelineExecutionId, ''),
     buildId: buildId
   }
 
@@ -249,6 +257,14 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
             value: (instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.taskArn || ''
           }
         ]
+      case ServiceDeploymentType.Elastigroup:
+        return [
+          ...defaultInstanceInfoData,
+          {
+            label: getString('cd.serviceDashboard.ec2InstanceId'),
+            value: (instanceData.instanceInfoDTO as SpotInstanceInfoDTO)?.ec2InstanceId || ''
+          }
+        ]
       case ServiceDeploymentType.CustomDeployment:
         return [
           ...customDeploymentInstanceInfoData,
@@ -284,6 +300,13 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
 
   const getInfrastructureSectionValues = (deploymentType: ServiceDefinition['type']) => {
     switch (deploymentType) {
+      case ServiceDeploymentType.Elastigroup:
+        return [
+          {
+            label: getString('cd.serviceDashboard.elastigroupId'),
+            value: (instanceData.infrastructureDetails as SpotInfrastructureDetails)?.elastigroupId || ''
+          }
+        ]
       case ServiceDeploymentType.ECS:
         return [
           {

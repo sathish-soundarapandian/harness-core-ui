@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, pickBy, set } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType, PageSpinner } from '@harness/uicore'
+import { EXECUTION_TIME_INPUT_VALUE, getMultiTypeFromValue, MultiTypeInputType, PageSpinner } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
@@ -82,10 +82,14 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
   const [selectedProjectValue, setSelectedProjectValue] = useState<JiraProjectSelectOption>()
   const [selectedIssueTypeValue, setSelectedIssueTypeValue] = useState<JiraProjectSelectOption>()
 
-  const connectorRefFixedValue = getGenuineValue(
-    initialValues.spec?.connectorRef || (inputSetData?.allValues?.spec?.connectorRef as string)
-  )
-  const projectKeyFixedValue = initialValues.spec?.projectKey || inputSetData?.allValues?.spec?.projectKey
+  const connectorRefFixedValue =
+    template?.spec?.connectorRef === EXECUTION_TIME_INPUT_VALUE
+      ? formContentProps?.formik?.values?.spec?.connectorRef
+      : getGenuineValue(initialValues.spec?.connectorRef || (inputSetData?.allValues?.spec?.connectorRef as string))
+  const projectKeyFixedValue =
+    template?.spec?.projectKey === EXECUTION_TIME_INPUT_VALUE
+      ? formContentProps?.formik?.values?.spec?.projectKey
+      : initialValues.spec?.projectKey || inputSetData?.allValues?.spec?.projectKey
 
   const issueTypeFixedValue = initialValues.spec?.issueType || inputSetData?.allValues?.spec?.issueType
   const [fields, setFields] = useState<JiraFieldNGWithValue[]>([])

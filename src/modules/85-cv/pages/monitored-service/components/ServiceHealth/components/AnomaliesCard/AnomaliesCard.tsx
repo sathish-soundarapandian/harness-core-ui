@@ -110,14 +110,10 @@ export default function AnomaliesCard(props: AnomaliesCardProps): JSX.Element {
       )
     } else {
       return (
-        <Container padding={{ right: 'small', left: 'small' }}>
+        <Container padding={{ right: 'medium', left: 'small' }}>
           {!anomaliesLoading && isTotalAnomaliesAvailable && (
-            <Text
-              padding={{ right: 'small', top: 'small' }}
-              color={Color.WHITE}
-              font={{ size: 'xsmall', weight: 'bold' }}
-            >
-              {`${getString('cv.monitoredServices.serviceHealth.anamolies')}: ${
+            <Text padding={{ top: 'small' }} color={Color.WHITE} font={{ size: 'xsmall', weight: 'bold' }}>
+              {`${getString('cv.monitoredServices.serviceHealth.anamolies')} ${
                 anomaliesData?.resource?.totalAnomalies
               }`}
             </Text>
@@ -131,7 +127,7 @@ export default function AnomaliesCard(props: AnomaliesCardProps): JSX.Element {
           )}
           {isLogsAnomaliesAvailable && (
             <Text
-              padding={{ top: 'small', bottom: 'small' }}
+              padding={{ top: 'xsmall', bottom: 'small' }}
               color={Color.WHITE}
               font={{ size: 'xsmall', weight: 'bold' }}
             >

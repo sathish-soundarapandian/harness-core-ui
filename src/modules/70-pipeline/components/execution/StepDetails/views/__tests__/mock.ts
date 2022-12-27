@@ -8,7 +8,8 @@
 import type { UseGetMockDataWithMutateAndRefetch } from '@common/utils/testUtils'
 import type {
   ResponseHarnessApprovalInstanceAuthorization,
-  ResponseApprovalInstanceResponse
+  ResponseApprovalInstanceResponse,
+  ExecutionGraph
 } from 'services/pipeline-ng'
 
 export const mockAuthData: UseGetMockDataWithMutateAndRefetch<ResponseHarnessApprovalInstanceAuthorization> = {
@@ -290,4 +291,12 @@ export const mockCustomApprovalDataError: UseGetMockDataWithMutateAndRefetch<Res
       details: {}
     }
   }
+}
+
+export const executionMetadata: ExecutionGraph['executionMetadata'] = {
+  accountId: 'acc',
+  pipelineIdentifier: 'pipeline',
+  orgIdentifier: 'org',
+  projectIdentifier: 'project',
+  planExecutionId: 'execution'
 }

@@ -245,7 +245,7 @@ export const getPipelinePayloadWithoutCodebase = (): Record<string, any> => {
                     step: {
                       type: 'Run',
                       name: 'Echo Welcome Message',
-                      identifier: 'Run',
+                      identifier: 'Echo_Welcome_Message',
                       spec: {
                         connectorRef: ACCOUNT_SCOPE_PREFIX.concat(DOCKER_REGISTRY_CONNECTOR_REF),
                         image: 'alpine',

@@ -36,6 +36,7 @@ export enum StepType {
   DeployInfrastructure = 'DeployInfrastructure',
   DeployInfrastructureEntity = 'DeployInfrastructureEntity',
   DeployClusterEntity = 'DeployClusterEntity',
+  InlineEntityFilters = 'InlineEntityFilters',
   KubernetesDirect = 'KubernetesDirect',
   K8sServiceSpec = 'K8sServiceSpec',
   K8sRollingDeploy = 'K8sRollingDeploy',
@@ -126,7 +127,25 @@ export enum StepType {
   ChaosExperiment = 'Chaos',
   Elastigroup = 'Elastigroup',
   ElastigroupService = 'ElastigroupService',
-  ElastigroupRollback = 'ElastigroupRollback'
+  ElastigroupRollback = 'ElastigroupRollback',
+  ElastigroupSetup = 'ElastigroupSetup',
+  TasService = 'TasService',
+  TasInfra = 'TAS',
+  AppRollback = 'AppRollback',
+  SwapRoutes = 'SwapRoutes',
+  SwapRollback = 'SwapRollback',
+  TanzuCommand = 'TanzuCommand',
+  BasicAppSetup = 'BasicAppSetup',
+  BGAppSetup = 'BGAppSetup',
+  CanaryAppSetup = 'CanaryAppSetup',
+  AppResize = 'AppResize',
+  Asg = 'ASGServiceSpec',
+  AsgInfraSpec = 'AsgInfraSpec',
+  AsgCanaryDelete = 'AsgCanaryDelete',
+  ElastigroupDeploy = 'ElastigroupDeploy',
+  ElastigroupSwapRoute = 'ElastigroupSwapRoute',
+  ElastigroupBGStageSetup = 'ElastigroupBGStageSetup',
+  AsgCanaryDeploy = 'AsgCanaryDeploy'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

@@ -17,6 +17,7 @@
 .dialogStyles {
   min-width: 600px;
   width: auto;
+  max-width: min(1024px, calc(100vw - var(--spacing-huge)));
   .service-override-dialog {
     min-height: 450px;
   }

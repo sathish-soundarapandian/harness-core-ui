@@ -9,24 +9,26 @@ import React from 'react'
 import { defaultTo, get, isNil } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikValues } from 'formik'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
+import type { IItemRendererProps } from '@blueprintjs/select'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 
 import { StringKeys, useStrings } from 'framework/strings'
 import { NameValuePair, useListAwsRegions } from 'services/portal'
 import { useGetBucketsInManifests } from 'services/cd-ng'
 import List from '@common/components/List/List'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useMutateAsGet } from '@common/hooks'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { ManifestToConnectorMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { shouldAllowOnlyOneFilePath } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/CommonManifestDetails/utils'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import {
   getManifestFieldFqnPath,
@@ -37,7 +39,6 @@ import {
   isNewServiceEnvEntity,
   shouldFetchTagsSource
 } from '../../K8sServiceSpec/ArtifactSource/artifactSourceUtils'
-import ExperimentalInput from '../../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import { isFieldRuntime } from '../../K8sServiceSpec/K8sServiceSpecHelper'
 import css from '../../K8sServiceSpec/KubernetesManifests/KubernetesManifests.module.scss'
 
@@ -75,6 +76,7 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { getRBACErrorMessage } = useRBACError()
 
   const [lastQueryData, setLastQueryData] = React.useState({
     connectorRef: '',
@@ -97,7 +99,7 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
   })
   const regions = (regionData?.resource || []).map((region: NameValuePair) => ({
     value: region.value,
-    label: region.name
+    label: region.name as string
   }))
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
@@ -125,7 +127,8 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
   const {
     data: s3BucketList,
     loading: s3BucketDataLoading,
-    refetch: refetchS3Buckets
+    refetch: refetchS3Buckets,
+    error: fetchBucketsError
   } = useMutateAsGet(useGetBucketsInManifests, {
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
@@ -140,25 +143,25 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
     debounce: 300
   })
 
-  const s3BucketOptions = React.useMemo(() => {
+  const buckets = React.useMemo((): { label: string; value: string }[] => {
+    if (s3BucketDataLoading) {
+      return [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
+    } else if (fetchBucketsError) {
+      return []
+    }
     return Object.keys(s3BucketList?.data || {}).map(item => ({
       label: item,
       value: item
     }))
-  }, [s3BucketList?.data])
-
-  const getBuckets = React.useCallback((): { label: string; value: string }[] => {
-    if (s3BucketDataLoading) {
-      return [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
-    }
-    return defaultTo(s3BucketOptions, [])
-  }, [s3BucketDataLoading, s3BucketOptions])
+  }, [s3BucketDataLoading, s3BucketList?.data, fetchBucketsError])
 
   const canFetchBuckets = React.useCallback((): boolean => {
     return (
       !!(
         (lastQueryData.connectorRef != fixedConnectorValue || lastQueryData.region !== fixedRegionValue) &&
-        shouldFetchTagsSource([fixedConnectorValue, fixedRegionValue])
+        (isNewServiceEnvEntity(path as string)
+          ? shouldFetchTagsSource([serviceIdentifier])
+          : shouldFetchTagsSource([fixedConnectorValue, fixedRegionValue]))
       ) || isNil(s3BucketList?.data)
     )
   }, [template, lastQueryData, fixedConnectorValue, fixedRegionValue, s3BucketList?.data])
@@ -187,10 +190,19 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
     )
   }
 
+  const itemRenderer = React.useCallback(
+    (item: SelectOption, itemProps: IItemRendererProps) => (
+      <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={s3BucketDataLoading} />
+    ),
+    [s3BucketDataLoading]
+  )
+
   const renderBucketNameField = (): React.ReactElement | null => {
     return (
       <div className={css.verticalSpacingInput}>
-        <ExperimentalInput
+        <SelectInputSetView
+          fieldPath={`${manifestPath}.spec.store.spec.bucketName`}
+          template={template}
           name={`${path}.${manifestPath}.spec.store.spec.bucketName`}
           disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.bucketName`)}
           formik={formik}
@@ -211,14 +223,20 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
             selectProps: {
               usePortal: true,
               addClearBtn: !readonly,
-              items: getBuckets(),
-              allowCreatingNewItems: true
+              items: buckets,
+              allowCreatingNewItems: true,
+              itemRenderer,
+              noResults: (
+                <Text lineClamp={2} width={400} height={100} padding="small">
+                  {getRBACErrorMessage(fetchBucketsError as RBACError) || getString('pipeline.noBuckets')}
+                </Text>
+              )
             },
             expressions,
             allowableTypes
           }}
           useValue
-          selectItems={s3BucketOptions}
+          selectItems={buckets}
         />
       </div>
     )
@@ -270,71 +288,37 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
         </div>
       )}
 
-      <div className={css.inputFieldLayout}>
-        {isFieldRuntime(`${manifestPath}.spec.store.spec.region`, template) && (
-          <div className={css.verticalSpacingInput}>
-            <ExperimentalInput
-              formik={formik}
-              name={`${path}.${manifestPath}.spec.store.spec.region`}
-              disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.region`)}
-              multiTypeInputProps={{
-                selectProps: {
-                  usePortal: true,
-                  addClearBtn: !readonly,
-                  items: regions
-                },
-                onChange: (selected: any) => {
-                  if (fixedRegionValue !== selected.value) {
-                    resetBuckets(formik, `${path}.${manifestPath}.spec.store.spec.bucketName`)
-                  }
-                },
-                expressions,
-                allowableTypes
-              }}
-              useValue
-              selectItems={regions}
-              label={getString('regionLabel')}
-            />
-          </div>
-        )}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.region`)) ===
-          MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            className={css.configureOptions}
-            style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.store.spec.region`)}
-            type="String"
-            variableName="region"
-            showRequiredField={false}
-            showDefaultField={true}
-            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
-            onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.region`, value)
+      {isFieldRuntime(`${manifestPath}.spec.store.spec.region`, template) && (
+        <div className={css.verticalSpacingInput}>
+          <SelectInputSetView
+            fieldPath={`${manifestPath}.spec.store.spec.region`}
+            template={template}
+            formik={formik}
+            name={`${path}.${manifestPath}.spec.store.spec.region`}
+            disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.region`)}
+            multiTypeInputProps={{
+              selectProps: {
+                usePortal: true,
+                addClearBtn: !readonly,
+                items: regions
+              },
+              onChange: (selected: any) => {
+                if (fixedRegionValue !== selected.value) {
+                  resetBuckets(formik, `${path}.${manifestPath}.spec.store.spec.bucketName`)
+                }
+              },
+              expressions,
+              allowableTypes
             }}
+            useValue
+            selectItems={regions}
+            label={getString('regionLabel')}
           />
-        )}
-      </div>
-      <div className={css.inputFieldLayout}>
-        {isFieldRuntime(`${manifestPath}.spec.store.spec.bucketName`, template) && renderBucketNameField()}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.bucketName`)) ===
-          MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            className={css.configureOptions}
-            style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.store.spec.bucketName`)}
-            type="String"
-            variableName="bucketName"
-            showRequiredField={false}
-            showDefaultField={true}
-            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
-            onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.bucketName`, value)
-            }}
-          />
-        )}
-      </div>
+        </div>
+      )}
+
+      {isFieldRuntime(`${manifestPath}.spec.store.spec.bucketName`, template) && renderBucketNameField()}
+
       {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
         <div className={css.verticalSpacingInput}>
           <List

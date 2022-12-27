@@ -15,8 +15,10 @@ import {
   useNestedAccordion,
   ButtonVariation,
   ButtonSize,
-  AllowedTypes
+  AllowedTypes,
+  Popover
 } from '@harness/uicore'
+import { PopoverInteractionKind } from '@blueprintjs/core'
 import { Formik, FieldArray } from 'formik'
 import { v4 as uuid } from 'uuid'
 import cx from 'classnames'
@@ -297,12 +299,16 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                               type={[]}
                             />
                           ) : variable.type === VariableType.Secret ? (
-                            <MultiTypeSecretInput
-                              small
-                              name={`variables[${index}].value`}
-                              label=""
-                              disabled={readonly}
-                            />
+                            <Popover interactionKind={PopoverInteractionKind.HOVER} boundary="viewport">
+                              <div className={css.secretWidth}>
+                                <MultiTypeSecretInput
+                                  small
+                                  name={`variables[${index}].value`}
+                                  label=""
+                                  disabled={readonly}
+                                />
+                              </div>
+                            </Popover>
                           ) : (
                             <FormInput.MultiTextInput
                               className="variableInput"

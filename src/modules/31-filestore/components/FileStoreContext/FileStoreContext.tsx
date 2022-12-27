@@ -5,12 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { createContext, useState, useCallback } from 'react'
+import React, { createContext, useState, useCallback, useEffect } from 'react'
 import type { FileStoreNodeDTO as NodeDTO, FileDTO, NGTag } from 'services/cd-ng'
 import { useGetFolderNodes } from 'services/cd-ng'
-import { FILE_VIEW_TAB, FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
+import { FILE_VIEW_TAB, FileStoreNodeTypes, SORT_TYPE } from '@filestore/interfaces/FileStore'
 import { FILE_STORE_ROOT } from '@filestore/utils/constants'
-import type { FileUsage } from '@filestore/interfaces/FileStore'
+import type { FileUsage, SortType, NodeSortDTO } from '@filestore/interfaces/FileStore'
+import { sortNodesByType } from '@filestore/utils/FileStoreUtils'
+
 import { ScopedObjectDTO, useFileStoreScope } from '../../common/useFileStoreScope/useFileStoreScope'
 
 export interface FileContentDTO extends FileDTO {
@@ -30,6 +32,7 @@ export interface FileStoreNodeDTO extends NodeDTO {
   path?: string
   initialContent?: string
   savedFileUsage?: boolean
+  isOpen?: boolean
 }
 
 export interface FileStoreContextState {
@@ -58,6 +61,14 @@ export interface FileStoreContextState {
   queryParams: ScopedObjectDTO
   fileUsage?: FileUsage
   handleSetIsUnsaved?: (status: boolean) => void
+  closedNode: string
+  handleClosedNode: (nodeId: string, filter: boolean) => void
+  isClosedNode: (nodeId: string) => boolean
+  sortNode: NodeSortDTO[]
+  updateSortNode: (node: NodeSortDTO) => void
+  getSortTypeById: (nodeId: string, nodes: NodeSortDTO[]) => SortType
+  globalSort: SortType
+  updateGlobalSort: (sortType: SortType) => void
 }
 
 export interface GetNodeConfig {
@@ -85,18 +96,24 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
     scope,
     isModalView
   })
+  const [fileStore, setFileStore] = useState<FileStoreNodeDTO[] | undefined>()
   const [tempNodes, setTempNodes] = useState<FileStoreNodeDTO[]>([])
   const [unsavedNodes, setUnsavedNodes] = useState<FileStoreNodeDTO[]>([])
   const [deletedNode, setDeletedNodes] = useState<string>('')
   const [activeTab, setActiveTab] = useState<FILE_VIEW_TAB>(FILE_VIEW_TAB.DETAILS)
   const [loading, setLoading] = useState<boolean>(false)
+  const [closedNode, setClosedNode] = useState<string>('')
+  const [globalSort, setGlobalSort] = useState<SortType>(SORT_TYPE.ALPHABETICAL_FILE_TYPE)
+  const [sortNode, setSortNode] = useState<NodeSortDTO[]>([
+    { identifier: FILE_STORE_ROOT, sortType: SORT_TYPE.ALPHABETICAL_FILE_TYPE }
+  ])
+
   const [currentNode, setCurrentNodeState] = useState<FileStoreNodeDTO>({
     identifier: FILE_STORE_ROOT,
     name: FILE_STORE_ROOT,
     type: FileStoreNodeTypes.FOLDER,
     children: []
   } as FileStoreNodeDTO)
-  const [fileStore, setFileStore] = useState<FileStoreNodeDTO[] | undefined>()
 
   const { mutate: getFolderNodes, loading: isGettingFolderNodes } = useGetFolderNodes({
     queryParams: {
@@ -105,9 +122,61 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
     }
   })
 
+  const updateGlobalSort = (sortType: SortType): void => {
+    setGlobalSort(sortType)
+  }
+
+  useEffect(() => {
+    setSortNode([
+      ...sortNode.map((sort: NodeSortDTO) => ({
+        ...sort,
+        sortType: globalSort
+      }))
+    ])
+    setFileStore(sortNodesByType(fileStore as FileStoreNodeDTO[], globalSort))
+  }, [globalSort])
+
+  const updateSortNode = (node: NodeSortDTO): void => {
+    const nodeHasSortType = sortNode.find((item: NodeSortDTO) => item.identifier === node.identifier)
+    if (nodeHasSortType) {
+      return setSortNode([
+        ...sortNode.map((item: NodeSortDTO) => {
+          if (item.identifier === node.identifier) {
+            return {
+              ...item,
+              sortType: node.sortType
+            }
+          }
+          return item
+        })
+      ])
+    }
+    setSortNode([...sortNode, node])
+  }
+
+  const getSortTypeById = (nodeId: string, nodes: NodeSortDTO[]): SortType => {
+    const assignedSortType = nodes.find((item: NodeSortDTO) => item.identifier === nodeId)
+    return assignedSortType ? assignedSortType.sortType : globalSort
+  }
+
   const setCurrentNode = (node: FileStoreNodeDTO): void => {
     setCurrentNodeState(node)
   }
+
+  const handleClosedNode = (id: string, filter = false): void => {
+    if (filter && id !== FILE_STORE_ROOT) {
+      setClosedNode('')
+      return
+    }
+    setClosedNode(id)
+  }
+
+  const isClosedNode = React.useCallback(
+    (nodeIdentifier: string): boolean => {
+      return closedNode === nodeIdentifier
+    },
+    [closedNode]
+  )
 
   const updateCurrentNode = (node: FileStoreNodeDTO): void => {
     setCurrentNode(node)
@@ -162,13 +231,16 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
     getFolderNodes({ ...nodeParams, children: undefined }).then(response => {
       if (nodeParams?.identifier === FILE_STORE_ROOT) {
         setFileStore(
-          response?.data?.children?.map((node: FileStoreNodeDTO) => {
-            return {
-              ...node,
-              parentIdentifier: FILE_STORE_ROOT,
-              parentName: FILE_STORE_ROOT
-            }
-          })
+          sortNodesByType(
+            response?.data?.children?.map((node: FileStoreNodeDTO) => {
+              return {
+                ...node,
+                parentIdentifier: FILE_STORE_ROOT,
+                parentName: FILE_STORE_ROOT
+              }
+            }) as FileStoreNodeDTO[],
+            getSortTypeById(FILE_STORE_ROOT, sortNode)
+          )
         )
       }
       if (response?.data) {
@@ -246,7 +318,15 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
         unsavedNodes,
         setUnsavedNodes,
         fileUsage,
-        handleSetIsUnsaved
+        handleSetIsUnsaved,
+        closedNode,
+        handleClosedNode,
+        isClosedNode,
+        updateSortNode,
+        getSortTypeById,
+        sortNode,
+        globalSort,
+        updateGlobalSort
       }}
     >
       {props.children}

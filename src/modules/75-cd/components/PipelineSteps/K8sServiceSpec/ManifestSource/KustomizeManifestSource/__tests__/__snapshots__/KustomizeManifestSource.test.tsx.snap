@@ -74,6 +74,7 @@ exports[`KustomizeManifestSource tests Should match snapshot 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -143,6 +144,7 @@ exports[`KustomizeManifestSource tests Should match snapshot 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -218,6 +220,7 @@ exports[`KustomizeManifestSource tests Should match snapshot 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -711,6 +714,7 @@ exports[`KustomizeManifestSource tests Should match snapshot with fromTrigger 1`
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -780,6 +784,7 @@ exports[`KustomizeManifestSource tests Should match snapshot with fromTrigger 1`
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -855,6 +860,7 @@ exports[`KustomizeManifestSource tests Should match snapshot with fromTrigger 1`
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"

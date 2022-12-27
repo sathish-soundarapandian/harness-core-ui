@@ -48,7 +48,7 @@ describe('Unit tests for AnomaliesCard', () => {
     const { container, getByText } = render(<WrapperComponent {...initialProps} />)
     expect(container).toMatchSnapshot()
 
-    expect(getByText('cv.monitoredServices.serviceHealth.anamolies: 0')).toBeDefined()
+    expect(getByText('cv.monitoredServices.serviceHealth.anamolies 0')).toBeDefined()
     expect(getByText('cv.monitoredServices.serviceHealth.lowestHealthScore')).toBeDefined()
     expect(getByText('pipeline.verification.analysisTab.metrics 0')).toBeDefined()
     expect(getByText('pipeline.verification.analysisTab.logs 0')).toBeDefined()
@@ -84,7 +84,7 @@ describe('Unit tests for AnomaliesCard', () => {
         showOnlyChanges: true,
         changeTimelineSummary: [
           {
-            key: ChangeSourceTypes.Deployments,
+            key: ChangeSourceTypes.Deployment,
             count: 0,
             message: ''
           }
@@ -112,7 +112,7 @@ describe('Unit tests for AnomaliesCard', () => {
         showOnlyChanges: true,
         changeTimelineSummary: [
           {
-            key: ChangeSourceTypes.Deployments,
+            key: ChangeSourceTypes.Deployment,
             count: 10,
             message: 'MESSAGE'
           }

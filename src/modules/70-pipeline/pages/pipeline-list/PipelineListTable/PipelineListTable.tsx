@@ -10,6 +10,7 @@ import type { Column } from 'react-table'
 import { Text, TableV2, Icon, Layout } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
+import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
@@ -21,14 +22,15 @@ import {
   MenuCell,
   PipelineNameCell,
   RecentExecutionsCell,
-  LastModifiedCell
+  LastModifiedCell,
+  RunPipelineCell
 } from './PipelineListCells'
 import { getRouteProps } from '../PipelineListUtils'
 import css from './PipelineListTable.module.scss'
 
 export interface PipelineListColumnActions {
-  onDeletePipeline: (commitMsg: string, pipeline: PMSPipelineSummaryResponse) => Promise<void>
-  onClonePipeline: (pipeline: PMSPipelineSummaryResponse) => void
+  onDeletePipeline?: (commitMsg: string, pipeline: PMSPipelineSummaryResponse) => Promise<void>
+  onClonePipeline?: (pipeline: PMSPipelineSummaryResponse) => void
 }
 
 export interface PipelineListTableProps extends PipelineListColumnActions {
@@ -36,6 +38,7 @@ export interface PipelineListTableProps extends PipelineListColumnActions {
   gotoPage: (pageNumber: number) => void
   setSortBy: (sortBy: string[]) => void
   sortBy: string[]
+  minimal?: boolean
 }
 
 export function PipelineListTable({
@@ -44,7 +47,8 @@ export function PipelineListTable({
   onDeletePipeline,
   onClonePipeline,
   sortBy,
-  setSortBy
+  setSortBy,
+  minimal
 }: PipelineListTableProps): React.ReactElement {
   const history = useHistory()
   const { getString } = useStrings()
@@ -73,18 +77,16 @@ export function PipelineListTable({
       {
         Header: getString('filters.executions.pipelineName'),
         accessor: 'name',
-        width: '25%',
         Cell: PipelineNameCell,
         serverSortProps: getServerSortProps('name')
       },
       {
         Header: getString('pipeline.codeSource'),
         accessor: 'storeType',
-        width: '12%',
         disableSortBy: true,
         Cell: CodeSourceCell
       },
-      {
+      !minimal && {
         Header: (
           <div className={css.recentExecutionHeader}>
             <Layout.Horizontal spacing="xsmall" className={css.latestExecutionText} flex={{ alignItems: 'center' }}>
@@ -98,39 +100,41 @@ export function PipelineListTable({
           </div>
         ),
         accessor: 'recentExecutions',
-        width: '28%',
         Cell: RecentExecutionsCell,
         disableSortBy: true
       },
       {
         Header: getString('pipeline.lastExecution'),
         accessor: 'executionSummaryInfo.lastExecutionTs',
-        width: '20%',
         Cell: LastExecutionCell,
         serverSortProps: getServerSortProps('executionSummaryInfo.lastExecutionTs')
       },
-      {
+      !minimal && {
         Header: getString('common.lastModified'),
         accessor: 'lastUpdatedAt',
-        width: '12%',
         Cell: LastModifiedCell,
         serverSortProps: getServerSortProps('lastUpdatedAt')
       },
-      {
+      !minimal && {
         Header: '',
         accessor: 'menu',
-        width: '3%',
         Cell: MenuCell,
         disableSortBy: true,
         onDeletePipeline,
         onClonePipeline
+      },
+      minimal && {
+        Header: '',
+        accessor: 'runPipeline',
+        Cell: RunPipelineCell,
+        disableSortBy: true
       }
-    ] as unknown as Column<PMSPipelineSummaryResponse>[]
-  }, [currentOrder, currentSort])
+    ].filter(Boolean) as unknown as Column<PMSPipelineSummaryResponse>[]
+  }, [currentOrder, currentSort, minimal])
 
   return (
     <TableV2
-      className={css.table}
+      className={cx(css.table, minimal && css.minimal)}
       columns={columns}
       data={content}
       pagination={{

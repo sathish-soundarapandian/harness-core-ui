@@ -158,6 +158,7 @@ exports[`Barrier tests Edit stage- readonly: edit stage readonly 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -264,6 +265,7 @@ exports[`Barrier tests Edit stage- readonly: edit stage readonly 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -455,6 +457,7 @@ exports[`Barrier tests Edit view with runtime input values 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -567,6 +570,7 @@ exports[`Barrier tests Edit view with runtime input values 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

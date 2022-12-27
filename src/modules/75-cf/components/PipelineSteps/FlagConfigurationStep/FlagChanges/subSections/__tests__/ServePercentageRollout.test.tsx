@@ -126,44 +126,6 @@ describe('ServePercentageRollout', () => {
       })
     })
   })
-
-  test('it should automatically distribute weight between new passed variations', async () => {
-    const variations1: Variation[] = [
-      { name: 'Test 1', identifier: 'test1', value: 'test1' },
-      { name: 'Test 2', identifier: 'test2', value: 'test2' }
-    ]
-
-    const variations2: Variation[] = [
-      { name: 'Test 3', identifier: 'test3', value: 'test3' },
-      { name: 'Test 4', identifier: 'test4', value: 'test4' },
-      { name: 'Test 5', identifier: 'test5', value: 'test5' }
-    ]
-
-    const variations3: Variation[] = [
-      { name: 'Test 6', identifier: 'test6', value: 'test6' },
-      { name: 'Test 7', identifier: 'test7', value: 'test7' }
-    ]
-
-    const setFieldMock = jest.fn()
-    const { rerender } = renderComponent({ variations: variations1, setField: setFieldMock })
-
-    setFieldMock.mockClear()
-    rerender(<Subject variations={variations2} setField={setFieldMock} />)
-
-    await waitFor(() => {
-      expect(setFieldMock).toHaveBeenCalledWith(expect.stringContaining(`variations[0]`), 33)
-      expect(setFieldMock).toHaveBeenCalledWith(expect.stringContaining(`variations[1]`), 33)
-      expect(setFieldMock).toHaveBeenCalledWith(expect.stringContaining(`variations[2]`), 34)
-    })
-
-    setFieldMock.mockClear()
-    rerender(<Subject variations={variations3} setField={setFieldMock} />)
-
-    await waitFor(() => {
-      expect(setFieldMock).toHaveBeenCalledWith(expect.stringContaining(`variations[0]`), 50)
-      expect(setFieldMock).toHaveBeenCalledWith(expect.stringContaining(`variations[1]`), 50)
-    })
-  })
 })
 
 describe('servePercentageRolloutSchema', () => {

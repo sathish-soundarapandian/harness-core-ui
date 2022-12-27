@@ -63,33 +63,40 @@ export default function ProjectsSideNav(): React.ReactElement {
               onSelect={data => {
                 updateAppStore({ selectedProject: data })
                 // changing project
-                history.push(
-                  compile(routeMatch.path)({
-                    ...routeMatch.params,
-                    projectIdentifier: data.identifier,
-                    orgIdentifier: data.orgIdentifier
-                  })
-                )
+                if (NEW_LEFT_NAVBAR_SETTINGS) {
+                  history.push(
+                    routes.toProjectDetails({
+                      accountId: params.accountId,
+                      orgIdentifier: data.orgIdentifier || '',
+                      projectIdentifier: data.identifier
+                    })
+                  )
+                } else {
+                  history.push(
+                    compile(routeMatch.path)({
+                      ...routeMatch.params,
+                      projectIdentifier: data.identifier,
+                      orgIdentifier: data.orgIdentifier
+                    })
+                  )
+                }
               }}
             />
           </Container>
-          <SidebarLink label={getString('overview')} to={routes.toProjectDetails(projectDetailsParams)} />
-          {NEW_LEFT_NAVBAR_SETTINGS && (
-            <>
-              <SidebarLink
-                className={css.sidebarlink}
-                label={getString('common.pipelineExecution')}
-                to={routes.toDeployments(projectDetailsParams)}
-              />
-              <SidebarLink
-                className={css.sidebarlink}
-                label={getString('pipelines')}
-                to={routes.toPipelines(projectDetailsParams)}
-              />
-              <SidebarLink label={getString('services')} to={routes.toServices(projectDetailsParams)} />
-              <SidebarLink label={getString('environments')} to={routes.toEnvironment(projectDetailsParams)} />
-            </>
-          )}
+          <Layout.Vertical spacing="small">
+            <SidebarLink label={getString('overview')} to={routes.toProjectDetails(projectDetailsParams)} />
+            {NEW_LEFT_NAVBAR_SETTINGS && (
+              <>
+                <SidebarLink
+                  label={getString('common.pipelineExecution')}
+                  to={routes.toDeployments(projectDetailsParams)}
+                />
+                <SidebarLink label={getString('pipelines')} to={routes.toPipelines(projectDetailsParams)} />
+                <SidebarLink label={getString('services')} to={routes.toServices(projectDetailsParams)} />
+                <SidebarLink label={getString('environments')} to={routes.toEnvironment(projectDetailsParams)} />
+              </>
+            )}
+          </Layout.Vertical>
           <ProjectSetupMenu defaultExpanded={NEW_LEFT_NAVBAR_SETTINGS} />
         </Container>
       )}

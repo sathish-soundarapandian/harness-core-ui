@@ -17,6 +17,7 @@ export interface ArtifactSourceRenderProps extends KubernetesArtifactsProps {
   pipelineIdentifier: string
   repoIdentifier?: string
   branch?: string
+  useArtifactV1Data?: boolean
 }
 
 export abstract class ArtifactSourceBase<T> {

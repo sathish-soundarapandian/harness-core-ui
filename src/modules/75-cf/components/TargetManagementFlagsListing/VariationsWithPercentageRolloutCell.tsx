@@ -13,6 +13,7 @@ import { useStrings } from 'framework/strings'
 import type { Feature } from 'services/cf'
 import { CFVariationColors, PERCENTAGE_ROLLOUT_VALUE } from '@cf/constants'
 import PercentageRollout from '@cf/components/PercentageRollout/PercentageRollout'
+import usePercentageRolloutEqualiser from '@cf/hooks/usePercentageRolloutEqualiser'
 
 import css from './VariationsCell.module.scss'
 
@@ -67,6 +68,13 @@ const VariationsWithPercentageRolloutCell: FC<VariationsWithPercentageRolloutCel
     () => get(errors, `${fieldPrefix}.percentageRollout.variations`, '') as string,
     [errors, fieldPrefix]
   )
+
+  const variationWeightFormIds = useMemo(
+    () => flag.variations.map((_, index) => `${fieldPrefix}.percentageRollout.variations[${index}].weight`),
+    [fieldPrefix, flag.variations]
+  )
+
+  usePercentageRolloutEqualiser(variationWeightFormIds, rowValues?.variation === PERCENTAGE_ROLLOUT_VALUE)
 
   return (
     <fieldset disabled={disabled} className={css.wrapper}>

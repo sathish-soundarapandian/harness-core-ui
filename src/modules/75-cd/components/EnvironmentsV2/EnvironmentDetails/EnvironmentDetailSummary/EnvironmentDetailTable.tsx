@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import type { GetDataError } from 'restful-react'
 import cx from 'classnames'
 import { defaultTo, isEqual, isUndefined, noop } from 'lodash-es'
@@ -179,6 +179,7 @@ export const RenderArtifactVersion: Renderer<CellProps<TableRowData>> = ({
     </HTMLTable>
   )
 
+  const showBadge = latest && tableType === TableType.SUMMARY
   return artifactVersion ? (
     <Popover
       interactionKind="hover"
@@ -188,13 +189,12 @@ export const RenderArtifactVersion: Renderer<CellProps<TableRowData>> = ({
         preventOverflow: { boundariesElement: 'viewport' }
       }}
     >
-      <Layout.Horizontal flex={{ alignItems: 'center' }} className={cx({ [css.latestBadgeStyle]: latest })}>
-        {latest && <Container className={css.latestArtifact} />}
+      <Layout.Horizontal flex={{ alignItems: 'center' }}>
+        {showBadge && <Container className={cx(css.latestArtifact, css.marginBottom1)} />}
         <Text
           style={{
-            maxWidth: tableType === TableType.SUMMARY ? (latest ? '62px' : '70px') : '125px',
-            paddingRight: 'var(--spacing-3)',
-            marginLeft: tableType === TableType.FULL && !latest ? 14 : ''
+            maxWidth: tableType === TableType.SUMMARY ? (latest ? '62px' : '70px') : '100%',
+            paddingRight: 'var(--spacing-3)'
           }}
           font={{ size: 'small' }}
           lineClamp={1}
@@ -210,6 +210,14 @@ export const RenderArtifactVersion: Renderer<CellProps<TableRowData>> = ({
   ) : (
     <></>
   )
+}
+
+export const RenderLatestBadge: Renderer<CellProps<TableRowData>> = ({
+  row: {
+    original: { latest }
+  }
+}) => {
+  return latest ? <Container className={css.latestArtifact} /> : <></>
 }
 
 const RenderInstanceCount: Renderer<CellProps<TableRowData>> = ({
@@ -258,7 +266,13 @@ const columnsProperties = {
   service: {
     width: {
       summary: '0%',
-      full: '20%'
+      full: '18%'
+    }
+  },
+  latestBadge: {
+    width: {
+      summary: '0%',
+      full: '2%'
     }
   },
   artifacts: {
@@ -308,20 +322,42 @@ export const EnvironmentDetailTable = (
     resetSearch
   } = props
   const [selectedRow, setSelectedRow] = React.useState<string>()
+  const [order, setOrder] = React.useState('default')
+  const inverseSorted = [...(data || [])]
+  if (order == 'desc') {
+    inverseSorted?.sort((a: InstanceGroupedByService, b: InstanceGroupedByService) => {
+      const firstServiceName = defaultTo(a.serviceName, '')
+      const secondServiceName = defaultTo(b.serviceName, '')
+      return secondServiceName.localeCompare(firstServiceName)
+    })
+  }
+
+  useEffect(() => {
+    setOrder('default')
+  }, [data])
 
   const { getString } = useStrings()
   const tableData: TableRowData[] = useMemo(() => {
-    return getFullViewTableData(data, tableType, serviceFilter)
-  }, [data, serviceFilter, tableType])
+    return getFullViewTableData(order === 'desc' ? inverseSorted : data, tableType, serviceFilter)
+  }, [data, order, serviceFilter, tableType])
 
   const columns: Column<TableRowData>[] = useMemo(() => {
     const columnsArray = [
       {
-        Header: getString('service'),
+        Header: (e: any) => {
+          e.column.isSorted ? (e.column.isSortedDesc ? setOrder('asc') : setOrder('desc')) : null
+          return getString('service')
+        },
         id: 'service',
         width: columnsProperties.service.width[tableType],
         Cell: RenderService,
         accessor: (row: TableRowData) => row.serviceId
+      },
+      {
+        Header: '',
+        id: 'latestBadge',
+        width: columnsProperties.latestBadge.width[tableType],
+        Cell: RenderLatestBadge
       },
       {
         Header: getString('cd.serviceDashboard.artifact'),
@@ -390,7 +426,9 @@ export const EnvironmentDetailTable = (
       artifactFilter: defaultTo(tableData[0].artifactVersion, ''),
       serviceFilter: defaultTo(tableData[0].serviceId, '')
     })
-    setSelectedRow(tableData[0] ? JSON.stringify(tableData[0]) + 0 : undefined)
+    setSelectedRow(
+      tableData[0] ? JSON.stringify(tableData[0]) + tableData[0].serviceId + tableData[0].artifactVersion : undefined
+    )
   }
 
   return (
@@ -401,16 +439,20 @@ export const EnvironmentDetailTable = (
       sortable={tableType === TableType.FULL}
       onRowClick={
         tableType === TableType.FULL
-          ? (row, index) => {
+          ? row => {
               setRowClickFilter({
                 artifactFilter: defaultTo(row.artifactVersion, ''),
                 serviceFilter: defaultTo(row.serviceId, '')
               })
-              setSelectedRow(JSON.stringify(row) + index)
+              setSelectedRow(JSON.stringify(row) + row.serviceId + row.artifactVersion)
             }
           : undefined
       }
-      getRowClassName={row => (isEqual(JSON.stringify(row.original) + row.index, selectedRow) ? css.selected : '')}
+      getRowClassName={row =>
+        isEqual(JSON.stringify(row.original) + row.original.serviceId + row.original.artifactVersion, selectedRow)
+          ? css.selected
+          : ''
+      }
     />
   )
 }

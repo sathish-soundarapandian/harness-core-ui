@@ -307,7 +307,7 @@ export default function ScheduledTriggerWizard(
       pipeline: newPipeline,
       originalPipeline,
       resolvedPipeline,
-      pipelineBranchName: '',
+      pipelineBranchName: isNewGitSyncRemotePipeline ? branch : '',
       ...getDefaultExpressionBreakdownValues(scheduleTabsId.MINUTES)
     }
   }

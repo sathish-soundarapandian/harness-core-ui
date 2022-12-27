@@ -446,6 +446,7 @@ export const DelegateListingItem: React.FC<DelegateProps> = props => {
           onDelegateClick(defaultTo(row.delegateGroupIdentifier, ''))
         }}
         renderRowSubComponent={renderRowSubComponent}
+        autoResetExpanded={false}
       />
     </Layout.Horizontal>
   )

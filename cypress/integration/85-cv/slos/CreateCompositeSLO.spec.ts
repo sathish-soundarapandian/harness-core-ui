@@ -22,7 +22,13 @@ import {
   sloListPostResponseRolling7Days,
   sloListCallResponseWithCompositeSLO,
   getServiceLevelObjectiveV2Response,
-  getServiceLevelObjectiveV2
+  getServiceLevelObjectiveV2,
+  getAccountLevelUserJourneysCall,
+  accountLevelListSLOsCall,
+  accountLevelSLOListResponse,
+  createSloV2,
+  createCompositeSLOPayload,
+  createProjectLevelCompositeSLOPayload
 } from '../../../support/85-cv/slos/constants'
 
 describe('Create Composite SLO', () => {
@@ -58,6 +64,7 @@ describe('Create Composite SLO', () => {
   })
 
   it('should be able to create SLO by filling all the details.', () => {
+    cy.intercept('POST', createSloV2).as('saveSLO')
     cy.intercept('POST', listSLOsCall, sloListPostResponseRolling7Days).as('sloListPostResponseRolling7Days')
     cy.contains('p', 'SLOs').click()
     cy.contains('span', 'Create Composite SLO').click()
@@ -82,7 +89,14 @@ describe('Create Composite SLO', () => {
 
     cy.contains('span', 'Next').click({ force: true })
     cy.contains('span', 'Save').click({ force: true })
-    cy.contains('span', 'Composite SLO created successfully').should('be.visible')
+    cy.wait('@saveSLO').then(data => {
+      // match the payload to verify we submit correct payload
+      cy.debug()
+      expect(JSON.stringify({ ...data.request.body })).equal(
+        JSON.stringify({ ...createProjectLevelCompositeSLOPayload })
+      )
+    })
+    cy.contains('span', 'Composite SLO created successfully').scrollIntoView().should('be.visible')
   })
 
   it('should render all the edit steps and update the SLO', () => {
@@ -184,5 +198,79 @@ describe('Create Composite SLO', () => {
       .click()
     cy.contains('span', 'Save').click({ force: true })
     cy.get('.bp3-dialog').findByRole('button', { name: /Ok/i }).click()
+  })
+})
+
+describe('Create account level SLO', () => {
+  beforeEach(() => {
+    cy.on('uncaught:exception', () => {
+      // returning false here prevents Cypress from
+      // failing the test
+      return false
+    })
+    cy.login('test', 'test')
+    cy.visitPageAssertion('[class^=SideNav-module_main]')
+    cy.contains('span', 'Service Reliability').click()
+    cy.intercept('GET', getAccountLevelUserJourneysCall, listUserJourneysCallResponse)
+  })
+  it('should be able to create SLO by filling all the details.', () => {
+    cy.intercept('POST', accountLevelListSLOsCall, accountLevelSLOListResponse).as('sloListPostResponseRolling7Days')
+    cy.intercept('POST', createSloV2).as('saveSLO')
+    cy.contains('p', 'SLOs').click()
+    cy.contains('span', 'Create Composite SLO').click()
+    // Filling details Under Name tab for SLO creation
+    cy.fillName('SLO-1')
+    // selecting user journey
+    cy.get('div[data-testid="multiSelectService"]').click()
+    cy.contains('label', 'new-one').click({ force: true })
+
+    cy.contains('span', 'Next').click({ force: true })
+
+    // selecting condition for SLI value
+    cy.get('input[name="periodLength"]').click()
+    cy.contains('p', '7').click({ force: true })
+
+    cy.contains('span', 'Next').click({ force: true })
+
+    cy.contains('span', 'Add SLOs').click()
+    cy.wait(1000)
+    cy.findAllByRole('checkbox').eq(1).click({ force: true })
+    cy.findAllByRole('checkbox').eq(1).should('be.checked')
+    cy.findAllByRole('checkbox').eq(2).should('not.be.checked')
+    cy.findAllByRole('checkbox').eq(2).click({ force: true })
+    cy.findAllByRole('checkbox').eq(2).should('be.checked')
+    cy.findAllByRole('checkbox').eq(1).should('be.checked')
+    cy.findAllByRole('checkbox').eq(1).click({ force: true })
+    cy.findAllByRole('checkbox').eq(2).should('be.checked')
+    cy.findAllByRole('checkbox').eq(1).should('not.be.checked')
+    cy.findAllByRole('checkbox').eq(1).click({ force: true })
+    cy.get('[data-testid="addSloButton"]').click({ force: true })
+    cy.wait(1000)
+
+    cy.contains('span', 'Add SLOs').click()
+    cy.wait('@sloListPostResponseRolling7Days')
+    cy.wait(1000)
+    cy.findAllByRole('checkbox').eq(1).should('be.checked')
+    cy.findAllByRole('checkbox').eq(2).should('be.checked')
+    cy.get('[data-testid="addSloButton"]').click({ force: true })
+
+    cy.get('[data-icon="main-trash"]').eq(1).click()
+    cy.wait(1000)
+    cy.get('.bp3-dialog')
+      .findByRole('button', { name: /delete/i })
+      .click()
+    cy.contains('p', 'demo_composite_slo').should('not.exist')
+    cy.contains('span', 'Add SLOs').click()
+    cy.wait('@sloListPostResponseRolling7Days')
+    cy.findAllByRole('checkbox').eq(2).click({ force: true })
+    cy.get('[data-testid="addSloButton"]').click({ force: true })
+    cy.contains('span', 'Next').click({ force: true })
+    cy.contains('span', 'Save').click({ force: true })
+
+    cy.wait('@saveSLO').then(data => {
+      // match the payload to verify we submit correct payload
+      cy.debug()
+      expect(JSON.stringify({ ...data.request.body })).equal(JSON.stringify({ ...createCompositeSLOPayload }))
+    })
   })
 })

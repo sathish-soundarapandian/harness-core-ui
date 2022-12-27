@@ -20,7 +20,7 @@ export interface ModuleTagsFilterProps {
 
 const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, setPredefinedFilter }) => {
   const { getString } = useStrings()
-  const { CENG_ENABLED, CING_ENABLED, CDNG_ENABLED, CFNG_ENABLED, CUSTOM_DASHBOARD_V2, CI_TI_DASHBOARDS_ENABLED } =
+  const { CDNG_ENABLED, CENG_ENABLED, CING_ENABLED, CFNG_ENABLED, CUSTOM_DASHBOARD_V2, CI_TI_DASHBOARDS_ENABLED } =
     useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
@@ -44,7 +44,6 @@ const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, set
       )
     )
   }
-
   return (
     <>
       {renderTagsFilter(DashboardTags.HARNESS, moduleTagCss.harnessTag, 'dashboards.modules.harness', true)}

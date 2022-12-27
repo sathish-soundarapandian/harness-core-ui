@@ -11,7 +11,7 @@ import { Spinner, Tabs } from '@blueprintjs/core'
 import { Layout, Button, PageError } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import type { ApprovalInstanceResponse, ExecutionNode } from 'services/pipeline-ng'
+import type { ApprovalInstanceResponse, ExecutionNode, ExecutionGraph } from 'services/pipeline-ng'
 import { useGetApprovalInstance, ResponseApprovalInstanceResponse } from 'services/pipeline-ng'
 import { isExecutionWaiting, isExecutionFailed, isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
@@ -41,6 +41,7 @@ export interface StepExecutionTimeInfo {
 interface ApprovalTabComponentProps extends StepExecutionTimeInfo {
   approvalData: ApprovalInstanceResponse
   isWaiting: boolean
+  executionMetadata: ExecutionGraph['executionMetadata']
 }
 
 export interface BaseApprovalViewProps extends StepDetailProps {
@@ -53,7 +54,7 @@ export interface BaseApprovalViewProps extends StepDetailProps {
 }
 
 export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactElement | null {
-  const { step, mock, approvalTabComponent: ApprovalTabComponent } = props
+  const { step, mock, approvalTabComponent: ApprovalTabComponent, executionMetadata } = props
   const approvalInstanceId = get(step, 'executableResponses[0].async.callbackIds[0]') || ''
   const manuallySelected = React.useRef(false)
   const [activeTab, setActiveTab] = React.useState(ApprovalStepTab.APPROVAL)
@@ -144,7 +145,7 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
         <Tabs.Tab
           id={ApprovalStepTab.STEP_EXECUTION_INPUTS}
           title={getString('pipeline.runtimeInputs')}
-          panel={<ExecutionInputs step={step} />}
+          panel={<ExecutionInputs step={step} executionMetadata={executionMetadata} />}
         />
       ) : null}
       <Tabs.Tab
@@ -157,6 +158,7 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
             startTs={step.startTs}
             endTs={step.endTs}
             stepParameters={step.stepParameters}
+            executionMetadata={executionMetadata}
           />
         }
       />

@@ -54,17 +54,16 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const { updateQueryParams } = useUpdateQueryParams<ExecutionQueryParams>()
   const opaBasedGovernanceEnabled = useFeatureFlag(FeatureFlag.OPA_PIPELINE_GOVERNANCE)
   const { licenseInformation } = useLicenseStore()
-  const stoPipelineSecurityEnabled = licenseInformation['STO']?.status === 'ACTIVE'
+  const isSecurityEnabled = licenseInformation['STO']?.status === 'ACTIVE'
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
   const canUsePolicyEngine = useAnyEnterpriseLicense()
 
   const routeParams = { ...accountPathProps, ...executionPathProps, ...pipelineModuleParams }
   const isLogView =
     view === SavedExecutionViewTypes.LOG || (!view && initialSelectedView === SavedExecutionViewTypes.LOG)
-  const isCD = params.module === 'cd'
   const isCI = params.module === 'ci'
-  const isSTO = params.module === 'sto'
   const isCIInPipeline = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.ci
+  const isSTOInPipeline = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.sto
 
   const ciData = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.ci
     ?.ciExecutionInfoDTO as CIWebhookInfoDTO
@@ -231,7 +230,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if ((isCD || isCI || isSTO) && stoPipelineSecurityEnabled) {
+  if ((isCIInPipeline || isSTOInPipeline) && isSecurityEnabled) {
     tabList.push({
       id: TAB_ID_MAP.STO_SECURITY,
       title: (

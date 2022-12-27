@@ -21,7 +21,8 @@ import { TemplateDetails, TemplateDetailsProps } from '../TemplateDetails'
 
 const gitAppStoreValues = {
   featureFlags: {
-    NG_TEMPLATE_GITX: true
+    NG_TEMPLATE_GITX: true,
+    PIE_NG_GITX_CACHING: true
   },
   isGitSyncEnabled: false,
   isGitSimplificationEnabled: true,
@@ -192,7 +193,11 @@ describe('<TemplateDetails /> git experience', () => {
         parentEntityProjectIdentifier: 'projectId',
         parentEntityRepoName: 'repoNameTest',
         projectIdentifier: 'Templateproject',
-        versionLabel: 'v4'
+        versionLabel: 'v4',
+        repoIdentifier: undefined
+      },
+      requestOptions: {
+        headers: { 'Load-From-Cache': 'true' }
       },
       templateIdentifier: 'manjutesttemplate'
     })
@@ -218,6 +223,9 @@ describe('<TemplateDetails /> git experience', () => {
         orgIdentifier: 'default',
         projectIdentifier: 'Templateproject',
         versionLabel: 'v4'
+      },
+      requestOptions: {
+        headers: { 'Load-From-Cache': 'true' }
       },
       templateIdentifier: 'manjutesttemplate'
     })

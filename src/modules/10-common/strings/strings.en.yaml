@@ -6,6 +6,7 @@ dashboards: Dashboards
 setup: Setup
 agent: Agent
 agents: Agents
+gitopsAgents: Gitops Agents
 perModule: Per Module
 application: Application
 certificate: Certificate
@@ -40,8 +41,8 @@ harnessPlatform: 'Harness Platform'
 harnessDelegate: 'Harness Delegate'
 connectThroughPlatform: 'Connect through Harness Platform'
 connectThroughDelegate: 'Connect through a Harness Delegate'
-connectThroughPlatformInfo: 'Use this option to connect to a SaaS Git provider. Secure communication with the Git provider is done through the Harness Platform. All credentials are encrypted and stored in the Secret Manager configured in Harness.'
-connectThroughDelegateInfo: 'Use this option to connect to a Git Provider behind your corporate firewall. Secure communication with the Git provider is through a Harness Delegate you install in your environment. The Delegate securely connects to the Harness Platform and performs tasks using your repositories.'
+connectThroughPlatformInfo: 'Use this option to connect to a {{connectorType}} provider. Secure communication with the {{connectorType}} provider is done through the Harness Platform. All credentials are encrypted and stored in the Secret Manager configured in Harness.'
+connectThroughDelegateInfo: 'Use this option to connect to a {{connectorType}} Provider behind your corporate firewall. Secure communication with the {{connectorType}} provider is through a Harness Delegate you install in your environment. The Delegate securely connects to the Harness Platform and performs tasks using your repositories.'
 pipeline: Pipeline
 templateStartLabel: Start with Template
 duplicateId: 'Duplicate Identifier'
@@ -151,7 +152,7 @@ configureOptions:
   validationErrors:
     regExIsRequired: 'Regex value is required'
     defaultRegExValid: Default value should validate with regex provided
-    defaultAllowedValid: Default value should be from allowed value
+    defaultAllowedValid: Default value should be from allowed values
     regExNotValid: 'Regex value is not valid'
     jexlExpressionRequired: '{{ $.common.jexlExpression }} is required'
     minOneAllowedValue: 'Minimum one allowed value'
@@ -586,6 +587,7 @@ confirmText: Are you sure?
 paste: Paste
 artifactTag: tag
 clientId: Client Id
+filter: Filter
 filters:
   saveNewFilter: Save New Filter
   unsavedFilter: Unsaved Filter
@@ -945,6 +947,7 @@ azureConnector: Azure Connector
 environmentList: Environment List
 environmentGroup:
   label: Environment Group
+  nameWithLabel: '{{name}} (Environment Group)'
   new: New Environment Group
   createNew: Create new Environment Group
   created: Environment Group created successfully
@@ -1161,3 +1164,16 @@ timeRangeLimitWarning:
 viewAll: View all
 lastUpdatedAt: Last updated at
 tryAgain: Try Again
+reload: Reload
+recents: Recents
+favorites: Favorites
+noRecentProjects: No Recent Projects
+organizations: ORGANIZATIONS
+projects: PROJECTS
+serviceId: 'SERVICE ID'
+servicesInstances: 'SERVICE INSTANCES'
+lastDeployed: 'LAST DEPLOYED'
+licensesConsumed: 'LICENSES CONSUMED'
+downloadCSV: 'Download CSV'
+whatIsActiveService: What is an Active Service?
+noActiveServiceData: No active Service Record found

@@ -439,6 +439,42 @@ exports[`Project Page List Create Project and Close 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -472,6 +508,42 @@ exports[`Project Page List Create Project and Close 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -876,6 +948,42 @@ exports[`Project Page List Create Project and Close 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -909,6 +1017,42 @@ exports[`Project Page List Create Project and Close 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -1313,6 +1457,42 @@ exports[`Project Page List Create Project and Close 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1346,6 +1526,42 @@ exports[`Project Page List Create Project and Close 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -1715,6 +1931,42 @@ exports[`Project Page List Create Project and Close 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1748,6 +2000,42 @@ exports[`Project Page List Create Project and Close 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -2152,6 +2440,42 @@ exports[`Project Page List Create Project and Close 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2185,6 +2509,42 @@ exports[`Project Page List Create Project and Close 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -2589,6 +2949,42 @@ exports[`Project Page List Create Project and Close 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2622,6 +3018,42 @@ exports[`Project Page List Create Project and Close 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -3026,6 +3458,42 @@ exports[`Project Page List Create Project and Close 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -3059,6 +3527,42 @@ exports[`Project Page List Create Project and Close 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -3735,6 +4239,42 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -3768,6 +4308,42 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -4172,6 +4748,42 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -4205,6 +4817,42 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -4609,6 +5257,42 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -4642,6 +5326,42 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -5011,6 +5731,42 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -5044,6 +5800,42 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -5448,6 +6240,42 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -5481,6 +6309,42 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -5885,6 +6749,42 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -5918,6 +6818,42 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -6322,6 +7258,42 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -6355,6 +7327,42 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -7031,6 +8039,42 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -7064,6 +8108,42 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -7468,6 +8548,42 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -7501,6 +8617,42 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -7905,6 +9057,42 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -7938,6 +9126,42 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -8307,6 +9531,42 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -8340,6 +9600,42 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -8744,6 +10040,42 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -8777,6 +10109,42 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -9181,6 +10549,42 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -9214,6 +10618,42 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -9618,6 +11058,42 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -9651,6 +11127,42 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -10327,6 +11839,42 @@ exports[`Project Page List Whole Modal Test 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -10360,6 +11908,42 @@ exports[`Project Page List Whole Modal Test 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -10764,6 +12348,42 @@ exports[`Project Page List Whole Modal Test 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -10797,6 +12417,42 @@ exports[`Project Page List Whole Modal Test 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -11201,6 +12857,42 @@ exports[`Project Page List Whole Modal Test 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -11234,6 +12926,42 @@ exports[`Project Page List Whole Modal Test 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -11603,6 +13331,42 @@ exports[`Project Page List Whole Modal Test 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -11636,6 +13400,42 @@ exports[`Project Page List Whole Modal Test 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -12040,6 +13840,42 @@ exports[`Project Page List Whole Modal Test 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -12073,6 +13909,42 @@ exports[`Project Page List Whole Modal Test 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -12477,6 +14349,42 @@ exports[`Project Page List Whole Modal Test 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -12510,6 +14418,42 @@ exports[`Project Page List Whole Modal Test 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>
@@ -12914,6 +14858,42 @@ exports[`Project Page List Whole Modal Test 1`] = `
                               </span>
                             </span>
                           </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -12947,6 +14927,42 @@ exports[`Project Page List Whole Modal Test 1`] = `
                                   tabindex="0"
                                 >
                                   +
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                          >
+                            <span
+                              class="bp3-popover-wrapper Avatar--avatarPopOver"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="Avatar--AvatarInner"
+                                  style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                                    data-icon="user"
+                                  >
+                                    <svg
+                                      fill="currentColor"
+                                      height="10"
+                                      viewBox="0 0 61 73"
+                                      width="10"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        clip-rule="evenodd"
+                                        d="M18.001 17.512c0-6.732 5.458-12.19 12.19-12.19 6.732 0 12.19 5.458 12.19 12.19 0 6.732-5.458 12.19-12.19 12.19-6.732 0-12.19-5.458-12.19-12.19zM30.191.522c-9.383 0-16.99 7.607-16.99 16.99 0 5.651 2.76 10.659 7.005 13.747L.466 68.8a2.4 2.4 0 002.123 3.517h55.206a2.4 2.4 0 002.105-3.552L39.608 31.656c4.565-3.046 7.573-8.244 7.573-14.144 0-9.383-7.607-16.99-16.99-16.99zm-5.744 32.984a16.96 16.96 0 005.744.996c1.77 0 3.476-.27 5.08-.773l18.476 33.787H6.563l17.884-34.01z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
                                 </div>
                               </span>
                             </span>

@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty, get } from 'lodash-es'
+import { isEmpty, get, defaultTo } from 'lodash-es'
 import { Icon, Layout, Text } from '@harness/uicore'
 import { Intent, Color } from '@harness/design-system'
 import { NodeRunInfo, useGetBarriersExecutionInfo } from 'services/pipeline-ng'
@@ -144,9 +144,10 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
       when: NodeRunInfo
     }
   }): JSX.Element => {
+    const whenCondition = defaultTo(popoverData?.when, (popoverData?.data as any)?.when)
     return (
       <HoverCard data={popoverData}>
-        {popoverData?.when && <ConditionalExecutionTooltipWrapper data={popoverData.when} mode={Modes.STAGE} />}
+        {whenCondition && <ConditionalExecutionTooltipWrapper data={whenCondition} mode={Modes.STAGE} />}
         {barrierSupportedStageTypes.indexOf(get(popoverData, 'data.nodeType', '')) !== -1 && (
           <CDInfo barrier={{ barrierInfoLoading, barrierData: barrierInfoData }} data={popoverData} />
         )}

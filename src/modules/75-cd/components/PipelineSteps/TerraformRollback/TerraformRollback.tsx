@@ -65,6 +65,7 @@ const setInitialValues = (data: TFRollbackData): TFRollbackData => {
   return {
     ...data,
     spec: {
+      ...data.spec,
       provisionerIdentifier: data?.spec?.provisionerIdentifier
     }
   }

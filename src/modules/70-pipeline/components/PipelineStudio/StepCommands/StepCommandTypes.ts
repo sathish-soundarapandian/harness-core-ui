@@ -25,7 +25,8 @@ export enum AdvancedPanels {
   FailureStrategy = 'failureStrategy',
   DelegateSelectors = 'delegateSelectors',
   ConditionalExecution = 'conditionalExecution',
-  LoopingStrategy = 'loopingStrategy'
+  LoopingStrategy = 'loopingStrategy',
+  CommandFlags = 'commandFlags'
 }
 
 export enum StepCommandsViews {
@@ -73,4 +74,5 @@ export type Values = StepOrStepGroupOrTemplateStepData & {
   failureStrategies?: FailureStrategyConfig[]
   template?: TemplateLinkConfig
   strategy?: any
+  commandFlags?: any
 }

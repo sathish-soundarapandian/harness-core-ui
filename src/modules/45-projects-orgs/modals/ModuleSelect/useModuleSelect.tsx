@@ -250,7 +250,6 @@ export const useModuleSelectModal = ({
     }
   }
   const infoCards: InfoCards[] = []
-
   if (CDNG_ENABLED) {
     infoCards.push({
       name: ModuleName.CD

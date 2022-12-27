@@ -7,6 +7,7 @@
 
 import React, { useMemo, useState } from 'react'
 import { Drawer, Intent } from '@blueprintjs/core'
+import cx from 'classnames'
 import { Button, useConfirmationDialog } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
@@ -17,7 +18,8 @@ import css from './useDrawerHook.module.scss'
 export const useDrawer = ({
   createHeader,
   createDrawerContent,
-  drawerOptions
+  drawerOptions,
+  className
 }: UseDrawerPropsInterface): UseDrawerInterface => {
   const { getString } = useStrings()
   const [drawerContentProps, setDrawerContentProps] = useState({})
@@ -43,7 +45,7 @@ export const useDrawer = ({
     () => (
       <>
         <Drawer {...parsedOptions}>
-          <div className={css.formFullheight}>{createDrawerContent(drawerContentProps)}</div>
+          <div className={cx(css.formFullheight, className)}>{createDrawerContent(drawerContentProps)}</div>
         </Drawer>
         <Button
           minimal

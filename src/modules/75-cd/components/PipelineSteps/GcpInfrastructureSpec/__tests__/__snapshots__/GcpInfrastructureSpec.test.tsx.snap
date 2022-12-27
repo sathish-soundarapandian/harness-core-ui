@@ -82,6 +82,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view for inputse
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -194,6 +195,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view for inputse
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -274,6 +276,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view for inputse
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -354,6 +357,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view for inputse
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -540,6 +544,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with empty 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -645,6 +650,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with empty 
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -717,6 +723,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with empty 
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -878,6 +885,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with runtim
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -989,6 +997,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with runtim
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -1099,6 +1108,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with runtim
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -1364,6 +1374,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with values
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1485,6 +1496,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with values
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -1557,6 +1569,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with values
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"

@@ -79,20 +79,12 @@ export const ConditionRow = ({
         className={css.operatorContainer}
         items={mockOperators}
         name={operatorKey}
-        label=""
         placeholder={getString('pipeline.operatorPlaceholder')}
-        onChange={() => {
-          formikProps.setFieldTouched(valueKey, true)
-        }}
       />
       <FormInput.Text
         name={valueKey}
         style={{ alignSelf: operatorError ? 'baseline' : 'center' }}
         className={css.textContainer}
-        label=""
-        onChange={() => {
-          formikProps.setFieldTouched(operatorKey, true)
-        }}
         placeholder={
           inNotInArr.includes(operatorValue)
             ? inNotInPlaceholder

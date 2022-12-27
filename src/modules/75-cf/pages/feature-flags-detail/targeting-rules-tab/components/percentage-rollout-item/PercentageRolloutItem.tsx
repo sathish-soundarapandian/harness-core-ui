@@ -7,8 +7,9 @@
 
 import { FontVariation } from '@harness/design-system'
 import { Container, Text, Button, SelectOption } from '@harness/uicore'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useMemo } from 'react'
 import PercentageRollout from '@cf/components/PercentageRollout/PercentageRollout'
+import usePercentageRolloutEqualiser from '@cf/hooks/usePercentageRolloutEqualiser'
 import type { Segment, Variation } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import type { VariationPercentageRollout } from '../../types'
@@ -34,6 +35,16 @@ const PercentageRolloutItem = ({
   featureFlagVariations
 }: VariationPercentageRolloutProps): ReactElement => {
   const { getString } = useStrings()
+
+  const variationWeightIds = useMemo<string[]>(
+    () =>
+      featureFlagVariations.map(
+        (_, variationIndex) => `targetingRuleItems[${index}].variations[${variationIndex}].weight`
+      ),
+    [featureFlagVariations, index]
+  )
+
+  usePercentageRolloutEqualiser(variationWeightIds)
 
   return (
     <>

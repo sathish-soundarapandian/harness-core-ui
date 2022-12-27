@@ -28,28 +28,36 @@ export const validateFilePath = (filePath: string): boolean => {
   }
 }
 
-export const getGitQueryParamsWithParentScope = (
-  storeMetadata: StoreMetadata | undefined,
-  params: ProjectPathProps,
-  repoIdentifier?: string,
+export const getGitQueryParamsWithParentScope = ({
+  storeMetadata,
+  params,
+  repoIdentifier,
+  branch,
+  loadFromFallbackBranch = false
+}: {
+  storeMetadata: StoreMetadata | undefined
+  params: ProjectPathProps
+  repoIdentifier?: string
   branch?: string
-): Partial<GetTemplateQueryParams> => {
+  loadFromFallbackBranch?: boolean
+}): Partial<GetTemplateQueryParams> => {
   const parentEntityIds = {
     parentEntityAccountIdentifier: params.accountId,
     parentEntityOrgIdentifier: params.orgIdentifier,
     parentEntityProjectIdentifier: params.projectIdentifier
   }
-
+  const branchParam = defaultTo(storeMetadata?.branch, branch)
   return {
     getDefaultFromOtherRepo: true,
 
     // Gitsync uses repoIdentifier
     repoIdentifier,
-    branch: defaultTo(storeMetadata?.branch, branch),
+    branch: branchParam,
 
     // Git experience uses storeMetadata
     parentEntityConnectorRef: storeMetadata?.connectorRef,
     parentEntityRepoName: storeMetadata?.repoName,
-    ...(!isEmpty(storeMetadata?.connectorRef) ? parentEntityIds : {})
+    ...(!isEmpty(storeMetadata?.connectorRef) ? parentEntityIds : {}),
+    ...(!branchParam && loadFromFallbackBranch && { loadFromFallbackBranch })
   }
 }

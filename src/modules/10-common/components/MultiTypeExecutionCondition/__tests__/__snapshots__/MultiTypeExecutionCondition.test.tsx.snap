@@ -29,6 +29,7 @@ exports[`MultiTypeExecutionCondition test input disabled and only fixed multi ty
             >
               <button
                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                data-testid="multi-type-button"
               >
                 <span
                   class="bp3-icon StyledProps--main"
@@ -85,6 +86,7 @@ exports[`MultiTypeExecutionCondition test input enabled and fixed, runtime multi
             >
               <button
                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                data-testid="multi-type-button"
               >
                 <span
                   class="bp3-icon StyledProps--main"

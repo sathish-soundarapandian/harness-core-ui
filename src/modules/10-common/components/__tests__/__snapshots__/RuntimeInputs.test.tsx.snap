@@ -45,6 +45,7 @@ exports[`RuntimeInput Tests for checkbox, RadioGroup and Text Area should render
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -141,6 +142,7 @@ exports[`RuntimeInput Tests for checkbox, RadioGroup and Text Area should render
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -207,6 +209,7 @@ exports[`RuntimeInput Tests for checkbox, RadioGroup and Text Area should render
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -300,6 +303,7 @@ exports[`RuntimeInput Tests for checkbox, RadioGroup and Text Area should render
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -377,6 +381,7 @@ exports[`RuntimeInput Tests for checkbox, RadioGroup and Text Area should render
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -453,6 +458,7 @@ exports[`RuntimeInput Tests for checkbox, RadioGroup and Text Area should render
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -527,6 +533,7 @@ exports[`RuntimeInput Tests for checkbox, RadioGroup and Text Area should render
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -622,6 +629,7 @@ exports[`RuntimeInput Tests for checkbox, RadioGroup and Text Area should render
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -686,6 +694,7 @@ exports[`RuntimeInput Tests for checkbox, RadioGroup and Text Area should render
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"

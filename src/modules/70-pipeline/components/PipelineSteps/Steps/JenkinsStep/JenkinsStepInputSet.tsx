@@ -196,6 +196,8 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
     return jobDetails.find(job => job.label === get(formik, `values.${prefix}spec.jobName`)) as SelectWithSubmenuOption
   }
 
+  const jobParameters = get(formik.values, `${prefix}spec.jobParameter`)
+
   return (
     <>
       <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
@@ -317,8 +319,9 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
           </div>
         ) : null}
 
-        {isArray(template?.spec?.jobParameter) ||
-        getMultiTypeFromValue(template?.spec?.jobParameter) === MultiTypeInputType.RUNTIME ? (
+        {(isArray(template?.spec?.jobParameter) ||
+          getMultiTypeFromValue(template?.spec?.jobParameter) === MultiTypeInputType.RUNTIME) &&
+        Array.isArray(jobParameters) ? (
           <div className={css.formGroup}>
             <MultiTypeFieldSelector
               name={`${prefix}spec.jobParameter`}

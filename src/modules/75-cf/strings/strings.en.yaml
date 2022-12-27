@@ -537,6 +537,7 @@ onboarding:
   createEnv: Create an environment
   selectOrCreateEnvironment: Select or Create an Environment
   environmentDescription: Environments are spaces within a project where you can independently configure Feature Flags. You can have multiple Environments and the same Flags can have a different state in each Environment.
+  selectOrTypeEnv: Select an existing Environment or type the name to create new one
   envCreated: Environment Created
   enterKeyName: Enter key name
   createSdkKey: Create an SDK Key

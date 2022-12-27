@@ -11,6 +11,7 @@ import { RouteWithLayout } from '@common/router'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import SideNav from '@code/components/SideNav/SideNav'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import { projectPathProps } from '@common/utils/routeUtils'
 import {
   Repository,
   Repositories,
@@ -23,13 +24,25 @@ import {
   Compare,
   CreateWebhook
 } from './CodeApp'
-import routes, { CODEPathProps, codePathProps } from './RouteDefinitions'
+import routes, { CODEPathProps } from './RouteDefinitions'
 import CODEHomePage from './pages/home/CODEHomePage'
 
-export const sidebarProps: SidebarContext = {
+const sidebarProps: SidebarContext = {
   navComponent: SideNav,
   title: 'Code',
   icon: 'code'
+}
+
+const codePathProps: Required<CODEPathProps> = {
+  ...projectPathProps,
+  repoName: ':repoName',
+  gitRef: ':gitRef*',
+  resourcePath: ':resourcePath*',
+  commitRef: ':commitRef*',
+  branch: ':branch*',
+  diffRefs: ':diffRefs*',
+  pullRequestId: ':pullRequestId',
+  pullRequestSection: ':pullRequestSection'
 }
 
 const RedirectToDefaultSCMRoute: React.FC = () => {
@@ -74,15 +87,27 @@ export default function CODERouteDestinations(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
-        path={routes.toCODEPullRequest({
-          repoPath: [
-            codePathProps.accountId,
-            codePathProps.orgIdentifier,
-            codePathProps.projectIdentifier,
-            codePathProps.repoName
-          ].join('/'),
-          pullRequestId: codePathProps.pullRequestId
-        })}
+        path={[
+          routes.toCODEPullRequest({
+            repoPath: [
+              codePathProps.accountId,
+              codePathProps.orgIdentifier,
+              codePathProps.projectIdentifier,
+              codePathProps.repoName
+            ].join('/'),
+            pullRequestId: codePathProps.pullRequestId,
+            pullRequestSection: codePathProps.pullRequestSection
+          }),
+          routes.toCODEPullRequest({
+            repoPath: [
+              codePathProps.accountId,
+              codePathProps.orgIdentifier,
+              codePathProps.projectIdentifier,
+              codePathProps.repoName
+            ].join('/'),
+            pullRequestId: codePathProps.pullRequestId
+          })
+        ]}
         sidebarProps={sidebarProps}
         pageName={PAGE_NAME.CODEPullRequests}
         exact

@@ -112,6 +112,8 @@ function HealthSourceDrawerContent({
         determineMaxTab={isEdit ? () => HealthSourceMaxTab : undefined}
         tabTitles={tabTitles}
         disableCache={true}
+        isTemplate={isTemplate}
+        expressions={expressions}
       >
         {tabs}
       </SetupSourceTabs>

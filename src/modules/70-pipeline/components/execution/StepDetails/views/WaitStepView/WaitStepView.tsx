@@ -8,7 +8,6 @@
 import React from 'react'
 import { defaultTo, merge } from 'lodash-es'
 import { Tabs, Tab } from '@harness/uicore'
-import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { StageType } from '@pipeline/utils/stageHelpers'
@@ -18,7 +17,6 @@ import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/A
 import { StepMode } from '@pipeline/utils/stepUtils'
 import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import { useExecutionDetails } from 'services/pipeline-ng'
-import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { WaitStepDetailsTab } from '../../tabs/WaitStepDetailsTab/WaitStepDetailsTab'
 import { ManualInterventionTab } from '../../tabs/ManualInterventionTab/ManualInterventionTab'
 import css from '../DefaultView/DefaultView.module.scss'
@@ -31,9 +29,9 @@ enum StepDetailTab {
 }
 
 export function WaitStepView(props: StepDetailProps): React.ReactElement {
-  const { step, stageType = StageType.DEPLOY, isStageExecutionInputConfigured } = props
+  const { step, stageType = StageType.DEPLOY, isStageExecutionInputConfigured, executionMetadata } = props
   const { getString } = useStrings()
-  const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<ExecutionPathProps>>()
+  const { orgIdentifier, projectIdentifier, accountId } = defaultTo(executionMetadata, {})
   const shouldShowInputOutput =
     ((step?.stepType ?? '') as string) !== 'liteEngineTask' && !isStageExecutionInputConfigured
   const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
@@ -78,7 +76,14 @@ export function WaitStepView(props: StepDetailProps): React.ReactElement {
           <Tab
             id={StepDetailTab.STEP_DETAILS}
             title={getString('details')}
-            panel={<WaitStepDetailsTab step={step} executionDetails={executionDetails} loading={loading} />}
+            panel={
+              <WaitStepDetailsTab
+                step={step}
+                executionDetails={executionDetails}
+                loading={loading}
+                executionMetadata={executionMetadata}
+              />
+            }
           />
         }
         {shouldShowInputOutput && (
@@ -107,7 +112,13 @@ export function WaitStepView(props: StepDetailProps): React.ReactElement {
           <Tab
             id={StepDetailTab.MANUAL_INTERVENTION}
             title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
-            panel={<ManualInterventionTab step={step} allowedStrategies={failureStrategies} />}
+            panel={
+              <ManualInterventionTab
+                step={step}
+                allowedStrategies={failureStrategies}
+                executionMetadata={executionMetadata}
+              />
+            }
           />
         ) : null}
       </Tabs>

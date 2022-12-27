@@ -37,11 +37,13 @@ import { setSecretField } from '@secrets/utils/SecretField'
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { transformStepHeadersAndParamsForPayloadForPrometheus } from '@connectors/components/CreateConnector/PrometheusConnector/utils'
 import { transformStepHeadersAndParamsForPayload } from '@connectors/components/CreateConnector/CustomHealthConnector/components/CustomHealthHeadersAndParams/CustomHealthHeadersAndParams.utils'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { AuthTypes, GitAuthTypes, GitAPIAuthTypes } from './ConnectorHelper'
 import { useConnectorWizard } from '../../../components/CreateConnectorWizard/ConnectorWizardContext'
 export interface DelegateCardInterface {
   type: string
   info: string
+  icon?: IconName
   disabled?: boolean
 }
 
@@ -322,7 +324,7 @@ export const buildTasPayload = (formData: FormData): ConnectorRequestBody => {
       credential: {
         type: CredTypeValues.ManualConfig,
         spec: {
-          endpointUrl: formData.endpointUrl,
+          endpointUrl: formData.endpointUrl.trim(),
           [formData.username.type === ValueType.TEXT ? 'username' : 'usernameRef']: formData.username.value,
           passwordRef: formData.passwordRef.referenceString
         }
@@ -1986,7 +1988,7 @@ export const buildErrorTrackingPayload = (formData: FormData): Connector => {
       description,
       tags,
       spec: {
-        url: window.location.href.split('#')[0],
+        url: windowLocationUrlPartBeforeHash(),
         apiKeyRef: apiReferenceKey,
         delegateSelectors: delegateSelectors || {}
       } as ErrorTrackingConnectorDTO
@@ -2454,6 +2456,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.azureKeyVault')
     case Connectors.PAGER_DUTY:
       return getString('connectors.testConnectionStep.validationText.pagerduty')
+    case Connectors.PDC:
+      return getString('connectors.testConnectionStep.validationText.pdc')
     case Connectors.SERVICE_NOW:
       return getString('connectors.testConnectionStep.validationText.serviceNow')
     case Connectors.AZURE:

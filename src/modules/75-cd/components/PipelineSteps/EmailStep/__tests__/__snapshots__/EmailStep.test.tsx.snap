@@ -52,6 +52,7 @@ exports[`Email Step Test should render deployment form 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -130,6 +131,7 @@ exports[`Email Step Test should render deployment form 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -210,6 +212,7 @@ exports[`Email Step Test should render deployment form 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -280,6 +283,7 @@ exports[`Email Step Test should render deployment form 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -349,6 +353,7 @@ exports[`Email Step Test should render deployment form 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -559,6 +564,7 @@ exports[`Email Step Test should render edit view as edit step 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -633,6 +639,7 @@ exports[`Email Step Test should render edit view as edit step 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -704,6 +711,7 @@ exports[`Email Step Test should render edit view as edit step 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -774,6 +782,7 @@ exports[`Email Step Test should render edit view as edit step 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -845,6 +854,7 @@ exports[`Email Step Test should render edit view as edit step 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1035,6 +1045,7 @@ exports[`Email Step Test should render edit view as new step with empty initial 
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1109,6 +1120,7 @@ exports[`Email Step Test should render edit view as new step with empty initial 
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1180,6 +1192,7 @@ exports[`Email Step Test should render edit view as new step with empty initial 
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1248,6 +1261,7 @@ exports[`Email Step Test should render edit view as new step with empty initial 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1317,6 +1331,7 @@ exports[`Email Step Test should render edit view as new step with empty initial 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1544,6 +1559,7 @@ exports[`Email Step Test should render runtime inputs 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1656,6 +1672,7 @@ exports[`Email Step Test should render runtime inputs 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1765,6 +1782,7 @@ exports[`Email Step Test should render runtime inputs 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1878,6 +1896,7 @@ exports[`Email Step Test should render runtime inputs 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1992,6 +2011,7 @@ exports[`Email Step Test should render runtime inputs 1`] = `
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"

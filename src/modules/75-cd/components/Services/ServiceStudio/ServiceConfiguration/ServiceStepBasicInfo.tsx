@@ -7,9 +7,11 @@
 
 import React, { useCallback } from 'react'
 import { Card, Formik, FormikForm } from '@harness/uicore'
-import { debounce, noop } from 'lodash-es'
+import { debounce, isEmpty, noop } from 'lodash-es'
 import cx from 'classnames'
+import * as Yup from 'yup'
 import { NameIdDescriptionTags } from '@common/components'
+import { NameSchema } from '@common/utils/Validation'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { NGServiceV2InfoConfig } from 'services/cd-ng'
 import { useServiceContext } from '@cd/context/ServiceContext'
@@ -40,7 +42,15 @@ function ServiceStepBasicInfo(): React.ReactElement {
       <Formik
         enableReinitialize
         initialValues={pipeline}
-        validate={values => delayedOnUpdate(values)}
+        validate={values => {
+          if (isEmpty(values.name)) {
+            return
+          }
+          delayedOnUpdate(values)
+        }}
+        validationSchema={Yup.object().shape({
+          name: NameSchema()
+        })}
         formName="service-entity"
         onSubmit={noop}
       >

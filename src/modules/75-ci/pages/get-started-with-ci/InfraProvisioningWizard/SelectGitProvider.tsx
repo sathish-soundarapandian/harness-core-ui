@@ -291,7 +291,7 @@ const SelectGitProviderRef = (
         disableNextBtn()
       }
     }
-  }, [authMethod, disableNextBtn, enableNextBtn, gitProvider?.type, oAuthStatus, testConnectionStatus])
+  }, [authMethod, gitProvider?.type, oAuthStatus, testConnectionStatus])
 
   const setForwardRef = ({
     values,
@@ -336,7 +336,7 @@ const SelectGitProviderRef = (
 
   useEffect(() => {
     if (gitProvider?.type === NonGitOption.OTHER) {
-      updateFooterLabel?.(`${getString('next')}: ${getString('ci.getStartedWithCI.pipelineConfig')}`)
+      updateFooterLabel?.(getString('ci.getStartedWithCI.createPipeline'))
     } else {
       updateFooterLabel?.(`${getString('next')}: ${getString('common.selectRepository')}`)
     }

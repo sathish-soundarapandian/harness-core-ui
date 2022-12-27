@@ -67,6 +67,27 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
           Strategy.ProceedWithDefaultValues
         ]
       }
+    case StageType.PIPELINE:
+      return {
+        [Modes.STEP]: [
+          Strategy.ManualIntervention,
+          Strategy.StageRollback,
+          Strategy.Ignore,
+          Strategy.Retry,
+          Strategy.MarkAsSuccess,
+          Strategy.Abort,
+          Strategy.ProceedWithDefaultValues
+        ],
+        [Modes.STEP_GROUP]: [
+          Strategy.ManualIntervention,
+          Strategy.StageRollback,
+          Strategy.Ignore,
+          Strategy.Retry,
+          Strategy.MarkAsSuccess,
+          Strategy.Abort
+        ],
+        [Modes.STAGE]: [Strategy.Ignore, Strategy.MarkAsSuccess, Strategy.Abort, Strategy.ProceedWithDefaultValues]
+      }
     case StageType.DEPLOY:
     default:
       return {

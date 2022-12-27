@@ -6,19 +6,22 @@
  */
 
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import { isEmpty } from 'lodash-es'
+import { intersection, isEmpty } from 'lodash-es'
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import { GitRepoName, ManifestStoreMap } from '../Manifesthelper'
 import type {
   CommandFlags,
+  CustomManifestManifestDataType,
   HelmHarnessFileStoreFormData,
   HelmWithGcsDataType,
   HelmWithGITDataType,
   HelmWithHTTPDataType,
-  HelmWithOCIDataType
+  HelmWithOCIDataType,
+  ManifestTypes
 } from '../ManifestInterface'
+import { allowedManifestForSingleAddition } from './CommonManifestDetails/utils'
 
 type formDataType =
   | HelmWithGcsDataType
@@ -26,6 +29,7 @@ type formDataType =
   | HelmWithHTTPDataType
   | HelmWithOCIDataType
   | HelmHarnessFileStoreFormData
+  | CustomManifestManifestDataType
 
 const getRepoNameBasedonScope = (initialValues: ManifestConfig, prevStepData: any): string => {
   const connectorScope = getScopeFromValue(initialValues?.spec.store?.spec.connectorRef)
@@ -109,3 +113,15 @@ export const getConnectorPath = (type: string, data: any): string => {
   }
 }
 export const filePathWidth = 600
+
+/**
+ *
+ * @param listOfManifests - selected manifests
+ * @returns list of manifest types to be disabled after single addition
+ */
+export const getListOfDisabledManifestTypes = (listOfManifests: ManifestConfigWrapper[]): ManifestTypes[] => {
+  const selectedManifestTypes = listOfManifests.map(
+    (item: ManifestConfigWrapper) => item.manifest?.type as ManifestTypes
+  )
+  return intersection(selectedManifestTypes, allowedManifestForSingleAddition)
+}

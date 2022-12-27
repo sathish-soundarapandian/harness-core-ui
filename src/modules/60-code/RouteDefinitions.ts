@@ -7,7 +7,6 @@
 
 import type { ProjectPathProps, RequiredField } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-import { projectPathProps } from '@common/utils/routeUtils'
 
 export interface CODEProps {
   space?: string
@@ -19,17 +18,7 @@ export interface CODEProps {
   branch?: string
   diffRefs?: string // comparing diff refs, i.e: main...v1.0.1
   pullRequestId?: string
-}
-
-export const codePathProps: Required<CODEPathProps> = {
-  ...projectPathProps,
-  repoName: ':repoName',
-  gitRef: ':gitRef*',
-  resourcePath: ':resourcePath*',
-  commitRef: ':commitRef*',
-  branch: ':branch*',
-  diffRefs: ':diffRefs*',
-  pullRequestId: ':pullRequestId'
+  pullRequestSection?: string // commits | diffs | checks ...
 }
 
 export type CODEPathProps = RequiredField<
@@ -79,9 +68,18 @@ export default {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/pulls`
   },
-  toCODEPullRequest: ({ repoPath, pullRequestId }: Required<Pick<CODEProps, 'repoPath' | 'pullRequestId'>>) => {
+  toCODEPullRequest: ({
+    repoPath,
+    pullRequestId,
+    pullRequestSection
+  }: RequiredField<
+    Pick<CODEProps, 'repoPath' | 'pullRequestId' | 'pullRequestSection'>,
+    'repoPath' | 'pullRequestId'
+  >) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/pulls/${pullRequestId}`
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/pulls/${pullRequestId}${
+      pullRequestSection ? '/' + pullRequestSection : ''
+    }`
   },
   toCODECompare: ({ repoPath, diffRefs }: Required<Pick<CODEProps, 'repoPath' | 'diffRefs'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')

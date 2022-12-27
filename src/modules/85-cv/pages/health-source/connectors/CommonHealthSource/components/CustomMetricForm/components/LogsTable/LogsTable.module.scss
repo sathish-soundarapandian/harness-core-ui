@@ -1,0 +1,44 @@
+.logsTable {
+  border: 1px solid var(--grey-200);
+  border-radius: var(--spacing-small);
+  [role='cell'] {
+    padding-right: var(--spacing-5) !important;
+    p {
+      white-space: nowrap !important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  [role='columnheader']:nth-child(2) {
+    margin-left: -16px !important;
+  }
+
+  :global(.TableV2--body) {
+    height: 300px;
+    overflow-y: auto;
+  }
+}
+
+.noRecords {
+  height: 300px;
+  position: relative;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--spacing-small);
+  > div {
+    height: unset !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.noDataImage {
+  height: 200px;
+}
+.noData {
+  > div {
+    margin-top: 0 !important;
+  }
+}

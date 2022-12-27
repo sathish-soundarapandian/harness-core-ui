@@ -266,6 +266,7 @@ exports[`FlagConfigurationStep StepViewType.Edit it should render disabled in ed
             </div>
             <button
               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+              data-testid="multi-type-button"
               disabled=""
             >
               <span
@@ -604,6 +605,7 @@ exports[`FlagConfigurationStep StepViewType.Edit it should render in edit mode 1
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

@@ -43,6 +43,7 @@ declare const styles: {
   readonly separator: string
   readonly startConfigHeader: string
   readonly testConnectionBtn: string
+  readonly toggleLabel: string
   readonly toolTipArea: string
   readonly wizard: string
   readonly yamlPathField: string

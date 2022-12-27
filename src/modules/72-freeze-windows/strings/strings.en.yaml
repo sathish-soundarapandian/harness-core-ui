@@ -22,7 +22,7 @@ freezeStudio:
   excludeFollowingOrgs: Exclude the following Organizations
   freezeCreatedSuccessfully: Freeze window created successfully
   freezeUpdatedSuccessfully: Freeze window updated successfully
-  activeFreeze: Freeze is in ACTIVE state
+  activeFreeze: Freeze is ACTIVE
 
 globalFreeze:
   disabled: Freeze disabled on all deployments for this <b>{{scope}}</b>
@@ -40,7 +40,6 @@ globalFreeze:
 freezeNotifications:
   windowEnabled: Freeze window is enabled
   rejectedDeployments: Deployments are rejected due to freeze window
-  rejectedInvocations: Trigger invocations are rejected due to freeze window
 
 deploymentFreeze: Deployment Freeze
 

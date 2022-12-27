@@ -16,13 +16,15 @@ export default function CVMultiTypeQuery({
   disableFetchButton,
   expressions,
   fetchRecords,
-  allowedTypes
+  allowedTypes,
+  onTypeChange
 }: {
   name: string
   disableFetchButton?: boolean
   expressions: string[]
   allowedTypes?: AllowedTypes
   fetchRecords?: () => void
+  onTypeChange?: (type: MultiTypeInputType) => void
 }): JSX.Element {
   const { getString } = useStrings()
 
@@ -32,6 +34,7 @@ export default function CVMultiTypeQuery({
       label={getString('cv.query')}
       defaultValueToReset=""
       skipRenderValueInExpressionLabel
+      onTypeChange={onTypeChange}
       allowedTypes={
         allowedTypes || [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
       }

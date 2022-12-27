@@ -141,7 +141,7 @@ const getModuleInfo = (
   hasLicense: boolean,
   shouldVisible: boolean,
   color: string
-) => {
+): useNavModuleInfoReturnType => {
   const { icon: moduleIcon, label, getHomePageUrl } = moduleInfo
   return {
     icon: moduleIcon,

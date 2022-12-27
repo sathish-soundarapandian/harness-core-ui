@@ -31,7 +31,7 @@ enum StepDetailTab {
 }
 
 export function PolicyEvaluationView(props: StepDetailProps): React.ReactElement {
-  const { step, stageType = StageType.DEPLOY } = props
+  const { step, stageType = StageType.DEPLOY, executionMetadata } = props
   const { getString } = useStrings()
   const [activeTab, setActiveTab] = React.useState(StepDetailTab.STEP_DETAILS)
   const manuallySelected = React.useRef(false)
@@ -58,7 +58,11 @@ export function PolicyEvaluationView(props: StepDetailProps): React.ReactElement
         }}
         renderAllTabPanels={false}
       >
-        <Tab id={StepDetailTab.STEP_DETAILS} title={getString('details')} panel={<PolicyEvaluationTab step={step} />} />
+        <Tab
+          id={StepDetailTab.STEP_DETAILS}
+          title={getString('details')}
+          panel={<PolicyEvaluationTab step={step} executionMetadata={executionMetadata} />}
+        />
         <Tab
           id={StepDetailTab.INPUT}
           title={getString('common.input')}
@@ -79,7 +83,13 @@ export function PolicyEvaluationView(props: StepDetailProps): React.ReactElement
           <Tab
             id={StepDetailTab.MANUAL_INTERVENTION}
             title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
-            panel={<ManualInterventionTab step={step} allowedStrategies={failureStrategies} />}
+            panel={
+              <ManualInterventionTab
+                step={step}
+                allowedStrategies={failureStrategies}
+                executionMetadata={executionMetadata}
+              />
+            }
           />
         ) : null}
       </Tabs>

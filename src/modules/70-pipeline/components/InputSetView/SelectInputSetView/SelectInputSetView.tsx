@@ -78,7 +78,7 @@ export function SelectInputSet(props: SelectInputSetViewProps): JSX.Element {
             showDefaultField={false}
             showAdvanced={true}
             onChange={val => formik?.setFieldValue(name, val)}
-            style={{ marginTop: 'var(--spacing-6)' }}
+            style={label ? { marginTop: 'var(--spacing-6)' } : undefined}
             {...configureOptionsProps}
             isReadonly={disabled}
           />

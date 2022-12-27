@@ -6,14 +6,18 @@
  */
 
 import moment from 'moment'
-export function chartsConfig(series: Highcharts.SeriesLineOptions[]): Highcharts.Options {
+export function chartsConfig(
+  series: Highcharts.SeriesLineOptions[],
+  chartConfig?: Highcharts.Options
+): Highcharts.Options {
   return {
     chart: {
       backgroundColor: 'transparent',
       height: 200,
       type: 'line',
       zoomType: 'xy',
-      spacing: [5, 2, 5, 2]
+      spacing: [5, 2, 5, 2],
+      ...(chartConfig?.chart ?? chartConfig?.chart)
     },
     credits: undefined,
     title: {

@@ -82,7 +82,7 @@ export interface ResponseSTOUsageResult {
 }
 
 export interface GetUsageQueryParams {
-  accountIdentifier: string
+  accountId: string
   timestamp: number
 }
 

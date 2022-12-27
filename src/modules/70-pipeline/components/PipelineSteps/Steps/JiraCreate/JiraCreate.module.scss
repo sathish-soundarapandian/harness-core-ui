@@ -34,12 +34,14 @@
       min-height: 50px;
       max-height: 120px;
       height: 75px !important;
+      resize: vertical;
     }
-
     .bp3-input {
-      height: 75px !important;
+      width: 390px !important;
+      &:disabled {
+        width: 330px !important;
+      }
     }
-
     .MultiTypeInput--btn {
       height: 30px !important;
     }

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import { act, render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { SupportPlatforms } from '@cf/components/LanguageSelection/LanguageSelection'
@@ -175,6 +175,7 @@ describe('ValidatingYourFlag', () => {
     jest.useFakeTimers()
     jest.clearAllMocks()
   })
+
   test('Should be able to toggle Flag ON and it loads', async () => {
     renderComponent()
 
@@ -184,11 +185,9 @@ describe('ValidatingYourFlag', () => {
     expect(flagToggle).not.toBeChecked()
 
     userEvent.click(flagToggle)
+    expect(flagToggle).toBeChecked()
 
-    await waitFor(() => {
-      expect(screen.getByTestId('fetchingContainer')).toBeVisible()
-      expect(flagToggle).toBeChecked()
-    })
+    expect(await screen.findByTestId('fetchingContainer')).toBeVisible()
   })
 
   test('Should return error state if flag is not active', async () => {
@@ -200,10 +199,13 @@ describe('ValidatingYourFlag', () => {
     expect(flagToggle).not.toBeChecked()
 
     userEvent.click(flagToggle)
-    jest.runAllTimers()
+    expect(flagToggle).toBeChecked()
+
+    act(() => {
+      jest.runAllTimers()
+    })
 
     await waitFor(() => {
-      expect(flagToggle).toBeChecked()
       expect(screen.getByText('cf.onboarding.toggleError')).toBeVisible()
       expect(screen.getByTestId('status-error')).toBeVisible()
       expect(screen.getByTestId('error-info')).toBeVisible()
@@ -211,13 +213,6 @@ describe('ValidatingYourFlag', () => {
   })
 
   test('Should return success state if flag is active within timeframe', async () => {
-    jest.spyOn(cfService, 'useGetAllFeatures').mockReturnValue({
-      data: mockActiveFeature,
-      loading: false,
-      error: null,
-      refetch: jest.fn()
-    } as any)
-
     renderComponent()
     const flagToggle = screen.getByTestId('flagToggle')
 
@@ -225,11 +220,21 @@ describe('ValidatingYourFlag', () => {
     expect(flagToggle).not.toBeChecked()
 
     userEvent.click(flagToggle)
-    jest.runAllTimers()
+    expect(flagToggle).toBeChecked()
+
+    jest.spyOn(cfService, 'useGetAllFeatures').mockReturnValue({
+      data: mockActiveFeature,
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    } as any)
+
+    act(() => {
+      jest.runAllTimers()
+    })
 
     await waitFor(() => {
-      expect(flagToggle).toBeChecked()
-      expect(screen.getByText('cf.onboarding.eventWeReceived' + ':')).toBeVisible()
+      expect(screen.getByText('cf.onboarding.eventWeReceived:')).toBeVisible()
       expect(screen.getByTestId('status-success')).toBeVisible()
       expect(screen.getByTestId('success-info')).toBeVisible()
     })
@@ -250,10 +255,13 @@ describe('ValidatingYourFlag', () => {
     expect(flagToggle).not.toBeChecked()
 
     userEvent.click(flagToggle)
-    jest.runAllTimers()
+    expect(flagToggle).toBeChecked()
+
+    act(() => {
+      jest.runAllTimers()
+    })
 
     await waitFor(() => {
-      expect(flagToggle).toBeChecked()
       expect(screen.getByText('cf.onboarding.toggleError')).toBeVisible()
       expect(screen.getByTestId('status-error')).toBeVisible()
       expect(screen.getByTestId('error-info')).toBeVisible()
@@ -269,10 +277,13 @@ describe('ValidatingYourFlag', () => {
     expect(flagToggle).not.toBeChecked()
 
     userEvent.click(flagToggle)
-    jest.runAllTimers()
+    expect(flagToggle).toBeChecked()
+
+    act(() => {
+      jest.runAllTimers()
+    })
 
     await waitFor(() => {
-      expect(flagToggle).toBeChecked()
       expect(screen.getByText('cf.onboarding.toggleError')).toBeVisible()
       expect(screen.getByTestId('status-error')).toBeVisible()
       expect(screen.getByTestId('error-info')).toBeVisible()
@@ -280,23 +291,16 @@ describe('ValidatingYourFlag', () => {
 
     //Toggle OFF
     userEvent.click(flagToggle)
+    expect(flagToggle).not.toBeChecked()
+
     //TOGGLE ON again
     userEvent.click(flagToggle)
+    expect(flagToggle).toBeChecked()
 
-    await waitFor(() => {
-      expect(screen.getByTestId('fetchingContainer')).toBeVisible()
-      expect(flagToggle).toBeChecked()
-    })
+    expect(await screen.findByTestId('fetchingContainer')).toBeVisible()
   })
 
   test('Should be able to toggle the flag to try again after success state', async () => {
-    jest.spyOn(cfService, 'useGetAllFeatures').mockReturnValue({
-      data: mockActiveFeature,
-      loading: false,
-      error: null,
-      refetch: jest.fn()
-    } as any)
-
     renderComponent()
 
     const flagToggle = screen.getByTestId('flagToggle')
@@ -305,23 +309,33 @@ describe('ValidatingYourFlag', () => {
     expect(flagToggle).not.toBeChecked()
 
     userEvent.click(flagToggle)
-    jest.runAllTimers()
+    expect(flagToggle).toBeChecked()
+
+    jest.spyOn(cfService, 'useGetAllFeatures').mockReturnValue({
+      data: mockActiveFeature,
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    } as any)
+
+    act(() => {
+      jest.runAllTimers()
+    })
 
     await waitFor(() => {
-      expect(flagToggle).toBeChecked()
-      expect(screen.getByText('cf.onboarding.eventWeReceived' + ':')).toBeVisible()
+      expect(screen.getByText('cf.onboarding.eventWeReceived:')).toBeVisible()
       expect(screen.getByTestId('status-success')).toBeVisible()
       expect(screen.getByTestId('success-info')).toBeVisible()
     })
 
     //Toggle OFF
     userEvent.click(flagToggle)
+    expect(flagToggle).not.toBeChecked()
+
     //TOGGLE ON again
     userEvent.click(flagToggle)
+    expect(flagToggle).toBeChecked()
 
-    await waitFor(() => {
-      expect(screen.getByTestId('fetchingContainer')).toBeInTheDocument()
-      expect(flagToggle).toBeChecked()
-    })
+    expect(await screen.findByTestId('fetchingContainer')).toBeInTheDocument()
   })
 })

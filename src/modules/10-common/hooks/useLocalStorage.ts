@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -30,16 +30,17 @@ export function useLocalStorage<T>(
     }
   })
 
-  function setItem(value: SetStateAction<T>): void {
+  useEffect(() => {
     try {
-      const valueToSet = isFunction(value) ? value(state) : value
-
-      setState(valueToSet)
-      storage.setItem(key, JSON.stringify(valueToSet))
+      storage.setItem(key, JSON.stringify(state))
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log(e)
     }
+  }, [state])
+
+  function setItem(value: SetStateAction<T>): void {
+    setState(value)
   }
 
   return [state, setItem]

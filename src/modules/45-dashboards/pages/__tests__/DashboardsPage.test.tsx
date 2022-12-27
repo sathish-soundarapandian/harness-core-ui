@@ -38,6 +38,8 @@ describe('DashboardsPage', () => {
       CD_LICENSE_STATE: LICENSE_STATE_VALUES.EXPIRED,
       CHAOS_LICENSE_STATE: LICENSE_STATE_VALUES.EXPIRED,
       STO_LICENSE_STATE: LICENSE_STATE_VALUES.EXPIRED,
+      CV_LICENSE_STATE: LICENSE_STATE_VALUES.EXPIRED,
+
       updateLicenseStore: jest.fn(),
       licenseInformation: {
         CD: {
@@ -70,6 +72,7 @@ describe('DashboardsPage', () => {
       CD_LICENSE_STATE: LICENSE_STATE_VALUES.EXPIRED,
       CHAOS_LICENSE_STATE: LICENSE_STATE_VALUES.EXPIRED,
       STO_LICENSE_STATE: LICENSE_STATE_VALUES.EXPIRED,
+      CV_LICENSE_STATE: LICENSE_STATE_VALUES.EXPIRED,
       updateLicenseStore: jest.fn(),
       licenseInformation: {
         CD: {

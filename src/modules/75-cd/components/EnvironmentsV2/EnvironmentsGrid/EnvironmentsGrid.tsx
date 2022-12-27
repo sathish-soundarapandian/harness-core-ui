@@ -12,6 +12,7 @@ import { defaultTo } from 'lodash-es'
 import { Container, Layout, useToaster } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { EnvironmentResponse, useDeleteEnvironmentV2 } from 'services/cd-ng'
 
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -28,6 +29,7 @@ export default function EnvironmentsGrid({ response, refetch }: any) {
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const history = useHistory()
+  const { CDC_ENVIRONMENT_DASHBOARD_NG } = useFeatureFlags()
 
   const { mutate: deleteItem } = useDeleteEnvironmentV2({
     queryParams: {
@@ -60,6 +62,19 @@ export default function EnvironmentsGrid({ response, refetch }: any) {
     }
   }
 
+  const handleOnClick = (id: string): void => {
+    history.push(
+      routes.toEnvironmentDetails({
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        module,
+        environmentIdentifier: defaultTo(id, ''),
+        sectionId: CDC_ENVIRONMENT_DASHBOARD_NG ? EnvironmentDetailsTab.SUMMARY : EnvironmentDetailsTab.CONFIGURATION
+      })
+    )
+  }
+
   return (
     <Container width={1160} style={{ margin: '0 auto' }}>
       <Layout.Masonry
@@ -67,7 +82,7 @@ export default function EnvironmentsGrid({ response, refetch }: any) {
         gutter={25}
         items={defaultTo(/* istanbul ignore next */ response?.content, [])}
         renderItem={(item: EnvironmentResponse) => (
-          <EnvironmentCard response={item} onEdit={handleEnvEdit} onDelete={handleEnvDelete} />
+          <EnvironmentCard response={item} onEdit={handleEnvEdit} onClick={handleOnClick} onDelete={handleEnvDelete} />
         )}
         keyOf={(item: EnvironmentResponse) => item.environment?.identifier}
       />

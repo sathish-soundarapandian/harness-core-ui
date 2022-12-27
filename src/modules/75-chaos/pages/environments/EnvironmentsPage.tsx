@@ -30,7 +30,6 @@ import { NoEnvironment } from '@chaos/components/NoEnvironment/NoEnvironment'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { withTableData } from '@chaos/utils/withTableData'
 
 import css from './EnvironmentsPage.module.scss'
@@ -225,17 +224,10 @@ const ChaosEnvironments: React.FC = () => {
     [getString, handleDeleteEnv]
   )
 
-  const params = useParams<ProjectPathProps>()
-
   return (
     <ListingPageTemplate
       title={getString('chaos.environments.pageTitle', { projectName: projectIdentifier })}
-      breadcrumbs={[
-        {
-          label: getString('environments'),
-          url: routes.toChaosEnvironments({ ...params })
-        }
-      ]}
+      breadcrumbs={[]}
       toolbar={
         hasEnvs && (
           <Layout.Horizontal>

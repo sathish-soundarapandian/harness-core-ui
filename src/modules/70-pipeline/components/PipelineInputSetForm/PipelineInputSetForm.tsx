@@ -249,7 +249,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     hideTitle
   } = props
   const { getString } = useStrings()
-  const isTemplatePipeline = !!template.template
+  const isTemplatePipeline = !!template?.template
   const finalTemplate = isTemplatePipeline ? (template?.template?.templateInputs as PipelineInfoConfig) : template
   const finalPath = isTemplatePipeline
     ? !isEmpty(path)

@@ -62,7 +62,8 @@ import {
   allowedArtifactTypes,
   ModalViewFor,
   isAllowedCustomArtifactDeploymentTypes,
-  isSidecarAllowed
+  isSidecarAllowed,
+  isAllowedGoogleArtifactDeploymentTypes
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'
@@ -114,7 +115,7 @@ export default function ArtifactsSelection({
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
     }
     if (
-      deploymentType === ServiceDeploymentType.Kubernetes &&
+      [ServiceDeploymentType.Kubernetes, ServiceDeploymentType.TAS].includes(deploymentType as ServiceDeploymentType) &&
       GITHUB_PACKAGES &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
     ) {
@@ -135,16 +136,16 @@ export default function ArtifactsSelection({
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AmazonMachineImage)
     }
     if (
-      [ServiceDeploymentType.Kubernetes, ServiceDeploymentType.CustomDeployment].includes(
-        deploymentType as ServiceDeploymentType
-      ) &&
+      isAllowedGoogleArtifactDeploymentTypes(deploymentType) &&
       NG_GOOGLE_ARTIFACT_REGISTRY &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
     }
     if (
-      deploymentType === 'AzureWebApp' &&
+      [ServiceDeploymentType.AzureWebApp, ServiceDeploymentType.TAS].includes(
+        deploymentType as ServiceDeploymentType
+      ) &&
       AZURE_WEBAPP_NG_JENKINS_ARTIFACTS &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Jenkins)
     ) {

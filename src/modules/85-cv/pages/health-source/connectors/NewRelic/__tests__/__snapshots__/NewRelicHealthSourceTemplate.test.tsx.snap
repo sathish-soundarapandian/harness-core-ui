@@ -61,6 +61,7 @@ exports[`Unit tests for NewRelic health source Template should work with custom 
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"

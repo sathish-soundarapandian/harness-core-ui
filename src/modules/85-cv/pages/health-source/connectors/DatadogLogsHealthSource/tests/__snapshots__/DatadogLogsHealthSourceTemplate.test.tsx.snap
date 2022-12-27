@@ -261,6 +261,7 @@ exports[`DatadogLogsHealthSource unit tests Datadog log renders when values are 
                                           >
                                             <button
                                               class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                                              data-testid="multi-type-button"
                                             >
                                               <span
                                                 class="bp3-icon StyledProps--main"
@@ -333,6 +334,7 @@ exports[`DatadogLogsHealthSource unit tests Datadog log renders when values are 
                                           >
                                             <button
                                               class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                                              data-testid="multi-type-button"
                                             >
                                               <span
                                                 class="bp3-icon StyledProps--main"

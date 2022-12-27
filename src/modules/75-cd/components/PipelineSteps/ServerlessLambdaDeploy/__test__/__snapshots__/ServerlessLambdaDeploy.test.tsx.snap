@@ -166,6 +166,7 @@ exports[`Test ServerlessDeployStep - Edit view Serverless Deploy Step rendering 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -205,7 +206,7 @@ exports[`Test ServerlessDeployStep - Edit view Serverless Deploy Step rendering 
               <div
                 class="Accordion--label"
               >
-                pipelineSteps.optionalConfiguration
+                common.optionalConfig
               </div>
               <div
                 class="Accordion--chevron"
@@ -392,6 +393,7 @@ exports[`Test ServerlessDeployStep - Edit view Serverless Deploy Step rendering 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -431,7 +433,7 @@ exports[`Test ServerlessDeployStep - Edit view Serverless Deploy Step rendering 
               <div
                 class="Accordion--label"
               >
-                pipelineSteps.optionalConfiguration
+                common.optionalConfig
               </div>
               <div
                 class="Accordion--chevron"
@@ -620,6 +622,7 @@ exports[`Test ServerlessDeployStep - Edit view Serverless Deploy Step rendering 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -659,7 +662,7 @@ exports[`Test ServerlessDeployStep - Edit view Serverless Deploy Step rendering 
               <div
                 class="Accordion--label"
               >
-                pipelineSteps.optionalConfiguration
+                common.optionalConfig
               </div>
               <div
                 class="Accordion--chevron"
@@ -853,6 +856,7 @@ exports[`Test ServerlessDeployStep - Edit view Serverless Deploy Step rendering 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -926,7 +930,7 @@ exports[`Test ServerlessDeployStep - Edit view Serverless Deploy Step rendering 
               <div
                 class="Accordion--label"
               >
-                pipelineSteps.optionalConfiguration
+                common.optionalConfig
               </div>
               <div
                 class="Accordion--chevron"
@@ -1032,6 +1036,7 @@ exports[`Test ServerlessDeployStep - InputSet view when path under inputSetData 
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1072,7 +1077,7 @@ exports[`Test ServerlessDeployStep - InputSet view when path under inputSetData 
           <div
             class="Accordion--label"
           >
-            pipelineSteps.optionalConfiguration
+            common.optionalConfig
           </div>
           <div
             class="Accordion--chevron"
@@ -1131,6 +1136,7 @@ exports[`Test ServerlessDeployStep - InputSet view when path under inputSetData 
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"

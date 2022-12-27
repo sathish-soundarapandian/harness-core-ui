@@ -15,6 +15,7 @@ import { executionPathProps, modulePathProps } from '@common/utils/routeUtils'
 import { EvaluatedPolicy, PolicyEvaluationContent, PolicyInfo } from '../PolicyEvaluationContent'
 
 import StepProps from '../__mocks__/StepProps.json'
+import executionMetadata from '../__mocks__/executionMetadata.json'
 
 describe('Policy Evaluation Content', () => {
   test('snapshot for no policy details', () => {
@@ -35,6 +36,7 @@ describe('Policy Evaluation Content', () => {
           step={{
             outcomes: {}
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -56,7 +58,7 @@ describe('Policy Evaluation Content', () => {
           module: 'cd'
         }}
       >
-        <PolicyEvaluationContent step={StepProps as any} />
+        <PolicyEvaluationContent step={StepProps as any} executionMetadata={executionMetadata} />
       </TestWrapper>
     )
 
@@ -80,7 +82,12 @@ describe('Policy Info under Policy Evaluation Content', () => {
           module: 'cd'
         }}
       >
-        <PolicyInfo policy={policy as EvaluatedPolicy} numberInList={1} policyStepEvaluationId={'2980'} />
+        <PolicyInfo
+          policy={policy as EvaluatedPolicy}
+          numberInList={1}
+          policyStepEvaluationId={'2980'}
+          executionMetadata={executionMetadata}
+        />
       </TestWrapper>
     )
 
@@ -102,7 +109,12 @@ describe('Policy Info under Policy Evaluation Content', () => {
           module: 'cd'
         }}
       >
-        <PolicyInfo policy={policy as EvaluatedPolicy} numberInList={1} policyStepEvaluationId={'2980'} />
+        <PolicyInfo
+          policy={policy as EvaluatedPolicy}
+          numberInList={1}
+          policyStepEvaluationId={'2980'}
+          executionMetadata={executionMetadata}
+        />
       </TestWrapper>
     )
 
@@ -124,7 +136,12 @@ describe('Policy Info under Policy Evaluation Content', () => {
           module: 'cd'
         }}
       >
-        <PolicyInfo policy={policy as EvaluatedPolicy} numberInList={1} policyStepEvaluationId={'2980'} />
+        <PolicyInfo
+          policy={policy as EvaluatedPolicy}
+          numberInList={1}
+          policyStepEvaluationId={'2980'}
+          executionMetadata={executionMetadata}
+        />
       </TestWrapper>
     )
 
@@ -146,7 +163,12 @@ describe('Policy Info under Policy Evaluation Content', () => {
           module: 'cd'
         }}
       >
-        <PolicyInfo policy={policy as EvaluatedPolicy} numberInList={1} policyStepEvaluationId={'2980'} />
+        <PolicyInfo
+          policy={policy as EvaluatedPolicy}
+          numberInList={1}
+          policyStepEvaluationId={'2980'}
+          executionMetadata={executionMetadata}
+        />
       </TestWrapper>
     )
 
@@ -168,7 +190,12 @@ describe('Policy Info under Policy Evaluation Content', () => {
           module: 'cd'
         }}
       >
-        <PolicyInfo policy={policy as EvaluatedPolicy} numberInList={1} policyStepEvaluationId={'2980'} />
+        <PolicyInfo
+          policy={policy as EvaluatedPolicy}
+          numberInList={1}
+          policyStepEvaluationId={'2980'}
+          executionMetadata={executionMetadata}
+        />
       </TestWrapper>
     )
 

@@ -5,13 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React, { useEffect, useMemo, useState } from 'react'
-import { Button, Container } from '@harness/uicore'
+import { defaultTo } from 'lodash-es'
+import { Button, ButtonVariation, Container } from '@harness/uicore'
 import { PopoverInteractionKind } from '@blueprintjs/core'
+import { useStrings } from 'framework/strings'
+
+import { useCommonHealthSource } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
+import { CommonHealthSourceContextFields } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import { CommonSelectedAppsSideNav } from './components/CommonSelectedAppsSideNav/CommonSelectedAppsSideNav'
 import {
   getCreatedMetricLength,
   getFilteredGroupedCreatedMetric,
-  getSelectedMetricIndex,
   getUpdatedMetric
 } from './CommonMultiItemsSideNav.utils'
 import type { GroupedCreatedMetrics } from './components/CommonSelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
@@ -42,7 +46,6 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
   const {
     onSelectMetric,
     createdMetrics: propsCreatedMetrics,
-    renamedMetric,
     onRemoveMetric,
     isValidInput,
     defaultSelectedMetric,
@@ -54,28 +57,14 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
     isMetricThresholdEnabled,
     openEditMetricModal
   } = props
+  const { getString } = useStrings()
   const [filter, setFilter] = useState<string | undefined>()
   const [createdMetrics, setCreatedMetrics] = useState<string[]>(
     propsCreatedMetrics?.length ? propsCreatedMetrics : [defaultMetricName]
   )
   const [selectedMetric, setSelectedMetric] = useState<string | undefined>(defaultSelectedMetric || createdMetrics[0])
 
-  useEffect(() => {
-    const selectedMetricIndex = getSelectedMetricIndex(createdMetrics, selectedMetric, renamedMetric)
-    if (selectedMetricIndex > -1) {
-      setCreatedMetrics(oldMetrics => {
-        if (selectedMetricIndex !== -1) oldMetrics[selectedMetricIndex] = renamedMetric as string
-        return Array.from(oldMetrics)
-      })
-      setSelectedMetric(renamedMetric)
-    }
-  }, [renamedMetric])
-
-  const metricsToRender = useMemo(() => {
-    return filter
-      ? createdMetrics.filter(metric => metric.toLocaleLowerCase().includes(filter?.toLocaleLowerCase()))
-      : createdMetrics
-  }, [filter, createdMetrics])
+  const { updateParentFormik } = useCommonHealthSource()
 
   const filteredGroupMetric = useMemo(() => {
     return getFilteredGroupedCreatedMetric(groupedCreatedMetrics, filter)
@@ -88,52 +77,53 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
 
   const hasOnRemove = shouldBeAbleToDeleteLastMetric || createdMetricsLength > 1
 
+  useEffect(() => {
+    setSelectedMetric(defaultSelectedMetric)
+  }, [defaultSelectedMetric])
+
+  useEffect(() => {
+    if (propsCreatedMetrics?.length) {
+      setCreatedMetrics(propsCreatedMetrics)
+    }
+  }, [propsCreatedMetrics])
+
   return (
     <Container className={css.main}>
       <Button
         icon="plus"
-        minimal
-        intent="primary"
+        variation={ButtonVariation.SECONDARY}
         disabled={!isValidInput}
         tooltip={!isValidInput ? tooptipMessage : undefined}
         tooltipProps={{ interactionKind: PopoverInteractionKind.HOVER_TARGET_ONLY }}
+        margin={{ bottom: 'small', left: 'medium', top: 'medium' }}
         onClick={() => {
           // TODO - This will be implemented once the entire form is implemented
           // if (isValidInput) {
-          setCreatedMetrics(oldMetrics => {
-            const newMetricName = ''
-            onSelectMetric(newMetricName, [newMetricName, ...oldMetrics], 0)
-            setSelectedMetric(newMetricName)
-            return [newMetricName, ...oldMetrics]
-          })
           // }
+          updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, '')
           openEditMetricModal()
         }}
       >
         {addFieldLabel}
       </Button>
       <CommonSelectedAppsSideNav
+        key={createdMetrics?.map(i => i)?.join('')}
         isValidInput={isValidInput}
         onSelect={(newlySelectedMetric, index) => {
           onSelectMetric(newlySelectedMetric, createdMetrics, index)
           setSelectedMetric(newlySelectedMetric)
         }}
         selectedItem={selectedMetric}
-        selectedMetrics={metricsToRender}
         groupedSelectedApps={filteredGroupMetric}
         isMetricThresholdEnabled={isMetricThresholdEnabled}
         openEditMetricModal={openEditMetricModal}
         onRemoveItem={
           hasOnRemove
-            ? (removedItem, index) => {
+            ? removedItem => {
                 setCreatedMetrics(oldMetrics => {
-                  const { updatedMetric, filteredOldMetrics, updateIndex } = getUpdatedMetric(
-                    oldMetrics,
-                    removedItem,
-                    index
-                  )
+                  const { updatedMetric, filteredOldMetrics, updateIndex } = getUpdatedMetric(oldMetrics, removedItem)
                   setSelectedMetric(updatedMetric)
-                  onRemoveMetric(removedItem, updatedMetric, [...filteredOldMetrics], updateIndex)
+                  onRemoveMetric(removedItem, updatedMetric, [...filteredOldMetrics], defaultTo(updateIndex, 0))
                   return [...filteredOldMetrics]
                 })
               }
@@ -141,7 +131,8 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
         }
         filterProps={{
           onFilter: setFilter,
-          className: css.metricsFilter
+          className: css.metricsFilter,
+          placeholder: getString('cv.monitoringSources.commonHealthSource.searchMetric')
         }}
       />
     </Container>

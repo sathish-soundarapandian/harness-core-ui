@@ -12,22 +12,11 @@ import { Popover, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/c
 import type { TimelineDataPoint, TimelineRowProps } from './TimelineRow.types'
 import { getDataWithPositions } from './TimelineRow.utils'
 import TimelineRowLoading from './components/TimelineRowLoading'
-import TimelineRowNoData from './components/TimelineRowNoData'
 import { DATE_FORMAT } from './TimelineRow.constants'
 import css from './TimelineRow.module.scss'
 
 export function TimelineRow(props: TimelineRowProps): JSX.Element {
-  const {
-    labelName,
-    labelWidth,
-    data,
-    isLoading,
-    noDataMessage,
-    leftOffset = 0,
-    startTimestamp,
-    endTimestamp,
-    hideTimeline
-  } = props
+  const { labelName, labelWidth, data, isLoading, leftOffset = 0, startTimestamp, endTimestamp, hideTimeline } = props
   const timelineRowRef = useRef<HTMLDivElement>(null)
   const [dataWithPositions, setDataWithPositions] = useState<TimelineDataPoint[]>([])
 
@@ -42,8 +31,6 @@ export function TimelineRow(props: TimelineRowProps): JSX.Element {
   const renderTimelineRow = useMemo(() => {
     if (isLoading) {
       return <TimelineRowLoading loadingBlockWidth={hideTimeline ? '20px' : '75px'} />
-    } else if (noDataMessage) {
-      return <TimelineRowNoData noDataMessage={noDataMessage} />
     }
     return (
       <>
@@ -85,7 +72,7 @@ export function TimelineRow(props: TimelineRowProps): JSX.Element {
         })}
       </>
     )
-  }, [isLoading, noDataMessage, dataWithPositions, hideTimeline])
+  }, [isLoading, dataWithPositions, hideTimeline])
 
   return (
     <Container className={css.main} ref={timelineRowRef}>

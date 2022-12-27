@@ -8,23 +8,23 @@
 import React from 'react'
 import cx from 'classnames'
 import {
-  Text,
-  Button,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  MultiTextInputProps,
-  ExpressionInput,
-  EXPRESSION_INPUT_PLACEHOLDER,
-  Layout,
-  Icon,
   AllowedTypes,
+  Button,
+  Container,
+  EXPRESSION_INPUT_PLACEHOLDER,
+  ExpressionInput,
   FormError,
-  Container
+  getMultiTypeFromValue,
+  Icon,
+  Layout,
+  MultiTextInputProps,
+  MultiTypeInputType,
+  Text
 } from '@harness/uicore'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 import { FormGroup, Intent } from '@blueprintjs/core'
-import { FieldArray, connect, FormikContextType } from 'formik'
-import { defaultTo, get } from 'lodash-es'
+import { connect, FieldArray, FormikContextType } from 'formik'
+import { defaultTo, get, isEmpty, isUndefined } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { MultiTypeFieldSelectorProps } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -35,12 +35,10 @@ import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/Conf
 import type { FileUsage } from '@filestore/interfaces/FileStore'
 import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 import FileSelectField from '@filestore/components/MultiTypeFileSelect/EncryptedSelect/EncryptedFileSelectField'
-import { isMultiTypeRuntime } from '@common/utils/utils'
+import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeConfigFileSelect from './MultiTypeConfigFileSelect'
 import css from './MultiConfigSelectField.module.scss'
-
-export type MapValue = { id: string; key: string; value: string }[]
-export type MultiTypeMapValue = MapValue | string
 
 interface MultiTypeMapConfigureOptionsProps
   extends Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'> {
@@ -63,12 +61,13 @@ export interface MultiTypeMapProps {
   restrictToSingleEntry?: boolean
   fileType: string
   expressions: string[]
-  values: string | string[]
+  values?: string | string[]
   allowableTypes?: AllowedTypes
   fileUsage?: FileUsage
   addFileLabel?: string
   isAttachment?: boolean
   deploymentType?: string
+  stepViewType?: StepViewType
 }
 
 export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactElement {
@@ -92,25 +91,29 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
     addFileLabel,
     isAttachment = false,
     deploymentType,
+    stepViewType,
     ...restProps
   } = props
 
-  const getDefaultResetValue = () => {
-    return ['']
-  }
-
+  const { getString } = useStrings()
   const [changed, setChanged] = React.useState(false)
+  const getDefaultResetValue = () => ['']
+  const isDeploymentForm = stepViewType === StepViewType.DeploymentForm
+  const shouldResetDefaultFormValue = stepViewType === StepViewType.InputSet || isDeploymentForm
+  const value = get(formik?.values, name, getDefaultResetValue())
 
-  const value = get(formik?.values, name, getDefaultResetValue()) as MultiTypeMapValue
+  React.useEffect(() => {
+    setTimeout(() => {
+      const currentValue = formik?.getFieldProps(name).value
+      if (shouldResetDefaultFormValue && !isUndefined(currentValue) && isEmpty(currentValue)) {
+        formik?.setFieldValue(name, getDefaultResetValue())
+      }
+    }, 0)
+  }, [name])
+
   const allowableFileSelectTypes = (allowableTypes as MultiTypeInputType[])?.filter(
     item => !isMultiTypeRuntime(item)
   ) as AllowedTypes
-
-  const isRunTime = React.useMemo(() => {
-    return getMultiTypeFromValue(get(formik?.values, name, getDefaultResetValue())) === MultiTypeInputType.RUNTIME
-  }, [value])
-
-  const { getString } = useStrings()
 
   return (
     <DragDropContext
@@ -138,13 +141,14 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
               name={name}
               defaultValueToReset={getDefaultResetValue()}
               style={{ flexGrow: 1, marginBottom: 0 }}
-              allowedTypes={defaultTo(allowableTypes, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED])}
+              allowedTypes={allowableTypes}
               {...multiTypeFieldSelectorProps}
               disableTypeSelection={multiTypeFieldSelectorProps.disableTypeSelection || disabled}
               hasParentValidation={true}
-              onTypeChange={e => {
-                if (!isMultiTypeRuntime(e)) {
-                  formik?.setFieldValue(name, [''])
+              useExecutionTimeInput={isDeploymentForm}
+              onTypeChange={type => {
+                if (!isMultiTypeRuntime(type)) {
+                  formik?.setFieldValue(name, getDefaultResetValue())
                 }
               }}
             >
@@ -154,8 +158,8 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                   return (
                     <>
                       <div className={css.listFieldsWrapper}>
-                        {Array.isArray(values) &&
-                          values.map((field: any, index: number) => {
+                        {Array.isArray(value) &&
+                          value.map((field: any, index: number) => {
                             const { ...restValue } = field
                             const error = get(formik?.errors, `${name}[${index}]`)
                             const hasError = errorCheck(`${name}[${index}]`, formik) && typeof error === 'string'
@@ -170,6 +174,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                     data-testid={`${name}[${index}]`}
                                     {...providedDrag.draggableProps}
                                     {...providedDrag.dragHandleProps}
+                                    className={css.draggable}
                                   >
                                     <Layout.Horizontal
                                       spacing="medium"
@@ -182,7 +187,6 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                           <Text className={css.text}>{`${index + 1}.`}</Text>
                                         </>
                                       )}
-
                                       <div className={css.multiSelectField}>
                                         <div className={cx(css.group)}>
                                           <MultiTypeConfigFileSelect
@@ -275,7 +279,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                             minimal
                                             data-testid={`remove-${name}-[${index}]`}
                                             onClick={() => remove(index)}
-                                            disabled={disabled || values.length <= 1}
+                                            disabled={disabled || value.length <= 1}
                                           />
                                         </div>
                                       </div>
@@ -295,7 +299,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                           onClick={() => {
                             push('')
                           }}
-                          disabled={disabled || isRunTime}
+                          disabled={disabled || isValueRuntimeInput(value)}
                           style={{ padding: 0 }}
                           margin={{ top: 'xlarge', bottom: isAttachment ? 'xxxlarge' : 'medium' }}
                         />

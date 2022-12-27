@@ -66,3 +66,19 @@ export interface NodeParamsDTO {
   parentIdentifier: string
   children: FileStoreNodeDTO[] | any[] | undefined
 }
+
+export enum SORT_TYPE {
+  ALPHABETICAL = 'ALPHABETICAL',
+  ALPHABETICAL_DESC = 'ALPHABETICAL_DESC',
+  LAST_UPDATED = 'LAST_UPDATED',
+  LAST_UPDATED_DESC = 'LAST_UPDATED_DESC',
+  ALPHABETICAL_FILE_TYPE = 'ALPHABETICAL_FILE_TYPE',
+  ALPHABETICAL_FOLDER_TYPE = 'ALPHABETICAL_FOLDER_TYPE'
+}
+
+export type SortType = SORT_TYPE | undefined | ''
+
+export interface NodeSortDTO {
+  identifier: string
+  sortType: SortType
+}

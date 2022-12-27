@@ -84,6 +84,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
 
   const { showError, showSuccess } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const [filterState, dispatch] = useReducer(sloFilterReducer, getInitialFilterState(getString), passedInitialState =>
     getInitialFilterStateLazy(passedInitialState, monitoredService)
   )
@@ -158,15 +159,23 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   })
 
   const onEdit = (sloIdentifier: string, sloType?: string): void => {
-    history.push({
-      pathname: routes.toCVSLODetailsPage({
-        identifier: sloIdentifier,
-        accountId,
-        orgIdentifier,
-        projectIdentifier
-      }),
-      search: getSearchString({ tab: SLODetailsPageTabIds.Configurations, monitoredServiceIdentifier, sloType })
-    })
+    isAccountLevel
+      ? history.push({
+          pathname: routes.toAccountCVSLODetailsPage({
+            identifier: sloIdentifier,
+            accountId
+          }),
+          search: getSearchString({ tab: SLODetailsPageTabIds.Configurations, sloType })
+        })
+      : history.push({
+          pathname: routes.toCVSLODetailsPage({
+            identifier: sloIdentifier,
+            accountId,
+            orgIdentifier,
+            projectIdentifier
+          }),
+          search: getSearchString({ tab: SLODetailsPageTabIds.Configurations, monitoredServiceIdentifier, sloType })
+        })
   }
 
   const onDelete = async (identifier: string, name: string, sloType?: SLOHealthListView['sloType']): Promise<void> => {
@@ -186,25 +195,27 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
 
   const getAddSLOButton = (): JSX.Element => (
     <Layout.Horizontal spacing="medium">
-      <RbacButton
-        icon="plus"
-        text={getString('cv.slos.createSLO')}
-        variation={ButtonVariation.PRIMARY}
-        onClick={() => {
-          history.push({
-            pathname: routes.toCVCreateSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }),
-            search: monitoredServiceIdentifier ? `?monitoredServiceIdentifier=${monitoredServiceIdentifier}` : ''
-          })
-        }}
-        className={getClassNameForMonitoredServicePage(css.createSloInMonitoredService, monitoredServiceIdentifier)}
-        permission={{
-          permission: PermissionIdentifier.EDIT_SLO_SERVICE,
-          resource: {
-            resourceType: ResourceType.SLO,
-            resourceIdentifier: projectIdentifier
-          }
-        }}
-      />
+      {!isAccountLevel && (
+        <RbacButton
+          icon="plus"
+          text={getString('cv.slos.createSLO')}
+          variation={ButtonVariation.PRIMARY}
+          onClick={() => {
+            history.push({
+              pathname: routes.toCVCreateSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }),
+              search: monitoredServiceIdentifier ? `?monitoredServiceIdentifier=${monitoredServiceIdentifier}` : ''
+            })
+          }}
+          className={getClassNameForMonitoredServicePage(css.createSloInMonitoredService, monitoredServiceIdentifier)}
+          permission={{
+            permission: PermissionIdentifier.EDIT_SLO_SERVICE,
+            resource: {
+              resourceType: ResourceType.SLO,
+              resourceIdentifier: projectIdentifier
+            }
+          }}
+        />
+      )}
       {SRM_COMPOSITE_SLO && !monitoredService && (
         <RbacButton
           icon="plus"
@@ -212,10 +223,22 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           text={getString('cv.slos.createCompositeSLO')}
           variation={ButtonVariation.PRIMARY}
           onClick={() => {
-            history.push({
-              pathname: routes.toCVCreateCompositeSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }),
-              search: monitoredServiceIdentifier ? `?monitoredServiceIdentifier=${monitoredServiceIdentifier}` : ''
-            })
+            isAccountLevel
+              ? history.push({
+                  pathname: routes.toAccountCVCreateCompositeSLOs({
+                    accountId,
+                    module: 'cv'
+                  })
+                })
+              : history.push({
+                  pathname: routes.toCVCreateCompositeSLOs({
+                    accountId,
+                    orgIdentifier,
+                    projectIdentifier,
+                    module: 'cv'
+                  }),
+                  search: monitoredServiceIdentifier ? `?monitoredServiceIdentifier=${monitoredServiceIdentifier}` : ''
+                })
           }}
           className={getClassNameForMonitoredServicePage(css.createSloInMonitoredService, monitoredServiceIdentifier)}
           permission={{
@@ -253,12 +276,17 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   const RenderSLOName: Renderer<CellProps<any>> = ({ row }) => {
     const slo = row?.original
     const { name = '', sloIdentifier = '', description = '', sloType = '' } = slo || {}
-    const path = routes.toCVSLODetailsPage({
-      identifier: sloIdentifier,
-      accountId,
-      orgIdentifier,
-      projectIdentifier
-    })
+    const path = isAccountLevel
+      ? routes.toAccountCVSLODetailsPage({
+          identifier: sloIdentifier,
+          accountId
+        })
+      : routes.toCVSLODetailsPage({
+          identifier: sloIdentifier,
+          accountId,
+          orgIdentifier,
+          projectIdentifier
+        })
     const queryParams = getSearchString({ sloType })
     return (
       <Link to={`${path}${queryParams}`}>
@@ -424,6 +452,60 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
       />
     )
   }
+
+  const columns = [
+    {
+      Header: getString('cv.slos.sloName').toUpperCase(),
+      width: '18%',
+      Cell: RenderSLOName
+    },
+    {
+      Header: getString('cv.slos.monitoredService').toUpperCase(),
+      width: '12%',
+      Cell: RenderMonitoredService
+    },
+    {
+      Header: getString('cv.slos.status').toUpperCase(),
+      width: '13%',
+      Cell: RenderSLOStatus
+    },
+    {
+      Header: getString('cv.errorBudgetRemaining').toUpperCase(),
+      width: '12%',
+      Cell: RenderRemainingErrorBudget
+    },
+    {
+      Header: getString('cv.slos.target').toUpperCase(),
+      width: '10%',
+      Cell: RenderTarget
+    },
+    {
+      Header: getString('cv.slos.burnRate').toUpperCase(),
+      width: '9%',
+      Cell: RenderBurnRate
+    },
+    {
+      Header: getString('ce.budgets.listPage.tableHeaders.alerts').toUpperCase(),
+      width: '8%',
+      Cell: RenderAlerts
+    },
+    {
+      Header: getString('cv.slos.userJourney').toUpperCase(),
+      width: '10%',
+      Cell: RenderUserJourney
+    },
+    {
+      Header: '',
+      id: 'sloActions',
+      width: '8%',
+      Cell: RenderSLOActions
+    }
+  ]
+
+  const filteredColumns = isAccountLevel
+    ? columns.filter(column => column.Header !== getString('cv.slos.monitoredService').toUpperCase())
+    : columns
+
   return (
     <>
       <HelpPanel referenceId="sloDetails" type={HelpPanelType.FLOATING_CONTAINER} />
@@ -494,6 +576,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
                   dispatch={dispatch}
                   filterItemsData={filterItemsData}
                   hideMonitoresServicesFilter={Boolean(monitoredService)}
+                  isAccountLevel={isAccountLevel}
                 />
                 <ExpandingSearchInput
                   width={250}
@@ -525,54 +608,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
             <>
               <TableV2
                 sortable={false}
-                columns={[
-                  {
-                    Header: getString('cv.slos.sloName').toUpperCase(),
-                    width: '18%',
-                    Cell: RenderSLOName
-                  },
-                  {
-                    Header: getString('cv.slos.monitoredService').toUpperCase(),
-                    width: '12%',
-                    Cell: RenderMonitoredService
-                  },
-                  {
-                    Header: getString('cv.slos.status').toUpperCase(),
-                    width: '13%',
-                    Cell: RenderSLOStatus
-                  },
-                  {
-                    Header: getString('cv.errorBudgetRemaining').toUpperCase(),
-                    width: '12%',
-                    Cell: RenderRemainingErrorBudget
-                  },
-                  {
-                    Header: getString('cv.slos.target').toUpperCase(),
-                    width: '10%',
-                    Cell: RenderTarget
-                  },
-                  {
-                    Header: getString('cv.slos.burnRate').toUpperCase(),
-                    width: '9%',
-                    Cell: RenderBurnRate
-                  },
-                  {
-                    Header: getString('ce.budgets.listPage.tableHeaders.alerts').toUpperCase(),
-                    width: '8%',
-                    Cell: RenderAlerts
-                  },
-                  {
-                    Header: getString('cv.slos.userJourney').toUpperCase(),
-                    width: '10%',
-                    Cell: RenderUserJourney
-                  },
-                  {
-                    Header: '',
-                    id: 'sloActions',
-                    width: '8%',
-                    Cell: RenderSLOActions
-                  }
-                ]}
+                columns={filteredColumns}
                 data={content}
                 pagination={{
                   pageSize,

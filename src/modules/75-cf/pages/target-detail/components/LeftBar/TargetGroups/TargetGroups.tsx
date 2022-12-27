@@ -51,11 +51,7 @@ const TargetGroups: React.FC<TargetGroupsProps> = ({ target }) => {
   }
 
   if (loading) {
-    return (
-      <Container height="100%" flex={{ align: 'center-center' }}>
-        <ContainerSpinner />
-      </Container>
-    )
+    return <ContainerSpinner width="auto" flex={{ align: 'center-center' }} style={{ overflow: 'hidden' }} />
   }
 
   return (

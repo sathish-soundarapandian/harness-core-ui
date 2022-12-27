@@ -12,6 +12,7 @@
   box-shadow: 1px 1px 3px 1px var(--grey-200);
   border-radius: 5px;
   padding: var(--spacing-small);
+
   .lineNumbersCol {
     flex-basis: 30px;
     margin-right: var(--spacing-small);
@@ -29,14 +30,21 @@
       min-width: 100%;
     }
   }
+
+  .panelV2 {
+    position: relative;
+  }
 }
 
 .lineNumber {
   text-align: right;
 }
 
-.editorRow:hover {
-  background-color: var(--blue-200);
+.editorRow {
+  color: var(--grey-800);
+  &:hover {
+    background-color: var(--primary-2);
+  }
 }
 
 .lineNumber,
@@ -46,10 +54,39 @@
   white-space: nowrap;
 }
 
+.editorRowV2 {
+  button {
+    display: none !important;
+  }
+
+  &:hover {
+    button {
+      display: inline-block !important;
+      position: absolute;
+      right: 0;
+    }
+  }
+}
+
 .selectableKey {
   color: var(--primary-7);
+  background-color: var(--primary-1);
+  padding: 0 var(--spacing-tiny);
+  border-radius: var(--spacing-xsmall);
   cursor: pointer;
   &:hover {
-    color: var(--blue-800);
+    color: var(--primary-7);
+  }
+}
+
+.rowContainer {
+  > button {
+    display: none !important;
+  }
+
+  &:hover {
+    > button {
+      display: block !important;
+    }
   }
 }

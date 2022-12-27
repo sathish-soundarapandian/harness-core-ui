@@ -45,7 +45,7 @@ export interface ExecutionListTableProps extends ExecutionListColumnActions {
   executionList: PagePipelineExecutionSummary
 }
 
-export function ExecutionListTable({
+function ExecutionListTable({
   executionList,
   isPipelineInvalid,
   onViewCompiledYaml
@@ -88,7 +88,7 @@ export function ExecutionListTable({
       },
       {
         Header: getString('filters.executions.pipelineName'),
-        accessor: 'pipelineIdentifier',
+        accessor: 'name',
         Cell: PipelineNameCell,
         serverSortProps: getServerSortProps('name')
       },
@@ -147,6 +147,7 @@ export function ExecutionListTable({
       sortable
       renderRowSubComponent={renderRowSubComponent}
       onRowClick={rowDetails => history.push(getExecutionPipelineViewLink(rowDetails, pathParams, queryParams))}
+      autoResetExpanded={false}
     />
   )
 }

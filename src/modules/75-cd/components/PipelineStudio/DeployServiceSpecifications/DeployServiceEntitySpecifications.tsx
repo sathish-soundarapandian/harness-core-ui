@@ -33,6 +33,7 @@ import type {
   DeployServiceEntityData
 } from '@cd/components/PipelineSteps/DeployServiceEntityStep/DeployServiceEntityUtils'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import PropagateFromServiceV2 from './PropagateWidget/PropagateFromServiceV2'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
@@ -93,7 +94,10 @@ export default function DeployServiceEntitySpecifications({
         )
       } else {
         const isSingleSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef)
-        const isMultiSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.services?.values)
+
+        /*  Currently BE does not support use from stage with multi services, so commenting this temporarily, to filter out stages with multi service. 
+        Once BE has support for multi service propagate, we need to just add the condition as ( !isSingleSvcEmpty || !isMultiSvcEmpty) */
+        // const isMultiSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.services?.values)
 
         const prevStageItemDeploymentType = (stageItem.stage as DeploymentStageElementConfig)?.spec?.deploymentType
         const prevStageItemCustomDeploymentConfig = (stageItem.stage as DeploymentStageElementConfig)?.spec
@@ -106,11 +110,7 @@ export default function DeployServiceEntitySpecifications({
               isEqual(prevStageItemCustomDeploymentConfig, currentStageCustomDeploymentConfig)
             : prevStageItemDeploymentType === currentStageDeploymentType
 
-        return (
-          (!isSingleSvcEmpty || !isMultiSvcEmpty) &&
-          currentStageType === stageItem?.stage?.type &&
-          areDeploymentDetailsSame
-        )
+        return !isSingleSvcEmpty && currentStageType === stageItem?.stage?.type && areDeploymentDetailsSame
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -174,15 +174,19 @@ export default function DeployServiceEntitySpecifications({
       await debounceUpdateStage(stageData?.stage)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [stage]
   )
+
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const getDeployServiceWidgetInitValues = useCallback((): DeployServiceEntityData => {
     if (setupModeType === setupMode.DIFFERENT) {
       return {
         ...pick(stage?.stage?.spec, ['service', 'services']),
         ...(scope !== Scope.PROJECT &&
-          isEmpty(get(stage, 'stage.spec.service.serviceRef')) && {
+          !CDS_OrgAccountLevelServiceEnvEnvGroup &&
+          isEmpty(get(stage, 'stage.spec.service.serviceRef')) &&
+          isEmpty(get(stage, 'stage.spec.services.values')) && {
             service: { serviceRef: RUNTIME_INPUT_VALUE }
           })
       }
@@ -194,7 +198,7 @@ export default function DeployServiceEntitySpecifications({
       return {
         ...pick(propogatedFromStage?.stage?.spec, ['service', 'services']),
         ...(scope !== Scope.PROJECT &&
-          isEmpty(get(stage, 'stage.spec.service.serviceRef')) && {
+          isEmpty(get(stage, 'stage.spec.service.useFromStage')) && {
             service: { serviceRef: RUNTIME_INPUT_VALUE }
           })
       }
@@ -255,7 +259,7 @@ export default function DeployServiceEntitySpecifications({
           readonly={isReadonly || setupModeType === setupMode.PROPAGATE}
           initialValues={getDeployServiceWidgetInitValues()}
           allowableTypes={
-            scope === Scope.PROJECT
+            scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
               ? allowableTypes
               : ((allowableTypes as MultiTypeInputType[]).filter(
                   item => item !== MultiTypeInputType.FIXED

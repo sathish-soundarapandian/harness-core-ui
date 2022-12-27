@@ -184,10 +184,16 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
     return options
   }, [projectData, selectedProject, projectsQuery, selectedOrg])
 
-  function handleOrgChange(item: SelectOption): void {
+  const handleOrgChange = (item: SelectOption): void => {
     setSelectedOrg(item)
     setSelectedProject({ label: '', value: '' } as SelectOption)
     setSelectedRow({})
+  }
+
+  const handleClose = (): void => {
+    window.dispatchEvent(new CustomEvent('CLOSE_CREATE_STAGE_POPOVER'))
+    setSelectedRow({})
+    setOpen(false)
   }
 
   return (
@@ -197,7 +203,7 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
         enforceFocus={false}
         canEscapeKeyClose
         canOutsideClickClose
-        onClose={() => setOpen(false)}
+        onClose={handleClose}
         className={css.dialog}
         title={
           <Text font={{ variation: FontVariation.H3 }}>{getString('pipeline.pipelineChaining.selectPipeline')}</Text>
@@ -233,6 +239,7 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
                   setSelectedRow({})
                 }}
                 value={selectedProject}
+                popoverClassName={css.projectListPopover}
               />
             </div>
           </Layout.Horizontal>
@@ -268,10 +275,17 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
               variation={ButtonVariation.PRIMARY}
               text={getString('entityReference.apply')}
               onClick={() => setOpen(false)}
-              disabled={isEmpty(selectedRow)}
+              disabled={isEmpty(selectedRow) || isEmpty(selectedOrg.value) || isEmpty(selectedProject.value)}
               className={cx(Classes.POPOVER_DISMISS)}
+              tooltip={
+                isEmpty(selectedProject.value)
+                  ? getString('pipeline.pipelineChaining.noProjectSelected')
+                  : isEmpty(selectedRow)
+                  ? getString('pipeline.pipelineChaining.noPipelineSelected')
+                  : undefined
+              }
             />
-            <Button variation={ButtonVariation.TERTIARY} text={getString('cancel')} onClick={() => setOpen(false)} />
+            <Button variation={ButtonVariation.TERTIARY} text={getString('cancel')} onClick={handleClose} />
           </Layout.Horizontal>
         </Container>
       </Dialog>

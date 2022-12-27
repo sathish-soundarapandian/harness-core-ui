@@ -50,7 +50,7 @@ function EnvironmentResourceModal({
   selectedData,
   resourceScope
 }: RbacResourceModalProps): React.ReactElement {
-  const { accountIdentifier, orgIdentifier = '', projectIdentifier = '' } = resourceScope
+  const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
   const { getString } = useStrings()
   const [page, setPage] = useState(0)
 

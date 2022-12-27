@@ -67,11 +67,6 @@ function WrapperComponent(props: ChangeTimelineProps): JSX.Element {
 }
 
 describe('Render ChangeTimeline', () => {
-  test('should render with empty data', async () => {
-    const { container } = render(<WrapperComponent {...defaultProps} />)
-    await waitFor(() => expect(container.querySelector('[data-testid="timelineNoData"]')).toBeTruthy())
-  })
-
   test('should render with error state', async () => {
     jest.spyOn(cvServices, 'useChangeEventTimeline').mockImplementation(
       () =>
@@ -127,6 +122,7 @@ describe('Render ChangeTimeline', () => {
         } as any)
     )
     const { container } = render(<WrapperComponent {...defaultProps} />)
+    expect(container).toMatchSnapshot()
     await waitFor(() => expect(container.querySelector('[data-testid="timelineLoading"]')).toBeTruthy())
   })
 

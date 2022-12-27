@@ -716,6 +716,7 @@ const transformStepsData = ({
         const iconUrl = get(templateIcons, templateRef) as string | undefined
         const type = (templateRef ? get(templateTypes, templateRef) : first?.step?.type) as string
         const { nodeType, iconName } = getNodeInfo(defaultTo(type, ''), graphType)
+        const stepIcon = get(step, 'data.icon') || iconName
         const isExecutionView = get(first, 'step.status', false)
         finalData.push({
           id: getuniqueIdForStep(first),
@@ -723,7 +724,7 @@ const transformStepsData = ({
           name: first?.step?.name as string,
           type,
           nodeType: nodeType as string,
-          icon: iconName,
+          icon: stepIcon,
           iconUrl,
           data: {
             ...first,
@@ -775,13 +776,14 @@ const transformStepsData = ({
       } else {
         const stepData = step as StepElementConfig
         const isExecutionView = get(step, 'status', false)
+        const stepIcon = get(step, 'data.icon') || iconName
         finalData.push({
           id: getuniqueIdForStep({ step } as any),
           identifier: stepData?.identifier as string,
           name: stepData?.name as string,
           type: stepData?.type as string,
           nodeType: stepData?.type as string,
-          icon: iconName,
+          icon: stepIcon,
           status: get(stepData, 'status', ''),
           data: {
             step: {
@@ -789,7 +791,7 @@ const transformStepsData = ({
             },
             type: stepData?.name as string,
             nodeType: stepData?.name as string,
-            icon: iconName,
+            icon: stepIcon,
             loopingStrategyEnabled: !!stepData?.strategy,
             conditionalExecutionEnabled:
               (stepData as any)?.data?.conditionalExecutionEnabled ||

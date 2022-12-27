@@ -7,11 +7,13 @@
 
 import React, { useContext, useEffect, useState } from 'react'
 import type { Column, Renderer, CellProps } from 'react-table'
+
 import { Position } from '@blueprintjs/core'
 import ReactTimeago from 'react-timeago'
 
 import { Layout, TableV2, Text, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+
 import type { FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
 import NodeMenuButton from '@filestore/common/NodeMenu/NodeMenuButton'
 import { useStrings } from 'framework/strings'
@@ -20,8 +22,8 @@ import FolderIcon from '@filestore/images/closed-folder.svg'
 import FileIcon from '@filestore/images/file-.svg'
 
 import { FileStoreNodeTypes, FileUsage } from '@filestore/interfaces/FileStore'
-import type { StoreNodeType } from '@filestore/interfaces/FileStore'
-import { getFileUsageNameByType, getMenuOptionItems } from '@filestore/utils/FileStoreUtils'
+import type { StoreNodeType, SortType } from '@filestore/interfaces/FileStore'
+import { getFileUsageNameByType, getMenuOptionItems, sortNodesByType } from '@filestore/utils/FileStoreUtils'
 import useDelete from '@filestore/common/useDelete/useDelete'
 import useNewNodeModal from '@filestore/common/useNewNodeModal/useNewNodeModal'
 
@@ -121,12 +123,28 @@ const RenderColumnMenu: Renderer<CellProps<FileStoreNodeDTO>> = ({ row }) => {
 
 const NodesList: React.FC = () => {
   const { getString } = useStrings()
+
+  const { currentNode, getNode, setCurrentNode, deletedNode, sortNode, getSortTypeById } = useContext(FileStoreContext)
+
   const [childNodes, setChildNodes] = useState<FileStoreNodeDTO[]>([])
-  const { currentNode, getNode, setCurrentNode, deletedNode } = useContext(FileStoreContext)
+  const [currentSortType, setCurrentSortType] = useState<SortType>(getSortTypeById(currentNode.identifier, sortNode))
+
+  const handleSetChildNodes = (nodes: FileStoreNodeDTO[]): void => {
+    setChildNodes(sortNodesByType(nodes, getSortTypeById(currentNode.identifier, sortNode)))
+  }
+
+  useEffect(() => {
+    const newSort = getSortTypeById(currentNode.identifier, sortNode)
+    if (currentSortType === newSort) {
+      return
+    }
+    setCurrentSortType(newSort)
+    handleSetChildNodes(childNodes)
+  }, [sortNode])
 
   useEffect(() => {
     if (currentNode?.children) {
-      setChildNodes(currentNode.children)
+      handleSetChildNodes(currentNode.children)
     } else {
       setChildNodes([])
     }
@@ -135,7 +153,7 @@ const NodesList: React.FC = () => {
   React.useEffect(() => {
     const existDeletedItem = childNodes.find((node: FileStoreNodeDTO) => node.identifier === deletedNode)
     if (existDeletedItem) {
-      setChildNodes(childNodes.filter((node: FileStoreNodeDTO) => node.identifier !== deletedNode))
+      handleSetChildNodes(childNodes.filter((node: FileStoreNodeDTO) => node.identifier !== deletedNode))
     }
   }, [deletedNode])
 
@@ -182,6 +200,7 @@ const NodesList: React.FC = () => {
       Cell: RenderColumnMenu
     }
   ]
+
   return (
     <Container padding="xlarge">
       {currentNode?.children?.length ? (

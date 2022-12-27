@@ -76,14 +76,17 @@ const StepSpotAuthentication: React.FC<StepProps<StepConfigureProps> & SpotAuthe
     : undefined
 
   useEffect(() => {
-    if (loadingConnectorSecrets && props.isEditMode && props.connectorInfo) {
-      setupSpotFormData(props.connectorInfo, accountId)
-        .then(data => {
-          setInitialValues(data as SpotFormInterface)
-        })
-        .finally(() => {
+    if (loadingConnectorSecrets) {
+      if (props.isEditMode) {
+        if (props.connectorInfo) {
+          setupSpotFormData(props.connectorInfo, accountId).then(data => {
+            setInitialValues(data as SpotFormInterface)
+            setLoadingConnectorSecrets(false)
+          })
+        } else {
           setLoadingConnectorSecrets(false)
-        })
+        }
+      }
     }
   }, [loadingConnectorSecrets])
 

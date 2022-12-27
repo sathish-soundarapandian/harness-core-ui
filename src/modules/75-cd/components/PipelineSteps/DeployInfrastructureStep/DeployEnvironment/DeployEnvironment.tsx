@@ -56,6 +56,7 @@ import { useStageFormContext } from '@pipeline/context/StageFormContext'
 
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { isEditEnvironment } from '../utils'
 
@@ -92,7 +93,7 @@ function DeployEnvironment({
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
 
-  const { GLOBAL_SERVICE_ENV } = useFeatureFlags()
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const [environments, setEnvironments] = useState<EnvironmentResponseDTO[]>()
   const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO>()
   const [environmentsSelectOptions, setEnvironmentsSelectOptions] = useState<SelectOption[]>()
@@ -106,7 +107,8 @@ function DeployEnvironment({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
-      projectIdentifier
+      projectIdentifier,
+      includeAllAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
     },
     body: {
       filterType: 'Environment'
@@ -167,24 +169,30 @@ function DeployEnvironment({
           const values = { ...formik?.values }
 
           const hasEnvChanged =
-            get(values, 'environment.environmentRef') !== get(values, 'environment.environmentInputs.identifier')
+            get(values, 'environment.environmentRef') !== get(initialValues, 'environment.environmentRef')
 
           if (parsedEnvironmentYaml.environmentInputs) {
-            ;(getMultiTypeFromValue(get(values, 'environment.environmentInputs')) === MultiTypeInputType.RUNTIME ||
-              hasEnvChanged) &&
+            if (
+              getMultiTypeFromValue(get(values, 'environment.environmentInputs')) === MultiTypeInputType.RUNTIME ||
+              hasEnvChanged
+            ) {
               set(values, 'environment.environmentInputs', {
                 ...clearRuntimeInput(parsedEnvironmentYaml.environmentInputs)
               })
+            }
           } else {
             unset(values, 'environment.environmentInputs')
           }
 
           if (parsedServiceOverridesYaml.serviceOverrideInputs) {
-            ;(getMultiTypeFromValue(get(values, 'environment.serviceOverrideInputs')) === MultiTypeInputType.RUNTIME ||
-              hasEnvChanged) &&
+            if (
+              getMultiTypeFromValue(get(values, 'environment.serviceOverrideInputs')) === MultiTypeInputType.RUNTIME ||
+              hasEnvChanged
+            ) {
               set(values, 'environment.serviceOverrideInputs', {
                 ...clearRuntimeInput(parsedServiceOverridesYaml.serviceOverrideInputs)
               })
+            }
           } else {
             unset(values, `environment.serviceOverrideInputs`)
           }
@@ -268,7 +276,7 @@ function DeployEnvironment({
         accountIdentifier: accountId,
         orgIdentifier,
         projectIdentifier,
-        environmentIdentifier: selectedEnvironment?.identifier
+        environmentIdentifier: getScopedValueFromDTO(selectedEnvironment)
       }
       refetchEnvironmentInputs({
         queryParams
@@ -314,7 +322,7 @@ function DeployEnvironment({
     if (!isNil(environments)) {
       setEnvironmentsSelectOptions(
         environments.map(environment => {
-          return { label: defaultTo(environment.name, ''), value: defaultTo(environment.identifier, '') }
+          return { label: defaultTo(environment.name, ''), value: defaultTo(getScopedValueFromDTO(environment), '') }
         })
       )
     }
@@ -348,7 +356,7 @@ function DeployEnvironment({
             })
           )
           setSelectedEnvironment(
-            environments?.find(environment => environment.identifier === existingEnvironment?.value)
+            environments?.find(environment => getScopedValueFromDTO(environment) === existingEnvironment?.value)
           )
         }
       }
@@ -413,7 +421,7 @@ function DeployEnvironment({
       spacing="medium"
       flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
     >
-      {GLOBAL_SERVICE_ENV ? (
+      {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
         <MultiTypeEnvironmentField
           {...commonProps}
           placeholder={
@@ -422,7 +430,7 @@ function DeployEnvironment({
           setRefValue={true}
           isNewConnectorLabelVisible={false}
           onChange={item => {
-            setSelectedEnvironment(environments?.find(environment => environment.identifier === item))
+            setSelectedEnvironment(environments?.find(environment => getScopedValueFromDTO(environment) === item))
             if (formik?.values['infrastructureRef'] && item !== RUNTIME_INPUT_VALUE) {
               formik?.setFieldValue('infrastructureRef', '')
             }

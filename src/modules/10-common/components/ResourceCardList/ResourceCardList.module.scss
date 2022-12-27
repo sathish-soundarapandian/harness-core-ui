@@ -41,6 +41,13 @@
   background-color: var(--magenta-100);
 }
 
+.gitOpsIcon {
+  svg path {
+    //Todo: We have blue icons today, remove this once we add non-colored icons
+    fill: var(--grey-600);
+  }
+}
+
 .gitOpsEntities {
   margin: var(--spacing-xlarge) 0;
   padding-top: var(--spacing-xlarge);

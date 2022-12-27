@@ -10,6 +10,10 @@ declare const styles: {
   readonly activeNode: string
   readonly folder: string
   readonly mainNode: string
+  readonly nodeCollapseActive: string
+  readonly nodeCollapseContainer: string
+  readonly nodeCollapseItem: string
+  readonly nodeCollapseNormal: string
   readonly styledPropsMain: string
 }
 export default styles

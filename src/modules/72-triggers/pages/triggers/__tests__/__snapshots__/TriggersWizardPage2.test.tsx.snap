@@ -503,6 +503,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                                         >
                                                           <button
                                                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                            data-testid="multi-type-button"
                                                           >
                                                             <span
                                                               class="bp3-icon StyledProps--main"
@@ -580,6 +581,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                                         >
                                                           <button
                                                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                            data-testid="multi-type-button"
                                                           >
                                                             <span
                                                               class="bp3-icon StyledProps--main"
@@ -654,6 +656,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                                         >
                                                           <button
                                                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                            data-testid="multi-type-button"
                                                           >
                                                             <span
                                                               class="bp3-icon StyledProps--main"
@@ -728,6 +731,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                                         >
                                                           <button
                                                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                            data-testid="multi-type-button"
                                                           >
                                                             <span
                                                               class="bp3-icon StyledProps--main"
@@ -860,6 +864,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                                       </div>
                                                       <button
                                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                        data-testid="multi-type-button"
                                                         disabled=""
                                                       >
                                                         <span
@@ -961,6 +966,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                                       </div>
                                                       <button
                                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                        data-testid="multi-type-button"
                                                         disabled=""
                                                       >
                                                         <span
@@ -1032,6 +1038,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                                       </div>
                                                       <button
                                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                        data-testid="multi-type-button"
                                                         disabled=""
                                                       >
                                                         <span
@@ -1100,6 +1107,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                                       </div>
                                                       <button
                                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                        data-testid="multi-type-button"
                                                         disabled=""
                                                       >
                                                         <span
@@ -1177,6 +1185,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                                       </div>
                                                       <button
                                                         class="MultiTypeInput--btn MultiTypeInput--EXPRESSION"
+                                                        data-testid="multi-type-button"
                                                         disabled=""
                                                       >
                                                         <span
@@ -2914,6 +2923,7 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
                             >
                               <button
                                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                data-testid="multi-type-button"
                               >
                                 <span
                                   class="bp3-icon StyledProps--main"
@@ -3031,6 +3041,7 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -3154,6 +3165,7 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -3231,6 +3243,7 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -3312,6 +3325,7 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
                         </div>
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--EXPRESSION"
+                          data-testid="multi-type-button"
                           disabled=""
                         >
                           <span
@@ -4243,6 +4257,7 @@ exports[`Manifest Trigger Tests on click of edit artifact - submits thru the rig
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -4347,6 +4362,7 @@ exports[`Manifest Trigger Tests on click of edit artifact - submits thru the rig
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -4735,7 +4751,6 @@ exports[`Manifest Trigger Tests on edit -with event conditions payload 1`] = `
                           class="bp3-form-group operatorContainer"
                           style="align-self: center;"
                         >
-                          
                           <div
                             class="bp3-form-content"
                           >
@@ -4789,7 +4804,6 @@ exports[`Manifest Trigger Tests on edit -with event conditions payload 1`] = `
                           class="bp3-form-group textContainer"
                           style="align-self: center;"
                         >
-                          
                           <div
                             class="bp3-form-content"
                           >

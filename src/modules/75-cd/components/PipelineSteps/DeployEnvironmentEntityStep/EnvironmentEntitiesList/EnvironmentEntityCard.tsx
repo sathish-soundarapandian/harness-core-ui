@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { Collapse, Divider } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
@@ -19,11 +19,12 @@ import {
   Layout,
   TagsPopover,
   Button,
-  ButtonSize
+  ButtonSize,
+  SelectOption
 } from '@harness/uicore'
-
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import type { ServiceSpec } from 'services/cd-ng'
+import type { NGEnvironmentInfoConfig, ServiceSpec } from 'services/cd-ng'
 
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -33,7 +34,10 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { getStepTypeByDeploymentType } from '@pipeline/utils/stageHelpers'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
+import { getIdentifierFromName } from '@common/utils/StringUtils'
+import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import type {
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState,
@@ -41,10 +45,8 @@ import type {
 } from '../types'
 import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
 import DeployCluster from '../DeployCluster/DeployCluster'
-import InlineEntityFilters from '../components/InlineEntityFilters/InlineEntityFilters'
 import {
-  EntityFilterType,
-  EntityType,
+  InlineEntityFiltersProps,
   InlineEntityFiltersRadioType
 } from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
 
@@ -56,6 +58,21 @@ export interface EnvironmentEntityCardProps extends EnvironmentData, Required<De
   onEditClick: (environment: EnvironmentData) => void
   onDeleteClick: (environment: EnvironmentData) => void
   initialValues: DeployEnvironmentEntityFormState
+}
+
+const getScopedRefUsingIdentifier = (
+  values: any,
+  environment: NGEnvironmentInfoConfig & {
+    yaml: string
+  }
+): string => {
+  const envRef = get(values, 'environment')
+  if (envRef) {
+    return envRef
+  }
+  return get(values, 'environments', []).find(
+    (env: SelectOption) => getIdentifierFromName(env.label) === environment?.identifier
+  )?.value
 }
 
 export function EnvironmentEntityCard({
@@ -74,7 +91,9 @@ export function EnvironmentEntityCard({
   const { getString } = useStrings()
   const { values, setFieldValue } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { name, identifier, tags } = environment
+  const scopedEnvRef = getScopedRefUsingIdentifier(values, environment)
   const filterPrefix = useMemo(() => `environmentFilters.${identifier}`, [identifier])
+  const { accountId } = useParams<PipelinePathProps>()
 
   const handleFilterRadio = (selectedRadioValue: InlineEntityFiltersRadioType): void => {
     if (selectedRadioValue === InlineEntityFiltersRadioType.MANUAL) {
@@ -120,22 +139,20 @@ export function EnvironmentEntityCard({
                 resourceType: ResourceType.ENVIRONMENT,
                 resourceIdentifier: identifier
               },
+              resourceScope: {
+                accountIdentifier: accountId,
+                orgIdentifier: environment.orgIdentifier,
+                projectIdentifier: environment.projectIdentifier
+              },
               permission: PermissionIdentifier.EDIT_ENVIRONMENT
             }}
           />
-          <RbacButton
+          <Button
             variation={ButtonVariation.ICON}
             icon="remove-minus"
             data-testid={`delete-environment-${identifier}`}
             disabled={readonly}
             onClick={() => onDeleteClick({ environment, environmentInputs })}
-            permission={{
-              resource: {
-                resourceType: ResourceType.ENVIRONMENT,
-                resourceIdentifier: identifier
-              },
-              permission: PermissionIdentifier.DELETE_ENVIRONMENT
-            }}
           />
         </Container>
       </Layout.Horizontal>
@@ -164,12 +181,12 @@ export function EnvironmentEntityCard({
                 </Text>
                 <StepWidget<ServiceSpec>
                   factory={factory}
-                  initialValues={values.environmentInputs?.[identifier] || {}}
+                  initialValues={values.environmentInputs?.[scopedEnvRef] || {}}
                   allowableTypes={allowableTypes}
                   template={environmentInputs}
                   type={getStepTypeByDeploymentType(deploymentType)}
                   stepViewType={StepViewType.TemplateUsage}
-                  path={`environmentInputs.${identifier}`}
+                  path={`environmentInputs.['${scopedEnvRef}']`}
                   readonly={readonly}
                   customStepProps={{
                     stageIdentifier
@@ -185,12 +202,12 @@ export function EnvironmentEntityCard({
                 </Text>
                 <StepWidget<ServiceSpec>
                   factory={factory}
-                  initialValues={values.environmentInputs?.[identifier]?.overrides || {}}
+                  initialValues={values.environmentInputs?.[scopedEnvRef]?.overrides || {}}
                   allowableTypes={allowableTypes}
                   template={environmentInputs.overrides}
                   type={getStepTypeByDeploymentType(deploymentType)}
                   stepViewType={StepViewType.TemplateUsage}
-                  path={`environmentInputs.${identifier}.overrides`}
+                  path={`environmentInputs.['${scopedEnvRef}'].overrides`}
                   readonly={readonly}
                   customStepProps={{
                     stageIdentifier
@@ -202,47 +219,46 @@ export function EnvironmentEntityCard({
         </>
       ) : null}
 
-      {!values.environment && Array.isArray(values.environments) && (
+      {!values.environment && Array.isArray(values.environments) && scopedEnvRef && (
         <>
           <Container margin={{ top: 'medium', bottom: 'medium' }}>
             <Divider />
           </Container>
-          <InlineEntityFilters
-            filterPrefix={filterPrefix}
-            entityStringKey={gitOpsEnabled ? 'common.clusters' : 'common.infrastructures'}
-            onRadioValueChange={handleFilterRadio}
+          <StepWidget<InlineEntityFiltersProps>
+            type={StepType.InlineEntityFilters}
+            factory={factory}
+            stepViewType={StepViewType.Edit}
             readonly={readonly}
-            baseComponent={
-              <>
-                {gitOpsEnabled ? (
-                  <DeployCluster
-                    initialValues={initialValues}
-                    readonly={readonly}
-                    allowableTypes={allowableTypes}
-                    environmentIdentifier={identifier}
-                    isMultiCluster
-                  />
-                ) : (
-                  <DeployInfrastructure
-                    initialValues={initialValues}
-                    readonly={readonly}
-                    allowableTypes={allowableTypes}
-                    environmentIdentifier={identifier}
-                    isMultiInfrastructure
-                    deploymentType={deploymentType}
-                    customDeploymentRef={customDeploymentRef}
-                  />
-                )}
-              </>
-            }
-            entityFilterListProps={{
-              entities: [gitOpsEnabled ? EntityType.CLUSTERS : EntityType.INFRASTRUCTURES],
-              filters: [EntityFilterType.ALL, EntityFilterType.TAGS],
-              placeholderProps: {
-                entity: getString('common.filterOnName', {
-                  name: getString(gitOpsEnabled ? 'common.clusters' : 'common.infrastructures')
-                }),
-                tags: getString('common.filterOnName', { name: getString('typeLabel') })
+            allowableTypes={allowableTypes}
+            initialValues={{
+              filterPrefix,
+              entityStringKey: gitOpsEnabled ? 'common.clusters' : 'common.infrastructures',
+              onRadioValueChange: handleFilterRadio,
+              baseComponent: (
+                <>
+                  {gitOpsEnabled ? (
+                    <DeployCluster
+                      initialValues={initialValues}
+                      readonly={readonly}
+                      allowableTypes={allowableTypes}
+                      environmentIdentifier={scopedEnvRef}
+                      isMultiCluster
+                    />
+                  ) : (
+                    <DeployInfrastructure
+                      initialValues={initialValues}
+                      readonly={readonly}
+                      allowableTypes={allowableTypes}
+                      environmentIdentifier={scopedEnvRef}
+                      isMultiInfrastructure
+                      deploymentType={deploymentType}
+                      customDeploymentRef={customDeploymentRef}
+                    />
+                  )}
+                </>
+              ),
+              entityFilterProps: {
+                entities: [gitOpsEnabled ? 'gitOpsClusters' : 'infrastructures']
               }
             }}
           />

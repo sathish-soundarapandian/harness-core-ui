@@ -134,6 +134,7 @@ exports[`<MultiTypeMap /> tests Should render runtime input properly 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -297,6 +298,7 @@ exports[`<MultiTypeMap /> tests Should restrict to a single entry: temp 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -356,6 +358,7 @@ exports[`<MultiTypeMap /> tests Should restrict to a single entry: temp 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -415,6 +418,7 @@ exports[`<MultiTypeMap /> tests Should restrict to a single entry: temp 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -474,6 +478,7 @@ exports[`<MultiTypeMap /> tests Should restrict to a single entry: temp 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"

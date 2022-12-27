@@ -15,6 +15,7 @@ import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { connectorUrlType } from '@connectors/constants'
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
+import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import type { SourceRepo, TriggerBaseType } from '../TriggerInterface'
 import { ciCodebaseBuild, ciCodebaseBuildPullRequest, CUSTOM, TriggerGitEvent } from '../utils'
 
@@ -217,6 +218,7 @@ export interface FlatOnEditValuesInterface {
   buildOperator?: string
   pipelineBranchName?: string
   inputSetRefs?: string[]
+  pollInterval?: string
 }
 
 export const getModifiedTemplateValues = (
@@ -236,6 +238,7 @@ export const getModifiedTemplateValues = (
 // requiredFields and checkValidPanel in getPanels() above to render warning icons related to this schema
 export const getValidationSchema = (
   getString: UseStringsReturn['getString'],
+  isGitWebhookPollingEnabled = false,
   isGithubWebhookAuthenticationEnabled = false
 ): ObjectSchema<Record<string, any> | undefined> => {
   return object().shape({
@@ -257,6 +260,17 @@ export const getValidationSchema = (
         return this.parent.sourceRepo === CUSTOM || event
       }
     ),
+    ...(isGitWebhookPollingEnabled && {
+      pollInterval: getDurationValidationSchema({
+        minimum: '2m',
+        maximum: '60m',
+        explicitAllowedValues: ['0']
+      }).required(
+        getString('common.validation.fieldIsRequired', {
+          name: getString('triggers.triggerConfigurationPanel.pollingFrequency')
+        })
+      )
+    }),
     connectorRef: object().test(
       getString('triggers.validation.connector'),
       getString('triggers.validation.connector'),

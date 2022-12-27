@@ -127,6 +127,7 @@ exports[`<Volumes /> tests All onEdit values render 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -264,6 +265,7 @@ exports[`<Volumes /> tests All onEdit values render 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -321,6 +323,7 @@ exports[`<Volumes /> tests All onEdit values render 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -442,6 +445,7 @@ exports[`<Volumes /> tests All onEdit values render 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -579,6 +583,7 @@ exports[`<Volumes /> tests All onEdit values render 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -659,6 +664,7 @@ exports[`<Volumes /> tests All onEdit values render 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -775,6 +781,7 @@ exports[`<Volumes /> tests All onEdit values render 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -917,6 +924,7 @@ exports[`<Volumes /> tests All onEdit values render 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -997,6 +1005,7 @@ exports[`<Volumes /> tests All onEdit values render 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -1224,6 +1233,7 @@ exports[`<Volumes /> tests Should render runtime input properly 1`] = `
             >
               <button
                 class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                data-testid="multi-type-button"
               >
                 <span
                   class="bp3-icon StyledProps--main"

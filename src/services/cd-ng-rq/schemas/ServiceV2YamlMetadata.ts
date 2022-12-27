@@ -12,4 +12,6 @@ export interface ServiceV2YamlMetadata {
   inputSetTemplateYaml?: string
   serviceIdentifier: string
   serviceYaml?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }

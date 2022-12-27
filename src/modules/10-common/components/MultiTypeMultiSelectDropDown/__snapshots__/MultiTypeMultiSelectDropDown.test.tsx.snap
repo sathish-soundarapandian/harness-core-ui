@@ -55,6 +55,7 @@ exports[`<MultiTypeMultiSelectDropDown /> tests Expression Input 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--EXPRESSION"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -179,6 +180,7 @@ exports[`<MultiTypeMultiSelectDropDown /> tests Fixed Input 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -289,6 +291,7 @@ exports[`<MultiTypeMultiSelectDropDown /> tests Fixed Input with error 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -399,6 +402,7 @@ exports[`<MultiTypeMultiSelectDropDown /> tests Runtime Input - Configuration Op
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -512,6 +516,7 @@ exports[`<MultiTypeMultiSelectDropDown /> tests Runtime Input 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -617,6 +622,7 @@ exports[`<MultiTypeMultiSelectDropDown /> tests validation 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"

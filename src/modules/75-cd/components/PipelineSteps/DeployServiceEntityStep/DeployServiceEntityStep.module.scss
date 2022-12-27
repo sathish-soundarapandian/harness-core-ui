@@ -51,7 +51,8 @@
 }
 
 .inputSetSpinner {
-  margin-bottom: var(--spacing-6);
+  display: flex;
+  align-self: center;
 }
 .inputFieldLayout {
   display: flex;

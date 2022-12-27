@@ -76,7 +76,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
     queryParams: {
       ...getScopeBasedProjectPathParams(params, scope),
       versionLabel: defaultTo(templateLinkConfig.versionLabel, ''),
-      ...getGitQueryParamsWithParentScope(storeMetadata, params, repoIdentifier, branch)
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch })
     }
   })
 

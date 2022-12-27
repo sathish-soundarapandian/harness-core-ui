@@ -9,23 +9,18 @@
 declare const styles: {
   readonly arrow: string
   readonly btn: string
-  readonly buildImg: string
-  readonly buildYourOwnPipeline: string
   readonly buttonRow: string
-  readonly ciIcon: string
-  readonly ciLogo: string
+  readonly centerAlign: string
   readonly containerItemCss: string
-  readonly contentWrapper: string
-  readonly icon: string
   readonly iconPadding: string
   readonly iconPaddingSmall: string
   readonly image: string
-  readonly label: string
-  readonly learnMore: string
   readonly linkText: string
   readonly listContainerCss: string
   readonly listItemCss: string
   readonly paddingXSmall: string
+  readonly samplePipeline: string
+  readonly separator: string
   readonly topPage: string
 }
 export default styles

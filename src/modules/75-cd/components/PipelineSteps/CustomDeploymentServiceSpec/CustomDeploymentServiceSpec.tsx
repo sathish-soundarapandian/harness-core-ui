@@ -13,13 +13,7 @@ import { CompletionItemKind } from 'vscode-languageserver-types'
 
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
-import {
-  StepViewType,
-  ValidateInputSetProps,
-  Step,
-  StepProps,
-  InputSetData
-} from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import {
   ServiceSpec,
   getConnectorListV2Promise,
@@ -61,7 +55,6 @@ export class CustomDeploymentServiceSpec extends Step<ServiceSpec> {
   protected type = StepType.CustomDeploymentServiceSpec
   protected defaultValues: ServiceSpec = {}
 
-  protected inputSetData: InputSetData<K8SDirectServiceStep> | undefined = undefined
   protected stepIcon: IconName = 'template-library'
   protected stepName = 'Deplyment Template Type'
   protected stepPaletteVisible = false
@@ -248,22 +241,15 @@ export class CustomDeploymentServiceSpec extends Step<ServiceSpec> {
         getString?.('fieldRequired', { field: 'Artifact Path Filter' })
       )
     }
-
-    if (
-      isEmpty(get(data, `${dataPathToField}.repositoryUrl`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.repositoryUrl`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.repositoryUrl`, getString?.('fieldRequired', { field: 'Repository URL' }))
-    }
-
     // ECR artifact specific fields
-    if (
-      isEmpty(get(data, `${dataPathToField}.region`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.region`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.region`, getString?.('fieldRequired', { field: 'Region' }))
+    if (artifactType !== ENABLED_ARTIFACT_TYPES.AmazonS3) {
+      if (
+        isEmpty(get(data, `${dataPathToField}.region`)) &&
+        isRequired &&
+        getMultiTypeFromValue(get(template, `${templatePathToField}.region`)) === MultiTypeInputType.RUNTIME
+      ) {
+        set(errors, `${dataPathToField}.region`, getString?.('fieldRequired', { field: 'Region' }))
+      }
     }
 
     // Nexus3 artifact specific fields
@@ -276,12 +262,14 @@ export class CustomDeploymentServiceSpec extends Step<ServiceSpec> {
         set(errors, `${dataPathToField}.spec.repositoryUrl`, getString?.('fieldRequired', { field: 'Repository URL' }))
       }
     }
-    if (
-      isEmpty(get(data, `${dataPathToField}.spec.artifactPath`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.spec.artifactPath`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.spec.artifactPath`, getString?.('fieldRequired', { field: 'Artifact Path' }))
+    if (artifactType !== ENABLED_ARTIFACT_TYPES.Jenkins) {
+      if (
+        isEmpty(get(data, `${dataPathToField}.spec.artifactPath`)) &&
+        isRequired &&
+        getMultiTypeFromValue(get(template, `${templatePathToField}.spec.artifactPath`)) === MultiTypeInputType.RUNTIME
+      ) {
+        set(errors, `${dataPathToField}.spec.artifactPath`, getString?.('fieldRequired', { field: 'Artifact Path' }))
+      }
     }
 
     // GCR artifact specific fields
@@ -476,12 +464,12 @@ export class CustomDeploymentServiceSpec extends Step<ServiceSpec> {
 
   validateInputSet({
     data,
+    template,
     getString,
     viewType
   }: ValidateInputSetProps<K8SDirectServiceStep>): FormikErrors<K8SDirectServiceStep> {
     const errors: FormikErrors<K8SDirectServiceStep> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-    const template = this.inputSetData?.template
 
     /** Primary Artifact fields validation */
     this.validatePrimaryArtifactInputSetFields({
@@ -508,7 +496,6 @@ export class CustomDeploymentServiceSpec extends Step<ServiceSpec> {
     const { initialValues, onUpdate, stepViewType, inputSetData, factory, customStepProps, readonly, allowableTypes } =
       props
 
-    this.inputSetData = inputSetData
     if (stepViewType === StepViewType.InputVariable) {
       return (
         <CustomDeploymentSpecVariablesForm

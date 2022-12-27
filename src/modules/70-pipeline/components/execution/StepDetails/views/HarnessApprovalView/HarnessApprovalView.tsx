@@ -50,7 +50,7 @@ enum ApprovalStepTab {
 }
 
 export function HarnessApprovalView(props: HarnessApprovalViewProps): React.ReactElement {
-  const { step, mock, getApprovalAuthorizationMock, stageType = StageType.DEPLOY } = props
+  const { step, mock, getApprovalAuthorizationMock, stageType = StageType.DEPLOY, executionMetadata } = props
   const approvalInstanceId = get(step, 'executableResponses[0].async.callbackIds[0]') || ''
   const manuallySelected = React.useRef(false)
   const [activeTab, setActiveTab] = React.useState(ApprovalStepTab.APPROVAL)
@@ -128,7 +128,7 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
         <Tabs.Tab
           id={ApprovalStepTab.STEP_EXECUTION_INPUTS}
           title={getString('pipeline.runtimeInputs')}
-          panel={<ExecutionInputs step={step} />}
+          panel={<ExecutionInputs step={step} executionMetadata={executionMetadata} />}
         />
       ) : null}
       <Tabs.Tab
@@ -149,6 +149,7 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
             startTs={step.startTs}
             endTs={step.endTs}
             stepParameters={step.stepParameters}
+            executionMetadata={executionMetadata}
           />
         }
       />
@@ -184,7 +185,13 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
           id={ApprovalStepTab.MANUAL_INTERVENTION}
           key={ApprovalStepTab.MANUAL_INTERVENTION}
           title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
-          panel={<ManualInterventionTab step={step} allowedStrategies={failureStrategies} />}
+          panel={
+            <ManualInterventionTab
+              step={step}
+              allowedStrategies={failureStrategies}
+              executionMetadata={executionMetadata}
+            />
+          }
         />
       )}
       {activeTab === ApprovalStepTab.APPROVAL && (

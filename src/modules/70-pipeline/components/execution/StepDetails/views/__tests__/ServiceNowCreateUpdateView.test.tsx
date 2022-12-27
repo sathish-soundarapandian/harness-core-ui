@@ -13,6 +13,7 @@ import type { ExecutionNode } from 'services/pipeline-ng'
 import { getDefaultReducerState } from '@pipeline/components/LogsContent/LogsState/utils'
 import type { UseActionCreatorReturn } from '@pipeline/components/LogsContent/LogsState/actions'
 import { ServiceNowCreateUpdateView } from '../ServiceNowCreateUpdateView/ServiceNowCreateUpdateView'
+import { executionMetadata } from './mock'
 
 const actions: UseActionCreatorReturn = {
   createSections: jest.fn(),
@@ -60,7 +61,7 @@ describe('ServiceNowcreateupdate view test ', () => {
     jest.spyOn(loadAsh, 'get').mockReturnValue({ ticketNumber: 'ticketNumber', ticketUrl: 'ticketUrl' })
     const { container } = render(
       <TestWrapper>
-        <ServiceNowCreateUpdateView step={stepProps}></ServiceNowCreateUpdateView>
+        <ServiceNowCreateUpdateView step={stepProps} executionMetadata={executionMetadata}></ServiceNowCreateUpdateView>
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

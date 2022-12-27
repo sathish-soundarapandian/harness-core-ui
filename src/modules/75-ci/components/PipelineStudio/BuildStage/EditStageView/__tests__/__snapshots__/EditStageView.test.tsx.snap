@@ -685,6 +685,7 @@ exports[`EditStageView snapshot test should render properly without data 1`] = `
                             >
                               <button
                                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                data-testid="multi-type-button"
                               >
                                 <span
                                   class="bp3-icon StyledProps--main"
@@ -760,6 +761,7 @@ exports[`EditStageView snapshot test should render properly without data 1`] = `
                             >
                               <button
                                 class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                data-testid="multi-type-button"
                               >
                                 <span
                                   class="bp3-icon StyledProps--main"

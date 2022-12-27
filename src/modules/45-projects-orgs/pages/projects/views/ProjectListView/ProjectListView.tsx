@@ -75,9 +75,7 @@ const RenderColumnModules: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) 
   const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
   const data = row.original
-
   const shouldShowModules = data.projectResponse.project.modules?.length
-
   function getModuleIcons(project: Project): React.ReactElement[] {
     const modules = project.modules
     const icons = []

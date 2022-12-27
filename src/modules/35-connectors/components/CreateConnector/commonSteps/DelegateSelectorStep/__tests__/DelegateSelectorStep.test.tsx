@@ -78,7 +78,6 @@ jest.mock('services/cd-ng-rq', () => ({
 jest.spyOn(featureFlags, 'useFeatureFlags').mockImplementation(() => ({
   CDNG_ENABLED: false
 }))
-
 describe('DelegateSelectorStep', () => {
   test('should render DelegateSelectorStep component', async () => {
     const { container } = render(

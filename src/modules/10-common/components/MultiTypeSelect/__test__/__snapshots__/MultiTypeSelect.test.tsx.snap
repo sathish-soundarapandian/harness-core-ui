@@ -70,6 +70,7 @@ exports[`<MultiTypeSelect /> tests Should render properly 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

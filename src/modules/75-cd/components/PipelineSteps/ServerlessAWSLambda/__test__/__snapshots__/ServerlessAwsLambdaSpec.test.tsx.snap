@@ -79,6 +79,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view for input
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -158,6 +159,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view for input
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -238,6 +240,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view for input
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -424,6 +427,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with empt
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -497,6 +501,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with empt
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -569,6 +574,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with empt
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -697,6 +703,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with runt
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -808,6 +815,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with runt
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -918,6 +926,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with runt
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -1150,6 +1159,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with valu
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1223,6 +1233,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with valu
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -1295,6 +1306,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with valu
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"

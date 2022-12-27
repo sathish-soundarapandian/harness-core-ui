@@ -7,29 +7,27 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Layout } from '@harness/uicore'
-import { StringKeys, useStrings } from 'framework/strings'
+import { Label, Layout } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import type { ConfigFileSourceRenderProps } from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBase'
-import { isFieldRuntime } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpecHelper'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import { MultiConfigSelectField } from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
+import { isFieldRuntime } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpecHelper'
 import css from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpec.module.scss'
 
 interface K8sValuesYamlConfigFileRenderProps extends ConfigFileSourceRenderProps {
-  pathFieldlabel: StringKeys
   formik?: any
-  readnonly?: boolean
 }
 const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlConfigFileRenderProps): React.ReactElement => {
-  const { template, path, configFilePath, configFile, readonly, formik } = props
+  const { template, path, configFilePath, configFile, readonly, formik, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [filesType, setFilesType] = React.useState('files')
   const [fieldType, setFieldType] = React.useState(FILE_TYPE_VALUES.FILE_STORE)
 
   React.useEffect(() => {
-    if (!Array.isArray(configFile?.spec?.store?.spec?.files) && configFile?.spec?.store?.spec?.files) {
+    if (configFile?.spec?.store?.spec?.files) {
       setFilesType('files')
       setFieldType(FILE_TYPE_VALUES.FILE_STORE)
     } else {
@@ -47,20 +45,23 @@ const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlConfigFileRenderProp
       {(isFieldRuntime(`${configFilePath}.spec.store.spec.files`, template) ||
         isFieldRuntime(`${configFilePath}.spec.store.spec.secretFiles`, template)) && (
         <div className={css.verticalSpacingInput}>
-          <FileStoreList
-            formik={formik}
-            labelClassName={css.listLabel}
-            label={
-              fieldType === FILE_TYPE_VALUES.ENCRYPTED
-                ? getString('pipeline.configFiles.encryptedFiles')
-                : getString('pipeline.configFiles.plainText')
-            }
-            name={`${path}.${configFilePath}.spec.store.spec.${filesType}`}
+          <MultiConfigSelectField
             disabled={readonly}
-            style={{ marginBottom: 'var(--spacing-small)' }}
+            name={`${path}.${configFilePath}.spec.store.spec.${filesType}`}
+            fileType={fieldType}
             expressions={expressions}
-            type={fieldType}
-            isNameOfArrayType
+            formik={formik}
+            stepViewType={stepViewType}
+            multiTypeFieldSelectorProps={{
+              disableTypeSelection: false,
+              label: (
+                <Label htmlFor="files">
+                  {fieldType === FILE_TYPE_VALUES.ENCRYPTED
+                    ? getString('pipeline.configFiles.encryptedFiles')
+                    : getString('pipeline.configFiles.plainText')}
+                </Label>
+              )
+            }}
           />
         </div>
       )}

@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react'
-import { defaultTo, get, memoize } from 'lodash-es'
+import { defaultTo, get, memoize, pick } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 
 import { parse } from 'yaml'
@@ -33,7 +33,11 @@ import {
   SidecarArtifact,
   useGetBuildDetailsForArtifactoryArtifactWithYaml,
   useGetImagePathsForArtifactoryV2,
-  useGetService
+  useGetService,
+  useGetBuildDetailsForArtifactoryArtifact,
+  useGetImagePathsForArtifactory,
+  ArtifactListConfig,
+  ArtifactSource
 } from 'services/cd-ng'
 
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
@@ -44,7 +48,10 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import {
   getHelpeTextForTags,
   isAzureWebAppGenericDeploymentType,
+  isCustomDTGenericDeploymentType,
   isServerlessDeploymentType,
+  isTasGenericDeploymentType,
+  RepositoryFormatTypes,
   ServiceDeploymentType
 } from '@pipeline/utils/stageHelpers'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -205,7 +212,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     isSidecar,
     artifactPath,
     stepViewType,
-    artifacts
+    artifacts,
+    useArtifactV1Data = false
   } = props
 
   const { getString } = useStrings()
@@ -220,15 +228,21 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     },
     serviceIdentifier: serviceIdentifier as string
   })
+  const [repoFormat, setRepoFormat] = useState(
+    defaultTo(
+      artifact?.spec?.repositoryFormat,
+      get(initialValues, `artifacts.${artifactPath}.spec.repositoryFormat`, '')
+    )
+  )
 
   const selectedDeploymentType: ServiceDeploymentType = useMemo(() => {
     let selectedStageSpec: DeploymentStageConfig = getStageFromPipeline(
       props.stageIdentifier,
-      props.formik.values.pipeline ?? props.formik.values
+      props.formik?.values.pipeline ?? props.formik?.values
     ).stage?.stage?.spec as DeploymentStageConfig
 
     const stageArray: StageElementWrapperConfig[] = []
-    props.formik.values.stages?.forEach((stage: StageElementWrapperConfig) => {
+    props.formik?.values.stages?.forEach((stage: StageElementWrapperConfig) => {
       if (get(stage, 'parallel')) {
         stage.parallel?.forEach((parallelStage: StageElementWrapperConfig) => {
           stageArray.push(parallelStage)
@@ -247,34 +261,106 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     return isNewServiceEnvEntity(path as string)
       ? (get(selectedStageSpec, 'service.serviceInputs.serviceDefinition.type') as ServiceDeploymentType)
       : (get(selectedStageSpec, 'serviceConfig.serviceDefinition.type') as ServiceDeploymentType)
-  }, [path, props.formik.values, props.stageIdentifier])
+  }, [path, props.formik?.values, props.stageIdentifier])
 
   const isServerlessOrSshOrWinRmSelected =
     isServerlessDeploymentType(selectedDeploymentType) ||
     selectedDeploymentType === 'WinRm' ||
     selectedDeploymentType === 'Ssh'
 
-  let repoFormat = defaultTo(
-    artifact?.spec?.repositoryFormat,
-    get(initialValues, `artifacts.${artifactPath}.spec.repositoryFormat`, '')
+  const [isAzureWebAppGenericSelected, setIsAzureWebAppGenericSelected] = useState(
+    repoFormat ? isAzureWebAppGenericDeploymentType(selectedDeploymentType, repoFormat) : false
   )
-  const isAzureWebAppGenericSelected = useMemo(() => {
+
+  const [isCustomDeploymentGenericSelected, setIsCustomDeploymentGenericSelected] = useState(
+    repoFormat ? isCustomDTGenericDeploymentType(selectedDeploymentType, repoFormat) : false
+  )
+
+  const [isTasGenericSelected, setIsTasGenericSelected] = useState(
+    repoFormat ? isCustomDTGenericDeploymentType(selectedDeploymentType, repoFormat) : false
+  )
+
+  const [isGenericArtifactory, setIsGenericArtifactory] = useState(
+    isServerlessOrSshOrWinRmSelected ||
+      isAzureWebAppGenericSelected ||
+      isCustomDeploymentGenericSelected ||
+      isTasGenericSelected ||
+      repoFormat === RepositoryFormatTypes.Generic
+  )
+
+  useEffect(() => {
+    let serviceRepoFormat
     /* istanbul ignore else */
     if (service) {
       const parsedService = service?.data?.yaml && parse(service?.data?.yaml)
-      repoFormat = get(parsedService, `service.serviceDefinition.spec.artifacts.${artifactPath}.spec.repositoryFormat`)
+      // to be refactored for some fields once generic dependency is resolved via V2
+      const artifactsInfo = get(parsedService, `service.serviceDefinition.spec.artifacts`) as ArtifactListConfig
+      artifactsInfo?.primary?.sources?.map(artifactInfo => {
+        if (artifactInfo?.identifier === (artifact as ArtifactSource)?.identifier) {
+          serviceRepoFormat = artifactInfo?.spec?.repositoryFormat
+          setRepoFormat(serviceRepoFormat)
+        }
+      })
     }
 
-    if (repoFormat) {
-      return isAzureWebAppGenericDeploymentType(selectedDeploymentType, repoFormat)
+    setIsTasGenericSelected(
+      serviceRepoFormat ? isTasGenericDeploymentType(selectedDeploymentType, serviceRepoFormat) : false
+    )
+  }, [service, artifact, selectedDeploymentType])
+
+  useEffect(() => {
+    let serviceRepoFormat
+    /* istanbul ignore else */
+    if (service) {
+      const parsedService = service?.data?.yaml && parse(service?.data?.yaml)
+      serviceRepoFormat = get(
+        parsedService,
+        `service.serviceDefinition.spec.artifacts.${artifactPath}.spec.repositoryFormat`
+      )
+
+      setRepoFormat(serviceRepoFormat)
     }
 
-    return false
-  }, [service, artifactPath, selectedDeploymentType, initialValues, artifact])
+    setIsAzureWebAppGenericSelected(
+      serviceRepoFormat ? isAzureWebAppGenericDeploymentType(selectedDeploymentType, serviceRepoFormat) : false
+    )
+  }, [service, artifactPath, selectedDeploymentType])
 
-  const isGenericArtifactory = React.useMemo(() => {
-    return isServerlessOrSshOrWinRmSelected || isAzureWebAppGenericSelected
-  }, [isServerlessOrSshOrWinRmSelected, isAzureWebAppGenericSelected])
+  useEffect(() => {
+    let serviceRepoFormat
+    /* istanbul ignore else */
+    if (service) {
+      const parsedService = service?.data?.yaml && parse(service?.data?.yaml)
+      // to be refactored for some fields once generic dependency is resolved via V2
+      const artifactsInfo = get(parsedService, `service.serviceDefinition.spec.artifacts`) as ArtifactListConfig
+      artifactsInfo?.primary?.sources?.map(artifactInfo => {
+        if (artifactInfo?.identifier === (artifact as ArtifactSource)?.identifier) {
+          serviceRepoFormat = artifactInfo?.spec?.repositoryFormat
+          setRepoFormat(serviceRepoFormat)
+        }
+      })
+    }
+
+    setIsCustomDeploymentGenericSelected(
+      serviceRepoFormat ? isCustomDTGenericDeploymentType(selectedDeploymentType, serviceRepoFormat) : false
+    )
+  }, [service, artifact, selectedDeploymentType])
+
+  useEffect(() => {
+    setIsGenericArtifactory(
+      isServerlessOrSshOrWinRmSelected ||
+        isAzureWebAppGenericSelected ||
+        isCustomDeploymentGenericSelected ||
+        isTasGenericSelected ||
+        repoFormat === RepositoryFormatTypes.Generic
+    )
+  }, [
+    isServerlessOrSshOrWinRmSelected,
+    isAzureWebAppGenericSelected,
+    isCustomDeploymentGenericSelected,
+    isTasGenericSelected,
+    repoFormat
+  ])
 
   const connectorRef = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
@@ -285,11 +371,30 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
   )
 
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
-    data: imagePathData,
-    loading: imagePathLoading,
-    refetch: refetchImagePathData,
-    error: imagePathError
+    data: imagePathV1Data,
+    loading: imagePathV1Loading,
+    refetch: refetchV1ImagePathData,
+    error: imagePathV1Error
+  } = useGetImagePathsForArtifactory({
+    queryParams: {
+      repository: defaultTo(getFinalQueryParamValue(repositoryValue), ''),
+      connectorRef,
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: true,
+    debounce: 300
+  })
+
+  const {
+    data: imagePathV2Data,
+    loading: imagePathV2Loading,
+    refetch: refetchV2ImagePathData,
+    error: imagePathV2Error
   } = useMutateAsGet(useGetImagePathsForArtifactoryV2, {
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
@@ -299,7 +404,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     },
     queryParams: {
       repository: getFinalQueryParamValue(repositoryValue),
-      connectorRef,
+      connectorRef: getFinalQueryParamValue(connectorRef),
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
@@ -320,6 +425,20 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     },
     lazy: true
   })
+
+  const { imagePathData, imagePathLoading, refetchImagePathData, imagePathError } = useArtifactV1Data
+    ? {
+        imagePathData: imagePathV1Data,
+        imagePathLoading: imagePathV1Loading,
+        refetchImagePathData: refetchV1ImagePathData,
+        imagePathError: imagePathV1Error
+      }
+    : {
+        imagePathData: imagePathV2Data,
+        imagePathLoading: imagePathV2Loading,
+        refetchImagePathData: refetchV2ImagePathData,
+        imagePathError: imagePathV2Error
+      }
 
   useEffect(() => {
     if (imagePathLoading) {
@@ -400,9 +519,12 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
 
     return {
       artifactPath: getFinalQueryParamValue(
-        getImagePath(
-          artifact?.spec?.artifactPath,
-          get(initialValues, `artifacts.${artifactPath}.spec.artifactPath`, '')
+        getDefaultQueryParam(
+          getValidInitialValuePath(
+            get(artifacts, `${artifactPath}.spec.artifactPath`, ''),
+            artifact?.spec?.artifactPath
+          ),
+          get(initialValues?.artifacts, `${artifactPath}.spec.artifactPath`, '')
         )
       ),
       connectorRef: getFinalQueryParamValue(connectorRefValue),
@@ -436,15 +558,43 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     path,
     serviceIdentifier,
     isPropagatedStage,
-    stageIdentifier
+    stageIdentifier,
+    artifacts,
+    isSidecar
   ])
 
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', artifactPaths: '', repository: '' })
+
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
-    data: artifactoryTagsData,
-    loading: fetchingTags,
-    refetch: refetchTags,
-    error: fetchTagsError
+    data: artifactoryTagsV1Data,
+    loading: fetchingV1Tags,
+    refetch: refetchV1Tags,
+    error: fetchTagsV1Error
+  } = useGetBuildDetailsForArtifactoryArtifact({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      repoIdentifier,
+      branch,
+      ...pick(artifactoryTagsDataCallMetadataQueryParams, [
+        'artifactPath',
+        'repository',
+        'repositoryFormat',
+        'connectorRef'
+      ])
+    },
+    lazy: true,
+    debounce: 300
+  })
+
+  const {
+    data: artifactoryTagsV2Data,
+    loading: fetchingV2Tags,
+    refetch: refetchV2Tags,
+    error: fetchTagsV2Error
   } = useMutateAsGet(useGetBuildDetailsForArtifactoryArtifactWithYaml, {
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
@@ -462,6 +612,20 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     },
     lazy: true
   })
+
+  const { artifactoryTagsData, fetchingTags, refetchTags, fetchTagsError } = useArtifactV1Data
+    ? {
+        artifactoryTagsData: artifactoryTagsV1Data,
+        fetchingTags: fetchingV1Tags,
+        refetchTags: refetchV1Tags,
+        fetchTagsError: fetchTagsV1Error
+      }
+    : {
+        artifactoryTagsData: artifactoryTagsV2Data,
+        fetchingTags: fetchingV2Tags,
+        refetchTags: refetchV2Tags,
+        fetchTagsError: fetchTagsV2Error
+      }
 
   const canFetchTags = (): boolean => {
     return !!(
@@ -528,7 +692,6 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               projectIdentifier={projectIdentifier}
               configureOptionsProps={{ className: css.connectorConfigOptions }}
               orgIdentifier={orgIdentifier}
-              width={391}
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
@@ -545,9 +708,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               }}
             />
           )}
-
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.repositoryUrl`, template) && (
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.repositoryUrl`, template) && (
+            <div className={css.inputFieldLayout}>
               <FormInput.MultiTextInput
                 label={getString('repositoryUrlLabel')}
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repositoryUrl`)}
@@ -558,28 +720,28 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                 }}
                 name={`${path}.artifacts.${artifactPath}.spec.repositoryUrl`}
               />
-            )}
-            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.repositoryUrl`)) ===
-              MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
-                className={css.configureOptions}
-                style={{ alignSelf: 'center' }}
-                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.repositoryUrl`)}
-                type="String"
-                variableName="repositoryUrl"
-                showRequiredField={false}
-                showDefaultField={true}
-                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
-                onChange={value => {
-                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.repositoryUrl`, value)
-                }}
-              />
-            )}
-          </div>
-
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.repository`, template) && (
+              {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.repositoryUrl`)) ===
+                MultiTypeInputType.RUNTIME && (
+                <ConfigureOptions
+                  className={css.configureOptions}
+                  style={{ alignSelf: 'center' }}
+                  value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.repositoryUrl`)}
+                  type="String"
+                  variableName="repositoryUrl"
+                  showRequiredField={false}
+                  isReadonly={readonly}
+                  showDefaultField={true}
+                  isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+                  showAdvanced={true}
+                  onChange={value => {
+                    formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.repositoryUrl`, value)
+                  }}
+                />
+              )}
+            </div>
+          )}
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.repository`, template) && (
+            <div className={css.inputFieldLayout}>
               <ServerlessArtifactoryRepository
                 connectorRef={
                   get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '') || artifact?.spec?.connectorRef
@@ -608,8 +770,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                 )}
                 stepViewType={stepViewType}
               />
-            )}
-          </div>
+            </div>
+          )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactDirectory`, template) && isGenericArtifactory && (
             <TextFieldInputSetView
               label={getString('pipeline.artifactsSelection.artifactDirectory')}
@@ -624,9 +786,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               template={template}
             />
           )}
-
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactPath`, template) && !isGenericArtifactory && (
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactPath`, template) && !isGenericArtifactory && (
+            <div className={css.inputFieldLayout}>
               <FormInput.MultiTypeInput
                 selectItems={artifactPaths}
                 label={getString('pipeline.artifactImagePathLabel')}
@@ -665,25 +826,26 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                   }
                 }}
               />
-            )}
-            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.artifactPath`)) ===
-              MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
-                className={css.configureOptions}
-                style={{ alignSelf: 'center' }}
-                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.artifactPath`)}
-                type="String"
-                variableName="artifactPath"
-                showRequiredField={false}
-                showDefaultField={true}
-                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
-                onChange={value => {
-                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.artifactPath`, value)
-                }}
-              />
-            )}
-          </div>
+              {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.artifactPath`)) ===
+                MultiTypeInputType.RUNTIME && (
+                <ConfigureOptions
+                  className={css.configureOptions}
+                  style={{ alignSelf: 'center' }}
+                  value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.artifactPath`)}
+                  type="String"
+                  variableName="artifactPath"
+                  showRequiredField={false}
+                  isReadonly={readonly}
+                  showDefaultField={true}
+                  isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+                  showAdvanced={true}
+                  onChange={value => {
+                    formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.artifactPath`, value)
+                  }}
+                />
+              )}
+            </div>
+          )}
 
           <TagFields
             {...props}

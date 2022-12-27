@@ -29,6 +29,8 @@ import { get, set, isEmpty } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import type { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import { shouldHideHeaderAndNavBtns } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { CommonManifestDataType, ManifestTypes } from '../../ManifestInterface'
 import { GitRepoName, ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
@@ -46,6 +48,7 @@ interface K8sValuesManifestPropType {
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
+  context?: ModalViewFor
 }
 
 const showAdvancedSection = (selectedManifest: ManifestTypes | null): boolean => {
@@ -62,10 +65,11 @@ function K8sValuesManifest({
   prevStepData,
   previousStep,
   manifestIdsList,
+  context,
   isReadonly = false
 }: StepProps<ConnectorConfigDTO> & K8sValuesManifestPropType): React.ReactElement {
   const { getString } = useStrings()
-
+  const hideHeaderAndNavBtns = context ? shouldHideHeaderAndNavBtns(context) : false
   const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
     prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
@@ -151,11 +155,29 @@ function K8sValuesManifest({
     handleSubmit(manifestObj)
   }
 
+  const handleValidate = (formData: CommonManifestDataType): void => {
+    if (hideHeaderAndNavBtns) {
+      submitFormData({
+        ...prevStepData,
+        ...formData,
+        connectorRef: prevStepData?.connectorRef
+          ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+            ? prevStepData?.connectorRef
+            : prevStepData?.connectorRef?.value
+          : prevStepData?.identifier
+          ? prevStepData?.identifier
+          : ''
+      })
+    }
+  }
+
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {stepName}
-      </Text>
+      {!hideHeaderAndNavBtns && (
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {stepName}
+        </Text>
+      )}
 
       <Formik
         initialValues={getInitialValues()}
@@ -180,16 +202,6 @@ function K8sValuesManifest({
             }
             return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
           }),
-          valuesPaths: Yup.lazy((value): Yup.Schema<unknown> => {
-            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-              return Yup.array().of(
-                Yup.object().shape({
-                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
-                })
-              )
-            }
-            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
-          }),
           repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
             if (
               connectionType === GitRepoName.Repo ||
@@ -200,6 +212,7 @@ function K8sValuesManifest({
             return !isEmpty(value) && value?.length > 0
           })
         })}
+        validate={handleValidate}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
@@ -273,21 +286,22 @@ function K8sValuesManifest({
                     />
                   )}
                 </div>
-
-                <Layout.Horizontal spacing="medium" className={css.saveBtn}>
-                  <Button
-                    variation={ButtonVariation.SECONDARY}
-                    text={getString('back')}
-                    icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
-                  />
-                  <Button
-                    variation={ButtonVariation.PRIMARY}
-                    type="submit"
-                    text={getString('submit')}
-                    rightIcon="chevron-right"
-                  />
-                </Layout.Horizontal>
+                {!hideHeaderAndNavBtns && (
+                  <Layout.Horizontal spacing="medium" className={css.saveBtn}>
+                    <Button
+                      variation={ButtonVariation.SECONDARY}
+                      text={getString('back')}
+                      icon="chevron-left"
+                      onClick={() => previousStep?.(prevStepData)}
+                    />
+                    <Button
+                      variation={ButtonVariation.PRIMARY}
+                      type="submit"
+                      text={getString('submit')}
+                      rightIcon="chevron-right"
+                    />
+                  </Layout.Horizontal>
+                )}
               </Layout.Vertical>
             </FormikForm>
           )

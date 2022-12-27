@@ -26,6 +26,8 @@ import type { ArtifactoryRegistrySpec } from 'services/pipeline-ng'
 import ServerlessArtifactoryRepository from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/Artifactory/ServerlessArtifactoryRepository'
 import { getConnectorIdValue, getConnectorRefQueryData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import ArtifactoryArtifactPath from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/Artifactory/ArtifactoryArtifactPath'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -36,6 +38,7 @@ function Artifactory({
   previousStep
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ArtifactoryRegistrySpec>): React.ReactElement {
   const { getString } = useStrings()
+  const CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY = useFeatureFlag(FeatureFlag.CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY)
   const validationSchema = Yup.object().shape({
     repositoryFormat: Yup.string().required(getString('triggers.validation.repositoryFormat')),
     repository: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
@@ -46,6 +49,12 @@ function Artifactory({
     artifactPath: Yup.string().when('repositoryFormat', {
       is: `${RepositoryFormatTypes.Docker}`,
       then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPath'))
+    }),
+    ...(CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY && {
+      repositoryUrl: Yup.string().when('repositoryFormat', {
+        is: `${RepositoryFormatTypes.Docker}`,
+        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryUrl'))
+      })
     })
   })
 
@@ -167,7 +176,7 @@ function Artifactory({
                         multiTextInputProps={{
                           allowableTypes: [MultiTypeInputType.FIXED]
                         }}
-                        isOptional
+                        isOptional={!CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY}
                       />
                     </div>
                   </>

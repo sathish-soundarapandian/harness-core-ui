@@ -383,6 +383,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -868,6 +869,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1353,6 +1355,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1838,6 +1841,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2322,6 +2326,7 @@ exports[`Test cloudformation remote tags step one should error when submitting 1
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2776,6 +2781,7 @@ exports[`Test cloudformation remote tags step one should open new connector moda
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3261,6 +3267,7 @@ exports[`Test cloudformation remote tags step one should open new connector moda
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3786,6 +3793,7 @@ exports[`Test cloudformation remote tags step one should render tags details inc
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3905,6 +3913,7 @@ exports[`Test cloudformation remote tags step one should render tags details inc
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -4395,6 +4404,7 @@ exports[`Test cloudformation remote tags step one should render with initial dat
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -4879,6 +4889,7 @@ exports[`Test cloudformation remote tags step one should render with no initial 
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -5313,6 +5324,7 @@ exports[`Test cloudformation remote tags step one should render with runtime dat
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -5782,6 +5794,7 @@ exports[`Test cloudformation remote tags step one should submit step one 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"

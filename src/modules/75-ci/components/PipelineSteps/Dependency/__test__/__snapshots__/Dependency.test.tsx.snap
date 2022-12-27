@@ -171,6 +171,7 @@ exports[`Dependency Edit view edit mode fails when cpu present but memory is not
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -333,6 +334,7 @@ exports[`Dependency Edit view edit mode fails when cpu present but memory is not
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -408,6 +410,7 @@ exports[`Dependency Edit view edit mode fails when cpu present but memory is not
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -644,6 +647,7 @@ exports[`Dependency Edit view edit mode works 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -806,6 +810,7 @@ exports[`Dependency Edit view edit mode works 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -881,6 +886,7 @@ exports[`Dependency Edit view edit mode works 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1117,6 +1123,7 @@ exports[`Dependency Edit view edit mode works when memory present but cpu is not
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1279,6 +1286,7 @@ exports[`Dependency Edit view edit mode works when memory present but cpu is not
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1354,6 +1362,7 @@ exports[`Dependency Edit view edit mode works when memory present but cpu is not
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1600,6 +1609,7 @@ exports[`Dependency Edit view renders runtime inputs 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1727,6 +1737,7 @@ exports[`Dependency Edit view renders runtime inputs 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1840,6 +1851,7 @@ exports[`Dependency Edit view renders runtime inputs 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2107,6 +2119,7 @@ exports[`Dependency Edit view should render properly 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2218,6 +2231,7 @@ exports[`Dependency Edit view should render properly 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2293,6 +2307,7 @@ exports[`Dependency Edit view should render properly 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2457,6 +2472,7 @@ exports[`Dependency InputSet View should render all fields 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED multiButtonForFixedType"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2568,6 +2584,7 @@ exports[`Dependency InputSet View should render all fields 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2643,6 +2660,7 @@ exports[`Dependency InputSet View should render all fields 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -2706,6 +2724,7 @@ exports[`Dependency InputSet View should render all fields 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -2951,6 +2970,7 @@ exports[`Dependency InputSet View should render all fields 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3138,6 +3158,7 @@ exports[`Dependency InputSet View should render all fields 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3287,6 +3308,7 @@ exports[`Dependency InputSet View should render all fields 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -3374,6 +3396,7 @@ exports[`Dependency InputSet View should render all fields 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"

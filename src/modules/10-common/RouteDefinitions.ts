@@ -773,6 +773,10 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/get-started`
   ),
+  toCDOnboardingWizard: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/cd-onboarding`
+  ),
   toPipelineStudio: withAccountId(
     ({
       orgIdentifier,
@@ -1525,23 +1529,23 @@ const routes = {
   ),
 
   toCVCodeErrors: withAccountId(
-    ({ projectIdentifier, orgIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/CodeErrors`
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/et/eventsummary`
   ),
 
   toCVCodeErrorsAgents: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
-      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/codeerrors/agents`
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/agents`
   ),
 
   toCVCodeErrorsAgentsTokens: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
-      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/codeerrors/agents-tokens`
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/tokens`
   ),
 
   toCVCodeErrorsAgentsControl: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
-      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/codeerrors`
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et`
   ),
 
   toCVMonitoringServicesInputSets: withAccountId(
@@ -1554,6 +1558,9 @@ const routes = {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos`
     }
   ),
+  toAccountCVSLOs: withAccountId(() => {
+    return `/cv/slos`
+  }),
   toCVSLODetailsPage: withAccountId(
     ({
       module = 'cv',
@@ -1562,6 +1569,9 @@ const routes = {
       projectIdentifier
     }: Partial<ProjectPathProps & { identifier: string; module: string }>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/${identifier}`
+  ),
+  toAccountCVSLODetailsPage: withAccountId(
+    ({ module = 'cv', identifier }: { identifier: string; module?: string }) => `/${module}/slos/${identifier}`
   ),
   toErrorTracking: withAccountId(
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
@@ -1578,6 +1588,9 @@ const routes = {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/create/composite`
     }
   ),
+  toAccountCVCreateCompositeSLOs: withAccountId(({ module = 'cv' }: { module?: string }) => {
+    return `/${module}/slos/create/composite`
+  }),
   toCVAddMonitoringServicesSetup: withAccountId(
     ({ projectIdentifier, orgIdentifier }: Partial<ProjectPathProps & { identifier: string }>) =>
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservices/setup`

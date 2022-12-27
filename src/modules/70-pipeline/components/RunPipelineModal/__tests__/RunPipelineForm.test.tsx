@@ -12,15 +12,16 @@ import {
   waitFor,
   act,
   queryByAttribute,
-  findByTestId as findByTestIdGlobal
+  findByTestId as findByTestIdGlobal,
+  screen
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useGetPreflightCheckResponse, startPreflightCheckPromise, useGetPipeline } from 'services/pipeline-ng'
-
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { TestWrapper } from '@common/utils/testUtils'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { GetInputSetYamlDiffInline } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
+import { useShouldDisableDeployment } from 'services/cd-ng'
 import { RunPipelineForm } from '../RunPipelineForm'
 import {
   getMockFor_Generic_useMutate,
@@ -513,6 +514,42 @@ describe('STUDIO MODE', () => {
 
     // Save the snapshot - value is present from merge input set API
     expect(container).toMatchSnapshot('after applying input sets')
+  })
+
+  test('show warning for active deployment freeze', async () => {
+    const useShouldDisableDeploymentMock = useShouldDisableDeployment as jest.MockedFunction<any>
+    useShouldDisableDeploymentMock.mockImplementation(() => {
+      return {
+        data: {
+          data: {
+            shouldDisable: true,
+            freezeReferences: [
+              {
+                freezeScope: 'account',
+                identifier: '_GLOBAL_',
+                type: 'GLOBAL'
+              }
+            ]
+          }
+        },
+        refetch: jest.fn(),
+        error: null
+      }
+    })
+
+    render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" />
+      </TestWrapper>
+    )
+    expect(screen.getByText('pipeline.runDisabledOnFreeze')).toBeInTheDocument()
+    useShouldDisableDeploymentMock.mockImplementation(() => {
+      return {
+        data: {},
+        refetch: jest.fn(),
+        error: null
+      }
+    })
   })
 })
 

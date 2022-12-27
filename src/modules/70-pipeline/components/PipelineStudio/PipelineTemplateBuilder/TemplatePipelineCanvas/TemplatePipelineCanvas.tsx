@@ -76,7 +76,12 @@ export function TemplatePipelineCanvas(): React.ReactElement {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: defaultTo(pipeline.template?.versionLabel, ''),
-      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params: queryParams,
+        repoIdentifier: gitDetails.repoIdentifier,
+        branch: gitDetails.branch
+      })
     }
   })
 

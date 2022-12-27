@@ -18,7 +18,7 @@ exports[`StageAdvancedInputSetForm tests viewType DeploymentForm initial render 
           advancedTitle
         </div>
         <div
-          class="nestedAccordions formGroup md"
+          class="nestedAccordions formGroup runTimeWidth"
         >
           <div
             class="bp3-form-group"
@@ -125,7 +125,7 @@ exports[`StageAdvancedInputSetForm tests viewType DeploymentForm initial render 
           </div>
         </div>
         <div
-          class="nestedAccordions formGroup md"
+          class="nestedAccordions formGroup runTimeWidth"
         >
           <div
             class="StyledProps--font StyledProps--main StyledProps--margin-bottom-medium"

@@ -35,7 +35,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
   >()
   const { sloType } = useQueryParams<{ sloType?: string }>()
   const isCompositeSLO = sloType === SLOType.COMPOSITE
-
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const { currentPeriodStartTime = 0, currentPeriodEndTime = 0, monitoredServiceDetails } = sloDashboardWidget ?? {}
   const [chartTimeRange, setChartTimeRange] = useState<{ startTime: number; endTime: number }>()
   const [sliderTimeRange, setSliderTimeRange] = useState<{ startTime: number; endTime: number }>()
@@ -86,43 +86,45 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
               <Container padding={{ bottom: 'xlarge' }} />
             </>
           )}
-          <Card className={css.changesCard}>
-            <Heading
-              level={2}
-              color={Color.GREY_800}
-              padding={{ bottom: 'medium' }}
-              font={{ variation: FontVariation.CARD_TITLE }}
-            >
-              {getString('changes')}
-            </Heading>
-            <ChangesSourceCard
-              startTime={startTime}
-              endTime={endTime}
-              monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
-              monitoredServiceIdentifiers={
-                sloDashboardWidget?.monitoredServiceDetails?.map(
-                  serviceDetails => serviceDetails.monitoredServiceIdentifier || ''
-                ) || []
-              }
-            />
-            <Text
-              icon="info"
-              color={Color.GREY_600}
-              iconProps={{ size: 12, color: Color.PRIMARY_7 }}
-              font={{ variation: FontVariation.SMALL }}
-              padding={{ top: 'small', bottom: 'small' }}
-            >
-              {getString('cv.theTrendIsDeterminedForTheSelectedPeriodOverPeriod')}
-            </Text>
-            <ChangesTable
-              isCardView={false}
-              hasChangeSource
-              startTime={startTime}
-              endTime={endTime}
-              monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
-              monitoredServiceDetails={monitoredServiceDetails || []}
-            />
-          </Card>
+          {!isAccountLevel && (
+            <Card className={css.changesCard}>
+              <Heading
+                level={2}
+                color={Color.GREY_800}
+                padding={{ bottom: 'medium' }}
+                font={{ variation: FontVariation.CARD_TITLE }}
+              >
+                {getString('changes')}
+              </Heading>
+              <ChangesSourceCard
+                startTime={startTime}
+                endTime={endTime}
+                monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
+                monitoredServiceIdentifiers={
+                  sloDashboardWidget?.monitoredServiceDetails?.map(
+                    serviceDetails => serviceDetails.monitoredServiceIdentifier || ''
+                  ) || []
+                }
+              />
+              <Text
+                icon="info"
+                color={Color.GREY_600}
+                iconProps={{ size: 12, color: Color.PRIMARY_7 }}
+                font={{ variation: FontVariation.SMALL }}
+                padding={{ top: 'small', bottom: 'small' }}
+              >
+                {getString('cv.theTrendIsDeterminedForTheSelectedPeriodOverPeriod')}
+              </Text>
+              <ChangesTable
+                isCardView={false}
+                hasChangeSource
+                startTime={startTime}
+                endTime={endTime}
+                monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
+                monitoredServiceDetails={monitoredServiceDetails || []}
+              />
+            </Card>
+          )}
         </Container>
       )}
     </Page.Body>

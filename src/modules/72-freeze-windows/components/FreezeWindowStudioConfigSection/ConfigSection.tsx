@@ -42,7 +42,7 @@ const ConfigsSection = (
   }: ConfigsSectionProps,
   _formikRef: unknown
 ) => {
-  const formikRef = React.useRef()
+  const formikRef = React.useRef<FormikProps<{ entity?: Array<Record<string, any>> }>>()
   const [editViews, setEditViews] = React.useState<boolean[]>(
     Array(/* istanbul ignore next */ entityConfigs?.length).fill(false)
   )
@@ -79,9 +79,7 @@ const ConfigsSection = (
   }, [entityConfigs.length])
 
   const onDeleteRule = React.useCallback(index => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const currentValues = formikRef.current?.values
+    const currentValues = /* istanbul ignore next */ formikRef.current?.values
     const updatedValues = [...(currentValues?.entity || [])]
     updatedValues.splice(index, 1)
     setInitialValues({ entity: updatedValues })
@@ -93,8 +91,6 @@ const ConfigsSection = (
   }, [])
 
   const onAddRule = () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     const currentValues = /* istanbul ignore next */ formikRef.current?.values
     const addedConfig = getEmptyEntityConfig(fieldsVisibility)
     /* istanbul ignore next */
@@ -113,6 +109,16 @@ const ConfigsSection = (
       const newEditViews = [..._editViews]
       newEditViews[index] = isEdit
       return newEditViews
+    })
+  }
+
+  const resetValuesForEntity = (index: number) => {
+    const currentValues = /* istanbul ignore next */ formikRef.current?.values
+    const resetValues = getInitialValuesForConfigSection([entityConfigs[index]], getString, resources)
+    const updatedValues = [...(currentValues?.entity || [])]
+    updatedValues[index] = resetValues.entity?.[0] as Record<string, any>
+    formikRef.current?.setValues({
+      entity: updatedValues
     })
   }
 
@@ -151,6 +157,7 @@ const ConfigsSection = (
               fieldsVisibility={fieldsVisibility}
               onDeleteRule={onDeleteRule}
               isReadOnly={isReadOnly}
+              resetValuesForEntity={resetValuesForEntity}
             />
           ))
         }}

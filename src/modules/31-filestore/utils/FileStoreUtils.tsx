@@ -9,13 +9,15 @@ import { Color } from '@harness/design-system'
 import type { IconName, MaybeElement } from '@blueprintjs/core'
 import { Icon } from '@harness/uicore'
 import React from 'react'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, sortBy, reverse } from 'lodash-es'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import type { StringsMap } from 'framework/strings/StringsContext'
 import type { FileStoreNodeDTO } from 'services/cd-ng'
 import type { Item as NodeMenuOptionItem } from '@filestore/common/NodeMenu/NodeMenuButton'
 import type { FileStorePopoverItem } from '@filestore/common/FileStorePopover/FileStorePopover'
 import type { ScopedObjectDTO } from '@filestore/common/useFileStoreScope/useFileStoreScope'
-import { FileStoreNodeTypes, FileUsage } from '@filestore/interfaces/FileStore'
+import { FileStoreNodeTypes, FileUsage, SORT_TYPE } from '@filestore/interfaces/FileStore'
+import type { SortType } from '@filestore/interfaces/FileStore'
 
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -112,6 +114,8 @@ export const getIconByActionType = (actionType: FileStoreActionTypes): IconName 
       return 'folder-new'
     case FileStoreActionTypes.DELETE_NODE:
       return <Icon name="main-trash" {...iconDefaults} />
+    case FileStoreActionTypes.SORT_NODE:
+      return <Icon name="sort" {...iconDefaults} />
     default:
       return null
   }
@@ -141,10 +145,10 @@ export const getMenuOptionItems = (
   optionItems: FileStorePopoverOptionItem[],
   type?: FileStoreNodeTypes
 ): NodeMenuOptionItem[] => {
-  const { DELETE_NODE, CREATE_NODE, UPDATE_NODE, UPLOAD_NODE } = FileStoreActionTypes
+  const { DELETE_NODE, CREATE_NODE, UPDATE_NODE, UPLOAD_NODE, SORT_NODE } = FileStoreActionTypes
   const ACTIONS =
     type === FileStoreNodeTypes.FOLDER
-      ? [DELETE_NODE, CREATE_NODE, UPDATE_NODE, UPLOAD_NODE, '-']
+      ? [DELETE_NODE, CREATE_NODE, UPDATE_NODE, UPLOAD_NODE, '-', SORT_NODE]
       : [DELETE_NODE, UPDATE_NODE]
   const FILTERED_ACTIONS = optionItems.filter((optionItem: FileStorePopoverOptionItem): boolean => {
     if (optionItem === '-') {
@@ -232,4 +236,68 @@ export const prepareFileValues = (values: any, currentNode: any, notCurrentNode:
 
   data.append('mimeType', getMimeTypeByName(values.name))
   return data
+}
+
+export const getSortIconByActionType = (sortType: SortType): IconName | MaybeElement => {
+  const iconDefaults = {
+    size: 16,
+    padding: { right: 'small' },
+    color: Color.GREY_700
+  }
+
+  switch (sortType) {
+    case SORT_TYPE.ALPHABETICAL:
+      return <Icon name="sort-alphabetical" {...iconDefaults} />
+    case SORT_TYPE.ALPHABETICAL_DESC:
+      return <Icon name="sort-alphabetical-desc" {...iconDefaults} />
+    case SORT_TYPE.LAST_UPDATED:
+      return <Icon name="sort-desc" {...iconDefaults} />
+    case SORT_TYPE.LAST_UPDATED_DESC:
+      return <Icon name="sort-asc" {...iconDefaults} />
+    case SORT_TYPE.ALPHABETICAL_FOLDER_TYPE:
+      return <Icon name="folder-close" {...iconDefaults} />
+    case SORT_TYPE.ALPHABETICAL_FILE_TYPE:
+      return <Icon name="code-file-light" {...iconDefaults} />
+    default:
+      return <Icon name="sort" {...iconDefaults} />
+  }
+}
+
+export const getSortLabelByActionType = (sortType: SortType): keyof StringsMap => {
+  switch (sortType) {
+    case SORT_TYPE.ALPHABETICAL:
+      return 'filestore.sort.byAlphabeticalAz'
+    case SORT_TYPE.ALPHABETICAL_DESC:
+      return 'filestore.sort.byAlphabeticalZa'
+    case SORT_TYPE.LAST_UPDATED:
+      return 'common.lastModified'
+    case SORT_TYPE.LAST_UPDATED_DESC:
+      return 'filestore.sort.firstModified'
+    case SORT_TYPE.ALPHABETICAL_FOLDER_TYPE:
+      return 'filestore.sort.byFolderType'
+    case SORT_TYPE.ALPHABETICAL_FILE_TYPE:
+      return 'filestore.sort.byFileType'
+    default:
+      return 'filestore.sort.nodeBy'
+  }
+}
+
+export const sortNodesByType = (nodes: FileStoreNodeDTO[], sortType: SortType): FileStoreNodeDTO[] => {
+  switch (sortType) {
+    case SORT_TYPE.ALPHABETICAL:
+      return [...sortBy(nodes, ['name'])]
+    case SORT_TYPE.ALPHABETICAL_DESC:
+      return [...reverse(sortBy(nodes, ['name']))]
+    case SORT_TYPE.LAST_UPDATED:
+      return [...reverse(sortBy(nodes, ['lastModifiedAt']))]
+    case SORT_TYPE.LAST_UPDATED_DESC:
+      return [...sortBy(nodes, ['lastModifiedAt'])]
+    case SORT_TYPE.ALPHABETICAL_FILE_TYPE:
+      return [...sortBy(nodes, ['type', 'name'])]
+    case SORT_TYPE.ALPHABETICAL_FOLDER_TYPE:
+      return [...reverse(sortBy(nodes, ['type']))]
+
+    default:
+      return [...sortBy(nodes, ['name'])]
+  }
 }

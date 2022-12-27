@@ -23,6 +23,7 @@ import {
 import type {
   AvailableThresholdTypes,
   HandleCriteriaPercentageUpdateParams,
+  MetricThresholdsForCustomMetricProps,
   MetricThresholdsState,
   MetricThresholdType,
   SelectItem,
@@ -566,8 +567,8 @@ export function getMetricNameItems(
 }
 
 export const getIsMetricThresholdCanBeShown = (
-  metricData: { [key: string]: boolean },
-  groupedCreatedMetrics: GroupedCreatedMetrics
+  metricData?: { [key: string]: boolean },
+  groupedCreatedMetrics?: GroupedCreatedMetrics
 ): boolean => {
   if (!metricData || !groupedCreatedMetrics) {
     return false
@@ -755,5 +756,141 @@ export const handleCriteriaPercentageUpdate = ({
     clonedThresholdValue[index] = updatedThresholds
 
     replaceFn(updatedThresholds)
+  }
+}
+
+/**
+ * ⭐️ Metric thresholds for common health sources ⭐️
+ */
+
+/**
+ * Generates metric packs payload from metricData.
+ */
+export const getMetricPacksForPayloadV2 = (
+  formData: any,
+  isMetricThresholdEnabled: boolean
+): TimeSeriesMetricPackDTO[] => {
+  const { metricData, ignoreThresholds, failFastThresholds } = formData
+
+  const metricPacks = Object.entries(metricData).map(item => {
+    return item[1] && item[0] !== MetricTypeValues.Custom
+      ? {
+          identifier: item[0] as string,
+          metricThresholds: isMetricThresholdEnabled
+            ? getMetricThresholdsForPayload(item[0], ignoreThresholds, failFastThresholds)
+            : []
+        }
+      : {}
+  })
+
+  const filteredMetricPacks = metricPacks.filter(item => !isEmpty(item)) as TimeSeriesMetricPackDTO[]
+
+  return filteredMetricPacks
+}
+
+const isAllRequiredValuesPresentForPayload = ({
+  metricName,
+  metricThresholds,
+  isMetricThresholdEnabled
+}: MetricThresholdsForCustomMetricProps): boolean =>
+  Boolean(isMetricThresholdEnabled && metricName && Array.isArray(metricThresholds) && metricThresholds.length)
+
+/**
+ * Generates metric thresholds payload for a custom metric
+ */
+export const getMetricThresholdsForCustomMetric = ({
+  metricName,
+  metricThresholds,
+  isMetricThresholdEnabled
+}: MetricThresholdsForCustomMetricProps): Array<MetricThresholdType> => {
+  if (!isAllRequiredValuesPresentForPayload({ metricName, metricThresholds, isMetricThresholdEnabled })) {
+    return []
+  }
+
+  return metricThresholds.filter(
+    metricThreshold =>
+      metricThreshold.metricType === MetricTypeValues.Custom && metricThreshold.metricName === metricName
+  )
+}
+
+/**
+ * Returns all metric thresholds from query definitions (custom metrics)
+ */
+export const getAllMetricThresholdsOfQueryDefinitions = (
+  queryDefinitions?: Array<{ metricThresholds?: MetricThresholdType[] }>
+): MetricThresholdType[] => {
+  if (!Array.isArray(queryDefinitions) || !queryDefinitions?.length) {
+    return []
+  }
+
+  const thresholds = []
+
+  for (const metricDefinition of queryDefinitions) {
+    thresholds.push(...(metricDefinition?.metricThresholds ?? []))
+  }
+
+  return thresholds
+}
+
+/**
+ * Returns metric thresholds of particular thresholdType for edit
+ */
+export const getFilteredMetricThresholdValuesV2 = (
+  thresholdType: AvailableThresholdTypes,
+  metricPacks?: TimeSeriesMetricPackDTO[],
+  queryDefinitions?: Array<{ metricThresholds?: MetricThresholdType[] }>
+): MetricThresholdType[] => {
+  if ((!metricPacks?.length && !queryDefinitions?.length) || !thresholdType) {
+    return []
+  }
+
+  const metricThresholds = getAllMetricThresholds(metricPacks)
+
+  metricThresholds.push(...getAllMetricThresholdsOfQueryDefinitions(queryDefinitions))
+
+  return metricThresholds.filter(metricThreshold => metricThreshold.type === thresholdType)
+}
+
+/**
+ * Checks whether metric thresholds section can be shown or not
+ * based on metric packs config and custom metric values
+ */
+export const getCanShowMetricThresholds = ({
+  isMetricThresholdConfigEnabled,
+  isMetricThresholdFFEnabled,
+  isMetricPacksEnabled,
+  groupedCreatedMetrics,
+  metricData
+}: {
+  isMetricThresholdConfigEnabled: boolean
+  isMetricThresholdFFEnabled?: boolean
+  isMetricPacksEnabled?: boolean
+  groupedCreatedMetrics: GroupedCreatedMetrics
+  metricData?: { [key: string]: boolean }
+}): boolean => {
+  if (!isMetricThresholdConfigEnabled || !isMetricThresholdFFEnabled || isEmpty(groupedCreatedMetrics)) {
+    return false
+  }
+
+  if (!isMetricPacksEnabled) {
+    /**
+     * If "metricPacks" is disabled, then criteria to enable metric thresholds are
+     *
+     * 1. We need to have atleast one custom metric with group name (AND)
+     * 2. We need to have atleast one custom metric with CV enabled
+     */
+    return Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length)
+  } else {
+    /**
+     * If "metricPacks" is enabled, then criteria to enable metric thresholds are
+     *
+     * 1. We need to have atleast one metric pack selected
+     *
+     * OR
+     *
+     * 1. We need to have atleast one custom metric with group name (AND)
+     * 2. We need to have atleast one custom metric with CV enabled
+     */
+    return Boolean(getIsMetricThresholdCanBeShown(metricData, groupedCreatedMetrics))
   }
 }

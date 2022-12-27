@@ -118,8 +118,9 @@ export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren
   }, [accountId, orgIdentifier, projectIdentifier, userEmail])
 
   const setPreference = (key: string, value: unknown): void => {
-    const newPreferences = { ...currentPreferences, [key]: value }
-    setPreferences(newPreferences)
+    setPreferences(prevState => {
+      return { ...prevState, [key]: value }
+    })
   }
 
   const getPreference = (key: string): any => {

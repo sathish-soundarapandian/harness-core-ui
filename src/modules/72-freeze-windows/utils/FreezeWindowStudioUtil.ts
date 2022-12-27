@@ -20,6 +20,7 @@ import {
   FreezeWindowLevels,
   ResourcesInterface
 } from '@freeze-windows/types'
+import { DefaultFreezeId } from '@freeze-windows/context/FreezeWindowReducer'
 
 export const isAllOptionSelected = (selected?: SelectOption[]) => {
   if (Array.isArray(selected)) {
@@ -84,6 +85,9 @@ export function isValidYaml(
 
 export const getInitialValues = (freezeObj: any) => {
   const pickedValues = pick(freezeObj, 'name', 'identifier', 'description', 'tags')
+  if (freezeObj.identifier === DefaultFreezeId) {
+    pickedValues.identifier = ''
+  }
   return {
     ...pickedValues
   }
@@ -148,12 +152,12 @@ export const getInitialValuesForConfigSection = (
   entityConfigs: EntityConfig[],
   getString: UseStringsReturn['getString'],
   resources: ResourcesInterface
-) => {
+): { entity?: Array<Record<string, any>> } => {
   const initialValues = {}
-  entityConfigs?.forEach((c: EntityConfig, i: number) => {
+  entityConfigs.forEach((c: EntityConfig, i: number) => {
     set(initialValues, `entity[${i}].name`, c.name)
 
-    const entities = c.entities
+    const entities = c.entities || []
 
     let projectResourcesMap: Record<string, SelectOption> | null = null
     if (resources.freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
@@ -165,7 +169,7 @@ export const getInitialValuesForConfigSection = (
       }
     }
 
-    entities?.forEach(entity => {
+    entities.forEach(entity => {
       const { type, filterType, entityRefs } = entity
       if (filterType === 'All') {
         // set filterType and entity
@@ -228,10 +232,14 @@ const updateEntities = (obj: any, entities: any, index: number) => {
   }
 }
 
+export interface EntityTypeReqd extends EntityType {
+  entityRefs: string[]
+}
+
 const getMetaDataForField = (fieldKey: FIELD_KEYS, entities: EntityType[], newValues: any) => {
   const index = entities.findIndex((e: any) => e.type === fieldKey)
   const isAllSelected = isAllOptionSelected(newValues[fieldKey])
-  const obj: EntityType = { type: fieldKey, filterType: 'All', entityRefs: [] }
+  const obj: EntityTypeReqd = { type: fieldKey, filterType: 'All', entityRefs: [] }
   const isNewValueEmpty = isEmpty(newValues[fieldKey])
 
   return { isAllSelected, obj, index, isNewValueEmpty }
@@ -247,13 +255,13 @@ const adaptForOrgField = (newValues: any, entities: EntityType[]) => {
     const hasExcludedOrgs = newValues[FIELD_KEYS.ExcludeOrgCheckbox] && !isEmpty(newValues[FIELD_KEYS.ExcludeOrg])
     obj.filterType = hasExcludedOrgs ? 'NotEquals' : 'All'
     if (hasExcludedOrgs) {
-      obj.entityRefs?.push(...(newValues[FIELD_KEYS.ExcludeOrg]?.map((field: SelectOption) => field.value) || []))
+      obj.entityRefs.push(...(newValues[FIELD_KEYS.ExcludeOrg]?.map((field: SelectOption) => field.value) || []))
     }
     // exclude can be there
     // entityRefs reqd, if exclude is true
   } else {
     obj.filterType = 'Equals'
-    obj.entityRefs?.push(...(newValues[fieldKey]?.map((field: SelectOption) => field.value) || []))
+    obj.entityRefs.push(...(newValues[fieldKey]?.map((field: SelectOption) => field.value) || []))
   }
 
   updateEntities(obj, entities, orgFieldIndex)
@@ -293,13 +301,13 @@ const adaptForProjectField = (newValues: any, entities: EntityType[]) => {
     const hasExcludedProj = newValues[FIELD_KEYS.ExcludeProjCheckbox] && !isEmpty(newValues[FIELD_KEYS.ExcludeProj])
     obj.filterType = hasExcludedProj ? 'NotEquals' : 'All'
     if (hasExcludedProj) {
-      obj.entityRefs?.push(...(newValues[FIELD_KEYS.ExcludeProj]?.map((field: SelectOption) => field.value) || []))
+      obj.entityRefs.push(...(newValues[FIELD_KEYS.ExcludeProj]?.map((field: SelectOption) => field.value) || []))
     }
   } else if (isNewValueEmpty) {
     // Do Nothing here
   } else {
     obj.filterType = 'Equals'
-    obj.entityRefs?.push(...(newValues[fieldKey]?.map((field: SelectOption) => field.value) || []))
+    obj.entityRefs.push(...(newValues[fieldKey]?.map((field: SelectOption) => field.value) || []))
   }
   updateEntities(obj, entities, index)
 }
@@ -315,7 +323,7 @@ const adaptForServiceField = (newValues: any, entities: EntityType[]) => {
     obj.filterType = 'All'
   } else {
     obj.filterType = 'Equals'
-    obj.entityRefs?.push(...(newValues[fieldKey]?.map((field: SelectOption) => field.value) || []))
+    obj.entityRefs.push(...(newValues[fieldKey]?.map((field: SelectOption) => field.value) || []))
   }
 
   updateEntities(obj, entities, index)

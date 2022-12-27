@@ -28,12 +28,6 @@ const secretMock = {
   type: 'WinRmCredentials'
 }
 
-jest.mock('@secrets/utils/SSHAuthUtils', () => ({
-  getSecretReferencesforSSH: jest.fn().mockResolvedValue({
-    passwordSecret: 'password'
-  })
-}))
-
 describe('Test hook for correctness', () => {
   test('render useCreateWinRmCredModal hook edit view', async () => {
     const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (

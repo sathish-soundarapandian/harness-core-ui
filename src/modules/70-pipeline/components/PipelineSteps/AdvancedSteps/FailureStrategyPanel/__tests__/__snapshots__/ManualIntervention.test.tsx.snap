@@ -349,6 +349,7 @@ exports[`Failure Strategy: ManualIntervention strategy works with simple fallbac
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"

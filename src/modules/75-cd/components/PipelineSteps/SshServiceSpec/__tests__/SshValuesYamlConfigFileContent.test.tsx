@@ -26,7 +26,6 @@ describe('<SshValuesYamlConfigFileContent /> tests', () => {
           accountId="a3"
           pipelineIdentifier="a4"
           repoIdentifier="a5"
-          pathFieldlabel="save"
           configFileSourceBaseFactory={configFileSourceBaseFactory}
           readonly={false}
           stageIdentifier="a6"

@@ -7,15 +7,12 @@
 
 import React, { useEffect, useCallback } from 'react'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
-import { useStrings } from 'framework/strings'
 import { CommonMultiItemsSideNav } from '@cv/components/CommonMultiItemsSideNav/CommonMultiItemsSideNav'
-import {
-  onSelectMetric,
-  getGroupedCreatedMetrics,
-  updateSelectedMetricsMap,
-  onRemoveMetric
-} from './CommonCustomMetric.utils'
+import { updateSelectedMetricsMap } from './CommonCustomMetric.utils'
+import { CommonHealthSourceContextFields } from '../../connectors/CommonHealthSource/CommonHealthSource.constants'
 import type { CommonCustomMetricInterface } from './CommonCustomMetric.types'
+
+import { useCommonHealthSource } from '../../connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
 
 export default function CommonCustomMetric(props: CommonCustomMetricInterface): JSX.Element {
   const {
@@ -29,9 +26,6 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
     mappedMetrics,
     selectedMetric,
     groupedCreatedMetrics,
-    setMappedMetrics,
-    setCreatedMetrics,
-    setGroupedCreatedMetrics,
     initCustomForm,
     isPrimaryMetric,
     shouldBeAbleToDeleteLastMetric,
@@ -39,74 +33,79 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
     filterRemovedMetricNameThresholds,
     openEditMetricModal
   } = props
-  const { getString } = useStrings()
+
+  const { updateParentFormik } = useCommonHealthSource()
 
   useEffect(() => {
-    setMappedMetrics(oldState => {
-      const emptyName = formikValues.metricName?.length
-      // add default metric data when we delete last metric and add again
-      if (!emptyName && !oldState?.selectedMetric && mappedMetrics?.size === 0) {
-        const initMap = new Map()
-        initMap.set(defaultMetricName, initCustomForm)
-        return { selectedMetric: defaultMetricName, mappedMetrics: initMap }
-      }
-      if (!emptyName) {
-        return { selectedMetric: oldState.selectedMetric, mappedMetrics: mappedMetrics }
-      }
-      const metricName = formikValues.metricName || ''
-      const duplicateName =
-        Array.from(mappedMetrics.keys()).indexOf(metricName) > -1 &&
-        oldState.selectedMetric !== formikValues?.metricName
-      if (duplicateName) {
-        return { selectedMetric: oldState.selectedMetric, mappedMetrics: mappedMetrics }
-      }
+    let data = { selectedMetric, mappedMetrics }
+    const emptyName = formikValues?.metricName?.length
+    // add default metric data when we delete last metric and add again
+    if (!emptyName && !selectedMetric && mappedMetrics?.size === 0) {
+      const initMap = new Map()
+      initMap.set(defaultMetricName, initCustomForm)
+      data = { selectedMetric: defaultMetricName, mappedMetrics: initMap }
+    }
+    if (!emptyName) {
+      data = { selectedMetric: selectedMetric, mappedMetrics: mappedMetrics }
+    }
+    const metricName = formikValues.metricName || ''
+    const duplicateName =
+      Array.from(mappedMetrics?.keys()).indexOf(metricName) > -1 && selectedMetric !== formikValues?.metricName
+    if (duplicateName) {
+      data = { selectedMetric: selectedMetric, mappedMetrics: mappedMetrics }
+    }
 
-      return updateSelectedMetricsMap({
-        updatedMetric: metricName,
-        oldMetric: oldState.selectedMetric,
-        mappedMetrics: oldState.mappedMetrics,
-        formikValues,
-        initCustomForm,
-        isPrimaryMetric
-      })
+    data = updateSelectedMetricsMap({
+      updatedMetric: metricName,
+      oldMetric: selectedMetric,
+      mappedMetrics,
+      formikValues,
+      initCustomForm,
+      isPrimaryMetric
     })
+    updateParentFormik(CommonHealthSourceContextFields.CustomMetricsMap, data.mappedMetrics)
+    updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, data.selectedMetric)
   }, [formikValues?.groupName, formikValues?.metricName, formikValues?.continuousVerification])
 
-  useEffect(() => {
-    const updatedGroupedCreatedMetrics = getGroupedCreatedMetrics(mappedMetrics, getString)
-    setGroupedCreatedMetrics(updatedGroupedCreatedMetrics)
-  }, [formikValues?.groupName, mappedMetrics, selectedMetric, formikValues?.continuousVerification])
-
   const removeMetric = useCallback(
-    (removedMetric, updatedMetric, updatedList, smIndex) => {
-      onRemoveMetric({
-        removedMetric,
-        updatedMetric,
-        updatedList,
-        smIndex,
-        formikValues,
-        setCreatedMetrics,
-        setMappedMetrics
-      })
+    (removedMetric, updatedMetric) => {
+      const commonUpdatedMap = new Map(mappedMetrics)
+
+      if (commonUpdatedMap.has(removedMetric)) {
+        commonUpdatedMap.delete(removedMetric)
+      } else {
+        // handle case where user updates the metric name for current selected metric
+        commonUpdatedMap.delete(selectedMetric)
+      }
+
+      // update map with current values
+      if (formikValues?.metricName !== removedMetric && formikValues?.metricName === updatedMetric) {
+        commonUpdatedMap.set(updatedMetric, { ...formikValues } || { metricName: updatedMetric })
+      }
+
+      updateParentFormik(CommonHealthSourceContextFields.CustomMetricsMap, commonUpdatedMap)
+      updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, updatedMetric)
+
       if (isMetricThresholdEnabled && filterRemovedMetricNameThresholds && removedMetric) {
         filterRemovedMetricNameThresholds(removedMetric)
       }
     },
-    [formikValues]
+    [formikValues, mappedMetrics]
   )
 
   const selectMetric = useCallback(
-    (newMetric, updatedList, smIndex) =>
-      onSelectMetric({
-        newMetric,
-        updatedList,
-        smIndex,
-        setCreatedMetrics,
-        setMappedMetrics,
+    newMetric => {
+      const data = updateSelectedMetricsMap({
+        updatedMetric: newMetric,
+        oldMetric: selectedMetric,
+        mappedMetrics,
         formikValues,
         initCustomForm,
         isPrimaryMetric
-      }),
+      })
+      updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, data.selectedMetric)
+      updateParentFormik(CommonHealthSourceContextFields.CustomMetricsMap, data.mappedMetrics)
+    },
     [formikValues]
   )
 
@@ -122,10 +121,10 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
           renamedMetric={formikValues?.metricName}
           isValidInput={isValidInput}
           groupedCreatedMetrics={groupedCreatedMetrics}
-          onRemoveMetric={(removedMetric, updatedMetric, updatedList, smIndex) =>
-            removeMetric(removedMetric, updatedMetric, updatedList, smIndex)
-          }
-          onSelectMetric={(newMetric, updatedList, smIndex) => selectMetric(newMetric, updatedList, smIndex)}
+          onRemoveMetric={(removedMetric, updatedMetric) => {
+            removeMetric(removedMetric, updatedMetric)
+          }}
+          onSelectMetric={newMetric => selectMetric(newMetric)}
           shouldBeAbleToDeleteLastMetric={shouldBeAbleToDeleteLastMetric}
           isMetricThresholdEnabled={isMetricThresholdEnabled}
           openEditMetricModal={openEditMetricModal}

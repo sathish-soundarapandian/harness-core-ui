@@ -157,6 +157,7 @@ exports[`Test MergePrStep should render Merge Params when FF is true: Merge Para
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -411,6 +412,7 @@ exports[`Test MergePrStep should render Merge Params when FF is true: Merge Para
                                       >
                                         <button
                                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                          data-testid="multi-type-button"
                                         >
                                           <span
                                             class="bp3-icon StyledProps--main"
@@ -676,6 +678,7 @@ exports[`Test MergePrStep should render edit view as edit step 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -931,6 +934,7 @@ exports[`Test MergePrStep should render edit view as edit step with runtime inpu
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -1184,6 +1188,7 @@ exports[`Test MergePrStep should render edit view as edit step with runtime inpu
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1315,6 +1320,7 @@ exports[`Test MergePrStep should render edit view as edit step with runtime inpu
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1421,6 +1427,7 @@ exports[`Test MergePrStep should render edit view as inputset step 1`] = `
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1626,6 +1633,7 @@ exports[`Test MergePrStep should render edit view as new step 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

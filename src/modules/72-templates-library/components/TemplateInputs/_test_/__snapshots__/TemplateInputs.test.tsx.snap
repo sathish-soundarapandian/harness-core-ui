@@ -76,6 +76,7 @@ exports[`<TemplateInputs /> tests snapshot test 1`] = `
                           </div>
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                            data-testid="multi-type-button"
                             disabled=""
                           >
                             <span
@@ -182,6 +183,7 @@ exports[`<TemplateInputs /> tests snapshot test 1`] = `
                             </div>
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                              data-testid="multi-type-button"
                               disabled=""
                             >
                               <span
@@ -417,6 +419,7 @@ exports[`<TemplateInputs /> tests snapshot test 1`] = `
                             </div>
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                              data-testid="multi-type-button"
                               disabled=""
                             >
                               <span

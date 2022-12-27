@@ -32,7 +32,7 @@ enum StepDetailTab {
 }
 
 export function DefaultView(props: StepDetailProps): React.ReactElement {
-  const { step, stageType = StageType.DEPLOY, isStageExecutionInputConfigured } = props
+  const { step, stageType = StageType.DEPLOY, isStageExecutionInputConfigured, executionMetadata } = props
   const { getString } = useStrings()
   const [activeTab, setActiveTab] = React.useState(StepDetailTab.STEP_DETAILS)
   const manuallySelected = React.useRef(false)
@@ -76,7 +76,11 @@ export function DefaultView(props: StepDetailProps): React.ReactElement {
         renderAllTabPanels={false}
       >
         {isStageExecutionInputConfigured ? null : (
-          <Tab id={StepDetailTab.STEP_DETAILS} title={getString('details')} panel={<StepDetailsTab step={step} />} />
+          <Tab
+            id={StepDetailTab.STEP_DETAILS}
+            title={getString('details')}
+            panel={<StepDetailsTab step={step} executionMetadata={executionMetadata} />}
+          />
         )}
 
         {shouldShowInputOutput && (
@@ -105,14 +109,20 @@ export function DefaultView(props: StepDetailProps): React.ReactElement {
           <Tab
             id={StepDetailTab.STEP_EXECUTION_INPUTS}
             title={getString('pipeline.runtimeInputs')}
-            panel={<ExecutionInputs step={step} />}
+            panel={<ExecutionInputs step={step} executionMetadata={executionMetadata} />}
           />
         ) : null}
         {isManualInterruption ? (
           <Tab
             id={StepDetailTab.MANUAL_INTERVENTION}
             title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
-            panel={<ManualInterventionTab step={step} allowedStrategies={failureStrategies} />}
+            panel={
+              <ManualInterventionTab
+                step={step}
+                allowedStrategies={failureStrategies}
+                executionMetadata={executionMetadata}
+              />
+            }
           />
         ) : null}
       </Tabs>

@@ -20,7 +20,8 @@ import {
   isServerlessDeploymentType,
   isSSHWinRMDeploymentType,
   ServiceDeploymentType,
-  isElastigroupDeploymentType
+  isElastigroupDeploymentType,
+  isTASDeploymentType
 } from '@pipeline/utils/stageHelpers'
 
 const DEFAULT_RELEASE_NAME = 'release-<+INFRA_KEY>'
@@ -198,11 +199,28 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
+    case InfraDeploymentType.Asg: {
+      const { connectorRef, region } = infrastructure?.spec || {}
+      return {
+        connectorRef,
+        region,
+        allowSimultaneousDeployments
+      }
+    }
     case InfraDeploymentType.Elastigroup: {
       const { connectorRef, configuration } = infrastructure?.spec || {}
       return {
         connectorRef,
         configuration,
+        allowSimultaneousDeployments
+      }
+    }
+    case InfraDeploymentType.TAS: {
+      const { connectorRef, organization, space } = infrastructure?.spec || {}
+      return {
+        connectorRef,
+        organization,
+        space,
         allowSimultaneousDeployments
       }
     }
@@ -278,6 +296,18 @@ export const getInfraGroups = (
       ]
     }
   ]
+  const asgInfraGroups: InfrastructureGroup[] = [
+    {
+      groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
+      items: [
+        {
+          label: getString('common.aws'),
+          icon: 'aws-asg',
+          value: InfraDeploymentType.Asg
+        }
+      ]
+    }
+  ]
 
   const elastigroupInfraGroups: InfrastructureGroup[] = [
     {
@@ -287,6 +317,18 @@ export const getInfraGroups = (
           label: getString('pipeline.serviceDeploymentTypes.elastigroup'),
           icon: 'elastigroup',
           value: InfraDeploymentType.Elastigroup
+        }
+      ]
+    }
+  ]
+  const tasInfraGroups: InfrastructureGroup[] = [
+    {
+      groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
+      items: [
+        {
+          label: getString('pipeline.serviceDeploymentTypes.tas'),
+          icon: 'tas',
+          value: InfraDeploymentType.TAS
         }
       ]
     }
@@ -312,10 +354,14 @@ export const getInfraGroups = (
       return sshWinRMInfraGroups
     case deploymentType === ServiceDeploymentType.ECS:
       return ecsInfraGroups
+    case deploymentType === ServiceDeploymentType.Asg:
+      return asgInfraGroups
     case isElastigroupDeploymentType(deploymentType):
       return elastigroupInfraGroups
     case isCustomDeploymentType(deploymentType):
       return customDeploymentInfraGroups
+    case isTASDeploymentType(deploymentType):
+      return tasInfraGroups
     default:
       return kuberntesInfraGroups
   }
@@ -385,6 +431,11 @@ const infraGroupItems: {
     label: 'pipeline.serviceDeploymentTypes.elastigroup',
     icon: 'elastigroup',
     value: InfraDeploymentType.Elastigroup
+  },
+  [InfraDeploymentType.TAS]: {
+    label: 'pipeline.serviceDeploymentTypes.tas',
+    icon: 'tas',
+    value: InfraDeploymentType.TAS
   }
 }
 
@@ -418,6 +469,13 @@ export const isElastigroupInfrastructureType = (infrastructureType?: string): bo
 
 export const isCustomDeploymentInfrastructureType = (infrastructureType?: string): boolean => {
   return infrastructureType === InfraDeploymentType.CustomDeployment
+}
+export const isTASInfrastructureType = (infrastructureType?: string): boolean => {
+  return infrastructureType === InfraDeploymentType.TAS
+}
+
+export const isAsgDeploymentInfrastructureType = (infrastructureType?: string): boolean => {
+  return infrastructureType === InfraDeploymentType.Asg
 }
 
 export const getInfraDefinitionDetailsHeaderTooltipId = (selectedInfrastructureType: string): string => {

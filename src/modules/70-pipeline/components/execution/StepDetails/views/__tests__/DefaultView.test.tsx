@@ -15,6 +15,7 @@ import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { getDefaultReducerState } from '@pipeline/components/LogsContent/LogsState/utils'
 import type { UseActionCreatorReturn } from '@pipeline/components/LogsContent/LogsState/actions'
 import { DefaultView } from '../DefaultView/DefaultView'
+import { executionMetadata } from './mock'
 
 const actions: UseActionCreatorReturn = {
   createSections: jest.fn(),
@@ -43,6 +44,7 @@ describe('Default View Test', () => {
           step={{
             status: ExecutionStatusEnum.InterventionWaiting
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -63,6 +65,7 @@ describe('Default View Test', () => {
               responseMessages: [responseMessage]
             }
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -83,6 +86,7 @@ describe('Default View Test', () => {
               }
             ]
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )

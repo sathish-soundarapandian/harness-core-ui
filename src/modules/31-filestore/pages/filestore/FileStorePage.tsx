@@ -61,7 +61,7 @@ import { createRequestBodyPayload, FileStoreFilterFormType } from '@filestore/ut
 import { Filter, FilterRef } from '@common/components/Filter/Filter'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
-import { getFileUsageNameByType } from '@filestore/utils/FileStoreUtils'
+import { getFileUsageNameByType, sortNodesByType } from '@filestore/utils/FileStoreUtils'
 import { useUnsavedConfirmation } from '@filestore/common/useUnsavedConfirmation/useUnsavedConfirmation'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -121,7 +121,8 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
     tempNodes,
     unsavedNodes,
     fileUsage: FILE_USAGE_CONTEXT,
-    handleSetIsUnsaved
+    handleSetIsUnsaved,
+    globalSort
   } = useContext(FileStoreContext)
   const { accountIdentifier: accountId, orgIdentifier, projectIdentifier } = queryParams
   const history = useHistory()
@@ -339,12 +340,15 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
       response => {
         if (response?.data?.children) {
           setFileStore(
-            response.data.children.map(node => {
-              return {
-                ...node,
-                parentName: FILE_STORE_ROOT
-              }
-            })
+            sortNodesByType(
+              response.data.children.map(node => {
+                return {
+                  ...node,
+                  parentName: FILE_STORE_ROOT
+                }
+              }),
+              globalSort
+            )
           )
           setCurrentNode({
             ...response.data,

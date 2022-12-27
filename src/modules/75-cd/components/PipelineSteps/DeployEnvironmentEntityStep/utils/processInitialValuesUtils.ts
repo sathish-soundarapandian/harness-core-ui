@@ -8,20 +8,13 @@
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { defaultTo, set } from 'lodash-es'
 import type { EnvironmentYamlV2 } from 'services/cd-ng'
-import { isValueRuntimeInput } from '@common/utils/utils'
+import { getIdentifierFromScopedRef, isValueRuntimeInput } from '@common/utils/utils'
 import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState, FilterYaml } from '../types'
 
 export function processFiltersInitialValues(
   filters?: FilterYaml[]
 ): NonNullable<DeployEnvironmentEntityFormState['environmentGroupFilters']> {
-  return defaultTo(filters, []).map((filter: FilterYaml) => ({
-    ...filter,
-    entities: filter?.entities?.map(entity => ({
-      // ? Can we use getString here?
-      label: entity === 'environments' ? 'Environments' : entity === 'gitOpsClusters' ? 'Clusters' : 'Infrastructures',
-      value: entity
-    }))
-  }))
+  return defaultTo(filters, [])
 }
 
 export function processSingleEnvironmentInitialValues(
@@ -144,44 +137,44 @@ export function getEnvironmentsFormStateFromInitialValues(
   } else {
     defaultTo(environments, []).map((environment: EnvironmentYamlV2, index: number) => {
       set(formState, `environments.${index}`, {
-        label: environment.environmentRef,
+        label: getIdentifierFromScopedRef(environment.environmentRef),
         value: environment.environmentRef
       })
 
-      set(formState, `environmentInputs.${environment.environmentRef}`, environment.environmentInputs)
+      set(formState, `environmentInputs.['${environment.environmentRef}']`, environment.environmentInputs)
 
       const environmentFilters = processFiltersInitialValues((environment as any).filters)
       if (environmentFilters.length) {
-        set(formState, `environmentFilters.${environment.environmentRef}`, environmentFilters)
+        set(formState, `environmentFilters.['${environment.environmentRef}']`, environmentFilters)
       } else {
         if (gitOpsEnabled) {
           if (Array.isArray(environment.gitOpsClusters)) {
             environment.gitOpsClusters.map((gitOpsCluster, clusterIndex) => {
-              set(formState, `clusters.${environment.environmentRef}.${clusterIndex}`, {
+              set(formState, `clusters.['${environment.environmentRef}'].${clusterIndex}`, {
                 label: gitOpsCluster.identifier,
                 value: gitOpsCluster.identifier
               })
             })
           } else {
-            set(formState, `clusters.${environment.environmentRef}`, environment.gitOpsClusters)
+            set(formState, `clusters.['${environment.environmentRef}']`, environment.gitOpsClusters)
           }
         } else {
           if (environment.deployToAll !== true) {
             if (Array.isArray(environment.infrastructureDefinitions)) {
               environment.infrastructureDefinitions.map((infrastructure, infrastructureIndex) => {
-                set(formState, `infrastructures.${environment.environmentRef}.${infrastructureIndex}`, {
+                set(formState, `infrastructures.['${environment.environmentRef}'].${infrastructureIndex}`, {
                   label: infrastructure.identifier,
                   value: infrastructure.identifier
                 })
 
                 set(
                   formState,
-                  `infrastructureInputs.${environment.environmentRef}.${infrastructure.identifier}`,
+                  `infrastructureInputs.['${environment.environmentRef}'].${infrastructure.identifier}`,
                   infrastructure.inputs
                 )
               })
             } else {
-              set(formState, `infrastructures.${environment.environmentRef}`, environment.infrastructureDefinitions)
+              set(formState, `infrastructures.['${environment.environmentRef}']`, environment.infrastructureDefinitions)
             }
           }
         }
@@ -208,7 +201,11 @@ export function processMultiEnvironmentInitialValues(
     category: 'multi',
     ...getEnvironmentsFormStateFromInitialValues(initialValues.environments?.values, false, gitOpsEnabled),
     ...(environmentFilters.length &&
-      isValueRuntimeInput(environmentValues.environments) && { environmentFilters: { runtime: environmentFilters } })
+      (isValueRuntimeInput(environmentValues.environments) || !initialValues.environments?.values) && {
+        environmentFilters: {
+          [`${initialValues.environments?.values ? 'runtime' : 'fixedScenario'}`]: environmentFilters
+        }
+      })
   }
 }
 

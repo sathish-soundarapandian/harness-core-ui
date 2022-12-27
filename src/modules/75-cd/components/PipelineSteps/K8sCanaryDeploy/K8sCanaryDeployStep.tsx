@@ -268,6 +268,7 @@ export class K8sCanaryDeployStep extends PipelineStep<K8sCanaryDeployData> {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
+    this._hasCommandFlagSelectionVisible = true
   }
   renderStep(props: StepProps<K8sCanaryDeployData>): JSX.Element {
     const {

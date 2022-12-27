@@ -7,9 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly accordian: string
-  readonly applicationDropdown: string
-  readonly bp3InputLeftContainer: string
   readonly content: string
   readonly disabled: string
   readonly formFullheight: string
@@ -18,6 +15,5 @@ declare const styles: {
   readonly iconButton: string
   readonly main: string
   readonly manualQueryWarning: string
-  readonly tierDropdown: string
 }
 export default styles

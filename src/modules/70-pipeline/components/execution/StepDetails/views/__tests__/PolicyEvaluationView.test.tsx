@@ -15,6 +15,7 @@ import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { StageType } from '@pipeline/utils/stageHelpers'
 
 import { PolicyEvaluationView } from '../PolicyEvaluationView/PolicyEvaluationView'
+import { executionMetadata } from './mock'
 
 describe('Policy Evaluation View Test', () => {
   test('renders snapshot', () => {
@@ -25,6 +26,7 @@ describe('Policy Evaluation View Test', () => {
             status: ExecutionStatusEnum.InterventionWaiting
           }}
           stageType={StageType.DEPLOY}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -46,6 +48,7 @@ describe('Policy Evaluation View Test', () => {
             }
           }}
           stageType={StageType.DEPLOY}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -68,6 +71,7 @@ describe('Policy Evaluation View Test', () => {
             ]
           }}
           stageType={StageType.DEPLOY}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )

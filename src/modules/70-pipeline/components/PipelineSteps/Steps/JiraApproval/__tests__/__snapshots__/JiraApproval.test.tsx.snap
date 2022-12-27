@@ -164,6 +164,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -314,6 +315,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -419,6 +421,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -555,6 +558,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -627,6 +631,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -894,6 +899,7 @@ exports[`Jira Approval tests Basic snapshot - deploymentform mode: jira-approval
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -969,6 +975,7 @@ exports[`Jira Approval tests Basic snapshot - deploymentform mode: jira-approval
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1215,6 +1222,7 @@ exports[`Jira Approval tests Basic snapshot - inputset mode: input set with erro
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1321,6 +1329,7 @@ exports[`Jira Approval tests Basic snapshot - inputset mode: input set with erro
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -1565,6 +1574,7 @@ exports[`Jira Approval tests Edit stage - readonly: edit stage view readonly 1`]
                 </div>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span
@@ -1710,6 +1720,7 @@ exports[`Jira Approval tests Edit stage - readonly: edit stage view readonly 1`]
                   </button>
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                     disabled=""
                   >
                     <span
@@ -1809,6 +1820,7 @@ exports[`Jira Approval tests Edit stage - readonly: edit stage view readonly 1`]
                 </div>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span
@@ -1907,6 +1919,7 @@ exports[`Jira Approval tests Edit stage - readonly: edit stage view readonly 1`]
                 </div>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span
@@ -1973,6 +1986,7 @@ exports[`Jira Approval tests Edit stage - readonly: edit stage view readonly 1`]
                 </div>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span
@@ -2251,6 +2265,7 @@ exports[`Jira Approval tests deploymentform mode - readonly: jira-approval-deplo
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -2326,6 +2341,7 @@ exports[`Jira Approval tests deploymentform mode - readonly: jira-approval-deplo
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"

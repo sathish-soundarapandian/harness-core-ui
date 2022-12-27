@@ -33,9 +33,6 @@ exports[`Artifactory Artifact Source tests snapshot test for Sidecar Artifactory
         </div>
         <div
           class="inputFieldLayout"
-        />
-        <div
-          class="inputFieldLayout"
         >
           <div
             class="imagePathContainer"
@@ -118,6 +115,7 @@ exports[`Artifactory Artifact Source tests snapshot test for Sidecar Artifactory
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -224,6 +222,7 @@ exports[`Artifactory Artifact Source tests snapshot test for Sidecar Artifactory
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -327,6 +326,7 @@ exports[`Artifactory Artifact Source tests snapshot test for Sidecar Artifactory
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"

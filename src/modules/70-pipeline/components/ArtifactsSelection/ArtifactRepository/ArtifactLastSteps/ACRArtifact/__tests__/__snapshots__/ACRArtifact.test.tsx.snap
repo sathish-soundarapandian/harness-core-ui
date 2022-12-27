@@ -19,7 +19,7 @@ exports[`Acr Artifact tests Should render correctly in edit case 1`] = `
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="dockerSideCard"
@@ -157,6 +157,7 @@ exports[`Acr Artifact tests Should render correctly in edit case 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -277,6 +278,7 @@ exports[`Acr Artifact tests Should render correctly in edit case 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -397,6 +399,7 @@ exports[`Acr Artifact tests Should render correctly in edit case 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -524,6 +527,7 @@ exports[`Acr Artifact tests Should render correctly in edit case 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -677,7 +681,7 @@ exports[`Acr Artifact tests Should render correctly in edit case for runtime fie
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="dockerSideCard"
@@ -771,6 +775,7 @@ exports[`Acr Artifact tests Should render correctly in edit case for runtime fie
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -885,6 +890,7 @@ exports[`Acr Artifact tests Should render correctly in edit case for runtime fie
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -999,6 +1005,7 @@ exports[`Acr Artifact tests Should render correctly in edit case for runtime fie
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1164,6 +1171,7 @@ exports[`Acr Artifact tests Should render correctly in edit case for runtime fie
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"

@@ -48,8 +48,11 @@ export function getLocalValueFromSelectedOptions(
 ): MultiSelectOption[] {
   const allOptionIndex = options.findIndex(opt => opt.value === SELECT_ALL_OPTION.value)
 
+  if (options.length === 0) {
+    return []
+  }
   // if All Option is the last selected option, clear the rest and select All Option
-  if (allOptionIndex === options.length - 1) {
+  else if (allOptionIndex === options.length - 1) {
     return [SELECT_ALL_OPTION]
   }
   // else if option selected when All option is selected, clear All option

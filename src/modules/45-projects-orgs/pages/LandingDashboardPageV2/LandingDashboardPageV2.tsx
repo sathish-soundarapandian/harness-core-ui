@@ -6,6 +6,7 @@ import type { TimeRangeFilterType } from '@common/types'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import OverviewGlanceCardsV2 from './OverviewGlanceCardsContainer/OverviewGlanceCardsContainer'
+import PreferencesCard from './PreferencesCard/PreferencesCard'
 import css from './LandingDashboardPageV2.module.scss'
 
 const LandingDashboardPageV2 = () => {
@@ -33,6 +34,9 @@ const LandingDashboardPageV2 = () => {
         >
           <Layout.Vertical className={css.left}>
             <OverviewGlanceCardsV2 timeRange={timeRange} />
+          </Layout.Vertical>
+          <Layout.Vertical className={css.right}>
+            <PreferencesCard />
           </Layout.Vertical>
         </Layout.Horizontal>
       </PageBody>

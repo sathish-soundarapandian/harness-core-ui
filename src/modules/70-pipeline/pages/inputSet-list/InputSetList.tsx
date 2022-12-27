@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { defaultTo, isEmpty, pick } from 'lodash-es'
 import { Popover, Layout, TextInput, Text, ButtonVariation, useToaster } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
@@ -20,6 +20,7 @@ import {
   useGetInputSetsListForPipeline,
   useGetTemplateFromPipeline
 } from 'services/pipeline-ng'
+import type { Error } from 'services/template-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { OverlayInputSetForm } from '@pipeline/components/OverlayInputSetForm/OverlayInputSetForm'
 import routes from '@common/RouteDefinitions'
@@ -84,7 +85,7 @@ function InputSetList(): React.ReactElement {
     extraQueryParams: { pipelineIdentifier: pipelineIdentifier }
   })
 
-  const { data: template } = useMutateAsGet(useGetTemplateFromPipeline, {
+  const { data: template, error: templateError } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
@@ -118,7 +119,16 @@ function InputSetList(): React.ReactElement {
     },
     { staleTime: 5 * 60 * 1000 }
   )
-  const isPipelineInvalid = !pipelineMetadata?.data?.entityValidityDetails?.valid
+
+  const isPipelineInvalid = useMemo(() => {
+    if (pipelineMetadata?.data && !pipelineMetadata?.data?.entityValidityDetails?.valid) {
+      return true
+    }
+    if ((templateError?.data as Error)?.status === 'ERROR') {
+      return true
+    }
+    return false
+  }, [pipelineMetadata, templateError])
 
   const { mutate: deleteInputSet } = useDeleteInputSetForPipeline({
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier, pipelineIdentifier }
@@ -240,12 +250,15 @@ function InputSetList(): React.ReactElement {
     }
   }
 
-  function getTooltipText(): JSX.Element | undefined {
-    if (isPipelineInvalid) return <Text padding="medium">{getString('pipeline.cannotAddInputSetInvalidPipeline')}</Text>
+  const getTooltipText: () => JSX.Element | undefined = useCallback((): JSX.Element | undefined => {
+    if (isPipelineInvalid) {
+      return <Text padding="medium">{getString('pipeline.cannotAddInputSetInvalidPipeline')}</Text>
+    }
 
-    if (!pipelineHasRuntimeInputs)
+    if (!pipelineHasRuntimeInputs) {
       return <Text padding="medium">{getString('pipeline.inputSets.noRuntimeInputsCurrently')}</Text>
-  }
+    }
+  }, [isPipelineInvalid, pipelineHasRuntimeInputs])
 
   const NewInputSetButtonPopover = (
     <Popover

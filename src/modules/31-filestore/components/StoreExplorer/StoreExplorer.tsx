@@ -11,6 +11,7 @@ import { Color } from '@harness/design-system'
 import { NewFileButton } from '@filestore/common/NewFile/NewFile'
 import type { FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { RootNodesList } from '@filestore/components/NavNodeList/NavNodesList'
+import { NodeSortMenu } from '@filestore/common/NodeSortMenu/NodeSortMenu'
 import { FileStoreContext } from '../FileStoreContext/FileStoreContext'
 
 import css from './StoreExplorer.module.scss'
@@ -30,7 +31,10 @@ export default function StoreExplorer({ fileStore }: StoreExplorerProps): React.
   return (
     <Layout.Vertical style={{ height: isModalView ? 'calc(50vh - 70px)' : '100%' }}>
       <Container background={Color.GREY_0} padding={{ top: 'medium', left: 'medium' }} className={css.explorer}>
-        {NewButton}
+        <Container flex={{ justifyContent: 'space-between' }}>
+          {NewButton}
+          <NodeSortMenu />
+        </Container>
         <RootNodesList rootStore={fileStore} />
       </Container>
     </Layout.Vertical>

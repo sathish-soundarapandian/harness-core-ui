@@ -14,19 +14,7 @@ import { useStrings } from 'framework/strings'
 import { useGetSloConsumptionBreakdownView } from 'services/cv'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
-  RenderSLIType,
-  RenderTarget
-} from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/components/AddSlos/components/SLOList.utils'
-import {
-  RenderMonitoredService,
-  RenderSLOName,
-  RenderAssignedWeightage,
-  RenderActualSlo,
-  RenderErrorBudgetBurned,
-  RenderContributedErrorBudgetBurned,
-  getDate
-} from './CompositeSLOConsumption.utils'
+import { getDate, getConsumptionTableColums } from './CompositeSLOConsumption.utils'
 import css from '../../DetailsPanel.module.scss'
 
 interface CompositeSLOConsumptionProps {
@@ -39,6 +27,7 @@ const CompositeSLOConsumption = ({ startTime, endTime }: CompositeSLOConsumption
   const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<
     ProjectPathProps & { identifier: string }
   >()
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const { error, loading, data, refetch } = useGetSloConsumptionBreakdownView({ identifier, lazy: true })
 
   useEffect(() => {
@@ -77,55 +66,7 @@ const CompositeSLOConsumption = ({ startTime, endTime }: CompositeSLOConsumption
     )
   } else {
     content = (
-      <TableV2
-        sortable={true}
-        data={tabelData}
-        columns={[
-          {
-            accessor: 'sloName',
-            Header: getString('cv.slos.sloName').toUpperCase(),
-            Cell: RenderSLOName
-          },
-          {
-            accessor: 'serviceName',
-            Header: getString('cv.slos.monitoredService').toUpperCase(),
-            width: '15%',
-            Cell: RenderMonitoredService
-          },
-          {
-            accessor: 'sliType',
-            Header: getString('cv.slos.sliType'),
-            Cell: RenderSLIType
-          },
-          {
-            accessor: 'weightagePercentage',
-            Header: getString('cv.CompositeSLO.Consumption.AssignedWeightage').toUpperCase(),
-            width: '12%',
-            Cell: RenderAssignedWeightage
-          },
-          {
-            accessor: 'sloTargetPercentage',
-            Header: getString('cv.slos.target').toUpperCase(),
-            Cell: RenderTarget
-          },
-          {
-            accessor: 'sliStatusPercentage',
-            Header: getString('cv.CompositeSLO.Consumption.ActualSlo').toUpperCase(),
-            Cell: RenderActualSlo
-          },
-          {
-            accessor: 'errorBudgetBurned',
-            Header: getString('cv.CompositeSLO.Consumption.ErrorBudgetBurned').toUpperCase(),
-            width: '15%',
-            Cell: RenderErrorBudgetBurned
-          },
-          {
-            accessor: 'contributedErrorBudgetBurned',
-            Header: getString('cv.CompositeSLO.Consumption.ContributedErrorBudgetBurned').toUpperCase(),
-            Cell: RenderContributedErrorBudgetBurned
-          }
-        ]}
-      />
+      <TableV2 sortable={true} data={tabelData} columns={getConsumptionTableColums({ getString, isAccountLevel })} />
     )
   }
 

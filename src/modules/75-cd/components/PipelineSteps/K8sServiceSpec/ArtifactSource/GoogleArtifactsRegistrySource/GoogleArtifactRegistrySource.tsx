@@ -20,6 +20,7 @@ import {
   GARBuildDetailsDTO,
   RegionGar,
   SidecarArtifact,
+  useGetBuildDetailsForGoogleArtifactRegistry,
   useGetBuildDetailsForGoogleArtifactRegistryV2,
   useGetRegionsForGoogleArtifactRegistry
 } from 'services/cd-ng'
@@ -27,6 +28,7 @@ import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRe
 import { TriggerDefaultFieldList } from '@triggers/components/Triggers/utils'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -63,7 +65,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     serviceIdentifier,
     stepViewType,
     pipelineIdentifier,
-    artifacts
+    artifacts,
+    useArtifactV1Data = false
   } = props
 
   const { getString } = useStrings()
@@ -100,11 +103,30 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     get(initialValues?.artifacts, `${artifactPath}.spec.repositoryName`)
   )
 
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
-    data: buildsDetail,
-    refetch: refetchBuildDetails,
-    loading: fetchingBuilds,
-    error
+    data: buildsV1Detail,
+    refetch: refetchBuildV1Details,
+    loading: fetchingV1Builds,
+    error: fetchingV1BuildsError
+  } = useGetBuildDetailsForGoogleArtifactRegistry({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      package: getFinalQueryParamValue(packageValue),
+      project: getFinalQueryParamValue(projectValue),
+      region: getFinalQueryParamValue(regionValue),
+      repositoryName: getFinalQueryParamValue(repositoryNameValue)
+    }
+  })
+
+  const {
+    data: buildsV2Detail,
+    refetch: refetchBuildV2Details,
+    loading: fetchingV2Builds,
+    error: fetchingV2BuildsError
   } = useMutateAsGet(useGetBuildDetailsForGoogleArtifactRegistryV2, {
     lazy: true,
     body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
@@ -136,6 +158,20 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       )
     }
   })
+
+  const { refetchBuildDetails, fetchingBuilds, error, buildsDetail } = useArtifactV1Data
+    ? {
+        refetchBuildDetails: refetchBuildV1Details,
+        fetchingBuilds: fetchingV1Builds,
+        error: fetchingV1BuildsError,
+        buildsDetail: buildsV1Detail
+      }
+    : {
+        refetchBuildDetails: refetchBuildV2Details,
+        fetchingBuilds: fetchingV2Builds,
+        error: fetchingV2BuildsError,
+        buildsDetail: buildsV2Detail
+      }
 
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
@@ -308,7 +344,13 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   items: getBuildDetails(),
                   allowCreatingNewItems: true
                 },
-                onFocus: () => {
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
+                  }
                   refetchBuildDetails()
                 }
               }}

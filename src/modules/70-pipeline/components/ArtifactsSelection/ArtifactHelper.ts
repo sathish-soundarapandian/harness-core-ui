@@ -19,14 +19,24 @@ import type { ArtifactType } from './ArtifactInterface'
 export enum ModalViewFor {
   PRIMARY = 1,
   SIDECAR = 2,
-  Template = 3
+  Template = 3,
+  CD_Onboarding = 4
 }
 
 export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
   return (
     deploymentType === ServiceDeploymentType.Kubernetes ||
     deploymentType === ServiceDeploymentType.NativeHelm ||
-    deploymentType === ServiceDeploymentType.ECS
+    deploymentType === ServiceDeploymentType.ECS ||
+    deploymentType == ServiceDeploymentType.TAS
+  )
+}
+
+export const isAllowedGoogleArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
+  return (
+    deploymentType === ServiceDeploymentType.Kubernetes ||
+    deploymentType === ServiceDeploymentType.CustomDeployment ||
+    deploymentType === ServiceDeploymentType.TAS
   )
 }
 
@@ -38,7 +48,9 @@ export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isRe
       deploymentType === ServiceDeploymentType.Ssh ||
       deploymentType === ServiceDeploymentType.AzureWebApp ||
       deploymentType === ServiceDeploymentType.Elastigroup ||
-      deploymentType === ServiceDeploymentType.CustomDeployment
+      deploymentType === ServiceDeploymentType.CustomDeployment ||
+      deploymentType === ServiceDeploymentType.TAS ||
+      deploymentType === ServiceDeploymentType.Asg
     )
   )
 }
@@ -191,7 +203,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Acr
   ],
-  Elastigroup: [ENABLED_ARTIFACT_TYPES.AmazonS3],
+  Asg: [ENABLED_ARTIFACT_TYPES.AmazonMachineImage],
+  Elastigroup: [ENABLED_ARTIFACT_TYPES.AmazonMachineImage],
   CustomDeployment: [
     ENABLED_ARTIFACT_TYPES.CustomArtifact,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
@@ -204,15 +217,14 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Acr
   ],
   TAS: [
-    ENABLED_ARTIFACT_TYPES.AmazonS3,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-    ENABLED_ARTIFACT_TYPES.Acr,
-    ENABLED_ARTIFACT_TYPES.DockerRegistry,
-    ENABLED_ARTIFACT_TYPES.Ecr,
-    ENABLED_ARTIFACT_TYPES.Gcr,
-    ENABLED_ARTIFACT_TYPES.Jenkins,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
-    ENABLED_ARTIFACT_TYPES.CustomArtifact
+    ENABLED_ARTIFACT_TYPES.Nexus2Registry,
+    ENABLED_ARTIFACT_TYPES.DockerRegistry,
+    ENABLED_ARTIFACT_TYPES.AmazonS3,
+    ENABLED_ARTIFACT_TYPES.Gcr,
+    ENABLED_ARTIFACT_TYPES.Ecr,
+    ENABLED_ARTIFACT_TYPES.Acr
   ]
 }
 

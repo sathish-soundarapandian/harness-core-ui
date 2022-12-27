@@ -111,7 +111,7 @@ export function TemplateVariablesContextProvider(
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      ...getGitQueryParamsWithParentScope(storeMetadata, params, repoIdentifier, branch)
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch })
     },
     body: {
       originalEntityYaml: yamlStringify(originalTemplate)

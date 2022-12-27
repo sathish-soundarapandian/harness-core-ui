@@ -102,22 +102,37 @@ export function VariableOutputPanel(): React.ReactElement {
           })
       }}
       validationSchema={Yup.object().shape({
-        outputs: Yup.array().of(
-          Yup.object().shape({
-            name: Yup.string()
-              .trim()
-              .required(getString('common.validation.nameIsRequired'))
-              .max(
-                MAX_LENGTH,
-                getString('common.validation.fieldCannotbeLongerThanN', { name: getString('name'), n: MAX_LENGTH })
-              )
-              .matches(
-                /^[a-zA-Z_][0-9a-zA-Z_$.]*$/,
-                getString('common.validation.fieldMustBeAlphanumeric', { name: getString('name') })
-              ),
-            value: Yup.string().trim().required(getString('common.validation.valueIsRequired'))
-          })
-        )
+        outputs: Yup.lazy((formikOutputValues): Yup.Schema<unknown> => {
+          return Yup.array().of(
+            Yup.object().shape({
+              name: Yup.string()
+                .trim()
+                .required(getString('common.validation.nameIsRequired'))
+                .max(
+                  MAX_LENGTH,
+                  getString('common.validation.fieldCannotbeLongerThanN', { name: getString('name'), n: MAX_LENGTH })
+                )
+                .matches(
+                  /^[a-zA-Z_][0-9a-zA-Z_$.]*$/,
+                  getString('common.validation.fieldMustBeAlphanumeric', { name: getString('name') })
+                )
+                .test(
+                  'Check Duplicate Output Name',
+                  getString('pipeline.pipelineChaining.outputAlreadyExists'),
+                  outputName => {
+                    let count = 0
+                    if (Array.isArray(formikOutputValues)) {
+                      formikOutputValues.forEach(val => {
+                        if (val?.name === outputName) count++
+                      })
+                    }
+                    return count <= 1
+                  }
+                ),
+              value: Yup.string().trim().required(getString('common.validation.valueIsRequired'))
+            })
+          )
+        })
       })}
     >
       {formik => {

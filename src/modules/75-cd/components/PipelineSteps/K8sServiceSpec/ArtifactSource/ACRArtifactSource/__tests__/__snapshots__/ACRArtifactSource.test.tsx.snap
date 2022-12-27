@@ -100,6 +100,7 @@ exports[`Acr Artifact Source tests Should match snapshot for Sidecar Acr artifac
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -194,6 +195,7 @@ exports[`Acr Artifact Source tests Should match snapshot for Sidecar Acr artifac
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -288,6 +290,7 @@ exports[`Acr Artifact Source tests Should match snapshot for Sidecar Acr artifac
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -353,6 +356,7 @@ exports[`Acr Artifact Source tests Should match snapshot for Sidecar Acr artifac
               </div>
               <button
                 class="MultiTypeInput--btn MultiTypeInput--EXPRESSION"
+                data-testid="multi-type-button"
                 disabled=""
               >
                 <span
@@ -497,6 +501,7 @@ exports[`Acr Artifact Source tests Should match snapshot for Sidecar Acr artifac
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -626,6 +631,7 @@ exports[`Acr Artifact Source tests Should match snapshot for Sidecar Acr artifac
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -720,6 +726,7 @@ exports[`Acr Artifact Source tests Should match snapshot for Sidecar Acr artifac
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -814,6 +821,7 @@ exports[`Acr Artifact Source tests Should match snapshot for Sidecar Acr artifac
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"
@@ -875,6 +883,7 @@ exports[`Acr Artifact Source tests Should match snapshot for Sidecar Acr artifac
                 >
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                   >
                     <span
                       class="bp3-icon StyledProps--main"

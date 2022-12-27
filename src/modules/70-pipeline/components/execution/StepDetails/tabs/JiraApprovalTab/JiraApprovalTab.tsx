@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { Container } from '@harness/uicore'
-import type { ApprovalInstanceResponse, JiraApprovalInstanceDetails } from 'services/pipeline-ng'
+import type { ApprovalInstanceResponse, ExecutionGraph, JiraApprovalInstanceDetails } from 'services/pipeline-ng'
 import { Duration } from '@common/exports'
 import { ApprovalStatus } from '@pipeline/utils/approvalUtils'
 import { String } from 'framework/strings'
@@ -28,10 +28,11 @@ export type ApprovalData =
 export interface JiraApprovalTabProps extends StepExecutionTimeInfo {
   approvalData: ApprovalInstanceResponse
   isWaiting: boolean
+  executionMetadata: ExecutionGraph['executionMetadata']
 }
 
 export function JiraApprovalTab(props: JiraApprovalTabProps): React.ReactElement {
-  const { isWaiting, startTs, endTs, stepParameters } = props
+  const { isWaiting, startTs, endTs, stepParameters, executionMetadata } = props
   const approvalData = props.approvalData as ApprovalData
   const wasApproved = !isWaiting && approvalData?.status === ApprovalStatus.APPROVED
   const wasRejected =
@@ -102,7 +103,7 @@ export function JiraApprovalTab(props: JiraApprovalTabProps): React.ReactElement
       )}
 
       <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
-        <StepDetails step={{ startTs, endTs, stepParameters }} />
+        <StepDetails step={{ startTs, endTs, stepParameters }} executionMetadata={executionMetadata} />
       </Container>
 
       <div className={cx(css.jiraApproval, css.applyTopPadding)}>

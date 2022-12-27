@@ -123,6 +123,7 @@ exports[`Terraform artifactory tests initial render 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -242,6 +243,7 @@ exports[`Terraform artifactory tests initial render 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -463,6 +465,7 @@ exports[`Terraform artifactory tests initial render with form data for config an
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -582,6 +585,7 @@ exports[`Terraform artifactory tests initial render with form data for config an
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -803,6 +807,7 @@ exports[`Terraform artifactory tests initial render with form data for config in
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -922,6 +927,7 @@ exports[`Terraform artifactory tests initial render with form data for config in
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1181,6 +1187,7 @@ exports[`Terraform artifactory tests initial render with form data for var files
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -1336,6 +1343,7 @@ exports[`Terraform artifactory tests initial render with form data for var files
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -1456,6 +1464,7 @@ exports[`Terraform artifactory tests initial render with form data for var files
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -1741,6 +1750,7 @@ exports[`Terraform artifactory tests initial render with no form data for config
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -1860,6 +1870,7 @@ exports[`Terraform artifactory tests initial render with no form data for config
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2081,6 +2092,7 @@ exports[`Terraform artifactory tests submit when it is a config form 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -2200,6 +2212,7 @@ exports[`Terraform artifactory tests submit when it is a config form 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2421,6 +2434,7 @@ exports[`Terraform artifactory tests test click previous button 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -2540,6 +2554,7 @@ exports[`Terraform artifactory tests test click previous button 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2799,6 +2814,7 @@ exports[`Terraform artifactory tests test submitting when terraform plan form 1`
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -2954,6 +2970,7 @@ exports[`Terraform artifactory tests test submitting when terraform plan form 1`
                               >
                                 <button
                                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                  data-testid="multi-type-button"
                                 >
                                   <span
                                     class="bp3-icon StyledProps--main"
@@ -3277,6 +3294,7 @@ exports[`Terraform artifactory tests when deleting a artifact path 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"

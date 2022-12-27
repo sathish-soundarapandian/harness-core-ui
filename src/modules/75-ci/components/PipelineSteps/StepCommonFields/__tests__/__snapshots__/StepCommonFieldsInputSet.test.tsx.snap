@@ -83,6 +83,7 @@ exports[`<StepCommonFieldsInputSet /> tests Readonly mode works 1`] = `
                         </div>
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                           disabled=""
                         >
                           <span
@@ -164,6 +165,7 @@ exports[`<StepCommonFieldsInputSet /> tests Readonly mode works 1`] = `
                         </div>
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                           disabled=""
                         >
                           <span
@@ -257,6 +259,7 @@ exports[`<StepCommonFieldsInputSet /> tests Readonly mode works 1`] = `
                   </div>
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                     disabled=""
                   >
                     <span
@@ -375,6 +378,7 @@ exports[`<StepCommonFieldsInputSet /> tests Should render properly 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -462,6 +466,7 @@ exports[`<StepCommonFieldsInputSet /> tests Should render properly 1`] = `
                           >
                             <button
                               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
                             >
                               <span
                                 class="bp3-icon StyledProps--main"
@@ -561,6 +566,7 @@ exports[`<StepCommonFieldsInputSet /> tests Should render properly 1`] = `
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"

@@ -103,6 +103,7 @@ export default function ConditionalExecutionTooltip(props: ConditionalExecutionT
                   style={{ wordBreak: 'break-word' }}
                   font={{ size: 'xsmall' }}
                   color={Color.GREY_900}
+                  flex={{ justifyContent: 'start' }}
                 >
                   {resolvedVariable.fullExpression !== resolvedVariable.trimmedExpression ? (
                     <Text font={{ size: 'xsmall' }} color={Color.GREY_900} tooltip={resolvedVariable.fullExpression}>
@@ -111,7 +112,7 @@ export default function ConditionalExecutionTooltip(props: ConditionalExecutionT
                   ) : (
                     resolvedVariable.trimmedExpression
                   )}
-                  {' = '}
+                  <div style={{ paddingLeft: 2, paddingRight: 2 }}>{'='}</div>
                   {resolvedVariable.expressionValue}
                 </Text>
               )

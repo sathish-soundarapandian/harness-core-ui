@@ -6,6 +6,7 @@
  */
 
 import type { StringKeys } from 'framework/strings'
+import type { AddEditEntityFilterProps } from './AddEditEntityFilterModal/AddEditEntityFilterModal.types'
 
 export enum InlineEntityFiltersRadioType {
   MANUAL = 'manual',
@@ -14,53 +15,14 @@ export enum InlineEntityFiltersRadioType {
 
 export interface InlineEntityFiltersProps {
   filterPrefix: string
-  readonly: boolean
   entityStringKey: StringKeys
   onRadioValueChange?(selectedRadioValue: InlineEntityFiltersRadioType): void
   showCard?: boolean
   hasTopMargin?: boolean
   baseComponent: React.ReactElement
-  entityFilterListProps: {
-    entities: EntityType[]
-    filters: EntityFilterType[]
-    defaultFilterType?: EntityFilterType
-    placeholderProps: {
-      entity: string
-      tags: string
-    }
-  }
-}
-
-export enum EntityType {
-  ENVIRONMENTS = 'environments',
-  INFRASTRUCTURES = 'infrastructures',
-  CLUSTERS = 'gitOpsClusters'
-}
-
-export enum EntityFilterType {
-  ALL = 'all',
-  TAGS = 'tags'
-}
-
-export const entityTypeStringsMap: Record<EntityType, StringKeys> = {
-  environments: 'environments',
-  infrastructures: 'common.infrastructures',
-  gitOpsClusters: 'common.clusters'
-}
-
-export const entityFilterTypeStringsMap: Record<EntityFilterType, StringKeys> = {
-  all: 'all',
-  tags: 'tagsLabel'
-}
-
-export interface EntityFilterListProps {
-  filterPrefix: string
-  readonly: boolean
-  entities: EntityType[]
-  filters: EntityFilterType[]
-  defaultFilterType?: EntityFilterType
-  placeholderProps: {
-    entity: string
-    tags: string
+  entityFilterProps: AddEditEntityFilterProps
+  gridAreaProps?: {
+    headerAndRadio: string
+    content: string
   }
 }

@@ -48,7 +48,7 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
   const { stage } = getStageFromPipeline(selectedStageId)
 
   const getSshOrWinRmType = React.useCallback(() => {
-    const { deploymentType } = stage?.stage?.spec as DeploymentStageConfig
+    const deploymentType = get(stage?.stage?.spec as DeploymentStageConfig, 'deploymentType')
     if (deploymentType) {
       return isSSHWinRMDeploymentType(deploymentType as string)
     }

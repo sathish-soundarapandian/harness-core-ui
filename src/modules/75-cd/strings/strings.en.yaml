@@ -99,6 +99,8 @@ steps:
       vpcs: VPCs
   ecsRunTaskStep:
     ecsRunTaskDefinition: ECS Run Task Definition
+    ecsRunTaskDefinitionArn: ECS Run Task Definition ARN
+    ecsRunTaskDefinitionArnPlaceholder: Enter ECS Run Task Definition ARN
     runTaskDefinition: Run Task Definition
     ecsRunTaskRequestDefinition: ECS Run Task Request Definition
     runTaskRequestDefinition: Run Task Request Definition
@@ -120,6 +122,30 @@ steps:
     elastigroupConfigReq: Elastigroup Configuration is required
     elastigroupTitle: Elastigroup Configuration Source
     elastigroupConfigDetails: '{{$.common.configDetails}}'
+  tasInfra:
+    space: Space
+    organizationPlaceholder: Select organization
+    spacePlaceholder: Specify the space
+    organizationError: No organization found with given Connector
+    spacesError: No spaces found within given organization
+  tas:
+    enableDownSizeOldApplication: Downsize Old Applications
+    enableUpsizeInActiveApp: Upsize Applications in Active App
+    upsizeInactiveService: Upsize inactive Service
+    totalInstances: Total Instances
+    oldAppInstances: Desired Instances - Old Version
+    newAppInstance: New App Instance
+    oldAppInstance: Old App Instance
+    minimumCountPercentage: Percentage must be greater than or equal to 0
+    existingVersionToKeep: Existing Versions To Keep
+    additionalRoutes: Additional Routes
+    tempRoutes: Temporary Routes
+    readFromManifest: Read from Manifest
+    matchRunningInstances: Match Running Instances
+    typeAndEnterForRouteAdd: Type and press enter to add a route
+    tempRouteMandatory: Temp route is mandatory
+    upscaleNewFirstLabel: Add new instances first, then downsize old instances
+    downScaleOldFirstLabel: Downsize old instances first, then add new instances
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -321,6 +347,8 @@ serviceDashboard:
   taskArn: Task ARN
   awsRegion: AWS Region
   containerList: Container List
+  elastigroupId: Elastigroup Id
+  ec2InstanceId: EC2 Instance Id
 noEnvironment:
   title: No Environments Available
   message: Create an environment and let’s start configuring the deployment
@@ -394,6 +422,7 @@ backendConfigFileStore: 'Specify Terraform Backend Config File Store'
 backendConfigFileStepOne: 'Terraform Backend Config Store'
 backendConfigFileStoreTitle: 'Backend Config File'
 selectRepository: Select a repository
+fetchingRepository: Fetching repositories...
 selectArtifact: Select an artifact
 artifactName: Artifact Name
 selectArtifactSource: Select Artifact Source
@@ -498,7 +527,40 @@ overrideYaml: Override Yaml Values
 manifestId: Manifest Id
 azureWebAppRollbackDescription: Rollback to the last successfully deployed app.
 azureWebAppSwapSlotDescription: Azure Swap environment slot with new instance.
+asgCanaryDeleteStepDescription: Asg Canary Delete
 getStartedWithCD:
+  onboardingTitle: Start your deployments journey with Harness CD
+  onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
+  runDelegateSubtitle: You can install the Delegate in your target environment.
+  delegateInstalled: Delegate installed successfully
+  selectDeploymentType: Select deployment type
+  deployToGitops: Do you want to deploy using GitOps?
+  configureEnvironment: Connect to Environment
+  configureService: Configure Service
+  helm: Helm
+  manifestTypeSelection: Manifest type
+  manifestStoreLabel: Manifest location
+  selectAuthMethod: Select an authentication method
+  gitopsRedirect:
+    title: Deploy with Gitops
+    subtitle: You will be redirected to Gitops section. Are you sure you want to leave this page?
+  closeOnboarding:
+    title: Leave Onboarding Process?
+    subtitle: You are about to leave without having set up a pipeline for deployment. Are you sure you want to leave anyway?
+  inHarnessFileStore: Use the Harness provided manifests from your Harness account file store
+  environmentDetails: Environment details
+  entityCreationTitle: 'The following Harness entities have automatically been created for you:'
+  delegateRunAs: Delegate run as
+  artifactStorage: Artifact storage
+  manifestStorage: Manifest storage
+  serviceConfiguration: Service Configuration
+  allSet: Your pipeline is ready to go!
+  successFull: successful
+  connectTo: 'Connect to a {{entity}}'
+  deploymentType: Deployment type
+  serviceName: Service name
+  selectArtifactRepo: Select your artifact repository
+  artifactToDeploy: Do you have an artifact to deploy?
   workloadDeploy: What workload would you like to deploy?
   serviceDeploy: Where do you want to deploy your service?
   serviceHeading: What is the name of your Service?
@@ -522,8 +584,19 @@ getStartedWithCD:
   setupDelegate: Setup Delegate
   delegateInfo1: Harness Continuous Delivery empowers teams to deliver new features, fast and securely. The first step to creating deployment pipelines is connecting to your target environment by installing a Harness Delegate.
   delegateInfo2: The delegate is a worker process that runs on your infrastructure execute tasks on your infrastructure on behalf of Harness platform.
+  delegateNotConnected: Delegate not connected
   delegateRequiredWarning: The delegate is not successfully connected, you will not be able to deploy without a delegate. Are you sure you want to continue?
   setupaNewDelegate: + Setup a New Delegate
+  viewDelegateDetails: View Delegate Details
+  hideDelegateDetails: Hide Delegate Details
+  checkDelegateInstalled: Checking for the delegate. Installation takes a minute or two.
+  testConnection: Test connection
+  harnessFileStore: Harness Filestore
+  delegateSuccess: The delegate is installed. Next you can configure the service.
+  connectHarnessEnv: Connect Harness to your environment
+  installDelegateToTargetEnv: Install a Harness Delegate in your target environment.
+  delegateDescription: A Delegate is a service that runs on your infrastructure to execute tasks on behalf of the Harness platform.
+  helpAndTroubleshoot: Help & Troubleshoot
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment
@@ -534,6 +607,7 @@ skipRendering: Skip K8s Manifest(s) Rendering
 credentialsRef: credentialsRef
 connectorRefText: connectorRef
 loadingDelegate: Please Wait, Creating a Delegate for you...
+fetchingDelegate: Please wait, fetching delegate details for you...
 hosts: hosts
 hostFilters: hostFilters
 attributeFilters: attributeFilters
@@ -555,21 +629,20 @@ validation:
 welcomeMessage: Welcome to Harness
 welcomeToHarnessCD: Welcome to Harness Continuous Delivery!
 learnMoreDelegate: Learn more about Delegates
-runDelegate: How do you want to run the Delegate
+runDelegate: How do you want to install the Delegate?
 installDelegate: Install Delegate
-instructionsDelegate: Instructions to Install the Delegate
-downloadYAML: Download the YAML
+instructionsDelegate: Install the Delegate
 previewYAML: Preview Yaml
 installCluster: Install on your Cluster
-checkCluster: Check if you can connect to your cluster
-delegateInstallCommand: Install the delegate by running the following command
-delegateConnectionWait: Waiting for Delegate to connect
+checkCluster: Set up and connect to your target cluster.
+delegateInstallCommand: 'Install the Delegate with the following command:'
+delegateConnectionWait: Wait for the Delegate to register
 delegateFailed: Delegate Failed to connect to Harness
 delegateFailText1: Harness Delegate Failed to connect to our Harness SaaS. Please make sure the infrastructure the delegate is installed on can reach https://app.harness.io
 delegateFailText2: The Delegate failed to come up on the cluster, please check to see if the pods are healthy or could be scheduled on the cluster
 delegateSuccess: Great! You have successfully installed the Delegate.
 pipelineCreation: Please proceed to creating your first pipeline
-instructionsCluster: Instructions to check if you have access to your cluster
+instructionsCluster: Set up and connect to your target cluster
 googleK8sService: Google K8s Service
 amazonElasticK8sService: Amazon Elastic K8s Service
 azureK8sService: Azure K8s Service
@@ -588,12 +661,12 @@ awsCli: Make sure the aws cli and eksctl and are installed
 amazonElasticCmd: eksctl utils write-kubeconfig --cluster=delegate
 azureCli: Make sure the Azure CLI is installed
 azureCliCmd: az aks install-cli
-azureCmd: az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
+azureCmd: az aks create -g myResourceGroup -n myAKSCluster --enable-managed-identity --node-count 2 --enable-addons monitoring --enable-msi-auth-for-monitoring  --generate-ssh-keys
 kubectlNodes: kubectl get nodes
 miniKube: Install Minikube
 miniKubeCmd1: curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 miniKubeCmd2: sudo install minikube-linux-amd64 /usr/local/bin/minikube
-miniKubeCmd3: minikube start
+miniKubeCmd3: minikube start --memory 4g --cpus 4
 miniKubeCmd4: kubectl get pods -A
 deploymentSteps: Deployment Steps
 useStepTemplatesForYourDeploymentType: Use step templates for your deployment type here
@@ -627,7 +700,7 @@ logoOfName: 'Logo of {{name}}'
 deploymentTemplates: 'Deployment Templates'
 environmentDetailPage:
   infraSlashCluster: Infra / GitOps Cluster
-  selectInfraMsg: 'Select an Artifact to view instance details'
+  selectArtifactMsg: 'Select an Artifact to view instance details'
   noInstancesToShow: No Instances to show
   seeFull: See full
   viewInTable: 'View in table'
@@ -635,3 +708,31 @@ environmentDetailPage:
   emptyInstanceDetailMsg: 'Empty instance detail'
   emptyServiceDetailMsg: 'There are no services with instances in this environment.'
   emptyExecutionListMsg: 'There are no executions for this given criteria.'
+ElastigroupStep:
+  appName: App Name
+  minInstances: Min Instances
+  maxInstances: Max Instances
+  desiredInstances: Desired Instances
+  valueCannotBeLessThan: '{{value}} cannot be less than {{value2}}'
+  valueCannotBeGreaterThan: '{{value}} cannot be greater than {{value2}}'
+  valueCannotBe: '{{value}} cannot be empty, string etc., should only be a non-negative number'
+ElastigroupSwap:
+  downsizeOldElastigroup: Downsize old Elastigroup
+oldService: Old Service
+ElastigroupBGStageSetup:
+  connectedCloudProvider: Connected Cloud Provider
+  awsLoadBalancerConfig: AWS Load Balancer Configuration
+  awsLoadBalancer: AWS Load Balancer
+  configureProductionListener: Configure your Production Listener
+  configureStageListener: Configure your Stage Listener
+  listenerColon: 'Listener :'
+  ruleColon: 'Rule :'
+inlineEntityFilters:
+  filterIdentifier: Filter identifier
+  enterFilterIdentifier: Enter filter identifier
+  validation:
+    filterIdentifierRequired: Filter identifier is required
+    filterIdentifierAlreadyExists: Filter with same identifier already exists
+    selectAtleastOneEntity: Atlteast 1 entity is required
+    tagsAreRequired: Tags are required
+    chooseAllOrAny: Please choose one of All or Any

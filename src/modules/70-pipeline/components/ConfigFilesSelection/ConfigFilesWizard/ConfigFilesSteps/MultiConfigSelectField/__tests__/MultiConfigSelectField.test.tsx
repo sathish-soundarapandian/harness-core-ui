@@ -149,9 +149,6 @@ describe('Define Multi type config select field', () => {
     const addBtn = await findByTestId(container, 'add-files')
     expect(addBtn).toBeInTheDocument()
 
-    await act(() => {
-      fireEvent.click(addBtn)
-    })
     const deleteBtn = await findByTestId(container, 'remove-files-[0]')
     expect(deleteBtn).toBeInTheDocument()
     expect(deleteBtn).toBeDisabled()
@@ -171,9 +168,12 @@ describe('Define Multi type config select field', () => {
     )
 
     const deleteBtn = await findByTestId(container, 'remove-files-[1]')
+    const addBtn = await findByTestId(container, 'add-files')
+    expect(addBtn).toBeInTheDocument()
     await act(() => {
-      fireEvent.click(deleteBtn)
+      fireEvent.click(addBtn)
     })
     expect(deleteBtn).toBeInTheDocument()
+    expect(deleteBtn).toBeEnabled()
   })
 })

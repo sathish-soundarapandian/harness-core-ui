@@ -356,6 +356,21 @@ const ECSRunTaskStepInputSetModeFormikForm = (props: ECSRunTaskStepInputSetProps
         </div>
       )}
 
+      {getMultiTypeFromValue(template?.spec?.taskDefinitionArn) === MultiTypeInputType.RUNTIME && (
+        <div className={css.verticalSpacingInput}>
+          <FormInput.MultiTextInput
+            name={`${prefix}spec.taskDefinitionArn`}
+            label={getString('cd.steps.ecsRunTaskStep.ecsRunTaskDefinitionArn')}
+            placeholder={getString('cd.steps.ecsRunTaskStep.ecsRunTaskDefinitionArnPlaceholder')}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+          />
+        </div>
+      )}
+
       <TaskDefinitionFields
         {...props}
         prefixPath={prefix}

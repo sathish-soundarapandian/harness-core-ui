@@ -18,21 +18,27 @@ import { getCVMonitoringServicesSearchParam, getErrorMessage } from '@cv/utils/C
 import DetailsBreadcrumb from '@cv/pages/monitored-service/views/DetailsBreadcrumb'
 import DetailsHeaderTitle from '@cv/pages/monitored-service/views/DetailsHeaderTitle'
 import DetailsToolbar from '@cv/pages/monitored-service/views/DetailsToolbar'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import Configurations from './components/Configurations/Configurations'
 import { MonitoredServiceEnum } from './MonitoredServicePage.constants'
 import ServiceHealth from './components/ServiceHealth/ServiceHealth'
 import HealthScoreCard from './components/ServiceHealth/components/HealthScoreCard/HealthScoreCard'
 import CVSLOsListingPage from '../slos/CVSLOsListingPage'
 import { isProjectChangedOnMonitoredService } from './MonitoredServicePage.utils'
+import MonitoredServiceTabTitle from './CVMonitoredService/components/MonitoredServiceTabTitle'
 import css from './MonitoredServicePage.module.scss'
 
 const ServiceHealthAndConfiguration: React.FC = () => {
   const history = useHistory()
   const { getString } = useStrings()
+
   const { tab = MonitoredServiceEnum.SLOs, view } = useQueryParams<{ tab?: MonitoredServiceEnum; view?: Views.GRID }>()
   const { orgIdentifier, projectIdentifier, accountId, identifier } = useParams<
     ProjectPathProps & { identifier: string }
   >()
+
+  const isSRMLicenseEnabled = useFeatureFlag(FeatureFlag.CVNG_LICENSE_ENFORCEMENT)
 
   const {
     data: monitoredServiceData,
@@ -49,6 +55,12 @@ const ServiceHealthAndConfiguration: React.FC = () => {
   })
 
   const { monitoredService, lastModifiedAt } = monitoredServiceData?.data ?? {}
+
+  let selectedTab = tab
+
+  if (!loading && !error) {
+    selectedTab = monitoredService?.enabled || !isSRMLicenseEnabled ? tab : MonitoredServiceEnum.Configurations
+  }
 
   if (error) {
     if (isProjectChangedOnMonitoredService(error, identifier)) {
@@ -69,7 +81,7 @@ const ServiceHealthAndConfiguration: React.FC = () => {
   }
 
   const onTabChange = (nextTab: MonitoredServiceEnum): void => {
-    if (nextTab !== tab) {
+    if (nextTab !== tab && (monitoredService?.enabled || !isSRMLicenseEnabled)) {
       history.push({
         pathname: routes.toCVAddMonitoringServicesEdit({
           accountId,
@@ -124,6 +136,8 @@ const ServiceHealthAndConfiguration: React.FC = () => {
     </Page.Body>
   )
 
+  const isMonitoredServiceDisabled = isSRMLicenseEnabled && Boolean(!identifier || !monitoredService?.enabled)
+
   return (
     <>
       <Page.Header
@@ -138,22 +152,39 @@ const ServiceHealthAndConfiguration: React.FC = () => {
       <Container className={css.monitoredServiceTabs}>
         <Tabs
           id="monitoredServiceTabs"
-          selectedTabId={tab}
+          selectedTabId={selectedTab}
           onChange={onTabChange}
           tabList={[
             {
               id: MonitoredServiceEnum.SLOs,
-              title: getString('cv.slos.title'),
-              panel: panelSLO
+              title: (
+                <MonitoredServiceTabTitle
+                  title={getString('cv.slos.title')}
+                  isTabDisabled={isMonitoredServiceDisabled}
+                />
+              ),
+              panel: panelSLO,
+              disabled: isMonitoredServiceDisabled
             },
             {
               id: MonitoredServiceEnum.ServiceHealth,
-              title: getString('cv.monitoredServices.monitoredServiceTabs.serviceHealth'),
-              panel: panelServiceHealth
+              title: (
+                <MonitoredServiceTabTitle
+                  title={getString('cv.monitoredServices.monitoredServiceTabs.serviceHealth')}
+                  isTabDisabled={isMonitoredServiceDisabled}
+                />
+              ),
+              panel: panelServiceHealth,
+              disabled: isMonitoredServiceDisabled
             },
             {
               id: MonitoredServiceEnum.Configurations,
-              title: getString('cv.monitoredServices.monitoredServiceTabs.configurations'),
+              title: (
+                <MonitoredServiceTabTitle
+                  title={getString('cv.monitoredServices.monitoredServiceTabs.configurations')}
+                  isTabDisabled={false}
+                />
+              ),
               panel: panelConfigurations
             }
           ]}

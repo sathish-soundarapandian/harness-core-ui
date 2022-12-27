@@ -31,7 +31,7 @@ export const GraphServiceChanges = ({ changeSummary }: { changeSummary?: ChangeS
   return (
     <Layout.Vertical spacing="small">
       <Text icon="nav-project" {...styles}>
-        {createTooltipLabel(Deployment.count ?? 0, ChangeSourceTypes.Deployments, getString)}
+        {createTooltipLabel(Deployment.count ?? 0, ChangeSourceTypes.Deployment, getString)}
       </Text>
       <Text
         icon="infrastructure"
@@ -42,7 +42,7 @@ export const GraphServiceChanges = ({ changeSummary }: { changeSummary?: ChangeS
         {createTooltipLabel(Infrastructure.count ?? 0, ChangeSourceTypes.Infrastructure, getString)}
       </Text>
       <Text icon="warning-outline" {...styles}>
-        {createTooltipLabel(Alert.count ?? 0, ChangeSourceTypes.Incidents, getString)}
+        {createTooltipLabel(Alert.count ?? 0, ChangeSourceTypes.Alert, getString)}
       </Text>
     </Layout.Vertical>
   )

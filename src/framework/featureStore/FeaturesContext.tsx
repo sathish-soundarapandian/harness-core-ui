@@ -322,7 +322,7 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
   function getHighestEdition({ licenseInformation, licenseState }: GetHighestEditionProps): Editions {
     let edition = Editions.FREE
 
-    const { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE } = licenseState
+    const { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE, CV_LICENSE_STATE } = licenseState
 
     if (CI_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
       edition = compareEditions(licenseInformation?.['CI']?.edition as Editions, edition)
@@ -338,6 +338,10 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
 
     if (CCM_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
       edition = compareEditions(licenseInformation?.['CE']?.edition as Editions, edition)
+    }
+
+    if (CV_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
+      edition = compareEditions(licenseInformation?.['CV']?.edition as Editions, edition)
     }
 
     return edition
@@ -358,7 +362,7 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
       return Editions.COMMUNITY
     }
 
-    const { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE } = licenseState
+    const { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE, CV_LICENSE_STATE } = licenseState
 
     switch (moduleType) {
       case 'CORE': {
@@ -385,6 +389,13 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
       case 'CE': {
         if (CCM_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
           return (licenseInformation['CE']?.edition as Editions) || Editions.FREE
+        }
+        break
+      }
+
+      case 'CV': {
+        if (CV_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
+          return (licenseInformation['CV']?.edition as Editions) || Editions.FREE
         }
         break
       }

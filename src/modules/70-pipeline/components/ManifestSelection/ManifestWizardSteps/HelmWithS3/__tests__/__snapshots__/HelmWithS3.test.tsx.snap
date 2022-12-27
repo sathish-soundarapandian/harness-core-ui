@@ -148,6 +148,7 @@ exports[`bucketFetch loading true bucketFetch loading true 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -224,6 +225,7 @@ exports[`bucketFetch loading true bucketFetch loading true 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -335,6 +337,7 @@ exports[`bucketFetch loading true bucketFetch loading true 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -407,6 +410,7 @@ exports[`bucketFetch loading true bucketFetch loading true 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -483,6 +487,7 @@ exports[`bucketFetch loading true bucketFetch loading true 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -943,6 +948,7 @@ exports[`helm with S3 tests bucketname is null 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1047,6 +1053,7 @@ exports[`helm with S3 tests bucketname is null 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1123,6 +1130,7 @@ exports[`helm with S3 tests bucketname is null 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1195,6 +1203,7 @@ exports[`helm with S3 tests bucketname is null 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1271,6 +1280,7 @@ exports[`helm with S3 tests bucketname is null 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1731,6 +1741,7 @@ exports[`helm with S3 tests expand advanced section 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1835,6 +1846,7 @@ exports[`helm with S3 tests expand advanced section 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1900,7 +1912,7 @@ exports[`helm with S3 tests expand advanced section 1`] = `
                           name="folderPath"
                           placeholder="pipeline.manifestType.chartPathPlaceholder"
                           type="text"
-                          value=""
+                          value="/"
                         />
                       </div>
                       <span
@@ -1911,6 +1923,7 @@ exports[`helm with S3 tests expand advanced section 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -1983,6 +1996,7 @@ exports[`helm with S3 tests expand advanced section 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2059,6 +2073,7 @@ exports[`helm with S3 tests expand advanced section 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2341,6 +2356,7 @@ exports[`helm with S3 tests expand advanced section 1`] = `
                                     >
                                       <button
                                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        data-testid="multi-type-button"
                                       >
                                         <span
                                           class="bp3-icon StyledProps--main"
@@ -2825,6 +2841,7 @@ exports[`helm with S3 tests load form correctly in edit mode and fill region 1`]
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -2929,6 +2946,7 @@ exports[`helm with S3 tests load form correctly in edit mode and fill region 1`]
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3005,6 +3023,7 @@ exports[`helm with S3 tests load form correctly in edit mode and fill region 1`]
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3077,6 +3096,7 @@ exports[`helm with S3 tests load form correctly in edit mode and fill region 1`]
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3153,6 +3173,7 @@ exports[`helm with S3 tests load form correctly in edit mode and fill region 1`]
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3613,6 +3634,7 @@ exports[`helm with S3 tests renders without crashing 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3717,6 +3739,7 @@ exports[`helm with S3 tests renders without crashing 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3782,7 +3805,7 @@ exports[`helm with S3 tests renders without crashing 1`] = `
                           name="folderPath"
                           placeholder="pipeline.manifestType.chartPathPlaceholder"
                           type="text"
-                          value=""
+                          value="/"
                         />
                       </div>
                       <span
@@ -3793,6 +3816,7 @@ exports[`helm with S3 tests renders without crashing 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3865,6 +3889,7 @@ exports[`helm with S3 tests renders without crashing 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -3941,6 +3966,7 @@ exports[`helm with S3 tests renders without crashing 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -4401,6 +4427,7 @@ exports[`helm with S3 tests submits with the right payload 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -4505,6 +4532,7 @@ exports[`helm with S3 tests submits with the right payload 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -4581,6 +4609,7 @@ exports[`helm with S3 tests submits with the right payload 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -4653,6 +4682,7 @@ exports[`helm with S3 tests submits with the right payload 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"
@@ -4729,6 +4759,7 @@ exports[`helm with S3 tests submits with the right payload 1`] = `
                         >
                           <button
                             class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
                               class="bp3-icon StyledProps--main"

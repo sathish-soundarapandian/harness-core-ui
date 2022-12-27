@@ -35,7 +35,6 @@ import {
   getSLODashboardWidgetsResponse,
   getSLODetailsForSLO_2,
   getSLODetailsForSLO_3,
-  getSLODetailsForSLO_4,
   getSLODashboardWidgetsEmptyResponse,
   getSLODetailResponseSLOOutRange,
   getSLODetailResponseSLIRecalculation,

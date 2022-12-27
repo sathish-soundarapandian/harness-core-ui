@@ -1,0 +1,52 @@
+.logsTableJsonDrawer {
+  flex: 1 !important;
+  min-height: auto !important;
+}
+
+.jsonSelectorButton {
+  box-shadow: none !important;
+  border: 1px solid var(--bp3-intent-color, var(--grey-200)) !important;
+  color: var(--grey-800) !important;
+  height: 36px !important;
+  position: relative;
+  padding: var(--spacing-xsmall) var(--spacing-small) !important;
+  background-color: var(--white) !important;
+  display: flex;
+  justify-content: space-between;
+  border-radius: var(--spacing-2);
+  &:hover {
+    border-color: var(--primary-6);
+  }
+
+  &:focus {
+    border-color: var(--primary-7);
+  }
+
+  :global(.bp3-button-text) {
+    width: 100%;
+  }
+
+  :global(.bp3-icon-chevron-down) {
+    position: absolute;
+    right: 0;
+    opacity: 0.5;
+    padding: var(--spacing-small) !important;
+  }
+
+  .placeholder {
+    color: var(--grey-350);
+  }
+}
+
+.noRecords {
+  height: 300px;
+  position: relative;
+
+  > div {
+    height: unset !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

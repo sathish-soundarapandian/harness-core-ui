@@ -18,10 +18,12 @@ import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 
 export interface PipelineOutOfSyncErrorStripProps {
   updateRootEntity: (entityYaml: string) => Promise<void>
+  loadFromcache: boolean
 }
 
 export function PipelineOutOfSyncErrorStrip({
-  updateRootEntity
+  updateRootEntity,
+  loadFromcache
 }: PipelineOutOfSyncErrorStripProps): React.ReactElement {
   const {
     state: { originalPipeline, gitDetails, storeMetadata, pipelineIdentifier },
@@ -39,8 +41,9 @@ export function PipelineOutOfSyncErrorStrip({
         orgIdentifier,
         projectIdentifier,
         identifier: pipelineIdentifier,
-        ...getGitQueryParamsWithParentScope(storeMetadata, params)
-      }
+        ...getGitQueryParamsWithParentScope({ storeMetadata, params })
+      },
+      headers: { ...(loadFromcache ? { 'Load-From-Cache': 'true' } : {}) }
     },
     {
       enabled: (!!originalPipeline?.identifier || originalPipeline?.identifier !== '-1') && !isCommunity,

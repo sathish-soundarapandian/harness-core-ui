@@ -192,7 +192,10 @@ function StartupScriptListView({
       name: getString('pipeline.fileDetails'),
       expressions,
       allowableTypes,
-      stepName: getString('pipeline.startup.command.fileDetails'),
+      stepName:
+        deploymentType === 'Elastigroup'
+          ? getString('pipeline.startup.script.fileDetails')
+          : getString('pipeline.startup.command.fileDetails'),
       initialValues: getLastStepInitialData(),
       handleSubmit: handleSubmit,
       isReadonly: isReadonly

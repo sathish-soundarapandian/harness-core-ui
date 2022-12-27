@@ -56,7 +56,7 @@ export function ArtifactSourceConfigRuntimeInputs(props: Props) {
       formName="artifactSourceConfigRuntimeInputsForm"
       enableReinitialize={true}
     >
-      {_formikProps => {
+      {formikProps => {
         return (
           <>
             {artifactSource &&
@@ -79,6 +79,7 @@ export function ArtifactSourceConfigRuntimeInputs(props: Props) {
                 allowableTypes: allowableTypes,
                 initialValues: { artifacts: { primary: template } },
                 artifactPath: 'primary',
+                formik: formikProps,
                 path
               })}
           </>

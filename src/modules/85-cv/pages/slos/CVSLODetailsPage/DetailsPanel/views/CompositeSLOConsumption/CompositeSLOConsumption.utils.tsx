@@ -12,25 +12,51 @@ import { Link, useParams } from 'react-router-dom'
 import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
+import type { UseStringsReturn } from 'framework/strings'
+import type { SLOConsumptionBreakdown } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getSearchString } from '@cv/utils/CommonUtils'
+import {
+  RenderSLIType,
+  RenderTarget
+} from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/components/AddSlos/components/SLOList.utils'
+import {
+  getProjectAndOrgColumn,
+  getColumsForProjectAndAccountLevel
+} from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/CreateCompositeSloForm.utils'
 import css from './CompositeSLOConsumption.module.scss'
 
 export const getDate = (time: number): string => moment(new Date(time)).format('lll')
 
+interface GetOrgProjectParamsProps {
+  slo: SLOConsumptionBreakdown
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+const getOrgProjectParams = ({ slo, orgIdentifier, projectIdentifier }: GetOrgProjectParamsProps) =>
+  orgIdentifier && projectIdentifier
+    ? {
+        orgIdentifier,
+        projectIdentifier
+      }
+    : {
+        orgIdentifier: slo?.projectParams?.orgIdentifier ?? '',
+        projectIdentifier: slo?.projectParams?.projectIdentifier ?? ''
+      }
+
 export const RenderSLOName: Renderer<CellProps<any>> = ({ row }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const slo = row.original
+  const orgProjectParams = getOrgProjectParams({ slo, orgIdentifier, projectIdentifier })
   const { sloName = '', sloIdentifier = '', sloType = 'Simple' } = slo || {}
   const path = routes.toCVSLODetailsPage({
     identifier: sloIdentifier,
     accountId,
-    orgIdentifier,
-    projectIdentifier
+    ...orgProjectParams
   })
   const queryParams = getSearchString({ sloType })
   return (
-    <Link to={`${path}${queryParams}`}>
+    <Link to={`${path}${queryParams}`} target="_blank">
       <Text color={Color.PRIMARY_7} title={sloName} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
         {sloName}
       </Text>
@@ -41,6 +67,7 @@ export const RenderSLOName: Renderer<CellProps<any>> = ({ row }) => {
 export const RenderMonitoredService: Renderer<CellProps<any>> = ({ row }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const slo = row.original
+  const orgProjectParams = getOrgProjectParams({ slo, orgIdentifier, projectIdentifier })
   const { serviceName = '', environmentIdentifier = '', monitoredServiceIdentifier: identifier = '' } = slo || {}
 
   return (
@@ -48,11 +75,11 @@ export const RenderMonitoredService: Renderer<CellProps<any>> = ({ row }) => {
       <Link
         to={routes.toCVAddMonitoringServicesEdit({
           accountId,
-          orgIdentifier,
-          projectIdentifier,
+          ...orgProjectParams,
           identifier,
           module: 'cv'
         })}
+        target="_blank"
       >
         <Text
           color={Color.PRIMARY_7}
@@ -134,4 +161,61 @@ export const RenderContributedErrorBudgetBurned: Renderer<CellProps<any>> = ({ r
       {durationAsString(slo?.contributedErrorBudgetBurned)}
     </Text>
   )
+}
+
+export const getConsumptionTableColums = ({
+  getString,
+  isAccountLevel
+}: {
+  getString: UseStringsReturn['getString']
+  isAccountLevel: boolean
+}) => {
+  const allColumns = [
+    {
+      accessor: 'sloName',
+      Header: getString('cv.slos.sloName').toUpperCase(),
+      Cell: RenderSLOName
+    },
+    ...getProjectAndOrgColumn({ getString }),
+    {
+      accessor: 'serviceName',
+      Header: getString('cv.slos.monitoredService').toUpperCase(),
+      width: '15%',
+      Cell: RenderMonitoredService
+    },
+    {
+      accessor: 'sliType',
+      Header: getString('cv.slos.sliType'),
+      Cell: RenderSLIType
+    },
+    {
+      accessor: 'weightagePercentage',
+      Header: getString('cv.CompositeSLO.Consumption.AssignedWeightage').toUpperCase(),
+      width: '12%',
+      Cell: RenderAssignedWeightage
+    },
+    {
+      accessor: 'sloTargetPercentage',
+      Header: getString('cv.slos.target').toUpperCase(),
+      Cell: RenderTarget
+    },
+    {
+      accessor: 'sliStatusPercentage',
+      Header: getString('cv.CompositeSLO.Consumption.ActualSlo').toUpperCase(),
+      Cell: RenderActualSlo
+    },
+    {
+      accessor: 'errorBudgetBurned',
+      Header: getString('cv.CompositeSLO.Consumption.ErrorBudgetBurned').toUpperCase(),
+      width: '15%',
+      Cell: RenderErrorBudgetBurned
+    },
+    {
+      accessor: 'contributedErrorBudgetBurned',
+      Header: getString('cv.CompositeSLO.Consumption.ContributedErrorBudgetBurned').toUpperCase(),
+      Cell: RenderContributedErrorBudgetBurned
+    }
+  ]
+
+  return getColumsForProjectAndAccountLevel({ isAccountLevel, allColumns, getString })
 }

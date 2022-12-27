@@ -25,7 +25,7 @@ export const TemplateDetailsDrawer: React.FC<TemplateDetailsDrawerProps> = props
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
   const getTemplateDetails: React.ReactElement = React.useMemo(
-    () => (template ? <TemplateDetails template={template} /> : <></>),
+    () => (template ? <TemplateDetails template={template} loadFromFallbackBranch /> : <></>),
     [template]
   )
 

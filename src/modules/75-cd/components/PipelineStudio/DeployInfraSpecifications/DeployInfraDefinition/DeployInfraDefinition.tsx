@@ -35,7 +35,9 @@ import {
   GetExecutionStrategyYamlQueryParams,
   SshWinRmAwsInfrastructure,
   CustomDeploymentInfrastructure,
-  ElastigroupInfrastructure
+  ElastigroupInfrastructure,
+  TanzuApplicationServiceInfrastructure,
+  AsgInfrastructure
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -79,6 +81,8 @@ import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/Commo
 import type { ECSInfraSpec } from '@cd/components/PipelineSteps/ECSInfraSpec/ECSInfraSpec'
 import type { CustomDeploymentInfrastructureSpec } from '@cd/components/PipelineSteps/CustomDeploymentInfrastructureSpec/CustomDeploymentInfrastructureStep'
 import type { ElastigroupInfrastructureSpec } from '@cd/components/PipelineSteps/ElastigroupInfraSpec/ElastigroupInfraSpec'
+import type { TASInfrastructureSpec } from '@cd/components/PipelineSteps/TASInfrastructureStep/TASInfrastructureStep'
+import type { AsgInfraSpec } from '@cd/components/PipelineSteps/AsgInfraSpec/AsgInfraSpec'
 import {
   cleanUpEmptyProvisioner,
   getInfraDefinitionDetailsHeaderTooltipId,
@@ -86,10 +90,12 @@ import {
   getInfraGroups,
   getInfrastructureDefaultValue,
   InfrastructureGroup,
+  isAsgDeploymentInfrastructureType,
   isAzureWebAppInfrastructureType,
   isCustomDeploymentInfrastructureType,
   isElastigroupInfrastructureType,
-  isServerlessInfrastructureType
+  isServerlessInfrastructureType,
+  isTASInfrastructureType
 } from '../deployInfraHelper'
 import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
 
@@ -101,7 +107,6 @@ export const deploymentTypeInfraTypeMap: Record<string, InfraDeploymentType> = {
   awsCodeDeploy: InfraDeploymentType.KubernetesDirect,
   WinRm: InfraDeploymentType.KubernetesDirect,
   awsLambda: InfraDeploymentType.KubernetesDirect,
-  pcf: InfraDeploymentType.KubernetesDirect,
   Ssh: InfraDeploymentType.KubernetesDirect,
   ServerlessAwsLambda: InfraDeploymentType.ServerlessAwsLambda,
   ServerlessAzureFunctions: InfraDeploymentType.ServerlessAzureFunctions,
@@ -110,8 +115,10 @@ export const deploymentTypeInfraTypeMap: Record<string, InfraDeploymentType> = {
   AzureFunctions: InfraDeploymentType.AzureFunctions,
   AzureWebApp: InfraDeploymentType.AzureWebApp,
   ECS: InfraDeploymentType.ECS,
+  Asg: InfraDeploymentType.Asg,
   CustomDeployment: InfraDeploymentType.CustomDeployment,
-  Elastigroup: InfraDeploymentType.Elastigroup
+  Elastigroup: InfraDeploymentType.Elastigroup,
+  TAS: InfraDeploymentType.TAS
 }
 
 type InfraTypes =
@@ -125,6 +132,8 @@ type InfraTypes =
   | EcsInfrastructure
   | CustomDeploymentInfrastructure
   | ElastigroupInfrastructure
+  | TanzuApplicationServiceInfrastructure
+  | AsgInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
@@ -654,6 +663,29 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           />
         )
       }
+      case InfraDeploymentType.Asg: {
+        return (
+          <StepWidget<AsgInfraSpec>
+            factory={factory}
+            key={stage.stage.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as AsgInfraSpec}
+            type={StepType.AsgInfraSpec}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  region: value.region,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.Asg
+              )
+            }
+          />
+        )
+      }
       case InfraDeploymentType.CustomDeployment: {
         return (
           <StepWidget<CustomDeploymentInfrastructureSpec>
@@ -695,6 +727,30 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
                 InfraDeploymentType.Elastigroup
+              )
+            }
+          />
+        )
+      }
+      case InfraDeploymentType.TAS: {
+        return (
+          <StepWidget<TASInfrastructureSpec>
+            factory={factory}
+            key={stage?.stage?.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as TASInfrastructureSpec}
+            type={StepType.TasInfra}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  organization: value.organization,
+                  space: value.space,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.TAS
               )
             }
           />
@@ -766,7 +822,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
         isAzureWebAppInfrastructureType(selectedInfrastructureType) ||
         isElastigroupDeploymentType(selectedDeploymentType) ||
         isElastigroupInfrastructureType(selectedInfrastructureType) ||
-        isCustomDeploymentInfrastructureType(selectedInfrastructureType)
+        isCustomDeploymentInfrastructureType(selectedInfrastructureType) ||
+        isTASInfrastructureType(selectedInfrastructureType) ||
+        isAsgDeploymentInfrastructureType(selectedInfrastructureType)
       ) && (
         <Card className={stageCss.sectionCard}>
           {!(

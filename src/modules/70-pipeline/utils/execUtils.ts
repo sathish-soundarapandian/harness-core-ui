@@ -7,6 +7,7 @@
 
 import type { IconName } from '@harness/uicore'
 import { defaultTo, get, isEmpty } from 'lodash-es'
+import { v4 as uuid } from 'uuid'
 import { PipelineGraphState, PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
 import type { ExecutionGraph, ExecutionNode, NodeRunInfo } from 'services/pipeline-ng'
 import {
@@ -768,7 +769,7 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
       items.push({
         name: 'Runtime Inputs',
         identifier: rootNodeId,
-        id: rootNode?.uuid as string,
+        id: uuid(),
         icon: StepTypeIconsMap.RUNTIME_INPUT,
         type: StepType.StageRuntimeInput,
         nodeType: NodeType.RUNTIME_INPUT,
@@ -896,9 +897,10 @@ export const getExecutionStageDiagramListeners = ({
   const nodeListeners: { [key: string]: (event?: any) => void } = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [Event.ClickNode]: (event: any) => {
+      const selectedNodeId = event?.data?.nodeType === NodeType.RUNTIME_INPUT ? event.data.identifier : event.data?.id
       event?.data?.data?.stageNodeId
         ? onStepSelect(event?.data?.data?.stageNodeId, event?.data?.id)
-        : onStepSelect(event?.data?.id)
+        : onStepSelect(selectedNodeId)
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [Event.MouseEnterNode]: (event: any) => {

@@ -7,15 +7,16 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvService from 'services/cv'
-import ChangesSourcecard from '../ChangesSourceCard'
+import ChangesSourceCard from '../ChangesSourceCard'
 import {
   changeSummary,
   changeSummaryWithPositiveChange,
   changeSummaryWithNegativeChange,
-  changeSoureCardData,
-  changeSoureCardDataWithPositiveGrowth,
+  changeSourceCardData,
+  changeSourceCardDataWithPositiveGrowth,
   expectedPositiveTextContent,
   expectedNegativeTextContent,
   changeSummaryWithAbove100PositiveChange,
@@ -25,7 +26,10 @@ import { calculateChangePercentage } from '../ChangesSourceCard.utils'
 
 const monitoredServiceIdentifier = 'monitored_service_identifier'
 
-describe('Test ChangeSourcecard', () => {
+describe('Test ChangeSourceCard', () => {
+  beforeAll(() => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(true)
+  })
   test('should render with positive change', async () => {
     jest.spyOn(cvService, 'useGetMonitoredServiceChangeEventSummary').mockImplementation(
       () =>
@@ -38,15 +42,16 @@ describe('Test ChangeSourcecard', () => {
     )
     const { container } = render(
       <TestWrapper>
-        <ChangesSourcecard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
+        <ChangesSourceCard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
       </TestWrapper>
     )
-    expect(container.querySelectorAll('.iconContainer span[data-icon="main-caret-up"]').length).toEqual(4)
+    expect(container.querySelectorAll('.iconContainer span[data-icon="main-caret-up"]').length).toEqual(5)
     container.querySelectorAll('.tickerValue[data-test="tickerValue"]').forEach((item, index) => {
       expect(item.textContent).toEqual(expectedPositiveTextContent[index])
     })
     expect(container).toMatchSnapshot()
   })
+
   test('should render with negative change', async () => {
     jest.spyOn(cvService, 'useGetMonitoredServiceChangeEventSummary').mockImplementation(
       () =>
@@ -59,10 +64,10 @@ describe('Test ChangeSourcecard', () => {
     )
     const { container } = render(
       <TestWrapper>
-        <ChangesSourcecard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
+        <ChangesSourceCard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
       </TestWrapper>
     )
-    expect(container.querySelectorAll('.iconContainer span[data-icon="main-caret-down"]').length).toEqual(4)
+    expect(container.querySelectorAll('.iconContainer span[data-icon="main-caret-down"]').length).toEqual(5)
     container.querySelectorAll('.tickerValue[data-test="tickerValue"]').forEach((item, index) => {
       expect(item.textContent).toEqual(expectedNegativeTextContent[index])
     })
@@ -81,10 +86,10 @@ describe('Test ChangeSourcecard', () => {
     )
     const { container } = render(
       <TestWrapper>
-        <ChangesSourcecard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
+        <ChangesSourceCard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
       </TestWrapper>
     )
-    expect(container.querySelectorAll('.iconContainer span[data-icon="main-caret-up"]').length).toEqual(4)
+    expect(container.querySelectorAll('.iconContainer span[data-icon="main-caret-up"]').length).toEqual(5)
     container.querySelectorAll('.tickerValue[data-test="tickerValue"]').forEach((item, index) => {
       expect(item.textContent).toEqual(expectedAbove100PositiveTextContent[index])
     })
@@ -103,10 +108,10 @@ describe('Test ChangeSourcecard', () => {
     )
     const { container, getAllByTestId } = render(
       <TestWrapper>
-        <ChangesSourcecard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
+        <ChangesSourceCard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
       </TestWrapper>
     )
-    expect(getAllByTestId('loading-block')).toHaveLength(4)
+    expect(getAllByTestId('loading-block')).toHaveLength(5)
     expect(container).toMatchSnapshot()
   })
 
@@ -122,7 +127,7 @@ describe('Test ChangeSourcecard', () => {
     )
     const { container, getByText } = render(
       <TestWrapper>
-        <ChangesSourcecard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
+        <ChangesSourceCard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
       </TestWrapper>
     )
 
@@ -132,9 +137,9 @@ describe('Test ChangeSourcecard', () => {
 
   test('validate calculateChangePercentage', () => {
     const getString = (val: string): string => val
-    expect(calculateChangePercentage(changeSummary, getString)).toEqual(changeSoureCardData)
-    expect(calculateChangePercentage(changeSummaryWithPositiveChange, getString)).toEqual(
-      changeSoureCardDataWithPositiveGrowth
+    expect(calculateChangePercentage(getString, true, changeSummary)).toEqual(changeSourceCardData)
+    expect(calculateChangePercentage(getString, true, changeSummaryWithPositiveChange)).toEqual(
+      changeSourceCardDataWithPositiveGrowth
     )
   })
 })

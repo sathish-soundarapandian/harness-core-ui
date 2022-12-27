@@ -7,19 +7,19 @@
 
 import React from 'react'
 import { Button, ButtonVariation, Container, Popover, useToaster } from '@harness/uicore'
-import { chunk } from 'lodash-es'
-import { useHistory, useParams } from 'react-router-dom'
+import { chunk, defaultTo } from 'lodash-es'
+import { useHistory } from 'react-router-dom'
 import cx from 'classnames'
 import { IconName, Menu, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import {
   useHandleManualInterventionInterrupt,
   ExecutionNode,
-  HandleManualInterventionInterruptQueryParams
+  HandleManualInterventionInterruptQueryParams,
+  ExecutionGraph
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { Strategy, strategyIconMap, stringsMap, StrategyType } from '@pipeline/utils/FailureStrategyUtils'
-import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { StageType } from '@pipeline/utils/stageHelpers'
@@ -39,18 +39,18 @@ export interface ActionButtonProps {
   step: ExecutionNode
   allowedStrategies: StrategyType[]
   isManualInterruption: boolean
+  executionMetadata: ExecutionGraph['executionMetadata']
 }
 
 export function ActionButtons(props: ActionButtonProps): React.ReactElement {
-  const { allowedStrategies, step, isManualInterruption } = props
-  const { orgIdentifier, projectIdentifier, executionIdentifier, accountId } =
-    useParams<PipelineType<ExecutionPathProps>>()
+  const { allowedStrategies, step, isManualInterruption, executionMetadata } = props
+  const { orgIdentifier, projectIdentifier, accountId, planExecutionId } = defaultTo(executionMetadata, {})
   const {
     mutate: handleInterrupt,
     loading,
     error
   } = useHandleManualInterventionInterrupt({
-    planExecutionId: executionIdentifier,
+    planExecutionId,
     nodeExecutionId: step.uuid || /* istanbul ignore next */ ''
   })
   const { showError } = useToaster()
@@ -124,12 +124,12 @@ export function ActionButtons(props: ActionButtonProps): React.ReactElement {
 
 export default function ChaosExperimentExecView(props: StepDetailProps): React.ReactElement {
   const history = useHistory()
-  const { step, stageType = StageType.DEPLOY } = props
+  const { step, stageType = StageType.DEPLOY, executionMetadata } = props
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
   const failureStrategies = allowedStrategiesAsPerStep(stageType)[StepMode.STEP].filter(
     st => st !== Strategy.ManualIntervention
   )
-  const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<ExecutionPathProps>>()
+  const { orgIdentifier, projectIdentifier, accountId } = defaultTo(executionMetadata, {})
 
   return (
     <Container padding="medium">
@@ -142,6 +142,7 @@ export default function ChaosExperimentExecView(props: StepDetailProps): React.R
             step={step}
             allowedStrategies={failureStrategies}
             isManualInterruption={isManualInterruption}
+            executionMetadata={executionMetadata}
           />
         }
         onViewExecutionClick={expRunIdentifier =>

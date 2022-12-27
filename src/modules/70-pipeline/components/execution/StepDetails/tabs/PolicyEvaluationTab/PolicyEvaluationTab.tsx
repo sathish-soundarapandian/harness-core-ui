@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 
-import type { ExecutionNode } from 'services/pipeline-ng'
+import type { ExecutionGraph, ExecutionNode } from 'services/pipeline-ng'
 import { String } from 'framework/strings'
 
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
@@ -21,10 +21,11 @@ import css from '../StepDetailsTab/StepDetailsTab.module.scss'
 
 export interface ExecutionStepDetailsTabProps {
   step: ExecutionNode
+  executionMetadata: ExecutionGraph['executionMetadata']
 }
 
 export function PolicyEvaluationTab(props: ExecutionStepDetailsTabProps): React.ReactElement {
-  const { step } = props
+  const { step, executionMetadata } = props
 
   const errorMessage = step?.failureInfo?.message || step.executableResponses?.[0]?.skipTask?.message
   const isFailed = isExecutionCompletedWithBadState(step.status)
@@ -40,8 +41,8 @@ export function PolicyEvaluationTab(props: ExecutionStepDetailsTabProps): React.
           <p>{errorMessage}</p>
         </div>
       ) : null}
-      <StepDetails step={step} />
-      <PolicyEvaluationContent step={step} />
+      <StepDetails step={step} executionMetadata={executionMetadata} />
+      <PolicyEvaluationContent step={step} executionMetadata={executionMetadata} />
     </div>
   )
 }

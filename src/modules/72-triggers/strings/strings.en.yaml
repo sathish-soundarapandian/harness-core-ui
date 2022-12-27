@@ -82,6 +82,7 @@ triggerConfigurationPanel:
   autoAbortIssueComment: 'If a PR is updated with a new comment, Harness will automatically cancel active builds for the same PR.'
   eventPlaceholder: Select Event
   pollingFrequency: Polling Frequency
+  pollingFrequencyPlaceholder: Enter h/m/s/ms
   copySecretDialogTitle: Did you copy the value of your secret?
   copySecretDialogContent: Please be sure to copy the value of the secret you selected for the Github Webhook trigger, you will need to paste this into the secret field of the Webhook in Github
 conditionsPanel:

@@ -689,7 +689,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
         originalPipeline,
         resolvedPipeline,
         inputSetTemplateYamlObj,
-        pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew),
+        pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew) || branch,
         selectedArtifact: {}
       }
     }

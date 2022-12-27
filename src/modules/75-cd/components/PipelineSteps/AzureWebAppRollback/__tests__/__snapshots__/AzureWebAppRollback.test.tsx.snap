@@ -156,6 +156,7 @@ exports[`Test Azure Web App Rollback step should error on submit 1`] = `
             </div>
             <button
               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+              data-testid="multi-type-button"
               disabled=""
             >
               <span
@@ -370,6 +371,7 @@ exports[`Test Azure Web App Rollback step should render edit view as new step 1`
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -552,6 +554,7 @@ exports[`Test Azure Web App Rollback step should render rollback step view 1`] =
             </div>
             <button
               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+              data-testid="multi-type-button"
               disabled=""
             >
               <span
@@ -746,6 +749,7 @@ exports[`Test Azure Web App Rollback step should show runtime component 1`] = `
             </div>
             <button
               class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+              data-testid="multi-type-button"
               disabled=""
             >
               <span
@@ -934,6 +938,7 @@ exports[`Test Azure Web App Rollback step should submit rollback form 1`] = `
             </div>
             <button
               class="MultiTypeInput--btn MultiTypeInput--FIXED"
+              data-testid="multi-type-button"
               disabled=""
             >
               <span

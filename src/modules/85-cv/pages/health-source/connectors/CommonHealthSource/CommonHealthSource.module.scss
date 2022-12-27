@@ -10,17 +10,8 @@
 }
 
 .formFullheight {
-  height: calc(100vh - 120px);
-  min-height: calc(100% - 120px);
   position: relative;
   overflow-y: scroll;
-}
-
-.applicationDropdown,
-.tierDropdown {
-  span.bp3-input-left-container {
-    margin-top: var(--spacing-none) !important;
-  }
 }
 
 .iconButton {
@@ -28,9 +19,6 @@
 }
 
 .main {
-  box-shadow: 0px 0px 1.79261px rgba(40, 41, 61, 0.04), 0px 3.58522px 7.17043px rgba(96, 97, 112, 0.16);
-  background-color: var(--white) !important;
-
   :global(.Text--withDocsTooltip) {
     align-items: baseline !important;
   }
@@ -52,26 +40,6 @@
   .content {
     padding: var(--spacing-large) !important;
     margin-bottom: var(--spacing-xlarge);
-
-    .accordian [data-testid='riskProfile-details'],
-    [data-testid='metricToService-details'],
-    [data-testid='queryBuilder-details'] {
-      padding: 0 !important;
-    }
-
-    .accordian {
-      [class*='details'] {
-        margin: var(--spacing-large) 0 0 var(--spacing-large) !important;
-        background-color: var(--grey-50) !important;
-        padding: var(--spacing-medium) !important;
-        padding-right: 50% !important;
-      }
-    }
-
-    > div:nth-child(2) {
-      max-width: 55%;
-      flex-basis: 55%;
-    }
   }
 }
 

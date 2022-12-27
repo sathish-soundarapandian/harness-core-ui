@@ -17,6 +17,7 @@ import type {
 } from 'services/cd-ng'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import type { TemplateSummaryResponse } from 'services/template-ng'
+import type { ModalViewFor } from '@connectors/components/CreateConnector/CreateConnectorUtils'
 
 export interface KubFormData {
   name?: string
@@ -97,6 +98,8 @@ export interface ConnectorDetailsProps {
   orgIdentifier: string
   projectIdentifier: string
   helpPanelReferenceId?: string
+  context?: ModalViewFor
+  formClassName?: string
 }
 
 export interface AwsSecretManagerConfigFormData {

@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import { EXECUTION_TIME_INPUT_VALUE, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
@@ -58,9 +58,10 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
     branch
   }
   const [statusOptions, setStatusOptions] = useState<SelectOption[]>([])
-  const connectorRefFixedValue = getGenuineValue(
-    initialValues.spec?.connectorRef || (inputSetData?.allValues?.spec?.connectorRef as string)
-  )
+  const connectorRefFixedValue =
+    template?.spec?.connectorRef === EXECUTION_TIME_INPUT_VALUE
+      ? formContentProps?.formik?.values?.spec?.connectorRef
+      : getGenuineValue(initialValues.spec?.connectorRef || (inputSetData?.allValues?.spec?.connectorRef as string))
 
   const [statusValue, setStatusValue] = useState<SelectOption>()
 

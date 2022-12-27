@@ -145,7 +145,7 @@ exports[`TargetDetailPage TargetDetailPage should render data correctly 1`] = `
             t1
           </h3>
           <div
-            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main containerBorder StyledProps--background-primary1 StyledProps--padding-small"
+            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main containerBorder StyledProps--background-primary1 StyledProps--padding-top-xsmall StyledProps--padding-right-small StyledProps--padding-bottom-xsmall StyledProps--padding-left-small"
           >
             <span
               class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small"
@@ -153,7 +153,8 @@ exports[`TargetDetailPage TargetDetailPage should render data correctly 1`] = `
               idLabel
             </span>
             <span
-              class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small"
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--font-variation-small"
+              style="--text-line-clamp: 1;"
             >
               t1
             </span>
@@ -704,7 +705,7 @@ exports[`TargetDetailPage TargetDetailPage should render its segments 1`] = `
             t1
           </h3>
           <div
-            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main containerBorder StyledProps--background-primary1 StyledProps--padding-small"
+            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main containerBorder StyledProps--background-primary1 StyledProps--padding-top-xsmall StyledProps--padding-right-small StyledProps--padding-bottom-xsmall StyledProps--padding-left-small"
           >
             <span
               class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small"
@@ -712,7 +713,8 @@ exports[`TargetDetailPage TargetDetailPage should render its segments 1`] = `
               idLabel
             </span>
             <span
-              class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small"
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--font-variation-small"
+              style="--text-line-clamp: 1;"
             >
               t1
             </span>

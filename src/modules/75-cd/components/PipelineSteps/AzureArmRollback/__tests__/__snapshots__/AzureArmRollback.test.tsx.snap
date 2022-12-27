@@ -156,6 +156,7 @@ exports[`Test Azure ARM rollback stack should render edit view as new step 1`] =
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -229,6 +230,7 @@ exports[`Test Azure ARM rollback stack should render edit view as new step 1`] =
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -451,6 +453,7 @@ exports[`Test Azure ARM rollback stack should submit rollback form 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -524,6 +527,7 @@ exports[`Test Azure ARM rollback stack should submit rollback form 1`] = `
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

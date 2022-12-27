@@ -73,6 +73,7 @@ exports[`Jenkins step tests Basic snapshot - deploymentform mode 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -212,7 +213,7 @@ exports[`Jenkins step tests Basic snapshot - deploymentform mode 1`] = `
 exports[`Jenkins step tests Basic snapshot - input variable view: jira-approval-input variable view 1`] = `
 <div>
   <div
-    class="variablesListTable"
+    class="variablesListTable variablePaddingL3"
   />
 </div>
 `;
@@ -290,6 +291,7 @@ exports[`Jenkins step tests Basic snapshot - inputset mode 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -534,6 +536,7 @@ exports[`Jenkins step tests Basic snapshot - inputset mode but no runtime values
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -830,6 +833,7 @@ exports[`Jenkins step tests Edit stage - readonly: edit stage view readonly 1`] 
                 </div>
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                   disabled=""
                 >
                   <span
@@ -972,6 +976,7 @@ exports[`Jenkins step tests Edit stage - readonly: edit stage view readonly 1`] 
                   </button>
                   <button
                     class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                    data-testid="multi-type-button"
                     disabled=""
                   >
                     <span
@@ -1052,6 +1057,7 @@ exports[`Jenkins step tests Edit stage - readonly: edit stage view readonly 1`] 
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1343,6 +1349,7 @@ exports[`Jenkins step tests deploymentform mode - readonly 1`] = `
                       >
                         <button
                           class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
@@ -1643,6 +1650,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"
@@ -1790,6 +1798,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
                     >
                       <button
                         class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        data-testid="multi-type-button"
                       >
                         <span
                           class="bp3-icon StyledProps--main"
@@ -1871,6 +1880,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
                   >
                     <button
                       class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
                     >
                       <span
                         class="bp3-icon StyledProps--main"

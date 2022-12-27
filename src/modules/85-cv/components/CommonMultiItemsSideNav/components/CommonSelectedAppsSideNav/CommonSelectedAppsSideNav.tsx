@@ -6,19 +6,13 @@
  */
 
 import React from 'react'
-import { Container, Icon, Text, PageError, PageErrorProps } from '@harness/uicore'
-import { Classes } from '@blueprintjs/core'
-import cx from 'classnames'
+import { Container, Text } from '@harness/uicore'
 import { TableFilter, TableFilterProps } from '@cv/components/TableFilter/TableFilter'
 import GroupedSideNav from './components/GroupedSideNav/GroupedSideNav'
 import type { GroupedCreatedMetrics } from './components/GroupedSideNav/GroupedSideNav.types'
-import { LoadingCells } from './CommonSelectedAppsSideNav.constants'
 import css from './CommonSelectedAppsSideNav.module.scss'
 
 export interface CommonSelectedAppsSideNavProps {
-  selectedMetrics?: string[]
-  loading?: boolean
-  error?: PageErrorProps
   filterProps?: TableFilterProps
   headerText?: string
   selectedItem?: string
@@ -32,53 +26,16 @@ export interface CommonSelectedAppsSideNavProps {
 
 export function CommonSelectedAppsSideNav(props: CommonSelectedAppsSideNavProps): JSX.Element {
   const {
-    selectedMetrics,
-    groupedSelectedApps,
-    loading,
-    filterProps,
-    error,
-    headerText,
     onSelect,
+    filterProps,
+    headerText,
+    isValidInput,
     selectedItem,
     onRemoveItem,
-    isMetricThresholdEnabled,
     openEditMetricModal,
-    isValidInput
+    groupedSelectedApps,
+    isMetricThresholdEnabled
   } = props
-  let content = null
-
-  if (error?.message) {
-    content = <PageError {...error} />
-  } else if (loading) {
-    content = LoadingCells.map(loadingCell => (
-      <Container key={loadingCell} className={css.seletedAppContainer}>
-        <Container className={cx(Classes.SKELETON, css.selectedApp)} height={16} width="100%" />
-      </Container>
-    ))
-  } else {
-    content = selectedMetrics?.map((selectedApp, index) => {
-      return (
-        <Container key={selectedApp} className={css.seletedAppContainer} onClick={() => onSelect?.(selectedApp, index)}>
-          <Text
-            className={cx(css.selectedApp, selectedItem && selectedApp === selectedItem ? css.isSelected : false)}
-            lineClamp={1}
-          >
-            {selectedApp}
-          </Text>
-
-          {onRemoveItem && (
-            <Icon
-              name="main-delete"
-              onClick={e => {
-                e.stopPropagation()
-                onRemoveItem(selectedApp, index)
-              }}
-            />
-          )}
-        </Container>
-      )
-    })
-  }
 
   const groupedSelectedAppsList = Object.entries(groupedSelectedApps || {})
 
@@ -86,7 +43,7 @@ export function CommonSelectedAppsSideNav(props: CommonSelectedAppsSideNavProps)
     <Container className={css.main}>
       {headerText && <Text className={css.navHeader}>{headerText}</Text>}
       {filterProps && <TableFilter {...filterProps} />}
-      {groupedSelectedAppsList.length ? (
+      <Container padding={{ top: 'medium' }}>
         <GroupedSideNav
           onSelect={onSelect}
           selectedItem={selectedItem}
@@ -96,9 +53,7 @@ export function CommonSelectedAppsSideNav(props: CommonSelectedAppsSideNavProps)
           openEditMetricModal={openEditMetricModal}
           isValidInput={isValidInput}
         />
-      ) : (
-        content
-      )}
+      </Container>
     </Container>
   )
 }

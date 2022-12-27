@@ -36,8 +36,10 @@ export enum InfraDeploymentType {
   SshWinRmAzure = 'SshWinRmAzure',
   AzureWebApp = 'AzureWebApp',
   ECS = 'ECS',
+  Asg = 'Asg',
   CustomDeployment = 'CustomDeployment',
-  Elastigroup = 'Elastigroup'
+  Elastigroup = 'Elastigroup',
+  TAS = 'TAS'
 }
 
 export const deploymentTypeToInfraTypeMap = {
@@ -307,12 +309,21 @@ export function getECSInfraValidationSchema(getString: UseStringsReturn['getStri
     })
   })
 }
+export function getAsgInfraValidationSchema(getString: UseStringsReturn['getString']) {
+  return Yup.object().shape({
+    connectorRef: getConnectorSchema(getString),
+    region: Yup.lazy((): Yup.Schema<unknown> => {
+      return Yup.string().required(getString('validation.regionRequired'))
+    })
+  })
+}
 
 export const isMultiArtifactSourceEnabled = (
   isMultiArtifactSource: boolean,
-  stage: DeploymentStageElementConfig
+  stage: DeploymentStageElementConfig,
+  isServiceEntityPage: boolean
 ): boolean => {
-  return isMultiArtifactSource && isEmpty(stage?.spec?.serviceConfig?.serviceDefinition?.spec?.artifacts?.primary?.type)
+  return isMultiArtifactSource && (isEmpty(stage?.spec?.serviceConfig?.serviceDefinition?.type) || isServiceEntityPage)
 }
 
 export const shouldFetchFieldData = (fieldList: string[]) => {
@@ -324,4 +335,14 @@ export const shouldFetchFieldData = (fieldList: string[]) => {
     )
   })
   return emptyOrRuntimeFields.length === 0
+}
+
+export const checkEmptyOrLessThan = (value: any, minimumCount = 0): boolean => /* istanbul ignore next */ {
+  if (typeof value === 'string') {
+    return isEmpty(value)
+  }
+  if (typeof value === 'number') {
+    return value < minimumCount
+  }
+  return false
 }

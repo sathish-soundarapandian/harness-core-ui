@@ -172,7 +172,6 @@ const ModuleInfoCards: React.FC<ModuleInfoCardsProps> = props => {
   const { module, selectedInfoCard, setSelectedInfoCard, style } = props
   const { getString } = useStrings()
   const { CDNG_ENABLED } = useFeatureFlags()
-
   const { accountId } = useParams<{
     accountId: string
   }>()

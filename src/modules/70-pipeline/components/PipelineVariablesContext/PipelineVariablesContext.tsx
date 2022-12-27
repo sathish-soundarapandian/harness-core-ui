@@ -177,7 +177,7 @@ export function PipelineVariablesContextProvider(
       orgIdentifier,
       pipelineIdentifier: originalPipeline.identifier,
       projectIdentifier,
-      ...getGitQueryParamsWithParentScope(storeMetadata, params, repoIdentifier, branch)
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch })
     },
     body: {
       originalEntityYaml: enablePipelineTemplatesResolution ? yamlStringify(originalPipeline) : ''

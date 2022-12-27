@@ -21,7 +21,7 @@ import {
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, isEmpty, unset } from 'lodash-es'
+import { defaultTo, isEmpty, noop, unset } from 'lodash-es'
 import produce from 'immer'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
@@ -34,6 +34,7 @@ import {
 } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { useMutateAsGet } from '@common/hooks'
 import {
+  CacheResponseMetadata,
   Error,
   TemplateMetadataSummaryResponse,
   TemplateResponse,
@@ -63,6 +64,9 @@ import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
+import PipelineCachedCopy from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCachedCopy/PipelineCachedCopy'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
 import css from './TemplateDetails.module.scss'
 
@@ -72,6 +76,7 @@ export interface TemplateDetailsProps {
   storeMetadata?: StoreMetadata
   isStandAlone?: boolean
   disableVersionChange?: boolean
+  loadFromFallbackBranch?: boolean
 }
 
 export enum TemplateTabs {
@@ -86,7 +91,14 @@ export enum ParentTemplateTabs {
 }
 
 export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
-  const { template, setTemplate, storeMetadata, isStandAlone = false, disableVersionChange = false } = props
+  const {
+    template,
+    setTemplate,
+    storeMetadata,
+    isStandAlone = false,
+    disableVersionChange = false,
+    loadFromFallbackBranch = false
+  } = props
   const { getString } = useStrings()
   const history = useHistory()
   const [versionOptions, setVersionOptions] = React.useState<SelectOption[]>([])
@@ -104,6 +116,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   const { accountId, module } = params
   const [selectedBranch, setSelectedBranch] = React.useState<string | undefined>()
   const gitPopoverBranch = isStandAlone ? storeMetadata?.branch : selectedBranch
+  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
   const stableVersion = React.useMemo(() => {
     return (templates as TemplateSummaryResponse[])?.find(item => item.stableTemplate && !isEmpty(item.versionLabel))
@@ -122,8 +135,9 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       orgIdentifier: selectedTemplate?.orgIdentifier,
       projectIdentifier: selectedTemplate?.projectIdentifier,
       versionLabel: selectedTemplate?.versionLabel,
-      ...getGitQueryParamsWithParentScope(storeMetadata, params)
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params, loadFromFallbackBranch })
     },
+    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
     lazy: true
   })
 
@@ -473,6 +487,19 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                     panel={<TemplateActivityLog template={selectedTemplate} />}
                   />
                 </Tabs>
+                <div className={css.gitCacheContainer}>
+                  {isGitCacheEnabled && !isEmpty((selectedTemplate as TemplateResponse)?.cacheResponseMetadata) && (
+                    <PipelineCachedCopy
+                      reloadContent={getString('common.template.label')}
+                      cacheResponse={
+                        (selectedTemplate as TemplateResponse)?.cacheResponseMetadata as CacheResponseMetadata
+                      }
+                      reloadFromCache={noop}
+                      fetchError={templateYamlError as any}
+                      readonly={true}
+                    />
+                  )}
+                </div>
               </Container>
             </Layout.Vertical>
           </Container>

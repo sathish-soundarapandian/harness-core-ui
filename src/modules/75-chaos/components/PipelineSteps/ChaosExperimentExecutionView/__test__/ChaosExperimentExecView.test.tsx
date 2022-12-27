@@ -11,6 +11,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import type { ResponseMessage } from 'services/pipeline-ng'
 import ChaosExperimentExecView, { ActionButtons } from '../ChaosExperimentExecView'
+import executionMetadata from './executionMetadata.json'
 
 const mutate = jest.fn()
 jest.mock('services/pipeline-ng', () => ({
@@ -41,6 +42,7 @@ describe('ChaosExperimentExecView Test', () => {
           step={{
             status: ExecutionStatusEnum.Success
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -61,6 +63,7 @@ describe('ChaosExperimentExecView Test', () => {
               responseMessages: [responseMessage]
             }
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -82,6 +85,7 @@ describe('ChaosExperimentExecView Test', () => {
               }
             ]
           }}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )
@@ -98,6 +102,7 @@ describe('ChaosExperimentExecView Test', () => {
           }}
           allowedStrategies={['Abort', 'Ignore', 'MarkAsSuccess', 'PipelineRollback', 'Retry', 'StageRollback']}
           isManualInterruption={true}
+          executionMetadata={executionMetadata}
         />
       </TestWrapper>
     )

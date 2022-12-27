@@ -4,6 +4,7 @@ exports[`Validate MetricLineChart should render with Data 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main"
+    data-testid="chart"
   />
 </div>
 `;
@@ -12,6 +13,7 @@ exports[`Validate MetricLineChart should render with error state 1`] = `
 <div>
   <p
     class="StyledProps--font StyledProps--main StyledProps--padding-bottom-medium StyledProps--font-variation-form-message-danger"
+    data-testid="error"
   >
     mockError
   </p>
@@ -22,6 +24,8 @@ exports[`Validate MetricLineChart should render with loading state 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main"
+    data-testid="loading"
+    style="height: 300px;"
   >
     <span
       class="bp3-icon StyledProps--main StyledProps--margin-bottom-medium"

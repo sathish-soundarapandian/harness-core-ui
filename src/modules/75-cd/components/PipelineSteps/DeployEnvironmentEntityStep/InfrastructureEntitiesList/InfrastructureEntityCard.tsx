@@ -149,7 +149,7 @@ export function InfrastructureEntityCard({
                   (infraDefinitionTypeMapping[infrastructureInputs.type as StepType] ||
                     infrastructureInputs?.type) as StepType
                 }
-                path={`infrastructureInputs.${environmentIdentifier}.${identifier}.spec`}
+                path={`infrastructureInputs.['${environmentIdentifier}'].${identifier}.spec`}
                 readonly={readonly}
                 stepViewType={StepViewType.TemplateUsage}
                 customStepProps={{

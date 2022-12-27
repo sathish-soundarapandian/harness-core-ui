@@ -27,6 +27,8 @@ export interface SetupSourceTabsProps<T> {
   tabTitles: string[]
   determineMaxTab?: (data: T) => number
   disableCache?: boolean
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export interface SetupSourceTabsProviderProps<T> {
@@ -34,6 +36,8 @@ export interface SetupSourceTabsProviderProps<T> {
   tabsInfo?: TabInfo[]
   onPrevious: (updatedData?: T, updatedTabInfo?: TabInfo) => Promise<void>
   onNext: (updatedData: T, updatedTabInfo?: TabInfo) => Promise<void>
+  isTemplate?: boolean
+  expressions?: string[]
   children: React.ReactNode
 }
 
@@ -66,6 +70,8 @@ export const SetupSourceTabsContext = createContext<{
   sourceData: any
   onNext: (updatedData: any, updatedTabInfo?: TabInfo) => Promise<void>
   onPrevious: (updatedData?: any, updatedTabInfo?: TabInfo) => Promise<void>
+  isTemplate?: boolean
+  expressions?: string[]
 }>({
   tabsInfo: [],
   sourceData: {},
@@ -287,7 +293,7 @@ export function SetupSourceTabsProvider<T>(props: SetupSourceTabsProviderProps<T
 }
 
 export function SetupSourceTabs<T>(props: SetupSourceTabsProps<T>): JSX.Element {
-  const { data, tabTitles, children, determineMaxTab, disableCache } = props
+  const { data, tabTitles, children, determineMaxTab, disableCache, expressions, isTemplate } = props
   const [tabsLength, setTabsLength] = useState<number>(0)
   const tabInfo = useMemo(() => initializeTabsInfo(tabTitles), [tabTitles])
   const { sourceData, activeTabIndex, onSwitchTab, onNext, onPrevious } = useSetupSourceTabsHook(
@@ -301,6 +307,8 @@ export function SetupSourceTabs<T>(props: SetupSourceTabsProps<T>): JSX.Element 
   return (
     <SetupSourceTabsProvider
       sourceData={sourceData}
+      isTemplate={isTemplate}
+      expressions={expressions}
       onPrevious={onPrevious}
       onNext={async (updatedData: any, updatedTabInfo?: TabInfo | undefined) => {
         setTabsLength(tabsL => (tabsL > tabTitles.length ? tabTitles.length : tabsL + 1))

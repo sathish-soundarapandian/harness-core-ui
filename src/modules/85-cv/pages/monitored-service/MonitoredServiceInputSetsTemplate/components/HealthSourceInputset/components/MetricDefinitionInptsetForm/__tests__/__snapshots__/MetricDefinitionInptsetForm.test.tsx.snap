@@ -56,6 +56,7 @@ exports[`Validate MetricDefinitionInptsetForm should render MetricDefinitionInpt
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -122,6 +123,7 @@ exports[`Validate MetricDefinitionInptsetForm should render MetricDefinitionInpt
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -197,6 +199,7 @@ exports[`Validate MetricDefinitionInptsetForm should render MetricDefinitionInpt
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"
@@ -263,6 +266,7 @@ exports[`Validate MetricDefinitionInptsetForm should render MetricDefinitionInpt
               >
                 <button
                   class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  data-testid="multi-type-button"
                 >
                   <span
                     class="bp3-icon StyledProps--main"

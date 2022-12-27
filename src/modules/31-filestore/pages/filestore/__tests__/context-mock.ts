@@ -6,6 +6,7 @@
  */
 
 import type { FileStoreContextState } from '@filestore/components/FileStoreContext/FileStoreContext'
+import { SORT_TYPE } from '@filestore/interfaces/FileStore'
 
 export const contextFSMock = {
   currentNode: {
@@ -98,7 +99,10 @@ export const contextFSMock = {
   },
   deletedNode: '',
   unsavedNodes: [],
-  fileUsage: 'CONFIG'
+  fileUsage: 'CONFIG',
+  sortNode: [{ identifier: 'Root', sortType: SORT_TYPE.ALPHABETICAL }],
+  globalSort: SORT_TYPE.ALPHABETICAL,
+  closedNode: ''
 }
 
 export const getDummyFileStoreContextValue = (): FileStoreContextState => {
@@ -117,6 +121,11 @@ export const getDummyFileStoreContextValue = (): FileStoreContextState => {
     addDeletedNode: jest.fn(),
     removeFromTempNodes: jest.fn(),
     isCachedNode: jest.fn(),
-    handleSetIsUnsaved: jest.fn()
+    handleSetIsUnsaved: jest.fn(),
+    handleCloseNode: jest.fn(),
+    isClosedNode: jest.fn(),
+    updateSortNode: jest.fn(),
+    getSortTypeById: jest.fn(),
+    updateGlobalSort: jest.fn()
   } as any
 }

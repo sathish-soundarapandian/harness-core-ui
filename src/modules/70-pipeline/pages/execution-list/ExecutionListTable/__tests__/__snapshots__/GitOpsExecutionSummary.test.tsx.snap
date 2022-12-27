@@ -41,9 +41,10 @@ exports[`GitOpsExecutionSummary render with multiple applications 1`] = `
           href="/account/accountId/cd/orgs/default/projects/project1/gitops/applications/ID_1?agentId=AGENT_1"
         >
           <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+            style="max-width: 200px; --text-line-clamp: 1;"
           >
-            NAME_1
+            NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1
           </p>
         </a>
       </p>
@@ -108,7 +109,8 @@ exports[`GitOpsExecutionSummary render with one application 1`] = `
           href="/account/accountId/cd/orgs/default/projects/project1/gitops/applications/ID_1?agentId=AGENT_1"
         >
           <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+            style="max-width: 200px; --text-line-clamp: 1;"
           >
             NAME_1
           </p>

@@ -24,6 +24,7 @@ NA
 - Prettier: `retrigger prettier`
 - Type Check: `retrigger typecheck`
 - ESLint: `retrigger eslint`
+- Sonar: `retrigger sonar`
 - Standards: `retrigger standards`
 - Build: `retrigger build`
 - Title Check: `retrigger titlecheck`
