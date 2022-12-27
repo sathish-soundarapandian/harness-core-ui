@@ -69,7 +69,8 @@
 }
 
 .inputWidth {
-  width: 362px !important; // field width (320px) + configure options button width (42px)
+  /* field width (320px) + configure options button width (42px) */
+  width: 362px !important;
 }
 
 .nested-accordions {

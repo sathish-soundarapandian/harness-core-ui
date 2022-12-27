@@ -91,7 +91,6 @@ export default function ServiceNowImportSetDeploymentMode(props: ServiceNowImpor
         <TimeoutFieldInputSetView
           name={`${prefix}timeout`}
           label={getString('pipelineSteps.timeoutLabel')}
-          className={css.deploymentViewMedium}
           multiTypeDurationProps={{
             configureOptionsProps: {
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)

@@ -44,7 +44,6 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
         <TimeoutFieldInputSetView
           name={`${prefix}timeout`}
           label={getString('pipelineSteps.timeoutLabel')}
-          className={css.deploymentViewMedium}
           multiTypeDurationProps={{
             configureOptionsProps: {
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -99,7 +98,6 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
-          className={css.deploymentViewMedium}
           fieldPath="spec.issueKey"
           template={template}
         />

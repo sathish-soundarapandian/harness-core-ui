@@ -165,7 +165,6 @@ function FormContent(formContentProps: ServiceNowUpdateDeploymentModeFormContent
         <TimeoutFieldInputSetView
           name={`${prefix}timeout`}
           label={getString('pipelineSteps.timeoutLabel')}
-          className={css.deploymentViewMedium}
           multiTypeDurationProps={{
             configureOptionsProps: {
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -306,7 +305,6 @@ function FormContent(formContentProps: ServiceNowUpdateDeploymentModeFormContent
             allowableTypes: allowableTypes
           }}
           configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType) }}
-          className={css.deploymentViewMedium}
           fieldPath={'spec.templateName'}
           template={template}
         />

@@ -42,7 +42,6 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
         <TimeoutFieldInputSetView
           name={`${prefix}timeout`}
           label={getString('pipelineSteps.timeoutLabel')}
-          className={css.deploymentViewMedium}
           multiTypeDurationProps={{
             configureOptionsProps: {
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -115,7 +114,6 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType),
             allowedValuesType: ALLOWED_VALUES_TYPE.NUMBER
           }}
-          className={css.deploymentViewMedium}
           fieldPath="spec.approvers.minimumCount"
           template={template}
         />

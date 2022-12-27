@@ -123,7 +123,6 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
         <TimeoutFieldInputSetView
           name={`${prefix}timeout`}
           label={getString('pipelineSteps.timeoutLabel')}
-          className={css.deploymentViewMedium}
           multiTypeDurationProps={{
             configureOptionsProps: {
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -215,7 +214,6 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
-          className={css.deploymentViewMedium}
           fieldPath="spec.ticketNumber"
           template={template}
         />
