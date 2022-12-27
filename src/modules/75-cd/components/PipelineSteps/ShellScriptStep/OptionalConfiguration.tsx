@@ -223,7 +223,6 @@ export default function OptionalConfiguration(props: {
                   showDefaultField={false}
                   showAdvanced={true}
                   onChange={value => setFieldValue('spec.executionTarget.host', value)}
-                  style={{ marginTop: 12 }}
                   isReadonly={readonly}
                 />
               )}
@@ -254,7 +253,6 @@ export default function OptionalConfiguration(props: {
                   onChange={value => {
                     setFieldValue('spec.executionTarget.connectorRef', value)
                   }}
-                  style={{ marginTop: 4 }}
                   isReadonly={readonly}
                 />
               )}
