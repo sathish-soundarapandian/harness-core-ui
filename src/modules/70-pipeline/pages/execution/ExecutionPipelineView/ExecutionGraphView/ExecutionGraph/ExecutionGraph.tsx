@@ -67,7 +67,7 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
     DynamicPopoverHandlerBinding<unknown> | undefined
   >()
   const [stageSetupId, setStageSetupIdId] = React.useState('')
-  const { pipelineExecutionDetail, selectedStageId } = useExecutionContext()
+  const { pipelineExecutionDetail, selectedStageId, selectedChildStageId } = useExecutionContext()
 
   const nodeData = useMemo(
     () => processLayoutNodeMapV1(pipelineExecutionDetail?.pipelineExecutionSummary),
@@ -232,7 +232,9 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
             readonly
             loaderComponent={DiagramLoader}
             data={data.items as PipelineGraphState[]}
-            selectedNodeId={selectedStageId}
+            selectedNodeId={
+              isEmpty(childNodeData) || isEmpty(selectedChildStageId) ? selectedStageId : selectedChildStageId
+            }
             panZoom={false}
             parentSelector=".Pane1"
             {...(!isMatrixNode() && { collapsibleProps: { percentageNodeVisible: 0.8, bottomMarginInPixels: 120 } })}

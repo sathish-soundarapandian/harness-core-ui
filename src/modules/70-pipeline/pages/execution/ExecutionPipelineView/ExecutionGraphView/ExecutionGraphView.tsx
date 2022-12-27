@@ -125,6 +125,7 @@ export default function ExecutionGraphView(): React.ReactElement {
 
     delete params.step
     delete params.retryStep
+    if (!parentStageId && params?.childStage) delete params.childStage
 
     replaceQueryParams(params)
   }

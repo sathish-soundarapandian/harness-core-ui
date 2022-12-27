@@ -17,7 +17,8 @@ import {
   isExecutionRunning,
   ExecutionStatus,
   isExecutionSkipped,
-  isExecutionNotStarted
+  isExecutionNotStarted,
+  isExecutionComplete
 } from '@pipeline/utils/statusHelpers'
 import type { ExecutionGraph } from 'services/pipeline-ng'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -66,7 +67,8 @@ export function StepGroupNode(props: any): JSX.Element {
   React.useEffect(() => {
     if (
       props?.type === 'Pipeline' &&
-      isExecutionRunning(props?.status) &&
+      (isExecutionRunning(props?.status) || isExecutionComplete(props?.status)) &&
+      isNodeCollapsed &&
       childPipelineData &&
       childPipelineData?.length > 0
     ) {
@@ -128,12 +130,15 @@ export function StepGroupNode(props: any): JSX.Element {
               delete params?.step
               if (isUndefined(childPipelineData) || isEmpty(childPipelineData)) delete params?.childStage
               replaceQueryParams(params)
+              // Once the childPipelineData is available after refresh, the node will uncollapse.
+              if (isUndefined(childPipelineData) || isEmpty(childPipelineData)) return
             }
             setNodeCollapsed(false)
           }}
           {...props}
           isNodeCollapsed={true}
-          icon={props?.type === 'Pipeline' ? 'pipeline' : 'step-group'}
+          icon={props?.type === 'Pipeline' ? 'chained-pipeline' : 'step-group'}
+          selectedNodeId={props?.type === 'Pipeline' ? selectedStageId : props?.selectedNodeId} // In order to apply selected node background color on collapsing the node after execution is completed
         />
       ) : (
         <div style={{ position: 'relative' }}>
