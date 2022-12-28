@@ -11,6 +11,7 @@ declare const styles: {
   readonly btn: string
   readonly buttonRow: string
   readonly centerAlign: string
+  readonly closeWizard: string
   readonly containerItemCss: string
   readonly iconPadding: string
   readonly iconPaddingSmall: string

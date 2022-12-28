@@ -84,3 +84,9 @@
   margin: var(--spacing-xxlarge) var(--spacing-xxlarge) !important;
   opacity: 0.1;
 }
+
+.close-wizard {
+  position: absolute;
+  right: var(--spacing-large);
+  top: var(--spacing-large);
+}

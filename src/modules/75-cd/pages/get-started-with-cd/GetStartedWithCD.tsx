@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Icon, Layout, ButtonVariation, Container, ButtonSize } from '@harness/uicore'
+import { Text, Icon, Layout, ButtonVariation, Container, ButtonSize, Button } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -32,6 +32,14 @@ export default function GetStartedWithCD(): React.ReactElement {
   }
   return (
     <Layout.Vertical flex>
+      <Button
+        minimal
+        icon="cross"
+        iconProps={{ size: 20 }}
+        onClick={() => history.push(routes.toPipelines({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))}
+        className={css.closeWizard}
+        data-testid={'close-cd-onboarding-wizard'}
+      />
       <Container className={css.topPage}>
         <Layout.Horizontal flex margin="auto">
           <Layout.Vertical padding="xlarge" style={{ flex: 1, textAlign: 'center' }} className={css.centerAlign}>

@@ -44,7 +44,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     SRM_ET_EXPERIMENTAL,
     NEW_LEFT_NAVBAR_SETTINGS
   } = useFeatureFlags()
-  const { showGetStartedTabInMainMenu } = useSideNavContext()
+  const { showGetStartedTabInMainMenu, showGetStartedCDTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const { isGitSimplificationEnabled, isGitSyncEnabled, gitSyncEnabledOnlyForFF, selectedProject } = useAppStore()
   const { orgIdentifier = orgIdentifierFromParams, identifier: projectIdentifier = projectIdentifierFromParams } =
@@ -117,7 +117,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCI({ ...params, module })} />
         )}
 
-        {CD_ONBOARDING_ENABLED && module === 'cd' && !showGetStartedTabInMainMenu && (
+        {CD_ONBOARDING_ENABLED && module === 'cd' && !showGetStartedCDTabInMainMenu && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
         )}
 

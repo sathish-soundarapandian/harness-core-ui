@@ -53,6 +53,7 @@ import {
 } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import RunPipelineSummary from '../RunPipelineSummary/RunPipelineSummary'
+import commonCss from '../GetStartedWithCD.module.scss'
 import css from './DeployProvisioningWizard.module.scss'
 const WizardStepOrder = [
   DeployProvisiongWizardStepId.SelectDeploymentType,
@@ -543,7 +544,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
             icon="cross"
             iconProps={{ size: 18 }}
             onClick={showOnboaringExitWarning}
-            style={{ position: 'absolute', right: 'var(--spacing-large)', top: 'var(--spacing-large)' }}
+            className={commonCss.closeWizard}
             data-testid={'close-cd-onboarding-wizard'}
           />
         </Container>
