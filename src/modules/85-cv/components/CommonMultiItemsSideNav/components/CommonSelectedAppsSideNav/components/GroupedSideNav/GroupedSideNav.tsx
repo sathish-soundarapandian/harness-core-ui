@@ -103,6 +103,7 @@ export default function GroupedSideNav({
                     <Container>
                       {!isValidInput ? <Icon name="warning-icon" size={18} color={Color.ORANGE_700} /> : null}
                       <MetricMenu
+                        key={selectedApp.metricName}
                         onEdit={openEditMetricModal}
                         onDelete={handleOnDelete}
                         titleText={getString('common.delete', { name: selectedApp?.metricName })}

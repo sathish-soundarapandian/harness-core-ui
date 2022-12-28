@@ -74,6 +74,17 @@ export default function CommonHealthSource({
     failFastThresholds
   }
 
+  function replacer(key, value) {
+    if (value instanceof Map) {
+      return {
+        dataType: 'Map',
+        value: Array.from(value.entries()) // or with spread: value: [...value]
+      }
+    } else {
+      return value
+    }
+  }
+
   return (
     <Formik<CommonHealthSourceConfigurations>
       enableReinitialize
@@ -100,6 +111,7 @@ export default function CommonHealthSource({
 
         return (
           <>
+            <pre>{JSON.stringify(formik.values, replacer, 4)}</pre>
             {/* Non custom fields section can be added here */}
 
             <CommonHealthSourceProvider updateParentFormik={formik.setFieldValue}>
@@ -117,6 +129,7 @@ export default function CommonHealthSource({
                     return (
                       <FormikForm className={css.formFullheight}>
                         <CustomMetricFormContainer
+                          // key={createdMetrics.join('')}
                           setConfigurationsFormikFieldValue={formik.setFieldValue}
                           mappedMetrics={customMetricsMap}
                           selectedMetric={currentSelectedMetric}

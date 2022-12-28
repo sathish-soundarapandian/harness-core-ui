@@ -107,7 +107,7 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
         {addFieldLabel}
       </Button>
       <CommonSelectedAppsSideNav
-        key={createdMetrics?.map(i => i)?.join('')}
+        key={createdMetrics?.join('')}
         isValidInput={isValidInput}
         onSelect={(newlySelectedMetric, index) => {
           onSelectMetric(newlySelectedMetric, createdMetrics, index)
@@ -120,12 +120,13 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
         onRemoveItem={
           hasOnRemove
             ? removedItem => {
-                setCreatedMetrics(oldMetrics => {
-                  const { updatedMetric, filteredOldMetrics, updateIndex } = getUpdatedMetric(oldMetrics, removedItem)
-                  setSelectedMetric(updatedMetric)
-                  onRemoveMetric(removedItem, updatedMetric, [...filteredOldMetrics], defaultTo(updateIndex, 0))
-                  return [...filteredOldMetrics]
-                })
+                const { updatedMetric, filteredOldMetrics, updateIndex } = getUpdatedMetric(
+                  propsCreatedMetrics?.length ? propsCreatedMetrics : [defaultMetricName],
+                  removedItem
+                )
+                setSelectedMetric(updatedMetric)
+                // updateParentFormik(CommonHealthSourceContextFields.SelectedMetric, updatedMetric)
+                onRemoveMetric(removedItem, updatedMetric, [...filteredOldMetrics], defaultTo(updateIndex, 0))
               }
             : undefined
         }

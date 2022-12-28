@@ -17,7 +17,7 @@ import {
   SelectOption
 } from '@harness/uicore'
 import { Formik, useFormikContext } from 'formik'
-import { cloneDeep, defaultTo } from 'lodash-es'
+import { cloneDeep, defaultTo, isEqual } from 'lodash-es'
 import type { CustomHealthMetricDefinition } from 'services/cv'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
@@ -53,6 +53,8 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
     expressions,
     connectorIdentifier: connectorRef
   } = props
+
+  console.log('LOGS CustomMetricFormContainer', mappedMetrics)
 
   const { values: formValues, setValues, isValid } = useFormikContext<CommonCustomMetricFormikInterface>()
   const wrapperRef = useRef(null)
@@ -100,8 +102,12 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
        * update Parent formik when clicked outside.
        */
       function handleClickOutside(event: { target: unknown }): void {
-        if (ref.current && !ref.current.contains(event.target)) {
-          const clonedMappedMetricsData = cloneDeep(mappedMetricsData)
+        const clonedMappedMetricsData = cloneDeep(mappedMetricsData)
+        if (
+          ref.current &&
+          !ref.current.contains(event.target) &&
+          !isEqual(clonedMappedMetricsData.get(selectedMetricName), formValuesData)
+        ) {
           const hasEmptySet = clonedMappedMetricsData.has('')
           clonedMappedMetricsData.set(selectedMetricName, formValuesData)
           if (hasEmptySet) {
@@ -184,6 +190,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
           cardSectionClassName={css.customMetricContainer}
         >
           <CommonCustomMetric
+            key={createdMetrics?.join('')}
             isValidInput={isValid}
             selectedMetric={selectedMetric}
             formikValues={formValues}

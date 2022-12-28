@@ -57,7 +57,7 @@ export const LoadSourceByType = ({
 }): JSX.Element | null => {
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
   const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
-  const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
+  const isSumoLogicEnabled = true
   const healthSourceConfig = healthSourcesConfig[`${type}_${data?.product?.value}`]
 
   switch (type) {
