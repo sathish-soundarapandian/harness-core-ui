@@ -28,6 +28,7 @@ export function processSingleEnvironmentFormValues(
         environment: {
           environmentRef: RUNTIME_INPUT_VALUE,
           deployToAll: false,
+          ...{ provisioner: data.provisioner },
           environmentInputs: RUNTIME_INPUT_VALUE as any,
           ...(gitOpsEnabled
             ? { gitOpsClusters: RUNTIME_INPUT_VALUE as any }
@@ -41,6 +42,7 @@ export function processSingleEnvironmentFormValues(
           ...(!!data.environmentInputs?.[data.environment] && {
             environmentInputs: data.environmentInputs[data.environment]
           }),
+          provisioner: data.provisioner,
           deployToAll: false,
           ...(data.environment &&
             !!data.infrastructure && {
@@ -106,6 +108,7 @@ export function processSingleEnvironmentGitOpsFormValues(
           ...(!!data.environmentInputs?.[data.environment] && {
             environmentInputs: data.environmentInputs[data.environment]
           }),
+          provisioner: data.provisioner,
           deployToAll,
           ...(!isEmpty(data.clusters) && {
             gitOpsClusters: Array.isArray(selectedClusters)

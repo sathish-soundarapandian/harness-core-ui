@@ -11,11 +11,13 @@ import type {
   DeploymentStageConfig,
   EnvironmentGroupResponseDTO,
   FilterSpec,
+  ExecutionElementConfig,
   InfrastructureDefinitionConfig,
   NGEnvironmentInfoConfig,
   ServiceDefinition,
   TemplateLinkConfig
 } from 'services/cd-ng'
+import type { ProvisionersOptions } from '../InfraProvisioning/InfraProvisioning'
 
 export interface FilterYaml {
   identifier: string
@@ -30,9 +32,22 @@ export interface DeployEnvironmentEntityConfig extends Omit<DeploymentStageConfi
   environmentGroup?: DeploymentStageConfig['environmentGroup']
 }
 
+export interface InfraProvisioningEntityData {
+  provisioner?: ExecutionElementConfig
+  originalProvisioner?: Partial<ExecutionElementConfig>
+  provisionerEnabled?: boolean
+  provisionerSnippetLoading?: boolean
+  selectedProvisioner?: ProvisionersOptions
+}
 export interface DeployEnvironmentEntityFormState {
   environment?: string
   environments?: SelectOption[]
+  provisioner?: ExecutionElementConfig
+  originalProvisioner?: Partial<ExecutionElementConfig>
+  provisionerEnabled?: boolean
+  provisionerSnippetLoading?: boolean
+  selectedProvisioner?: ProvisionersOptions
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   environmentInputs?: Record<string, any>
   parallel?: boolean

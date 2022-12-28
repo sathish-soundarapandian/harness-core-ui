@@ -23,7 +23,7 @@ import { getCustomStepProps, infraDefinitionTypeMapping } from '@pipeline/utils/
 import { StepWidget } from '../../AbstractSteps/StepWidget'
 import factory from '../../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../../PipelineSteps/PipelineStepInterface'
-import type { StageInputSetFormProps } from '../StageInputSetForm'
+import { ExecutionWrapperInputSetForm, StageInputSetFormProps } from '../StageInputSetForm'
 
 import css from '../PipelineInputSetForm.module.scss'
 
@@ -43,7 +43,6 @@ export default function SingleEnvironmentInputSetForm({
   const { NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled } = useFeatureFlags()
   // This is the value of allValues
   const deploymentStageInputSet = get(formik?.values, path, {})
-
   return (
     <>
       {isSvcEnvEntityEnabled && deploymentStageTemplate?.environment && deploymentStage?.environment && (
@@ -82,6 +81,50 @@ export default function SingleEnvironmentInputSetForm({
               }
             }}
           />
+          {(deploymentStageTemplate as DeployStageConfig)?.environment?.provisioner && (
+            <div>
+              <div className={css.inputheader} style={{ paddingBottom: '4px' }}>
+                {getString('pipeline.provisionerSteps')}
+              </div>
+              <div className={css.nestedAccordions}>
+                {deploymentStageTemplate?.environment?.provisioner?.steps && (
+                  <>
+                    <ExecutionWrapperInputSetForm
+                      stepsTemplate={deploymentStageTemplate.environment?.provisioner?.steps}
+                      path={`${path}.environment.provisioner.steps`}
+                      allValues={deploymentStage?.environment?.provisioner?.steps}
+                      values={deploymentStageInputSet?.environment?.provisioner?.steps}
+                      formik={formik}
+                      readonly={readonly}
+                      viewType={viewType}
+                      allowableTypes={allowableTypes}
+                      customStepProps={{
+                        stageIdentifier: stageIdentifier as string,
+                        selectedStage: deploymentStage
+                      }}
+                    />
+                  </>
+                )}
+                {deploymentStageTemplate.execution?.rollbackSteps && (
+                  <ExecutionWrapperInputSetForm
+                    stepsTemplate={deploymentStageTemplate.execution.rollbackSteps}
+                    path={`${path}.execution.rollbackSteps`}
+                    allValues={deploymentStage?.execution?.rollbackSteps}
+                    values={deploymentStageInputSet?.execution?.rollbackSteps}
+                    formik={formik}
+                    readonly={readonly}
+                    viewType={viewType}
+                    allowableTypes={allowableTypes}
+                    customStepProps={{
+                      stageIdentifier: stageIdentifier as string,
+                      selectedStage: deploymentStage
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+          )}
+
           {(deploymentStageTemplate as DeployStageConfig).environment?.infrastructureDefinitions &&
             ((deploymentStageTemplate as DeployStageConfig).environment
               ?.infrastructureDefinitions as unknown as string) !== RUNTIME_INPUT_VALUE && (
@@ -91,6 +134,7 @@ export default function SingleEnvironmentInputSetForm({
                     ?.infrastructureDefinitions as unknown as string) !== RUNTIME_INPUT_VALUE && (
                     <div className={css.inputheader}>{getString('infrastructureText')}</div>
                   )}
+
                 {deploymentStageTemplate.environment?.infrastructureDefinitions
                   ?.map((infrastructureDefinition, index) => {
                     return (

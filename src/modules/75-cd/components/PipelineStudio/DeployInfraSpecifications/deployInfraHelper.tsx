@@ -29,7 +29,7 @@ const DEFAULT_RELEASE_NAME = 'release-<+INFRA_KEY>'
 export const cleanUpEmptyProvisioner = (
   stageData: StageElementWrapper<DeploymentStageElementConfig> | undefined
 ): boolean => {
-  const provisioner = stageData?.stage?.spec?.infrastructure?.infrastructureDefinition?.provisioner
+  const provisioner = stageData?.stage?.spec?.environment?.provisioner
   let isChanged = false
 
   if (!isNil(provisioner?.steps) && provisioner?.steps.length === 0) {

@@ -326,7 +326,7 @@ export interface StageInputSetFormProps {
   allowableTypes: AllowedTypes
 }
 
-function ExecutionWrapperInputSetForm(props: {
+export function ExecutionWrapperInputSetForm(props: {
   stepsTemplate: ExecutionWrapperConfig[]
   formik: StageInputSetFormProps['formik']
   path: string

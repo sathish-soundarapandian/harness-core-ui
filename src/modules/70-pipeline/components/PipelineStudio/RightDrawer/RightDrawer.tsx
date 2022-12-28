@@ -295,8 +295,7 @@ const updateWithNodeIdentifier = async (
   pipelineView: PipelineViewData,
   isRollback: boolean
 ): Promise<void> => {
-  const provisioner = (selectedStage?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
-    ?.infrastructureDefinition?.provisioner
+  const provisioner = (selectedStage?.stage as DeploymentStageElementConfig)?.spec?.environment?.provisioner
   if (drawerType === DrawerTypes.StepConfig && selectedStage?.stage?.spec?.execution) {
     const processingNodeIdentifier = data?.stepConfig?.node?.identifier
     const stageData = produce(selectedStage, draft => {
@@ -319,8 +318,7 @@ const updateWithNodeIdentifier = async (
   } else if (drawerType === DrawerTypes.ProvisionerStepConfig && provisioner) {
     const processingNodeIdentifier = data?.stepConfig?.node?.identifier
     const stageData = produce(selectedStage, draft => {
-      const provisionerInternal = (draft?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
-        ?.infrastructureDefinition?.provisioner
+      const provisionerInternal = (draft?.stage as DeploymentStageElementConfig)?.spec?.environment?.provisioner
       if (provisionerInternal) {
         updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode, isRollback)
       }
@@ -838,8 +836,7 @@ export function RightDrawer(): React.ReactElement {
       if (drawerType === DrawerTypes.StepConfig && draft?.stage?.spec?.execution) {
         updateStepWithinStage(draft.stage.spec.execution, processingNodeIdentifier, processNode, isRollback)
       } else if (drawerType === DrawerTypes.ProvisionerStepConfig) {
-        const provisionerInternal = (draft?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
-          ?.infrastructureDefinition?.provisioner
+        const provisionerInternal = (draft?.stage as DeploymentStageElementConfig)?.spec?.environment?.provisioner
         if (provisionerInternal) {
           updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode, isRollback)
         }
@@ -1079,17 +1076,14 @@ export function RightDrawer(): React.ReactElement {
 
               data?.paletteData?.onUpdate?.(newStepData.step)
 
-              if (
-                pipelineStage &&
-                !get(pipelineStage?.stage, 'spec.infrastructure.infrastructureDefinition.provisioner')
-              ) {
-                set(pipelineStage, 'stage.spec.infrastructure.infrastructureDefinition.provisioner', {
+              if (pipelineStage && !get(pipelineStage?.stage, 'spec.environment.provisioner')) {
+                set(pipelineStage, 'stage.spec.environment.provisioner', {
                   steps: [],
                   rollbackSteps: []
                 })
               }
 
-              const provisioner = get(pipelineStage?.stage, 'spec.infrastructure.infrastructureDefinition.provisioner')
+              const provisioner = get(pipelineStage?.stage, 'spec.environment.provisioner')
               // set empty arrays
               if (!paletteData.isRollback && !provisioner.steps) provisioner.steps = []
               if (paletteData.isRollback && !provisioner.rollbackSteps) provisioner.rollbackSteps = []

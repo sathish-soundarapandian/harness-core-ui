@@ -5,15 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import YAML from 'yaml'
 import { unstable_batchedUpdates } from 'react-dom'
 import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
-import { useFormikContext } from 'formik'
+import { FormikContextType, useFormikContext } from 'formik'
 import produce from 'immer'
-import { Divider } from '@blueprintjs/core'
+import { Card } from '@blueprintjs/core'
 import { v4 as uuid } from 'uuid'
-
 import {
+  Accordion,
   AllowedTypes,
   ButtonSize,
   ButtonVariation,
@@ -27,48 +28,48 @@ import {
   useToggleOpen
 } from '@harness/uicore'
 
-import type { EnvironmentYaml, NGEnvironmentInfoConfig } from 'services/cd-ng'
+import { EnvironmentYaml, NGEnvironmentInfoConfig, getProvisionerExecutionStrategyYamlPromise } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
-
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
-
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
-
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState,
-  EnvironmentWithInputs
+  EnvironmentWithInputs,
+  InfraProvisioningEntityData
 } from '../types'
 import { useGetEnvironmentsData } from './useGetEnvironmentsData'
 import AddEditEnvironmentModal from '../../DeployInfrastructureStep/AddEditEnvironmentModal'
 import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
 import DeployCluster from '../DeployCluster/DeployCluster'
-
+import { useParams } from 'react-router-dom'
 import {
   InlineEntityFiltersProps,
   InlineEntityFiltersRadioType
 } from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
-
+import type { InfraProvisioningData, ProvisionersOptions } from '../../InfraProvisioning/InfraProvisioning'
+import stageCss from '../../../PipelineStudio/DeployStageSetupShell/DeployStage.module.scss'
+import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { cleanUpEmptyProvisioner } from '@cd/components/PipelineStudio/DeployInfraSpecifications/deployInfraHelper'
 import css from './DeployEnvironment.module.scss'
-
+import { InfraProvisioningEntityBaseWithRef } from '../../InfraProvisioning/InfraProvisioningEntityBase'
 interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomStepProps> {
   initialValues: DeployEnvironmentEntityFormState
   readonly: boolean
@@ -396,6 +397,106 @@ export default function DeployEnvironment({
       setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
     }
   }
+  const [provisionerEnabled, setProvisionerEnabled] = useState<boolean | undefined>(false)
+  const [provisionerSnippetLoading, setProvisionerSnippetLoading] = useState<boolean>(false)
+  const [provisionerType, setProvisionerType] = useState<ProvisionersOptions>('TERRAFORM')
+  const {
+    state: {
+      originalPipeline,
+      selectionState: { selectedStageId }
+    },
+    getStageFromPipeline,
+    updateStage
+  } = usePipelineContext()
+
+  let originalProvisioner: InfraProvisioningEntityData['originalProvisioner'] = undefined
+  if (selectedStageId) {
+    const originalStage = getStageFromPipeline(selectedStageId, originalPipeline).stage
+    originalProvisioner = get(originalStage, 'stage.spec.environment.provisioner')
+  }
+  const getProvisionerData = (stageData: StageElementWrapper): InfraProvisioningEntityData => {
+    let provisioner = get(stageData, 'stage.spec.environment.provisioner')
+
+    provisioner = isNil(provisioner) ? {} : { ...provisioner }
+
+    if (isNil(provisioner.steps)) {
+      provisioner.steps = []
+    }
+    if (isNil(provisioner.rollbackSteps)) {
+      provisioner.rollbackSteps = []
+    }
+
+    return {
+      provisioner: { ...provisioner },
+      provisionerEnabled,
+      provisionerSnippetLoading,
+      originalProvisioner: { ...originalProvisioner }
+    }
+  }
+
+  const isProvisionerEmpty = (stageData: StageElementWrapper): boolean => {
+    const provisionerData = get(stageData, 'stage.spec.environment.provisioner')
+    return isEmpty(provisionerData?.steps) && isEmpty(provisionerData?.rollbackSteps)
+  }
+  const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+  const { accountId } = useParams<{
+    accountId: string
+  }>()
+  // load and apply provisioner snippet to the stage
+  useEffect(() => {
+    if (stage && isProvisionerEmpty(stage) && provisionerEnabled) {
+      setProvisionerSnippetLoading(true)
+      getProvisionerExecutionStrategyYamlPromise({
+        // eslint-disable-next-line
+        // @ts-ignore
+        queryParams: { provisionerType: provisionerType, routingId: accountId }
+      }).then(res => {
+        const provisionerSnippet = YAML.parse(defaultTo(res?.data, ''))
+        if (stage && isProvisionerEmpty(stage) && provisionerSnippet) {
+          const stageData = produce(stage, draft => {
+            set(draft, 'stage.spec.environment.provisioner', provisionerSnippet.provisioner)
+          })
+
+          if (stageData.stage) {
+            updateStage(stageData.stage).then(() => {
+              setProvisionerSnippetLoading(false)
+            })
+          }
+        }
+      })
+    }
+  }, [provisionerEnabled])
+
+  useEffect(() => {
+    if (!provisionerSnippetLoading) {
+      // update provisioners in formik
+      if (values && values.provisionerEnabled && values.provisioner) {
+        setValues({
+          ...values,
+          // if provisioner is not found, add it, else use the existing one
+          provisioner: {
+            ...values.provisioner
+          }
+        })
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [provisionerSnippetLoading, provisionerEnabled])
+
+  useEffect(() => {
+    setProvisionerEnabled(!isProvisionerEmpty(defaultTo(stage, {} as StageElementWrapper)))
+
+    // return () => {
+    //   let isChanged
+    //   const stageData = produce(stage, draft => {
+    //     isChanged = cleanUpEmptyProvisioner(draft)
+    //   })
+
+    //   if (stageData?.stage && isChanged) {
+    //     updateStage(stageData?.stage)
+    //   }
+    // }
+  }, [])
 
   return (
     <>
@@ -524,33 +625,70 @@ export default function DeployEnvironment({
               customDeploymentRef={customDeploymentRef}
               gitOpsEnabled={gitOpsEnabled}
             />
-
-            {!loading && !isMultiEnvironment && (
-              <>
-                <Divider />
-                {gitOpsEnabled ? (
-                  <DeployCluster
-                    initialValues={initialValues}
-                    readonly={readonly}
-                    allowableTypes={getAllowableTypesWithoutExpression(allowableTypes)}
-                    isMultiCluster
-                    environmentIdentifier={selectedEnvironments[0]}
-                  />
-                ) : (
-                  <DeployInfrastructure
-                    initialValues={initialValues}
-                    readonly={readonly}
-                    allowableTypes={allowableTypes}
-                    environmentIdentifier={selectedEnvironments[0]}
-                    deploymentType={deploymentType}
-                    customDeploymentRef={customDeploymentRef}
-                    lazyInfrastructure={isExpression}
-                  />
-                )}
-              </>
-            )}
           </>
         )}
+        <Accordion className={stageCss.accordion} activeId="dynamicProvisioning">
+          <Accordion.Panel
+            id="dynamicProvisioning"
+            addDomId={true}
+            summary={<div className={stageCss.tabHeading}>{getString('cd.dynamicProvisioning')}</div>}
+            details={
+              <Card className={stageCss.sectionCard}>
+                <InfraProvisioningEntityBaseWithRef
+                  path="provisioner"
+                  initialValues={getProvisionerData(defaultTo(stage, {} as StageElementWrapper))}
+                  allowableTypes={allowableTypes}
+                  provisionerSnippetLoading={provisionerSnippetLoading}
+                  onUpdate={(value: DeployEnvironmentEntityFormState) => {
+                    if (stage) {
+                      const stageData = produce(stage, draft => {
+                        set(draft, 'stage.spec.environment.provisioner', value.provisioner)
+                        cleanUpEmptyProvisioner(draft)
+                      })
+                      if (stageData.stage) {
+                        setProvisionerType(value.selectedProvisioner!)
+                        updateStage(stageData.stage).then(() => {
+                          setProvisionerEnabled(value?.provisionerEnabled)
+                        })
+                      }
+                    } else {
+                      setProvisionerType(value.selectedProvisioner!)
+                      setProvisionerEnabled(value?.provisionerEnabled)
+                    }
+                  }}
+                  provisionerEnabled={provisionerEnabled}
+                  originalProvisioner={originalProvisioner}
+                />
+              </Card>
+            }
+          />
+        </Accordion>
+
+        {((isFixed && !isEmpty(selectedEnvironments)) || (isExpression && values.environment)) &&
+          !loading &&
+          !isMultiEnvironment && (
+            <>
+              {gitOpsEnabled ? (
+                <DeployCluster
+                  initialValues={initialValues}
+                  readonly={readonly}
+                  allowableTypes={getAllowableTypesWithoutExpression(allowableTypes)}
+                  isMultiCluster
+                  environmentIdentifier={selectedEnvironments[0]}
+                />
+              ) : (
+                <DeployInfrastructure
+                  initialValues={initialValues}
+                  readonly={readonly}
+                  allowableTypes={allowableTypes}
+                  environmentIdentifier={selectedEnvironments[0]}
+                  deploymentType={deploymentType}
+                  customDeploymentRef={customDeploymentRef}
+                  lazyInfrastructure={isExpression}
+                />
+              )}
+            </>
+          )}
 
         {/* This component is specifically for filters */}
         {isRuntime && !readonly && (isMultiEnvironment ? true : gitOpsEnabled) && (

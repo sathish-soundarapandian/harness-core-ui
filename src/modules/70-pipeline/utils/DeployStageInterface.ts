@@ -9,6 +9,7 @@ import type { SelectOption } from '@harness/uicore'
 import type {
   DeploymentStageConfig,
   EnvironmentGroupYaml,
+  ExecutionElementConfig,
   PipelineInfrastructure,
   ServiceConfig,
   ServiceDefinition
@@ -19,6 +20,7 @@ export interface EnvironmentYamlV2 {
   environmentInputs?: {
     [key: string]: { [key: string]: any }
   }
+  provisioner?: ExecutionElementConfig
   environmentRef: string
   gitOpsClusters?: ClusterYaml[]
   infrastructureDefinitions?: InfraStructureDefinitionYaml[]
