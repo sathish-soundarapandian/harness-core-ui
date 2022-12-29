@@ -185,6 +185,9 @@ function FormComponent({
     </div>
   ))
 
+  const canFetchVersion =
+    getMultiTypeFromValue(formik.values?.spec?.region) === MultiTypeInputType.RUNTIME || !formik.values?.spec?.region
+
   return (
     <FormikForm>
       <div className={cx(css.artifactForm, formClassName)}>
@@ -307,7 +310,16 @@ function FormComponent({
                     <NoTagResults
                       tagError={versionError}
                       isServerlessDeploymentTypeSelected={false}
-                      defaultErrorText={getString('pipeline.artifactsSelection.validation.noVersion')}
+                      defaultErrorText={
+                        isVersionLoading
+                          ? getString('loading')
+                          : canFetchVersion
+                          ? getString('pipeline.requiredToFetch', {
+                              requiredField: 'Region',
+                              dependentField: 'version'
+                            })
+                          : getString('pipeline.artifactsSelection.validation.noVersion')
+                      }
                     />
                   ),
                   itemRenderer: itemRenderer,
@@ -317,7 +329,8 @@ function FormComponent({
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (
                     e?.target?.type !== 'text' ||
-                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                    canFetchVersion
                   ) {
                     return
                   }

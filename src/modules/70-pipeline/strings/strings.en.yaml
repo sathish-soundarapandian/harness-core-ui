@@ -1251,6 +1251,7 @@ approvalTypeRequired: Approval type is required
 numOfServices: '{{numOfServices}} Services'
 numOfEnvs: '{{numOfEnvironments}} Environments'
 numOfServicesAndEnv: '{{numOfServices}} Service(s), {{numOfEnvironments}} Environment(s)'
+requiredToFetch: '{{requiredField}} is required to fetch {{dependentField}}'
 executionList:
   servicesDeployedText: 'Services deployed ({{size}})'
   servicesDeployed: 'Services deployed'
