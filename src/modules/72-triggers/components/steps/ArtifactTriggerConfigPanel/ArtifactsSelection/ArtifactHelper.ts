@@ -60,7 +60,8 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   Jenkins: 'service-jenkins',
   AmazonS3: 'service-service-s3',
   GoogleArtifactRegistry: 'service-gar',
-  GithubPackageRegistry: 'service-github-package'
+  GithubPackageRegistry: 'service-github-package',
+  AzureArtifacts: 'service-azure-artifacts'
 }
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
@@ -103,7 +104,8 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   Jenkins: Connectors.JENKINS,
   AmazonS3: Connectors.AWS,
   GoogleArtifactRegistry: Connectors.GCP,
-  GithubPackageRegistry: Connectors.GITHUB
+  GithubPackageRegistry: Connectors.GITHUB,
+  AzureArtifacts: Connectors.AZURE_ARTIFACTS
 }
 
 export const ArtifactConnectorLabelMap: Record<string, string> = {

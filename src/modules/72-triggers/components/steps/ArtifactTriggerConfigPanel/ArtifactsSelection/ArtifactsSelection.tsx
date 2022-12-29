@@ -26,6 +26,7 @@ import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSCon
 import {
   buildArtifactoryPayload,
   buildAWSPayload,
+  buildAzureArtifactsPayload,
   buildAzurePayload,
   buildDockerPayload,
   buildGcpPayload,
@@ -55,6 +56,7 @@ import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnect
 import type { ArtifactTriggerConfig, NGTriggerSourceV2 } from 'services/pipeline-ng'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
+import StepAzureArtifactAuthentication from '@connectors/components/CreateConnector/AzureArtifactConnector/StepAuth/StepAzureArtifactAuthentication'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import { GCRImagePath } from './ArtifactRepository/ArtifactLastSteps/GCRImagePath/GCRImagePath'
 import { ECRArtifact } from './ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
@@ -388,6 +390,18 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
             <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifactType]} {...connectorDetailStepProps} />
             <GcpAuthentication name={getString('details')} {...authenticationStepProps} />
             <DelegateSelectorStep buildPayload={buildGcpPayload} {...delegateStepProps} />
+            <ConnectorTestConnection
+              type={ArtifactToConnectorMap[selectedArtifactType]}
+              {...ConnectorTestConnectionProps}
+            />
+          </StepWizard>
+        )
+      case ENABLED_ARTIFACT_TYPES.AzureArtifacts:
+        return (
+          <StepWizard title={stepWizardTitle}>
+            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifactType]} {...connectorDetailStepProps} />
+            <StepAzureArtifactAuthentication name={getString('details')} {...authenticationStepProps} />
+            <DelegateSelectorStep buildPayload={buildAzureArtifactsPayload} {...delegateStepProps} />
             <ConnectorTestConnection
               type={ArtifactToConnectorMap[selectedArtifactType]}
               {...ConnectorTestConnectionProps}

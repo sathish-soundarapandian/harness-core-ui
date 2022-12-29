@@ -15,14 +15,14 @@ import {
   ButtonVariation,
   SelectOption,
   FormInput,
-  FormikForm
-} from '@wings-software/uicore'
+  FormikForm,
+  MultiTypeInputType
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import { MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'

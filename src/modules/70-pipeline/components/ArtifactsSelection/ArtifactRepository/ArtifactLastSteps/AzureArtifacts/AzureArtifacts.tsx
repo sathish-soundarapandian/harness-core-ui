@@ -22,9 +22,9 @@ import {
 import cx from 'classnames'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { Menu } from '@blueprintjs/core'
 import { defaultTo, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -56,12 +56,11 @@ import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraAp
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { getHelpeTextForTags, RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { ArtifactIdentifierValidation, ModalViewFor, scopeOptions, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
-import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
-import type { IItemRendererProps } from '@blueprintjs/select'
 
 export const packageTypeOptions: SelectOption[] = [
   { label: 'Maven', value: RepositoryFormatTypes.Maven },
