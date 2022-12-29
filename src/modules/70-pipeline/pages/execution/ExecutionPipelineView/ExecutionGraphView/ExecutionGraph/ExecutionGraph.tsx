@@ -41,6 +41,7 @@ import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode
 import { getExecutionStageDiagramListeners } from '@pipeline/utils/execUtils'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { MatrixNode } from '@pipeline/components/PipelineDiagram/Nodes/MatrixNode/MatrixNode'
+import type { ExecutionGraph } from 'services/pipeline-ng'
 import CDInfo from './components/CD/CDInfo/CDInfo'
 import css from './ExecutionGraph.module.scss'
 
@@ -61,7 +62,7 @@ export interface ExecutionGraphProps {
 }
 
 export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactElement {
-  const { executionIdentifier } = useParams<ExecutionPathProps>()
+  const { executionIdentifier, accountId } = useParams<ExecutionPathProps>()
   const { getString } = useStrings()
   const [dynamicPopoverHandler, setDynamicPopoverHandler] = React.useState<
     DynamicPopoverHandlerBinding<unknown> | undefined
@@ -94,25 +95,38 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
   }, [childNodeData])
 
   React.useEffect(() => {
-    if (_childPipelineData) {
+    if (!isEmpty(_childPipelineData)) {
+      const _executionMetaData = {
+        accountId,
+        orgIdentifier: get(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary, 'orgIdentifier'),
+        projectIdentifier: get(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary, 'projectIdentifier'),
+        pipelineIdentifier: get(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary, 'pipelineIdentifier'),
+        planExecutionId: get(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary, 'planExecutionId'),
+        runSequence: get(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary, 'runSequence', 0).toString()
+      } as ExecutionGraph['executionMetadata']
+
+      // TODO -> Remove data mutation
       data?.items?.forEach((obj: PipelineGraphState) => {
-        if (obj.id === selectedStageId) obj.childPipelineData = _childPipelineData
+        let flag = false
+        if (obj.id === selectedStageId) {
+          obj.childPipelineData = _childPipelineData
+          obj.executionMetaData = _executionMetaData
+          flag = true
+        }
+        if (!flag && obj?.children?.length) {
+          obj?.children?.forEach?.(childObj => {
+            if (childObj.id === selectedStageId) {
+              childObj.childPipelineData = _childPipelineData
+              childObj.executionMetaData = _executionMetaData
+              flag = true
+              return
+            }
+          })
+        }
+        if (flag) return
       })
     }
   }, [_childPipelineData])
-
-  React.useEffect(() => {
-    if (pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata) {
-      data?.items?.forEach((obj: PipelineGraphState) => {
-        if (obj.id === selectedStageId) {
-          obj.executionMetaData = {
-            ...pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata,
-            runSequence: get(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary, 'runSequence', 0).toString()
-          }
-        }
-      })
-    }
-  }, [pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata])
 
   const {
     data: barrierInfoData,
