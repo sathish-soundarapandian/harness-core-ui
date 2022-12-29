@@ -21,6 +21,8 @@ export interface ExecutionContextParams {
   pipelineExecutionDetail: PipelineExecutionDetail | null
   allNodeMap: { [key: string]: ExecutionNode }
   pipelineStagesMap: Map<string, GraphLayoutNode>
+  childPipelineStagesMap: Map<string, GraphLayoutNode>
+  allStagesMap: Map<string, GraphLayoutNode>
   isPipelineInvalid?: boolean
   selectedStageId: string
   selectedChildStageId?: string
@@ -45,6 +47,8 @@ export const ExecutionContext = createContext<ExecutionContextParams>({
   pipelineExecutionDetail: null,
   allNodeMap: {},
   pipelineStagesMap: new Map(),
+  childPipelineStagesMap: new Map(),
+  allStagesMap: new Map(),
   isPipelineInvalid: false,
   selectedStageId: '',
   selectedChildStageId: '',

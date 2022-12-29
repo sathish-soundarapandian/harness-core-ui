@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Accordion, AccordionHandle } from '@harness/uicore'
-import { Spinner } from '@blueprintjs/core'
+import { Divider, Spinner } from '@blueprintjs/core'
 import { defaultTo, isEmpty } from 'lodash-es'
 
 import { useUpdateQueryParams } from '@common/hooks'
@@ -18,6 +18,7 @@ import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { isExecutionNotStarted, isExecutionSkipped } from '@pipeline/utils/statusHelpers'
 import { StatusHeatMap } from '@pipeline/components/StatusHeatMap/StatusHeatMap'
 import { String as TemplateString } from 'framework/strings'
+import type { GraphLayoutNode } from 'services/pipeline-ng'
 import { StepsTree } from '../StepsTree/StepsTree'
 import { StatusIcon } from '../StepsTree/StatusIcon'
 
@@ -27,10 +28,12 @@ const SCROLL_OFFSET = 250
 
 export function StageSelection(): React.ReactElement {
   const {
-    pipelineStagesMap,
+    childPipelineStagesMap,
+    allStagesMap,
     allNodeMap,
     pipelineExecutionDetail,
     selectedStageId,
+    selectedChildStageId,
     selectedStepId,
     selectedStageExecutionId,
     queryParams,
@@ -38,12 +41,15 @@ export function StageSelection(): React.ReactElement {
   } = useExecutionContext()
 
   const accordionRef = React.useRef<AccordionHandle | null>(null)
+  const childAccordionRef = React.useRef<AccordionHandle | null>(null)
   const containerRef = React.useRef<HTMLDivElement | null>(null)
   const prevSelectedStageIdRef = React.useRef(selectedStageId)
   const prevSelectedStageExecutionId = React.useRef(selectedStageExecutionId)
+  const prevSelectedChildStageIdRef = React.useRef(selectedChildStageId)
   const hasUserClicked = React.useRef(false)
+  const [childPipelineEntries, setChildPipelineEntries] = React.useState<Array<[string, GraphLayoutNode]>>([])
 
-  const { updateQueryParams } = useUpdateQueryParams<ExecutionPageQueryParams>()
+  const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<ExecutionPageQueryParams>()
 
   React.useEffect(() => {
     let timer: number
@@ -53,6 +59,9 @@ export function StageSelection(): React.ReactElement {
         ? selectedStageId
         : [selectedStageId, selectedStageExecutionId].join('|')
       accordionRef.current.open(newIdentifier)
+      if (childAccordionRef.current && selectedChildStageId) {
+        childAccordionRef.current.open(selectedChildStageId)
+      }
       const scrollPanelIntoView = (): void => {
         const panel = document.querySelector(`[data-testid="${newIdentifier}-panel"]`)
         if (panel && containerRef.current) {
@@ -73,23 +82,40 @@ export function StageSelection(): React.ReactElement {
         window.clearTimeout(timer)
       }
     }
-  }, [selectedStageId, selectedStageExecutionId])
+  }, [selectedStageId, selectedStageExecutionId, selectedChildStageId])
 
   React.useEffect(() => {
     if (!loading) {
       // only update reference, after API is complete
       prevSelectedStageIdRef.current = selectedStageId
       prevSelectedStageExecutionId.current = selectedStageExecutionId
+      prevSelectedChildStageIdRef.current = selectedChildStageId
     }
-  }, [selectedStageId, selectedStageExecutionId, loading])
+  }, [selectedStageId, selectedStageExecutionId, selectedChildStageId, loading])
+
+  React.useEffect(() => {
+    // if (prevSelectedStageIdRef.current === selectedStageId)
+    setChildPipelineEntries([...childPipelineStagesMap.entries()])
+  }, [childPipelineStagesMap])
 
   const tree = React.useMemo(
     () => processExecutionData(pipelineExecutionDetail?.executionGraph),
     [pipelineExecutionDetail?.executionGraph]
   )
 
+  const childPipelineTree = React.useMemo(
+    () => processExecutionData(pipelineExecutionDetail?.childGraph?.executionGraph),
+    [pipelineExecutionDetail?.childGraph?.executionGraph]
+  )
+
   function handleStepSelect(stepId: string, retryStep?: string): void {
-    updateQueryParams({ step: stepId, stage: selectedStageId, stageExecId: selectedStageExecutionId, retryStep })
+    updateQueryParams({
+      step: stepId,
+      stage: selectedStageId,
+      childStage: selectedChildStageId,
+      stageExecId: selectedStageExecutionId,
+      retryStep
+    })
   }
 
   /**
@@ -101,17 +127,35 @@ export function StageSelection(): React.ReactElement {
       const [stageNodeId, stageNodeExecId] = Array.isArray(stageId) ? stageId : (stageId || '').split('|')
 
       if (typeof stageId === 'string' && stageId && stageNodeId) {
-        updateQueryParams({
+        const params = {
+          ...queryParams,
           stage: stageNodeId,
           stageExecId: stageNodeExecId
-        })
+        }
+        delete params?.step
+        delete params?.childStage
+        replaceQueryParams(params)
       }
+      if (stageId && stageId !== prevSelectedStageIdRef.current) setChildPipelineEntries([])
       hasUserClicked.current = false
     }
   }
 
-  const stageEntries = [...pipelineStagesMap.entries()]
-  const stages = [...pipelineStagesMap.values()]
+  function handleChildAccordionChange(childStageId: string | string[]): void {
+    if (hasUserClicked.current && !isEmpty(childPipelineEntries) && childStageId && typeof childStageId === 'string') {
+      const params = {
+        ...queryParams,
+        stage: selectedStageId,
+        childStage: childStageId
+      }
+      delete params?.step
+      replaceQueryParams(params)
+      hasUserClicked.current = false
+    }
+  }
+
+  const stageEntries = [...allStagesMap.entries()]
+  const stages = [...allStagesMap.values()]
 
   return (
     <div ref={containerRef} className={css.mainContainer} onClick={() => (hasUserClicked.current = true)}>
@@ -143,6 +187,7 @@ export function StageSelection(): React.ReactElement {
             (!loading ||
               prevSelectedStageIdRef.current === stage.nodeUuid ||
               prevSelectedStageExecutionId.current === stage.nodeExecutionId)
+          const isChainedPipelineStage = stage.nodeType === 'Pipeline'
 
           return (
             <Accordion.Panel
@@ -156,15 +201,70 @@ export function StageSelection(): React.ReactElement {
                 </div>
               }
               details={
-                shouldShowTree ? (
-                  <StepsTree
-                    allNodeMap={allNodeMap}
-                    nodes={tree}
-                    selectedStepId={selectedStepId}
-                    onStepSelect={handleStepSelect}
-                    retryStep={queryParams.retryStep}
-                    isRoot
-                  />
+                isChainedPipelineStage ? (
+                  shouldShowTree && !isEmpty(childPipelineEntries) ? (
+                    <Accordion
+                      ref={childAccordionRef}
+                      className={css.mainAccordion}
+                      onChange={handleChildAccordionChange}
+                      panelClassName={css.accordionChildPanel}
+                      summaryClassName={css.accordionChildSummary}
+                      detailsClassName={css.accordionDetails}
+                    >
+                      {childPipelineEntries.map(([childIdentifier, childStage]) => {
+                        const newChildIdentifier = childStage?.strategyMetadata
+                          ? [childStage.nodeUuid, childStage.nodeExecutionId].join('|')
+                          : childIdentifier
+                        const shouldShowChildPipelineStepsTree =
+                          newChildIdentifier.includes(selectedChildStageId || '') &&
+                          (!loading || prevSelectedChildStageIdRef.current === childStage.nodeUuid)
+                        return (
+                          <Accordion.Panel
+                            key={newChildIdentifier}
+                            id={newChildIdentifier}
+                            disabled={isExecutionSkipped(childStage.status) || isExecutionNotStarted(childStage.status)}
+                            summary={
+                              <div>
+                                <StatusIcon className={css.icon} status={childStage.status as ExecutionStatus} />
+                                <span>{childStage.name}</span>
+                              </div>
+                            }
+                            details={
+                              shouldShowChildPipelineStepsTree ? (
+                                <>
+                                  <Divider />
+                                  <StepsTree
+                                    allNodeMap={allNodeMap}
+                                    nodes={childPipelineTree}
+                                    selectedStepId={selectedStepId}
+                                    onStepSelect={handleStepSelect}
+                                    retryStep={queryParams.retryStep}
+                                    isRoot
+                                  />
+                                </>
+                              ) : (
+                                <Spinner size={20} className={css.spinner} />
+                              )
+                            }
+                          />
+                        )
+                      })}
+                    </Accordion>
+                  ) : (
+                    <Spinner size={20} className={css.spinner} />
+                  )
+                ) : shouldShowTree ? (
+                  <>
+                    <Divider />
+                    <StepsTree
+                      allNodeMap={allNodeMap}
+                      nodes={tree}
+                      selectedStepId={selectedStepId}
+                      onStepSelect={handleStepSelect}
+                      retryStep={queryParams.retryStep}
+                      isRoot
+                    />
+                  </>
                 ) : (
                   <Spinner size={20} className={css.spinner} />
                 )

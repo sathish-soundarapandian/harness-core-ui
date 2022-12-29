@@ -333,6 +333,8 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     data?.data?.childGraph?.pipelineExecutionSummary?.startingNodeId
   ])
 
+  const allStagesMap = pipelineStagesMap
+
   if (childPipelineStagesMap.size)
     pipelineStagesMap = new Map<string, GraphLayoutNode>([...pipelineStagesMap, ...childPipelineStagesMap])
 
@@ -429,6 +431,8 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         pipelineExecutionDetail: data?.data || null,
         allNodeMap,
         pipelineStagesMap,
+        childPipelineStagesMap,
+        allStagesMap,
         isPipelineInvalid,
         selectedStageId,
         selectedChildStageId,

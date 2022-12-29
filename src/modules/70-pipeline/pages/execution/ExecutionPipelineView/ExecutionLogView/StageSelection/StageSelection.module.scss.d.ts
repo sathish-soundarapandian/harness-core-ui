@@ -7,6 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly accordionChildPanel: string
+  readonly accordionChildSummary: string
   readonly accordionDetails: string
   readonly accordionPanel: string
   readonly accordionSummary: string
