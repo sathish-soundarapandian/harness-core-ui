@@ -159,7 +159,7 @@ const SecretInput: React.FC<FormikSecretInput> = props => {
             </Text>
           </Link>
           {secretReference ? (
-            <>
+            <Layout.Horizontal flex={{ justifyContent: 'center' }} spacing="none" padding={{ right: 'xsmall' }}>
               <RbacButton
                 minimal
                 className={css.containerEditBtn}
@@ -186,14 +186,18 @@ const SecretInput: React.FC<FormikSecretInput> = props => {
                 text={<Icon size={16} name={'edit'} color={Color.PRIMARY_7} />}
               />
               {get(formik.values, name) && (
-                <Button
-                  icon="main-delete"
-                  onClick={() => {
+                <Icon
+                  name="main-delete"
+                  onClick={e => {
+                    e.preventDefault()
+                    e.stopPropagation()
                     formik.setFieldValue(name, undefined)
                   }}
+                  size={16}
+                  color={Color.GREY_500}
                 />
               )}
-            </>
+            </Layout.Horizontal>
           ) : null}
         </Container>
       </Layout.Vertical>

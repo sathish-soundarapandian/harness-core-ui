@@ -102,35 +102,43 @@ function EncryptedFileSelectField(props: SelectEncryptedProps): React.ReactEleme
       style={{ width: '100%' }}
     >
       <Layout.Vertical className={css.container}>
-        <Link
-          to="#"
-          className={css.containerLink}
-          data-testid={name}
-          onClick={e => {
-            if (!readonly) {
-              e.preventDefault()
-              openCreateOrSelectSecretModal()
-            }
-          }}
-        >
-          <Icon size={24} height={12} name={'key-main'} />
-          <Text
-            color={Color.PRIMARY_7}
-            flex={{ alignItems: 'center', justifyContent: 'flex-start', inline: false }}
-            padding="small"
-            className={css.containerLinkText}
-          >
-            {data.identifier ? <div>{data.identifier}</div> : <div>{getString('secrets.secret.configureSecret')}</div>}
-          </Text>
-        </Link>
-        {get(formik.values, name) && (
-          <Button
-            icon="main-delete"
-            onClick={() => {
-              formik.setFieldValue(name, undefined)
+        <Layout.Horizontal spacing="none" flex={{ alignItems: 'center' }}>
+          <Link
+            to="#"
+            className={css.containerLink}
+            data-testid={name}
+            onClick={e => {
+              if (!readonly) {
+                e.preventDefault()
+                openCreateOrSelectSecretModal()
+              }
             }}
-          />
-        )}
+          >
+            <Icon size={24} height={12} name={'key-main'} />
+            <Text
+              color={Color.PRIMARY_7}
+              flex={{ alignItems: 'center', justifyContent: 'flex-start', inline: false }}
+              padding="small"
+              className={css.containerLinkText}
+            >
+              {data.identifier ? (
+                <div>{data.identifier}</div>
+              ) : (
+                <div>{getString('secrets.secret.configureSecret')}</div>
+              )}
+            </Text>
+          </Link>
+          {get(formik.values, name) && (
+            <Icon
+              name="main-delete"
+              onClick={e => {
+                e.preventDefault()
+                e.stopPropagation()
+                formik.setFieldValue(name, undefined)
+              }}
+            />
+          )}
+        </Layout.Horizontal>
       </Layout.Vertical>
     </FormGroup>
   )

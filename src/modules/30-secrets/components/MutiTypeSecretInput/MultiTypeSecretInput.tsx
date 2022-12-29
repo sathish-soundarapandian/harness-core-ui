@@ -22,7 +22,8 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Layout,
-  ButtonGroup
+  ButtonGroup,
+  Icon
 } from '@harness/uicore'
 import { defaultTo, get, pick } from 'lodash-es'
 import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
@@ -50,19 +51,20 @@ export function getMultiTypeSecretInputType(serviceType: string): SecretResponse
 
 export interface MultiTypeSecretInputFixedTypeComponentProps
   extends FixedTypeComponentProps,
-    Omit<ButtonProps, 'onChange'> {}
+    Omit<ButtonProps, 'onChange'> {
+  onDeselect?: () => void
+}
 
 export function MultiTypeSecretInputFixedTypeComponent(
   props: MultiTypeSecretInputFixedTypeComponentProps
 ): React.ReactElement {
-  const { value, onChange, disabled, ...rest } = props
+  const { value, onChange, disabled, width, ...rest } = props
   const { getString } = useStrings()
   return (
-    <ButtonGroup>
+    <Layout.Horizontal spacing="none" flex={{ alignItems: 'center' }} className={css.value} width={width}>
       <Button
         {...rest}
         withoutBoxShadow
-        className={css.value}
         icon="key-main"
         iconProps={{ size: 24, height: 12 }}
         data-testid={'create-or-select-secret'}
@@ -70,8 +72,20 @@ export function MultiTypeSecretInputFixedTypeComponent(
       >
         <Text lineClamp={1}>{value || getString('createOrSelectSecret')}</Text>
       </Button>
-      {props.onDeselect && value && <Button icon="main-delete" onClick={props.onDeselect} />}
-    </ButtonGroup>
+      {props.onDeselect && value && (
+        <Icon
+          size={14}
+          name="main-download"
+          onClick={e => {
+            e.preventDefault()
+            e.stopPropagation()
+            if (!disabled && props.onDeselect) {
+              props.onDeselect()
+            }
+          }}
+        />
+      )}
+    </Layout.Horizontal>
   )
 }
 
@@ -204,18 +218,21 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
             style={{ flexGrow: 1 }}
           />
         ) : (
-          <MultiTypeSecretInputFixedTypeComponent
-            value={value}
-            onChange={handleChange}
-            onClick={openCreateOrSelectSecretModal}
-            onDeselect={() => {
-              formik.setFieldValue(name, undefined)
-            }}
-            disabled={disabled}
-            data-testid={name}
-          />
+          <>
+            <span>swaraj</span>
+            <MultiTypeSecretInputFixedTypeComponent
+              value={value}
+              onChange={handleChange}
+              onClick={openCreateOrSelectSecretModal}
+              onDeselect={() => {
+                formik.setFieldValue(name, undefined)
+              }}
+              disabled={disabled}
+              data-testid={name}
+            />
+          </>
         )}
-        {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
+        {false && enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
             value={value}
             type={'String'}

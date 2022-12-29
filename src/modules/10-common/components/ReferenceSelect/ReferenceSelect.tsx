@@ -192,15 +192,13 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
       }
     }
     return (
-      <ButtonGroup>
+      <Layout.Horizontal spacing="none" flex={{ alignItems: 'center' }}>
         <Button
           minimal
-          style={{ width: width - 80 }}
+          style={{ width }}
           data-testid={`cr-field-${name}`}
           className={css.container}
           withoutCurrentColor={true}
-          rightIcon="chevron-down"
-          iconProps={{ size: 14 }}
           disabled={disabled}
           onClick={e => {
             if (disabled) {
@@ -212,20 +210,35 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
         >
           {singleSelectPlaceholder}
         </Button>
-        {props.onDeselect && selected  && (
-          <Button
-            rightIcon="main-delete"
-            iconProps={{ size: 14 }}
+        <Layout.Horizontal spacing="none" flex={{ alignItems: 'center' }} className={css.iconsLayout}>
+          {props.onDeselect && selected && (
+            <Icon
+              size={14}
+              name={'main-delete'}
+              margin={{ left: 'xsmall', right: 'xsmall' }}
+              onClick={e => {
+                e.preventDefault()
+                e.stopPropagation()
+                if (!disabled && props.onDeselect) {
+                  props.onDeselect()
+                }
+              }}
+            />
+          )}
+          <Icon
+            size={14}
+            name={'chevron-down'}
+            margin={{ left: 'xsmall', right: 'xsmall' }}
             onClick={e => {
               if (disabled) {
                 e.preventDefault()
-              } else if (props.onDeselect) {
-                props.onDeselect()
+              } else {
+                setOpen(true)
               }
             }}
-          ></Button>
-        )}
-      </ButtonGroup>
+          />
+        </Layout.Horizontal>
+      </Layout.Horizontal>
     )
   }
 

@@ -12,6 +12,7 @@ declare const styles: {
   readonly contentContainer: string
   readonly dialog: string
   readonly groupedReferences: string
+  readonly iconsLayout: string
   readonly layoutHeight: string
   readonly placeholder: string
   readonly placeholderContainer: string

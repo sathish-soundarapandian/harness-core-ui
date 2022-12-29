@@ -17,7 +17,8 @@ import {
   Text,
   FormikTooltipContext,
   DataTooltipInterface,
-  Button
+  Button,
+  Layout
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -109,40 +110,44 @@ const SSHSecretInput: React.FC<FormikSSHSecretInput> = ({
         </label>
       ) : null}
       <Container flex={{ alignItems: 'center', justifyContent: 'space-between' }} className={css.container}>
-        <Link
-          to="#"
-          className={css.containerLink}
-          data-testid={name}
-          onClick={e => {
-            e.preventDefault()
-            if (allowSelection) {
-              openCreateOrSelectSecretModal()
-            }
-          }}
-        >
-          <Icon size={24} height={12} name={'key-main'} />
-          <Text
-            color={Color.PRIMARY_7}
-            flex={{ alignItems: 'center', justifyContent: 'flex-start', inline: false }}
-            padding="small"
-            className={css.containerLinkText}
-          >
-            <div>
-              {secretReference
-                ? getString('secrets.secret.configureSecret')
-                : placeholder || getString('createOrSelectSecret')}
-            </div>
-            {secretReference ? <div>{`<${secretReference['name']}>`}</div> : null}
-          </Text>
-        </Link>
-        {get(formik.values, name) && (
-          <Button
-            icon="main-delete"
-            onClick={() => {
-              formik.setFieldValue(name, undefined)
+        <Layout.Horizontal spacing="none" flex={{ alignItems: 'center' }}>
+          <Link
+            to="#"
+            className={css.containerLink}
+            data-testid={name}
+            onClick={e => {
+              e.preventDefault()
+              if (allowSelection) {
+                openCreateOrSelectSecretModal()
+              }
             }}
-          />
-        )}
+          >
+            <Icon size={24} height={12} name={'key-main'} />
+            <Text
+              color={Color.PRIMARY_7}
+              flex={{ alignItems: 'center', justifyContent: 'flex-start', inline: false }}
+              padding="small"
+              className={css.containerLinkText}
+            >
+              <div>
+                {secretReference
+                  ? getString('secrets.secret.configureSecret')
+                  : placeholder || getString('createOrSelectSecret')}
+              </div>
+              {secretReference ? <div>{`<${secretReference['name']}>`}</div> : null}
+            </Text>
+          </Link>
+          {get(formik.values, name) && (
+            <Icon
+              name="main-delete"
+              onClick={e => {
+                e.preventDefault()
+                e.stopPropagation()
+                formik.setFieldValue(name, undefined)
+              }}
+            />
+          )}
+        </Layout.Horizontal>
       </Container>
     </FormGroup>
   )

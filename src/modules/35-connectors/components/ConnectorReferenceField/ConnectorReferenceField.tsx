@@ -218,7 +218,7 @@ export function getSelectedRenderer(
   const icon = connectorStatusCheckInProgress ? 'spinner' : 'full-circle'
   return (
     <Layout.Horizontal spacing="small" flex={{ distribution: 'space-between' }} className={css.selectWrapper}>
-      <Text tooltip={selected?.label} className={css.label} color={Color.GREY_800}>
+      <Text lineClamp={1} tooltip={selected?.label} className={css.label} color={Color.GREY_800} width="50%">
         {selected?.label}
       </Text>
 

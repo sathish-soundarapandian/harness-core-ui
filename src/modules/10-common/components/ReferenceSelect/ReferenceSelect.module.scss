@@ -41,16 +41,15 @@
     width: 100%;
   }
 
-  :global(.bp3-icon-chevron-down) {
-    position: absolute;
-    right: 0;
-    opacity: 0.5;
-    padding: var(--spacing-small) !important;
-  }
-
   .placeholder {
     color: var(--grey-350);
   }
+}
+.iconsLayout {
+  position: absolute;
+  right: 36px;
+  opacity: 0.5;
+  padding: var(--spacing-small) !important;
 }
 .contentContainer {
   .closeButton {

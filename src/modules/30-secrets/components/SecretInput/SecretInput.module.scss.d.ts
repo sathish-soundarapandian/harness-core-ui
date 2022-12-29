@@ -11,5 +11,6 @@ declare const styles: {
   readonly containerEditBtn: string
   readonly containerLink: string
   readonly containerLinkText: string
+  readonly crossIcon: string
 }
 export default styles

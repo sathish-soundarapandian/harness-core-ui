@@ -56,13 +56,6 @@
     margin-bottom: 5px;
   }
   :global {
-    .bp3-icon-chevron-down {
-      position: absolute;
-      right: var(--spacing-8);
-      opacity: 0.5;
-      padding: var(--spacing-small) !important;
-    }
-
     .TextInput--main {
       margin-bottom: 0px;
     }
@@ -90,7 +83,7 @@
 
 .right-status {
   display: flex;
-  right: 60px;
+  right: 83px;
   position: absolute;
 
   #tag {
