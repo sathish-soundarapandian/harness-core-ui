@@ -6,7 +6,7 @@ exports[`TanzuCommandStep tests InputSet view renders errors 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="formGroup sm"
+      class="fieldAndOptions formGroup sm"
     >
       <div
         class="bp3-form-group bp3-intent-danger"
