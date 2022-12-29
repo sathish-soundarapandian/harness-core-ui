@@ -79,15 +79,10 @@ export default function SingleEnvironmentInputSetForm({
               if (deploymentStageInputSet?.environment) {
                 formik?.setValues(set(formik?.values, `${path}.environment`, values.environment))
               }
-              if (deploymentStageInputSet?.environment?.environmentRef === RUNTIME_INPUT_VALUE) {
-                formik?.setValues(
-                  set(formik?.values, `${path}.environment.infrastructureDefinitions`, RUNTIME_INPUT_VALUE)
-                )
-              }
             }}
           />
-
-          {(deploymentStageTemplate as DeployStageConfig).environment?.infrastructureDefinitions &&
+          {(deploymentStageTemplate as DeployStageConfig).environment?.environmentRef != RUNTIME_INPUT_VALUE &&
+            (deploymentStageTemplate as DeployStageConfig).environment?.infrastructureDefinitions &&
             ((deploymentStageTemplate as DeployStageConfig).environment
               ?.infrastructureDefinitions as unknown as string) !== RUNTIME_INPUT_VALUE && (
               <>

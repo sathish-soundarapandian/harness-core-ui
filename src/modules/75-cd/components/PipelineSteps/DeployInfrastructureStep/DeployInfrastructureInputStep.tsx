@@ -122,6 +122,7 @@ function DeployInfrastructureInputStepInternal({
 
                 delete draft.clusterRef
               }
+              set(draft, 'isEnvInputLoaded', initialValues.isEnvInputLoaded)
             })
           )
         }}
@@ -268,6 +269,7 @@ function DeployInfrastructureInputStepInternal({
                 inputSetData?.allValues ||
                 (inputSetData?.template?.environment?.infrastructureDefinitions as unknown as string) ===
                   RUNTIME_INPUT_VALUE) &&
+              formik.values.isEnvInputLoaded &&
               shouldRenderInfrastructure && (
                 <Container margin={{ bottom: 'medium' }}>
                   <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
