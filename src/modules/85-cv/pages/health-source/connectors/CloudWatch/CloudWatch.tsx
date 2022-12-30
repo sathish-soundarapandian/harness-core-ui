@@ -1,11 +1,16 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useContext, useMemo } from 'react'
 import { Formik, FormikForm, Container, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import CloudWatchContent from './components/CloudWatchContent'
 import type { CloudWatchFormType, CloudWatchProps } from './CloudWatch.types'
 import DrawerFooter from '../../common/DrawerFooter/DrawerFooter'
