@@ -8,6 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import {
+  JsonNode,
   ResponseJsonNode,
   ResponseYamlSchemaResponse,
   useGetSchemaYaml,
@@ -17,6 +18,8 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useToaster } from '@common/exports'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import simplifiedYAMLSchema from './resources/simplified-yaml-schema.json'
 
 export interface PipelineSchemaData {
   pipelineSchema: ResponseJsonNode | null
@@ -37,6 +40,7 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
   const { data: pipelineSchema, error } = useGetSchemaYaml({
     queryParams: {
       entityType: 'Pipelines',
@@ -44,7 +48,8 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
       orgIdentifier: orgIdentifier,
       accountIdentifier: accountId,
       scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
-    }
+    },
+    lazy: CI_YAML_VERSIONING
   })
   const { data: loopingStrategySchema } = useGetStepYamlSchema({
     queryParams: {
@@ -60,7 +65,14 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
     showError(getRBACErrorMessage(error), undefined, 'pipeline.get.yaml.error')
   }
   return (
-    <PipelineSchemaContext.Provider value={{ pipelineSchema, loopingStrategySchema }}>
+    <PipelineSchemaContext.Provider
+      value={{
+        pipelineSchema: CI_YAML_VERSIONING
+          ? ({ data: simplifiedYAMLSchema as JsonNode } as ResponseJsonNode)
+          : pipelineSchema,
+        loopingStrategySchema
+      }}
+    >
       {props.children}
     </PipelineSchemaContext.Provider>
   )

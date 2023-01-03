@@ -190,7 +190,7 @@ function PipelineYamlView(): React.ReactElement {
             height={'calc(100vh - 200px)'}
             width="calc(100vw - 400px)"
             invocationMap={stepsFactory.getInvocationMap()}
-            schema={CI_YAML_VERSIONING ? {} : pipelineSchema?.data}
+            schema={pipelineSchema?.data}
             isEditModeSupported={!isReadonly}
             openDialogProp={onEditButtonClick}
             {...yamlOrJsonProp}
