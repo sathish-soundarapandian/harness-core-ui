@@ -940,8 +940,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         //TODO @vardan - confirm step name, identifier and type with Backend
         step: {
           name: pluginName,
-          identifier: pluginName.split(' ').join('_'),
-          type: 'Plugin',
+          type: 'script',
           spec: sanitizePluginValues(pluginInput)
         }
       }
