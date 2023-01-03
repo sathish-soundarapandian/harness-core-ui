@@ -825,12 +825,12 @@ pipelineChaining:
   selectPipeline: Select Pipeline
   noProjectSelected: Project is not selected
   noPipelineSelected: Pipeline is not selected
-  childPipelineID: Child Pipeline ID
   pipelineOutputs: Pipeline Outputs
   outputTabSummaryDetail: Define outputs from child pipeline that you can use in other stages in parent pipeline.
   newOutput: New Output
   removeOutput: Remove this output
   outputAlreadyExists: Output with same name already exists
+  enterOutputName: Enter Output Name
 aboutYourStage:
   stageNamePlaceholder: Enter Stage Name
 infraSpecifications:

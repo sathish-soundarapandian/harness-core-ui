@@ -190,6 +190,7 @@ export function VariableOutputPanel(): React.ReactElement {
                           label=""
                           localName={yamlData.localName}
                           fullName={yamlData.fqn}
+                          placeholder={getString('pipeline.pipelineChaining.enterOutputName')}
                         />
                         <div className={css.valueColumn} data-type={getMultiTypeFromValue(output.value as string)}>
                           <FormInput.MultiTextInput

@@ -208,21 +208,23 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
     )
   }
 
-  const isMatrixNode = React.useCallback((): boolean => {
-    let isMatrixNodePresent = false
+  const isMatrixNodeOrChainedPipeline = React.useCallback((): boolean => {
+    let isMatrixNodeOrChainedPipelinePresent = false
     data?.items?.forEach((obj: PipelineGraphState) => {
-      if (isNodeTypeMatrixOrFor(get(obj, 'type'))) {
-        isMatrixNodePresent = true
+      const objType = get(obj, 'type')
+      if (isNodeTypeMatrixOrFor(objType) || objType === StageType.PIPELINE) {
+        isMatrixNodeOrChainedPipelinePresent = true
         return
       }
       obj?.children?.forEach((parallelNode: PipelineGraphState) => {
-        if (isNodeTypeMatrixOrFor(get(parallelNode, 'type'))) {
-          isMatrixNodePresent = true
+        const parallelNodeType = get(parallelNode, 'type')
+        if (isNodeTypeMatrixOrFor(parallelNodeType) || parallelNodeType === StageType.PIPELINE) {
+          isMatrixNodeOrChainedPipelinePresent = true
           return
         }
       })
     })
-    return isMatrixNodePresent
+    return isMatrixNodeOrChainedPipelinePresent
   }, [data?.items])
 
   return (
@@ -252,7 +254,9 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
             }
             panZoom={false}
             parentSelector=".Pane1"
-            {...(!isMatrixNode() && { collapsibleProps: { percentageNodeVisible: 0.8, bottomMarginInPixels: 120 } })}
+            {...(!isMatrixNodeOrChainedPipeline() && {
+              collapsibleProps: { percentageNodeVisible: 0.8, bottomMarginInPixels: 120 }
+            })}
             graphLinkClassname={css.graphLink}
             key={executionIdentifier}
           />

@@ -27,6 +27,7 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 
 import { useQueryParams } from '@common/hooks'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { ExecutionStage, ExecutionStageProps } from './ExecutionStage'
 import { MultiTypeDeploymentSummary } from './MultiTypeDeploymentSummary'
 
@@ -126,6 +127,7 @@ export function ExecutionStageWrapper(props: ExecutionStageProps): React.ReactEl
           repoName={repoName}
           branch={branch}
           storeType={storeType}
+          link={stage.type === StageType.PIPELINE}
         />
       )}
 
@@ -141,6 +143,7 @@ export function ExecutionStageWrapper(props: ExecutionStageProps): React.ReactEl
           repoName={repoName}
           branch={branch}
           storeType={storeType}
+          link={stage.type === StageType.PIPELINE}
         />
       ))}
     </Fragment>

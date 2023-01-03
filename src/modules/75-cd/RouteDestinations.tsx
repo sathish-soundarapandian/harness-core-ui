@@ -280,7 +280,6 @@ export default (
       sidebarProps={CDSideNavProps}
       pageName={PAGE_NAME.GetStartedWithCD}
       path={routes.toGetStartedWithCD({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
-      layout={MinimalLayout}
     >
       <GetStartedWithCD />
     </RouteWithLayout>

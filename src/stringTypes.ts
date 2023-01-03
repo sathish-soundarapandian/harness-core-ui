@@ -4002,7 +4002,7 @@ export interface StringsMap {
   'pipeline.pipelineCachedCopy.reloadPipeline': string
   'pipeline.pipelineCachedCopy.reloadPipelineContent': string
   'pipeline.pipelineCachedCopy.updateAvailable': string
-  'pipeline.pipelineChaining.childPipelineID': string
+  'pipeline.pipelineChaining.enterOutputName': string
   'pipeline.pipelineChaining.newOutput': string
   'pipeline.pipelineChaining.noPipelineSelected': string
   'pipeline.pipelineChaining.noProjectSelected': string
