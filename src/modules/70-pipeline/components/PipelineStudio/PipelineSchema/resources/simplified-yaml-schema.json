@@ -6,6 +6,10 @@
       "description": "Pipeline defines the pipeline execution.",
       "type": "object",
       "properties": {
+        "name": {
+          "description": "Name of the pipeline.",
+          "type": "string"
+        },
         "version": {
           "description": "Version defines the schema version.",
           "type": ["string", "number"]
