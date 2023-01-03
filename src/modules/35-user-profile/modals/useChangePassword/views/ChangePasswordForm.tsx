@@ -116,6 +116,40 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({ hideModal, pass
     }
   }
 
+  const getPasswordRequirementsError = () => {
+    const {
+      minNumberOfCharacters,
+      minNumberOfUppercaseCharacters,
+      minNumberOfLowercaseCharacters,
+      minNumberOfDigits,
+      minNumberOfSpecialCharacters
+    } = passwordStrengthPolicy
+
+    if (minNumberOfCharacters) {
+      return getString('authSettings.atLeastNChars', {
+        minNumberOfCharacters: minNumberOfCharacters
+      })
+    }
+
+    if (minNumberOfUppercaseCharacters) {
+      return getString('authSettings.haveOneUppercase')
+    }
+
+    if (minNumberOfLowercaseCharacters) {
+      return getString('authSettings.haveOneLowercase')
+    }
+
+    if (minNumberOfDigits) {
+      return getString('authSettings.haveOneDigit')
+    }
+
+    if (minNumberOfSpecialCharacters) {
+      return getString('authSettings.haveOneSpecialChar')
+    }
+
+    return getString('userProfile.passwordReqs')
+  }
+
   return (
     <Layout.Vertical padding={{ left: 'huge', right: 'huge' }}>
       <ModalErrorHandler bind={setModalErrorHandler} />
@@ -138,7 +172,7 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({ hideModal, pass
             .matches(
               PASSWORD_CHECKS_RGX(passwordStrengthPolicy),
               passwordStrengthPolicy.enabled
-                ? getString('userProfile.passwordReqs')
+                ? `${getString('common.shouldText')} ${getPasswordRequirementsError().toLowerCase()}`
                 : getString('userProfile.passwordMustBeBetweenMinAndMax', {
                     min: MIN_NUMBER_OF_CHARACTERS,
                     max: MAX_NUMBER_OF_CHARACTERS

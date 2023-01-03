@@ -931,6 +931,7 @@ export interface StringsMap {
   'common.setup': string
   'common.sh': string
   'common.shell': string
+  'common.shouldText': string
   'common.showHarnessManagedError': string
   'common.showLess': string
   'common.showMore': string
