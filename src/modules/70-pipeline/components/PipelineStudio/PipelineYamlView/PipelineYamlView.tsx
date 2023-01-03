@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import { defaultTo, isEqual, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { ButtonVariation, Checkbox, Tag } from '@harness/uicore'
@@ -17,9 +17,10 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import RbacButton from '@rbac/components/Button/Button'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { StoreType } from '@common/constants/GitSyncTypes'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import type { EntityValidityDetails } from 'services/pipeline-ng'
+import type { EntityValidityDetails, PipelineInfoConfig } from 'services/pipeline-ng'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
 import type { Pipeline } from '@pipeline/utils/types'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -79,6 +80,7 @@ function PipelineYamlView(): React.ReactElement {
   expressionRef.current = expressions
   const updateEntityValidityDetailsRef = React.useRef<(entityValidityDetails: EntityValidityDetails) => Promise<void>>()
   updateEntityValidityDetailsRef.current = updateEntityValidityDetails
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
 
   const remoteFileName = React.useMemo(
     () =>
@@ -96,7 +98,9 @@ function PipelineYamlView(): React.ReactElement {
       if (yamlHandler && !isDrawerOpened) {
         Interval = window.setInterval(() => {
           try {
-            const pipelineFromYaml = parse<Pipeline>(yamlHandler.getLatestYaml())?.pipeline
+            const pipelineFromYaml = CI_YAML_VERSIONING
+              ? parse<Pipeline>(yamlHandler.getLatestYaml())
+              : parse<Pipeline>(yamlHandler.getLatestYaml())?.pipeline
             // Do not call updatePipeline with undefined, pipelineFromYaml check in below if condition prevents that.
             // This can happen when somebody adds wrong yaml (e.g. connector's yaml) into pipeline yaml that is stored in Git
             // and opens pipeline in harness. At this time above line will evaluate to undefined
@@ -105,7 +109,7 @@ function PipelineYamlView(): React.ReactElement {
               !isEqual(omit(pipeline, 'repo', 'branch'), pipelineFromYaml) &&
               yamlHandler.getYAMLValidationErrorMap()?.size === 0 // Don't update for Invalid Yaml
             ) {
-              updatePipeline(pipelineFromYaml).then(() => {
+              updatePipeline(pipelineFromYaml as PipelineInfoConfig).then(() => {
                 if (entityValidityDetails?.valid === false) {
                   updateEntityValidityDetailsRef.current?.({ ...entityValidityDetails, valid: true, invalidYaml: '' })
                 }
@@ -151,10 +155,15 @@ function PipelineYamlView(): React.ReactElement {
     }
   }
 
-  const yamlOrJsonProp =
-    entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
-      ? { existingYaml: entityValidityDetails?.invalidYaml }
-      : { existingJSON: { pipeline: omit(pipeline, 'repo', 'branch') } }
+  const yamlOrJsonProp = useMemo(
+    (): Record<string, any> =>
+      entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
+        ? { existingYaml: entityValidityDetails?.invalidYaml }
+        : CI_YAML_VERSIONING
+        ? { existingJSON: pipeline }
+        : { existingJSON: { pipeline: omit(pipeline, 'repo', 'branch') } },
+    [pipeline]
+  )
 
   React.useEffect(() => {
     if (userPreferenceEditMode) {
@@ -181,7 +190,7 @@ function PipelineYamlView(): React.ReactElement {
             height={'calc(100vh - 200px)'}
             width="calc(100vw - 400px)"
             invocationMap={stepsFactory.getInvocationMap()}
-            schema={pipelineSchema?.data}
+            schema={CI_YAML_VERSIONING ? {} : pipelineSchema?.data}
             isEditModeSupported={!isReadonly}
             openDialogProp={onEditButtonClick}
             {...yamlOrJsonProp}

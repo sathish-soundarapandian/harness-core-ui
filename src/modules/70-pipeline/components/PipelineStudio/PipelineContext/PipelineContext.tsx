@@ -59,6 +59,7 @@ import {
   TemplateServiceDataType
 } from '@pipeline/utils/templateUtils'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { Pipeline, TemplateIcons } from '@pipeline/utils/types'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
@@ -107,6 +108,7 @@ export const getPipelineByIdentifier = (
   params: GetPipelineQueryParams & GitQueryParams,
   identifier: string,
   isPipelineGitCacheEnabled: boolean,
+  isSimplifiedYAMLPipeline?: boolean,
   loadFromCache?: boolean,
   signal?: AbortSignal
 ): Promise<PipelineInfoConfigWithGitDetails | FetchError> => {
@@ -147,7 +149,8 @@ export const getPipelineByIdentifier = (
       }
 
       return {
-        ...(yamlPipelineDetails !== null && { ...yamlPipelineDetails.pipeline }),
+        ...(yamlPipelineDetails !== null &&
+          (isSimplifiedYAMLPipeline ? { ...yamlPipelineDetails } : { ...yamlPipelineDetails.pipeline })),
         gitDetails: obj.data.gitDetails ?? {},
         entityValidityDetails: obj.data.entityValidityDetails ?? {},
         yamlSchemaErrorWrapper: obj.data.yamlSchemaErrorWrapper ?? {},
@@ -345,6 +348,7 @@ export interface FetchPipelineBoundProps {
   isPipelineGitCacheEnabled: boolean
   storeMetadata?: StoreMetadata
   supportingTemplatesGitx?: boolean
+  isSimplifiedYAMLPipeline?: boolean
 }
 
 export interface FetchPipelineUnboundProps {
@@ -429,7 +433,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
     gitDetails,
     supportingTemplatesGitx,
     storeMetadata,
-    isPipelineGitCacheEnabled
+    isPipelineGitCacheEnabled,
+    isSimplifiedYAMLPipeline
   } = props
   const {
     forceFetch = false,
@@ -465,6 +470,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       { ...queryParams, ...(repoIdentifier ? { repoIdentifier } : {}), ...(branch ? { branch } : {}) },
       pipelineId,
       isPipelineGitCacheEnabled,
+      isSimplifiedYAMLPipeline,
       loadFromCache,
       signal
     )
@@ -1099,6 +1105,7 @@ export function PipelineProvider({
     'pipeline_studio_view',
     state.entityValidityDetails.valid === false ? SelectedView.YAML : SelectedView.VISUAL
   )
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
   state.pipelineIdentifier = pipelineIdentifier
   const fetchPipeline = _fetchPipeline.bind(null, {
     dispatch,
@@ -1110,7 +1117,8 @@ export function PipelineProvider({
     },
     storeMetadata: state.storeMetadata,
     supportingTemplatesGitx,
-    isPipelineGitCacheEnabled
+    isPipelineGitCacheEnabled,
+    isSimplifiedYAMLPipeline: CI_YAML_VERSIONING
   })
 
   const updatePipelineStoreMetadata = _updateStoreMetadata.bind(null, {

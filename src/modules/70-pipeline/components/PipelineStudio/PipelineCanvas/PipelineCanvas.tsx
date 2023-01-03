@@ -73,7 +73,7 @@ import type { Pipeline } from '@pipeline/utils/types'
 import useDiffDialog from '@common/hooks/useDiffDialog'
 import { PipelineOutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/PipelineOutOfSyncErrorStrip/PipelineOutOfSyncErrorStrip'
 import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
@@ -250,6 +250,7 @@ export function PipelineCanvas({
 
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
 
   React.useEffect(() => {
     if (isGitSyncEnabled || isPipelineRemote) {
@@ -991,11 +992,11 @@ export function PipelineCanvas({
                   <VisualYamlToggle
                     className={css.visualYamlToggle}
                     selectedView={isYaml || disableVisualView ? SelectedView.YAML : SelectedView.VISUAL}
-                    disableToggle={disableVisualView}
+                    disableToggle={disableVisualView || CI_YAML_VERSIONING}
                     onChange={nextMode => {
                       handleViewChange(nextMode)
                     }}
-                    showDisableToggleReason={true}
+                    showDisableToggleReason={!CI_YAML_VERSIONING}
                   />
                   <div>
                     <div className={css.savePublishContainer}>
@@ -1095,7 +1096,13 @@ export function PipelineCanvas({
             )
           ) : (
             <Container className={css.builderContainer}>
-              {isYaml ? <PipelineYamlView /> : pipeline.template ? <TemplatePipelineBuilder /> : <StageBuilder />}
+              {isYaml || CI_YAML_VERSIONING ? (
+                <PipelineYamlView />
+              ) : pipeline.template ? (
+                <TemplatePipelineBuilder />
+              ) : (
+                <StageBuilder />
+              )}
             </Container>
           )}
         </Layout.Vertical>
