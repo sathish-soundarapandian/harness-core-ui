@@ -99,7 +99,7 @@ const ModuleOverview: React.FC<ModuleOverviewProps> = ({
   const { label, Component, imageSrc } = moduleLabelMap[module]
   const { getString } = useStrings()
   const { color, icon, backgroundColor, hasLicense } = useNavModuleInfo(module)
-  const showEmptyState = !hasLicense
+  const showEmptyState = module === ModuleName.CD ? false : !hasLicense
 
   const containerStyle = cx(css.container, {
     [css.expanded]: isExpanded,

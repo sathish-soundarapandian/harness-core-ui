@@ -41,16 +41,36 @@ interface OverviewGlanceCardsV2Props {
 const OverviewGlanceCardsV2: React.FC<OverviewGlanceCardsV2Props> = ({ timeRange }) => {
   const { accountId } = useParams<AccountPathProps>()
 
-  const { data: countResponse, loading } = useGetCounts({
+  let { data: countResponse, loading } = useGetCounts({
     queryParams: {
       accountIdentifier: accountId,
       startTime: getGMTStartDateTime(timeRange.from),
       endTime: getGMTEndDateTime(timeRange.to)
-    }
+    },
+    mock: {}
   })
 
+  loading = false
+
   const { projectsCountDetail, envCountDetail, servicesCountDetail, pipelinesCountDetail } =
-    countResponse?.data?.response || {}
+    {
+      projectsCountDetail: {
+        count: 697,
+        countChangeAndCountChangeRateInfo: { countChange: 6, countChangeRate: 0.0 }
+      },
+      servicesCountDetail: {
+        count: 2287,
+        countChangeAndCountChangeRateInfo: { countChange: 23, countChangeRate: 0.0 }
+      },
+      envCountDetail: {
+        count: 1327,
+        countChangeAndCountChangeRateInfo: { countChange: 17, countChangeRate: 0.0 }
+      },
+      pipelinesCountDetail: {
+        count: 2581,
+        countChangeAndCountChangeRateInfo: { countChange: 27, countChangeRate: 0.0 }
+      }
+    } || {}
 
   const GLANCE_CARDS: GlanceCard[] = [
     {
