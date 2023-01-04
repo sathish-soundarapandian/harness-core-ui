@@ -208,14 +208,17 @@ export const savePipeline = (
   params: CreatePipelineQueryParams & PutPipelineQueryParams,
   pipeline: PipelineInfoConfig,
   isEdit = false,
-  useAPIV2 = false
+  useAPIV2 = false,
+  isSimplifiedYAMLPipeline = false
 ): Promise<Failure | undefined> => {
   const createPipeline = useAPIV2 ? createPipelineV2Promise : createPipelinePromise
   const updatePipeline = useAPIV2 ? putPipelineV2Promise : putPipelinePromise
 
-  const body = yamlStringify({
-    pipeline: { ...pipeline, ...pick(params, 'projectIdentifier', 'orgIdentifier') }
-  })
+  const body = isSimplifiedYAMLPipeline
+    ? yamlStringify(pipeline)
+    : yamlStringify({
+        pipeline: { ...pipeline, ...pick(params, 'projectIdentifier', 'orgIdentifier') }
+      })
 
   return isEdit
     ? updatePipeline({
