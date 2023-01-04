@@ -16,6 +16,7 @@ declare const styles: {
   readonly header: string
   readonly jfrog: string
   readonly jfrogImage: string
+  readonly link: string
   readonly seeMoreContainer: string
   readonly slack: string
   readonly teamImage: string
