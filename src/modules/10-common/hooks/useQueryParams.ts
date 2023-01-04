@@ -42,7 +42,7 @@ type CustomQsDecoder = (customQsDecoderOptions?: {
 }) => IParseOptions['decoder']
 
 export const queryParamDecodeAll: CustomQsDecoder =
-  ({ parseNumbers = true, parseBoolean = true, ignoreNull = true, ignoreEmptyString = true } = {}) =>
+  ({ parseNumbers = true, parseBoolean = true, ignoreNull = true, ignoreEmptyString = false } = {}) =>
   (value, decoder) => {
     if (parseNumbers && /^(\d+|\d*\.\d+)$/.test(value)) {
       return parseFloat(value)
