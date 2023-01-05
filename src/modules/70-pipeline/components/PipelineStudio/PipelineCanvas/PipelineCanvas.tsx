@@ -447,7 +447,10 @@ export function PipelineCanvas({
 
   React.useEffect(() => {
     if (isInitialized) {
-      if (pipeline?.identifier === DefaultNewPipelineId) {
+      if (
+        (CI_YAML_VERSIONING && pipeline?.name === '') ||
+        (!CI_YAML_VERSIONING && pipeline?.identifier === DefaultNewPipelineId)
+      ) {
         setModalMode('create')
         showModal()
       }
@@ -512,8 +515,14 @@ export function PipelineCanvas({
     ) => {
       pipeline.name = values.name
       pipeline.description = values.description
-      pipeline.identifier = values.identifier
+      if (!CI_YAML_VERSIONING) {
+        pipeline.identifier = values.identifier
+      }
       pipeline.tags = values.tags ?? {}
+      if (CI_YAML_VERSIONING) {
+        delete (pipeline as PipelineInfoConfig).orgIdentifier
+        delete (pipeline as PipelineInfoConfig).projectIdentifier
+      }
       delete (pipeline as PipelineWithGitContextFormProps).repo
       delete (pipeline as PipelineWithGitContextFormProps).branch
       delete (pipeline as PipelineWithGitContextFormProps).connectorRef
@@ -553,7 +562,7 @@ export function PipelineCanvas({
       hideModal()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [hideModal, pipeline, updatePipeline]
+    [hideModal, pipeline, updatePipeline, CI_YAML_VERSIONING]
   )
 
   const getPipelineTemplate = async (): Promise<void> => {
