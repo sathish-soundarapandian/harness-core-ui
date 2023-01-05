@@ -951,7 +951,7 @@ export function PipelineCanvas({
                           <TagsPopover tags={pipeline.tags} />
                         </Container>
                       )}
-                      {pipeline.description && (
+                      {pipeline?.description && (
                         <Container className={cx({ [css.tagsContainer]: isGitSyncEnabled })}>
                           <DescriptionPopover text={pipeline.description} />
                         </Container>

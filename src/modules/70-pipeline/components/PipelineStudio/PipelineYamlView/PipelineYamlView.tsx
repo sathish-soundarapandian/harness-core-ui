@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React from 'react'
 import { defaultTo, isEqual, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { ButtonVariation, Checkbox, Tag } from '@harness/uicore'
@@ -155,15 +155,10 @@ function PipelineYamlView(): React.ReactElement {
     }
   }
 
-  const yamlOrJsonProp = useMemo(
-    (): Record<string, any> =>
-      entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
-        ? { existingYaml: entityValidityDetails?.invalidYaml }
-        : CI_YAML_VERSIONING
-        ? { existingJSON: pipeline }
-        : { existingJSON: { pipeline: omit(pipeline, 'repo', 'branch') } },
-    [pipeline]
-  )
+  const yamlOrJsonProp =
+    entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
+      ? { existingYaml: entityValidityDetails?.invalidYaml }
+      : { existingJSON: CI_YAML_VERSIONING ? pipeline : { pipeline: omit(pipeline, 'repo', 'branch') } }
 
   React.useEffect(() => {
     if (userPreferenceEditMode) {
