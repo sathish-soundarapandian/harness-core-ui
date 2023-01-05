@@ -515,13 +515,13 @@ export function PipelineCanvas({
     ) => {
       pipeline.name = values.name
       pipeline.description = values.description
-      if (!CI_YAML_VERSIONING) {
-        pipeline.identifier = values.identifier
-      }
+      pipeline.identifier = values.identifier
       pipeline.tags = values.tags ?? {}
       if (CI_YAML_VERSIONING) {
+        delete (pipeline as Partial<PipelineInfoConfig>).identifier
         delete (pipeline as PipelineInfoConfig).orgIdentifier
         delete (pipeline as PipelineInfoConfig).projectIdentifier
+        delete (pipeline as PipelineInfoConfig).tags
       }
       delete (pipeline as PipelineWithGitContextFormProps).repo
       delete (pipeline as PipelineWithGitContextFormProps).branch

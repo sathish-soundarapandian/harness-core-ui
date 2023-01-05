@@ -10,7 +10,7 @@ import { defaultTo, isEqual, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { ButtonVariation, Checkbox, Tag } from '@harness/uicore'
 import { parse } from '@common/utils/YamlHelperMethods'
-import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
+import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -170,7 +170,7 @@ function PipelineYamlView(): React.ReactElement {
     <div className={css.yamlBuilder}>
       <>
         {!isDrawerOpened && (
-          <YamlBuilderMemo
+          <YAMLBuilder
             key={isYamlEditable.toString()}
             fileName={isPipelineRemote ? remoteFileName : defaultTo(yamlFileName, defaultFileName)}
             entityType="Pipelines"
