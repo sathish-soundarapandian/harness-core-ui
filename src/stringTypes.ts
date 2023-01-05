@@ -3283,6 +3283,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.customArtifactManualFill': string
   'pipeline.artifactsSelection.customArtifactScriptFill': string
   'pipeline.artifactsSelection.delegateselectionPlaceholder': string
+  'pipeline.artifactsSelection.digestPlaceholder': string
   'pipeline.artifactsSelection.errors.noRepositories': string
   'pipeline.artifactsSelection.existingDocker.enterTagRegex': string
   'pipeline.artifactsSelection.existingDocker.imageNamePlaceholder': string
@@ -3517,6 +3518,7 @@ export interface StringsMap {
   'pipeline.deploymentRepo': string
   'pipeline.deploymentRepoStore': string
   'pipeline.depth': string
+  'pipeline.digest': string
   'pipeline.discard': string
   'pipeline.draft': string
   'pipeline.duplicateImport': string

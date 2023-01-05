@@ -857,6 +857,7 @@ infraSpecifications:
     amd64: AMD64
     arm64: ARM64
 imagePathLabel: Image Path
+digest: Digest
 artifactPathLabel: Artifact Path
 artifactImagePathLabel: Artifact/Image Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
@@ -874,6 +875,7 @@ artifactsSelection:
   extensionPlaceholder: Enter Extension
   classifier: Classifier
   classifierPlaceholder: Enter Classifier
+  digestPlaceholder: Enter Digest
   packageName: Package Name
   packageNamePlaceholder: Select Package
   addPrimaryArtifact: Add Primary Artifact

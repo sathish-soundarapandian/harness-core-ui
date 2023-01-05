@@ -7,7 +7,18 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import cx from 'classnames'
-import { Formik, Layout, Button, StepProps, Text, ButtonVariation, FormikForm } from '@harness/uicore'
+import {
+  Formik,
+  Layout,
+  Button,
+  StepProps,
+  Text,
+  ButtonVariation,
+  FormikForm,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType
+} from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
@@ -15,6 +26,7 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { ConnectorConfigDTO, DockerBuildDetailsDTO, useGetBuildDetailsForDocker } from 'services/cd-ng'
 import {
@@ -194,6 +206,31 @@ export function DockerRegistryArtifact({
                 setTagList={setTagList}
                 tagDisabled={isTagDisabled(formik?.values)}
               />
+
+              <div className={css.imagePathContainer}>
+                <FormInput.MultiTextInput
+                  label={getString('pipeline.digest')}
+                  name="digest"
+                  placeholder={getString('pipeline.artifactsSelection.digestPlaceholder')}
+                  multiTextInputProps={{ expressions, allowableTypes }}
+                />
+                {getMultiTypeFromValue(formik?.values?.digest) === MultiTypeInputType.RUNTIME && (
+                  <div className={css.configureOptions}>
+                    <ConfigureOptions
+                      value={formik?.values?.digest as string}
+                      type="String"
+                      variableName="digest"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      showAdvanced={true}
+                      onChange={value => {
+                        formik.setFieldValue('digest', value)
+                      }}
+                      isReadonly={isReadonly}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
             {!hideHeaderAndNavBtns && (
               <Layout.Horizontal spacing="medium">

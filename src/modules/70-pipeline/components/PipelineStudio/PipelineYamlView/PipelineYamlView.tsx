@@ -161,7 +161,6 @@ function PipelineYamlView(): React.ReactElement {
       updatePipelineView({ ...pipelineView, isYamlEditable: true })
     }
   }, [userPreferenceEditMode])
-
   return (
     <div className={css.yamlBuilder}>
       <>
