@@ -387,7 +387,7 @@ function SavePipelinePopover(
   const saveAndPublish = React.useCallback(async () => {
     window.dispatchEvent(new CustomEvent('SAVE_PIPELINE_CLICKED'))
 
-    let latestPipeline: PipelineInfoConfig | Pipeline = pipeline
+    let latestPipeline: PipelineInfoConfig = pipeline
 
     if (isYaml && yamlHandler) {
       if (!parse(yamlHandler.getLatestYaml())) {
@@ -397,7 +397,7 @@ function SavePipelinePopover(
       }
       try {
         latestPipeline = CI_YAML_VERSIONING
-          ? parse<Pipeline>(yamlHandler.getLatestYaml())
+          ? parse<PipelineInfoConfig>(yamlHandler.getLatestYaml())
           : (parse<Pipeline>(yamlHandler.getLatestYaml()).pipeline as PipelineInfoConfig)
       } /* istanbul ignore next */ catch (err) {
         showError(err.message || err, undefined, 'pipeline.save.pipeline.error')
@@ -405,7 +405,7 @@ function SavePipelinePopover(
     }
 
     const ciCodeBaseConfigurationError = validateCICodebaseConfiguration({
-      pipeline: latestPipeline as PipelineInfoConfig,
+      pipeline: latestPipeline,
       getString
     })
     if (ciCodeBaseConfigurationError) {
@@ -414,7 +414,7 @@ function SavePipelinePopover(
       return
     }
 
-    await initPipelinePublish(latestPipeline as PipelineInfoConfig)
+    await initPipelinePublish(latestPipeline)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     deletePipelineCache,
@@ -437,9 +437,7 @@ function SavePipelinePopover(
     () => ({
       updatePipeline: async (pipelineYaml: string) => {
         await initPipelinePublish(
-          (CI_YAML_VERSIONING
-            ? parse<Pipeline>(pipelineYaml)
-            : parse<Pipeline>(pipelineYaml).pipeline) as PipelineInfoConfig
+          CI_YAML_VERSIONING ? parse<PipelineInfoConfig>(pipelineYaml) : parse<Pipeline>(pipelineYaml).pipeline
         )
       }
     }),

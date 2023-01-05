@@ -99,7 +99,7 @@ function PipelineYamlView(): React.ReactElement {
         Interval = window.setInterval(() => {
           try {
             const pipelineFromYaml = CI_YAML_VERSIONING
-              ? parse<Pipeline>(yamlHandler.getLatestYaml())
+              ? parse<PipelineInfoConfig>(yamlHandler.getLatestYaml())
               : parse<Pipeline>(yamlHandler.getLatestYaml())?.pipeline
             // Do not call updatePipeline with undefined, pipelineFromYaml check in below if condition prevents that.
             // This can happen when somebody adds wrong yaml (e.g. connector's yaml) into pipeline yaml that is stored in Git
@@ -109,7 +109,7 @@ function PipelineYamlView(): React.ReactElement {
               !isEqual(omit(pipeline, 'repo', 'branch'), pipelineFromYaml) &&
               yamlHandler.getYAMLValidationErrorMap()?.size === 0 // Don't update for Invalid Yaml
             ) {
-              updatePipeline(pipelineFromYaml as PipelineInfoConfig).then(() => {
+              updatePipeline(pipelineFromYaml).then(() => {
                 if (entityValidityDetails?.valid === false) {
                   updateEntityValidityDetailsRef.current?.({ ...entityValidityDetails, valid: true, invalidYaml: '' })
                 }
