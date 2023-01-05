@@ -140,9 +140,10 @@ export function Nexus3Artifact({
         'repository-url-validation',
         getString('pipeline.artifactsSelection.validation.repositoryUrl'),
         function (value) {
-          return !value
-            ? this.parent.repositoryFormat === RepositoryFormatTypes.Docker &&
-                this.parent.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryUrl
+          return this.parent.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryUrl
+            ? value
+              ? true
+              : false
             : true
         }
       ),
@@ -151,9 +152,10 @@ export function Nexus3Artifact({
         'repository-port-validation',
         getString('pipeline.artifactsSelection.validation.repositoryPort'),
         function (value) {
-          return !value
-            ? this.parent.repositoryFormat === RepositoryFormatTypes.Docker &&
-                this.parent.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryPort
+          return this.parent.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryPort
+            ? value
+              ? true
+              : false
             : true
         }
       ),
@@ -161,7 +163,7 @@ export function Nexus3Artifact({
         'artifact-paths-should-not-be-same',
         getString('pipeline.artifactsSelection.validation.artifactPath'),
         function (value) {
-          return !value ? this.parent.repositoryFormat === RepositoryFormatTypes.Docker : true
+          return value ? true : false
         }
       )
     })
