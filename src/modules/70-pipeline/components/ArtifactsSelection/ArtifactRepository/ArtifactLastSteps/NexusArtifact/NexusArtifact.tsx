@@ -56,7 +56,6 @@ import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../Artifact
 
 import ArtifactImagePathTagView, { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
-import TgPlanVarFiles from '@cd/components/PipelineSteps/TerragruntPlan/InputSteps/TgPlanVarFiles'
 
 export interface specInterface {
   artifactId?: string
