@@ -222,7 +222,7 @@ export const savePipeline = (
 
   return isEdit
     ? updatePipeline({
-        pipelineIdentifier: pipeline.identifier,
+        pipelineIdentifier: isSimplifiedYAMLPipeline && params.identifier ? params.identifier : pipeline.identifier,
         queryParams: {
           ...params
         },

@@ -99,7 +99,7 @@ function SavePipelinePopover(
   const { showSuccess, showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
-  const { OPA_PIPELINE_GOVERNANCE } = useFeatureFlags()
+  const { OPA_PIPELINE_GOVERNANCE, CI_YAML_VERSIONING } = useFeatureFlags()
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
@@ -233,6 +233,7 @@ function SavePipelinePopover(
         accountIdentifier: accountId,
         projectIdentifier,
         orgIdentifier,
+        identifier: pipelineIdentifier,
         ...(currStoreMetadata?.storeType ? { storeType: currStoreMetadata?.storeType } : {}),
         ...(currStoreMetadata?.storeType === StoreType.REMOTE ? { connectorRef: currStoreMetadata?.connectorRef } : {}),
         ...(updatedGitDetails ?? {}),
@@ -243,7 +244,8 @@ function SavePipelinePopover(
       },
       omit(latestPipeline, 'repo', 'branch'),
       isEdit,
-      !!OPA_PIPELINE_GOVERNANCE
+      !!OPA_PIPELINE_GOVERNANCE,
+      CI_YAML_VERSIONING
     )
     setLoading(false)
     const newPipelineId = latestPipeline?.identifier
