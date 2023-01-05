@@ -1148,6 +1148,8 @@ stepDescription:
   TASBasicAppSetup: Initialize the TAS Application for Basic Deployment
   TASBGAppSetup: Initialize the TAS Application for BlueGreen Deployment
   TASCanaryAppSetup: Initialize the TAS Application for Canary Deployment
+  RollingRollback: Rollback to previous deployment during failure of Rolling Deployment
+  RollingDeployment: Performs Rolling Deployment of TAS
   ElastigroupDeploy: Elastigroup Deploy step
   ElastigroupSwapRoute: Elastigroup Swap Route
   ElastigroupBGStageSetup: Elastigroup Blue/Green Step

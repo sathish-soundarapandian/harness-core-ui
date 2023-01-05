@@ -110,6 +110,8 @@ import { AsgCanaryDeployStep } from './AsgCanaryDeploy/AsgCanaryDeployStep'
 import { AsgRollingRollbackStep } from './AsgRollingRollbackStep/AsgRollingRollbackStep'
 import { AsgRollingDeploy } from './AsgRollingDeployStep/AsgRollingDeployStep'
 import { ContainerStep } from './ContainerStep/ContainerStep'
+import { TASRollingRollbackStep } from './TasRollingRollbackStep/TasRollingRollbackStep'
+import { TasRollingDeploymentStep } from './TasRollingDeploymentStep/TasRollingDeploymentStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -210,6 +212,8 @@ factory.registerStep(new AppResizeStep())
 factory.registerStep(new TASBasicAppSetupStep())
 factory.registerStep(new TasBGAppSetupStep())
 factory.registerStep(new TasCanaryAppSetupStep())
+factory.registerStep(new TASRollingRollbackStep())
+factory.registerStep(new TasRollingDeploymentStep())
 factory.registerStep(new AsgCanaryDeleteStep())
 factory.registerStep(new AsgCanaryDeployStep())
 factory.registerStep(new AsgRollingRollbackStep())

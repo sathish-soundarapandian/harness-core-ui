@@ -146,6 +146,8 @@ export enum StepType {
   BGAppSetup = 'BGAppSetup',
   CanaryAppSetup = 'CanaryAppSetup',
   AppResize = 'AppResize',
+  RollingDeployment = 'RollingDeployment',
+  RollingRollback = 'RollingRollback',
   Asg = 'ASGServiceSpec',
   AsgInfraSpec = 'AsgInfraSpec',
   Bandit = 'Bandit',
