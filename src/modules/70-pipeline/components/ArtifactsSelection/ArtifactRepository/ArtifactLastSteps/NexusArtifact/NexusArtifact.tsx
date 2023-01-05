@@ -56,6 +56,7 @@ import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../Artifact
 
 import ArtifactImagePathTagView, { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
+import TgPlanVarFiles from '@cd/components/PipelineSteps/TerragruntPlan/InputSteps/TgPlanVarFiles'
 
 export interface specInterface {
   artifactId?: string
@@ -117,6 +118,7 @@ export function Nexus3Artifact({
     }),
     repository: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
     repositoryFormat: Yup.string().required(getString('pipeline.artifactsSelection.validation.repositoryFormat')),
+
     spec: Yup.object().shape({
       artifactId: Yup.string().when('repositoryFormat', {
         is: val => val === RepositoryFormatTypes.Maven,
@@ -134,18 +136,35 @@ export function Nexus3Artifact({
         is: RepositoryFormatTypes.NPM || RepositoryFormatTypes.NuGet,
         then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.packageName'))
       }),
-      repositoryUrl: Yup.string().when('repositoryFormat', {
-        is: RepositoryFormatTypes.Docker,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryUrl'))
-      }),
-      repositoryPort: Yup.string().when('repositoryFormat', {
-        is: RepositoryFormatTypes.Docker,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryPort'))
-      }),
-      artifactPath: Yup.string().when('repositoryFormat', {
-        is: RepositoryFormatTypes.Docker,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPath'))
-      })
+
+      repositoryUrl: Yup.string().test(
+        'repository-url-validation',
+        getString('pipeline.artifactsSelection.validation.repositoryUrl'),
+        function (value) {
+          return !value
+            ? this.parent.repositoryFormat === RepositoryFormatTypes.Docker &&
+                this.parent.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryUrl
+            : true
+        }
+      ),
+
+      repositoryPort: Yup.string().test(
+        'repository-port-validation',
+        getString('pipeline.artifactsSelection.validation.repositoryPort'),
+        function (value) {
+          return !value
+            ? this.parent.repositoryFormat === RepositoryFormatTypes.Docker &&
+                this.parent.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryPort
+            : true
+        }
+      ),
+      artifactPath: Yup.string().test(
+        'artifact-paths-should-not-be-same',
+        getString('pipeline.artifactsSelection.validation.artifactPath'),
+        function (value) {
+          return !value ? this.parent.repositoryFormat === RepositoryFormatTypes.Docker : true
+        }
+      )
     })
   }
 
