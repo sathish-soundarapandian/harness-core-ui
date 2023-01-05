@@ -31,6 +31,7 @@ export const EARLY_ACCESS_LINK = `https://docs.harness.io/article/w4krvu96i3-ear
 export const HARNESS_DEVELOPER_HUB_LINK = 'https://developer.harness.io/'
 export const HARNESS_JFROG_BLOG_LINK =
   'https://www.harness.io/blog/how-to-configure-your-builds-with-jfrog-artifactory-and-harness'
+export const HARNESS_SUPPORT_URL = 'https://www.harness.io/support-search'
 
 export const openZendeskSupport = (e: React.MouseEvent<Element, MouseEvent>): void => {
   e.stopPropagation()

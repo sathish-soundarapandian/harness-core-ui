@@ -332,7 +332,7 @@ exports[`landing dashboard page tests time range update 1`] = `
             </a>
             <a
               class="link"
-              href="/sso.html?action=login&brand_id=114095000394&locale_id=1&return_to=https%3A%2F%2Fsupport.harness.io%2Fhc%2Fen-us%2Frequests&src=zendesk&timestamp=1672820386825"
+              href="https://www.harness.io/support-search"
               rel="noreferrer"
               target="_blank"
             >

@@ -14,7 +14,7 @@ import {
   HARNESS_COMMUNITY_SLACK_LINK,
   HARNESS_DEVELOPER_HUB_LINK,
   HARNESS_JFROG_BLOG_LINK,
-  HARNESS_SUPPORT_LINK
+  HARNESS_SUPPORT_URL
 } from '@common/components/ResourceCenter/utils'
 import teamSvg from './images/team.svg'
 import jfrogSvg from './images/configure_jfrog.svg'
@@ -114,7 +114,7 @@ const ResourcesCardContainer: React.FC = () => {
           descriptionImage={<img src={teamSvg} className={css.teamImage} />}
           description={getString('common.support.title')}
           subTitle={getString('common.support.subtitle')}
-          url={HARNESS_SUPPORT_LINK}
+          url={HARNESS_SUPPORT_URL}
         />
         <ResourcesCard
           className={css.jfrog}
