@@ -248,7 +248,7 @@ function SavePipelinePopover(
       CI_YAML_VERSIONING
     )
     setLoading(false)
-    const newPipelineId = latestPipeline?.identifier
+    const newPipelineId = CI_YAML_VERSIONING ? get(response, 'data.identifier') : latestPipeline?.identifier
 
     if (response && response.status === 'SUCCESS') {
       const governanceData: GovernanceMetadata | undefined = get(response, 'data.governanceMetadata')
@@ -387,7 +387,7 @@ function SavePipelinePopover(
   const saveAndPublish = React.useCallback(async () => {
     window.dispatchEvent(new CustomEvent('SAVE_PIPELINE_CLICKED'))
 
-    let latestPipeline: PipelineInfoConfig = pipeline
+    let latestPipeline: PipelineInfoConfig | Pipeline = pipeline
 
     if (isYaml && yamlHandler) {
       if (!parse(yamlHandler.getLatestYaml())) {
@@ -396,20 +396,25 @@ function SavePipelinePopover(
         return
       }
       try {
-        latestPipeline = parse<Pipeline>(yamlHandler.getLatestYaml()).pipeline as PipelineInfoConfig
+        latestPipeline = CI_YAML_VERSIONING
+          ? parse<Pipeline>(yamlHandler.getLatestYaml())
+          : (parse<Pipeline>(yamlHandler.getLatestYaml()).pipeline as PipelineInfoConfig)
       } /* istanbul ignore next */ catch (err) {
         showError(err.message || err, undefined, 'pipeline.save.pipeline.error')
       }
     }
 
-    const ciCodeBaseConfigurationError = validateCICodebaseConfiguration({ pipeline: latestPipeline, getString })
+    const ciCodeBaseConfigurationError = validateCICodebaseConfiguration({
+      pipeline: latestPipeline as PipelineInfoConfig,
+      getString
+    })
     if (ciCodeBaseConfigurationError) {
       clear()
       showError(ciCodeBaseConfigurationError)
       return
     }
 
-    await initPipelinePublish(latestPipeline)
+    await initPipelinePublish(latestPipeline as PipelineInfoConfig)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     deletePipelineCache,
@@ -431,10 +436,14 @@ function SavePipelinePopover(
     ref,
     () => ({
       updatePipeline: async (pipelineYaml: string) => {
-        await initPipelinePublish(parse<Pipeline>(pipelineYaml).pipeline)
+        await initPipelinePublish(
+          (CI_YAML_VERSIONING
+            ? parse<Pipeline>(pipelineYaml)
+            : parse<Pipeline>(pipelineYaml).pipeline) as PipelineInfoConfig
+        )
       }
     }),
-    [initPipelinePublish]
+    [initPipelinePublish, CI_YAML_VERSIONING]
   )
 
   if (loading) {
