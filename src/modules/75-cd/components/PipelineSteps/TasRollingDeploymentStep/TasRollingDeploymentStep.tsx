@@ -22,7 +22,7 @@ import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
-import type { StepElementConfig, StepSpecType } from 'services/cd-ng'
+import type { StepElementConfig, TasRollingDeployStepInfo } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -44,14 +44,8 @@ import { FormMultiTypeKVTagInput } from '@common/components/MutliTypeKVTagInput/
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
-// TODO:: replace by swagger
-export type TasTasRollingDeploymentsStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-  additionalRoutes?: string[]
-}
-
 interface TasRollingDeploymentData extends StepElementConfig {
-  spec: TasTasRollingDeploymentsStepInfo
+  spec: TasRollingDeployStepInfo
 }
 
 export interface TasRollingDeploymentVariableStepProps {
@@ -317,7 +311,7 @@ export class TasRollingDeploymentStep extends PipelineStep<TasRollingDeploymentD
     return errors
   }
 
-  protected type = StepType.RollingDeployment
+  protected type = StepType.TasRollingDeploy
   protected stepName = 'Rolling Deployment'
   protected stepIcon: IconName = 'tasRollingSetup'
   protected referenceId = 'TasRollingDeploymentStep'
@@ -326,7 +320,7 @@ export class TasRollingDeploymentStep extends PipelineStep<TasRollingDeploymentD
   protected defaultValues: TasRollingDeploymentData = {
     identifier: '',
     name: '',
-    type: StepType.RollingDeployment,
+    type: StepType.TasRollingDeploy,
     timeout: '10m',
     spec: {}
   }

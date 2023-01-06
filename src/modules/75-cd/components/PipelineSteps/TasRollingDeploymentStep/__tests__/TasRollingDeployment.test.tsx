@@ -22,7 +22,7 @@ const existingInitialValues = {
   identifier: 'TAS_Rolling_Deployment_Stepback',
   name: 'TAS Rolling_Deployment Stepback',
   timeout: '10m',
-  type: StepType.RollingDeployment,
+  type: StepType.TasRollingDeploy,
   spec: {
     additionalRoutes: ['addRoute1']
   }
@@ -40,7 +40,7 @@ describe('TASRollingDeploymentStepStep tests', () => {
     const { container, getByText } = render(
       <TestStepWidget
         initialValues={{}}
-        type={StepType.RollingDeployment}
+        type={StepType.TasRollingDeploy}
         onUpdate={onUpdate}
         onChange={onChange}
         ref={ref}
@@ -65,7 +65,7 @@ describe('TASRollingDeploymentStepStep tests', () => {
         identifier: 'Rolling_Deployment_Step',
         name: 'Rolling Deployment Step',
         timeout: '10m',
-        type: StepType.RollingDeployment,
+        type: StepType.TasRollingDeploy,
         spec: {}
       })
     )
@@ -78,10 +78,10 @@ describe('TASRollingDeploymentStepStep tests', () => {
         initialValues={{
           name: 'RollingDeployment',
           identifier: 'RollingDeployment',
-          type: StepType.RollingDeployment,
+          type: StepType.TasRollingDeploy,
           timeout: RUNTIME_INPUT_VALUE
         }}
-        type={StepType.RollingDeployment}
+        type={StepType.TasRollingDeploy}
         onUpdate={onUpdate}
         onChange={onChange}
         ref={ref}
@@ -100,7 +100,7 @@ describe('TASRollingDeploymentStepStep tests', () => {
         identifier: 'RollingDeployment',
         name: 'RollingDeployment',
         timeout: '10m',
-        type: StepType.RollingDeployment,
+        type: StepType.TasRollingDeploy,
         spec: {}
       })
     )
@@ -113,7 +113,7 @@ describe('TASRollingDeploymentStepStep tests', () => {
           identifier: 'TAS_Rolling_Deployment_Step',
           name: 'Rolling Deployment Step',
           timeout: '',
-          type: StepType.RollingDeployment,
+          type: StepType.TasRollingDeploy,
           spec: {
             additionalRoutes: RUNTIME_INPUT_VALUE
           }
@@ -122,12 +122,12 @@ describe('TASRollingDeploymentStepStep tests', () => {
           identifier: 'TAS_Rolling_Deployment_Step',
           name: 'Rolling Deployment Step',
           timeout: RUNTIME_INPUT_VALUE,
-          type: StepType.RollingDeployment,
+          type: StepType.TasRollingDeploy,
           spec: {
             additionalRoutes: RUNTIME_INPUT_VALUE
           }
         }}
-        type={StepType.RollingDeployment}
+        type={StepType.TasRollingDeploy}
         stepViewType={StepViewType.InputSet}
         onUpdate={onUpdate}
       />
@@ -146,7 +146,7 @@ describe('TASRollingDeploymentStepStep tests', () => {
       identifier: 'TAS_Rolling_Deployment_Step',
       name: 'Rolling Deployment Step',
       timeout: '10m',
-      type: StepType.RollingDeployment,
+      type: StepType.TasRollingDeploy,
       spec: {
         additionalRoutes: RUNTIME_INPUT_VALUE
       }
@@ -157,7 +157,7 @@ describe('TASRollingDeploymentStepStep tests', () => {
     const { container } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
-        type={StepType.RollingDeployment}
+        type={StepType.TasRollingDeploy}
         onUpdate={onUpdate}
         onChange={onChange}
         stepViewType={StepViewType.InputVariable}

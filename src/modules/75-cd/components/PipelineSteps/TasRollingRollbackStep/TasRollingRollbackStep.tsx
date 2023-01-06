@@ -31,7 +31,7 @@ interface TASRollbackStepVariableStepProps {
 }
 
 export class TASRollingRollbackStep extends PipelineStep<StepElementConfig> {
-  protected type = StepType.RollingRollback
+  protected type = StepType.TasRollingRollback
   protected stepName = 'Rolling Rollback'
   protected stepIcon: IconName = 'tasRollback'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.RollingRollback'
@@ -39,7 +39,7 @@ export class TASRollingRollbackStep extends PipelineStep<StepElementConfig> {
   protected defaultValues: StepElementConfig = {
     identifier: '',
     name: '',
-    type: StepType.RollingRollback,
+    type: StepType.TasRollingRollback,
     timeout: '10m'
   }
 

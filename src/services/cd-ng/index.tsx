@@ -3732,6 +3732,9 @@ export interface EntityDetail {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
 }
 
 export interface EntityDetailProtoDTO {
@@ -6150,6 +6153,9 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
   )[]
   moduleType?:
     | 'CD'
@@ -6350,6 +6356,9 @@ export interface GitEntityFilterProperties {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6621,6 +6630,9 @@ export interface GitFullSyncEntityInfoDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6815,6 +6827,9 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7130,6 +7145,9 @@ export interface GitSyncEntityDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7318,6 +7336,9 @@ export interface GitSyncEntityListDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7523,6 +7544,9 @@ export interface GitSyncErrorDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -9514,10 +9538,9 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export interface OAuthSettings {
+export type OAuthSettings = NGAuthSettings & {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -10727,6 +10750,9 @@ export interface ReferencedByDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
 }
 
 export interface RefreshResponse {
@@ -11961,6 +11987,9 @@ export interface ResponseListEntityType {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -15130,6 +15159,9 @@ export interface StepData {
     | 'ElastigroupSwapRoute'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
 }
 
 export interface StepElementConfig {
@@ -15493,6 +15525,22 @@ export type TasPercentageInstanceSelection = TasInstanceSelectionBase & {
 
 export type TasRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+}
+
+export type TasRollingDeployStepInfo = StepSpecType & {
+  additionalRoutes?: string[]
+  delegateSelectors?: string[]
+}
+
+export type TasRollingRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type TasRouteMappingStepInfo = StepSpecType & {
+  appName: string
+  delegateSelectors?: string[]
+  routeType: 'Map' | 'UnMap'
+  routes?: string[]
 }
 
 export type TasSwapRollbackStepInfo = StepSpecType & {
@@ -16543,9 +16591,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -17293,6 +17341,9 @@ export interface ListActivitiesQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17473,6 +17524,9 @@ export interface ListActivitiesQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -17757,6 +17811,9 @@ export interface GetActivitiesSummaryQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17937,6 +17994,9 @@ export interface GetActivitiesSummaryQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -33252,6 +33312,9 @@ export interface ListReferredByEntitiesQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -33493,6 +33556,9 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
   searchTerm?: string
 }
 
@@ -36745,6 +36811,9 @@ export interface GetReferencedByQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
   searchTerm?: string
 }
 
@@ -39248,6 +39317,9 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -39496,6 +39568,9 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'TanzuCommand'
       | 'AsgRollingDeploy'
       | 'AsgRollingRollback'
+      | 'TasRollingDeploy'
+      | 'TasRollingRollback'
+      | 'RouteMapping'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -45442,6 +45517,9 @@ export interface GetStepYamlSchemaQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
   yamlGroup?: string
 }
 
@@ -45750,6 +45828,9 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -57477,7 +57558,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -57487,7 +57568,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -57500,7 +57581,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -57514,7 +57595,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -57526,7 +57607,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -57535,7 +57616,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -57928,7 +58009,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -57942,7 +58023,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -57957,7 +58038,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -57971,7 +58052,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -57983,7 +58064,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -57992,7 +58073,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -58128,7 +58209,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -58143,7 +58224,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -58158,7 +58239,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -58173,7 +58254,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -58192,7 +58273,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -58201,7 +58282,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -58220,7 +58301,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -58235,7 +58316,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -58250,7 +58331,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -58265,7 +58346,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -58284,7 +58365,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -58293,7 +58374,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -59144,6 +59225,9 @@ export interface GetYamlSchemaQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'RouteMapping'
   subtype?:
     | 'K8sCluster'
     | 'Git'

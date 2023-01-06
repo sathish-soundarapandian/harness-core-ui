@@ -22,7 +22,7 @@ const existingInitialValues = {
   identifier: 'TAS_Rolling_Rollback_Stepback',
   name: 'TAS Rolling Rollback Stepback',
   timeout: '10m',
-  type: StepType.RollingRollback
+  type: StepType.TasRollingRollback
 }
 const onUpdate = jest.fn()
 const onChange = jest.fn()
@@ -37,7 +37,7 @@ describe('TASRollingRollbackStepStep tests', () => {
     const { container, getByText } = render(
       <TestStepWidget
         initialValues={{}}
-        type={StepType.RollingRollback}
+        type={StepType.TasRollingRollback}
         onUpdate={onUpdate}
         onChange={onChange}
         ref={ref}
@@ -62,7 +62,7 @@ describe('TASRollingRollbackStepStep tests', () => {
         identifier: 'TAS_Rolling_Rollback_Step',
         name: 'TAS Rolling Rollback Step',
         timeout: '10m',
-        type: StepType.RollingRollback
+        type: StepType.TasRollingRollback
       })
     )
   })
@@ -74,15 +74,15 @@ describe('TASRollingRollbackStepStep tests', () => {
           identifier: 'TAS_Rolling_Rollback_Step',
           name: 'TAS Rolling Rollback Step',
           timeout: '',
-          type: StepType.RollingRollback
+          type: StepType.TasRollingRollback
         }}
         template={{
           identifier: 'TAS_Rolling_Rollback_Step',
           name: 'TAS Rolling Rollback Step',
           timeout: RUNTIME_INPUT_VALUE,
-          type: StepType.RollingRollback
+          type: StepType.TasRollingRollback
         }}
-        type={StepType.RollingRollback}
+        type={StepType.TasRollingRollback}
         stepViewType={StepViewType.InputSet}
         onUpdate={onUpdate}
       />
@@ -101,7 +101,7 @@ describe('TASRollingRollbackStepStep tests', () => {
       identifier: 'TAS_Rolling_Rollback_Step',
       name: 'TAS Rolling Rollback Step',
       timeout: '10m',
-      type: StepType.RollingRollback
+      type: StepType.TasRollingRollback
     })
   })
 
@@ -109,7 +109,7 @@ describe('TASRollingRollbackStepStep tests', () => {
     const { container } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
-        type={StepType.RollingRollback}
+        type={StepType.TasRollingRollback}
         onUpdate={onUpdate}
         onChange={onChange}
         stepViewType={StepViewType.InputVariable}
