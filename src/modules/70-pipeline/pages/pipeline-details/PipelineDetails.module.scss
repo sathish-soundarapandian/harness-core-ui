@@ -61,3 +61,11 @@
 .rightMargin {
   margin-right: 64px !important;
 }
+.callout {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-medium);
+  background-color: var(--yellow-100) !important;
+  border-bottom: 1px solid var(--grey-200);
+  z-index: 5;
+}
