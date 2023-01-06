@@ -1133,14 +1133,14 @@ stepDescription:
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
   ElastigroupRollback: Rollback for the Elastigroup steps
   ElastigroupSetup: Elastigroup setup step
-  SwapRoute: Swap Route for Tanzu Application Service
-  SwapRollback: Swap Rolback for Tanzu Application Service
-  TasRollback: Rollback for the TAS steps
-  AppResize: Update the number of instances for this app
-  TanzuCommandScript: Command Scripts to run any CF CLI command or script at any point in your Harness TAS Pipelines
-  TASBasicAppSetup: TAS basic setup step
-  TASBGAppSetup: TAS blue green setup step
-  TASCanaryAppSetup: TAS canary setup step
+  SwapRoute: Swap between Active and InActive TAS Applications
+  SwapRollback: Rollback the Swap to Active in Blue Green Deployments
+  TasRollback: Rollback to previous deployment during failure
+  AppResize: Scale the TAS Application as per the scaling requirements
+  TanzuCommandScript: Execute custom Tanzu Commands in this Step
+  TASBasicAppSetup: Initialize the TAS Application for Basic Deployment
+  TASBGAppSetup: Initialize the TAS Application for BlueGreen Deployment
+  TASCanaryAppSetup: Initialize the TAS Application for Canary Deployment
   ElastigroupDeploy: Elastigroup Deploy step
   ElastigroupSwapRoute: Elastigroup Swap Route
   ElastigroupBGStageSetup: Elastigroup Blue/Green Step
