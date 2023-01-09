@@ -19,9 +19,9 @@ export interface ACLAggregateFilter {
 
 export type AMIArtifactConfig = ArtifactConfig & {
   connectorRef: string
-  filters?: ParameterFieldListAMIFilter
+  filters?: AMIFilter[]
   region: string
-  tags?: ParameterFieldListAMITag
+  tags?: AMITag[]
   version?: string
   versionRegex?: string
 }
@@ -33,12 +33,6 @@ export type AMIArtifactSummary = ArtifactSummary & {
 export interface AMIFilter {
   name?: string
   value?: string
-}
-
-export interface AMIRequestBody {
-  filters?: AMIFilter[]
-  runtimeInputYaml?: string
-  tags?: AMITag[]
 }
 
 export interface AMITag {
@@ -689,7 +683,7 @@ export interface AddUsersResponse {
 
 export interface AdditionalMetadata {
   values?: {
-    [key: string]: string
+    [key: string]: { [key: string]: any }
   }
 }
 
@@ -1807,13 +1801,9 @@ export type CIModuleLicenseDTO = ModuleLicenseDTO & {
   numberOfCommitters?: number
 }
 
-export type CVLicenseSummaryDTO = LicensesWithSummaryDTO & {
-  totalServices?: number
-}
+export type CVLicenseSummaryDTO = LicensesWithSummaryDTO & {}
 
-export type CVModuleLicenseDTO = ModuleLicenseDTO & {
-  numberOfServices?: number
-}
+export type CVModuleLicenseDTO = ModuleLicenseDTO & {}
 
 export interface Capacity {
   spec?: CapacitySpec
@@ -1971,9 +1961,6 @@ export interface ClusterFromGitops {
   identifier?: string
   name?: string
   scopeLevel?: 'ACCOUNT' | 'ORGANIZATION' | 'PROJECT'
-  tags?: {
-    [key: string]: string
-  }
 }
 
 export interface ClusterRequest {
@@ -1995,9 +1982,6 @@ export interface ClusterResponse {
   orgIdentifier?: string
   projectIdentifier?: string
   scope?: 'ACCOUNT' | 'ORGANIZATION' | 'PROJECT'
-  tags?: {
-    [key: string]: string
-  }
 }
 
 export interface ClusterYaml {
@@ -3695,11 +3679,6 @@ export interface EnvironmentInfoByServiceId {
   service_endTs?: number
   service_startTs?: number
   tag?: string
-}
-
-export interface EnvironmentInputsMergedResponseDto {
-  environmentYaml?: string
-  mergedEnvironmentInputsYaml?: string
 }
 
 export interface EnvironmentInputsetYamlAndServiceOverridesMetadata {
@@ -7517,11 +7496,6 @@ export interface InfrastructureInfo {
   infrastructureName?: string
 }
 
-export interface InfrastructureInputsMergedResponseDto {
-  infrastructureYaml?: string
-  mergedInfrastructureInputsYaml?: string
-}
-
 export interface InfrastructureRequestDTO {
   description?: string
   environmentRef?: string
@@ -8834,9 +8808,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -9475,30 +9450,6 @@ export interface ParameterFieldBoolean {
   value?: boolean
 }
 
-export interface ParameterFieldListAMIFilter {
-  defaultValue?: AMIFilter[]
-  executionInput?: boolean
-  expression?: boolean
-  expressionValue?: string
-  inputSetValidator?: InputSetValidator
-  jsonResponseField?: boolean
-  responseField?: string
-  typeString?: boolean
-  value?: AMIFilter[]
-}
-
-export interface ParameterFieldListAMITag {
-  defaultValue?: AMITag[]
-  executionInput?: boolean
-  expression?: boolean
-  expressionValue?: string
-  inputSetValidator?: InputSetValidator
-  jsonResponseField?: boolean
-  responseField?: string
-  typeString?: boolean
-  value?: AMITag[]
-}
-
 export interface ParameterFieldMapStringString {
   defaultValue?: {
     [key: string]: string
@@ -10033,7 +9984,6 @@ export interface ResourceDTO {
     | 'DELEGATE_TOKEN'
     | 'GOVERNANCE_POLICY'
     | 'GOVERNANCE_POLICY_SET'
-    | 'GOVERNANCE_POLICY_ENFORCEMENT'
     | 'VARIABLE'
     | 'CHAOS_HUB'
     | 'MONITORED_SERVICE'
@@ -10526,13 +10476,6 @@ export interface ResponseEnvironmentGroupResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseEnvironmentInputsMergedResponseDto {
-  correlationId?: string
-  data?: EnvironmentInputsMergedResponseDto
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
 export interface ResponseEnvironmentResponse {
   correlationId?: string
   data?: EnvironmentResponse
@@ -10746,13 +10689,6 @@ export interface ResponseHelmChartResponseDTO {
 export interface ResponseInfrastructureConfig {
   correlationId?: string
   data?: InfrastructureConfig
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseInfrastructureInputsMergedResponseDto {
-  correlationId?: string
-  data?: InfrastructureInputsMergedResponseDto
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -18388,77 +18324,6 @@ export const listTagsForAMIArtifactPromise = (
     void
   >('POST', getConfig('ng/api'), `/artifacts/ami/tags`, props, signal)
 
-export interface ListVersionsForAMIArtifactQueryParams {
-  connectorRef?: string
-  region?: string
-  versionRegex?: string
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  pipelineIdentifier?: string
-  fqnPath?: string
-  serviceId?: string
-}
-
-export type ListVersionsForAMIArtifactProps = Omit<
-  MutateProps<ResponseListBuildDetails, Failure | Error, ListVersionsForAMIArtifactQueryParams, AMIRequestBody, void>,
-  'path' | 'verb'
->
-
-/**
- * List Versions for AMI Artifacts
- */
-export const ListVersionsForAMIArtifact = (props: ListVersionsForAMIArtifactProps) => (
-  <Mutate<ResponseListBuildDetails, Failure | Error, ListVersionsForAMIArtifactQueryParams, AMIRequestBody, void>
-    verb="POST"
-    path={`/artifacts/ami/versions`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseListVersionsForAMIArtifactProps = Omit<
-  UseMutateProps<
-    ResponseListBuildDetails,
-    Failure | Error,
-    ListVersionsForAMIArtifactQueryParams,
-    AMIRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * List Versions for AMI Artifacts
- */
-export const useListVersionsForAMIArtifact = (props: UseListVersionsForAMIArtifactProps) =>
-  useMutate<ResponseListBuildDetails, Failure | Error, ListVersionsForAMIArtifactQueryParams, AMIRequestBody, void>(
-    'POST',
-    `/artifacts/ami/versions`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * List Versions for AMI Artifacts
- */
-export const listVersionsForAMIArtifactPromise = (
-  props: MutateUsingFetchProps<
-    ResponseListBuildDetails,
-    Failure | Error,
-    ListVersionsForAMIArtifactQueryParams,
-    AMIRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseListBuildDetails,
-    Failure | Error,
-    ListVersionsForAMIArtifactQueryParams,
-    AMIRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/artifacts/ami/versions`, props, signal)
-
 export interface GetArtifactsBuildsDetailsForArtifactoryQueryParams {
   connectorRef: string
   repositoryName: string
@@ -25848,7 +25713,7 @@ export interface ListBucketsWithServiceV2QueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  pipelineIdentifier?: string
+  pipelineIdentifier: string
   fqnPath: string
   serviceId?: string
   branch?: string
@@ -25943,7 +25808,7 @@ export interface GetFilePathsV2ForS3QueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  pipelineIdentifier?: string
+  pipelineIdentifier: string
   fqnPath: string
   serviceId?: string
   branch?: string
@@ -32520,99 +32385,6 @@ export const getEnvironmentListV2Promise = (
     void
   >('POST', getConfig('ng/api'), `/environmentsV2/listV2`, props, signal)
 
-export interface MergeEnvironmentInputsQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-}
-
-export interface MergeEnvironmentInputsPathParams {
-  environmentIdentifier: string
-}
-
-export type MergeEnvironmentInputsProps = Omit<
-  MutateProps<
-    ResponseEnvironmentInputsMergedResponseDto,
-    Failure | Error,
-    MergeEnvironmentInputsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    MergeEnvironmentInputsPathParams
-  >,
-  'path' | 'verb'
-> &
-  MergeEnvironmentInputsPathParams
-
-/**
- * This api merges old and new environment inputs YAML
- */
-export const MergeEnvironmentInputs = ({ environmentIdentifier, ...props }: MergeEnvironmentInputsProps) => (
-  <Mutate<
-    ResponseEnvironmentInputsMergedResponseDto,
-    Failure | Error,
-    MergeEnvironmentInputsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    MergeEnvironmentInputsPathParams
-  >
-    verb="POST"
-    path={`/environmentsV2/mergeEnvironmentInputs/${environmentIdentifier}`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseMergeEnvironmentInputsProps = Omit<
-  UseMutateProps<
-    ResponseEnvironmentInputsMergedResponseDto,
-    Failure | Error,
-    MergeEnvironmentInputsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    MergeEnvironmentInputsPathParams
-  >,
-  'path' | 'verb'
-> &
-  MergeEnvironmentInputsPathParams
-
-/**
- * This api merges old and new environment inputs YAML
- */
-export const useMergeEnvironmentInputs = ({ environmentIdentifier, ...props }: UseMergeEnvironmentInputsProps) =>
-  useMutate<
-    ResponseEnvironmentInputsMergedResponseDto,
-    Failure | Error,
-    MergeEnvironmentInputsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    MergeEnvironmentInputsPathParams
-  >(
-    'POST',
-    (paramsInPath: MergeEnvironmentInputsPathParams) =>
-      `/environmentsV2/mergeEnvironmentInputs/${paramsInPath.environmentIdentifier}`,
-    { base: getConfig('ng/api'), pathParams: { environmentIdentifier }, ...props }
-  )
-
-/**
- * This api merges old and new environment inputs YAML
- */
-export const mergeEnvironmentInputsPromise = (
-  {
-    environmentIdentifier,
-    ...props
-  }: MutateUsingFetchProps<
-    ResponseEnvironmentInputsMergedResponseDto,
-    Failure | Error,
-    MergeEnvironmentInputsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    MergeEnvironmentInputsPathParams
-  > & { environmentIdentifier: string },
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseEnvironmentInputsMergedResponseDto,
-    Failure | Error,
-    MergeEnvironmentInputsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    MergeEnvironmentInputsPathParams
-  >('POST', getConfig('ng/api'), `/environmentsV2/mergeEnvironmentInputs/${environmentIdentifier}`, props, signal)
-
 export interface GetEnvironmentInputsQueryParams {
   environmentIdentifier: string
   accountIdentifier: string
@@ -39140,100 +38912,6 @@ export const getInfrastructureYamlAndRuntimeInputsPromise = (
     InfrastructureYamlMetadataApiInput,
     void
   >('POST', getConfig('ng/api'), `/infrastructures/infrastructureYamlMetadata`, props, signal)
-
-export interface MergeInfraInputsQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  environmentIdentifier: string
-}
-
-export interface MergeInfraInputsPathParams {
-  infraIdentifier: string
-}
-
-export type MergeInfraInputsProps = Omit<
-  MutateProps<
-    ResponseInfrastructureInputsMergedResponseDto,
-    Failure | Error,
-    MergeInfraInputsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    MergeInfraInputsPathParams
-  >,
-  'path' | 'verb'
-> &
-  MergeInfraInputsPathParams
-
-/**
- * This api merges old and new infrastructure inputs YAML
- */
-export const MergeInfraInputs = ({ infraIdentifier, ...props }: MergeInfraInputsProps) => (
-  <Mutate<
-    ResponseInfrastructureInputsMergedResponseDto,
-    Failure | Error,
-    MergeInfraInputsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    MergeInfraInputsPathParams
-  >
-    verb="POST"
-    path={`/infrastructures/mergeInfrastructureInputs/${infraIdentifier}`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseMergeInfraInputsProps = Omit<
-  UseMutateProps<
-    ResponseInfrastructureInputsMergedResponseDto,
-    Failure | Error,
-    MergeInfraInputsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    MergeInfraInputsPathParams
-  >,
-  'path' | 'verb'
-> &
-  MergeInfraInputsPathParams
-
-/**
- * This api merges old and new infrastructure inputs YAML
- */
-export const useMergeInfraInputs = ({ infraIdentifier, ...props }: UseMergeInfraInputsProps) =>
-  useMutate<
-    ResponseInfrastructureInputsMergedResponseDto,
-    Failure | Error,
-    MergeInfraInputsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    MergeInfraInputsPathParams
-  >(
-    'POST',
-    (paramsInPath: MergeInfraInputsPathParams) =>
-      `/infrastructures/mergeInfrastructureInputs/${paramsInPath.infraIdentifier}`,
-    { base: getConfig('ng/api'), pathParams: { infraIdentifier }, ...props }
-  )
-
-/**
- * This api merges old and new infrastructure inputs YAML
- */
-export const mergeInfraInputsPromise = (
-  {
-    infraIdentifier,
-    ...props
-  }: MutateUsingFetchProps<
-    ResponseInfrastructureInputsMergedResponseDto,
-    Failure | Error,
-    MergeInfraInputsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    MergeInfraInputsPathParams
-  > & { infraIdentifier: string },
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseInfrastructureInputsMergedResponseDto,
-    Failure | Error,
-    MergeInfraInputsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    MergeInfraInputsPathParams
-  >('POST', getConfig('ng/api'), `/infrastructures/mergeInfrastructureInputs/${infraIdentifier}`, props, signal)
 
 export interface GetInfrastructureInputsQueryParams {
   accountIdentifier: string
