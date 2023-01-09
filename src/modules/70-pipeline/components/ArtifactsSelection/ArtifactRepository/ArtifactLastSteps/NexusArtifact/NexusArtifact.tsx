@@ -21,7 +21,7 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { merge, defaultTo, memoize } from 'lodash-es'
+import { merge, defaultTo, memoize,isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -136,36 +136,38 @@ export function Nexus3Artifact({
         then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.packageName'))
       }),
 
-      repositoryUrl: Yup.string().test(
-        'repository-url-validation',
-        getString('pipeline.artifactsSelection.validation.repositoryUrl'),
-        function (value) {
-          return this.parent.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryUrl
-            ? value
-              ? true
-              : false
-            : true
-        }
-      ),
+      repositoryUrl: Yup.mixed().when('repositoryFormat', {
+        is:   RepositoryFormatTypes.Docker,
+        then: Yup.mixed().test({
+          test(value: string | undefined): boolean | Yup.ValidationError {
+            if (this.parent.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryUrl) {
+                return isEmpty(value) ? this.createError({ message: getString('pipeline.artifactsSelection.validation.repositoryUrl') }) : true
+            } 
+            return false
+          }
+        })
+      }),
 
-      repositoryPort: Yup.string().test(
-        'repository-port-validation',
-        getString('pipeline.artifactsSelection.validation.repositoryPort'),
-        function (value) {
-          return this.parent.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryPort
-            ? value
-              ? true
-              : false
-            : true
-        }
-      ),
-      artifactPath: Yup.string().test(
-        'artifact-paths-should-not-be-same',
-        getString('pipeline.artifactsSelection.validation.artifactPath'),
-        function (value) {
-          return value ? true : false
-        }
-      )
+      repositoryPort:Yup.mixed().when('repositoryFormat', {
+        is:   RepositoryFormatTypes.Docker,
+        then: Yup.mixed().test({
+          test(value: string | undefined): boolean | Yup.ValidationError {
+            if (this.parent.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryPort) {
+                return isEmpty(value) ? this.createError({ message: getString('pipeline.artifactsSelection.validation.repositoryPort') }) : true
+            } 
+            return false
+          }
+        })
+      }),
+      artifactPath: Yup.mixed().when('repositoryFormat', {
+        is:   RepositoryFormatTypes.Docker,
+        then: Yup.mixed().test({
+          test(value: string | undefined): boolean | Yup.ValidationError {
+            return isEmpty(value) ? this.createError({ message: getString('pipeline.artifactsSelection.validation.artifactPath') }) : true
+          }
+        })
+      })
+    
     })
   }
 
