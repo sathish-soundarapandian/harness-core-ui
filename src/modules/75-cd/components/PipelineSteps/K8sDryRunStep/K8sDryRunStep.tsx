@@ -31,7 +31,7 @@ interface K8sDryRunStepVariableStepProps {
 }
 
 export class K8sDryRunStep extends PipelineStep<StepElementConfig> {
-  protected type = StepType.K8sDryRun
+  protected type = StepType.DryRunManifest
   protected stepName = 'K8s Dry Run'
   protected stepIcon: IconName = 'undo'
   protected stepDescription: keyof StringsMap = 'cd.k8sDryRunStepDescription'
@@ -39,7 +39,7 @@ export class K8sDryRunStep extends PipelineStep<StepElementConfig> {
   protected defaultValues: StepElementConfig = {
     identifier: '',
     name: '',
-    type: StepType.K8sDryRun,
+    type: StepType.DryRunManifest,
     timeout: '10m'
   }
 

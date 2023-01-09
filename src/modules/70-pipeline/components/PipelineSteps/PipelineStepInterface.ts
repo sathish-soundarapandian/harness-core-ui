@@ -28,7 +28,7 @@ export enum StepType {
   K8sApply = 'K8sApply',
   K8sCanaryDelete = 'K8sCanaryDelete',
   K8sDelete = 'K8sDelete',
-  K8sDryRun = 'K8sDryRun',
+  DryRunManifest = 'DryRunManifest',
   StepGroup = 'StepGroup',
   DeployServiceEntity = 'DeployServiceEntity',
   DeployService = 'DeployService',

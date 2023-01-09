@@ -22,7 +22,7 @@ const existingInitialValues = {
   identifier: 'Step_K8sDryRun',
   name: 'Step K8sDryRun',
   timeout: '10m',
-  type: StepType.K8sDryRun
+  type: StepType.DryRunManifest
 }
 const onUpdate = jest.fn()
 const onChange = jest.fn()
@@ -37,7 +37,7 @@ describe('K8s Dry Run step tests', () => {
     const { container, getByText } = render(
       <TestStepWidget
         initialValues={{}}
-        type={StepType.K8sDryRun}
+        type={StepType.DryRunManifest}
         onUpdate={onUpdate}
         onChange={onChange}
         ref={ref}
@@ -64,7 +64,7 @@ describe('K8s Dry Run step tests', () => {
         identifier: 'Step_1',
         name: 'Step 1',
         timeout: '20m',
-        type: StepType.K8sDryRun
+        type: StepType.DryRunManifest
       })
     )
   })
@@ -76,15 +76,15 @@ describe('K8s Dry Run step tests', () => {
           identifier: 'Step_K8sDryRun',
           name: 'Step K8sDryRun',
           timeout: '',
-          type: StepType.K8sDryRun
+          type: StepType.DryRunManifest
         }}
         template={{
           identifier: 'Step_K8sDryRun',
           name: 'Step K8sDryRun',
           timeout: RUNTIME_INPUT_VALUE,
-          type: StepType.K8sDryRun
+          type: StepType.DryRunManifest
         }}
-        type={StepType.K8sDryRun}
+        type={StepType.DryRunManifest}
         stepViewType={StepViewType.InputSet}
         onUpdate={onUpdate}
       />
@@ -103,7 +103,7 @@ describe('K8s Dry Run step tests', () => {
       identifier: 'Step_K8sDryRun',
       name: 'Step K8sDryRun',
       timeout: '20m',
-      type: StepType.K8sDryRun
+      type: StepType.DryRunManifest
     })
   })
 
@@ -111,7 +111,7 @@ describe('K8s Dry Run step tests', () => {
     const { getByText } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
-        type={StepType.K8sDryRun}
+        type={StepType.DryRunManifest}
         onUpdate={onUpdate}
         onChange={onChange}
         stepViewType={StepViewType.InputVariable}
