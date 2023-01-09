@@ -599,17 +599,6 @@ function RunPipelineFormBasic({
     setSelectedView(view)
   }
 
-  const handleFormikChangeFromYAML = () => {
-    if (yamlHandler && formikRef.current) {
-      const parsedYaml = yamlParse<PipelineConfig>(defaultTo(yamlHandler.getLatestYaml(), ''))
-
-      if (parsedYaml.pipeline) {
-        formikRef.current.setValues(parsedYaml.pipeline)
-        formikRef.current.validateForm(parsedYaml.pipeline)
-      }
-    }
-  }
-
   const blockedStagesSelected = useMemo(() => {
     let areDependentStagesSelected = false
     if (selectedStageData.allStagesSelected) {
@@ -862,7 +851,6 @@ function RunPipelineFormBasic({
                           width="100%"
                           isEditModeSupported={canEditYaml}
                           comparableYaml={inputSetYamlResponse?.data?.inputSetTemplateYaml}
-                          onChange={handleFormikChangeFromYAML}
                         />
                       </Layout.Vertical>
                     </div>
