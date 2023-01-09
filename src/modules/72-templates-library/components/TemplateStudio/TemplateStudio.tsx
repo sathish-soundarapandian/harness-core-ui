@@ -17,7 +17,6 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import EndOfLifeBanner from '@pipeline/components/PipelineStudio/PipelineCanvas/EndOfLifeBanner'
 
 export function TemplateStudio(): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier, templateIdentifier, templateType, module } = useParams<
@@ -36,7 +35,6 @@ export function TemplateStudio(): React.ReactElement {
       >
         <GitSyncStoreProvider>
           <TemplateStudioInternal />
-          <EndOfLifeBanner />
         </GitSyncStoreProvider>
       </TemplateProvider>
     </>
