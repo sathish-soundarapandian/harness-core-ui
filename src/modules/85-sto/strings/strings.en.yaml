@@ -52,3 +52,4 @@ Info: Info
 Unassigned: Unassigned
 continuous: '{{$.common.purpose.sto.continuous}}'
 stoExemption: Exemption
+gettingStarted: Getting Started

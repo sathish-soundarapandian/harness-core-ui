@@ -8238,6 +8238,7 @@ export interface StringsMap {
   'sto.continuous': string
   'sto.exemptions': string
   'sto.failedToGetIssueCounts': string
+  'sto.gettingStarted': string
   'sto.issues': string
   'sto.noSecurityIssues': string
   'sto.noSecurityResults': string
