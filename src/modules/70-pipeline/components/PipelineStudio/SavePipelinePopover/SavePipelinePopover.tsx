@@ -248,7 +248,11 @@ function SavePipelinePopover(
       CI_YAML_VERSIONING
     )
     setLoading(false)
-    const newPipelineId = CI_YAML_VERSIONING ? get(response, 'data.identifier') : latestPipeline?.identifier
+    const newPipelineId = CI_YAML_VERSIONING
+      ? OPA_PIPELINE_GOVERNANCE
+        ? get(response, 'data.identifier')
+        : get(response, 'data')
+      : latestPipeline?.identifier
 
     if (response && response.status === 'SUCCESS') {
       const governanceData: GovernanceMetadata | undefined = get(response, 'data.governanceMetadata')
