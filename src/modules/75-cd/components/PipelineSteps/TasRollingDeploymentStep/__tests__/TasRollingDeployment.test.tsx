@@ -19,8 +19,8 @@ import { TasRollingDeploymentStep } from '../TasRollingDeploymentStep'
 factory.registerStep(new TasRollingDeploymentStep())
 
 const existingInitialValues = {
-  identifier: 'TAS_Rolling_Deployment_Stepback',
-  name: 'TAS Rolling_Deployment Stepback',
+  name: 'Tas Rolling Deploy',
+  identifier: 'rollingDeploy',
   timeout: '10m',
   type: StepType.TasRollingDeploy,
   spec: {
@@ -164,7 +164,12 @@ describe('TASRollingDeploymentStepStep tests', () => {
         isNewStep={true}
         customStepProps={{
           stageIdentifier: 'testStage',
-          variablesData: existingInitialValues,
+          variablesData: {
+            ...existingInitialValues,
+            spec: {
+              additionalRoutes: 'addRoute1'
+            }
+          },
           metadataMap: {
             'Rolling Deployment Stepback': {
               yamlProperties: {
@@ -178,11 +183,11 @@ describe('TASRollingDeploymentStepStep tests', () => {
                 localName: 'step.RollingDeployment.timeout'
               }
             },
-            additionalRoutes: {
+            addRoute1: {
               yamlProperties: {
                 fqn: 'pipeline.stages.qaStage.spec.execution.steps.CanaryAppSetup.spec.additionalRoutes',
                 localName: 'execution.steps.CanaryAppSetup.spec.additionalRoutes',
-                variableName: 'spec.additionalRoutes',
+                variableName: 'additionalRoutes',
                 aliasFQN: '',
                 visible: true
               }
