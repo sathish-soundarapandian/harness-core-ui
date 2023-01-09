@@ -84,6 +84,7 @@ import usePipelineErrors from './PipelineErrors/usePipelineErrors'
 import { getDuplicateStepIdentifierList } from './PipelineCanvasUtils'
 import PipelineCachedCopy from './PipelineCachedCopy/PipelineCachedCopy'
 import css from './PipelineCanvas.module.scss'
+import EndOfLifeBanner from './EndOfLifeBanner'
 
 interface OtherModalProps {
   onSubmit?: (values: PipelineInfoConfig) => void
@@ -221,6 +222,7 @@ export function PipelineCanvas({
 
   useDocumentTitle([parse(pipeline?.name || getString('pipelines'))])
   const [discardBEUpdateDialog, setDiscardBEUpdate] = React.useState(false)
+
   const { openDialog: openConfirmBEUpdateError } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
     contentText: getString('pipelines-studio.pipelineUpdatedError'),
@@ -1055,6 +1057,7 @@ export function PipelineCanvas({
               )}
             </div>
           )}
+          <EndOfLifeBanner />
           <PipelineOutOfSyncErrorStrip
             updateRootEntity={updateEntity}
             loadFromcache={isPipelineGitCacheEnabled && loadFromCache}

@@ -5,12 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { Button, ButtonSize, ButtonVariation, Heading, Layout, TabNavigation, Text } from '@harness/uicore'
+import { Heading, Layout, TabNavigation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { matchPath, useLocation, useParams, useRouteMatch } from 'react-router-dom'
-import { Callout } from '@blueprintjs/core'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import { useGlobalEventListener, useQueryParams, useUpdateQueryParams } from '@common/hooks'
@@ -351,31 +350,9 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
 export default function PipelineDetails({ children }: React.PropsWithChildren<unknown>): React.ReactElement {
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
-  const [showBanner, setShowBanner] = useState(true)
 
   return (
     <div className={css.wrapper}>
-      {showBanner && (
-        <Callout className={css.callout} intent="success" icon={null}>
-          <Text color={Color.BLACK}>
-            Harness has made a significant update to the services and environments in CD. Services and Environments now
-            have definitions that are associated with the respective object and can be managed independent of the
-            pipeline. This change is a forward looking change that won’t impact your existing pipelines. However, we do
-            plan on reducing our support on the service v1 and environments v1 and plan to deprecate by end of January.
-            We have an automated migration tool to support our users. Please contact
-            <a href="https://support.harness.io/hc/en-us" target="_blank" rel="noreferrer">
-              <b>&nbsp;support.harness.io&nbsp;</b>
-            </a>
-            for further questions.
-          </Text>
-          <Button
-            variation={ButtonVariation.ICON}
-            size={ButtonSize.LARGE}
-            icon="cross"
-            onClick={() => setShowBanner(false)}
-          />
-        </Callout>
-      )}
       {isGitSyncEnabled ? (
         <GitSyncStoreProvider>
           <PipelinePage>{children}</PipelinePage>
