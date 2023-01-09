@@ -333,6 +333,7 @@ export interface AccessControlCheckError {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -3732,6 +3733,7 @@ export interface EntityDetail {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4296,6 +4298,7 @@ export interface Error {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -4660,6 +4663,7 @@ export interface ErrorMetadata {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -5075,6 +5079,7 @@ export interface Failure {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -5232,6 +5237,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
+    | 'DRY_RUN_MANIFEST'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5308,6 +5314,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
+    | 'DRY_RUN_MANIFEST'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5400,6 +5407,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
+    | 'DRY_RUN_MANIFEST'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5500,6 +5508,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
+    | 'DRY_RUN_MANIFEST'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -6150,6 +6159,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
   )[]
   moduleType?:
     | 'CD'
@@ -6350,6 +6360,7 @@ export interface GitEntityFilterProperties {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6621,6 +6632,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6815,6 +6827,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7130,6 +7143,7 @@ export interface GitSyncEntityDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7318,6 +7332,7 @@ export interface GitSyncEntityListDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7523,6 +7538,7 @@ export interface GitSyncErrorDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -8653,6 +8669,10 @@ export interface K8sContainer {
 export type K8sDeleteStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   deleteResources: DeleteResourcesWrapper
+}
+
+export type K8sDryRunManifestStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
 }
 
 export type K8sGcpInfrastructure = Infrastructure & {
@@ -10727,6 +10747,7 @@ export interface ReferencedByDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
 }
 
 export interface RefreshResponse {
@@ -11961,6 +11982,7 @@ export interface ResponseListEntityType {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12554,6 +12576,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -17293,6 +17316,7 @@ export interface ListActivitiesQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17473,6 +17497,7 @@ export interface ListActivitiesQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -17757,6 +17782,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17937,6 +17963,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -32899,6 +32926,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
+    | 'DRY_RUN_MANIFEST'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -33045,6 +33073,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'AZURE_CREATE_BP_RESOURCE'
       | 'AZURE_ROLLBACK_ARM_RESOURCE'
       | 'SHELL_SCRIPT_PROVISION'
+      | 'DRY_RUN_MANIFEST'
       | 'SECURITY'
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
@@ -33252,6 +33281,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -33493,6 +33523,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
   searchTerm?: string
 }
 
@@ -36745,6 +36776,7 @@ export interface GetReferencedByQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
   searchTerm?: string
 }
 
@@ -39248,6 +39280,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -39496,6 +39529,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'TanzuCommand'
       | 'AsgRollingDeploy'
       | 'AsgRollingRollback'
+      | 'DryRunManifest'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -45442,6 +45476,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
   yamlGroup?: string
 }
 
@@ -45750,6 +45785,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -46097,7 +46133,7 @@ export const getExecutionStrategyListPromise = (
   )
 
 export interface GetProvisionerExecutionStrategyYamlQueryParams {
-  provisionerType: 'TERRAFORM' | 'CLOUD_FORMATION' | 'AZURE_ARM' | 'SHELL_SCRIPT_PROVISIONER'
+  provisionerType: 'TERRAFORM' | 'CLOUD_FORMATION' | 'AZURE_ARM' | 'AZURE_BLUEPRINT' | 'SHELL_SCRIPT_PROVISIONER'
 }
 
 export type GetProvisionerExecutionStrategyYamlProps = Omit<
@@ -59144,6 +59180,7 @@ export interface GetYamlSchemaQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'DryRunManifest'
   subtype?:
     | 'K8sCluster'
     | 'Git'
