@@ -33748,6 +33748,7 @@ export interface DeleteEnvironmentGroupQueryParams {
   filePath?: string
   commitMsg?: string
   lastObjectId?: string
+  forceDelete?: boolean
 }
 
 export type DeleteEnvironmentGroupProps = Omit<
@@ -35483,6 +35484,7 @@ export interface DeleteEnvironmentV2QueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  forceDelete?: boolean
 }
 
 export type DeleteEnvironmentV2Props = Omit<
@@ -51242,6 +51244,7 @@ export interface DeleteServiceV2QueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  forceDelete?: boolean
 }
 
 export type DeleteServiceV2Props = Omit<

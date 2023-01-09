@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { defaultTo, get } from 'lodash-es'
@@ -20,6 +20,8 @@ import routes from '@common/RouteDefinitions'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import {
   EnvironmentMenu,
   EnvironmentName,
@@ -35,15 +37,9 @@ export default function EnvironmentsList({ response, refetch }: any) {
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const history = useHistory()
-  const { CDC_ENVIRONMENT_DASHBOARD_NG } = useFeatureFlags()
-
-  const { mutate: deleteItem } = useDeleteEnvironmentV2({
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier
-    }
-  })
+  const { CDC_ENVIRONMENT_DASHBOARD_NG, CDS_FORCE_DELETE_ENTITIES } = useFeatureFlags()
+  const [curEnvId, setCurEnvId] = useState('')
+  const { mutate: deleteItem } = useDeleteEnvironmentV2({})
 
   const handleEnvEdit = (id: string): void => {
     history.push(
@@ -58,15 +54,36 @@ export default function EnvironmentsList({ response, refetch }: any) {
     )
   }
 
-  const handleEnvDelete = async (id: string) => {
+  const handleEnvDelete = async (id: string, forceDelete: boolean) => {
     try {
-      await deleteItem(id, { headers: { 'content-type': 'application/json' } })
+      await deleteItem(id, {
+        headers: { 'content-type': 'application/json' },
+        queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, forceDelete: forceDelete }
+      })
       showSuccess(getString('cd.environment.deleted'))
       refetch()
     } catch (e: any) {
-      showError(getRBACErrorMessage(e))
+      if (CDS_FORCE_DELETE_ENTITIES && e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+        setCurEnvId(id)
+        openReferenceErrorDialog()
+      } else {
+        showError(getRBACErrorMessage(e))
+      }
     }
   }
+
+  const redirectToReferencedBy = (): void => {
+    closeDialog()
+  }
+
+  const { openDialog: openReferenceErrorDialog, closeDialog } = useEntityDeleteErrorHandlerDialog({
+    entity: {
+      type: ResourceType.ENVIRONMENT,
+      name: ''
+    },
+    redirectToReferencedBy: redirectToReferencedBy,
+    forceDeleteCallback: CDS_FORCE_DELETE_ENTITIES ? () => handleEnvDelete(curEnvId, true) : undefined
+  })
 
   type CustomColumn<T extends Record<string, any>> = Column<T>
 
