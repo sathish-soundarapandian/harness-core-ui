@@ -25,18 +25,16 @@ export function TemplateStudio(): React.ReactElement {
   const { versionLabel, repoIdentifier, branch } = useQueryParams<TemplateStudioQueryParams & GitQueryParams>()
 
   return (
-    <>
-      <TemplateProvider
-        queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
-        module={module}
-        templateIdentifier={templateIdentifier}
-        versionLabel={versionLabel}
-        templateType={templateType}
-      >
-        <GitSyncStoreProvider>
-          <TemplateStudioInternal />
-        </GitSyncStoreProvider>
-      </TemplateProvider>
-    </>
+    <TemplateProvider
+      queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
+      module={module}
+      templateIdentifier={templateIdentifier}
+      versionLabel={versionLabel}
+      templateType={templateType}
+    >
+      <GitSyncStoreProvider>
+        <TemplateStudioInternal />
+      </GitSyncStoreProvider>
+    </TemplateProvider>
   )
 }
