@@ -325,7 +325,7 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
       />
       {showSLOTableAndMessage && (
         <>
-          <TableV2 sortable columns={filteredColumns} data={serviceLevelObjectivesDetails} minimal />
+          <TableV2 columns={filteredColumns} data={serviceLevelObjectivesDetails} minimal />
           <HelpPanel referenceId={'compositeSLOWeightage'} type={HelpPanelType.FLOATING_CONTAINER} />
           <Container className={cx(css.totalRow, showErrorState ? css.rowFailure : css.rowSuccess)}>
             {Array(5)

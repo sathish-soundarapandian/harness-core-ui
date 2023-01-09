@@ -65,9 +65,7 @@ const CompositeSLOConsumption = ({ startTime, endTime }: CompositeSLOConsumption
       </Container>
     )
   } else {
-    content = (
-      <TableV2 sortable={true} data={tabelData} columns={getConsumptionTableColums({ getString, isAccountLevel })} />
-    )
+    content = <TableV2 data={tabelData} columns={getConsumptionTableColums({ getString, isAccountLevel })} />
   }
 
   return (

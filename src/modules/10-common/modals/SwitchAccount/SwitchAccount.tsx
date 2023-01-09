@@ -249,7 +249,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
         {!settingDefault && !error && accounts ? (
           accounts.length ? (
             <>
-              <TableV2 columns={columns} data={accounts} sortable={false} className={css.table} />
+              <TableV2 columns={columns} data={accounts} className={css.table} />
 
               <Pagination
                 itemCount={data?.resource?.totalItems || 0}

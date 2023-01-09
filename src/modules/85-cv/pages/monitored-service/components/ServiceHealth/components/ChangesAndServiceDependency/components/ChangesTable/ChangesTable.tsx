@@ -249,7 +249,7 @@ export default function ChangesTable({
     <ChangesTableWrapper {...wrapperProps}>
       <Layout.Vertical height="100%">
         <Container className={css.tableContainer}>
-          <TableV2 sortable data={content} columns={columns} onRowClick={showDrawer} />
+          <TableV2 data={content} columns={columns} onRowClick={showDrawer} />
         </Container>
         <Container padding={{ left: 'medium', right: 'medium' }}>
           <Pagination
