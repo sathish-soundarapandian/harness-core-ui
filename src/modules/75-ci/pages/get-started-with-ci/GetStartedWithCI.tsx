@@ -52,7 +52,7 @@ import css from './GetStartedWithCI.module.scss'
 
 export default function GetStartedWithCI(): React.ReactElement {
   const { trackEvent } = useTelemetry()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { CIE_HOSTED_VMS } = useFeatureFlags()
   const [showWizard, setShowWizard] = useState<boolean>(false)
@@ -65,10 +65,7 @@ export default function GetStartedWithCI(): React.ReactElement {
   const { mutate: fetchGitConnectors, loading: fetchingGitConnectors } = useGetConnectorListV2({
     queryParams: {
       accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier,
-      pageSize: 100,
-      includeAllConnectorsAvailableAtScope: true
+      pageSize: 10
     }
   })
   const [isFetchingSecret, setIsFetchingSecret] = useState<boolean>()
@@ -83,16 +80,14 @@ export default function GetStartedWithCI(): React.ReactElement {
       } as ConnectorFilterProperties).then((response: ResponsePageConnectorResponse) => {
         const { status, data } = response
         if (status === Status.SUCCESS && Array.isArray(data?.content) && data?.content && data.content.length > 0) {
-          const connectors = data.content
-          setConnectorsEligibleForPreSelection(
-            connectors.map((item: ConnectorResponse) => item.connector) as ConnectorInfoDTO[]
+          const filteredConnectors = data.content.filter(
+            (item: ConnectorResponse) =>
+              get(item, 'connector.spec.apiAccess.spec.tokenRef') && item.status?.status === Status.SUCCESS
           )
-          const sortedConnectors = sortConnectorsByLastConnectedAtTsDescOrder(connectors)
-          const selectedConnector =
-            sortedConnectors.find(
-              (item: ConnectorResponse) =>
-                get(item, 'connector.spec.apiAccess.spec.tokenRef') && item.status?.status === Status.SUCCESS
-            ) || sortedConnectors[0]
+          setConnectorsEligibleForPreSelection(
+            filteredConnectors.map((item: ConnectorResponse) => item.connector) as ConnectorInfoDTO[]
+          )
+          const selectedConnector = sortConnectorsByLastConnectedAtTsDescOrder(filteredConnectors)?.[0]
           if (selectedConnector?.connector) {
             setPreselectedGitConnector(selectedConnector?.connector)
             const secretIdentifier = getIdentifierFromValue(
