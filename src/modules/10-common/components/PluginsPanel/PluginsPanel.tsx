@@ -32,9 +32,23 @@ import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiT
 
 import css from './PluginsPanel.module.scss'
 
+export enum PluginType {
+  HARNESS = 'script',
+  BITRISE = 'Bitrise',
+  ACTION = 'Action'
+}
+
+export enum PluginKind {
+  HARNESS = 'harness',
+  BITRISE = 'bitrise',
+  ACTION = 'action'
+}
+
 export interface PluginAddUpdateMetadata {
+  pluginType: PluginType
   pluginData: Record<string, any>
-  pluginName: string
+  pluginName: PluginMetadataResponse['name']
+  pluginUses: PluginMetadataResponse['uses']
   shouldInsertYAML: boolean
 }
 
@@ -89,7 +103,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     }
   }, [query, plugins, selectedPluginFromYAMLView])
 
-  const { name: pluginName, repo: pluginDocumentationLink, inputs: formFields } = plugin || {}
+  const { name: pluginName, repo: pluginDocumentationLink, inputs: formFields, kind, uses } = plugin || {}
 
   const generateFormikInitialValues = useCallback((inputs: Input[]): Record<string, any> => {
     const result = new Map(inputs.map(i => [i.name, i.default]))
@@ -125,7 +139,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   }, [])
 
   const renderPlugin = useCallback((_plugin: PluginMetadataResponse): JSX.Element => {
-    const { name, description, kind } = _plugin
+    const { name, description, kind: pluginKind } = _plugin
     return (
       <Layout.Horizontal
         padding={{ top: 'large', bottom: 'large', right: 'xlarge', left: 'xlarge' }}
@@ -147,7 +161,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
             </Layout.Vertical>
           </Layout.Horizontal>
         </Layout.Horizontal>
-        <Text font={{ variation: FontVariation.TINY }}>{`by ${capitalize(kind)}`}</Text>
+        <Text font={{ variation: FontVariation.TINY }}>{`by ${capitalize(pluginKind)}`}</Text>
       </Layout.Horizontal>
     )
   }, [])
@@ -238,6 +252,19 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     return <></>
   }, [loading, plugins, error, query])
 
+  const getPluginTypeFromKind = useCallback((_kind: string): PluginType => {
+    switch (_kind) {
+      case PluginKind.HARNESS:
+        return PluginType.HARNESS
+      case PluginKind.BITRISE:
+        return PluginType.BITRISE
+      case PluginKind.ACTION:
+        return PluginType.ACTION
+      default:
+        return PluginType.HARNESS
+    }
+  }, [])
+
   return (
     <Container className={css.tabs}>
       <Tabs id={'pluginsPanel'} defaultSelectedTabId={'plugins'} className={css.tabs}>
@@ -255,7 +282,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
           }
           panel={
             <Container style={{ height }} className={css.pluginDetailsPanel}>
-              {pluginName ? (
+              {pluginName && kind ? (
                 <Layout.Vertical
                   spacing="medium"
                   margin={{ left: 'xxlarge', top: 'large', right: 'xxlarge', bottom: 'xxlarge' }}
@@ -270,7 +297,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                     <Formik
                       initialValues={
                         isPluginUpdateAction
-                          ? get(selectedPluginFromYAMLView, 'spec')
+                          ? get(selectedPluginFromYAMLView, kind === PluginKind.HARNESS ? 'spec' : 'spec.with')
                           : formFields
                           ? generateFormikInitialValues(formFields)
                           : {}
@@ -281,7 +308,13 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                       onSubmit={formValues => {
                         try {
                           onPluginAddUpdate(
-                            { pluginName, pluginData: formValues, shouldInsertYAML: true } as PluginAddUpdateMetadata,
+                            {
+                              pluginName,
+                              pluginData: formValues,
+                              shouldInsertYAML: true,
+                              pluginType: getPluginTypeFromKind(kind),
+                              pluginUses: uses
+                            },
                             isPluginUpdateAction
                           )
                         } catch (e) {

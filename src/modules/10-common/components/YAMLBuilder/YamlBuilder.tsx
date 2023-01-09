@@ -82,7 +82,7 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { countAllKeysInObject } from '@common/utils/utils'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { PluginAddUpdateMetadata, PluginsPanel } from '../PluginsPanel/PluginsPanel'
+import { PluginAddUpdateMetadata, PluginsPanel, PluginType } from '../PluginsPanel/PluginsPanel'
 
 // Please do not remove this, read this https://eemeli.org/yaml/#scalar-options
 scalarOptions.str.fold.lineWidth = 100000
@@ -934,19 +934,21 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [editorRef.current?.editor]
   )
 
-  const wrapPlugInputInAStep = useCallback(
-    (pluginName: string, pluginInput: Record<string, any>): Record<string, any> => {
-      return {
-        //TODO @vardan - confirm step name, identifier and type with Backend
-        step: {
-          name: pluginName,
-          type: 'script',
-          spec: sanitizePluginValues(pluginInput)
-        }
+  const wrapPlugInputInAStep = useCallback((pluginMetadata: PluginAddUpdateMetadata): Record<string, any> => {
+    const { pluginData, pluginType, pluginName, pluginUses } = pluginMetadata
+    return {
+      step: {
+        name: pluginName,
+        //@vardan confirm if identifier needs to be there
+        identifier: `${pluginName?.split(' ').join('_')}_${new Date().getTime().toString()}`,
+        type: pluginType,
+        spec:
+          pluginType === PluginType.HARNESS
+            ? sanitizePluginValues(pluginData)
+            : { with: sanitizePluginValues(pluginData), uses: pluginUses }
       }
-    },
-    []
-  )
+    }
+  }, [])
 
   const sanitizePluginValues = useCallback((unSanitizedObj: Record<string, any>): Record<string, any> => {
     try {
@@ -958,7 +960,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const addUpdatePluginIntoExistingYAML = useCallback(
     (pluginMetadata: PluginAddUpdateMetadata, isPluginUpdate: boolean): void => {
-      const { pluginData, pluginName, shouldInsertYAML } = pluginMetadata
+      const { pluginData, shouldInsertYAML } = pluginMetadata
       const cursorPosition = currentCursorPosition.current
       if (!isEmpty(pluginData) && shouldInsertYAML && cursorPosition) {
         try {
@@ -968,7 +970,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const existingSteps =
             (findAllValuesForJSONPath(currentPipelineJSON, yamlStepToBeInsertedAt) as unknown[]) || []
           let updatedSteps = existingSteps.slice(0) as unknown[]
-          const pluginValuesAsStep = wrapPlugInputInAStep(pluginName, pluginData)
+          const pluginValuesAsStep = wrapPlugInputInAStep(pluginMetadata)
           const stepCountInPrecedingStage = (
             closestStageIndex > 0
               ? (findAllValuesForJSONPath(
