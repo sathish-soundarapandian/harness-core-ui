@@ -233,7 +233,7 @@ function SavePipelinePopover(
         accountIdentifier: accountId,
         projectIdentifier,
         orgIdentifier,
-        identifier: pipelineIdentifier,
+        ...(CI_YAML_VERSIONING && { identifier: pipelineIdentifier }),
         ...(currStoreMetadata?.storeType ? { storeType: currStoreMetadata?.storeType } : {}),
         ...(currStoreMetadata?.storeType === StoreType.REMOTE ? { connectorRef: currStoreMetadata?.connectorRef } : {}),
         ...(updatedGitDetails ?? {}),
