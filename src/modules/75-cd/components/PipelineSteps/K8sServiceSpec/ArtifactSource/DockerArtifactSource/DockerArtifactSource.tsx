@@ -12,7 +12,12 @@ import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@h
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { SidecarArtifact, useGetBuildDetailsForDocker, useGetBuildDetailsForDockerWithYaml } from 'services/cd-ng'
+import {
+  SidecarArtifact,
+  useGetBuildDetailsForDocker,
+  useGetBuildDetailsForDockerWithYaml,
+  useGetLastSuccessfulBuildForDocker
+} from 'services/cd-ng'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
@@ -36,6 +41,7 @@ import {
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
+import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
 
 interface DockerRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
@@ -143,6 +149,47 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     },
     lazy: true
   })
+
+  const {
+    data: digestData,
+    loading: fetchingDigest,
+    refetch: fetchDigest,
+    error: digestError
+  } = useMutateAsGet(useGetLastSuccessfulBuildForDocker, {
+    body: {
+      tag: formik?.values?.tag
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      repoIdentifier,
+      branch,
+      imagePath: getFinalQueryParamValue(imagePathValue),
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'tag'
+      )
+    },
+    lazy: true
+  })
+
   const { fetchTags, fetchingTags, fetchTagsError, dockerdata } = useArtifactV1Data
     ? {
         fetchTags: fetchV1Tags,
@@ -256,16 +303,60 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
           )}
 
           {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) && (
-            <ArtifactTagRuntimeField
-              {...props}
-              isFieldDisabled={() => isFieldDisabled(`artifacts.${artifactPath}.spec.tag`, true)}
-              fetchingTags={fetchingTags}
-              buildDetailsList={dockerdata?.data?.buildDetailsList}
-              fetchTagsError={fetchTagsError}
-              fetchTags={fetchTagsEnabled}
-              expressions={expressions}
-              stageIdentifier={stageIdentifier}
-            />
+            <>
+              <ArtifactTagRuntimeField
+                {...props}
+                isFieldDisabled={() => isFieldDisabled(`artifacts.${artifactPath}.spec.tag`, true)}
+                fetchingTags={fetchingTags}
+                buildDetailsList={dockerdata?.data?.buildDetailsList}
+                fetchTagsError={fetchTagsError}
+                fetchTags={fetchTagsEnabled}
+                expressions={expressions}
+                stageIdentifier={stageIdentifier}
+              />
+            </>
+          )}
+
+          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+            <div className={css.inputFieldLayout}>
+              sdfsdfds
+              <DigestField
+                {...props}
+                fetchingDigest={fetchingDigest}
+                // buildDetailsList={dockerdata?.data?.buildDetailsList}
+                fetchDigestError={digestError}
+                fetchDigest={fetchDigest}
+                expressions={expressions}
+                stageIdentifier={stageIdentifier}
+              />
+              {/* <FormInput.MultiTextInput
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                label={getString('pipeline.digest')}
+                name={`${path}.artifacts.${artifactPath}.spec.digest`}
+              />
+              {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.digest`)) ===
+                MultiTypeInputType.RUNTIME && (
+                <ConfigureOptions
+                  className={css.configureOptions}
+                  style={{ alignSelf: 'center' }}
+                  value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.digest`)}
+                  type="String"
+                  variableName="digest"
+                  showRequiredField={false}
+                  isReadonly={readonly}
+                  showDefaultField={true}
+                  isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+                  showAdvanced={true}
+                  onChange={value => {
+                    formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.digext`, value)
+                  }}
+                />
+              )} */}
+            </div>
           )}
 
           <div className={css.inputFieldLayout}>

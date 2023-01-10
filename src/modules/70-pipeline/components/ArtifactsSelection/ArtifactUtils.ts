@@ -195,7 +195,8 @@ export const getFinalArtifactObj = (
     spec: {
       connectorRef: formData?.connectorId,
       imagePath: formData?.imagePath,
-      ...tagData
+      ...tagData,
+      digest: formData?.digest
     }
   }
   if (isIdentifierAllowed) {

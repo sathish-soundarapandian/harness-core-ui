@@ -160,11 +160,11 @@ export function DockerRegistryArtifact({
       submitFormData({
         ...formData,
         tag: defaultTo(formData?.tag?.value, formData?.tag),
-        connectorId: getConnectorIdValue(prevStepData)
+        connectorId: getConnectorIdValue(prevStepData),
+        digest: formData?.digest
       })
     }
   }
-
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       {!hideHeaderAndNavBtns && (
@@ -182,7 +182,8 @@ export function DockerRegistryArtifact({
             ...prevStepData,
             ...formData,
             tag: defaultTo(formData?.tag?.value, formData?.tag),
-            connectorId: getConnectorIdValue(prevStepData)
+            connectorId: getConnectorIdValue(prevStepData),
+            digest: formData?.digest
           })
         }}
       >
@@ -208,12 +209,16 @@ export function DockerRegistryArtifact({
               />
 
               <div className={css.imagePathContainer}>
-                <FormInput.MultiTextInput
+
+                <Artifact
+                {/* <FormInput.MultiTextInput
                   label={getString('pipeline.digest')}
                   name="digest"
                   placeholder={getString('pipeline.artifactsSelection.digestPlaceholder')}
                   multiTextInputProps={{ expressions, allowableTypes }}
                 />
+
+                {getMultiTypeFromValue(formik?.values?.digest)}
                 {getMultiTypeFromValue(formik?.values?.digest) === MultiTypeInputType.RUNTIME && (
                   <div className={css.configureOptions}>
                     <ConfigureOptions
@@ -229,7 +234,7 @@ export function DockerRegistryArtifact({
                       isReadonly={isReadonly}
                     />
                   </div>
-                )}
+                )} */}
               </div>
             </div>
             {!hideHeaderAndNavBtns && (

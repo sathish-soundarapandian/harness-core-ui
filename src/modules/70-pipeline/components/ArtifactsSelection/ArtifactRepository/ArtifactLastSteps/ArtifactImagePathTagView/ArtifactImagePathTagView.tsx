@@ -239,7 +239,6 @@ function ArtifactImagePathTagView({
             name="tag"
             className={css.tagInputButton}
           />
-
           {getMultiTypeFromValue(formik?.values?.tag) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
               <ConfigureOptions
