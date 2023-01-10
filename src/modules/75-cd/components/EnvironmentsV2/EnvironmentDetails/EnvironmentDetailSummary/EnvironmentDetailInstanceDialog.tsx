@@ -41,7 +41,10 @@ export default function EnvironmentDetailInstanceDialog(
   const searchRef = useRef({} as ExpandingSearchInputHandle)
   const isSearchAppliedInfra = useRef<boolean>(!isEmpty(searchTermInfra))
   const [rowClickFilter, setRowClickFilter] = useState<InfraViewFilters>({
-    artifactFilter: '',
+    artifactFilter: {
+      artifactPath: '',
+      artifactVersion: ''
+    },
     serviceFilter: ''
   })
 
@@ -131,7 +134,11 @@ export default function EnvironmentDetailInstanceDialog(
       if (rowClickFilter.serviceFilter && service?.serviceId === rowClickFilter.serviceFilter) {
         if (service.instanceGroupedByArtifactList) {
           service.instanceGroupedByArtifactList.forEach(artifact => {
-            if (rowClickFilter.artifactFilter && artifact.artifactVersion === rowClickFilter.artifactFilter) {
+            if (
+              rowClickFilter.artifactFilter &&
+              artifact.artifactVersion === rowClickFilter.artifactFilter.artifactVersion &&
+              artifact.artifactPath === rowClickFilter.artifactFilter.artifactPath
+            ) {
               if (artifact.instanceGroupedByEnvironmentList) {
                 artifact.instanceGroupedByEnvironmentList.forEach(env => {
                   if (envFilter && env.envId === envFilter) {
@@ -188,7 +195,8 @@ export default function EnvironmentDetailInstanceDialog(
           />
         </Container>
         <EnvironmentDetailInfraView
-          artifactFilter={rowClickFilter.artifactFilter}
+          artifactPath={rowClickFilter.artifactFilter.artifactPath}
+          artifactVersion={rowClickFilter.artifactFilter.artifactVersion}
           envFilter={envFilter}
           serviceFilter={rowClickFilter.serviceFilter}
           data={filteredDataInfra}
@@ -212,7 +220,7 @@ export default function EnvironmentDetailInstanceDialog(
       isOpen={isOpen}
       onClose={() => {
         setIsOpen(false)
-        setRowClickFilter({ artifactFilter: '', serviceFilter: '' })
+        setRowClickFilter({ artifactFilter: { artifactPath: '', artifactVersion: '' }, serviceFilter: '' })
       }}
       enforceFocus={false}
     >

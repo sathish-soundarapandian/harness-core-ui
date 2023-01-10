@@ -28,7 +28,10 @@ export enum TableType {
 }
 
 export interface InfraViewFilters {
-  artifactFilter: string
+  artifactFilter: {
+    artifactVersion: string
+    artifactPath: string
+  }
   serviceFilter: string
 }
 
@@ -423,7 +426,10 @@ export const EnvironmentDetailTable = (
 
   if (isUndefined(selectedRow) && tableType === TableType.FULL) {
     setRowClickFilter({
-      artifactFilter: defaultTo(tableData[0].artifactVersion, ''),
+      artifactFilter: {
+        artifactVersion: defaultTo(tableData[0].artifactVersion, ''),
+        artifactPath: defaultTo(tableData[0].artifactPath, '')
+      },
       serviceFilter: defaultTo(tableData[0].serviceId, '')
     })
     setSelectedRow(
@@ -441,7 +447,10 @@ export const EnvironmentDetailTable = (
         tableType === TableType.FULL
           ? row => {
               setRowClickFilter({
-                artifactFilter: defaultTo(row.artifactVersion, ''),
+                artifactFilter: {
+                  artifactVersion: defaultTo(row.artifactVersion, ''),
+                  artifactPath: defaultTo(row.artifactPath, '')
+                },
                 serviceFilter: defaultTo(row.serviceId, '')
               })
               setSelectedRow(JSON.stringify(row) + row.serviceId + row.artifactVersion)

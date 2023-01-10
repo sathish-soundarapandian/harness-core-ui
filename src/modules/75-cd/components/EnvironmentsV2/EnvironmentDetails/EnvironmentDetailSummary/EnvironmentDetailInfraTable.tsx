@@ -38,6 +38,7 @@ export interface TableRowData {
   envId?: string
   serviceFilter?: string
   artifactVersion?: string
+  artifactPath?: string
   infraIdentifier?: string
   clusterId?: string
   infraName?: string
@@ -54,7 +55,8 @@ export interface TableRowData {
 export const getSummaryViewTableData = (
   InstanceGroupedByInfraList?: InstanceGroupedByInfrastructureV2[],
   tableView?: InfraViewTableType,
-  artifactFilter?: string,
+  artifactVersion?: string,
+  artifactPath?: string,
   envFilter?: string,
   serviceFilter?: string
 ): TableRowData[] => {
@@ -89,7 +91,8 @@ export const getSummaryViewTableData = (
       lastDeployedAt: lastDeployedAt,
       envId: defaultTo(envFilter, ''),
       serviceFilter: defaultTo(serviceFilter, ''),
-      artifactVersion: defaultTo(artifactFilter, ''),
+      artifactVersion: defaultTo(artifactVersion, ''),
+      artifactPath: defaultTo(artifactPath, ''),
       lastPipelineExecutionId: defaultTo(pipelineExecutionId, ''),
       lastPipelineExecutionName: defaultTo(pipelineExecution, ''),
       tableType: tableView
@@ -101,7 +104,8 @@ export const getSummaryViewTableData = (
 export const getFullViewTableData = (
   InstanceGroupedByInfraList?: InstanceGroupedByInfrastructureV2[],
   tableView?: InfraViewTableType,
-  artifactFilter?: string,
+  artifactVersion?: string,
+  artifactPath?: string,
   envFilter?: string,
   serviceFilter?: string
 ): TableRowData[] => {
@@ -135,7 +139,8 @@ export const getFullViewTableData = (
           infraName: defaultTo(infraName, ''),
           envId: defaultTo(envFilter, ''),
           serviceFilter: defaultTo(serviceFilter, ''),
-          artifactVersion: defaultTo(artifactFilter, ''),
+          artifactVersion: defaultTo(artifactVersion, ''),
+          artifactPath: defaultTo(artifactPath, ''),
           lastPipelineExecutionId: defaultTo(pipelineExecutionId, ''),
           lastPipelineExecutionName: defaultTo(pipelineExecution, ''),
           tableType: tableView
@@ -313,7 +318,8 @@ export const EnvironmentDetailInfraTable = (
     data?: InstanceGroupedByInfrastructureV2[]
     error?: GetDataError<unknown> | null
     refetch?: () => Promise<void>
-    artifactFilter?: string
+    artifactVersion?: string
+    artifactPath?: string
     envFilter?: string
     serviceFilter?: string
     tableStyle: string
@@ -326,20 +332,21 @@ export const EnvironmentDetailInfraTable = (
     error,
     refetch,
     tableStyle,
-    artifactFilter,
+    artifactVersion,
     envFilter,
-    serviceFilter
+    serviceFilter,
+    artifactPath
   } = props
 
   const { getString } = useStrings()
   const tableData: TableRowData[] = useMemo(() => {
     switch (tableType) {
       case InfraViewTableType.SUMMARY:
-        return getSummaryViewTableData(data, tableType, artifactFilter, envFilter, serviceFilter)
+        return getSummaryViewTableData(data, tableType, artifactVersion, artifactPath, envFilter, serviceFilter)
       case InfraViewTableType.FULL:
-        return getFullViewTableData(data, tableType, artifactFilter, envFilter, serviceFilter)
+        return getFullViewTableData(data, tableType, artifactVersion, artifactPath, envFilter, serviceFilter)
     }
-  }, [tableType, data, artifactFilter, envFilter, serviceFilter])
+  }, [tableType, data, artifactVersion, envFilter, serviceFilter, artifactPath])
 
   const columns: Column<TableRowData>[] = useMemo(() => {
     const columnsArray = [
