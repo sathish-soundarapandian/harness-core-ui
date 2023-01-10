@@ -56,6 +56,7 @@ export interface RunModalHeaderProps {
   formErrors: FormikErrors<InputSetDTO>
   stageExecutionData: ResponseListStageExecutionResponse | null
   executionStageList: SelectOption[]
+  disableVisualView: boolean
 }
 
 export default function RunModalHeader(props: RunModalHeaderProps): React.ReactElement | null {
@@ -73,7 +74,8 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
     formRefDom,
     formErrors,
     stageExecutionData,
-    executionStageList
+    executionStageList,
+    disableVisualView
   } = props
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
@@ -180,7 +182,7 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
           <VisualYamlToggle
             selectedView={selectedView}
             onChange={handleModeSwitch}
-            disableToggle={!template?.data?.inputSetTemplateYaml}
+            disableToggle={!template?.data?.inputSetTemplateYaml || !!disableVisualView}
           />
         </div>
       </div>
