@@ -137,7 +137,12 @@ function ArtifactDigestField({
               addTooltip: true
             },
             onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-              onTagInputFocus(e, refetch)
+              if (
+                getMultiTypeFromValue(formik?.values?.imagePath) !== MultiTypeInputType.RUNTIME &&
+                getMultiTypeFromValue(formik?.values?.tag) !== MultiTypeInputType.RUNTIME &&
+                getMultiTypeFromValue(connecterRefValue) !== MultiTypeInputType.RUNTIME
+              )
+                onTagInputFocus(e, refetch)
             }
           }}
           label={getString('pipeline.digest')}
