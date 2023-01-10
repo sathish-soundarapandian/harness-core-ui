@@ -304,6 +304,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   ])
 
   const [disableVisualView, setDisableVisualView] = React.useState(inputSet.entityValidityDetails?.valid === false)
+  const CI_YAML_VERSIONING = true //useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
 
   const formikRef = React.useRef<FormikProps<InputSetDTO & GitContextProps & StoreMetadata>>()
 
@@ -318,7 +319,9 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
 
   React.useEffect(() => {
     if (!isEmpty(inputSet)) setFilePath(getFilePath(inputSet))
-    if (!isInputSetInvalid(inputSet)) {
+    if (CI_YAML_VERSIONING) {
+      setSelectedView(SelectedView.YAML)
+    } else if (!isInputSetInvalid(inputSet)) {
       setSelectedView(SelectedView.VISUAL)
     } else {
       setSelectedView(SelectedView.YAML)
@@ -326,12 +329,12 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   }, [inputSet, inputSet.entityValidityDetails?.valid])
 
   React.useEffect(() => {
-    if (inputSet.entityValidityDetails?.valid === false || inputSet.outdated) {
+    if (inputSet.entityValidityDetails?.valid === false || inputSet.outdated || CI_YAML_VERSIONING) {
       setDisableVisualView(true)
     } else {
       setDisableVisualView(false)
     }
-  }, [inputSet.entityValidityDetails?.valid, inputSet.outdated])
+  }, [inputSet.entityValidityDetails?.valid, inputSet.outdated, CI_YAML_VERSIONING])
 
   React.useEffect(() => {
     if (inputSetIdentifier !== '-1' && !isNewInModal) {
@@ -525,6 +528,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
   >()
   const { connectorRef, repoIdentifier, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
+  const CI_YAML_VERSIONING = true //useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
 
   return (
     <React.Fragment>
@@ -552,7 +556,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                   }}
                   disableToggle={disableVisualView}
                   disableToggleReasonIcon={'danger-icon'}
-                  showDisableToggleReason={true}
+                  showDisableToggleReason={!CI_YAML_VERSIONING}
                 />
               </div>
             </Layout.Horizontal>

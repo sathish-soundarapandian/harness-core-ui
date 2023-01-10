@@ -178,6 +178,12 @@ function RunPipelineFormBasic({
   const [existingProvide, setExistingProvide] = useState<'existing' | 'provide'>('existing')
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [isInputSetApplied, setIsInputSetApplied] = useState(true)
+  const CI_YAML_VERSIONING = true //useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
+  const [disableVisualView, setDisableVisualView] = React.useState(!!CI_YAML_VERSIONING)
+  React.useEffect(() => {
+    setDisableVisualView(!!CI_YAML_VERSIONING)
+    CI_YAML_VERSIONING ? setSelectedView(SelectedView.YAML) : setSelectedView(SelectedView.VISUAL)
+  }, [CI_YAML_VERSIONING])
 
   const [canSaveInputSet, canEditYaml] = usePermission(
     {
@@ -805,6 +811,7 @@ function RunPipelineFormBasic({
                     formErrors={formErrors}
                     stageExecutionData={stageExecutionData}
                     executionStageList={executionStageList}
+                    disableVisualView={disableVisualView}
                   />
                   <RequiredStagesInfo
                     selectedStageData={selectedStageData}
