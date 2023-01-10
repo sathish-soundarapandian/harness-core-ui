@@ -191,7 +191,6 @@ const GitFullSyncEntityList: React.FC<GitFullSyncEntityListProps> = props => {
       columns={columns}
       data={listData}
       name="GitFullSyncEntityList"
-      sortable={true}
       pagination={{
         itemCount: data?.totalItems || 0,
         pageSize: data?.pageSize || 10,

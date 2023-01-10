@@ -178,7 +178,6 @@ const ClusterTableView = (props: ClusterTableViewProps): React.ReactElement => {
       <TableV2
         columns={columns}
         data={content}
-        sortable
         rowDataTestID={() => {
           return `clusterDataRow`
         }}

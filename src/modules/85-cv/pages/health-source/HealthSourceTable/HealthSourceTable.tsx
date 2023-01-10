@@ -117,7 +117,6 @@ export default function HealthSourceTable({
         return (
           <TableV2
             className={css.healthSourceTableWrapper}
-            sortable={true}
             onRowClick={data => {
               const rowFilteredData = healthSourceTableData?.find(
                 (healthSource: RowData) => healthSource.identifier === data.identifier

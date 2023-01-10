@@ -351,19 +351,22 @@ export const EnvironmentDetailInfraTable = (
         ),
         id: 'infra',
         width: columnsProperties.infras.width,
-        Cell: RenderInfra
+        Cell: RenderInfra,
+        disableSortBy: tableType !== InfraViewTableType.FULL
       },
       {
         Header: getString('cd.serviceDashboard.headers.instances'),
         id: 'instances',
         width: columnsProperties.instances.width,
-        Cell: RenderInstances
+        Cell: RenderInstances,
+        disableSortBy: tableType !== InfraViewTableType.FULL
       },
       {
         Header: getString('cd.serviceDashboard.headers.pipelineExecution'),
         id: 'pipelineExecution',
         width: columnsProperties.pipelineExecution.width,
-        Cell: RenderPipelineExecution
+        Cell: RenderPipelineExecution,
+        disableSortBy: tableType !== InfraViewTableType.FULL
       }
     ]
     return columnsArray as unknown as Column<TableRowData>[]
@@ -394,13 +397,5 @@ export const EnvironmentDetailInfraTable = (
     )
   }
 
-  return (
-    <Table<TableRowData>
-      columns={columns}
-      data={tableData}
-      className={tableStyle}
-      hideHeaders={true}
-      sortable={tableType === InfraViewTableType.FULL}
-    />
-  )
+  return <Table<TableRowData> columns={columns} data={tableData} className={tableStyle} hideHeaders={true} />
 }

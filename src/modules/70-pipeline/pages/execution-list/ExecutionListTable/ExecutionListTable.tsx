@@ -147,7 +147,6 @@ function ExecutionListTable({
         pageIndex: number,
         gotoPage: page => updateQueryParams({ page })
       }}
-      sortable
       renderRowSubComponent={renderRowSubComponent}
       onRowClick={rowDetails => history.push(getExecutionPipelineViewLink(rowDetails, pathParams, queryParams))}
       autoResetExpanded={false}

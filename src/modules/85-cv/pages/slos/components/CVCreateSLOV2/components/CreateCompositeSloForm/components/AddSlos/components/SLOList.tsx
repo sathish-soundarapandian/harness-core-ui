@@ -270,7 +270,6 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
         >
           {content?.length ? (
             <TableV2
-              sortable
               columns={filteredColumns as Array<Column<SLOHealthListView>>}
               data={content || []}
               pagination={{

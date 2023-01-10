@@ -94,7 +94,6 @@ describe('Test util functions', () => {
   test('should render tags', async () => {
     const { container, getByText } = render(
       <TableV2
-        sortable={true}
         columns={[
           {
             Header: 'RenderHealthTrend',

@@ -92,7 +92,6 @@ export default function ChangeSourceTable({ value, onSuccess, onEdit }: ChangeSo
       {tableData?.length ? (
         <TableV2
           className={css.changeSourceTableWrapper}
-          sortable={true}
           onRowClick={rowdata => {
             onEdit({ isEdit: true, tableData, rowdata, onSuccess })
           }}

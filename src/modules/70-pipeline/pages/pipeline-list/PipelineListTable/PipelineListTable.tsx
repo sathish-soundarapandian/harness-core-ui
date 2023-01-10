@@ -144,7 +144,6 @@ export function PipelineListTable({
         pageIndex: number,
         gotoPage
       }}
-      sortable
       getRowClassName={() => css.tableRow}
       onRowClick={rowDetails => history.push(routes.toPipelineStudio(getRouteProps(pathParams, rowDetails)))}
     />

@@ -292,7 +292,6 @@ export const DelegateListing: React.FC = () => {
           <Container className={css.delegateListContainer}>
             {filteredTokens.length ? (
               <TableV2<DelegateTokenDetails>
-                sortable={true}
                 className={css.table}
                 columns={columns}
                 data={pageTokens}

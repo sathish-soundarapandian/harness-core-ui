@@ -457,48 +457,57 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     {
       Header: getString('cv.slos.sloName').toUpperCase(),
       width: '18%',
-      Cell: RenderSLOName
+      Cell: RenderSLOName,
+      disableSortBy: true
     },
     {
       Header: getString('cv.slos.monitoredService').toUpperCase(),
       width: '12%',
-      Cell: RenderMonitoredService
+      Cell: RenderMonitoredService,
+      disableSortBy: true
     },
     {
       Header: getString('cv.slos.status').toUpperCase(),
       width: '13%',
-      Cell: RenderSLOStatus
+      Cell: RenderSLOStatus,
+      disableSortBy: true
     },
     {
       Header: getString('cv.errorBudgetRemaining').toUpperCase(),
       width: '12%',
-      Cell: RenderRemainingErrorBudget
+      Cell: RenderRemainingErrorBudget,
+      disableSortBy: true
     },
     {
       Header: getString('cv.slos.target').toUpperCase(),
       width: '10%',
-      Cell: RenderTarget
+      Cell: RenderTarget,
+      disableSortBy: true
     },
     {
       Header: getString('cv.slos.burnRate').toUpperCase(),
       width: '9%',
-      Cell: RenderBurnRate
+      Cell: RenderBurnRate,
+      disableSortBy: true
     },
     {
       Header: getString('ce.budgets.listPage.tableHeaders.alerts').toUpperCase(),
       width: '8%',
-      Cell: RenderAlerts
+      Cell: RenderAlerts,
+      disableSortBy: true
     },
     {
       Header: getString('cv.slos.userJourney').toUpperCase(),
       width: '10%',
-      Cell: RenderUserJourney
+      Cell: RenderUserJourney,
+      disableSortBy: true
     },
     {
       Header: '',
       id: 'sloActions',
       width: '8%',
-      Cell: RenderSLOActions
+      Cell: RenderSLOActions,
+      disableSortBy: true
     }
   ]
 
@@ -608,7 +617,6 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           {!!content?.length && (
             <>
               <TableV2
-                sortable={false}
                 columns={filteredColumns}
                 data={content}
                 pagination={{

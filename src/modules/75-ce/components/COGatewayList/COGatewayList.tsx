@@ -924,7 +924,6 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
                 }
                 onRowClick={onRowClick}
                 columns={columns}
-                sortable={true}
               />
             </div>
           </>

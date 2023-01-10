@@ -351,19 +351,22 @@ export const EnvironmentDetailTable = (
         id: 'service',
         width: columnsProperties.service.width[tableType],
         Cell: RenderService,
-        accessor: (row: TableRowData) => row.serviceId
+        accessor: (row: TableRowData) => row.serviceId,
+        disableSortBy: tableType !== TableType.FULL
       },
       {
         Header: '',
         id: 'latestBadge',
         width: columnsProperties.latestBadge.width[tableType],
-        Cell: RenderLatestBadge
+        Cell: RenderLatestBadge,
+        disableSortBy: tableType !== TableType.FULL
       },
       {
         Header: getString('cd.serviceDashboard.artifact'),
         id: 'artifact',
         width: columnsProperties.artifacts.width[tableType],
-        Cell: RenderArtifactVersion
+        Cell: RenderArtifactVersion,
+        disableSortBy: tableType !== TableType.FULL
       },
       {
         Header: (
@@ -373,13 +376,15 @@ export const EnvironmentDetailTable = (
         ),
         id: 'infra',
         width: columnsProperties.infras.width[tableType],
-        Cell: RenderInfra
+        Cell: RenderInfra,
+        disableSortBy: tableType !== TableType.FULL
       },
       {
         Header: getString('cd.serviceDashboard.headers.instances'),
         id: 'instances',
         width: columnsProperties.instancesCount.width[tableType],
-        Cell: RenderInstanceCount
+        Cell: RenderInstanceCount,
+        disableSortBy: tableType !== TableType.FULL
       }
     ]
 
@@ -436,7 +441,6 @@ export const EnvironmentDetailTable = (
       columns={columns}
       data={tableData}
       className={tableStyle}
-      sortable={tableType === TableType.FULL}
       onRowClick={
         tableType === TableType.FULL
           ? row => {

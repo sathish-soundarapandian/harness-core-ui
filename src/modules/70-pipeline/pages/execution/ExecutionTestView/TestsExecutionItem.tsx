@@ -612,7 +612,6 @@ export function TestsExecutionItem({
                 columns={columns}
                 data={data?.content || []}
                 getRowClassName={row => (row.original === selectedRow ? css.rowSelected : '')}
-                sortable
                 resizable={true}
                 onRowClick={
                   onShowCallGraphForClass

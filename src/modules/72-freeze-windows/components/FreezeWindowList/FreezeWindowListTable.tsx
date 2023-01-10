@@ -141,7 +141,6 @@ export function FreezeWindowListTable({
         pageIndex,
         gotoPage
       }}
-      sortable
       onRowClick={rowDetails => onViewFreezeRow(rowDetails)}
       className={css.table}
     />

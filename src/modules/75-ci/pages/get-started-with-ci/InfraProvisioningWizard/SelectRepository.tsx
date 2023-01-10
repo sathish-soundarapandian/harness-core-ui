@@ -374,7 +374,6 @@ function RepositorySelectionTable({ repositories, onRowClick }: RepositorySelect
       hideHeaders={true}
       minimal={true}
       resizable={false}
-      sortable={false}
       className={css.repositoryTable}
       onRowClick={data => setSelectedRow(data)}
     />

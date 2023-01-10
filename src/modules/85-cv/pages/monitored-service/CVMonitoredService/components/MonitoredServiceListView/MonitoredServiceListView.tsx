@@ -353,7 +353,6 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
             {getListTitle(getString, selectedFilter, totalItems)}
           </Heading>
           <TableV2
-            sortable={true}
             columns={[
               {
                 Header: ' ',

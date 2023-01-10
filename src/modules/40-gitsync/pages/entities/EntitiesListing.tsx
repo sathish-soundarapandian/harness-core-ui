@@ -43,7 +43,6 @@ const EntityListView: React.FC<EntityListViewProps> = props => {
       className={css.table}
       columns={getTableColumns()}
       data={data?.gitSyncEntities || []}
-      sortable={true}
       pagination={{
         itemCount: props.data?.totalItems || 0,
         pageSize: props.data?.pageSize || 10,

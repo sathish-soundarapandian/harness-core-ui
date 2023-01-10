@@ -123,7 +123,6 @@ const ErrorBudgetResetHistory: React.FC<ErrorBudgetResetHistoryProps> = ({ servi
     <Container height={200} border={{ top: true, bottom: true }} style={{ overflow: 'auto' }}>
       <TableV2
         minimal
-        sortable
         columns={[
           {
             Header: getString('cv.dateAndTime'),

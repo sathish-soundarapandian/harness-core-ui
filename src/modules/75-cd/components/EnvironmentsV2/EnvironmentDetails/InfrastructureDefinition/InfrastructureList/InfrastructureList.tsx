@@ -105,7 +105,6 @@ export default function InfrastructureList({
           <TableV2<InfrastructureResponse>
             columns={infrastructureColumns}
             data={defaultTo(list, [])}
-            sortable
             onRowClick={rowItem => onEdit(defaultTo(rowItem.infrastructure?.yaml, '{}'))}
           />
         </Container>

@@ -267,7 +267,6 @@ export function ServiceLicenseTable({
                   }
                 : undefined
             }
-            sortable
           />
         ) : (
           <NoDataCard
