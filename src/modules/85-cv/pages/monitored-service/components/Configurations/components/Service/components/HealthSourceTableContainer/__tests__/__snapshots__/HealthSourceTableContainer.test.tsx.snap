@@ -58,7 +58,7 @@ exports[`Validate should close drawer 1`] = `
             </span>
           </div>
           <div
-            class="TableV2--cell TableV2--sortable"
+            class="TableV2--cell"
             colspan="1"
             role="columnheader"
             style="width: 35%;"
@@ -300,7 +300,7 @@ exports[`Validate should render HealthSourceTableContainer with data 1`] = `
             </span>
           </div>
           <div
-            class="TableV2--cell TableV2--sortable"
+            class="TableV2--cell"
             colspan="1"
             role="columnheader"
             style="width: 35%;"

@@ -74,7 +74,7 @@ exports[`GitOps Cluster tests initial render 1`] = `
         </span>
       </div>
       <div
-        class="TableV2--cell TableV2--sortable"
+        class="TableV2--cell"
         colspan="1"
         role="columnheader"
         style="width: 5%;"

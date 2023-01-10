@@ -7297,7 +7297,7 @@ exports[`BuildTests snapshot test should render Reports UI 1`] = `
                       role="row"
                     >
                       <div
-                        class="TableV2--cell TableV2--sortable TableV2--resizable"
+                        class="TableV2--cell TableV2--resizable"
                         colspan="1"
                         role="columnheader"
                         style="width: 50px;"
@@ -18878,7 +18878,7 @@ exports[`BuildTests snapshot test should render TI+Reports UI 1`] = `
                       role="row"
                     >
                       <div
-                        class="TableV2--cell TableV2--sortable TableV2--resizable"
+                        class="TableV2--cell TableV2--resizable"
                         colspan="1"
                         role="columnheader"
                         style="width: 50px;"

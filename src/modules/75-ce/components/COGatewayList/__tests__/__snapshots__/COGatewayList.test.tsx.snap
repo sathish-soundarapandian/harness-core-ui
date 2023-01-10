@@ -628,7 +628,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                   </span>
                 </div>
                 <div
-                  class="TableV2--cell TableV2--sortable"
+                  class="TableV2--cell"
                   colspan="1"
                   role="columnheader"
                   style="width: 15%;"
@@ -640,7 +640,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                   </p>
                 </div>
                 <div
-                  class="TableV2--cell TableV2--sortable"
+                  class="TableV2--cell"
                   colspan="1"
                   role="columnheader"
                   style="width: 30%;"
@@ -720,7 +720,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                   </span>
                 </div>
                 <div
-                  class="TableV2--cell TableV2--sortable"
+                  class="TableV2--cell"
                   colspan="1"
                   role="columnheader"
                   style="width: 5%;"
@@ -2633,7 +2633,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                   </span>
                 </div>
                 <div
-                  class="TableV2--cell TableV2--sortable"
+                  class="TableV2--cell"
                   colspan="1"
                   role="columnheader"
                   style="width: 15%;"
@@ -2645,7 +2645,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                   </p>
                 </div>
                 <div
-                  class="TableV2--cell TableV2--sortable"
+                  class="TableV2--cell"
                   colspan="1"
                   role="columnheader"
                   style="width: 30%;"
@@ -2725,7 +2725,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                   </span>
                 </div>
                 <div
-                  class="TableV2--cell TableV2--sortable"
+                  class="TableV2--cell"
                   colspan="1"
                   role="columnheader"
                   style="width: 5%;"

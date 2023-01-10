@@ -29,10 +29,11 @@ exports[`StoreView should render StoreView component 1`] = `
             role="row"
           >
             <div
-              class="TableV2--cell"
+              class="TableV2--cell TableV2--sortable"
               colspan="1"
               role="columnheader"
               style="width: 30%;"
+              title="Toggle SortBy"
             >
               <div
                 class="Text--withDocsTooltip"
@@ -44,12 +45,32 @@ exports[`StoreView should render StoreView component 1`] = `
                   filestore.view.fileName
                 </p>
               </div>
+              <span
+                class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                icon="double-caret-vertical"
+              >
+                <svg
+                  data-icon="double-caret-vertical"
+                  height="15"
+                  viewBox="0 0 16 16"
+                  width="15"
+                >
+                  <desc>
+                    double-caret-vertical
+                  </desc>
+                  <path
+                    d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
             </div>
             <div
-              class="TableV2--cell"
+              class="TableV2--cell TableV2--sortable"
               colspan="1"
               role="columnheader"
               style="width: 15%;"
+              title="Toggle SortBy"
             >
               <div
                 class="Text--withDocsTooltip"
@@ -61,12 +82,32 @@ exports[`StoreView should render StoreView component 1`] = `
                   common.file
                 </p>
               </div>
+              <span
+                class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                icon="double-caret-vertical"
+              >
+                <svg
+                  data-icon="double-caret-vertical"
+                  height="15"
+                  viewBox="0 0 16 16"
+                  width="15"
+                >
+                  <desc>
+                    double-caret-vertical
+                  </desc>
+                  <path
+                    d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
             </div>
             <div
-              class="TableV2--cell"
+              class="TableV2--cell TableV2--sortable"
               colspan="1"
               role="columnheader"
               style="width: 15%;"
+              title="Toggle SortBy"
             >
               <div
                 class="Text--withDocsTooltip"
@@ -78,12 +119,32 @@ exports[`StoreView should render StoreView component 1`] = `
                   filestore.view.fileUsage
                 </p>
               </div>
+              <span
+                class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                icon="double-caret-vertical"
+              >
+                <svg
+                  data-icon="double-caret-vertical"
+                  height="15"
+                  viewBox="0 0 16 16"
+                  width="15"
+                >
+                  <desc>
+                    double-caret-vertical
+                  </desc>
+                  <path
+                    d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
             </div>
             <div
-              class="TableV2--cell"
+              class="TableV2--cell TableV2--sortable"
               colspan="1"
               role="columnheader"
               style="width: 15%;"
+              title="Toggle SortBy"
             >
               <div
                 class="Text--withDocsTooltip"
@@ -95,12 +156,32 @@ exports[`StoreView should render StoreView component 1`] = `
                   common.lastModifiedTime
                 </p>
               </div>
+              <span
+                class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                icon="double-caret-vertical"
+              >
+                <svg
+                  data-icon="double-caret-vertical"
+                  height="15"
+                  viewBox="0 0 16 16"
+                  width="15"
+                >
+                  <desc>
+                    double-caret-vertical
+                  </desc>
+                  <path
+                    d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
             </div>
             <div
-              class="TableV2--cell"
+              class="TableV2--cell TableV2--sortable"
               colspan="1"
               role="columnheader"
               style="width: 15%;"
+              title="Toggle SortBy"
             >
               <div
                 class="Text--withDocsTooltip"
@@ -112,12 +193,32 @@ exports[`StoreView should render StoreView component 1`] = `
                   filestore.view.lastModifiedBy
                 </p>
               </div>
+              <span
+                class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                icon="double-caret-vertical"
+              >
+                <svg
+                  data-icon="double-caret-vertical"
+                  height="15"
+                  viewBox="0 0 16 16"
+                  width="15"
+                >
+                  <desc>
+                    double-caret-vertical
+                  </desc>
+                  <path
+                    d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
             </div>
             <div
-              class="TableV2--cell"
+              class="TableV2--cell TableV2--sortable"
               colspan="1"
               role="columnheader"
               style="width: 10%;"
+              title="Toggle SortBy"
             >
               <div
                 class="Text--withDocsTooltip"
@@ -129,6 +230,25 @@ exports[`StoreView should render StoreView component 1`] = `
                    
                 </p>
               </div>
+              <span
+                class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                icon="double-caret-vertical"
+              >
+                <svg
+                  data-icon="double-caret-vertical"
+                  height="15"
+                  viewBox="0 0 16 16"
+                  width="15"
+                >
+                  <desc>
+                    double-caret-vertical
+                  </desc>
+                  <path
+                    d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
             </div>
           </div>
           <div
