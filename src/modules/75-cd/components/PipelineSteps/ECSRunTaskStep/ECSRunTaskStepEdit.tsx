@@ -220,12 +220,11 @@ const ECSRunTaskStepEdit = (
       >
         {(formik: FormikProps<ECSRunTaskStepInitialValues>) => {
           setFormikRef(formikRef, formik)
-          const { values, setFieldValue } = formik
+          const { setFieldValue } = formik
+
           return (
             <FormikForm>
               <NameTimeoutField
-                values={{ name: values.name, timeout: values.timeout }}
-                setFieldValue={setFieldValue}
                 allowableTypes={allowableTypes}
                 isNewStep={isNewStep}
                 readonly={readonly}

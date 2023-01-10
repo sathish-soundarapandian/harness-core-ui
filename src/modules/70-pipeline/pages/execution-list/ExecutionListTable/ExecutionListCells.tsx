@@ -10,8 +10,8 @@ import { Checkbox, Classes } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
 import { get, isEmpty, defaultTo } from 'lodash-es'
-import React, { useRef } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import React, { useRef, useCallback } from 'react'
+import { Link, useParams, useHistory } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseExpandedRowProps } from 'react-table'
 import { Duration, TimeAgoPopover } from '@common/components'
 import type { StoreType } from '@common/constants/GitSyncTypes'
@@ -37,9 +37,14 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary, PipelineStageInfo } from 'services/pipeline-ng'
+import { useDebugPipelineExecuteWithInputSetYaml } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
-import type { ExecutionListColumnActions } from './ExecutionListTable'
+import { useToaster } from '@common/exports'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { PipelineActions } from '@common/constants/TrackingConstants'
 import { CITriggerInfo, CITriggerInfoProps } from './CITriggerInfoCell'
+import type { ExecutionListColumnActions } from './ExecutionListTable'
 import css from './ExecutionListTable.module.scss'
 
 export const getExecutionPipelineViewLink = (
@@ -310,12 +315,58 @@ export const DurationCell: CellType = ({ row }) => {
 }
 
 export const MenuCell: CellType = ({ row, column }) => {
-  const { onViewCompiledYaml, isPipelineInvalid } = column
+  const { onViewCompiledYaml, isPipelineInvalid, setLoadingForDebugMode } = column
   const data = row.original
   const { projectIdentifier, orgIdentifier, accountId, module, pipelineIdentifier } =
     useParams<PipelineType<PipelinePathProps>>()
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
   const { addToCompare } = useExecutionCompareContext()
+  const hasCI = hasCIStage(data)
+  const history = useHistory()
+  const { getRBACErrorMessage } = useRBACError()
+  const { showSuccess, showWarning } = useToaster()
+  const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
+  const { mutate: runPipelineInDebugMode } = useDebugPipelineExecuteWithInputSetYaml({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      moduleType: module || ''
+    },
+    identifier: defaultTo(pipelineIdentifier || data.pipelineIdentifier, ''),
+    originalExecutionId: defaultTo(data.planExecutionId, ''),
+    requestOptions: {
+      headers: {
+        'content-type': 'application/yaml'
+      }
+    }
+  })
+
+  const handleRunPipelineInDebugMode = useCallback(async () => {
+    try {
+      const response = await runPipelineInDebugMode()
+      setLoadingForDebugMode?.(true)
+      if (response.status === 'SUCCESS') {
+        showSuccess(getString('runPipelineForm.pipelineRunSuccessFully'))
+        setLoadingForDebugMode?.(false)
+        history.push({
+          pathname: routes.toExecutionPipelineView({
+            orgIdentifier,
+            pipelineIdentifier: pipelineIdentifier ?? data.pipelineIdentifier ?? '',
+            projectIdentifier,
+            executionIdentifier: response?.data?.planExecution?.uuid ?? '',
+            accountId,
+            module,
+            source
+          })
+        })
+        trackEvent(PipelineActions.StartedExecution, { module })
+      }
+    } catch (error: any) {
+      showWarning(defaultTo(getRBACErrorMessage(error), getString('runPipelineForm.runPipelineFailed')))
+    }
+  }, [runPipelineInDebugMode, orgIdentifier, pipelineIdentifier, projectIdentifier, history, showWarning])
 
   const [canEdit, canExecute] = usePermission(
     {
@@ -355,6 +406,7 @@ export const MenuCell: CellType = ({ row, column }) => {
         canEdit={canEdit}
         onViewCompiledYaml={() => onViewCompiledYaml(data)}
         onCompareExecutions={() => addToCompare(data)}
+        onReRunInDebugMode={hasCI ? () => handleRunPipelineInDebugMode() : undefined}
         source={source}
         canExecute={canExecute}
         canRetry={data.canRetry}

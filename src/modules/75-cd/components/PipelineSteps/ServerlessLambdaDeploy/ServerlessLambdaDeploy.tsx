@@ -29,7 +29,6 @@ import {
   InputSetData
 } from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig } from 'services/cd-ng'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import {
@@ -90,7 +89,7 @@ function ServerlessLambdaDeployWidget(
       >
         {(formik: FormikProps<StepElementConfig>) => {
           setFormikRef(formikRef, formik)
-          const { values, setFieldValue } = formik
+
           return (
             <FormikForm>
               {stepViewType !== StepViewType.Template && (
@@ -111,28 +110,13 @@ function ServerlessLambdaDeployWidget(
                   name="timeout"
                   label={getString('pipelineSteps.timeoutLabel')}
                   multiTypeDurationProps={{
-                    enableConfigureOptions: false,
+                    enableConfigureOptions: true,
                     expressions,
                     disabled: readonly,
                     allowableTypes
                   }}
                   disabled={readonly}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
 
               <ServerlessDeployCommandOptions isReadonly={readonly} stepViewType={props.stepViewType} />

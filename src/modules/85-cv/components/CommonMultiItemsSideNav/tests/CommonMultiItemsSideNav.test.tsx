@@ -14,7 +14,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
 import { CommonMultiItemsSideNav } from '../CommonMultiItemsSideNav'
 import { getFilteredGroupedCreatedMetric, getSelectedMetricIndex } from '../CommonMultiItemsSideNav.utils'
-import { groupedCreatedMetrics } from './CommonMultiItemsSideNav.mock'
+import { commonHealthSourceProviderPropsMock, groupedCreatedMetrics } from './CommonMultiItemsSideNav.mock'
 
 describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
   const defaultMetricName = 'metric-1'
@@ -33,7 +33,7 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
   test('Ensure that all passed in metrics are rendered in CommonMultiItemsSideNav', async () => {
     const { container, getByText } = render(
       <TestWrapper>
-        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+        <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
           <CommonMultiItemsSideNav
             tooptipMessage={tooptipMessage}
             defaultMetricName={defaultMetricName}
@@ -60,7 +60,7 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
     const onRemoveMock = jest.fn()
     const { container, getByText } = render(
       <TestWrapper>
-        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+        <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
           <CommonMultiItemsSideNav
             tooptipMessage={tooptipMessage}
             defaultMetricName={defaultMetricName}
@@ -101,7 +101,7 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
         >
           {formikData => {
             return (
-              <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+              <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
                 <CommonMultiItemsSideNav
                   tooptipMessage={tooptipMessage}
                   defaultMetricName={defaultMetricName}
@@ -132,7 +132,7 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
   test('Ensure that only when single app is there delete button does not exist in CommonMultiItemsSideNav', async () => {
     const { container, getByText } = render(
       <TestWrapper>
-        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+        <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
           <CommonMultiItemsSideNav
             tooptipMessage={tooptipMessage}
             defaultMetricName={defaultMetricName}
@@ -159,7 +159,7 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
   test('Ensure that when selected app name changes, the nav shows that change in CommonMultiItemsSideNav', async () => {
     const { container, getByText, rerender } = render(
       <TestWrapper>
-        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+        <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
           <CommonMultiItemsSideNav
             tooptipMessage={tooptipMessage}
             defaultMetricName={defaultMetricName}
@@ -184,7 +184,7 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
 
     rerender(
       <TestWrapper>
-        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+        <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
           <CommonMultiItemsSideNav
             tooptipMessage={tooptipMessage}
             defaultMetricName={defaultMetricName}
@@ -213,7 +213,7 @@ describe('Unit tests for CommonMultiItemsSideNav side nav', () => {
     const onSelectMock = jest.fn()
     const { container, getByText } = render(
       <TestWrapper>
-        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+        <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
           <CommonMultiItemsSideNav
             tooptipMessage={tooptipMessage}
             defaultMetricName={defaultMetricName}

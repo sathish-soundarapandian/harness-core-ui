@@ -26,10 +26,12 @@ import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSCon
 import {
   buildArtifactoryPayload,
   buildAWSPayload,
+  buildAzureArtifactsPayload,
   buildAzurePayload,
   buildDockerPayload,
   buildGcpPayload,
   buildGithubPayload,
+  buildJenkinsPayload,
   buildNexusPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
@@ -55,6 +57,8 @@ import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnect
 import type { ArtifactTriggerConfig, NGTriggerSourceV2 } from 'services/pipeline-ng'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
+import StepJenkinsAuthentication from '@connectors/components/CreateConnector/JenkinsConnector/StepAuth/StepJenkinsAuthentication'
+import StepAzureArtifactAuthentication from '@connectors/components/CreateConnector/AzureArtifactConnector/StepAuth/StepAzureArtifactAuthentication'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import { GCRImagePath } from './ArtifactRepository/ArtifactLastSteps/GCRImagePath/GCRImagePath'
 import { ECRArtifact } from './ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
@@ -75,6 +79,8 @@ import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArt
 import { showConnectorStep } from './ArtifactUtils'
 import { GithubPackageRegistry } from './ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
 import { GoogleArtifactRegistry } from './ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
+import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsArtifact/JenkinsArtifact'
+import { AzureArtifacts } from './ArtifactRepository/ArtifactLastSteps/AzureArtifacts/AzuerArtifacts'
 import css from '@pipeline/components/ArtifactsSelection/ArtifactsSelection.module.scss'
 
 interface ArtifactsSelectionProps {
@@ -393,6 +399,18 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
             />
           </StepWizard>
         )
+      case ENABLED_ARTIFACT_TYPES.AzureArtifacts:
+        return (
+          <StepWizard title={stepWizardTitle}>
+            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifactType]} {...connectorDetailStepProps} />
+            <StepAzureArtifactAuthentication name={getString('details')} {...authenticationStepProps} />
+            <DelegateSelectorStep buildPayload={buildAzureArtifactsPayload} {...delegateStepProps} />
+            <ConnectorTestConnection
+              type={ArtifactToConnectorMap[selectedArtifactType]}
+              {...ConnectorTestConnectionProps}
+            />
+          </StepWizard>
+        )
       case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
         return (
           <StepWizard title={stepWizardTitle}>
@@ -405,6 +423,18 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
             />
             <StepGithubAuthentication name={getString('credentials')} {...authenticationStepProps} />
             <DelegateSelectorStep buildPayload={buildGithubPayload} {...delegateStepProps} />
+            <ConnectorTestConnection
+              type={ArtifactToConnectorMap[selectedArtifactType]}
+              {...ConnectorTestConnectionProps}
+            />
+          </StepWizard>
+        )
+      case ENABLED_ARTIFACT_TYPES.Jenkins:
+        return (
+          <StepWizard title={stepWizardTitle}>
+            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifactType]} {...connectorDetailStepProps} />
+            <StepJenkinsAuthentication name={getString('credentials')} {...authenticationStepProps} />
+            <DelegateSelectorStep buildPayload={buildJenkinsPayload} {...delegateStepProps} />
             <ConnectorTestConnection
               type={ArtifactToConnectorMap[selectedArtifactType]}
               {...ConnectorTestConnectionProps}
@@ -443,10 +473,12 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
         return <GoogleArtifactRegistry {...artifactLastStepProps()} />
       case 'Acr':
         return <ACRArtifact {...artifactLastStepProps()} />
+      case 'AzureArtifacts':
+        return <AzureArtifacts {...artifactLastStepProps()} />
       case 'CustomArtifact':
         return <CustomArtifact {...artifactLastStepProps()} />
       case 'Jenkins':
-        return <div>Not Supported Yet!</div>
+        return <JenkinsArtifact {...artifactLastStepProps()} />
       case 'DockerRegistry':
         return <DockerRegistryArtifact {...artifactLastStepProps()} />
     }

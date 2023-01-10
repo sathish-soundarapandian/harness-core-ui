@@ -346,6 +346,7 @@ describe('BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build I
     fireEvent.click(await findByTestId('advanced-summary'))
 
     await waitFor(() => expect(container.querySelector('[data-name="volumes"]')).toBeDefined())
+    expect(container).toMatchSnapshot()
   })
 
   // eslint-disable-next-line jest/no-disabled-tests

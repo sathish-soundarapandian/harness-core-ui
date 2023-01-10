@@ -125,16 +125,8 @@ describe('ResourceCenter', () => {
 })
 
 test('should render early access tabs', async () => {
-  const featureFlags = {
-    EARLY_ACCESS_ENABLED: true
-  }
-
-  const defaultAppStoreValues = {
-    featureFlags
-  }
-
   const { getByTestId } = render(
-    <TestWrapper defaultAppStoreValues={defaultAppStoreValues}>
+    <TestWrapper>
       <ResourceCenter />
     </TestWrapper>
   )

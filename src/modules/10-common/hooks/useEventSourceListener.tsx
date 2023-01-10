@@ -41,6 +41,7 @@ interface EventSourceListenerProps<T> {
   event: EventSourceEvent<T>
   queryParams?: Record<string, unknown>
   queryParamStringifyOptions?: IStringifyOptions
+  headers?: Record<string, string>
   lazy?: boolean
 }
 
@@ -49,7 +50,8 @@ export function useEventSourceListener<T = unknown>({
   event,
   lazy = false,
   queryParams,
-  queryParamStringifyOptions
+  queryParamStringifyOptions,
+  headers: customHeaders = {}
 }: EventSourceListenerProps<T>): EventSourceListenerReturn {
   const [init, setInit] = useState<boolean>(false)
   const { accountId } = useParams<AccountPathProps>()
@@ -89,9 +91,17 @@ export function useEventSourceListener<T = unknown>({
         search: returnUrlParams(getLoginPageURL({ returnUrl: window.location.href }))
       })
     } else {
-      setSource(new EventSourcePolyfill(`${url}${getQueryParams(queryParams)}`, getRequestOptions()))
+      const { headers: defaultHeaders, ...rest } = getRequestOptions()
+      const headers = Object.assign({}, defaultHeaders, customHeaders)
+
+      setSource(
+        new EventSourcePolyfill(`${url}${getQueryParams(queryParams)}`, {
+          headers,
+          ...rest
+        })
+      )
     }
-  }, [url, token, queryParams, accountId])
+  }, [url, token, queryParams, accountId, customHeaders])
 
   const createListener = (_source: EventSource): void => {
     removeListener(_source)

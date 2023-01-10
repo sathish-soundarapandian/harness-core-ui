@@ -144,7 +144,7 @@ exports[`ServicesList render 1`] = `
               class="bp3-input  ExpandingSearchInput--filter"
               dir="auto"
               placeholder="search"
-              style="padding-right: 0px;"
+              style="padding-right: 38px;"
               type="search"
               value=""
             />
@@ -302,7 +302,7 @@ exports[`ServicesList render 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 15%;"
+          style="width: 25%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -572,7 +572,7 @@ exports[`ServicesList render 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 25%;"
             />
             <div
               class="TableV2--cell"
@@ -930,7 +930,7 @@ exports[`ServicesList render 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 25%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main lastDeployment"

@@ -49,8 +49,8 @@ export const CreateNewFreezeWindow: React.FC<CreateNewFreezeWindowProps> = ({ on
       onSubmit={onSubmit}
       formName="createNewFreezeWindow"
       validationSchema={Yup.object().shape({
-        name: NameSchema(),
-        identifier: IdentifierSchema()
+        name: NameSchema(getString),
+        identifier: IdentifierSchema(getString)
       })}
     >
       {formikProps => {

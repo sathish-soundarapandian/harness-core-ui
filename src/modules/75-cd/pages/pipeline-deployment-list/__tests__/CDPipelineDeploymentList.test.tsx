@@ -95,7 +95,19 @@ jest.mock('services/pipeline-ng', () => ({
   useRerunStagesWithRuntimeInputYaml: jest.fn(() => ({ data: null })),
   useGetInputSetsListForPipeline: jest.fn(() => ({ data: null, refetch: jest.fn() })),
   useCreateVariablesV2: jest.fn(() => ({})),
-  useValidateTemplateInputs: jest.fn(() => ({ data: null }))
+  useValidateTemplateInputs: jest.fn(() => ({ data: null })),
+  useDebugPipelineExecuteWithInputSetYaml: jest.fn(() => ({
+    loading: false,
+    refetch: jest.fn(),
+    mutate: jest.fn().mockResolvedValue({
+      data: {
+        correlationId: '',
+        status: 'SUCCESS',
+        metaData: null,
+        data: {}
+      }
+    })
+  }))
 }))
 
 jest.mock('services/pipeline-rq', () => ({

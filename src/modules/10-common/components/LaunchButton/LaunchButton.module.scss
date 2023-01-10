@@ -9,13 +9,13 @@
   background: transparent;
   font-size: 10px;
   z-index: 1;
-  position: absolute;
   bottom: 75px;
   border-radius: 5px;
   border: 1px solid var(--primary-7);
   color: var(--primary-6);
   max-height: 32px;
   margin: var(--spacing-medium);
+  margin-top: auto;
   padding: var(--spacing-small);
   cursor: pointer;
   &:hover {

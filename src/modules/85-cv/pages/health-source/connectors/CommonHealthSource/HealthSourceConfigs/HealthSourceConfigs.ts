@@ -23,13 +23,20 @@ export const healthSourcesConfig: HealthSourcesConfig = {
       metricsChart: {
         enabled: true,
         chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO
+      },
+      assign: {
+        enabled: true,
+        hideCV: false,
+        hideServiceIdentifier: false,
+        hideSLIAndHealthScore: false,
+        defaultServiceInstance: '_sourceHost'
       }
     },
     metricPacks: {
       enabled: false
     },
     sideNav: {
-      shouldBeAbleToDeleteLastMetric: true
+      shouldBeAbleToDeleteLastMetric: false
     },
     metricThresholds: {
       enabled: true
@@ -56,9 +63,12 @@ export const healthSourcesConfig: HealthSourcesConfig = {
       queryAndRecords: {
         enabled: true,
         titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQuerySubDescription'
+      },
+      assign: {
+        enabled: false,
+        defaultServiceInstance: ''
       }
     },
-
     sideNav: {
       shouldBeAbleToDeleteLastMetric: false
     },

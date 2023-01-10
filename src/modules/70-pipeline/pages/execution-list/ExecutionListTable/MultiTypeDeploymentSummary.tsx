@@ -10,12 +10,12 @@ import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Button, ButtonSize, ButtonVariation, Icon, Layout, Text, Popover } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { get } from 'lodash-es'
+import { get, uniqBy } from 'lodash-es'
 import { Classes, PopoverInteractionKind, Tooltip } from '@blueprintjs/core'
 
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'framework/strings/StringsContext'
-import type { Application } from 'services/cd-ng'
+import type { Application, Environment } from 'services/cd-ng'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
 import { isMultiSvcOrMultiEnv as getIsMultiSvcOrMultiEnv } from '@pipeline/utils/executionUtils'
 import type { StageType } from '@pipeline/utils/stageHelpers'
@@ -59,7 +59,7 @@ function getServicesTextAndTooltip(props: GetTextAndTooltipProps): [string, Reac
           ))}
         </React.Fragment>
       ) : undefined
-  } else if (Array.isArray(children) && children.length > 0) {
+  } /* istanbul ignore next */ else if (Array.isArray(children) && children.length > 0) {
     servicesText =
       get(children[0], 'data.moduleInfo.cd.serviceInfo.displayName') ||
       get(children[0], 'data.moduleInfo.cd.serviceInfo.identifier')
@@ -73,8 +73,18 @@ function getEnvironmentsTextAndTooltip(props: GetTextAndTooltipProps): [string, 
   let environmentsText = ''
   let environmentsTooltipText: React.ReactElement | undefined = undefined
 
-  const environments = get(stepParameters, 'environments.values.__encodedValue.valueDoc.value')
+  let environments = get(stepParameters, 'environments.values.__encodedValue.valueDoc.value')
   const environmentGroup = get(stepParameters, 'environmentGroup')
+
+  if (!environments) {
+    // GitOps
+    const allChildEnvs: Environment[] =
+      children?.reduce((accum: Environment[], child: PipelineGraphState) => {
+        const childEnvs = get(child, 'data.moduleInfo.cd.gitopsExecutionSummary.environments')
+        return [...accum, ...(childEnvs || [])]
+      }, []) || []
+    environments = uniqBy(allChildEnvs, env => `${env.identifier}`)
+  }
 
   if (environmentGroup) {
     environmentsText = getString('common.environmentGroup.nameWithLabel', {
@@ -94,23 +104,25 @@ function getEnvironmentsTextAndTooltip(props: GetTextAndTooltipProps): [string, 
         </React.Fragment>
       )
     }
-  } else if (Array.isArray(environments)) {
+  } else if (Array.isArray(environments) && environments.length) {
     environmentsText =
       environments.length > 1
         ? getString('pipeline.numOfEnvs', { numOfEnvironments: environments.length })
-        : get(environments[0], 'environmentRef.__encodedValue.valueDoc.value')
+        : /* istanbul ignore next */ get(environments[0], 'environmentRef.__encodedValue.valueDoc.value') ||
+          get(environments[0], 'name') ||
+          get(environments[0], 'identifier')
 
     environmentsTooltipText =
       environments.length > 1 ? (
         <React.Fragment>
           {environments.map((e, i) => (
             <Text font={{ size: 'small' }} color={Color.WHITE} margin={{ bottom: 'small' }} key={i}>
-              {get(e, 'environmentRef.__encodedValue.valueDoc.value')}
+              {get(e, 'environmentRef.__encodedValue.valueDoc.value') || get(e, 'name') || get(e, 'identifier')}
             </Text>
           ))}
         </React.Fragment>
       ) : undefined
-  } else if (Array.isArray(children) && children.length > 0) {
+  } /* istanbul ignore next */ else if (Array.isArray(children) && children.length > 0) {
     environmentsText =
       get(children[0], 'data.moduleInfo.cd.infraExecutionSummary.name') ||
       get(children[0], 'data.moduleInfo.cd.infraExecutionSummary.identifier')
@@ -127,7 +139,11 @@ function getGitOpsApplicationTextAndTooltip(
   let appsTooltipText: React.ReactElement | undefined = undefined
 
   if (Array.isArray(children) && children.length > 0) {
-    const apps: Application[] = get(children[0], 'data.moduleInfo.cd.gitOpsAppSummary.applications') || []
+    const allChildApps: Application[] = children.reduce((accum: Application[], child: PipelineGraphState) => {
+      const childApps = get(child, 'data.moduleInfo.cd.gitOpsAppSummary.applications')
+      return [...accum, ...(childApps || [])]
+    }, [])
+    const apps = uniqBy(allChildApps, app => `${app.identifier}_${app.name}_${app.agentIdentifier}`)
     appsText = apps.length > 1 ? getString('pipeline.numOfApps', { numOfApps: apps.length }) : apps[0]?.name || ''
     appsTooltipText =
       apps.length > 1 ? (

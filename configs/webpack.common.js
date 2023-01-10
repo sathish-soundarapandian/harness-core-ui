@@ -36,6 +36,7 @@ const enableTIUI = process.env.ENABLE_TI_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
 const enableCODE = process.env.ENABLE_CODE === 'true'
 const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
+const enableIACM = process.env.ENABLE_IACM === 'true'
 
 console.log('Common build flags')
 console.table({
@@ -47,7 +48,8 @@ console.table({
   enableTIUI,
   enableSTO,
   enableCODE,
-  enableFFUI
+  enableFFUI,
+  enableIACM
 })
 
 const config = {
@@ -204,7 +206,8 @@ const config = {
         enableCIUI,
         enableTIUI,
         enableCODE,
-        enableFFUI
+        enableFFUI,
+        enableIACM
       })
     ),
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
@@ -266,6 +269,11 @@ if (!enableCODE) {
 
 if (!enableFFUI) {
   config.resolve.alias['ffui/MicroFrontendApp'] = ChildAppError
+}
+
+if (!enableIACM) {
+  config.resolve.alias['iacm/MicroFrontendApp'] = ChildAppError
+  config.resolve.alias['iacm/IACMStage'] = ChildAppError
 }
 
 module.exports = config

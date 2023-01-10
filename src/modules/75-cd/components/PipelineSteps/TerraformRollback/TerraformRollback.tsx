@@ -26,7 +26,7 @@ import {
   ValidateInputSetProps
 } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions, VALIDATORS } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
@@ -132,26 +132,9 @@ function TerraformRollbackWidget(
                 <FormMultiTypeDurationField
                   name="timeout"
                   label={getString('pipelineSteps.timeoutLabel')}
-                  multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                  multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
                   disabled={readonly}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                    allowedValuesValidator={VALIDATORS[ALLOWED_VALUES_TYPE.TIME]({ minimum: '10s' })}
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      /* istanbul ignore next */
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={readonly}
-                  />
-                )}
               </div>
               <div className={stepCss.divider} />
               <div className={cx(stepCss.formGroup, stepCss.md)}>

@@ -2,6 +2,7 @@ import React from 'react'
 import { Formik } from 'formik'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
 import { FIELD_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import { TestWrapper } from '@common/utils/testUtils'
 import JsonSelectorWithDrawer from '../JsonSelectorWithDrawer'
@@ -11,7 +12,7 @@ describe('JsonSelectorWithDrawer', () => {
   test('should pass correct selected data', async () => {
     render(
       <TestWrapper>
-        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+        <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
           <Formik initialValues={{ serviceInstance: 'test' }} onSubmit={() => Promise.resolve()}>
             <JsonSelectorWithDrawer
               jsonData={{ propertyName: 'test value' }}
@@ -24,6 +25,8 @@ describe('JsonSelectorWithDrawer', () => {
                 }
               ]}
               disableFields={false}
+              multiTypeRecord={null}
+              setMultiTypeRecord={() => void 0}
             />
           </Formik>
         </CommonHealthSourceProvider>
@@ -50,7 +53,7 @@ describe('JsonSelectorWithDrawer', () => {
   test('should not render anything if invalid config is passed', async () => {
     render(
       <TestWrapper>
-        <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+        <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
           <Formik initialValues={{ serviceInstance: 'test' }} onSubmit={() => Promise.resolve()}>
             <JsonSelectorWithDrawer
               jsonData={{ propertyName: 'test value' }}
@@ -63,6 +66,8 @@ describe('JsonSelectorWithDrawer', () => {
                 }
               ]}
               disableFields={false}
+              multiTypeRecord={null}
+              setMultiTypeRecord={() => void 0}
             />
           </Formik>
         </CommonHealthSourceProvider>

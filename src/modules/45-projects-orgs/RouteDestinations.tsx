@@ -617,6 +617,9 @@ export default (
         <UsersPage />
       </AccessControlPage>
     </RouteWithLayout>
+    <RouteWithLayout sidebarProps={ProjectDetailsSideNavProps} path={routes.toFileStore({ ...projectPathProps })} exact>
+      <FileStorePage />
+    </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={ProjectDetailsSideNavProps}
       path={[routes.toUserDetails({ ...projectPathProps, ...userPathProps })]}

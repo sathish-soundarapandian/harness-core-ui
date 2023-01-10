@@ -106,7 +106,7 @@ const Overview: React.FC<OverviewProps & StepProps<ConnectorConfigDTO>> = ({ nex
               .required(getString('validation.connectorName'))
               .max(63)
               .matches(delegateNameRegex, getString('delegates.delegateNameRegexIssue')),
-            identifier: IdentifierSchema()
+            identifier: IdentifierSchema(getString)
           })}
           onSubmit={(formData, formikActions) => {
             handleSubmit(formData, formikActions)

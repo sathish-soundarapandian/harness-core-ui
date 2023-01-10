@@ -78,26 +78,9 @@ export const AzureTrafficShiftRef = (props: AzureTrafficShiftProps, formikRef: S
               <FormMultiTypeDurationField
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
-                multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
                 disabled={readonly}
               />
-              {getMultiTypeFromValue(get(formik, 'values.timeout')) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={get(formik, 'values.timeout') as string}
-                  type="String"
-                  variableName="step.timeout"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  showAdvanced={true}
-                  onChange={
-                    /* istanbul ignore next */ value => {
-                      formik?.setFieldValue('timeout', value)
-                    }
-                  }
-                  isReadonly={readonly}
-                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                />
-              )}
             </div>
             <div className={stepCss.divider} />
             <div className={cx(stepCss.formGroup, stepCss.md)}>

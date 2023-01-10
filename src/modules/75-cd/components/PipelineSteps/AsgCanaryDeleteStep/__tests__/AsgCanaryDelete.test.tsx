@@ -108,7 +108,7 @@ describe('Asg Canary Delete Step tests', () => {
   })
 
   test('Variables view renders fine', async () => {
-    const { getByText } = render(
+    const { container } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
         type={StepType.AsgCanaryDelete}
@@ -137,9 +137,6 @@ describe('Asg Canary Delete Step tests', () => {
       />
     )
 
-    expect(getByText('name')).toBeVisible()
-    expect(getByText('timeout')).toBeVisible()
-    expect(getByText('Step AsgCanaryDelete')).toBeVisible()
-    expect(getByText('10m')).toBeVisible()
+    expect(container).toMatchSnapshot()
   })
 })

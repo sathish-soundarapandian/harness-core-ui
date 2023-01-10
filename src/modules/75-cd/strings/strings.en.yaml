@@ -237,7 +237,7 @@ pipelineSteps:
     hideEnvironmentInputs: Hide environment inputs
     viewInfrastructureInputs: View infrastructure inputs
     hideInfrastructureInputs: Hide infrastructure inputs
-    multiEnvironmentsParallelDeployLabel: Deploy environments in parallel?
+    multiEnvironmentsParallelDeployLabel: Deploy to Environments or Infrastructures in parallel?
     environmentGroupDialogTitleText: Deploy to environment group?
     environmentGroupConfirmationText: Are you sure you want to switch to deploying to a single environment group? If you choose to proceed, your existing environments will be lost.
     multiEnvironmentsDialogTitleText: Deploy to multiple environments or infrastructures?
@@ -272,9 +272,9 @@ pipelineSteps:
       scalingPolicy: Scaling Policy
       scalableTarget: Scalable Target
     newServiceOverride: New configuration overrides
-    multiServicesText: Deploy to multiple Services
-    multiServicesTitleText: Deploy to multiple services?
-    multiServicesParallelDeployLabel: Deploy services in parallel?
+    multiServicesText: Deploy multiple Services
+    multiServicesTitleText: Deploy multiple Services?
+    multiServicesParallelDeployLabel: Deploy Services in parallel?
     multiServicesConfirmationText: Are you sure you want to switch to deploying multiple services?. If you choose to proceed, your existing service will be migrated automatically.
     singleServicesTitleText: Deploy to single service?
     singleServicesConfirmationText: Are you sure you want to switch to deploying to a single services?. If you choose to proceed, your existing services will be lost.

@@ -1808,6 +1808,7 @@ export interface K8sDirectInfraYamlSpec {
   serviceAccountName?: string
   tolerations?: Toleration[]
   volumes?: CIVolume[]
+  hostNames?: string[]
 }
 
 export type K8sHostedInfraYaml = Infrastructure & {

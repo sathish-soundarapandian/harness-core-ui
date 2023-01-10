@@ -28,6 +28,7 @@ export function processSingleEnvironmentFormValues(
         environment: {
           environmentRef: RUNTIME_INPUT_VALUE,
           deployToAll: false,
+          ...(!isEmpty(data.provisioner) && { provisioner: data.provisioner }),
           environmentInputs: RUNTIME_INPUT_VALUE as any,
           ...(gitOpsEnabled
             ? { gitOpsClusters: RUNTIME_INPUT_VALUE as any }
@@ -42,6 +43,7 @@ export function processSingleEnvironmentFormValues(
             environmentInputs: data.environmentInputs[data.environment]
           }),
           deployToAll: false,
+          ...(!isEmpty(data.provisioner) && { provisioner: data.provisioner }),
           ...(data.environment &&
             !!data.infrastructure && {
               infrastructureDefinitions:
@@ -106,6 +108,7 @@ export function processSingleEnvironmentGitOpsFormValues(
           ...(!!data.environmentInputs?.[data.environment] && {
             environmentInputs: data.environmentInputs[data.environment]
           }),
+          ...(!isEmpty(data.provisioner) && { provisioner: data.provisioner }),
           deployToAll,
           ...(!isEmpty(data.clusters) && {
             gitOpsClusters: Array.isArray(selectedClusters)
@@ -247,6 +250,9 @@ export function processEnvironmentGroupFormValues(
       return {
         environmentGroup: {
           envGroupRef: RUNTIME_INPUT_VALUE,
+          metadata: {
+            parallel: data.parallel
+          },
           ...(filters.length
             ? { filters }
             : {
@@ -265,6 +271,9 @@ export function processEnvironmentGroupFormValues(
       return {
         environmentGroup: {
           envGroupRef: data.environmentGroup,
+          metadata: {
+            parallel: data.parallel
+          },
           ...(filters?.length
             ? { filters }
             : {

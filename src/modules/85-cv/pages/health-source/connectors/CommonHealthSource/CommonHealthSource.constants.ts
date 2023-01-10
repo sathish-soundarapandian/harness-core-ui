@@ -15,7 +15,7 @@ export const HealthSourceProducts: HealthSourceProductsType = {
 }
 
 export const initConfigurationsForm = {
-  customMetricsMap: new Map(),
+  queryMetricsMap: new Map(),
   selectedMetric: '',
   ignoreThresholds: [],
   failFastThresholds: []
@@ -39,6 +39,7 @@ export const CustomMetricFormFieldNames = {
   GROUP_NAME: 'groupName',
 
   QUERY: 'query',
+  IS_QUERY_EXECUTED: 'isQueryExecuted',
 
   METRIC_VALUE: 'metricValue',
   TIMESTAMP_LOCATOR: 'timestamp',
@@ -55,7 +56,7 @@ export const CustomMetricFormFieldNames = {
 }
 
 export const CommonConfigurationsFormFieldNames = {
-  CUSTOM_METRICS_MAP: 'customMetricsMap',
+  CUSTOM_METRICS_MAP: 'queryMetricsMap',
   SELECTED_METRIC: 'selectedMetric',
   IGNORE_THRESHOLDS: 'ignoreThresholds',
   FAILFAST_THRESHOLDS: 'failFastThresholds'

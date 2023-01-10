@@ -27,6 +27,7 @@ declare const styles: {
   readonly duration: string
   readonly fieldsGroup: string
   readonly formGroup: string
+  readonly formRow: string
   readonly inpLabel: string
   readonly inputWidth: string
   readonly kvpairLg: string

@@ -8,15 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 
-import {
-  Accordion,
-  AllowedTypes,
-  Formik,
-  FormInput,
-  getMultiTypeFromValue,
-  IconName,
-  MultiTypeInputType
-} from '@harness/uicore'
+import { Accordion, AllowedTypes, Formik, FormInput, IconName } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 
@@ -41,7 +33,6 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { StringsMap } from 'stringTypes'
 
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MergePRVariableStepProps, MergePRVariableView } from './MergePrVariableView'
 import MergePRInputStep from './MergePrInputStep'
@@ -132,7 +123,7 @@ function MergePRWidget(props: MergePrProps, formikRef: StepFormikFowardRef<Merge
                   name="timeout"
                   label={getString('pipelineSteps.timeoutLabel')}
                   multiTypeDurationProps={{
-                    enableConfigureOptions: false,
+                    enableConfigureOptions: true,
                     expressions,
                     disabled: readonly,
                     allowableTypes
@@ -140,26 +131,6 @@ function MergePRWidget(props: MergePrProps, formikRef: StepFormikFowardRef<Merge
                   className={stepCss.duration}
                   disabled={readonly}
                 />
-                {getMultiTypeFromValue(formik.values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={formik.values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    // istanbul ignore next
-                    onChange={
-                      // istanbul ignore next
-                      value => {
-                        // istanbul ignore next
-                        formik.setFieldValue('timeout', value)
-                      }
-                    }
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
 
               <div className={cx(stepCss.formGroup, stepCss.sm)}>

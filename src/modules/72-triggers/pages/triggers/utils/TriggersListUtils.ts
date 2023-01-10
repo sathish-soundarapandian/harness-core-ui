@@ -79,7 +79,11 @@ export const getTriggerIcon = ({
   return 'yaml-builder-trigger'
 }
 
-const triggerDrawerMap = (getString: (key: StringKeys) => string, isNewService: boolean): AddDrawerMapInterface => ({
+const triggerDrawerMap = (
+  getString: (key: StringKeys) => string,
+  isNewService: boolean,
+  allowV2Artifacts: boolean | undefined
+): AddDrawerMapInterface => ({
   drawerLabel: getString('common.triggersLabel'),
   showAllLabel: getString('triggers.showAllTriggers'),
   categories: [
@@ -180,6 +184,22 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string, isNewService: 
           iconName: ArtifactIconByType.GithubPackageRegistry as IconName,
           disabled: isNewService
         },
+        ...(allowV2Artifacts
+          ? [
+              {
+                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Jenkins]),
+                value: ENABLED_ARTIFACT_TYPES.Jenkins,
+                iconName: ArtifactIconByType.Jenkins as IconName,
+                disabled: isNewService
+              },
+              {
+                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AzureArtifacts]),
+                value: ENABLED_ARTIFACT_TYPES.AzureArtifacts,
+                iconName: ArtifactIconByType.AzureArtifacts as IconName,
+                disabled: isNewService
+              }
+            ]
+          : []),
         ...(isNewService
           ? [
               {
@@ -244,8 +264,9 @@ export const getSourceRepoOptions = (getString: (str: StringKeys) => string): { 
 
 export const getCategoryItems = (
   getString: (key: StringKeys) => string,
-  isNewService: boolean
-): AddDrawerMapInterface => triggerDrawerMap(getString, isNewService)
+  isNewService: boolean,
+  allowV2Artifacts: boolean | undefined
+): AddDrawerMapInterface => triggerDrawerMap(getString, isNewService, allowV2Artifacts)
 
 export interface ItemInterface {
   itemLabel: string

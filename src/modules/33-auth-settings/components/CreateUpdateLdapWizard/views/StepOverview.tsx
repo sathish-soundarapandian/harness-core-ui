@@ -42,7 +42,7 @@ export const StepOverview: React.FC<StepProps<CreateUpdateLdapWizardProps> & Lda
       authorizationEnabled: authorizationEnabled
     }
     const validationSchema = Yup.object().shape({
-      displayName: NameSchema()
+      displayName: NameSchema(getString)
     })
 
     return (

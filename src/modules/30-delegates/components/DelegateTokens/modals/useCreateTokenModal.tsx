@@ -110,7 +110,7 @@ export const useCreateTokenModal = ({ onSuccess }: CreateTokenModalProps): Creat
             onSubmit={onSubmit}
             formName="createTokenForm"
             validationSchema={Yup.object().shape({
-              name: NameSchema({ requiredErrorMsg: getString('delegates.tokens.tokenNameRequired') }),
+              name: NameSchema(getString, { requiredErrorMsg: getString('delegates.tokens.tokenNameRequired') }),
               tokenValue: Yup.string()
             })}
           >

@@ -142,7 +142,7 @@ exports[`test cases for Budgets List Page should be able to render the budget li
           class="bp3-input  ExpandingSearchInput--filter"
           dir="auto"
           placeholder="ce.budgets.listPage.searchText"
-          style="padding-right: 0px;"
+          style="padding-right: 38px;"
           type="search"
           value=""
         />

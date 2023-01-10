@@ -42,12 +42,15 @@ export interface InputOutputTabRowProps {
   data: Record<string, any>
   level: number
   prefix: string
+  isMultiline: boolean
 }
 
 export function InputOutputTabRow(props: InputOutputTabRowProps): React.ReactElement {
   return (
     <React.Fragment>
       {toPairs(props.data).map(([key, value]) => {
+        const isDescriptionField = key.toLowerCase().endsWith('description')
+
         if (key.startsWith('_') || isNil(value)) return null
 
         let newKey = `${props.prefix}.${key}`
@@ -61,7 +64,7 @@ export function InputOutputTabRow(props: InputOutputTabRowProps): React.ReactEle
 
           return (
             <Collapse key={key} title={startCase(key)}>
-              <InputOutputTabRow prefix={newKey} data={value} level={props.level + 1} />
+              <InputOutputTabRow prefix={newKey} data={value} level={props.level + 1} isMultiline={props.isMultiline} />
             </Collapse>
           )
         }
@@ -92,6 +95,7 @@ export function InputOutputTabRow(props: InputOutputTabRowProps): React.ReactEle
                       prefix={`${newKey}[${index}]`}
                       data={item}
                       level={props.level + 1}
+                      isMultiline={props.isMultiline}
                     />
                   </Collapse>
                 )
@@ -107,7 +111,14 @@ export function InputOutputTabRow(props: InputOutputTabRowProps): React.ReactEle
             </div>
             <div className={css.value}>
               <CopyText textToCopy={value.toString()} className={css.valueText}>
-                <LinkifyText content={toString(value)} />
+                <LinkifyText
+                  content={toString(value)}
+                  textProps={
+                    isDescriptionField && props.isMultiline
+                      ? { style: { wordBreak: 'break-word', whiteSpace: 'pre-wrap' } }
+                      : {}
+                  }
+                />
               </CopyText>
             </div>
           </div>
@@ -122,10 +133,11 @@ export interface InputOutputTabProps {
   data?: Record<string, any>
   mode: 'input' | 'output'
   baseFqn?: string
+  isMultiline?: boolean
 }
 
 export function InputOutputTab(props: InputOutputTabProps): React.ReactElement {
-  const { mode, baseFqn = '', data } = props
+  const { mode, baseFqn = '', data, isMultiline } = props
   const { getString } = useStrings()
 
   if (!data || isEmpty(data)) {
@@ -144,7 +156,7 @@ export function InputOutputTab(props: InputOutputTabProps): React.ReactElement {
         <div>{getString(mode === 'input' ? 'inputName' : 'outputName')}</div>
         <div>{getString(mode === 'input' ? 'inputValue' : 'outputValue')}</div>
       </div>
-      <InputOutputTabRow prefix={baseFqn} data={data} level={0} />
+      <InputOutputTabRow prefix={baseFqn} data={data} level={0} isMultiline={!!isMultiline} />
     </div>
   )
 }

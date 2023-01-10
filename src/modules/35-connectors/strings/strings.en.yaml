@@ -76,7 +76,7 @@ addParameter: Add Parameter
 baseURL: Base URL
 requestMethod: Request Method
 optionalAuthentication: Authentication (optional)
-bearerToken: Bearer Token (HTTP Header)
+bearerToken: Bearer Token(HTTP Header)
 apiToken: API Token
 apiTokenValidation: API Token is required.
 connectivityMode:

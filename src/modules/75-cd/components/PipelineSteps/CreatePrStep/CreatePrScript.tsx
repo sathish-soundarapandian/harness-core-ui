@@ -19,7 +19,7 @@ import {
 import { get } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
@@ -49,7 +49,7 @@ export default function CreatePRScript(props: {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const scriptType: ScriptType = get(formValues, 'spec.shell', 'Bash')
-  const timeout = get(formValues, 'timeout', '')
+
   return (
     <>
       {stepViewType !== StepViewType.Template && (
@@ -68,30 +68,10 @@ export default function CreatePRScript(props: {
         <FormMultiTypeDurationField
           name="timeout"
           label={getString('pipelineSteps.timeoutLabel')}
-          multiTypeDurationProps={{ enableConfigureOptions: false, expressions, disabled: readonly, allowableTypes }}
+          multiTypeDurationProps={{ enableConfigureOptions: true, expressions, disabled: readonly, allowableTypes }}
           className={stepCss.duration}
           disabled={readonly}
         />
-        {getMultiTypeFromValue(timeout) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={timeout as string}
-            type="String"
-            variableName="step.timeout"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            // istanbul ignore next
-            onChange={
-              // istanbul ignore next
-              value => {
-                // istanbul ignore next
-                setFieldValue('timeout', value)
-              }
-            }
-            isReadonly={readonly}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-          />
-        )}
       </div>
       <div className={stepCss.divider} />
 

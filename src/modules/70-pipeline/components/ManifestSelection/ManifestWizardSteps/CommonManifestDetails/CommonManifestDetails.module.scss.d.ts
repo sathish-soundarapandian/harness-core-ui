@@ -9,6 +9,7 @@
 declare const styles: {
   readonly addFileButton: string
   readonly addNewManifest: string
+  readonly addmarginBottom: string
   readonly addmarginTop: string
   readonly advancedStepOpen: string
   readonly bp3PopoverTarget: string

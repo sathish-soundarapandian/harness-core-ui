@@ -221,14 +221,14 @@ const ChannelRow: React.FC<ChannelRow> = ({
           type: Yup.string().required(),
           groupEmail: Yup.string().when(['type'], {
             is: 'EMAIL',
-            then: EmailSchema()
+            then: EmailSchema(getString)
           }),
           slackWebhookUrl: Yup.string().when(['type'], {
             is: 'SLACK',
             then:
               selectedInputType === MultiTypeInputType.EXPRESSION
                 ? Yup.string().required(getString('common.validation.urlIsRequired'))
-                : URLValidationSchema()
+                : URLValidationSchema(getString)
           }),
           pagerDutyKey: Yup.string().when(['type'], {
             is: 'PAGERDUTY',
@@ -239,7 +239,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
             then:
               selectedInputType === MultiTypeInputType.EXPRESSION
                 ? Yup.string().required(getString('common.validation.urlIsRequired'))
-                : URLValidationSchema()
+                : URLValidationSchema(getString)
           })
         })}
         formName="NotificationForm"

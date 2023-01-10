@@ -571,7 +571,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           <span className={cx(css.filePath, css.flexCenter, { [css.lightBg]: theme === 'DARK' })}>{fileName}</span>
           {fileName && entityType ? <Tag className={css.entityTag}>{entityType}</Tag> : null}
           {yamlRef.current ? (
-            <Container padding={{ left: 'medium' }}>
+            <Container padding={{ left: entityType ? 'medium' : undefined }}>
               {showCopyIcon ? <CopyToClipboard content={defaultTo(yamlRef.current, '')} showFeedback={true} /> : null}
             </Container>
           ) : null}

@@ -18,6 +18,7 @@ declare const styles: {
   readonly manifestInfoTooltip: string
   readonly nopadLeft: string
   readonly subheading: string
+  readonly tooltip: string
   readonly verticalSpacingInput: string
 }
 export default styles

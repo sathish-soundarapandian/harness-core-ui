@@ -199,7 +199,8 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
                   onChange={selectedConnector => {
                     if (
                       (formik.values.connectorRef as ConnectorRefFormValueType).value !==
-                      (selectedConnector as unknown as EntityReferenceResponse<ConnectorReferenceDTO>).record.identifier
+                      (selectedConnector as unknown as EntityReferenceResponse<ConnectorReferenceDTO>)?.record
+                        ?.identifier
                     ) {
                       resetFieldValue(formik, 'cluster')
                     }

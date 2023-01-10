@@ -11,7 +11,14 @@ import { FFContextProvider, FFContextProviderProps } from '@harnessio/ff-react-c
 import { PageSpinner } from '@harness/uicore'
 
 export function FeatureFlagsProvider({ children }: PropsWithChildren<unknown>): ReactElement {
-  const { useLegacyFeatureFlags, sdkKey, baseUrl, enableStream: streamEnabled, async } = window.featureFlagsConfig
+  const {
+    useLegacyFeatureFlags,
+    sdkKey,
+    baseUrl,
+    eventUrl,
+    enableStream: streamEnabled,
+    async
+  } = window.featureFlagsConfig
   const { accountId } = useParams<Record<string, string>>()
 
   const target = useMemo<FFContextProviderProps['target']>(
@@ -31,7 +38,7 @@ export function FeatureFlagsProvider({ children }: PropsWithChildren<unknown>): 
       async={async}
       apiKey={sdkKey}
       target={target}
-      options={{ baseUrl, streamEnabled }}
+      options={{ baseUrl, streamEnabled, eventUrl }}
       fallback={<PageSpinner />}
     >
       {children}

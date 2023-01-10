@@ -64,6 +64,7 @@ export function getInstanceDropdownSchema(
   getString: UseStringsReturn['getString']
 ): Yup.ObjectSchema {
   const { maximum } = props
+  /* istanbul ignore next */
   if (maximum && typeof maximum !== 'number') {
     throw new Error(`Invalid format "${maximum}" provided for maximum value`)
   }
@@ -73,6 +74,7 @@ export function getInstanceDropdownSchema(
         const { required = false } = props
         if (type === InstanceTypes.Count) {
           const value = this.parent?.spec?.value
+          /* istanbul ignore next */
           if (getMultiTypeFromValue(value as unknown as string) !== MultiTypeInputType.FIXED) {
             return true
           }
@@ -236,7 +238,7 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
   const valueForConfigureOptions = value?.spec?.value as string
 
   const tooltipContext = React.useContext(FormikTooltipContext)
-  const dataTooltipId = tooltipContext?.formName ? `${tooltipContext?.formName}_${name}` : ''
+  const dataTooltipId = tooltipContext?.formName ? `${tooltipContext.formName}_${name}` : ''
 
   return (
     <Container>
@@ -261,9 +263,11 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
             showRequiredField={false}
             showDefaultField={false}
             showAdvanced={true}
-            onChange={val => {
-              formik?.setFieldValue(name, { ...value, spec: { value: val } })
-            }}
+            onChange={
+              /* istanbul ignore next */ val => {
+                formik?.setFieldValue(name, { ...value, spec: { value: val } })
+              }
+            }
             style={{ marginTop: 'var(--spacing-6)' }}
             allowedValuesType={ALLOWED_VALUES_TYPE.NUMBER}
             {...configureOptionsProps}

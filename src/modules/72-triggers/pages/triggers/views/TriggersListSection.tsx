@@ -31,7 +31,12 @@ import copy from 'clipboard-copy'
 import { Classes, Intent, Menu, Position } from '@blueprintjs/core'
 import { isUndefined, isEmpty, sum, get } from 'lodash-es'
 import cx from 'classnames'
-import { NGTriggerDetailsResponse, useDeleteTrigger, useUpdateTrigger } from 'services/pipeline-ng'
+import {
+  NGTriggerDetailsResponse,
+  PageNGTriggerDetailsResponse,
+  useDeleteTrigger,
+  useUpdateTrigger
+} from 'services/pipeline-ng'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -39,8 +44,9 @@ import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { UseStringsReturn } from 'framework/strings'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import {
   getTriggerIcon,
   GitSourceProviders,
@@ -56,12 +62,13 @@ export interface GoToEditWizardInterface {
   triggerType?: string
 }
 interface TriggersListSectionProps {
-  data?: NGTriggerDetailsResponse[] // BE accidentally reversed. Will be changed to NGTriggerResponse later
+  triggerListData?: PageNGTriggerDetailsResponse
   refetchTriggerList: () => void
   goToEditWizard: ({ triggerIdentifier, triggerType }: GoToEditWizardInterface) => void
   goToDetails: ({ triggerIdentifier, triggerType }: GoToEditWizardInterface) => void
   isPipelineInvalid?: boolean
   gitAwareForTriggerEnabled?: boolean
+  gotoPage: (pageNumber: number) => void
 }
 
 // type CustomColumn<T extends object> = Column<T> & {
@@ -555,21 +562,23 @@ const RenderPipelineReferenceBranch: Renderer<CellProps<NGTriggerDetailsResponse
 }
 
 export const TriggersListSection: React.FC<TriggersListSectionProps> = ({
-  data,
+  triggerListData,
   refetchTriggerList,
   goToEditWizard,
   goToDetails,
   isPipelineInvalid,
-  gitAwareForTriggerEnabled
+  gitAwareForTriggerEnabled,
+  gotoPage
 }): JSX.Element => {
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
-  const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<{
-    projectIdentifier: string
-    orgIdentifier: string
-    accountId: string
-    pipelineIdentifier: string
-  }>()
+  const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<PipelinePathProps>()
+  const data = get(triggerListData, 'content')
+  const pageIndex = get(triggerListData, 'pageIndex', DEFAULT_PAGE_INDEX)
+  const pageSize = get(triggerListData, 'pageSize', DEFAULT_PAGE_SIZE)
+  const totalItems = get(triggerListData, 'totalItems', 0)
+  const totalPages = get(triggerListData, 'totalPages', 0)
+
   const [isExecutable] = usePermission(
     {
       resourceScope: {
@@ -700,6 +709,13 @@ export const TriggersListSection: React.FC<TriggersListSectionProps> = ({
       className={css.table}
       columns={columns}
       data={data || /* istanbul ignore next */ []}
+      pagination={{
+        itemCount: totalItems,
+        pageSize,
+        pageCount: totalPages,
+        pageIndex,
+        gotoPage
+      }}
       onRowClick={item => goToDetails({ triggerIdentifier: item.identifier || '' })}
     />
   )

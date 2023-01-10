@@ -9,14 +9,13 @@ import React from 'react'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { Formik, FormInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { StepElementConfig } from 'services/cd-ng'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { GitOpsFetchLinkedAppsProps } from './helper'
@@ -44,7 +43,6 @@ function GitOpsFetchLinkedAppsWidget(
         })}
       >
         {(formik: FormikProps<StepElementConfig>) => {
-          const { values, setFieldValue } = formik
           setFormikRef(formikRef, formik)
           return (
             <>
@@ -59,26 +57,11 @@ function GitOpsFetchLinkedAppsWidget(
                   name="timeout"
                   label={getString('pipelineSteps.timeoutLabel')}
                   multiTypeDurationProps={{
-                    enableConfigureOptions: false,
+                    enableConfigureOptions: true,
                     disabled: readonly,
                     allowableTypes
                   }}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
             </>
           )

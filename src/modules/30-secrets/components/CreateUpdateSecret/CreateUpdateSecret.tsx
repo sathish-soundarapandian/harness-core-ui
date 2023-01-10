@@ -429,8 +429,8 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
         formName="createUpdateSecretForm"
         enableReinitialize
         validationSchema={Yup.object().shape({
-          name: NameSchema(),
-          identifier: IdentifierSchema(),
+          name: NameSchema(getString),
+          identifier: IdentifierSchema(getString),
           value:
             editing || type === 'SecretFile' || selectedSecretManager?.type === 'CustomSecretManager'
               ? Yup.string().trim()

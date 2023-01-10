@@ -14,7 +14,7 @@ const getString = (key: StringKeys): string => key
 
 describe('Test util methods', () => {
   test('Test getCategoryItems method', () => {
-    const triggerCategories = getCategoryItems(getString, true).categories
+    const triggerCategories = getCategoryItems(getString, true, true).categories
     let webhookTriggerCategories = triggerCategories.find((item: CategoryInterface) => item.categoryValue === 'Webhook')
     expect(triggerCategories.length).toBe(5)
     webhookTriggerCategories = triggerCategories.find((item: CategoryInterface) => item.categoryValue === 'Webhook')

@@ -22,6 +22,7 @@ import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
 import type { NexusRegistrySpec } from 'services/pipeline-ng'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
+import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { ImagePathProps, RepositoryPortOrServer } from '../../../ArtifactInterface'
 import { repositoryPortOrServer } from '../../../ArtifactHelper'
 import ArtifactImagePath from '../ArtifactImagePath/ArtifactImagePath'
@@ -66,7 +67,7 @@ export function NexusArtifact({
             ...(formData.repositoryFormat === RepositoryPortOrServer.RepositoryPort && {
               repositoryPort: formData.repositoryPort
             }),
-            connectorRef: prevStepData?.connectorId?.value
+            connectorRef: getConnectorIdValue(prevStepData)
           })
         }}
       >

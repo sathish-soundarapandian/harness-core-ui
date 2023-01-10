@@ -5,6 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
+import type { CommonHealthSourceContextType } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
+
 export const appdMetric = {
   metricPath: {
     metricPathDropdown_0: { path: '', value: 'Calls per Minute' },
@@ -255,3 +258,9 @@ const exectedNewMetricData = {
 
 expectedMappedMetrics.set('appdMetric', exectedMetricData)
 expectedMappedMetrics.set('appdMetric new', exectedNewMetricData)
+
+export const updateParentFormikMock = jest.fn()
+export const commonHealthSourceProviderPropsMock2: CommonHealthSourceContextType = {
+  ...commonHealthSourceProviderPropsMock,
+  updateParentFormik: updateParentFormikMock
+}

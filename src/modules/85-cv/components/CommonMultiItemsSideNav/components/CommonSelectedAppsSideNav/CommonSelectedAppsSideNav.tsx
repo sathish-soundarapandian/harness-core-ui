@@ -21,7 +21,7 @@ export interface CommonSelectedAppsSideNavProps {
   groupedSelectedApps?: GroupedCreatedMetrics
   isMetricThresholdEnabled?: boolean
   openEditMetricModal: () => void
-  isValidInput?: boolean
+  hideDeleteIcon?: boolean
 }
 
 export function CommonSelectedAppsSideNav(props: CommonSelectedAppsSideNavProps): JSX.Element {
@@ -29,12 +29,12 @@ export function CommonSelectedAppsSideNav(props: CommonSelectedAppsSideNavProps)
     onSelect,
     filterProps,
     headerText,
-    isValidInput,
     selectedItem,
     onRemoveItem,
     openEditMetricModal,
     groupedSelectedApps,
-    isMetricThresholdEnabled
+    isMetricThresholdEnabled,
+    hideDeleteIcon
   } = props
 
   const groupedSelectedAppsList = Object.entries(groupedSelectedApps || {})
@@ -51,7 +51,7 @@ export function CommonSelectedAppsSideNav(props: CommonSelectedAppsSideNavProps)
           groupedSelectedAppsList={groupedSelectedAppsList}
           isMetricThresholdEnabled={isMetricThresholdEnabled}
           openEditMetricModal={openEditMetricModal}
-          isValidInput={isValidInput}
+          hideDeleteIcon={hideDeleteIcon}
         />
       </Container>
     </Container>

@@ -13,8 +13,8 @@ import { TestWrapper } from '@common/utils/testUtils'
 import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
 import CustomMetric from '../CommonCustomMetric'
 import { initGroupedCreatedMetrics, initializeSelectedMetricsMap } from '../CommonCustomMetric.utils'
+import { commonHealthSourceProviderPropsMock2, updateParentFormikMock } from './CommonCustomMetric.mock'
 
-const updateParentFormik = jest.fn()
 const WrapperComponent = () => {
   const INIT = { metricName: 'Metric Name', groupName: { label: 'Group 1', value: 'Group 1' } }
   const customMetricsMap = new Map()
@@ -28,7 +28,7 @@ const WrapperComponent = () => {
   const formInit = mappedMetrics.get(selectedMetric)
 
   return (
-    <CommonHealthSourceProvider updateParentFormik={updateParentFormik}>
+    <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock2}>
       <Formik initialValues={formInit} onSubmit={jest.fn()} formName="runtimeInputsTest">
         {formik => {
           const createdMetrics = Array.from(customMetricsMap?.keys()) || ['health source metric']
@@ -90,7 +90,7 @@ describe('Test case', () => {
       }
     ])
 
-    expect(updateParentFormik).toHaveBeenCalled()
+    expect(updateParentFormikMock).toHaveBeenCalled()
     await waitFor(() => expect(getAllByTestId('sideNav-options').length).toEqual(1))
     const metricSideNav = getAllByTestId('sideNav-options')[0]
 

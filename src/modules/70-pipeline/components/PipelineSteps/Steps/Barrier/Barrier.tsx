@@ -35,7 +35,6 @@ import {
 } from 'services/pipeline-ng'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { useStrings } from 'framework/strings'
 import {
@@ -155,7 +154,6 @@ function BarrierWidget(props: BarrierProps, formikRef: StepFormikFowardRef<Barri
         })}
       >
         {(formik: FormikProps<BarrierData>) => {
-          const { values, setFieldValue } = formik
           setFormikRef(formikRef, formik)
           return (
             <>
@@ -170,27 +168,12 @@ function BarrierWidget(props: BarrierProps, formikRef: StepFormikFowardRef<Barri
                   name="timeout"
                   label={getString('pipelineSteps.timeoutLabel')}
                   multiTypeDurationProps={{
-                    enableConfigureOptions: false,
+                    enableConfigureOptions: true,
                     allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                       item => item !== MultiTypeInputType.EXPRESSION
                     ) as AllowedTypes
                   }}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={props.isReadonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
 
               <div className={stepCss.divider} />

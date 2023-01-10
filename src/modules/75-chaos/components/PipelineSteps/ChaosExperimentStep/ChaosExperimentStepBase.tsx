@@ -9,6 +9,7 @@ import React from 'react'
 import { Formik, FormikForm, Container, FormInput, Layout, Button, useToggleOpen, Accordion } from '@harness/uicore'
 import { Drawer, FormGroup, Label } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
+import { isEqual } from 'lodash-es'
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
@@ -41,6 +42,19 @@ import css from './ChaosExperimentStep.module.scss'
 const PipelineExperimentSelect = React.lazy(() => import('chaos/PipelineExperimentSelect'))
 // eslint-disable-next-line import/no-unresolved
 const ExperimentPreview = React.lazy(() => import('chaos/ExperimentPreview'))
+
+export const MemoizedPipelineExperimentSelect = React.memo(function ResilienceViewTabContent(
+  props: PipelineExperimentSelectProps
+) {
+  return <ChildAppMounter<PipelineExperimentSelectProps> ChildApp={PipelineExperimentSelect} {...props} />
+})
+
+export const MemoizedExperimentPreview = React.memo(
+  function ResilienceViewTabContent(props: ExperimentPreviewProps) {
+    return <ChildAppMounter<ExperimentPreviewProps> ChildApp={ExperimentPreview} {...props} />
+  },
+  (oldProps, newProps) => isEqual(oldProps.experimentID, newProps.experimentID)
+)
 
 export const ChaosExperimentStepBase = (
   { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, onChange }: ChaosExperimentStepProps,
@@ -154,11 +168,8 @@ export const ChaosExperimentStepBase = (
               </FormGroup>
             </Layout.Vertical>
 
-            <ChildAppMounter<ExperimentPreviewProps>
-              ChildApp={ExperimentPreview}
-              experimentID={formikProps.values.spec.experimentRef}
-            />
-            <Drawer isOpen={isExperimentDrawerOpen} enforceFocus={true} size="75%">
+            <MemoizedExperimentPreview experimentID={formikProps.values.spec.experimentRef} />
+            <Drawer isOpen={isExperimentDrawerOpen} enforceFocus={true} size="80%">
               <Button
                 data-testid="experimentReferenceFieldCloseBtn"
                 minimal
@@ -168,20 +179,20 @@ export const ChaosExperimentStepBase = (
                 onClick={closeExperimentDrawer}
               />
               <Container>
-                <ChildAppMounter<PipelineExperimentSelectProps>
-                  ChildApp={PipelineExperimentSelect}
+                <MemoizedPipelineExperimentSelect
                   onSelect={(experiment: ChaosExperiment) => {
                     formikProps.setFieldValue('spec.experimentRef', experiment.id)
                     closeExperimentDrawer()
                   }}
-                  goToNewExperiment={() =>
-                    history.push(
-                      routes.toNewChaosExperiment({
+                  goToNewExperiment={query =>
+                    history.push({
+                      pathname: routes.toNewChaosExperiment({
                         accountId: accountId,
                         orgIdentifier: orgIdentifier,
                         projectIdentifier: projectIdentifier
-                      })
-                    )
+                      }),
+                      search: query
+                    })
                   }
                 />
               </Container>

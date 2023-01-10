@@ -334,6 +334,17 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
+      {get(enableFields, 'spec.uses') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          {renderMultiTypeTextField({
+            name: `${prefix}spec.uses`,
+            tooltipId: enableFields['spec.uses'].tooltipId,
+            labelKey: 'ci.usesLabel',
+            inputProps: enableFields['spec.uses'].multiTextInputProps,
+            fieldPath: 'spec.uses'
+          })}
+        </Container>
+      ) : null}
 
       {get(enableFields, 'spec.build') && formik && (
         <Container className={cx(css.formGroup, stepCss, buildCss)}>

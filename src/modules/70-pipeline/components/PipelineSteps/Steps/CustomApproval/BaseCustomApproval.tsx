@@ -20,7 +20,7 @@ import {
   SelectOption
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
@@ -73,28 +73,10 @@ export default function BaseCustomApproval(props: {
         <FormMultiTypeDurationField
           name="timeout"
           label={getString('pipelineSteps.timeoutLabel')}
-          multiTypeDurationProps={{ enableConfigureOptions: false, expressions, disabled: readonly, allowableTypes }}
+          multiTypeDurationProps={{ enableConfigureOptions: true, expressions, disabled: readonly, allowableTypes }}
           className={stepCss.duration}
           disabled={readonly}
         />
-        {getMultiTypeFromValue(formValues?.timeout) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={formValues?.timeout as string}
-            type="String"
-            variableName="timeout"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={
-              /* istanbul ignore next */ value => {
-                /* istanbul ignore next */
-                setFieldValue('timeout', value)
-              }
-            }
-            isReadonly={readonly}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-          />
-        )}
       </div>
       <div className={stepCss.divider} />
       <div className={cx(stepCss.formGroup, stepCss.sm)}>
@@ -154,55 +136,19 @@ export default function BaseCustomApproval(props: {
         <FormMultiTypeDurationField
           name="spec.retryInterval"
           label={getString('pipeline.customApprovalStep.retryInterval')}
-          multiTypeDurationProps={{ enableConfigureOptions: false, expressions, disabled: readonly, allowableTypes }}
+          multiTypeDurationProps={{ enableConfigureOptions: true, expressions, disabled: readonly, allowableTypes }}
           className={stepCss.duration}
           disabled={readonly}
         />
-        {getMultiTypeFromValue(formValues?.spec?.retryInterval) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={formValues?.spec?.retryInterval as string}
-            type="String"
-            variableName="spec.retryInterval"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={
-              /* istanbul ignore next */ value => {
-                /* istanbul ignore next */
-                setFieldValue('spec.retryInterval', value)
-              }
-            }
-            isReadonly={readonly}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-          />
-        )}
       </div>
       <div className={cx(stepCss.formGroup, stepCss.sm)}>
         <FormMultiTypeDurationField
           name="spec.scriptTimeout"
           label={getString('pipeline.customApprovalStep.scriptTimeout')}
-          multiTypeDurationProps={{ enableConfigureOptions: false, expressions, disabled: readonly, allowableTypes }}
+          multiTypeDurationProps={{ enableConfigureOptions: true, expressions, disabled: readonly, allowableTypes }}
           className={stepCss.duration}
           disabled={readonly}
         />
-        {getMultiTypeFromValue(formValues?.spec?.scriptTimeout) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={formValues?.spec?.scriptTimeout as string}
-            type="String"
-            variableName="spec.scriptTimeout"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={
-              /* istanbul ignore next */ value => {
-                /* istanbul ignore next */
-                setFieldValue('spec.scriptTimeout', value)
-              }
-            }
-            isReadonly={readonly}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-          />
-        )}
       </div>
       <div className={cx(stepCss.formGroup)}>
         <MultiTypeFieldSelector

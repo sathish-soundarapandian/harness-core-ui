@@ -242,8 +242,8 @@ export const getValidationSchema = (
   isGithubWebhookAuthenticationEnabled = false
 ): ObjectSchema<Record<string, any> | undefined> => {
   return object().shape({
-    name: NameSchema({ requiredErrorMsg: getString('triggers.validation.triggerName') }),
-    identifier: IdentifierSchema(),
+    name: NameSchema(getString, { requiredErrorMsg: getString('triggers.validation.triggerName') }),
+    identifier: IdentifierSchema(getString),
     ...(isGithubWebhookAuthenticationEnabled && {
       encryptedWebhookSecretIdentifier: string().test(
         getString('triggers.validation.configureSecret'),

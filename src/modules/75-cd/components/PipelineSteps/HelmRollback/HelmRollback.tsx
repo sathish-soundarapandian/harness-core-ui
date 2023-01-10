@@ -28,7 +28,6 @@ import type { StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StringsMap } from 'stringTypes'
 
@@ -99,7 +98,6 @@ function HelmRollbackWidget(
         })}
       >
         {(formik: FormikProps<StepElementConfig>) => {
-          const { values, setFieldValue } = formik
           setFormikRef(formikRef, formik)
 
           return (
@@ -116,24 +114,8 @@ function HelmRollbackWidget(
                     name="timeout"
                     label={getString('pipelineSteps.timeoutLabel')}
                     className={stepCss.duration}
-                    multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                    multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
                   />
-                  {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
-                      value={values.timeout as string}
-                      type="String"
-                      variableName="step.timeout"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      showAdvanced={true}
-                      onChange={value => {
-                        /* istanbul ignore next */
-                        setFieldValue('timeout', value)
-                      }}
-                      isReadonly={props.isReadonly}
-                      allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                    />
-                  )}
                 </div>
               </Layout.Vertical>
             </>

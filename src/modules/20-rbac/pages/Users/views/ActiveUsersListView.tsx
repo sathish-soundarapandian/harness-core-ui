@@ -41,12 +41,13 @@ import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRole
 import { PrincipalType } from '@rbac/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useMutateAsGet } from '@common/hooks'
-import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { PipelineType, ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import OpenInNewTab from '@rbac/components/MenuItem/OpenInNewTab'
 import RbacButton from '@rbac/components/Button/Button'
 import { getUserName, setPageNumber, useGetCommunity } from '@common/utils/utils'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
@@ -148,7 +149,7 @@ const RenderColumnEmail: Renderer<CellProps<UserAggregate>> = ({ row }) => {
 const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) => {
   const data = row.original.user
   const name = getUserName(data)
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const scope = getScopeFromDTO({ accountIdentifier: accountId, projectIdentifier, orgIdentifier })
   const [menuOpen, setMenuOpen] = useState(false)
   const [isLastAdmin, setIsLastAdmin] = useState(false)
@@ -260,6 +261,14 @@ const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) =
     permission: PermissionIdentifier.MANAGE_USER
   }
 
+  const userDetailsUrl = routes.toUserDetails({
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    module,
+    userIdentifier: data.uuid
+  })
+
   return (
     <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
       <Popover
@@ -281,6 +290,9 @@ const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) =
           }}
         />
         <Menu>
+          <li>
+            <OpenInNewTab url={userDetailsUrl} />
+          </li>
           <RbacMenuItem
             icon="res-roles"
             text={getString('rbac.manageRoleBindings')}

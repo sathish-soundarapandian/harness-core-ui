@@ -83,6 +83,7 @@ export const HarnessNextGenMockData = {
   },
   responseMessages: []
 }
+
 export const HarnessNextGenMockDataWithoutMetadata = {
   metaData: {
     pipelinePath: 'https://harness.io'

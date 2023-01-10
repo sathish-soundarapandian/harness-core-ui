@@ -235,8 +235,8 @@ export default function CreateEnvironmentGroupModal({
           onSubmit(values)
         }}
         validationSchema={Yup.object().shape({
-          name: NameSchema({ requiredErrorMsg: getString('fieldRequired', { field: 'Name' }) }),
-          identifier: IdentifierSchema()
+          name: NameSchema(getString, { requiredErrorMsg: getString('fieldRequired', { field: 'Name' }) }),
+          identifier: IdentifierSchema(getString)
         })}
       >
         {formikProps => {

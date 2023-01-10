@@ -169,12 +169,14 @@ const ConfigureAlerts: React.FC<StepProps<BudgetStepData> & Props> = props => {
       Yup.object({
         emailAddresses: Yup.array().when('notificationChannel', {
           is: BudgetAlertChannels.EMAIL,
-          then: Yup.array().of(EmailSchemaWithoutRequired()).required(getString('common.validation.email.required'))
+          then: Yup.array()
+            .of(EmailSchemaWithoutRequired(getString))
+            .required(getString('common.validation.email.required'))
         }),
         slackWebhooks: Yup.array().when('notificationChannel', {
           is: BudgetAlertChannels.SLACK,
           then: Yup.array()
-            .of(URLValidationSchemaWithoutRequired())
+            .of(URLValidationSchemaWithoutRequired(getString))
             .required(getString('common.validation.urlIsRequired'))
             .nullable()
         })

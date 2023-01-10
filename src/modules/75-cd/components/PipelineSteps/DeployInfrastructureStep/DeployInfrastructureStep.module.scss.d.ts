@@ -11,8 +11,10 @@ declare const styles: {
   readonly formRow: string
   readonly grid: string
   readonly inputWidth: string
+  readonly inputheader: string
   readonly label: string
   readonly modalFooter: string
+  readonly nestedAccordions: string
   readonly thumbnailSelect: string
   readonly yamlToggleEnv: string
 }

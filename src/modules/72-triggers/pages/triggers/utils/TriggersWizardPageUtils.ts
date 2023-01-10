@@ -354,8 +354,8 @@ export const getValidationSchema = (
 ): ObjectSchema<Record<string, any> | undefined> => {
   if (triggerType === TriggerTypes.WEBHOOK) {
     return object().shape({
-      name: NameSchema({ requiredErrorMsg: getString('triggers.validation.triggerName') }),
-      identifier: IdentifierSchema(),
+      name: NameSchema(getString, { requiredErrorMsg: getString('triggers.validation.triggerName') }),
+      identifier: IdentifierSchema(getString),
       event: string().test(
         getString('triggers.validation.event'),
         getString('triggers.validation.event'),

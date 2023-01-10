@@ -23,6 +23,7 @@ const renderComponent = (config: Partial<Window['featureFlagsConfig']> = {}): Re
       useLegacyFeatureFlags: true,
       sdkKey: 'SDK_KEY',
       baseUrl: 'https://url.com',
+      eventUrl: 'https://url.com',
       enableStream: false,
       async: true
     },
@@ -57,12 +58,13 @@ describe('FeatureFlagsProvider', () => {
     expect(screen.getByTestId('ff-context-provider')).toBeInTheDocument()
   })
 
-  test('it should pass on the async, apiKey, baseUrl and streamEnabled vars to the SDK', async () => {
+  test('it should pass on the async, apiKey, baseUrl, eventUrl and streamEnabled vars to the SDK', async () => {
     const config = {
       useLegacyFeatureFlags: false,
       async: true,
       sdkKey: 'TEST KEY',
       baseUrl: 'https://test.base.url',
+      eventUrl: 'https://test.event.url',
       enableStream: true
     }
 
@@ -74,6 +76,7 @@ describe('FeatureFlagsProvider', () => {
         async: config.async,
         options: expect.objectContaining({
           baseUrl: config.baseUrl,
+          eventUrl: config.eventUrl,
           streamEnabled: config.enableStream
         })
       }),

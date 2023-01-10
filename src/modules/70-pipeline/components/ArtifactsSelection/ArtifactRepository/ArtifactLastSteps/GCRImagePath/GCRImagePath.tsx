@@ -87,6 +87,7 @@ export function GCRImagePath({
   const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')

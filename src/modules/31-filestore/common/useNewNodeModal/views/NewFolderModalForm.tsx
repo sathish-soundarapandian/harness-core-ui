@@ -170,8 +170,8 @@ const NewFolderForm: React.FC<NewFolderModalData> = props => {
       enableReinitialize
       formName="newFolder"
       validationSchema={Yup.object().shape({
-        name: NameSchema(),
-        identifier: IdentifierSchema()
+        name: NameSchema(getString),
+        identifier: IdentifierSchema(getString)
       })}
       onSubmit={values => {
         modalErrorHandler?.hide()

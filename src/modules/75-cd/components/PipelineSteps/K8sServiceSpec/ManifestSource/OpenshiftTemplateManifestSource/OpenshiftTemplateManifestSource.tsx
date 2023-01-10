@@ -17,6 +17,8 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import List from '@common/components/List/List'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
+import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
@@ -89,15 +91,17 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.paramsPaths`, template) && (
           <div className={css.verticalSpacingInput}>
-            <List
+            <FileSelectList
               labelClassName={css.listLabel}
               label={getString('pipeline.manifestType.paramsYamlPath')}
               name={`${path}.${manifestPath}.spec.paramsPaths`}
-              placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+              placeholder={getString('select')}
               disabled={isFieldDisabled(`${manifestPath}.spec.paramsPaths`)}
               style={{ marginBottom: 'var(--spacing-small)' }}
               expressions={expressions}
               isNameOfArrayType
+              type={SELECT_FILES_TYPE.FILE_STORE}
+              formik={formik}
             />
           </div>
         )}

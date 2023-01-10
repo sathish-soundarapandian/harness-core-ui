@@ -349,12 +349,9 @@
   top: 12px;
 }
 
-.customButtons {
-  display: flex;
-  justify-content: space-between;
-  width: 70%;
-}
-
-.paddingTop8 {
+.dialogStyle {
   padding-top: var(--spacing-xxlarge) !important;
+  p {
+    word-break: normal;
+  }
 }

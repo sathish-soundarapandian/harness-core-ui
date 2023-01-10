@@ -161,6 +161,7 @@ function HelmWithOCI({
             })
           ),
           ...ManifestIdentifierValidation(
+            getString,
             manifestIdsList,
             initialValues?.identifier,
             getString('pipeline.uniqueIdentifier')

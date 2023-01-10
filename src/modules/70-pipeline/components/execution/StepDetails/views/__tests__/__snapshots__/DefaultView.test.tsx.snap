@@ -157,7 +157,7 @@ exports[`Default View Test error in step evaluation 1`] = `
                     class="bp3-input  ExpandingSearchInput--find"
                     dir="auto"
                     placeholder="Search"
-                    style="padding-right: 0px;"
+                    style="padding-right: 130px;"
                     type="search"
                     value=""
                   />
@@ -364,7 +364,7 @@ exports[`Default View Test failure responses 1`] = `
                     class="bp3-input  ExpandingSearchInput--find"
                     dir="auto"
                     placeholder="Search"
-                    style="padding-right: 0px;"
+                    style="padding-right: 130px;"
                     type="search"
                     value=""
                   />

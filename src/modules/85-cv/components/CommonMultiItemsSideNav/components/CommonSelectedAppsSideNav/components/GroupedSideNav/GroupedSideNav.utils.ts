@@ -4,14 +4,14 @@ import type { GroupedMetric } from './GroupedSideNav.types'
 
 export function showWarningIcon({
   touched,
-  isValidInput,
+  isValid,
   selectedApp,
   selectedItem
 }: {
   touched: FormikTouched<unknown>
-  isValidInput?: boolean
+  isValid?: boolean
   selectedApp: GroupedMetric
   selectedItem?: string
 }): boolean {
-  return !isEmpty(touched) && !isValidInput && selectedApp?.metricName === selectedItem
+  return !isEmpty(touched) && !isValid && selectedApp?.metricName === selectedItem
 }

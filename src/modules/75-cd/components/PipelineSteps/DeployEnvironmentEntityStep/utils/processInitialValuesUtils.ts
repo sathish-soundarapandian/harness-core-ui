@@ -26,8 +26,10 @@ export function processSingleEnvironmentInitialValues(
   if (environment) {
     if (getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.RUNTIME) {
       set(formState, 'environment', RUNTIME_INPUT_VALUE)
+      set(formState, 'provisioner', environment.provisioner)
     } else {
       set(formState, 'environment', environment.environmentRef)
+      set(formState, 'provisioner', environment.provisioner)
       // if environmentRef is a FIXED value and contains selected environment
       set(
         formState,
@@ -82,6 +84,7 @@ export function processSingleEnvironmentGitOpsInitialValues(
   if (environment) {
     if (getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.RUNTIME) {
       set(formState, 'environment', RUNTIME_INPUT_VALUE)
+      set(formState, 'provisioner', environment.provisioner)
       const filters = processFiltersInitialValues((environment as any).filters)
       if (filters.length) {
         set(formState, 'environmentFilters.runtime', filters)
@@ -96,7 +99,7 @@ export function processSingleEnvironmentGitOpsInitialValues(
           ? { [environment.environmentRef]: environment?.environmentInputs }
           : {}
       )
-
+      set(formState, 'provisioner', environment.provisioner)
       if (environment.deployToAll !== true) {
         set(
           formState,
@@ -250,5 +253,6 @@ export function processEnvironmentGroupInitialValues(
   }
 
   formState.category = 'group'
+  formState.parallel = defaultTo(initialValues.environmentGroup?.metadata?.parallel, true)
   return formState
 }

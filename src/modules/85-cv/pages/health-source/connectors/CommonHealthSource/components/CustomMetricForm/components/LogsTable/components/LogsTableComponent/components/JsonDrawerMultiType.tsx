@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
 import { AllowedTypes, ExpressionAndRuntimeType, MultiTypeInputType } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
@@ -43,6 +43,34 @@ const JsonDrawerMultiType = ({
       ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
       : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
 
+  const handleTypeChange = useCallback(
+    type => {
+      if (type !== multiType) {
+        setMultiType?.(name, type)
+
+        if (type === MultiTypeInputType.EXPRESSION || type === MultiTypeInputType.FIXED) {
+          setFieldValue(name, undefined)
+        }
+      }
+    },
+    [multiType, name]
+  )
+
+  const handleValueChange = useCallback(
+    (updatedValue, _, type): void => {
+      if (isMultiTypeRuntime(type)) {
+        setFieldValue(name, updatedValue)
+      }
+
+      if (type === multiType && type === MultiTypeInputType.EXPRESSION) {
+        setFieldValue(name, updatedValue)
+      } else if (type === MultiTypeInputType.EXPRESSION) {
+        setFieldValue(name, undefined)
+      }
+    },
+    [multiType, name]
+  )
+
   return (
     <ExpressionAndRuntimeType<JsonSelectorButtonProps>
       name={name}
@@ -51,17 +79,8 @@ const JsonDrawerMultiType = ({
       allowableTypes={allowedTypes as AllowedTypes}
       expressions={expressions}
       multitypeInputValue={multiType}
-      onChange={(updatedValue, _, type): void => {
-        if (type !== multiType) {
-          setMultiType?.(name, type)
-        }
-
-        if (isMultiTypeRuntime(type) || type === MultiTypeInputType.EXPRESSION) {
-          setFieldValue(name, updatedValue)
-        } else if (type === MultiTypeInputType.FIXED) {
-          setFieldValue(name, undefined)
-        }
-      }}
+      onTypeChange={handleTypeChange}
+      onChange={handleValueChange}
       fixedTypeComponentProps={{
         onClick: () => onClick(name, label),
         displayText: displayText,

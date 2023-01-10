@@ -23,10 +23,10 @@ export default function InputDatePicker(props: InputDatePickerProps) {
   const ref = useRef(null)
   const { formikProps } = props
   const getText = () => {
-    const endDate = new Date(formikProps?.values?.timeRange?.endTime || 0)
+    const endDate = new Date(formikProps?.values?.timeRange?.endTime || Date.now())
     if (formikProps?.values?.timeRange?.endTime) endDate.setDate(endDate.getDate() - 1)
     return formikProps?.values?.timeRange
-      ? `${new Date(formikProps?.values?.timeRange?.startTime || 0)?.toLocaleDateString() || ''} - ${
+      ? `${new Date(formikProps?.values?.timeRange?.startTime || Date.now())?.toLocaleDateString() || ''} - ${
           endDate?.toLocaleDateString() || ''
         }`
       : null
@@ -35,9 +35,9 @@ export default function InputDatePicker(props: InputDatePickerProps) {
     DynamicPopoverHandlerBinding<{ data: null }> | undefined
   >()
   const getValue = (): DateRange | undefined => {
-    const endDate = new Date(formikProps?.values?.timeRange?.endTime || 0)
+    const endDate = new Date(formikProps?.values?.timeRange?.endTime || Date.now())
     if (formikProps?.values?.timeRange?.endTime) endDate.setDate(endDate.getDate() - 1)
-    return [new Date(formikProps?.values?.timeRange?.startTime || 0), endDate]
+    return [new Date(formikProps?.values?.timeRange?.startTime || Date.now()), endDate]
   }
 
   const canvasClickListener = React.useCallback((): void => dynamicPopoverHandler?.hide(), [dynamicPopoverHandler])
@@ -57,7 +57,7 @@ export default function InputDatePicker(props: InputDatePickerProps) {
         defaultValue={getValue()}
         minDate={new Date(0)}
         onChange={selectedDates => {
-          const updatedEndTime = new Date(selectedDates[1] || selectedDates[0] || 0)
+          const updatedEndTime = new Date(selectedDates[1] || selectedDates[0] || Date.now())
           updatedEndTime.setDate(updatedEndTime.getDate() + 1)
           formikProps?.setValues({
             ...formikProps?.values,

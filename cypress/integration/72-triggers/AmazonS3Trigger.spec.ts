@@ -3,9 +3,9 @@ import {
   pipelineDetails,
   pipelineDetailsWithRoutingIdCall,
   pipelineStudioRoute,
-  s3bucketData,
-  triggersList
+  s3bucketData
 } from '../../support/70-pipeline/constants'
+import { createTriggerAPI, getTriggerListAPI } from './constansts'
 
 describe('AmazonS3 Trigger', () => {
   const visitTriggersPageWithAssertion = (): void => {
@@ -64,11 +64,13 @@ describe('AmazonS3 Trigger', () => {
     cy.contains('span', 'Apply').click()
     cy.contains('span', 'Continue').click()
     cy.contains('span', 'Continue').click()
-    cy.intercept('GET', triggersList, {
-      fixture: 'pipeline/api/triggers/triggersList.json'
-    }).as('triggersList')
     cy.contains('span', 'Create Trigger').click()
-    cy.wait(1000)
+    cy.intercept(createTriggerAPI).as('createTrigger')
+    cy.wait('@createTrigger').its('response.statusCode').should('eq', 200)
+    cy.intercept('GET', getTriggerListAPI, {
+      fixture: 'pipeline/api/triggers/triggersList.json'
+    }).as('getTriggerList')
+    cy.wait('@getTriggerList')
     cy.contains('p', 'amazonS3Trigger').should('be.visible')
   })
 
@@ -101,11 +103,13 @@ describe('AmazonS3 Trigger', () => {
     cy.contains('span', 'Apply').click()
     cy.contains('span', 'Continue').click()
     cy.contains('span', 'Continue').click()
-    cy.intercept('GET', triggersList, {
-      fixture: 'pipeline/api/triggers/triggersList.json'
-    }).as('triggersList')
     cy.contains('span', 'Create Trigger').click()
-    cy.wait(1000)
+    cy.intercept(createTriggerAPI).as('createTrigger')
+    cy.wait('@createTrigger').its('response.statusCode').should('eq', 200)
+    cy.intercept('GET', getTriggerListAPI, {
+      fixture: 'pipeline/api/triggers/triggersList.json'
+    }).as('getTriggerList')
+    cy.wait('@getTriggerList')
     cy.contains('p', 'amazonS3Trigger').should('be.visible')
   })
 })

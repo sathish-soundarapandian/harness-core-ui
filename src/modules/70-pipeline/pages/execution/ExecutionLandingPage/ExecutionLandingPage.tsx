@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useEffect } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useCallback } from 'react'
 import { Intent } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
 import { useParams, useLocation, useHistory } from 'react-router-dom'
@@ -18,7 +18,8 @@ import {
   GovernanceMetadata,
   GraphLayoutNode,
   ResponsePipelineExecutionDetail,
-  useGetExecutionDetailV2
+  useGetExecutionDetailV2,
+  useDebugPipelineExecuteWithInputSetYaml
 } from 'services/pipeline-ng'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import { ExecutionStatus, isExecutionComplete } from '@pipeline/utils/statusHelpers'
@@ -47,9 +48,12 @@ import { hasCIStage, hasOverviewDetail, hasServiceDetail } from '@pipeline/utils
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
-import { ExecutionPipelineVariables } from './ExecutionPipelineVariables'
+import { useToaster } from '@common/exports'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { PipelineActions } from '@common/constants/TrackingConstants'
 import ExecutionTabs from './ExecutionTabs/ExecutionTabs'
 import ExecutionMetadata from './ExecutionMetadata/ExecutionMetadata'
+import { ExecutionPipelineVariables } from './ExecutionPipelineVariables'
 import { ExecutionHeader } from './ExecutionHeader/ExecutionHeader'
 
 import css from './ExecutionLandingPage.module.scss'
@@ -285,6 +289,48 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     }
   })
 
+  const { showSuccess, showWarning } = useToaster()
+  const { trackEvent } = useTelemetry()
+  const { mutate: runPipelineInDebugMode, loading: pipelineDebugExecutionLoading } =
+    useDebugPipelineExecuteWithInputSetYaml({
+      queryParams: {
+        accountIdentifier: accountId,
+        projectIdentifier,
+        orgIdentifier,
+        moduleType: module || ''
+      },
+      identifier: pipelineIdentifier ?? '',
+      originalExecutionId: executionIdentifier ?? '',
+      requestOptions: {
+        headers: {
+          'content-type': 'application/yaml'
+        }
+      }
+    })
+
+  const handleRunPipelineInDebugMode = useCallback(async () => {
+    try {
+      const response = await runPipelineInDebugMode()
+      if (response.status === 'SUCCESS') {
+        showSuccess(getString('runPipelineForm.pipelineRunSuccessFully'))
+        history.push({
+          pathname: routes.toExecutionPipelineView({
+            orgIdentifier,
+            pipelineIdentifier,
+            projectIdentifier,
+            executionIdentifier: response?.data?.planExecution?.uuid ?? '',
+            accountId,
+            module,
+            source
+          })
+        })
+        trackEvent(PipelineActions.StartedExecution, { module })
+      }
+    } catch (err: any) {
+      showWarning(getRBACErrorMessage(err) ?? getString('runPipelineForm.runPipelineFailed'))
+    }
+  }, [runPipelineInDebugMode, orgIdentifier, pipelineIdentifier, projectIdentifier, history, showWarning])
+
   useEffect(() => {
     if (data?.data?.pipelineExecutionSummary?.modules?.includes(ModuleName.CI.toLowerCase())) {
       fetchExecutionConfig()
@@ -461,14 +507,14 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         projectIdentifier={projectIdentifier}
         planExecutionId={executionIdentifier}
       >
-        {(!data && loading) || reportSummaryLoading ? <PageSpinner /> : null}
+        {(!data && loading) || reportSummaryLoading || pipelineDebugExecutionLoading ? <PageSpinner /> : null}
         {error ? (
           <PageError message={getRBACErrorMessage(error) as string} />
         ) : (
           <main className={css.main}>
             <div className={css.lhs}>
               <header className={css.header}>
-                <ExecutionHeader />
+                <ExecutionHeader onRunPipelineInDebugMode={handleRunPipelineInDebugMode} />
                 <ExecutionMetadata />
               </header>
               <ExecutionTabs savedExecutionView={savedExecutionView} setSavedExecutionView={setSavedExecutionView} />

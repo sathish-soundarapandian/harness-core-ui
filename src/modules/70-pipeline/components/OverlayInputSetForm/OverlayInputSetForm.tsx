@@ -658,7 +658,7 @@ export function OverlayInputSetForm({
             formName="overlayInputSet"
             enableReinitialize={true}
             validationSchema={Yup.object().shape({
-              name: NameSchema({ requiredErrorMsg: getString('common.validation.nameIsRequired') }),
+              name: NameSchema(getString, { requiredErrorMsg: getString('common.validation.nameIsRequired') }),
               inputSetReferences: Yup.array().of(Yup.string().required(getString('inputSets.inputSetIsRequired')))
             })}
             onSubmit={values => {

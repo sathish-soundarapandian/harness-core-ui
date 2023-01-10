@@ -248,10 +248,10 @@ export const TemplateStageSpecifications = (): JSX.Element => {
           onSubmit={noop}
           validate={validateForm}
           validationSchema={Yup.object().shape({
-            name: NameSchema({
+            name: NameSchema(getString, {
               requiredErrorMsg: getString('pipelineSteps.build.create.stageNameRequiredError')
             }),
-            identifier: IdentifierSchema()
+            identifier: IdentifierSchema(getString)
           })}
           enableReinitialize={true}
         >

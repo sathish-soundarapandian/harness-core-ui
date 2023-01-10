@@ -11,7 +11,6 @@ import {
   inputSetsCall,
   inputSetsTemplateCall,
   pipelineDetailsWithRoutingIdCall,
-  triggersList,
   templatesListCall,
   templatesListRoute,
   stepLibrary,
@@ -22,6 +21,7 @@ import {
 } from '../../support/70-pipeline/constants'
 import { getRuntimeInputKeys } from '../../utils/step-utils'
 import templatesData from '../../fixtures/ci/api/runStep/inputSetTemplateResponse.json'
+import { getTriggerListAPI } from '../72-triggers/constansts'
 // Data from QA, CI Automation Account
 // https://qa.harness.io/ng/#/account/h61p38AZSV6MzEkpWWBtew/ci/orgs/default/projects/mtran/pipelines/CI_Pipeline1/pipeline-studio/
 
@@ -84,7 +84,7 @@ describe('Pipeline Studio', () => {
 
   it('STEP CONFIG: Toggle all fields as Runtime Inputs', () => {
     const numOfPossibleRuntimeInputs = 12
-    var skipFieldIndexes: number[] = [3, 9] // start index count at 0
+    const skipFieldIndexes: number[] = [3, 9] // start index count at 0
     // skip Shell(3) and Image Pull Policy (9)
     cy.intercept('POST', runPipelineTemplateCall, {
       fixture: 'ci/api/runStep/inputSetTemplateResponse.json'
@@ -201,7 +201,9 @@ describe('Triggers', () => {
       return false
     })
     cy.initializeRoute()
-    cy.intercept('GET', triggersList, { fixture: 'pipeline/api/triggers/emptyTriggersList' }).as('emptyTriggersList')
+    cy.intercept('GET', getTriggerListAPI, { fixture: 'pipeline/api/triggers/emptyTriggersList' }).as(
+      'emptyTriggersList'
+    )
     cy.intercept('POST', inputSetsTemplateCall, {
       fixture: 'ci/api/runStep/inputSetTemplateResponse.json'
     }).as('fetchServiceTemplate')

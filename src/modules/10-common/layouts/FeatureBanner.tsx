@@ -23,7 +23,7 @@ import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { useGetUsage, UsageAndLimitReturn } from '@common/hooks/useGetUsageAndLimit'
-import type { CEModuleLicenseDTO, CVModuleLicenseDTO } from 'services/cd-ng'
+import type { CEModuleLicenseDTO, SRMModuleLicenseDTO } from 'services/cd-ng'
 import {
   ViewUsageLink,
   ExplorePlansBtn,
@@ -175,7 +175,7 @@ export default function FeatureBanner(): React.ReactElement | null {
     limitData: {
       limit: {
         ccm: { totalSpendLimit: (licenseInformation?.CE as CEModuleLicenseDTO)?.spendLimit },
-        cv: { totalServices: (licenseInformation?.CV as CVModuleLicenseDTO)?.numberOfServices }
+        cv: { totalServices: (licenseInformation?.CV as SRMModuleLicenseDTO)?.numberOfServices }
       }
     }
   }

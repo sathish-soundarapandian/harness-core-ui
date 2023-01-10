@@ -41,7 +41,7 @@ function StepGroupWidget(
         formName="stepGroup"
         initialValues={initialValues}
         validationSchema={Yup.object().shape({
-          name: NameSchema()
+          name: NameSchema(getString)
         })}
       >
         {(formik: FormikProps<StepGroupElementConfig>) => {

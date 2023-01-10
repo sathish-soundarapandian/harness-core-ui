@@ -90,7 +90,7 @@ const CustomRadioGroup: React.FC<CustomRadioGroupProps> = props => {
               value={item.value}
               color={Color.GREY_800}
               className={css.radio}
-              checked={item.checked}
+              defaultChecked={item.checked}
               disabled={item.disabled}
               onClick={() => onClick(item.value as DelegateOptions)}
             />
@@ -318,24 +318,28 @@ export const DelegateSelector: React.FC<DelegateSelectorProps> = props => {
       </Text>
       <CustomRadioGroup items={options} onClick={newMode => resetDelegateSelectorsAndUpdateMode(newMode)} />
       {CustomComponent}
-      <Layout.Horizontal flex={{ justifyContent: 'space-between' }} margin={{ bottom: 'medium' }}>
-        <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
-          {getString('connectors.delegate.testDelegateConnectivity')}
-        </Text>
-        <RbacButton
-          icon="plus"
-          variation={ButtonVariation.SECONDARY}
-          withoutBoxShadow
-          font={{ weight: 'semi-bold' }}
-          iconProps={{ margin: { right: 'xsmall' } }}
-          permission={permissionRequestNewDelegate}
-          onClick={() => openDelegateModal()}
-          data-name="installNewDelegateButton"
-        >
-          {getString('connectors.testConnectionStep.installNewDelegate')}
-        </RbacButton>
-      </Layout.Horizontal>
-      <DelegateSelectorTable {...delegateSelectorTableProps} />
+      {mode !== DelegateOptions.DelegateOptionsAny && (
+        <>
+          <Layout.Horizontal flex={{ justifyContent: 'space-between' }} margin={{ bottom: 'medium' }}>
+            <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
+              {getString('connectors.delegate.testDelegateConnectivity')}
+            </Text>
+            <RbacButton
+              icon="plus"
+              variation={ButtonVariation.SECONDARY}
+              withoutBoxShadow
+              font={{ weight: 'semi-bold' }}
+              iconProps={{ margin: { right: 'xsmall' } }}
+              permission={permissionRequestNewDelegate}
+              onClick={() => openDelegateModal()}
+              data-name="installNewDelegateButton"
+            >
+              {getString('connectors.testConnectionStep.installNewDelegate')}
+            </RbacButton>
+          </Layout.Horizontal>
+          <DelegateSelectorTable {...delegateSelectorTableProps} />
+        </>
+      )}
     </Layout.Vertical>
   )
 }

@@ -14,13 +14,15 @@ import { Text, Layout, Button, FormInput, Formik, StepProps, SelectOption, Butto
 import { FontVariation } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import { ConnectorConfigDTO, useGetBucketListForS3 } from 'services/cd-ng'
+import { useGetBucketListForS3 } from 'services/cd-ng'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { useListAwsRegions } from 'services/portal'
 import type { BuildStore, HelmManifestSpec } from 'services/pipeline-ng'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { helmVersions } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import type { ManifestStepInitData } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { ManifestLastStepProps, ManifestTriggerSource } from '../../ManifestInterface'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithHttp/Helm.module.scss'
@@ -33,10 +35,11 @@ function HelmWithS3({
   initialValues,
   handleSubmit,
   previousStep
-}: StepProps<ConnectorConfigDTO> & ManifestLastStepProps): React.ReactElement {
+}: StepProps<ManifestStepInitData> & ManifestLastStepProps): React.ReactElement {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const [regions, setRegions] = useState<SelectOption[]>([])
+  const connectorRef = getConnectorIdValue(prevStepData) || (prevStepData?.connectorRef as ConnectorSelectedValue).value
 
   /* Code related to region */
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
@@ -62,7 +65,7 @@ function HelmWithS3({
   const fetchBucket = (regionValue: string): void => {
     refetchBuckets({
       queryParams: {
-        connectorRef: prevStepData?.connectorRef?.value,
+        connectorRef,
         region: regionValue,
         accountIdentifier: accountId,
         projectIdentifier,
@@ -122,7 +125,7 @@ function HelmWithS3({
   }
 
   const submitFormData = (formData: HelmManifestSpec): void => {
-    const { connectorRef, store } = prevStepData ?? {}
+    const { store } = prevStepData ?? {}
     const { region, bucketName, folderPath, chartName, helmVersion } = formData
 
     const manifestTriggerSource: ManifestTriggerSource = {
@@ -133,7 +136,7 @@ function HelmWithS3({
           store: {
             type: store as BuildStore['type'],
             spec: {
-              connectorRef: (connectorRef as ConnectorSelectedValue)?.value,
+              connectorRef,
               bucketName,
               folderPath,
               region

@@ -97,7 +97,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
 
   const { getString } = useStrings()
   const [changed, setChanged] = React.useState(false)
-  const getDefaultResetValue = () => ['']
+  const getDefaultResetValue = () => (name === 'paramsPaths' ? [] : [''])
   const isDeploymentForm = stepViewType === StepViewType.DeploymentForm
   const shouldResetDefaultFormValue = stepViewType === StepViewType.InputSet || isDeploymentForm
   const value = get(formik?.values, name, getDefaultResetValue())
@@ -301,7 +301,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                           }}
                           disabled={disabled || isValueRuntimeInput(value)}
                           style={{ padding: 0 }}
-                          margin={{ top: 'xlarge', bottom: isAttachment ? 'xxxlarge' : 'medium' }}
+                          margin={{ top: 'small', bottom: isAttachment ? 'xxxlarge' : 'medium' }}
                         />
                       )}
                     </>

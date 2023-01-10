@@ -8,7 +8,7 @@
 import type * as React from 'react'
 import type { IconName } from '@harness/uicore'
 import { defaultTo, has, isEmpty } from 'lodash-es'
-
+import { v4 as uuid } from 'uuid'
 import {
   ExecutionStatus,
   ExecutionStatusEnum,
@@ -922,17 +922,56 @@ export const getChildNodeDataForMatrix = (
 export const isNodeTypeMatrixOrFor = (nodeType?: string): boolean => {
   return [NodeTypes.Matrix, NodeTypes.Loop, NodeTypes.Parallelism].includes(nodeType as NodeTypes)
 }
-export const processLayoutNodeMapV1 = (executionSummary?: PipelineExecutionSummary): PipelineGraphState[] => {
+
+export function processLayoutNodeMapV1(executionSummary?: PipelineExecutionSummary): PipelineGraphState[] {
   const response: PipelineGraphState[] = []
   if (!executionSummary) {
     return response
   }
+
   const startingNodeId = executionSummary.startingNodeId
   const layoutNodeMap = executionSummary.layoutNodeMap
+  const firstRollbackStageGraphId = executionSummary.firstRollbackStageGraphId
+
+  response.push(...processLayoutNodeMapInternal(layoutNodeMap, startingNodeId, firstRollbackStageGraphId))
+
+  if (firstRollbackStageGraphId && layoutNodeMap?.[firstRollbackStageGraphId]) {
+    const nodeDetails = layoutNodeMap[firstRollbackStageGraphId]
+    const rollbackWrapperId = uuid()
+    response.push({
+      id: rollbackWrapperId,
+      identifier: nodeDetails?.nodeIdentifier as string,
+      type: 'Rollback',
+      name: 'Rollback Stages',
+      icon: 'cross',
+      data: {
+        ...(nodeDetails as any),
+        children: [],
+        graphType: PipelineGraphType.STAGE_GRAPH,
+        id: rollbackWrapperId
+      },
+      childPipelineData: processLayoutNodeMapInternal(layoutNodeMap, firstRollbackStageGraphId)
+    })
+  }
+
+  return response
+}
+
+export const processLayoutNodeMapInternal = (
+  layoutNodeMap?: Record<string, GraphLayoutNode>,
+  startingNodeId?: string,
+  endingNodeId?: string
+): PipelineGraphState[] => {
+  const response: PipelineGraphState[] = []
+
   if (startingNodeId && layoutNodeMap?.[startingNodeId]) {
     let nodeDetails: GraphLayoutNode | undefined = layoutNodeMap[startingNodeId]
 
     while (nodeDetails) {
+      if (nodeDetails.nodeIdentifier === endingNodeId) {
+        return response
+      }
+
       const currentNodeChildren: string[] | undefined = nodeDetails?.edgeLayoutList?.currentNodeChildren
       const nextIds: string[] | undefined = nodeDetails?.edgeLayoutList?.nextIds
       if (nodeDetails?.nodeType === NodeTypes.Parallel && currentNodeChildren && currentNodeChildren.length > 1) {
@@ -1065,6 +1104,7 @@ export const processLayoutNodeMapV1 = (executionSummary?: PipelineExecutionSumma
       }
     }
   }
+
   return response
 }
 

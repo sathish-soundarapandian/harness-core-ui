@@ -12,7 +12,7 @@ import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType, Tex
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
@@ -37,14 +37,7 @@ export default function ShellScriptProvisionSource(props: {
   stepViewType?: StepViewType
   allowableTypes: AllowedTypes
 }): React.ReactElement {
-  const {
-    formik,
-    formik: { values: formValues, setFieldValue },
-    isNewStep,
-    readonly,
-    stepViewType,
-    allowableTypes
-  } = props
+  const { formik, isNewStep, readonly, stepViewType, allowableTypes } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
@@ -52,7 +45,7 @@ export default function ShellScriptProvisionSource(props: {
     (formik.values as ShellScriptProvisionFormData).spec.source?.type as LocationType
   )
 
-  const onLocationChange = (value: LocationType) => {
+  const onLocationChange = (value: LocationType): void => {
     setLocationType(value)
   }
 
@@ -75,27 +68,10 @@ export default function ShellScriptProvisionSource(props: {
         <FormMultiTypeDurationField
           name="timeout"
           label={getString('pipelineSteps.timeoutLabel')}
-          multiTypeDurationProps={{ enableConfigureOptions: false, expressions, disabled: readonly, allowableTypes }}
+          multiTypeDurationProps={{ enableConfigureOptions: true, expressions, disabled: readonly, allowableTypes }}
           className={stepCss.duration}
           disabled={readonly}
         />
-        {getMultiTypeFromValue(formValues?.timeout) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={formValues?.timeout as string}
-            type="String"
-            variableName="step.timeout"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={
-              /* istanbul ignore next */ value => {
-                setFieldValue('timeout', value)
-              }
-            }
-            isReadonly={readonly}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-          />
-        )}
       </div>
 
       <div className={stepCss.divider} />

@@ -167,8 +167,8 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
           formName="cfEnvDialog"
           onSubmit={handleSubmit}
           validationSchema={Yup.object().shape({
-            name: NameSchema({ requiredErrorMsg: getString?.('fieldRequired', { field: 'Environment' }) }),
-            identifier: IdentifierSchema()
+            name: NameSchema(getString, { requiredErrorMsg: getString?.('fieldRequired', { field: 'Environment' }) }),
+            identifier: IdentifierSchema(getString)
           })}
           validate={handleValidation}
         >

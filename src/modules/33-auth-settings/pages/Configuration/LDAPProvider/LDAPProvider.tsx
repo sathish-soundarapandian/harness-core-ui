@@ -149,10 +149,7 @@ const LDAPProvider: React.FC<Props> = ({ authSettings, refetchAuthSettings, perm
         >
           <Container padding={{ bottom: 'large' }}>
             <Card className={css.card}>
-              <Container margin={{ left: 'xlarge' }}>
-                <Radio font={{ weight: 'bold', size: 'normal' }} checked={ldapEnabledForAuth} readOnly />
-              </Container>
-              <Text font={{ variation: FontVariation.CARD_TITLE }} className={css.flexGrowFull}>
+              <Text font={{ variation: FontVariation.CARD_TITLE }} className={css.flexGrowFull} width="30%">
                 {ldapSettings.displayName}
               </Text>
               <Text color={Color.GREY_800} width="70%">

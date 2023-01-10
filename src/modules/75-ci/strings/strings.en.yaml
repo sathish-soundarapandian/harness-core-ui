@@ -124,6 +124,7 @@ buildInfra:
     architecture: Achitecture
     isRequiredWhen: '{{field1}} is required in case {{field2}} is provided'
   cloud: Cloud
+  hostNames: Host Names
 pipelineSteps:
   build:
     infraSpecifications:
@@ -134,6 +135,14 @@ portBindings: Port Bindings
 hostPort: Host Port
 containerPort: Container Port
 baseConnectorImage: Base Image Connector
+usesLabel: Uses
+GHAPluginUsesPlaceholder: hello-world-javascript-action@main
+GHAPluginWithKeyPlaceholder: who-to-greet
+bitrisePluginUsesPlaceholder: github.com/bitrise-io/bitrise-steplib/appium-server
+bitrisePluginWithKeyPlaceholder: Appium_version
+bitrisePluginWithValuePlaceholder: next
+pluginEnvKeyPlaceholder: TOKEN
+pluginEnvValuePlaceholder: token
 getStartedWithCI:
   learnMoreAboutCI: Learn more about Harness CI
   buildyourOwnPipeline: Build your own Pipeline

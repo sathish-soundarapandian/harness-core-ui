@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React, { useCallback, useContext, useMemo } from 'react'
+import React, { Ref, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import {
   Card,
   Container,
@@ -16,11 +16,14 @@ import {
   IconName,
   Layout,
   MultiTypeInputType,
-  Text
+  SelectOption,
+  Text,
+  useConfirmationDialog
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { Color } from '@harness/design-system'
+import { Color, Intent } from '@harness/design-system'
 import cx from 'classnames'
+import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -50,7 +53,8 @@ import {
   canShowDataSelector,
   canShowDataInfoSelector,
   formValidation,
-  getIsConnectorDisabled
+  getIsConnectorDisabled,
+  shouldShowProductChangeConfirmation
 } from './DefineHealthSource.utils'
 import PrometheusDataSourceTypeSelector from './components/DataSourceTypeSelector/DataSourceTypeSelector'
 import DataInfoSelector from './components/DataInfoSelector/DataInfoSelector'
@@ -70,10 +74,14 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
     ProjectPathProps & { identifier: string; templateType?: string }
   >()
   const { isEdit } = sourceData
-
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
   const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
+  const [productInfo, setProductInfo] = useState<{
+    updatedProduct: SelectOption | null
+    currentProduct: SelectOption | null
+  }>({ updatedProduct: null, currentProduct: null })
+  const defineHealthSourceFormRef = useRef<FormikProps<any>>()
 
   const disabledByFF: string[] = useMemo(() => {
     const disabledConnectorsList = []
@@ -201,6 +209,43 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
     return null
   }
 
+  const handleSetProduct = (
+    formik: FormikProps<any>,
+    product: SelectOption | null,
+    shouldResetConfigurations: boolean
+  ): void => {
+    const newValues = {
+      ...formik.values,
+      product,
+      ...(shouldResetConfigurations && { ...initConfigurationsForm })
+    }
+    formik.setValues(newValues)
+  }
+
+  const handleProductChange = (product: SelectOption | null, shouldResetConfigurations: boolean): void => {
+    const defineHealthSourceForm = defineHealthSourceFormRef?.current
+    if (defineHealthSourceForm) {
+      handleSetProduct(defineHealthSourceForm, product, shouldResetConfigurations)
+    }
+  }
+
+  const { openDialog } = useConfirmationDialog({
+    titleText: getString('cv.healthSource.productChangeConfirmationHeader'),
+    contentText: getString('cv.healthSource.productChangeConfirmation'),
+    confirmButtonText: getString('confirm'),
+    cancelButtonText: getString('cancel'),
+    intent: Intent.DANGER,
+    buttonIntent: Intent.DANGER,
+    className: css.productChangeConfirmation,
+    onCloseDialog: function (shouldUpdateProduct: boolean) {
+      if (shouldUpdateProduct) {
+        handleProductChange(productInfo.updatedProduct, true)
+      } else {
+        handleProductChange(productInfo.currentProduct, false)
+      }
+    }
+  })
+
   return (
     <BGColorWrapper>
       <Formik
@@ -224,6 +269,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
           // formValues shoudl always be of defineHealthSource
           onNext(formValues, { tabStatus: 'SUCCESS' })
         }}
+        innerRef={defineHealthSourceFormRef as Ref<FormikProps<any>>}
       >
         {formik => {
           const featureOption = getFeatureOption(formik?.values?.sourceType, getString, isSplunkMetricEnabled)
@@ -350,13 +396,22 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
                       name="product"
                       disabled={isEdit || featureOption.length === 1}
                       onChange={product => {
-                        // resetting the configurations page whenever product is changed
-                        const newValues = {
-                          ...formik.values,
-                          product,
-                          ...initConfigurationsForm
+                        const currentProduct = formik?.values?.product
+                        const updatedProduct = product
+                        const isHealthSourceConfigured = formik?.values?.queryMetricsMap?.size > 0
+                        if (
+                          shouldShowProductChangeConfirmation(
+                            isSumoLogicEnabled,
+                            currentProduct,
+                            updatedProduct,
+                            isHealthSourceConfigured
+                          )
+                        ) {
+                          setProductInfo({ updatedProduct, currentProduct })
+                          openDialog()
+                        } else {
+                          handleSetProduct(formik, product, false)
                         }
-                        formik.setValues(newValues)
                       }}
                     />
                   </Container>

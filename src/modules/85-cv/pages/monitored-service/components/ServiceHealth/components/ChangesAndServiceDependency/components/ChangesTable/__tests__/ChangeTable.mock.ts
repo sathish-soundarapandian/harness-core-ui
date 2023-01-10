@@ -9,8 +9,8 @@ export const mockData = {
   metadata: {},
   resource: {
     totalPages: 1,
-    totalItems: 4,
-    pageItemCount: 4,
+    totalItems: 5,
+    pageItemCount: 5,
     pageSize: 10,
     content: [
       {
@@ -72,6 +72,21 @@ export const mockData = {
         eventTime: 1634648078986,
         category: 'Alert',
         type: 'PagerDuty'
+      },
+      {
+        id: 'Wz75tpRlTVeacqcEhTXqRA',
+        accountId: 'kmpySmUISimoRrJL6NL73w',
+        orgIdentifier: 'default',
+        projectIdentifier: 'demokaran',
+        serviceIdentifier: 'demoservice',
+        serviceName: 'demo-service',
+        envIdentifier: 'demoenv',
+        environmentName: 'demo-env',
+        name: 'CV Trial Limit',
+        changeSourceIdentifier: 'featureFlag',
+        eventTime: 1633961702460,
+        category: 'FeatureFlag',
+        type: 'HARNESS_FF'
       }
     ],
     pageIndex: 0,

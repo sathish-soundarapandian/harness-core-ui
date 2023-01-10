@@ -301,3 +301,15 @@ export const getMetricNameFilteredNonCustomFields = <T extends Record<Thresholds
 
   return updatedNonCustomFields
 }
+
+export const getMetricNameFilteredMetricThresholds = <
+  T extends Record<ThresholdsPropertyNames, MetricThresholdType[]>
+>({
+  isMetricThresholdEnabled,
+  metricThresholds,
+  metricName
+}: {
+  isMetricThresholdEnabled: boolean
+  metricThresholds: T
+  metricName: string
+}): T => getMetricNameFilteredNonCustomFields(isMetricThresholdEnabled, metricThresholds, metricName)

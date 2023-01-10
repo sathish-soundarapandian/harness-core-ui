@@ -29,8 +29,6 @@ import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
-import { returnLaunchUrl } from '@common/utils/routeUtils'
-import { LaunchButton } from '@common/components/LaunchButton/LaunchButton'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { isOnPrem, useGetCommunity } from '@common/utils/utils'
 import { useGetPipelines } from '@pipeline/hooks/useGetPipelines'
@@ -228,10 +226,6 @@ export default function CDSideNav(): React.ReactElement {
           <ProjectSetupMenu module={module} />
         </React.Fragment>
       ) : null}
-      <LaunchButton
-        launchButtonText={getString('cd.cdLaunchText')}
-        redirectUrl={returnLaunchUrl(`#/account/${params.accountId}/dashboard`)}
-      />
     </Layout.Vertical>
   )
 }

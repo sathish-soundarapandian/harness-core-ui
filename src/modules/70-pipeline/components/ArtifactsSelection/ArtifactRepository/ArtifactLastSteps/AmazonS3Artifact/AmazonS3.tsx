@@ -272,6 +272,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const sidecarSchema = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')

@@ -120,7 +120,12 @@ function KustomizeWithHarnessStore({
         initialValues={getInitialValues()}
         formName="kustomizeHarnessFileStore"
         validationSchema={Yup.object().shape({
-          ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
+          ...ManifestIdentifierValidation(
+            getString,
+            manifestIdsList,
+            initialValues?.identifier,
+            getString('pipeline.uniqueName')
+          ),
           files: Yup.lazy((value): Yup.Schema<unknown> => {
             if (getMultiTypeFromValue(value as string[]) === MultiTypeInputType.FIXED) {
               return Yup.array().of(Yup.string().required(getString('pipeline.manifestType.pathRequired')))
@@ -150,7 +155,7 @@ function KustomizeWithHarnessStore({
                       placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                     />
                   </div>
-                  <div className={css.halfWidth}>
+                  <div className={cx(css.halfWidth, css.addmarginBottom)}>
                     <MultiConfigSelectField
                       name="files"
                       allowableTypes={allowableTypes}
@@ -163,6 +168,7 @@ function KustomizeWithHarnessStore({
                         disableTypeSelection: false,
                         label: <Text>{getString('pipeline.manifestType.kustomizeFolderPath')}</Text>
                       }}
+                      restrictToSingleEntry
                     />
                   </div>
                   <div

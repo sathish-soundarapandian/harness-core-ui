@@ -63,7 +63,7 @@ exports[`StartTrialTemplate snapshot test should call start trial api when click
     <div
       data-testid="location"
     >
-      /account/undefined/ci/home?modal=FREE&&experience=FREE
+      /account/undefined/ci/home?modal=FREE&experience=FREE
     </div>
   </div>
 </div>

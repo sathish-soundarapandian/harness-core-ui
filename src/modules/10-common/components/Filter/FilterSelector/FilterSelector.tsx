@@ -18,6 +18,7 @@ import css from './FilterSelector.module.scss'
 interface FilterSelectorProps<T> {
   appliedFilter?: T | null
   filters?: T[]
+  refetchFilters?: () => Promise<void>
   onFilterBtnClick: () => void
   onFilterSelect: (option: SelectOption, event?: React.SyntheticEvent<HTMLElement, Event> | undefined) => void
   fieldToLabelMapping: Map<string, string>
@@ -27,7 +28,15 @@ interface FilterSelectorProps<T> {
 }
 
 export default function FilterSelector<T extends FilterInterface>(props: FilterSelectorProps<T>): React.ReactElement {
-  const { filters, onFilterBtnClick, onFilterSelect, appliedFilter, fieldToLabelMapping, filterWithValidFields } = props
+  const {
+    filters,
+    onFilterBtnClick,
+    onFilterSelect,
+    appliedFilter,
+    fieldToLabelMapping,
+    filterWithValidFields,
+    refetchFilters
+  } = props
   const { getString } = useStrings()
 
   const renderFilterBtn = React.useCallback(
@@ -48,12 +57,12 @@ export default function FilterSelector<T extends FilterInterface>(props: FilterS
 
   const fieldCountInAppliedFilter = getFilterSize(filterWithValidFields)
 
-  const getItems = React.useMemo(
+  const items = React.useMemo(
     () =>
       filters?.map(item => ({
         label: truncate(item?.name, { length: MAX_FILTER_NAME_LENGTH }),
         value: item?.identifier
-      })) as SelectOption[],
+      })) as SelectOption[] | undefined,
     [filters]
   )
 
@@ -63,7 +72,8 @@ export default function FilterSelector<T extends FilterInterface>(props: FilterS
         buttonTestId={'filter-select'}
         onChange={onFilterSelect}
         value={appliedFilter ? appliedFilter.identifier : null}
-        items={getItems}
+        items={items}
+        getLazyItems={refetchFilters}
         placeholder={filters?.length ? getString('filters.selectFilter') : getString('common.filters.noFilterSaved')}
         minWidth={220}
         usePortal={true}

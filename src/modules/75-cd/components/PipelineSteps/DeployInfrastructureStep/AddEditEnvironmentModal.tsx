@@ -133,8 +133,8 @@ export default function AddEditEnvironmentModal({
         }
       }
       validationSchema={Yup.object().shape({
-        name: NameSchema({ requiredErrorMsg: getString('fieldRequired', { field: 'Name' }) }),
-        identifier: IdentifierSchema(),
+        name: NameSchema(getString, { requiredErrorMsg: getString('fieldRequired', { field: 'Name' }) }),
+        identifier: IdentifierSchema(getString),
         type: Yup.string().required().oneOf(['Production', 'PreProduction'])
       })}
       validateOnChange

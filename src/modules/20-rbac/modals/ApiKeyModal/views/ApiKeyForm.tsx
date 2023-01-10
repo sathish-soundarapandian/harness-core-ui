@@ -92,8 +92,8 @@ const ApiKeyForm: React.FC<ApiKeyModalData> = ({ data, isEdit, onSubmit, apiKeyT
           }}
           formName="apiKeyForm"
           validationSchema={Yup.object().shape({
-            name: NameSchema(),
-            identifier: IdentifierSchema()
+            name: NameSchema(getString),
+            identifier: IdentifierSchema(getString)
           })}
           onSubmit={values => {
             modalErrorHandler?.hide()

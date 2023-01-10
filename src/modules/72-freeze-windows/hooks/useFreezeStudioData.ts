@@ -26,7 +26,7 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     data: orgsData,
     refetch: refetchOrgs
   } = useGetOrganizationAggregateDTOList({
-    queryParams: { accountIdentifier: accountId },
+    queryParams: { accountIdentifier: accountId, pageSize: 200 },
     lazy: true
   })
 
@@ -38,7 +38,8 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
-      projectIdentifier
+      projectIdentifier,
+      size: 200
     },
     lazy: true
   })
@@ -50,7 +51,8 @@ export const useFreezeStudioData = (): ResourcesInterface => {
   } = useGetProjectList({
     queryParams: {
       accountIdentifier: accountId,
-      orgIdentifier
+      orgIdentifier,
+      pageSize: 200
     },
     lazy: true
   })
@@ -161,7 +163,8 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     refetchProjects({
       queryParams: {
         accountIdentifier: accountId,
-        orgIdentifier: _orgIdentifier
+        orgIdentifier: _orgIdentifier,
+        pageSize: 200
       }
     })
   }, 300)

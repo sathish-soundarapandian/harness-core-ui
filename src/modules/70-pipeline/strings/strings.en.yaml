@@ -33,6 +33,7 @@ previewTemplateLabel: Preview Template YAML
 templateInputs: Template Inputs
 onlyPositiveInteger: Only positive integer values
 depth: Depth
+feedsText: Feeds
 advancedOptions: Advanced Options
 additionalConfiguration: Additional Configuration
 pipelineTimeoutSettings: Pipeline Timeout Settings
@@ -384,6 +385,8 @@ manifestType:
     chartNamePlaceHolder: 'Enter Chart Name'
     chartVersionPlaceHolder: 'Enter Chart Version'
     chartVersionRequired: 'Chart Version is required'
+    loadingChartVersion: 'Fetching Chart Versions...'
+    noResultsChartVersion: 'No manifest chart versions found'
   oci:
     basePathRequired: 'Base Path is required'
     chartVersionValidation: '"latest" tag is not supported as chart version'
@@ -546,6 +549,7 @@ execution:
     downloadLogs: Download logs
     viewCompiledYaml: View Compiled YAML
     compareExecutions: Compare Pipeline Executions
+    reRunInDebugMode: Re-run in debug mode
   layouts:
     bottom: Align to bottom
     right: Align to right
@@ -561,6 +565,7 @@ resourceConstraints:
   yourPipeline: ' ( your execution )'
   k8sNamespaceText: K8s namespace
   serverlessInfraEntity: serverless infrastructure entity
+  elastigroupInfraEntity: Elastigroup Infrastructure
 targets:
   title: Targets
 barriers:
@@ -1133,17 +1138,20 @@ stepDescription:
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
   ElastigroupRollback: Rollback for the Elastigroup steps
   ElastigroupSetup: Elastigroup setup step
-  SwapRoute: Swap Route for Tanzu Application Service
-  SwapRollback: Swap Rolback for Tanzu Application Service
-  TasRollback: Rollback for the TAS steps
-  AppResize: Update the number of instances for this app
-  TanzuCommandScript: Command Scripts to run any CF CLI command or script at any point in your Harness TAS Pipelines
-  TASBasicAppSetup: TAS basic setup step
-  TASBGAppSetup: TAS blue green setup step
-  TASCanaryAppSetup: TAS canary setup step
+  SwapRoute: Swap between Active and InActive TAS Applications
+  SwapRollback: Rollback the Swap to Active in Blue Green Deployments
+  TasRollback: Rollback to previous deployment during failure
+  AppResize: Scale the TAS Application as per the scaling requirements
+  TanzuCommandScript: Execute custom Tanzu Commands in this Step
+  GHAPlugin: Run GitHub Actions as a step in the pipeline
+  BitrisePlugin: Run Bitrise plugin as a step in the pipeline
+  TASBasicAppSetup: Initialize the TAS Application for Basic Deployment
+  TASBGAppSetup: Initialize the TAS Application for BlueGreen Deployment
+  TASCanaryAppSetup: Initialize the TAS Application for Canary Deployment
   ElastigroupDeploy: Elastigroup Deploy step
   ElastigroupSwapRoute: Elastigroup Swap Route
   ElastigroupBGStageSetup: Elastigroup Blue/Green Step
+  Container: Execute one or more commands on a container image in a CD stage.
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
@@ -1203,7 +1211,6 @@ expressionsEvaluation: Expressions Evaluation
 deploymentFrequency: 'Deployment Frequency'
 executionFrequency: 'Execution Frequency'
 retryPipeline: Retry Failed Pipeline
-openInNewTab: Open in new tab
 openPipelineInNewTab: Open Pipeline in new tab
 stagetoRetryFrom: Select the stage that you would like to resume from
 runAllParallelstages: Run all parallel stages
@@ -1336,7 +1343,7 @@ serviceDeploymentTypes:
   serverlessAwsType: Serverless Aws Lambda
   customDeploy: Custom Deployment
   spotElastigroup: Spot Elastigroup
-  asg: AWS ASG
+  asg: AWS Auto Scaling Group
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
@@ -1551,3 +1558,8 @@ pipelineCachedCopy:
   newCacheVersion: New Cache version is available, click reload to view details.
 resilienceTab:
   title: Resilience
+noServicesFound: No Services Available
+noEnvironmentGroupsFound: No Environment Groups Available
+envGroupLabel: Select an existing Environment Group
+envLabel: Select an existing Environment
+serviceLabel: Select an existing service

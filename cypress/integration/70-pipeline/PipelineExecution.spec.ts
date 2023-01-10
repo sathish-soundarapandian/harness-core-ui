@@ -81,68 +81,72 @@ describe('Pipeline Execution', () => {
 
     cy.wait('@statusFailed', { timeout: 30000 })
 
-    cy.get('.Pane.horizontal.Pane1').within(() => {
-      cy.contains('p', 'testStage_Cypress').should('be.visible')
-      cy.get('span[icon="warning-sign"]').should('be.visible')
-      cy.get('span[icon="warning-sign"]').siblings().contains('p', "File 'src/' not found").should('be.visible')
+    cy.get('.Pane.horizontal.Pane1')
+      .scrollIntoView()
+      .within(() => {
+        cy.contains('p', 'testStage_Cypress').should('be.visible')
+        cy.get('span[icon="warning-sign"]').should('be.visible')
+        cy.get('span[icon="warning-sign"]').siblings().contains('p', "File 'src/' not found").should('be.visible')
 
-      cy.get('.default-node').should('be.visible').trigger('mouseover')
-      cy.get('.default-node').should('be.visible').trigger('onmouseover')
-      cy.get('.default-node').should('be.visible').trigger('mouseenter')
+        cy.get('.default-node').should('be.visible').trigger('mouseover')
+        cy.get('.default-node').should('be.visible').trigger('onmouseover')
+        cy.get('.default-node').should('be.visible').trigger('mouseenter')
 
-      cy.get('[class^="DynamicPopover-module_dynamic-popover"]').should('be.visible')
-      cy.get('[class^="DynamicPopover-module_dynamic-popover"]').within(() => {
+        cy.get('[class^="DynamicPopover-module_dynamic-popover"]').should('be.visible')
+        cy.get('[class^="DynamicPopover-module_dynamic-popover"]').within(() => {
+          cy.get('span[icon="warning-sign"]')
+            .should('be.visible')
+            .siblings()
+            .contains('span', 'FAILED')
+            .should('be.visible')
+          cy.contains('p', 'testService').should('be.visible')
+          cy.contains('p', 'testEnv').should('be.visible')
+        })
+
+        cy.get('.default-node').should('be.visible').trigger('mouseleave')
+        cy.wait(1000)
+      })
+
+    cy.get('.Pane.horizontal.Pane2')
+      .scrollIntoView()
+      .within(() => {
+        cy.get('span[icon="warning-sign"]').should('be.visible')
+        cy.contains('div', 'Error Summary').should('be.visible')
+
+        cy.get('*[class^="StepDetailsTab"]')
+          .should('be.visible')
+          .within(() => {
+            cy.get('span[data-icon="info"]')
+              .should('be.visible')
+              .siblings()
+              .contains('span', "Provided file path doesn't exist")
+              .should('be.visible')
+
+            cy.contains(
+              'span',
+              "Failed while trying to fetch files from git connector: 'GitConn1' in manifest with identifier: ManifestIdentifier"
+            ).should('be.visible')
+            cy.get('span[icon="lightbulb"]')
+              .should('be.visible')
+              .siblings()
+              .contains(
+                'span',
+                'Please ensure that provided file path exists in git repository or in reference branch: master'
+              )
+              .should('be.visible')
+          })
+
+        cy.contains('div', 'Error Summary').should('be.visible')
+        cy.contains('p', "File 'src/' not found").should('be.visible')
+
         cy.get('span[icon="warning-sign"]')
           .should('be.visible')
           .siblings()
           .contains('span', 'FAILED')
           .should('be.visible')
-        cy.contains('p', 'testService').should('be.visible')
-        cy.contains('p', 'testEnv').should('be.visible')
+        cy.contains('div', 'testService').should('be.visible')
+        cy.contains('li', 'testEnv').should('be.visible')
       })
-
-      cy.get('.default-node').should('be.visible').trigger('mouseleave')
-      cy.wait(1000)
-    })
-
-    cy.get('.Pane.horizontal.Pane2').within(() => {
-      cy.get('span[icon="warning-sign"]').should('be.visible')
-      cy.contains('div', 'Error Summary').should('be.visible')
-
-      cy.get('*[class^="StepDetailsTab"]')
-        .should('be.visible')
-        .within(() => {
-          cy.get('span[data-icon="info"]')
-            .should('be.visible')
-            .siblings()
-            .contains('span', "Provided file path doesn't exist")
-            .should('be.visible')
-
-          cy.contains(
-            'span',
-            "Failed while trying to fetch files from git connector: 'GitConn1' in manifest with identifier: ManifestIdentifier"
-          ).should('be.visible')
-          cy.get('span[icon="lightbulb"]')
-            .should('be.visible')
-            .siblings()
-            .contains(
-              'span',
-              'Please ensure that provided file path exists in git repository or in reference branch: master'
-            )
-            .should('be.visible')
-        })
-
-      cy.contains('div', 'Error Summary').should('be.visible')
-      cy.contains('p', "File 'src/' not found").should('be.visible')
-
-      cy.get('span[icon="warning-sign"]')
-        .should('be.visible')
-        .siblings()
-        .contains('span', 'FAILED')
-        .should('be.visible')
-      cy.contains('div', 'testService').should('be.visible')
-      cy.contains('li', 'testEnv').should('be.visible')
-    })
     cy.wait(2000)
   })
 

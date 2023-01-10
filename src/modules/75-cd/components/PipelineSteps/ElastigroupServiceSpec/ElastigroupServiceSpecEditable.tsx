@@ -22,11 +22,12 @@ import {
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
 import { useServiceContext } from '@cd/context/ServiceContext'
+import { FeatureFlag } from '@common/featureFlags'
 import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
 import type { ElastigroupServiceSpecFormProps } from './ElastigroupServiceSpecInterface'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
@@ -52,17 +53,17 @@ const ElastigroupServiceSpecEditable: React.FC<ElastigroupServiceSpecFormProps> 
     getStageFromPipeline
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
-  const { NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
+  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType =
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
-    !!NG_ARTIFACT_SOURCES,
+    !!isSvcEnvEnabled,
     stage?.stage as DeploymentStageElementConfig,
     isServiceEntityPage
   )
-  const isNewService = isNewServiceEnvEntity(!!NG_SVC_ENV_REDESIGN, stage?.stage as DeploymentStageElementConfig)
+  const isNewService = isNewServiceEnvEntity(!!isSvcEnvEnabled, stage?.stage as DeploymentStageElementConfig)
 
   const updateStageData = async (newStage: any): Promise<void> => {
     await updateStage(newStage)

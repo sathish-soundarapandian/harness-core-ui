@@ -12,7 +12,7 @@ import { isEmpty } from 'lodash-es'
 import { NameSchema } from '@common/utils/Validation'
 import { Connectors } from '@connectors/constants'
 import type { ArtifactSource, ConnectorInfoDTO, PrimaryArtifact, ServiceDefinition } from 'services/cd-ng'
-import type { StringKeys } from 'framework/strings'
+import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { ArtifactType } from './ArtifactInterface'
 
@@ -257,17 +257,18 @@ export const repositoryPortOrServer: IOptionProps[] = [
 ]
 
 export const ArtifactIdentifierValidation = (
+  getString: UseStringsReturn['getString'],
   artifactIdentifiers: string[],
   id: string | undefined,
   validationMsg: string
 ): { identifier: Schema<unknown> } => {
   if (!id) {
     return {
-      identifier: NameSchema().notOneOf(artifactIdentifiers, validationMsg)
+      identifier: NameSchema(getString).notOneOf(artifactIdentifiers, validationMsg)
     }
   }
   return {
-    identifier: NameSchema()
+    identifier: NameSchema(getString)
   }
 }
 

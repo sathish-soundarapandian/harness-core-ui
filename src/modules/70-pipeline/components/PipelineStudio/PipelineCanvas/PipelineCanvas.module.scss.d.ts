@@ -15,15 +15,14 @@ declare const styles: {
   readonly builderContainer: string
   readonly content: string
   readonly crossIcon: string
-  readonly customButtons: string
   readonly dialog: string
+  readonly dialogStyle: string
   readonly discardBtn: string
   readonly folderName: string
   readonly gitDetails: string
   readonly gitRemoteDetailsWrapper: string
   readonly modalCard: string
   readonly modalContent: string
-  readonly paddingTop8: string
   readonly pipelineIcon: string
   readonly pipelineMetadataContainer: string
   readonly pipelineName: string

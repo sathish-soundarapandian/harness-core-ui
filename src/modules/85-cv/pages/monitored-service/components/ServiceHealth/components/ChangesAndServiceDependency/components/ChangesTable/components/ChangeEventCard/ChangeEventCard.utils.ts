@@ -8,9 +8,10 @@
 import moment from 'moment'
 import { Color } from '@harness/design-system'
 import type { EventData } from '@cv/components/ActivitiesTimelineView/ActivitiesTimelineView'
-import type { ChangeEventMetadata, ChangeEventDTO } from 'services/cv'
+import type { ChangeEventMetadata, ChangeEventDTO, InternalChangeEventMetaData } from 'services/cv'
 import type { UseStringsReturn } from 'framework/strings'
-import type { CustomChangeEventDTO } from './ChangeEventCard.types'
+import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
+import type { ChangeTitleData, CustomChangeEventDTO } from './ChangeEventCard.types'
 import { StageStatusMapper, VerificationStatus } from './ChangeEventCard.constant'
 
 export const createChangeDetailsData = (resource: ChangeEventDTO | undefined) => {
@@ -26,6 +27,7 @@ export const createChangeDetailsData = (resource: ChangeEventDTO | undefined) =>
     }
   }
 }
+
 export const createChangeDetailsDataForKubernetes = (resource: ChangeEventDTO | undefined) => {
   const { type, category, metadata, name } = resource || {}
   return {
@@ -66,7 +68,7 @@ export const createChangeTitleData = (
   pipelineIdentifier?: string,
   runSequence?: number,
   status?: string
-) => {
+): ChangeTitleData => {
   const { name, id = '', type, metadata, serviceIdentifier, envIdentifier } = resource || {}
   return {
     name: pipelineIdentifier ?? name,
@@ -76,6 +78,28 @@ export const createChangeTitleData = (
     serviceIdentifier,
     envIdentifier,
     status: (StageStatusMapper as any)[`${status}`] || status
+  }
+}
+
+export const createChangeTitleDataForInternalCS = (resource?: ChangeEventDTO): ChangeTitleData => {
+  const { name, type, metadata, serviceIdentifier, envIdentifier } = resource || {}
+  return {
+    name,
+    type,
+    url: (metadata as InternalChangeEventMetaData)?.internalChangeEvent?.internalLinkToEntity?.url,
+    serviceIdentifier,
+    envIdentifier
+  }
+}
+
+export const getTextForRedirectButton = (getString: UseStringsReturn['getString'], type?: string): string => {
+  switch (type) {
+    case ChangeSourceTypes.HarnessCDNextGen:
+      return getString('cv.changeSource.changeSourceCard.viewDeployment')
+    case ChangeSourceTypes.HARNESS_FF:
+      return getString('cv.changeSource.changeSourceCard.viewFeatureFlag')
+    default:
+      return ''
   }
 }
 

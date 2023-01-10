@@ -65,7 +65,7 @@ describe('GIT SYNC DISABLED', () => {
     cy.wait(2000)
     cy.contains('p', 'Pipelines').should('be.visible', { timeout: 10000 }).click()
     cy.contains('p', 'Close without saving?').should('be.visible')
-    cy.contains('span', 'Confirm').click({ force: true })
+    cy.contains('span', 'Leave this Page').click({ force: true })
     cy.wait(2000)
     cy.contains('span', 'Create a Pipeline').should('be.visible')
   })

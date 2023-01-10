@@ -9,10 +9,11 @@ import React from 'react'
 import { render, act, fireEvent, queryByAttribute } from '@testing-library/react'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { UseGetReturnData } from '@common/utils/testUtils'
+import { TestWrapper, UseGetReturnData } from '@common/utils/testUtils'
 import type { ResponseConnectorResponse } from 'services/cd-ng'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { ChaosExperimentStep } from '../ChaosExperimentStep'
+import { MemoizedExperimentPreview, MemoizedPipelineExperimentSelect } from '../ChaosExperimentStepBase'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -123,6 +124,42 @@ describe('ChaosExperiment Step', () => {
           assertion: 'faultsPassed > 2'
         }
       })
+    })
+  })
+
+  describe('<MemoizedExperimentPreview /> tests', () => {
+    test('Should re-render MemoizedExperimentPreview when experimentID change', () => {
+      const { container } = render(
+        <TestWrapper>
+          <MemoizedExperimentPreview experimentID="experimentID1" />
+        </TestWrapper>
+      )
+
+      expect(container).toMatchSnapshot()
+
+      render(
+        <TestWrapper>
+          <MemoizedExperimentPreview experimentID="experimentID2" />
+        </TestWrapper>,
+        { container }
+      )
+
+      expect(container).toMatchSnapshot()
+    })
+  })
+
+  describe('<MemoizedPipelineExperimentSelect /> tests', () => {
+    test('Should render MemoizedPipelineExperimentSelect', () => {
+      const mockOnSelect = jest.fn()
+      const mockGoToNewExperiment = jest.fn()
+
+      const { container } = render(
+        <TestWrapper>
+          <MemoizedPipelineExperimentSelect onSelect={mockOnSelect} goToNewExperiment={mockGoToNewExperiment} />
+        </TestWrapper>
+      )
+
+      expect(container).toMatchSnapshot()
     })
   })
 })

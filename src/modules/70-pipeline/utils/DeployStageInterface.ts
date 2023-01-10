@@ -9,6 +9,7 @@ import type { SelectOption } from '@harness/uicore'
 import type {
   DeploymentStageConfig,
   EnvironmentGroupYaml,
+  ExecutionElementConfig,
   PipelineInfrastructure,
   ServiceConfig,
   ServiceDefinition
@@ -25,6 +26,7 @@ export interface EnvironmentYamlV2 {
   serviceOverrideInputs?: {
     [key: string]: { [key: string]: any }
   }
+  provisioner?: ExecutionElementConfig
 }
 
 export interface ServiceYamlV2 {

@@ -60,15 +60,12 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
   } = props
   const { getString } = useStrings()
   const [filter, setFilter] = useState<string | undefined>()
-
   const createdMetrics = useMemo(
     () => (propsCreatedMetrics?.length ? propsCreatedMetrics : [defaultMetricName]),
     [propsCreatedMetrics]
   )
   const selectedMetric = defaultSelectedMetric || createdMetrics[0]
-
   const { updateParentFormik } = useCommonHealthSource()
-
   const filteredGroupMetric = useMemo(() => {
     return getFilteredGroupedCreatedMetric(groupedCreatedMetrics, filter)
   }, [filter, groupedCreatedMetrics])
@@ -78,6 +75,7 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
     [groupedCreatedMetrics, createdMetrics]
   )
   const hasOnRemove = shouldBeAbleToDeleteLastMetric || createdMetricsLength > 1
+  const hideDeleteIcon = Boolean(!shouldBeAbleToDeleteLastMetric && createdMetricsLength === 1)
 
   const onRemoveItem = (removedItem: string): void => {
     if (!hasOnRemove) return
@@ -103,7 +101,6 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
         {addFieldLabel}
       </Button>
       <CommonSelectedAppsSideNav
-        isValidInput={isValid}
         onSelect={(newlySelectedMetric, index) => {
           // Allow change of panel only if current panel is valid
           if (isValid) {
@@ -116,6 +113,7 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
         isMetricThresholdEnabled={isMetricThresholdEnabled}
         openEditMetricModal={openEditMetricModal}
         onRemoveItem={onRemoveItem}
+        hideDeleteIcon={hideDeleteIcon}
         filterProps={{
           onFilter: setFilter,
           className: css.metricsFilter,

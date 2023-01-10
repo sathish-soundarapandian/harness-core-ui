@@ -41,7 +41,7 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { Connectors } from '@connectors/constants'
@@ -255,23 +255,10 @@ function FormContent({
           disabled={readonly}
           multiTypeDurationProps={{
             expressions,
-            enableConfigureOptions: false,
+            enableConfigureOptions: true,
             allowableTypes
           }}
         />
-        {getMultiTypeFromValue(formik.values.timeout) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={formik.values.timeout || ''}
-            type="String"
-            variableName="timeout"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={value => formik.setFieldValue('timeout', value)}
-            isReadonly={readonly}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-          />
-        )}
       </div>
 
       <div className={cx(stepCss.formGroup, stepCss.lg)}>

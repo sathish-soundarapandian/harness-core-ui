@@ -65,12 +65,6 @@ exports[`AccountSideNav AccountSideNav simple snapshot test 1`] = `
         orgsText
       </p>
     </a>
-    <button
-      class="launchButtonPosition"
-      type="button"
-    >
-      common.cgLaunchText
-    </button>
   </div>
 </div>
 `;

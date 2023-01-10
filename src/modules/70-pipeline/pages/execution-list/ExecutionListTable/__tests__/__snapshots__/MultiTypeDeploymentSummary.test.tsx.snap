@@ -1,5 +1,117 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`MultiTypeDeploymentSummary render environmentGroup in getEnvironmentsTextAndTooltip 1`] = `
+<div>
+  <div
+    class="stage matrixStage matrixSummary"
+  >
+    <button
+      class="bp3-button Button--button StyledProps--font StyledProps--main accordionBtn Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
+      type="button"
+    >
+      <span
+        class="bp3-icon StyledProps--main"
+        data-icon="accordion-expanded"
+      >
+        <svg
+          fill="none"
+          height="12"
+          viewBox="0 0 12 11"
+          width="12"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            fill="#F3F3FA"
+            height="10.5"
+            rx="0.75"
+            stroke="#9293AB"
+            stroke-width="0.5"
+            width="11.5"
+            x="0.25"
+            y="0.25"
+          />
+          <path
+            d="M10 6.143H2V5h8v1.143z"
+            fill="#0A3364"
+            opacity="0.7"
+          />
+        </svg>
+      </span>
+    </button>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey900"
+    >
+      Stage
+    </p>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+    >
+      |
+    </p>
+    <span
+      class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey900"
+      data-icon="looping"
+    >
+      <svg
+        fill="currentColor"
+        height="16"
+        viewBox="0 0 13 12"
+        width="16"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M1.667 6c0 1.47 1.14 2.667 2.542 2.667v.666C2.439 9.333 1 7.838 1 6s1.44-3.333 3.209-3.333h2.819L5.931 1.569l.471-.471L8.305 3 6.403 4.903 5.93 4.43l1.098-1.098h-2.82C2.807 3.333 1.667 4.53 1.667 6zm7.458-3.333v.666c1.401 0 2.542 1.196 2.542 2.667 0 1.47-1.141 2.667-2.542 2.667h-2.82l1.097-1.098-.471-.471L5.029 9l1.902 1.903.472-.472-1.098-1.098h2.819c1.77 0 3.21-1.495 3.21-3.333s-1.44-3.333-3.21-3.333z"
+        />
+      </svg>
+    </span>
+    <div
+      class="Layout--horizontal StyledProps--main"
+    >
+      <span
+        class="bp3-popover-wrapper"
+      >
+        <span
+          class="bp3-popover-target"
+        >
+          <p
+            class="StyledProps--font StyledProps--main servicesText StyledProps--font-size-small StyledProps--color StyledProps--color-primary5"
+            style="text-decoration: underline dotted;"
+            tabindex="0"
+          >
+            pipeline.numOfServices
+          </p>
+        </span>
+      </span>
+      <span
+        class="bp3-popover-wrapper"
+      >
+        <span
+          class="bp3-popover-target"
+        >
+          <p
+            class="StyledProps--font StyledProps--main environmentsText StyledProps--font-size-small StyledProps--color StyledProps--color-primary5"
+            style="text-decoration: underline dotted;"
+            tabindex="0"
+          >
+            common.environmentGroup.nameWithLabel
+          </p>
+        </span>
+      </span>
+    </div>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+    >
+      |
+    </p>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey900"
+    >
+      pipeline.numOfStages
+    </p>
+  </div>
+</div>
+`;
+
 exports[`MultiTypeDeploymentSummary render service, env and gitops applications 1`] = `
 <div>
   <div
@@ -90,9 +202,10 @@ exports[`MultiTypeDeploymentSummary render service, env and gitops applications 
         >
           <p
             class="StyledProps--font StyledProps--main environmentsText StyledProps--font-size-small StyledProps--color StyledProps--color-primary5"
+            style="text-decoration: underline dotted;"
             tabindex="0"
           >
-            Prod
+            pipeline.numOfEnvs
           </p>
         </span>
       </span>

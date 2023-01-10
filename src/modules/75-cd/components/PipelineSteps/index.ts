@@ -109,6 +109,7 @@ import { AsgCanaryDeleteStep } from './AsgCanaryDeleteStep/AsgCanaryDeleteStep'
 import { AsgCanaryDeployStep } from './AsgCanaryDeploy/AsgCanaryDeployStep'
 import { AsgRollingRollbackStep } from './AsgRollingRollbackStep/AsgRollingRollbackStep'
 import { AsgRollingDeploy } from './AsgRollingDeployStep/AsgRollingDeployStep'
+import { ContainerStep } from './ContainerStep/ContainerStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -123,6 +124,7 @@ factory.registerStep(new K8sCanaryDeleteStep())
 factory.registerStep(new K8sApplyStep())
 factory.registerStep(new K8sDeleteStep())
 factory.registerStep(new ShellScriptStep())
+factory.registerStep(new ContainerStep())
 factory.registerStep(new KubernetesInfraSpec())
 factory.registerStep(new GcpInfrastructureSpec())
 factory.registerStep(new PDCInfrastructureSpec())

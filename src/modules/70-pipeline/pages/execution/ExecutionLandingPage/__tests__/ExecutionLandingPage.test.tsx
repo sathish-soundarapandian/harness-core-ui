@@ -45,7 +45,19 @@ jest.mock('services/pipeline-ng', () => ({
   useHandleStageInterrupt: jest.fn(() => ({
     mutate: jest.fn()
   })),
-  useGetInputsetYaml: jest.fn(() => ({ data: null }))
+  useGetInputsetYaml: jest.fn(() => ({ data: null })),
+  useDebugPipelineExecuteWithInputSetYaml: jest.fn(() => ({
+    loading: false,
+    refetch: jest.fn(),
+    mutate: jest.fn().mockResolvedValue({
+      data: {
+        correlationId: '',
+        status: 'SUCCESS',
+        metaData: null,
+        data: {}
+      }
+    })
+  }))
 }))
 
 jest.mock('services/ti-service', () => ({

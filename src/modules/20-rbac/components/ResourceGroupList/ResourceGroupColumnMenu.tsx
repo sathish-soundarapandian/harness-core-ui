@@ -13,10 +13,12 @@ import { useParams } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import { useStrings } from 'framework/strings'
 import { ResourceGroupV2, ResourceGroupV2Response, useDeleteResourceGroupV2 } from 'services/resourcegroups'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import OpenInNewTab from '@rbac/components/MenuItem/OpenInNewTab'
 import css from './ResourceGroupList.module.scss'
 
 export type CellPropsResourceGroupColumn<D extends Record<string, any>, V = any> = TableInstance<D> & {
@@ -31,10 +33,11 @@ export type CellPropsResourceGroupColumn<D extends Record<string, any>, V = any>
 
 const ResourceGroupColumnMenu: Renderer<CellPropsResourceGroupColumn<ResourceGroupV2Response>> = ({ row, column }) => {
   const data = row.original
+  const resourceGroupIdentifier = data?.resourceGroup?.identifier
   const isHarnessManaged = data.harnessManaged
   const [menuOpen, setMenuOpen] = useState(false)
   const { showSuccess, showError } = useToaster()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
   const { mutate: deleteResourceGroup } = useDeleteResourceGroupV2({
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier }
@@ -76,18 +79,26 @@ const ResourceGroupColumnMenu: Renderer<CellPropsResourceGroupColumn<ResourceGro
   const handleDelete = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
     e.stopPropagation()
     setMenuOpen(false)
-    if (!data?.resourceGroup?.identifier) return
+    if (!resourceGroupIdentifier) return
     openDialog()
   }
 
   const handleEdit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
     e.stopPropagation()
     setMenuOpen(false)
-    if (!row.original?.resourceGroup?.identifier) {
+    if (!resourceGroupIdentifier) {
       return
     }
     column.openResourceGroupModal?.(row.original.resourceGroup)
   }
+
+  const resourceGroupDetailsUrl = routes.toResourceGroupDetails({
+    resourceGroupIdentifier: resourceGroupIdentifier || '',
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    module
+  })
 
   return !isHarnessManaged ? (
     <Popover
@@ -108,6 +119,9 @@ const ResourceGroupColumnMenu: Renderer<CellPropsResourceGroupColumn<ResourceGro
         }}
       />
       <Menu style={{ minWidth: 'unset' }}>
+        <li>
+          <OpenInNewTab url={resourceGroupDetailsUrl} />
+        </li>
         <RbacMenuItem
           icon="edit"
           text={getString('edit')}

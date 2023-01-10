@@ -39,7 +39,6 @@ import type { StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
@@ -275,28 +274,12 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                     disabled={isDisabled}
                     label={getString('pipelineSteps.timeoutLabel')}
                     multiTypeDurationProps={{
-                      enableConfigureOptions: false,
+                      enableConfigureOptions: true,
                       expressions,
                       disabled: isDisabled,
                       allowableTypes
                     }}
                   />
-                  {getMultiTypeFromValue(formikProps.values.timeout) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
-                      style={{ marginBottom: 4 }}
-                      value={values.timeout as string}
-                      type="String"
-                      variableName="step.timeout"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      showAdvanced={true}
-                      onChange={value => {
-                        formikProps.setFieldValue('timeout', value)
-                      }}
-                      isReadonly={isDisabled}
-                      allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                    />
-                  )}
                 </Layout.Horizontal>
               </div>
               <div className={stepCss.divider} />

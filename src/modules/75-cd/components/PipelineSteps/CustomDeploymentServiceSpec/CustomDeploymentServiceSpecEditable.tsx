@@ -17,8 +17,9 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useServiceContext } from '@cd/context/ServiceContext'
+import { FeatureFlag } from '@common/featureFlags'
 import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
 import type { CustomDeploymentServiceInputFormProps } from './CustomDeploymentServiceSpecInterface'
 import css from './CustomDeploymentServiceSpec.module.scss'
@@ -30,7 +31,7 @@ const CustomDeploymentServiceSpecEditable: React.FC<CustomDeploymentServiceInput
 }) => {
   const { getString } = useStrings()
   const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
-  const { NG_ARTIFACT_SOURCES } = useFeatureFlags()
+  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const {
     state: {
       selectionState: { selectedStageId }
@@ -43,7 +44,7 @@ const CustomDeploymentServiceSpecEditable: React.FC<CustomDeploymentServiceInput
   const { isServiceEntityPage } = useServiceContext()
 
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
-    !!NG_ARTIFACT_SOURCES,
+    !!isSvcEnvEnabled,
     stage?.stage as DeploymentStageElementConfig,
     isServiceEntityPage
   )

@@ -196,3 +196,25 @@ export const CODENavItem = () => {
     </li>
   )
 }
+
+export const IACNavItem = (): JSX.Element => {
+  const params = useParams<ProjectPathProps>()
+
+  return (
+    <li className={css.navItem}>
+      <Link {...commonLinkProps} to={routes.toIACM(params)}>
+        <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+          <Icon name="iacm" size={30} />
+          <Text
+            font={{ weight: 'semi-bold', align: 'center' }}
+            padding={{ bottom: 'xsmall' }}
+            color={Color.WHITE}
+            className={css.text}
+          >
+            <String stringID="common.iacm" />
+          </Text>
+        </Layout.Vertical>
+      </Link>
+    </li>
+  )
+}

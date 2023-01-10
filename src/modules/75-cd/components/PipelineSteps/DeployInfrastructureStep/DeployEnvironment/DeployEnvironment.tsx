@@ -151,6 +151,7 @@ function DeployEnvironment({
         )
 
         if (path) {
+          const existingTemplate: any = getStageFormTemplate(path)
           updateStageFormTemplate(
             {
               environmentRef: RUNTIME_INPUT_VALUE,
@@ -160,6 +161,7 @@ function DeployEnvironment({
               ...(parsedServiceOverridesYaml?.serviceOverrideInputs && {
                 serviceOverrideInputs: parsedServiceOverridesYaml?.serviceOverrideInputs
               }),
+              provisioner: existingTemplate.provisioner,
               ...(!gitOpsEnabled && { infrastructureDefinitions: RUNTIME_INPUT_VALUE }),
               ...(gitOpsEnabled && { gitOpsClusters: RUNTIME_INPUT_VALUE })
             },

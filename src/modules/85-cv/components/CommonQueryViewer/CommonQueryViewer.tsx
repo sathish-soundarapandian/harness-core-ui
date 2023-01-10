@@ -41,12 +41,12 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
   const { getString } = useStrings()
 
   const { isTemplate, expressions } = useContext(SetupSourceTabsContext)
-  const healthSourceConfigContext = useCommonHealthSource()
+  const { updateHelperContext, isQueryRuntimeOrExpression } = useCommonHealthSource()
 
   useEffect(() => {
     if (isTemplate) {
       const queryType = getMultiTypeFromValue(query)
-      healthSourceConfigContext.updateHelperContext({
+      updateHelperContext({
         isQueryRuntimeOrExpression: queryType !== MultiTypeInputType.FIXED
       })
     }
@@ -61,8 +61,7 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
 
   const handleQueryTemplateTypeChange = (updatedType: MultiTypeInputType): void => {
     const isQueryTypeRuntimeOrExpression = updatedType !== MultiTypeInputType.FIXED
-
-    healthSourceConfigContext.updateHelperContext({ isQueryRuntimeOrExpression: isQueryTypeRuntimeOrExpression })
+    updateHelperContext({ isQueryRuntimeOrExpression: isQueryTypeRuntimeOrExpression })
   }
 
   return (
@@ -107,9 +106,19 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
           handleFetchRecords={handleFetchRecords}
         />
       )}
-      {isQueryExecuted ? (
-        <CommonRecords fetchRecords={handleFetchRecords} loading={loading} data={records} error={error} query={query} />
+      {/* {isQueryExecuted ? ( */}
+      {!isQueryRuntimeOrExpression ? (
+        <CommonRecords
+          fetchRecords={handleFetchRecords}
+          loading={loading}
+          data={records}
+          error={error}
+          query={query}
+          isQueryExecuted={isQueryExecuted}
+        />
       ) : null}
+
+      {/* ) : null} */}
       <CommonQueryViewDialog
         isOpen={isDialogOpen}
         onHide={() => setIsDialogOpen(false)}

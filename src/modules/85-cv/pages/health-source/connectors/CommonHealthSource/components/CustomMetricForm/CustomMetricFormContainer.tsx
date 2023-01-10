@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { MutableRefObject, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { MutableRefObject, useContext, useEffect, useRef, useState } from 'react'
 import { useModalHook } from '@harness/use-modal'
 import {
   Button,
@@ -53,7 +53,8 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
     groupedCreatedMetrics,
     isTemplate,
     expressions,
-    connectorIdentifier: connectorRef
+    connectorIdentifier: connectorRef,
+    filterRemovedMetricNameThresholds
   } = props
 
   const {
@@ -75,21 +76,12 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   const [showCustomMetric, setShowCustomMetric] = useState(
     !!Array.from(defaultTo(mappedMetrics, []))?.length && healthSourceConfig?.customMetrics?.enabled
   )
-
   const metricDefinitions = existingMetricDetails?.spec?.metricDefinitions
   const currentSelectedMetricDetail = metricDefinitions?.find(
     (metricDefinition: CustomHealthMetricDefinition) =>
       metricDefinition.metricName === mappedMetrics.get(selectedMetric || '')?.metricName
   )
-
-  const filterRemovedMetricNameThresholds = useCallback(
-    (deletedMetricName: string) => {
-      if (isMetricThresholdEnabled && deletedMetricName) {
-        // TODO implement this later
-      }
-    },
-    [isMetricThresholdEnabled]
-  )
+  const isEdit = Boolean(formValues?.identifier)
 
   function useUpdateConfigFormikOnOutsideClick(
     ref: MutableRefObject<any>,
@@ -100,7 +92,12 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
     useEffect(() => {
       //  update Parent formik when clicked outside.
       async function handleClickOutside(event: { target: unknown }): Promise<void> {
-        if (ref.current && !ref.current.contains(event.target)) {
+        if (
+          ref.current &&
+          !ref.current.contains(event.target)
+          // && !isEqual(mappedMetricsData.get(selectedMetricName), formValuesData)
+        ) {
+          // This will be executed only when current form value changes.
           const updatedMappedMetricsData = getUpdatedMappedMetricsData(
             mappedMetricsData,
             selectedMetricName,
@@ -152,7 +149,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
             updateParentFormikWithLatestData(updateParentFormik, mappedMetrics, createdMetrics[0])
           }}
           validate={data => {
-            return validateAddMetricForm(data, getString, createdMetrics)
+            return validateAddMetricForm(data, getString, createdMetrics, groupedCreatedMetrics)
           }}
         >
           {() => {
@@ -163,6 +160,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
                 groupNames={groupNames}
                 setGroupName={setGroupName}
                 fieldLabel={fieldLabel}
+                isEdit={isEdit}
               />
             )
           }}
@@ -196,6 +194,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
             isMetricThresholdEnabled={isMetricThresholdEnabled}
             filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
             openEditMetricModal={openModal}
+            defaultServiceInstance={healthSourceConfig.customMetrics?.assign?.defaultServiceInstance}
           >
             <Container ref={wrapperRef}>
               <CustomMetricForm

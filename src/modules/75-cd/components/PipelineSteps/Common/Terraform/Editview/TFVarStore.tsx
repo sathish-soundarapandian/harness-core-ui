@@ -109,7 +109,7 @@ export const TFVarStore: React.FC<StepProps<any> & TFVarStoreProps> = ({
           varFile: Yup.object().shape({
             store: Yup.object().shape({
               spec: Yup.object().shape({
-                connectorRef: ConnectorRefSchema()
+                connectorRef: ConnectorRefSchema(getString)
               })
             })
           })

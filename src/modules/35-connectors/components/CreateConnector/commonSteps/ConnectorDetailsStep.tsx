@@ -167,8 +167,8 @@ const ConnectorDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDe
           }}
           formName={`connectorDetailsStepForm${props.type}`}
           validationSchema={Yup.object().shape({
-            name: NameSchema(),
-            identifier: IdentifierSchema()
+            name: NameSchema(getString),
+            identifier: IdentifierSchema(getString)
           })}
           initialValues={{
             ...(getInitialValues() as DetailsForm),

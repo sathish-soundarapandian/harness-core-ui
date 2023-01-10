@@ -44,6 +44,12 @@ DefaultSettingsFactory.registerCategory('GIT_EXPERIENCE', {
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
 })
 
+DefaultSettingsFactory.registerCategory('PMS', {
+  icon: 'cog',
+  label: 'common.pipeline',
+  modulesWhereCategoryWillBeDisplayed: ['cd', 'ci']
+})
+
 DefaultSettingsFactory.registerSettingHandler(SettingType.DISABLE_HARNESS_BUILT_IN_SECRET_MANAGER, {
   label: 'common.accountSetting.connector.disableBISMHeading',
   settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
@@ -54,7 +60,7 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.DISABLE_HARNESS_BUILT_
 DefaultSettingsFactory.registerSettingHandler(SettingType.MANDATE_CUSTOM_WEBHOOK_AUTHORIZATION, {
   label: 'defaultSettings.mandateAuthorizationForCustomWebhookTriggers',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
-  settingCategory: 'CORE'
+  settingCategory: 'PMS'
 })
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_GIT_COMMANDS, {
@@ -94,7 +100,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.SETTING, {
 DefaultSettingsFactory.registerSettingHandler(SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION, {
   label: 'defaultSettings.mandateWebhookSecretsGithubTriggers',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
-  settingCategory: 'CORE'
+  settingCategory: 'PMS'
 })
 
 export default function DefaultSettingsRoutes(): React.ReactElement {

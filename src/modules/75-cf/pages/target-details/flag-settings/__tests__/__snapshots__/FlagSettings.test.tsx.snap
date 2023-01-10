@@ -56,7 +56,7 @@ exports[`FlagSettings it should render correctly 1`] = `
             class="bp3-input  ExpandingSearchInput--filter"
             dir="auto"
             placeholder="cf.targetDetail.searchPlaceholder"
-            style="padding-right: 0px;"
+            style="padding-right: 38px;"
             type="search"
             value=""
           />

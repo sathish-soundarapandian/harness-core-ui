@@ -5,11 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useCallback } from 'react'
+import React, { useMemo } from 'react'
 import { Text, Container, Icon, Layout, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { getLocationPathName } from 'framework/utils/WindowLocation'
+import { openWindowInNewTab } from '@cv/utils/CommonUtils'
 import type { ChangeTitleData } from '../../ChangeEventCard.types'
 import { getIconByChangeType } from './ChangeTitle.utils'
 import css from './ChangeTitle.module.scss'
@@ -28,13 +28,6 @@ export default function ChangeTitle({ changeTitleData }: { changeTitleData: Chan
     [url, name]
   )
 
-  const openPipelineInNewTab = useCallback(() => {
-    const pipelineURL = `${window.location.origin}${getLocationPathName()}#${url}`
-    if (url) {
-      window.open(pipelineURL, '_blank')
-    }
-  }, [url])
-
   return (
     <Container padding={{ top: 'medium', bottom: 'medium' }} className={css.main}>
       <Icon {...getIconByChangeType(type)} />
@@ -49,7 +42,7 @@ export default function ChangeTitle({ changeTitleData }: { changeTitleData: Chan
       </Layout.Vertical>
       {url ? (
         <Button
-          onClick={openPipelineInNewTab}
+          onClick={() => openWindowInNewTab(url)}
           className={css.redirectButton}
           text={getString('cv.changeSource.changeSourceCard.viewDeployment')}
           icon="share"

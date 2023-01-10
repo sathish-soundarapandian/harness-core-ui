@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { v4 as uuid } from 'uuid'
 import React from 'react'
 import { Layout, Text } from '@harness/uicore'
@@ -9,7 +16,9 @@ import { SRMNotification, SRMNotificationType } from '../../NotificationsContain
 import { sloConditionOptions } from '../SLONotificationRuleRow/SLONotificationRuleRow.constants'
 import {
   changeTypeOptions,
-  conditionOptions
+  conditionOptions,
+  eventStatusOptions,
+  eventTypeOptions
 } from '../ConfigureMonitoredServiceAlertConditions/ConfigureMonitoredServiceAlertConditions.constants'
 
 export function getCurrentNotification(data: NotificationRuleResponse): SRMNotification {
@@ -38,6 +47,21 @@ export function getCurrentNotification(data: NotificationRuleResponse): SRMNotif
           condition?.spec?.changeEventTypes.length && {
             changeType: condition?.spec?.changeEventTypes?.map((changeEventType: string | number | symbol) =>
               changeTypeOptions.find(changeTypeOption => changeTypeOption.value === changeEventType)
+            )
+          }),
+        ...(condition?.spec?.errorTrackingEventStatus &&
+          condition?.spec?.errorTrackingEventStatus.length && {
+            eventStatus: condition?.spec?.errorTrackingEventStatus?.map((eventStatus: string | number | symbol) =>
+              eventStatusOptions.find(eventStatusOption => eventStatusOption.value === eventStatus)
+            )
+          }),
+        ...(condition?.spec?.errorTrackingEventTypes &&
+          condition?.spec?.errorTrackingEventTypes.length && {
+            eventType: condition?.spec?.errorTrackingEventTypes?.map(
+              (errorTrackingEventType: string | number | symbol) =>
+                eventTypeOptions.find(
+                  errorTrackingTypeOption => errorTrackingTypeOption.value === errorTrackingEventType
+                )
             )
           })
       }

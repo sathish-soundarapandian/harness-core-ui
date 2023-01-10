@@ -88,7 +88,7 @@ describe('ServiceV2 - Deployment Template', () => {
     cy.contains('p', 'Change Template').should('be.visible')
     cy.contains('p', 'Preview Template YAML').should('be.visible')
     cy.contains('p', 'Open Template in new tab').should('be.visible')
-    cy.contains('span', 'Add Primary Artifact').should('be.visible').click()
+    cy.contains('span', 'Add Artifact Source').should('be.visible').click()
 
     cy.get('[class*="ArtifactConnector-module_wrapping_sbruUF"]').within(() => {
       artifactRepoTypes.forEach(item => {

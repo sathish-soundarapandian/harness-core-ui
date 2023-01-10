@@ -1,5 +1,8 @@
+import { MultiTypeInputType } from '@harness/uicore'
+import { isEmpty } from 'lodash-es'
 import { CHART_VISIBILITY_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import type { HealthSourceRecordsRequest, QueryRecordsRequestRequestBody } from 'services/cv'
+import type { LogFieldsMultiTypeState } from '../../../CustomMetricForm.types'
 
 export function shouldAutoBuildChart(
   chartConfig: { enabled: boolean; chartVisibilityMode: CHART_VISIBILITY_ENUM } | undefined
@@ -9,11 +12,13 @@ export function shouldAutoBuildChart(
 
 export function shouldShowChartComponent(
   chartConfig: { enabled: boolean; chartVisibilityMode: CHART_VISIBILITY_ENUM } | undefined,
-  records: Record<string, any>[],
-  fetchingSampleRecordLoading: boolean,
-  query: string
+  isQueryRuntimeOrExpression?: boolean
+  // records: Record<string, any>[],
+  // fetchingSampleRecordLoading: boolean,
+  // query: string
 ): boolean {
-  return !!(query && chartConfig?.enabled && records && records?.length && !fetchingSampleRecordLoading)
+  // return !!(query && chartConfig?.enabled && records && records?.length && !fetchingSampleRecordLoading)
+  return Boolean(chartConfig?.enabled && !isQueryRuntimeOrExpression)
 }
 
 export function getRecordsRequestBody(
@@ -24,7 +29,7 @@ export function getRecordsRequestBody(
   const { endTime, startTime } = getStartAndEndTime()
 
   const recordsRequestBody = {
-    connectorIdentifier,
+    connectorIdentifier: connectorIdentifier?.connector?.identifier ?? connectorIdentifier,
     endTime,
     startTime,
     providerType: providerType as HealthSourceRecordsRequest['providerType'],
@@ -56,14 +61,29 @@ export const getIsLogsCanBeShown = ({
   )
 }
 
+const getAreAllLogFieldsAreFixed = (multiTypeRecord: LogFieldsMultiTypeState | null): boolean => {
+  if (!multiTypeRecord || isEmpty(multiTypeRecord)) {
+    return true
+  }
+
+  return Object.keys(multiTypeRecord).every(
+    fieldName => multiTypeRecord[fieldName as keyof LogFieldsMultiTypeState] === MultiTypeInputType.FIXED
+  )
+}
+
 export const getCanShowSampleLogButton = ({
   isTemplate,
   isQueryRuntimeOrExpression,
-  isConnectorRuntimeOrExpression
+  isConnectorRuntimeOrExpression,
+  multiTypeRecord
 }: {
   isTemplate?: boolean
   isQueryRuntimeOrExpression?: boolean
   isConnectorRuntimeOrExpression?: boolean
+  multiTypeRecord: LogFieldsMultiTypeState | null
 }): boolean => {
-  return Boolean(!isTemplate || (!isQueryRuntimeOrExpression && !isConnectorRuntimeOrExpression))
+  return Boolean(
+    !isTemplate ||
+      (!isQueryRuntimeOrExpression && !isConnectorRuntimeOrExpression && getAreAllLogFieldsAreFixed(multiTypeRecord))
+  )
 }

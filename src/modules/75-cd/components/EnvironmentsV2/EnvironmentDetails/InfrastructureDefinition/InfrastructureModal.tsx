@@ -676,8 +676,8 @@ function BootstrapDeployInfraDefinition({
                   formName={'infrastructure-modal'}
                   onSubmit={noop}
                   validationSchema={Yup.object().shape({
-                    name: NameSchema({ requiredErrorMsg: getString('fieldRequired', { field: 'Name' }) }),
-                    identifier: IdentifierSchema()
+                    name: NameSchema(getString, { requiredErrorMsg: getString('fieldRequired', { field: 'Name' }) }),
+                    identifier: IdentifierSchema(getString)
                   })}
                 >
                   {formikProps => {

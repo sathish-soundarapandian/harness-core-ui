@@ -77,8 +77,6 @@ export function MultiTypeDuration(props: MultiTypeDurationProps): React.ReactEle
     ...rest
   } = props
 
-  const { getString } = useStrings()
-
   const expressionAndRuntimeTypeComponent = (
     <ExpressionAndRuntimeType
       name={name}
@@ -103,7 +101,7 @@ export function MultiTypeDuration(props: MultiTypeDurationProps): React.ReactEle
           {getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
             <ConfigureOptions
               value={value as string}
-              type={getString('string')}
+              type="String"
               variableName={name}
               showRequiredField={false}
               showDefaultField={false}

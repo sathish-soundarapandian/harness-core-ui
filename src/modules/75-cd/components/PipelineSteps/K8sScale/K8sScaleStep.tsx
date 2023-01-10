@@ -34,7 +34,7 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions, VALIDATORS } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import { getInstanceDropdownSchema } from '@common/components/InstanceDropdownField/InstanceDropdownField'
@@ -129,27 +129,11 @@ function K8ScaleDeployWidget(props: K8sScaleProps, formikRef: StepFormikFowardRe
                     disabled={readonly}
                     multiTypeDurationProps={{
                       expressions,
-                      enableConfigureOptions: false,
+                      enableConfigureOptions: true,
                       disabled: readonly,
                       allowableTypes
                     }}
                   />
-                  {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
-                      allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                      allowedValuesValidator={VALIDATORS[ALLOWED_VALUES_TYPE.TIME]({ minimum: '10s' })}
-                      value={values.timeout as string}
-                      type="String"
-                      variableName="step.timeout"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      showAdvanced={true}
-                      onChange={value => {
-                        setFieldValue('timeout', value)
-                      }}
-                      isReadonly={readonly}
-                    />
-                  )}
                 </div>
 
                 <div className={stepCss.divider} />

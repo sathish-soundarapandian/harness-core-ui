@@ -246,13 +246,13 @@ export default function ImportResource({
   const getVersionLabelSchema =
     resourceType === ResourceType.TEMPLATE
       ? {
-          versionLabel: TemplateVersionLabelSchema()
+          versionLabel: TemplateVersionLabelSchema(getString)
         }
       : {}
 
   const validationSchema = Yup.object().shape({
-    name: NameSchema({ requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
-    identifier: IdentifierSchema(),
+    name: NameSchema(getString, { requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
+    identifier: IdentifierSchema(getString),
     ...getVersionLabelSchema,
     ...gitSyncFormSchema(getString)
   })

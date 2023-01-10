@@ -1944,6 +1944,17 @@ const routes = {
       environmentIdentifier
     }: Partial<ProjectPathProps> & { environmentIdentifier: string }) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/environments/${environmentIdentifier}`
+  ),
+
+  /*********************** IACM */
+  toIACM: withAccountId(() => `/iacm`),
+  toIACMMicroFrontend: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
+  ),
+  toIACMStacks: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/stacks`
   )
 }
 

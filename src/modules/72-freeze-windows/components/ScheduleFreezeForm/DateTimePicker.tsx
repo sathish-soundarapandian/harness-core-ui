@@ -9,7 +9,7 @@ import React, { ReactElement } from 'react'
 import { connect, FormikContextType } from 'formik'
 import { get, isEmpty } from 'lodash-es'
 import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
-import { DataTooltipInterface, DateInput, errorCheck, FormError, getFormFieldLabel } from '@harness/uicore'
+import { DataTooltipInterface, DateInput, FormError, getFormFieldLabel } from '@harness/uicore'
 import type { DateInputProps } from '@harness/uicore/dist/components/DateInput/DateInput'
 import moment from 'moment'
 
@@ -35,7 +35,7 @@ interface FormikDateTimePickerProps extends IFormGroupProps {
 
 function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<any>): ReactElement {
   const { formik, name, ...restProps } = props
-  const hasError = errorCheck(name, formik)
+  const hasError = get(formik?.errors, name)
   const {
     intent = hasError ? Intent.DANGER : Intent.NONE,
     helperText = hasError ? <FormError name={name} errorMessage={get(formik?.errors, name)} /> : null,

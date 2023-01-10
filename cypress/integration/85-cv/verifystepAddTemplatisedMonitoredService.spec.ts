@@ -21,6 +21,7 @@ import {
   updateMonitoredService
 } from '../../support/85-cv/verifyStep/constants'
 import { Connectors } from '../../utils/connctors-utils'
+import { addHashInCypressURLBasedOnBrowserRouter } from '../../utils/windowLocation'
 
 describe('Verify Step Addition', () => {
   beforeEach(() => {
@@ -53,7 +54,7 @@ describe('Verify Step Addition', () => {
     ).as('pipelineList')
 
     cy.visit(
-      '#/account/accountId/cd/orgs/default/projects/project1/pipelines/testCypressInit/pipeline-studio/?storeType=INLINE&stageId=test&sectionId=EXECUTION',
+      `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/pipelines/testCypressInit/pipeline-studio/?storeType=INLINE&stageId=test&sectionId=EXECUTION`,
       {
         timeout: 30000
       }

@@ -1,5 +1,41 @@
 stepDescription:
   ZeroNorth: Run a security tool to test for vulnerabilities.
+  Bandit: Use Bandit to test for vulnerabilities.
+  Blackduckhub: Use Black Duck Hub to test for vulnerabilities.
+  Brakeman: Use Brakeman to test for vulnerabilities.
+  Burp: Use Burp to test for vulnerabilities.
+  Snyk: Use Snyk to test for vulnerabilities.
+  AquaTrivy: Use Aqua Trivy to test for vulnerabilities.
+  Checkmarx: Use Checkmarx to test for vulnerabilities.
+  Fortify: Use Fortify to test for vulnerabilities.
+  FortifyOnDemand: Use FortifyOnDemand to test for vulnerabilities.
+  Owasp: Use Owasp to test for vulnerabilities.
+  TwistLock: Use TwistLock to test for vulnerabilities.
+  ScoutSuite: Use ScoutSuite to test for vulnerabilities.
+  Veracode: Use Veracode to test for vulnerabilities.
+  WhiteSource: Use WhiteSource to test for vulnerabilities.
+  Zap: Use Zap to test for vulnerabilities.
+stepField:
+  mode: Scan Mode
+  config: Scan Configuration
+  target:
+    type: Target Type
+    name: Target Name
+    variant: Target Variant
+    ssl: Verify SSL
+    workspace: Target Workspace
+  advanced:
+    logLevel: Log Level
+    serializer: Log Serializer
+    cli: CLI
+    passthrough: Passthrough
+    failOnSeverity: Fail On Severity
+    includeRaw: Include Raw
+  ingestion:
+    file: Ingestion File
+  optionLabels:
+    logLevel:
+      debug: Debug
 zeroNorthImagePlaceholder: shield
 securityStage:
   description: Scan code, artifacts, and infrastructure for security vulnerabilities.

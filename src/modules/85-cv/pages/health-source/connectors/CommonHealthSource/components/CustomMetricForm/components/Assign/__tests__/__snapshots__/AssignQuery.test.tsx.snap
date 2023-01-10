@@ -1,0 +1,1481 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Validate AssignQuery should not render RiskProfile when continuousVerification and healthScore are false 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <div
+      class="StyledProps--font StyledProps--main main"
+    >
+      <div
+        class="StyledProps--font StyledProps--main assignSection"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+          >
+            cv.monitoringSources.assign
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+          >
+            cv.monitoringSources.commonHealthSource.assign.subHeader
+          </p>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
+        >
+          <div
+            class="bp3-form-group"
+          >
+            <div
+              class="bp3-form-content"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+              >
+                <input
+                  name="continuousVerification"
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                <span
+                  class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                  data-tooltip-id="runtimeInputsTest_continuousVerification"
+                >
+                  cv.monitoringSources.commonHealthSource.assign.continuousVerification.title
+                </span>
+              </label>
+              <div
+                class="bp3-form-helper-text"
+              >
+                cv.monitoringSources.commonHealthSource.assign.continuousVerification.helptext
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
+        >
+          <div
+            class="bp3-form-group"
+          >
+            <div
+              class="bp3-form-content"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+              >
+                <input
+                  name="healthScore"
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                <span
+                  class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                  data-tooltip-id="runtimeInputsTest_healthScore"
+                >
+                  cv.monitoredServices.monitoredServiceTabs.serviceHealth
+                </span>
+              </label>
+              <div
+                class="bp3-form-helper-text"
+              >
+                cv.monitoringSources.commonHealthSource.assign.serviceHealth.helptext
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
+        >
+          <div
+            class="bp3-form-group"
+          >
+            <div
+              class="bp3-form-content"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+              >
+                <input
+                  checked=""
+                  name="sli"
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                <span
+                  class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                  data-tooltip-id="runtimeInputsTest_sli"
+                >
+                  cv.monitoringSources.commonHealthSource.assign.serviceLevelIndicator.title
+                </span>
+              </label>
+              <div
+                class="bp3-form-helper-text"
+              >
+                cv.monitoringSources.commonHealthSource.assign.serviceLevelIndicator.helptext
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
+        >
+          <div
+            class="FormError--errorDiv"
+            data-name="sli"
+          >
+            <span
+              class="bp3-icon StyledProps--main FormError--errorTextIcon StyledProps--intent-danger"
+              data-icon="circle-cross"
+            >
+              <svg
+                height="12"
+                viewBox="0 0 13 13"
+                width="12"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M.167 6.501a6.333 6.333 0 1012.666 0 6.333 6.333 0 00-12.666 0zm4.071-3.003l2.26 2.263 2.264-2.263c.495-.495 1.236.248.741.743L7.24 6.504l2.254 2.258c.495.495-.247 1.238-.742.743L6.497 7.246 4.238 9.505c-.495.495-1.236-.249-.741-.744l2.258-2.258-2.259-2.262c-.494-.495.248-1.238.742-.743z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <span
+              class="FormError--error"
+            >
+              SLI Error
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Validate AssignQuery should render RiskProfile when continuousVerification and healthScore are true 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <div
+      class="StyledProps--font StyledProps--main main"
+    >
+      <div
+        class="StyledProps--font StyledProps--main assignSection"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+          >
+            cv.monitoringSources.assign
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+          >
+            cv.monitoringSources.commonHealthSource.assign.subHeader
+          </p>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
+        >
+          <div
+            class="bp3-form-group"
+          >
+            <div
+              class="bp3-form-content"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+              >
+                <input
+                  checked=""
+                  name="continuousVerification"
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                <span
+                  class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                  data-tooltip-id="runtimeInputsTest_continuousVerification"
+                >
+                  cv.monitoringSources.commonHealthSource.assign.continuousVerification.title
+                </span>
+              </label>
+              <div
+                class="bp3-form-helper-text"
+              >
+                cv.monitoringSources.commonHealthSource.assign.continuousVerification.helptext
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
+        >
+          <div
+            class="bp3-form-group"
+          >
+            <div
+              class="bp3-form-content"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+              >
+                <input
+                  checked=""
+                  name="healthScore"
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                <span
+                  class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                  data-tooltip-id="runtimeInputsTest_healthScore"
+                >
+                  cv.monitoredServices.monitoredServiceTabs.serviceHealth
+                </span>
+              </label>
+              <div
+                class="bp3-form-helper-text"
+              >
+                cv.monitoringSources.commonHealthSource.assign.serviceHealth.helptext
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
+        >
+          <div
+            class="bp3-form-group"
+          >
+            <div
+              class="bp3-form-content"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+              >
+                <input
+                  name="sli"
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                <span
+                  class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                  data-tooltip-id="runtimeInputsTest_sli"
+                >
+                  cv.monitoringSources.commonHealthSource.assign.serviceLevelIndicator.title
+                </span>
+              </label>
+              <div
+                class="bp3-form-helper-text"
+              >
+                cv.monitoringSources.commonHealthSource.assign.serviceLevelIndicator.helptext
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+        >
+          cv.monitoringSources.riskProfile
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+        >
+          cv.monitoringSources.commonHealthSource.assign.riskProfileSubHeader
+        </p>
+      </div>
+      <div
+        class="Layout--vertical StyledProps--main main"
+      >
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xlarge"
+        >
+          <div
+            class="bp3-form-group riskProfileRadioGroup"
+          >
+            <label
+              class="bp3-label"
+              for="riskCategory"
+            >
+              <span
+                class="Tooltip--acenter"
+                data-tooltip-id="runtimeInputsTest_riskCategory"
+              >
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="riskProfileBaselineDeviation"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+                  >
+                    cv.monitoringSources.riskCategoryLabel
+                  </p>
+                </div>
+              </span>
+               
+              <span
+                class="bp3-text-muted"
+              />
+            </label>
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="StyledProps--main"
+              >
+                
+                <div
+                  class="RadioButtonGroup--inline"
+                >
+                  <label
+                    class="RadioButton--radio StyledProps--main"
+                  >
+                    <input
+                      class="RadioButton--input"
+                      name="riskCategory"
+                      type="radio"
+                      value="Errors"
+                    />
+                    <span
+                      class="RadioButton--radioIcon"
+                    />
+                    Errors
+                  </label>
+                  <label
+                    class="RadioButton--radio StyledProps--main"
+                  >
+                    <input
+                      class="RadioButton--input"
+                      name="riskCategory"
+                      type="radio"
+                      value="Infrastructure"
+                    />
+                    <span
+                      class="RadioButton--radioIcon"
+                    />
+                    Infrastructure
+                  </label>
+                  <label
+                    class="RadioButton--radio StyledProps--main"
+                  >
+                    <input
+                      class="RadioButton--input"
+                      name="riskCategory"
+                      type="radio"
+                      value="Performance_Throughput"
+                    />
+                    <span
+                      class="RadioButton--radioIcon"
+                    />
+                    Performance/Throughput
+                  </label>
+                  <label
+                    class="RadioButton--radio StyledProps--main"
+                  >
+                    <input
+                      class="RadioButton--input"
+                      name="riskCategory"
+                      type="radio"
+                      value="Performance_Other"
+                    />
+                    <span
+                      class="RadioButton--radioIcon"
+                    />
+                    Performance/Other
+                  </label>
+                  <label
+                    class="RadioButton--radio StyledProps--main"
+                  >
+                    <input
+                      class="RadioButton--input"
+                      name="riskCategory"
+                      type="radio"
+                      value="Performance_ResponseTime"
+                    />
+                    <span
+                      class="RadioButton--radioIcon"
+                    />
+                    Performance/Response Time
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xlarge"
+        >
+          <div
+            class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+            >
+              cv.monitoringSources.commonHealthSource.assign.deviation.title
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+            >
+              cv.monitoringSources.commonHealthSource.assign.deviation.helptext
+            </p>
+          </div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-top-small"
+          >
+            <div
+              class="bp3-form-group"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                >
+                  <input
+                    name="higherBaselineDeviation"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                    data-tooltip-id="runtimeInputsTest_higherBaselineDeviation"
+                  >
+                    cv.monitoringSources.commonHealthSource.assign.serviceInstance.higherLabel
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                >
+                  <input
+                    name="lowerBaselineDeviation"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                    data-tooltip-id="runtimeInputsTest_lowerBaselineDeviation"
+                  >
+                    cv.monitoringSources.commonHealthSource.assign.serviceInstance.lowerLabel
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main"
+        >
+          <div
+            class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+            >
+              cv.monitoringSources.commonHealthSource.assign.serviceInstance.title
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+            >
+              cv.monitoringSources.commonHealthSource.assign.serviceInstance.helptext
+            </p>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main"
+            style="width: 350px;"
+          >
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+                for="serviceInstance"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="runtimeInputsTest_serviceInstance"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main main"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main primaryLabel"
+                    >
+                      cv.monitoringSources.serviceInstanceIdentifier
+                    </p>
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="healthSourceMetricsServiceInstanceId"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main secondaryLabel"
+                      >
+                        cv.monitoringSources.optionalServiceInstanceLabel
+                      </p>
+                    </div>
+                  </div>
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="serviceInstance"
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Validate AssignQuery should render RiskProfile when continuousVerification and healthScore are true with empty riskProfileResponse 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <div
+      class="StyledProps--font StyledProps--main main"
+    >
+      <div
+        class="StyledProps--font StyledProps--main assignSection"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+          >
+            cv.monitoringSources.assign
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+          >
+            cv.monitoringSources.commonHealthSource.assign.subHeader
+          </p>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
+        >
+          <div
+            class="bp3-form-group"
+          >
+            <div
+              class="bp3-form-content"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+              >
+                <input
+                  checked=""
+                  name="continuousVerification"
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                <span
+                  class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                  data-tooltip-id="runtimeInputsTest_continuousVerification"
+                >
+                  cv.monitoringSources.commonHealthSource.assign.continuousVerification.title
+                </span>
+              </label>
+              <div
+                class="bp3-form-helper-text"
+              >
+                cv.monitoringSources.commonHealthSource.assign.continuousVerification.helptext
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
+        >
+          <div
+            class="bp3-form-group"
+          >
+            <div
+              class="bp3-form-content"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+              >
+                <input
+                  checked=""
+                  name="healthScore"
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                <span
+                  class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                  data-tooltip-id="runtimeInputsTest_healthScore"
+                >
+                  cv.monitoredServices.monitoredServiceTabs.serviceHealth
+                </span>
+              </label>
+              <div
+                class="bp3-form-helper-text"
+              >
+                cv.monitoringSources.commonHealthSource.assign.serviceHealth.helptext
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
+        >
+          <div
+            class="bp3-form-group"
+          >
+            <div
+              class="bp3-form-content"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+              >
+                <input
+                  name="sli"
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                <span
+                  class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                  data-tooltip-id="runtimeInputsTest_sli"
+                >
+                  cv.monitoringSources.commonHealthSource.assign.serviceLevelIndicator.title
+                </span>
+              </label>
+              <div
+                class="bp3-form-helper-text"
+              >
+                cv.monitoringSources.commonHealthSource.assign.serviceLevelIndicator.helptext
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
+        >
+          <div
+            class="FormError--errorDiv"
+            data-name="sli"
+          >
+            <span
+              class="bp3-icon StyledProps--main FormError--errorTextIcon StyledProps--intent-danger"
+              data-icon="circle-cross"
+            >
+              <svg
+                height="12"
+                viewBox="0 0 13 13"
+                width="12"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M.167 6.501a6.333 6.333 0 1012.666 0 6.333 6.333 0 00-12.666 0zm4.071-3.003l2.26 2.263 2.264-2.263c.495-.495 1.236.248.741.743L7.24 6.504l2.254 2.258c.495.495-.247 1.238-.742.743L6.497 7.246 4.238 9.505c-.495.495-1.236-.249-.741-.744l2.258-2.258-2.259-2.262c-.494-.495.248-1.238.742-.743z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <span
+              class="FormError--error"
+            >
+              SLI Error
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+        >
+          cv.monitoringSources.riskProfile
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+        >
+          cv.monitoringSources.commonHealthSource.assign.riskProfileSubHeader
+        </p>
+      </div>
+      <div
+        class="Layout--vertical StyledProps--main main"
+      >
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xlarge"
+        >
+          <div
+            class="StyledProps--font StyledProps--main"
+          />
+          <div
+            class="FormError--errorDiv"
+            data-name="sli"
+          >
+            <span
+              class="bp3-icon StyledProps--main FormError--errorTextIcon StyledProps--intent-danger"
+              data-icon="circle-cross"
+            >
+              <svg
+                height="12"
+                viewBox="0 0 13 13"
+                width="12"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M.167 6.501a6.333 6.333 0 1012.666 0 6.333 6.333 0 00-12.666 0zm4.071-3.003l2.26 2.263 2.264-2.263c.495-.495 1.236.248.741.743L7.24 6.504l2.254 2.258c.495.495-.247 1.238-.742.743L6.497 7.246 4.238 9.505c-.495.495-1.236-.249-.741-.744l2.258-2.258-2.259-2.262c-.494-.495.248-1.238.742-.743z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <span
+              class="FormError--error"
+            >
+              Risk category Error
+            </span>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xlarge"
+        >
+          <div
+            class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+            >
+              cv.monitoringSources.commonHealthSource.assign.deviation.title
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+            >
+              cv.monitoringSources.commonHealthSource.assign.deviation.helptext
+            </p>
+          </div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-top-small"
+          >
+            <div
+              class="bp3-form-group"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                >
+                  <input
+                    name="higherBaselineDeviation"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                    data-tooltip-id="runtimeInputsTest_higherBaselineDeviation"
+                  >
+                    cv.monitoringSources.commonHealthSource.assign.serviceInstance.higherLabel
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                >
+                  <input
+                    name="lowerBaselineDeviation"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                    data-tooltip-id="runtimeInputsTest_lowerBaselineDeviation"
+                  >
+                    cv.monitoringSources.commonHealthSource.assign.serviceInstance.lowerLabel
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+          >
+            <div
+              class="FormError--errorDiv"
+              data-name="sli"
+            >
+              <span
+                class="bp3-icon StyledProps--main FormError--errorTextIcon StyledProps--intent-danger"
+                data-icon="circle-cross"
+              >
+                <svg
+                  height="12"
+                  viewBox="0 0 13 13"
+                  width="12"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M.167 6.501a6.333 6.333 0 1012.666 0 6.333 6.333 0 00-12.666 0zm4.071-3.003l2.26 2.263 2.264-2.263c.495-.495 1.236.248.741.743L7.24 6.504l2.254 2.258c.495.495-.247 1.238-.742.743L6.497 7.246 4.238 9.505c-.495.495-1.236-.249-.741-.744l2.258-2.258-2.259-2.262c-.494-.495.248-1.238.742-.743z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                class="FormError--error"
+              >
+                Deviation Error
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main"
+        >
+          <div
+            class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+            >
+              cv.monitoringSources.commonHealthSource.assign.serviceInstance.title
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+            >
+              cv.monitoringSources.commonHealthSource.assign.serviceInstance.helptext
+            </p>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main"
+            style="width: 350px;"
+          >
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+                for="serviceInstance"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="runtimeInputsTest_serviceInstance"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main main"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main primaryLabel"
+                    >
+                      cv.monitoringSources.serviceInstanceIdentifier
+                    </p>
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="healthSourceMetricsServiceInstanceId"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main secondaryLabel"
+                      >
+                        cv.monitoringSources.optionalServiceInstanceLabel
+                      </p>
+                    </div>
+                  </div>
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="serviceInstance"
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Validate AssignQuery should render form errors 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <div
+      class="StyledProps--font StyledProps--main main"
+    >
+      <div
+        class="StyledProps--font StyledProps--main assignSection"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+          >
+            cv.monitoringSources.assign
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+          >
+            cv.monitoringSources.commonHealthSource.assign.subHeader
+          </p>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
+        >
+          <div
+            class="bp3-form-group"
+          >
+            <div
+              class="bp3-form-content"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+              >
+                <input
+                  checked=""
+                  name="continuousVerification"
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                <span
+                  class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                  data-tooltip-id="runtimeInputsTest_continuousVerification"
+                >
+                  cv.monitoringSources.commonHealthSource.assign.continuousVerification.title
+                </span>
+              </label>
+              <div
+                class="bp3-form-helper-text"
+              >
+                cv.monitoringSources.commonHealthSource.assign.continuousVerification.helptext
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
+        >
+          <div
+            class="bp3-form-group"
+          >
+            <div
+              class="bp3-form-content"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+              >
+                <input
+                  checked=""
+                  name="healthScore"
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                <span
+                  class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                  data-tooltip-id="runtimeInputsTest_healthScore"
+                >
+                  cv.monitoredServices.monitoredServiceTabs.serviceHealth
+                </span>
+              </label>
+              <div
+                class="bp3-form-helper-text"
+              >
+                cv.monitoringSources.commonHealthSource.assign.serviceHealth.helptext
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
+        >
+          <div
+            class="bp3-form-group"
+          >
+            <div
+              class="bp3-form-content"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+              >
+                <input
+                  name="sli"
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                <span
+                  class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                  data-tooltip-id="runtimeInputsTest_sli"
+                >
+                  cv.monitoringSources.commonHealthSource.assign.serviceLevelIndicator.title
+                </span>
+              </label>
+              <div
+                class="bp3-form-helper-text"
+              >
+                cv.monitoringSources.commonHealthSource.assign.serviceLevelIndicator.helptext
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--margin-bottom-large"
+        >
+          <div
+            class="FormError--errorDiv"
+            data-name="sli"
+          >
+            <span
+              class="bp3-icon StyledProps--main FormError--errorTextIcon StyledProps--intent-danger"
+              data-icon="circle-cross"
+            >
+              <svg
+                height="12"
+                viewBox="0 0 13 13"
+                width="12"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M.167 6.501a6.333 6.333 0 1012.666 0 6.333 6.333 0 00-12.666 0zm4.071-3.003l2.26 2.263 2.264-2.263c.495-.495 1.236.248.741.743L7.24 6.504l2.254 2.258c.495.495-.247 1.238-.742.743L6.497 7.246 4.238 9.505c-.495.495-1.236-.249-.741-.744l2.258-2.258-2.259-2.262c-.494-.495.248-1.238.742-.743z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <span
+              class="FormError--error"
+            >
+              SLI Error
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+        >
+          cv.monitoringSources.riskProfile
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+        >
+          cv.monitoringSources.commonHealthSource.assign.riskProfileSubHeader
+        </p>
+      </div>
+      <div
+        class="Layout--vertical StyledProps--main main"
+      >
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xlarge"
+        >
+          <div
+            class="bp3-form-group riskProfileRadioGroup"
+          >
+            <label
+              class="bp3-label"
+              for="riskCategory"
+            >
+              <span
+                class="Tooltip--acenter"
+                data-tooltip-id="runtimeInputsTest_riskCategory"
+              >
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="riskProfileBaselineDeviation"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+                  >
+                    cv.monitoringSources.riskCategoryLabel
+                  </p>
+                </div>
+              </span>
+               
+              <span
+                class="bp3-text-muted"
+              />
+            </label>
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="StyledProps--main"
+              >
+                
+                <div
+                  class="RadioButtonGroup--inline"
+                >
+                  <label
+                    class="RadioButton--radio StyledProps--main"
+                  >
+                    <input
+                      class="RadioButton--input"
+                      name="riskCategory"
+                      type="radio"
+                      value="Errors"
+                    />
+                    <span
+                      class="RadioButton--radioIcon"
+                    />
+                    Errors
+                  </label>
+                  <label
+                    class="RadioButton--radio StyledProps--main"
+                  >
+                    <input
+                      class="RadioButton--input"
+                      name="riskCategory"
+                      type="radio"
+                      value="Infrastructure"
+                    />
+                    <span
+                      class="RadioButton--radioIcon"
+                    />
+                    Infrastructure
+                  </label>
+                  <label
+                    class="RadioButton--radio StyledProps--main"
+                  >
+                    <input
+                      class="RadioButton--input"
+                      name="riskCategory"
+                      type="radio"
+                      value="Performance_Throughput"
+                    />
+                    <span
+                      class="RadioButton--radioIcon"
+                    />
+                    Performance/Throughput
+                  </label>
+                  <label
+                    class="RadioButton--radio StyledProps--main"
+                  >
+                    <input
+                      class="RadioButton--input"
+                      name="riskCategory"
+                      type="radio"
+                      value="Performance_Other"
+                    />
+                    <span
+                      class="RadioButton--radioIcon"
+                    />
+                    Performance/Other
+                  </label>
+                  <label
+                    class="RadioButton--radio StyledProps--main"
+                  >
+                    <input
+                      class="RadioButton--input"
+                      name="riskCategory"
+                      type="radio"
+                      value="Performance_ResponseTime"
+                    />
+                    <span
+                      class="RadioButton--radioIcon"
+                    />
+                    Performance/Response Time
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="FormError--errorDiv"
+            data-name="sli"
+          >
+            <span
+              class="bp3-icon StyledProps--main FormError--errorTextIcon StyledProps--intent-danger"
+              data-icon="circle-cross"
+            >
+              <svg
+                height="12"
+                viewBox="0 0 13 13"
+                width="12"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M.167 6.501a6.333 6.333 0 1012.666 0 6.333 6.333 0 00-12.666 0zm4.071-3.003l2.26 2.263 2.264-2.263c.495-.495 1.236.248.741.743L7.24 6.504l2.254 2.258c.495.495-.247 1.238-.742.743L6.497 7.246 4.238 9.505c-.495.495-1.236-.249-.741-.744l2.258-2.258-2.259-2.262c-.494-.495.248-1.238.742-.743z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <span
+              class="FormError--error"
+            >
+              Risk category Error
+            </span>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xlarge"
+        >
+          <div
+            class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+            >
+              cv.monitoringSources.commonHealthSource.assign.deviation.title
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+            >
+              cv.monitoringSources.commonHealthSource.assign.deviation.helptext
+            </p>
+          </div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-top-small"
+          >
+            <div
+              class="bp3-form-group"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                >
+                  <input
+                    name="higherBaselineDeviation"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                    data-tooltip-id="runtimeInputsTest_higherBaselineDeviation"
+                  >
+                    cv.monitoringSources.commonHealthSource.assign.serviceInstance.higherLabel
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                >
+                  <input
+                    name="lowerBaselineDeviation"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                    data-tooltip-id="runtimeInputsTest_lowerBaselineDeviation"
+                  >
+                    cv.monitoringSources.commonHealthSource.assign.serviceInstance.lowerLabel
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--margin-bottom-small"
+          >
+            <div
+              class="FormError--errorDiv"
+              data-name="sli"
+            >
+              <span
+                class="bp3-icon StyledProps--main FormError--errorTextIcon StyledProps--intent-danger"
+                data-icon="circle-cross"
+              >
+                <svg
+                  height="12"
+                  viewBox="0 0 13 13"
+                  width="12"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M.167 6.501a6.333 6.333 0 1012.666 0 6.333 6.333 0 00-12.666 0zm4.071-3.003l2.26 2.263 2.264-2.263c.495-.495 1.236.248.741.743L7.24 6.504l2.254 2.258c.495.495-.247 1.238-.742.743L6.497 7.246 4.238 9.505c-.495.495-1.236-.249-.741-.744l2.258-2.258-2.259-2.262c-.494-.495.248-1.238.742-.743z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                class="FormError--error"
+              >
+                Deviation Error
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main"
+        >
+          <div
+            class="Layout--vertical StyledProps--main StyledProps--margin-bottom-medium"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title"
+            >
+              cv.monitoringSources.commonHealthSource.assign.serviceInstance.title
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+            >
+              cv.monitoringSources.commonHealthSource.assign.serviceInstance.helptext
+            </p>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main"
+            style="width: 350px;"
+          >
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+                for="serviceInstance"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="runtimeInputsTest_serviceInstance"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main main"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main primaryLabel"
+                    >
+                      cv.monitoringSources.serviceInstanceIdentifier
+                    </p>
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="healthSourceMetricsServiceInstanceId"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main secondaryLabel"
+                      >
+                        cv.monitoringSources.optionalServiceInstanceLabel
+                      </p>
+                    </div>
+                  </div>
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="serviceInstance"
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

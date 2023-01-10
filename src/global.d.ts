@@ -78,6 +78,7 @@ declare interface Window {
   featureFlagsConfig: {
     useLegacyFeatureFlags: boolean
     baseUrl: string
+    eventUrl: string
     enableStream: boolean
     sdkKey: string
     async: boolean
@@ -101,8 +102,6 @@ declare interface Document {
 }
 
 declare const monaco: any
-
-declare module 'event-source-polyfill'
 
 declare module 'refiner-js'
 
@@ -183,6 +182,16 @@ declare module 'sto/PipelineSecurityView' {
 }
 declare module 'stoV2/PipelineSecurityView' {
   const ChildApp: React.ComponentType<PipelineSecurityViewProps>
+  export default ChildApp
+}
+
+declare module 'iacm/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'iacm/IACMStage' {
+  const ChildApp: ChildAppComponent
   export default ChildApp
 }
 

@@ -587,14 +587,20 @@ function RunPipelineFormBasic({
     ]
   )
 
-  function handleModeSwitch(view: SelectedView): void {
-    if (view === SelectedView.VISUAL && yamlHandler && formikRef.current) {
+  function formikUpdateWithLatestYaml(): void {
+    if (yamlHandler && formikRef.current) {
       const parsedYaml = yamlParse<PipelineConfig>(defaultTo(yamlHandler.getLatestYaml(), ''))
 
       if (parsedYaml.pipeline) {
         formikRef.current.setValues(parsedYaml.pipeline)
         formikRef.current.validateForm(parsedYaml.pipeline)
       }
+    }
+  }
+
+  function handleModeSwitch(view: SelectedView): void {
+    if (view === SelectedView.VISUAL) {
+      formikUpdateWithLatestYaml()
     }
     setSelectedView(view)
   }
@@ -851,6 +857,7 @@ function RunPipelineFormBasic({
                           width="100%"
                           isEditModeSupported={canEditYaml}
                           comparableYaml={inputSetYamlResponse?.data?.inputSetTemplateYaml}
+                          onChange={formikUpdateWithLatestYaml}
                         />
                       </Layout.Vertical>
                     </div>

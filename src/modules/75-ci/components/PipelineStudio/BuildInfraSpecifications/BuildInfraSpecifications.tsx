@@ -84,7 +84,7 @@ import { k8sLabelRegex, k8sAnnotationRegex } from '@common/utils/StringUtils'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { Connectors } from '@connectors/constants'
 import { OsTypes, ArchTypes, CIBuildInfrastructureType } from '@pipeline/utils/constants'
-import { isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isEnterprisePlan, isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { BuildTabs } from '../CIPipelineStagesUtils'
 import {
   KUBERNETES_HOSTED_INFRA_ID,
@@ -125,6 +125,7 @@ interface KubernetesBuildInfraFormValues {
   nodeSelector?: MultiTypeMapUIType
   harnessImageConnectorRef?: string
   os?: string
+  hostNames?: MultiTypeListUIType
 }
 
 interface ContainerSecurityContext {
@@ -386,6 +387,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const [isProvisionedByHarnessDelegateHealthy, setIsProvisionedByHarnessDelegateHealthy] = useState<boolean>(false)
   const { licenseInformation } = useLicenseStore()
   const isFreeEdition = isFreePlan(licenseInformation, ModuleName.CI)
+  const isSecurityEnterprise =
+    isEnterprisePlan(licenseInformation, ModuleName.STO) && licenseInformation['STO']?.status === 'ACTIVE'
 
   const BuildInfraTypes: ThumbnailSelectProps['items'] = [
     ...(enabledHostedBuildsForFreeUsers && CIE_HOSTED_VMS
@@ -406,7 +409,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           } as Item
         ]
       : []),
-    ...(!isFreeEdition
+    ...(!isFreeEdition || isSecurityEnterprise
       ? [
           {
             label: getString('pipeline.serviceDeploymentTypes.kubernetes'),
@@ -424,7 +427,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           } as Item
         ]
       : []),
-    ...(!isFreeEdition
+    ...(!isFreeEdition || isSecurityEnterprise
       ? [
           {
             label: getString('ci.buildInfra.vMs'),
@@ -579,7 +582,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       ),
       harnessImageConnectorRef: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
         ?.harnessImageConnectorRef,
-      os: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.os || OsTypes.Linux
+      os: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.os || OsTypes.Linux,
+      hostNames: getInitialListValues((stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.hostNames || [])
     }
   }, [stage])
 
@@ -653,6 +657,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           poolName: undefined,
           harnessImageConnectorRef: undefined,
           os: OsTypes.Linux,
+          hostNames: '',
           ...additionalDefaultFields
         }
       }
@@ -675,6 +680,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       harnessImageConnectorRef: undefined,
       os: OsTypes.Linux,
       arch: ArchTypes.Amd64,
+      hostNames: '',
       ...additionalDefaultFields
     }
   }, [stage])
@@ -714,6 +720,13 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           const filteredLabels = getMapValues(
             Array.isArray(values.labels) ? values.labels.filter((val: any) => testLabelKey(val.key)) : values.labels
           )
+          let filteredHostNames
+          if (values.hostNames && values.hostNames.length > 0) {
+            filteredHostNames =
+              typeof values.hostNames === 'string'
+                ? values.hostNames
+                : values.hostNames.map((listValue: { id: string; value: string }) => listValue.value)
+          }
           const filteredTolerations = Array.isArray(values.tolerations)
             ? values.tolerations.map(
                 (val: { effect?: string; key?: string; operator?: string; value?: string; id?: string }) => {
@@ -812,7 +825,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                     nodeSelector: getMapValues(values.nodeSelector),
                     ...additionalKubernetesFields,
                     harnessImageConnectorRef,
-                    os: values.os
+                    os: values.os,
+                    hostNames: !isEmpty(filteredHostNames) ? filteredHostNames : undefined
                   }
                 }
               : _buildInfraType === CIBuildInfrastructureType.VM
@@ -1599,6 +1613,23 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               />
             </Container>
           </Container>
+          <Container className={css.bottomMargin7} width={300}>
+            <MultiTypeList
+              name="hostNames"
+              multiTextInputProps={{
+                expressions,
+                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+              }}
+              formik={formik}
+              multiTypeFieldSelectorProps={{
+                label: (
+                  <Text tooltipProps={{ dataTooltipId: 'hostNames' }}>{getString('ci.buildInfra.hostNames')}</Text>
+                ),
+                allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+              }}
+              disabled={isReadonly}
+            />
+          </Container>
           {renderTimeOutFields()}
           {renderHarnessImageConnectorRefField()}
         </>
@@ -1723,7 +1754,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                 }
                 return true
               }
-            )
+            ),
+          hostNames: yup.lazy(value => validateUniqueList({ value, getString }))
         })
       case CIBuildInfrastructureType.VM:
         return yup.object().shape({
@@ -1953,6 +1985,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                               ?.annotations,
                             stringKey: 'ci.annotations'
                           })}
+                          {renderPropagateList({
+                            value: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                              ?.hostNames,
+                            stringKey: 'ci.buildInfra.hostNames'
+                          })}
                           {typeof (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
                             ?.automountServiceAccountToken !== 'undefined' && (
                             <>
@@ -2175,7 +2212,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                 labels: {},
                                 nodeSelector: {},
                                 harnessImageConnectorRef: '',
-                                os: ''
+                                os: '',
+                                hostNames: ''
                               }
                             }
                           : buildInfraType === CIBuildInfrastructureType.VM

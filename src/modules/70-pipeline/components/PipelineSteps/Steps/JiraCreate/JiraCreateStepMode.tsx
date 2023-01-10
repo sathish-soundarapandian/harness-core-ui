@@ -50,7 +50,7 @@ import type {
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { getGenuineValue, setIssueTypeOptions } from '../JiraApproval/helper'
@@ -378,22 +378,9 @@ function FormContent({
           multiTypeDurationProps={{
             expressions,
             allowableTypes,
-            enableConfigureOptions: false
+            enableConfigureOptions: true
           }}
         />
-        {getMultiTypeFromValue(formik.values.timeout) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={formik.values.timeout || ''}
-            type="String"
-            variableName="timeout"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={value => formik.setFieldValue('timeout', value)}
-            isReadonly={readonly}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-          />
-        )}
       </div>
       <div className={stepCss.divider} />
 

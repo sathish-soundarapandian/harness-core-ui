@@ -24,7 +24,7 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import { getInstanceDropdownSchema } from '@common/components/InstanceDropdownField/InstanceDropdownField'
@@ -34,6 +34,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import type { StringsMap } from 'stringTypes'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { getSanitizedflatObjectForVariablesView } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -112,26 +113,11 @@ function AsgCanaryDeployWidget(
                 className={stepCss.duration}
                 multiTypeDurationProps={{
                   expressions,
-                  enableConfigureOptions: false,
+                  enableConfigureOptions: true,
                   disabled: readonly,
                   allowableTypes
                 }}
               />
-              {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={values.timeout as string}
-                  type="String"
-                  variableName="step.timeout"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  showAdvanced={true}
-                  onChange={value => {
-                    setFieldValue('timeout', value)
-                  }}
-                  isReadonly={readonly}
-                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                />
-              )}
             </div>
             <div className={stepCss.divider} />
             <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -228,7 +214,7 @@ const AsgCanaryDeployVariableStep: React.FC<AsgCanaryDeployVariableStepProps> = 
 }) => {
   return (
     <VariablesListTable
-      data={variablesData.spec}
+      data={getSanitizedflatObjectForVariablesView(variablesData.spec)}
       originalData={initialValues.spec}
       metadataMap={metadataMap}
       className={pipelineVariablesCss.variablePaddingL3}

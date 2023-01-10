@@ -83,7 +83,7 @@ const BusinessMappingBuilder: (props: BusinessMappingBuilderProps) => React.Reac
   const fieldValuesList = get(data, 'perspectiveFields.fieldIdentifierData') as QlceViewFieldIdentifierData[]
 
   const validationSchema = Yup.object().shape({
-    name: NameSchema(),
+    name: NameSchema(getString),
     costTargets: Yup.array().of(
       Yup.object().shape({
         name: Yup.string().trim().required(),

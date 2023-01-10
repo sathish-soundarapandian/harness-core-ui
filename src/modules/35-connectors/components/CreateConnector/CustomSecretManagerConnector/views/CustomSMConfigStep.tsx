@@ -190,7 +190,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
               })
           }),
           templateInputs: Yup.object().shape({
-            environmentVariables: VariableSchema()
+            environmentVariables: VariableSchema(getString)
           })
         })}
         onSubmit={formData => {

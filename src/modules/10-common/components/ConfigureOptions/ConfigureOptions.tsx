@@ -12,6 +12,7 @@ import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
 
+import { useConfigureOptionsContext } from './ConfigureOptionsContext'
 import ConfigureOptionsDialog, { ConfigureOptionsDialogProps } from './ConfigureOptionsDialog'
 import { ALLOWED_VALUES_TYPE } from './constants'
 import { VALIDATORS } from './validators'
@@ -25,7 +26,7 @@ export interface ConfigureOptionsProps extends Omit<ConfigureOptionsDialogProps,
 
 export { ALLOWED_VALUES_TYPE, VALIDATORS }
 
-export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
+export function ConfigureOptions(props: ConfigureOptionsProps): React.ReactElement | null {
   const {
     value,
     isRequired,
@@ -48,6 +49,7 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
   const [isHover, setIsHover] = React.useState<boolean>()
   const { isOpen, open: showModal, close: hideModal } = useToggleOpen()
   const { getString } = useStrings()
+  const { disableConfigureOptions } = useConfigureOptionsContext()
 
   React.useEffect(() => {
     setInput(value)
@@ -60,6 +62,10 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
     },
     [hideModal, onChange, input, defaultValue]
   )
+
+  if (disableConfigureOptions) {
+    return null
+  }
 
   return (
     <React.Fragment>

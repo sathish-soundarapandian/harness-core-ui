@@ -65,7 +65,7 @@ export const TestEmailConfig: React.FC<TestEmailConfigProps> = props => {
         onSubmit={handleSubmit}
         formName="configureTestEmailNotifications"
         validationSchema={Yup.object().shape({
-          to: EmailSchema()
+          to: EmailSchema(getString)
         })}
         initialValues={{
           to: ''
@@ -178,8 +178,8 @@ const ConfigureEmailNotifications: React.FC<ConfigureEmailNotificationsProps> = 
           validationSchema={Yup.object().shape({
             emailIds: Yup.string().when('userGroups', {
               is: val => isEmpty(val),
-              then: EmailSchema({ allowMultiple: true, emailSeparator: ',' }),
-              otherwise: EmailSchemaWithoutRequired({ allowMultiple: true, emailSeparator: ',' })
+              then: EmailSchema(getString, { allowMultiple: true, emailSeparator: ',' }),
+              otherwise: EmailSchemaWithoutRequired(getString, { allowMultiple: true, emailSeparator: ',' })
             })
           })}
           initialValues={{

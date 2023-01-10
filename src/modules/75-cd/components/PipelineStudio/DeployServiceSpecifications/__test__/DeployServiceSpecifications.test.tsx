@@ -304,7 +304,7 @@ describe('Deploy service stage specifications', () => {
     expect(getAllByText('common.headerWithOptionalText')).toHaveLength(2)
 
     // Check for + Add Primary Artifact button which confirms if Primary Artifact section is rendered
-    expect(getByText('pipeline.artifactsSelection.addPrimaryArtifact')).toBeInTheDocument()
+    expect(getByText('pipeline.artifactsSelection.addArtifactSource')).toBeInTheDocument()
     // Check for + Add Sidecar button which confirms if Sidecar Artifact section is rendered
     expect(getByText('pipeline.artifactsSelection.addSidecar')).toBeInTheDocument()
 

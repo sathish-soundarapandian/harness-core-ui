@@ -9,7 +9,6 @@ export interface MetricMenuProps {
   itemName: string
   index: number
   metricThresholdTitleText?: string
-  metricThresholdCancelButtonText?: string
   metricThresholdWarningContentText?: string
-  showPromptOnDelete?: boolean
+  hideDeleteIcon?: boolean
 }

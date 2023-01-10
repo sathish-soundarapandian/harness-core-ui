@@ -125,29 +125,11 @@ function AsgRollingDeployWidget(
                   className={stepCss.duration}
                   multiTypeDurationProps={{
                     expressions,
-                    enableConfigureOptions: false,
+                    enableConfigureOptions: true,
                     disabled: readonly,
                     allowableTypes
                   }}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  /* istanbul ignore next */
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={
-                      /* istanbul ignore next */ value => {
-                        setFieldValue('timeout', value)
-                      }
-                    }
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
               <div className={stepCss.divider} />
               <Text margin={{ bottom: 'medium' }}>{getString('instanceFieldOptions.instances')}</Text>

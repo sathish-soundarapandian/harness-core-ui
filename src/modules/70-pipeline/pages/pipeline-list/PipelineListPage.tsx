@@ -266,7 +266,7 @@ function _PipelineListPage(): React.ReactElement {
               <Button
                 intent="primary"
                 icon="refresh"
-                onClick={pipelinesQuery.refetch}
+                onClick={() => pipelinesQuery.refetch()} // don't use pipelinesQuery.refetch directly, that causes passing click event as refetch props causing issues
                 minimal
                 tooltipProps={{ isDark: true }}
                 tooltip={getString('common.refresh')}

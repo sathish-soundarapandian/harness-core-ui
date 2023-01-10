@@ -227,9 +227,6 @@ const SAMLProvider: React.FC<Props> = ({
         >
           <Container padding={{ bottom: 'large' }}>
             <Card className={css.card}>
-              <Container margin={{ left: 'xlarge' }}>
-                <Radio font={{ weight: 'bold', size: 'normal' }} checked={samlEnabled} readOnly />
-              </Container>
               <Text color={Color.GREY_800} font={{ weight: 'bold' }} width="30%">
                 {samlSettings.displayName}
               </Text>

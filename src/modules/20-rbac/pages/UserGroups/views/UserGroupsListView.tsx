@@ -43,12 +43,13 @@ import {
   getUserGroupMenuOptionText,
   AuthenticationMechanisms
 } from '@rbac/utils/utils'
-import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { PipelineType, ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import OpenInNewTab from '@rbac/components/MenuItem/OpenInNewTab'
 import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
 import { getUserName, useGetCommunity } from '@common/utils/utils'
 import css from './UserGroupsListView.module.scss'
@@ -241,8 +242,9 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
   const {
     accountId: accountIdentifier,
     orgIdentifier: childOrgIdentifier,
-    projectIdentifier: childProjectIdentifier
-  } = useParams<ProjectPathProps>()
+    projectIdentifier: childProjectIdentifier,
+    module
+  } = useParams<ProjectPathProps & ModulePathParams>()
   const [menuOpen, setMenuOpen] = useState(false)
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
@@ -335,7 +337,13 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
     }
     return <RbacMenuItem icon={icon} text={text} onClick={clickHandler} permission={permissionRequest} />
   }
-
+  const userGroupDetailsUrl = routes.toUserGroupDetails({
+    accountId: accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    module,
+    userGroupIdentifier: identifier
+  })
   return row.original.userGroupDTO.harnessManaged ? (
     <></>
   ) : (
@@ -358,6 +366,9 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
           }}
         />
         <Menu>
+          <li>
+            <OpenInNewTab url={userGroupDetailsUrl} />
+          </li>
           <RbacMenuItem
             icon="res-roles"
             text={getString('rbac.manageRoleBindings')}

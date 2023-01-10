@@ -12,7 +12,15 @@ import { Form } from 'formik'
 import { Formik, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+// eslint-disable-next-line no-restricted-imports
+import { GenericServiceSpec } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpec'
+// eslint-disable-next-line no-restricted-imports
+import { Dependency } from '@ci/components/PipelineSteps/Dependency/Dependency'
+import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StageInputSetForm } from '../StageInputSetForm'
+
+factory.registerStep(new Dependency())
+factory.registerStep(new GenericServiceSpec())
 
 jest.mock('@common/utils/YamlUtils', () => ({}))
 

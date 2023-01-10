@@ -64,7 +64,7 @@ export function getSelectedStagesFromPipeline(
   ) as StageElementWrapperConfig[]
 }
 
-export const getFlattenedSteps = (allSteps: ExecutionWrapperConfig[]): StepElementConfig[] => {
+export const getFlattenedSteps = (allSteps?: ExecutionWrapperConfig[]): StepElementConfig[] => {
   let allFlattenedSteps = []
   allFlattenedSteps = flatMap(allSteps, (currStep: ExecutionWrapperConfig) => {
     const steps: StepElementConfig[] = []

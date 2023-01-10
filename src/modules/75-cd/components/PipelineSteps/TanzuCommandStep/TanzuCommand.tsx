@@ -27,7 +27,6 @@ import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Ste
 import type { StepElementConfig, StoreConfig, TasCommandStepInfo } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import { useStrings } from 'framework/strings'
@@ -204,27 +203,12 @@ function TanzuCommandWidget(
                 disabled={readonly}
                 label={getString('pipelineSteps.timeoutLabel')}
                 multiTypeDurationProps={{
-                  enableConfigureOptions: false,
+                  enableConfigureOptions: true,
                   expressions,
                   disabled: readonly,
                   allowableTypes
                 }}
               />
-              {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={values.timeout as string}
-                  type="String"
-                  variableName="step.timeout"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  showAdvanced={true}
-                  onChange={value => {
-                    setFieldValue('timeout', value)
-                  }}
-                  isReadonly={readonly}
-                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                />
-              )}
             </div>
 
             <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
@@ -234,10 +218,11 @@ function TanzuCommandWidget(
                   name="spec.script.store.type"
                   disabled={readonly}
                   value={templateFileType}
-                  onChange={e => {
-                    /* istanbul ignore next */
-                    onSelectChange(e, values, setFieldValue)
-                  }}
+                  onChange={
+                    /* istanbul ignore next */ e => {
+                      onSelectChange(e, values, setFieldValue)
+                    }
+                  }
                   data-testid="templateOptions"
                 >
                   <option value={InstanceScriptTypes.FileStore}>{getString('resourcePage.fileStore')}</option>
@@ -276,16 +261,18 @@ function TanzuCommandWidget(
                   allowedTypes={allowableTypes}
                   disableTypeSelection={readonly}
                   skipRenderValueInExpressionLabel
-                  expressionRender={() => {
-                    return (
-                      <ShellScriptMonacoField
-                        name="spec.script.store.spec.content"
-                        scriptType={scriptType}
-                        disabled={readonly}
-                        expressions={expressions}
-                      />
-                    )
-                  }}
+                  expressionRender={
+                    /* istanbul ignore next */ () => {
+                      return (
+                        <ShellScriptMonacoField
+                          name="spec.script.store.spec.content"
+                          scriptType={scriptType}
+                          disabled={readonly}
+                          expressions={expressions}
+                        />
+                      )
+                    }
+                  }
                 >
                   <ShellScriptMonacoField
                     name="spec.script.store.spec.content"
@@ -368,14 +355,16 @@ const TanzuCommandInputStep: React.FC<TanzuCommandProps> = props => {
             allowedTypes={allowableTypes}
             skipRenderValueInExpressionLabel
             disabled={inputSetData?.readonly}
-            expressionRender={() => (
-              <ShellScriptMonacoField
-                name={`${prefix}spec.script.store.spec.content`}
-                scriptType={scriptType}
-                disabled={inputSetData?.readonly}
-                expressions={expressions}
-              />
-            )}
+            expressionRender={
+              /* istanbul ignore next */ () => (
+                <ShellScriptMonacoField
+                  name={`${prefix}spec.script.store.spec.content`}
+                  scriptType={scriptType}
+                  disabled={inputSetData?.readonly}
+                  expressions={expressions}
+                />
+              )
+            }
           >
             <ShellScriptMonacoField
               name={`${prefix}spec.script.store.spec.content`}
@@ -416,7 +405,7 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
         <TanzuCommandInputStep
           allowableTypes={allowableTypes}
           initialValues={initialValues}
-          onUpdate={data => onUpdate?.(this.processFormData(data))}
+          onUpdate={/* istanbul ignore next */ data => onUpdate?.(this.processFormData(data))}
           stepViewType={stepViewType}
           inputSetData={inputSetData}
           formikRef={formikRef}
@@ -435,8 +424,8 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
       return (
         <VariablesListTable
           className={pipelineVariablesCss.variablePaddingL3}
-          data={variablesData}
-          originalData={initialValues}
+          data={variablesData.spec}
+          originalData={initialValues.spec}
           metadataMap={metadataMap}
         />
       )

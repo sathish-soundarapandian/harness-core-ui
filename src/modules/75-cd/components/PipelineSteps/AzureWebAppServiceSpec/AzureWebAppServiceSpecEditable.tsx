@@ -23,11 +23,12 @@ import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelec
 import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
 import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { useServiceContext } from '@cd/context/ServiceContext'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
 import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
 import StartupScriptSelection from '@pipeline/components/StartupScriptSelection/StartupScriptSelection'
+import { FeatureFlag } from '@common/featureFlags'
 import type { AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
 import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
@@ -59,14 +60,14 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
     allowableTypes
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
-  const { NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
+  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType =
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
-  const isNewService = isNewServiceEnvEntity(!!NG_SVC_ENV_REDESIGN, stage?.stage as DeploymentStageElementConfig)
+  const isNewService = isNewServiceEnvEntity(!!isSvcEnvEnabled, stage?.stage as DeploymentStageElementConfig)
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
-    !!NG_ARTIFACT_SOURCES,
+    !!isSvcEnvEnabled,
     stage?.stage as DeploymentStageElementConfig,
     isServiceEntityPage
   )

@@ -51,7 +51,11 @@ const showManifestStoreStepDirectly = (selectedManifest: ManifestTypes | null): 
       ManifestDataType.EcsTaskDefinition,
       ManifestDataType.EcsServiceDefinition,
       ManifestDataType.EcsScalingPolicyDefinition,
-      ManifestDataType.EcsScalableTargetDefinition
+      ManifestDataType.EcsScalableTargetDefinition,
+      ManifestDataType.AsgConfiguration,
+      ManifestDataType.AsgLaunchTemplate,
+      ManifestDataType.AsgScalingPolicy,
+      ManifestDataType.AsgScheduledUpdateGroupAction
     ].includes(selectedManifest)
   )
 }

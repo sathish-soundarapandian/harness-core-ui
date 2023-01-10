@@ -13,7 +13,7 @@ export const MockContextValues = {
     metricData: {
       Performance: true
     },
-    customMetricsMap: new Map(),
+    queryMetricsMap: new Map(),
     failFastThresholds: [],
     ignoreThresholds: [],
     selectedMetric: ''

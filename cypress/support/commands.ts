@@ -33,6 +33,7 @@
 import '@testing-library/cypress/add-commands'
 import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command'
 import { Connectors, getConnectorIconByType } from '../utils/connctors-utils'
+import { addHashInCypressURLBasedOnBrowserRouter } from '../utils/windowLocation'
 import { activeTabClassName } from './70-pipeline/constants'
 import {
   servicesCall,
@@ -153,7 +154,7 @@ Cypress.Commands.add('fillField', (fieldName: string, value: string) => {
 })
 
 Cypress.Commands.add('login', (emailValue: string, password: string) => {
-  cy.visit('#/login')
+  cy.visit(`${addHashInCypressURLBasedOnBrowserRouter()}login`)
   cy.get('[data-id="email-0"] input').clear().type(emailValue)
   cy.get('[data-id="password-1"] input').clear().type(password)
   cy.clickSubmit()

@@ -5,26 +5,27 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
-import { Button, ButtonVariation, TextInput } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import React from 'react'
+import { Button, ButtonVariation, ExpandingSearchInput } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useParams, useHistory } from 'react-router-dom'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
-import { useGetTriggerListForTarget } from 'services/pipeline-ng'
+import { GetTriggerListForTargetQueryParams, useGetTriggerListForTarget } from 'services/pipeline-ng'
 import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
-import { useQueryParams } from '@common/hooks'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { AddDrawer } from '@common/components'
 import { DrawerContext } from '@common/components/AddDrawer/AddDrawer'
-import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { getErrorMessage } from '@triggers/components/Triggers/utils'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
-
 import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
 import { getCategoryItems, ItemInterface, TriggerDataInterface } from '../utils/TriggersListUtils'
 import css from './TriggersList.module.scss'
@@ -37,34 +38,39 @@ interface TriggersListPropsInterface {
 
 export default function TriggersList(props: TriggersListPropsInterface & GitQueryParams): JSX.Element {
   const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled } = props
-  const { branch, repoIdentifier, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
-
-  const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
-    PipelineType<{
-      projectIdentifier: string
-      orgIdentifier: string
-      accountId: string
-      pipelineIdentifier: string
-    }>
-  >()
-  const [searchParam, setSearchParam] = useState('')
+  const {
+    branch,
+    repoIdentifier,
+    connectorRef,
+    repoName,
+    storeType,
+    page = DEFAULT_PAGE_INDEX,
+    size = DEFAULT_PAGE_SIZE,
+    searchTerm
+  } = useQueryParams<GitQueryParams & Pick<GetTriggerListForTargetQueryParams, 'page' | 'size' | 'searchTerm'>>()
+  const { CD_TRIGGER_V2 } = useFeatureFlags()
+  const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
+    useParams<PipelineType<PipelinePathProps>>()
   const { getString } = useStrings()
+  const { updateQueryParams } = useUpdateQueryParams<Pick<GetTriggerListForTargetQueryParams, 'page' | 'searchTerm'>>()
 
   const {
     data: triggerListResponse,
-    error,
-    refetch,
-    loading
+    error: triggerListDataLoadingError,
+    refetch: fetchTriggerList,
+    loading: triggerListDataLoading
   } = useGetTriggerListForTarget({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
       targetIdentifier: pipelineIdentifier,
-      searchTerm: searchParam
-    },
-    debounce: 300
+      searchTerm,
+      size,
+      page
+    }
   })
+
   const triggerList = triggerListResponse?.data?.content || undefined
   const history = useHistory()
   const [isEditable] = usePermission(
@@ -116,7 +122,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
     } else {
       setIncompatibleGitSyncBranch(false)
     }
-  }, [branchesWithStatusData])
+  }, [branchesWithStatusData, branch])
 
   const goToEditWizard = ({ triggerIdentifier, triggerType }: GoToEditWizardInterface): void => {
     history.push(
@@ -172,7 +178,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
 
     return (
       <AddDrawer
-        addDrawerMap={getCategoryItems(getString, false)}
+        addDrawerMap={getCategoryItems(getString, false, CD_TRIGGER_V2)}
         onSelect={onSelect}
         onClose={hideDrawer}
         drawerContext={DrawerContext.STUDIO}
@@ -197,25 +203,24 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
           onClick={openDrawer}
           {...buttonProps}
         ></Button>
-        <TextInput
-          leftIcon="thinner-search"
-          leftIconProps={{ name: 'thinner-search', size: 14, color: Color.GREY_700 }}
+        <ExpandingSearchInput
+          alwaysExpanded
           placeholder={getString('search')}
-          data-name="search"
-          wrapperClassName={css.searchWrapper}
-          value={searchParam}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setSearchParam(e.target.value.trim())
+          onChange={text => {
+            updateQueryParams(text ? { searchTerm: text, page: DEFAULT_PAGE_INDEX } : { searchTerm: undefined })
           }}
+          defaultValue={searchTerm}
+          className={css.searchWrapper}
+          throttle={300}
         />
       </Page.SubHeader>
 
       <Page.Body
-        loading={loading}
-        error={error?.message}
-        retryOnError={() => refetch()}
+        loading={triggerListDataLoading}
+        error={getErrorMessage(triggerListDataLoadingError)}
+        retryOnError={() => fetchTriggerList()}
         noData={
-          !searchParam
+          !searchTerm
             ? {
                 when: () => (Array.isArray(triggerList) && triggerList.length === 0) || incompatibleGitSyncBranch,
                 icon: 'yaml-builder-trigger',
@@ -233,12 +238,13 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
         }
       >
         <TriggersListSection
-          data={triggerList}
-          refetchTriggerList={refetch}
+          triggerListData={triggerListResponse?.data}
+          refetchTriggerList={fetchTriggerList}
           goToEditWizard={goToEditWizard}
           goToDetails={goToDetails}
           isPipelineInvalid={isPipelineInvalid}
           gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
+          gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
         />
       </Page.Body>
     </>

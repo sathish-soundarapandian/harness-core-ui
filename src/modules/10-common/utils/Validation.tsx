@@ -6,7 +6,7 @@
  */
 
 import * as Yup from 'yup'
-import { StringKeys, useStrings, UseStringsReturn } from 'framework/strings'
+import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import {
   illegalIdentifiers,
   regexEmail,
@@ -41,8 +41,10 @@ export function NameSchemaWithoutHook(
     .matches(regexName, getString('common.validation.namePatternIsNotValid'))
 }
 
-export function NameSchema(config?: { requiredErrorMsg?: string }): Yup.Schema<string> {
-  const { getString } = useStrings()
+export function NameSchema(
+  getString: UseStringsReturn['getString'],
+  config?: { requiredErrorMsg?: string }
+): Yup.Schema<string> {
   return NameSchemaWithoutHook(getString, config)
 }
 
@@ -70,17 +72,17 @@ export function IdentifierSchemaWithoutHook(
   })
 }
 
-export function IdentifierSchema(config?: {
-  requiredErrorMsg?: string
-  regexErrorMsg?: string
-}): Yup.Schema<string | undefined> {
-  const { getString } = useStrings()
+export function IdentifierSchema(
+  getString: UseStringsReturn['getString'],
+  config?: {
+    requiredErrorMsg?: string
+    regexErrorMsg?: string
+  }
+): Yup.Schema<string | undefined> {
   return IdentifierSchemaWithoutHook(getString, config)
 }
 
-export function EmailSchema(emailProps: EmailProps = {}): Yup.Schema<string> {
-  const { getString } = useStrings()
-
+export function EmailSchema(getString: UseStringsReturn['getString'], emailProps: EmailProps = {}): Yup.Schema<string> {
   if (emailProps.allowMultiple)
     return Yup.string()
       .trim()
@@ -101,9 +103,10 @@ export function EmailSchema(emailProps: EmailProps = {}): Yup.Schema<string> {
     .required(getString('common.validation.email.required'))
     .email(getString('common.validation.email.format'))
 }
-export function EmailSchemaWithoutRequired(emailProps: EmailProps = {}): Yup.Schema<string | undefined> {
-  const { getString } = useStrings()
-
+export function EmailSchemaWithoutRequired(
+  getString: UseStringsReturn['getString'],
+  emailProps: EmailProps = {}
+): Yup.Schema<string | undefined> {
   if (emailProps.allowMultiple)
     return Yup.string()
       .trim()
@@ -120,16 +123,17 @@ export function EmailSchemaWithoutRequired(emailProps: EmailProps = {}): Yup.Sch
 }
 
 export function URLValidationSchema(
+  getString: UseStringsReturn['getString'],
   { urlMessage, requiredMessage } = {} as { urlMessage?: string; requiredMessage?: string }
 ): Yup.Schema<string | undefined> {
-  const { getString } = useStrings()
   return Yup.string()
     .trim()
     .required(requiredMessage ?? getString('common.validation.urlIsRequired'))
     .url(urlMessage ?? getString('validation.urlIsNotValid'))
 }
-export function URLValidationSchemaWithoutRequired(): Yup.Schema<string | undefined> {
-  const { getString } = useStrings()
+export function URLValidationSchemaWithoutRequired(
+  getString: UseStringsReturn['getString']
+): Yup.Schema<string | undefined> {
   return Yup.string().trim().url(getString('validation.urlIsNotValid'))
 }
 
@@ -137,15 +141,16 @@ export const isEmail = (email: string): boolean => {
   return regexEmail.test(String(email).toLowerCase())
 }
 
-export const ConnectorRefSchema = (config?: { requiredErrorMsg?: string }): Yup.MixedSchema => {
-  const { getString } = useStrings()
+export const ConnectorRefSchema = (
+  getString: UseStringsReturn['getString'],
+  config?: { requiredErrorMsg?: string }
+): Yup.MixedSchema => {
   return Yup.mixed().required(
     config?.requiredErrorMsg ? config?.requiredErrorMsg : getString('pipelineSteps.build.create.connectorRequiredError')
   )
 }
 
-export function TemplateVersionLabelSchema(): Yup.Schema<string> {
-  const { getString } = useStrings()
+export function TemplateVersionLabelSchema(getString: UseStringsReturn['getString']): Yup.Schema<string> {
   const versionLabelText = getString('common.versionLabel')
   return Yup.string()
     .trim()
@@ -169,7 +174,9 @@ export function TemplateVersionLabelSchema(): Yup.Schema<string> {
     )
 }
 
-export const VariableSchema = (): Yup.NotRequiredArraySchema<
+export const VariableSchema = (
+  getString: UseStringsReturn['getString']
+): Yup.NotRequiredArraySchema<
   | {
       name: string
       value: string
@@ -177,7 +184,6 @@ export const VariableSchema = (): Yup.NotRequiredArraySchema<
     }
   | undefined
 > => {
-  const { getString } = useStrings()
   return Yup.array().of(
     Yup.object({
       name: Yup.string().required(getString('common.validation.nameIsRequired')),

@@ -106,7 +106,7 @@ describe('TASRollbackStepStep tests', () => {
   })
 
   test('Variables view renders fine', async () => {
-    const { getByText } = render(
+    const { container } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
         type={StepType.AppRollback}
@@ -120,14 +120,20 @@ describe('TASRollbackStepStep tests', () => {
           metadataMap: {
             'TAS Rollback Stepback': {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.AppRollback.name',
-                localName: 'step.AppRollbackStep.name'
+                fqn: 'pipeline.stages.testStage.spec.execution.steps.AppRollback_1.name',
+                localName: 'execution.steps.AppRollback_1.name',
+                variableName: 'name',
+                aliasFQN: '',
+                visible: true
               }
             },
             '10m': {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.AppRollback.timeout',
-                localName: 'step.AppRollback.timeout'
+                fqn: 'pipeline.stages.testStage.spec.execution.steps.AppRollback_1.timeout',
+                localName: 'execution.steps.AppRollback_1.timeout',
+                variableName: 'timeout',
+                aliasFQN: '',
+                visible: true
               }
             }
           }
@@ -135,9 +141,6 @@ describe('TASRollbackStepStep tests', () => {
       />
     )
 
-    expect(getByText('name')).toBeVisible()
-    expect(getByText('timeout')).toBeVisible()
-    expect(getByText('TAS Rollback Stepback')).toBeVisible()
-    expect(getByText('10m')).toBeVisible()
+    expect(container).toMatchSnapshot()
   })
 })

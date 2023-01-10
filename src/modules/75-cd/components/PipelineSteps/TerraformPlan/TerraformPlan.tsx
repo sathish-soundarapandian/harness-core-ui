@@ -158,20 +158,20 @@ function TerraformPlanWidget(
     style: { width: 1175, minHeight: 640, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
   }
 
-  const onCloseOfRemoteWizard = () => {
+  const onCloseOfRemoteWizard = (): void => {
     setConnectorView(false)
     setShowRemoteWizard(false)
     setIsEditMode(false)
   }
 
-  const onCloseBackendConfigRemoteWizard = () => {
+  const onCloseBackendConfigRemoteWizard = (): void => {
     setConnectorView(false)
     setShowBackendConfigRemoteWizard(false)
     setIsEditMode(false)
   }
 
   /* istanbul ignore next */
-  const getNewConnectorSteps = () => {
+  const getNewConnectorSteps = (): React.ReactElement => {
     const connectorType = ConnectorMap[selectedConnector]
     const buildPayload = getBuildPayload(connectorType)
     return (
@@ -528,25 +528,9 @@ function TerraformPlanWidget(
                 <FormMultiTypeDurationField
                   name="timeout"
                   label={getString('pipelineSteps.timeoutLabel')}
-                  multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                  multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
                   disabled={readonly}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      /* istanbul ignore next */
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
 
               <div className={css.divider} />

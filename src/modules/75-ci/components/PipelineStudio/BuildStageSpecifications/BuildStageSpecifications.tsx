@@ -116,7 +116,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
   }, [])
 
   const validationSchema = yup.object().shape({
-    ...(isContextTypeNotStageTemplate(contextType) && { name: NameSchema() }),
+    ...(isContextTypeNotStageTemplate(contextType) && { name: NameSchema(getString) }),
     sharedPaths: yup.lazy(value => {
       if (Array.isArray(value)) {
         return yup.array().test('valuesShouldBeUnique', getString('validation.uniqueValues'), list => {

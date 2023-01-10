@@ -111,6 +111,8 @@ export function getStepPaletteModuleInfosFromStage(
     case ServiceDeploymentType.CustomDeployment:
       category = 'CustomDeployment'
       break
+    case ServiceDeploymentType.Asg:
+      category = 'AutoScalingGroup'
   }
   switch (stageType) {
     case StageType.BUILD:

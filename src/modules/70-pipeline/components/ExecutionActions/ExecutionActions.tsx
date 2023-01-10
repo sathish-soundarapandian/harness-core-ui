@@ -76,6 +76,7 @@ export interface ExecutionActionsProps {
   source: ExecutionPathProps['source']
   onViewCompiledYaml?: () => void
   onCompareExecutions?: () => void
+  onReRunInDebugMode?: () => void
   menuOnlyActions?: boolean
   isExecutionListView?: boolean
 }
@@ -155,6 +156,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     isPipelineInvalid,
     onViewCompiledYaml,
     onCompareExecutions,
+    onReRunInDebugMode,
     menuOnlyActions,
     isExecutionListView
   } = props
@@ -392,6 +394,13 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
                 text={getString(rerunText)}
                 disabled={!canRerun || isPipelineInvalid}
                 onClick={reRunPipeline}
+              />
+            )}
+            {onReRunInDebugMode && (
+              <MenuItem
+                text={getString('pipeline.execution.actions.reRunInDebugMode')}
+                onClick={onReRunInDebugMode}
+                disabled={!canRerun || isPipelineInvalid}
               />
             )}
             <MenuItem text={getString(abortText)} onClick={openAbortDialog} disabled={!canAbort} />

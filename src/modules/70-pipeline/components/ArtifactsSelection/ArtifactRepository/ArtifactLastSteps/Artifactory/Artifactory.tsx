@@ -209,6 +209,7 @@ function Artifactory({
   const sidecarSchema = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')
@@ -218,6 +219,7 @@ function Artifactory({
   const serverlessSidecarSchema = Yup.object().shape({
     ...serverlessArtifactorySchema,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')

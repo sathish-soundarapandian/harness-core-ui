@@ -28,7 +28,6 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { isApprovalStepFieldDisabled } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/helper'
 import { useStrings } from 'framework/strings'
@@ -145,23 +144,10 @@ function FormContent({
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeDurationProps={{
             expressions,
-            enableConfigureOptions: false,
+            enableConfigureOptions: true,
             allowableTypes
           }}
         />
-        {getMultiTypeFromValue(formik.values.timeout) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={defaultTo(formik.values.timeout, '')}
-            type="String"
-            variableName="timeout"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={/* istanbul ignore next */ value => formik.setFieldValue('timeout', value)}
-            isReadonly={readonly}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-          />
-        )}
       </div>
 
       <div className={stepCss.divider} />
@@ -338,7 +324,7 @@ function ServiceNowImportSetStepMode(
         ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
         spec: Yup.object().shape({
-          connectorRef: ConnectorRefSchema({
+          connectorRef: ConnectorRefSchema(getString, {
             requiredErrorMsg: getString('pipeline.serviceNowApprovalStep.validations.connectorRef')
           }),
           stagingTableName: Yup.lazy((value?: string): Yup.Schema<string | undefined> => {

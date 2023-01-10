@@ -192,8 +192,8 @@ const CreateConnectorFromYamlPage: React.FC = () => {
                 initialValues={initialValues}
                 formName="connector-create-from-yaml"
                 validationSchema={Yup.object().shape({
-                  name: NameSchema({ requiredErrorMsg: getString('validation.connectorName') }),
-                  identifier: IdentifierSchema(),
+                  name: NameSchema(getString, { requiredErrorMsg: getString('validation.connectorName') }),
+                  identifier: IdentifierSchema(getString),
                   ...(isGitSyncEnabled
                     ? {
                         repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),

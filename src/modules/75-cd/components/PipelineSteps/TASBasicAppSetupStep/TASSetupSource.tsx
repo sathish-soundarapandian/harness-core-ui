@@ -59,7 +59,7 @@ export default function TasSetupSource(props: {
           name="timeout"
           label={getString('pipelineSteps.timeoutLabel')}
           multiTypeDurationProps={{
-            enableConfigureOptions: false,
+            enableConfigureOptions: true,
             expressions,
             disabled: readonly,
             allowableTypes
@@ -67,23 +67,6 @@ export default function TasSetupSource(props: {
           className={stepCss.duration}
           disabled={readonly}
         />
-        {getMultiTypeFromValue(formValues?.timeout) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={formValues?.timeout as string}
-            type="String"
-            variableName="step.timeout"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={
-              /* istanbul ignore next */ value => {
-                setFieldValue('timeout', value)
-              }
-            }
-            isReadonly={readonly}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-          />
-        )}
       </div>
 
       <div className={stepCss.divider} />

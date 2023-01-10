@@ -185,7 +185,7 @@ export function MultiTypeEnvironmentGroupField(props: EnvironmentGroupReferenceF
                     openAddNewModal?.()
                     setHideModal(true)
                   }}
-                  text={`+ ${createNewLabel || 'Environment'}`}
+                  text={`+ ${createNewLabel || 'Environment Group'}`}
                   margin={{ right: 'small' }}
                   permission={{
                     permission: PermissionIdentifier.EDIT_ENVIRONMENT_GROUP,

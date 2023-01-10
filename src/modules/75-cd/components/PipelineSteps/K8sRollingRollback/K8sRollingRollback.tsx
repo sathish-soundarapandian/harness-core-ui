@@ -26,7 +26,6 @@ import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Ste
 import type { StepElementConfig, K8sRollingRollbackStepInfo } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import { useStrings } from 'framework/strings'
@@ -96,7 +95,6 @@ function K8sRollingRollbackWidget(
         })}
       >
         {(formik: FormikProps<K8sRollingRollbackData>) => {
-          const { values, setFieldValue } = formik
           setFormikRef(formikRef, formik)
 
           return (
@@ -120,27 +118,12 @@ function K8sRollingRollbackWidget(
                   disabled={readonly}
                   label={getString('pipelineSteps.timeoutLabel')}
                   multiTypeDurationProps={{
-                    enableConfigureOptions: false,
+                    enableConfigureOptions: true,
                     expressions,
                     disabled: readonly,
                     allowableTypes
                   }}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
 
               <Accordion className={stepCss.accordion}>

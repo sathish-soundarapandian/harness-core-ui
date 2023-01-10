@@ -246,7 +246,9 @@ const CDSideNavProps: SidebarContext = {
   navComponent: CDSideNav,
   subtitle: 'Continuous',
   title: 'Delivery',
-  icon: 'cd-main'
+  icon: 'cd-main',
+  launchButtonText: 'cd.cdLaunchText',
+  launchButtonRedirectUrl: '#/account/{replaceAccountId}/dashboard'
 }
 
 const moduleParams: ModulePathParams = {

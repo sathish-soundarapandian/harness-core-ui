@@ -67,8 +67,10 @@ export class ElastigroupDeploy extends PipelineStep<
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const errors = { spec: {} } as any
+    /* istanbul ignore else */
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
       let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
+      /* istanbul ignore else */
       if (isRequired) {
         timeoutSchema = timeoutSchema.required(getString?.('validation.timeout10SecMinimum'))
       }
@@ -88,6 +90,7 @@ export class ElastigroupDeploy extends PipelineStep<
       }
     }
 
+    /* istanbul ignore else */
     if (
       getMultiTypeFromValue(template?.spec?.newService?.spec?.count) === MultiTypeInputType.RUNTIME ||
       getMultiTypeFromValue(template?.spec?.newService?.spec?.percentage) === MultiTypeInputType.RUNTIME
@@ -106,7 +109,7 @@ export class ElastigroupDeploy extends PipelineStep<
       try {
         newService.validateSync(data?.spec)
       } catch (e) {
-        /* istanbul ignore else */
+        /* istanbul ignore next */
         if (e instanceof Yup.ValidationError) {
           const err = yupToFormErrors(e)
 
@@ -115,6 +118,7 @@ export class ElastigroupDeploy extends PipelineStep<
       }
     }
 
+    /* istanbul ignore else */
     if (
       getMultiTypeFromValue(template?.spec?.oldService?.spec?.count) === MultiTypeInputType.RUNTIME ||
       getMultiTypeFromValue(template?.spec?.oldService?.spec?.percentage) === MultiTypeInputType.RUNTIME
@@ -133,7 +137,7 @@ export class ElastigroupDeploy extends PipelineStep<
       try {
         oldService.validateSync(data?.spec)
       } catch (e) {
-        /* istanbul ignore else */
+        /* istanbul ignore next */
         if (e instanceof Yup.ValidationError) {
           const err = yupToFormErrors(e)
 

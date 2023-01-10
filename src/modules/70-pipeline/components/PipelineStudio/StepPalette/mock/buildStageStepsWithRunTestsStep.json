@@ -20,6 +20,14 @@
             "name": "Plugin"
           },
           {
+            "type": "Action",
+            "name": "GHA Plugin"
+          },
+          {
+            "type": "Bitrise",
+            "name": "Bitrise Plugin"
+          },
+          {
             "type": "RestoreCacheS3",
             "name": "Restore Cache From S3"
           },

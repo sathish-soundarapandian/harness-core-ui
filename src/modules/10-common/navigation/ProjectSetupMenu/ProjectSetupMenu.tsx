@@ -71,6 +71,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     (USE_OLD_GIT_SYNC && (isCIorCDorSTO || !module) && !isGitSimplificationEnabled)
 
   const showTemplates = isCIorCDorSTO || (!module && NEW_LEFT_NAVBAR_SETTINGS)
+  const showFileStore = isCIorCD || !module
+
   return (
     <NavExpandable
       title={getString('common.projectSetup')}
@@ -112,7 +114,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
             to={routes.toFreezeWindows({ ...params, module: params.module || 'cd' })}
           />
         ) : null}
-        {isCIorCD && <SidebarLink label={getString('resourcePage.fileStore')} to={routes.toFileStore(params)} />}
+        {showFileStore && <SidebarLink label={getString('resourcePage.fileStore')} to={routes.toFileStore(params)} />}
         {enabledHostedBuildsForFreeUsers && !showGetStartedTabInMainMenu && module === 'ci' && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCI({ ...params, module })} />
         )}

@@ -303,8 +303,8 @@ function SaveAsInputSet({
                 )
               }}
               validationSchema={Yup.object().shape({
-                name: NameSchema({ requiredErrorMsg: getString('common.validation.nameIsRequired') }),
-                identifier: IdentifierSchema()
+                name: NameSchema(getString, { requiredErrorMsg: getString('common.validation.nameIsRequired') }),
+                identifier: IdentifierSchema(getString)
               })}
               initialValues={
                 {

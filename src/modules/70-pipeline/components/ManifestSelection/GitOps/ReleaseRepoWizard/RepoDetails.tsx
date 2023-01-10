@@ -231,7 +231,7 @@ function RepoDetails({
         initialValues={getInitialValues()}
         formName="releaseRepoDetails"
         validationSchema={Yup.object().shape({
-          identifier: NameSchema(),
+          identifier: NameSchema(getString),
           branch: Yup.string().when('gitFetchType', {
             is: 'Branch',
             then: Yup.string().trim().required(getString('validation.branchName'))

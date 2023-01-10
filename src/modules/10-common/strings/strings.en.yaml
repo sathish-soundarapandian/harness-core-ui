@@ -1016,6 +1016,10 @@ stoText: Security Testing Orchestration
 # Chaos Module
 chaosText: Chaos
 
+# IACM Module
+iacm: IACM
+iacmText: Infrastructure as Code Management
+
 zipCode: Postal / Zip Code
 countryOrRegion: Country or Region
 billingAddress: Billing Address
@@ -1030,6 +1034,7 @@ true: 'true'
 false: 'false'
 saving: 'Saving'
 executedBy: Executed By
+updatedBy: Updated By
 headerWithOptionalText: '{{header}} (Optional)'
 selectWorkload: Select Workload
 
@@ -1112,9 +1117,9 @@ allClusters: 'All Clusters'
 all: 'All {{name}}'
 sortedByCreatedTime: List sorted by created time
 configDetails: 'Configuration Details'
-freezeActiveBannerTextPrefix: Freeze enabled on all deployments for this
+freezeActiveBannerTextPrefix: Global deployment freeze enabled on this
 freezeActiveBannerTimeframe: from <b>{{startTime}}</b> to <b>{{endTime}}</b>
-freezeListActiveBannerText: There are {{count}} ongoing deployment freeze windows
+freezeListActiveBannerText: There are {{count}} ongoing global deployment freeze windows
 loadingFieldOptions: Loading {{fieldName}}s...
 freezeListActiveBannerExpandedTextPrefix: On the
 resourceIdentifier: Resource Identifier
@@ -1265,3 +1270,6 @@ support:
   subtitle: We are here 24/7 for you.
 configureJfrog: How to Configure Your Builds with JFrog Artifactory and Harness
 supportText: Support
+openInNewTab: Open in new tab
+stayOnThisPage: 'Stay on this Page'
+leaveThisPage: 'Leave this Page'

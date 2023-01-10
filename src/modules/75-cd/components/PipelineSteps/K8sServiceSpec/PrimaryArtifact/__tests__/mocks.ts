@@ -160,7 +160,8 @@ export const formik = {
       }
     ]
   },
-  setValues: jest.fn()
+  setValues: jest.fn(),
+  setFieldValue: jest.fn()
 }
 export const stageContextValue = {
   getStageFormTemplate: jest.fn(() => '<+input>'),

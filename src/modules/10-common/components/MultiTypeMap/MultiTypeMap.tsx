@@ -48,6 +48,7 @@ export interface MultiTypeMapProps {
   keyLabel?: string
   valueLabel?: string
   restrictToSingleEntry?: boolean
+  keyValuePlaceholders?: Array<string>
 }
 
 export const MultiTypeMap = (props: MultiTypeMapProps): React.ReactElement => {
@@ -64,6 +65,7 @@ export const MultiTypeMap = (props: MultiTypeMapProps): React.ReactElement => {
     keyLabel,
     valueLabel,
     restrictToSingleEntry,
+    keyValuePlaceholders,
     ...restProps
   } = props
 
@@ -107,7 +109,11 @@ export const MultiTypeMap = (props: MultiTypeMapProps): React.ReactElement => {
                             {keyLabel ?? getString('keyLabel')}
                           </Text>
                         )}
-                        <FormInput.Text name={`${name}[${index}].key`} disabled={disabled} />
+                        <FormInput.Text
+                          name={`${name}[${index}].key`}
+                          disabled={disabled}
+                          placeholder={keyValuePlaceholders?.[0]}
+                        />
                       </div>
 
                       <div>
@@ -125,6 +131,7 @@ export const MultiTypeMap = (props: MultiTypeMapProps): React.ReactElement => {
                               ...valueMultiTextInputProps
                             }}
                             disabled={disabled}
+                            placeholder={keyValuePlaceholders?.[1]}
                           />
                           <Button
                             icon="main-trash"

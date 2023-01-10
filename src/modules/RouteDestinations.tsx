@@ -30,6 +30,7 @@ import CFRoutes from '@cf/RouteDestinations'
 import CERoutes from '@ce/RouteDestinations'
 import STORoutes from '@sto/RouteDestinations'
 import GovernanceRoutes from '@governance/RouteDestinations'
+import IACMRoutes from '@iacm/RouteDestinations'
 import ChaosRoutes from '@chaos/RouteDestinations'
 import DASHBOARDRoutes from '@dashboards/RouteDestinations'
 import AccountSideNav from '@common/components/AccountSideNav/AccountSideNav'
@@ -54,7 +55,8 @@ export default function RouteDestinations(): React.ReactElement {
     CFNG_ENABLED,
     CHAOS_ENABLED,
     NG_SETTINGS,
-    CODE_ENABLED
+    CODE_ENABLED,
+    IACM_ENABLED
   } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
@@ -95,6 +97,7 @@ export default function RouteDestinations(): React.ReactElement {
         </Route>
       ) : null}
       {CFNG_ENABLED ? CFRoutes({})?.props.children : null}
+      {IACM_ENABLED ? IACMRoutes().props.children : null}
       <Route path="*">
         <NotFoundPage />
       </Route>

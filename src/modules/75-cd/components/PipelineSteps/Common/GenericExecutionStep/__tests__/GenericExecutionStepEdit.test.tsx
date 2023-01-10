@@ -144,7 +144,7 @@ describe('GenericExecutionStepEdit tests', () => {
     expect(timeoutInput).toBeInTheDocument()
     expect(timeoutInput.value).toBe('<+input>')
 
-    const cogTimeout = document.getElementById('configureOptions_step.timeout')
+    const cogTimeout = document.querySelector('[data-icon="cog"]')
     userEvent.click(cogTimeout!)
     await waitFor(() => expect(modals.length).toBe(1))
     const timeoutCOGModal = modals[0] as HTMLElement

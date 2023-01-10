@@ -111,9 +111,9 @@ export const calculateDepthPS = (
       return 1
     }
     // expanded group
-    if (node.stepGroup.steps?.length > 0) {
+    if (node.stepGroup.steps && node.stepGroup.steps.length > 0) {
       groupMaxDepth = 0
-      node.stepGroup.steps.forEach(nodeG => {
+      node.stepGroup.steps?.forEach(nodeG => {
         let depthInner = 0
         if (nodeG?.parallel) {
           // parallel
@@ -611,7 +611,7 @@ export const addStepOrGroup = (
   }
 }
 
-export const StepTypeToPipelineIconMap: Record<any, IconName> = {
+export const StepTypeToPipelineIconMap: Record<string, IconName> = {
   [PipelineStepType.SHELLSCRIPT]: 'command-shell-script',
   [PipelineStepType.K8sRollingRollback]: 'undo',
   [PipelineStepType.K8sRollingDeploy]: 'rolling',

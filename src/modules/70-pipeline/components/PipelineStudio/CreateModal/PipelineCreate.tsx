@@ -118,8 +118,8 @@ export default function CreatePipelines({
   const validationSchema = React.useMemo(
     () =>
       Yup.object().shape({
-        name: NameSchema({ requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
-        identifier: IdentifierSchema(),
+        name: NameSchema(getString, { requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
+        identifier: IdentifierSchema(getString),
         ...getGitValidationSchema()
       }),
     [getString, supportingGitSimplification, oldGitSyncEnabled, storeTypeParam]

@@ -84,7 +84,7 @@ const StepSmtpDetails: React.FC<StepProps<NgSmtpDTO> & SmtpSharedObj & CreateSmt
       }}
       formName="smtpStepDetailsForm"
       validationSchema={Yup.object().shape({
-        name: NameSchema(),
+        name: NameSchema(getString),
         host: Yup.string().trim().required(getString('validation.hostRequired')),
         port: Yup.number()
           .moreThan(-1, getString('common.smtp.portPositive'))

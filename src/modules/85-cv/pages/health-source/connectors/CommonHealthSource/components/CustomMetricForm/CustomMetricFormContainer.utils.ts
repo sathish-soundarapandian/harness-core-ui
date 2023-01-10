@@ -7,6 +7,7 @@
 
 import type { FormikErrors } from 'formik'
 import { cloneDeep, set } from 'lodash-es'
+import type { SelectOption } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import type { CreatedMetricsWithSelectedIndex } from '@cv/pages/health-source/common/CommonCustomMetric/CommonCustomMetric.types'
 import type { AddMetricForm } from './CustomMetricForm.types'
@@ -14,6 +15,7 @@ import { CommonConfigurationsFormFieldNames, CustomMetricFormFieldNames } from '
 import type {
   CommonCustomMetricFormikInterface,
   CommonHealthSourceConfigurations,
+  GroupedCreatedMetrics,
   HealthSourceConfig
 } from '../../CommonHealthSource.types'
 import { DEFAULT_EMPTY_GROUP_NAME, DEFAULT_LOGS_GROUP_NAME, initCustomForm } from './CustomMetricForm.constants'
@@ -21,7 +23,8 @@ import { DEFAULT_EMPTY_GROUP_NAME, DEFAULT_LOGS_GROUP_NAME, initCustomForm } fro
 export const validateAddMetricForm = (
   formData: AddMetricForm,
   getString: UseStringsReturn['getString'],
-  createdMetrics: CreatedMetricsWithSelectedIndex['createdMetrics']
+  createdMetrics: CreatedMetricsWithSelectedIndex['createdMetrics'],
+  groupedCreatedMetrics: GroupedCreatedMetrics
 ): FormikErrors<AddMetricForm> => {
   const errors: FormikErrors<AddMetricForm> = {}
   const { identifier = '', metricName = '', groupName } = formData
@@ -39,12 +42,41 @@ export const validateAddMetricForm = (
     set(errors, CustomMetricFormFieldNames.GROUP_NAME, getString('fieldRequired', { field: 'Group name' }))
   }
 
-  if (createdMetrics?.filter((name: string) => name === metricName).length) {
-    errors.metricName = getString('cv.monitoringSources.prometheus.validation.uniqueName', {
-      existingName: metricName
-    })
-  }
+  validateDuplicateMetricName({ createdMetrics, metricName, groupedCreatedMetrics, groupName, errors, getString })
+
   return errors
+}
+
+function validateDuplicateMetricName({
+  createdMetrics,
+  metricName,
+  groupedCreatedMetrics,
+  groupName,
+  errors,
+  getString
+}: {
+  createdMetrics: string[]
+  metricName: string
+  groupedCreatedMetrics: GroupedCreatedMetrics
+  groupName: string | SelectOption
+  errors: FormikErrors<AddMetricForm>
+  getString: UseStringsReturn['getString']
+}): void {
+  if (createdMetrics?.filter((name: string) => name === metricName).length) {
+    let oldGroupName = ''
+    Object.entries(groupedCreatedMetrics).map(groupedMetricData => {
+      const groupedMetrics = groupedMetricData[1]?.map(el => el.metricName)
+      if (groupedMetrics?.includes(metricName)) {
+        oldGroupName = groupedMetricData[0]
+      }
+    })
+
+    if (oldGroupName === ((groupName as SelectOption)?.value ?? groupName)) {
+      errors.metricName = getString('cv.monitoringSources.prometheus.validation.uniqueName', {
+        existingName: metricName
+      })
+    }
+  }
 }
 
 export function getHealthSourceConfigDetails(healthSourceConfig: HealthSourceConfig) {
@@ -53,12 +85,14 @@ export function getHealthSourceConfigDetails(healthSourceConfig: HealthSourceCon
   const customMetricsConfig = healthSourceConfig?.customMetrics
   const fieldLabel = healthSourceConfig?.addQuery?.label
   const shouldBeAbleToDeleteLastMetric = healthSourceConfig?.sideNav?.shouldBeAbleToDeleteLastMetric
+  const isAssignComponentEnabled = healthSourceConfig?.customMetrics?.assign?.enabled
   return {
     enabledDefaultGroupName,
     fieldLabel,
     shouldBeAbleToDeleteLastMetric,
     enabledRecordsAndQuery,
-    customMetricsConfig
+    customMetricsConfig,
+    isAssignComponentEnabled
   }
 }
 
@@ -91,7 +125,7 @@ export function getUpdatedMappedMetricsData(
   mappedMetricsData: Map<string, CommonCustomMetricFormikInterface>,
   selectedMetricName: string,
   formValuesData: CommonCustomMetricFormikInterface
-): CommonHealthSourceConfigurations['customMetricsMap'] {
+): CommonHealthSourceConfigurations['queryMetricsMap'] {
   const updatedMappedMetricsData = cloneDeep(mappedMetricsData)
   updatedMappedMetricsData.set(selectedMetricName, formValuesData)
   cleanUpMappedMetrics(updatedMappedMetricsData)

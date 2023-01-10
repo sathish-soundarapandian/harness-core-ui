@@ -215,8 +215,8 @@ const OverviewStep: React.FC<OverviewProps> = props => {
           formName="connectorsCeAwsOverViewForm"
           initialValues={getInitialValues() as OverviewDetails}
           validationSchema={Yup.object().shape({
-            name: NameSchema(),
-            identifier: IdentifierSchema(),
+            name: NameSchema(getString),
+            identifier: IdentifierSchema(getString),
             awsAccountId: Yup.number()
               .typeError(getString('connectors.ceAws.overview.validation.numeric'))
               .positive(getString('connectors.ceAws.overview.validation.positive'))

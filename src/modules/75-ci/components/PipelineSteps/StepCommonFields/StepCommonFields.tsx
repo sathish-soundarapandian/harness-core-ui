@@ -53,13 +53,15 @@ interface StepCommonFieldsProps {
   enableFields?: string[]
   buildInfrastructureType: CIBuildInfrastructureType
   allowableTypes?: AllowedTypes
+  disableRunAsUser?: boolean
 }
 
 const StepCommonFields = ({
   withoutTimeout,
   disabled,
   enableFields = [],
-  buildInfrastructureType
+  buildInfrastructureType,
+  disableRunAsUser
 }: StepCommonFieldsProps): JSX.Element => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -144,7 +146,7 @@ const StepCommonFields = ({
           />
         </Container>
       )}
-      {!isVMBuildInfraType ? (
+      {!isVMBuildInfraType && !disableRunAsUser ? (
         <Container className={cx(css.formGroup, css.lg)}>
           <MultiTypeTextField
             label={

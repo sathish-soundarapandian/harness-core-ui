@@ -14,6 +14,7 @@ import { useStrings } from 'framework/strings'
 
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import type { DockerRegistrySpec } from 'services/pipeline-ng'
+import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import ArtifactImagePath from '../ArtifactImagePath/ArtifactImagePath'
 import css from '../../ArtifactConnector.module.scss'
@@ -41,7 +42,7 @@ export function DockerRegistryArtifact({
         onSubmit={formData => {
           handleSubmit({
             ...formData,
-            connectorRef: prevStepData?.connectorId?.value
+            connectorRef: getConnectorIdValue(prevStepData)
           })
         }}
       >

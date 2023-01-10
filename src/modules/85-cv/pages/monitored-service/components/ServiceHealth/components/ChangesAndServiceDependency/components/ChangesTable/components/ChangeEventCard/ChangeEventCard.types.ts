@@ -20,7 +20,7 @@ export interface ChangeDetailsDataInterface {
   category?: ChangeEventDTO['category']
   status?: ChangeEventDTO['metadata']['status']
   details: {
-    [key: string]: string | { name: string | ChangeEventDTO['type']; url?: string }
+    [key: string]: string | { name: string | ChangeEventDTO['type']; url?: string } | string[]
   }
   executedBy?: { shouldVisible?: boolean; component: React.ReactElement } | null
   name?: string
@@ -29,9 +29,9 @@ export interface ChangeDetailsDataInterface {
 export interface ChangeTitleData {
   name: string | undefined
   type: ChangeEventDTO['type']
-  executionId: string | number
+  executionId?: string | number
   url?: string
-  status: PipelineExecutionSummary['status']
+  status?: PipelineExecutionSummary['status']
   serviceIdentifier?: string
   envIdentifier?: string
 }

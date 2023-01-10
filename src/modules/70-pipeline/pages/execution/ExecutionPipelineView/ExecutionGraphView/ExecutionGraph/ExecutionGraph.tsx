@@ -41,7 +41,7 @@ import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode
 import { getExecutionStageDiagramListeners } from '@pipeline/utils/execUtils'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { MatrixNode } from '@pipeline/components/PipelineDiagram/Nodes/MatrixNode/MatrixNode'
-import type { ExecutionGraph } from 'services/pipeline-ng'
+import type { ExecutionGraph as IExecutionGraph } from 'services/pipeline-ng'
 import { NodeDimensionProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeDimensionStore'
 import CDInfo from './components/CD/CDInfo/CDInfo'
 import css from './ExecutionGraph.module.scss'
@@ -51,7 +51,7 @@ diagram.registerNode(['Deployment', 'CI'], PipelineStageNode as unknown as React
 diagram.registerNode(DiagramNodeType.CreateNode, CreateNodeStage as unknown as React.FC<BaseReactComponentProps>)
 diagram.registerNode(DiagramNodeType.EndNode, EndNodeStage)
 diagram.registerNode(DiagramNodeType.StartNode, StartNodeStage)
-diagram.registerNode('Pipeline', DiagramNodes[DiagramNodeType.StepGroupNode])
+diagram.registerNode(['Pipeline', 'Rollback'], DiagramNodes[DiagramNodeType.StepGroupNode])
 diagram.registerNode([DiagramNodeType.MatrixNode, DiagramNodeType.LoopNode, DiagramNodeType.PARALLELISM], MatrixNode)
 diagram.registerNode(['Approval', 'JiraApproval', 'HarnessApproval', 'default-diamond'], DiamondNodeWidget)
 
@@ -104,7 +104,7 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
         pipelineIdentifier: get(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary, 'pipelineIdentifier'),
         planExecutionId: get(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary, 'planExecutionId'),
         runSequence: get(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary, 'runSequence', 0).toString()
-      } as ExecutionGraph['executionMetadata']
+      } as IExecutionGraph['executionMetadata']
 
       // TODO -> Remove data mutation
       for (const obj of data.items) {

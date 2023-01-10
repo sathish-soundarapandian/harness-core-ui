@@ -585,23 +585,9 @@ exports[`Configuration Configuration page 1`] = `
                 <div
                   class="bp3-card bp3-elevation-0 Card--card card"
                 >
-                  <div
-                    class="StyledProps--font StyledProps--main StyledProps--margin-left-xlarge"
-                  >
-                    <label
-                      class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-normal"
-                    >
-                      <input
-                        readonly=""
-                        type="radio"
-                      />
-                      <span
-                        class="bp3-control-indicator"
-                      />
-                    </label>
-                  </div>
                   <p
                     class="StyledProps--font StyledProps--main flexGrowFull StyledProps--font-variation-card-title"
+                    style="width: 30%;"
                   >
                     ldap11223355
                   </p>

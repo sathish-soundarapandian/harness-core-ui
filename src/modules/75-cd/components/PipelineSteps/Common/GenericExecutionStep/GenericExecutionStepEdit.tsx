@@ -61,11 +61,9 @@ const GenericExecutionStepEdit = (
       >
         {(formik: FormikProps<StepElementConfig>) => {
           setFormikRef(formikRef, formik)
-          const { values, setFieldValue } = formik
+
           return (
             <NameTimeoutField
-              values={{ name: values.name, timeout: values.timeout }}
-              setFieldValue={setFieldValue}
               allowableTypes={allowableTypes}
               isNewStep={isNewStep}
               readonly={readonly}

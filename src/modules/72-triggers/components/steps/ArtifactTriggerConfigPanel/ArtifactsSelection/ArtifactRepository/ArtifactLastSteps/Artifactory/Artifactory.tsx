@@ -110,7 +110,7 @@ function Artifactory({
               repositoryUrl: formData.repositoryUrl,
               tag: defaultTag
             }),
-            connectorRef: prevStepData?.connectorId?.value,
+            connectorRef: getConnectorIdValue(prevStepData),
             eventConditions
           })
         }}

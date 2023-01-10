@@ -24,7 +24,6 @@ import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Ste
 import { useStrings } from 'framework/strings'
 import type { K8sRollingStepInfo, StepElementConfig } from 'services/cd-ng'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
   FormMultiTypeDurationField,
@@ -83,7 +82,6 @@ function K8BGDeployWidget(props: K8BGDeployProps, formikRef: StepFormikFowardRef
         })}
       >
         {(formik: FormikProps<K8sBGDeployData>) => {
-          const { values, setFieldValue } = formik
           setFormikRef(formikRef, formik)
           return (
             <>
@@ -105,27 +103,12 @@ function K8BGDeployWidget(props: K8BGDeployProps, formikRef: StepFormikFowardRef
                   disabled={readonly}
                   label={getString('pipelineSteps.timeoutLabel')}
                   multiTypeDurationProps={{
-                    enableConfigureOptions: false,
+                    enableConfigureOptions: true,
                     expressions,
                     disabled: readonly,
                     allowableTypes
                   }}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
               <Accordion className={stepCss.accordion}>
                 <Accordion.Panel

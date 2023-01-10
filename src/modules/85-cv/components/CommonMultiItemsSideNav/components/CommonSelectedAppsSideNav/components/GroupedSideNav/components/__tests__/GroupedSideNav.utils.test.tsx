@@ -13,7 +13,7 @@ describe('Unit tests for MetricMenu', () => {
       touched: {
         query: true
       },
-      isValidInput: false,
+      isValid: false,
       selectedApp: {
         metricName: 'metric-1'
       },
@@ -22,24 +22,22 @@ describe('Unit tests for MetricMenu', () => {
     expect(showWarningIcon(data)).toEqual(true)
   })
 
-  test('should not show showWarningIcon when form is not touched even if the form is not valid', () => {
+  test('should show the showWarningIcon when form is touched and if the form is not valid', () => {
     const data = {
-      touched: {},
-      isValidInput: false,
+      touched: { query: true },
+      isValid: false,
       selectedApp: {
         metricName: 'metric-1'
       },
       selectedItem: 'metric-1'
     }
-    expect(showWarningIcon(data)).toEqual(false)
+    expect(showWarningIcon(data)).toEqual(true)
   })
 
   test('should not show showWarningIcon when form is not touched and the form is valid', () => {
     const data = {
-      touched: {
-        query: true
-      },
-      isValidInput: true,
+      touched: {},
+      isValid: true,
       selectedApp: {
         metricName: 'metric-1'
       },
@@ -53,7 +51,7 @@ describe('Unit tests for MetricMenu', () => {
       touched: {
         query: true
       },
-      isValidInput: true,
+      isValid: true,
       selectedApp: {
         metricName: 'metric-1'
       },
@@ -67,7 +65,7 @@ describe('Unit tests for MetricMenu', () => {
       touched: {
         query: true
       },
-      isValidInput: true,
+      isValid: true,
       selectedApp: {},
       selectedItem: 'metric-2'
     }

@@ -145,8 +145,8 @@ function useValidateValues({
 } {
   const { getString } = useStrings()
   const NameIdSchema = Yup.object({
-    name: NameSchema(),
-    identifier: IdentifierSchema()
+    name: NameSchema(getString),
+    identifier: IdentifierSchema(getString)
   })
   return {
     validateValues: async (
@@ -296,8 +296,8 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   const { validateValues } = useValidateValues({ template, pipeline, formErrors, setFormErrors, resolvedPipeline })
 
   const NameIdSchema = Yup.object({
-    name: NameSchema(),
-    identifier: IdentifierSchema()
+    name: NameSchema(getString),
+    identifier: IdentifierSchema(getString)
   })
   const formRefDom = React.useRef<HTMLElement | undefined>()
   const getPipelineData = (): Pipeline => {
@@ -439,6 +439,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                                 }
                                 template={parse<Pipeline>(get(template, 'data.inputSetTemplateYaml', '')).pipeline}
                                 viewType={StepViewType.InputSet}
+                                disableRuntimeInputConfigureOptions
                               />
                             )}
                           </Layout.Vertical>

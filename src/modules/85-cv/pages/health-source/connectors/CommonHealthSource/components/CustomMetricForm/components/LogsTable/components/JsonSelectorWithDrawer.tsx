@@ -1,8 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useFormikContext } from 'formik'
 import {
   AllowedTypes,
   Container,
+  FormError,
   Layout,
   MultiTypeInputType,
   NoDataCard,
@@ -29,7 +30,6 @@ import JsonSelectorButton from './LogsTableComponent/components/JsonSelectorButt
 import JsonDrawerMultiType from './LogsTableComponent/components/JsonDrawerMultiType'
 import type { LogFieldsMultiTypeState } from '../../../CustomMetricForm.types'
 import { useCommonHealthSource } from '../../CommonHealthSourceContext/useCommonHealthSource'
-import { getMultiTypeRecordInitialValue } from './JsonSelectorWithDrawer.utils'
 import css from './JsonSelectorWithDrawer.module.scss'
 
 interface JsonSelectorWithDrawerProps {
@@ -37,6 +37,8 @@ interface JsonSelectorWithDrawerProps {
   jsonData?: Record<string, any>
   disableFields?: boolean
   allowedTypes?: AllowedTypes
+  multiTypeRecord: LogFieldsMultiTypeState | null
+  setMultiTypeRecord: React.Dispatch<React.SetStateAction<LogFieldsMultiTypeState | null>>
 }
 
 export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProps): JSX.Element | null {
@@ -44,27 +46,17 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
 
   const { isTemplate, sourceData } = useContext(SetupSourceTabsContext)
 
-  const { values, setFieldValue, setValues } = useFormikContext<CommonCustomMetricFormikInterface>()
+  const { values, setFieldValue, setValues, errors } = useFormikContext<CommonCustomMetricFormikInterface>()
 
   const { isQueryRuntimeOrExpression } = useCommonHealthSource()
 
   const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(sourceData.connectorRef)
 
-  const { fieldMappings, disableFields, jsonData } = props
+  const { fieldMappings, disableFields, jsonData, multiTypeRecord, setMultiTypeRecord } = props
 
   const filteredFieldsMapping = fieldMappings?.filter(field => field.type === FIELD_ENUM.JSON_SELECTOR)
 
   const isDisabled = disableFields
-
-  const [multiTypeRecord, setMultiTypeRecord] = useState<LogFieldsMultiTypeState | null>(
-    (): LogFieldsMultiTypeState | null => {
-      return getMultiTypeRecordInitialValue({
-        filteredFieldsMapping,
-        isTemplate,
-        formValues: values
-      })
-    }
-  )
 
   useEffect(() => {
     if (
@@ -191,6 +183,9 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
                 disabled={isDisabled}
                 icon="plus"
               />
+            )}
+            {errors[field.identifier] && (
+              <FormError name={field.identifier} errorMessage={getString('fieldRequired', { field: field.label })} />
             )}
           </Layout.Vertical>
         )

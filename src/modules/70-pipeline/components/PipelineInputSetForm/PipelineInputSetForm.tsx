@@ -32,6 +32,7 @@ import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
+import { ConfigureOptionsContextProvider } from '@common/components/ConfigureOptions/ConfigureOptionsContext'
 import { StageInputSetForm } from './StageInputSetForm'
 import { StageAdvancedInputSetForm } from './StageAdvancedInputSetForm'
 import { CICodebaseInputSetForm } from './CICodebaseInputSetForm'
@@ -66,6 +67,7 @@ export interface PipelineInputSetFormProps {
   gitAwareForTriggerEnabled?: boolean
   selectedStageData?: StageSelectionData
   hideTitle?: boolean
+  disableRuntimeInputConfigureOptions?: boolean
 }
 
 export const stageTypeToIconMap: Record<string, IconName> = {
@@ -246,7 +248,8 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     viewTypeMetadata,
     allowableTypes,
     selectedStageData,
-    hideTitle
+    hideTitle,
+    disableRuntimeInputConfigureOptions: disableConfigureOptions
   } = props
   const { getString } = useStrings()
   const isTemplatePipeline = !!template?.template
@@ -383,6 +386,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                         allowableTypes={allowableTypes}
                         selectedStageData={selectedStageData}
                         hideTitle={true}
+                        disableRuntimeInputConfigureOptions={disableConfigureOptions}
                       />
                     </>
                   ) : (
@@ -438,6 +442,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                           allowableTypes={allowableTypes}
                           selectedStageData={selectedStageData}
                           hideTitle={true}
+                          disableRuntimeInputConfigureOptions={disableConfigureOptions}
                         />
                       </>
                     ) : (
@@ -463,13 +468,15 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     </Layout.Vertical>
   )
 }
+
 export function PipelineInputSetForm(props: Omit<PipelineInputSetFormProps, 'allowableTypes'>): React.ReactElement {
+  const { disableRuntimeInputConfigureOptions: disableConfigureOptions, isRunPipelineForm } = props
   const [template, setTemplate] = React.useState(props.template)
   const accountPathProps = useParams<AccountPathProps>()
   const { NG_EXECUTION_INPUT } = useFeatureFlags()
 
   useDeepCompareEffect(() => {
-    if (props.isRunPipelineForm) {
+    if (isRunPipelineForm) {
       PubSubPipelineActions.publish(PipelineActions.RunPipeline, {
         pipeline: props.originalPipeline,
         accountPathProps,
@@ -481,14 +488,16 @@ export function PipelineInputSetForm(props: Omit<PipelineInputSetFormProps, 'all
   }, [props?.template])
 
   return (
-    <PipelineInputSetFormInternal
-      {...props}
-      template={template}
-      allowableTypes={
-        NG_EXECUTION_INPUT
-          ? [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.EXECUTION_TIME]
-          : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
-      }
-    />
+    <ConfigureOptionsContextProvider disableConfigureOptions={!!disableConfigureOptions}>
+      <PipelineInputSetFormInternal
+        {...props}
+        template={template}
+        allowableTypes={
+          NG_EXECUTION_INPUT
+            ? [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.EXECUTION_TIME]
+            : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+        }
+      />
+    </ConfigureOptionsContextProvider>
   )
 }

@@ -56,7 +56,7 @@ exports[`HealthSource table Should Render all the componetns in edit mode for cl
           id="bp3-tab-title_setup-sources_2"
           role="tab"
         >
-          cv.healthSource.customizeHealthSource
+          configuration
         </div>
       </div>
       <div
@@ -874,7 +874,7 @@ exports[`HealthSource table Should Render all the componetns in edit mode for lo
           role="tab"
           tabindex="0"
         >
-          cv.healthSource.customizeHealthSource
+          configuration
         </div>
       </div>
       <div
@@ -1691,7 +1691,7 @@ exports[`HealthSource table should matchsnapshot 1`] = `
           id="bp3-tab-title_setup-sources_1"
           role="tab"
         >
-          cv.healthSource.customizeHealthSource
+          configuration
         </div>
       </div>
       <div

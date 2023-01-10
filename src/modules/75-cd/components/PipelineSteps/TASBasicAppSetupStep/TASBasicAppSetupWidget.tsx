@@ -45,6 +45,7 @@ export function TASBasicAppSetupWidget(
       })
     }
     if (value < 1) {
+      /* istanbul ignore next */
       return this.createError({
         message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
           value: valueString,

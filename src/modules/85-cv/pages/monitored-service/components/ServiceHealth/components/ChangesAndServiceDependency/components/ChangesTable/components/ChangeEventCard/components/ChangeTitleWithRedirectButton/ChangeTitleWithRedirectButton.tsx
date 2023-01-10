@@ -1,23 +1,28 @@
 /*
- * Copyright 2021 Harness Inc. All rights reserved.
+ * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useCallback } from 'react'
+import React, { useMemo } from 'react'
 import { Text, Container, Layout, Button, ButtonVariation, ButtonSize } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import VerificationStatusCard from '@cv/components/ExecutionVerification/components/DeploymentProgressAndNodes/components/VerificationStatusCard/VerificationStatusCard'
-import { getLocationPathName } from 'framework/utils/WindowLocation'
+import { openWindowInNewTab } from '@cv/utils/CommonUtils'
 import type { ChangeTitleData } from '../../ChangeEventCard.types'
 import { IconWithText } from '../IconWithText/IconWithText'
+import { getTextForRedirectButton } from '../../ChangeEventCard.utils'
 import css from '../ChangeTitle/ChangeTitle.module.scss'
 
-export default function ChangeTitleForHarness({ changeTitleData }: { changeTitleData: ChangeTitleData }): JSX.Element {
+export default function ChangeTitleWithRedirectButton({
+  changeTitleData
+}: {
+  changeTitleData: ChangeTitleData
+}): JSX.Element {
   const { getString } = useStrings()
-  const { name, executionId, url, serviceIdentifier, envIdentifier, status } = changeTitleData
+  const { name, executionId, url, serviceIdentifier, envIdentifier, status, type } = changeTitleData
   const titleOptions = useMemo(
     () =>
       url
@@ -28,11 +33,6 @@ export default function ChangeTitleForHarness({ changeTitleData }: { changeTitle
         : {},
     [url, name]
   )
-
-  const openPipelineInNewTab = useCallback(() => {
-    const pipelineURL = `${window.location.origin}${getLocationPathName()}#${url}`
-    window.open(pipelineURL, '_blank')
-  }, [url])
 
   return (
     <Container>
@@ -46,23 +46,25 @@ export default function ChangeTitleForHarness({ changeTitleData }: { changeTitle
         >
           {name}
         </Text>
-        <Text font={{ size: 'xsmall' }} color={Color.GREY_800} flex={{ align: 'center-center' }}>
-          ({getString('cd.serviceDashboard.executionId')}
-          <span>{executionId}</span>)
-        </Text>
+        {executionId && (
+          <Text font={{ size: 'xsmall' }} color={Color.GREY_800} flex={{ align: 'center-center' }}>
+            ({getString('cd.serviceDashboard.executionId')}
+            <span>{executionId}</span>)
+          </Text>
+        )}
       </Layout.Horizontal>
       <Container flex margin={{ top: 'xsmall' }}>
         <Layout.Horizontal spacing="xlarge">
           <IconWithText icon={'cd-solid'} />
           <IconWithText icon={'main-setup'} text={serviceIdentifier} />
           <IconWithText icon={'environments'} text={envIdentifier} />
-          <VerificationStatusCard status={status} />
+          {status && <VerificationStatusCard status={status} />}
         </Layout.Horizontal>
         {url ? (
           <Button
-            onClick={openPipelineInNewTab}
+            onClick={() => openWindowInNewTab(url)}
             className={css.redirectButtonPipeline}
-            text={getString('cv.changeSource.changeSourceCard.viewDeployment')}
+            text={getTextForRedirectButton(getString, type)}
             icon="share"
             iconProps={{ size: 12 }}
             variation={ButtonVariation.SECONDARY}

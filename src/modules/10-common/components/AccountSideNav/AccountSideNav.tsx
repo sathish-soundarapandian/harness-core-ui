@@ -15,11 +15,9 @@ import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useStrings } from 'framework/strings'
 import { isEnterprisePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
-import { returnLaunchUrl } from '@common/utils/routeUtils'
 import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetAccountNG } from 'services/cd-ng'
-import { LaunchButton } from '../LaunchButton/LaunchButton'
 
 export default function AccountSideNav(): React.ReactElement {
   const { getString } = useStrings()
@@ -53,10 +51,6 @@ export default function AccountSideNav(): React.ReactElement {
       )}
       <SidebarLink label={getString('common.auditTrail')} to={routes.toAuditTrail({ accountId })} />
       <SidebarLink label={getString('orgsText')} to={routes.toOrganizations({ accountId })} />
-      <LaunchButton
-        launchButtonText={getString('common.cgLaunchText')}
-        redirectUrl={returnLaunchUrl(`#/account/${accountId}/dashboard`)}
-      />
     </Layout.Vertical>
   )
 }

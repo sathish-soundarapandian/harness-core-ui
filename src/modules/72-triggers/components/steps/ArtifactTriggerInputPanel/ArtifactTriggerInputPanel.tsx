@@ -507,6 +507,7 @@ function ArtifactTriggerInputPanelForm({
                   viewTypeMetadata={{ isTrigger: true }}
                   readonly={isNewGitSyncRemotePipeline}
                   gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
+                  disableRuntimeInputConfigureOptions
                 />
               )}
           </div>

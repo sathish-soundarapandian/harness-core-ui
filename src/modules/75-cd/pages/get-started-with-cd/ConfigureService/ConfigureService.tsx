@@ -54,10 +54,11 @@ import {
 } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { Connectors } from '@connectors/constants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
+import { FeatureFlag } from '@common/featureFlags'
 import {
   BinaryValue,
   cleanServiceDataUtil,
@@ -124,7 +125,7 @@ const ConfigureServiceRef = (
   const { showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { disableNextBtn, enableNextBtn, onSuccess } = props
-  const { NG_ARTIFACT_SOURCES } = useFeatureFlags()
+  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const {
     state: { service: serviceData, delegate: delegateData },
     saveServiceData
@@ -213,7 +214,7 @@ const ConfigureServiceRef = (
       const artifactObj = get(serviceData, 'serviceDefinition.spec.artifacts') as ArtifactListConfig
       const updatedArtifactObj = produce(artifactObj, draft => {
         if (draft) {
-          if (NG_ARTIFACT_SOURCES) {
+          if (isSvcEnvEnabled) {
             set(draft, 'primary.sources[0].type', formikRef?.current?.values?.artifactType)
             set(draft, 'primary.sources[0].spec', formikRef?.current?.values?.artifactConfig?.spec)
             set(draft, 'primary.primaryArtifactRef', formikRef?.current?.values?.artifactConfig?.identifier)

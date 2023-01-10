@@ -40,6 +40,7 @@ describe('Test for getRiskColorValue', () => {
     expect(getRiskColorValue(RiskValues.HEALTHY)).toEqual(Utils.getRealCSSColor(Color.GREEN_500))
     expect(getRiskColorValue(RiskValues.OBSERVE)).toEqual(Utils.getRealCSSColor(Color.YELLOW_800))
     expect(getRiskColorValue(RiskValues.NEED_ATTENTION)).toEqual(Utils.getRealCSSColor(Color.ORANGE_600))
+    expect(getRiskColorValue(SLOErrorBudget.EXHAUSTED)).toEqual(Utils.getRealCSSColor(Color.RED_800))
     expect(getRiskColorValue(RiskValues.UNHEALTHY)).toEqual(Utils.getRealCSSColor(Color.RED_600))
     expect(getRiskColorValue(RiskValues.NO_ANALYSIS)).toEqual(Utils.getRealCSSColor(Color.GREY_400))
     expect(getRiskColorValue()).toEqual(Utils.getRealCSSColor(Color.GREY_400))
@@ -50,6 +51,7 @@ describe('Test for getRiskColorValue', () => {
     expect(getRiskColorValue(RiskValues.HEALTHY, false)).toEqual(Color.GREEN_500)
     expect(getRiskColorValue(RiskValues.OBSERVE, false)).toEqual(Color.YELLOW_800)
     expect(getRiskColorValue(RiskValues.NEED_ATTENTION, false)).toEqual(Color.ORANGE_600)
+    expect(getRiskColorValue(SLOErrorBudget.EXHAUSTED, false)).toEqual(Color.RED_800)
     expect(getRiskColorValue(RiskValues.UNHEALTHY, false)).toEqual(Color.RED_600)
     expect(getRiskColorValue(RiskValues.NO_ANALYSIS, false)).toEqual(Color.GREY_400)
     expect(getRiskColorValue()).toEqual(Utils.getRealCSSColor(Color.GREY_400))
@@ -63,6 +65,7 @@ describe('Test for getSecondaryRiskColorValue', () => {
     expect(getSecondaryRiskColorValue(RiskValues.OBSERVE)).toEqual(Utils.getRealCSSColor(Color.YELLOW_50))
     expect(getSecondaryRiskColorValue(RiskValues.NEED_ATTENTION)).toEqual(Utils.getRealCSSColor(Color.ORANGE_50))
     expect(getSecondaryRiskColorValue(RiskValues.UNHEALTHY)).toEqual(Utils.getRealCSSColor(Color.RED_50))
+    expect(getSecondaryRiskColorValue(SLOErrorBudget.EXHAUSTED)).toEqual(Utils.getRealCSSColor(Color.RED_100))
     expect(getSecondaryRiskColorValue(RiskValues.NO_ANALYSIS)).toEqual(Utils.getRealCSSColor(Color.GREY_50))
     expect(getSecondaryRiskColorValue()).toEqual(Utils.getRealCSSColor(Color.GREY_50))
   })
@@ -72,6 +75,7 @@ describe('Test for getSecondaryRiskColorValue', () => {
     expect(getSecondaryRiskColorValue(RiskValues.OBSERVE, false)).toEqual(Color.YELLOW_50)
     expect(getSecondaryRiskColorValue(RiskValues.NEED_ATTENTION, false)).toEqual(Color.ORANGE_50)
     expect(getSecondaryRiskColorValue(RiskValues.UNHEALTHY, false)).toEqual(Color.RED_50)
+    expect(getSecondaryRiskColorValue(SLOErrorBudget.EXHAUSTED, false)).toEqual(Color.RED_100)
     expect(getSecondaryRiskColorValue(RiskValues.NO_ANALYSIS, false)).toEqual(Color.GREY_50)
     expect(getSecondaryRiskColorValue()).toEqual(Utils.getRealCSSColor(Color.GREY_50))
   })
@@ -86,7 +90,7 @@ describe('Test for isNumeric', () => {
 })
 
 describe('test for logs screen utils', () => {
-  test('getEventTypeLightColor should return correct color values', () => {
+  test('getEventTypeLightColor should return correct realCSSColor values', () => {
     expect(getEventTypeLightColor(EVENT_TYPE.UNKNOWN)).toEqual(Utils.getRealCSSColor(Color.RED_50))
     expect(getEventTypeLightColor(EVENT_TYPE.UNKNOWN, true)).toEqual('var(--red-50)')
     expect(getEventTypeLightColor(EVENT_TYPE.KNOWN)).toEqual(Utils.getRealCSSColor(Color.PRIMARY_2))
@@ -99,7 +103,15 @@ describe('test for logs screen utils', () => {
     expect(getEventTypeLightColor(EVENT_TYPE.BASELINE, true)).toEqual('var(--grey-200)')
   })
 
-  test('getEventTypeColor should return correct color values', () => {
+  test('getEventTypeLightColor should return correct non realCSSColor values', () => {
+    expect(getEventTypeLightColor(EVENT_TYPE.UNKNOWN, false)).toEqual(Color.RED_50)
+    expect(getEventTypeLightColor(EVENT_TYPE.KNOWN, false)).toEqual(Color.PRIMARY_2)
+    expect(getEventTypeLightColor(EVENT_TYPE.FREQUENCY, false)).toEqual(Color.YELLOW_200)
+    expect(getEventTypeLightColor('UNEXPECTED', false)).toEqual(Color.YELLOW_200)
+    expect(getEventTypeLightColor(EVENT_TYPE.BASELINE, false)).toEqual(Color.GREY_200)
+  })
+
+  test('getEventTypeColor should return correct realCSSColor values', () => {
     expect(getEventTypeColor(EVENT_TYPE.UNKNOWN)).toEqual(Utils.getRealCSSColor(Color.RED_800))
     expect(getEventTypeColor(EVENT_TYPE.UNKNOWN, true)).toEqual('var(--red-800)')
     expect(getEventTypeColor(EVENT_TYPE.KNOWN)).toEqual(Utils.getRealCSSColor(Color.PRIMARY_7))
@@ -110,7 +122,14 @@ describe('test for logs screen utils', () => {
     expect(getEventTypeColor(EVENT_TYPE.BASELINE, true)).toEqual('var(--grey-700)')
   })
 
-  test('getEventTypeChartColor should return correct color values', () => {
+  test('getEventTypeColor should return correct non realCSSColor values', () => {
+    expect(getEventTypeColor(EVENT_TYPE.UNKNOWN, false)).toEqual(Color.RED_800)
+    expect(getEventTypeColor(EVENT_TYPE.KNOWN, false)).toEqual(Color.PRIMARY_7)
+    expect(getEventTypeColor(EVENT_TYPE.FREQUENCY, false)).toEqual(Color.YELLOW_800)
+    expect(getEventTypeColor(EVENT_TYPE.BASELINE, false)).toEqual(Color.GREY_700)
+  })
+
+  test('getEventTypeChartColor should return correct realCSSColor values', () => {
     expect(getEventTypeChartColor(EVENT_TYPE.UNKNOWN)).toEqual(Utils.getRealCSSColor(Color.RED_400))
     expect(getEventTypeChartColor(EVENT_TYPE.UNKNOWN, true)).toEqual('var(--red-400)')
     expect(getEventTypeChartColor(EVENT_TYPE.KNOWN)).toEqual(Utils.getRealCSSColor(Color.PRIMARY_4))
@@ -119,6 +138,13 @@ describe('test for logs screen utils', () => {
     expect(getEventTypeChartColor(EVENT_TYPE.FREQUENCY, true)).toEqual('var(--yellow-700)')
     expect(getEventTypeChartColor(EVENT_TYPE.BASELINE)).toEqual(Utils.getRealCSSColor(Color.GREY_300))
     expect(getEventTypeChartColor(EVENT_TYPE.BASELINE, true)).toEqual('var(--grey-300)')
+  })
+
+  test('getEventTypeChartColor should return correct non realCSSColor values', () => {
+    expect(getEventTypeChartColor(EVENT_TYPE.UNKNOWN, false)).toEqual(Color.RED_400)
+    expect(getEventTypeChartColor(EVENT_TYPE.KNOWN, false)).toEqual(Color.PRIMARY_4)
+    expect(getEventTypeChartColor(EVENT_TYPE.FREQUENCY, false)).toEqual(Color.YELLOW_700)
+    expect(getEventTypeChartColor(EVENT_TYPE.BASELINE, false)).toEqual(Color.GREY_300)
   })
 })
 
@@ -138,6 +164,7 @@ describe('Test for getDetailsLabel', () => {
     expect(getDetailsLabel('artifactType', getString)).toEqual(getString('pipeline.artifactsSelection.artifactType'))
     expect(getDetailsLabel('artifactTag', getString)).toEqual(getString('connectors.cdng.artifactTag'))
     expect(getDetailsLabel('executedBy', getString)).toEqual(getString('common.executedBy'))
+    expect(getDetailsLabel('updatedBy', getString)).toEqual(getString('common.updatedBy'))
     expect(getDetailsLabel('eventType', getString)).toEqual(getString('pipeline.verification.logs.eventType'))
     expect(getDetailsLabel('UNKNOWN', getString)).toEqual('UNKNOWN')
   })

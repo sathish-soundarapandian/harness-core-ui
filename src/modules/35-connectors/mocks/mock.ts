@@ -82,7 +82,8 @@ export const mockedDelegates = {
         delegateInsightsDetails: { insights: [] },
         lastHeartBeat: 1623575011349,
         activelyConnected: false,
-        delegateInstanceDetails: []
+        delegateInstanceDetails: [],
+        connectivityStatus: 'connected'
       },
       {
         groupId: 'nhJQFrnqRsibPbQR1Erl8g',
@@ -97,7 +98,8 @@ export const mockedDelegates = {
         delegateInsightsDetails: { insights: [] },
         lastHeartBeat: 1623575011349,
         activelyConnected: false,
-        delegateInstanceDetails: []
+        delegateInstanceDetails: [],
+        connectivityStatus: 'connected'
       }
     ]
   },

@@ -47,7 +47,6 @@ export interface ActiveServiceInstancePopoverProps {
   infraIdentifier?: string
   clusterId?: string
   pipelineExecutionId?: string
-  lastDeployedAt?: number
 }
 
 interface SectionProps {
@@ -114,8 +113,7 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     isEnvDetail = false,
     pipelineExecutionId,
     infraIdentifier,
-    clusterId,
-    lastDeployedAt
+    clusterId
   } = props
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { getString } = useStrings()
@@ -129,7 +127,6 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     buildIds: [buildId],
     clusterIdentifier: clusterId,
     infraIdentifier,
-    lastDeployedAt,
     pipelineExecutionId
   }
 

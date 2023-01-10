@@ -37,7 +37,7 @@ function Overview({
         initialValues={{ name: '', identifier: '', ...data, ...prevStepData }}
         formName="notificationsOverview"
         validationSchema={Yup.object().shape({
-          name: (NameSchema() as Yup.StringSchema<string>).test(
+          name: (NameSchema(getString) as Yup.StringSchema<string>).test(
             'isNameUnique',
             getString('validation.notificationNameDuplicate'),
             name => {

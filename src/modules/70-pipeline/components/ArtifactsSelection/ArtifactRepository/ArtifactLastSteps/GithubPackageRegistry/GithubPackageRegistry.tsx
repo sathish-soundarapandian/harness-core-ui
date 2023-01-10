@@ -498,6 +498,7 @@ export function GithubPackageRegistry(
   const sidecarSchema = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')

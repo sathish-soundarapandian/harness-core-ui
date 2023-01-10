@@ -88,8 +88,8 @@ const RoleForm: React.FC<RoleModalData> = props => {
       }}
       formName="roleForm"
       validationSchema={Yup.object().shape({
-        name: NameSchema(),
-        identifier: IdentifierSchema()
+        name: NameSchema(getString),
+        identifier: IdentifierSchema(getString)
       })}
       onSubmit={values => {
         modalErrorHandler?.hide()

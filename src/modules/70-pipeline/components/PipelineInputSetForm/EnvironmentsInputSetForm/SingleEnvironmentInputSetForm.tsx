@@ -24,7 +24,6 @@ import { StepWidget } from '../../AbstractSteps/StepWidget'
 import factory from '../../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../../PipelineSteps/PipelineStepInterface'
 import type { StageInputSetFormProps } from '../StageInputSetForm'
-
 import css from '../PipelineInputSetForm.module.scss'
 
 export default function SingleEnvironmentInputSetForm({
@@ -82,6 +81,7 @@ export default function SingleEnvironmentInputSetForm({
               }
             }}
           />
+
           {(deploymentStageTemplate as DeployStageConfig).environment?.infrastructureDefinitions &&
             ((deploymentStageTemplate as DeployStageConfig).environment
               ?.infrastructureDefinitions as unknown as string) !== RUNTIME_INPUT_VALUE && (

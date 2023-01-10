@@ -9,6 +9,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { FormikForm } from '@harness/uicore'
 import { Formik } from 'formik'
+import userEvent from '@testing-library/user-event'
 import * as cvService from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { CommonRecordsProps } from '../types'
@@ -28,10 +29,9 @@ function WrapperComponent(props: CommonRecordsProps): any {
 
 describe('Unit tests for CommonRecords component', () => {
   test('Verify that loading state is rendering correctly for CommonRecords', async () => {
-    jest.spyOn(cvService, 'useGetStackdriverLogSampleData').mockReturnValue({} as any)
     const fetchRecordsMock = jest.fn()
     const { container } = render(<WrapperComponent fetchRecords={fetchRecordsMock} loading={true} />)
-    expect(container.querySelector('[data-icon="steps-spinner"]')).not.toBeNull()
+    expect(container.querySelector('[data-icon="spinner"]')).not.toBeNull()
   })
 
   test('Verify that error state is rendering correctly for Records', async () => {
@@ -45,22 +45,38 @@ describe('Unit tests for CommonRecords component', () => {
       <WrapperComponent fetchRecords={fetchRecordsMock} error={{ data: { message: 'mockError' } }} />
     )
     // check for error
+
     expect(getByText('mockError')).not.toBeNull()
+
+    // should be able to click on the retry button
+    const retryButton = getByText('Retry')
+    expect(retryButton).not.toBeNull()
+    userEvent.click(retryButton)
   })
 
   test('Verify that No Records state is rendering correctly for Records', async () => {
-    jest.spyOn(cvService, 'useGetStackdriverLogSampleData').mockReturnValue({} as any)
+    const fetchRecordsMock = jest.fn()
+    const { getByText } = render(<WrapperComponent fetchRecords={fetchRecordsMock} data={[]} isQueryExecuted={true} />)
+    expect(getByText('cv.monitoringSources.gcoLogs.noRecordsForQuery')).not.toBeNull()
+
+    // should be able to click on the retry button
+    const retryButton = getByText('retry')
+    expect(retryButton).not.toBeNull()
+    userEvent.click(retryButton)
+  })
+
+  test('Verify that correct message is shown if no query is executed', async () => {
     const fetchRecordsMock = jest.fn()
     const { getByText } = render(<WrapperComponent fetchRecords={fetchRecordsMock} data={[]} />)
-    expect(getByText('cv.monitoringSources.gcoLogs.noRecordsForQuery')).not.toBeNull()
+    expect(getByText('cv.monitoringSources.commonHealthSource.records.runQueryToSeeRecords')).not.toBeNull()
   })
 
   test('Verify that valid records state is rendering correctly for Records', async () => {
-    jest.spyOn(cvService, 'useGetStackdriverLogSampleData').mockReturnValue({} as any)
     const fetchRecordsMock = jest.fn()
     const { container } = render(
       <WrapperComponent
         fetchRecords={fetchRecordsMock}
+        isQueryExecuted={true}
         data={[
           {
             insertId: 's0w7sqfbplb0y',

@@ -24,7 +24,7 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import { getInstanceDropdownSchema } from '@common/components/InstanceDropdownField/InstanceDropdownField'
@@ -116,26 +116,11 @@ function K8CanaryDeployWidget(
                   className={stepCss.duration}
                   multiTypeDurationProps={{
                     expressions,
-                    enableConfigureOptions: false,
+                    enableConfigureOptions: true,
                     disabled: readonly,
                     allowableTypes
                   }}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
               <div className={stepCss.divider} />
               <div className={cx(stepCss.formGroup, stepCss.md)}>

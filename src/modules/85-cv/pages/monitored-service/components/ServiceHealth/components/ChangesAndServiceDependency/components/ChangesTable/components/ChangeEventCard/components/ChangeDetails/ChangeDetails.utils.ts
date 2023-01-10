@@ -8,6 +8,7 @@
 import { Color } from '@harness/design-system'
 import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import type { ChangeEventDTO } from 'services/cv'
+import type { UseStringsReturn } from 'framework/strings'
 import { EXECUTION_STATUS_HARNESS_CD_NEXTGEN, EXECUTION_STATUS_HARNESS_CD } from './ChangeDetails.constant'
 
 export const createDetailsTitle = (type?: string, category?: string) => {
@@ -162,5 +163,14 @@ export const statusToColorMapping = (
         color: Color.GREY_500,
         backgroundColor: Color.GREY_50
       }
+  }
+}
+
+export const getSourceLabel = (getString: UseStringsReturn['getString'], type: ChangeEventDTO['type']): string => {
+  switch (type) {
+    case ChangeSourceTypes.HARNESS_FF:
+      return getString('common.moduleTitles.cf')
+    default:
+      return ''
   }
 }

@@ -29,7 +29,8 @@ import type {
   ArtifactTriggerConfig,
   CustomArtifactSpec,
   GithubPackagesSpec,
-  GarSpec
+  GarSpec,
+  AzureArtifactsRegistrySpec
 } from 'services/pipeline-ng'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -2019,6 +2020,7 @@ export const getTriggerArtifactInitialSpec = (
   const connectorRef = ''
   const tag = '<+trigger.artifact.build>'
   const version = '<+trigger.artifact.build>'
+  const build = '<+trigger.artifact.build>'
   const eventConditions: TriggerEventDataCondition[] = []
   const imagePath = ''
 
@@ -2094,7 +2096,7 @@ export const getTriggerArtifactInitialSpec = (
         connectorRef,
         eventConditions,
         jobName: '',
-        version
+        build
       } as JenkinsRegistrySpec
     }
     case 'CustomArtifact': {
@@ -2126,6 +2128,18 @@ export const getTriggerArtifactInitialSpec = (
         repositoryName: '',
         version
       } as GarSpec
+    }
+    case 'AzureArtifacts': {
+      return {
+        packageName: '',
+        connectorRef,
+        eventConditions,
+        packageType: 'maven',
+        scope: 'project',
+        project: '',
+        feed: '',
+        version
+      } as AzureArtifactsRegistrySpec
     }
   }
 }

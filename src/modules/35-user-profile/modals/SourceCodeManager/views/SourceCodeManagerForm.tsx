@@ -252,7 +252,7 @@ const SourceCodeManagerForm: React.FC<SourceCodeManagerProps> = props => {
           initialValues={formInitialValues}
           formName="sourceCodeManagerForm"
           validationSchema={Yup.object().shape({
-            name: NameSchema(),
+            name: NameSchema(getString),
             username: Yup.string().when(['authType'], {
               is: authType => authType === AuthTypes.USERNAME_PASSWORD || authType === AuthTypes.USERNAME_TOKEN,
               then: Yup.string().trim().required(getString('validation.username')),

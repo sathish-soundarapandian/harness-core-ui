@@ -15,5 +15,11 @@ export default defineConfig({
     runMode: 2,
     openMode: 0
   },
-  fixturesFolder: 'fixtures'
+  fixturesFolder: 'fixtures',
+  env: {
+    // since urls need addHashInCypressURLBasedOnBrowserRouter function to create urls with hash and
+    // without hash and inorder to decide if the browserRouterEnabeld  is true or not in app's window object,
+    //Cypress does not have access to the app intially so injecting the browserRouterEnabled flag inside cypress env
+    browserRouterEnabled: true
+  }
 })

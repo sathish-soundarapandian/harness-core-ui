@@ -40,10 +40,11 @@ interface StepCommonFieldsInputSetProps<T> extends Omit<InputSetData<T>, 'path' 
   enableFields?: string[]
   stepViewType: StepViewType
   allowableTypes?: AllowedTypes
+  disableRunAsUser?: boolean
 }
 
 function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): JSX.Element | null {
-  const { path, template, readonly, withoutTimeout, enableFields = [], stepViewType } = props
+  const { path, template, readonly, withoutTimeout, enableFields = [], stepViewType, disableRunAsUser } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const isRunAsUserRuntime = getMultiTypeFromValue(template?.spec?.runAsUser) === MultiTypeInputType.RUNTIME
@@ -163,7 +164,7 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
           />
         </Container>
       )}
-      {isRunAsUserRuntime && (
+      {isRunAsUserRuntime && !disableRunAsUser && (
         <Container className={cx(css.formGroup, stepCss, css.topSpacingLarge, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${isEmpty(path) ? '' : `${path}.`}spec.runAsUser`,

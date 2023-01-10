@@ -53,7 +53,7 @@ export const useUserGroupModal = ({ onSuccess }: UseUserGroupModalProps): UseUse
         />
       </Dialog>
     ),
-    [userGroupData, isAddMember]
+    [userGroupData, isAddMember, onSuccess]
   )
   const open = useCallback(
     (_userGroup?: UserGroupDTO, _isAddMember?: boolean) => {

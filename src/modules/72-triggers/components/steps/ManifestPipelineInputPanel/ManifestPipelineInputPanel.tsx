@@ -507,6 +507,7 @@ function ManifestTriggerInputPanelForm({
                   viewTypeMetadata={{ isTrigger: true }}
                   readonly={isNewGitSyncRemotePipeline}
                   gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
+                  disableRuntimeInputConfigureOptions
                 />
               )}
           </div>

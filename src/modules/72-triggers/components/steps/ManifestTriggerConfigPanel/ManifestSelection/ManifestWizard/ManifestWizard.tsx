@@ -51,7 +51,7 @@ export function ManifestWizard({
 }: ManifestWizardStepsProps): React.ReactElement {
   const { getString } = useStrings()
   const onStepChange = (arg: StepChangeData<any>): void => {
-    if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 2) {
+    if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep < 2) {
       handleConnectorViewChange(false)
       handleStoreChange()
     }

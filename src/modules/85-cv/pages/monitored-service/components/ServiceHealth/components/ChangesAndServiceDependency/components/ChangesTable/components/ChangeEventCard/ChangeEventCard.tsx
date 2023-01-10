@@ -19,6 +19,7 @@ import PagerDutyEventCard from './components/EventCards/PagerDutyEventCard/Pager
 import HarnessNextGenEventCard from './components/EventCards/HarnessNextGenEventCard/HarnessNextGenEventCard'
 import HarnessCDEventCard from './components/EventCards/HarnessCDEventCard/HarnessCDEventCard'
 import K8sChangeEventCard from './components/EventCards/K8sChangeEventCard/K8sChangeEventCard'
+import InternalCSEventCard from './components/EventCards/InternalCSEventCard/InternalCSEventCard'
 
 export default function ChangeEventCard({ activityId }: { activityId: string }): JSX.Element {
   const { getString } = useStrings()
@@ -45,6 +46,8 @@ export default function ChangeEventCard({ activityId }: { activityId: string }):
         return <HarnessNextGenEventCard data={data?.resource} />
       case ChangeSourceTypes.K8sCluster:
         return <K8sChangeEventCard data={data?.resource} />
+      case ChangeSourceTypes.HARNESS_FF:
+        return <InternalCSEventCard data={data?.resource} />
       default:
         return <NoDataCard message={getString('cv.changeSource.noDataAvaiableForCard')} image={noDataImage} />
     }

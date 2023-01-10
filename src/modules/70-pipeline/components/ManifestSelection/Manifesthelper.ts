@@ -10,7 +10,7 @@ import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/ui
 import { Connectors } from '@connectors/constants'
 import type { ConnectorConfigDTO, ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
-import type { StringKeys } from 'framework/strings'
+import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import { NameSchema } from '@common/utils/Validation'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import {
@@ -333,17 +333,18 @@ export const gitFetchTypeList = [
 ]
 
 export const ManifestIdentifierValidation = (
+  getString: UseStringsReturn['getString'],
   manifestNames: Array<string>,
   id: string | undefined,
   validationMsg: string
 ): { identifier: Schema<unknown> } => {
   if (!id) {
     return {
-      identifier: NameSchema().notOneOf(manifestNames, validationMsg)
+      identifier: NameSchema(getString).notOneOf(manifestNames, validationMsg)
     }
   }
   return {
-    identifier: NameSchema()
+    identifier: NameSchema(getString)
   }
 }
 

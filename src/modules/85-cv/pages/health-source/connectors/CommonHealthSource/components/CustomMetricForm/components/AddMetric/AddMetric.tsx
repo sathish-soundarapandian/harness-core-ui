@@ -22,19 +22,20 @@ export interface AddMetricProps {
   groupNames: SelectOption[]
   setGroupName: Dispatch<SetStateAction<SelectOption[]>>
   fieldLabel: string
+  isEdit: boolean
 }
 
 export default function AddMetric(props: AddMetricProps): JSX.Element {
-  const { enableDefaultGroupName, currentSelectedMetricDetail, groupNames, setGroupName, fieldLabel } = props
+  const { enableDefaultGroupName, currentSelectedMetricDetail, groupNames, setGroupName, fieldLabel, isEdit } = props
   const { handleReset, handleSubmit, values, setFieldValue } = useFormikContext<AddMetricForm>()
   const { getString } = useStrings()
   const handleSubmitData = (): void => handleSubmit()
+  const labelName = isEdit ? 'common.editName' : 'common.addName'
+
   return (
     <Container padding="large">
       <Text font={{ weight: 'bold', size: 'large' }} color={Color.BLACK} padding={{ bottom: 'xxlarge' }}>
-        {getString('common.addName', {
-          name: fieldLabel
-        })}
+        {getString(labelName, { name: fieldLabel })}
       </Text>
       <Layout.Vertical spacing="small">
         <NameId

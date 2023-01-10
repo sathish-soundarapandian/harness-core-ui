@@ -200,7 +200,7 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
       initialValues={initialValues}
       formName="newFile"
       validationSchema={Yup.object().shape({
-        identifier: IdentifierSchema()
+        identifier: IdentifierSchema(getString)
       })}
       onSubmit={values => {
         modalErrorHandler?.hide()

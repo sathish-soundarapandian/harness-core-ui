@@ -154,7 +154,12 @@ function OpenShiftParamWithGit({
         initialValues={getInitialValues()}
         formName="osWithGit"
         validationSchema={Yup.object().shape({
-          ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
+          ...ManifestIdentifierValidation(
+            getString,
+            manifestIdsList,
+            initialValues?.identifier,
+            getString('pipeline.uniqueName')
+          ),
 
           branch: Yup.string().when('gitFetchType', {
             is: 'Branch',

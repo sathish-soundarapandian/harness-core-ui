@@ -89,7 +89,7 @@ export class TasBGAppSetupStep extends PipelineStep<TasBGAppSetupData> {
       return (
         <TasBasicAppSetupInputSet<TasBGAppSetupStepInfo>
           initialValues={initialValues}
-          onUpdate={data => onUpdate?.(this.processFormData(data))}
+          onUpdate={/* istanbul ignore next */ data => onUpdate?.(this.processFormData(data))}
           stepViewType={stepViewType}
           readonly={!!inputSetData?.readonly}
           template={inputSetData?.template}
@@ -104,8 +104,8 @@ export class TasBGAppSetupStep extends PipelineStep<TasBGAppSetupData> {
       return (
         <VariablesListTable
           className={pipelineVariablesCss.variablePaddingL3}
-          data={variablesData}
-          originalData={initialValues}
+          data={variablesData.spec}
+          originalData={initialValues.spec}
           metadataMap={metadataMap}
         />
       )

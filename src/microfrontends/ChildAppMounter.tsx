@@ -32,6 +32,7 @@ import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import LevelUpBanner from '@common/components/FeatureWarning/LevelUpBanner'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
+import { useEventSourceListener } from '@common/hooks/useEventSourceListener'
 import ChildAppError from './ChildAppError'
 import type { ChildAppProps, Scope } from './index'
 
@@ -109,7 +110,8 @@ export class ChildAppMounter<T = never> extends React.Component<
             useRBACError,
             usePermission,
             useCreateConnectorModal,
-            useFeature
+            useFeature,
+            useEventSourceListener
           }}
           utils={{ getLocationPathName }}
         >

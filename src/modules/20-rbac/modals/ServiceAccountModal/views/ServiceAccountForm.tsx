@@ -98,8 +98,8 @@ const ServiceAccountForm: React.FC<ServiceAccountModalData> = props => {
       }}
       formName="serviceAccountForm"
       validationSchema={Yup.object().shape({
-        name: NameSchema(),
-        identifier: IdentifierSchema()
+        name: NameSchema(getString),
+        identifier: IdentifierSchema(getString)
       })}
       onSubmit={values => {
         modalErrorHandler?.hide()

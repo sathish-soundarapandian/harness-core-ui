@@ -44,7 +44,9 @@ export enum StageType {
   SECURITY = 'SecurityTests',
   MATRIX = 'MATRIX',
   LOOP = 'LOOP',
-  PARALLELISM = 'PARALLELISM'
+  PARALLELISM = 'PARALLELISM',
+  ROLLBACK = 'Rollback',
+  IACM = 'IACM'
 }
 
 export enum ServiceDeploymentType {
@@ -414,7 +416,8 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details',
   [ServiceDeploymentType.SshWinRmAws]: 'Amazon Web Services Details',
   [ServiceDeploymentType.SshWinRmAzure]: 'Azure Infrastructure details',
-  [ServiceDeploymentType.TAS]: 'Tanzu Application Service Infrastructure Details'
+  [ServiceDeploymentType.TAS]: 'Tanzu Application Service Infrastructure Details',
+  [ServiceDeploymentType.Asg]: 'AWS Details'
 }
 
 export const getSelectedDeploymentType = (

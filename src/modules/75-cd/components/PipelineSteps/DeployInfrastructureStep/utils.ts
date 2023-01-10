@@ -347,6 +347,9 @@ export function processInputSetInitialValues(
       ...(initialValues.environment?.serviceOverrideInputs && {
         serviceOverrideInputs: initialValues.environment?.serviceOverrideInputs
       }),
+      ...(initialValues.environment?.provisioner && {
+        provisioner: initialValues.environment?.provisioner
+      }),
       ...(initialValues.environment?.infrastructureDefinitions && {
         infrastructureDefinitions: initialValues.environment?.infrastructureDefinitions
       }),

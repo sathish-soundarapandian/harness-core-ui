@@ -8,6 +8,8 @@
 import React from 'react'
 import { Formik, FormikForm } from '@harness/uicore'
 import { render, waitFor } from '@testing-library/react'
+import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
+import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
 import { TestWrapper } from '@common/utils/testUtils'
 import { CommonSelectedAppsSideNavProps, CommonSelectedAppsSideNav } from '../CommonSelectedAppsSideNav'
 import { groupedSelectedApps } from './CommonSelectedAppsSideNav.mock'
@@ -15,11 +17,13 @@ import { groupedSelectedApps } from './CommonSelectedAppsSideNav.mock'
 function WrapperComponent(props: CommonSelectedAppsSideNavProps): JSX.Element {
   return (
     <TestWrapper>
-      <Formik initialValues={{}} onSubmit={jest.fn()} formName="testForm">
-        <FormikForm>
-          <CommonSelectedAppsSideNav {...props} groupedSelectedApps={groupedSelectedApps} />
-        </FormikForm>
-      </Formik>
+      <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
+        <Formik initialValues={{}} onSubmit={jest.fn()} formName="testForm">
+          <FormikForm>
+            <CommonSelectedAppsSideNav {...props} groupedSelectedApps={groupedSelectedApps} />
+          </FormikForm>
+        </Formik>
+      </CommonHealthSourceProvider>
     </TestWrapper>
   )
 }

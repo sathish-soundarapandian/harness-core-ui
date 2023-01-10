@@ -6,7 +6,8 @@
  */
 
 import { Drawer } from '@blueprintjs/core'
-import { Button, ButtonVariation, Container, FormInput } from '@harness/uicore'
+import { Button, ButtonVariation, Container, FormInput, Layout, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 import React from 'react'
 import { useStrings } from 'framework/strings'
@@ -21,15 +22,40 @@ export function CommonQueryViewDialog(props: CommonQueryViewDialogProps): JSX.El
   return (
     <Drawer {...DrawerProps} isOpen={isOpen} onClose={onHide} className={css.queryViewDialog}>
       <Container className={css.queryContainer}>
-        <FormInput.TextArea name={CustomMetricFormFieldNames.QUERY} className={css.formQueryBox} />
-        <Button
-          variation={ButtonVariation.SECONDARY}
-          text={getString('cv.monitoringSources.commonHealthSource.runQuery')}
-          onClick={fetchRecords}
-          disabled={isEmpty(query) || loading}
-          className={css.runQueryButton}
-        />
-        <CommonRecords fetchRecords={fetchRecords} loading={loading} data={data} error={error} query={query} />
+        <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+          <Container className={css.queryPanel}>
+            <Text font={{ variation: FontVariation.H6 }} margin={{ top: 'xxlarge', bottom: 'small' }}>
+              {getString('cv.query')}
+            </Text>
+            <FormInput.TextArea name={CustomMetricFormFieldNames.QUERY} className={css.formQueryBox} />
+          </Container>
+          <Container className={css.queryPanel}>
+            <CommonRecords
+              fetchRecords={fetchRecords}
+              loading={loading}
+              data={data}
+              error={error}
+              query={query}
+              className={css.dialogRecords}
+            />
+          </Container>
+        </Layout.Horizontal>
+        <Layout.Horizontal>
+          <Button
+            variation={ButtonVariation.SECONDARY}
+            text={getString('cv.monitoringSources.commonHealthSource.runQuery')}
+            onClick={fetchRecords}
+            disabled={isEmpty(query) || loading}
+            margin={{ right: 'small' }}
+            className={css.runQueryButton}
+          />
+          <Button
+            variation={ButtonVariation.SECONDARY}
+            text={getString('close')}
+            onClick={onHide}
+            className={css.closeButton}
+          />
+        </Layout.Horizontal>
       </Container>
     </Drawer>
   )

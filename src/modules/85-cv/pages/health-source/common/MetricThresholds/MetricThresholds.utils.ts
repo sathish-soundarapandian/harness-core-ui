@@ -309,6 +309,22 @@ export function validateCommonFieldsForMetricThreshold(
   }
 }
 
+export const validateMetricThresholds = ({
+  thresholdName,
+  errors,
+  thresholdValues,
+  getString,
+  isValidateGroup
+}: {
+  thresholdName: string
+  errors: Record<string, string>
+  thresholdValues: MetricThresholdType[] | null
+  getString: UseStringsReturn['getString']
+  isValidateGroup: boolean
+}): void => {
+  validateCommonFieldsForMetricThreshold(thresholdName, errors, thresholdValues, getString, isValidateGroup)
+}
+
 export const getIsMetricPacksSelected = (metricData: { [key: string]: boolean }): boolean => {
   if (!metricData) return false
 

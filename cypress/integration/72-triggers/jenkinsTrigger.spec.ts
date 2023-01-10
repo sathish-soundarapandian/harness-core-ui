@@ -5,9 +5,9 @@ import {
   jobDetailsCall,
   pipelineDetails,
   pipelineDetailsWithRoutingIdCall,
-  pipelineStudioRoute,
-  triggersList
+  pipelineStudioRoute
 } from '../../support/70-pipeline/constants'
+import { getTriggerListAPI } from './constansts'
 
 describe.skip('Jenkins Trigger', () => {
   const visitTriggersPageWithAssertion = (): void => {
@@ -64,11 +64,11 @@ describe.skip('Jenkins Trigger', () => {
     cy.contains('span', 'Apply').click()
     cy.contains('span', 'Continue').click()
     cy.contains('span', 'Continue').click()
-    cy.intercept('GET', triggersList, {
-      fixture: 'pipeline/api/triggers/triggersList.json'
-    }).as('triggersList')
     cy.contains('span', 'Create Trigger').click()
-    cy.wait(1000)
+    cy.intercept('GET', getTriggerListAPI, {
+      fixture: 'pipeline/api/triggers/triggersList.json'
+    }).as('getTriggerList')
+    cy.wait('@getTriggerList')
     cy.contains('p', 'jenkinsTrigger').should('be.visible')
   })
 })

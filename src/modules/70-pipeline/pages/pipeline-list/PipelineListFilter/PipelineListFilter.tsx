@@ -65,6 +65,7 @@ export function PipelineListFilter({
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<PipelineListPageQueryParams>>()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<PipelineListPagePathParams>()
   const { state: isFiltersDrawerOpen, open: openFilterDrawer, close: hideFilterDrawer } = useBooleanStatus()
+  const filterDrawerOpenedRef = useRef(false)
 
   const { mutate: createFilter } = usePostFilter({
     queryParams: { accountIdentifier: accountId }
@@ -81,22 +82,23 @@ export function PipelineListFilter({
     error: errorFetchingFilters,
     refetch: refetchFilterList
   } = useGetFilterList({
-    queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, type: 'PipelineSetup' }
+    queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, type: 'PipelineSetup' },
+    lazy: !filterDrawerOpenedRef.current
   })
 
   const { data: deploymentTypeResponse, loading: isFetchingDeploymentTypes } = useGetServiceDefinitionTypes({
     queryParams: { accountId },
-    lazy: !isFiltersDrawerOpen
+    lazy: !filterDrawerOpenedRef.current
   })
 
   const { data: servicesResponse, loading: isFetchingServices } = useGetServiceListForProject({
     queryParams: { accountId, orgIdentifier, projectIdentifier },
-    lazy: !isFiltersDrawerOpen
+    lazy: !filterDrawerOpenedRef.current
   })
 
   const { data: environmentsResponse, loading: isFetchingEnvironments } = useGetEnvironmentListForProject({
     queryParams: { accountId, orgIdentifier, projectIdentifier },
-    lazy: !isFiltersDrawerOpen
+    lazy: !filterDrawerOpenedRef.current
   })
 
   const isCDEnabled = !!selectedProject?.modules?.includes('CD')
@@ -231,7 +233,11 @@ export function PipelineListFilter({
       <FilterSelector<FilterDTO>
         appliedFilter={appliedFilter}
         filters={filterListResponse?.data?.content}
-        onFilterBtnClick={openFilterDrawer}
+        refetchFilters={refetchFilterList}
+        onFilterBtnClick={() => {
+          filterDrawerOpenedRef.current = true
+          openFilterDrawer()
+        }}
         onFilterSelect={onFilterSelect}
         fieldToLabelMapping={fieldToLabelMapping}
         filterWithValidFields={filterWithValidFieldsWithMetaInfo}

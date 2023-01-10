@@ -41,9 +41,9 @@ import type { DeploymentConfig } from '@pipeline/components/PipelineStudio/Pipel
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
-import { StepForm } from '@pipeline/components/PipelineInputSetForm/StageInputSetForm'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { StepForm } from '@pipeline/components/PipelineInputSetForm/StepInputSetForm'
 import css from './TemplateInputs.module.scss'
 
 export interface TemplateInputsProps {

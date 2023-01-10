@@ -85,7 +85,7 @@ const VaultConfigForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsPr
         initialValues={{ ...initialValues, ...prevStepData }}
         formName="vaultConfigForm"
         validationSchema={Yup.object().shape({
-          vaultUrl: URLValidationSchema(),
+          vaultUrl: URLValidationSchema(getString),
           renewalIntervalMinutes: Yup.mixed().when('accessType', {
             is: val => val !== HashiCorpVaultAccessTypes.VAULT_AGENT && val !== HashiCorpVaultAccessTypes.AWS_IAM,
             then: Yup.number()

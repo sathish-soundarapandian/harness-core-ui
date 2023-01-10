@@ -6,6 +6,7 @@ export interface CommonHealthSourceContextType {
   isQueryRuntimeOrExpression?: boolean
   updateParentFormik: FormikHelpers<CommonHealthSourceConfigurations>['setFieldValue']
   updateHelperContext: (updatedValue: Partial<CommonHealthSourceContextType>) => void
+  parentFormValues: CommonHealthSourceConfigurations
 }
 
 export const CommonHealthSourceContext = React.createContext<CommonHealthSourceContextType>(
@@ -20,7 +21,8 @@ type CommonHealthSourceProviderType = Omit<CommonHealthSourceContextType, 'updat
 export default function CommonHealthSourceProvider({
   children,
   updateParentFormik,
-  isQueryRuntimeOrExpression
+  isQueryRuntimeOrExpression,
+  parentFormValues
 }: CommonHealthSourceProviderType): JSX.Element {
   const [values, setValues] = useState<Pick<CommonHealthSourceContextType, 'isQueryRuntimeOrExpression'>>({
     isQueryRuntimeOrExpression
@@ -38,7 +40,8 @@ export default function CommonHealthSourceProvider({
   const contextValues = {
     ...values,
     updateParentFormik,
-    updateHelperContext: updateHelperContextFn
+    updateHelperContext: updateHelperContextFn,
+    parentFormValues
   }
 
   return <CommonHealthSourceContext.Provider value={contextValues}>{children}</CommonHealthSourceContext.Provider>

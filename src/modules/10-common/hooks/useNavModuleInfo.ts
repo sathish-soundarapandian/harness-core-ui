@@ -25,6 +25,7 @@ export type NavModuleName =
   | ModuleName.CHAOS
   | ModuleName.STO
   | ModuleName.CODE
+  | ModuleName.IACM
 
 // Default order of modules on side nav, please add modules to this list accordingly.
 // For any module to be visible on side nav, it has to be added in this list
@@ -36,7 +37,8 @@ export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
   ModuleName.CE,
   ModuleName.CV,
   ModuleName.STO,
-  ModuleName.CHAOS
+  ModuleName.CHAOS,
+  ModuleName.IACM
 ]
 
 export interface useNavModuleInfoReturnType {
@@ -120,6 +122,13 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toCODE({ accountId }),
     featureFlagName: FeatureFlag.CODE_ENABLED,
     color: '--default-module-border'
+  },
+  [ModuleName.IACM]: {
+    icon: 'iacm',
+    label: 'iacm.navTitle',
+    getHomePageUrl: (accountId: string) => routes.toIACM({ accountId }),
+    featureFlagName: FeatureFlag.IACM_ENABLED,
+    color: '--iacm-border'
   }
 }
 
@@ -132,7 +141,7 @@ export interface GroupConfig {
 export const moduleGroupConfig: GroupConfig[] = [
   {
     label: 'common.moduleList.buildAndTest',
-    items: [ModuleName.CI, ModuleName.CHAOS, ModuleName.STO]
+    items: [ModuleName.CI, ModuleName.CHAOS, ModuleName.STO, ModuleName.IACM]
   },
   {
     label: 'common.moduleList.deployChanges',

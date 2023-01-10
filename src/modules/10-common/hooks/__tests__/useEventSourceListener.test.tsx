@@ -10,7 +10,6 @@ import React from 'react'
 import SessionToken from 'framework/utils/SessionToken'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
-import { useEventSourceListener } from '../useEventSourceListener'
 
 const addEventListener = jest.fn()
 const removeEventListener = jest.fn()
@@ -30,11 +29,24 @@ const eventSource: EventSource = {
   OPEN: 1
 }
 
+let receivedHeaders: Record<string, string>
+const eventSourcePolyfillFn = jest.fn().mockImplementation((_, options) => {
+  receivedHeaders = options.headers
+  return eventSource
+})
 jest.mock('event-source-polyfill', () => ({
-  EventSourcePolyfill: jest.fn().mockImplementation(() => eventSource)
+  EventSourcePolyfill: eventSourcePolyfillFn
 }))
 
-const Wrapped = ({ lazy = false }: { lazy?: boolean }): React.ReactElement => {
+import { useEventSourceListener } from '../useEventSourceListener'
+
+const Wrapped = ({
+  lazy = false,
+  headers
+}: {
+  lazy?: boolean
+  headers?: Record<string, string>
+}): React.ReactElement => {
   const [message, setMessage] = React.useState<string>('')
 
   const { startListening, stopListening } = useEventSourceListener<string>({
@@ -48,7 +60,8 @@ const Wrapped = ({ lazy = false }: { lazy?: boolean }): React.ReactElement => {
       arrayFormat: 'repeat'
     },
     lazy,
-    event: { onMessage: event => setMessage(event.data) }
+    event: { onMessage: event => setMessage(event.data) },
+    headers
   })
 
   return (
@@ -108,5 +121,17 @@ describe('use Event Source Stream', () => {
     })
     expect(addEventListener).toHaveBeenCalledTimes(0)
     expect(removeEventListener).toHaveBeenCalledTimes(3)
+  })
+
+  test('Custom headers should be passed', async () => {
+    render(
+      <TestWrapper path={routes.toProjects({ accountId: 'dummy' })} pathParams={{ accountId: 'dummy' }}>
+        <Wrapped lazy={true} headers={{ 'x-foo': 'bar' }} />
+      </TestWrapper>
+    )
+
+    expect(eventSourcePolyfillFn).toHaveBeenCalled()
+    expect(receivedHeaders['x-foo']).toEqual('bar')
+    expect(receivedHeaders['Authorization']).toEqual('Bearer token')
   })
 })

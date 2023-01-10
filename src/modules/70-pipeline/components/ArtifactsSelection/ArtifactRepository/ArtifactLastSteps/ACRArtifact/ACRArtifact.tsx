@@ -81,6 +81,7 @@ export function ACRArtifact({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+  const isTemplateContext = context === ModalViewFor.Template
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const loadingItems = [{ label: 'Loading...', value: 'Loading Loading...' }]
@@ -167,6 +168,7 @@ export function ACRArtifact({
   const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')
@@ -519,7 +521,7 @@ export function ACRArtifact({
             repository: getValue(formData.repository)
           })
         }}
-        enableReinitialize={true}
+        enableReinitialize={!isTemplateContext}
       >
         {formik => {
           formikRef.current = formik
@@ -541,7 +543,7 @@ export function ACRArtifact({
                         ) {
                           return
                         }
-                        if (connectorRef === RUNTIME_INPUT_VALUE) {
+                        if (!connectorRef || connectorRef === RUNTIME_INPUT_VALUE) {
                           return
                         }
 
@@ -617,6 +619,7 @@ export function ACRArtifact({
                         const subscriptionId = getValue(formik?.values?.subscriptionId)
 
                         if (
+                          !connectorRef ||
                           connectorRef === RUNTIME_INPUT_VALUE ||
                           !subscriptionId ||
                           subscriptionId === RUNTIME_INPUT_VALUE
@@ -703,6 +706,7 @@ export function ACRArtifact({
                         const registry = getValue(formik?.values?.registry)
 
                         if (
+                          !connectorRef ||
                           connectorRef === RUNTIME_INPUT_VALUE ||
                           !subscriptionId ||
                           subscriptionId === RUNTIME_INPUT_VALUE ||

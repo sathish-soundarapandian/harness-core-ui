@@ -1,8 +1,15 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { MultiTypeDeploymentSummary } from '../MultiTypeDeploymentSummary'
-import { GITOPS_STAGE } from './MultiTypeDeploymentSummaryHelper'
+import { GITOPS_STAGE, ENVIRONMENT_GROUP_STAGE } from './MultiTypeDeploymentSummaryHelper'
 
 export const accountId = 'accountId'
 export const projectIdentifier = 'project1'
@@ -15,6 +22,16 @@ describe('MultiTypeDeploymentSummary', () => {
         pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', applicationId: 'applicationId' }}
       >
         <MultiTypeDeploymentSummary stage={GITOPS_STAGE} onToggleClick={jest.fn()} isStagesExpanded={true} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+  test('render environmentGroup in getEnvironmentsTextAndTooltip', () => {
+    const { container } = render(
+      <TestWrapper
+        pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', applicationId: 'applicationId' }}
+      >
+        <MultiTypeDeploymentSummary stage={ENVIRONMENT_GROUP_STAGE} onToggleClick={jest.fn()} isStagesExpanded={true} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

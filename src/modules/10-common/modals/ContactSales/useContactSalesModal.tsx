@@ -107,8 +107,8 @@ const ContactSalesForm = ({ onSubmit }: { onSubmit: (values: ContactSalesFormPro
     }
   ]
   const validationSchema = Yup.object().shape({
-    fullName: NameSchema(),
-    email: EmailSchema(),
+    fullName: NameSchema(getString),
+    email: EmailSchema(getString),
     countryName: Yup.string().trim().required(getString('common.banners.trial.contactSalesForm.countryValidation')),
     countryCode: Yup.string()
       .trim()

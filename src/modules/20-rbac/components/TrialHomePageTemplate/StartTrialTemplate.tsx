@@ -19,13 +19,17 @@ import {
   useStartFreeLicense,
   StartFreeLicenseQueryParams
 } from 'services/cd-ng'
-import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import type { Module } from 'framework/types/ModuleName'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, PlanActions, TrialActions } from '@common/constants/TrackingConstants'
 import routes from '@common/RouteDefinitions'
 import useStartTrialModal from '@common/modals/StartTrial/StartTrialModal'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { Editions, ModuleLicenseType, SubscriptionTabNames } from '@common/constants/SubscriptionTypes'
 import { getGaClientID, getSavedRefererURL, isOnPrem } from '@common/utils/utils'
+import { getModuleToDefaultURLMap } from 'framework/LicenseStore/licenseStoreUtil'
 import css from './StartTrialTemplate.module.scss'
 
 interface StartTrialTemplateProps {
@@ -61,6 +65,7 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { showModal } = useStartTrialModal({ module, handleStartTrial })
+  const isDefaultProjectCreated = useFeatureFlag(FeatureFlag.CREATE_DEFAULT_PROJECT)
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const FREE_PLAN_ENABLED = !isOnPrem()
   const clickEvent = FREE_PLAN_ENABLED ? PlanActions.StartFreeClick : TrialActions.StartTrialClick
@@ -77,11 +82,17 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
       const data = await startTrial()
 
       handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, data?.data)
-
-      history.push({
-        pathname: routes.toModuleHome({ accountId, module }),
-        search: `?modal=${modal}&&experience=${experience}`
-      })
+      if (isDefaultProjectCreated) {
+        const moduleUrlWithDefaultProject = getModuleToDefaultURLMap(accountId, module as Module)[module]
+        history.push(
+          moduleUrlWithDefaultProject ? (moduleUrlWithDefaultProject as string) : routes.toHome({ accountId })
+        )
+      } else {
+        history.push({
+          pathname: routes.toModuleHome({ accountId, module }),
+          search: `?modal=${modal}&experience=${experience}`
+        })
+      }
     } catch (error) {
       showError(error.data?.message)
     }

@@ -24,7 +24,7 @@ import * as Yup from 'yup'
 import { memoize } from 'lodash-es'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { RegistryHostNames } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { getConnectorIdValue, RegistryHostNames } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { GcrSpec } from 'services/pipeline-ng'
 import ArtifactImagePath from '../ArtifactImagePath/ArtifactImagePath'
 import type { ImagePathProps } from '../../../ArtifactInterface'
@@ -69,7 +69,7 @@ export function GCRImagePath({
         onSubmit={formData => {
           handleSubmit({
             ...formData,
-            connectorRef: prevStepData?.connectorId?.value
+            connectorRef: getConnectorIdValue(prevStepData)
           })
         }}
       >

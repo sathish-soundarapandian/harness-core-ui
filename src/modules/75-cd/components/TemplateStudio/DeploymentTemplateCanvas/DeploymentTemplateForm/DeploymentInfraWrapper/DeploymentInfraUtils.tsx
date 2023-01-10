@@ -65,7 +65,7 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
     instanceAttributes: Yup.array()
       .of(
         Yup.object().shape({
-          name: NameSchema(),
+          name: NameSchema(getString),
           jsonPath: Yup.string().required(getString('common.validation.valueIsRequired'))
         })
       )

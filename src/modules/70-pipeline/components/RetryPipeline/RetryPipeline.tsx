@@ -697,6 +697,7 @@ function RetryPipeline({
             maybeContainerClass={existingProvide === 'provide' ? css.inputSetFormRunPipeline : ''}
             listOfSelectedStages={listOfSelectedStages}
             isRetryFormStageSelected={selectedStage !== null}
+            disableRuntimeInputConfigureOptions
           />
         </>
       )

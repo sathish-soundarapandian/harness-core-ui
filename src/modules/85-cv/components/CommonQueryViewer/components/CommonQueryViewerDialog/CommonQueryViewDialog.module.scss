@@ -6,11 +6,18 @@
  */
 
 .formQueryBox textarea {
-  width: 100%;
-  border-radius: 8px;
+  min-width: 50%;
+  border-radius: var(--spacing-small);
   resize: vertical;
-  min-height: 350px;
+  min-height: 80vh;
   padding: var(--spacing-medium) !important;
+}
+.dialogRecords {
+  min-height: 80vh !important;
+}
+
+.queryPanel {
+  min-width: 49%;
 }
 
 .queryViewDialog {
@@ -20,7 +27,8 @@
   }
 }
 
-.runQueryButton {
+.runQueryButton,
+.closeButton {
   border-radius: var(--spacing-2);
 }
 

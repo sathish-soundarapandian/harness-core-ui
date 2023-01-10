@@ -30,7 +30,8 @@ describe('Unit tests for AddMetric', () => {
     currentSelectedMetricDetail: {} as CustomHealthMetricDefinition,
     groupNames: [{ label: 'group1', value: 'group1' }],
     setGroupName: jest.fn(),
-    fieldLabel: 'Metric'
+    fieldLabel: 'Metric',
+    isEdit: false
   }
   test('Ensure AddMetric component loads with groupName when default groupName is disabled in Health source config', async () => {
     const { container } = render(<WrapperComponent {...props} />)

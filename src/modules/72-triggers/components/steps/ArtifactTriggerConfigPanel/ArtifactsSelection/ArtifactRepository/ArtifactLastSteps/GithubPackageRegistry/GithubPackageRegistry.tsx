@@ -34,6 +34,7 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import type { GithubPackagesSpec } from 'services/pipeline-ng'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
+import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { ArtifactSourceIdentifier } from '../ArtifactIdentifier'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
@@ -257,7 +258,7 @@ export function GithubPackageRegistry(
         onSubmit={formData => {
           handleSubmit({
             ...formData,
-            connectorRef: prevStepData?.connectorId?.value
+            connectorRef: getConnectorIdValue(prevStepData)
           })
         }}
       >

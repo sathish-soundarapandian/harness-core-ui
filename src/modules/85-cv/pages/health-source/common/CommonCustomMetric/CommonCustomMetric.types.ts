@@ -50,6 +50,7 @@ export interface CommonCustomMetricInterface {
   isMetricThresholdEnabled?: boolean
   filterRemovedMetricNameThresholds?: (metricName: string) => void
   openEditMetricModal: () => void
+  defaultServiceInstance?: string
 }
 
 export interface CommonUpdateSelectedMetricsMapInterface {

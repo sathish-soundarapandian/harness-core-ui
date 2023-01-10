@@ -11,6 +11,7 @@ import { FormikForm } from '@harness/uicore'
 import { Formik } from 'formik'
 import * as cvService from 'services/cv'
 import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
+import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { CommonQueryViewerProps } from '../types'
 import { CommonQueryViewer } from '../CommonQueryViewer'
@@ -18,7 +19,7 @@ import { CommonQueryViewer } from '../CommonQueryViewer'
 function WrapperComponent(props: CommonQueryViewerProps): any {
   return (
     <TestWrapper>
-      <CommonHealthSourceProvider updateParentFormik={jest.fn()}>
+      <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
         <Formik initialValues={{}} onSubmit={jest.fn()}>
           <FormikForm>
             <CommonQueryViewer {...props} />

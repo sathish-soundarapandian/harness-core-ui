@@ -22,9 +22,9 @@ import {
 import cx from 'classnames'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { Menu } from '@blueprintjs/core'
 import { defaultTo, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -57,6 +57,7 @@ import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraAp
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { getHelpeTextForTags, RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { ArtifactIdentifierValidation, ModalViewFor, scopeOptions, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -216,18 +217,17 @@ function FormComponent({
     )
   }, [versionResponse?.data])
 
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        disabled={fetchingVersions || fetchingFeeds || fetchingPackages || fetchingProjects}
-        onClick={handleClick}
-      />
-    </div>
+  const versionItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingVersions} />
+  ))
+  const feedItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingFeeds} />
+  ))
+  const packageItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingPackages} />
+  ))
+  const projectItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingProjects} />
   ))
 
   const isFeedDisabled = (): boolean => {
@@ -297,7 +297,7 @@ function FormComponent({
                 expressions,
                 allowableTypes,
                 selectProps: {
-                  itemRenderer: itemRenderer,
+                  itemRenderer: projectItemRenderer,
                   items: getItems(fetchingProjects, 'Projects', projectItems),
                   allowCreatingNewItems: true,
                   addClearBtn: true
@@ -354,7 +354,7 @@ function FormComponent({
                     defaultErrorText={getString('pipeline.artifactsSelection.validation.noFeeds')}
                   />
                 ),
-                itemRenderer: itemRenderer,
+                itemRenderer: feedItemRenderer,
                 items: getItems(fetchingFeeds, 'Feeds', feedItems),
                 allowCreatingNewItems: true,
                 addClearBtn: true
@@ -414,7 +414,7 @@ function FormComponent({
                     defaultErrorText={getString('pipeline.artifactsSelection.validation.noPackage')}
                   />
                 ),
-                itemRenderer: itemRenderer,
+                itemRenderer: packageItemRenderer,
                 items: getItems(fetchingPackages, 'Packages', packageItems),
                 allowCreatingNewItems: true,
                 addClearBtn: true
@@ -484,7 +484,7 @@ function FormComponent({
                       defaultErrorText={getString('pipeline.artifactsSelection.validation.noBuild')}
                     />
                   ),
-                  itemRenderer: itemRenderer,
+                  itemRenderer: versionItemRenderer,
                   items: getItems(fetchingVersions, 'Versions', versionItems),
                   allowCreatingNewItems: true,
                   addClearBtn: true
@@ -658,6 +658,7 @@ export function AzureArtifacts(
   const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')

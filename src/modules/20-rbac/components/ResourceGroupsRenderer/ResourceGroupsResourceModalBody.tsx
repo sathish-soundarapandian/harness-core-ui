@@ -13,7 +13,7 @@ import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/Resource
 import { PageSpinner } from '@common/components'
 import type { RbacResourceModalProps } from '@rbac/factories/RbacFactory'
 import { useStrings } from 'framework/strings'
-import { ResourceGroupV2Response, useGetFilterResourceGroupList } from 'services/resourcegroups'
+import { ResourceGroupV2Response, useGetFilterResourceGroupListV2 } from 'services/resourcegroups'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 
 export type ResourceGroupColumn = ResourceGroupV2Response & { identifier: string }
@@ -27,7 +27,7 @@ const ResourceGroupsResourceModalBody: React.FC<RbacResourceModalProps> = ({
   const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
   const [page, setPage] = useState(0)
   const { getString } = useStrings()
-  const { data, loading } = useMutateAsGet(useGetFilterResourceGroupList, {
+  const { data, loading } = useMutateAsGet(useGetFilterResourceGroupListV2, {
     body: { accountIdentifier, orgIdentifier, projectIdentifier, searchTerm },
     queryParams: {
       accountIdentifier,

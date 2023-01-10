@@ -20,3 +20,5 @@ export const TWO_HOURS_IN_MILLISECONDS = 1000 * 60 * 60 * 2
 export const StageStatusMapper = {
   IgnoreFailed: 'Failed'
 }
+
+export const TIME_FORMAT_DETAILS_CARD = 'MMMM DD YYYY, h:mm a'

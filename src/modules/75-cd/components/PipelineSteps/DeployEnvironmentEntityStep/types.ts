@@ -10,6 +10,7 @@ import type {
   ClusterResponse,
   DeploymentStageConfig,
   EnvironmentGroupResponseDTO,
+  ExecutionElementConfig,
   FilterSpec,
   InfrastructureDefinitionConfig,
   NGEnvironmentInfoConfig,
@@ -48,6 +49,7 @@ export interface DeployEnvironmentEntityFormState {
   environmentGroupFilters?: FilterYaml[]
   environmentFilters?: Record<string, FilterYaml[]>
   infraClusterFilters?: FilterYaml[]
+  provisioner?: ExecutionElementConfig
 }
 
 export interface DeployEnvironmentEntityCustomStepProps {

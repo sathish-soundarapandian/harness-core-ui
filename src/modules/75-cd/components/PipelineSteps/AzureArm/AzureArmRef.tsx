@@ -81,7 +81,7 @@ export const AzureArmRef = (
           return Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired'))
         }),
         configuration: Yup.object().shape({
-          connectorRef: ConnectorRefSchema(),
+          connectorRef: ConnectorRefSchema(getString),
           template: Yup.object().shape({
             store: Yup.object({
               type: Yup.string(),
@@ -193,26 +193,9 @@ export const AzureArmRef = (
               <FormMultiTypeDurationField
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
-                multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
                 disabled={readonly}
               />
-              {getMultiTypeFromValue(values?.timeout) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={values?.timeout as string}
-                  type="String"
-                  variableName="step.timeout"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  showAdvanced={true}
-                  onChange={
-                    /* istanbul ignore next */ value => {
-                      setFieldValue('timeout', value)
-                    }
-                  }
-                  isReadonly={readonly}
-                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                />
-              )}
             </div>
             <div className={css.divider} />
             <div className={cx(stepCss.formGroup, stepCss.lg)}>

@@ -38,7 +38,6 @@ import type { GetExecutionStrategyYamlQueryParams, ManifestConfigWrapper } from 
 
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
 
 import {
@@ -169,7 +168,7 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
         })}
       >
         {(formik: FormikProps<K8sApplyFormData>) => {
-          const { values, setFieldValue } = formik
+          const { values } = formik
           setFormikRef(formikRef, formik)
           return (
             <>
@@ -190,23 +189,8 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                   name="timeout"
                   disabled={isDisabled}
                   label={getString('pipelineSteps.timeoutLabel')}
-                  multiTypeDurationProps={{ enableConfigureOptions: false, disabled: isDisabled, allowableTypes }}
+                  multiTypeDurationProps={{ enableConfigureOptions: true, disabled: isDisabled, allowableTypes }}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={isDisabled}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
               <div className={stepCss.divider} />
               <div className={stepCss.formGroup}>

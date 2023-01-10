@@ -53,7 +53,8 @@
       "@cv/*": ["modules/85-cv/*"],
       "@sto/*": ["modules/85-sto/*"],
       "@ce/*": ["modules/75-ce/*"],
-      "@gitops/*": ["modules/90-gitops/*"]
+      "@gitops/*": ["modules/90-gitops/*"],
+      "@iacm/*": ["modules/85-iacm/*"]
     }
   },
   "types": ["cypress"],

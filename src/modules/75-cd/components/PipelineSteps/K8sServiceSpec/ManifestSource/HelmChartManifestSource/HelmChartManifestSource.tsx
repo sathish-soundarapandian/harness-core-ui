@@ -7,7 +7,8 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { FormError, FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 import { defaultTo, get } from 'lodash-es'
 import {
   ManifestDataType,
@@ -36,6 +37,7 @@ import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   getDefaultQueryParam,
   getFinalQueryParamData,
@@ -80,8 +82,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [showRepoName, setShowRepoName] = useState(true)
+  const { getRBACErrorMessage } = useRBACError()
   const manifestStoreType = get(template, `${manifestPath}.spec.store.type`, null)
-  const errorMessage = 'data.message'
 
   const connectorRefPath =
     manifest?.spec?.store?.type === 'OciHelmChart'
@@ -631,37 +633,59 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
         {isFieldRuntime(`${manifestPath}.spec.chartVersion`, template) && (
           <div className={css.verticalSpacingInput}>
             {isNewServiceEnvEntity(path as string) ? (
-              <ExperimentalInput
-                formik={formik}
-                name={`${path}.${manifestPath}.spec.chartVersion`}
-                disabled={isFieldDisabled(fromTrigger ? 'chartVersion' : `${manifestPath}.spec.chartVersion`)}
-                multiTypeInputProps={{
-                  onFocus: () => {
-                    if (!chartVersions?.length) {
-                      refetchChartVersions()
-                    }
-                  },
-                  selectProps: {
-                    usePortal: true,
-                    addClearBtn: !readonly,
-                    allowCreatingNewItems: true,
-                    ...(fromTrigger && { value: TriggerDefaultFieldList.chartVersion }),
-                    items: chartVersions,
-                    noResults: (
-                      <Text padding={'small'}>
-                        {loadingChartVersions
-                          ? getString('loading')
-                          : get(chartVersionsError, errorMessage, null) || 'No manifest chart Versions found'}
+              <>
+                <ExperimentalInput
+                  formik={formik}
+                  name={`${path}.${manifestPath}.spec.chartVersion`}
+                  disabled={
+                    isFieldDisabled(fromTrigger ? 'chartVersion' : `${manifestPath}.spec.chartVersion`) ||
+                    loadingChartVersions
+                  }
+                  placeholder={
+                    loadingChartVersions
+                      ? getString('pipeline.manifestType.http.loadingChartVersion')
+                      : getString('pipeline.manifestType.http.chartVersionPlaceHolder')
+                  }
+                  multiTypeInputProps={{
+                    onFocus: () => {
+                      if (!chartVersions?.length) {
+                        refetchChartVersions()
+                      }
+                    },
+                    selectProps: {
+                      usePortal: true,
+                      addClearBtn: !readonly,
+                      allowCreatingNewItems: true,
+                      ...(fromTrigger && { value: TriggerDefaultFieldList.chartVersion }),
+                      items: chartVersions,
+                      noResults: (
+                        <Text padding={'small'}>{getString('pipeline.manifestType.http.noResultsChartVersion')}</Text>
+                      )
+                    },
+                    expressions,
+                    allowableTypes
+                  }}
+                  useValue
+                  selectItems={chartVersions}
+                  label={getString('pipeline.manifestType.http.chartVersion')}
+                />
+                {chartVersionsError ? (
+                  <FormError
+                    errorMessage={
+                      <Text
+                        lineClamp={1}
+                        width={380}
+                        margin={{ bottom: 'medium' }}
+                        intent={Intent.DANGER}
+                        tooltipProps={{ isDark: true, popoverClassName: css.tooltip }}
+                      >
+                        {getRBACErrorMessage(chartVersionsError)}
                       </Text>
-                    )
-                  },
-                  expressions,
-                  allowableTypes
-                }}
-                useValue
-                selectItems={chartVersions}
-                label={getString('pipeline.manifestType.http.chartVersion')}
-              />
+                    }
+                    name={`${path}.${manifestPath}.spec.chartVersion`}
+                  ></FormError>
+                ) : null}
+              </>
             ) : (
               <FormInput.MultiTextInput
                 disabled={isFieldDisabled(fromTrigger ? 'chartVersion' : `${manifestPath}.spec.chartVersion`)}

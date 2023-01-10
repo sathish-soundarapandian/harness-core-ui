@@ -98,7 +98,7 @@ exports[`Unit tests for MetricsAnalysisContainer Verify if MetricsAnalysisContai
       <div
         class="bp3-input-group ui-search-box ExpandingSearchInput--main    ExpandingSearchInput--light"
         data-name=""
-        style="max-width: 250px;"
+        style="max-width: 250px; width: 250px;"
       >
         <span
           class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
@@ -123,7 +123,7 @@ exports[`Unit tests for MetricsAnalysisContainer Verify if MetricsAnalysisContai
           class="bp3-input  ExpandingSearchInput--filter"
           dir="auto"
           placeholder="pipeline.verification.metricViewPlaceholder"
-          style="padding-right: 0px;"
+          style="padding-right: 38px;"
           type="search"
           value=""
         />

@@ -49,7 +49,7 @@ function ServiceStepBasicInfo(): React.ReactElement {
           delayedOnUpdate(values)
         }}
         validationSchema={Yup.object().shape({
-          name: NameSchema()
+          name: NameSchema(getString)
         })}
         formName="service-entity"
         onSubmit={noop}

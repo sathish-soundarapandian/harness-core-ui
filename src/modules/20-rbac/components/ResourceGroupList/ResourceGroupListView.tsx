@@ -141,6 +141,7 @@ const ResourceGroupListView: React.FC<ResourceGroupListViewProps> = props => {
   const listData: ResourceGroupV2Response[] = data?.content || []
   const { getString } = useStrings()
   const history = useHistory()
+
   const openResourceSelector = (resourceGroupIdentifier: string): void => {
     history.push(
       routes.toResourceGroupDetails({
@@ -152,6 +153,7 @@ const ResourceGroupListView: React.FC<ResourceGroupListViewProps> = props => {
       })
     )
   }
+
   const columns: Column<ResourceGroupV2Response>[] = useMemo(
     () => [
       {

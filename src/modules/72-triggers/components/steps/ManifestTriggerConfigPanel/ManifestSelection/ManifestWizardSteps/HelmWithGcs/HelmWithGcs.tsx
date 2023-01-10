@@ -21,12 +21,14 @@ import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
-import { ConnectorConfigDTO, useGetGCSBucketList } from 'services/cd-ng'
+import { useGetGCSBucketList } from 'services/cd-ng'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/components'
 import type { BuildStore, HelmManifestSpec } from 'services/pipeline-ng'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { helmVersions } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import type { ManifestStepInitData } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { ManifestLastStepProps, ManifestTriggerSource } from '../../ManifestInterface'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithHttp/Helm.module.scss'
@@ -39,10 +41,11 @@ function HelmWithGcs({
   initialValues,
   handleSubmit,
   previousStep
-}: StepProps<ConnectorConfigDTO> & ManifestLastStepProps): React.ReactElement {
+}: StepProps<ManifestStepInitData> & ManifestLastStepProps): React.ReactElement {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
+  const connectorRef = getConnectorIdValue(prevStepData) || (prevStepData?.connectorRef as ConnectorSelectedValue).value
 
   const {
     data: bucketData,
@@ -66,7 +69,7 @@ function HelmWithGcs({
           accountIdentifier: accountId,
           projectIdentifier,
           orgIdentifier,
-          connectorRef: prevStepData?.connectorRef?.value
+          connectorRef
         }
       })
     }
@@ -85,7 +88,8 @@ function HelmWithGcs({
     }
   }
   const submitFormData = (formData: HelmManifestSpec): void => {
-    const { connectorRef, store } = prevStepData ?? {}
+    const { store } = prevStepData ?? {}
+
     const { bucketName, folderPath, chartName, helmVersion } = formData
 
     const manifestTriggerSource: ManifestTriggerSource = {
@@ -96,7 +100,7 @@ function HelmWithGcs({
           store: {
             type: store as BuildStore['type'],
             spec: {
-              connectorRef: (connectorRef as ConnectorSelectedValue)?.value,
+              connectorRef,
               bucketName,
               folderPath
             }

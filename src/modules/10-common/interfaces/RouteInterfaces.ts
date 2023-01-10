@@ -208,6 +208,7 @@ export type ModuleNameMatch =
   | ':module(ce)'
   | ':module(sto)'
   | ':module(chaos)'
+  | ':module(iacm)'
 
 export type Module = ModuleName | ModuleNameMatch
 

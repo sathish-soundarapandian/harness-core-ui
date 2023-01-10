@@ -23,6 +23,7 @@ import { OrganizationCard } from '@projects-orgs/components/OrganizationCard/Org
 import type { Organization } from 'services/cd-ng'
 import { NameIdDescriptionTags } from '@common/components'
 import { NameSchema, IdentifierSchema } from '@common/utils/Validation'
+import { useStrings } from 'framework/strings'
 import css from './Steps.module.scss'
 
 interface OrganizationFormData {
@@ -46,6 +47,7 @@ const OrganizationForm: React.FC<OrganizationFormData> = ({
   disablePreview,
   enableEdit
 }) => {
+  const { getString } = useStrings()
   return (
     <Formik
       initialValues={{
@@ -58,8 +60,8 @@ const OrganizationForm: React.FC<OrganizationFormData> = ({
       formName="orgForm"
       enableReinitialize={true}
       validationSchema={Yup.object().shape({
-        name: NameSchema(),
-        identifier: IdentifierSchema()
+        name: NameSchema(getString),
+        identifier: IdentifierSchema(getString)
       })}
       onSubmit={(values: Organization) => {
         onComplete(values)

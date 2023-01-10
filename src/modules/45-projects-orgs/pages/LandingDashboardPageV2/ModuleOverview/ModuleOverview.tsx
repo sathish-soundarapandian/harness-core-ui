@@ -85,6 +85,10 @@ const moduleLabelMap: Record<NavModuleName, IModuleOverviewMap> = {
   [ModuleName.CODE]: {
     label: 'common.purpose.code.name',
     Component: () => null
+  },
+  [ModuleName.IACM]: {
+    label: 'iacm.stageTitle',
+    Component: () => null
   }
 }
 

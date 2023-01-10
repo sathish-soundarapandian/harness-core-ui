@@ -172,7 +172,10 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
                       key={projectAggregate.projectResponse.project.identifier}
                       data={projectAggregate}
                       minimal={true}
-                      selected={projectAggregate.projectResponse.project.identifier === selectedProject?.identifier}
+                      selected={
+                        projectAggregate.projectResponse.project.identifier === selectedProject?.identifier &&
+                        projectAggregate.projectResponse.project.orgIdentifier === selectedProject?.orgIdentifier
+                      }
                       className={cx(css.projectCard, Classes.POPOVER_DISMISS)}
                       onClick={() => {
                         onSelect(projectAggregate.projectResponse.project)

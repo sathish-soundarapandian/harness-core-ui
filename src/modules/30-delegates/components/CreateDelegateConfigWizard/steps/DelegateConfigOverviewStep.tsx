@@ -38,7 +38,7 @@ const DelegateConfigOverviewStep: React.FC<DelegateConfigOverviewStepProps> = ({
       formName="delegateConfigOverviewForm"
       enableReinitialize={true}
       validationSchema={Yup.object().shape({
-        name: NameSchema()
+        name: NameSchema(getString)
       })}
       onSubmit={(values: dataObj) => {
         nextStep?.({ ...prevStepData, ...values })

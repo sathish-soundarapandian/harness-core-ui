@@ -12,6 +12,7 @@ import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { useStateWithQueryParams } from '@common/hooks/useStateWithQueryParams'
 import { useServiceAccountModal } from '@rbac/modals/ServiceAccountModal/useServiceAccountModal'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import { useListAggregatedServiceAccounts } from 'services/cd-ng'
@@ -27,7 +28,7 @@ const ServiceAccountsPage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
   useDocumentTitle(getString('rbac.serviceAccounts.label'))
-  const [searchTerm, setsearchTerm] = useState<string>('')
+  const [searchTerm, setsearchTerm] = useStateWithQueryParams({ key: 'search' })
   const [page, setPage] = useState(0)
 
   const { data, loading, error, refetch } = useListAggregatedServiceAccounts({
@@ -69,6 +70,7 @@ const ServiceAccountsPage: React.FC = () => {
           toolbar={
             <Layout.Horizontal margin={{ right: 'small' }} height="xxxlarge">
               <ExpandingSearchInput
+                defaultValue={searchTerm}
                 alwaysExpanded
                 placeholder={getString('common.searchPlaceholder')}
                 onChange={text => {

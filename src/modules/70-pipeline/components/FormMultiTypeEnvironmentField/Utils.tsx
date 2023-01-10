@@ -1,3 +1,4 @@
+/* eslint-disable strings-restrict-modules */
 /*
  * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -13,6 +14,8 @@ import cx from 'classnames'
 import type { ReferenceSelectProps } from '@common/components/ReferenceSelect/ReferenceSelect'
 import { EnvironmentResponseDTO, Failure, getEnvironmentAccessListPromise } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import environmentEmptyStateSvg from '@pipeline/icons/emptyServiceDetail.svg'
+
 import css from './FormMultiTypeEnvironmentField.module.scss'
 
 export function getReferenceFieldProps({
@@ -35,11 +38,11 @@ export function getReferenceFieldProps({
   return {
     name,
     width,
-    selectAnReferenceLabel: 'Select an existing Environment',
+    selectAnReferenceLabel: getString('pipeline.envLabel'),
     selected,
     placeholder,
     defaultScope,
-    createNewLabel: 'Environment',
+    createNewLabel: getString('environment'),
     isNewConnectorLabelVisible: true,
     fetchRecords: (done, search, page, scope, signal = undefined) => {
       const request = getEnvironmentAccessListPromise(
@@ -80,10 +83,13 @@ export function getReferenceFieldProps({
     },
     projectIdentifier,
     orgIdentifier,
-    noRecordsText: 'No environments found',
-    componentName: 'Environment',
+    noRecordsText: getString('cd.noEnvironment.title'),
+    componentName: getString('environment'),
     noDataCard: {
-      message: 'No Environments Found'
+      image: environmentEmptyStateSvg,
+      message: getString('cd.noEnvironment.title'),
+      containerClassName: css.noDataCardContainerConnector,
+      className: css.noDataCardContainerContent
     },
     isMultiSelect,
     selectedReferences: selectedEnvironments,

@@ -67,7 +67,7 @@ function HealthSourceDrawerContent({
         [
           getString('cv.healthSource.defineHealthSource'),
           getString('cv.healthSource.connectors.gco.selectDashboardTab'),
-          getString('cv.healthSource.customizeHealthSource')
+          getString('configuration')
         ],
         <DefineHealthSource
           key="defineHealthSource"
@@ -88,7 +88,7 @@ function HealthSourceDrawerContent({
       ]
     }
     return [
-      [getString('cv.healthSource.defineHealthSource'), getString('cv.healthSource.customizeHealthSource')],
+      [getString('cv.healthSource.defineHealthSource'), getString('configuration')],
       <DefineHealthSource
         key="defineHealthSource"
         isTemplate={isTemplate}

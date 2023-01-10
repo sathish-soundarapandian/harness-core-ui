@@ -97,8 +97,8 @@ const TokenForm: React.FC<TokenFormProps> = ({
       }}
       formName="tokenForm"
       validationSchema={Yup.object().shape({
-        name: NameSchema(),
-        identifier: IdentifierSchema(),
+        name: NameSchema(getString),
+        identifier: IdentifierSchema(getString),
         expiryDate: Yup.date().min(new Date()).required()
       })}
       onSubmit={values => {

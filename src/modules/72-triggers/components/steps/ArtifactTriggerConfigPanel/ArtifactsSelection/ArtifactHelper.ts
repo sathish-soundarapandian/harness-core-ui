@@ -12,7 +12,7 @@ import { isEmpty } from 'lodash-es'
 import { NameSchema } from '@common/utils/Validation'
 import { Connectors } from '@connectors/constants'
 import type { ArtifactSource, ConnectorInfoDTO, PrimaryArtifact, ServiceDefinition } from 'services/cd-ng'
-import type { StringKeys } from 'framework/strings'
+import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { ArtifactType } from './ArtifactInterface'
 
@@ -60,7 +60,8 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   Jenkins: 'service-jenkins',
   AmazonS3: 'service-service-s3',
   GoogleArtifactRegistry: 'service-gar',
-  GithubPackageRegistry: 'service-github-package'
+  GithubPackageRegistry: 'service-github-package',
+  AzureArtifacts: 'service-azure-artifacts'
 }
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
@@ -74,7 +75,8 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   Jenkins: 'connectors.jenkins.jenkins',
   AmazonS3: 'pipeline.artifactsSelection.amazonS3Title',
   GoogleArtifactRegistry: 'pipeline.artifactsSelection.googleArtifactRegistryTitle',
-  GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle'
+  GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle',
+  AzureArtifacts: 'connectors.title.azureArtifacts'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
@@ -88,7 +90,8 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   Jenkins: 'Jenkins',
   AmazonS3: 'AmazonS3',
   GoogleArtifactRegistry: 'GoogleArtifactRegistry',
-  GithubPackageRegistry: 'GithubPackageRegistry'
+  GithubPackageRegistry: 'GithubPackageRegistry',
+  AzureArtifacts: 'AzureArtifacts'
 }
 
 export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -101,7 +104,8 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   Jenkins: Connectors.JENKINS,
   AmazonS3: Connectors.AWS,
   GoogleArtifactRegistry: Connectors.GCP,
-  GithubPackageRegistry: Connectors.GITHUB
+  GithubPackageRegistry: Connectors.GITHUB,
+  AzureArtifacts: Connectors.AZURE_ARTIFACTS
 }
 
 export const ArtifactConnectorLabelMap: Record<string, string> = {
@@ -114,7 +118,8 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   Jenkins: 'Jenkins',
   AmazonS3: 'AWS',
   GoogleArtifactRegistry: 'GCP',
-  GithubPackageRegistry: 'Github'
+  GithubPackageRegistry: 'Github',
+  AzureArtifacts: 'Azure Artifacts'
 }
 
 export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<ArtifactType>> = {
@@ -218,15 +223,16 @@ export const repositoryPortOrServer: IOptionProps[] = [
 export const ArtifactIdentifierValidation = (
   artifactIdentifiers: string[],
   id: string | undefined,
-  validationMsg: string
+  validationMsg: string,
+  getString: UseStringsReturn['getString']
 ): { identifier: Schema<unknown> } => {
   if (!id) {
     return {
-      identifier: NameSchema().notOneOf(artifactIdentifiers, validationMsg)
+      identifier: NameSchema(getString).notOneOf(artifactIdentifiers, validationMsg)
     }
   }
   return {
-    identifier: NameSchema()
+    identifier: NameSchema(getString)
   }
 }
 

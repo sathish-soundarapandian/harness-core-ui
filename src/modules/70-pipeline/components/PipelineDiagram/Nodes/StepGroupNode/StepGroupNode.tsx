@@ -175,7 +175,8 @@ export function StepGroupNode(props: any): JSX.Element {
               [css.parallelNodes]: props?.isParallelNode,
               [css.nestedGroup]: isNestedStepGroup,
               [css.stepGroupNormal]: !isNestedStepGroup,
-              parentMatrix: isParentMatrix
+              parentMatrix: isParentMatrix,
+              [css.rollbackGroup]: StageType.ROLLBACK === props?.type
             })}
           >
             <div
@@ -328,7 +329,7 @@ export function StepGroupNode(props: any): JSX.Element {
             <div className={css.stepGroupBody}>
               <StepGroupGraph
                 {...props}
-                data={props?.type === StageType.PIPELINE ? childPipelineData : stepsData}
+                data={[StageType.PIPELINE, StageType.ROLLBACK].includes(props?.type) ? childPipelineData : stepsData}
                 isNodeCollapsed={isNodeCollapsed}
                 parentIdentifier={props?.identifier}
                 hideLinks={props?.identifier === STATIC_SERVICE_GROUP_NAME}

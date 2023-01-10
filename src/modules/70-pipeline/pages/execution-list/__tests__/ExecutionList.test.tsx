@@ -98,7 +98,19 @@ jest.mock('services/pipeline-ng', () => ({
     loading: false,
     cancel: jest.fn()
   })),
-  useGetInputsetYaml: jest.fn(() => ({ data: null }))
+  useGetInputsetYaml: jest.fn(() => ({ data: null })),
+  useDebugPipelineExecuteWithInputSetYaml: jest.fn(() => ({
+    loading: false,
+    refetch: jest.fn(),
+    mutate: jest.fn().mockResolvedValue({
+      data: {
+        correlationId: '',
+        status: 'SUCCESS',
+        metaData: null,
+        data: {}
+      }
+    })
+  }))
 }))
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))

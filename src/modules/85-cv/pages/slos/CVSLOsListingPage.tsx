@@ -582,6 +582,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
                   width={250}
                   throttle={500}
                   onChange={setSearch}
+                  autoFocus={false}
                   placeholder={getString('cv.slos.searchSLO')}
                 />
               </Container>

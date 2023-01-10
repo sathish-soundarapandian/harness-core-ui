@@ -281,6 +281,7 @@ export default function DeployEnvironmentEntityWidget({
   return (
     <>
       <Formik<DeployEnvironmentEntityFormState>
+        enableReinitialize
         formName="deployEnvironmentEntityWidgetForm"
         onSubmit={noop}
         validate={(values: DeployEnvironmentEntityFormState) => {

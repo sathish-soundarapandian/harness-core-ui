@@ -523,7 +523,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
             onClick={e => e.stopPropagation()}
           >
             <Icon name="launch" style={{ marginRight: '5px' }} />
-            {getString('pipeline.openInNewTab')}
+            {getString('common.openInNewTab')}
           </Link>
           <RbacMenuItem
             icon="edit"
@@ -617,7 +617,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
         {
           Header: getString('cd.serviceDashboard.lastPipelineExecution').toLocaleUpperCase(),
           id: 'lastDeployment',
-          width: '15%',
+          width: '25%',
           Cell: RenderLastDeployment
         },
         {

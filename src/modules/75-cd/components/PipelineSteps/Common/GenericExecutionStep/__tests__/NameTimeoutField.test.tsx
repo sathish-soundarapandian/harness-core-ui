@@ -22,7 +22,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { NameTimeoutField } from '../NameTimeoutField'
 
-const doConfigureOptionsTesting = async (cogModal: HTMLElement) => {
+const doConfigureOptionsTesting = async (cogModal: HTMLElement): Promise<void> => {
   // Type regex and submit
   // check if field has desired value
   await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
@@ -30,7 +30,7 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement) => {
   userEvent.click(regexRadio)
   const regexTextArea = queryByAttribute('name', cogModal, 'regExValues') as HTMLInputElement
   act(() => {
-    fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
+    fireEvent.change(regexTextArea, { target: { value: '<+input>.includes(/test/)' } })
   })
   await waitFor(() => expect(regexTextArea.value).toBe('<+input>.includes(/test/)'))
   const cogSubmit = getElementByText(cogModal, 'submit')
@@ -38,7 +38,6 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement) => {
 }
 
 const emptyInitialValues = { name: '', timeout: '' }
-const mockSetFieldValue = jest.fn()
 const handleSubmit = jest.fn()
 
 describe('NameTimeoutField tests', () => {
@@ -48,8 +47,6 @@ describe('NameTimeoutField tests', () => {
         <Formik initialValues={emptyInitialValues} onSubmit={handleSubmit}>
           <NameTimeoutField
             allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
-            setFieldValue={mockSetFieldValue}
-            values={emptyInitialValues}
             readonly={false}
             stepViewType={StepViewType.Edit}
           />
@@ -57,7 +54,7 @@ describe('NameTimeoutField tests', () => {
       </TestWrapper>
     )
 
-    const queryByNameAttribute = (name: string) => queryByAttribute('name', container, name)
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
 
     const identifierEditIcon = queryByAttribute('data-icon', container, 'Edit')
     expect(identifierEditIcon).toBeInTheDocument()
@@ -87,8 +84,6 @@ describe('NameTimeoutField tests', () => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           <NameTimeoutField
             allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
-            setFieldValue={mockSetFieldValue}
-            values={initialValues}
             isNewStep={true}
             readonly={false}
             stepViewType={StepViewType.Edit}
@@ -97,7 +92,7 @@ describe('NameTimeoutField tests', () => {
       </TestWrapper>
     )
 
-    const queryByNameAttribute = (name: string) => queryByAttribute('name', container, name)
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     const modals = document.getElementsByClassName('bp3-dialog')
     expect(modals.length).toBe(0)
 
@@ -109,14 +104,11 @@ describe('NameTimeoutField tests', () => {
     expect(timeoutInput).toBeInTheDocument()
     expect(timeoutInput.value).toBe('<+input>')
 
-    const cogTimeout = document.getElementById('configureOptions_step.timeout')
+    const cogTimeout = document.querySelector('[data-icon="cog"]')
     userEvent.click(cogTimeout!)
     await waitFor(() => expect(modals.length).toBe(1))
     const timeoutCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(timeoutCOGModal)
-    await waitFor(() =>
-      expect(mockSetFieldValue).toBeCalledWith('timeout', '<+input>.regex(<+input>.includes(/test/))')
-    )
   })
 
   test('identifier should not be editable when isNewStep is false', () => {
@@ -125,8 +117,6 @@ describe('NameTimeoutField tests', () => {
         <Formik initialValues={emptyInitialValues} onSubmit={handleSubmit}>
           <NameTimeoutField
             allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
-            setFieldValue={mockSetFieldValue}
-            values={emptyInitialValues}
             isNewStep={false}
             readonly={false}
             stepViewType={StepViewType.Edit}

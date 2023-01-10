@@ -215,7 +215,7 @@ export const terraformArtifactorySchema = (isConfig: boolean, isBackendConfig: b
 
   return Yup.object().shape({
     varFile: Yup.object().shape({
-      identifier: IdentifierSchema(),
+      identifier: IdentifierSchema(getString),
       spec: Yup.object().shape({
         store: Yup.object().shape({
           spec: Yup.object().shape({

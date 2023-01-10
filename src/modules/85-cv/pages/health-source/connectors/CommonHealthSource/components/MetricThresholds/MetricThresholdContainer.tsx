@@ -1,0 +1,39 @@
+import React from 'react'
+import { useFormikContext } from 'formik'
+import { getCanShowMetricThresholds } from '@cv/pages/health-source/common/MetricThresholds/MetricThresholds.utils'
+import type {
+  CommonHealthSourceConfigurations,
+  GroupedCreatedMetrics,
+  HealthSourceConfig
+} from '../../CommonHealthSource.types'
+import MetricThresholdProvider from './MetricThresholdProvider'
+
+export interface MetricThresholdContainerProps {
+  healthSourceConfig: HealthSourceConfig
+  groupedCreatedMetrics: GroupedCreatedMetrics
+  isMetricThresholdEnabled: boolean
+}
+
+export default function MetricThresholdContainer(props: MetricThresholdContainerProps): JSX.Element {
+  const { healthSourceConfig, groupedCreatedMetrics, isMetricThresholdEnabled } = props
+  const { values: formValues } = useFormikContext<CommonHealthSourceConfigurations>()
+  const isShowMetricThreshold = getCanShowMetricThresholds({
+    isMetricThresholdConfigEnabled: Boolean(healthSourceConfig?.metricThresholds?.enabled),
+    isMetricPacksEnabled: Boolean(healthSourceConfig?.metricPacks?.enabled),
+    groupedCreatedMetrics,
+    isMetricThresholdEnabled
+  })
+
+  if (isShowMetricThreshold) {
+    return (
+      <MetricThresholdProvider
+        formikValues={formValues}
+        groupedCreatedMetrics={groupedCreatedMetrics}
+        metricPacks={[]}
+        isOnlyCustomMetricHealthSource={!healthSourceConfig?.metricPacks?.enabled}
+      />
+    )
+  } else {
+    return <></>
+  }
+}

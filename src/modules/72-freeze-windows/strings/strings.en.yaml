@@ -25,17 +25,17 @@ freezeStudio:
   activeFreeze: Freeze is ACTIVE
 
 globalFreeze:
-  disabled: Freeze disabled on all deployments for this <b>{{scope}}</b>
-  disableFreezeTitle: Disable Freeze on all deployments for this {{scope}}
+  disabled: Global deployment freeze disabled on this <b>{{scope}}</b>
+  disableFreezeTitle: Disable global deployment freeze on this {{scope}}
   disableFreezeText: For any deployments that were frozen, you will have to manually go back and resume them.
-  disableFreezeSuccess: Freeze disabled on all deployments for this {{scope}}
-  disableFreezeFailure: Failed to disable freeze
-  enabled: Freeze enabled on all deployments for this <b>{{scope}}</b>
+  disableFreezeSuccess: Global deployment freeze disabled on this {{scope}}
+  disableFreezeFailure: Failed to disable global deployment freeze
+  enabled: Global deployment freeze enabled on this <b>{{scope}}</b>
   enabledWindow: from <b>{{startTime}}</b> {{supportText}} <b>{{endTimeOrDuration}}</b> {{timeZone}}
-  enableFreezeTitle: Enable Freeze on all deployments for this {{scope}}
-  enableFreezeTitleInfo: When a freeze is applied, all deployments for this {{scope}} cannot be started manually, nor through Triggers. Any ongoing deployments in the freeze will be aborted.
-  enableFreezeSuccess: Freeze enabled on all deployments for this {{scope}}
-  enableFreezeFailure: Failed to enable freeze
+  enableFreezeTitle: Enable global deployment freeze on this {{scope}}
+  enableFreezeTitleInfo: When a global deployment freeze is applied, all deployments on this {{scope}} cannot be started manually, nor through Triggers. Any ongoing deployments in the freeze will be aborted.
+  enableFreezeSuccess: Global deployment freeze enabled on this {{scope}}
+  enableFreezeFailure: Failed to enable global deployment freeze
 
 freezeNotifications:
   windowEnabled: Freeze window is enabled

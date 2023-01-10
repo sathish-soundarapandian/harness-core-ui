@@ -13,6 +13,7 @@ import userEvent from '@testing-library/user-event'
 import * as cvServices from 'services/cv'
 import * as useDrawerHook from '@cv/hooks/useDrawerHook/useDrawerHook'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
+import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { CustomMetricFormContainerProps } from '../CustomMetricForm.types'
 import CustomMetricFormContainer from '../CustomMetricFormContainer'
@@ -22,16 +23,17 @@ import {
   mockedCustomMetricsFormForLogsTable,
   mockedCustomMetricsFormForLogsTable2,
   mockedCustomMetricsFormForLogsTableConnectorTemplates,
+  riskCategoryMock,
   sampleDataResponse,
   sampleRawRecordsMock
 } from './CustomMetricFormContainer.mock'
 import { validateAddMetricForm } from '../CustomMetricFormContainer.utils'
 import CommonHealthSourceProvider from '../components/CommonHealthSourceContext/CommonHealthSourceContext'
+import type { GroupedCreatedMetrics } from '../../../CommonHealthSource.types'
 
-const updateParentFormik = jest.fn()
 function WrapperComponent(props: CustomMetricFormContainerProps): JSX.Element {
   return (
-    <CommonHealthSourceProvider updateParentFormik={updateParentFormik}>
+    <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
       <Formik initialValues={props} onSubmit={jest.fn()}>
         <FormikForm>
           <TestWrapper
@@ -50,6 +52,8 @@ const getString = (key: any): any => {
   return key
 }
 
+const refetchMock = jest.fn()
+
 describe('Unit tests for CustomMetricFormContainer', () => {
   const props = {
     ...mockedCustomMetricFormContainerData,
@@ -58,6 +62,12 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     setGroupedCreatedMetrics: jest.fn(),
     setNonCustomFeilds: jest.fn()
   } as any
+
+  beforeAll(() => {
+    jest
+      .spyOn(cvServices, 'useGetRiskCategoryForCustomHealthMetric')
+      .mockImplementation(() => ({ loading: false, error: null, data: riskCategoryMock, refetch: refetchMock } as any))
+  })
 
   test('Ensure CustomMetricFormContainer component loads with the button to add metric', async () => {
     const { getByText } = render(<WrapperComponent {...props} />)
@@ -79,7 +89,8 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       groupName: 'group-1'
     }
     const createdMetrics: string[] = []
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
+    const groupedCreatedMetrics: GroupedCreatedMetrics = {}
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics)
     expect(actualErrors).toEqual({ metricName: 'fieldRequired' })
   })
 
@@ -90,7 +101,8 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       groupName: ''
     }
     const createdMetrics: string[] = []
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
+    const groupedCreatedMetrics: GroupedCreatedMetrics = {}
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics)
     expect(actualErrors).toEqual({ groupName: 'fieldRequired' })
   })
 
@@ -101,7 +113,8 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       groupName: 'group-1'
     }
     const createdMetrics: string[] = []
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
+    const groupedCreatedMetrics: GroupedCreatedMetrics = {}
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics)
     expect(actualErrors).toEqual({ identifier: 'fieldRequired' })
   })
 
@@ -109,10 +122,21 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     const formData = {
       metricName: 'metric1',
       identifier: 'metric1',
-      groupName: 'group-1'
+      groupName: 'group1'
     }
     const createdMetrics: string[] = ['metric1']
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
+    const groupedCreatedMetrics: GroupedCreatedMetrics = {
+      group1: [
+        {
+          groupName: {
+            label: 'group1',
+            value: 'group1'
+          },
+          metricName: 'metric1'
+        }
+      ]
+    }
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics)
     expect(actualErrors).toEqual({
       metricName: 'cv.monitoringSources.prometheus.validation.uniqueName'
     })
@@ -126,9 +150,10 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       setGroupedCreatedMetrics: jest.fn(),
       setNonCustomFeilds: jest.fn()
     } as any
-    test('should test whether the logs table section is hidden if the query is not entered', async () => {
+    test('should test whether the inputs are disabled if the query is not entered and should take correct default value', async () => {
       const { container } = render(<WrapperComponent {...mockProps} />)
-      expect(container.querySelector('.jsonSelectorButton')).toBeNull()
+      expect(container.querySelector('.jsonSelectorButton')).toBeDisabled()
+      expect(container.querySelector('.jsonSelectorButton')).toHaveTextContent('_sourcehost')
     })
 
     test('should test whether the inputs are enabled if the query present', async () => {
@@ -475,7 +500,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
               sourceData: { sourceType: 'SumoLogic', product: { value: 'SUMOLOGIC_LOG' } }
             }}
           >
-            <CommonHealthSourceProvider updateParentFormik={updateParentFormik}>
+            <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
               <Formik initialValues={newProps} onSubmit={jest.fn()}>
                 <FormikForm>
                   <TestWrapper
@@ -490,12 +515,12 @@ describe('Unit tests for CustomMetricFormContainer', () => {
           </SetupSourceTabsContext.Provider>
         )
       }
-      test('should test template inputs not are visible if it is tempaltes and query is not runtime or expression', () => {
+      test('should test multitype template inputs are visible if it is a tempalte and query is fixed', () => {
         const { container } = render(<TemplatesWrapperComponent {...mockProps} query="select *" />)
 
         const templateFixedInput = container.querySelector('.MultiTypeInput--FIXED')
 
-        expect(templateFixedInput).toBeNull()
+        expect(templateFixedInput).toBeInTheDocument()
       })
 
       test('should test template inputs are Runtime and fetch logs button is hidden if connector is runtime', () => {
@@ -516,7 +541,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
               sourceData: { sourceType: 'SumoLogic', product: { value: 'SUMOLOGIC_LOG' }, connectorRef: '<+input>' }
             }}
           >
-            <CommonHealthSourceProvider updateParentFormik={updateParentFormik}>
+            <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
               <Formik initialValues={mockPropsConnectorTemplateProps} onSubmit={jest.fn()}>
                 <FormikForm>
                   <TestWrapper

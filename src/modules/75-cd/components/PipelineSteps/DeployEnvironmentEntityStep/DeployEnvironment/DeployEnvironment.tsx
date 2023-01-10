@@ -26,7 +26,6 @@ import {
   SelectOption,
   useToggleOpen
 } from '@harness/uicore'
-
 import type { EnvironmentYaml, NGEnvironmentInfoConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
@@ -50,7 +49,6 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
-
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -66,7 +64,7 @@ import {
   InlineEntityFiltersProps,
   InlineEntityFiltersRadioType
 } from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
-
+import { DeployProvisioner } from '../DeployProvisioner/DeployProvisioner'
 import css from './DeployEnvironment.module.scss'
 
 interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomStepProps> {
@@ -122,7 +120,7 @@ export default function DeployEnvironment({
   const uniquePathForEnvironments = React.useRef(`_pseudo_field_${uuid()}`)
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
 
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup, CD_NG_DYNAMIC_PROVISIONING_ENV_V2 } = useFeatureFlags()
 
   // State
   const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(getAllFixedEnvironments(initialValues))
@@ -134,6 +132,9 @@ export default function DeployEnvironment({
   const isRuntime = isMultiTypeRuntime(environmentsType)
   const isExpression = isMultiTypeExpression(environmentsType)
   const filterPrefix = 'environmentFilters.runtime'
+
+  const shouldRenderEnvironmentEntitiesList =
+    (isFixed && !isEmpty(selectedEnvironments)) || (isExpression && values.environment)
 
   // API
   const {
@@ -509,46 +510,45 @@ export default function DeployEnvironment({
             name="parallel"
           />
         ) : null}
-
-        {((isFixed && !isEmpty(selectedEnvironments)) || (isExpression && values.environment)) && (
+        {shouldRenderEnvironmentEntitiesList && (
+          <EnvironmentEntitiesList
+            loading={loading || updatingEnvironmentsData}
+            environmentsData={environmentsData}
+            readonly={readonly}
+            allowableTypes={allowableTypes}
+            onEnvironmentEntityUpdate={onEnvironmentEntityUpdate}
+            onRemoveEnvironmentFromList={onRemoveEnvironmentFromList}
+            initialValues={initialValues}
+            stageIdentifier={stageIdentifier}
+            deploymentType={deploymentType}
+            customDeploymentRef={customDeploymentRef}
+            gitOpsEnabled={gitOpsEnabled}
+          />
+        )}
+        {!(isFixed && isEmpty(selectedEnvironments)) && !isMultiEnvironment && CD_NG_DYNAMIC_PROVISIONING_ENV_V2 ? (
+          <DeployProvisioner initialValues={initialValues} allowableTypes={allowableTypes} />
+        ) : null}
+        {shouldRenderEnvironmentEntitiesList && !loading && !isMultiEnvironment && (
           <>
-            <EnvironmentEntitiesList
-              loading={loading || updatingEnvironmentsData}
-              environmentsData={environmentsData}
-              readonly={readonly}
-              allowableTypes={allowableTypes}
-              onEnvironmentEntityUpdate={onEnvironmentEntityUpdate}
-              onRemoveEnvironmentFromList={onRemoveEnvironmentFromList}
-              initialValues={initialValues}
-              stageIdentifier={stageIdentifier}
-              deploymentType={deploymentType}
-              customDeploymentRef={customDeploymentRef}
-              gitOpsEnabled={gitOpsEnabled}
-            />
-
-            {!loading && !isMultiEnvironment && (
-              <>
-                <Divider />
-                {gitOpsEnabled ? (
-                  <DeployCluster
-                    initialValues={initialValues}
-                    readonly={readonly}
-                    allowableTypes={getAllowableTypesWithoutExpression(allowableTypes)}
-                    isMultiCluster
-                    environmentIdentifier={selectedEnvironments[0]}
-                  />
-                ) : (
-                  <DeployInfrastructure
-                    initialValues={initialValues}
-                    readonly={readonly}
-                    allowableTypes={allowableTypes}
-                    environmentIdentifier={selectedEnvironments[0]}
-                    deploymentType={deploymentType}
-                    customDeploymentRef={customDeploymentRef}
-                    lazyInfrastructure={isExpression}
-                  />
-                )}
-              </>
+            <Divider />
+            {gitOpsEnabled ? (
+              <DeployCluster
+                initialValues={initialValues}
+                readonly={readonly}
+                allowableTypes={getAllowableTypesWithoutExpression(allowableTypes)}
+                isMultiCluster
+                environmentIdentifier={selectedEnvironments[0]}
+              />
+            ) : (
+              <DeployInfrastructure
+                initialValues={initialValues}
+                readonly={readonly}
+                allowableTypes={allowableTypes}
+                environmentIdentifier={selectedEnvironments[0]}
+                deploymentType={deploymentType}
+                customDeploymentRef={customDeploymentRef}
+                lazyInfrastructure={isExpression}
+              />
             )}
           </>
         )}
@@ -602,7 +602,6 @@ export default function DeployEnvironment({
             }}
           />
         )}
-
         <ModalDialog
           isOpen={isAddNewModalOpen}
           onClose={closeAddNewModal}

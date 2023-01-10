@@ -13,9 +13,9 @@ import { useStrings } from 'framework/strings'
 import { useExecutionListFilterContext } from '@pipeline/pages/execution-list/ExecutionListFilterContext/ExecutionListFilterContext'
 import type { ExecutionListProps } from '@pipeline/pages/execution-list/ExecutionList'
 import emptyExecutionList from '@pipeline/pages/execution-list/images/cd-execution-illustration.svg'
-import emptyInstanceDetail from './EmptyStateSvgs/emptyInstanceDetail.svg'
-import emptyServiceDetail from './EmptyStateSvgs/emptyServiceDetail.svg'
-import noDataFound from './EmptyStateSvgs/noDataFound.svg'
+import emptyInstanceDetail from '@pipeline/icons/emptyInstanceDetail.svg'
+import emptyServiceDetail from '@pipeline/icons/emptyServiceDetail.svg'
+import noDataFound from '@pipeline/icons/noDataFound.svg'
 
 import css from './EnvironmentDetailSummary.module.scss'
 

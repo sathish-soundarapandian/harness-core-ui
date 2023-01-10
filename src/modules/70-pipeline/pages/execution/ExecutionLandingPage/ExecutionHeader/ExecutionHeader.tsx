@@ -27,6 +27,7 @@ import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { TagsPopover } from '@common/components'
 
+import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RetryHistory from '@pipeline/components/RetryPipeline/RetryHistory/RetryHistory'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -34,7 +35,11 @@ import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetai
 import { useQueryParams } from '@common/hooks'
 import css from './ExecutionHeader.module.scss'
 
-export function ExecutionHeader(): React.ReactElement {
+export interface ExecutionHeaderProps {
+  onRunPipelineInDebugMode: () => void
+}
+
+export function ExecutionHeader({ onRunPipelineInDebugMode }: ExecutionHeaderProps): React.ReactElement {
   const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
   const {
@@ -63,6 +68,7 @@ export function ExecutionHeader(): React.ReactElement {
     },
     [orgIdentifier, projectIdentifier, accountId, pipelineIdentifier]
   )
+  const hasCI = hasCIStage(pipelineExecutionSummary)
 
   useDocumentTitle([
     `${pipelineExecutionSummary?.status ? pipelineExecutionSummary?.status + ' | ' : ''} ${
@@ -185,6 +191,7 @@ export function ExecutionHeader(): React.ReactElement {
             canExecute={canExecute}
             canRetry={pipelineExecutionSummary.canRetry}
             modules={pipelineExecutionSummary.modules}
+            onReRunInDebugMode={hasCI ? () => onRunPipelineInDebugMode() : undefined}
           />
         </div>
       </div>

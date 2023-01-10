@@ -16,11 +16,14 @@ import type {
   CommonCustomMetricFormikInterface,
   FieldMapping
 } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+import { FIELD_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import JsonSelectorWithDrawer from './components/JsonSelectorWithDrawer'
 import LogsTableComponent from './components/LogsTableComponent/LogsTableComponent'
 import CustomMetricsSectionHeader from '../CustomMetricsSectionHeader'
 import { useCommonHealthSource } from '../CommonHealthSourceContext/useCommonHealthSource'
 import { getCanShowSampleLogButton } from '../CommonCustomMetricFormContainer/CommonCustomMetricFormContainerLayout/CommonCustomMetricFormContainer.utils'
+import type { LogFieldsMultiTypeState } from '../../CustomMetricForm.types'
+import { getMultiTypeRecordInitialValue } from './components/JsonSelectorWithDrawer.utils'
 
 interface CommonHealthSourceLogsTable {
   connectorIdentifier: string
@@ -67,14 +70,31 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
 
   const { getString } = useStrings()
 
+  const filteredFieldsMapping = fieldMappings?.filter(field => field.type === FIELD_ENUM.JSON_SELECTOR)
+
+  const [multiTypeRecord, setMultiTypeRecord] = useState<LogFieldsMultiTypeState | null>(
+    (): LogFieldsMultiTypeState | null => {
+      return getMultiTypeRecordInitialValue({
+        filteredFieldsMapping,
+        isTemplate,
+        formValues: values
+      })
+    }
+  )
+
   useEffect(() => {
-    if (!isTemplate) {
-      const defaultValuesToUpdateFormik = getFieldsDefaultValuesFromConfig(values, fieldMappings)
+    if (!isTemplate || (isTemplate && (!isQueryRuntimeOrExpression || !isConnectorRuntimeOrExpression))) {
+      const defaultValuesToUpdateFormik = getFieldsDefaultValuesFromConfig({
+        values,
+        multiTypeRecord,
+        fieldMappings,
+        isTemplate
+      })
       if (!isEmpty(defaultValuesToUpdateFormik)) {
         setValues({ ...values, ...defaultValuesToUpdateFormik })
       }
     }
-  }, [values])
+  }, [values, isQueryRuntimeOrExpression, isConnectorRuntimeOrExpression, multiTypeRecord])
 
   const handleFetchSampleLogs = () => {
     const fetchSampleLogsPayload = getRequestBodyForSampleLogs(providerType, {
@@ -102,12 +122,28 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
           fieldMappings={fieldMappings}
           jsonData={sampleRecords}
           disableFields={isLogFieldsDisabled}
+          multiTypeRecord={multiTypeRecord}
+          setMultiTypeRecord={setMultiTypeRecord}
         />
       </Container>
 
-      {getCanShowSampleLogButton({ isQueryRuntimeOrExpression, isConnectorRuntimeOrExpression, isTemplate }) && (
+      {getCanShowSampleLogButton({
+        isQueryRuntimeOrExpression,
+        isConnectorRuntimeOrExpression,
+        isTemplate,
+        multiTypeRecord
+      }) && (
         <Layout.Horizontal spacing="medium" margin={{ bottom: 'medium', top: 'medium' }}>
-          <Button onClick={handleFetchSampleLogs} disabled={isLogFieldsDisabled} variation={ButtonVariation.SECONDARY}>
+          <Button
+            onClick={handleFetchSampleLogs}
+            tooltip={
+              isLogFieldsDisabled
+                ? getString('cv.monitoringSources.commonHealthSource.logsTable.fetchLogDataButtonDisableMessage')
+                : ''
+            }
+            disabled={isLogFieldsDisabled}
+            variation={ButtonVariation.SECONDARY}
+          >
             {getString('cv.monitoringSources.commonHealthSource.logsTable.sampleLogButtonText')}
           </Button>
 

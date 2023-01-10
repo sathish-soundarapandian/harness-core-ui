@@ -109,7 +109,7 @@ describe('TanzuCommandStep tests', () => {
       }
     })
 
-    const { container, getByText } = render(
+    const { container, getByText, getByTestId } = render(
       <TestStepWidget
         initialValues={initialValuesFS}
         type={StepType.TanzuCommand}
@@ -121,7 +121,7 @@ describe('TanzuCommandStep tests', () => {
       />
     )
     await act(() => ref.current?.submitForm()!)
-    expect(container).toMatchSnapshot()
+    // expect(container).toMatchSnapshot()
     const timeoutError = getByText('validation.timeout10SecMinimum')
     expect(timeoutError).toBeInTheDocument()
 
@@ -130,6 +130,15 @@ describe('TanzuCommandStep tests', () => {
 
     const fileSelectError = getByText('common.validation.fieldIsRequired')
     expect(fileSelectError).toBeInTheDocument()
+
+    const scriptTypeDropdown = getByTestId('templateOptions')
+    expect((getByText('resourcePage.fileStore') as HTMLOptionElement).selected).toBeTruthy()
+    fireEvent.click(scriptTypeDropdown!)
+
+    act(() => {
+      userEvent.selectOptions(scriptTypeDropdown, 'inline')
+    })
+    expect(container).toMatchSnapshot()
   })
   test('should show error on submit with invalid data with inline script', async () => {
     const ref = React.createRef<StepFormikRef<unknown>>()
@@ -274,6 +283,52 @@ describe('TanzuCommandStep tests', () => {
     expect(onUpdate).not.toHaveBeenCalled()
   })
 
+  test('InputSet view inline script validation', async () => {
+    const { getByText } = render(
+      <TestStepWidget
+        initialValues={{
+          identifier: 'Tanzu_Command_Step',
+          name: 'Tanzu Command Step',
+          timeout: '',
+          type: StepType.TanzuCommand,
+          spec: {
+            script: {
+              store: {
+                type: InstanceScriptTypes.Inline,
+                spec: {
+                  content: ''
+                }
+              }
+            }
+          }
+        }}
+        template={{
+          identifier: 'Tanzu_Command_Step',
+          name: 'Tanzu Command Step',
+          timeout: RUNTIME_INPUT_VALUE,
+          type: StepType.TanzuCommand,
+          spec: {
+            script: {
+              store: {
+                type: InstanceScriptTypes.Inline,
+                spec: {
+                  content: RUNTIME_INPUT_VALUE
+                }
+              }
+            }
+          }
+        }}
+        type={StepType.TanzuCommand}
+        stepViewType={StepViewType.InputSet}
+        onUpdate={onUpdate}
+        inputSetData={{ path: '', readonly: true }}
+      />
+    )
+    const submitBtn = getByText('Submit')
+    userEvent.click(submitBtn)
+    await waitFor(() => expect(getByText('fieldRequired')).toBeInTheDocument())
+  })
+
   test('InputSet view renders fine', async () => {
     const { container, getByText } = render(
       <TestStepWidget
@@ -344,7 +399,7 @@ describe('TanzuCommandStep tests', () => {
   })
 
   test('Variables view renders fine', async () => {
-    const { getByText } = render(
+    const { container } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
         type={StepType.TanzuCommand}
@@ -356,16 +411,22 @@ describe('TanzuCommandStep tests', () => {
           stageIdentifier: 'testStage',
           variablesData: existingInitialValues,
           metadataMap: {
-            TanzuCommand: {
+            'Tanzu Command Step': {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.TanzuCommandStep.name',
-                localName: 'step.TanzuCommandStep.name'
+                fqn: 'pipeline.stages.testStage.spec.execution.steps.TanzuCommand_1.name',
+                localName: 'execution.steps.TanzuCommand_1.name',
+                variableName: 'name',
+                aliasFQN: '',
+                visible: true
               }
             },
             '10m': {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.TanzuCommandStep.timeout',
-                localName: 'step.TanzuCommand.timeout'
+                fqn: 'pipeline.stages.testStage.spec.execution.steps.TanzuCommand_1.timeout',
+                localName: 'execution.steps.TanzuCommand_1.timeout',
+                variableName: 'timeout',
+                aliasFQN: '',
+                visible: true
               }
             }
           }
@@ -373,9 +434,6 @@ describe('TanzuCommandStep tests', () => {
       />
     )
 
-    expect(getByText('name')).toBeVisible()
-    expect(getByText('TanzuCommand')).toBeVisible()
-    expect(getByText('timeout')).toBeVisible()
-    expect(getByText('10m')).toBeVisible()
+    expect(container).toMatchSnapshot()
   })
 })

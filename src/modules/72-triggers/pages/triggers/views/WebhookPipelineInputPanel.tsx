@@ -599,6 +599,7 @@ function WebhookPipelineInputPanelForm({
                 viewTypeMetadata={{ isTrigger: true }}
                 readonly={gitAwareForTriggerEnabled}
                 gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
+                disableRuntimeInputConfigureOptions
               />
             ) : null}
           </div>

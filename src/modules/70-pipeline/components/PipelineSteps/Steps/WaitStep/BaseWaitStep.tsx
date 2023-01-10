@@ -9,14 +9,13 @@ import React from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
 
-import { AllowedTypes, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { WaitStepData } from './WaitStepTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -27,12 +26,7 @@ export default function BaseWaitStep(props: {
   stepViewType?: StepViewType
   allowableTypes: AllowedTypes
 }): React.ReactElement {
-  const {
-    isNewStep,
-    readonly,
-    stepViewType,
-    formik: { values: formValues, setFieldValue }
-  } = props
+  const { isNewStep, readonly, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
@@ -54,26 +48,11 @@ export default function BaseWaitStep(props: {
           disabled={readonly}
           className={stepCss.duration}
           multiTypeDurationProps={{
-            enableConfigureOptions: false,
+            enableConfigureOptions: true,
             expressions,
             disabled: readonly
           }}
         />
-        {getMultiTypeFromValue(formValues?.spec?.duration) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={formValues?.spec?.duration as string}
-            type="String"
-            variableName="spec.duration"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={value => {
-              setFieldValue('spec.duration', value)
-            }}
-            isReadonly={readonly}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-          />
-        )}
       </div>
     </>
   )

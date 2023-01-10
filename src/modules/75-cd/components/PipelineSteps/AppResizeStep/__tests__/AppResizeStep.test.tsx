@@ -6,14 +6,22 @@
  */
 
 import React from 'react'
-import { act, render, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import userEvent from '@testing-library/user-event'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import type { TasAppResizeStepInfo } from 'services/cd-ng'
 import { AppResizeStep } from '../AppResizeStep'
 import { InstanceTypes } from '../InstanceDropdownField'
+import {
+  countRequiredValues,
+  negativeCountVal,
+  negativePercentageValues,
+  percentageMoreThan100Values,
+  percentageValues
+} from './mocks'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 factory.registerStep(new AppResizeStep())
@@ -477,5 +485,151 @@ describe('Test AppResizeStep', () => {
     const processForm = new AppResizeStep().processFormData(data.template)
     expect(processForm).toMatchSnapshot()
     expect(response).toMatchSnapshot()
+  })
+
+  test('Instance dropdown to error validation', async () => {
+    const onUpdate = jest.fn()
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    // Required Field Validation
+    const { getByText } = render(
+      <TestStepWidget
+        initialValues={countRequiredValues}
+        type={StepType.AppResize}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdate}
+        ref={ref}
+      />
+    )
+
+    await act(() => ref.current?.submitForm()!)
+    const instancePercentageError = getByText('fieldRequired')
+    expect(instancePercentageError).toBeInTheDocument()
+
+    // Positive Value Validation
+    render(
+      <TestStepWidget
+        initialValues={negativeCountVal}
+        type={StepType.AppResize}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdate}
+        ref={ref}
+      />
+    )
+
+    await act(() => ref.current?.submitForm()!)
+    const minimumCountInstanceError = getByText('common.instanceValidation.minimumCountInstance')
+    expect(minimumCountInstanceError).toBeInTheDocument()
+
+    // Required Percentage Validation
+    render(
+      <TestStepWidget
+        initialValues={percentageValues}
+        type={StepType.AppResize}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdate}
+        ref={ref}
+      />
+    )
+
+    await act(() => ref.current?.submitForm()!)
+    const instancePercentageError1 = screen.getAllByText('fieldRequired')
+    expect(instancePercentageError1).toHaveLength(2)
+
+    // Required Percentage Validation
+    render(
+      <TestStepWidget
+        initialValues={negativePercentageValues}
+        type={StepType.AppResize}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdate}
+        ref={ref}
+      />
+    )
+
+    await act(() => ref.current?.submitForm()!)
+
+    const instanceNegativePercentageError = getByText('cd.steps.tas.minimumCountPercentage')
+    expect(instanceNegativePercentageError).toBeInTheDocument()
+
+    // Required Percentage Validation
+    render(
+      <TestStepWidget
+        initialValues={percentageMoreThan100Values}
+        type={StepType.AppResize}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdate}
+        ref={ref}
+      />
+    )
+
+    await act(() => ref.current?.submitForm()!)
+    const instancePercentageMoreThan100Error = getByText('common.instanceValidation.maximumCountPercentage')
+    expect(instancePercentageMoreThan100Error).toBeInTheDocument()
+  })
+
+  test('Toggle InstanceDropdown Fields', async () => {
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const onUpdate = jest.fn()
+    render(
+      <TestStepWidget
+        initialValues={{
+          identifier: 'App_Resize_Step',
+          name: 'App Resize Step',
+          timeout: '10m',
+          spec: {
+            newAppInstances: {
+              spec: { value: '' },
+              type: InstanceTypes.Percentage
+            },
+            oldAppInstances: {
+              spec: { value: 10 },
+              type: InstanceTypes.Count
+            }
+          },
+          type: 'AppResize'
+        }}
+        type={StepType.AppResize}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdate}
+        ref={ref}
+      />
+    )
+    // Clear input and update value
+    const instancePercentageInput = screen.getByPlaceholderText('instanceFieldOptions.percentagePlaceHolder')
+    userEvent.clear(instancePercentageInput)
+    userEvent.type(instancePercentageInput, '20')
+
+    // Toggle percentage to count - value default to 1
+    const menuItemPercetage = screen.getByText('instanceFieldOptions.percentageText')
+    userEvent.click(menuItemPercetage!)
+    const instanceCountOption = screen.getAllByText('instanceFieldOptions.instanceText')?.[1]
+    userEvent.click(instanceCountOption!)
+
+    // Toggle count to percentage - value default to 100
+    const menuItemCount = screen.getAllByText('instanceFieldOptions.instanceText')?.[1]!
+    userEvent.click(menuItemCount)
+    const instancePercentageOption = screen.getAllByText('instanceFieldOptions.percentageText')?.[1]
+    userEvent.click(instancePercentageOption!)
+
+    await act(() => ref.current?.submitForm()!)
+
+    await waitFor(() =>
+      expect(onUpdate).toHaveBeenCalledWith({
+        identifier: 'App_Resize_Step',
+        name: 'App Resize Step',
+        spec: {
+          newAppInstances: {
+            spec: { value: 1 },
+            type: InstanceTypes.Count
+          },
+          oldAppInstances: {
+            spec: { value: 100 },
+            type: InstanceTypes.Percentage
+          }
+        },
+        timeout: '10m',
+        type: 'AppResize'
+      })
+    )
   })
 })

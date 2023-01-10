@@ -246,6 +246,7 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
           executionIdentifier={executionIdentifier}
           maybeContainerClass={existingProvide === 'provide' ? css.inputSetFormRunPipeline : ''}
           selectedStageData={selectedStageData}
+          disableRuntimeInputConfigureOptions
         />
       </>
     )

@@ -50,7 +50,6 @@ import {
 } from 'services/cd-ng'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
@@ -96,11 +95,11 @@ function FormComponent(
     repoIdentifier,
     branch
   }
-  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
-  const packageValue = getGenuineValue(formik.values.spec.package || initialValues?.spec?.package)
-  const projectValue = getGenuineValue(formik.values.spec.project || initialValues?.spec?.project)
-  const regionValue = getGenuineValue(formik.values.spec.region || initialValues?.spec?.region)
-  const repositoryNameValue = getGenuineValue(formik.values?.spec.repositoryName || initialValues?.spec?.repositoryName)
+  const connectorRefValue = getConnectorIdValue(prevStepData)
+  const packageValue = defaultTo(formik.values.spec.package, initialValues?.spec?.package)
+  const projectValue = defaultTo(formik.values.spec.project, initialValues?.spec?.project)
+  const regionValue = defaultTo(formik.values.spec.region, initialValues?.spec?.region)
+  const repositoryNameValue = defaultTo(formik.values?.spec.repositoryName, initialValues?.spec?.repositoryName)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const {
@@ -517,6 +516,7 @@ export function GoogleArtifactRegistry(
   const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')

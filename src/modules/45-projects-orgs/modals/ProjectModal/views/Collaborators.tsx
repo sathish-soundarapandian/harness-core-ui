@@ -188,7 +188,7 @@ const Collaborators: React.FC<CollaboratorModalData> = props => {
       validationSchema={Yup.object().shape({
         collaborators: Yup.array().of(
           Yup.object().shape({
-            value: EmailSchema()
+            value: EmailSchema(getString)
           })
         )
       })}

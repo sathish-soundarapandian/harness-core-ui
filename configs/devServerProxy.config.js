@@ -153,5 +153,9 @@ module.exports = {
   '/tiui': {
     pathRewrite: { '^/tiui': '' },
     target: process.env.TI_UI_URL || 'https://localhost:9200'
+  },
+  '/iacm': {
+    pathRewrite: { '^/iacm': '' },
+    target: process.env.IAC_UI_URL || 'https://localhost:8185'
   }
 }

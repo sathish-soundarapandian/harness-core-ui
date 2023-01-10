@@ -424,13 +424,13 @@ function ExecutionGraphRef<T extends StageElementConfig>(
               event?.destination?.nodeType === NodeType.StepGroupNode &&
               event?.destination?.data?.length === 0
             ) {
-              if (current.node.stepGroup) current.node.stepGroup.steps.push(dropNode)
+              if (current.node.stepGroup) current.node.stepGroup.steps?.push(dropNode)
               else if (current.node.parallel) {
                 const index = current.node.parallel.findIndex(
                   obj => obj?.stepGroup?.identifier === event?.destination?.identifier
                 )
                 if (index > -1) {
-                  current.node.parallel?.[index].stepGroup?.steps.push(dropNode)
+                  current.node.parallel?.[index].stepGroup?.steps?.push(dropNode)
                 }
               }
             } else if (current.parent && (current.node.step || current.node.stepGroup)) {
