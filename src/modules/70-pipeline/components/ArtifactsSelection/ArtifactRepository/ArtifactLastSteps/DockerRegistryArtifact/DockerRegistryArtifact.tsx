@@ -7,18 +7,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import cx from 'classnames'
-import {
-  Formik,
-  Layout,
-  Button,
-  StepProps,
-  Text,
-  ButtonVariation,
-  FormikForm,
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType
-} from '@harness/uicore'
+import { Formik, Layout, Button, StepProps, Text, ButtonVariation, FormikForm } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
@@ -26,7 +15,6 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { ConnectorConfigDTO, DockerBuildDetailsDTO, useGetBuildDetailsForDocker } from 'services/cd-ng'
 import {
@@ -44,6 +32,8 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
+import ArtifactDigestField from '../ArtifactImagePathTagView/ArtifactDigestField'
+
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -135,6 +125,7 @@ export function DockerRegistryArtifact({
     },
     [lastImagePath, prevStepData]
   )
+
   const fetchTags = useCallback(
     (imagePath = ''): void => {
       if (canFetchTags(imagePath)) {
@@ -183,7 +174,7 @@ export function DockerRegistryArtifact({
             ...formData,
             tag: defaultTo(formData?.tag?.value, formData?.tag),
             connectorId: getConnectorIdValue(prevStepData),
-            digest: formData?.digest
+            digest: defaultTo(formData?.digest?.value, formData?.digest)
           })
         }}
       >
@@ -209,32 +200,21 @@ export function DockerRegistryArtifact({
               />
 
               <div className={css.imagePathContainer}>
-
-                <Artifact
-                {/* <FormInput.MultiTextInput
-                  label={getString('pipeline.digest')}
-                  name="digest"
-                  placeholder={getString('pipeline.artifactsSelection.digestPlaceholder')}
-                  multiTextInputProps={{ expressions, allowableTypes }}
+                <ArtifactDigestField
+                  selectedArtifact={selectedArtifact as ArtifactType}
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  isReadonly={isReadonly}
+                  lastImagePath={lastImagePath}
+                  connecterRefValue={getConnectorRefQueryData()}
+                  connectorIdValue={getConnectorIdValue(prevStepData)}
+                  buildDetailsLoading={dockerBuildDetailsLoading}
+                  accountIdentifier={accountId}
+                  orgIdentifier={orgIdentifier}
+                  projectIdentifier={projectIdentifier}
+                  repoIdentifier={repoIdentifier}
                 />
-
-                {getMultiTypeFromValue(formik?.values?.digest)}
-                {getMultiTypeFromValue(formik?.values?.digest) === MultiTypeInputType.RUNTIME && (
-                  <div className={css.configureOptions}>
-                    <ConfigureOptions
-                      value={formik?.values?.digest as string}
-                      type="String"
-                      variableName="digest"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      showAdvanced={true}
-                      onChange={value => {
-                        formik.setFieldValue('digest', value)
-                      }}
-                      isReadonly={isReadonly}
-                    />
-                  </div>
-                )} */}
               </div>
             </div>
             {!hideHeaderAndNavBtns && (

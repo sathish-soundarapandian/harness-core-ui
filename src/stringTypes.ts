@@ -3301,6 +3301,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.groupIdPlaceholder': string
   'pipeline.artifactsSelection.groupPlaceholder': string
   'pipeline.artifactsSelection.loadingArtifactPaths': string
+  'pipeline.artifactsSelection.loadingDigest': string
   'pipeline.artifactsSelection.loadingRepository': string
   'pipeline.artifactsSelection.loadingTags': string
   'pipeline.artifactsSelection.orgNamePlaceholder': string
@@ -10580,6 +10581,10 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   'pipelineSteps.deploy.create.multipleServices': string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  'pipelineSteps.deploy.errors.nodigest': string
   /**
    * @deprecated migrate this string to module level file
    */

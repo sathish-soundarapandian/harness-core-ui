@@ -902,6 +902,7 @@ pipelineSteps:
   deploy:
     errors:
       notags: No tags found with given Image Path
+      nodigest: No Digests found with given tag
     create:
       multipleServices: '{{$.multipleService}}'
       deployStageName: Deploy

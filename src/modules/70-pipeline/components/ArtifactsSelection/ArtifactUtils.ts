@@ -278,6 +278,19 @@ const getTagValues = (
   if (specValues?.tag && getMultiTypeFromValue(specValues?.tag) === MultiTypeInputType.FIXED) {
     values.tag = { label: specValues?.tag, value: specValues?.tag }
   }
+
+  return values
+}
+
+export const getDigestValues = (specValues: any): ImagePathTypes => {
+  const values = { ...specValues }
+  if (specValues?.digest && getMultiTypeFromValue(specValues?.digest) === MultiTypeInputType.FIXED) {
+    if (getMultiTypeFromValue(specValues?.digest) === MultiTypeInputType.FIXED) {
+      values.digest = { label: specValues?.digest, value: specValues?.digest }
+    } else {
+      values.digest = specValues?.digest
+    }
+  }
   return values
 }
 
@@ -322,6 +335,9 @@ export const getArtifactFormData = (
       break
     default:
       values = getTagValues(specValues, isServerlessDeploymentTypeSelected)
+  }
+  if (specValues?.digest) {
+    values = getDigestValues(values)
   }
 
   if (isIdentifierAllowed && initialValues?.identifier) {

@@ -319,7 +319,6 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
 
           {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
             <div className={css.inputFieldLayout}>
-              sdfsdfds
               <DigestField
                 {...props}
                 fetchingDigest={fetchingDigest}

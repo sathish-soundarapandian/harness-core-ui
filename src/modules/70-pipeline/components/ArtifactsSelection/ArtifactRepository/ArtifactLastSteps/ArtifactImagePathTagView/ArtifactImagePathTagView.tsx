@@ -114,6 +114,8 @@ function ArtifactImagePathTagView({
     }
   }, [formik.values?.tag])
 
+  console.log(formik.values.tag, 'Tag')
+
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
       <Menu.Item
