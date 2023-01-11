@@ -90,7 +90,7 @@ const CustomRadioGroup: React.FC<CustomRadioGroupProps> = props => {
               value={item.value}
               color={Color.GREY_800}
               className={css.radio}
-              defaultChecked={item.checked}
+              checked={item.checked}
               disabled={item.disabled}
               onClick={() => onClick(item.value as DelegateOptions)}
             />
@@ -317,9 +317,9 @@ export const DelegateSelector: React.FC<DelegateSelectorProps> = props => {
         {getString('connectors.delegate.configure')}
       </Text>
       <CustomRadioGroup items={options} onClick={newMode => resetDelegateSelectorsAndUpdateMode(newMode)} />
-      {CustomComponent}
       {mode !== DelegateOptions.DelegateOptionsAny && (
         <>
+          {CustomComponent}
           <Layout.Horizontal flex={{ justifyContent: 'space-between' }} margin={{ bottom: 'medium' }}>
             <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
               {getString('connectors.delegate.testDelegateConnectivity')}

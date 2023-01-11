@@ -85,6 +85,9 @@ describe('DelegateSelectorStep', () => {
         <DelegateSelectorStep {...defaultProps} buildPayload={jest.fn()} />
       </TestWrapper>
     )
+    await act(async () => {
+      fireEvent.click(container.querySelector('input[value="DelegateOptions.DelegateOptionsSelective"]')!)
+    })
     expect(container.querySelector('[data-name="DelegateSelectors"] input')).toBeTruthy()
     expect(container).toMatchSnapshot()
     expect(container.querySelector('[value="DelegateOptions.DelegateOptionsAny"]')?.getAttribute('disabled')).toBe(null)
