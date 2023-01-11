@@ -6,13 +6,13 @@
       "description": "Pipeline defines the pipeline execution.",
       "type": "object",
       "properties": {
-        "name": {
-          "description": "Name of the pipeline.",
-          "type": "string"
-        },
         "version": {
           "description": "Version defines the schema version.",
           "type": ["string", "number"]
+        },
+        "name": {
+          "description": "Pipeline provides the pipeline name.",
+          "type": "string"
         },
         "stages": {
           "type": "array",
@@ -43,6 +43,7 @@
           "description": "Registry provides container registry configuration."
         }
       },
+      "required": ["version", "stages"],
       "examples": [
         {
           "version": 1,
@@ -211,6 +212,7 @@
           ]
         }
       ],
+      "required": ["name"],
       "x-file": "stage.yaml"
     },
     "Strategy": {
@@ -1530,6 +1532,12 @@
           },
           "description": "The step environment variables."
         },
+        "reports": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Report"
+          }
+        },
         "privileged": {
           "type": "boolean"
         },
@@ -1809,6 +1817,65 @@
           "type": "array"
         }
       },
+      "examples": [
+        {
+          "version": 1,
+          "stages": [
+            {
+              "name": "build",
+              "type": "ci",
+              "spec": {
+                "steps": [
+                  {
+                    "name": "compile",
+                    "type": "script",
+                    "image": "golang",
+                    "spec": {
+                      "run": "go build"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "registry": {
+            "credentials": ["connector.dockerhub", "connector.gcr"]
+          }
+        },
+        {
+          "version": 1,
+          "stages": [
+            {
+              "name": "build",
+              "type": "ci",
+              "spec": {
+                "steps": [
+                  {
+                    "name": "compile",
+                    "type": "script",
+                    "image": "us.gcr.io/account/project/golang:latest",
+                    "spec": {
+                      "run": "go build"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "registry": {
+            "credentials": [
+              {
+                "name": "connector.dockerhub",
+                "match": "docker.io"
+              },
+              {
+                "name": "connector.gcr",
+                "match": "us.gcr.io"
+              }
+            ]
+          }
+        }
+      ],
       "x-file": "registry.yaml"
     }
   },
