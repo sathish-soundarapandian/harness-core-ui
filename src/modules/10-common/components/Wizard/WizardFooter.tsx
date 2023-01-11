@@ -90,6 +90,7 @@ export const WizardFooter = ({
           text={getString('continue')}
           variation={ButtonVariation.PRIMARY}
           rightIcon="chevron-right"
+          disabled={!formikProps.isValid}
           onClick={async () => {
             const formErrors = await formikProps.validateForm()
             if (!isEmpty(formErrors)) {
