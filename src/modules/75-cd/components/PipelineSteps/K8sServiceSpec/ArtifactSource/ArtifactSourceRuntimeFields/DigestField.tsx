@@ -6,13 +6,13 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { defaultTo, get, memoize } from 'lodash-es'
+import { get, memoize } from 'lodash-es'
 import { Menu } from '@blueprintjs/core'
 
 import { getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text, useToaster } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
-import type { DockerBuildDetailsDTO, Failure, Error, ArtifactoryBuildDetailsDTO } from 'services/cd-ng'
+import type { Failure, Error } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -27,6 +27,7 @@ interface DigestFieldProps extends ArtifactSourceRenderProps {
   fetchDigest: () => void
   fetchDigestError: GetDataError<Failure | Error> | null
   expressions: string[]
+  digestData: any[]
 }
 const DigestField = (props: DigestFieldProps): JSX.Element => {
   const {
@@ -77,8 +78,8 @@ const DigestField = (props: DigestFieldProps): JSX.Element => {
           fetchingDigest
             ? [
                 {
-                  label: 'Loading Digest',
-                  value: 'Loading Digest'
+                  label: getString('pipeline.artifactsSelection.loadingDigest'),
+                  value: getString('pipeline.artifactsSelection.loadingDigest')
                 }
               ]
             : digestList
@@ -99,18 +100,14 @@ const DigestField = (props: DigestFieldProps): JSX.Element => {
             items: fetchingDigest
               ? [
                   {
-                    label: 'Loading Digest',
-                    value: 'Loading Digest'
+                    label: getString('pipeline.artifactsSelection.loadingDigest'),
+                    value: getString('pipeline.artifactsSelection.loadingDigest')
                   }
                 ]
               : digestList,
             usePortal: true,
             addClearBtn: !readonly,
-            noResults: (
-              <Text lineClamp={1}>
-                {getTagError(fetchDigestError) || getString('pipelineSteps.deploy.errors.notags')}
-              </Text>
-            ),
+            noResults: <Text lineClamp={1}>{getTagError(fetchDigestError)}</Text>,
             itemRenderer,
             allowCreatingNewItems: true,
             popoverClassName: css.selectPopover,
@@ -119,7 +116,7 @@ const DigestField = (props: DigestFieldProps): JSX.Element => {
           expressions,
           allowableTypes
         }}
-        label={'Digest'}
+        label={getString('pipeline.digest')}
         name={`${path}.artifacts.${artifactPath}.spec.digest`}
       />
       {getMultiTypeFromValue(
@@ -141,7 +138,7 @@ const DigestField = (props: DigestFieldProps): JSX.Element => {
           isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
           showAdvanced={true}
           onChange={value => {
-            formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.digext`, value)
+            formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.digest`, value)
           }}
         />
       )}

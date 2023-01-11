@@ -86,6 +86,8 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
   )
 
+  const tagValue = get(initialValues, `artifacts.${artifactPath}.spec.tag`, '')
+
   const connectorRefValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
@@ -157,7 +159,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     error: digestError
   } = useMutateAsGet(useGetLastSuccessfulBuildForDocker, {
     body: {
-      tag: formik?.values?.tag
+      tag: tagValue
     },
     requestOptions: {
       headers: {
@@ -327,6 +329,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
                 fetchDigest={fetchDigest}
                 expressions={expressions}
                 stageIdentifier={stageIdentifier}
+                digestData={digestData}
               />
               {/* <FormInput.MultiTextInput
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
