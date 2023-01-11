@@ -52,6 +52,8 @@ import type { GitContextProps } from '@common/components/GitContextForm/GitConte
 import { memoizedParse, parse } from '@common/utils/YamlHelperMethods'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import type { InputSetDTO, InputSetType, Pipeline, InputSet } from '@pipeline/utils/types'
 import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
@@ -304,7 +306,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   ])
 
   const [disableVisualView, setDisableVisualView] = React.useState(inputSet.entityValidityDetails?.valid === false)
-  const CI_YAML_VERSIONING = true //useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
+  const CI_YAML_VERSIONING = useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
 
   const formikRef = React.useRef<FormikProps<InputSetDTO & GitContextProps & StoreMetadata>>()
 
@@ -528,7 +530,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
   >()
   const { connectorRef, repoIdentifier, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
-  const CI_YAML_VERSIONING = true //useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
+  const CI_YAML_VERSIONING = useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
 
   return (
     <React.Fragment>

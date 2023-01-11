@@ -178,7 +178,7 @@ function RunPipelineFormBasic({
   const [existingProvide, setExistingProvide] = useState<'existing' | 'provide'>('existing')
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [isInputSetApplied, setIsInputSetApplied] = useState(true)
-  const CI_YAML_VERSIONING = true //useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
+  const CI_YAML_VERSIONING = useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
   const [disableVisualView, setDisableVisualView] = React.useState(!!CI_YAML_VERSIONING)
   React.useEffect(() => {
     setDisableVisualView(!!CI_YAML_VERSIONING)
