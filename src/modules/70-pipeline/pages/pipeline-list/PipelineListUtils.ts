@@ -51,7 +51,7 @@ export const getRouteProps = (pathParams: PipelineListPagePathParams, pipeline?:
 
 export const queryParamOptions = {
   parseArrays: true,
-  decoder: queryParamDecodeAll(),
+  decoder: queryParamDecodeAll({ ignoreEmptyString: false }),
   processQueryParams(params: PipelineListPageQueryParams): ProcessedPipelineListPageQueryParams {
     return {
       ...params,

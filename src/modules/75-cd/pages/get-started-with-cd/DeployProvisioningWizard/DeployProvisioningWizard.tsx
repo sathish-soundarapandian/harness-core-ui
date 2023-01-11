@@ -508,7 +508,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           2,
           {
             StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.ConfigureService), StepStatus.ToDo),
-            StepName: getString('common.connectEnvironment'),
+            StepName: getString('common.configureService'),
             onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.ConfigureService)
           }
         ],

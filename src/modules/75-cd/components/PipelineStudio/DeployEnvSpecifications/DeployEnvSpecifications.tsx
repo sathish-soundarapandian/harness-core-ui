@@ -6,7 +6,7 @@
  */
 
 import React, { MutableRefObject, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
-import { debounce, defaultTo, get, isEmpty, set } from 'lodash-es'
+import { debounce, defaultTo, get } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
 
@@ -27,8 +27,6 @@ import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/Depl
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-
-import { StageType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { getAllowableTypesWithoutFixedValue } from '@pipeline/utils/runPipelineUtils'
@@ -77,27 +75,6 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     ),
     [updateStage]
   )
-
-  useEffect(() => {
-    // istanbul ignore else
-    if (
-      isEmpty(stage?.stage?.spec?.environment) &&
-      isEmpty(stage?.stage?.spec?.environments) &&
-      isEmpty(stage?.stage?.spec?.environmentGroup) &&
-      stage?.stage?.type === StageType.DEPLOY
-    ) {
-      const stageData = produce(stage, draft => {
-        if (draft) {
-          set(draft, 'stage.spec', {
-            ...stage.stage?.spec,
-            environment: {}
-          })
-        }
-      })
-      debounceUpdateStage(stageData?.stage)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const updateEnvStep = useCallback(
     /* istanbul ignore next */ (value: DeployStageConfig) => {

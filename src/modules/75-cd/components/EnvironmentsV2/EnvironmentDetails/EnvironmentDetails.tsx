@@ -51,6 +51,7 @@ import { PipelineContextType } from '@pipeline/components/PipelineStudio/Pipelin
 
 import EntityUsage from '@common/pages/entityUsage/EntityUsage'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
+import { sanitize } from '@common/utils/JSONUtils'
 import { PageHeaderTitle, PageHeaderToolbar } from './EnvironmentDetailsPageHeader'
 import EnvironmentConfiguration from './EnvironmentConfiguration/EnvironmentConfiguration'
 import { ServiceOverrides } from './ServiceOverrides/ServiceOverrides'
@@ -120,7 +121,9 @@ export default function EnvironmentDetails(): React.ReactElement {
       const response = await updateEnvironmentV2Promise({
         body: {
           ...bodyWithoutYaml,
-          yaml: yamlStringify({ environment: values })
+          yaml: yamlStringify({
+            environment: sanitize({ ...values }, { removeEmptyObject: false, removeEmptyString: false })
+          })
         },
         queryParams: {
           accountIdentifier: accountId
@@ -142,11 +145,7 @@ export default function EnvironmentDetails(): React.ReactElement {
     setUpdateLoading(false)
   }
 
-  const {
-    createdAt,
-    environment: { name, identifier, description, tags, type, yaml } = {},
-    lastModifiedAt
-  } = defaultTo(data?.data, {}) as EnvironmentResponse
+  const { createdAt, environment: { yaml } = {}, lastModifiedAt } = defaultTo(data?.data, {}) as EnvironmentResponse
 
   const handleTabChange = (tabId: EnvironmentDetailsTab): void => {
     updateQueryParams({
@@ -158,6 +157,7 @@ export default function EnvironmentDetails(): React.ReactElement {
     () => (yamlParse(defaultTo(yaml, '{}')) as NGEnvironmentConfig)?.environment,
     [yaml]
   )
+  const { name, identifier, description, tags, type } = defaultTo(parsedYamlEnvironment, {}) as NGEnvironmentInfoConfig
   const variables = defaultTo(parsedYamlEnvironment?.variables, [])
   const overrides = parsedYamlEnvironment?.overrides
 
@@ -201,11 +201,11 @@ export default function EnvironmentDetails(): React.ReactElement {
           <Formik<NGEnvironmentInfoConfig>
             initialValues={
               {
-                name: defaultTo(name, ''),
-                identifier: defaultTo(identifier, ''),
+                name,
+                identifier,
                 description,
-                tags: defaultTo(tags, {}),
-                type: defaultTo(type, ''),
+                tags,
+                type,
                 orgIdentifier: orgIdentifier,
                 projectIdentifier: projectIdentifier,
                 variables,
