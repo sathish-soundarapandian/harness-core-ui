@@ -16,7 +16,7 @@ import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterC
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 import { isObjectEmpty, UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import { StringUtils, useToaster } from '@common/exports'
-import { useBooleanStatus, useDeepCompareEffect, useUpdateQueryParams } from '@common/hooks'
+import { useBooleanStatus, useDeepCompareEffect, useMutateAsGet, useUpdateQueryParams } from '@common/hooks'
 import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
 import { getBuildType, getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 import {
@@ -28,11 +28,7 @@ import {
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
-import {
-  useGetEnvironmentListForProject,
-  useGetServiceDefinitionTypes,
-  useGetServiceListForProject
-} from 'services/cd-ng'
+import { useGetEnvironmentListV2, useGetServiceDefinitionTypes, useGetServiceList } from 'services/cd-ng'
 import {
   FilterDTO,
   PipelineFilterProperties,
@@ -41,6 +37,7 @@ import {
   usePostFilter,
   useUpdateFilter
 } from 'services/pipeline-ng'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ExecutionListFilterForm } from '../../execution-list/ExecutionListFilterForm/ExecutionListFilterForm'
 import type { PipelineListPagePathParams, PipelineListPageQueryParams } from '../types'
 import { usePipeLineListFilterMapper } from './usePipelineListFilterMapper'
@@ -67,6 +64,8 @@ export function PipelineListFilter({
   const { state: isFiltersDrawerOpen, open: openFilterDrawer, close: hideFilterDrawer } = useBooleanStatus()
   const filterDrawerOpenedRef = useRef(false)
 
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+
   const { mutate: createFilter } = usePostFilter({
     queryParams: { accountIdentifier: accountId }
   })
@@ -91,13 +90,26 @@ export function PipelineListFilter({
     lazy: !filterDrawerOpenedRef.current
   })
 
-  const { data: servicesResponse, loading: isFetchingServices } = useGetServiceListForProject({
-    queryParams: { accountId, orgIdentifier, projectIdentifier },
+  const { data: servicesResponse, loading: isFetchingServices } = useGetServiceList({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      includeAllServicesAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
+    },
     lazy: !filterDrawerOpenedRef.current
   })
 
-  const { data: environmentsResponse, loading: isFetchingEnvironments } = useGetEnvironmentListForProject({
-    queryParams: { accountId, orgIdentifier, projectIdentifier },
+  const { data: environmentsResponse, loading: isFetchingEnvironments } = useMutateAsGet(useGetEnvironmentListV2, {
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      includeAllAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
+    },
+    body: {
+      filterType: 'Environment'
+    },
     lazy: !filterDrawerOpenedRef.current
   })
 
@@ -249,8 +261,8 @@ export function PipelineListFilter({
             isCDEnabled={isCDEnabled}
             isCIEnabled={isCIEnabled}
             initialValues={{
-              environments: getMultiSelectFormOptions(environmentsResponse?.data?.content),
-              services: getMultiSelectFormOptions(servicesResponse?.data?.content),
+              environments: getMultiSelectFormOptions(environmentsResponse?.data?.content, 'environment'),
+              services: getMultiSelectFormOptions(servicesResponse?.data?.content, 'service'),
               deploymentType: deploymentTypeSelectOptions
             }}
             type="PipelineSetup"
@@ -269,8 +281,8 @@ export function PipelineListFilter({
             repositoryName: repoName ? repoName[0] : undefined,
             deploymentType: deploymentTypes,
             infrastructureType: infrastructureTypes ? infrastructureTypes[0] : undefined,
-            services: getMultiSelectFormOptions(serviceNames),
-            environments: getMultiSelectFormOptions(environmentNames)
+            services: getMultiSelectFormOptions(serviceNames, 'service'),
+            environments: getMultiSelectFormOptions(environmentNames, 'environment')
           },
           metadata: { name, filterVisibility, identifier, filterProperties: {} }
         }}
