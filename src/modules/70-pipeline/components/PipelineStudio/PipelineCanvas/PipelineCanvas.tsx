@@ -374,13 +374,17 @@ export function PipelineCanvas({
           >
             <CreatePipelines
               afterSave={onSubmit}
-              initialValues={merge(pipeline, {
-                repo: repoName || gitDetails.repoIdentifier || '',
-                branch: branch || gitDetails.branch || '',
-                connectorRef: defaultTo(connectorRef, ''),
-                storeType: defaultTo(storeType, StoreType.INLINE),
-                filePath: gitDetails.filePath
-              })}
+              {...(CI_YAML_VERSIONING
+                ? {}
+                : {
+                    initialValues: merge(pipeline, {
+                      repo: repoName || gitDetails.repoIdentifier || '',
+                      branch: branch || gitDetails.branch || '',
+                      connectorRef: defaultTo(connectorRef, ''),
+                      storeType: defaultTo(storeType, StoreType.INLINE),
+                      filePath: gitDetails.filePath
+                    })
+                  })}
               closeModal={onCloseCreate}
               gitDetails={{ ...gitDetails, remoteFetchFailed: Boolean(remoteFetchError) } as IGitContextFormProps}
               primaryButtonText={modalMode === 'create' ? getString('start') : getString('continue')}

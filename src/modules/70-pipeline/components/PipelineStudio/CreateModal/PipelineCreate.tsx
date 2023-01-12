@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { get, omit, pick } from 'lodash-es'
+import { get, omit, omitBy, pick, isEmpty } from 'lodash-es'
 import produce from 'immer'
 import * as Yup from 'yup'
 import { Container, Formik, FormikForm, Button, ButtonVariation, Text } from '@harness/uicore'
@@ -31,6 +31,7 @@ import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { errorCheck } from '@common/utils/formikHelpers'
@@ -93,6 +94,7 @@ export default function CreatePipelines({
   const { isGitSyncEnabled, gitSyncEnabledOnlyForFF, supportingGitSimplification } = useAppStore()
   const oldGitSyncEnabled = isGitSyncEnabled && !gitSyncEnabledOnlyForFF
   const { trackEvent } = useTelemetry()
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
 
   const newInitialValues = React.useMemo(() => {
     return produce(initialValues, draft => {
@@ -149,7 +151,15 @@ export default function CreatePipelines({
         : undefined
 
     afterSave?.(
-      omit(values, 'storeType', 'connectorRef', 'repo', 'branch', 'filePath', 'useTemplate'),
+      omit(
+        omitBy(values, isEmpty) as PipelineInfoConfig,
+        'storeType',
+        'connectorRef',
+        'repo',
+        'branch',
+        'filePath',
+        'useTemplate'
+      ),
       {
         storeType: values.storeType as StoreMetadata['storeType'],
         connectorRef:
@@ -165,7 +175,7 @@ export default function CreatePipelines({
       <Formik<CreatePipelinesValue>
         initialValues={newInitialValues}
         formName="pipelineCreate"
-        validationSchema={validationSchema}
+        validationSchema={CI_YAML_VERSIONING ? Yup.object().shape({}) : validationSchema}
         onSubmit={handleSubmit}
       >
         {formikProps => (
