@@ -227,7 +227,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       repoIdentifier: isGitSyncEnabled ? inputSetRepoIdentifier : repoName,
       branch: isGitSyncEnabled ? inputSetBranch : branch,
       parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoIdentifier
+      parentEntityRepoName: repoName
     }
   })
 
