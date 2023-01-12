@@ -62,7 +62,11 @@ function DeployInfrastructureInputStepInternal({
   } = customStepProps
   const { serviceOverrideInputs } = inputSetData?.template?.environment || {}
 
-  const shouldRenderInfrastructure = initialValues?.environment?.environmentRef !== RUNTIME_INPUT_VALUE
+  //Show Infra Input Menu only when Env is Fixed
+  const renderInfra = initialValues?.environment?.environmentRef !== RUNTIME_INPUT_VALUE
+
+  const shouldRenderInfrastructure =
+    getMultiTypeFromValue(inputSetData?.template?.environment?.environmentRef) !== MultiTypeInputType.RUNTIME
 
   const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues.environment?.environmentRef)
@@ -269,8 +273,8 @@ function DeployInfrastructureInputStepInternal({
                 inputSetData?.allValues ||
                 (inputSetData?.template?.environment?.infrastructureDefinitions as unknown as string) ===
                   RUNTIME_INPUT_VALUE) &&
-              formik.values.isEnvInputLoaded &&
-              shouldRenderInfrastructure && (
+              renderInfra &&
+              (formik.values.isEnvInputLoaded || shouldRenderInfrastructure) && (
                 <Container margin={{ bottom: 'medium' }}>
                   <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
                     {getString('infrastructureText')}
