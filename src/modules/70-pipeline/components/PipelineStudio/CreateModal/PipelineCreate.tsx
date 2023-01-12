@@ -152,7 +152,7 @@ export default function CreatePipelines({
 
     afterSave?.(
       omit(
-        omitBy(values, isEmpty) as PipelineInfoConfig,
+        CI_YAML_VERSIONING ? (omitBy(values, isEmpty) as PipelineInfoConfig) : values,
         'storeType',
         'connectorRef',
         'repo',
