@@ -275,7 +275,7 @@ describe('Jira Create tests', () => {
       timeout: '1d',
       type: 'JiraCreate',
       spec: {
-        connectorRef: 'cid1',
+        connectorRef: 'c1d1',
         projectKey: 'pid1',
         issueType: 'itd1',
         delegateSelectors: undefined,

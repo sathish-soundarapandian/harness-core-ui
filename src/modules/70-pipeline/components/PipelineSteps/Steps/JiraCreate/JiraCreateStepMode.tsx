@@ -424,6 +424,7 @@ function FormContent({
               }
             }
           }}
+          setRefValue
           disabled={isApprovalStepFieldDisabled(readonly)}
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
         />

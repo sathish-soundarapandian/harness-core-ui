@@ -38,7 +38,7 @@ import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
 const getCalculatedStyles = (data: PipelineGraphState[], parallelism: number, showAllNodes?: boolean): LayoutStyles => {
   const nodeWidth = data?.[0]?.nodeType === StageType.APPROVAL ? 85 : 120 // (125- text with lineClamp,90-PipelineStage), 132(Diamond) + 40(padding)
-  const nodeHeight = data?.[0]?.nodeType === StageType.APPROVAL ? 139 : 115 // 64/40(node) + 55/50(text)+ 25(gap)
+  const nodeHeight = 139 // 64(node) + 55/50(text)+ 25(gap)
   parallelism = !parallelism ? 0 : (parallelism === 1 ? data.length : parallelism) || DEFAULT_MATRIX_PARALLELISM // parallelism strategy (undefined)- setting to default 0
   if (showAllNodes) {
     const maxChildLength = defaultTo(data?.length, 0)

@@ -209,7 +209,9 @@ function WebhookPipelineInputPanelForm({
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
-      branch: gitAwareForTriggerEnabled ? inputSetSelectedBranch : branch
+      branch: gitAwareForTriggerEnabled ? inputSetSelectedBranch : branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
     }
   })
 
