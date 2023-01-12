@@ -8,10 +8,11 @@
 import React from 'react'
 import { StepProps, StepWizard, StepWizardProps } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import StackRepoTypeStep from './StackRepoTypeStep'
 import StackProvisionerDetailsStep from './StackProvisionerDetailsStep'
 import StackProvisionerTypeStep from './StackProvisionerTypeStep'
-import StackRepoDetailsStep from './StackRepoDetailsStep'
+import StackRepoDetailsStep, { GitFetchTypes } from './StackRepoDetailsStep'
 import css from './StackWizard.module.scss'
 
 export type IACMResourceStack = {
@@ -23,10 +24,12 @@ export type IACMResourceStack = {
   provisionerVersion?: string
   workspace?: string
   autoApprove?: boolean
-  ttl?: string
   repoConnectorType?: string
   repoConnector?: string
+  repoConnectorObject?: ConnectorInfoDTO & { scope?: string }
+  gitFetchType?: GitFetchTypes
   branch?: string
+  commitId?: string
   scriptsPath?: string
 }
 

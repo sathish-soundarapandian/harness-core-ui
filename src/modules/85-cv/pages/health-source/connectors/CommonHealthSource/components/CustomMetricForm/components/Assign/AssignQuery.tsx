@@ -8,18 +8,19 @@
 import React from 'react'
 import { Container } from '@harness/uicore'
 import { RiskProfile } from './components/RiskProfile/RiskProfile'
-import type { SelectHealthSourceServicesProps } from './AssignQuery.types'
+import type { AssignQueryProps } from './AssignQuery.types'
 import AssignSection from './components/AssignSection/AssignSection'
 import css from './AssignQuery.module.scss'
 
-export default function SelectHealthSourceServices({
+export default function AssignQuery({
   values,
   hideServiceIdentifier = false,
   hideCV,
   hideSLIAndHealthScore,
   showOnlySLI = false,
-  riskProfileResponse
-}: SelectHealthSourceServicesProps): JSX.Element {
+  riskProfileResponse,
+  defaultServiceInstance
+}: AssignQueryProps): JSX.Element {
   const { continuousVerification, healthScore, serviceInstance, riskCategory } = values
 
   return (
@@ -31,6 +32,7 @@ export default function SelectHealthSourceServices({
           serviceInstance={typeof serviceInstance === 'string' ? serviceInstance : (serviceInstance?.value as string)}
           riskCategory={riskCategory}
           riskProfileResponse={riskProfileResponse}
+          defaultServiceInstance={defaultServiceInstance}
         />
       )}
     </Container>

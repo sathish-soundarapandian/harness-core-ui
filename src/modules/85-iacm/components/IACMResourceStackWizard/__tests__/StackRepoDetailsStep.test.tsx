@@ -10,7 +10,7 @@ import { render, RenderResult, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
 import { mockProvisionerConnectorResponse } from './mocks'
-import StackRepoDetailsStep from '../StackRepoDetailsStep'
+import StackRepoDetailsStep, { GitFetchTypes } from '../StackRepoDetailsStep'
 
 const actions = { onSubmit: jest.fn(), nextStep: jest.fn() }
 const mockData = {
@@ -21,11 +21,11 @@ const mockData = {
   name: 'test stack',
   provisionerType: 'terraform',
   provisionerVersion: '2.0.0',
-  ttl: '1669208915047',
   workspace: 'test workspace',
   repo: 'test repo',
   branch: 'test branch',
-  scriptsPath: 'test path'
+  scriptsPath: 'test path',
+  gitFetchType: GitFetchTypes.BRANCH
 }
 
 const renderComponent = (): RenderResult => {
@@ -68,11 +68,10 @@ describe('StackRepoDetailsStep', () => {
     const branchInput = container.querySelector('input[name="branch"]')
     const scriptsPathInput = container.querySelector('input[name="scriptsPath"]')
 
-    expect(repoInput).toBeInTheDocument()
+    expect(repoInput).not.toBeInTheDocument()
     expect(branchInput).toBeInTheDocument()
     expect(scriptsPathInput).toBeInTheDocument()
 
-    expect(screen.getByDisplayValue('test repo')).toBeVisible()
     expect(screen.getByDisplayValue('test branch')).toBeVisible()
     expect(screen.getByDisplayValue('test path')).toBeVisible()
   })

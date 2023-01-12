@@ -1,0 +1,71 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.main {
+  background: var(--white);
+  min-height: calc(var(--execution-children-height) - var(--execution-stage-details-height));
+  overflow: auto;
+  isolation: isolate;
+
+  display: grid;
+  grid-template-rows: auto 1fr;
+
+  [data-state='floating'] & {
+    width: 520px;
+    height: 630px;
+    min-height: auto;
+    box-shadow: 0 2px 8px var(--grey-400);
+    border-radius: 8px;
+    border-top-color: transparent;
+  }
+
+  .header {
+    padding: var(--spacing-medium) var(--spacing-large);
+
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+
+    .actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-small);
+    }
+  }
+
+  :global {
+    .bp3-tab-list {
+      overflow: hidden;
+      padding: 0 var(--spacing-5);
+      position: relative;
+
+      .bp3-tab-indicator-wrapper {
+        z-index: 2;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        height: 3px;
+        bottom: 0;
+        left: calc(-1 * var(--spacing-5));
+        right: 0;
+        background-color: var(--grey-100);
+      }
+    }
+
+    .bp3-tab-panel {
+      margin-top: var(--spacing-none);
+    }
+  }
+
+  .tab {
+    height: calc(100% - var(--execution-tabs-height));
+  }
+}

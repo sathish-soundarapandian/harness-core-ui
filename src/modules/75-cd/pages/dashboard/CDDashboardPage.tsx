@@ -46,16 +46,12 @@ import {
 } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { DeploymentsTimeRangeContext } from '@cd/components/Services/common'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useLocalStorage, useMutateAsGet, useQueryParams } from '@common/hooks'
+import { useLocalStorage, useMutateAsGet } from '@common/hooks'
 import PipelineModalListView from '@pipeline/components/PipelineModalListView/PipelineModalListView'
 import { TitleWithToolTipId } from '@common/components/Title/TitleWithToolTipId'
 import { DashboardSelected } from '@pipeline/components/ServiceExecutionsCard/ServiceExecutionsCard'
-import {
-  ExecutionListFilterContextProvider,
-  ProcessedExecutionListPageQueryParams,
-  queryParamOptions
-} from '@pipeline/pages/execution-list/ExecutionListFilterContext/ExecutionListFilterContext'
 import { OverviewExecutionListEmpty } from '@pipeline/pages/execution-list/ExecutionListEmpty/OverviewExecutionListEmpty'
+import { useExecutionListQueryParams } from '@pipeline/pages/execution-list/utils/executionListUtil'
 import DeploymentsHealthCards from './DeploymentsHealthCards'
 import DeploymentExecutionsChart from './DeploymentExecutionsChart'
 import WorkloadCard from './DeploymentCards/WorkloadCard'
@@ -97,9 +93,7 @@ const NoDataOverviewPage: React.FC<{ onHide: () => void }> = ({ onHide }) => {
         margin: 16
       }}
     >
-      <ExecutionListFilterContextProvider>
-        <OverviewExecutionListEmpty onRunPipeline={openModal} onHide={onHide} />
-      </ExecutionListFilterContextProvider>
+      <OverviewExecutionListEmpty onRunPipeline={openModal} onHide={onHide} />
     </div>
   )
 }
@@ -154,7 +148,7 @@ export function executionStatusInfoToExecutionSummary(
 
 export const CDDashboardPage: React.FC = () => {
   const { getString } = useStrings()
-  const queryParams = useQueryParams<ProcessedExecutionListPageQueryParams>(queryParamOptions)
+  const queryParams = useExecutionListQueryParams()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const { CDC_DASHBOARD_ENHANCEMENT_NG } = useFeatureFlags()
 

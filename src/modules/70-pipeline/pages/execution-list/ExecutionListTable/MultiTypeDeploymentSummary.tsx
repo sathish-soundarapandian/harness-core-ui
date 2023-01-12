@@ -151,7 +151,7 @@ function getGitOpsApplicationTextAndTooltip(
           {apps.map((e: Application, i: number) =>
             linkNode(e, {
               index: i,
-              color: Color.WHITE,
+              color: Color.PRIMARY_5,
               lineClamp: 1,
               orgIdentifier,
               module,

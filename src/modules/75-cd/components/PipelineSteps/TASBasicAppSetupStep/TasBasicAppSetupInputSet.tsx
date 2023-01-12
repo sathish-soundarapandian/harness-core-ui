@@ -77,6 +77,7 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
               expressions,
               allowableTypes
             }}
+            type={getString('tagLabel')}
             label={getString('cd.steps.tas.additionalRoutes')}
             enableConfigureOptions
             isArray={true}
@@ -93,6 +94,7 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
               expressions,
               allowableTypes
             }}
+            type={getString('tagLabel')}
             label={getString('cd.steps.tas.tempRoutes')}
             enableConfigureOptions
             isArray={true}

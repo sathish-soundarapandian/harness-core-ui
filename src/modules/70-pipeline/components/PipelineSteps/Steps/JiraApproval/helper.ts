@@ -22,10 +22,6 @@ export const processFormData = (values: JiraApprovalData): JiraApprovalData => {
     ...values,
     spec: {
       ...values.spec,
-      connectorRef:
-        getMultiTypeFromValue(values.spec.connectorRef as SelectOption) === MultiTypeInputType.FIXED
-          ? (values.spec.connectorRef as SelectOption)?.value?.toString()
-          : values.spec.connectorRef,
       projectKey:
         getMultiTypeFromValue(values.spec.projectKey as JiraProjectSelectOption) === MultiTypeInputType.FIXED
           ? (values.spec.projectKey as JiraProjectSelectOption)?.key?.toString()

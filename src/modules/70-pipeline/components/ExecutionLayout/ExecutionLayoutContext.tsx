@@ -25,6 +25,8 @@ export interface ExecutionLayoutContextParams {
   isStepDetailsVisible: boolean
   restoreDialog(): void
   setStepDetailsVisibility(action: SetStateAction<boolean>): void
+  isCollapsedNodePaneVisible: boolean
+  setCollapsedNodePaneVisibility(action: SetStateAction<boolean>): void
 }
 
 export const ExecutionLayoutContext = createContext<ExecutionLayoutContextParams>({
@@ -36,7 +38,9 @@ export const ExecutionLayoutContext = createContext<ExecutionLayoutContextParams
   setTertiaryPaneSize: /* istanbul ignore next */ () => void 0,
   isStepDetailsVisible: false,
   restoreDialog: /* istanbul ignore next */ () => void 0,
-  setStepDetailsVisibility: /* istanbul ignore next */ () => void 0
+  setStepDetailsVisibility: /* istanbul ignore next */ () => void 0,
+  isCollapsedNodePaneVisible: false,
+  setCollapsedNodePaneVisibility: /* istanbul ignore next */ () => void 0
 })
 
 export function useExecutionLayoutContext(): ExecutionLayoutContextParams {

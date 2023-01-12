@@ -16,7 +16,8 @@ import {
   FormikForm,
   Button,
   ThumbnailSelect,
-  Heading
+  Heading,
+  MultiTypeInputType
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
@@ -51,11 +52,6 @@ const connectorTypesOptions = (_getString: UseStringsReturn['getString']): Item[
       label: _getString('common.repo_provider.bitbucketLabel'),
       icon: ConnectorIcons['Bitbucket'],
       value: 'Bitbucket'
-    },
-    {
-      label: _getString('harness'),
-      icon: ConnectorIcons['Harness'],
-      value: 'Harness'
     }
   ]
 }
@@ -69,7 +65,7 @@ const StackRepoTypeStep: React.FC<StepProps<StackWizardStepProps>> = props => {
 
   return (
     <Layout.Vertical height="inherit" spacing="medium" className={css.optionsViewContainer}>
-      <Heading level="3" margin={{ bottom: 'xxxlarge' }}>
+      <Heading level="2" margin={{ bottom: 'xxxlarge' }}>
         {name}
       </Heading>
       <Formik
@@ -90,7 +86,8 @@ const StackRepoTypeStep: React.FC<StepProps<StackWizardStepProps>> = props => {
         enableReinitialize
       >
         {formik => {
-          const { values, setFieldValue, isValid } = formik
+          const { values, isValid, setFieldValue } = formik
+          setConnectorType(values?.repoConnectorType as ConnectorTypes)
           return (
             <FormikForm>
               <Layout.Vertical flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -103,24 +100,29 @@ const StackRepoTypeStep: React.FC<StepProps<StackWizardStepProps>> = props => {
                       isReadonly={false}
                       onChange={provisionerTypeSelected => {
                         setConnectorType(provisionerTypeSelected as ConnectorTypes)
-                        if (provisionerTypeSelected === 'Harness') {
-                          setFieldValue('repoConnector', '')
-                        }
                       }}
                     />
                   </Layout.Horizontal>
-                  {values?.repoConnectorType !== 'Harness' && (
+                  {values?.repoConnectorType !== 'Harness' && values?.repoConnectorType && (
                     <FormMultiTypeConnectorField
                       label={<Text color={Color.GREY_900}>{getString('iacm.stackWizard.selectGitConnector')}</Text>}
                       type={connectorType as ConnectorInfoDTO['type']}
-                      name="repoConnector"
+                      name="repoConnectorObject"
                       placeholder={getString('select')}
                       accountIdentifier={accountId}
                       projectIdentifier={projectIdentifier}
                       orgIdentifier={orgIdentifier}
                       style={{ marginBottom: 10 }}
-                      multiTypeProps={{ expressions }}
-                      setRefValue
+                      multiTypeProps={{ expressions, allowableTypes: [MultiTypeInputType.FIXED] }}
+                      onChange={(value: any) => {
+                        /* istanbul ignore next */
+                        const connectorValue =
+                          /* istanbul ignore next */
+                          value?.scope && value?.scope !== 'project'
+                            ? `${value.scope}.${value?.record?.identifier}`
+                            : value?.record?.identifier || value
+                        setFieldValue('repoConnector', connectorValue)
+                      }}
                     />
                   )}
                 </Layout.Vertical>

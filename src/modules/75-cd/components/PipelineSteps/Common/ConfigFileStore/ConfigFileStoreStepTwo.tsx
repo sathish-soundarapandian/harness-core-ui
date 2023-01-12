@@ -43,6 +43,7 @@ interface ConfigFileStoreStepTwoProps {
   isTerraformPlan?: boolean
   isBackendConfig?: boolean
   isTerragruntPlan?: boolean
+  isTerragrunt: boolean
 }
 
 export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreStepTwoProps> = ({
@@ -54,7 +55,8 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
   name,
   isTerraformPlan = false,
   isBackendConfig = false,
-  isTerragruntPlan = false
+  isTerragruntPlan = false,
+  isTerragrunt
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -234,7 +236,7 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
                   }
                 </div>
 
-                {!isBackendConfig && (
+                {!isBackendConfig && !isTerragrunt && (
                   <Accordion>
                     <Accordion.Panel
                       id="advanced-config"

@@ -115,6 +115,32 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
     item => !isMultiTypeRuntime(item)
   ) as AllowedTypes
 
+  const expressionInputRenderer = (fieldName: string): JSX.Element => {
+    return (
+      <FormGroup
+        helperText={
+          errorCheck(fieldName, formik) ? (
+            <FormError name={fieldName} errorMessage={get(formik?.errors, fieldName)} />
+          ) : null
+        }
+        intent={errorCheck(fieldName, formik) ? Intent.DANGER : Intent.NONE}
+        style={{ width: '100%' }}
+      >
+        <ExpressionInput
+          name={fieldName}
+          value={get(formik?.values, fieldName)}
+          disabled={false}
+          inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
+          items={expressions}
+          onChange={val =>
+            /* istanbul ignore next */
+            formik?.setFieldValue(fieldName, val)
+          }
+        />
+      </FormGroup>
+    )
+  }
+
   return (
     <DragDropContext
       onDragEnd={(result: DropResult) => {
@@ -141,7 +167,11 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
               name={name}
               defaultValueToReset={getDefaultResetValue()}
               style={{ flexGrow: 1, marginBottom: 0 }}
-              allowedTypes={allowableTypes}
+              allowedTypes={
+                (allowableTypes as MultiTypeInputType[])?.filter(
+                  allowedType => allowedType !== MultiTypeInputType.EXPRESSION
+                ) as AllowedTypes
+              }
               {...multiTypeFieldSelectorProps}
               disableTypeSelection={multiTypeFieldSelectorProps.disableTypeSelection || disabled}
               hasParentValidation={true}
@@ -151,6 +181,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                   formik?.setFieldValue(name, getDefaultResetValue())
                 }
               }}
+              expressionRender={() => expressionInputRenderer(name)}
             >
               <FieldArray
                 name={name}
@@ -212,34 +243,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                             expressionRender={() => {
                                               return (
                                                 <Container className={css.fieldExpressionHelperWrapper}>
-                                                  <FormGroup
-                                                    helperText={
-                                                      errorCheck(`${name}[${index}]`, formik) ? (
-                                                        <FormError
-                                                          name={`${name}[${index}]`}
-                                                          errorMessage={get(formik?.errors, `${name}[${index}]`)}
-                                                        />
-                                                      ) : null
-                                                    }
-                                                    intent={
-                                                      errorCheck(`${name}[${index}]`, formik)
-                                                        ? Intent.DANGER
-                                                        : Intent.NONE
-                                                    }
-                                                    style={{ width: '100%' }}
-                                                  >
-                                                    <ExpressionInput
-                                                      name={`${name}[${index}]`}
-                                                      value={get(formik?.values, `${name}[${index}]`)}
-                                                      disabled={false}
-                                                      inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
-                                                      items={expressions}
-                                                      onChange={val =>
-                                                        /* istanbul ignore next */
-                                                        formik?.setFieldValue(`${name}[${index}]`, val)
-                                                      }
-                                                    />
-                                                  </FormGroup>
+                                                  {expressionInputRenderer(`${name}[${index}]`)}
                                                 </Container>
                                               )
                                             }}

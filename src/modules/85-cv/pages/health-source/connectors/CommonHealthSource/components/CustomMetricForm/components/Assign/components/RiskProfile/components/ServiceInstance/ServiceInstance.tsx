@@ -5,28 +5,45 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { useFormikContext } from 'formik'
 import { Container, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { useStrings } from 'framework/strings'
+import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { useCommonHealthSource } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
 import CustomMetricsSectionHeader from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CustomMetricsSectionHeader'
 import { ServiceInstanceLabel } from '@cv/pages/health-source/common/ServiceInstanceLabel/ServiceInstanceLabel'
 import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import { getIsConnectorRuntimeOrExpression } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
+import { getTypeOfInput } from '@cv/utils/CommonUtils'
+
 interface ServiceInstanceProps {
   serviceInstance?: string
+  defaultServiceInstance?: string
   continuousVerificationEnabled?: boolean
 }
 
 export default function ServiceInstance({
   serviceInstance,
+  defaultServiceInstance,
   continuousVerificationEnabled
 }: ServiceInstanceProps): JSX.Element {
   const { getString } = useStrings()
   const { isQueryRuntimeOrExpression } = useCommonHealthSource()
+  const { setFieldValue } = useFormikContext<CommonCustomMetricFormikInterface>()
   const { isTemplate, expressions, sourceData } = useContext(SetupSourceTabsContext)
   const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(sourceData.connectorRef)
+
+  const [metricInstanceMultiType, setMetricPathMultiType] = useState<MultiTypeInputType>(() =>
+    getMultiTypeFromValue(serviceInstance)
+  )
+
+  useEffect(() => {
+    if (isTemplate && serviceInstance && metricInstanceMultiType === MultiTypeInputType.FIXED) {
+      setMetricPathMultiType(getTypeOfInput(serviceInstance))
+    }
+  }, [serviceInstance])
 
   return (
     <Container>
@@ -41,13 +58,22 @@ export default function ServiceInstance({
               <FormInput.MultiTextInput
                 label={<ServiceInstanceLabel />}
                 name={CustomMetricFormFieldNames.SERVICE_INSTANCE}
+                onChange={(value, _valueType, multiType) => {
+                  if (multiType !== metricInstanceMultiType) {
+                    setMetricPathMultiType(multiType)
+                    if (!value && multiType === MultiTypeInputType.FIXED) {
+                      setFieldValue(CustomMetricFormFieldNames.SERVICE_INSTANCE, defaultServiceInstance)
+                    }
+                  }
+                  const isServiceInstanceFixed = getMultiTypeFromValue(value) === MultiTypeInputType.FIXED
+                  if (multiType === MultiTypeInputType.EXPRESSION && isServiceInstanceFixed) {
+                    setFieldValue(CustomMetricFormFieldNames.SERVICE_INSTANCE, undefined)
+                  }
+                }}
                 multiTextInputProps={{
                   value: serviceInstance,
                   expressions,
-                  multitypeInputValue:
-                    (isConnectorRuntimeOrExpression || isQueryRuntimeOrExpression) && !serviceInstance
-                      ? MultiTypeInputType.EXPRESSION
-                      : getMultiTypeFromValue(serviceInstance),
+                  multitypeInputValue: metricInstanceMultiType,
                   allowableTypes:
                     isConnectorRuntimeOrExpression || isQueryRuntimeOrExpression
                       ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]

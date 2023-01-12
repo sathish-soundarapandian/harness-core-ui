@@ -14750,6 +14750,7 @@ export interface SettingDTO {
     | 'CHAOS'
     | 'SCIM'
     | 'GIT_EXPERIENCE'
+    | 'CONNECTORS'
   defaultValue?: string
   groupIdentifier: string
   identifier: string
@@ -51342,6 +51343,7 @@ export interface GetSettingsListQueryParams {
     | 'CHAOS'
     | 'SCIM'
     | 'GIT_EXPERIENCE'
+    | 'CONNECTORS'
   group?: string
 }
 

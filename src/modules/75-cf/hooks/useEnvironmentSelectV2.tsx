@@ -10,8 +10,8 @@ import { useParams } from 'react-router-dom'
 import { Select, SelectOption, SelectProps } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { EnvironmentResponseDTO, useGetEnvironmentListForProject } from 'services/cd-ng'
-import { rewriteCurrentLocationWithActiveEnvironment } from '@cf/utils/CFUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import css from './useEnvironmentSelectV2.module.scss'
 
 export interface UseEnvironmentSelectV2Params {
@@ -24,6 +24,11 @@ export interface UseEnvironmentSelectV2Params {
 }
 
 export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => {
+  const [, setActiveEnvironment] = useQueryParamsState('activeEnvironment', '', {
+    serializer: env => env,
+    deserializer: env => env
+  })
+
   const { preference: preferredEnvironment, setPreference: setPreferredEnvironment } = usePreferenceStore<string>(
     PreferenceScope.USER,
     'FF_SELECTED_ENV'
@@ -67,7 +72,7 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
           }
           setSelectedEnvironment(newValue)
           onChange(newValue, found, false)
-          rewriteCurrentLocationWithActiveEnvironment(found.identifier)
+          setActiveEnvironment(found?.identifier as string)
           return
         }
       }
@@ -82,16 +87,16 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
             data.data.content.find(({ identifier }) => identifier === preferredEnvironment) as EnvironmentResponseDTO,
             false
           )
-          rewriteCurrentLocationWithActiveEnvironment(preferredEnvironment)
+          setActiveEnvironment(preferredEnvironment)
         } else {
           setSelectedEnvironment(selectOptions[0])
           onChange(selectOptions[0], data?.data?.content?.[0], false)
-          rewriteCurrentLocationWithActiveEnvironment(data?.data?.content?.[0].identifier)
+          setActiveEnvironment(data?.data?.content?.[0].identifier as string)
         }
       }
     } else if (data?.data?.content?.length === 0) {
       onEmpty()
-      rewriteCurrentLocationWithActiveEnvironment()
+      setActiveEnvironment('')
     }
   }, [data?.data?.content?.length, data?.data?.content?.find, selectedEnvironmentIdentifier]) // eslint-disable-line
 
@@ -113,7 +118,7 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
                 data?.data?.content?.find(env => env.identifier === opt.value) as EnvironmentResponseDTO,
                 true
               )
-              rewriteCurrentLocationWithActiveEnvironment(opt.value as string)
+              setActiveEnvironment(opt.value as string)
             }
           }}
           inputProps={{

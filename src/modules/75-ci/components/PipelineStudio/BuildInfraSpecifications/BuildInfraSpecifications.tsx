@@ -382,7 +382,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<BuildInfraFormValues>>()
   const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
-  const { CIE_HOSTED_VMS, CI_DOCKER_INFRASTRUCTURE, CIE_HOSTED_VMS_MAC } = useFeatureFlags()
+  const { CIE_HOSTED_VMS, CI_DOCKER_INFRASTRUCTURE, CIE_HOSTED_VMS_MAC, CIE_HOSTED_VMS_WINDOWS } = useFeatureFlags()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const [isProvisionedByHarnessDelegateHealthy, setIsProvisionedByHarnessDelegateHealthy] = useState<boolean>(false)
   const { licenseInformation } = useLicenseStore()
@@ -1225,6 +1225,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           buildInfraSelectOptions.push({
             label: getString('pipeline.infraSpecifications.osTypes.macos'),
             value: OsTypes.MacOS
+          })
+        if (CIE_HOSTED_VMS_WINDOWS)
+          buildInfraSelectOptions.push({
+            label: getString('pipeline.infraSpecifications.osTypes.windows'),
+            value: OsTypes.Windows
           })
         break
       default:

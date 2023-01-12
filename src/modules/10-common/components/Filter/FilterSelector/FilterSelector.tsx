@@ -74,7 +74,11 @@ export default function FilterSelector<T extends FilterInterface>(props: FilterS
         value={appliedFilter ? appliedFilter.identifier : null}
         items={items}
         getLazyItems={refetchFilters}
-        placeholder={filters?.length ? getString('filters.selectFilter') : getString('common.filters.noFilterSaved')}
+        placeholder={
+          filters?.length || refetchFilters
+            ? getString('filters.selectFilter')
+            : getString('common.filters.noFilterSaved')
+        }
         minWidth={220}
         usePortal={true}
         addClearBtn={true}

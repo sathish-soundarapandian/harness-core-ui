@@ -9,11 +9,11 @@ import type { FormikErrors, FormikProps } from 'formik'
 import { cloneDeep, set } from 'lodash-es'
 import { RUNTIME_INPUT_VALUE, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
-import type { NextGenHealthSourceSpec, QueryRecordsRequest } from 'services/cv'
+import type { HealthSource, NextGenHealthSourceSpec, QueryRecordsRequest } from 'services/cv'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { V2 } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
 import { initializeSelectedMetricsMap } from '../../common/CommonCustomMetric/CommonCustomMetric.utils'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
-import { HealthSourceTypes } from '../../types'
 import {
   initCustomForm,
   ProviderTypes,
@@ -225,14 +225,6 @@ export const getIsConnectorRuntimeOrExpression = (
   return getMultiTypeFromValue(connectorValue) !== MultiTypeInputType.FIXED
 }
 
-export const getIsQueryRuntimeOrExpression = (query?: string): boolean => {
-  if (!query) {
-    return false
-  }
-
-  return getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
-}
-
 const validateLogFields = ({
   formData,
   getString,
@@ -401,21 +393,21 @@ export const createHealthSourcePayload = (
     healthSourceName: string
     connectorRef: string
   },
-  consfigureHealthSourceData: CommonHealthSourceConfigurations,
+  configureHealthSourceData: CommonHealthSourceConfigurations,
   isTemplate?: boolean
 ): UpdatedHealthSource => {
   const isMetricThresholdEnabled = !isTemplate
   const { product, healthSourceName, healthSourceIdentifier, connectorRef } = defineHealthSourcedata
   const productValue = (product?.value ?? product) as string
-  const { queryMetricsMap = new Map(), ignoreThresholds, failFastThresholds } = consfigureHealthSourceData
+  const { queryMetricsMap = new Map(), ignoreThresholds, failFastThresholds } = configureHealthSourceData
 
   const healthSourcePayload = {
-    type: HealthSourceTypes.NextGenHealthSource as UpdatedHealthSource['type'],
+    type: productValue as UpdatedHealthSource['type'],
     identifier: healthSourceIdentifier,
     name: healthSourceName,
+    version: V2 as HealthSource['version'],
     spec: {
       connectorRef: connectorRef as string,
-      dataSourceType: productValue as NextGenHealthSourceSpec['dataSourceType'],
       queryDefinitions: [] as NextGenHealthSourceSpec['queryDefinitions']
     }
   }
@@ -457,7 +449,6 @@ export const createHealthSourcePayload = (
               })
             : [],
 
-        // TODO this will be taken from assign section when the section is implemented
         riskProfile: {
           riskCategory: riskCategory,
           thresholdTypes: getThresholdTypes({ lowerBaselineDeviation, higherBaselineDeviation })

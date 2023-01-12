@@ -10,13 +10,15 @@ import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicor
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { useExecutionListFilterContext } from '@pipeline/pages/execution-list/ExecutionListFilterContext/ExecutionListFilterContext'
 import type { ExecutionListProps } from '@pipeline/pages/execution-list/ExecutionList'
 import emptyExecutionList from '@pipeline/pages/execution-list/images/cd-execution-illustration.svg'
+import {
+  getIsAnyFilterApplied,
+  useExecutionListQueryParams
+} from '@pipeline/pages/execution-list/utils/executionListUtil'
 import emptyInstanceDetail from '@pipeline/icons/emptyInstanceDetail.svg'
 import emptyServiceDetail from '@pipeline/icons/emptyServiceDetail.svg'
 import noDataFound from '@pipeline/icons/noDataFound.svg'
-
 import css from './EnvironmentDetailSummary.module.scss'
 
 export function DialogEmptyState({
@@ -67,7 +69,8 @@ export function ExecutionListEmptyState({
   resetFilter
 }: Pick<ExecutionListProps, 'isPipelineInvalid'> & { resetFilter: () => void }): JSX.Element {
   const { getString } = useStrings()
-  const { isAnyFilterApplied } = useExecutionListFilterContext()
+  const queryParams = useExecutionListQueryParams()
+  const isAnyFilterApplied = getIsAnyFilterApplied(queryParams)
 
   return (
     <Container className={cx(css.serviceDetailEmptyState, css.executionListEmpty)}>

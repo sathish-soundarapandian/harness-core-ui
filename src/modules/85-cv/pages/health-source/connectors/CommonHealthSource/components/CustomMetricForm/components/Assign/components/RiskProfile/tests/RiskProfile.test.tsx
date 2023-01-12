@@ -152,7 +152,7 @@ describe('Unit tests for RiskProfile', () => {
         isQueryRuntimeOrExpression
       />
     )
-    expect(containerExpression.querySelector('[data-icon="expression-input"]')).toBeInTheDocument()
+    expect(containerExpression.querySelector('[data-icon="fixed-input"]')).toBeInTheDocument()
     const { container, rerender } = render(
       <WrapperComponent data={{} as unknown as ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>} isTemplate />
     )

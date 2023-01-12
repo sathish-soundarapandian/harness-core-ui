@@ -25,6 +25,7 @@ import type { FormikErrors, FormikProps } from 'formik'
 import { get, merge } from 'lodash-es'
 import cx from 'classnames'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import { getImagePullPolicyOptions, getShellOptions } from '@common/utils/ContainerRunStepUtils'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
@@ -37,10 +38,7 @@ import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
-import StepCommonFields, {
-  GetImagePullPolicyOptions,
-  GetShellOptions /*,{ /*usePullOptions }*/
-} from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
+import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import {
   getInitialValuesInCorrectFormat,
@@ -457,8 +455,8 @@ export const RunTestsStepBase = (
         {
           buildToolOptions,
           languageOptions: getLanguageOptions(getString),
-          imagePullPolicyOptions: GetImagePullPolicyOptions(),
-          shellOptions: GetShellOptions(getString),
+          imagePullPolicyOptions: getImagePullPolicyOptions(getString),
+          shellOptions: getShellOptions(getString),
           buildEnvironmentOptions: getBuildEnvironmentOptions(getString),
           frameworkVersionOptions: getFrameworkVersionOptions(getString)
         }

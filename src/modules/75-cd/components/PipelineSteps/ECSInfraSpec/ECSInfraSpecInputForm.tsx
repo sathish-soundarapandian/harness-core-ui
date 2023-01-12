@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { connect, FormikProps, FormikValues } from 'formik'
+import { connect, FormikProps } from 'formik'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
@@ -26,16 +26,10 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { connectorTypes, EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { ConnectorRefFormValueType } from '@cd/utils/connectorUtils'
 import type { ECSInfraSpecCustomStepProps } from './ECSInfraSpec'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-
-export const resetFieldValue = (fieldPath: string, formik?: FormikValues): void => {
-  const fieldValue = get(formik?.values, fieldPath, '')
-  if (fieldValue?.length && getMultiTypeFromValue(fieldValue) === MultiTypeInputType.FIXED) {
-    formik?.setFieldValue(fieldPath, '')
-  }
-}
 
 export interface ECSInfraSpecInputFormProps {
   initialValues: EcsInfrastructure
@@ -176,10 +170,11 @@ const ECSInfraSpecInputForm = ({
             gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
             onChange={selectedConnector => {
               if (
+                formik &&
                 (get(formik?.values, connectorFieldName) as ConnectorRefFormValueType).value !==
-                (selectedConnector as unknown as EntityReferenceResponse<ConnectorReferenceDTO>)?.record?.identifier
+                  (selectedConnector as unknown as EntityReferenceResponse<ConnectorReferenceDTO>)?.record?.identifier
               ) {
-                resetFieldValue(clusterFieldName, formik)
+                resetFieldValue(formik, clusterFieldName)
               }
             }}
           />
@@ -201,8 +196,11 @@ const ECSInfraSpecInputForm = ({
               popoverClassName: cx(stepCss.formGroup, stepCss.md)
             },
             onChange: selectedRegion => {
-              if (get(formik?.values, regionFieldName) !== ((selectedRegion as SelectOption).value as string)) {
-                resetFieldValue(clusterFieldName, formik)
+              if (
+                formik &&
+                get(formik?.values, regionFieldName) !== ((selectedRegion as SelectOption).value as string)
+              ) {
+                resetFieldValue(formik, clusterFieldName)
               }
             }
           }}

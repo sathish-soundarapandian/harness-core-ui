@@ -11,6 +11,7 @@ import { defaultTo, get, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import { getShellOptions } from '@common/utils/ContainerRunStepUtils'
 import MultiTypeListInputSet from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
 import { getHasValuesAsRuntimeInputFromTemplate } from '@pipeline/utils/CIUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -26,7 +27,6 @@ import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import type { ContainerStepProps } from './types'
-import { GetShellOptions } from './helper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ContainerStep.module.scss'
 
@@ -115,7 +115,7 @@ export default function ContainerStepInputSet(props: ContainerStepProps): React.
           fieldPath={'spec.shell'}
           multiTypeInputProps={{
             selectProps: {
-              items: GetShellOptions(getString)
+              items: getShellOptions(getString)
             },
             expressions,
             allowableTypes
@@ -123,7 +123,7 @@ export default function ContainerStepInputSet(props: ContainerStepProps): React.
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
-          selectItems={GetShellOptions(getString)}
+          selectItems={getShellOptions(getString)}
         />
       )}
 

@@ -472,6 +472,7 @@ export interface StringsMap {
   'common.hourly': string
   'common.iacm': string
   'common.iacmText': string
+  'common.ifNotPresent': string
   'common.ignore': string
   'common.import': string
   'common.importEntityFromGit': string
@@ -516,6 +517,7 @@ export interface StringsMap {
   'common.logs.noLogsText': string
   'common.manage': string
   'common.manageSubscription': string
+  'common.matchType': string
   'common.member': string
   'common.modified': string
   'common.module.cd': string
@@ -1012,6 +1014,8 @@ export interface StringsMap {
   'common.supportText': string
   'common.supportedInFirstGeneration': string
   'common.supportedModals': string
+  'common.svcEnv2Banner': string
+  'common.svcEnvV2Truncated': string
   'common.switchAccount': string
   'common.switchAccountError': string
   'common.switchAccountSearch': string
@@ -3155,6 +3159,7 @@ export interface StringsMap {
   'code.homepageHeading': string
   'code.learnMore': string
   'code.pullRequests': string
+  'code.webhooks': string
   'pipeline.ACR.name': string
   'pipeline.ACR.registry': string
   'pipeline.ACR.registryError': string
@@ -3385,6 +3390,7 @@ export interface StringsMap {
   'pipeline.cannotAddTriggerInvalidPipeline': string
   'pipeline.cannotEditTriggerInvalidPipeline': string
   'pipeline.cannotRunInvalidPipeline': string
+  'pipeline.cannotRunUnsavedPipeline': string
   'pipeline.changeTemplateLabel': string
   'pipeline.ci.validations.invalidSize': string
   'pipeline.ci.validations.keyUnique': string
@@ -3568,12 +3574,15 @@ export interface StringsMap {
   'pipeline.execution.elapsedTime': string
   'pipeline.execution.emptyStepGroup': string
   'pipeline.execution.ignoreFailedWarningText': string
+  'pipeline.execution.instanceList': string
+  'pipeline.execution.instances': string
   'pipeline.execution.iotab.noInputText': string
   'pipeline.execution.iotab.noOutputText': string
   'pipeline.execution.layouts.bottom': string
   'pipeline.execution.layouts.float': string
   'pipeline.execution.layouts.minimize': string
   'pipeline.execution.layouts.right': string
+  'pipeline.execution.listDetails': string
   'pipeline.execution.noInputsText': string
   'pipeline.execution.pipelineActionMessages.abortedMessage': string
   'pipeline.execution.pipelineActionMessages.pausedMessage': string
@@ -3747,6 +3756,7 @@ export interface StringsMap {
   'pipeline.gitPullRequest': string
   'pipeline.gitPullRequestNumber': string
   'pipeline.gitRepo': string
+  'pipeline.imagePathHelperText': string
   'pipeline.imagePathLabel': string
   'pipeline.imageTag': string
   'pipeline.imageVersionDeprecated': string
@@ -3956,6 +3966,7 @@ export interface StringsMap {
   'pipeline.manifestType.path': string
   'pipeline.manifestType.pathPlaceholder': string
   'pipeline.manifestType.pathRequired': string
+  'pipeline.manifestType.periodPrefixValidation': string
   'pipeline.manifestType.pluginPathHelperText': string
   'pipeline.manifestType.repoNamePlaceholder': string
   'pipeline.manifestType.selectManifestStore': string
@@ -4009,6 +4020,7 @@ export interface StringsMap {
   'pipeline.noClustersFound': string
   'pipeline.noEnvironmentGroupsFound': string
   'pipeline.noFilePathsFound': string
+  'pipeline.noImagesFound': string
   'pipeline.noPipelinesLabel': string
   'pipeline.noPipelinesText': string
   'pipeline.noRegions': string
@@ -4030,7 +4042,9 @@ export interface StringsMap {
   'pipeline.openTemplateInNewTabLabel': string
   'pipeline.operatorPlaceholder': string
   'pipeline.outOf': string
+  'pipeline.outOfSyncErrorStrip.noErrorText': string
   'pipeline.outOfSyncErrorStrip.reconcile': string
+  'pipeline.outOfSyncErrorStrip.reconcileStarted': string
   'pipeline.outOfSyncErrorStrip.unsyncedTemplateInfo': string
   'pipeline.outOfSyncErrorStrip.updatedTemplateInfo': string
   'pipeline.overrideSets.configure': string
@@ -4136,11 +4150,14 @@ export interface StringsMap {
   'pipeline.requiredToFetch': string
   'pipeline.resilienceTab.title': string
   'pipeline.resourceConstraints.currentlyExecuting': string
+  'pipeline.resourceConstraints.ecsInfraEntity': string
   'pipeline.resourceConstraints.elastigroupInfraEntity': string
   'pipeline.resourceConstraints.infoText': string
   'pipeline.resourceConstraints.k8sNamespaceText': string
   'pipeline.resourceConstraints.serverlessInfraEntity': string
+  'pipeline.resourceConstraints.tanzuInfraEntity': string
   'pipeline.resourceConstraints.title': string
+  'pipeline.resourceConstraints.traditionalInfraEntity': string
   'pipeline.resourceConstraints.yourPipeline': string
   'pipeline.retryHistory': string
   'pipeline.retryHistoryDescription': string
@@ -4274,7 +4291,6 @@ export interface StringsMap {
   'pipeline.startup.script.subtitle': string
   'pipeline.startup.scriptFilePath': string
   'pipeline.step.validation.namePatternIsNotValid': string
-  'pipeline.stepCommonFields.ifNotPresent': string
   'pipeline.stepCommonFields.runAsUser': string
   'pipeline.stepCommonFields.validation.invalidLimitCPU': string
   'pipeline.stepCommonFields.validation.invalidLimitMemory': string
@@ -8272,6 +8288,7 @@ export interface StringsMap {
   'iacm.stackWizard.autoApprove': string
   'iacm.stackWizard.autoApproveRequired': string
   'iacm.stackWizard.connectorRequired': string
+  'iacm.stackWizard.gitFetchTypeRequired': string
   'iacm.stackWizard.provisionerDetails': string
   'iacm.stackWizard.provisionerType': string
   'iacm.stackWizard.provisionerTypeRequired': string

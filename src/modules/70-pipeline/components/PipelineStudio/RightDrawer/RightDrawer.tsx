@@ -61,6 +61,7 @@ import { AdvancedOptions } from '../AdvancedOptions/AdvancedOptions'
 import { RightDrawerTitle } from './RightDrawerTitle'
 import { getFlattenedStages } from '../StageBuilder/StageBuilderUtil'
 import { getFlattenedSteps } from '../CommonUtils/CommonUtils'
+import { isNewServiceEnvEntity } from '../CommonUtils/DeployStageSetupShellUtils'
 import css from './RightDrawer.module.scss'
 
 export const FullscreenDrawers: DrawerTypes[] = [
@@ -538,7 +539,12 @@ export function RightDrawer(): React.ReactElement {
 
   const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
 
-  const provisionerPath = NG_SVC_ENV_REDESIGN
+  const isNewEnvironmentEntityEnabled = isNewServiceEnvEntity(
+    !!NG_SVC_ENV_REDESIGN,
+    selectedStage?.stage as DeploymentStageElementConfig
+  )
+
+  const provisionerPath = isNewEnvironmentEntityEnabled
     ? 'environment.provisioner'
     : 'infrastructure.infrastructureDefinition.provisioner'
 

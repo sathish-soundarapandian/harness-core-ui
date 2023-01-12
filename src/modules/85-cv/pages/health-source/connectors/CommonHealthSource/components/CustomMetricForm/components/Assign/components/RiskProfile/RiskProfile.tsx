@@ -20,10 +20,12 @@ interface RiskProfileProps {
   continuousVerificationEnabled?: boolean
   serviceInstance?: string
   riskCategory?: string
+  defaultServiceInstance?: string
 }
 
 export function RiskProfile(props: RiskProfileProps): JSX.Element {
-  const { continuousVerificationEnabled, serviceInstance, riskCategory, riskProfileResponse } = props
+  const { continuousVerificationEnabled, serviceInstance, riskCategory, riskProfileResponse, defaultServiceInstance } =
+    props
   const { getString } = useStrings()
   return (
     <>
@@ -36,6 +38,7 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
         <Deviation />
         <ServiceInstance
           serviceInstance={serviceInstance}
+          defaultServiceInstance={defaultServiceInstance}
           continuousVerificationEnabled={continuousVerificationEnabled}
         />
       </Layout.Vertical>

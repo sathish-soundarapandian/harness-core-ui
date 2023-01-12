@@ -121,11 +121,7 @@ describe('FeatureFlagsPage', () => {
 
     fireEvent.click(document.getElementsByClassName('TableV2--row TableV2--card TableV2--clickable')[0] as HTMLElement)
 
-    expect(
-      screen.getByText(
-        '/account/dummy/cf/orgs/dummy/projects/dummy/feature-flags/hello_world?activeEnvironment=Mock_Environment'
-      )
-    ).toBeDefined()
+    expect(screen.getByTestId('location')).toHaveTextContent('dummy/feature-flags/hello_world')
   })
 
   test('Should go to edit page by clicking edit', async () => {
@@ -134,11 +130,7 @@ describe('FeatureFlagsPage', () => {
     fireEvent.click(document.querySelector('[data-icon="Options"]') as HTMLElement)
     fireEvent.click(document.querySelector('[icon="edit"]') as HTMLElement)
 
-    expect(
-      screen.getByText(
-        '/account/dummy/cf/orgs/dummy/projects/dummy/feature-flags/hello_world?activeEnvironment=Mock_Environment'
-      )
-    ).toBeDefined()
+    expect(screen.getByTestId('location')).toHaveTextContent('feature-flags/hello_world')
   })
 
   test('It should allow deleting', async () => {

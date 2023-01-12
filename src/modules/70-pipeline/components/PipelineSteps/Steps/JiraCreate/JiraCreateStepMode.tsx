@@ -411,6 +411,7 @@ function FormContent({
               }
             }
           }}
+          setRefValue
           disabled={isApprovalStepFieldDisabled(readonly)}
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
         />
@@ -539,6 +540,7 @@ function FormContent({
             selectedFields={formik.values.spec.selectedRequiredFields}
             renderRequiredFields={true}
             readonly={readonly}
+            connectorRef={defaultTo(connectorRefFixedValue, '')}
           />
         </div>
         {!ALLOW_USER_TYPE_FIELDS_JIRA && unsupportedRequiredFields?.length > 0 && (

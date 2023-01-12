@@ -6,12 +6,10 @@
  */
 
 import React from 'react'
-import { defaultTo } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
 import { Icon, Layout } from '@harness/uicore'
 
 import routes from '@common/RouteDefinitions'
-import type { GitOpsExecutionSummary } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
@@ -28,15 +26,9 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
   const serviceDisplayName = stageInfo.serviceInfo?.displayName
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
-  // This will removed with the multi service env list view effort
-  const gitOpsEnvironments = Array.isArray(stageInfo.gitopsExecutionSummary?.environments)
-    ? (stageInfo.gitopsExecutionSummary as Required<GitOpsExecutionSummary>).environments.map(envForGitOps =>
-        defaultTo(envForGitOps.name, '')
-      )
-    : []
-
+  const gitOpsEnvironments = stageInfo.gitopsExecutionSummary?.environments || []
   const environment = gitOpsEnvironments.length
-    ? gitOpsEnvironments.join(', ')
+    ? null
     : stageInfo.infraExecutionSummary?.name || stageInfo.infraExecutionSummary?.identifier
   const infra =
     stageInfo.infraExecutionSummary?.infrastructureName || stageInfo.infraExecutionSummary?.infrastructureIdentifier
@@ -45,44 +37,48 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
   const serviceScope = getScopeFromValue(stageInfo.serviceInfo?.identifier)
   const infrastructureScope = getScopeFromValue(stageInfo.infraExecutionSummary?.identifier)
 
-  return serviceDisplayName && environment ? (
+  return serviceDisplayName || environment ? (
     <Layout.Horizontal spacing="medium" className={css.cdExecutionSummary}>
-      <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center' }} className={css.service}>
-        <Icon name="services" size={14} />
-        <Link
-          to={routes.toServiceStudio({
-            module: 'cd',
-            accountId,
-            ...(serviceScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
-            ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-            serviceId: getIdentifierFromScopedRef(stageInfo.serviceInfo?.identifier || '')
-          })}
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          <span>{serviceDisplayName}</span>
-          {tag ? <span>&nbsp;({tag})</span> : null}
-        </Link>
-      </Layout.Horizontal>
+      {serviceDisplayName ? (
+        <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center' }}>
+          <Icon name="services" size={14} />
+          <Link
+            to={routes.toServiceStudio({
+              module: 'cd',
+              accountId,
+              ...(serviceScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+              ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
+              serviceId: getIdentifierFromScopedRef(stageInfo.serviceInfo?.identifier || '')
+            })}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <span>{serviceDisplayName}</span>
+            {tag ? <span>&nbsp;({tag})</span> : null}
+          </Link>
+        </Layout.Horizontal>
+      ) : null}
 
-      <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center' }}>
-        <Icon name="environments" size={12} />
-        <Link
-          to={routes.toEnvironmentDetails({
-            module: 'cd',
-            accountId,
-            ...(infrastructureScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
-            ...(infrastructureScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-            environmentIdentifier: getIdentifierFromScopedRef(stageInfo.infraExecutionSummary?.identifier || ''),
-            sectionId: 'INFRASTRUCTURE'
-          })}
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          <span>{environment}</span>
-          {infra ? <span>&nbsp;({infra})</span> : null}
-        </Link>
-      </Layout.Horizontal>
+      {environment ? (
+        <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center' }} className={css.environment}>
+          <Icon name="environments" size={12} />
+          <Link
+            to={routes.toEnvironmentDetails({
+              module: 'cd',
+              accountId,
+              ...(infrastructureScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+              ...(infrastructureScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
+              environmentIdentifier: getIdentifierFromScopedRef(stageInfo.infraExecutionSummary?.identifier || ''),
+              sectionId: 'INFRASTRUCTURE'
+            })}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <span>{environment}</span>
+            {infra ? <span>&nbsp;({infra})</span> : null}
+          </Link>
+        </Layout.Horizontal>
+      ) : null}
     </Layout.Horizontal>
   ) : null
 }

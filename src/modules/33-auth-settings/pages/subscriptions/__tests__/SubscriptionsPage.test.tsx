@@ -70,7 +70,8 @@ describe('Subscriptions Page', () => {
         data: {
           data: [
             {
-              edition: Editions.ENTERPRISE
+              edition: Editions.ENTERPRISE,
+              cdLicenseType: CDLicenseType.SERVICES
             }
           ],
           status: 'SUCCESS'
@@ -109,7 +110,8 @@ describe('Subscriptions Page', () => {
         data: {
           data: [
             {
-              edition: Editions.ENTERPRISE
+              edition: Editions.ENTERPRISE,
+              cdLicenseType: CDLicenseType.SERVICES
             }
           ],
           status: 'SUCCESS'
@@ -153,7 +155,8 @@ describe('Subscriptions Page', () => {
         data: {
           data: [
             {
-              edition: Editions.ENTERPRISE
+              edition: Editions.ENTERPRISE,
+              cdLicenseType: CDLicenseType.SERVICES
             }
           ],
           status: 'SUCCESS'
@@ -265,6 +268,7 @@ describe('Subscriptions Page', () => {
           data: [
             {
               edition: Editions.ENTERPRISE,
+              cdLicenseType: CDLicenseType.SERVICES,
               expiryTime: 0
             }
           ],
@@ -445,7 +449,8 @@ describe('Subscriptions Page', () => {
         data: {
           data: [
             {
-              edition: Editions.ENTERPRISE
+              edition: Editions.ENTERPRISE,
+              cdLicenseType: CDLicenseType.SERVICES
             }
           ],
           status: 'SUCCESS'

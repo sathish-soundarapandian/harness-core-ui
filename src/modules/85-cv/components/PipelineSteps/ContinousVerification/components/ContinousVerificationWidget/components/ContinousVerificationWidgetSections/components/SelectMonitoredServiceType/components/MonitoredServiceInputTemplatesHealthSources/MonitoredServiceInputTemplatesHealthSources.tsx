@@ -21,18 +21,19 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { TemplateInputs } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import {
-  doesHealthSourceHasQueries,
-  getMetricDefinitionPath,
-  getMetricDefinitions,
-  setCommaSeperatedList
+  enrichHealthSourceWithVersionForHealthsourceType,
+  getMetricDefinitionData,
+  getSourceTypeForConnector,
+  setCommaSeperatedList,
+  shouldRenderField,
+  showQueriesText
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
+import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
 import {
   CONNECTOR_REF,
   IDENTIFIER,
   INDEXES,
-  METRIC_DEFINITIONS,
   NAME,
-  QUERIES,
   spacingMedium
 } from './MonitoredServiceInputTemplatesHealthSources.constants'
 
@@ -54,14 +55,18 @@ export default function MonitoredServiceInputTemplatesHealthSources(
 
   return (
     <>
-      {healthSources?.map((healthSource: any, index: number) => {
-        const spec = healthSource?.spec || {}
-        const hasQueries = doesHealthSourceHasQueries(healthSource)
-        let path = `sources.healthSources.${index}.spec`
+      {healthSources?.map((healthSourceData: any, index: number) => {
+        const spec = healthSourceData?.spec || {}
+        const path = `sources.healthSources.${index}.spec`
         const fields = Object.entries(spec).map(item => {
           return { name: item[0], path: `${path}.${item[0]}` }
         })
-        const metricDefinitions = getMetricDefinitions(hasQueries, healthSource)
+
+        // TODO - this can be removed once the templateInputs api gives version also in healthsoure entity.
+        const healthSource = enrichHealthSourceWithVersionForHealthsourceType(
+          healthSourceData as UpdatedHealthSourceWithAllSpecs
+        )
+        const { metricDefinitions, metricDefinitionInptsetFormPath } = getMetricDefinitionData(healthSource, path)
 
         return (
           <Card key={`${healthSource?.name}.${index}`}>
@@ -81,16 +86,16 @@ export default function MonitoredServiceInputTemplatesHealthSources(
                       name={`spec.monitoredService.spec.templateInputs.${input.path}`}
                       label={getString('connector')}
                       placeholder={getString('cv.healthSource.connectors.selectConnector', {
-                        sourceType: healthSource?.type
+                        sourceType: getSourceTypeForConnector(healthSource)
                       })}
-                      disabled={!healthSource?.type}
+                      disabled={!getSourceTypeForConnector(healthSource)}
                       setRefValue
                       multiTypeProps={{ allowableTypes, expressions }}
-                      type={healthSource?.type}
+                      type={getSourceTypeForConnector(healthSource)}
                       enableConfigureOptions={false}
                     />
                   )
-                } else if (input.name !== METRIC_DEFINITIONS && input.name !== QUERIES) {
+                } else if (shouldRenderField(input)) {
                   return (
                     <FormInput.MultiTextInput
                       key={input.name}
@@ -107,56 +112,57 @@ export default function MonitoredServiceInputTemplatesHealthSources(
             ) : (
               <NoResultsView text={'No Runtime inputs available'} minimal={true} />
             )}
-            <Layout.Vertical padding={{ top: 'medium' }}>
-              {Array.isArray(metricDefinitions) && metricDefinitions.length
-                ? metricDefinitions.map((item: any, idx: number) => {
-                    path = getMetricDefinitionPath(path, hasQueries)
-                    const metricDefinitionFields = getNestedFields(item, [], `${path}.${idx}`)
-                    return (
-                      <>
-                        <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
-                          {hasQueries ? getString('cv.queries') : getString('cv.monitoringSources.metricLabel')}:{' '}
-                          {item?.metricName}
-                        </Text>
-                        {metricDefinitionFields.map(input => {
-                          if (input.name === INDEXES) {
-                            return (
-                              <FormInput.MultiTextInput
-                                key={input.name}
-                                name={`spec.monitoredService.spec.templateInputs.${input.path}`}
-                                label={getFieldLabelForVerifyTemplate(input.name, getString)}
-                                onChange={value =>
-                                  setCommaSeperatedList(
-                                    value as string,
-                                    onChange,
-                                    `spec.monitoredService.spec.templateInputs.${input.path}`
-                                  )
-                                }
-                                multiTextInputProps={{
-                                  expressions,
-                                  allowableTypes
-                                }}
-                              />
-                            )
-                          } else if (input.name !== IDENTIFIER && input.name !== NAME) {
-                            return (
-                              <FormInput.MultiTextInput
-                                key={input.name}
-                                name={`spec.monitoredService.spec.templateInputs.${input.path}`}
-                                label={getFieldLabelForVerifyTemplate(input.name, getString)}
-                                multiTextInputProps={{
-                                  expressions,
-                                  allowableTypes
-                                }}
-                              />
-                            )
-                          }
-                        })}
-                      </>
-                    )
-                  })
-                : null}
-            </Layout.Vertical>
+            {Array.isArray(metricDefinitions) && metricDefinitions.length ? (
+              <Layout.Vertical padding={{ top: 'medium' }}>
+                {metricDefinitions.map((item: any, idx: number) => {
+                  const metricDefinitionFields = getNestedFields(item, [], `${metricDefinitionInptsetFormPath}.${idx}`)
+                  return (
+                    <>
+                      <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
+                        {showQueriesText(healthSource)
+                          ? getString('cv.queries')
+                          : getString('cv.monitoringSources.metricLabel')}
+                        : {item?.metricName}
+                      </Text>
+                      {metricDefinitionFields.map(input => {
+                        if (input.name === INDEXES) {
+                          return (
+                            <FormInput.MultiTextInput
+                              key={input.name}
+                              name={`spec.monitoredService.spec.templateInputs.${input.path}`}
+                              label={getFieldLabelForVerifyTemplate(input.name, getString)}
+                              onChange={value =>
+                                setCommaSeperatedList(
+                                  value as string,
+                                  onChange,
+                                  `spec.monitoredService.spec.templateInputs.${input.path}`
+                                )
+                              }
+                              multiTextInputProps={{
+                                expressions,
+                                allowableTypes
+                              }}
+                            />
+                          )
+                        } else if (input.name !== IDENTIFIER && input.name !== NAME) {
+                          return (
+                            <FormInput.MultiTextInput
+                              key={input.name}
+                              name={`spec.monitoredService.spec.templateInputs.${input.path}`}
+                              label={getFieldLabelForVerifyTemplate(input.name, getString)}
+                              multiTextInputProps={{
+                                expressions,
+                                allowableTypes
+                              }}
+                            />
+                          )
+                        }
+                      })}
+                    </>
+                  )
+                })}
+              </Layout.Vertical>
+            ) : null}
           </Card>
         )
       })}

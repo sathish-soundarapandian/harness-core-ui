@@ -12,6 +12,7 @@ exports[`TAS BGAppSetupStep - runtime view and validation test Input set view va
 Object {
   "spec": Object {
     "existingVersionToKeep": undefined,
+    "tempRoutes": undefined,
   },
   "timeout": "Value must be greater than or equal to \\"10s\\"",
 }

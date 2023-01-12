@@ -299,6 +299,7 @@ export default function TfVarFileList(props: TfVarFileProps): React.ReactElement
                           setSelectedConnector={setSelectedConnector}
                           handleConnectorViewChange={() => setConnectorView(true)}
                           setConnectorView={setConnectorView}
+                          isTerragrunt={false}
                         />
                         {connectorView ? getNewConnectorSteps() : null}
                         {selectedConnector === 'Artifactory' ? (

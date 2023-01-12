@@ -36,7 +36,8 @@ import {
   ConnectorMap,
   ConnectorLabelMap,
   ConnectorTypes,
-  getPath
+  getPath,
+  TerragruntAllowedTypes
 } from './ConfigFileStoreHelper'
 import css from './ConfigFileStore.module.scss'
 
@@ -65,7 +66,7 @@ export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreSt
   isTerraformPlan = false,
   isBackendConfig = false,
   isTerragruntPlan = false,
-  isTerragrunt = false
+  isTerragrunt
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -75,7 +76,12 @@ export const ConfigFileStoreStepOne: React.FC<StepProps<any> & ConfigFileStoreSt
     accountId: string
   }>()
 
-  const storeTypes = isBackendConfig ? [...AllowedTypes, 'Harness'] : AllowedTypes
+  const storeTypes =
+    (isBackendConfig && isTerragrunt) || isTerragrunt
+      ? TerragruntAllowedTypes
+      : isBackendConfig
+      ? [...AllowedTypes, 'Harness']
+      : AllowedTypes
   const path = getPath(isTerraformPlan, isTerragruntPlan, isBackendConfig)
 
   useEffect(() => {

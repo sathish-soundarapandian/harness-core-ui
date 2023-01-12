@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react'
 import { useFormikContext } from 'formik'
-import { get } from 'lodash-es'
+import { defaultTo, get, isArray as checkIsArray } from 'lodash-es'
 import { FormGroup, IFormGroupProps, Intent, ITagInputProps, TagInput } from '@blueprintjs/core'
 import cx from 'classnames'
 
@@ -51,7 +51,7 @@ export function KVTagInputFixed(props: KVTagInputFixedProps): React.ReactElement
     <TagInput
       values={
         isArray
-          ? fieldValue || []
+          ? (checkIsArray(fieldValue) ? fieldValue : [fieldValue]) || []
           : Object.keys(fieldValue || {}).map(key => {
               const value = fieldValue[key]
               return value ? `${key}:${value}` : key
@@ -96,6 +96,7 @@ export interface FormMultiTypeKVTagInputProps extends Omit<IFormGroupProps, 'lab
   configureOptionsProps?: Omit<ConfigureOptionsProps, 'name' | 'type' | 'value' | 'onChange'>
   onChange?: (value: string[]) => void
   isArray?: boolean
+  type?: string
 }
 
 export function FormMultiTypeKVTagInput(props: FormMultiTypeKVTagInputProps): React.ReactElement {
@@ -108,6 +109,7 @@ export function FormMultiTypeKVTagInput(props: FormMultiTypeKVTagInputProps): Re
     enableConfigureOptions,
     configureOptionsProps,
     onChange,
+    type: configureType,
     ...restProps
   } = props
   const { getString } = useStrings()
@@ -163,7 +165,7 @@ export function FormMultiTypeKVTagInput(props: FormMultiTypeKVTagInputProps): Re
           <ConfigureOptions
             value={value}
             variableName={name}
-            type={getString('service')}
+            type={defaultTo(configureType, getString('service'))}
             onChange={handleConfigChange}
             {...configureOptionsProps}
           />

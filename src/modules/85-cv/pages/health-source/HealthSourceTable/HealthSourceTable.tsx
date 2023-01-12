@@ -62,11 +62,7 @@ export default function HealthSourceTable({
     const rowdata = row?.original
     return (
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-        <Icon
-          className={css.sourceTypeIcon}
-          name={getIconBySourceType(rowdata?.type as string, rowdata?.spec)}
-          size={22}
-        />
+        <Icon className={css.sourceTypeIcon} name={getIconBySourceType(rowdata?.type as string)} size={22} />
         <ContextMenuActions
           titleText={getString('cv.healthSource.deleteHealthSource')}
           contentText={getString('cv.healthSource.deleteHealthSourceWarning') + `: ${rowdata.identifier}`}
@@ -99,7 +95,7 @@ export default function HealthSourceTable({
 
   const renderTypeByFeature: Renderer<CellProps<RowData>> = ({ row }): JSX.Element => {
     const rowdata = row?.original
-    return <Text>{getTypeByFeature(rowdata?.type as string, getString, rowdata?.spec)}</Text>
+    return <Text>{getTypeByFeature(rowdata?.type as string, getString)}</Text>
   }
 
   const editRow = useCallback(rowToEdit => {

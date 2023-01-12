@@ -10,15 +10,14 @@ import { Formik, FormikForm, Accordion, Container } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
-import StepCommonFields, {
-  GetImagePullPolicyOptions
-} from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
+import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import { getConnectorRefWidth, isRuntimeInput } from '@pipeline/utils/CIUtils'
 import {
   getInitialValuesInCorrectFormat,
@@ -120,7 +119,7 @@ export const GitCloneStepBase = (
       initialValues={getInitialValuesInCorrectFormat<GitCloneStepData, GitCloneStepDataUI>(
         initialValues,
         transformValuesFieldsConfig,
-        { imagePullPolicyOptions: GetImagePullPolicyOptions() }
+        { imagePullPolicyOptions: getImagePullPolicyOptions(getString) }
       )}
       formName="GitCloneStep"
       validate={valuesToValidate => {

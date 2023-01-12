@@ -55,7 +55,7 @@ jest.mock('@pipeline/components/AbstractSteps/StepWidget', () => ({
 describe('deploy environment entity widget', () => {
   test('renders single environment and can toggle empty state to multi environment', async () => {
     render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags: { ENV_GROUP: true } }}>
+      <TestWrapper>
         <DeployEnvironmentEntityWidget
           initialValues={{ environment: '', category: 'single' }}
           allowableTypes={allowableTypes}
@@ -85,7 +85,7 @@ describe('deploy environment entity widget', () => {
 
   test('renders single environment and can toggle with state to multi environment', async () => {
     render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags: { ENV_GROUP: true } }}>
+      <TestWrapper>
         <DeployEnvironmentEntityWidget
           initialValues={{ environment: 'Env_1', category: 'single' }}
           allowableTypes={allowableTypes}

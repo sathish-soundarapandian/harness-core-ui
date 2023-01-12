@@ -20,7 +20,7 @@ import css from './ExecutionLayoutFloatingView.module.scss'
  * This component will only be rendered when layout === 'FLOATING'
  */
 export default function ExecutionLayoutFloatingView(props: React.PropsWithChildren<unknown>): React.ReactElement {
-  const { layout, restoreDialog } = useExecutionLayoutContext()
+  const { layout, restoreDialog, isCollapsedNodePaneVisible } = useExecutionLayoutContext()
   const [position, setPosition] = useLocalStorage('execution_layout_float_position', { x: -40, y: -30 })
   const [isOpen, setIsOpen] = React.useState(true)
   const [referenceElement, setReferenceElement] = React.useState<HTMLElement | null>(null)
@@ -86,7 +86,9 @@ export default function ExecutionLayoutFloatingView(props: React.PropsWithChildr
               variation={ButtonVariation.LINK}
               data-testid="restore"
             >
-              <String stringID="pipeline.stepDetails" />
+              <String
+                stringID={isCollapsedNodePaneVisible ? 'pipeline.execution.listDetails' : 'pipeline.stepDetails'}
+              />
             </Button>
           </div>
         </Draggable>

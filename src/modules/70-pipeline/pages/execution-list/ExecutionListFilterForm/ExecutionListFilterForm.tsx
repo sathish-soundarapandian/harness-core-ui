@@ -12,7 +12,7 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { FilterProperties } from 'services/pipeline-ng'
 import {
-  getOptionsForMultiSelect,
+  getExecutionStatusOptions,
   BUILD_TYPE,
   DeploymentTypeContext,
   BuildTypeContext
@@ -235,7 +235,7 @@ export function ExecutionListFilterForm<
         ) : null}
         {type === 'PipelineExecution' ? (
           <FormInput.MultiSelect
-            items={getOptionsForMultiSelect()}
+            items={getExecutionStatusOptions()}
             name="status"
             label={getString('status')}
             placeholder={getString('pipeline.jiraUpdateStep.selectStatus')}

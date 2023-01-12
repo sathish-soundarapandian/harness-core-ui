@@ -48,7 +48,7 @@ export function CommonRecords(props: CommonRecordsProps): JSX.Element {
     )
   } else if (!isQueryExecuted) {
     content = (
-      <Container className={css.noDataContainer}>
+      <Container className={cx(css.centerElement, css.noDataContainer)}>
         <NoDataCard
           message={
             <Text padding={{ top: 'small', left: 'medium' }}>

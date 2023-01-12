@@ -56,15 +56,15 @@ import css from './PipelineStageAdvancedSpecifications.module.scss'
 const memoizedParse = memoize(parse)
 
 function PipelineInputSetFormBasic(): React.ReactElement {
-  const { accountId, branch, repoIdentifier, connectorRef } = useParams<
+  const { accountId } = useParams<
     PipelineType<{
       orgIdentifier: string
       projectIdentifier: string
       pipelineIdentifier: string
       accountId: string
-    }> &
-      GitQueryParams
+    }>
   >()
+  const { connectorRef, repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
   const {
     state: {
       selectionState: { selectedStageId = '' }
@@ -175,7 +175,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
         branch,
         getDefaultFromOtherRepo: true,
         parentEntityConnectorRef: connectorRef,
-        parentEntityRepoName: repoIdentifier
+        parentEntityRepoName: repoName
       }
     }
   )

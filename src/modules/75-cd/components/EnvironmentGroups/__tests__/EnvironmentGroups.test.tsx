@@ -71,6 +71,9 @@ describe('Environment Group Tests', () => {
   test('first render and search term change', async () => {
     const { container } = render(
       <TestWrapper
+        defaultFeatureFlagValues={{
+          NG_SVC_ENV_REDESIGN: true
+        }}
         path={routes.toEnvironmentGroups({ ...projectPathProps, ...modulePathProps })}
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy', module: 'cd' }}
       >

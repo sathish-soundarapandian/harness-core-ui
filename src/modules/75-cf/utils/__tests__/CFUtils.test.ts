@@ -8,7 +8,6 @@
 import { cloneDeep, omit, set } from 'lodash-es'
 import type { Feature } from 'services/cf'
 import * as CFUtils from '../CFUtils'
-import { rewriteCurrentLocationWithActiveEnvironment } from '../CFUtils'
 
 describe('CFUtils', () => {
   beforeEach(() => {
@@ -91,56 +90,6 @@ describe('CFUtils', () => {
       const flag = omit(mockFlag, 'envProperties.defaultServe')
 
       expect(CFUtils.getDefaultVariation(flag)).toEqual(flag.variations[1])
-    })
-  })
-
-  describe('rewriteCurrentLocationWithActiveEnvironment', () => {
-    const realLocation = global.location
-    const replaceMock = jest.fn()
-
-    beforeAll(() => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      delete global.location
-      global.location = { ...realLocation, replace: replaceMock }
-    })
-
-    afterAll(() => {
-      global.location = realLocation
-    })
-
-    test('it should not change the URL when env is the same as the active env', async () => {
-      const env = 'test'
-      location.href = `https://test.com?activeEnvironment=${env}`
-
-      rewriteCurrentLocationWithActiveEnvironment(env)
-
-      expect(replaceMock).not.toHaveBeenCalled()
-    })
-
-    test('it should try to change the URL when env is different than the active env', async () => {
-      const env = 'test'
-      location.href = 'https://test.com?activeEnvironment=someotherenv'
-
-      rewriteCurrentLocationWithActiveEnvironment(env)
-
-      expect(replaceMock).toHaveBeenCalledWith(expect.stringContaining(`activeEnvironment=${env}`))
-    })
-
-    test('it should try to remove activeEnvironment from the URL if env is not passed', async () => {
-      location.href = 'https://test.com?activeEnvironment=someotherenv'
-
-      rewriteCurrentLocationWithActiveEnvironment()
-
-      expect(replaceMock).toHaveBeenCalledWith(expect.not.stringContaining('activeEnvironment'))
-    })
-
-    test('it should try to remove activeEnvironment from the URL if env is empty', async () => {
-      location.href = 'https://test.com?activeEnvironment=someotherenv'
-
-      rewriteCurrentLocationWithActiveEnvironment('')
-
-      expect(replaceMock).toHaveBeenCalledWith(expect.not.stringContaining('activeEnvironment'))
     })
   })
 })

@@ -5,12 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-const useActiveEnvironment = (): {
+import { useLocation } from 'react-router-dom'
+import { useMemo } from 'react'
+
+export interface UseActiveEnvironmentPayload {
   activeEnvironment: string
   withActiveEnvironment: (url: string, envOverride?: string) => string
-} => {
-  const params = new URLSearchParams(location.href.split('?')?.[1])
-  const activeEnvironment = params.get('activeEnvironment') ?? ''
+}
+const useActiveEnvironment = (): UseActiveEnvironmentPayload => {
+  const { search } = useLocation()
+  const activeEnvironment = useMemo<string>(() => new URLSearchParams(search).get('activeEnvironment') || '', [search])
 
   const withActiveEnvironment = (url: string, envOverride?: string): string => {
     const env = envOverride ?? activeEnvironment

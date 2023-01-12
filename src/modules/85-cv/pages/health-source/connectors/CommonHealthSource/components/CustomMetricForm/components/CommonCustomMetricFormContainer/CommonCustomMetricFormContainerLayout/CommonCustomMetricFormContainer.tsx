@@ -34,7 +34,8 @@ import {
   getRecordsRequestBody
 } from './CommonCustomMetricFormContainer.utils'
 import { useCommonHealthSource } from '../../CommonHealthSourceContext/useCommonHealthSource'
-import SelectHealthSourceServices from '../../Assign/AssignQuery'
+import { HEALTHSOURCE_TYPE_TO_PROVIDER_MAPPING } from './CommonCustomMetricFormContainer.constants'
+import AssignQuery from '../../Assign/AssignQuery'
 
 export default function CommonCustomMetricFormContainer(props: CommonCustomMetricFormContainerProps): JSX.Element {
   const { values } = useFormikContext<CommonCustomMetricFormikInterface>()
@@ -45,12 +46,10 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   const [records, setRecords] = useState<Record<string, any>[]>([])
   const [isQueryExecuted, setIsQueryExecuted] = useState<boolean>(false)
   const [healthSourceTimeSeriesData, setHealthSourceTimeSeriesData] = useState<TimeSeries[] | undefined>()
-
   const { isQueryRuntimeOrExpression } = useCommonHealthSource()
-
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const chartConfig = healthSourceConfig?.customMetrics?.metricsChart
-  const providerType = product?.value
+  const providerType = HEALTHSOURCE_TYPE_TO_PROVIDER_MAPPING[product?.value]
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
   const isLogsTableVisible = getIsLogsTableVisible(healthSourceConfig)
   const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
@@ -112,6 +111,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   }
 
   const isDataAvailableForLogsTable = Boolean(!fetchingSampleRecordLoading && !error && records?.length)
+  const { sli, healthScore, riskCategory, serviceInstance, continuousVerification } = values
 
   return (
     <Container key={values?.identifier} padding={'small'} margin={'small'}>
@@ -143,6 +143,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
       {isLogsTableVisible && (
         <LogsTableContainer
           fieldMappings={healthSourceConfig?.customMetrics?.fieldMappings}
+          //TODO this extra function should not be required.
           providerType={getProviderType(sourceData) as QueryRecordsRequest['providerType']}
           connectorIdentifier={connectorIdentifier}
           sampleRecords={records}
@@ -153,17 +154,19 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
 
       {/* ⭐️ Assign section */}
       {healthSourceConfig.customMetrics?.assign?.enabled && (
-        <SelectHealthSourceServices
+        <AssignQuery
           values={{
-            sli: !!values.sli,
-            healthScore: !!values.healthScore,
-            riskCategory: values?.riskCategory,
-            continuousVerification: !!values.continuousVerification
+            riskCategory,
+            serviceInstance,
+            sli: Boolean(sli),
+            healthScore: Boolean(healthScore),
+            continuousVerification: Boolean(continuousVerification)
           }}
           riskProfileResponse={riskProfileResponse}
           hideCV={healthSourceConfig.customMetrics?.assign?.hideCV}
           hideServiceIdentifier={healthSourceConfig.customMetrics?.assign?.hideServiceIdentifier}
           hideSLIAndHealthScore={healthSourceConfig.customMetrics?.assign?.hideSLIAndHealthScore}
+          defaultServiceInstance={healthSourceConfig.customMetrics?.assign?.defaultServiceInstance}
         />
       )}
     </Container>

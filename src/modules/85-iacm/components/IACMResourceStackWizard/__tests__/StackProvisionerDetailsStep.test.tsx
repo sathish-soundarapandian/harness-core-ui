@@ -22,7 +22,6 @@ const mockData = {
   name: 'test stack',
   provisionerType: 'terraform',
   provisionerVersion: '2.0.0',
-  ttl: '1669208915047',
   workspace: 'test workspace'
 }
 

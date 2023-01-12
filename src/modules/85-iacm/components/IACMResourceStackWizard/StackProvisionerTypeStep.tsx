@@ -18,7 +18,7 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-import { NameIdDescriptionTags } from '@common/components'
+import { NameIdDescription } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import type { StackWizardStepProps } from './index'
 import css from './StackWizard.module.scss'
 
@@ -26,9 +26,15 @@ interface Provisioner {
   label: string
   icon: IconName
   value: string
+  disabled?: boolean
+  tooltip?: string
 }
 
 const provisioners = (_getString: UseStringsReturn['getString']): Provisioner[] => {
+  const comingSoon = {
+    disabled: true,
+    tooltip: _getString('common.comingSoon')
+  }
   return [
     {
       label: _getString('iacm.terraform'),
@@ -37,28 +43,33 @@ const provisioners = (_getString: UseStringsReturn['getString']): Provisioner[] 
     },
     {
       label: _getString('iacm.terragrunt'),
-      icon: 'service-terraform',
-      value: 'terragrunt'
+      icon: 'service-terragrunt',
+      value: 'terragrunt',
+      ...comingSoon
     },
     {
       label: _getString('iacm.pulumi'),
-      icon: 'service-terraform',
-      value: 'pulumi'
+      icon: 'service-pulumi',
+      value: 'pulumi',
+      ...comingSoon
     },
     {
       label: _getString('iacm.cdk'),
-      icon: 'service-terraform',
-      value: 'cdk'
+      icon: 'service-cdk',
+      value: 'cdk',
+      ...comingSoon
     },
     {
       label: _getString('iacm.ansible'),
-      icon: 'service-terraform',
-      value: 'ansible'
+      icon: 'service-ansible',
+      value: 'ansible',
+      ...comingSoon
     },
     {
       label: _getString('iacm.cloudformation'),
-      icon: 'service-terraform',
-      value: 'cloudformation'
+      icon: 'service-cloudformation',
+      value: 'cloudformation',
+      ...comingSoon
     }
   ]
 }
@@ -69,7 +80,7 @@ const ProvisionerTypeStep: React.FC<StackWizardStepProps> = props => {
 
   return (
     <Layout.Vertical height="inherit" spacing="medium" className={css.optionsViewContainer}>
-      <Heading level="3" margin={{ bottom: 'xxxlarge' }}>
+      <Heading level="2" margin={{ bottom: 'xxxlarge' }}>
         {name}
       </Heading>
       <Formik
@@ -101,7 +112,7 @@ const ProvisionerTypeStep: React.FC<StackWizardStepProps> = props => {
                       setFieldValue('provisionerType', provisionerTypeSelected)
                     }}
                   />
-                  <NameIdDescriptionTags
+                  <NameIdDescription
                     formikProps={formik}
                     identifierProps={{ inputName: 'name' }}
                     className={css.nameIdDescContainer}

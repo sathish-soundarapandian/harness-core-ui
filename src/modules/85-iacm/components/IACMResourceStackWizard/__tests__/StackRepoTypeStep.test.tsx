@@ -22,10 +22,38 @@ const mockData = {
   name: 'test stack',
   provisionerType: 'terraform',
   provisionerVersion: '2.0.0',
-  ttl: '1669208915047',
   workspace: 'test workspace',
   repoConnectorType: 'Git',
-  repoConnector: 'test'
+  repoConnector: 'test',
+  repoConnectorObject: {
+    connector: {
+      description: null,
+      identifier: 'test',
+      name: 'test',
+      orgIdentifier: 'harness',
+      projectIdentifier: 'iacm',
+      spec: {
+        branchName: null,
+        connectionType: 'Account',
+        delegateSelectors: [],
+        executeOnDelegate: true,
+        spec: {
+          passwordRef: 'secret',
+          username: 'test',
+          usernameRef: null
+        },
+        type: 'Http',
+        url: 'http://null',
+        validationRepo: 'test'
+      },
+      tags: {},
+      type: 'Git'
+    },
+    label: 'test',
+    live: false,
+    scope: 'project',
+    value: 'test'
+  }
 }
 
 const renderComponent = (): RenderResult => {

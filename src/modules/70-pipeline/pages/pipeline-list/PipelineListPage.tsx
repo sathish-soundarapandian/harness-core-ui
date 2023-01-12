@@ -12,7 +12,6 @@ import {
   ExpandingSearchInput,
   ExpandingSearchInputHandle,
   HarnessDocTooltip,
-  Layout,
   Text,
   useToggleOpen
 } from '@harness/uicore'
@@ -33,7 +32,6 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useStrings } from 'framework/strings'
 import {
-  FilterDTO,
   PMSPipelineSummaryResponse,
   useGetPipelineList,
   useGetRepositoryList,
@@ -44,26 +42,28 @@ import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { CreatePipeline } from './CreatePipeline/CreatePipeline'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
-import { getEmptyStateIllustration, queryParamOptions } from './PipelineListUtils'
+import { getEmptyStateIllustration, getFiltersRequestPayload, queryParamOptions } from './PipelineListUtils'
 import type {
   PipelineListPagePathParams,
   PipelineListPageQueryParams,
   ProcessedPipelineListPageQueryParams
 } from './types'
 import { PipelineListFilter } from './PipelineListFilter/PipelineListFilter'
+import { getIsSavedFilterApplied } from '../execution-list/utils/executionListUtil'
 import css from './PipelineListPage.module.scss'
 
 function _PipelineListPage(): React.ReactElement {
   const { getString } = useStrings()
   const searchRef = useRef({} as ExpandingSearchInputHandle)
-  const [appliedFilter, setAppliedFilter] = useState<FilterDTO | undefined>() // selected filter
   const [pipelineToClone, setPipelineToClone] = useState<PMSPipelineSummaryResponse>()
   const { getRBACErrorMessage } = useRBACError()
   const { showSuccess, showError } = useToaster()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
-  const { searchTerm, repoIdentifier, branch, page, size, repoName } = queryParams
+  const { searchTerm, repoIdentifier, branch, page, size, repoName, filterIdentifier, filters } = queryParams
+  const isSavedFilterApplied = getIsSavedFilterApplied(queryParams.filterIdentifier)
+
   const pathParams = useParams<PipelineListPagePathParams>()
   const { projectIdentifier, orgIdentifier, accountId, module } = pathParams
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<PipelineListPageQueryParams>>()
@@ -90,12 +90,9 @@ function _PipelineListPage(): React.ReactElement {
   })
   const { globalFreezes } = useGlobalFreezeBanner()
   const pipelinesQuery = useMutateAsGet(useGetPipelineList, {
-    body: {
-      filterType: 'PipelineSetup',
-      repoName,
-      ...appliedFilter?.filterProperties
-    },
+    body: !isSavedFilterApplied && queryParams.filters ? getFiltersRequestPayload(queryParams.filters) : null,
     queryParams: {
+      filterIdentifier: isSavedFilterApplied ? filterIdentifier : undefined,
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
@@ -134,7 +131,6 @@ function _PipelineListPage(): React.ReactElement {
 
   const resetFilter = (): void => {
     searchRef.current.clear()
-    setAppliedFilter(undefined)
     replaceQueryParams({})
   }
 
@@ -174,7 +170,7 @@ function _PipelineListPage(): React.ReactElement {
     }
   }
 
-  const hasFilter = !!(appliedFilter || searchTerm)
+  const hasFilter = !!(filterIdentifier || searchTerm || filters)
 
   return (
     <>
@@ -188,7 +184,7 @@ function _PipelineListPage(): React.ReactElement {
         breadcrumbs={<NGBreadcrumbs links={[]} />}
       />
       <Page.SubHeader className={css.subHeader}>
-        <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+        <div className={css.subHeaderItems}>
           <CreatePipeline onSuccess={pipelinesQuery.refetch} />
           {isGitSyncEnabled ? (
             <GitFilters
@@ -209,8 +205,8 @@ function _PipelineListPage(): React.ReactElement {
               onRefetch={repoListQuery.refetch}
             />
           )}
-        </Layout.Horizontal>
-        <Layout.Horizontal style={{ alignItems: 'center' }}>
+          <div className={css.flexExpand} />
+
           <ExpandingSearchInput
             alwaysExpanded
             width={200}
@@ -220,14 +216,9 @@ function _PipelineListPage(): React.ReactElement {
             }}
             defaultValue={searchTerm}
             ref={searchRef}
-            className={css.expandSearch}
           />
-          <PipelineListFilter
-            queryParams={queryParams}
-            setAppliedFilter={setAppliedFilter}
-            appliedFilter={appliedFilter}
-          />
-        </Layout.Horizontal>
+          <PipelineListFilter />
+        </div>
       </Page.SubHeader>
 
       <GlobalFreezeBanner globalFreezes={globalFreezes} />

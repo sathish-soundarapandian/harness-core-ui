@@ -6,8 +6,8 @@
  */
 
 import type { SLIMetricSpec } from 'services/cv'
+import { PeriodTypeEnum } from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.constants'
 import { SLIMetricEnum, SLITypeEnum } from './components/SLI/SLI.constants'
-import { PeriodTypeEnum } from './components/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.constants'
 
 export enum CreateSLOEnum {
   NAME = 'Name',

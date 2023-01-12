@@ -96,7 +96,7 @@ export const createOption = (label: string, value: string, count?: number): Mult
   } as MultiSelectOption
 }
 
-export const getOptionsForMultiSelect = (): MultiSelectOption[] => {
+export const getExecutionStatusOptions = (): MultiSelectOption[] => {
   return Object.keys(EXECUTION_STATUS).map(key => {
     const text = EXECUTION_STATUS[parseInt(key)] || ''
     return createOption(startCase(text), text)

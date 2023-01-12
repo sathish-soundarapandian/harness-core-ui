@@ -5,22 +5,36 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { defaultTo, get } from 'lodash-es'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
-import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { useMutateAsGet } from '@common/hooks'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { SidecarArtifact, useGetBuildDetailsForEcr, useGetBuildDetailsForEcrWithYaml } from 'services/cd-ng'
+import React, { useCallback, useMemo } from 'react'
+import { defaultTo, get, isNil, memoize } from 'lodash-es'
+import type { IItemRendererProps } from '@blueprintjs/select'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+
+import {
+  GetImagesListForEcrQueryParams,
+  SidecarArtifact,
+  useGetBuildDetailsForEcr,
+  useGetBuildDetailsForEcrWithYaml,
+  useGetImagesListForEcr
+} from 'services/cd-ng'
 import { NameValuePair, useListAwsRegions } from 'services/portal'
-import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
+import { useMutateAsGet } from '@common/hooks'
 import { useStrings } from 'framework/strings'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
+import { checkIfQueryParamsisNotEmpty, resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
+import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -30,8 +44,6 @@ import {
   getYamlData,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
-  resetTags,
-  shouldFetchTagsSource,
   isExecutionTimeFieldDisabled,
   getValidInitialValuePath
 } from '../artifactSourceUtils'
@@ -70,10 +82,18 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     useArtifactV1Data = false
   } = props
 
-  const { getString } = useStrings()
-  const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
-  const { expressions } = useVariablesExpression()
   const [lastQueryData, setLastQueryData] = React.useState({ connectorRef: '', imagePath: '', region: '' })
+  const [imagesListLastQueryData, setImagesListLastQueryData] = React.useState({
+    connectorRef: '',
+    region: ''
+  })
+
+  const { getString } = useStrings()
+  const { expressions } = useVariablesExpression()
+  const { getRBACErrorMessage } = useRBACError()
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+
+  const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const imagePathValue = getImagePath(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.imagePath`, ''), artifact?.spec?.imagePath),
     get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
@@ -86,6 +106,94 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.region`, ''), artifact?.spec?.region),
     get(initialValues?.artifacts, `${artifactPath}.spec.region`, '')
   )
+
+  // Image Path
+  const imagesListAPIQueryParams: GetImagesListForEcrQueryParams = {
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    connectorRef: getFinalQueryParamValue(connectorRefValue),
+    region: getFinalQueryParamValue(regionValue),
+    repoIdentifier,
+    branch,
+    pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+    serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+    fqnPath: getFqnPath(
+      path as string,
+      !!isPropagatedStage,
+      stageIdentifier,
+      defaultTo(
+        isSidecar
+          ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+          : artifactPath,
+        ''
+      ),
+      'imagePath'
+    )
+  }
+
+  const {
+    data: imagesListData,
+    loading: imagesListLoading,
+    refetch: refetchImagesList,
+    error: imagesListError
+  } = useMutateAsGet(useGetImagesListForEcr, {
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: imagesListAPIQueryParams,
+    lazy: true,
+    debounce: 300
+  })
+
+  const allImageOptions = useMemo(() => {
+    if (imagesListLoading) {
+      return [{ label: getString('loading'), value: getString('loading') }]
+    }
+    return defaultTo(
+      imagesListData?.data?.images?.map((image: string) => ({
+        label: defaultTo(image, ''),
+        value: defaultTo(image, '')
+      })),
+      []
+    )
+  }, [imagesListLoading, imagesListError, imagesListData])
+
+  const canFetchImagesList = useCallback((): boolean => {
+    if (NG_SVC_ENV_REDESIGN) {
+      let shouldFetchImages = false
+      if (isFieldRuntime(`artifacts.${artifactPath}.spec.connectorRef`, template)) {
+        shouldFetchImages = !!(
+          imagesListLastQueryData.connectorRef !== connectorRefValue &&
+          checkIfQueryParamsisNotEmpty([connectorRefValue])
+        )
+      }
+      if (!shouldFetchImages && isFieldRuntime(`artifacts.${artifactPath}.spec.region`, template)) {
+        shouldFetchImages = !!(
+          imagesListLastQueryData.region !== regionValue && checkIfQueryParamsisNotEmpty([regionValue])
+        )
+      }
+      return shouldFetchImages || isNil(imagesListData?.data)
+    } else {
+      return !!(
+        (imagesListLastQueryData.connectorRef != connectorRefValue || imagesListLastQueryData.region !== regionValue) &&
+        checkIfQueryParamsisNotEmpty([connectorRefValue, regionValue])
+      )
+    }
+  }, [NG_SVC_ENV_REDESIGN, template, imagesListLastQueryData, connectorRefValue, regionValue, imagesListData?.data])
+
+  const fetchImagesList = useCallback((): void => {
+    if (canFetchImagesList()) {
+      setImagesListLastQueryData({
+        connectorRef: connectorRefValue,
+        region: regionValue
+      })
+      refetchImagesList()
+    }
+  }, [canFetchImagesList, refetchImagesList])
 
   // v1 tags api is required to fetch tags for artifact source template usage while linking to service
   // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
@@ -169,7 +277,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
 
   const regions = defaultTo(regionData?.resource, []).map((region: NameValuePair) => ({
     value: region.value,
-    label: region.name
+    label: defaultTo(region.name, '')
   }))
 
   const fetchTags = (): void => {
@@ -185,7 +293,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
         lastQueryData.imagePath !== imagePathValue ||
         getMultiTypeFromValue(artifact?.spec?.imagePath) === MultiTypeInputType.EXPRESSION ||
         lastQueryData.region !== regionValue) &&
-      shouldFetchTagsSource([connectorRefValue, imagePathValue, regionValue])
+      checkIfQueryParamsisNotEmpty([connectorRefValue, imagePathValue, regionValue])
     )
   }
 
@@ -208,7 +316,30 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     }
     return false
   }
+
+  const getImagePathHelperText = () => {
+    if (
+      (getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.imagePath`)) ===
+        MultiTypeInputType.FIXED &&
+        (getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.RUNTIME || connectorRefValue?.length === 0)) ||
+      getMultiTypeFromValue(regionValue) === MultiTypeInputType.RUNTIME ||
+      regionValue?.length === 0
+    ) {
+      return getString('pipeline.imagePathHelperText')
+    }
+  }
+
   const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
+
+  const itemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem
+      item={item}
+      itemProps={itemProps}
+      disabled={imagesListLoading || !!imagesListError}
+      style={imagesListError ? { lineClamp: 1, width: 400, padding: 'small' } : {}}
+    />
+  ))
+
   return (
     <>
       {isRuntime && (
@@ -230,7 +361,18 @@ const Content = (props: ECRRenderContent): JSX.Element => {
                 allowableTypes,
                 expressions
               }}
-              onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
+              onChange={(selected, _typeValue) => {
+                const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
+                const newConnectorRefValue =
+                  item.scope === Scope.ORG || item.scope === Scope.ACCOUNT
+                    ? `${item.scope}.${item?.record?.identifier}`
+                    : item.record?.identifier
+
+                if (newConnectorRefValue !== connectorRefValue) {
+                  resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.imagePath`)
+                  resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.tag`)
+                }
+              }}
               className={css.connectorMargin}
               type={ArtifactToConnectorMap[defaultTo(artifact?.type, '')]}
               gitScope={{
@@ -240,15 +382,20 @@ const Content = (props: ECRRenderContent): JSX.Element => {
               }}
             />
           )}
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.region`, template) && (
-              <ExperimentalInput
+
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.region`, template) && (
+            <div className={css.inputFieldLayout}>
+              <SelectInputSetView
+                fieldPath={`artifacts.${artifactPath}.spec.region`}
+                template={template}
                 formik={formik}
                 multiTypeInputProps={{
-                  onChange: () => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`),
+                  onChange: () => {
+                    resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.imagePath`)
+                    resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.tag`)
+                  },
                   selectProps: {
                     usePortal: true,
-                    addClearBtn: !readonly,
                     items: regions
                   },
                   expressions,
@@ -259,41 +406,58 @@ const Content = (props: ECRRenderContent): JSX.Element => {
                 selectItems={regions}
                 label={getString('regionLabel')}
                 name={`${path}.artifacts.${artifactPath}.spec.region`}
-              />
-            )}
-            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.region`)) ===
-              MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
-                className={css.configureOptions}
-                style={{ alignSelf: 'center' }}
-                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.region`)}
-                type="String"
-                variableName="region"
-                showRequiredField={false}
-                isReadonly={readonly}
-                showDefaultField={true}
-                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
-                onChange={value => {
-                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.region`, value)
+                configureOptionsProps={{
+                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType as StepViewType)
                 }}
               />
-            )}
-          </div>
+            </div>
+          )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.imagePath`, template) && (
-            <TextFieldInputSetView
-              label={getString('pipeline.imagePathLabel')}
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.imagePath`)}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              name={`${path}.artifacts.${artifactPath}.spec.imagePath`}
-              onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
-              fieldPath={`artifacts.${artifactPath}.spec.imagePath`}
-              template={template}
-            />
+            <div className={css.inputFieldLayout}>
+              <SelectInputSetView
+                fieldPath={`artifacts.${artifactPath}.spec.imagePath`}
+                template={template}
+                selectItems={allImageOptions}
+                label={getString('pipeline.imagePathLabel')}
+                placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
+                name={`${path}.artifacts.${artifactPath}.spec.imagePath`}
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.imagePath`)}
+                helperText={getImagePathHelperText()}
+                useValue
+                multiTypeInputProps={{
+                  expressions,
+                  allowableTypes,
+                  onChange: selected => {
+                    if (imagePathValue !== (selected as any)?.value) {
+                      resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.tag`)
+                    }
+                  },
+                  selectProps: {
+                    noResults: (
+                      <Text lineClamp={1} width={400} padding="small">
+                        {getRBACErrorMessage(imagesListError as RBACError) || getString('pipeline.noImagesFound')}
+                      </Text>
+                    ),
+                    itemRenderer: itemRenderer,
+                    items: allImageOptions,
+                    allowCreatingNewItems: true,
+                    usePortal: true
+                  },
+                  onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                    if (
+                      e?.target?.type !== 'text' ||
+                      (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                    ) {
+                      return
+                    }
+                    if (!imagesListLoading) {
+                      fetchImagesList()
+                    }
+                  }
+                }}
+              />
+            </div>
           )}
 
           {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) && (
@@ -319,11 +483,14 @@ const Content = (props: ECRRenderContent): JSX.Element => {
               fetchTags={fetchTags}
               expressions={expressions}
               stageIdentifier={stageIdentifier}
+              template={template}
             />
           )}
-          <div className={css.inputFieldLayout}>
-            {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
-              <FormInput.MultiTextInput
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
+            <div className={css.inputFieldLayout}>
+              <TextFieldInputSetView
+                fieldPath={`artifacts.${artifactPath}.spec.tagRegex`}
+                template={template}
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
                 multiTextInputProps={{
                   expressions,
@@ -331,27 +498,12 @@ const Content = (props: ECRRenderContent): JSX.Element => {
                 }}
                 label={getString('tagRegex')}
                 name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
-              />
-            )}
-            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.tagRegex`)) ===
-              MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
-                className={css.configureOptions}
-                style={{ alignSelf: 'center' }}
-                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.tagRegex`)}
-                type="String"
-                variableName="tagRegex"
-                showRequiredField={false}
-                isReadonly={readonly}
-                showDefaultField={true}
-                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
-                onChange={value => {
-                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.tagRegex`, value)
+                configureOptionsProps={{
+                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType as StepViewType)
                 }}
               />
-            )}
-          </div>
+            </div>
+          )}
         </Layout.Vertical>
       )}
     </>

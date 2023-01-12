@@ -35,9 +35,8 @@ export interface ContainerStepProps {
 }
 
 export interface ContainerStepVariableProps {
-  initialValues: StepElementConfig
-  stageIdentifier: string
   onUpdate?(data: StepElementConfig): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: StepElementConfig
+  variablesData: ContainerStepData
+  originalData: ContainerStepData
 }

@@ -18,8 +18,8 @@ import { useStrings } from 'framework/strings'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 
-import { InlineEntityFiltersProps, InlineEntityFiltersRadioType } from './InlineEntityFiltersUtils'
-import EntityFilterList from './EntityFiltersList/EntityFilterList'
+import { InlineEntityFiltersProps, InlineEntityFiltersRadioType } from '../InlineEntityFiltersUtils'
+import EntityFilterList from '../EntityFiltersList/EntityFilterList'
 
 import css from './InlineEntityFiltersWidget.module.scss'
 

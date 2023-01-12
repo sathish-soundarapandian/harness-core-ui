@@ -40,6 +40,12 @@ describe('Create empty monitored service', () => {
             name: 'CVNG_TEMPLATE_MONITORED_SERVICE',
             enabled: true,
             lastUpdatedAt: 0
+          },
+          {
+            uuid: null,
+            name: 'USE_OLD_GIT_SYNC',
+            enabled: true,
+            lastUpdatedAt: 0
           }
         ]
       })

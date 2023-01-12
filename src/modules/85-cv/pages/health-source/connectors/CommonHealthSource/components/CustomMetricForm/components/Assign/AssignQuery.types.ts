@@ -8,7 +8,7 @@
 import type { SelectOption } from '@harness/uicore'
 import type { useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
 
-export type SelectHealthSourceServicesProps = {
+export type AssignQueryProps = {
   values: {
     sli: boolean
     healthScore?: boolean
@@ -22,4 +22,5 @@ export type SelectHealthSourceServicesProps = {
   showOnlySLI?: boolean
   key?: string
   riskProfileResponse?: ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>
+  defaultServiceInstance?: string
 }

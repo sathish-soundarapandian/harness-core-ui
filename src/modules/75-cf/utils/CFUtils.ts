@@ -271,24 +271,6 @@ export function useValidateVariationValues(): UseValidateVariationValuesResult {
   return validateVariationValues
 }
 
-export const rewriteCurrentLocationWithActiveEnvironment = (env?: string): void => {
-  const [url, queryParams] = location.href.split('?')
-  const activeQueryParams = new URLSearchParams(queryParams || '')
-
-  if (env) {
-    activeQueryParams.set('activeEnvironment', env)
-  } else {
-    activeQueryParams.delete('activeEnvironment')
-  }
-
-  const queryString = activeQueryParams.toString()
-  const newLocation = queryString ? `${url}?${queryString}` : url
-
-  if (newLocation !== location.href) {
-    location.replace(newLocation)
-  }
-}
-
 export const getDefaultVariation = (flag: Feature): Variation => {
   if (!isFeatureFlagOn(flag)) {
     return flag.variations.find(({ identifier }) => identifier === flag.defaultOffVariation) as Variation

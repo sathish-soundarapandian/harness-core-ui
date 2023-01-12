@@ -9,9 +9,13 @@ import React from 'react'
 import { cloneDeep, defaultTo } from 'lodash-es'
 import { Text } from '@harness/uicore'
 import type { Renderer, CellProps } from 'react-table'
-import { PeriodTypes, PeriodLengthTypes } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
 import type { SLODashboardApiFilter, SLOTargetFilterDTO } from 'services/cv'
-import type { SLOObjective, SLOV2Form } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import {
+  SLOObjective,
+  SLOV2Form,
+  PeriodTypes,
+  PeriodLengthTypes
+} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { getSLORefIdWithOrgAndProject } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import { SLOType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import type {

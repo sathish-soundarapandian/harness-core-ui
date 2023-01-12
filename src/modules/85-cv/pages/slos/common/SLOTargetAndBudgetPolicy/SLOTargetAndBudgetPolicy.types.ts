@@ -6,7 +6,7 @@
  */
 
 import type { FormikProps } from 'formik'
-import type { SLOForm } from '../../CreateSLO.types'
+import type { SLOForm } from '../../components/CVCreateSLO/components/CreateSLOForm/CreateSLO.types'
 
 export interface SLOTargetAndBudgetPolicyProps {
   formikProps: FormikProps<SLOForm>

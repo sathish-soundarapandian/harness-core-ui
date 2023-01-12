@@ -46,6 +46,7 @@ const execContextValues: ExecutionContextParams = {
   selectedStageId: '',
   selectedStepId: '',
   selectedStageExecutionId: '',
+  selectedCollapsedNodeId: '',
   loading: false,
   isDataLoadedForSelectedStage: false,
   queryParams: {},
@@ -53,10 +54,10 @@ const execContextValues: ExecutionContextParams = {
   setLogsToken: jest.fn(),
   refetch: undefined,
   addNewNodeToMap: jest.fn(),
-  setStepsGraphCanvasState: jest.fn(),
   setSelectedStepId: jest.fn(),
   setSelectedStageId: jest.fn(),
-  setSelectedStageExecutionId: jest.fn()
+  setSelectedStageExecutionId: jest.fn(),
+  setSelectedCollapsedNodeId: jest.fn()
 }
 
 jest.mock('services/logs', () => ({

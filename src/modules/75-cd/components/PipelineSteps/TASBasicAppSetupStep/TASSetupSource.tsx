@@ -125,6 +125,7 @@ export default function TasSetupSource(props: {
             expressions,
             allowableTypes
           }}
+          type={getString('tagLabel')}
           label={getString('cd.steps.tas.additionalRoutes')}
           enableConfigureOptions
           isArray={true}

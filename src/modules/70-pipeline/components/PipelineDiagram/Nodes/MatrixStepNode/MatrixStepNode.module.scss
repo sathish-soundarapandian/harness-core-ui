@@ -261,13 +261,17 @@
   }
   .showNodes {
     display: flex;
+    align-items: center;
     margin: 0 !important;
     p {
       font-weight: bold !important;
       padding: 0 8px 0 0 !important;
     }
-    .showNodeText {
-      color: var(--primary-7);
+
+    button {
+      padding: 0 !important;
+      height: auto !important;
+      min-height: auto !important;
     }
   }
 }
@@ -275,8 +279,13 @@
   padding-top: 10px !important;
   border-top: 1px solid var(--grey-200);
   width: 100% !important;
+
+  display: flex;
+  align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+  gap: var(--spacing-small);
+
   .concurrencyLabel {
     margin: 0;
     line-height: 14px;

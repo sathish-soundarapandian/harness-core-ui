@@ -12,25 +12,22 @@
   border: none;
   box-shadow: var(--elevation-2);
 
-  .lhs {
+  .subHeaderItems {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    column-gap: var(--spacing-medium);
+    gap: var(--spacing-medium);
+    width: 100%;
   }
 
-  .rhs {
-    display: flex;
-    align-items: center;
+  .flexExpand {
+    flex-grow: 1;
   }
 
   .runButton {
     &:global(.bp3-disabled) {
       border: none !important;
     }
-  }
-
-  .expandSearch {
-    margin-right: var(--spacing-medium);
   }
 
   .myDeploymentsCheckbox {
@@ -46,24 +43,6 @@
     &.selected {
       border-color: var(--primary-7);
       background-color: var(--primary-1);
-    }
-  }
-
-  .btnGroup {
-    box-shadow: var(--elevation-2);
-    border-radius: var(--spacing-3);
-
-    :global(.bp3-button) {
-      width: 50px;
-      box-shadow: var(--elevation-3) !important;
-
-      &:first-of-type {
-        border-radius: var(--spacing-3) 0 0 var(--spacing-3);
-      }
-
-      &:last-of-type {
-        border-radius: 0 var(--spacing-3) var(--spacing-3) 0;
-      }
     }
   }
 }

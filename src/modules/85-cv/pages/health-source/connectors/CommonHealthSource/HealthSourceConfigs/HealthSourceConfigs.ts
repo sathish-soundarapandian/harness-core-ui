@@ -5,11 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import { CHART_VISIBILITY_ENUM, FIELD_ENUM } from '../CommonHealthSource.constants'
 import type { HealthSourcesConfig } from '../CommonHealthSource.types'
 
 export const healthSourcesConfig: HealthSourcesConfig = {
-  SUMOLOGIC_METRICS: {
+  [HealthSourceTypes.SumologicMetrics]: {
     addQuery: {
       label: 'Metric',
       enableDefaultGroupName: false
@@ -42,7 +43,7 @@ export const healthSourcesConfig: HealthSourcesConfig = {
       enabled: true
     }
   },
-  SUMOLOGIC_LOG: {
+  [HealthSourceTypes.SumologicLogs]: {
     addQuery: {
       label: 'Log',
       enableDefaultGroupName: true

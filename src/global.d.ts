@@ -200,3 +200,5 @@ declare type Optional<T, K extends keyof T = keyof T> = Omit<T, K> & Partial<Pic
 declare type Mutable<T> = {
   -readonly [K in keyof T]: T[K]
 }
+
+declare type ValueOf<T> = T[keyof T]

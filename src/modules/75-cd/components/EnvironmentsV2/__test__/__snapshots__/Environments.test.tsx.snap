@@ -88,6 +88,12 @@ exports[`Environments V2 test snapshot test with list view and after sort 1`] = 
         >
           environment
         </a>
+        <a
+          class="TabNavigation--tags TabNavigation--small"
+          href="/account/dummy/dummy/orgs/dummy/projects/dummy/environment-group"
+        >
+          common.environmentGroups.label
+        </a>
       </div>
     </div>
     <div

@@ -7,26 +7,13 @@
 
 import type { IconName } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
-import type { ChangeSourceDTO, NextGenHealthSourceSpec, Sources } from 'services/cv'
+import type { ChangeSourceDTO, Sources } from 'services/cv'
 import { Connectors } from '@connectors/constants'
 import type { UseStringsReturn } from 'framework/strings'
 import { HealthSourceTypes } from '../types'
 import type { UpdatedHealthSource, RowData } from '../HealthSourceDrawer/HealthSourceDrawerContent.types'
-import { METRICS } from '../connectors/CommonHealthSource/CommonHealthSource.constants'
 
-export const getTypeByFeature = (
-  feature: string,
-  getString: UseStringsReturn['getString'],
-  spec?: NextGenHealthSourceSpec
-): string => {
-  if (feature === HealthSourceTypes.NextGenHealthSource) {
-    const type = spec?.dataSourceType as string
-    if (type.includes(METRICS)) {
-      return getString('pipeline.verification.analysisTab.metrics')
-    } else {
-      return getString('pipeline.verification.analysisTab.logs')
-    }
-  }
+export const getTypeByFeature = (feature: string, getString: UseStringsReturn['getString']): string => {
   switch (feature) {
     case Connectors.APP_DYNAMICS:
     case Connectors.AWS:
@@ -38,24 +25,22 @@ export const getTypeByFeature = (
     case HealthSourceTypes.DatadogMetrics:
     case HealthSourceTypes.SplunkMetric:
     case HealthSourceTypes.CloudWatchMetrics:
+    case HealthSourceTypes.SumologicMetrics:
     case HealthSourceTypes.AwsPrometheus:
       return getString('pipeline.verification.analysisTab.metrics')
     case HealthSourceTypes.StackdriverLog:
     case HealthSourceTypes.DatadogLog:
     case HealthSourceTypes.Splunk:
     case HealthSourceTypes.Elk:
+    case HealthSourceTypes.SumologicLogs:
       return getString('pipeline.verification.analysisTab.logs')
     default:
       return getString('common.repo_provider.customLabel')
   }
 }
 
-export const getIconBySourceType = (type: string, spec?: NextGenHealthSourceSpec): IconName => {
-  let sourceType = type
-  if (type === HealthSourceTypes.NextGenHealthSource) {
-    sourceType = spec?.dataSourceType as string
-  }
-  switch (sourceType) {
+export const getIconBySourceType = (type: string): IconName => {
+  switch (type) {
     case 'KUBERNETES':
       return 'service-kubernetes'
     case 'APP_DYNAMICS':
@@ -114,8 +99,8 @@ export const getIconBySourceType = (type: string, spec?: NextGenHealthSourceSpec
     case HealthSourceTypes.CloudWatchMetrics:
     case 'CLOUDWATCH_METRICS':
       return 'service-aws'
-    case 'SUMOLOGIC_METRICS':
-    case 'SUMOLOGIC_LOG':
+    case HealthSourceTypes.SumologicLogs:
+    case HealthSourceTypes.SumologicMetrics:
       return 'service-sumologic'
     default:
       return 'placeholder'

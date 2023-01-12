@@ -3,10 +3,10 @@
 exports[`GitOpsExecutionSummary render with multiple applications 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
+    class="Layout--horizontal StyledProps--main gitOpsExecutionSummary StyledProps--margin-left-small"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--margin-left-small"
+      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
       style="align-items: center;"
     >
       <span
@@ -46,6 +46,7 @@ exports[`GitOpsExecutionSummary render with multiple applications 1`] = `
         >
           <span
             class="primary6"
+            style="text-decoration: underline dotted;"
             tabindex="0"
           >
             +
@@ -61,10 +62,10 @@ exports[`GitOpsExecutionSummary render with multiple applications 1`] = `
 exports[`GitOpsExecutionSummary render with one application 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
+    class="Layout--horizontal StyledProps--main gitOpsExecutionSummary StyledProps--margin-left-small"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--margin-left-small"
+      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
       style="align-items: center;"
     >
       <span

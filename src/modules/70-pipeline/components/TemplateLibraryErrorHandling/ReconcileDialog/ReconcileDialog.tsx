@@ -65,7 +65,7 @@ export function ReconcileDialog({
   const [loading, setLoading] = React.useState<boolean>(false)
   const { showError } = useToaster()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
-  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const isGitSyncEnabled = isGitSyncEnabledForProject && /* istanbul ignore next */ !gitSyncEnabledOnlyForFF
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
 
@@ -102,6 +102,7 @@ export function ReconcileDialog({
     setSelectedErrorNodeSummary(getFirstLeafNode(errorNodeSummary))
   }, [])
 
+  /* istanbul ignore next */
   const onUpdateAll = async (): Promise<void> => {
     setLoading(true)
     if (templateResponse) {
@@ -155,6 +156,7 @@ export function ReconcileDialog({
     }
   }
 
+  /* istanbul ignore next */
   const updateTemplate = async (refreshedYaml: string) => {
     const isInlineTemplate =
       isEmpty(selectedErrorNodeSummary?.templateResponse?.gitDetails?.branch) &&
@@ -186,6 +188,7 @@ export function ReconcileDialog({
     }
   }
 
+  /* istanbul ignore next */
   const onUpdateNode = async (refreshedYaml: string): Promise<void> => {
     if (isEqual(selectedErrorNodeSummary, errorNodeSummary)) {
       await updateRootEntity(refreshedYaml)
@@ -232,13 +235,9 @@ export function ReconcileDialog({
                     </Text>
                   </Layout.Vertical>
                 </Container>
-                {isEdit && (
+                {isEdit && hasChildren && (
                   <Button
-                    text={
-                      hasChildren
-                        ? getString('pipeline.reconcileDialog.updateAllLabel')
-                        : getString('pipeline.reconcileDialog.updateEntityLabel', { entity })
-                    }
+                    text={getString('pipeline.reconcileDialog.updateAllLabel')}
                     variation={ButtonVariation.PRIMARY}
                     width={248}
                     disabled={!updateButtonEnabled}

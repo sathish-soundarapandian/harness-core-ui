@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useContext } from 'react'
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
+import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { CommonMultiItemsSideNav } from '@cv/components/CommonMultiItemsSideNav/CommonMultiItemsSideNav'
 import { updateSelectedMetricsMap } from './CommonCustomMetric.utils'
 import type { CommonCustomMetricInterface } from './CommonCustomMetric.types'
@@ -33,7 +35,8 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
     defaultServiceInstance
   } = props
 
-  const { updateParentFormik } = useCommonHealthSource()
+  const { isQueryRuntimeOrExpression, updateParentFormik } = useCommonHealthSource()
+  const { isTemplate } = useContext(SetupSourceTabsContext)
 
   useEffect(() => {
     let data = { selectedMetric, mappedMetrics }
@@ -69,6 +72,32 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
 
     updateParentFormikWithLatestData(updateParentFormik, data?.mappedMetrics, data?.selectedMetric)
   }, [formikValues?.groupName, formikValues?.metricName, formikValues?.continuousVerification])
+
+  useEffect(() => {
+    let isUpdated = false
+    const isServiceInstanceFixed = getMultiTypeFromValue(formikValues.serviceInstance) === MultiTypeInputType.FIXED
+
+    if (isQueryRuntimeOrExpression) {
+      const canMakeRuntime = !formikValues.serviceInstance || isServiceInstanceFixed
+      if (canMakeRuntime) {
+        formikValues.serviceInstance = RUNTIME_INPUT_VALUE
+        isUpdated = true
+      }
+    }
+
+    if (isUpdated) {
+      const data = updateSelectedMetricsMap({
+        updatedMetric: formikValues.metricName,
+        oldMetric: selectedMetric,
+        mappedMetrics,
+        formikValues,
+        initCustomForm,
+        isPrimaryMetric
+      })
+
+      updateParentFormikWithLatestData(updateParentFormik, data?.mappedMetrics, data?.selectedMetric)
+    }
+  }, [isTemplate, formikValues.query, isQueryRuntimeOrExpression])
 
   const removeMetric = useCallback(
     (removedMetric, updatedMetric) => {

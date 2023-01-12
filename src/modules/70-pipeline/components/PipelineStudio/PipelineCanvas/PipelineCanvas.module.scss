@@ -27,7 +27,7 @@
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--pipeline-light-grey);
-  padding: 0px var(--spacing-xlarge);
+  padding: 0 var(--spacing-medium) 0 var(--spacing-xlarge);
   background-color: var(--white);
   height: 49px;
 }
@@ -354,4 +354,11 @@
   p {
     word-break: normal;
   }
+}
+.callout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--yellow-100) !important;
+  border-bottom: 1px solid var(--grey-200);
 }

@@ -354,6 +354,7 @@ export default function TerraformEditView(
           setConnectorView={setConnectorView}
           selectedConnector={selectedConnector}
           setSelectedConnector={setSelectedConnector}
+          isTerragrunt={false}
         />
         {connectorView ? getNewConnectorSteps() : null}
         {selectedConnector === 'Artifactory' ? (
@@ -427,6 +428,7 @@ export default function TerraformEditView(
               setShowModal(false)
               setShowBackendConfigRemoteWizard(false)
             }}
+            isTerragrunt={false}
           />
         )}
       </StepWizard>

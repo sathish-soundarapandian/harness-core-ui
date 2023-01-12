@@ -33,6 +33,7 @@ const contextValue: ExecutionContextParams = {
   ),
   selectedStageId: 'google_1',
   selectedStageExecutionId: '',
+  selectedCollapsedNodeId: '',
   selectedStepId: '',
   queryParams: {},
   loading: false,
@@ -42,7 +43,8 @@ const contextValue: ExecutionContextParams = {
   addNewNodeToMap: jest.fn(),
   setSelectedStepId: jest.fn(),
   setSelectedStageId: jest.fn(),
-  setSelectedStageExecutionId: jest.fn()
+  setSelectedStageExecutionId: jest.fn(),
+  setSelectedCollapsedNodeId: jest.fn()
 }
 
 const fetchMock = jest.spyOn(global, 'fetch' as any)

@@ -80,7 +80,7 @@ export const LastDeployedCell: CellType = ({ row }) => {
   const data = row.original
   return (
     <Text color={Color.GREY_900} font={{ size: 'small' }}>
-      {moment(data.lastDeployed).format('DD-MM-YYYY')}
+      {moment(data.lastDeployed).format('MM-DD-YYYY')}
     </Text>
   )
 }

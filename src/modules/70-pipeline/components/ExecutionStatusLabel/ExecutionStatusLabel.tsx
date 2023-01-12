@@ -74,18 +74,20 @@ export interface ExecutionStatusLabelProps {
   status?: ExecutionStatus
   className?: string
   label?: string
+  withoutIcon?: boolean
 }
 
 export default function ExecutionStatusLabel({
   status,
   className,
-  label
+  label,
+  withoutIcon = false
 }: ExecutionStatusLabelProps): React.ReactElement | null {
   if (!status) return null
 
   return (
     <div className={cx(css.status, css[status.toLowerCase() as keyof typeof css], className)}>
-      {iconMap[status] ? <Icon {...iconMap[status]} className={css.icon} /> : null}
+      {iconMap[status] && !withoutIcon ? <Icon {...iconMap[status]} className={css.icon} /> : null}
       {label ? label : <String stringID={stringsMap[status] || 'pipeline.executionStatus.Unknown'} />}
     </div>
   )

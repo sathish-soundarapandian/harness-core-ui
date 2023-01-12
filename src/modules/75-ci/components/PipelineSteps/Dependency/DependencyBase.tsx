@@ -8,15 +8,14 @@
 import React from 'react'
 import { Formik, FormikForm, Accordion, Container } from '@harness/uicore'
 import { get } from 'lodash-es'
+import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { Connectors } from '@connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
-import StepCommonFields, {
-  GetImagePullPolicyOptions
-} from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
+import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import {
   getInitialValuesInCorrectFormat,
   getFormValuesInCorrectFormat
@@ -54,7 +53,7 @@ export const DependencyBase = (
       initialValues={getInitialValuesInCorrectFormat<DependencyData, DependencyDataUI>(
         initialValues,
         transformValuesFieldsConfig,
-        { imagePullPolicyOptions: GetImagePullPolicyOptions() }
+        { imagePullPolicyOptions: getImagePullPolicyOptions(getString) }
       )}
       formName="dependencyBase"
       validate={valuesToValidate => {

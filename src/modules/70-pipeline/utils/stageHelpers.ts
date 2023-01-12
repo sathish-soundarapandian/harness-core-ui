@@ -364,7 +364,12 @@ export const isElastigroupDeploymentType = (deploymentType: string): boolean => 
 export const isCustomDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.CustomDeployment
 }
-
+export const isNativeHelmDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.NativeHelm
+}
+export const isEcsDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.ECS
+}
 export const isAzureWebAppGenericDeploymentType = (deploymentType: string, repo: string | undefined): boolean => {
   if (isAzureWebAppDeploymentType(deploymentType)) {
     // default repository format should be Generic if none is previously selected

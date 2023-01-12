@@ -9,13 +9,12 @@ import React from 'react'
 import { Formik, FormikForm, Accordion, Container } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { get } from 'lodash-es'
+import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
-import StepCommonFields, {
-  GetImagePullPolicyOptions
-} from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
+import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
   getInitialValuesInCorrectFormat,
@@ -53,7 +52,7 @@ export const GHAPluginStepBase = (
       initialValues={getInitialValuesInCorrectFormat<GHAPluginStepData, GHAPluginStepDataUI>(
         initialValues,
         transformValuesFieldsConfig,
-        { imagePullPolicyOptions: GetImagePullPolicyOptions() }
+        { imagePullPolicyOptions: getImagePullPolicyOptions(getString) }
       )}
       formName="GHApluginStep"
       validate={valuesToValidate => {

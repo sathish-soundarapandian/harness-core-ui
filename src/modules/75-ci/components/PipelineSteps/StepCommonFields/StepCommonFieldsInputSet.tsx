@@ -16,10 +16,8 @@ import type { StringsMap } from 'stringTypes'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import {
-  GetShellOptions,
-  GetImagePullPolicyOptions
-} from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
+import { getImagePullPolicyOptions, getShellOptions } from '@common/utils/ContainerRunStepUtils'
+import {} from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import type { InputSetData } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -121,11 +119,11 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
               </Layout.Horizontal>
             }
             multiTypeInputProps={{
-              selectItems: GetImagePullPolicyOptions(),
+              selectItems: getImagePullPolicyOptions(getString),
               placeholder: getString('select'),
               multiTypeInputProps: {
                 expressions,
-                selectProps: { addClearBtn: true, items: GetImagePullPolicyOptions() },
+                selectProps: { addClearBtn: true, items: getImagePullPolicyOptions(getString) },
                 allowableTypes: AllMultiTypeInputTypesForInputSet
               },
               disabled: readonly
@@ -150,11 +148,11 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
               </Layout.Horizontal>
             }
             multiTypeInputProps={{
-              selectItems: GetImagePullPolicyOptions(),
+              selectItems: getImagePullPolicyOptions(getString),
               placeholder: getString('select'),
               multiTypeInputProps: {
                 expressions,
-                selectProps: { addClearBtn: true, items: GetShellOptions(getString) },
+                selectProps: { addClearBtn: true, items: getShellOptions(getString) },
                 allowableTypes: AllMultiTypeInputTypesForInputSet
               },
               disabled: readonly

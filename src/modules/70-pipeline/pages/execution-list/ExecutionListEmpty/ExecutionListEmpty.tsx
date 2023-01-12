@@ -13,8 +13,8 @@ import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { getModuleRunType, getModuleRunTypeDetails } from '@pipeline/utils/runPipelineUtils'
 import EmptySearchResults from '@common/images/EmptySearchResults.svg'
 import type { ExecutionListProps } from '../ExecutionList'
-import { useExecutionListFilterContext } from '../ExecutionListFilterContext/ExecutionListFilterContext'
 import { useExecutionListEmptyAction } from './useExecutionListEmptyAction'
+import { getIsAnyFilterApplied, useExecutionListQueryParams } from '../utils/executionListUtil'
 import css from './ExecutionListEmpty.module.scss'
 
 export function ExecutionListEmpty({
@@ -23,7 +23,8 @@ export function ExecutionListEmpty({
   resetFilter
 }: Pick<ExecutionListProps, 'isPipelineInvalid' | 'onRunPipeline'> & { resetFilter: () => void }): JSX.Element {
   const { getString } = useStrings()
-  const { isAnyFilterApplied } = useExecutionListFilterContext()
+  const queryParams = useExecutionListQueryParams()
+  const isAnyFilterApplied = getIsAnyFilterApplied(queryParams)
   const { module } = useModuleInfo()
   const { hasNoPipelines, loading, EmptyAction } = useExecutionListEmptyAction(!!isPipelineInvalid, onRunPipeline)
   const { illustration } = getModuleRunTypeDetails(module)

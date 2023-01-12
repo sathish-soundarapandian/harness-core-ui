@@ -17,7 +17,14 @@ import type { CDStageModuleInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ExecutionPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { isElastigroupDeploymentType, isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  isAzureWebAppOrSshWinrmGenericDeploymentType,
+  isEcsDeploymentType,
+  isElastigroupDeploymentType,
+  isNativeHelmDeploymentType,
+  isServerlessDeploymentType,
+  isTASDeploymentType
+} from '@pipeline/utils/stageHelpers'
 
 export interface ResourceConstraintTooltipProps {
   loading: boolean
@@ -57,6 +64,14 @@ export default function ResourceConstraintTooltip(props: ResourceConstraintToolt
         return getString('pipeline.resourceConstraints.serverlessInfraEntity')
       case isElastigroupDeploymentType(deploymentType):
         return getString('pipeline.resourceConstraints.elastigroupInfraEntity')
+      case isTASDeploymentType(deploymentType):
+        return getString('pipeline.resourceConstraints.tanzuInfraEntity')
+      case isNativeHelmDeploymentType(deploymentType):
+        return getString('pipeline.resourceConstraints.k8sNamespaceText')
+      case isEcsDeploymentType(deploymentType):
+        return getString('pipeline.resourceConstraints.ecsInfraEntity')
+      case isAzureWebAppOrSshWinrmGenericDeploymentType(deploymentType, undefined):
+        return getString('pipeline.resourceConstraints.traditionalInfraEntity')
       default:
         return getString('pipeline.resourceConstraints.k8sNamespaceText')
     }

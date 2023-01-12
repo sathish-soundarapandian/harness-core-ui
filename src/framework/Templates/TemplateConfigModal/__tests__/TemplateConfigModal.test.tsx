@@ -18,9 +18,7 @@ import { ConfigModalProps, Intent, TemplateConfigModalWithRef } from '../Templat
 jest.useFakeTimers()
 
 const gitAppStoreValues = {
-  featureFlags: {
-    NG_TEMPLATE_GITX: true
-  },
+  featureFlags: {},
   isGitSyncEnabled: false,
   isGitSimplificationEnabled: true,
   supportingGitSimplification: true,

@@ -118,6 +118,10 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
         url = paths.toSTO(params)
         label = getString('common.purpose.sto.continuous')
         break
+      case ModuleName.IACM:
+        url = paths.toIACM(params)
+        label = getString('common.iacm')
+        break
     }
 
     if (projectIdentifier) {

@@ -18,7 +18,7 @@ import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes
 import { ResponseModuleLicenseDTO, useStartFreeLicense, useStartTrialLicense } from 'services/cd-ng'
 import useChaosTrialModal from '@chaos/modals/ChaosTrialModal/useChaosTrialModal'
 import routes from '@common/RouteDefinitions'
-import { getGaClientID, getSavedRefererURL, isOnPrem } from '@common/utils/utils'
+import { getGaClientID, getSavedRefererURL } from '@common/utils/utils'
 import bgImageURL from '../../images/chaos.svg'
 
 const ChaosTrialHomePage: React.FC = () => {
@@ -27,7 +27,8 @@ const ChaosTrialHomePage: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
-  const isFreeEnabled = !isOnPrem()
+  // TODO: replace `false` with `!isOnPrem()` after Free plan is enabled
+  const isFreeEnabled = false
   const module = 'chaos'
   const moduleType = 'CHAOS'
   const refererURL = getSavedRefererURL()

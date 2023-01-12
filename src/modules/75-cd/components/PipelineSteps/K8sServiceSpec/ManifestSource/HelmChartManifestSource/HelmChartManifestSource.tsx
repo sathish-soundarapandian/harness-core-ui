@@ -632,7 +632,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.chartVersion`, template) && (
           <div className={css.verticalSpacingInput}>
-            {isNewServiceEnvEntity(path as string) ? (
+            {isNewServiceEnvEntity(path as string) && manifest?.spec?.store?.type !== 'OciHelmChart' ? (
               <>
                 <ExperimentalInput
                   formik={formik}
@@ -696,6 +696,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
                   allowableTypes
                 }}
                 label={getString('pipeline.manifestType.http.chartVersion')}
+                placeholder={getString('pipeline.manifestType.http.chartVersionPlaceHolder')}
               />
             )}
           </div>

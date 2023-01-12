@@ -996,7 +996,7 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
                     >
-                      24-05-2022
+                      05-24-2022
                     </p>
                   </div>
                   <div
@@ -1086,7 +1086,7 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
                     >
-                      20-06-2022
+                      06-20-2022
                     </p>
                   </div>
                   <div
@@ -2005,7 +2005,7 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
                     >
-                      24-05-2022
+                      05-24-2022
                     </p>
                   </div>
                   <div
@@ -2095,7 +2095,7 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
                     >
-                      20-06-2022
+                      06-20-2022
                     </p>
                   </div>
                   <div
@@ -3014,7 +3014,7 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
                     >
-                      24-05-2022
+                      05-24-2022
                     </p>
                   </div>
                   <div
@@ -3104,7 +3104,7 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
                     >
-                      20-06-2022
+                      06-20-2022
                     </p>
                   </div>
                   <div
@@ -3445,629 +3445,6 @@ exports[`Subscriptions Page it renders trial not started information 1`] = `
                 common.banners.trial.contactSales
               </span>
             </button>
-          </div>
-        </div>
-      </div>
-      <div
-        class="bp3-card bp3-elevation-0 Card--card outterCard"
-      >
-        <div
-          class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-stretch"
-        >
-          <div
-            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
-            style="width: 100%;"
-          >
-            <div
-              class="Layout--vertical StyledProps--main"
-            >
-              <h1
-                class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
-              >
-                common.subscriptions.usage.services
-              </h1>
-              <span
-                class="bp3-popover-wrapper"
-              >
-                <span
-                  class="bp3-popover-target Text--targetClass"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
-                    tabindex="0"
-                  >
-                    common.whatIsActiveService
-                  </p>
-                </span>
-              </span>
-            </div>
-          </div>
-          <div
-            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
-            style="width: 100%;"
-          >
-            <div
-              class="Layout--vertical StyledProps--main badgesContainer"
-            >
-              <div
-                class="badge runningExecutions"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main badgeText"
-                >
-                  2
-                   
-                </p>
-                <span>
-                  common.subscriptions.usage.services
-                </span>
-                <p
-                  class="StyledProps--font StyledProps--main"
-                >
-                   
-                  auditTrail.actions.updated
-                   -
-                </p>
-                <p
-                  class="StyledProps--font StyledProps--main badgeText"
-                >
-                  20-06-2022 9:55:59
-                </p>
-              </div>
-            </div>
-            <div
-              class="Layout--vertical StyledProps--main"
-            >
-              <div
-                class="bp3-popover-wrapper DropDown--main orgDropdown"
-              >
-                <div
-                  class="bp3-popover-target"
-                >
-                  <div
-                    class=""
-                  >
-                    <div
-                      class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--withBorder DropDown--minWidth StyledProps--flex"
-                      data-testid="dropdown-button"
-                      style="min-width: 130px;"
-                    >
-                      <div
-                        class="Layout--horizontal StyledProps--main DropDown--labelWrapper StyledProps--flex"
-                      >
-                        <p
-                          class="StyledProps--font Text--lineclamp StyledProps--main DropDown--label"
-                          data-testid="dropdown-value"
-                          style="--text-line-clamp: 1;"
-                        >
-                          common.tabOrgs
-                        </p>
-                      </div>
-                      <div
-                        class="Layout--horizontal StyledProps--main DropDown--btnWrapper StyledProps--flex"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
-                          data-icon="main-chevron-down"
-                        >
-                          <svg
-                            height="8"
-                            viewBox="0 0 14 8"
-                            width="8"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
-                              fill="#4d5969"
-                            />
-                          </svg>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="bp3-popover-wrapper DropDown--main orgDropdown"
-            >
-              <div
-                class="bp3-popover-target"
-              >
-                <div
-                  class=""
-                >
-                  <div
-                    class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--withBorder DropDown--minWidth StyledProps--flex"
-                    data-testid="dropdown-button"
-                    style="min-width: 130px;"
-                  >
-                    <div
-                      class="Layout--horizontal StyledProps--main DropDown--labelWrapper StyledProps--flex"
-                    >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main DropDown--label"
-                        data-testid="dropdown-value"
-                        style="--text-line-clamp: 1;"
-                      >
-                        common.tabProjects
-                      </p>
-                    </div>
-                    <div
-                      class="Layout--horizontal StyledProps--main DropDown--btnWrapper StyledProps--flex"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
-                        data-icon="main-chevron-down"
-                      >
-                        <svg
-                          height="8"
-                          viewBox="0 0 14 8"
-                          width="8"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
-                            fill="#4d5969"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <p
-              class="StyledProps--font Text--lineclamp StyledProps--main fetchButton StyledProps--font-variation-lead StyledProps--color StyledProps--color-primary7"
-              style="--text-line-clamp: 1;"
-            >
-              Fetch
-            </p>
-          </div>
-          <div
-            class="TableV2--table table"
-          >
-            <div
-              class="TableV2--header"
-              role="row"
-            >
-              <div
-                class="TableV2--cell TableV2--sortable"
-                colspan="1"
-                role="columnheader"
-                style="width: 14%;"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  <div
-                    class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-                    >
-                      common.purpose.service
-                    </p>
-                    <span
-                      class="bp3-popover-wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="info"
-                          tabindex="0"
-                        >
-                          <svg
-                            height="15"
-                            viewBox="0 0 12 12"
-                            width="15"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              clip-rule="evenodd"
-                              d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                      </span>
-                    </span>
-                  </div>
-                </p>
-              </div>
-              <div
-                class="TableV2--cell TableV2--sortable"
-                colspan="1"
-                role="columnheader"
-                style="width: 13%;"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  <div
-                    class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-                    >
-                      common.organizations
-                    </p>
-                  </div>
-                </p>
-              </div>
-              <div
-                class="TableV2--cell TableV2--sortable"
-                colspan="1"
-                role="columnheader"
-                style="width: 15%;"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  <div
-                    class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-                    >
-                      common.projects
-                    </p>
-                    <span
-                      class="bp3-popover-wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="info"
-                          tabindex="0"
-                        >
-                          <svg
-                            height="15"
-                            viewBox="0 0 12 12"
-                            width="15"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              clip-rule="evenodd"
-                              d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                      </span>
-                    </span>
-                  </div>
-                </p>
-              </div>
-              <div
-                class="TableV2--cell TableV2--sortable"
-                colspan="1"
-                role="columnheader"
-                style="width: 18%;"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  <div
-                    class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-                    >
-                      common.serviceId
-                    </p>
-                  </div>
-                </p>
-              </div>
-              <div
-                class="TableV2--cell TableV2--sortable"
-                colspan="1"
-                role="columnheader"
-                style="width: 15%;"
-                title="Toggle SortBy"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  <div
-                    class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-                    >
-                      common.servicesInstances
-                    </p>
-                  </div>
-                </p>
-                <span
-                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
-                  icon="double-caret-vertical"
-                >
-                  <svg
-                    data-icon="double-caret-vertical"
-                    height="15"
-                    viewBox="0 0 16 16"
-                    width="15"
-                  >
-                    <desc>
-                      double-caret-vertical
-                    </desc>
-                    <path
-                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-              </div>
-              <div
-                class="TableV2--cell TableV2--sortable"
-                colspan="1"
-                role="columnheader"
-                style="width: 12%;"
-                title="Toggle SortBy"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  <div
-                    class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-                    >
-                      common.lastDeployed
-                    </p>
-                  </div>
-                </p>
-                <span
-                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
-                  icon="double-caret-vertical"
-                >
-                  <svg
-                    data-icon="double-caret-vertical"
-                    height="15"
-                    viewBox="0 0 16 16"
-                    width="15"
-                  >
-                    <desc>
-                      double-caret-vertical
-                    </desc>
-                    <path
-                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-              </div>
-              <div
-                class="TableV2--cell TableV2--sortable"
-                colspan="1"
-                role="columnheader"
-                style="width: 15%;"
-                title="Toggle SortBy"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  <div
-                    class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-                    >
-                      common.licensesConsumed
-                    </p>
-                  </div>
-                </p>
-                <span
-                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
-                  icon="double-caret-vertical"
-                >
-                  <svg
-                    data-icon="double-caret-vertical"
-                    height="15"
-                    viewBox="0 0 16 16"
-                    width="15"
-                  >
-                    <desc>
-                      double-caret-vertical
-                    </desc>
-                    <path
-                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-              </div>
-            </div>
-            <div
-              class="TableV2--body"
-            >
-              <div
-                class="TableV2--row TableV2--card"
-                role="row"
-              >
-                <div
-                  class="TableV2--cells"
-                >
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 14%;"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
-                    >
-                      K8S Service
-                    </p>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 13%;"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
-                    >
-                      Deleted
-                    </p>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 15%;"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
-                    >
-                      Deleted
-                    </p>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 18%;"
-                  >
-                    <a
-                      href="/account/kmpySmUISimoRrJL6NL73w/services/K8S_Service"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-small"
-                      >
-                        K8S_Service
-                      </p>
-                    </a>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 15%;"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
-                    >
-                      1
-                    </p>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 12%;"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
-                    >
-                      24-05-2022
-                    </p>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 15%;"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
-                    >
-                      1
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="TableV2--row TableV2--card"
-                role="row"
-              >
-                <div
-                  class="TableV2--cells"
-                >
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 14%;"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
-                    >
-                      SSHService
-                    </p>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 13%;"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
-                    >
-                      Deleted
-                    </p>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 15%;"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
-                    >
-                      Deleted
-                    </p>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 18%;"
-                  >
-                    <a
-                      href="/account/kmpySmUISimoRrJL6NL73w/services/SSHService"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-small"
-                      >
-                        SSHService
-                      </p>
-                    </a>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 15%;"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
-                    >
-                      2
-                    </p>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 12%;"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
-                    >
-                      20-06-2022
-                    </p>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 15%;"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
-                    >
-                      1
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -4985,7 +4362,7 @@ exports[`Subscriptions Page it should update the license store 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
                     >
-                      24-05-2022
+                      05-24-2022
                     </p>
                   </div>
                   <div
@@ -5075,7 +4452,7 @@ exports[`Subscriptions Page it should update the license store 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
                     >
-                      20-06-2022
+                      06-20-2022
                     </p>
                   </div>
                   <div

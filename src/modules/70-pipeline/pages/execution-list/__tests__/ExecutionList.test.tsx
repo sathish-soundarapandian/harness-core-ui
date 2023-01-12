@@ -143,7 +143,7 @@ jest.mock('services/cd-ng-rq', () => ({
 
 const commonRequest = (): any =>
   cloneDeep({
-    body: { filterType: 'PipelineExecution' },
+    body: null,
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
     queryParams: {
       accountIdentifier: 'accountId',

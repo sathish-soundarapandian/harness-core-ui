@@ -36,6 +36,7 @@ import {
   ConnectorLabelMap,
   ConnectorMap,
   ConnectorTypes,
+  TerragruntAllowedTypes,
   tfVarIcons
 } from '../../ConfigFileStore/ConfigFileStoreHelper'
 import css from './TerraformVarfile.module.scss'
@@ -48,6 +49,7 @@ interface TFVarStoreProps {
   isReadonly?: boolean
   setConnectorView?: (val: boolean) => void
   setSelectedConnector: (val: string) => void
+  isTerragrunt: boolean
 }
 
 export const TFVarStore: React.FC<StepProps<any> & TFVarStoreProps> = ({
@@ -59,7 +61,8 @@ export const TFVarStore: React.FC<StepProps<any> & TFVarStoreProps> = ({
   handleConnectorViewChange,
   isReadonly,
   setConnectorView,
-  setSelectedConnector
+  setSelectedConnector,
+  isTerragrunt
 }) => {
   const [selectedType, setSelectedType] = React.useState('')
   const { getString } = useStrings()
@@ -90,6 +93,8 @@ export const TFVarStore: React.FC<StepProps<any> & TFVarStoreProps> = ({
   const newConnectorLabel = `${getString('newLabel')} ${
     !!selectedType && getString(ConnectorLabelMap[selectedType as ConnectorTypes])
   } ${getString('connector')}`
+
+  const remoteStoreAllowedTypes = isTerragrunt ? TerragruntAllowedTypes : AllowedTypes
 
   return (
     <Layout.Vertical padding="small" className={css.tfVarStore}>
@@ -122,7 +127,7 @@ export const TFVarStore: React.FC<StepProps<any> & TFVarStoreProps> = ({
           return (
             <>
               <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
-                {AllowedTypes.map(item => (
+                {remoteStoreAllowedTypes.map(item => (
                   <div key={item} className={css.squareCardContainer}>
                     <Card
                       className={css.manifestIcon}

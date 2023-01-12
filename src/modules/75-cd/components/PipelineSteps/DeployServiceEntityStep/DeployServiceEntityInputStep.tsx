@@ -72,7 +72,7 @@ export function DeployServiceEntityInputStep({
   const servicesTemplate = inputSetData?.template?.services?.values
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const serviceIdentifiers: string[] = useMemo(() => {
-    if (serviceValue) {
+    if (serviceValue && getMultiTypeFromValue(serviceValue) === MultiTypeInputType.FIXED) {
       return [serviceValue]
     }
 

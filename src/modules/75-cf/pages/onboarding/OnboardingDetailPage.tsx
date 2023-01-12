@@ -48,6 +48,7 @@ export const OnboardingDetailPage: React.FC = () => {
   const [apiKey, setApiKey] = useState<ApiKey>()
   const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO | undefined>()
   const [testDone, setTestDone] = useState(false)
+  const [verified, setVerified] = useState(false)
   const [selectedFlag, setSelectedFlag] = useState<Feature | undefined>()
 
   const totalSteps = Object.keys(STEP).length / 2
@@ -106,7 +107,10 @@ export const OnboardingDetailPage: React.FC = () => {
     }
   }, [currentStep])
 
-  const disableNext = !selectedFlag?.identifier || (selectedStep === STEP.SELECT_ENV_SDK && !apiKey)
+  const disableNext =
+    !selectedFlag?.identifier ||
+    (selectedStep === STEP.SELECT_ENV_SDK && !apiKey) ||
+    (selectedStep === STEP.VALIDATE_FLAG && !verified)
 
   const { trackEvent } = useTelemetry()
 
@@ -180,6 +184,8 @@ export const OnboardingDetailPage: React.FC = () => {
             apiKey={apiKey as ApiKey}
             testDone={testDone}
             setTestDone={setTestDone}
+            verified={verified}
+            setVerified={setVerified}
             environmentIdentifier={selectedEnvironment.identifier}
           />
         )}

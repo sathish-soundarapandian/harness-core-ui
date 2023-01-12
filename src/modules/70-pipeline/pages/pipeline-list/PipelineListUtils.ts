@@ -8,7 +8,7 @@
 import { Color } from '@harness/design-system'
 import EmptySearchResults from '@common/images/EmptySearchResults.svg'
 import type { StoreType } from '@common/constants/GitSyncTypes'
-import type { PMSPipelineSummaryResponse } from 'services/pipeline-ng'
+import type { PipelineFilterProperties, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, DEFAULT_PIPELINE_LIST_TABLE_SORT } from '@pipeline/utils/constants'
 import type { Module } from '@common/interfaces/RouteInterfaces'
@@ -51,7 +51,7 @@ export const getRouteProps = (pathParams: PipelineListPagePathParams, pipeline?:
 
 export const queryParamOptions = {
   parseArrays: true,
-  decoder: queryParamDecodeAll(),
+  decoder: queryParamDecodeAll({ ignoreEmptyString: false }),
   processQueryParams(params: PipelineListPageQueryParams): ProcessedPipelineListPageQueryParams {
     return {
       ...params,
@@ -78,4 +78,17 @@ export const getEmptyStateIllustration = (hasFilter: boolean, module?: Module): 
   }
 
   return illustration[module] || CDPipelineIllustration
+}
+
+export const getFiltersRequestPayload = (filters: PipelineFilterProperties) => {
+  if (filters?.pipelineTags) {
+    filters.pipelineTags = filters?.pipelineTags?.map(({ key, value }) => {
+      return { key, value: value ?? '' }
+    })
+  }
+
+  return {
+    ...filters,
+    filterType: 'PipelineSetup'
+  }
 }

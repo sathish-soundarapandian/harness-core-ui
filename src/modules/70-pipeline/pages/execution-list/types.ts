@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { PartiallyRequired } from '@pipeline/utils/types'
 import type { GetListOfExecutionsQueryParams, PipelineExecutionFilterProperties } from 'services/pipeline-ng'
 
 export type ExecutionListPageQueryParams = GetListOfExecutionsQueryParams & {
@@ -16,3 +17,8 @@ export interface SortBy {
   sort: 'name' | 'status' | 'startTs'
   order: 'ASC' | 'DESC'
 }
+
+export type ProcessedExecutionListPageQueryParams = PartiallyRequired<
+  ExecutionListPageQueryParams,
+  'page' | 'size' | 'sort'
+>

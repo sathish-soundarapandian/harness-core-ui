@@ -61,3 +61,9 @@ export enum Experiences {
   CG = 'CG',
   NG = 'NG'
 }
+
+export enum Width {
+  SMALL = 120,
+  MEDIUM = 160,
+  LARGE = 200
+}

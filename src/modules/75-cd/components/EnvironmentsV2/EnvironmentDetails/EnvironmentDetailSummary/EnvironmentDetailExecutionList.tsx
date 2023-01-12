@@ -6,29 +6,14 @@
  */
 
 import React, { useRef } from 'react'
-import {
-  Button,
-  ButtonVariation,
-  Container,
-  ExpandingSearchInput,
-  ExpandingSearchInputHandle,
-  Icon,
-  Layout,
-  Page,
-  PageError,
-  Text
-} from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import { Container, ExpandingSearchInput, ExpandingSearchInputHandle, Icon, PageError, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { useBooleanStatus, useMutateAsGet, useUpdateQueryParams } from '@common/hooks'
+import { useMutateAsGet, useUpdateQueryParams } from '@common/hooks'
 import { GetListOfExecutionsQueryParams, PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-import {
-  ExecutionListFilterContextProvider,
-  useExecutionListFilterContext
-} from '@pipeline/pages/execution-list/ExecutionListFilterContext/ExecutionListFilterContext'
 import { MemoisedExecutionListTable } from '@pipeline/pages/execution-list/ExecutionListTable/ExecutionListTable'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { usePolling } from '@common/hooks/usePolling'
@@ -38,10 +23,11 @@ import {
   ExecutionCompareProvider,
   useExecutionCompareContext
 } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
-import { ExecutionCompareYaml } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareYaml'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import { useExecutionListQueryParams } from '@pipeline/pages/execution-list/utils/executionListUtil'
+import { ExecutionCompareYamlHeader } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareYamlHeader'
+import { Width } from '@common/constants/Utils'
 import { ExecutionListEmptyState } from './EnvironmentDetailsUtils'
-
 import css from './EnvironmentDetailSummary.module.scss'
 
 interface EnvironmentDetailExecutionListProps {
@@ -55,14 +41,12 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
   const searchRef = useRef({} as ExpandingSearchInputHandle)
   const { replaceQueryParams, updateQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
   const { module } = useModuleInfo()
-  const { isCompareMode, cancelCompareMode, compareItems } = useExecutionCompareContext()
-
+  const { isCompareMode } = useExecutionCompareContext()
   const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<PipelinePathProps>>()
-  const { queryParams } = useExecutionListFilterContext()
-
+  const queryParams = useExecutionListQueryParams()
   const { page, size, sort, myDeployments, status, repoIdentifier, searchTerm, repoName } = queryParams
 
-  const resetFilter = (): void => {
+  const resetFilter = /* istanbul ignore next */ (): void => {
     searchRef.current.clear()
     replaceQueryParams({})
   }
@@ -76,7 +60,6 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
     }
   }
   const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
-  const { state: showCompareExecutionDrawer, close, open } = useBooleanStatus(false)
 
   const {
     data,
@@ -117,7 +100,7 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
   const hasExecutions = executionList?.totalElements && executionList?.totalElements > 0
   const showSpinner = initLoading || (loading && !isPolling)
 
-  const changeQueryParam = <T extends keyof GetListOfExecutionsQueryParams>(
+  const changeQueryParam = /* istanbul ignore next */ <T extends keyof GetListOfExecutionsQueryParams>(
     key: T,
     value: GetListOfExecutionsQueryParams[T]
   ): void => {
@@ -128,44 +111,9 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
     }
   }
 
-  const compareYamls = (): JSX.Element => {
-    return isCompareMode ? (
-      <>
-        <Page.SubHeader className={css.main}>
-          <Text font={{ variation: FontVariation.LEAD }}>{getString('pipeline.execution.compareExecutionsTitle')}</Text>
-          <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-end', justifyContent: 'flex-start' }}>
-            <Button
-              text={getString('pipeline.execution.compareAction')}
-              variation={ButtonVariation.PRIMARY}
-              onClick={() => open()}
-              disabled={compareItems.length < 2}
-            />
-            <Button
-              text={getString('cancel')}
-              variation={ButtonVariation.TERTIARY}
-              onClick={() => cancelCompareMode()}
-            />
-          </Layout.Horizontal>
-        </Page.SubHeader>
-        {showCompareExecutionDrawer && (
-          <ExecutionCompareYaml
-            compareItems={compareItems}
-            onClose={() => {
-              close()
-              cancelCompareMode()
-            }}
-          />
-        )}
-      </>
-    ) : (
-      <></>
-    )
-  }
-
   return (
     <div>
-      {compareYamls()}
-      <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
+      {isCompareMode && <ExecutionCompareYamlHeader />}
       <div className={css.titleStyle}>
         <Text color={Color.GREY_800} font={{ weight: 'bold' }}>
           {`${getString('pipeline.dashboards.totalExecutions')}: ${defaultTo(data?.data?.totalElements, 0)} `}
@@ -174,7 +122,7 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
           defaultValue={queryParams.searchTerm}
           alwaysExpanded
           onChange={value => changeQueryParam('searchTerm', value)}
-          width={200}
+          width={Width.LARGE}
           ref={searchRef}
         />
       </div>
@@ -191,6 +139,8 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
       ) : (
         <ExecutionListEmptyState resetFilter={resetFilter} />
       )}
+
+      <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
     </div>
   )
 }
@@ -198,11 +148,9 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
 export function EnvironmentDetailExecutionList(props: EnvironmentDetailExecutionListProps): React.ReactElement {
   return (
     <GitSyncStoreProvider>
-      <ExecutionListFilterContextProvider>
-        <ExecutionCompareProvider>
-          <EnvironmentDetailExecutionListInternal {...props} />
-        </ExecutionCompareProvider>
-      </ExecutionListFilterContextProvider>
+      <ExecutionCompareProvider>
+        <EnvironmentDetailExecutionListInternal {...props} />
+      </ExecutionCompareProvider>
     </GitSyncStoreProvider>
   )
 }

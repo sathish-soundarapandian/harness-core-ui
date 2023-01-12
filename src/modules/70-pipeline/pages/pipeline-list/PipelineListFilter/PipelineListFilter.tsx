@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /*
  * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -6,7 +7,7 @@
  */
 
 import React, { useMemo, useRef } from 'react'
-import { SelectOption, shouldShowError } from '@harness/uicore'
+import { Layout, SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -16,7 +17,7 @@ import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterC
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 import { isObjectEmpty, UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import { StringUtils, useToaster } from '@common/exports'
-import { useBooleanStatus, useDeepCompareEffect, useUpdateQueryParams } from '@common/hooks'
+import { useBooleanStatus, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
 import { getBuildType, getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 import {
@@ -25,7 +26,6 @@ import {
   getValidFilterArguments,
   PipelineFormType
 } from '@pipeline/utils/PipelineFilterRequestUtils'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import {
@@ -33,162 +33,129 @@ import {
   useGetServiceDefinitionTypes,
   useGetServiceListForProject
 } from 'services/cd-ng'
+import type { FilterDTO, PipelineFilterProperties } from 'services/pipeline-ng'
+import { useDeleteFilter, useGetFilterList, usePostFilter, useUpdateFilter } from 'services/pipeline-ng'
+import { killEvent } from '@common/utils/eventUtils'
 import {
-  FilterDTO,
-  PipelineFilterProperties,
-  useDeleteFilter,
-  useGetFilterList,
-  usePostFilter,
-  useUpdateFilter
-} from 'services/pipeline-ng'
+  useFilterWithValidFieldsWithMetaInfo,
+  usePipelineListFilterFieldToLabelMapping
+} from '@pipeline/pages/utils/Filters/filters'
 import { ExecutionListFilterForm } from '../../execution-list/ExecutionListFilterForm/ExecutionListFilterForm'
-import type { PipelineListPagePathParams, PipelineListPageQueryParams } from '../types'
-import { usePipeLineListFilterMapper } from './usePipelineListFilterMapper'
+import type {
+  PipelineListPagePathParams,
+  PipelineListPageQueryParams,
+  ProcessedPipelineListPageQueryParams
+} from '../types'
+import { queryParamOptions } from '../PipelineListUtils'
 
-interface PipelineListFilterProps {
-  queryParams: PipelineListPageQueryParams
-  appliedFilter: FilterDTO | undefined
-  setAppliedFilter: (appliedFilter: FilterDTO | undefined) => void
-}
+const UNSAVED_FILTER_IDENTIFIER = StringUtils.getIdentifierFromName(UNSAVED_FILTER)
 
-export function PipelineListFilter({
-  queryParams,
-  appliedFilter,
-  setAppliedFilter
-}: PipelineListFilterProps): React.ReactElement {
+export function PipelineListFilter(): React.ReactElement {
   const { getString } = useStrings()
-  const UNSAVED_FILTER_IDENTIFIER = StringUtils.getIdentifierFromName(UNSAVED_FILTER)
   const filterRef = useRef<FilterRef<FilterDTO> | null>(null)
-  const { getRBACErrorMessage } = useRBACError()
   const { showError } = useToaster()
-  const { selectedProject } = useAppStore()
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<PipelineListPageQueryParams>>()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<PipelineListPagePathParams>()
   const { state: isFiltersDrawerOpen, open: openFilterDrawer, close: hideFilterDrawer } = useBooleanStatus()
   const filterDrawerOpenedRef = useRef(false)
+  const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
+  const { selectedProject } = useAppStore()
+  const isCDEnabled = !!selectedProject?.modules?.includes('CD')
+  const isCIEnabled = !!selectedProject?.modules?.includes('CI')
 
-  const { mutate: createFilter } = usePostFilter({
-    queryParams: { accountIdentifier: accountId }
-  })
-  const { mutate: updateFilter } = useUpdateFilter({
-    queryParams: { accountIdentifier: accountId }
-  })
-  const { mutate: deleteFilter } = useDeleteFilter({
-    queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, type: 'PipelineSetup' }
-  })
-  const {
-    loading: isFetchingFilters,
-    data: filterListResponse,
-    error: errorFetchingFilters,
-    refetch: refetchFilterList
-  } = useGetFilterList({
-    queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, type: 'PipelineSetup' },
-    lazy: !filterDrawerOpenedRef.current
-  })
+  /**Start Data hooks */
 
-  const { data: deploymentTypeResponse, loading: isFetchingDeploymentTypes } = useGetServiceDefinitionTypes({
+  const { data: deploymentTypeResponse, loading: isDeploymentTypesLoading } = useGetServiceDefinitionTypes({
     queryParams: { accountId },
     lazy: !filterDrawerOpenedRef.current
   })
-
-  const { data: servicesResponse, loading: isFetchingServices } = useGetServiceListForProject({
+  const { data: servicesResponse, loading: isServicesLoading } = useGetServiceListForProject({
     queryParams: { accountId, orgIdentifier, projectIdentifier },
     lazy: !filterDrawerOpenedRef.current
   })
-
-  const { data: environmentsResponse, loading: isFetchingEnvironments } = useGetEnvironmentListForProject({
+  const { data: environmentsResponse, loading: isEnvironmentsLoading } = useGetEnvironmentListForProject({
     queryParams: { accountId, orgIdentifier, projectIdentifier },
     lazy: !filterDrawerOpenedRef.current
   })
+  const { mutate: createFilter, loading: isCreateFilterLoading } = usePostFilter({
+    queryParams: { accountIdentifier: accountId }
+  })
+  const { mutate: updateFilter, loading: isUpdateFilterLoading } = useUpdateFilter({
+    queryParams: { accountIdentifier: accountId }
+  })
+  const { mutate: deleteFilter, loading: isDeleteFilterLoading } = useDeleteFilter({
+    queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, type: 'PipelineSetup' }
+  })
+  const {
+    data: filterListData,
+    loading: isFilterListLoading,
+    refetch: refetchFilterList
+  } = useGetFilterList({
+    queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, type: 'PipelineSetup' },
+    lazy: !filterDrawerOpenedRef.current && !queryParams.filterIdentifier
+  })
 
-  const isCDEnabled = !!selectedProject?.modules?.includes('CD')
-  const isCIEnabled = !!selectedProject?.modules?.includes('CI')
-  const reset = (): void => {
-    setAppliedFilter(undefined)
-    replaceQueryParams({})
-  }
-
-  const handleSaveOrUpdate = async (
-    isUpdate: boolean,
-    data: FilterDataInterface<PipelineFormType, FilterInterface>
-  ): Promise<void> => {
-    const requestBodyPayload = createRequestBodyPayload({
-      isUpdate,
-      data,
-      projectIdentifier,
-      orgIdentifier
-    })
-    const saveOrUpdateHandler = filterRef.current?.saveOrUpdateFilterHandler
-    if (saveOrUpdateHandler && typeof saveOrUpdateHandler === 'function') {
-      const updatedFilter = await saveOrUpdateHandler(isUpdate, requestBodyPayload)
-      updateQueryParams({ filters: updatedFilter || {} })
-    }
-    refetchFilterList()
-  }
-
-  const unsavedFilter = {
-    name: UNSAVED_FILTER,
-    identifier: StringUtils.getIdentifierFromName(UNSAVED_FILTER)
-  }
+  /**End Data hooks */
 
   const deploymentTypeSelectOptions = useMemo(() => {
-    if (!isEmpty(deploymentTypeResponse?.data) && deploymentTypeResponse?.data) {
-      const options: SelectOption[] = deploymentTypeResponse.data
-        .filter(deploymentType => deploymentType in deploymentTypeLabel)
+    const options: SelectOption[] =
+      deploymentTypeResponse?.data
+        ?.filter(deploymentType => deploymentType in deploymentTypeLabel)
         .map(type => ({
           label: getString(deploymentTypeLabel[type]),
           value: type as string
-        }))
-      return options
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        })) || ([] as SelectOption[])
+    return options
   }, [deploymentTypeResponse])
 
-  useDeepCompareEffect(() => {
-    const calculatedFilter =
-      queryParams.filterIdentifier && queryParams.filterIdentifier !== UNSAVED_FILTER_IDENTIFIER
-        ? getFilterByIdentifier(queryParams.filterIdentifier || '', filterListResponse?.data?.content)
-        : queryParams.filters && !isEmpty(queryParams.filters)
-        ? ({
-            name: UNSAVED_FILTER,
-            identifier: UNSAVED_FILTER_IDENTIFIER,
-            filterProperties: queryParams.filters,
-            filterVisibility: undefined
-          } as FilterDTO)
-        : undefined
+  const filterList = filterListData?.data?.content
+  const isMetaDataLoading = isDeploymentTypesLoading || isEnvironmentsLoading || isServicesLoading
+  const isFilterCrudLoading =
+    isCreateFilterLoading || isUpdateFilterLoading || isDeleteFilterLoading || isFilterListLoading
+  const appliedFilter =
+    queryParams.filterIdentifier && queryParams.filterIdentifier !== UNSAVED_FILTER_IDENTIFIER
+      ? getFilterByIdentifier(queryParams.filterIdentifier, filterList)
+      : !isEmpty(queryParams.filters)
+      ? ({
+          name: UNSAVED_FILTER,
+          identifier: UNSAVED_FILTER_IDENTIFIER,
+          filterProperties: queryParams.filters,
+          filterVisibility: undefined
+        } as FilterDTO)
+      : null
+  const { name = '', filterVisibility, identifier = '', filterProperties } = appliedFilter || {}
+  const {
+    name: pipelineName,
+    pipelineTags: _pipelineTags,
+    moduleProperties,
+    description
+  } = (filterProperties as PipelineFilterProperties) || {}
+  const { ci, cd } = moduleProperties || {}
+  const { branch, tag, ciExecutionInfoDTO, repoName } = ci || {}
+  const { deploymentTypes, environmentNames, infrastructureTypes, serviceNames } = cd || {}
+  const { sourceBranch, targetBranch } = ciExecutionInfoDTO?.pullRequest || {}
+  const buildType = getBuildType(moduleProperties || {})
+  const fieldToLabelMapping = usePipelineListFilterFieldToLabelMapping()
+  const filterWithValidFieldsWithMetaInfo = useFilterWithValidFieldsWithMetaInfo(
+    appliedFilter?.filterProperties,
+    fieldToLabelMapping
+  )
 
-    setAppliedFilter(calculatedFilter)
-  }, [queryParams])
+  /**Start Handlers */
 
-  const isFetchingMetaData = isFetchingDeploymentTypes && isFetchingServices && isFetchingEnvironments
-
-  const handleDelete = async (identifier: string): Promise<void> => {
-    const deleteHandler = filterRef.current?.deleteFilterHandler
-    if (deleteHandler && typeof deleteFilter === 'function') {
-      await deleteHandler(identifier)
-    }
-    if (identifier === appliedFilter?.identifier) {
-      reset()
-    }
-    await refetchFilterList()
+  const handleFilterSelection = (
+    option: SelectOption,
+    event?: React.SyntheticEvent<HTMLElement, Event> | undefined
+  ) => {
+    killEvent(event)
+    updateQueryParams({
+      filterIdentifier: option.value ? option.value.toString() : undefined,
+      filters: undefined
+    })
   }
 
-  const onApply = (inputFormData: FormikProps<PipelineFormType>['values']): void => {
-    if (!isObjectEmpty(inputFormData)) {
-      const filterFromFormData = getValidFilterArguments({ ...inputFormData })
-      updateQueryParams({
-        page: undefined,
-        filterIdentifier: undefined,
-        filters: filterFromFormData || {}
-      })
-      hideFilterDrawer()
-    } else {
-      showError(getString('filters.invalidCriteria'), undefined, 'pipeline.invalid.criteria.error')
-    }
-  }
-
-  const handleFilterSelect = (filterIdentifier: string): void => {
-    if (filterIdentifier !== unsavedFilter.identifier) {
+  const handleFilterClick = (filterIdentifier: string) => {
+    if (filterIdentifier !== UNSAVED_FILTER_IDENTIFIER) {
       updateQueryParams({
         filterIdentifier,
         filters: undefined
@@ -196,49 +163,58 @@ export function PipelineListFilter({
     }
   }
 
-  const {
-    name: pipelineName,
-    pipelineTags: _pipelineTags,
-    moduleProperties,
-    description
-  } = (appliedFilter?.filterProperties as PipelineFilterProperties) || {}
-  const { name = '', filterVisibility, identifier = '' } = appliedFilter || {}
-  const { ci, cd } = moduleProperties || {}
-  const { branch, tag, ciExecutionInfoDTO, repoName } = ci || {}
-  const { deploymentTypes, environmentNames, infrastructureTypes, serviceNames } = cd || {}
-  const { sourceBranch, targetBranch } = ciExecutionInfoDTO?.pullRequest || {}
-  const buildType = getBuildType(moduleProperties || {})
-
-  if (errorFetchingFilters && shouldShowError(errorFetchingFilters)) {
-    showError(getRBACErrorMessage(errorFetchingFilters), undefined, 'pipeline.fetch.filter.error')
-  }
-
-  const onFilterSelect = (option: SelectOption): void => {
-    if (option.value) {
-      updateQueryParams({
-        filterIdentifier: option.value.toString(),
-        filters: undefined
-      })
+  const onApply = (inputFormData: FormikProps<PipelineFormType>['values']): void => {
+    if (!isObjectEmpty(inputFormData)) {
+      const filterFromFormData = getValidFilterArguments({ ...inputFormData })
+      updateQueryParams({ page: undefined, filterIdentifier: undefined, filters: filterFromFormData || {} })
+      hideFilterDrawer()
     } else {
-      reset()
+      showError(getString('filters.invalidCriteria'), undefined, 'pipeline.invalid.criteria.error')
     }
   }
 
-  const { fieldToLabelMapping, filterWithValidFieldsWithMetaInfo } = usePipeLineListFilterMapper(
-    appliedFilter?.filterProperties
-  )
+  const handleSaveOrUpdate = async (
+    isUpdate: boolean,
+    data: FilterDataInterface<PipelineFormType, FilterInterface>
+  ) => {
+    const saveOrUpdateHandler = filterRef.current?.saveOrUpdateFilterHandler
+    if (typeof saveOrUpdateHandler === 'function') {
+      const requestBodyPayload = createRequestBodyPayload({
+        isUpdate,
+        data,
+        projectIdentifier,
+        orgIdentifier
+      })
+      const updatedFilter = await saveOrUpdateHandler(isUpdate, requestBodyPayload)
+      updateQueryParams({ filters: updatedFilter?.filterProperties || {} })
+      refetchFilterList()
+    }
+  }
+
+  const handleDelete = async (deleteIdentifier: string) => {
+    const deleteHandler = filterRef.current?.deleteFilterHandler
+    if (deleteHandler && typeof deleteFilter === 'function') {
+      await deleteHandler(deleteIdentifier)
+      reset()
+      refetchFilterList()
+    }
+  }
+
+  const reset = () => replaceQueryParams({})
+
+  /**End Handlers */
 
   return (
-    <>
+    <Layout.Horizontal>
       <FilterSelector<FilterDTO>
         appliedFilter={appliedFilter}
-        filters={filterListResponse?.data?.content}
+        filters={filterList}
         refetchFilters={refetchFilterList}
         onFilterBtnClick={() => {
           filterDrawerOpenedRef.current = true
           openFilterDrawer()
         }}
-        onFilterSelect={onFilterSelect}
+        onFilterSelect={handleFilterSelection}
         fieldToLabelMapping={fieldToLabelMapping}
         filterWithValidFields={filterWithValidFieldsWithMetaInfo}
       />
@@ -274,13 +250,13 @@ export function PipelineListFilter({
           },
           metadata: { name, filterVisibility, identifier, filterProperties: {} }
         }}
-        filters={filterListResponse?.data?.content}
-        isRefreshingFilters={isFetchingFilters || isFetchingMetaData}
+        filters={filterList}
+        isRefreshingFilters={isFilterCrudLoading || isMetaDataLoading}
         onApply={onApply}
-        onClose={() => hideFilterDrawer()}
+        onClose={hideFilterDrawer}
         onSaveOrUpdate={handleSaveOrUpdate}
         onDelete={handleDelete}
-        onFilterSelect={handleFilterSelect}
+        onFilterSelect={handleFilterClick}
         onClear={reset}
         ref={filterRef}
         dataSvcConfig={
@@ -292,6 +268,6 @@ export function PipelineListFilter({
         }
         onSuccessfulCrudOperation={refetchFilterList}
       />
-    </>
+    </Layout.Horizontal>
   )
 }

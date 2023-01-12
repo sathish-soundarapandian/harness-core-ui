@@ -30,11 +30,10 @@ export default function HealthSources(props: HealthSourcesProps): React.ReactEle
   const TypeTableCell = (tableProps: CellProps<HealthSource>): JSX.Element => {
     const type = tableProps?.row?.values?.type
     const name = tableProps?.row?.values?.name
-    const spec = tableProps?.row?.values?.spec
     return (
       <div className={css.healthsourcename}>
         <div className={css.healthsourcetype}>
-          <Icon name={getIconBySourceType(type, spec)} size={18} />
+          <Icon name={getIconBySourceType(type)} size={18} />
         </div>
         <span>{name}</span>
       </div>
@@ -107,6 +106,12 @@ export default function HealthSources(props: HealthSourcesProps): React.ReactEle
       ) : (
         <TableV2<HealthSource>
           columns={[
+            {
+              Header: '',
+              accessor: 'spec',
+              width: '0%',
+              Cell: <></>
+            },
             {
               Header: 'Source',
               accessor: 'name',

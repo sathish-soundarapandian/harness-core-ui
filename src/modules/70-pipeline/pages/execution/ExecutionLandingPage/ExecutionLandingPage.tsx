@@ -39,7 +39,7 @@ import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/i
 import { PipelineExecutionWarning } from '@pipeline/components/PipelineExecutionWarning/PipelineExecutionWarning'
 import { logsCache } from '@pipeline/components/LogsContent/LogsState/utils'
 import { EvaluationModal } from '@governance/EvaluationModal'
-import ExecutionContext, { GraphCanvasState } from '@pipeline/context/ExecutionContext'
+import ExecutionContext from '@pipeline/context/ExecutionContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { usePolling } from '@common/hooks/usePolling'
@@ -90,8 +90,8 @@ const setStageIds = ({
     return
   }
 
-  // if user has selected a stage/step do not auto-update
-  if (queryParams.stage || queryParams.step) {
+  // if user has selected a stage/step/collapsedNode do not auto-update
+  if (queryParams.stage || queryParams.step || queryParams.collapsedNode) {
     setAutoSelectedStageId('')
     setAutoSelectedChildStageId('')
     setAutoSelectedStepId('')
@@ -213,6 +213,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   const [selectedStageExecutionId, setSelectedStageExecutionId] = React.useState<string>('')
   const [selectedChildStageId, setSelectedChildStageId] = React.useState<string>('')
   const [selectedStepId, setSelectedStepId] = React.useState<string>('')
+  const [selectedCollapsedNodeId, setSelectedCollapsedNodeId] = React.useState<string>('')
   const { preference: savedExecutionView, setPreference: setSavedExecutionView } = usePreferenceStore<
     string | undefined
   >(PreferenceScope.USER, 'executionViewType')
@@ -223,11 +224,6 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   const location = useLocation<{ shouldShowGovernanceEvaluations: boolean; governanceMetadata: GovernanceMetadata }>()
   const locationPathNameArr = location?.pathname?.split('/') || []
   const selectedPageTab = locationPathNameArr[locationPathNameArr.length - 1]
-  const [stepsGraphCanvasState, setStepsGraphCanvasState] = React.useState<GraphCanvasState>({
-    offsetX: 5,
-    offsetY: 0,
-    zoom: 100
-  })
 
   const { data, refetch, loading, error } = useGetExecutionDetailV2({
     planExecutionId: executionIdentifier,
@@ -440,6 +436,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     }
     setSelectedStageExecutionId((queryParams?.stageExecId as string) || autoStageNodeExecutionId)
     setSelectedStepId((queryParams.step as string) || autoSelectedStepId)
+    setSelectedCollapsedNodeId(queryParams?.collapsedNode ?? '')
     queryParams?.stage && !queryParams?.stageExecId && setAutoStageNodeExecutionId(queryParams?.stageExecId || '')
   }, [
     loading,
@@ -483,18 +480,18 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         selectedChildStageId,
         selectedStepId,
         selectedStageExecutionId,
+        selectedCollapsedNodeId,
         loading,
         isDataLoadedForSelectedStage,
         queryParams,
         logsToken,
         setLogsToken,
         refetch,
-        stepsGraphCanvasState,
-        setStepsGraphCanvasState,
         setSelectedStageId,
         setSelectedStepId,
         setIsPipelineInvalid,
         setSelectedStageExecutionId,
+        setSelectedCollapsedNodeId,
         addNewNodeToMap(id, node) {
           setAllNodeMap(nodeMap => ({ ...nodeMap, [id]: node }))
         }

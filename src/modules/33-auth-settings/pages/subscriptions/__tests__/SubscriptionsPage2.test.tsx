@@ -67,7 +67,8 @@ describe('Subscriptions Page', () => {
         data: {
           data: [
             {
-              edition: Editions.ENTERPRISE
+              edition: Editions.ENTERPRISE,
+              cdLicenseType: 'SERVICES'
             }
           ],
           status: 'SUCCESS'

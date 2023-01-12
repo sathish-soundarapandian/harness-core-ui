@@ -113,7 +113,8 @@ export const WizardFooter = ({
           rightIcon="chevron-right"
           type="submit"
           disabled={disableSubmit}
-          onClick={async () => {
+          onClick={async event => {
+            event.preventDefault()
             setSubmittedForm(true)
 
             if (

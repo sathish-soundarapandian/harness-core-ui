@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import { defaultTo, set } from 'lodash-es'
+import { defaultTo, isEmpty, set } from 'lodash-es'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
@@ -171,7 +171,14 @@ export class TasBGAppSetupStep extends PipelineStep<TasBGAppSetupData> {
         })
       )
     }
-    // Additional Routes
+    /* istanbul ignore else */
+    if (
+      getMultiTypeFromValue(template?.spec?.tempRoutes) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.tempRoutes)
+    ) {
+      set(errors, 'spec.tempRoutes', getString?.('fieldRequired', { field: 'Temp Routes' }))
+    }
     return errors
   }
 }

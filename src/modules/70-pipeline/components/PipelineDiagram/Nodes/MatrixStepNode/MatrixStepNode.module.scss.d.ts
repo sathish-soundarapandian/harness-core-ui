@@ -35,7 +35,6 @@ declare const styles: {
   readonly nodeNameText: string
   readonly readonly: string
   readonly runningAnimation: string
-  readonly showNodeText: string
   readonly showNodes: string
   readonly stageName: string
   readonly stepCount: string

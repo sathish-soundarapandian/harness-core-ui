@@ -10,13 +10,12 @@ import { Divider } from '@blueprintjs/core'
 import { Accordion, Container, Formik, FormikForm } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { get } from 'lodash-es'
+import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
-import StepCommonFields, {
-  GetImagePullPolicyOptions
-} from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
+import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import {
   getInitialValuesInCorrectFormat,
   getFormValuesInCorrectFormat
@@ -58,7 +57,7 @@ export const BanditStepBase = (
   const valuesInCorrectFormat = getInitialValuesInCorrectFormat<BanditStepData, BanditStepData>(
     initialValues,
     transformValuesFieldsConfig(initialValues),
-    { imagePullPolicyOptions: GetImagePullPolicyOptions() }
+    { imagePullPolicyOptions: getImagePullPolicyOptions(getString) }
   )
 
   return (

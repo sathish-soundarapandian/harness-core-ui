@@ -38,7 +38,13 @@ const RemoteCommits = lazy(() => import('code/Commits'))
 const RemoteBranches = lazy(() => import('code/Branches'))
 
 // eslint-disable-next-line import/no-unresolved
-const RemoteCreateWebhook = lazy(() => import('code/CreateWebhook'))
+const RemoteWebhooks = lazy(() => import('code/Webhooks'))
+
+// eslint-disable-next-line import/no-unresolved
+const RemoteWebhookNew = lazy(() => import('code/WebhookNew'))
+
+// eslint-disable-next-line import/no-unresolved
+const RemoteWebhookDetails = lazy(() => import('code/WebhookDetails'))
 
 // eslint-disable-next-line import/no-unresolved
 const RemoteSettings = lazy(() => import('code/Settings'))
@@ -116,8 +122,16 @@ export const Compare: React.FC<RemoteViewProps> = props => (
   <CODERemoteComponentMounter component={<RemoteCompare {...props} />} />
 )
 
-export const CreateWebhook: React.FC<RemoteViewProps> = props => (
-  <CODERemoteComponentMounter component={<RemoteCreateWebhook {...props} />} />
+export const Webhooks: React.FC<RemoteViewProps> = props => (
+  <CODERemoteComponentMounter component={<RemoteWebhooks {...props} />} />
+)
+
+export const WebhookNew: React.FC<RemoteViewProps> = props => (
+  <CODERemoteComponentMounter component={<RemoteWebhookNew {...props} />} />
+)
+
+export const WebhookDetails: React.FC<RemoteViewProps> = props => (
+  <CODERemoteComponentMounter component={<RemoteWebhookDetails {...props} />} />
 )
 
 export const Settings: React.FC<RemoteViewProps> = props => (

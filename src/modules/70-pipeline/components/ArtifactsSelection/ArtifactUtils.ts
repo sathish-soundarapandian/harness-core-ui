@@ -611,3 +611,10 @@ export const shouldHideHeaderAndNavBtns = (context: number): boolean =>
 export const hasFixedDefiniteValue = (value: any) => {
   return getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME || !value
 }
+
+export const resetFieldValue = (formik: FormikValues, fieldPath: string): void => {
+  const fieldValue = get(formik.values, fieldPath, '')
+  if (!isEmpty(fieldValue) && getMultiTypeFromValue(fieldValue) === MultiTypeInputType.FIXED) {
+    formik.setFieldValue(fieldPath, '')
+  }
+}

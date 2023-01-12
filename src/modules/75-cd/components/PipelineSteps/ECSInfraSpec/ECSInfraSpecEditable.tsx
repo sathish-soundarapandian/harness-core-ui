@@ -19,8 +19,8 @@ import {
   SelectOption
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { debounce, defaultTo, get, noop } from 'lodash-es'
-import type { FormikProps, FormikValues } from 'formik'
+import { debounce, defaultTo, noop } from 'lodash-es'
+import type { FormikProps } from 'formik'
 import type { IItemRendererProps } from '@blueprintjs/select'
 
 import { EcsInfrastructure, useClusters } from 'services/cd-ng'
@@ -40,17 +40,10 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { connectorTypes, EXPRESSION_STRING } from '@pipeline/utils/constants'
-import { checkIfQueryParamsisNotEmpty } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { checkIfQueryParamsisNotEmpty, resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { getECSInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import css from './ECSInfraSpec.module.scss'
-
-export const resetFieldValue = (formik: FormikValues, fieldPath: string): void => {
-  const fieldValue = get(formik.values, fieldPath, '')
-  if (fieldValue?.length && getMultiTypeFromValue(fieldValue) === MultiTypeInputType.FIXED) {
-    formik.setFieldValue(fieldPath, '')
-  }
-}
 
 export interface ECSInfraSpecEditableProps {
   initialValues: EcsInfrastructure

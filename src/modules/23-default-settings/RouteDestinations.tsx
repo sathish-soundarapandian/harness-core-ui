@@ -38,6 +38,12 @@ DefaultSettingsFactory.registerCategory('CORE', {
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
 })
 
+DefaultSettingsFactory.registerCategory('CONNECTORS', {
+  icon: 'cog',
+  label: 'connectorsLabel',
+  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
+})
+
 DefaultSettingsFactory.registerCategory('GIT_EXPERIENCE', {
   icon: 'cog',
   label: 'authSettings.cdCommunityPlan.communityPlanStrings.item5',
@@ -54,7 +60,7 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.DISABLE_HARNESS_BUILT_
   label: 'common.accountSetting.connector.disableBISMHeading',
   settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
   yupValidation: Yup.boolean(),
-  settingCategory: 'CORE'
+  settingCategory: 'CONNECTORS'
 })
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.MANDATE_CUSTOM_WEBHOOK_AUTHORIZATION, {

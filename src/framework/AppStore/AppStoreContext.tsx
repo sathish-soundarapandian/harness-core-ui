@@ -293,7 +293,7 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
           isGitSimplificationEnabled: gitXEnabled,
           supportingGitSimplification,
           gitSyncEnabledOnlyForFF: gitSyncEnabledOnlyForFF,
-          supportingTemplatesGitx: supportingGitSimplification && state.featureFlags['NG_TEMPLATE_GITX']
+          supportingTemplatesGitx: supportingGitSimplification
         }))
       })
     } else {
@@ -303,7 +303,7 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
         connectivityMode: undefined,
         isGitSimplificationEnabled: false,
         supportingGitSimplification: true,
-        supportingTemplatesGitx: !state.featureFlags['USE_OLD_GIT_SYNC'] && state.featureFlags['NG_TEMPLATE_GITX'],
+        supportingTemplatesGitx: !state.featureFlags['USE_OLD_GIT_SYNC'],
         gitSyncEnabledOnlyForFF: false
       }))
     }
@@ -313,8 +313,7 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
     projectIdentifierFromPath,
     orgIdentifierFromPath,
     state.isGitSyncEnabled,
-    state.featureFlags[FeatureFlag.USE_OLD_GIT_SYNC],
-    state.featureFlags[FeatureFlag.NG_TEMPLATE_GITX]
+    state.featureFlags[FeatureFlag.USE_OLD_GIT_SYNC]
   ])
 
   // set selectedOrg when orgDetails are fetched

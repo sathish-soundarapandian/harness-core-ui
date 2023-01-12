@@ -147,6 +147,51 @@ function ServerlessAwsLambdaManifest({
     handleSubmit(manifestObj)
   }
 
+  const validationSchema = Yup.object().shape({
+    ...ManifestIdentifierValidation(
+      getString,
+      manifestIdsList,
+      initialValues?.identifier,
+      getString('pipeline.uniqueName')
+    ),
+    branch: Yup.string().when('gitFetchType', {
+      is: 'Branch',
+      then: Yup.string().trim().required(getString('validation.branchName'))
+    }),
+    commitId: Yup.string().when('gitFetchType', {
+      is: 'Commit',
+      then: Yup.string().trim().required(getString('validation.commitId'))
+    }),
+    paths: Yup.lazy((value): Yup.Schema<unknown> => {
+      if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+        return Yup.array().of(
+          Yup.object().shape({
+            path: Yup.string()
+              .min(1)
+              .required(getString('common.validation.fieldIsRequired', { name: getString('common.git.folderPath') }))
+              .test(
+                'Check prefix',
+                getString('pipeline.manifestType.periodPrefixValidation', { name: getString('common.git.folderPath') }),
+                (currPathValue: string) => {
+                  return !(currPathValue && currPathValue.startsWith('.'))
+                }
+              )
+          })
+        )
+      }
+      return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+    }),
+    repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
+      if (
+        connectionType === GitRepoName.Repo ||
+        getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+      ) {
+        return true
+      }
+      return !isEmpty(value) && value?.length > 0
+    })
+  })
+
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
@@ -156,41 +201,7 @@ function ServerlessAwsLambdaManifest({
       <Formik
         initialValues={getInitialValues()}
         formName="serverlessAwsLambda"
-        validationSchema={Yup.object().shape({
-          ...ManifestIdentifierValidation(
-            getString,
-            manifestIdsList,
-            initialValues?.identifier,
-            getString('pipeline.uniqueName')
-          ),
-          branch: Yup.string().when('gitFetchType', {
-            is: 'Branch',
-            then: Yup.string().trim().required(getString('validation.branchName'))
-          }),
-          commitId: Yup.string().when('gitFetchType', {
-            is: 'Commit',
-            then: Yup.string().trim().required(getString('validation.commitId'))
-          }),
-          paths: Yup.lazy((value): Yup.Schema<unknown> => {
-            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-              return Yup.array().of(
-                Yup.object().shape({
-                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
-                })
-              )
-            }
-            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
-          }),
-          repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
-            if (
-              connectionType === GitRepoName.Repo ||
-              getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-            ) {
-              return true
-            }
-            return !isEmpty(value) && value?.length > 0
-          })
-        })}
+        validationSchema={validationSchema}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,

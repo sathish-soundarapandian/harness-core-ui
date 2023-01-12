@@ -64,20 +64,22 @@ export const CDPipelineStudioNew = diagram.render()
 export interface ExecutionStageDetailsProps {
   layout: ExecutionLayoutState
   onStepSelect(step?: string): void
-  onStageSelect(step: string): void
+  onCollapsedNodeSelect(collapsedNode?: string): void
 }
 
 export default function ExecutionStageDetails(props: ExecutionStageDetailsProps): React.ReactElement {
+  const { onCollapsedNodeSelect, onStepSelect } = props
   const {
     pipelineExecutionDetail,
     pipelineStagesMap,
     loading,
     selectedStageId,
     selectedStepId,
+    selectedCollapsedNodeId,
     allNodeMap,
     isDataLoadedForSelectedStage
   } = useExecutionContext()
-  const { setStepDetailsVisibility } = useExecutionLayoutContext()
+  const { setStepDetailsVisibility, setCollapsedNodePaneVisibility } = useExecutionLayoutContext()
   const [barrierSetupId, setBarrierSetupId] = React.useState<string | undefined>()
   const [resourceUnit, setResourceUnit] = React.useState<string | undefined>()
   const [dynamicPopoverHandler, setDynamicPopoverHandler] = React.useState<
@@ -117,9 +119,15 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
 
   React.useEffect(() => {
     diagram.registerListeners(
-      getExecutionStageDiagramListeners({ onMouseEnter: onMouseEnterV1, allNodeMap, onMouseLeave, onStepSelect })
+      getExecutionStageDiagramListeners({
+        onMouseEnter: onMouseEnterV1,
+        allNodeMap,
+        onMouseLeave,
+        onStepSelect,
+        onCollapsedNodeSelect
+      })
     )
-  }, [dynamicPopoverHandler, allNodeMap])
+  }, [dynamicPopoverHandler, allNodeMap, onCollapsedNodeSelect])
 
   // load barrier info when barrier step is mouse over (when barrierSetupId is set)
   React.useEffect(() => {
@@ -152,12 +160,15 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
     setStepDetailsVisibility(!!selectedStepId)
   }, [selectedStepId, setStepDetailsVisibility])
 
+  // open collapsed node pane when a collapsed node is clicked
+  React.useEffect(() => {
+    setCollapsedNodePaneVisibility(!!selectedCollapsedNodeId)
+  }, [selectedCollapsedNodeId, setCollapsedNodePaneVisibility])
+
   const onMouseLeave = (): void => {
     dynamicPopoverHandler?.hide()
     setBarrierSetupId(undefined)
   }
-
-  const onStepSelect = (id: string): void => props.onStepSelect(id)
 
   const onMouseEnterV1 = ({ event, data: stageData }: { event: any; data: any }): void => {
     const isFinished = stageData?.endTs

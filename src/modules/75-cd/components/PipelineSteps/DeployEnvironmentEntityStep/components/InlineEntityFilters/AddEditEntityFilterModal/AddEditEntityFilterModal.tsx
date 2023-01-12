@@ -8,21 +8,12 @@
 import React, { useMemo } from 'react'
 import { Formik } from 'formik'
 
-import {
-  Button,
-  ButtonVariation,
-  FormikForm,
-  FormInput,
-  Layout,
-  ModalDialog,
-  RUNTIME_INPUT_VALUE
-} from '@harness/uicore'
+import { Button, ButtonVariation, FormikForm, FormInput, Layout, ModalDialog } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { EnvSwaggerObjectWrapper } from 'services/cd-ng'
 
 import { FormMultiTypeKVTagInput } from '@common/components/MutliTypeKVTagInput/MultiTypeKVTagInput'
-import { isValueRuntimeInput } from '@common/utils/utils'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
@@ -81,7 +72,7 @@ export default function AddEditEntityFilterModal({
       spec: {
         ...(values.type === 'tags' && {
           tags: filterSpec.tags,
-          matchType: isValueRuntimeInput(filterSpec.tags) ? RUNTIME_INPUT_VALUE : filterSpec.matchType
+          matchType: filterSpec.matchType
         })
       }
     })
@@ -113,9 +104,8 @@ export default function AddEditEntityFilterModal({
         )}
       >
         {formikProps => {
-          const { entities: filteredOnEntities, type, spec } = formikProps.values
+          const { entities: filteredOnEntities, type } = formikProps.values
           const showCondition = type === 'tags'
-          const showMatchType = !isValueRuntimeInput(spec.tags)
 
           const entitiesPlaceholder = filteredOnEntities.length
             ? ''
@@ -125,7 +115,7 @@ export default function AddEditEntityFilterModal({
             <FormikForm>
               <FormInput.Text
                 name={'identifier'}
-                label={getString('common.ID')}
+                label={getString('identifier')}
                 placeholder={getString('cd.inlineEntityFilters.enterFilterIdentifier')}
                 tooltipProps={{
                   dataTooltipId: 'inlineEntityFilterIdentifer'
@@ -153,48 +143,39 @@ export default function AddEditEntityFilterModal({
                   dataTooltipId: 'inlineEntityFilterType'
                 }}
               />
-              <Layout.Horizontal
-                flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
-                spacing="medium"
-                margin={{ bottom: 'medium' }}
-              >
-                {showCondition && (
-                  <>
-                    <FormMultiTypeKVTagInput
-                      name={'spec.tags'}
-                      tagsProps={{ placeholder: getString('common.filterOnName', { name: getString('tagsLabel') }) }}
-                      multiTypeProps={{
-                        allowableTypes,
-                        expressions
-                      }}
-                      label={getString('common.condition')}
-                      enableConfigureOptions
-                      configureOptionsProps={{
-                        variableName: 'spec.tags',
-                        hideExecutionTimeField: true
-                      }}
-                      className={css.tagInput}
-                      tooltipProps={{
-                        dataTooltipId: `inlineEntityFilterCondition_${type}`
-                      }}
-                    />
-                    {showMatchType && (
-                      <FormInput.RadioGroup
-                        name={'spec.matchType'}
-                        className={css.radioGroup}
-                        radioGroup={{
-                          inline: true
-                        }}
-                        items={[
-                          { label: getString('all'), value: 'all' },
-                          { label: getString('common.any'), value: 'any' }
-                        ]}
-                      />
-                    )}
-                  </>
-                )}
-              </Layout.Horizontal>
-              <Layout.Horizontal spacing="medium">
+              {showCondition && (
+                <>
+                  <FormInput.MultiTypeInput
+                    name={'spec.matchType'}
+                    useValue
+                    selectItems={[
+                      { label: getString('all'), value: 'all' },
+                      { label: getString('common.any'), value: 'any' }
+                    ]}
+                    label={getString('common.matchType')}
+                    tooltipProps={{
+                      dataTooltipId: 'inlineEntityFilterMatchType'
+                    }}
+                    multiTypeInputProps={{
+                      allowableTypes
+                    }}
+                  />
+                  <FormMultiTypeKVTagInput
+                    name={'spec.tags'}
+                    tagsProps={{ placeholder: getString('common.filterOnName', { name: getString('tagsLabel') }) }}
+                    multiTypeProps={{
+                      allowableTypes,
+                      expressions
+                    }}
+                    label={getString('common.condition')}
+                    className={css.tagInput}
+                    tooltipProps={{
+                      dataTooltipId: `inlineEntityFilterCondition_${type}`
+                    }}
+                  />
+                </>
+              )}
+              <Layout.Horizontal spacing="medium" padding={{ top: 'medium' }}>
                 <Button type="submit" variation={ButtonVariation.PRIMARY}>
                   {getString('save')}
                 </Button>

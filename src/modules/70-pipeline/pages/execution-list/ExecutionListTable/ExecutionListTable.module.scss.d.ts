@@ -12,10 +12,13 @@ declare const styles: {
   readonly checkbox: string
   readonly childPipelineExecutionInfo: string
   readonly divider: string
+  readonly environment: string
   readonly environmentsText: string
   readonly execution: string
+  readonly gitOpsExecutionSummary: string
   readonly icon: string
   readonly iconWrapper: string
+  readonly marginLeftZero: string
   readonly matrixLabel: string
   readonly matrixStage: string
   readonly matrixStageList: string

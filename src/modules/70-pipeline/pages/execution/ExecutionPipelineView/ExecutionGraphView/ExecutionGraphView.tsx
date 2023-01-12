@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useCallback } from 'react'
 import { debounce, omit } from 'lodash-es'
 import SplitPane, { SplitPaneProps } from 'react-split-pane'
 
@@ -20,6 +20,8 @@ import {
 } from '@pipeline/components/ExecutionLayout/ExecutionLayoutContext'
 import ExecutionLayoutFloatingView from '@pipeline/components/ExecutionLayout/ExecutionLayoutFloatingView'
 
+import { ExecutionNodeList } from '@pipeline/components/ExecutionNodeList/ExecutionNodeList'
+import { CollapsedNodeProvider } from '@pipeline/components/ExecutionNodeList/CollapsedNodeStore'
 import { ExecutionStageDetailsHeader } from './ExecutionStageDetailsHeader/ExecutionStageDetailsHeader'
 import ExecutionGraph from './ExecutionGraph/ExecutionGraph'
 import ExecutionStageDetails from './ExecutionStageDetails/ExecutionStageDetails'
@@ -61,12 +63,14 @@ export default function ExecutionGraphView(): React.ReactElement {
   const {
     allNodeMap,
     pipelineStagesMap,
+    selectedStepId,
     selectedStageId,
     selectedChildStageId,
     selectedStageExecutionId,
     queryParams,
     setSelectedStepId,
-    setSelectedStageExecutionId
+    setSelectedStageExecutionId,
+    setSelectedCollapsedNodeId
   } = useExecutionContext()
 
   function handleStepSelection(step?: string): void {
@@ -98,8 +102,8 @@ export default function ExecutionGraphView(): React.ReactElement {
         step
       }
 
-      // delete retryStep param on step change
       delete params.retryStep
+      delete params.collapsedNode
 
       replaceQueryParams(params)
     }
@@ -125,10 +129,42 @@ export default function ExecutionGraphView(): React.ReactElement {
 
     delete params.step
     delete params.retryStep
+    delete params.collapsedNode
     if (!parentStageId && params?.childStage) delete params.childStage
 
     replaceQueryParams(params)
   }
+
+  const handleCollapsedNodeSelection = useCallback(
+    (collapsedNode?: string): void => {
+      const params = {
+        ...queryParams,
+        stage: selectedStageId,
+        step: selectedStepId,
+        ...(selectedStageExecutionId && { stageExecId: selectedStageExecutionId }),
+        ...(selectedChildStageId && { childStage: selectedChildStageId }),
+        collapsedNode
+      }
+
+      delete params.retryStep
+
+      if (!collapsedNode) {
+        delete params.collapsedNode
+        setSelectedCollapsedNodeId('')
+      }
+
+      replaceQueryParams(params)
+    },
+    [
+      queryParams,
+      replaceQueryParams,
+      selectedChildStageId,
+      selectedStageExecutionId,
+      selectedStageId,
+      selectedStepId,
+      setSelectedCollapsedNodeId
+    ]
+  )
 
   const [layouts, setLayoutState] = useLocalStorage<ExecutionLayoutState[]>(
     'execution_layout_2', // increase the number in case data structure is changed
@@ -136,6 +172,7 @@ export default function ExecutionGraphView(): React.ReactElement {
   )
   const [layoutState] = layouts
   const [isStepDetailsVisible, setStepDetailsVisibility] = React.useState(false)
+  const [isCollapsedNodePaneVisible, setCollapsedNodePaneVisibility] = React.useState(false)
   const [primaryPaneSize, setPrimaryPaneSize] = React.useState(250)
   const [tertiaryPaneSize, setTertiaryPaneSize] = React.useState(
     layoutState === ExecutionLayoutState.RIGHT ? RIGHT_LAYOUT_DEFAULT_SIZE : BOTTOM_LAYOUT_DEFAULT_SIZE
@@ -172,15 +209,16 @@ export default function ExecutionGraphView(): React.ReactElement {
     }
   }, [layoutState])
 
-  const child1 = <ExecutionGraph onSelectedStage={handleStageSelection} />
-  const child2 = (
+  const executionGraph = <ExecutionGraph onSelectedStage={handleStageSelection} />
+  const executionStageDetails = (
     <ExecutionStageDetails
       layout={layoutState}
       onStepSelect={handleStepSelection}
-      onStageSelect={handleStageSelection}
+      onCollapsedNodeSelect={handleCollapsedNodeSelection}
     />
   )
-  const child3 = <ExecutionStepDetails />
+  const nodeListOrStepdetails = isCollapsedNodePaneVisible ? <ExecutionNodeList /> : <ExecutionStepDetails />
+  const isThirdPaneVisible = isCollapsedNodePaneVisible || isStepDetailsVisible
 
   let stageGraphPaneStyles = { ...styles }
 
@@ -205,46 +243,52 @@ export default function ExecutionGraphView(): React.ReactElement {
         setTertiaryPaneSize,
         isStepDetailsVisible,
         setStepDetailsVisibility,
-        restoreDialog
+        restoreDialog,
+        isCollapsedNodePaneVisible,
+        setCollapsedNodePaneVisibility
       }}
     >
-      <div className={css.main} id={EXECUTION_LAYOUT_DOM_ID}>
-        <SplitPane
-          split="horizontal"
-          className={css.splitPane1}
-          minSize={MIN_PANEL_SIZE}
-          size={primaryPaneSize}
-          onChange={handleStageResize}
-          pane1Style={omit(styles, 'height')}
-          pane2Style={styles}
-          style={styles}
-        >
-          {child1}
-          <div className={css.stageDetails}>
-            <ExecutionStageDetailsHeader />
-            {isStepDetailsVisible &&
-            (layoutState === ExecutionLayoutState.BOTTOM || layoutState === ExecutionLayoutState.RIGHT) ? (
-              <SplitPane
-                className={css.splitPane2}
-                {...splitPaneProps[layoutState]}
-                size={tertiaryPaneSize}
-                onChange={setStepSplitPaneSizeDebounce}
-                pane1Style={stageGraphPaneStyles}
-                pane2Style={styles}
-                style={styles}
-              >
-                {child2}
-                {child3}
-              </SplitPane>
-            ) : (
-              <React.Fragment>
-                {child2}
-                {isStepDetailsVisible ? <ExecutionLayoutFloatingView>{child3}</ExecutionLayoutFloatingView> : null}
-              </React.Fragment>
-            )}
-          </div>
-        </SplitPane>
-      </div>
+      <CollapsedNodeProvider>
+        <div className={css.main} id={EXECUTION_LAYOUT_DOM_ID}>
+          <SplitPane
+            split="horizontal"
+            className={css.splitPane1}
+            minSize={MIN_PANEL_SIZE}
+            size={primaryPaneSize}
+            onChange={handleStageResize}
+            pane1Style={omit(styles, 'height')}
+            pane2Style={styles}
+            style={styles}
+          >
+            {executionGraph}
+            <div className={css.stageDetails}>
+              <ExecutionStageDetailsHeader />
+              {isThirdPaneVisible &&
+              (layoutState === ExecutionLayoutState.BOTTOM || layoutState === ExecutionLayoutState.RIGHT) ? (
+                <SplitPane
+                  className={css.splitPane2}
+                  {...splitPaneProps[layoutState]}
+                  size={tertiaryPaneSize}
+                  onChange={setStepSplitPaneSizeDebounce}
+                  pane1Style={stageGraphPaneStyles}
+                  pane2Style={styles}
+                  style={styles}
+                >
+                  {executionStageDetails}
+                  {nodeListOrStepdetails}
+                </SplitPane>
+              ) : (
+                <React.Fragment>
+                  {executionStageDetails}
+                  {isThirdPaneVisible ? (
+                    <ExecutionLayoutFloatingView>{nodeListOrStepdetails}</ExecutionLayoutFloatingView>
+                  ) : null}
+                </React.Fragment>
+              )}
+            </div>
+          </SplitPane>
+        </div>
+      </CollapsedNodeProvider>
     </ExecutionLayoutContext.Provider>
   )
 }

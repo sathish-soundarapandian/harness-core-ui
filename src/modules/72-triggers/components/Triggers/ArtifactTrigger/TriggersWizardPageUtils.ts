@@ -56,6 +56,7 @@ import type {
 } from '@triggers/pages/triggers/interface/TriggersWizardInterface'
 import type { AddConditionInterface } from '@triggers/pages/triggers/views/AddConditionsSection'
 import type { ArtifactTriggerSpec } from '@triggers/components/steps/ArtifactTriggerConfigPanel/ArtifactsSelection/ArtifactInterface'
+import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import type { TriggerType } from '../TriggerInterface'
 export const CUSTOM = 'Custom'
 export const AWS_CODECOMMIT = 'AWS_CODECOMMIT'
@@ -1901,9 +1902,14 @@ export const getArtifactManifestTriggerYaml = ({
     selectedArtifact,
     stageId,
     pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
-    inputSetRefs,
     source
   } = val
+
+  const inputSetRefs = get(
+    val,
+    'inputSetRefs',
+    get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
+  )
 
   const { type: triggerType, spec: triggerSpec } = source ?? {}
   const { type: artifactType, spec: artifactSpec } = triggerSpec ?? {}

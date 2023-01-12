@@ -321,6 +321,7 @@ function TerragruntPlanWidget(
           setConnectorView={setConnectorView}
           selectedConnector={selectedConnector}
           setSelectedConnector={setSelectedConnector}
+          isTerragrunt
         />
         {connectorView ? getNewConnectorSteps() : null}
         {
@@ -354,6 +355,7 @@ function TerragruntPlanWidget(
             <ConfigFileStoreStepTwo
               name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
               isTerragruntPlan
+              isTerragrunt
               isBackendConfig={isBackendConfig}
               isReadonly={readonly}
               allowableTypes={allowableTypes}
@@ -569,7 +571,7 @@ function TerragruntPlanWidget(
                   label={getString('connectors.title.secretManager')}
                   category={'SECRET_MANAGER'}
                   setRefValue
-                  width={280}
+                  width={261}
                   name="spec.configuration.secretManagerRef"
                   placeholder={getString('select')}
                   accountIdentifier={accountId}

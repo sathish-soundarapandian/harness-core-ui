@@ -246,11 +246,8 @@ describe('Wizard tests', () => {
       expect(document.body.querySelector('[icon="warning-sign"]')).toBeNull()
 
       fireEvent.click(tab3)
-      await waitFor(() => queryByText(container, result.current.getString('submit')))
-      const submitButton = container.querySelector('button[type="submit"]')
-      if (!submitButton) {
-        throw Error('no submit button')
-      }
+      const submitButton = queryByText(container, result.current.getString('submit')) as HTMLButtonElement
+      await waitFor(() => expect(submitButton).toBeInTheDocument())
       fireEvent.click(submitButton)
       expect(queryByText(document.body, result.current.getString('addressErrorFields'))).not.toBeNull()
       expect(document.body.querySelectorAll('[icon="warning-sign"]')?.length).toEqual(1)

@@ -1,4 +1,5 @@
 import type { QueryRecordsRequest } from 'services/cv'
+import { HealthSourceTypes } from '../../types'
 import type { HealthSourceProductsType } from './CommonHealthSource.types'
 
 export const DEFAULT_HEALTH_SOURCE_QUERY = 'Health Source Query'
@@ -6,11 +7,11 @@ export const METRICS = 'METRICS'
 export const HealthSourceProducts: HealthSourceProductsType = {
   SUMOLOGIC_METRICS: {
     label: 'SumoLogic Cloud Metrics',
-    value: 'SUMOLOGIC_METRICS'
+    value: HealthSourceTypes.SumologicMetrics
   },
   SUMOLOGIC_LOG: {
     label: 'SumoLogic Cloud Logs',
-    value: 'SUMOLOGIC_LOG'
+    value: HealthSourceTypes.SumologicLogs
   }
 }
 

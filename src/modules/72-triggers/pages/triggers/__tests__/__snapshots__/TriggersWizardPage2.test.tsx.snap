@@ -716,6 +716,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                                           autocomplete="off"
                                                           class="bp3-input"
                                                           name="pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[0].manifest.spec.chartVersion"
+                                                          placeholder="pipeline.manifestType.http.chartVersionPlaceHolder"
                                                           type="text"
                                                           value=""
                                                         />

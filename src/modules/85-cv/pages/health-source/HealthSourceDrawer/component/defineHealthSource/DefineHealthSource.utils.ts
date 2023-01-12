@@ -124,6 +124,10 @@ export const getConnectorTypeName = (name: HealthSourceTypes): string => {
     case HealthSourceTypes.CloudWatch:
       connectorTypeName = Connectors.AWS
       break
+    case HealthSourceTypes.SumologicLogs:
+    case HealthSourceTypes.SumologicMetrics:
+      connectorTypeName = Connectors.SUMOLOGIC
+      break
     default:
       connectorTypeName = name
   }
@@ -283,6 +287,10 @@ export function getProductBasedOnType(
       return getFeatureOption(Connectors.CUSTOM_HEALTH, getString)[1]
     case 'CustomHealthMetric':
       return getFeatureOption(Connectors.CUSTOM_HEALTH, getString)[0]
+    case HealthSourceTypes.SumologicMetrics:
+      return getFeatureOption(Connectors.SUMOLOGIC, getString)[0]
+    case HealthSourceTypes.SumologicLogs:
+      return getFeatureOption(Connectors.SUMOLOGIC, getString)[1]
     case Connectors.PROMETHEUS:
     case HealthSourceTypes.AwsPrometheus:
       return getFeatureOption(Connectors.PROMETHEUS, getString)[0]
@@ -300,12 +308,10 @@ const getHealthSourceType = (type?: string, sourceType?: string): string | undef
 }
 
 export const getDataSourceType = ({ type, dataSourceType }: GetDataSourceTypeParams): string | null => {
-  if (type !== HealthSourceTypes.NextGenHealthSource) {
-    if (type === HealthSourceTypes.AwsPrometheus || dataSourceType === AWSDataSourceType) {
-      return AWSDataSourceType
-    } else if (type === HealthSourceTypes.Prometheus || dataSourceType === HealthSourceTypes.Prometheus) {
-      return HealthSourceTypes.Prometheus
-    }
+  if (type === HealthSourceTypes.AwsPrometheus || dataSourceType === AWSDataSourceType) {
+    return AWSDataSourceType
+  } else if (type === HealthSourceTypes.Prometheus || dataSourceType === HealthSourceTypes.Prometheus) {
+    return HealthSourceTypes.Prometheus
   }
   return null
 }
@@ -345,7 +351,6 @@ export const getSelectedFeature = (sourceData: any): any => {
     (el: any) => el?.identifier === sourceData?.healthSourceIdentifier
   )
   const selectedFeature = currentHealthSource?.spec?.feature
-
   return selectedFeature ? { label: selectedFeature, value: selectedFeature } : { ...sourceData?.product }
 }
 
@@ -360,13 +365,9 @@ export function getProduct({
   currentHealthSource: any
   sourceData: any
 }): SelectOption | { label: string; value: string } | undefined {
-  if (currentHealthSource?.type === HealthSourceTypes.NextGenHealthSource) {
-    return HealthSourceProducts[currentHealthSource?.spec?.dataSourceType]
-  } else {
-    return selectedFeature
-      ? { label: selectedFeature, value: selectedFeature }
-      : getProductBasedOnType(getString, currentHealthSource?.type, sourceData?.product)
-  }
+  return selectedFeature
+    ? { label: selectedFeature, value: selectedFeature }
+    : getProductBasedOnType(getString, currentHealthSource?.type, sourceData?.product)
 }
 
 export function getRegionsDropdownOptions(regions: ResponseListString['data']): SelectOption[] {

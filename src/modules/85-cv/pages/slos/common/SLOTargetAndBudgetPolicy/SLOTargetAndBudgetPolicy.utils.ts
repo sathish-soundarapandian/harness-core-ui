@@ -9,7 +9,7 @@ import type { SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import moment from 'moment'
 import type { UseStringsReturn } from 'framework/strings'
-import type { SLOForm } from '../../CreateSLO.types'
+import type { SLOForm } from '../../components/CVCreateSLO/components/CreateSLOForm/CreateSLO.types'
 import { dateFormatSLOTarget, PeriodTypeEnum } from './SLOTargetAndBudgetPolicy.constants'
 
 export const getPeriodTypeOptions = (getString: UseStringsReturn['getString']): SelectOption[] => {

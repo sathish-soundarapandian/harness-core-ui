@@ -553,7 +553,6 @@ export const metricThresholdDisabledPayloadResult = {
   name: 'Health source 2 ',
   spec: {
     connectorRef: 'account.Sumologic_Metric_Test',
-    dataSourceType: 'SUMOLOGIC_METRICS',
     queryDefinitions: [
       {
         continuousVerificationEnabled: false,
@@ -572,9 +571,9 @@ export const metricThresholdDisabledPayloadResult = {
       }
     ]
   },
-  type: 'NextGenHealthSource'
+  type: 'SUMOLOGIC_METRICS',
+  version: 'v2'
 }
-
 const queryMetricsMap = new Map()
 queryMetricsMap.set('M1', {
   identifier: 'M1',
@@ -617,7 +616,6 @@ export const payloadMockWithMetricThresholdsMock = {
   name: 'Health source 2 ',
   spec: {
     connectorRef: 'account.Sumologic_Metric_Test',
-    dataSourceType: 'SUMOLOGIC_METRICS',
     queryDefinitions: [
       {
         continuousVerificationEnabled: false,
@@ -626,17 +624,31 @@ export const payloadMockWithMetricThresholdsMock = {
         liveMonitoringEnabled: false,
         metricThresholds: [
           {
-            criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
+            criteria: {
+              spec: {
+                greaterThan: 21
+              },
+              type: 'Percentage'
+            },
             metricName: 'metric 1',
             metricType: 'Custom',
-            spec: { action: 'Ignore' },
+            spec: {
+              action: 'Ignore'
+            },
             type: 'IgnoreThreshold'
           },
           {
-            criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
+            criteria: {
+              spec: {
+                greaterThan: 21
+              },
+              type: 'Percentage'
+            },
             metricName: 'metric 1',
             metricType: 'Custom',
-            spec: { action: 'FailAfterOccurrence' },
+            spec: {
+              action: 'FailAfterOccurrence'
+            },
             type: 'FailImmediately'
           }
         ],
@@ -651,7 +663,8 @@ export const payloadMockWithMetricThresholdsMock = {
       }
     ]
   },
-  type: 'NextGenHealthSource'
+  type: 'SUMOLOGIC_METRICS',
+  version: 'v2'
 }
 
 export const expectedMetrithresholdsEdit = {

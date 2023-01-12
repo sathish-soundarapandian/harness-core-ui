@@ -538,10 +538,14 @@ export default function ScheduledTriggerWizard(
       pipeline: pipelineRuntimeInput,
       triggerType: formikValueTriggerType,
       expression,
-      pipelineBranchName = '',
-      inputSetRefs
+      pipelineBranchName = ''
     } = val
 
+    const inputSetRefs = get(
+      val,
+      'inputSetRefs',
+      get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
+    )
     // actions will be required thru validation
     const stringifyPipelineRuntimeInput = yamlStringify({
       pipeline: clearNullUndefined(pipelineRuntimeInput)
@@ -705,11 +709,19 @@ export default function ScheduledTriggerWizard(
     latestYaml: triggerYaml
   }: {
     formikProps: FormikProps<any>
-    latestYaml?: any // validate from YAML view
+    latestYaml?: string
   }): Promise<FormikErrors<FlatValidScheduleFormikValuesInterface>> => {
     if (!formikProps) return {}
     let _pipelineBranchNameError = ''
     let _inputSetRefsError = ''
+
+    let parsedTriggerYaml
+
+    try {
+      parsedTriggerYaml = parse(triggerYaml || '')
+    } catch (e) {
+      showError(getString('triggers.cannotParseInputValues'))
+    }
 
     if (isNewGitSyncRemotePipeline) {
       const pipelineBranchName = (formikProps?.values?.pipelineBranchName || '').trim()
@@ -719,8 +731,14 @@ export default function ScheduledTriggerWizard(
       }
 
       // inputSetRefs is required if Input Set is required to run pipeline
-      if (template?.data?.inputSetTemplateYaml && !formikProps?.values?.inputSetSelected?.length) {
-        _inputSetRefsError = getString('triggers.inputSetIsRequired')
+      if (template?.data?.inputSetTemplateYaml) {
+        if (!formikProps?.values?.inputSetSelected?.length) {
+          _inputSetRefsError = getString('triggers.inputSetIsRequired')
+        }
+
+        if (parsedTriggerYaml?.trigger?.inputSetRefs?.length || formikProps?.values?.inputSetRefs?.length) {
+          _inputSetRefsError = ''
+        }
       }
     }
 
@@ -735,12 +753,14 @@ export default function ScheduledTriggerWizard(
       latestPipelineFromYamlView = getTriggerPipelineValues(triggerYaml, formikProps)
     }
 
-    const runPipelineFormErrors = await getFormErrors({
-      latestPipeline: latestPipelineFromYamlView || latestPipeline,
-      latestYamlTemplate: yamlTemplate,
-      orgPipeline: values.pipeline,
-      setSubmitting
-    })
+    const runPipelineFormErrors = isNewGitSyncRemotePipeline
+      ? null
+      : await getFormErrors({
+          latestPipeline: latestPipelineFromYamlView || latestPipeline,
+          latestYamlTemplate: yamlTemplate,
+          orgPipeline: values.pipeline,
+          setSubmitting
+        })
     const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)
       : undefined

@@ -18,6 +18,7 @@ import { useUpdateQueryParams, useQueryParams, useMutateAsGet } from '@common/ho
 import { usePreferenceStore, PreferenceScope } from 'framework/PreferenceStore/PreferenceStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import type { CDModuleLicenseDTO } from 'services/portal'
 import SubscriptionDetailsCard from './SubscriptionDetailsCard'
 import SubscriptionUsageCard from './SubscriptionUsageCard'
 import { ServiceLicenseTable } from './ServiceLicenseTable'
@@ -101,7 +102,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         refetchGetLicense={refetchGetLicense}
       />
       {enabled && licenseData && <SubscriptionUsageCard module={module} licenseData={licenseData} />}
-      {module === 'CD' ? (
+      {module === 'CD' && (licenseData as CDModuleLicenseDTO)?.cdLicenseType === 'SERVICES' ? (
         <ServiceLicenseTable
           gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
           data={activeServiceList?.data || {}}

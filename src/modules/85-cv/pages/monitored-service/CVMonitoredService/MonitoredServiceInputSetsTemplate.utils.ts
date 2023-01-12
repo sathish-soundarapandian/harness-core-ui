@@ -94,6 +94,7 @@ export const getFieldLabelForVerifyTemplate = (name: string, getString: UseStrin
       return getString('cv.monitoringSources.appD.serviceInstanceMetricPath')
     case 'serviceInstanceFieldName':
     case 'serviceInstanceIdentifier':
+    case 'serviceInstanceField':
       return getString('cv.monitoringSources.appD.serviceInstanceFieldName')
     case 'indexes':
       return getString('cv.monitoringSources.datadogLogs.logIndexesLabel')
@@ -134,6 +135,7 @@ export const getValidationLabelByNameForTemplateInputs = (
     case 'serviceInstanceMetricPath':
       return getString('connectors.cdng.validations.serviceInstanceMetricPathValidation')
     case 'serviceInstanceFieldName':
+    case 'serviceInstanceField':
       return getString('connectors.cdng.validations.serviceInstanceFieldNameValidation')
     case 'connectorRef':
       return getString('connectors.validation.connectorIsRequired')

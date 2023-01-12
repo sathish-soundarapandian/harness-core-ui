@@ -26,3 +26,4 @@ stackWizard:
   provisionerTypeRequired: Provisioner type is required
   scriptsPathRequired: Scripts path is required
   repoConnectorTypeRequired: Repository Connector type is required
+  gitFetchTypeRequired: Git Fetch Type is required

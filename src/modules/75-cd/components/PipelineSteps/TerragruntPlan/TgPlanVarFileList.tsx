@@ -253,6 +253,7 @@ export default function TgPlanVarFileList(props: TgVarFileProps): React.ReactEle
                                   setSelectedConnector={setSelectedConnector}
                                   handleConnectorViewChange={() => setConnectorView(true)}
                                   setConnectorView={setConnectorView}
+                                  isTerragrunt
                                 />
                                 {connectorView ? getNewConnectorSteps() : null}
                                 {selectedConnector === 'Artifactory' ? (

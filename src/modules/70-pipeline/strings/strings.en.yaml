@@ -341,6 +341,7 @@ manifestType:
   kustomizePathRequired: Kustomize Path is required
   kustomizeFolderPathRequired: Kustomize Folder Path is required
   pathRequired: File Path is required
+  periodPrefixValidation: '{{ name }} can not start with "."'
   varsPathRequired: Vars Path is required
   autoScalerPathRequired: Autoscaler Path is required
   bucketNameRequired: Bucket Name is required
@@ -526,6 +527,9 @@ execution:
   compareExecutionsTitle: Select executions to compare the compiled YAML
   emptyStepGroup: Step Group is empty
   ignoreFailedWarningText: A failed step was ignored because the step’s Failure Strategy is Ignore Failure. The step’s failure did not impact the Pipeline’s success.
+  instanceList: Instance list
+  instances: INSTANCES
+  listDetails: List details
   iotab:
     noInputText: No input found for current step
     noOutputText: No output found for current step
@@ -566,6 +570,10 @@ resourceConstraints:
   k8sNamespaceText: K8s namespace
   serverlessInfraEntity: serverless infrastructure entity
   elastigroupInfraEntity: Elastigroup Infrastructure
+  tanzuInfraEntity: Tanzu Infrastructure
+  ecsInfraEntity: ECS Infrastructure
+  traditionalInfraEntity: SSH/WinRm Infrastructure
+
 targets:
   title: Targets
 barriers:
@@ -1023,7 +1031,6 @@ verification:
     totalClusters: Total Clusters
 stepCommonFields:
   runAsUser: Run as User
-  ifNotPresent: 'If Not Present'
   validation:
     mustBeANumber: '{{label}} must be a number'
     invalidLimitMemory: Invalid Limit Memory. To learn more, hover over the Set Container Resources tooltip.
@@ -1051,6 +1058,7 @@ artifactOrImagePathDependencyRequired: required to fetch the artifact/image path
 artifactRepositoryDependencyRequired: 'Artifactory Connector is required to fetch repositories. You can make this field Runtime input otherwise.'
 bucketNameHelperText: 'Connector is required to fetch buckets'
 filePathHelperText: 'Connector and Bucket Name are required to fetch file paths'
+imagePathHelperText: 'Connector and Region are required to fetch image paths'
 myDeploymentsText: My Deployments
 myBuildsText: My Builds
 mySecurityTestsText: My Security Tests
@@ -1060,6 +1068,7 @@ noBuckets: No buckets found with given region
 noBucketsFound: No buckets found
 noFilePathsFound: No file paths found
 noClustersFound: No clusters found
+noImagesFound: No images found
 gitRepo: Git Repo
 buildRepo: Build Repo
 failureTypetext: Select Failure Type
@@ -1369,12 +1378,15 @@ errorFramework:
 delegate:
   DelegateSelectorOptional: 'Delegate Selector (optional)'
 cannotRunInvalidPipeline: Cannot run the pipeline because it's invalid, please review the configuration.
+cannotRunUnsavedPipeline: Please click Save and then run the pipeline.
 cannotAddTriggerInvalidPipeline: Cannot add a trigger because pipeline is invalid, please review the configuration.
 cannotAddInputSetInvalidPipeline: Cannot add an input set because pipeline is invalid, please review the configuration.
 cannotEditTriggerInvalidPipeline: Cannot edit the trigger because pipeline is invalid, please review the configuration.
 parentStageDeleteWarning: "Warning: this Stage's settings are propagated to another Stage(s) in this Pipeline ({{propagatingStages}}). If you delete this Stage, you must update the other Stages' settings or the Pipeline will fail."
 outOfSyncErrorStrip:
   reconcile: Reconcile
+  reconcileStarted: Reconciliation has started.
+  noErrorText: All of the entities referenced in this {{entity}} are in sync.
   unsyncedTemplateInfo: Some of the entities referenced in this {{entity}} have gone out of sync.
   updatedTemplateInfo: Some of the entities referenced in this {{entity}} have been updated.
 reconcileDialog:

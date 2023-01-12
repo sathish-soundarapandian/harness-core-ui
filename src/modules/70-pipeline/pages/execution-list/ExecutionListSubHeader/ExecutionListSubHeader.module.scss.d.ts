@@ -8,14 +8,12 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly branchSelector: string
-  readonly btnGroup: string
-  readonly expandSearch: string
-  readonly lhs: string
+  readonly flexExpand: string
   readonly main: string
   readonly myDeploymentsCheckbox: string
-  readonly rhs: string
   readonly runButton: string
   readonly selected: string
+  readonly subHeaderItems: string
   readonly transparent: string
 }
 export default styles

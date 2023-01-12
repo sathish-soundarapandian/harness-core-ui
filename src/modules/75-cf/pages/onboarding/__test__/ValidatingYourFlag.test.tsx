@@ -12,7 +12,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { SupportPlatforms } from '@cf/components/LanguageSelection/LanguageSelection'
 import mockImport from 'framework/utils/mockImport'
 import * as cfService from 'services/cf'
-import { ValidateYourFlagView } from '../views/ValidatingYourFlagView'
+import { TestYourFlagViewProps, ValidateYourFlagView } from '../views/ValidatingYourFlagView'
 
 jest.mock('services/cf', () => ({
   useGetAllFeatures: jest.fn().mockReturnValue({ data: [], loading: false, refetch: jest.fn() }),
@@ -133,7 +133,7 @@ const mockPastActiveFeature = {
   ]
 }
 
-const renderComponent = (): RenderResult =>
+const renderComponent = (props: Partial<TestYourFlagViewProps> = {}): RenderResult =>
   render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/onboarding/detail"
@@ -163,9 +163,12 @@ const renderComponent = (): RenderResult =>
           identifier: 'xxx-xxx-xxx',
           type: 'server'
         }}
-        environmentIdentifier="foo-123-bar"
+        environmentIdentifier={'foo-123-bar'}
         testDone={false}
         setTestDone={jest.fn()}
+        verified={false}
+        setVerified={jest.fn()}
+        {...props}
       />
     </TestWrapper>
   )
@@ -213,7 +216,7 @@ describe('ValidatingYourFlag', () => {
   })
 
   test('Should return success state if flag is active within timeframe', async () => {
-    renderComponent()
+    renderComponent({ testDone: true, verified: true })
     const flagToggle = screen.getByTestId('flagToggle')
 
     expect(flagToggle).toBeInTheDocument()
@@ -301,7 +304,7 @@ describe('ValidatingYourFlag', () => {
   })
 
   test('Should be able to toggle the flag to try again after success state', async () => {
-    renderComponent()
+    renderComponent({ testDone: true, verified: true })
 
     const flagToggle = screen.getByTestId('flagToggle')
 

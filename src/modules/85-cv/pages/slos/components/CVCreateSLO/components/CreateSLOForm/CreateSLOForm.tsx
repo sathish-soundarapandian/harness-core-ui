@@ -22,8 +22,8 @@ import {
 } from 'services/cv'
 import RbacButton from '@rbac/components/Button/Button'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
-import SLOName from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOName/SLOName'
-import SLOTargetAndBudgetPolicy from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy'
+import SLOName from '@cv/pages/slos/common/SLOName/SLOName'
+import SLOTargetAndBudgetPolicy from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy'
 import {
   isFormDataValid,
   handleTabChange,

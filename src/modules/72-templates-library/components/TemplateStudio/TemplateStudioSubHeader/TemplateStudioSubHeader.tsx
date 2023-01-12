@@ -35,6 +35,7 @@ import { stringify } from '@common/utils/YamlHelperMethods'
 import PipelineCachedCopy from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCachedCopy/PipelineCachedCopy'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import EndOfLifeBanner from '@pipeline/components/PipelineStudio/PipelineCanvas/EndOfLifeBanner'
 import css from './TemplateStudioSubHeader.module.scss'
 
 export interface TemplateStudioSubHeaderProps {
@@ -92,82 +93,85 @@ const TemplateStudioSubHeader: (
   })
 
   return (
-    <Container
-      className={css.subHeader}
-      height={49}
-      padding={{ right: 'xlarge', left: 'xlarge' }}
-      border={{ bottom: true, color: Color.GREY_200 }}
-      background={Color.WHITE}
-    >
-      <Layout.Horizontal height={'100%'} flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
-        <TemplateStudioSubHeaderLeftView onGitBranchChange={onGitBranchChange} />
-        {!templateYamlError && (
-          <Container>
-            <VisualYamlToggle
-              className={css.visualYamlToggle}
-              selectedView={isYaml || isVisualViewDisabled ? SelectedView.YAML : SelectedView.VISUAL}
-              onChange={nextMode => {
-                onViewChange(nextMode)
-              }}
-              disableToggle={isVisualViewDisabled}
-            />
-          </Container>
-        )}
-        <Container>
-          <Layout.Horizontal spacing={'medium'} flex={{ alignItems: 'center' }}>
-            {isPipelineGitCacheEnabled && !isEmpty(cacheResponse) && (
-              <PipelineCachedCopy
-                reloadContent={getString('common.template.label')}
-                cacheResponse={cacheResponse}
-                reloadFromCache={reloadFromCache}
-                fetchError={templateYamlError as any}
+    <Layout.Vertical>
+      <Container
+        className={css.subHeader}
+        height={49}
+        padding={{ right: 'xlarge', left: 'xlarge' }}
+        border={{ bottom: true, color: Color.GREY_200 }}
+        background={Color.WHITE}
+      >
+        <Layout.Horizontal height={'100%'} flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
+          <TemplateStudioSubHeaderLeftView onGitBranchChange={onGitBranchChange} />
+          {!templateYamlError && (
+            <Container>
+              <VisualYamlToggle
+                className={css.visualYamlToggle}
+                selectedView={isYaml || isVisualViewDisabled ? SelectedView.YAML : SelectedView.VISUAL}
+                onChange={nextMode => {
+                  onViewChange(nextMode)
+                }}
+                disableToggle={isVisualViewDisabled}
               />
-            )}
-            {!templateYamlError && (
-              <Layout.Horizontal spacing={'medium'} flex={{ alignItems: 'center' }}>
-                {isReadonly && (
-                  <Container>
-                    <Layout.Horizontal spacing={'small'}>
-                      <Icon name="eye-open" size={16} color={Color.ORANGE_800} />
-                      <Text color={Color.ORANGE_800} font={{ size: 'small' }}>
-                        {getString('common.readonlyPermissions')}
-                      </Text>
-                    </Layout.Horizontal>
-                  </Container>
-                )}
-                {isUpdated && !isReadonly && (
-                  <Button
-                    variation={ButtonVariation.LINK}
-                    intent="warning"
-                    className={css.tagRender}
-                    onClick={openDiffModal}
-                  >
-                    {getString('unsavedChanges')}
-                  </Button>
-                )}
-                {!isReadonly && (
-                  <Container>
-                    <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
-                      <SaveTemplatePopoverWithRef getErrors={getErrors} ref={saveTemplateHandleRef} />
-                      {templateIdentifier !== DefaultNewTemplateId && (
-                        <Button
-                          disabled={!isUpdated}
-                          onClick={() => {
-                            fetchTemplate({ forceFetch: true, forceUpdate: true })
-                          }}
-                          variation={ButtonVariation.SECONDARY}
-                          text={getString('common.discard')}
-                        />
-                      )}
-                    </Layout.Horizontal>
-                  </Container>
-                )}
-              </Layout.Horizontal>
-            )}
-          </Layout.Horizontal>
-        </Container>
-      </Layout.Horizontal>
-    </Container>
+            </Container>
+          )}
+          <Container>
+            <Layout.Horizontal spacing={'medium'} flex={{ alignItems: 'center' }}>
+              {isPipelineGitCacheEnabled && !isEmpty(cacheResponse) && (
+                <PipelineCachedCopy
+                  reloadContent={getString('common.template.label')}
+                  cacheResponse={cacheResponse}
+                  reloadFromCache={reloadFromCache}
+                  fetchError={templateYamlError as any}
+                />
+              )}
+              {!templateYamlError && (
+                <Layout.Horizontal spacing={'medium'} flex={{ alignItems: 'center' }}>
+                  {isReadonly && (
+                    <Container>
+                      <Layout.Horizontal spacing={'small'}>
+                        <Icon name="eye-open" size={16} color={Color.ORANGE_800} />
+                        <Text color={Color.ORANGE_800} font={{ size: 'small' }}>
+                          {getString('common.readonlyPermissions')}
+                        </Text>
+                      </Layout.Horizontal>
+                    </Container>
+                  )}
+                  {isUpdated && !isReadonly && (
+                    <Button
+                      variation={ButtonVariation.LINK}
+                      intent="warning"
+                      className={css.tagRender}
+                      onClick={openDiffModal}
+                    >
+                      {getString('unsavedChanges')}
+                    </Button>
+                  )}
+                  {!isReadonly && (
+                    <Container>
+                      <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
+                        <SaveTemplatePopoverWithRef getErrors={getErrors} ref={saveTemplateHandleRef} />
+                        {templateIdentifier !== DefaultNewTemplateId && (
+                          <Button
+                            disabled={!isUpdated}
+                            onClick={() => {
+                              fetchTemplate({ forceFetch: true, forceUpdate: true })
+                            }}
+                            variation={ButtonVariation.SECONDARY}
+                            text={getString('common.discard')}
+                          />
+                        )}
+                      </Layout.Horizontal>
+                    </Container>
+                  )}
+                </Layout.Horizontal>
+              )}
+            </Layout.Horizontal>
+          </Container>
+        </Layout.Horizontal>
+      </Container>
+      <EndOfLifeBanner />
+    </Layout.Vertical>
   )
 }
 

@@ -209,6 +209,7 @@ export function TasCanaryAppSetupWidget(
                 multiTypeProps={{
                   allowableTypes
                 }}
+                type={getString('tagLabel')}
                 label={getString('cd.steps.tas.additionalRoutes')}
                 enableConfigureOptions
                 isArray={true}

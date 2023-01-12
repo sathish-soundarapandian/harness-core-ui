@@ -21,6 +21,7 @@ import { isEmpty, get } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useLocation } from 'react-router-dom'
+import { getImagePullPolicyOptions, getShellOptions } from '@common/utils/ContainerRunStepUtils'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -28,10 +29,7 @@ import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
-import StepCommonFields, {
-  GetImagePullPolicyOptions,
-  GetShellOptions
-} from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
+import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import {
@@ -85,7 +83,7 @@ export const BackgroundStepBase = (
       initialValues={getInitialValuesInCorrectFormat<BackgroundStepData, BackgroundStepDataUI>(
         initialValues,
         transformValuesFieldsConfig,
-        { imagePullPolicyOptions: GetImagePullPolicyOptions(), shellOptions: GetShellOptions(getString) }
+        { imagePullPolicyOptions: getImagePullPolicyOptions(getString), shellOptions: getShellOptions(getString) }
       )}
       formName="ciBackgroundStep"
       validate={valuesToValidate => {
@@ -161,11 +159,11 @@ export const BackgroundStepBase = (
                   </Text>
                 }
                 multiTypeInputProps={{
-                  selectItems: GetShellOptions(getString),
+                  selectItems: getShellOptions(getString),
                   placeholder: getString('select'),
                   multiTypeInputProps: {
                     expressions,
-                    selectProps: { items: GetShellOptions(getString) },
+                    selectProps: { items: getShellOptions(getString) },
                     allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
                   },
                   disabled: readonly

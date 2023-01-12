@@ -245,8 +245,8 @@ monitoringSources:
       subHeader: Select services to which the metric and custom metric will be applied.
       riskProfileSubHeader: Harness will verify and rate your events based on your selected risk category and deviation.
       continuousVerification:
-        title: Continuous Verification (Applied to the pipeplines in the Continuous Deployment)
-        helptext: Apply this to the pipepline in the Continuous Deployment to verify that the deployed service is running safely, perform automatic rollbacks, and apply machine learning to every deployment to find and highlight problems in future deployments.
+        title: Continuous Verification (Applied to the pipelines in the Continuous Deployment)
+        helptext: Apply this to the pipeline in the Continuous Deployment to verify that the deployed service is running safely, perform automatic rollbacks, and apply machine learning to every deployment to find and highlight problems in future deployments.
       serviceHealth:
         helptext: Apply this to track the changes in the health trend of your Monitored Service.
       serviceLevelIndicator:

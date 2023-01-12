@@ -6,11 +6,18 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, DateInput, Formik, FormikForm, FormInput, Heading, Layout } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  Formik,
+  FormikForm,
+  FormInput,
+  Heading,
+  Layout,
+  MultiTypeInputType
+} from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { FormGroup } from '@blueprintjs/core'
-import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -38,13 +45,12 @@ const ProvisionerDetailsStage: React.FC<StackWizardStepProps> = props => {
 
   return (
     <Layout.Vertical height="inherit" spacing="medium" className={css.optionsViewContainer}>
-      <Heading level="3" margin={{ bottom: 'xxxlarge' }}>
+      <Heading level="2" margin={{ bottom: 'xxxlarge' }}>
         {name}
       </Heading>
       <Formik
         initialValues={{
           workspace: '',
-          ttl: '',
           connector: '',
           autoApprove: false,
           provisionerVersion: '',
@@ -53,7 +59,6 @@ const ProvisionerDetailsStage: React.FC<StackWizardStepProps> = props => {
         formName={`resourcestack-wizard-${identifier}`}
         validationSchema={Yup.object({
           workspace: Yup.string().required(getString('iacm.stackWizard.workspaceRequired')),
-          ttl: Yup.number().required(getString('iacm.stackWizard.ttlRequired')),
           connector: Yup.string().required(getString('iacm.stackWizard.connectorRequired')),
           autoApprove: Yup.boolean().required(getString('iacm.stackWizard.autoApproveRequired')),
           provisionerVersion: Yup.string().required(getString('iacm.stackWizard.provisionerVersionRequired'))
@@ -62,26 +67,12 @@ const ProvisionerDetailsStage: React.FC<StackWizardStepProps> = props => {
         enableReinitialize
       >
         {formik => {
-          const { values, setFieldValue, errors, isValid } = formik
+          const { values, isValid } = formik
           return (
             <FormikForm>
               <Layout.Horizontal spacing="medium">
                 <Layout.Vertical>
-                  <FormInput.MultiTextInput name="workspace" label={getString('pipelineSteps.workspace')} />
-                  <FormGroup
-                    label={getString('iacm.stackWizard.ttl')}
-                    labelFor="ttl"
-                    helperText={get(errors, 'ttl')}
-                    intent={get(errors, 'ttl') ? 'danger' : undefined}
-                  >
-                    <DateInput
-                      name="ttl"
-                      timePrecision="minute"
-                      onChange={value => {
-                        setFieldValue('ttl', Number(value))
-                      }}
-                    />
-                  </FormGroup>
+                  <FormInput.Text name="workspace" label={getString('pipelineSteps.workspace')} />
                   <FormMultiTypeConnectorField
                     key={values.connector}
                     name="connector"
@@ -90,7 +81,7 @@ const ProvisionerDetailsStage: React.FC<StackWizardStepProps> = props => {
                     accountIdentifier={accountId}
                     projectIdentifier={projectIdentifier}
                     orgIdentifier={orgIdentifier}
-                    multiTypeProps={{ expressions }}
+                    multiTypeProps={{ expressions, allowableTypes: [MultiTypeInputType.FIXED] }}
                     createNewLabel={getString('connectors.createConnector')}
                     type={Connectors.AWS}
                     enableConfigureOptions={false}

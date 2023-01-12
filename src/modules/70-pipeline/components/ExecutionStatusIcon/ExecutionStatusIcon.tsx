@@ -10,6 +10,7 @@ import { Icon, Layout, Popover } from '@harness/uicore'
 import cx from 'classnames'
 import React from 'react'
 import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
+import { isNil } from 'lodash-es'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import ExecutionStatusLabel from '../ExecutionStatusLabel/ExecutionStatusLabel'
 import css from './ExecutionStatusIcon.module.scss'
@@ -44,9 +45,10 @@ export const iconMap: Record<ExecutionStatus, IconProps> = {
 export interface ExecutionStatusIconProps {
   status: ExecutionStatus
   className?: string
+  size?: number
 }
 
-export function ExecutionStatusIcon({ status, className }: ExecutionStatusIconProps): React.ReactElement | null {
+export function ExecutionStatusIcon({ status, className, size }: ExecutionStatusIconProps): React.ReactElement | null {
   if (!status || !iconMap[status]) return null
 
   return (
@@ -63,6 +65,7 @@ export function ExecutionStatusIcon({ status, className }: ExecutionStatusIconPr
       <Icon
         {...iconMap[status]}
         className={cx(css.statusIcon, css[status.toLowerCase() as keyof typeof css], className)}
+        {...(!isNil(size) && { size })}
       />
     </Popover>
   )

@@ -17,13 +17,10 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 
 export default function EnvironmentTabs(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
-  const isEnvGroupEnabled = useFeatureFlag(FeatureFlag.ENV_GROUP)
   const [canViewEnvGroup] = usePermission(
     {
       permissions: [PermissionIdentifier.VIEW_ENVIRONMENT_GROUP],
@@ -48,7 +45,7 @@ export default function EnvironmentTabs(): React.ReactElement {
       }
     ]
 
-    if (isEnvGroupEnabled && canViewEnvGroup) {
+    if (canViewEnvGroup) {
       links.push({
         label: getString('common.environmentGroups.label'),
         to: routes.toEnvironmentGroups({
@@ -62,7 +59,7 @@ export default function EnvironmentTabs(): React.ReactElement {
 
     setNavLinks(links)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEnvGroupEnabled, accountId, orgIdentifier, projectIdentifier, module, canViewEnvGroup])
+  }, [accountId, orgIdentifier, projectIdentifier, module, canViewEnvGroup])
 
   return <TabNavigation size={'small'} links={navLinks} />
 }

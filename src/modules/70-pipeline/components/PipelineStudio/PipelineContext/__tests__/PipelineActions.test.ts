@@ -124,12 +124,9 @@ describe('PipelineActions test', () => {
     expect(newState).toEqual({ ...initialState, selectionState: resp.selectionState })
   })
 
-  test('PipelineActions Updating', () => {
-    const newState = PipelineReducer(initialState, {
-      ...PipelineContextActions.updating(),
-      response: { schemaErrors: true }
-    })
-    expect(newState).toEqual({ ...initialState, isLoading: false, isBEPipelineUpdated: false, isUpdated: true })
+  test('PipelineActions Loading', () => {
+    const newState = PipelineReducer(initialState, { ...PipelineContextActions.setLoading(true) })
+    expect(newState).toEqual({ ...initialState, isLoading: true })
   })
 })
 

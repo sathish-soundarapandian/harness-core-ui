@@ -114,6 +114,7 @@ export function TasBGAppSetupWidget(
                 multiTypeProps={{
                   allowableTypes
                 }}
+                type={getString('tagLabel')}
                 label={getString('cd.steps.tas.tempRoutes')}
                 enableConfigureOptions
                 isArray={true}

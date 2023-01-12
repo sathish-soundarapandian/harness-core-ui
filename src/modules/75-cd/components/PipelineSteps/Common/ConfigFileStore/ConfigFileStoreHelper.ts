@@ -21,6 +21,8 @@ import type { Scope } from '@common/interfaces/SecretsInterface'
 export const AllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket', 'Artifactory']
 export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Artifactory' | 'Harness'
 
+export const TerragruntAllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket']
+
 export const tfVarIcons: any = {
   Git: 'service-github',
   Github: 'github',

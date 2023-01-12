@@ -7,6 +7,11 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly executionFilter: string
+  readonly container: string
+  readonly end: string
+  readonly header: string
+  readonly nameAndIconCell: string
+  readonly table: string
+  readonly tableWrapper: string
 }
 export default styles

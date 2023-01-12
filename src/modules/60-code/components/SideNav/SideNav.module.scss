@@ -10,13 +10,24 @@
   margin-left: var(--spacing-xxlarge);
 
   > p {
+    > span {
+      padding-right: var(--spacing-small) !important;
+    }
+  }
+
+  > p {
     > span:not([data-icon='code-file-light']) {
       color: var(--white) !important;
-      padding-right: var(--spacing-small) !important;
 
       svg path {
         fill: var(--white);
       }
+    }
+  }
+
+  &.webhooks {
+    > p {
+      transform: translateX(-4px);
     }
   }
 }

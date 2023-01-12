@@ -119,7 +119,9 @@ function ArtifactTriggerInputPanelForm({
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
-      branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch
+      branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
     }
   })
 

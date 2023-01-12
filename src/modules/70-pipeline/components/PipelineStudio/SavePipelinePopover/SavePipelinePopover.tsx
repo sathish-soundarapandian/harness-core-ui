@@ -364,29 +364,44 @@ function SavePipelinePopover(
       )
   })
 
-  const initPipelinePublish = async (latestPipeline: PipelineInfoConfig) => {
-    // if Git sync enabled then display modal
-    if (isGitSyncEnabled || storeMetadata?.storeType === 'REMOTE') {
-      if ((storeMetadata?.storeType !== 'REMOTE' && isEmpty(gitDetails.repoIdentifier)) || isEmpty(gitDetails.branch)) {
-        clear()
-        showError(getString('pipeline.gitExperience.selectRepoBranch'))
-        return
+  const initPipelinePublish = React.useCallback(
+    async (latestPipeline: PipelineInfoConfig): Promise<void> => {
+      // if Git sync enabled then display modal
+      if (isGitSyncEnabled || storeMetadata?.storeType === 'REMOTE') {
+        if (
+          (storeMetadata?.storeType !== 'REMOTE' && isEmpty(gitDetails.repoIdentifier)) ||
+          isEmpty(gitDetails.branch)
+        ) {
+          clear()
+          showError(getString('pipeline.gitExperience.selectRepoBranch'))
+          return
+        }
+        openSaveToGitDialog({
+          isEditing: pipelineIdentifier !== DefaultNewPipelineId,
+          resource: {
+            type: 'Pipelines',
+            name: latestPipeline.name,
+            identifier: latestPipeline.identifier,
+            gitDetails: gitDetails ?? {},
+            storeMetadata: storeMetadata?.storeType ? storeMetadata : undefined
+          },
+          payload: { pipeline: omit(latestPipeline, 'repo', 'branch') }
+        })
+      } else {
+        await saveAndPublishPipeline(latestPipeline, storeMetadata)
       }
-      openSaveToGitDialog({
-        isEditing: pipelineIdentifier !== DefaultNewPipelineId,
-        resource: {
-          type: 'Pipelines',
-          name: latestPipeline.name,
-          identifier: latestPipeline.identifier,
-          gitDetails: gitDetails ?? {},
-          storeMetadata: storeMetadata?.storeType ? storeMetadata : undefined
-        },
-        payload: { pipeline: omit(latestPipeline, 'repo', 'branch') }
-      })
-    } else {
-      await saveAndPublishPipeline(latestPipeline, storeMetadata)
-    }
-  }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      gitDetails,
+      isGitSyncEnabled,
+      openSaveToGitDialog,
+      pipelineIdentifier,
+      saveAndPublishPipeline,
+      showError,
+      storeMetadata
+    ]
+  )
 
   const saveAndPublish = React.useCallback(async () => {
     window.dispatchEvent(new CustomEvent('SAVE_PIPELINE_CLICKED'))

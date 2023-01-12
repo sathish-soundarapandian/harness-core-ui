@@ -16,17 +16,14 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { StringsMap } from 'stringTypes'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
-import { getSanitizedflatObjectForVariablesView } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import { ContainerStepBaseWithRef } from './ContainerStepBase'
 import ContainerStepInputSet from './ContainerStepInputSet'
 import { processFormData } from './helper'
 import type { ContainerStepData, ContainerStepVariableProps } from './types'
-
 export class ContainerStep extends PipelineStep<ContainerStepData> {
   protected type = StepType.Container
   protected stepName = 'Configure Container Step'
   protected stepIcon: IconName = 'run-ci-step'
-  protected stepIconColor = 'var(----grey-600)'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.Container'
   protected stepPaletteVisible = false
   protected stepIconSize = 34
@@ -122,14 +119,8 @@ export class ContainerStep extends PipelineStep<ContainerStepData> {
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
-      const { variablesData, metadataMap } = customStepProps as ContainerStepVariableProps
-      return (
-        <VariablesListTable
-          data={getSanitizedflatObjectForVariablesView(variablesData)}
-          originalData={initialValues as Record<string, any>}
-          metadataMap={metadataMap}
-        />
-      )
+      const { variablesData, metadataMap, originalData } = customStepProps as ContainerStepVariableProps
+      return <VariablesListTable data={variablesData} originalData={originalData} metadataMap={metadataMap} />
     }
 
     return (

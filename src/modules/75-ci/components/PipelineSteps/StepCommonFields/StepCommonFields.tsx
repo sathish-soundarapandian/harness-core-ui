@@ -6,11 +6,12 @@
  */
 
 import React from 'react'
-import { Text, SelectOption, Container, Layout, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
+import { Text, Container, Layout, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { connect } from 'formik'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import { useStrings } from 'framework/strings'
+import { getImagePullPolicyOptions, getShellOptions } from '@common/utils/ContainerRunStepUtils'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
@@ -28,22 +29,6 @@ export const usePullOptions: () => PullOptions = () => {
     { label: getString('pipelineSteps.pullIfNotExistsLabel'), value: 'ifNotExists' },
     { label: getString('pipelineSteps.pullNeverLabel'), value: 'never' },
     { label: getString('pipelineSteps.pullAlwaysLabel'), value: 'always' }
-  ]
-}
-
-export const GetShellOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
-  { label: getString('common.bash'), value: 'Bash' },
-  { label: getString('common.powershell'), value: 'Powershell' },
-  { label: getString('common.pwsh'), value: 'Pwsh' },
-  { label: getString('common.sh'), value: 'Sh' }
-]
-
-export const GetImagePullPolicyOptions: () => SelectOption[] = () => {
-  const { getString } = useStrings()
-  return [
-    { label: getString('pipelineSteps.pullAlwaysLabel'), value: 'Always' },
-    { label: getString('pipeline.stepCommonFields.ifNotPresent'), value: 'IfNotPresent' },
-    { label: getString('pipelineSteps.pullNeverLabel'), value: 'Never' }
   ]
 }
 
@@ -96,11 +81,11 @@ const StepCommonFields = ({
               </Layout.Horizontal>
             }
             multiTypeInputProps={{
-              selectItems: GetImagePullPolicyOptions(),
+              selectItems: getImagePullPolicyOptions(getString),
               placeholder: getString('select'),
               multiTypeInputProps: {
                 expressions,
-                selectProps: { addClearBtn: true, items: GetImagePullPolicyOptions() },
+                selectProps: { addClearBtn: true, items: getImagePullPolicyOptions(getString) },
                 allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
               },
               disabled
@@ -132,11 +117,11 @@ const StepCommonFields = ({
               </Layout.Horizontal>
             }
             multiTypeInputProps={{
-              selectItems: GetShellOptions(getString),
+              selectItems: getShellOptions(getString),
               placeholder: getString('select'),
               multiTypeInputProps: {
                 expressions,
-                selectProps: { addClearBtn: true, items: GetShellOptions(getString) },
+                selectProps: { addClearBtn: true, items: getShellOptions(getString) },
                 allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
               },
               disabled

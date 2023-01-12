@@ -9,13 +9,12 @@ import React from 'react'
 import { Formik, FormikForm } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { get } from 'lodash-es'
+import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
-import StepCommonFields, {
-  GetImagePullPolicyOptions
-} from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
+import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import {
   getInitialValuesInCorrectFormat,
   getFormValuesInCorrectFormat
@@ -51,7 +50,7 @@ export const ZeroNorthStepBase = (
       initialValues={getInitialValuesInCorrectFormat<ZeroNorthStepData, ZeroNorthStepDataUI>(
         initialValues,
         transformValuesFieldsConfig,
-        { imagePullPolicyOptions: GetImagePullPolicyOptions() }
+        { imagePullPolicyOptions: getImagePullPolicyOptions(getString) }
       )}
       formName="zeroNorthStep"
       validate={valuesToValidate => {

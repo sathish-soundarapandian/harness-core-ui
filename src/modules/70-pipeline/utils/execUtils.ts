@@ -888,13 +888,15 @@ interface GetExecutionStageDiagramListenersParams {
   allChildNodeMap?: any
   onMouseLeave: () => void
   onStepSelect: (id: string, parentStageId?: string, stageExecId?: string) => void
+  onCollapsedNodeSelect?: (collapsedNodeId?: string) => void
 }
 export const getExecutionStageDiagramListeners = ({
   allNodeMap,
   allChildNodeMap,
   onMouseEnter,
   onMouseLeave,
-  onStepSelect
+  onStepSelect,
+  onCollapsedNodeSelect
 }: GetExecutionStageDiagramListenersParams): { [key: string]: (event: any) => void } => {
   const nodeListeners: { [key: string]: (event?: any) => void } = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -913,9 +915,12 @@ export const getExecutionStageDiagramListeners = ({
         onMouseEnter({ data: { ...stageData, ...getNodeConditions(stageData) }, event: { ...event, target } })
       }
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [Event.MouseLeaveNode]: () => {
       onMouseLeave()
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [Event.CollapsedNodeClick]: (event: any) => {
+      onCollapsedNodeSelect?.(event?.data?.id)
     }
   }
   return nodeListeners

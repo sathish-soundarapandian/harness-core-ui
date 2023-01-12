@@ -51,23 +51,17 @@ export function TerragruntVariableStep(props: TerragruntVariableStepProps): Reac
         {variablesData.spec?.configuration?.spec?.environmentVariables && (
           <Text className={css.stepTitle}>{getString('environmentVariables')}</Text>
         )}
-        <VariablesListTable
-          data={variablesData?.spec?.configuration?.spec}
-          originalData={initialValues.spec?.configuration?.spec}
-          metadataMap={metadataMap}
-          className={pipelineVariableCss.variablePaddingL3}
-        />
-        {variablesData?.spec?.configuration?.spec?.configFiles?.store?.spec && (
-          <>
-            <Text className={css.stepTitle}>{getString('pipelineSteps.configFiles')}</Text>
+        {((variablesData?.spec?.configuration?.spec?.environmentVariables as []) || [])?.map((envVar, index) => {
+          return (
             <VariablesListTable
-              data={variablesData?.spec?.configuration?.spec?.configFiles?.store?.spec}
-              originalData={initialValues.spec?.configuration?.spec?.configFiles?.store?.spec}
+              key={envVar}
+              data={variablesData.spec?.configuration?.spec?.environmentVariables?.[index]}
+              originalData={initialValues.spec?.configuration?.spec?.environmentVariables?.[index]}
               metadataMap={metadataMap}
-              className={pipelineVariableCss.variablePaddingL3}
+              className={pipelineVariableCss.variablePaddingL4}
             />
-          </>
-        )}
+          )
+        })}
       </>
     )
   } else {

@@ -10,19 +10,12 @@ import { get } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import type { UseStringsReturn } from 'framework/strings'
 import { cpuLimitRegex, memorLimityRegex } from '@common/utils/StringUtils'
-import type { MapType, MultiTypeListUIType, SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
+import type { MapType, MultiTypeListUIType } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ContainerStepData } from './types'
 import { getConnectorSchema, getNameSpaceSchema } from '../PipelineStepsUtil'
-
-export const GetShellOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
-  { label: getString('common.bash'), value: 'Bash' },
-  { label: getString('common.powershell'), value: 'Powershell' },
-  { label: getString('common.pwsh'), value: 'Pwsh' },
-  { label: getString('common.sh'), value: 'Sh' }
-]
 
 export const processInitialValues = (values: ContainerStepData): ContainerStepData => {
   return {

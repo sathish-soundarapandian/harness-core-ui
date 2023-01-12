@@ -8,8 +8,7 @@
 describe('Template Stage Selection', () => {
   const gitSyncEnabledCall =
     '/ng/api/git-sync/git-sync-enabled?accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
-  const templatesListCall =
-    '/template/api/templates/list?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&templateListType=Stable&searchTerm=&page=0&size=20&includeAllTemplatesAvailableAtScope=true'
+  const templateMetadataCall = `/template/api/templates/list-metadata?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&templateListType=Stable&searchTerm=&page=0&size=20&includeAllTemplatesAvailableAtScope=true`
   const pipelineVariablesCall =
     '/pipeline/api/pipelines/variables?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
   const templateDetailsCall =
@@ -25,7 +24,7 @@ describe('Template Stage Selection', () => {
         return false
       })
       cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
-      cy.intercept('POST', templatesListCall, { fixture: 'template/api/templatesList' })
+      cy.intercept('POST', templateMetadataCall, { fixture: 'template/api/templatesList' })
       cy.login('test', 'test')
 
       cy.visitCreatePipeline()

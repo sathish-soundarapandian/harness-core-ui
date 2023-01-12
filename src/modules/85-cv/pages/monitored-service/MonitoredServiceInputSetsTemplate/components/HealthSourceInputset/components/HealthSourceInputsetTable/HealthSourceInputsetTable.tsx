@@ -9,16 +9,18 @@ import React from 'react'
 import { Icon, Layout, TableV2, Text } from '@harness/uicore'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import { getIconBySourceType } from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable.utils'
+import { isHealthSourceVersionV2 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import css from './HealthSourceInputsetTable.module.scss'
 
 export default function HealthSourceInputsetTable({ healthSources }: any): JSX.Element {
   const tableData =
     healthSources?.map((healthSource: any) => {
       const { name, spec, type } = healthSource
+      const feature = isHealthSourceVersionV2(healthSource) ? type : spec?.feature
       return {
         healthSource: name,
         connector: spec?.connectorRef,
-        feature: spec?.feature,
+        feature,
         type
       }
     }) || []
@@ -36,7 +38,7 @@ export default function HealthSourceInputsetTable({ healthSources }: any): JSX.E
             accessor: function accessor(row: any) {
               return (
                 <Layout.Horizontal>
-                  <Icon name={getIconBySourceType(row.type, row?.spec)} margin={{ right: 'medium' }} />
+                  <Icon name={getIconBySourceType(row.type)} margin={{ right: 'medium' }} />
                   <Text>{row.healthSource}</Text>
                 </Layout.Horizontal>
               )

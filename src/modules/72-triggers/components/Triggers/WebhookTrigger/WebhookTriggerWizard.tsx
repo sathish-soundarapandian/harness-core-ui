@@ -816,7 +816,11 @@ export default function WebhookTriggerWizard(
       encryptedWebhookSecretIdentifier,
       pollInterval
     } = val
-    const inputSetRefs = get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
+    const inputSetRefs = get(
+      val,
+      'inputSetRefs',
+      get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
+    )
     const referenceString =
       typeof encryptedWebhookSecretIdentifier === 'string'
         ? encryptedWebhookSecretIdentifier
@@ -1131,15 +1135,28 @@ export default function WebhookTriggerWizard(
     latestYaml: triggerYaml
   }: {
     formikProps: FormikProps<any>
-    latestYaml?: any // validate from YAML view
+    latestYaml?: string
   }): Promise<FormikErrors<FlatValidWebhookFormikValuesInterface>> => {
     if (!formikProps) return {}
     let _inputSetRefsError = ''
+    let parsedTriggerYaml
+
+    try {
+      parsedTriggerYaml = parse(triggerYaml || '')
+    } catch (e) {
+      showError(getString('triggers.cannotParseInputValues'))
+    }
 
     if (isNewGitSyncRemotePipeline) {
       // inputSetRefs is required if Input Set is required to run pipeline
-      if (template?.data?.inputSetTemplateYaml && !formikProps?.values?.inputSetSelected?.length) {
-        _inputSetRefsError = getString('triggers.inputSetIsRequired')
+      if (template?.data?.inputSetTemplateYaml) {
+        if (!formikProps?.values?.inputSetSelected?.length) {
+          _inputSetRefsError = getString('triggers.inputSetIsRequired')
+        }
+
+        if (parsedTriggerYaml?.trigger?.inputSetRefs?.length || formikProps?.values?.inputSetRefs?.length) {
+          _inputSetRefsError = ''
+        }
       }
     }
 
@@ -1154,12 +1171,14 @@ export default function WebhookTriggerWizard(
       latestPipelineFromYamlView = getTriggerPipelineValues(triggerYaml, formikProps)
     }
 
-    const runPipelineFormErrors = await getFormErrors({
-      latestPipeline: latestPipelineFromYamlView || latestPipeline,
-      latestYamlTemplate: yamlTemplate,
-      orgPipeline: values.pipeline,
-      setSubmitting
-    })
+    const runPipelineFormErrors = isNewGitSyncRemotePipeline
+      ? null
+      : await getFormErrors({
+          latestPipeline: latestPipelineFromYamlView || latestPipeline,
+          latestYamlTemplate: yamlTemplate,
+          orgPipeline: values.pipeline,
+          setSubmitting
+        })
     const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ inputSetRefs: _inputSetRefsError }, value => !value)
       : undefined

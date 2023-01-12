@@ -28,6 +28,7 @@ import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import { getImagePullPolicyOptions, getShellOptions } from '@common/utils/ContainerRunStepUtils'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -42,7 +43,7 @@ import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfi
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import type { ContainerStepData, ContainerStepProps } from './types'
-import { GetShellOptions, getValidationSchema, processInitialValues } from './helper'
+import { getValidationSchema, processInitialValues } from './helper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ContainerStep.module.scss'
 
@@ -152,16 +153,16 @@ export const ContainerStepBase = (
                 useValue
                 multiTypeInputProps={{
                   selectProps: {
-                    items: GetShellOptions(getString)
+                    items: getShellOptions(getString)
                   },
                   expressions,
                   allowableTypes
                 }}
-                selectItems={GetShellOptions(getString)}
+                selectItems={getShellOptions(getString)}
               />
               {getMultiTypeFromValue(formik.values.spec.shell) === MultiTypeInputType.RUNTIME && !readonly && (
                 <SelectConfigureOptions
-                  options={GetShellOptions(getString)}
+                  options={getShellOptions(getString)}
                   value={formik.values.spec.shell as string}
                   type="String"
                   variableName="spec.shell"
@@ -365,6 +366,24 @@ export const ContainerStepBase = (
                 summary={getString('common.optionalConfig')}
                 details={
                   <>
+                    <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                      <FormInput.MultiTypeInput
+                        name="spec.imagePullPolicy"
+                        label={getString('pipelineSteps.pullLabel')}
+                        disabled={readonly}
+                        useValue
+                        multiTypeInputProps={{
+                          selectProps: {
+                            items: getImagePullPolicyOptions(getString),
+
+                            addClearBtn: true
+                          },
+                          expressions,
+                          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                        }}
+                        selectItems={getImagePullPolicyOptions(getString)}
+                      />
+                    </div>
                     <div className={cx(stepCss.formGroup, stepCss.lg)}>
                       <MultiTypeList
                         multiTextInputProps={{

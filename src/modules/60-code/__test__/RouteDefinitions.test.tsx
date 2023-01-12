@@ -11,65 +11,62 @@ import routes from '../RouteDefinitions'
 describe('RouteDefinitions', () => {
   test('routes should render links correctly', async () => {
     const { container } = render(
-      <div>
-        <p>{routes.toCODE({ accountId: 'test-accountId' })}</p>
-        <p>{routes.toCODEHome({ accountId: 'test-accountId' })}</p>
-        <p>{routes.toCODERepositories({ space: '/harness/default/test' })}</p>
-        <p>
-          {routes.toCODERepository({
-            repoPath: 'harness/default/test/repo1',
-            gitRef: 'main',
-            resourcePath: 'src/components/Test.tsx'
-          })}
-        </p>
-        <p>
-          {routes.toCODERepository({
-            repoPath: 'harness/default/test/repo1',
-            gitRef: 'main'
-          })}
-        </p>
-        <p>
-          {routes.toCODERepository({
-            repoPath: 'harness/default/test/repo1',
-            resourcePath: 'src/components/Test.tsx'
-          })}
-        </p>
-        <p>
-          {routes.toCODEFileEdit({
-            repoPath: 'harness/default/test/repo1',
-            gitRef: 'main',
-            resourcePath: 'src/components/Test.tsx'
-          })}
-        </p>
-        <p>
-          {routes.toCODEFileEdit({
-            repoPath: 'harness/default/test/repo1',
-            gitRef: 'main'
-          })}
-        </p>
-        <p>{routes.toCODECommits({ repoPath: 'harness/default/test/repo1', commitRef: 'main' })}</p>
-        <p>{routes.toCODECommits({ repoPath: 'harness/default/test/repo1' })}</p>
-        <p>{routes.toCODEBranches({ repoPath: 'harness/default/test/repo1' })}</p>
-        <p>{routes.toCODEPullRequests({ repoPath: 'harness/default/test/repo1' })}</p>
-        <p>{routes.toCODEPullRequest({ repoPath: 'harness/default/test/repo1', pullRequestId: '1001' })}</p>
-        <p>
-          {routes.toCODEPullRequest({
-            repoPath: 'harness/default/test/repo1',
-            pullRequestId: '1001',
-            pullRequestSection: 'commits'
-          })}
-        </p>
-        <p>
-          {routes.toCODEPullRequest({
-            repoPath: 'harness/default/test/repo1',
-            pullRequestId: '1001',
-            pullRequestSection: 'diffs'
-          })}
-        </p>
-        <p>{routes.toCODECompare({ repoPath: 'harness/default/test/repo1', diffRefs: 'main...develop' })}</p>
-        <p>{routes.toCODESettings({ repoPath: 'harness/default/test/repo1' })}</p>
-        <p>{routes.toCODECreateWebhook({ repoPath: 'harness/default/test/repo1' })}</p>
-      </div>
+      <pre>
+        {routes.toCODE({ accountId: 'test-accountId' })}
+        {routes.toCODEHome({ accountId: 'test-accountId' })}
+        {routes.toCODERepositories({ space: '/harness/default/test' })}
+
+        {routes.toCODERepository({
+          repoPath: 'harness/default/test/repo1',
+          gitRef: 'main',
+          resourcePath: 'src/components/Test.tsx'
+        })}
+
+        {routes.toCODERepository({
+          repoPath: 'harness/default/test/repo1',
+          gitRef: 'main'
+        })}
+
+        {routes.toCODERepository({
+          repoPath: 'harness/default/test/repo1',
+          resourcePath: 'src/components/Test.tsx'
+        })}
+
+        {routes.toCODEFileEdit({
+          repoPath: 'harness/default/test/repo1',
+          gitRef: 'main',
+          resourcePath: 'src/components/Test.tsx'
+        })}
+
+        {routes.toCODEFileEdit({
+          repoPath: 'harness/default/test/repo1',
+          gitRef: 'main'
+        })}
+
+        {routes.toCODECommits({ repoPath: 'harness/default/test/repo1', commitRef: 'main' })}
+        {routes.toCODECommits({ repoPath: 'harness/default/test/repo1' })}
+        {routes.toCODEBranches({ repoPath: 'harness/default/test/repo1' })}
+        {routes.toCODEPullRequests({ repoPath: 'harness/default/test/repo1' })}
+        {routes.toCODEPullRequest({ repoPath: 'harness/default/test/repo1', pullRequestId: '1001' })}
+
+        {routes.toCODEPullRequest({
+          repoPath: 'harness/default/test/repo1',
+          pullRequestId: '1001',
+          pullRequestSection: 'commits'
+        })}
+
+        {routes.toCODEPullRequest({
+          repoPath: 'harness/default/test/repo1',
+          pullRequestId: '1001',
+          pullRequestSection: 'diffs'
+        })}
+
+        {routes.toCODECompare({ repoPath: 'harness/default/test/repo1', diffRefs: 'main...develop' })}
+        {routes.toCODESettings({ repoPath: 'harness/default/test/repo1' })}
+        {routes.toCODEWebhooks({ repoPath: 'harness/default/test/repo1' })}
+        {routes.toCODEWebhookNew({ repoPath: 'harness/default/test/repo1' })}
+        {routes.toCODEWebhookDetails({ repoPath: 'harness/default/test/repo1', webhookId: '1234' })}
+      </pre>
     )
 
     expect(container).toMatchSnapshot()

@@ -28,8 +28,6 @@ import { Intent } from '@harness/design-system'
 
 import { StringKeys, useStrings } from 'framework/strings'
 
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { Scope } from '@common/interfaces/SecretsInterface'
 
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
@@ -79,7 +77,6 @@ export default function DeployEnvironmentEntityWidget({
 }: DeployEnvironmentEntityWidgetProps): JSX.Element {
   const { getString } = useStrings()
   const [radioValue, setRadioValue] = useState<string>(getString(getRadioValueFromInitialValues(initialValues)))
-  const isEnvGroupFFEnabled = useFeatureFlag(FeatureFlag.ENV_GROUP)
   const { scope } = usePipelineContext()
 
   const formikRef = useRef<FormikProps<DeployEnvironmentEntityFormState> | null>(null)
@@ -304,11 +301,7 @@ export default function DeployEnvironmentEntityWidget({
 
           return (
             <FormikForm>
-              <div
-                className={cx(css.environmentEntityWidget, {
-                  [css.centerRadio]: !isEnvGroupFFEnabled
-                })}
-              >
+              <div className={cx(css.environmentEntityWidget)}>
                 <Layout.Vertical className={css.toggle} flex={{ alignItems: 'flex-end', justifyContent: 'center' }}>
                   <Layout.Vertical flex={{ alignItems: 'center' }}>
                     <Toggle
@@ -317,7 +310,7 @@ export default function DeployEnvironmentEntityWidget({
                       label={toggleLabel}
                       tooltipId={'multiEnvInfraToggle'}
                     />
-                    {(isMultiEnvironment || isEnvironmentGroup) && isEnvGroupFFEnabled && (
+                    {(isMultiEnvironment || isEnvironmentGroup) && (
                       <RadioGroup
                         onChange={handleEnvironmentGroupToggle}
                         options={[

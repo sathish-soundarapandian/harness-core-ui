@@ -7,9 +7,9 @@
 
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { defaultTo, set } from 'lodash-es'
-import type { EnvironmentYamlV2 } from 'services/cd-ng'
+import type { EnvironmentYamlV2, FilterYaml } from 'services/cd-ng'
 import { getIdentifierFromScopedRef, isValueRuntimeInput } from '@common/utils/utils'
-import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState, FilterYaml } from '../types'
+import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from '../types'
 
 export function processFiltersInitialValues(
   filters?: FilterYaml[]

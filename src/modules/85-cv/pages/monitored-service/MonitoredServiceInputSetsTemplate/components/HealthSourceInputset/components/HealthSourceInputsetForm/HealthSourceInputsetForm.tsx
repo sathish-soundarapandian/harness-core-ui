@@ -11,15 +11,17 @@ import { Card, FormInput, MultiTypeInputType, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import type { ConnectorInfoDTO, HealthSource } from 'services/cv'
+import type { HealthSource } from 'services/cv'
 import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
-import {
-  getLabelByName,
-  healthSourceTypeMapping
-} from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
+import { getLabelByName } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
 import { spacingMedium } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.constants'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
+import {
+  enrichHealthSourceWithVersionForHealthsourceType,
+  getMetricDefinitionData,
+  getSourceTypeForConnector
+} from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import MetricDefinitionInptsetForm from '../MetricDefinitionInptsetForm/MetricDefinitionInptsetForm'
 import css from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.module.scss'
 
@@ -34,30 +36,37 @@ export default function HealthSourceInputsetForm({
 }: HealthSourceInputsetFormInterface): JSX.Element {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const content = healthSources?.map((healthSource, index: number) => {
-    const spec = healthSource?.spec
+  const content = healthSources?.map((healthSourceData, index: number) => {
+    const spec = healthSourceData?.spec
     const path = `sources.healthSources.${index}.spec`
     const runtimeInputs = Object.entries(spec)
       .filter(item => item[1] === '<+input>')
       .map(item => {
         return { name: item[0], path: `${path}.${item[0]}` }
       })
+
+    // TODO - this can be removed once the templateInputs api gives version also in healthsoure entity.
+    const healthSource = enrichHealthSourceWithVersionForHealthsourceType(
+      healthSourceData as UpdatedHealthSourceWithAllSpecs
+    )
     const { metricDefinitions, metricDefinitionInptsetFormPath } = getMetricDefinitionData(
       healthSource as UpdatedHealthSourceWithAllSpecs,
       path
     )
+    const areMetricDefinitionsPresent = Boolean(Array.isArray(metricDefinitions) && metricDefinitions?.length)
+
     return (
       <Card key={`${healthSource?.name}.${index}`} className={css.healthSourceInputSet}>
         <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
           {getString('cv.healthSource.nameLabel')}: {healthSource?.name}
         </Text>
-        {runtimeInputs?.length || metricDefinitions?.length ? (
+        {runtimeInputs?.length || areMetricDefinitionsPresent ? (
           runtimeInputs.reverse().map(input => {
             if (input.name === 'connectorRef' && !isReadOnlyInputSet) {
               return (
                 <FormConnectorReferenceField
                   width={400}
-                  type={healthSourceTypeMapping(healthSource?.type as ConnectorInfoDTO['type'])}
+                  type={getSourceTypeForConnector(healthSource)}
                   name={input.path}
                   label={
                     <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
@@ -68,7 +77,7 @@ export default function HealthSourceInputsetForm({
                   projectIdentifier={projectIdentifier}
                   orgIdentifier={orgIdentifier}
                   placeholder={getString('cv.healthSource.connectors.selectConnector', {
-                    sourceType: healthSource?.type
+                    sourceType: getSourceTypeForConnector(healthSource)
                   })}
                   tooltipProps={{ dataTooltipId: 'selectHealthSourceConnector' }}
                 />
@@ -89,7 +98,7 @@ export default function HealthSourceInputsetForm({
         ) : (
           <NoResultsView minimal={true} text={getString('templatesLibrary.noInputsRequired')} />
         )}
-        {Boolean(metricDefinitions?.length) && (
+        {Boolean(areMetricDefinitionsPresent) && (
           <MetricDefinitionInptsetForm path={metricDefinitionInptsetFormPath} metricDefinitions={metricDefinitions} />
         )}
       </Card>
@@ -101,16 +110,4 @@ export default function HealthSourceInputsetForm({
   } else {
     return <></>
   }
-}
-
-const getMetricDefinitionData = (healthSource: UpdatedHealthSourceWithAllSpecs, path: string) => {
-  const hasQueries = healthSource?.spec?.queries !== undefined
-  const metricDefinitions = hasQueries
-    ? healthSource?.spec?.queries
-    : healthSource?.spec?.metricDefinitions || healthSource?.spec?.newRelicMetricDefinitions
-  const isNewRelicMetric = Boolean(healthSource?.spec?.newRelicMetricDefinitions)
-  const metricDefinitionInptsetFormPath = `${path}.${
-    hasQueries ? 'queries' : isNewRelicMetric ? 'newRelicMetricDefinitions' : 'metricDefinitions'
-  }`
-  return { metricDefinitions, metricDefinitionInptsetFormPath }
 }

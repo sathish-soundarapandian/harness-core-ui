@@ -7,8 +7,7 @@
 
 import type { AllowedTypes, SelectOption } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
-import type { EnvSwaggerObjectWrapper, TagsFilter } from 'services/cd-ng'
-import type { FilterYaml } from '../../../types'
+import type { EnvSwaggerObjectWrapper, FilterYaml, TagsFilter } from 'services/cd-ng'
 
 export type EntityType = Required<EnvSwaggerObjectWrapper>['envFilterEntityType']
 

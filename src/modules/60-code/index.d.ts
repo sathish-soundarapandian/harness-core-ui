@@ -60,12 +60,12 @@ declare module 'code/Webhooks' {
   export default ChildApp
 }
 
-declare module 'code/CreateWebhook' {
+declare module 'code/WebhookNew' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
 
-declare module 'code/EditWebhook' {
+declare module 'code/WebhookDetails' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }

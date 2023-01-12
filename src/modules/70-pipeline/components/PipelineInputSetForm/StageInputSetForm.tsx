@@ -571,7 +571,7 @@ export function StageInputSetFormInternal({
                 stepViewType={viewType}
                 path={`${path}.service`}
                 allowableTypes={
-                  scope === Scope.PROJECT
+                  scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
                     ? allowableTypes
                     : ((allowableTypes as MultiTypeInputType[]).filter(
                         item => item !== MultiTypeInputType.FIXED
@@ -637,7 +637,7 @@ export function StageInputSetFormInternal({
                 stepViewType={viewType}
                 path={`${path}.services`}
                 allowableTypes={
-                  scope === Scope.PROJECT
+                  scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
                     ? allowableTypes
                     : ((allowableTypes as MultiTypeInputType[]).filter(
                         item => item !== MultiTypeInputType.FIXED

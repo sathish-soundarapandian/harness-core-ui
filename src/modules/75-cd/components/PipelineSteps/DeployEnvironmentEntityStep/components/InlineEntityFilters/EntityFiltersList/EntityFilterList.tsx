@@ -7,14 +7,15 @@
 
 import React, { useState } from 'react'
 import { FieldArray, useFormikContext } from 'formik'
-import { get } from 'lodash-es'
+import { get, isNil } from 'lodash-es'
 
 import { Button, ButtonSize, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
+import type { FilterYaml } from 'services/cd-ng'
 
-import { EntityFilterListProps, renderFilterSpec } from './EntityFilterListUtils'
+import type { EntityFilterListProps } from './EntityFilterListUtils'
 import { defaultEntityFilter } from '../AddEditEntityFilterModal/AddEditEntityFilterModalUtils'
 import {
   AddEditEntityFilterModalState,
@@ -22,7 +23,7 @@ import {
   entityTypeStringsMap
 } from '../AddEditEntityFilterModal/AddEditEntityFilterModal.types'
 import AddEditEntityFilterModal from '../AddEditEntityFilterModal/AddEditEntityFilterModal'
-import type { FilterYaml } from '../../../types'
+import EntityFilterSpec from './EntityFilterSpec'
 
 import css from './EntityFilterList.module.scss'
 
@@ -53,7 +54,7 @@ export default function EntityFilterList<T>({
         }
 
         const onClose = (index?: number, filter?: FilterYaml): void => {
-          if (filter && index) {
+          if (filter && !isNil(index)) {
             if (index > -1) {
               replace(index, filter)
             } else {
@@ -77,7 +78,7 @@ export default function EntityFilterList<T>({
                   {entityFilterList.length > 0 && (
                     <>
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-                        {getString('common.ID').toUpperCase()}
+                        {getString('identifier').toUpperCase()}
                       </Text>
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
                         {getString('common.filterOnName', { name: getString('entities') }).toUpperCase()}
@@ -106,7 +107,7 @@ export default function EntityFilterList<T>({
                           {entities?.map(entity => getString(entityTypeStringsMap[entity])).join(', ')}
                         </Layout.Vertical>
                         <Text>{getString(entityFilterTypeStringsMap[type])}</Text>
-                        <Layout.Horizontal>{renderFilterSpec(spec, getString)}</Layout.Horizontal>
+                        <EntityFilterSpec type={type} spec={spec} />
                         <Layout.Horizontal spacing="small">
                           <Button
                             variation={ButtonVariation.ICON}

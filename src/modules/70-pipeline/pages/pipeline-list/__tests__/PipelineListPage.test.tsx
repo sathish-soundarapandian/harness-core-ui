@@ -292,20 +292,17 @@ describe('CD Pipeline List Page', () => {
     mutateListOfPipelines.mockReset()
     userEvent.type(screen.getByRole('searchbox'), 'asd')
     jest.runOnlyPendingTimers()
-    expect(mutateListOfPipelines).toHaveBeenCalledWith(
-      { filterType: 'PipelineSetup' },
-      {
-        queryParams: {
-          accountIdentifier: 'accountId',
-          orgIdentifier: 'orgIdentifier',
-          page: 0,
-          projectIdentifier: 'projectIdentifier',
-          searchTerm: 'asd',
-          size: 20,
-          sort: ['lastUpdatedAt', 'DESC']
-        }
+    expect(mutateListOfPipelines).toHaveBeenCalledWith(null, {
+      queryParams: {
+        accountIdentifier: 'accountId',
+        orgIdentifier: 'orgIdentifier',
+        page: 0,
+        projectIdentifier: 'projectIdentifier',
+        searchTerm: 'asd',
+        size: 20,
+        sort: ['lastUpdatedAt', 'DESC']
       }
-    )
+    })
   })
 })
 
@@ -339,20 +336,17 @@ describe('CI Pipeline List Page', () => {
     // test sorting
     mutateListOfPipelines.mockReset()
     userEvent.click(screen.getByText('pipeline.lastExecution'))
-    expect(mutateListOfPipelines).toHaveBeenCalledWith(
-      { filterType: 'PipelineSetup' },
-      {
-        queryParams: {
-          accountIdentifier: 'accountId',
-          orgIdentifier: 'orgIdentifier',
-          page: 0,
-          projectIdentifier: 'projectIdentifier',
-          searchTerm: undefined,
-          size: 20,
-          sort: ['executionSummaryInfo.lastExecutionTs', 'ASC']
-        }
+    expect(mutateListOfPipelines).toHaveBeenCalledWith(null, {
+      queryParams: {
+        accountIdentifier: 'accountId',
+        orgIdentifier: 'orgIdentifier',
+        page: 0,
+        projectIdentifier: 'projectIdentifier',
+        searchTerm: undefined,
+        size: 20,
+        sort: ['executionSummaryInfo.lastExecutionTs', 'ASC']
       }
-    )
+    })
   })
 
   test('should show trigger icons with appropriate links to navigate to triggers', async () => {
