@@ -4,7 +4,7 @@
 // import { useStrings } from 'framework/strings'
 // import { EVENT_TYPE } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.utils'
 // import { getEventTypeColor, getEventTypeLightColor } from '@cv/utils/CommonUtils'
-// import css from '../LogAnalysisRiskAndJiraModal.module.scss'
+// import css from '../LogAnalysisDetailsDrawer.module.scss'
 // import logRowStyle from '../../../LogAnalysisRow.module.scss'
 
 // export function UpdatedEventPreference(): JSX.Element {

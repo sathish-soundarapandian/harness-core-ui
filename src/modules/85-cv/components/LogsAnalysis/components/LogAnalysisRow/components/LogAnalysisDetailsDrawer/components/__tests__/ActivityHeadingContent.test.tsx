@@ -2,7 +2,7 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ActivityHeadingContent } from '../ActivityHeadingContent'
-import type { ActivityHeadingContentProps } from '../../LogAnalysisRiskAndJiraModal.types'
+import type { ActivityHeadingContentProps } from '../../LogAnalysisDetailsDrawer.types'
 import { trendData } from './ActivityHeadingContent.mock'
 
 const initialProps: ActivityHeadingContentProps = {

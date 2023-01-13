@@ -18,7 +18,7 @@ import {
 import { getSingleLogData } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.utils'
 import type { PipelinePathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getEventTypeColor, getEventTypeLightColor } from '@cv/utils/CommonUtils'
-import { LogAnalysisRiskAndJiraModal } from './components/LogAnalysisRiskAndJiraModal/LogAnalysisRiskAndJiraModal'
+import { LogAnalysisDetailsDrawer } from './components/LogAnalysisDetailsDrawer/LogAnalysisDetailsDrawer'
 import type {
   LogAnalysisDataRowProps,
   LogAnalysisRowProps,
@@ -287,7 +287,7 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     <Container className={cx(css.main, props.className)}>
       <ColumnHeaderRow />
       {riskEditModalData.showDrawer ? (
-        <LogAnalysisRiskAndJiraModal
+        <LogAnalysisDetailsDrawer
           onHide={onDrawerHide}
           rowData={
             riskEditModalData.selectedRowData !== null ? riskEditModalData.selectedRowData : ({} as LogAnalysisRowData)

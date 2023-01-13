@@ -9,18 +9,18 @@ import React from 'react'
 import { render, waitFor, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { LogData } from 'services/cv'
-import { LogAnalysisRiskAndJiraModal } from '../LogAnalysisRiskAndJiraModal'
-import type { LogAnalysisRiskAndJiraModalProps } from '../LogAnalysisRiskAndJiraModal.types'
+import { LogAnalysisDetailsDrawer } from '../LogAnalysisDetailsDrawer'
+import type { LogAnalysisRiskAndJiraModalProps } from '../LogAnalysisDetailsDrawer.types'
 
 const WrapperComponent = (props: LogAnalysisRiskAndJiraModalProps): JSX.Element => {
   return (
     <TestWrapper>
-      <LogAnalysisRiskAndJiraModal {...props} />
+      <LogAnalysisDetailsDrawer {...props} />
     </TestWrapper>
   )
 }
 
-describe('Unit tests for LogAnalysisRiskAndJiraModal', () => {
+describe('Unit tests for LogAnalysisDetailsDrawer', () => {
   const initialProps: LogAnalysisRiskAndJiraModalProps = {
     onHide: jest.fn(),
     rowData: {
@@ -34,7 +34,7 @@ describe('Unit tests for LogAnalysisRiskAndJiraModal', () => {
     },
     isDataLoading: false
   }
-  test('Verify if all the fields are rendered correctly inside LogAnalysisRiskAndJiraModal', async () => {
+  test('Verify if all the fields are rendered correctly inside LogAnalysisDetailsDrawer', async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const { getByText } = render(<WrapperComponent {...initialProps} />)
