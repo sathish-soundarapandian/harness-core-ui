@@ -2874,17 +2874,15 @@ export interface LogAnalysisRadarChartClusterDTO {
 }
 
 export interface LogAnalysisRadarChartListDTO {
-  averageFrequencyData?: TimestampFrequencyCount[]
-  baseline?: LogAnalysisRadarChartListDTO
+  averageControlFrequencyData?: TimestampFrequencyCount[]
   clusterId?: string
   clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
-  frequencyData?: number[]
-  hasControlData?: boolean
-  hostFrequencyData?: HostFrequencyData[]
   label?: number
   message?: string
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  testHostFrequencyData?: HostFrequencyData[]
+  totalTestFrequencyData?: TimestampFrequencyCount[]
 }
 
 export interface LogAnalysisRadarChartListWithCountDTO {
@@ -3135,18 +3133,18 @@ export interface MetricTagResponseDTO {
 }
 
 export interface MetricThreshold {
+  action?: 'Ignore' | 'FailImmediately' | 'FailAfterOccurrence' | 'FailAfterConsecutiveOccurrence'
   criteria?: MetricThresholdCriteria
-  groupName?: string
-  metricIdentifier?: string
-  metricName?: string
-  metricType?: string
-  spec: MetricThresholdSpec
-  type?: 'IgnoreThreshold' | 'FailImmediately'
+  isUserDefined?: boolean
+  thresholdIdentifier?: string
+  thresholdType?: 'IgnoreThreshold' | 'FailImmediately'
 }
 
 export interface MetricThresholdCriteria {
-  spec?: MetricThresholdCriteriaSpec
-  type?: 'Absolute' | 'Percentage'
+  actionableCount?: number
+  greaterThanThreshold?: number
+  lessThanThreshold?: number
+  measurementType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
 }
 
 export interface MetricThresholdCriteriaSpec {
