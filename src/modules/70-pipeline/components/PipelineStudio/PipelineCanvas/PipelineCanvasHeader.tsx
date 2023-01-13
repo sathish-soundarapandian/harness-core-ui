@@ -70,6 +70,7 @@ export interface PipelineCanvasHeaderProps {
   isPipelineRemote: boolean
   isGitSyncEnabled: boolean
   disableVisualView: boolean
+  showDisableToggleReason: boolean
   onGitBranchChange(selectedFilter: GitFilterScope, defaultSelected?: boolean): void
   setModalMode(mode: 'edit' | 'create'): void
   setYamlError(mode: boolean): void
@@ -87,6 +88,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     setYamlError,
     showModal,
     disableVisualView,
+    showDisableToggleReason = true,
     toPipelineStudio,
     openRunPipelineModal
   } = props
@@ -344,7 +346,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                 selectedView={isYaml || disableVisualView ? SelectedView.YAML : SelectedView.VISUAL}
                 disableToggle={disableVisualView}
                 onChange={handleViewChange}
-                showDisableToggleReason={true}
+                showDisableToggleReason={showDisableToggleReason}
               />
               <div>
                 <div className={css.savePublishContainer}>

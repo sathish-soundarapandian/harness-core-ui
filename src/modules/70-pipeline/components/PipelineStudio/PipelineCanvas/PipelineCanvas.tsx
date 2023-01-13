@@ -343,12 +343,12 @@ export function PipelineCanvas({
   }, [pipelineIdentifier, entityValidityDetails?.valid])
 
   React.useEffect(() => {
-    if (entityValidityDetails?.valid === false) {
+    if (entityValidityDetails?.valid === false || CI_YAML_VERSIONING) {
       setDisableVisualView(true)
     } else {
       setDisableVisualView(false)
     }
-  }, [entityValidityDetails?.valid])
+  }, [entityValidityDetails?.valid, CI_YAML_VERSIONING])
 
   React.useEffect(() => {
     if (isInitialized) {
@@ -792,6 +792,7 @@ export function PipelineCanvas({
             setYamlError={setYamlError}
             showModal={showModal}
             disableVisualView={disableVisualView}
+            showDisableToggleReason={!CI_YAML_VERSIONING}
             toPipelineStudio={toPipelineStudio}
             openRunPipelineModal={openRunPipelineModal}
           />
