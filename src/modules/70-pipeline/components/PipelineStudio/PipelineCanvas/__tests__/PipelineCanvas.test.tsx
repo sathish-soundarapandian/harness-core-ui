@@ -12,6 +12,7 @@ import { set } from 'lodash-es'
 import { putPipelinePromise, createPipelinePromise, PipelineInfoConfig } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useMutateAsGet } from '@common/hooks'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { PipelineCanvas, PipelineCanvasProps } from '../PipelineCanvas'
 import { PipelineContext } from '../../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../../PipelineContext/PipelineActions'
@@ -439,5 +440,33 @@ describe('Existing pipeline', () => {
       expect(screen.getByText('editPipeline')).toBeInTheDocument()
       expect(screen.getByText('continue')).toBeInTheDocument()
     })
+  })
+
+  test('Visual mode should be disabled for FF CI_YAML_VERSIONING on', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CI_YAML_VERSIONING: true
+    })
+    const props = getProps()
+    const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false, isUpdated: true })
+    const { getByText } = render(
+      <TestWrapper>
+        <PipelineContext.Provider
+          value={{
+            ...contextValue,
+            state: {
+              ...contextValue.state,
+              pipelineView: {
+                ...contextValue.state.pipelineView,
+                isYamlEditable: true
+              }
+            },
+            view: 'YAML'
+          }}
+        >
+          <PipelineCanvas {...props} />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    expect(getByText('VISUAL')).toHaveClass('PillToggle--item PillToggle--disabledMode')
   })
 })
