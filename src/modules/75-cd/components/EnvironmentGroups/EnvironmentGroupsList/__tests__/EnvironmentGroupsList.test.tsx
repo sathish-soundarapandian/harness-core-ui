@@ -122,6 +122,18 @@ describe('Environment Groups List View', () => {
       const deleteButton = findDialogContainer()?.querySelectorAll('.bp3-button-text')[0]
       fireEvent.click(deleteButton!)
     })
+
+    await waitFor(() =>
+      expect(mutate).toHaveBeenCalledWith('Env_Group_4', {
+        headers: { 'content-type': 'application/json' },
+        queryParams: {
+          accountIdentifier: 'dummy',
+          forceDelete: undefined,
+          orgIdentifier: 'dummy',
+          projectIdentifier: 'dummy'
+        }
+      })
+    )
   })
 
   test('delete env group fails and displays toast', async () => {
