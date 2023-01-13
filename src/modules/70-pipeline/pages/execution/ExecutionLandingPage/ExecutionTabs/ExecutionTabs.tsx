@@ -58,7 +58,6 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const isSecurityEnabled = licenseInformation['STO']?.status === 'ACTIVE'
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
   const isChaosEnabled = useFeatureFlag(FeatureFlag.CHAOS_ENABLED)
-  const isSimplifiedYAMLPipeline = useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
   const canUsePolicyEngine = useAnyEnterpriseLicense()
 
   const routeParams = { ...accountPathProps, ...executionPathProps, ...pipelineModuleParams }
@@ -86,12 +85,6 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
     setSavedExecutionView(checked ? SavedExecutionViewTypes.LOG : SavedExecutionViewTypes.GRAPH)
   }
-
-  React.useEffect(() => {
-    if (isSimplifiedYAMLPipeline) {
-      setSavedExecutionView(SavedExecutionViewTypes.LOG)
-    }
-  }, [isSimplifiedYAMLPipeline])
 
   React.useEffect(() => {
     const isPipeLineView = !!matchPath(location.pathname, {

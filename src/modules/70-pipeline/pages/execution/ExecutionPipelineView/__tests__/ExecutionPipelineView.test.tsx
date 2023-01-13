@@ -10,6 +10,7 @@ import { render } from '@testing-library/react'
 import { getMockFor_useGetPipeline } from '@pipeline/components/RunPipelineModal/__tests__/mocks'
 
 import { TestWrapper } from '@common/utils/testUtils'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 
 import { SavedExecutionViewTypes } from '@pipeline/components/LogsContent/LogsContent'
 import ExecutionPipelineView from '../ExecutionPipelineView'
@@ -37,6 +38,19 @@ describe('<ExecutionPipelineView /> tests', () => {
     )
 
     expect(getByTestId('view').innerHTML).toBe('ExecutionGraphView')
+  })
+
+  test('renders log view by default for FF CI_YAML_VERSIONING on', () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CI_YAML_VERSIONING: true
+    })
+    const { getByTestId } = render(
+      <TestWrapper>
+        <ExecutionPipelineView />
+      </TestWrapper>
+    )
+
+    expect(getByTestId('view').innerHTML).toBe('ExecutionLogView')
   })
 
   test('renders log view with correct params', () => {
