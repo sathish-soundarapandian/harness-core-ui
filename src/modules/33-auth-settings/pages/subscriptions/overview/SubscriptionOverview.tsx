@@ -122,7 +122,6 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         />
       ) : null}
       <Card className={css.lookerGraph}>
-        {/* <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}></Layout.Vertical> */}
         <iframe
           src={signedUrlResponse?.resource}
           height="100%"
