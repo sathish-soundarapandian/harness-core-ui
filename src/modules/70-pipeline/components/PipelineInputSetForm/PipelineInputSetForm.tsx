@@ -48,8 +48,9 @@ import { getStageFromPipeline, getTemplatePath } from '../PipelineStudio/StepUti
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { getFilteredAllowableTypes, StageSelectionData } from '../../utils/runPipelineUtils'
 import { OutputPanelInputSetView } from '../CommonPipelineStages/PipelineStage/PipelineStageOutputSection/OutputPanelInputSetView'
-import css from './PipelineInputSetForm.module.scss'
+import IACMInputSetForm from './IACMInputSetForm'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import css from './PipelineInputSetForm.module.scss'
 
 export interface PipelineInputSetFormProps {
   originalPipeline: PipelineInfoConfig
@@ -336,6 +337,15 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
         </>
       )}
       <CICodebaseInputSetForm
+        path={finalPath}
+        readonly={readonly}
+        originalPipeline={props.originalPipeline}
+        template={template}
+        viewType={viewType}
+        viewTypeMetadata={viewTypeMetadata}
+        selectedStageData={selectedStageData}
+      />
+      <IACMInputSetForm
         path={finalPath}
         readonly={readonly}
         originalPipeline={props.originalPipeline}

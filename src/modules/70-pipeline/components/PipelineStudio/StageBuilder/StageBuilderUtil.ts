@@ -252,6 +252,25 @@ export const mayBeStripCIProps = (pipeline: PipelineInfoConfig): boolean => {
   return false
 }
 
+export const mayBeStripIACMProps = (pipeline: PipelineInfoConfig): boolean => {
+  // no IACM stages exist
+  const areIACMStagesAbsent = pipeline?.stages?.every(stage => stage.stage?.type !== 'IACM')
+  if (areIACMStagesAbsent) {
+    const props = Object.keys(pipeline.properties || {})
+    // figure out if only properties that are left is related to iacm
+    const isIACMOnly = props.length === 1 && props[0] === 'iacm'
+    if (isIACMOnly) {
+      return delete pipeline.properties
+    }
+    // otherwise figure out if properties object has a iacm prop
+    const hasIACM = props.some(prop => prop === 'iacm')
+    if (hasIACM && pipeline.properties?.iacm) {
+      return delete pipeline.properties.iacm
+    }
+  }
+  return false
+}
+
 export const removeNodeFromPipeline = (
   nodeResponse: { stage?: StageElementWrapperConfig; parent?: StageElementWrapperConfig },
   data: PipelineInfoConfig,

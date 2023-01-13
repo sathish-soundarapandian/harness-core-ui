@@ -58,7 +58,8 @@ import {
   MoveStageDetailsType,
   moveStage,
   getFlattenedStages,
-  Listeners
+  Listeners,
+  mayBeStripIACMProps
 } from './StageBuilderUtil'
 import { StageList } from './views/StageList'
 import { SplitViewTypes } from '../PipelineContext/PipelineActions'
@@ -269,7 +270,8 @@ function StageBuilder(): JSX.Element {
         const stageToDelete = getStageFromPipeline(deleteId, cloned)
         const isRemove = removeNodeFromPipeline(stageToDelete, cloned, stageMap)
         const isStripped = mayBeStripCIProps(cloned)
-        if (isRemove || isStripped) {
+        const isIACMStripped = mayBeStripIACMProps(cloned)
+        if (isRemove || isStripped || isIACMStripped) {
           updatePipeline(cloned)
           showSuccess(getString('deleteStageSuccess'))
           // call telemetry
