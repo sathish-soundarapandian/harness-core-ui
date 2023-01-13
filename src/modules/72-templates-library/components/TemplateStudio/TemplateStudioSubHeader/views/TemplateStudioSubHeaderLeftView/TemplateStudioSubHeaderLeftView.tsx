@@ -24,6 +24,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { isEmpty, isNil } from 'lodash-es'
 import { Dialog, Spinner } from '@blueprintjs/core'
 import classNames from 'classnames'
+
 import {
   Fields,
   ModalProps,
@@ -49,22 +50,34 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
-import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Templates/templates'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import StudioGitPopover from '@pipeline/components/PipelineStudio/StudioGitPopover'
 import { VersionsDropDown } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
 import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
+import {
+  PipelineCachedCopy,
+  PipelineCachedCopyHandle
+} from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCachedCopy/PipelineCachedCopy'
 import { StoreType } from '@common/constants/GitSyncTypes'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import css from './TemplateStudioSubHeaderLeftView.module.scss'
 
 export interface TemplateStudioSubHeaderLeftViewProps {
   onGitBranchChange?: (selectedFilter: GitFilterScope) => void
 }
 
-export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLeftViewProps) => JSX.Element = ({
-  onGitBranchChange
-}) => {
+export interface TemplateStudioSubHeaderLeftViewHandle {
+  openReconcileConfirmation(): void
+}
+
+export function TemplateStudioSubHeaderLeftView(
+  props: TemplateStudioSubHeaderLeftViewProps,
+  ref: React.ForwardedRef<TemplateStudioSubHeaderLeftViewHandle>
+): React.ReactElement {
+  const { onGitBranchChange } = props
   const {
     state,
     updateTemplate,
@@ -73,9 +86,20 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
     view,
     isReadonly,
     updateGitDetails,
-    updateStoreMetadata
+    updateStoreMetadata,
+    updateTemplateView
   } = React.useContext(TemplateContext)
-  const { template, versions, stableVersion, isUpdated, gitDetails, storeMetadata, templateYamlError } = state
+  const {
+    template,
+    versions,
+    stableVersion,
+    isUpdated,
+    gitDetails,
+    storeMetadata,
+    templateYamlError,
+    templateView,
+    cacheResponseMetadata: cacheResponse
+  } = state
   const { accountId, projectIdentifier, orgIdentifier, module, templateIdentifier } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
@@ -85,7 +109,7 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
     isGitSyncEnabled: isGitSyncEnabledForProject,
     gitSyncEnabledOnlyForFF,
     supportingTemplatesGitx
-  } = React.useContext(AppStoreContext)
+  } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [modalProps, setModalProps] = React.useState<ModalProps>()
   const isYaml = view === SelectedView.YAML
@@ -94,6 +118,8 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
+  const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
+  const pipelineCachedCopyRef = React.useRef<PipelineCachedCopyHandle | null>(null)
 
   const { mutate: updateStableTemplate, loading: updateStableTemplateLoading } = useUpdateStableTemplate({
     templateIdentifier: template.identifier,
@@ -107,6 +133,18 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
     },
     requestOptions: { headers: { 'content-type': 'application/json' } }
   })
+
+  React.useImperativeHandle(ref, () => ({
+    openReconcileConfirmation() {
+      pipelineCachedCopyRef.current?.showConfirmationModal()
+    }
+  }))
+
+  const reloadFromCache = React.useCallback((): void => {
+    updateTemplateView({ ...templateView, isYamlEditable: false })
+    fetchTemplate({ forceFetch: true, forceUpdate: true, loadFromCache: false })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [templateView])
 
   const navigateToTemplatesListPage = React.useCallback(() => {
     history.push(routes.toTemplates({ orgIdentifier, projectIdentifier, accountId, module }))
@@ -334,15 +372,32 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
         {storeMetadata?.storeType === StoreType.REMOTE && (
           <>
             <span className={css.separator}></span>
-            <GitPopoverV2
-              storeMetadata={storeMetadata!}
-              gitDetails={gitDetails}
-              branchChangeDisabled={templateIdentifier === DefaultNewTemplateId}
-              onGitBranchChange={onGitBranchChange!}
-            />
+            <Layout.Horizontal flex={{ alignItems: 'center' }}>
+              <GitPopoverV2
+                storeMetadata={storeMetadata!}
+                gitDetails={gitDetails}
+                branchChangeDisabled={templateIdentifier === DefaultNewTemplateId}
+                onGitBranchChange={onGitBranchChange!}
+                btnClassName={css.gitBtn}
+                customIcon={
+                  isPipelineGitCacheEnabled && !isEmpty(cacheResponse) ? (
+                    <PipelineCachedCopy
+                      ref={pipelineCachedCopyRef}
+                      reloadContent={getString('common.template.label')}
+                      cacheResponse={cacheResponse}
+                      reloadFromCache={reloadFromCache}
+                      fetchError={templateYamlError as any}
+                      className={css.cacheIcon}
+                    />
+                  ) : undefined
+                }
+              />
+            </Layout.Horizontal>
           </>
         )}
       </Layout.Horizontal>
     </Container>
   )
 }
+
+export const TemplateStudioSubHeaderLeftViewWithRef = React.forwardRef(TemplateStudioSubHeaderLeftView)

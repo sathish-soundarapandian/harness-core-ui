@@ -29,6 +29,7 @@ declare const styles: {
   readonly markerStart: string
   readonly matrixBorderWrapper: string
   readonly matrixFooter: string
+  readonly matrixNodesGridWrapper: string
   readonly matrixStepGroup: string
   readonly nestedGroup: string
   readonly nestedStepGroup: string

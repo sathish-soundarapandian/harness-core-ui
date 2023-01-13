@@ -36,18 +36,12 @@ interface CommonHealthSourceLogsTable {
 
 export default function LogsTableContainer(props: CommonHealthSourceLogsTable): JSX.Element {
   const { fieldMappings, connectorIdentifier, providerType, sampleRecords, disableLogFields, isRecordsLoading } = props
-
   const { values, setValues } = useFormikContext<CommonCustomMetricFormikInterface>()
-
   const { query, serviceInstance } = values
-
   const [logsSampleData, setLogsSampleData] = useState<LogRecord[] | null>(null)
-
   const { isTemplate } = useContext(SetupSourceTabsContext)
-
   const { isQueryRuntimeOrExpression } = useCommonHealthSource()
   const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(connectorIdentifier)
-
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
   const {

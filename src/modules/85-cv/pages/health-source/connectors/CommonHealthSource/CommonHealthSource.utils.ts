@@ -168,18 +168,6 @@ export function getTemplateValuesForConfigFields(
   return valuesToUpdate
 }
 
-// 🚨 TODO: Type it correctly
-export function getProviderType(sourceData: any): QueryRecordsRequest['providerType'] | null {
-  if (!sourceData) {
-    return null
-  }
-
-  const { product } = sourceData
-  const { value } = product || {}
-
-  return ProviderTypes[value]
-}
-
 export function getRequestBodyForSampleLogs(
   providerType: QueryRecordsRequest['providerType'],
   otherValues: {

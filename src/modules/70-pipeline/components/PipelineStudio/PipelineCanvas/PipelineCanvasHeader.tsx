@@ -47,7 +47,6 @@ import type {
   PipelineType,
   RunPipelineQueryParams
 } from '@common/interfaces/RouteInterfaces'
-import { usePermission } from '@rbac/hooks/usePermission'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { Pipeline } from '@pipeline/utils/types'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -61,7 +60,7 @@ import { useQueryParams } from '@common/hooks'
 import StudioGitPopover from '../StudioGitPopover'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
-import PipelineCachedCopy from './PipelineCachedCopy/PipelineCachedCopy'
+import { PipelineCachedCopy, PipelineCachedCopyHandle } from './PipelineCachedCopy/PipelineCachedCopy'
 import { getDuplicateStepIdentifierList } from './PipelineCanvasUtils'
 import EndOfLifeBanner from './EndOfLifeBanner'
 import css from './PipelineCanvas.module.scss'
@@ -123,8 +122,10 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } = params
   const { isYamlEditable } = pipelineView
   const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
+
   const [loadFromCache, setLoadFromCache] = React.useState(true)
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
+  const pipelineCachedCopyRef = React.useRef<PipelineCachedCopyHandle | null>(null)
   const isCommunity = useGetCommunity()
   const { data: reconcileErrorData, refetch: reconcilePipeline } = useValidateTemplateInputsQuery(
     {
@@ -218,26 +219,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     title: getString('pipeline.piplineDiffTitle')
   })
 
-  const [canExecute] = usePermission(
-    {
-      resourceScope: {
-        accountIdentifier: accountId,
-        orgIdentifier,
-        projectIdentifier
-      },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipeline?.identifier
-      },
-      permissions: [PermissionIdentifier.EXECUTE_PIPELINE]
-    },
-    [orgIdentifier, projectIdentifier, accountId, pipeline?.identifier]
-  )
-
   const isYaml = view === SelectedView.YAML
-  const permissionText = canExecute
-    ? getString('common.viewAndExecutePermissions')
-    : getString('common.readonlyPermissions')
 
   function handleEditClick(): void {
     setModalMode('edit')
@@ -265,6 +247,10 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   function handleReconcileClick(): void {
     reconcilePipeline()
     showSuccess(getString('pipeline.outOfSyncErrorStrip.reconcileStarted'))
+  }
+
+  function handleReloadFromGitClick(): void {
+    pipelineCachedCopyRef.current?.showConfirmationModal()
   }
 
   function handleReloadFromCache(): void {
@@ -336,6 +322,15 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                     readOnly: pipelineIdentifier === DefaultNewPipelineId
                   }}
                 />
+                {isPipelineGitCacheEnabled && !isEmpty(pipelineCacheResponse) && (
+                  <PipelineCachedCopy
+                    ref={pipelineCachedCopyRef}
+                    reloadContent={getString('common.pipeline')}
+                    cacheResponse={pipelineCacheResponse as CacheResponseMetadata}
+                    reloadFromCache={handleReloadFromCache}
+                    fetchError={remoteFetchError}
+                  />
+                )}
               </div>
             )}
           </div>
@@ -350,20 +345,6 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
               />
               <div>
                 <div className={css.savePublishContainer}>
-                  {isPipelineGitCacheEnabled && !isEmpty(pipelineCacheResponse) && (
-                    <PipelineCachedCopy
-                      reloadContent={getString('common.pipeline')}
-                      cacheResponse={pipelineCacheResponse as CacheResponseMetadata}
-                      reloadFromCache={handleReloadFromCache}
-                      fetchError={remoteFetchError}
-                    />
-                  )}
-                  {isReadonly && (
-                    <div className={css.readonlyAccessTag}>
-                      <Icon name="eye-open" size={16} />
-                      <div className={css.readonlyAccessText}>{permissionText}</div>
-                    </div>
-                  )}
                   {isUpdated && !isReadonly && (
                     <Button
                       variation={ButtonVariation.LINK}
@@ -414,6 +395,25 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                   <Popover className={Classes.DARK} position={Position.LEFT}>
                     <Button variation={ButtonVariation.ICON} icon="Options" aria-label="pipeline menu actions" />
                     <Menu style={{ backgroundColor: 'unset' }}>
+                      {isPipelineRemote && isPipelineGitCacheEnabled ? (
+                        <RbacMenuItem
+                          icon="repeat"
+                          text={getString('common.reloadFromGit')}
+                          onClick={handleReloadFromGitClick}
+                          permission={{
+                            resourceScope: {
+                              accountIdentifier: accountId,
+                              orgIdentifier,
+                              projectIdentifier
+                            },
+                            resource: {
+                              resourceType: ResourceType.PIPELINE,
+                              resourceIdentifier: pipeline?.identifier
+                            },
+                            permission: PermissionIdentifier.VIEW_PIPELINE
+                          }}
+                        />
+                      ) : null}
                       <RbacMenuItem
                         icon="refresh"
                         text={getString('pipeline.outOfSyncErrorStrip.reconcile')}

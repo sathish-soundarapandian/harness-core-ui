@@ -52,6 +52,10 @@
 
   .collapsedMatrixWrapper {
     padding: var(--spacing-large) var(--spacing-small) var(--spacing-large) var(--spacing-small);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     &.nestedStepGroup {
       margin-top: 25px;
     }
@@ -171,11 +175,10 @@
   }
 
   .stepGroupBody {
+    padding: 0 var(--spacing-xxlarge) 0 var(--spacing-xxlarge) !important;
     &.hasMoreChild {
-      margin-bottom: 20px;
+      padding-bottom: var(--spacing-small) !important;
     }
-    padding: 0 var(--spacing-xlarge) 0 var(--spacing-xxlarge);
-    padding-bottom: 0 !important;
 
     // reset margin-bottom inside matrix as node-gap accounted with height calculation
     :global(.default-node) {
@@ -251,11 +254,9 @@
 }
 
 .matrixFooter {
-  position: absolute;
-  bottom: 0;
   width: 100% !important;
   justify-content: space-between;
-  padding: 0 24px 16px 24px !important;
+  padding: 0 24px 0 24px !important;
   p {
     font-weight: bold !important;
   }
@@ -325,4 +326,9 @@
       }
     }
   }
+}
+.matrix-nodes-grid-wrapper {
+  display: grid;
+  gap: 20px 60px;
+  grid-template-columns: repeat(var(--columns), 1fr);
 }

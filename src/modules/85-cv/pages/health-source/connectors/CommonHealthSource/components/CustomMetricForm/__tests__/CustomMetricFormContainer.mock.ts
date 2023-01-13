@@ -6,6 +6,7 @@
  */
 
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { DEFAULT_LOGS_GROUP_NAME } from '../CustomMetricForm.constants'
 
 export const mockedCustomMetricFormContainerData = {
   mappedMetrics: new Map(),
@@ -64,10 +65,7 @@ const mappedMetrics = new Map()
 mappedMetrics.set('dasdaa', {
   identifier: 'dasdaa',
   metricName: 'dasdaa',
-  groupName: {
-    label: 'Logs Group',
-    value: 'logsGroup'
-  }
+  groupName: DEFAULT_LOGS_GROUP_NAME
 })
 
 export const mockedCustomMetricsFormForLogsTable = {
@@ -121,10 +119,7 @@ export const mockedCustomMetricsFormForLogsTable = {
     'Logs Group': [
       {
         index: 0,
-        groupName: {
-          label: 'Logs Group',
-          value: 'logsGroup'
-        },
+        groupName: DEFAULT_LOGS_GROUP_NAME,
         metricName: 'dasdaa'
       }
     ]
@@ -142,10 +137,7 @@ mappedMetrics2.set('dasdaa', {
   identifier: 'dasdaa',
   metricName: 'dasdaa',
   query: 'Select *',
-  groupName: {
-    label: 'Logs Group',
-    value: 'logsGroup'
-  }
+  groupName: DEFAULT_LOGS_GROUP_NAME
 })
 
 export const mockedCustomMetricsFormForLogsTable2 = {

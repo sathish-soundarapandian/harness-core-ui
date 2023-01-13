@@ -12,6 +12,7 @@ exports[`<GitPopoverV2 /> snapshot 1`] = `
     >
       <div
         class="customButton"
+        tabindex="0"
       >
         <span
           class="bp3-icon StyledProps--main"

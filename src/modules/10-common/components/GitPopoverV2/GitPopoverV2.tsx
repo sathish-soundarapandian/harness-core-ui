@@ -12,6 +12,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'
+import cx from 'classnames'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { EntityGitDetails } from 'services/template-ng'
 import { useStrings } from 'framework/strings'
@@ -28,6 +29,8 @@ interface GitPopoverV2Props {
   onGitBranchChange: (selectedFilter: GitFilterScope) => void
   branchChangeDisabled?: boolean
   forceFetch?: boolean
+  customIcon?: React.ReactNode
+  btnClassName?: string
 }
 
 const createSelectOption = (value?: string): SelectOption => {
@@ -35,15 +38,6 @@ const createSelectOption = (value?: string): SelectOption => {
     label: defaultTo(value, ''),
     value: defaultTo(value, '')
   }
-}
-
-const CustomButtom = (): JSX.Element => {
-  return (
-    <div className={css.customButton}>
-      <Icon name="git-popover" size={15} />
-      <Icon name="main-chevron-down" size={8} />
-    </div>
-  )
 }
 
 interface ItemUIProps {
@@ -103,7 +97,9 @@ export const GitPopoverV2 = ({
   gitDetails = {},
   branchChangeDisabled = false,
   forceFetch = false,
-  onGitBranchChange
+  onGitBranchChange,
+  customIcon,
+  btnClassName
 }: GitPopoverV2Props): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
@@ -169,7 +165,10 @@ export const GitPopoverV2 = ({
 
   return (
     <Popover interactionKind={PopoverInteractionKind.HOVER} autoFocus={false}>
-      <CustomButtom />
+      <div className={cx(css.customButton, btnClassName)}>
+        <Icon name="git-popover" size={15} />
+        {customIcon || <Icon name="main-chevron-down" size={8} />}
+      </div>
       <Layout.Vertical padding={{ top: 'large', bottom: 'large', left: 'xlarge', right: 'xlarge' }}>
         {/* Heading */}
         <Text font={{ size: 'small', weight: 'bold' }} color={Color.BLACK}>

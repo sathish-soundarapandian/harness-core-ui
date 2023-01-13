@@ -7,7 +7,8 @@
 
 import React, { useEffect } from 'react'
 import type { GetDataError } from 'restful-react'
-import { Button, ButtonVariation, Icon, IconName, Layout, ModalDialog, Text, useToggleOpen } from '@harness/uicore'
+import cx from 'classnames'
+import { Icon, IconName, Layout, useToggleOpen, ConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { Tooltip } from '@blueprintjs/core'
 import { isEmpty } from 'lodash-es'
@@ -16,33 +17,32 @@ import { formatDatetoLocale } from '@common/utils/dateUtils'
 import type { CacheResponseMetadata, Failure } from 'services/pipeline-ng'
 import css from './PipelineCachedCopy.module.scss'
 
-// enum CacheState {
-//   VALID_CACHE = 'VALID_CACHE',
-//   STALE_CACHE = 'STALE_CACHE',
-//   UNKNOWN = 'UNKNOWN'
-// }
-interface PipelineCachedCopyInterface {
+export interface PipelineCachedCopyProps {
   reloadContent: string
   cacheResponse: CacheResponseMetadata
   reloadFromCache: (loadFromCache?: boolean) => void
   fetchError?: GetDataError<Failure | Error> | null
   readonly?: boolean
+  className?: string
 }
+
+export interface PipelineCachedCopyHandle {
+  showConfirmationModal(): void
+}
+
 const cacheStateToIconMap: Record<CacheResponseMetadata['cacheState'], IconName> = {
   VALID_CACHE: 'success-tick',
   STALE_CACHE: 'stale-cache',
   UNKNOWN: 'danger-icon'
 }
 
-function PipelineCachedCopy({
-  reloadContent,
-  cacheResponse,
-  fetchError,
-  reloadFromCache,
-  readonly
-}: PipelineCachedCopyInterface): React.ReactElement {
+function PipelineCachedCopyInner(
+  props: PipelineCachedCopyProps,
+  ref: React.ForwardedRef<PipelineCachedCopyHandle>
+): React.ReactElement {
+  const { reloadContent, cacheResponse, fetchError, reloadFromCache, readonly, className } = props
   const { getString } = useStrings()
-  const { isOpen: isModalOpen, close: hideModal, open: showModal } = useToggleOpen(false)
+  const { isOpen: isModalOpen, close: hideModal, open: showConfirmationModal } = useToggleOpen(false)
   const { isOpen: isErrorModalOpen, close: hideErrorModal, open: showErrorModal } = useToggleOpen(false)
 
   useEffect(() => {
@@ -56,103 +56,62 @@ function PipelineCachedCopy({
     reloadFromCache()
   }
 
-  function getTooltipContent(): JSX.Element {
-    return (
-      <>
-        {/* {cacheResponse.cacheState === CacheState.STALE_CACHE && !readonly && (
-          <div>{getString('pipeline.pipelineCachedCopy.cacheInProgress')}</div>
-        )} */}
-        <div>
-          <span>{getString('common.lastUpdatedAt')}</span>: {formatDatetoLocale(cacheResponse.lastUpdatedAt)}
-        </div>
-      </>
-    )
+  const tooltipContent = (
+    <>
+      <span>{getString('pipeline.pipelineCachedCopy.cachedCopyText')}</span>:{' '}
+      {formatDatetoLocale(cacheResponse.lastUpdatedAt)}
+    </>
+  )
+
+  React.useImperativeHandle(ref, () => ({
+    showConfirmationModal
+  }))
+
+  function handleReconcileConfirmClick(confirm: boolean): void {
+    if (confirm) {
+      reloadPipeline()
+    }
+
+    hideModal()
   }
 
-  function renderCacheUpdatedIcon(): JSX.Element | undefined {
-    if (!readonly) {
-      return <Icon size={12} name="command-rollback" onClick={showModal} />
+  function handleReconcileRetryClick(confirm: boolean): void {
+    if (confirm) {
+      reloadPipeline()
     }
+
+    hideErrorModal()
   }
 
   return (
     <>
-      <div className={css.cachedcopy}>
+      <div className={cx(css.cachedcopy, className)}>
         <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'space-between' }} spacing="small">
-          <Tooltip position="bottom" content={getTooltipContent()}>
-            <Text
-              font={{ align: 'center', size: 'xsmall' }}
-              icon={cacheStateToIconMap[cacheResponse.cacheState]}
-              iconProps={{ size: 12 }}
-            >
-              {getString('pipeline.pipelineCachedCopy.cachedCopyText')}
-            </Text>
+          <Tooltip position="bottom" content={tooltipContent}>
+            <Icon name={cacheStateToIconMap[cacheResponse.cacheState]} />
           </Tooltip>
-          {renderCacheUpdatedIcon()}
         </Layout.Horizontal>
       </div>
-      <ModalDialog
+      <ConfirmationDialog
+        intent={Intent.WARNING}
         isOpen={isModalOpen}
-        isCloseButtonShown
-        canEscapeKeyClose
-        canOutsideClickClose
-        enforceFocus={false}
-        onClose={hideModal}
-        title={
-          <>
-            <Icon name="warning-icon" intent={Intent.WARNING} size={32} />{' '}
-            <span>{getString('pipeline.pipelineCachedCopy.reloadPipeline', { pageType: reloadContent })}</span>
-          </>
-        }
-        footer={
-          <Layout.Horizontal spacing="small">
-            <Button variation={ButtonVariation.PRIMARY} text={getString('confirm')} onClick={reloadPipeline} />
-            <Button
-              variation={ButtonVariation.TERTIARY}
-              text={getString('cancel')}
-              onClick={/* istanbul ignore next */ () => hideModal()}
-            />
-          </Layout.Horizontal>
-        }
-        width={600}
-        className={css.dialogStyles}
-      >
-        <Text margin={{ left: 'huge', right: 'huge' }}>
-          {getString('pipeline.pipelineCachedCopy.reloadPipelineContent', { pageType: reloadContent })}
-        </Text>
-      </ModalDialog>
-      <ModalDialog
+        onClose={handleReconcileConfirmClick}
+        titleText={getString('pipeline.pipelineCachedCopy.reloadPipeline', { pageType: reloadContent })}
+        contentText={getString('pipeline.pipelineCachedCopy.reloadPipelineContent', { pageType: reloadContent })}
+        confirmButtonText={getString('confirm')}
+        cancelButtonText={getString('cancel')}
+      />
+      <ConfirmationDialog
+        intent={Intent.DANGER}
         isOpen={isErrorModalOpen}
-        isCloseButtonShown
-        canEscapeKeyClose
-        canOutsideClickClose
-        enforceFocus={false}
-        onClose={hideErrorModal}
-        title={
-          <>
-            <Icon name="danger-icon" intent={Intent.DANGER} size={32} />
-            <span>{getString('pipeline.pipelineCachedCopy.cacheUpdateFailed')}</span>
-          </>
-        }
-        footer={
-          <Layout.Horizontal spacing="small">
-            <Button variation={ButtonVariation.PRIMARY} text={getString('common.tryAgain')} onClick={reloadPipeline} />
-            <Button
-              variation={ButtonVariation.TERTIARY}
-              text={getString('cancel')}
-              onClick={/* istanbul ignore next */ () => hideErrorModal()}
-            />
-          </Layout.Horizontal>
-        }
-        width={600}
-        className={css.dialogStyles}
-      >
-        <Text margin={{ left: 'huge', right: 'huge' }}>
-          {getString('pipeline.pipelineCachedCopy.reloadPipelineContent', { pageType: reloadContent })}
-        </Text>
-      </ModalDialog>
+        onClose={handleReconcileRetryClick}
+        titleText={getString('pipeline.pipelineCachedCopy.cacheUpdateFailed')}
+        contentText={getString('pipeline.pipelineCachedCopy.reloadPipelineContent', { pageType: reloadContent })}
+        confirmButtonText={getString('common.tryAgain')}
+        cancelButtonText={getString('cancel')}
+      />
     </>
   )
 }
 
-export default PipelineCachedCopy
+export const PipelineCachedCopy = React.forwardRef(PipelineCachedCopyInner)

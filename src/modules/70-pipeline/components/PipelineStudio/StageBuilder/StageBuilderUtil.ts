@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { flatMap, findIndex, cloneDeep, set, noop, isEmpty } from 'lodash-es'
+import { flatMap, findIndex, cloneDeep, set, noop, isEmpty, defaultTo } from 'lodash-es'
 import { Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { v4 as uuid } from 'uuid'
@@ -777,11 +777,12 @@ export const getNodeEventListerner = (
       const current = getStageFromPipeline(eventTemp?.identifier, pipeline)
       if (current.stage?.stage?.when) {
         const { pipelineStatus, condition } = current.stage.stage.when
+        const nodeID = defaultTo(eventTemp?.node?.id, eventTemp?.id)
         if (pipelineStatus === PipelineOrStageStatus.SUCCESS && isEmpty(condition)) {
           return
         }
         dynamicPopoverHandler?.show(
-          `[data-nodeid="${eventTemp?.node?.id}"]`,
+          `[data-nodeid="${nodeID}"]`,
           {
             event: eventTemp,
             data: current.stage,

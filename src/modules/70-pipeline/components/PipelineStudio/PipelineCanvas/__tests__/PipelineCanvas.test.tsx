@@ -6,13 +6,13 @@
  */
 
 import React from 'react'
-import { useParams } from 'react-router-dom'
 import { render, act, fireEvent, waitFor, screen } from '@testing-library/react'
 import { set } from 'lodash-es'
 import { putPipelinePromise, createPipelinePromise, PipelineInfoConfig } from 'services/pipeline-ng'
-import { TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { useMutateAsGet } from '@common/hooks'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
+import routes from '@common/RouteDefinitions'
 import { PipelineCanvas, PipelineCanvasProps } from '../PipelineCanvas'
 import { PipelineContext } from '../../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../../PipelineContext/PipelineActions'
@@ -55,11 +55,6 @@ jest.mock('resize-observer-polyfill', () => {
 jest.mock('framework/GitRepoStore/GitSyncStoreContext', () => ({
   useGitSyncStore: jest.fn().mockReturnValue({ gitSyncRepos: [{ identifier: 'repoIdentifier', name: 'repoName' }] })
 }))
-// eslint-disable-next-line jest-no-mock
-jest.mock('react-router-dom', () => ({
-  ...(jest.requireActual('react-router-dom') as any),
-  useParams: jest.fn()
-}))
 
 jest.mock('services/pipeline-ng', () => ({
   putPipelinePromise: jest.fn(),
@@ -95,13 +90,22 @@ window.IntersectionObserver = mockIntersectionObserver
 /* Mocks end */
 
 describe('Pipeline Canvas - new pipeline', () => {
-  beforeEach(() => {
-    // eslint-disable-next-line
-    // @ts-ignore
-    useParams.mockImplementation(() => {
-      return { pipelineIdentifier: DefaultNewPipelineId }
-    })
+  const testWrapperProps: TestWrapperProps = {
+    path: routes.toPipelineStudio({
+      pipelineIdentifier: ':pipelineIdentifier',
+      orgIdentifier: ':orgIdentifier',
+      accountId: ':accountId',
+      projectIdentifier: ':projectIdentifier'
+    }),
+    pathParams: {
+      pipelineIdentifier: DefaultNewPipelineId,
+      orgIdentifier: 'TEST_ORG',
+      accountId: 'TEST_ACCOUNT',
+      projectIdentifier: 'TEST_PROJECT'
+    }
+  }
 
+  beforeEach(() => {
     // eslint-disable-next-line
     // @ts-ignore
     useMutateAsGet.mockImplementation(() => {
@@ -113,7 +117,7 @@ describe('Pipeline Canvas - new pipeline', () => {
     const props = getProps()
     const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false })
     const { getByText } = render(
-      <TestWrapper>
+      <TestWrapper {...testWrapperProps}>
         <PipelineContext.Provider value={contextValue}>
           <PipelineCanvas {...props} />
         </PipelineContext.Provider>
@@ -137,7 +141,7 @@ describe('Pipeline Canvas - new pipeline', () => {
     const props = getProps()
     const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false, isUpdated: true })
     const { getByText, queryByText } = render(
-      <TestWrapper>
+      <TestWrapper {...testWrapperProps}>
         <PipelineContext.Provider value={contextValue}>
           <PipelineCanvas {...props} />
         </PipelineContext.Provider>
@@ -191,7 +195,7 @@ describe('Pipeline Canvas - new pipeline', () => {
     const props = getProps()
     const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false, isUpdated: true })
     const { getByText } = render(
-      <TestWrapper>
+      <TestWrapper {...testWrapperProps}>
         <PipelineContext.Provider
           value={{
             ...contextValue,
@@ -226,7 +230,7 @@ describe('Pipeline Canvas - new pipeline', () => {
     const props = getProps()
     const contextValue = getDummyPipelineCanvasContextValue({ isLoading: true })
     const { queryByText } = render(
-      <TestWrapper>
+      <TestWrapper {...testWrapperProps}>
         <PipelineContext.Provider value={contextValue}>
           <PipelineCanvas {...props} />
         </PipelineContext.Provider>
@@ -247,7 +251,7 @@ describe('Pipeline Canvas - new pipeline', () => {
       message: 'INVALID_REQUEST'
     }
     const { queryByText, container } = render(
-      <TestWrapper>
+      <TestWrapper {...testWrapperProps}>
         <PipelineContext.Provider value={contextValue}>
           <PipelineCanvas {...props} />
         </PipelineContext.Provider>
@@ -265,7 +269,7 @@ describe('Pipeline Canvas - new pipeline', () => {
       gitDetails: { repoIdentifier: 'repoIdentifier', rootFolder: 'rootFolder', filePath: 'filePath', branch: 'branch' }
     })
     const { queryByText, getByTestId } = render(
-      <TestWrapper defaultAppStoreValues={{ isGitSyncEnabled: true }}>
+      <TestWrapper {...testWrapperProps} defaultAppStoreValues={{ isGitSyncEnabled: true }}>
         <PipelineContext.Provider value={contextValue}>
           <PipelineCanvas {...props} />
         </PipelineContext.Provider>
@@ -280,7 +284,7 @@ describe('Pipeline Canvas - new pipeline', () => {
     expect(queryByText('rootFolderfilePath')).toBeNull()
   })
 
-  test('readonly mode', () => {
+  test('readonly mode', async () => {
     const props = getProps()
     const contextValue = getDummyPipelineCanvasContextValue({
       isLoading: false,
@@ -288,14 +292,16 @@ describe('Pipeline Canvas - new pipeline', () => {
       isReadonly: true
     })
     const { queryByText } = render(
-      <TestWrapper>
+      <TestWrapper {...testWrapperProps}>
         <PipelineContext.Provider value={contextValue}>
           <PipelineCanvas {...props} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    expect(queryByText('common.viewAndExecutePermissions')).toBeTruthy()
-    expect(queryByText('save')).toBeTruthy()
+    const save = queryByText('save')!
+    expect(save).toBeInTheDocument()
+    fireEvent.mouseOver(save)
+    expect(await screen.findByText('common.viewAndExecutePermissions')).toBeInTheDocument()
   })
 
   test('isUpdated true and execute permissions', () => {
@@ -329,7 +335,7 @@ describe('Pipeline Canvas - new pipeline', () => {
     const props = getProps()
     const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false, isUpdated: true })
     const { getByText, getByRole } = render(
-      <TestWrapper>
+      <TestWrapper {...testWrapperProps}>
         <PipelineContext.Provider
           value={{
             ...contextValue,
@@ -373,7 +379,7 @@ describe('Pipeline Canvas - new pipeline', () => {
     set(contextValue, 'state.pipeline.identifier', DefaultNewPipelineId)
 
     render(
-      <TestWrapper>
+      <TestWrapper {...testWrapperProps}>
         <PipelineContext.Provider value={contextValue}>
           <PipelineCanvas {...props} />
         </PipelineContext.Provider>
@@ -387,13 +393,22 @@ describe('Pipeline Canvas - new pipeline', () => {
 })
 
 describe('Existing pipeline', () => {
-  beforeEach(() => {
-    // eslint-disable-next-line
-    // @ts-ignore
-    useParams.mockImplementation(() => {
-      return { pipelineIdentifier: 'someId' }
-    })
+  const testWrapperProps: TestWrapperProps = {
+    path: routes.toPipelineStudio({
+      pipelineIdentifier: ':pipelineIdentifier',
+      orgIdentifier: ':orgIdentifier',
+      accountId: ':accountId',
+      projectIdentifier: ':projectIdentifier'
+    }),
+    pathParams: {
+      pipelineIdentifier: 'TEST_PIPELINE',
+      orgIdentifier: 'TEST_ORG',
+      accountId: 'TEST_ACCOUNT',
+      projectIdentifier: 'TEST_PROJECT'
+    }
+  }
 
+  beforeEach(() => {
     // eslint-disable-next-line
     // @ts-ignore
     useMutateAsGet.mockImplementation(() => {
@@ -409,7 +424,7 @@ describe('Existing pipeline', () => {
       isUpdated: true
     })
     const { queryByText } = render(
-      <TestWrapper>
+      <TestWrapper {...testWrapperProps}>
         <PipelineContext.Provider value={contextValue}>
           <PipelineCanvas {...props} />
         </PipelineContext.Provider>
@@ -422,7 +437,7 @@ describe('Existing pipeline', () => {
     const props = getProps()
     const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false })
     const { container } = render(
-      <TestWrapper>
+      <TestWrapper {...testWrapperProps}>
         <PipelineContext.Provider value={contextValue}>
           <PipelineCanvas {...props} />
         </PipelineContext.Provider>

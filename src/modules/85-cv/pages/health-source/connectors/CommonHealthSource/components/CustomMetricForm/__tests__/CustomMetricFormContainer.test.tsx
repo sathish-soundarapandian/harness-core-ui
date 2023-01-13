@@ -15,6 +15,7 @@ import * as useDrawerHook from '@cv/hooks/useDrawerHook/useDrawerHook'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
 import { TestWrapper } from '@common/utils/testUtils'
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import type { CustomMetricFormContainerProps } from '../CustomMetricForm.types'
 import CustomMetricFormContainer from '../CustomMetricFormContainer'
 import {
@@ -228,7 +229,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         <SetupSourceTabsContext.Provider
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: 'SUMOLOGIC_LOG' } } }}
+          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: HealthSourceTypes.SumologicLogs } } }}
         >
           <WrapperComponent {...mockProps2} query="select *" />
         </SetupSourceTabsContext.Provider>
@@ -282,7 +283,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         <SetupSourceTabsContext.Provider
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: 'SUMOLOGIC_LOG' } } }}
+          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: HealthSourceTypes.SumologicLogs } } }}
         >
           <WrapperComponent {...mockProps2} query="select *" />
         </SetupSourceTabsContext.Provider>
@@ -330,7 +331,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         <SetupSourceTabsContext.Provider
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: 'SUMOLOGIC_LOG' } } }}
+          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: HealthSourceTypes.SumologicLogs } } }}
         >
           <WrapperComponent {...mockProps2} query="select *" />
         </SetupSourceTabsContext.Provider>
@@ -386,7 +387,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         <SetupSourceTabsContext.Provider
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: 'SUMOLOGIC_LOG' } } }}
+          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: HealthSourceTypes.SumologicLogs } } }}
         >
           <WrapperComponent {...mockProps2} query="select *" />
         </SetupSourceTabsContext.Provider>
@@ -451,7 +452,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         <SetupSourceTabsContext.Provider
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: 'SUMOLOGIC_LOG' } } }}
+          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: HealthSourceTypes.SumologicLogs } } }}
         >
           <WrapperComponent {...mockProps2} query="select *" />
         </SetupSourceTabsContext.Provider>
@@ -497,7 +498,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
               expressions: [],
               onNext: jest.fn(),
               onPrevious: jest.fn(),
-              sourceData: { sourceType: 'SumoLogic', product: { value: 'SUMOLOGIC_LOG' } }
+              sourceData: { sourceType: 'SumoLogic', product: { value: HealthSourceTypes.SumologicLogs } }
             }}
           >
             <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
@@ -538,7 +539,11 @@ describe('Unit tests for CustomMetricFormContainer', () => {
               expressions: [],
               onNext: jest.fn(),
               onPrevious: jest.fn(),
-              sourceData: { sourceType: 'SumoLogic', product: { value: 'SUMOLOGIC_LOG' }, connectorRef: '<+input>' }
+              sourceData: {
+                sourceType: 'SumoLogic',
+                product: { value: HealthSourceTypes.SumologicLogs },
+                connectorRef: '<+input>'
+              }
             }}
           >
             <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>

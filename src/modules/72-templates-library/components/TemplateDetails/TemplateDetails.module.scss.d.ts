@@ -7,10 +7,12 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly cacheIcon: string
   readonly container: string
   readonly dropdown: string
   readonly errorHandler: string
   readonly errorPanel: string
+  readonly gitBtn: string
   readonly gitCacheContainer: string
   readonly innerTabsContainer: string
   readonly openInStudio: string

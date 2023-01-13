@@ -114,9 +114,20 @@ export function MatrixNode(props: any): JSX.Element {
   const stagePath = getStagePathFromPipeline(props?.identifier || '', 'pipeline.stages')
   const hasChildrenToBeCollapsed = state.length > COLLAPSED_MATRIX_NODE_LENGTH
 
+  const [concurrentNodes, setConcurrentNodes] = React.useState<number>(MAX_ALLOWED_MATRIX_COLLAPSED_NODES)
+
   const debounceHideVisibility = debounce(() => {
     setVisibilityOfAdd(false)
   }, 300)
+
+  React.useEffect(() => {
+    if (showAllNodes) {
+      setConcurrentNodes(maxParallelism === 0 ? 1 : Math.min(maxParallelism, (state || []).length))
+    } else {
+      const updatedParallelism = Math.min(maxParallelism, MAX_ALLOWED_MATRIX_COLLAPSED_NODES) || 1
+      setConcurrentNodes(maxParallelism === 0 ? 1 : Math.min(updatedParallelism, (state || []).length))
+    }
+  }, [maxParallelism, showAllNodes, state])
 
   React.useEffect(() => {
     props?.updateGraphLinks?.()
@@ -315,10 +326,12 @@ export function MatrixNode(props: any): JSX.Element {
             ) : (
               <>
                 <div
-                  className={cx(css.stepGroupBody, { [css.hasMoreChild]: hasChildrenToBeCollapsed })}
-                  style={layoutStyles}
+                  className={cx(css.stepGroupBody, { [css.hasMoreChild]: maxParallelism || hasChildrenToBeCollapsed })}
                 >
-                  <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: '60px', rowGap: '20px' }}>
+                  <div
+                    className={css.matrixNodesGridWrapper}
+                    style={{ '--columns': concurrentNodes } as React.CSSProperties}
+                  >
                     {state.map((node: any, index: number) => {
                       const NodeComponent: React.FC<BaseReactComponentProps> = defaultTo(
                         props.getNode?.(node?.type)?.component,

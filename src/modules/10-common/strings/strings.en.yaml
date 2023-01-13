@@ -7,6 +7,7 @@ setup: Setup
 agent: Agent
 agents: Agents
 gitopsAgents: Gitops Agents
+reloadFromGit: 'Reload from Git'
 perModule: Per Module
 application: Application
 certificate: Certificate

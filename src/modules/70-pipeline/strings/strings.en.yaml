@@ -1560,7 +1560,7 @@ triggeredByThirdParty: Triggered by a third party system
 triggeredByCron: Triggered on {{start}} by cron {{triggeredBy}}
 configureArtifactSource: Configure Artifact Source
 pipelineCachedCopy:
-  cachedCopyText: Cached Copy
+  cachedCopyText: Last cached at
   reloadPipeline: Reload {{pageType}}?
   reloadPipelineContent: Are you sure you want to load the {{pageType}} from Git? You will lose all your unsaved changes.
   cacheInProgress: Cache update in progress

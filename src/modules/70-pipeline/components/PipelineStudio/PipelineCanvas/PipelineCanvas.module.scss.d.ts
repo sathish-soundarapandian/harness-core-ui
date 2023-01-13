@@ -30,8 +30,6 @@ declare const styles: {
   readonly pipelineNameContainer: string
   readonly pipelineStudioTitle: string
   readonly pipelineStudioTitleContainer: string
-  readonly readonlyAccessTag: string
-  readonly readonlyAccessText: string
   readonly rectangle: string
   readonly remotePipelineName: string
   readonly repoDetails: string

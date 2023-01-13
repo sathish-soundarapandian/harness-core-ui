@@ -7,15 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly cacheIcon: string
-  readonly createTemplateDialog: string
-  readonly dropdown: string
-  readonly gitBtn: string
-  readonly gitCreateTemplateDialog: string
-  readonly separator: string
-  readonly shortened: string
-  readonly subHeaderLeftView: string
-  readonly templateName: string
-  readonly versionDropDown: string
+  readonly conditional: string
+  readonly loopingStrategy: string
 }
 export default styles

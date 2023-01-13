@@ -20,10 +20,7 @@ import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CommonQueryViewer } from '@cv/components/CommonQueryViewer/CommonQueryViewer'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
-import {
-  getIsLogsTableVisible,
-  getProviderType
-} from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
+import { getIsLogsTableVisible } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
 import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import CommonChart from '../../CommonChart/CommonChart'
 import type { CommonCustomMetricFormContainerProps } from './CommonCustomMetricFormContainer.types'
@@ -115,7 +112,6 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
 
   return (
     <Container key={values?.identifier} padding={'small'} margin={'small'}>
-      {/* ⭐️ Query section */}
       <CommonQueryViewer
         isQueryExecuted={isQueryExecuted}
         records={records}
@@ -138,21 +134,16 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
           healthSourceTimeSeriesData={healthSourceTimeSeriesData}
         />
       ) : null}
-
-      {/* ⭐️ Logs Table */}
       {isLogsTableVisible && (
         <LogsTableContainer
           fieldMappings={healthSourceConfig?.customMetrics?.fieldMappings}
-          //TODO this extra function should not be required.
-          providerType={getProviderType(sourceData) as QueryRecordsRequest['providerType']}
+          providerType={providerType as QueryRecordsRequest['providerType']}
           connectorIdentifier={connectorIdentifier}
           sampleRecords={records}
           isRecordsLoading={fetchingSampleRecordLoading}
           disableLogFields={!isDataAvailableForLogsTable}
         />
       )}
-
-      {/* ⭐️ Assign section */}
       {healthSourceConfig.customMetrics?.assign?.enabled && (
         <AssignQuery
           values={{

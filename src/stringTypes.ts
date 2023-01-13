@@ -764,6 +764,7 @@ export interface StringsMap {
   'common.reject': string
   'common.releaseName': string
   'common.reload': string
+  'common.reloadFromGit': string
   'common.remove': string
   'common.removeThisVariable': string
   'common.repo_provider.awscodecommit': string

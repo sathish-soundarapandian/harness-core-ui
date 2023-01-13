@@ -22,6 +22,7 @@ import { FireEventMethod, NodeType } from '../../../types'
 import { getPositionOfAddIcon, attachDragImageToEventHandler, NodeEntity } from '../../utils'
 import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
 import defaultCss from '../DefaultNode.module.scss'
+import css from './PipelineStageNode.module.scss'
 
 const CODE_ICON: IconName = 'command-echo'
 const TEMPLATE_ICON: IconName = 'template-library'
@@ -304,7 +305,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
         </div>
       )}
       {props.data?.conditionalExecutionEnabled && (
-        <div className={defaultCss.conditional}>
+        <div className={css.conditional}>
           <Text
             tooltip={getString('pipeline.conditionalExecution.title')}
             tooltipProps={{
@@ -316,7 +317,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
         </div>
       )}
       {props.data?.loopingStrategyEnabled && (
-        <div className={defaultCss.loopingStrategy}>
+        <div className={css.loopingStrategy}>
           <Text
             tooltip={getString('pipeline.loopingStrategy.title')}
             tooltipProps={{

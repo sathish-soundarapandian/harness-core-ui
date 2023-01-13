@@ -6,12 +6,9 @@
  */
 
 .cachedcopy {
-  cursor: pointer;
-  background-color: var(--grey-100);
-  padding: var(--spacing-xsmall);
-  border-radius: var(--spacing-xsmall);
-  margin-right: var(--spacing-medium);
+  padding: 0 var(--spacing-small);
 }
+
 .dialogStyles {
   :global {
     .ModalDialog--body {

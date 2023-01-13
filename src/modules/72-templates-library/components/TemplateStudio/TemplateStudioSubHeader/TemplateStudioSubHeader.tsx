@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import {
   Button,
@@ -13,12 +13,13 @@ import {
   Container,
   Icon,
   Layout,
+  Popover,
   Text,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle
 } from '@harness/uicore'
+import { Classes, Menu, Position } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
-import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
@@ -29,13 +30,21 @@ import {
   SaveTemplatePopoverWithRef
 } from '@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'
-import { TemplateStudioSubHeaderLeftView } from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/views/TemplateStudioSubHeaderLeftView/TemplateStudioSubHeaderLeftView'
+import {
+  TemplateStudioSubHeaderLeftViewHandle,
+  TemplateStudioSubHeaderLeftViewWithRef
+} from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/views/TemplateStudioSubHeaderLeftView/TemplateStudioSubHeaderLeftView'
 import useDiffDialog from '@common/hooks/useDiffDialog'
 import { stringify } from '@common/utils/YamlHelperMethods'
-import PipelineCachedCopy from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCachedCopy/PipelineCachedCopy'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import EndOfLifeBanner from '@pipeline/components/PipelineStudio/PipelineCanvas/EndOfLifeBanner'
+import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { StoreType } from '@common/constants/GitSyncTypes'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+
 import css from './TemplateStudioSubHeader.module.scss'
 
 export interface TemplateStudioSubHeaderProps {
@@ -52,23 +61,17 @@ const TemplateStudioSubHeader: (
   props: TemplateStudioSubHeaderProps,
   ref: React.ForwardedRef<TemplateStudioSubHeaderHandle>
 ) => JSX.Element = ({ onViewChange, getErrors, onGitBranchChange }, ref) => {
-  const { state, fetchTemplate, view, isReadonly, updateTemplateView } = React.useContext(TemplateContext)
-  const {
-    template,
-    originalTemplate,
-    isUpdated,
-    entityValidityDetails,
-    templateYamlError,
-    templateView,
-    cacheResponseMetadata: cacheResponse
-  } = state
+  const { state, fetchTemplate, view, isReadonly } = React.useContext(TemplateContext)
+  const { template, originalTemplate, isUpdated, entityValidityDetails, templateYamlError, storeMetadata } = state
   const { getString } = useStrings()
-  const { templateIdentifier } = useParams<TemplateStudioPathProps>()
+  const { templateIdentifier, accountId, projectIdentifier, orgIdentifier } = useParams<TemplateStudioPathProps>()
   const isYaml = view === SelectedView.YAML
   const isVisualViewDisabled = React.useMemo(() => entityValidityDetails.valid === false, [entityValidityDetails.valid])
-  const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const saveTemplateHandleRef = React.useRef<SaveTemplateHandle | null>(null)
-
+  const templateStudioSubHeaderLeftViewHandleRef = React.useRef<TemplateStudioSubHeaderLeftViewHandle | null>(null)
+  const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
+  const { supportingGitSimplification } = useAppStore()
+  const isPipelineRemote = supportingGitSimplification && storeMetadata?.storeType === StoreType.REMOTE
   React.useImperativeHandle(
     ref,
     () => ({
@@ -80,29 +83,30 @@ const TemplateStudioSubHeader: (
     [saveTemplateHandleRef.current]
   )
 
-  const reloadFromCache = useCallback((): void => {
-    updateTemplateView({ ...templateView, isYamlEditable: false })
-    fetchTemplate({ forceFetch: true, forceUpdate: true, loadFromCache: false })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [templateView])
-
   const { open: openDiffModal } = useDiffDialog({
     originalYaml: stringify(originalTemplate),
     updatedYaml: stringify(template),
     title: getString('templatesLibrary.diffTitle')
   })
 
+  function handleReloadFromGitClick(): void {
+    templateStudioSubHeaderLeftViewHandleRef.current?.openReconcileConfirmation()
+  }
+
   return (
     <Layout.Vertical>
       <Container
         className={css.subHeader}
         height={49}
-        padding={{ right: 'xlarge', left: 'xlarge' }}
+        padding={{ right: 'medium', left: 'xlarge' }}
         border={{ bottom: true, color: Color.GREY_200 }}
         background={Color.WHITE}
       >
         <Layout.Horizontal height={'100%'} flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
-          <TemplateStudioSubHeaderLeftView onGitBranchChange={onGitBranchChange} />
+          <TemplateStudioSubHeaderLeftViewWithRef
+            ref={templateStudioSubHeaderLeftViewHandleRef}
+            onGitBranchChange={onGitBranchChange}
+          />
           {!templateYamlError && (
             <Container>
               <VisualYamlToggle
@@ -117,14 +121,6 @@ const TemplateStudioSubHeader: (
           )}
           <Container>
             <Layout.Horizontal spacing={'medium'} flex={{ alignItems: 'center' }}>
-              {isPipelineGitCacheEnabled && !isEmpty(cacheResponse) && (
-                <PipelineCachedCopy
-                  reloadContent={getString('common.template.label')}
-                  cacheResponse={cacheResponse}
-                  reloadFromCache={reloadFromCache}
-                  fetchError={templateYamlError as any}
-                />
-              )}
               {!templateYamlError && (
                 <Layout.Horizontal spacing={'medium'} flex={{ alignItems: 'center' }}>
                   {isReadonly && (
@@ -148,21 +144,60 @@ const TemplateStudioSubHeader: (
                     </Button>
                   )}
                   {!isReadonly && (
-                    <Container>
-                      <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
-                        <SaveTemplatePopoverWithRef getErrors={getErrors} ref={saveTemplateHandleRef} />
-                        {templateIdentifier !== DefaultNewTemplateId && (
-                          <Button
-                            disabled={!isUpdated}
-                            onClick={() => {
-                              fetchTemplate({ forceFetch: true, forceUpdate: true })
+                    <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
+                      <SaveTemplatePopoverWithRef getErrors={getErrors} ref={saveTemplateHandleRef} />
+                      {templateIdentifier !== DefaultNewTemplateId && (
+                        <Button
+                          disabled={!isUpdated}
+                          onClick={() => {
+                            fetchTemplate({ forceFetch: true, forceUpdate: true })
+                          }}
+                          variation={ButtonVariation.SECONDARY}
+                          text={getString('common.discard')}
+                        />
+                      )}
+                      <Popover className={Classes.DARK} position={Position.LEFT}>
+                        <Button variation={ButtonVariation.ICON} icon="Options" aria-label="pipeline menu actions" />
+                        <Menu style={{ backgroundColor: 'unset' }}>
+                          {isPipelineRemote && isPipelineGitCacheEnabled ? (
+                            <RbacMenuItem
+                              icon="repeat"
+                              text={getString('common.reloadFromGit')}
+                              onClick={handleReloadFromGitClick}
+                              permission={{
+                                resourceScope: {
+                                  accountIdentifier: accountId,
+                                  orgIdentifier,
+                                  projectIdentifier
+                                },
+                                resource: {
+                                  resourceType: ResourceType.TEMPLATE,
+                                  resourceIdentifier: template?.identifier
+                                },
+                                permission: PermissionIdentifier.VIEW_TEMPLATE
+                              }}
+                            />
+                          ) : null}
+                          <RbacMenuItem
+                            icon="refresh"
+                            text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
+                            disabled={true}
+                            permission={{
+                              resourceScope: {
+                                accountIdentifier: accountId,
+                                orgIdentifier,
+                                projectIdentifier
+                              },
+                              resource: {
+                                resourceType: ResourceType.TEMPLATE,
+                                resourceIdentifier: template?.identifier
+                              },
+                              permission: PermissionIdentifier.EDIT_TEMPLATE
                             }}
-                            variation={ButtonVariation.SECONDARY}
-                            text={getString('common.discard')}
                           />
-                        )}
-                      </Layout.Horizontal>
-                    </Container>
+                        </Menu>
+                      </Popover>
+                    </Layout.Horizontal>
                   )}
                 </Layout.Horizontal>
               )}

@@ -10,3 +10,17 @@
   height: 600px !important;
   overflow: auto;
 }
+
+.readonlyAccessTag {
+  display: flex;
+  color: var(--orange-800);
+  font-size: var(--font-size-small);
+  line-height: 18px;
+  align-items: center;
+  --intent-color: var(--orange-800);
+  padding: var(--spacing-medium);
+
+  .readonlyAccessText {
+    margin-left: var(--spacing-small);
+  }
+}

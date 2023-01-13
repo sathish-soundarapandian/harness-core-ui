@@ -64,7 +64,7 @@ import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
-import PipelineCachedCopy from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCachedCopy/PipelineCachedCopy'
+import { PipelineCachedCopy } from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCachedCopy/PipelineCachedCopy'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
@@ -341,21 +341,44 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                 border={{ bottom: true }}
               >
                 <Layout.Horizontal className={css.shrink} spacing={'small'} flex={{ alignItems: 'center' }}>
-                  <Text lineClamp={1} font={{ size: 'medium', weight: 'bold' }} color={Color.GREY_800}>
+                  <Text
+                    lineClamp={1}
+                    font={{ size: 'medium', weight: 'bold' }}
+                    color={Color.GREY_800}
+                    margin={{ right: 'small' }}
+                  >
                     {selectedTemplate.name}
                   </Text>
                   {supportingTemplatesGitx && (
-                    <GitPopoverV2
-                      storeMetadata={{
-                        ...storeMetadata,
-                        connectorRef: (selectedTemplate as TemplateResponse).connectorRef,
-                        storeType: (selectedTemplate as TemplateResponse).storeType,
-                        branch: gitPopoverBranch
-                      }}
-                      gitDetails={selectedTemplate.gitDetails!}
-                      onGitBranchChange={onGitBranchChange}
-                      forceFetch
-                    />
+                    <Layout.Horizontal flex={{ alignItems: 'center' }}>
+                      <GitPopoverV2
+                        storeMetadata={{
+                          ...storeMetadata,
+                          connectorRef: (selectedTemplate as TemplateResponse).connectorRef,
+                          storeType: (selectedTemplate as TemplateResponse).storeType,
+                          branch: gitPopoverBranch
+                        }}
+                        gitDetails={selectedTemplate.gitDetails!}
+                        onGitBranchChange={onGitBranchChange}
+                        forceFetch
+                        btnClassName={css.gitBtn}
+                        customIcon={
+                          isGitCacheEnabled &&
+                          !isEmpty((selectedTemplate as TemplateResponse)?.cacheResponseMetadata) ? (
+                            <PipelineCachedCopy
+                              reloadContent={getString('common.template.label')}
+                              cacheResponse={
+                                (selectedTemplate as TemplateResponse)?.cacheResponseMetadata as CacheResponseMetadata
+                              }
+                              reloadFromCache={noop}
+                              fetchError={templateYamlError as any}
+                              readonly={true}
+                              className={css.cacheIcon}
+                            />
+                          ) : undefined
+                        }
+                      />
+                    </Layout.Horizontal>
                   )}
                   {isGitSyncEnabled && (
                     <GitPopover
@@ -486,19 +509,6 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                     panel={<TemplateActivityLog template={selectedTemplate} />}
                   />
                 </Tabs>
-                <div className={css.gitCacheContainer}>
-                  {isGitCacheEnabled && !isEmpty((selectedTemplate as TemplateResponse)?.cacheResponseMetadata) && (
-                    <PipelineCachedCopy
-                      reloadContent={getString('common.template.label')}
-                      cacheResponse={
-                        (selectedTemplate as TemplateResponse)?.cacheResponseMetadata as CacheResponseMetadata
-                      }
-                      reloadFromCache={noop}
-                      fetchError={templateYamlError as any}
-                      readonly={true}
-                    />
-                  )}
-                </div>
               </Container>
             </Layout.Vertical>
           </Container>

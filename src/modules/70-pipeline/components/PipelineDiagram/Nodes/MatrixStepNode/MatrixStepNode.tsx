@@ -84,6 +84,7 @@ export function MatrixStepNode(props: any): JSX.Element {
   const [showAddLink, setShowAddLink] = React.useState(false)
   const [isNodeCollapsed, setNodeCollapsed] = React.useState(false)
   const [layoutStyles, setLayoutStyles] = React.useState<LayoutStyles>({ height: 100, width: 70 })
+  const [concurrentNodes, setConcurrentNodes] = React.useState<number>(MAX_ALLOWED_MATRIX_COLLAPSED_NODES)
   const [{ visibilityMap }] = useCollapsedNodeStore()
 
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
@@ -140,6 +141,16 @@ export function MatrixStepNode(props: any): JSX.Element {
   const debounceHideVisibility = debounce(() => {
     setVisibilityOfAdd(false)
   }, 300)
+
+  React.useEffect(() => {
+    const visibleStepsData = hasSelectedNestedSteps ? selectedNestedSteps : nestedStepsData
+    if (hasSelectedNestedSteps) {
+      setConcurrentNodes(maxParallelism === 0 ? 1 : Math.min(maxParallelism, (visibleStepsData || []).length))
+    } else {
+      const updatedParallelism = Math.min(maxParallelism, MAX_ALLOWED_MATRIX_COLLAPSED_NODES) || 1
+      setConcurrentNodes(maxParallelism === 0 ? 1 : Math.min(updatedParallelism, (visibleStepsData || []).length))
+    }
+  }, [maxParallelism, hasSelectedNestedSteps, selectedNestedSteps, nestedStepsData])
 
   useDeepCompareEffect(() => {
     if (nestedStepsData?.length) {
@@ -293,10 +304,12 @@ export function MatrixStepNode(props: any): JSX.Element {
             ) : (
               <>
                 <div
-                  className={cx(css.stepGroupBody, { [css.hasMoreChild]: hasChildrenToBeCollapsed })}
-                  style={layoutStyles}
+                  className={cx(css.stepGroupBody, { [css.hasMoreChild]: maxParallelism || hasChildrenToBeCollapsed })}
                 >
-                  <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: '80px', rowGap: '20px' }}>
+                  <div
+                    className={css.matrixNodesGridWrapper}
+                    style={{ '--columns': concurrentNodes } as React.CSSProperties}
+                  >
                     {(hasSelectedNestedSteps ? selectedNestedSteps : nestedStepsData)?.map(
                       ({ step: node }: any, index: number) => {
                         const defaultNode = props?.getDefaultNode()?.component

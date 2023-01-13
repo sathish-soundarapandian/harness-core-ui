@@ -4582,6 +4582,7 @@ export interface DeleteTemplateVersionsOfIdentifierQueryParams {
   commitMsg?: string
   lastObjectId?: string
   comments?: string
+  forceDelete?: boolean
 }
 
 export type DeleteTemplateVersionsOfIdentifierProps = Omit<
