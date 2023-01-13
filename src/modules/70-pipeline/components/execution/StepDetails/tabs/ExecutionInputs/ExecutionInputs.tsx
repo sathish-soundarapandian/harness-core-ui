@@ -25,6 +25,8 @@ import type { FormikErrors } from 'formik'
 import {
   ExecutionGraph,
   ExecutionNode,
+  PipelineInfoConfig,
+  PipelineStageConfig,
   StageElementConfig,
   StageElementWrapperConfig,
   useGetExecutionInputTemplate,
@@ -42,8 +44,8 @@ import type { StepElementConfig } from 'services/cd-ng'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { NodeType, NonSelectableNodes } from '@pipeline/utils/executionUtils'
-import { StageFormInternal } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
-import { validateStage } from '@pipeline/components/PipelineStudio/StepUtil'
+import { StageForm, StageFormInternal } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
+import { getStageFromPipeline, validateStage } from '@pipeline/components/PipelineStudio/StepUtil'
 import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import css from './ExecutionInputs.module.scss'
 
@@ -171,6 +173,15 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
 
   // https://github.com/harness/harness-core-ui/blob/8b2acdbdb7b6ca71f79fc2e3f76c4b55734b392e/src/modules/70-pipeline/components/PipelineStudio/StepUtil.ts#L184
 
+  const parsedPipelineStage = (parsedStage?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
+  const isTemplateParsedPipelineStage = !!parsedPipelineStage?.template
+  const finalTemplateParsedPipelineStage = isTemplateParsedPipelineStage
+    ? (parsedPipelineStage?.template?.templateInputs as PipelineInfoConfig)
+    : parsedPipelineStage
+  const parsedStagePath = isTemplateParsedPipelineStage
+    ? 'stage.spec.inputs.template.templateInputs'
+    : 'stage.spec.inputs'
+
   let content: React.ReactElement | null = null
 
   if (loading) {
@@ -187,15 +198,57 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
       >
         <FormikForm>
           {isStageForm ? (
-            <StageFormInternal
-              template={parsedStage}
-              path="stage"
-              readonly={isDone}
-              viewType={StepViewType.DeploymentForm}
-              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
-              stageClassName={css.stage}
-              allValues={fieldYaml}
-            />
+            step.stepType === NodeType.PIPELINE_STAGE ? (
+              finalTemplateParsedPipelineStage?.stages?.map((stageObj, index) => {
+                const childPipelineFieldYaml = isTemplateParsedPipelineStage
+                  ? ((fieldYaml?.stage?.spec as PipelineStageConfig)?.inputs?.template
+                      ?.templateInputs as PipelineInfoConfig)
+                  : ((fieldYaml?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig)
+                if (stageObj.stage) {
+                  const allValues = getStageFromPipeline(stageObj.stage?.identifier || '', childPipelineFieldYaml)
+                  return (
+                    <Layout.Vertical key={stageObj.stage?.identifier || index}>
+                      <StageForm
+                        template={stageObj}
+                        path={`${parsedStagePath}.stages[${index}].stage`}
+                        readonly={isDone}
+                        viewType={StepViewType.DeploymentForm}
+                        allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                        stageClassName={css.childStage}
+                        allValues={allValues}
+                      />
+                    </Layout.Vertical>
+                  )
+                } else if (stageObj.parallel) {
+                  return stageObj.parallel.map((stageP, indexp) => {
+                    const allValues = getStageFromPipeline(stageP.stage?.identifier || '', childPipelineFieldYaml)
+                    return (
+                      <Layout.Vertical key={`${stageObj?.stage?.identifier}-${stageP.stage?.identifier}-${indexp}`}>
+                        <StageForm
+                          template={stageP}
+                          path={`${parsedStagePath}.stages[${index}].parallel[${indexp}].stage`}
+                          readonly={isDone}
+                          viewType={StepViewType.DeploymentForm}
+                          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                          stageClassName={css.childStage}
+                          allValues={allValues}
+                        />
+                      </Layout.Vertical>
+                    )
+                  })
+                }
+              })
+            ) : (
+              <StageFormInternal
+                template={parsedStage}
+                path="stage"
+                readonly={isDone}
+                viewType={StepViewType.DeploymentForm}
+                allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                stageClassName={css.stage}
+                allValues={fieldYaml}
+              />
+            )
           ) : (
             <StepWidget<Partial<StepElementConfig>>
               factory={factory}

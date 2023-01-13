@@ -7,27 +7,30 @@
 
 import { FormikErrors, yupToFormErrors } from 'formik'
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import { isEmpty, has, set, isBoolean, get } from 'lodash-es'
+import { isEmpty, has, set, isBoolean, get, pick } from 'lodash-es'
 import * as Yup from 'yup'
 import type { K8sDirectInfraYaml } from 'services/ci'
 import type { DeploymentStageConfig, Infrastructure, ServiceYamlV2 } from 'services/cd-ng'
 
 import type { UseStringsReturn } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import type {
+import {
   TemplateStepNode,
   StageElementWrapperConfig,
   StepElementConfig,
   PipelineInfoConfig,
   ExecutionWrapperConfig,
   StageElementConfig,
-  PipelineStageConfig
+  PipelineStageConfig,
+  ResponsePMSPipelineResponseDTO,
+  getPipelinePromise
 } from 'services/pipeline-ng'
 import { getStepTypeByDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import { getPrCloneStrategyOptions } from '@pipeline/utils/constants'
 import { CodebaseTypes, isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import type { DeployStageConfig, InfraStructureDefinitionYaml } from '@pipeline/utils/DeployStageInterface'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import type { AccountPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 // eslint-disable-next-line no-restricted-imports
@@ -42,6 +45,12 @@ import { getSelectedStagesFromPipeline } from './CommonUtils/CommonUtils'
 import type { CustomVariablesData } from '../PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 import type { DeployServiceEntityData } from '../PipelineInputSetForm/StageInputSetForm'
 import { validateOutputPanelInputSet } from '../CommonPipelineStages/PipelineStage/PipelineStageOutputSection/utils'
+
+interface childPipelineMetadata {
+  pipelineId: string
+  orgId: string
+  projectId: string
+}
 
 export function getStepFromStage(stepId: string, steps?: ExecutionWrapperConfig[]): ExecutionWrapperConfig | undefined {
   let responseStep: ExecutionWrapperConfig | undefined = undefined
@@ -81,6 +90,69 @@ export function getStageFromPipeline(
     return responseStage
   }
   return
+}
+
+export function getChildPipelineMetadata(pipeline?: PipelineInfoConfig): childPipelineMetadata[] {
+  const childPipelinesMetaData: childPipelineMetadata[] = []
+  if (pipeline?.stages) {
+    pipeline.stages.forEach(item => {
+      if (item.stage) {
+        const childPipelineSpecData = get(item, 'stage.spec')
+        if (item.stage.type === StageType.PIPELINE && !isEmpty(childPipelineSpecData)) {
+          const {
+            pipeline: pipelineId,
+            org: orgId,
+            project: projectId
+          } = pick(childPipelineSpecData, ['pipeline', 'org', 'project'])
+          childPipelinesMetaData.push({
+            pipelineId,
+            orgId,
+            projectId
+          })
+        }
+      } else if (item.parallel) {
+        item.parallel.forEach(node => {
+          const childPipelineSpecData = get(node, 'stage.spec')
+          if (node.stage?.type === StageType.PIPELINE && !isEmpty(childPipelineSpecData)) {
+            const {
+              pipeline: pipelineId,
+              org: orgId,
+              project: projectId
+            } = pick(childPipelineSpecData, ['pipeline', 'org', 'project'])
+            childPipelinesMetaData.push({
+              pipelineId,
+              orgId,
+              projectId
+            })
+          }
+        })
+      }
+    })
+  }
+  return childPipelinesMetaData
+}
+
+export function getPromisesForChildPipeline(
+  params: AccountPathProps & GitQueryParams,
+  childPipelinesMetaData: childPipelineMetadata[]
+): Promise<ResponsePMSPipelineResponseDTO>[] {
+  const { accountId, repoIdentifier, branch, connectorRef } = params
+  const promises = childPipelinesMetaData.map(({ pipelineId, orgId, projectId }) => {
+    return getPipelinePromise({
+      pipelineIdentifier: pipelineId,
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier: orgId,
+        projectIdentifier: projectId,
+        repoIdentifier,
+        branch,
+        getTemplatesResolvedPipeline: true,
+        parentEntityConnectorRef: connectorRef,
+        parentEntityRepoName: repoIdentifier
+      }
+    })
+  })
+  return promises
 }
 
 export interface ValidateStepProps {

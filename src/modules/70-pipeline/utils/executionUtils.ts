@@ -86,7 +86,8 @@ export enum NodeType {
   RUNTIME_INPUT = 'RUNTIME_INPUT', // virtual node
   INFRASTRUCTURE_V2 = 'INFRASTRUCTURE_V2',
   INFRASTRUCTURE_TASKSTEP_V2 = 'INFRASTRUCTURE_TASKSTEP_V2',
-  SERVICE_V3 = 'SERVICE_V3'
+  SERVICE_V3 = 'SERVICE_V3',
+  PIPELINE_STAGE = 'PIPELINE_STAGE'
 }
 
 export const NonSelectableNodes: NodeType[] = [
@@ -95,7 +96,8 @@ export const NonSelectableNodes: NodeType[] = [
   NodeType.DEPLOYMENT_STAGE_STEP,
   NodeType.APPROVAL_STAGE,
   NodeType.CUSTOM_STAGE,
-  NodeType.NG_EXECUTION
+  NodeType.NG_EXECUTION,
+  NodeType.PIPELINE_STAGE
 ]
 
 export const TopLevelNodes: NodeType[] = [
@@ -127,7 +129,8 @@ export const StepTypeIconsMap: { [key in NodeType]: IconName } = {
   StepGroupNode: 'step-group',
   'GITOPS CLUSTERS': 'gitops-clusters',
   STRATEGY: 'step-group',
-  RUNTIME_INPUT: 'runtime-input'
+  RUNTIME_INPUT: 'runtime-input',
+  PIPELINE_STAGE: 'chained-pipeline'
 }
 
 export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {

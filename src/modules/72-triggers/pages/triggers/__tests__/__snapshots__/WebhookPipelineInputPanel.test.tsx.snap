@@ -309,7 +309,7 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
                       >
                         Stage: 
-                        
+                        stage1
                       </p>
                     </div>
                     <div
@@ -1258,7 +1258,7 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
                       >
                         Stage: 
-                        
+                        stage1
                       </p>
                     </div>
                     <div
