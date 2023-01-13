@@ -6,14 +6,14 @@
  */
 
 import React, { useMemo, useState } from 'react'
-
-import { Layout } from '@harness/uicore'
+import { Layout, Card } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import type { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import { useLisCDActiveServices, LisCDActiveServicesQueryParams } from 'services/cd-ng'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { useGeneratePublicDashboardSignedUrl } from 'services/custom-dashboards'
 import { useUpdateQueryParams, useQueryParams, useMutateAsGet } from '@common/hooks'
 import { usePreferenceStore, PreferenceScope } from 'framework/PreferenceStore/PreferenceStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -22,6 +22,7 @@ import SubscriptionDetailsCard from './SubscriptionDetailsCard'
 import SubscriptionUsageCard from './SubscriptionUsageCard'
 import { ServiceLicenseTable } from './ServiceLicenseTable'
 import type { TrialInformation } from '../SubscriptionsPage'
+import css from '../SubscriptionsPage.module.scss'
 
 type PartiallyRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
 interface SubscriptionOverviewProps {
@@ -38,6 +39,7 @@ type ProcessedActiveServiceListPageQueryParams = PartiallyRequired<
   LisCDActiveServicesQueryParams,
   'page' | 'size' | 'sort'
 >
+
 const queryParamOptions = {
   parseArrays: true,
   decoder: queryParamDecodeAll(),
@@ -59,6 +61,11 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
     'ActiveServiceSortingPreference'
   )
   const { accountId } = useParams<AccountPathProps>()
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const { data: signedUrlResponse } = useGeneratePublicDashboardSignedUrl({
+    queryParams: { accountId, dashboard: 'PLG-CD-License Usage Reporting', timezone }
+  })
+
   const queryParams = useQueryParams<LisCDActiveServicesQueryParams>(queryParamOptions)
   const { page, size } = queryParams
   const [orgName, setOrgName] = useState<string>('')
@@ -114,6 +121,17 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
           servicesLoading={loading}
         />
       ) : null}
+      <Card className={css.lookerGraph}>
+        {/* <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}></Layout.Vertical> */}
+        <iframe
+          src={signedUrlResponse?.resource}
+          height="100%"
+          width="100%"
+          frameBorder="0"
+          id="looker-dashboard"
+          data-testid="dashboard-iframe"
+        />
+      </Card>
     </Layout.Vertical>
   )
 }
