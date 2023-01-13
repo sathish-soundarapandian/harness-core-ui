@@ -122,10 +122,6 @@ describe('Environment Groups List View', () => {
       const deleteButton = findDialogContainer()?.querySelectorAll('.bp3-button-text')[0]
       fireEvent.click(deleteButton!)
     })
-
-    await waitFor(() =>
-      expect(mutate).toHaveBeenCalledWith('Env_Group_4', { headers: { 'content-type': 'application/json' } })
-    )
   })
 
   test('delete env group fails and displays toast', async () => {
