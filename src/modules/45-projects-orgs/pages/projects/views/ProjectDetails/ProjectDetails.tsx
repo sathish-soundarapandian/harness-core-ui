@@ -18,6 +18,7 @@ import routes from '@common/RouteDefinitions'
 import { Project, useGetProjectAggregateDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import ModuleListCard from '@projects-orgs/components/ModuleListCard/ModuleListCard'
 import { useProjectModal } from '@projects-orgs/modals/ProjectModal/useProjectModal'
 import { useCollaboratorModal } from '@projects-orgs/modals/ProjectModal/useCollaboratorModal'
@@ -44,11 +45,14 @@ import {
   LandingDashboardContextProvider
 } from '@common/factories/LandingDashboardContext'
 import TimeRangeSelect from '@projects-orgs/components/TimeRangeSelect/TimeRangeSelect'
+import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedCallout'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectDetails.module.scss'
 
 const ProjectDetails: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { getString } = useStrings()
   const [menuOpen, setMenuOpen] = useState(false)
   const { selectedTimeRange } = useLandingDashboardContext()
@@ -150,6 +154,7 @@ const ProjectDetails: React.FC = () => {
   /* istanbul ignore next */ if (!projectData) return <></>
   return (
     <>
+      {isGitSyncEnabled && <DeprecatedCallout />}
       <Page.Header
         size={projectData.description || !isEmpty(projectData.tags) ? 'xxlarge' : 'xlarge'}
         breadcrumbs={
