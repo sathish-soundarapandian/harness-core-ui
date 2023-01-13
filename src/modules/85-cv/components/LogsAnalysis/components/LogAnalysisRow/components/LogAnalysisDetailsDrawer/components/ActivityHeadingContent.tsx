@@ -5,10 +5,10 @@ import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
 import { useStrings } from 'framework/strings'
 import { getEventTypeColor, getEventTypeLightColor } from '@cv/utils/CommonUtils'
-import type { ActivityHeadingContentProps } from '../LogAnalysisRiskAndJiraModal.types'
-import { getChartsConfigForDrawer } from '../LogAnalysisRiskAndJiraModal.utils'
+import type { ActivityHeadingContentProps } from '../LogAnalysisDetailsDrawer.types'
+import { getChartsConfigForDrawer } from '../LogAnalysisDetailsDrawer.utils'
 import { getEventTypeFromClusterType } from '../../../LogAnalysisRow.utils'
-import css from '../LogAnalysisRiskAndJiraModal.module.scss'
+import css from '../LogAnalysisDetailsDrawer.module.scss'
 import logRowStyle from '../../../LogAnalysisRow.module.scss'
 
 export function ActivityHeadingContent(props: ActivityHeadingContentProps): JSX.Element {

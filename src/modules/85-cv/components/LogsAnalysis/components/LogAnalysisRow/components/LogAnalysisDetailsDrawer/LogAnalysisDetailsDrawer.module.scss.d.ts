@@ -10,6 +10,7 @@ declare const styles: {
   readonly activityContainer: string
   readonly almostFullScreenCloseBtn: string
   readonly chartContainer: string
+  readonly chartSection: string
   readonly copyButton: string
   readonly copySuccess: string
   readonly dataContent: string
@@ -28,6 +29,7 @@ declare const styles: {
   readonly reasonText: string
   readonly reasonTextContainer: string
   readonly sampleEvent: string
+  readonly sampleMessageSection: string
   readonly sharePopoverContent: string
   readonly urlContent: string
 }

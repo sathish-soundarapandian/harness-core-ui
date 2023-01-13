@@ -7,16 +7,16 @@
 
 import React, { useState, useCallback, useMemo } from 'react'
 import { isEmpty } from 'lodash-es'
-import { Container, Heading, Button, Text, Icon, PageError } from '@harness/uicore'
+import { Container, Heading, Button, Text, Icon, PageError, Layout } from '@harness/uicore'
 import { Drawer } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useStrings } from 'framework/strings'
-import type { SampleDataProps, LogAnalysisRiskAndJiraModalProps } from './LogAnalysisRiskAndJiraModal.types'
+import type { SampleDataProps, LogAnalysisRiskAndJiraModalProps } from './LogAnalysisDetailsDrawer.types'
 import { ActivityHeadingContent } from './components/ActivityHeadingContent'
-import { DrawerProps } from './LogAnalysisRiskAndJiraModal.constants'
+import { DrawerProps } from './LogAnalysisDetailsDrawer.constants'
 import getLogAnalysisLineChartOptions from '../../LogAnalysisLineChartConfig'
-import css from './LogAnalysisRiskAndJiraModal.module.scss'
+import css from './LogAnalysisDetailsDrawer.module.scss'
 
 export function SampleData(props: SampleDataProps): JSX.Element {
   const { logMessage } = props
@@ -33,7 +33,7 @@ export function SampleData(props: SampleDataProps): JSX.Element {
   )
 }
 
-export function LogAnalysisRiskAndJiraModal(props: LogAnalysisRiskAndJiraModalProps): JSX.Element {
+export function LogAnalysisDetailsDrawer(props: LogAnalysisRiskAndJiraModalProps): JSX.Element {
   const { onHide, rowData, isDataLoading, logsError, retryLogsCall } = props
   const [isOpen, setOpen] = useState(true)
 
@@ -93,10 +93,14 @@ export function LogAnalysisRiskAndJiraModal(props: LogAnalysisRiskAndJiraModalPr
           {/* <Container margin={{ bottom: 'small' }}>
       <UpdatedEventPreference />
     </Container> */}
-          <Container style={{ flex: 1 }}>
-            <ActivityHeadingContent activityType={activityType} trendData={trendData} count={count} />
-            <SampleData logMessage={message} />
-          </Container>
+          <Layout.Horizontal height="100%">
+            <Container className={css.chartSection}>
+              <ActivityHeadingContent activityType={activityType} trendData={trendData} count={count} />
+            </Container>
+            <Container className={css.sampleMessageSection}>
+              <SampleData logMessage={message} />
+            </Container>
+          </Layout.Horizontal>
         </Container>
       </>
     )

@@ -26,9 +26,21 @@
 
   .formAndMessageContainer {
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    padding: var(--padding-section) !important;
+    // display: flex;
+    // flex-direction: column;
+
+    .chartSection {
+      width: 60%;
+      height: 100%;
+      padding: var(--padding-section) !important;
+    }
+    .sampleMessageSection {
+      width: 40%;
+      height: 100%;
+      padding: var(--padding-section) !important;
+      background: var(--primary-bg);
+      border-left: 1px solid var(--grey-200);
+    }
   }
 
   .formContainer {
@@ -147,7 +159,7 @@
 .almostFullScreenCloseBtn:global(.bp3-button.bp3-minimal) {
   position: fixed;
   top: 0;
-  right: 50%;
+  right: 80%;
   background: #00ade4 !important;
   color: var(--white) !important;
   border-radius: 4px 0 0 4px !important;
