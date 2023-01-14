@@ -11,7 +11,7 @@ import type { Column } from 'react-table'
 import { defaultTo, get } from 'lodash-es'
 
 import { TableV2, useToaster } from '@harness/uicore'
-import { EnvironmentResponse, useDeleteEnvironmentV2 } from 'services/cd-ng'
+import { EnvironmentResponse, EnvironmentResponseDTO, useDeleteEnvironmentV2 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
@@ -38,7 +38,7 @@ export default function EnvironmentsList({ response, refetch }: any) {
   const { getString } = useStrings()
   const history = useHistory()
   const { CDC_ENVIRONMENT_DASHBOARD_NG, CDS_FORCE_DELETE_ENTITIES } = useFeatureFlags()
-  const [curEnvId, setCurEnvId] = useState('')
+  const [environmentToDelete, setEnvironmentToDelete] = useState<EnvironmentResponseDTO>({})
   const { mutate: deleteItem } = useDeleteEnvironmentV2({})
 
   const handleEnvEdit = (id: string): void => {
@@ -54,17 +54,20 @@ export default function EnvironmentsList({ response, refetch }: any) {
     )
   }
 
-  const handleEnvDelete = async (id: string, forceDelete: boolean) => {
+  const handleEnvDelete = async (
+    environment: Required<EnvironmentResponseDTO>,
+    forceDelete: boolean
+  ): Promise<void> => {
     try {
-      await deleteItem(id, {
+      await deleteItem(environment.identifier, {
         headers: { 'content-type': 'application/json' },
-        queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, forceDelete: forceDelete }
+        queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, forceDelete }
       })
       showSuccess(getString('cd.environment.deleted'))
       refetch()
     } catch (e: any) {
       if (CDS_FORCE_DELETE_ENTITIES && e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
-        setCurEnvId(id)
+        setEnvironmentToDelete(environment)
         openReferenceErrorDialog()
       } else {
         showError(getRBACErrorMessage(e))
@@ -73,16 +76,27 @@ export default function EnvironmentsList({ response, refetch }: any) {
   }
 
   const redirectToReferencedBy = (): void => {
-    closeDialog()
+    history.push(
+      routes.toEnvironmentDetails({
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        environmentIdentifier: environmentToDelete.identifier as string,
+        module,
+        sectionId: EnvironmentDetailsTab.REFERENCED_BY
+      })
+    )
   }
 
-  const { openDialog: openReferenceErrorDialog, closeDialog } = useEntityDeleteErrorHandlerDialog({
+  const { openDialog: openReferenceErrorDialog } = useEntityDeleteErrorHandlerDialog({
     entity: {
       type: ResourceType.ENVIRONMENT,
-      name: ''
+      name: environmentToDelete.name as string
     },
-    redirectToReferencedBy: redirectToReferencedBy,
-    forceDeleteCallback: CDS_FORCE_DELETE_ENTITIES ? () => handleEnvDelete(curEnvId, true) : undefined
+    redirectToReferencedBy,
+    forceDeleteCallback: CDS_FORCE_DELETE_ENTITIES
+      ? () => handleEnvDelete(environmentToDelete as Required<EnvironmentResponseDTO>, true)
+      : undefined
   })
 
   type CustomColumn<T extends Record<string, any>> = Column<T>
