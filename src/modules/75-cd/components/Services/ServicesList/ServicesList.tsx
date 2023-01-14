@@ -370,7 +370,6 @@ const RenderLastDeployment: Renderer<CellProps<ServiceListItem>> = ({ row }) => 
 const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
   const data = row.original
   const [menuOpen, setMenuOpen] = useState(false)
-  const [deleteError, setDeleteError] = useState('')
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -414,29 +413,6 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
     [data, orgIdentifier, projectIdentifier]
   )
 
-  const { openDialog: openDeleteErrorDialog } = useConfirmationDialog({
-    titleText: getString('common.deleteServiceFailure'),
-    contentText: deleteError,
-    cancelButtonText: getString('close'),
-    confirmButtonText: getString('common.viewReferences'),
-    intent: Intent.DANGER,
-    onCloseDialog: async isConfirmed => {
-      setDeleteError('')
-      if (isConfirmed) {
-        history.push({
-          pathname: routes.toServiceStudio({
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            serviceId: data.identifier,
-            module
-          }),
-          search: `tab=${ServiceTabs.REFERENCED_BY}`
-        })
-      }
-    }
-  })
-
   const deleteHandler = async (forceDelete?: boolean): Promise<void> => {
     try {
       const response = await deleteService(data.identifier, {
@@ -450,15 +426,9 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
         showSuccess(getString('common.deleteServiceMessage'))
         ;(column as any).reload?.()
       }
-    } catch (err) {
+    } catch (err: any) {
       if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
-        // showing reference by error in modal
-        setDeleteError(err?.data?.message || err?.message)
-        if (CDS_FORCE_DELETE_ENTITIES) {
-          openReferenceErrorDialog()
-        } else {
-          openDeleteErrorDialog()
-        }
+        openReferenceErrorDialog()
       } else {
         showError(getRBACErrorMessage(err as RBACError))
       }
@@ -479,15 +449,24 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
   })
 
   const redirectToReferencedBy = (): void => {
-    closeDialog()
+    history.push({
+      pathname: routes.toServiceStudio({
+        accountId: data.accountId,
+        orgIdentifier: data.orgorgIdentifier,
+        projectIdentifier: data.projectIdentifier,
+        serviceId: data.identifier,
+        module
+      }),
+      search: `tab=${ServiceTabs.REFERENCED_BY}`
+    })
   }
 
-  const { openDialog: openReferenceErrorDialog, closeDialog } = useEntityDeleteErrorHandlerDialog({
+  const { openDialog: openReferenceErrorDialog } = useEntityDeleteErrorHandlerDialog({
     entity: {
       type: ResourceType.SERVICE,
       name: defaultTo(data?.name, '')
     },
-    redirectToReferencedBy: redirectToReferencedBy,
+    redirectToReferencedBy,
     forceDeleteCallback: CDS_FORCE_DELETE_ENTITIES ? () => deleteHandler(true) : undefined
   })
 
