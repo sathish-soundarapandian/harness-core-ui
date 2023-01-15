@@ -42,12 +42,6 @@ export class ElastigroupDeploy extends PipelineStep<
           count: 1
         },
         type: 'Count'
-      },
-      oldService: {
-        spec: {
-          count: ''
-        },
-        type: 'Count'
       }
     }
   }

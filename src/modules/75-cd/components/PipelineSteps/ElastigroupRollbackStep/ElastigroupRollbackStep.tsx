@@ -40,6 +40,7 @@ export class ElastigroupRollbackStep extends PipelineStep<StepElementConfig> {
     identifier: '',
     name: '',
     type: StepType.ElastigroupRollback,
+    spec: {},
     timeout: '10m'
   }
 

@@ -16,6 +16,7 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedCallout'
 import NewUserView from './newUser/NewUserView'
 
 interface GitSyncPageProps {
@@ -24,12 +25,14 @@ interface GitSyncPageProps {
 
 export const GitSyncLandingView: React.FC<GitSyncPageProps> = ({ children }) => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled, gitSyncEnabledOnlyForFF } = useAppStore()
+  const showDeprecatedCallout = isGitSyncEnabled && !gitSyncEnabledOnlyForFF
   const { getString } = useStrings()
   useDocumentTitle(getString('gitManagement'))
 
   return (
     <>
+      {showDeprecatedCallout && <DeprecatedCallout />}
       <Page.Header
         size="medium"
         breadcrumbs={<NGBreadcrumbs />}

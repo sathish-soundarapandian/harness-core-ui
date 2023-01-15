@@ -64,6 +64,7 @@ describe('ElastigroupRollbackStep tests', () => {
         identifier: 'Step_1',
         name: 'Step 1',
         timeout: '20m',
+        spec: {},
         type: StepType.ElastigroupRollback
       })
     )

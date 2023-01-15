@@ -53,7 +53,7 @@ export default function ElastigroupSetupInputSet(props: ElastigroupSetupInputSet
           className={cx(stepCss.formGroup, stepCss.sm)}
         />
       )}
-      {getMultiTypeFromValue(template?.spec.name) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(template?.spec?.name) === MultiTypeInputType.RUNTIME && (
         <TextFieldInputSetView
           name={`${path}.spec.name`}
           disabled={readonly}
@@ -68,7 +68,7 @@ export default function ElastigroupSetupInputSet(props: ElastigroupSetupInputSet
           className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
-      {getMultiTypeFromValue(template?.spec.instances.spec.min) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(template?.spec?.instances?.spec?.min) === MultiTypeInputType.RUNTIME && (
         <TextFieldInputSetView
           name={`${path}.spec.instances.spec.min`}
           disabled={readonly}
@@ -84,7 +84,7 @@ export default function ElastigroupSetupInputSet(props: ElastigroupSetupInputSet
           className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
-      {getMultiTypeFromValue(template?.spec.instances.spec.desired) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(template?.spec?.instances?.spec?.desired) === MultiTypeInputType.RUNTIME && (
         <TextFieldInputSetView
           name={`${path}.spec.instances.spec.desired`}
           disabled={readonly}
@@ -100,7 +100,7 @@ export default function ElastigroupSetupInputSet(props: ElastigroupSetupInputSet
           className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
-      {getMultiTypeFromValue(template?.spec.instances.spec.max) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(template?.spec?.instances?.spec?.max) === MultiTypeInputType.RUNTIME && (
         <TextFieldInputSetView
           name={`${path}.spec.instances.spec.max`}
           disabled={readonly}

@@ -42,6 +42,7 @@ import {
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
+import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedCallout'
 import { CreatePipeline } from './CreatePipeline/CreatePipeline'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
 import { getEmptyStateIllustration, queryParamOptions } from './PipelineListUtils'
@@ -304,6 +305,7 @@ export function PipelineListPage(): React.ReactElement {
   if (isGitSyncEnabled) {
     return (
       <GitSyncStoreProvider>
+        <DeprecatedCallout />
         <_PipelineListPage />
       </GitSyncStoreProvider>
     )
