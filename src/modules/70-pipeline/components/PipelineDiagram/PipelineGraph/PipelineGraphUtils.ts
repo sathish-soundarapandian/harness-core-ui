@@ -881,7 +881,7 @@ export interface RelativeBounds {
 }
 
 const getRelativeBounds = (parentElement: HTMLElement, targetElement: HTMLElement): RelativeBounds => {
-  const parentPos = parentElement.getBoundingClientRect()
+  const parentPos = parentElement?.getBoundingClientRect()
   const childPos = targetElement.getBoundingClientRect()
   const relativePos: RelativeBounds = { top: 0, right: 0, bottom: 0, left: 0 }
 
