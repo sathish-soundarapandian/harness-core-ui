@@ -35,7 +35,8 @@ export const artifacts = {
     spec: {
       connectorRef: 'Docker_Conn',
       imagePath: './',
-      tag: '<+input>'
+      tag: '<+input>',
+      digest: '<+input>'
     },
     type: 'DockerRegistry'
   }
@@ -69,7 +70,8 @@ export const template = {
       spec: {
         connectorRef: 'Docker_Conn',
         imagePath: './',
-        tag: '<+input>'
+        tag: '<+input>',
+        digest: '<+input>'
       },
       type: 'DockerRegistry'
     }

@@ -51,6 +51,7 @@ jest.mock('services/cd-ng', () => ({
   usePostSecret: () => jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   usePostSecretFileV2: () => jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   usePutSecretFileV2: () => jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useGetLastSuccessfulBuildForDockerWithYaml: () => jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useGetConnectorList: () => jest.fn(() => []),
   useGetTestConnectionResult: () => jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useGetBuildDetailsForGcrWithYaml: () =>
