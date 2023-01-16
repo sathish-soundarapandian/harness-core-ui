@@ -868,6 +868,7 @@ infraSpecifications:
     amd64: AMD64
     arm64: ARM64
 imagePathLabel: Image Path
+digest: Digest
 artifactPathLabel: Artifact Path
 artifactImagePathLabel: Artifact/Image Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
@@ -885,6 +886,7 @@ artifactsSelection:
   extensionPlaceholder: Enter Extension
   classifier: Classifier
   classifierPlaceholder: Enter Classifier
+  digestPlaceholder: Enter Digest
   packageName: Package Name
   packageNamePlaceholder: Select Package
   addPrimaryArtifact: Add Primary Artifact
@@ -911,6 +913,7 @@ artifactsSelection:
   versionRegexPlaceholder: Enter Version Regex
   artifactTyperequired: Artifact Type is required
   loadingTags: Loading Tags...
+  loadingDigest: Loading Digest...
   loadingArtifactPaths: Loading Artifact Paths...
   artifactPathPlaceholder: Enter Artifact Path
   artifactDirectory: Artifact Directory
@@ -957,6 +960,7 @@ artifactsSelection:
     filePathRegex: File Path Regex is required
   errors:
     noRepositories: No repositories found with given connector
+    nodigest: No Digests found with given tag
 overrideSets:
   createOverrideSet: Create Override Set
   overrideSetPlaceholder: Enter Override Set Name

@@ -11,6 +11,8 @@ import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ArtifactType, TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import * as hooks from '@common/hooks/useFeatureFlag'
+
 import { DockerRegistryArtifact } from '../DockerRegistryArtifact'
 
 const props = {
@@ -31,6 +33,19 @@ const props = {
 jest.mock('services/cd-ng', () => ({
   useGetBuildDetailsForDocker: jest.fn().mockImplementation(() => {
     return { data: { buildDetailsList: [] }, refetch: jest.fn(), error: null, loading: false }
+  }),
+  useGetLastSuccessfulBuildForDocker: jest.fn().mockImplementation(() => {
+    return {
+      data: {
+        metadata: {
+          SHA: 'test',
+          SHAV2: 'test2'
+        }
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
   })
 }))
 describe('DockerRegistry Image Path Artifact tests', () => {
@@ -86,6 +101,8 @@ describe('DockerRegistry Image Path Artifact tests', () => {
   })
 
   test('submits with the right payload ', async () => {
+    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlags')
+    useFeatureFlags.mockReturnValue({ CD_NG_DOCKER_ARTIFACT_DIGEST: true })
     const initialValues = {
       identifier: '',
       spec: {
@@ -95,7 +112,8 @@ describe('DockerRegistry Image Path Artifact tests', () => {
       imagePath: '',
       tag: '',
       tagType: TagTypes.Value,
-      tagRegex: ''
+      tagRegex: '',
+      digest: undefined
     }
 
     const { container } = render(
@@ -117,7 +135,8 @@ describe('DockerRegistry Image Path Artifact tests', () => {
         spec: {
           connectorRef: '',
           imagePath: 'image-path',
-          tagRegex: 'tag'
+          tagRegex: 'tag',
+          digest: undefined
         }
       })
     })
@@ -159,5 +178,49 @@ describe('DockerRegistry Image Path Artifact tests', () => {
         }
       })
     })
+  })
+
+  test('mocking feature flag for digest', () => {
+    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlags')
+    useFeatureFlags.mockReturnValue({ CD_NG_DOCKER_ARTIFACT_DIGEST: true })
+
+    const initialValues = {
+      identifier: 'id',
+      imagePath: 'library/nginx',
+      tag: '',
+      tagRegex: 'someregex',
+      tagType: TagTypes.Regex,
+      digest: 'test'
+    }
+
+    const { container } = render(
+      <TestWrapper>
+        <DockerRegistryArtifact key={'key'} initialValues={initialValues} {...props} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('click on back button', () => {
+    const initialValues = {
+      identifier: '',
+      spec: {
+        imagePath: ''
+      },
+      type: 'DockerRegistry',
+      imagePath: '',
+      tag: '',
+      tagType: TagTypes.Value,
+      tagRegex: ''
+    }
+
+    const { container, getByText } = render(
+      <TestWrapper>
+        <DockerRegistryArtifact key={'key'} initialValues={initialValues} {...props} />
+      </TestWrapper>
+    )
+    fireEvent.click(getByText('back'))
+
+    expect(container).toMatchSnapshot()
   })
 })

@@ -71,6 +71,7 @@ export interface InitialArtifactDataType {
 export interface ImagePathTypes {
   identifier: string
   imagePath?: string
+  digest?: any
   artifactPath?: SelectOption | string
   tag: any
   tagRegex: any

@@ -195,7 +195,8 @@ export const getFinalArtifactObj = (
     spec: {
       connectorRef: formData?.connectorId,
       imagePath: formData?.imagePath,
-      ...tagData
+      ...tagData,
+      digest: formData?.digest
     }
   }
   if (isIdentifierAllowed) {
@@ -277,6 +278,19 @@ const getTagValues = (
   if (specValues?.tag && getMultiTypeFromValue(specValues?.tag) === MultiTypeInputType.FIXED) {
     values.tag = { label: specValues?.tag, value: specValues?.tag }
   }
+
+  return values
+}
+
+const getDigestValues = (specValues: any): ImagePathTypes => {
+  const values = { ...specValues }
+  if (specValues?.digest && getMultiTypeFromValue(specValues?.digest) === MultiTypeInputType.FIXED) {
+    if (getMultiTypeFromValue(specValues?.digest) === MultiTypeInputType.FIXED) {
+      values.digest = { label: specValues?.digest, value: specValues?.digest }
+    } else {
+      values.digest = specValues?.digest
+    }
+  }
   return values
 }
 
@@ -321,6 +335,10 @@ export const getArtifactFormData = (
       break
     default:
       values = getTagValues(specValues, isServerlessDeploymentTypeSelected)
+  }
+
+  if (selectedArtifact === ENABLED_ARTIFACT_TYPES.DockerRegistry) {
+    values = getDigestValues(values)
   }
 
   if (isIdentifierAllowed && initialValues?.identifier) {
@@ -617,4 +635,12 @@ export const resetFieldValue = (formik: FormikValues, fieldPath: string): void =
   if (!isEmpty(fieldValue) && getMultiTypeFromValue(fieldValue) === MultiTypeInputType.FIXED) {
     formik.setFieldValue(fieldPath, '')
   }
+}
+
+export const canFetchDigest = (imagePath: string, tag: string, connectorRefValue: string) => {
+  return (
+    getMultiTypeFromValue(imagePath) !== MultiTypeInputType.RUNTIME &&
+    getMultiTypeFromValue(tag) !== MultiTypeInputType.RUNTIME &&
+    getMultiTypeFromValue(connectorRefValue) !== MultiTypeInputType.RUNTIME
+  )
 }
