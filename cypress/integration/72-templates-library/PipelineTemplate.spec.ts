@@ -81,7 +81,7 @@ describe('Pipeline Template creation and assertion', () => {
     cy.contains('p', pipelineTemplateName).should('be.visible') //
     cy.contains('span', 'Unsaved changes').should('be.visible') //
 
-    cy.contains('span', 'Save').click()
+    cy.contains('span', 'Save').click({ force: true })
     cy.get('button[type="submit"]').click()
 
     cy.contains('span', 'yamlNode provided doesn not have root yaml field: pipeline').should('be.visible') //
