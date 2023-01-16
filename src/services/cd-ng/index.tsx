@@ -3179,12 +3179,14 @@ export type DockerConnectorDTO = ConnectorConfigDTO & {
 
 export type DockerHubArtifactConfig = ArtifactConfig & {
   connectorRef: string
+  digest?: string
   imagePath: string
   tag?: string
   tagRegex?: string
 }
 
 export interface DockerRequestDTO {
+  runtimeInputYaml?: string
   tag?: string
   tagRegex?: string
   tagsList?: string[]
@@ -22022,6 +22024,100 @@ export const getLastSuccessfulBuildForDockerPromise = (
     DockerRequestDTORequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/docker/getLastSuccessfulBuild`, props, signal)
+
+export interface GetLastSuccessfulBuildForDockerWithYamlQueryParams {
+  imagePath?: string
+  connectorRef?: string
+  tag?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
+  fqnPath: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  serviceId?: string
+}
+
+export type GetLastSuccessfulBuildForDockerWithYamlProps = Omit<
+  MutateProps<
+    ResponseDockerBuildDetailsDTO,
+    Failure | Error,
+    GetLastSuccessfulBuildForDockerWithYamlQueryParams,
+    DockerRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets docker last successful build with yaml input for expression resolution
+ */
+export const GetLastSuccessfulBuildForDockerWithYaml = (props: GetLastSuccessfulBuildForDockerWithYamlProps) => (
+  <Mutate<
+    ResponseDockerBuildDetailsDTO,
+    Failure | Error,
+    GetLastSuccessfulBuildForDockerWithYamlQueryParams,
+    DockerRequestDTORequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/docker/getLastSuccessfulBuildV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetLastSuccessfulBuildForDockerWithYamlProps = Omit<
+  UseMutateProps<
+    ResponseDockerBuildDetailsDTO,
+    Failure | Error,
+    GetLastSuccessfulBuildForDockerWithYamlQueryParams,
+    DockerRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets docker last successful build with yaml input for expression resolution
+ */
+export const useGetLastSuccessfulBuildForDockerWithYaml = (props: UseGetLastSuccessfulBuildForDockerWithYamlProps) =>
+  useMutate<
+    ResponseDockerBuildDetailsDTO,
+    Failure | Error,
+    GetLastSuccessfulBuildForDockerWithYamlQueryParams,
+    DockerRequestDTORequestBody,
+    void
+  >('POST', `/artifacts/docker/getLastSuccessfulBuildV2`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets docker last successful build with yaml input for expression resolution
+ */
+export const getLastSuccessfulBuildForDockerWithYamlPromise = (
+  props: MutateUsingFetchProps<
+    ResponseDockerBuildDetailsDTO,
+    Failure | Error,
+    GetLastSuccessfulBuildForDockerWithYamlQueryParams,
+    DockerRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseDockerBuildDetailsDTO,
+    Failure | Error,
+    GetLastSuccessfulBuildForDockerWithYamlQueryParams,
+    DockerRequestDTORequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/docker/getLastSuccessfulBuildV2`, props, signal)
 
 export interface ValidateArtifactForDockerQueryParams {
   imagePath?: string
