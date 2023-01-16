@@ -14,6 +14,8 @@ import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
 import { useQueryParams } from '@common/hooks'
 
 import { ConnectorConfigDTO, DockerBuildDetailsDTO, useGetBuildDetailsForDocker } from 'services/cd-ng'
@@ -32,6 +34,8 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
+import ArtifactDigestField from '../ArtifactImagePathTagView/ArtifactDigestField'
+
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -56,7 +60,7 @@ export function DockerRegistryArtifact({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
-
+  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
   const schemaObject = {
     imagePath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.imagePath')),
     tagType: Yup.string().required(),
@@ -85,27 +89,30 @@ export function DockerRegistryArtifact({
     return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
   }
 
+  const queryParams = {
+    imagePath: lastImagePath,
+    connectorRef: getConnectorRefQueryData(),
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    repoIdentifier,
+    branch
+  }
+
   const {
     data,
     loading: dockerBuildDetailsLoading,
     refetch: refetchDockerTag,
     error: dockerTagError
   } = useGetBuildDetailsForDocker({
-    queryParams: {
-      imagePath: lastImagePath,
-      connectorRef: getConnectorRefQueryData(),
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      repoIdentifier,
-      branch
-    },
+    queryParams,
     lazy: true,
     debounce: 300
   })
 
   useEffect(() => {
     if (checkIfQueryParamsisNotEmpty([lastImagePath])) {
+      /* istanbul ignore next */
       refetchDockerTag()
     }
   }, [lastImagePath, refetchDockerTag])
@@ -118,11 +125,13 @@ export function DockerRegistryArtifact({
   }, [data?.data?.buildDetailsList, dockerTagError])
 
   const canFetchTags = useCallback(
+    /* istanbul ignore next */
     (imagePath: string): boolean => {
       return !!(lastImagePath !== imagePath && shouldFetchFieldOptions(prevStepData, [imagePath]))
     },
     [lastImagePath, prevStepData]
   )
+
   const fetchTags = useCallback(
     (imagePath = ''): void => {
       if (canFetchTags(imagePath)) {
@@ -144,15 +153,16 @@ export function DockerRegistryArtifact({
   }
 
   const handleValidate = (formData: ImagePathTypes) => {
+    /* istanbul ignore next */
     if (hideHeaderAndNavBtns) {
       submitFormData({
         ...formData,
         tag: defaultTo(formData?.tag?.value, formData?.tag),
-        connectorId: getConnectorIdValue(prevStepData)
+        connectorId: getConnectorIdValue(prevStepData),
+        digest: formData?.digest
       })
     }
   }
-
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       {!hideHeaderAndNavBtns && (
@@ -166,12 +176,17 @@ export function DockerRegistryArtifact({
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         validate={handleValidate}
         onSubmit={formData => {
-          submitFormData({
+          const formObject = {
             ...prevStepData,
             ...formData,
             tag: defaultTo(formData?.tag?.value, formData?.tag),
             connectorId: getConnectorIdValue(prevStepData)
-          })
+          }
+
+          if (CD_NG_DOCKER_ARTIFACT_DIGEST) {
+            formObject['digest'] = defaultTo(formData?.digest?.value, formData?.digest)
+          }
+          submitFormData(formObject)
         }}
       >
         {formik => (
@@ -194,6 +209,21 @@ export function DockerRegistryArtifact({
                 setTagList={setTagList}
                 tagDisabled={isTagDisabled(formik?.values)}
               />
+
+              {CD_NG_DOCKER_ARTIFACT_DIGEST ? (
+                <div className={css.imagePathContainer}>
+                  <ArtifactDigestField
+                    selectedArtifact={selectedArtifact as ArtifactType}
+                    formik={formik}
+                    expressions={expressions}
+                    allowableTypes={allowableTypes}
+                    isReadonly={isReadonly}
+                    lastImagePath={lastImagePath}
+                    connectorRefValue={getConnectorRefQueryData()}
+                    isBuildDetailsLoading={dockerBuildDetailsLoading}
+                  />
+                </div>
+              ) : null}
             </div>
             {!hideHeaderAndNavBtns && (
               <Layout.Horizontal spacing="medium">
@@ -201,7 +231,9 @@ export function DockerRegistryArtifact({
                   variation={ButtonVariation.SECONDARY}
                   text={getString('back')}
                   icon="chevron-left"
-                  onClick={() => previousStep?.(prevStepData)}
+                  onClick={() => {
+                    previousStep?.(prevStepData)
+                  }}
                 />
                 <Button
                   variation={ButtonVariation.PRIMARY}

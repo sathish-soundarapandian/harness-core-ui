@@ -12,7 +12,12 @@ import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@h
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { SidecarArtifact, useGetBuildDetailsForDocker, useGetBuildDetailsForDockerWithYaml } from 'services/cd-ng'
+import {
+  SidecarArtifact,
+  useGetBuildDetailsForDocker,
+  useGetBuildDetailsForDockerWithYaml,
+  useGetLastSuccessfulBuildForDockerWithYaml
+} from 'services/cd-ng'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
@@ -20,6 +25,8 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -35,6 +42,7 @@ import {
   getValidInitialValuePath
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
+import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface DockerRenderContent extends ArtifactSourceRenderProps {
@@ -72,6 +80,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', imagePath: '' })
+  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const imagePathValue = getImagePath(
     // When the runtime value is provided some fixed value in templateusage view, that field becomes part of the pipeline yaml, and the fixed data comes from the pipelines api for service v2.
@@ -80,10 +89,38 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
   )
 
+  const tagValue = get(initialValues, `artifacts.${artifactPath}.spec.tag`, '')
+
   const connectorRefValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
+
+  const queryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch,
+    imagePath: getFinalQueryParamValue(imagePathValue),
+    connectorRef: getFinalQueryParamValue(connectorRefValue),
+    pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+    serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+    fqnPath: getFqnPath(
+      path as string,
+      !!isPropagatedStage,
+      stageIdentifier,
+      defaultTo(
+        isSidecar
+          ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+          : artifactPath,
+        ''
+      ),
+      'tag'
+    )
+  }
+
+  const pipelineRuntimeYaml = getYamlData(formik?.values, stepViewType as StepViewType, path as string)
   // v1 tags api is required to fetch tags for artifact source template usage while linking to service
   // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
   const {
@@ -111,38 +148,36 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     refetch: fetchV2Tags,
     error: fetchV2TagsError
   } = useMutateAsGet(useGetBuildDetailsForDockerWithYaml, {
-    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
+    body: pipelineRuntimeYaml,
     requestOptions: {
       headers: {
         'content-type': 'application/json'
       }
     },
 
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier,
-      repoIdentifier,
-      branch,
-      imagePath: getFinalQueryParamValue(imagePathValue),
-      connectorRef: getFinalQueryParamValue(connectorRefValue),
-      pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
-      fqnPath: getFqnPath(
-        path as string,
-        !!isPropagatedStage,
-        stageIdentifier,
-        defaultTo(
-          isSidecar
-            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
-            : artifactPath,
-          ''
-        ),
-        'tag'
-      )
-    },
+    queryParams,
     lazy: true
   })
+
+  const {
+    data: digestData,
+    loading: fetchingDigest,
+    refetch: fetchDigest,
+    error: digestError
+  } = useMutateAsGet(useGetLastSuccessfulBuildForDockerWithYaml, {
+    body: {
+      tag: tagValue,
+      pipelineRuntimeYaml
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams,
+    lazy: true
+  })
+
   const { fetchTags, fetchingTags, fetchTagsError, dockerdata } = useArtifactV1Data
     ? {
         fetchTags: fetchV1Tags,
@@ -256,17 +291,36 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
           )}
 
           {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) && (
-            <ArtifactTagRuntimeField
-              {...props}
-              isFieldDisabled={() => isFieldDisabled(`artifacts.${artifactPath}.spec.tag`, true)}
-              fetchingTags={fetchingTags}
-              buildDetailsList={dockerdata?.data?.buildDetailsList}
-              fetchTagsError={fetchTagsError}
-              fetchTags={fetchTagsEnabled}
-              expressions={expressions}
-              stageIdentifier={stageIdentifier}
-            />
+            <>
+              <ArtifactTagRuntimeField
+                {...props}
+                isFieldDisabled={() => isFieldDisabled(`artifacts.${artifactPath}.spec.tag`, true)}
+                fetchingTags={fetchingTags}
+                buildDetailsList={dockerdata?.data?.buildDetailsList}
+                fetchTagsError={fetchTagsError}
+                fetchTags={fetchTagsEnabled}
+                expressions={expressions}
+                stageIdentifier={stageIdentifier}
+              />
+            </>
           )}
+
+          {!fromTrigger &&
+            CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+              <div className={css.inputFieldLayout}>
+                <DigestField
+                  {...props}
+                  fetchingDigest={fetchingDigest}
+                  // buildDetailsList={dockerdata?.data?.buildDetailsList}
+                  fetchDigestError={digestError}
+                  fetchDigest={fetchDigest}
+                  expressions={expressions}
+                  stageIdentifier={stageIdentifier}
+                  digestData={digestData}
+                />
+              </div>
+            )}
 
           <div className={css.inputFieldLayout}>
             {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
@@ -294,6 +348,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
                 showAdvanced={true}
                 onChange={value => {
+                  /* istanbul ignore next */
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.tagRegex`, value)
                 }}
               />
