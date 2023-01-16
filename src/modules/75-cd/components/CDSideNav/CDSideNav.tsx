@@ -185,17 +185,29 @@ export default function CDSideNav(): React.ReactElement {
               })
             )
           } else if (experience) {
-            // when it's on trial page, forward to pipeline
-            history.push({
-              pathname: routes.toPipelineStudio({
-                orgIdentifier: data.orgIdentifier || '',
-                projectIdentifier: data.identifier || '',
-                pipelineIdentifier: '-1',
-                accountId,
-                module
-              }),
-              search: `?modal=${experience}`
-            })
+            // when it's on trial page, forward to get-started (behind FF)/ pipeline
+            history.push(
+              CD_ONBOARDING_ENABLED
+                ? {
+                    pathname: routes.toGetStartedWithCD({
+                      orgIdentifier: data.orgIdentifier || '',
+                      projectIdentifier: data.identifier || '',
+                      accountId,
+                      module
+                    }),
+                    search: `?modal=${experience}`
+                  }
+                : {
+                    pathname: routes.toPipelineStudio({
+                      orgIdentifier: data.orgIdentifier || '',
+                      projectIdentifier: data.identifier || '',
+                      pipelineIdentifier: '-1',
+                      accountId,
+                      module
+                    }),
+                    search: `?modal=${experience}`
+                  }
+            )
           } else {
             history.push(
               routes.toProjectOverview({
