@@ -17,7 +17,7 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import type { StringNGVariable } from 'services/pipeline-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
-import TerraformInputStep from '../Common/Terraform/TerraformInputStep'
+import TerragruntInputStep from '../Common/Terragrunt/InputSteps/TerragruntInputStep'
 import { ConfigurationTypes } from '../Common/Terraform/TerraformInterfaces'
 import type { TerragruntData, TerragruntVariableStepProps } from '../Common/Terragrunt/TerragruntInterface'
 import { onSubmitTerragruntData } from '../Common/Terragrunt/TerragruntHelper'
@@ -148,7 +148,7 @@ export class TerragruntApply extends PipelineStep<TerragruntData> {
     } = props
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <TerraformInputStep
+        <TerragruntInputStep
           initialValues={initialValues}
           onUpdate={data => onUpdate?.(this.processFormData(data))}
           onChange={data => onChange?.(this.processFormData(data))}

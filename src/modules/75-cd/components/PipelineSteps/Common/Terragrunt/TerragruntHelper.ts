@@ -22,7 +22,8 @@ import type { TerragruntData, TGPlanFormData } from './TerragruntInterface'
 export const onSubmitTerragruntData = (values: TerragruntData): TerragruntData => {
   const configObject: TerragruntExecutionData = {
     configFiles: {} as TerragruntConfigFilesWrapper,
-    moduleConfig: {} as TerragruntModuleConfig
+    moduleConfig: {} as TerragruntModuleConfig,
+    workspace: values.spec.configuration?.spec?.workspace
   }
   const envVars = values.spec.configuration?.spec?.environmentVariables
   const envMap: StringNGVariable[] = []
@@ -60,7 +61,7 @@ export const onSubmitTerragruntData = (values: TerragruntData): TerragruntData =
         }
       }
     } else if (values.spec.configuration?.spec?.backendConfig?.spec?.store) {
-      if (values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.type === 'Harness') {
+      if (values.spec.configuration?.spec?.backendConfig?.spec?.store?.type === 'Harness') {
         configObject['backendConfig'] = { ...values?.spec?.configuration?.spec?.backendConfig }
       } else {
         if (values.spec.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef) {
@@ -69,17 +70,17 @@ export const onSubmitTerragruntData = (values: TerragruntData): TerragruntData =
             ...values.spec.configuration?.spec?.backendConfig,
             spec: {
               store: {
-                ...values.spec?.configuration?.spec?.backendConfig?.spec?.store,
+                ...values.spec.configuration?.spec?.backendConfig?.spec?.store,
                 type:
                   backendConfigConnectorValue?.connector?.type ||
-                  values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.type,
+                  values.spec.configuration?.spec?.backendConfig?.spec?.store?.type,
                 spec: {
                   ...values.spec.configuration?.spec?.backendConfig?.spec?.store?.spec,
                   connectorRef: values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
                     ? getMultiTypeFromValue(
-                        values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
+                        values.spec.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
                       ) === MultiTypeInputType.RUNTIME || !backendConfigConnectorValue?.value
-                      ? values?.spec?.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
+                      ? values.spec.configuration?.spec?.backendConfig?.spec?.store?.spec?.connectorRef
                       : backendConfigConnectorValue?.value
                     : ''
                 }
@@ -87,42 +88,42 @@ export const onSubmitTerragruntData = (values: TerragruntData): TerragruntData =
             }
           }
         } else {
-          unset(values?.spec?.configuration?.spec, 'backendConfig')
+          unset(values.spec.configuration?.spec, 'backendConfig')
         }
       }
     } else {
-      unset(values?.spec?.configuration?.spec, 'backendConfig')
+      unset(values.spec.configuration?.spec, 'backendConfig')
     }
     if (envMap.length) {
       configObject['environmentVariables'] = envMap
     }
     if (targetMap.length) {
       configObject['targets'] = targetMap
-    } else if (getMultiTypeFromValue(values?.spec?.configuration?.spec?.targets) === MultiTypeInputType.RUNTIME) {
-      configObject['targets'] = values?.spec?.configuration?.spec?.targets
+    } else if (getMultiTypeFromValue(values.spec.configuration?.spec?.targets) === MultiTypeInputType.RUNTIME) {
+      configObject['targets'] = values.spec.configuration?.spec?.targets
     }
-    if (values?.spec?.configuration?.spec?.varFiles?.length) {
-      configObject['varFiles'] = values?.spec?.configuration?.spec?.varFiles
+    if (values.spec.configuration?.spec?.varFiles?.length) {
+      configObject['varFiles'] = values.spec.configuration?.spec?.varFiles
     } else {
-      unset(values?.spec?.configuration?.spec, 'varFiles')
+      unset(values.spec.configuration?.spec, 'varFiles')
     }
 
     if (
       connectorValue ||
-      getMultiTypeFromValue(values?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef) ===
+      getMultiTypeFromValue(values.spec.configuration?.spec?.configFiles?.store?.spec?.connectorRef) ===
         MultiTypeInputType.RUNTIME
     ) {
       configObject['configFiles'] = {
-        ...values.spec?.configuration?.spec?.configFiles,
+        ...values.spec.configuration?.spec?.configFiles,
         store: {
-          ...values.spec?.configuration?.spec?.configFiles?.store,
+          ...values.spec.configuration?.spec?.configFiles?.store,
           type: values.spec.configuration?.spec?.configFiles?.store?.type,
           spec: {
-            ...values.spec?.configuration?.spec?.configFiles?.store?.spec,
-            connectorRef: values?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef
+            ...values.spec.configuration?.spec?.configFiles?.store?.spec,
+            connectorRef: values.spec.configuration?.spec?.configFiles?.store?.spec?.connectorRef
               ? getMultiTypeFromValue(values?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef) ===
                   MultiTypeInputType.RUNTIME || !connectorValue?.value
-                ? values?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef
+                ? values.spec.configuration?.spec?.configFiles?.store?.spec?.connectorRef
                 : connectorValue?.value
               : ''
           }
@@ -130,7 +131,7 @@ export const onSubmitTerragruntData = (values: TerragruntData): TerragruntData =
       }
     }
 
-    if (values.spec?.configuration?.spec?.moduleConfig) {
+    if (values.spec.configuration?.spec?.moduleConfig) {
       configObject['moduleConfig'] = values.spec.configuration.spec?.moduleConfig as TerragruntModuleConfig
     }
     return {

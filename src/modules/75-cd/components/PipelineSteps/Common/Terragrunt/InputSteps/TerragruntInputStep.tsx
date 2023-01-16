@@ -7,22 +7,15 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { get, isEmpty } from 'lodash-es'
-import {
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  FormikForm,
-  Label,
-  Text,
-  FormInput,
-  Container
-} from '@harness/uicore'
+import { isEmpty } from 'lodash-es'
+import { FormikForm, Label, Text, FormInput, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import List from '@common/components/List/List'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -39,6 +32,7 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
   const { getString } = useStrings()
   const { inputSetData, readonly, path, allowableTypes, stepViewType, onUpdate, onChange } = props
   const { expressions } = useVariablesExpression()
+  const config = inputSetData?.template?.spec?.configuration
   /* istanbul ignore next */
   const onUpdateRef = (arg: TerragruntData): void => {
     onUpdate?.(arg as T)
@@ -49,7 +43,7 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
   }
   return (
     <FormikForm>
-      {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
+      {isValueRuntimeInput(inputSetData?.template?.timeout) && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
             label={getString('pipelineSteps.timeoutLabel')}
@@ -68,50 +62,48 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
           />
         </div>
       )}
-      {getMultiTypeFromValue((inputSetData?.template as TerragruntData)?.spec?.provisionerIdentifier) ===
-        MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.spec.provisionerIdentifier`}
-            placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
-            label={getString('pipelineSteps.provisionerIdentifier')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            fieldPath={'spec.provisionerIdentifier'}
-            template={inputSetData?.template}
-          />
-        </div>
+      {isValueRuntimeInput((inputSetData?.template as TerragruntData)?.spec?.provisionerIdentifier) && (
+        <TextFieldInputSetView
+          name={`${path}.spec.provisionerIdentifier`}
+          placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
+          label={getString('pipelineSteps.provisionerIdentifier')}
+          disabled={readonly}
+          className={cx(stepCss.formGroup, stepCss.md)}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          fieldPath={'spec.provisionerIdentifier'}
+          template={inputSetData?.template}
+        />
       )}
-      {getMultiTypeFromValue(get(inputSetData?.template, 'spec.configuration.spec.moduleConfig.path')) ===
-        MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            placeholder={'Enter path'}
-            label={getString('common.path')}
-            name={`${path}.spec.configuration.spec.moduleConfig.path`}
-            disabled={readonly}
-            template={inputSetData?.template}
-            fieldPath={'spec.configuration.spec.moduleConfig.path'}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-          />
-        </div>
+
+      {isValueRuntimeInput(config?.spec?.moduleConfig?.path) && (
+        <TextFieldInputSetView
+          placeholder={'Enter path'}
+          label={getString('common.path')}
+          name={`${path}.spec.configuration.spec.moduleConfig.path`}
+          disabled={readonly}
+          className={cx(stepCss.formGroup, stepCss.md)}
+          template={inputSetData?.template}
+          fieldPath={'spec.configuration.spec.moduleConfig.path'}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+        />
       )}
+
       <ConfigInputs {...props} onUpdate={onUpdateRef} onChange={onChangeRef} />
-      {inputSetData?.template?.spec?.configuration?.spec?.varFiles?.length && (
+      {config?.spec?.varFiles?.length && (
         <Label style={{ color: Color.GREY_900, paddingBottom: 'var(--spacing-medium)' }}>
           {getString('cd.terraformVarFiles')}
         </Label>
       )}
-      {inputSetData?.template?.spec?.configuration?.spec?.varFiles?.map((varFile: any, index) => {
+      {config?.spec?.varFiles?.map((varFile: any, index) => {
         if (varFile?.varFile?.type === TerraformStoreTypes.Inline) {
           return (
             <React.Fragment key={`${path}.spec.configuration.spec.varFiles[${index}]`}>
@@ -120,7 +112,7 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
                 {varFile?.varFile?.identifier}
               </Container>
 
-              {getMultiTypeFromValue(varFile?.varFile?.spec?.content) === MultiTypeInputType.RUNTIME && (
+              {isValueRuntimeInput(varFile?.varFile?.spec?.content) && (
                 <div className={cx(stepCss.formGroup, stepCss.md)}>
                   <FormInput.MultiTextInput
                     name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.content`}
@@ -148,8 +140,26 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
         return <></>
       })}
 
-      {getMultiTypeFromValue(get(inputSetData?.template, 'spec.configuration.spec.backendConfig.spec.content')) ===
-        MultiTypeInputType.RUNTIME && (
+      {isValueRuntimeInput(config?.spec?.workspace) && (
+        <TextFieldInputSetView
+          name={`${path}.spec.configuration.spec.workspace`}
+          placeholder={getString('pipeline.terraformStep.workspace')}
+          label={getString('pipelineSteps.workspace')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={inputSetData?.template}
+          className={cx(stepCss.formGroup, stepCss.md)}
+          fieldPath={`spec.configuration.spec.workspace`}
+        />
+      )}
+
+      {isValueRuntimeInput(config?.spec?.backendConfig?.spec?.content) && (
         <div
           className={cx(stepCss.formGroup, stepCss.md)}
           onKeyDown={e => {
@@ -189,8 +199,7 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
         </div>
       )}
       <ConfigInputs {...props} isBackendConfig={true} onUpdate={onUpdateRef} onChange={onChangeRef} />
-      {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.spec?.targets as string) ===
-        MultiTypeInputType.RUNTIME && (
+      {isValueRuntimeInput(config?.spec?.targets as string) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <List
             name={`${path}.spec.configuration.spec.targets`}

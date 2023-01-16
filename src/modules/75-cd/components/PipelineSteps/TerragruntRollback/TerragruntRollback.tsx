@@ -46,7 +46,7 @@ function TerragruntRollbackWidget(
   props: TerragruntRollbackProps,
   formikRef: StepFormikFowardRef<TFRollbackData>
 ): React.ReactElement {
-  const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, isNewStep = true, readonly = false } = props
+  const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, isNewStep, readonly = false } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
@@ -142,10 +142,11 @@ function TerragruntRollbackWidget(
                     showRequiredField={false}
                     showDefaultField={false}
                     showAdvanced={true}
-                    onChange={value => {
-                      /* istanbul ignore next */
-                      setFieldValue('spec.provisionerIdentifier', value)
-                    }}
+                    onChange={
+                      /* istanbul ignore next */ value => {
+                        setFieldValue('spec.provisionerIdentifier', value)
+                      }
+                    }
                     isReadonly={readonly}
                   />
                 )}

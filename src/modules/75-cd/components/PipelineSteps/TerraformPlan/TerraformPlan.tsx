@@ -340,6 +340,7 @@ function TerraformPlanWidget(
           setConnectorView={setConnectorView}
           selectedConnector={selectedConnector}
           setSelectedConnector={setSelectedConnector}
+          isTerragrunt={false}
         />
         {connectorView ? getNewConnectorSteps() : null}
         {
@@ -373,6 +374,7 @@ function TerraformPlanWidget(
               name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
               isTerraformPlan
               isBackendConfig={isBackendConfig}
+              isTerragrunt={false}
               isReadonly={readonly}
               allowableTypes={allowableTypes}
               onSubmitCallBack={(data: any, prevStepData: any) => {

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-
+import { get } from 'lodash-es'
 import { FormInput, getMultiTypeFromValue, Label, MultiTypeInputType, Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -28,29 +28,33 @@ export default function TgPlanVarFiles(props: TerragruntPlanProps): React.ReactE
       <Label style={{ color: Color.GREY_900, paddingBottom: 'var(--spacing-medium)' }}>
         {getString('cd.terraformVarFiles')}
       </Label>
-      {inputSetData?.template?.spec?.configuration?.varFiles?.map((varFile: any, index) => {
-        if (varFile?.varFile?.type === TerraformStoreTypes.Inline) {
+      {get(inputSetData?.template, 'spec.configuration.varFiles')?.map((varFile: any, index: number) => {
+        const { type, identifier } = varFile.varFile
+        if (type === TerraformStoreTypes.Inline) {
           return (
             <React.Fragment key={`${path}.spec.configuration.varFiles[${index}]`}>
               <Container flex width={150} padding={{ bottom: 'small' }}>
                 <Text font={{ weight: 'bold' }}>{getString('cd.varFile')}:</Text>
-                {varFile?.varFile?.identifier}
+                {identifier}
               </Container>
-              {getMultiTypeFromValue(varFile?.varFile?.spec?.content) === MultiTypeInputType.RUNTIME && (
-                <div className={cx(stepCss.formGroup, stepCss.md)}>
-                  <FormInput.MultiTextInput
-                    name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.content`}
-                    label={getString('pipelineSteps.content')}
-                    multiTextInputProps={{
-                      expressions,
-                      allowableTypes
-                    }}
-                  />
-                </div>
-              )}
+              {
+                /* istanbul ignore next */ getMultiTypeFromValue(get(varFile.varFile, 'spec.content')) ===
+                  MultiTypeInputType.RUNTIME && (
+                  <div className={cx(stepCss.formGroup, stepCss.md)}>
+                    <FormInput.MultiTextInput
+                      name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.content`}
+                      label={getString('pipelineSteps.content')}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes
+                      }}
+                    />
+                  </div>
+                )
+              }
             </React.Fragment>
           )
-        } else if (varFile.varFile?.type === TerraformStoreTypes.Remote) {
+        } else if (type === TerraformStoreTypes.Remote) {
           return <RemoteVarSection remoteVar={varFile} index={index} {...props} />
         }
         return <></>

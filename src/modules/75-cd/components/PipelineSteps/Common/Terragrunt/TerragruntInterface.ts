@@ -123,7 +123,7 @@ export interface TerragruntRollbackVariableStepProps {
   variablesData: TGRollbackData
 }
 export interface TGPlanFormData extends StepElementConfig {
-  spec?: Omit<TerragruntPlanStepInfo, 'configuration'> & {
+  spec: Omit<TerragruntPlanStepInfo, 'configuration'> & {
     configuration: Omit<TerragruntPlanExecutionData, 'environmentVariables' | 'targets'> & {
       targets?: Array<{ id: string; value: string }> | string[] | string
       environmentVariables?: Array<{ key: string; id: string; value: string }> | string
@@ -156,5 +156,5 @@ export interface TerragruntPlanVariableStepProps {
   stageIdentifier?: string
   onUpdate?(data: TGPlanFormData): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData?: TGPlanFormData
+  variablesData: TGPlanFormData
 }

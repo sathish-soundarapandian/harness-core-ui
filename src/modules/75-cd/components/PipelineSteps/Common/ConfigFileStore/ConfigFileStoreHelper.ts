@@ -21,6 +21,8 @@ import type { Scope } from '@common/interfaces/SecretsInterface'
 export const AllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket', 'Artifactory']
 export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Artifactory' | 'Harness'
 
+export const TerragruntAllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket']
+
 export const tfVarIcons: any = {
   Git: 'service-github',
   Github: 'github',
@@ -96,7 +98,7 @@ export const formikOnChangeNames = (path: string) => ({
   repoName: `${path}.store.spec.repoName`,
   branch: `${path}.store.spec.branch`,
   commitId: `${path}.store.spec.commitId`,
-  folderPath: `formik.values.${path}.store.spec.folderPath`,
+  folderPath: `${path}.store.spec.folderPath`,
   useConnectorCredentials: `${path}.moduleSource.useConnectorCredentials`
 })
 

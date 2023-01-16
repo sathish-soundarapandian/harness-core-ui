@@ -27,7 +27,8 @@ const props = {
     MultiTypeInputType.RUNTIME
   ] as AllowedTypesWithRunTime[],
   handleConnectorViewChange: jest.fn(),
-  setSelectedConnector: jest.fn()
+  setSelectedConnector: jest.fn(),
+  isTerragrunt: false
 }
 describe('Terraform Var Store tests', () => {
   test('initial render', async () => {
@@ -74,7 +75,8 @@ describe('Terraform Var Store tests', () => {
         MultiTypeInputType.RUNTIME
       ] as AllowedTypesWithRunTime[],
       handleConnectorViewChange: jest.fn(),
-      setSelectedConnector: jest.fn()
+      setSelectedConnector: jest.fn(),
+      isTerragrunt: false
     }
     const { container } = render(
       <TestWrapper>
@@ -110,7 +112,8 @@ describe('Terraform Var Store tests', () => {
         MultiTypeInputType.RUNTIME
       ] as AllowedTypesWithRunTime[],
       handleConnectorViewChange: jest.fn(),
-      setSelectedConnector: jest.fn()
+      setSelectedConnector: jest.fn(),
+      isTerragrunt: false
     }
     const { container } = render(
       <TestWrapper>
@@ -147,7 +150,8 @@ describe('Terraform Var Store tests', () => {
         MultiTypeInputType.RUNTIME
       ] as AllowedTypesWithRunTime[],
       handleConnectorViewChange: jest.fn(),
-      setSelectedConnector: jest.fn()
+      setSelectedConnector: jest.fn(),
+      isTerragrunt: false
     }
     render(
       <TestWrapper>

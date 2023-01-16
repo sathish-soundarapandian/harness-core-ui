@@ -29,7 +29,7 @@ import { Form } from 'formik'
 import { get } from 'lodash-es'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { HarnessOption } from '@pipeline/components/StartupScriptSelection/HarnessOption'
 import { formInputNames, formikOnChangeNames, stepTwoValidationSchema, getPath } from './ConfigFileStoreHelper'
 import type { Connector } from './ConfigFileStoreHelper'
@@ -43,6 +43,7 @@ interface ConfigFileStoreStepTwoProps {
   isTerraformPlan?: boolean
   isBackendConfig?: boolean
   isTerragruntPlan?: boolean
+  isTerragrunt: boolean
 }
 
 export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreStepTwoProps> = ({
@@ -54,7 +55,8 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
   name,
   isTerraformPlan = false,
   isBackendConfig = false,
-  isTerragruntPlan = false
+  isTerragruntPlan = false,
+  isTerragrunt
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -172,6 +174,7 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
                             formik.setFieldValue(formikOnChangeNames(path).branch, value)
                           }}
                           isReadonly={isReadonly}
+                          allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                         />
                       )
                     }
@@ -201,6 +204,7 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
                             formik.setFieldValue(formikOnChangeNames(path).commitId, value)
                           }}
                           isReadonly={isReadonly}
+                          allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                         />
                       )
                     }
@@ -229,12 +233,13 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
                           formik.setFieldValue(formikOnChangeNames(path).folderPath, value)
                         }}
                         isReadonly={isReadonly}
+                        allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                       />
                     )
                   }
                 </div>
 
-                {!isBackendConfig && (
+                {!isBackendConfig && !isTerragrunt && (
                   <Accordion>
                     <Accordion.Panel
                       id="advanced-config"

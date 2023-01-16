@@ -30,7 +30,6 @@ import type { TerragruntVarFileWrapper } from 'services/cd-ng'
 import type { TerragruntData } from '../TerragruntInterface'
 import { RemoteVar, TerraformStoreTypes } from '../../Terraform/TerraformInterfaces'
 import { TFRemoteWizard } from '../../Terraform/Editview/TFRemoteWizard'
-import { TFArtifactoryForm } from '../../Terraform/Editview/TerraformArtifactoryForm'
 import { TFVarStore } from '../../Terraform/Editview/TFVarStore'
 import InlineVarFile from '../../Terraform/Editview/InlineVarFile'
 import { DIALOG_PROPS } from '../TerragruntHelper'
@@ -47,14 +46,7 @@ interface TGVarFileProps {
 }
 
 export default function TgVarFileList(props: TGVarFileProps): React.ReactElement {
-  const {
-    formik,
-    isReadonly = false,
-    allowableTypes,
-    getNewConnectorSteps,
-    setSelectedConnector,
-    selectedConnector
-  } = props
+  const { formik, isReadonly = false, allowableTypes, getNewConnectorSteps, setSelectedConnector } = props
   const inlineInitValues: TerragruntVarFileWrapper = {
     varFile: {
       spec: {},
@@ -262,25 +254,16 @@ export default function TgVarFileList(props: TGVarFileProps): React.ReactElement
                                   setSelectedConnector={setSelectedConnector}
                                   handleConnectorViewChange={() => setConnectorView(true)}
                                   setConnectorView={setConnectorView}
+                                  isTerragrunt
                                 />
                                 {connectorView ? getNewConnectorSteps() : null}
-                                {selectedConnector === 'Artifactory' ? (
-                                  <TFArtifactoryForm
-                                    isConfig={false}
-                                    isTerraformPlan={false}
-                                    allowableTypes={allowableTypes}
-                                    name={getString('cd.varFileDetails')}
-                                    onSubmitCallBack={(values: RemoteVar) => onSubmit(values, arrayHelpers)}
-                                  />
-                                ) : (
-                                  <TFRemoteWizard
-                                    name={getString('cd.varFileDetails')}
-                                    onSubmitCallBack={(values: RemoteVar) => onSubmit(values, arrayHelpers)}
-                                    isEditMode={isEditMode}
-                                    isReadonly={isReadonly}
-                                    allowableTypes={allowableTypes}
-                                  />
-                                )}
+                                <TFRemoteWizard
+                                  name={getString('cd.varFileDetails')}
+                                  onSubmitCallBack={(values: RemoteVar) => onSubmit(values, arrayHelpers)}
+                                  isEditMode={isEditMode}
+                                  isReadonly={isReadonly}
+                                  allowableTypes={allowableTypes}
+                                />
                               </StepWizard>
                             </div>
                             <Button

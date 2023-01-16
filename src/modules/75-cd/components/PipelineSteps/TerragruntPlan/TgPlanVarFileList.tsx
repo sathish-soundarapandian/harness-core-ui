@@ -21,7 +21,6 @@ import type { TGPlanFormData } from '../Common/Terragrunt/TerragruntInterface'
 import { TFRemoteWizard } from '../Common/Terraform/Editview/TFRemoteWizard'
 import { TFVarStore } from '../Common/Terraform/Editview/TFVarStore'
 import InlineVarFile from '../Common/Terraform/Editview/InlineVarFile'
-import { TFArtifactoryForm } from '../Common/Terraform/Editview/TerraformArtifactoryForm'
 import { DIALOG_PROPS } from '../Common/Terragrunt/TerragruntHelper'
 import css from '../Common/Terraform/Editview/TerraformVarfile.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -36,14 +35,7 @@ interface TgVarFileProps {
 }
 
 export default function TgPlanVarFileList(props: TgVarFileProps): React.ReactElement {
-  const {
-    formik,
-    isReadonly = false,
-    allowableTypes,
-    getNewConnectorSteps,
-    setSelectedConnector,
-    selectedConnector
-  } = props
+  const { formik, isReadonly = false, allowableTypes, getNewConnectorSteps, setSelectedConnector } = props
   const inlineInitValues: TerragruntVarFileWrapper = {
     varFile: {
       identifier: '',
@@ -68,7 +60,7 @@ export default function TgPlanVarFileList(props: TgVarFileProps): React.ReactEle
   const [connectorView, setConnectorView] = React.useState(false)
   const { getString } = useStrings()
 
-  const onSubmit = (values: RemoteVar, arrayHelpers: any) => {
+  const onSubmit = /* istanbul ignore next */ (values: RemoteVar, arrayHelpers: any) => {
     if (isEditMode) {
       arrayHelpers.replace(selectedVarIndex, values)
     } else {
@@ -78,50 +70,52 @@ export default function TgPlanVarFileList(props: TgVarFileProps): React.ReactEle
   }
 
   const remoteRender = (varFile: TerragruntVarFileWrapper, index: number) => {
-    const { type, identifier } = varFile.varFile
+    const { identifier } = varFile.varFile
     return (
       <div className={css.configField} data-name={`edit-remote-${index}`}>
         <Layout.Horizontal>
-          {type === getString('remote') && <Icon name="remote" className={css.iconPosition} />}
+          <Icon name="remote" className={css.iconPosition} />
           <Text className={css.branch}>{identifier}</Text>
         </Layout.Horizontal>
         <Icon
           name="edit"
-          onClick={() => {
-            /* istanbul ignore next */
-            setShowRemoteWizard(true)
-            setSelectedVar(varFile)
-            setSelectedVarIndex(index)
-            setIsEditMode(true)
-          }}
+          onClick={
+            /* istanbul ignore next */ () => {
+              setShowRemoteWizard(true)
+              setSelectedVar(varFile)
+              setSelectedVarIndex(index)
+              setIsEditMode(true)
+            }
+          }
         />
       </div>
     )
   }
 
   const inlineRender = (varFile: TerragruntVarFileWrapper, index: number) => {
-    const { type, identifier } = varFile.varFile
+    const { identifier } = varFile.varFile
     return (
       <div className={css.configField} data-name={`edit-inline-${index}`}>
         <Layout.Horizontal>
-          {type === getString('inline') && <Icon name="Inline" className={css.iconPosition} />}
+          <Icon name="Inline" className={css.iconPosition} />
           <Text className={css.branch}>{identifier}</Text>
         </Layout.Horizontal>
         <Icon
           name="edit"
-          onClick={() => {
-            /* istanbul ignore next */
-            setShowTfModal(true)
-            setIsEditMode(true)
-            setSelectedVarIndex(index)
-            setSelectedVar(varFile)
-          }}
+          onClick={
+            /* istanbul ignore next */ () => {
+              setShowTfModal(true)
+              setIsEditMode(true)
+              setSelectedVarIndex(index)
+              setSelectedVar(varFile)
+            }
+          }
         />
       </div>
     )
   }
 
-  const getTitle = () => (
+  const getTitle = (
     <Layout.Vertical flex style={{ justifyContent: 'center', alignItems: 'center' }} margin={{ bottom: 'xlarge' }}>
       <Icon name="service-terraform" className={css.remoteIcon} size={50} padding={{ bottom: 'large' }} />
       <Text color={Color.WHITE}>{getString('pipelineSteps.remoteFile')}</Text>
@@ -148,15 +142,17 @@ export default function TgPlanVarFileList(props: TgVarFileProps): React.ReactEle
       </Label>
       <div className={cx(stepCss.formGroup, css.tfVarMargin)}>
         <DragDropContext
-          onDragEnd={(result: DropResult) => {
-            if (!result.destination) {
-              return
+          onDragEnd={
+            /* istanbul ignore next */ (result: DropResult) => {
+              if (!result.destination) {
+                return
+              }
+              const res = Array.from(get(formik.values, 'spec.configuration.varFiles'))
+              const [removed] = res.splice(result.source.index, 1)
+              res.splice(result.destination.index, 0, removed)
+              formik.setFieldValue('spec.configuration.varFiles', res)
             }
-            const res = Array.from(get(formik.values, 'spec.configuration.varFiles'))
-            const [removed] = res.splice(result.source.index, 1)
-            res.splice(result.destination.index, 0, removed)
-            formik.setFieldValue('spec.configuration.varFiles', res)
-          }}
+          }
         >
           <Droppable droppableId="droppable">
             {provided => (
@@ -166,7 +162,7 @@ export default function TgPlanVarFileList(props: TgVarFileProps): React.ReactEle
                   render={arrayHelpers => {
                     return (
                       <div>
-                        {formik.values?.spec?.configuration?.varFiles?.map(
+                        {get(formik.values.spec.configuration, 'varFiles')?.map(
                           (varFile: TerragruntVarFileWrapper, index: number) => {
                             return (
                               <Draggable key={index} draggableId={`${index}`} index={index}>
@@ -180,12 +176,12 @@ export default function TgPlanVarFileList(props: TgVarFileProps): React.ReactEle
                                   >
                                     <Layout.Horizontal spacing="medium" style={{ alignItems: 'baseline' }}>
                                       <Icon name="drag-handle-vertical" className={css.drag} />
-                                      {(formik.values.spec?.configuration?.varFiles || [])?.length > 1 && (
+                                      {get(formik.values.spec.configuration, 'varFiles', [])?.length > 1 && (
                                         <Text color={Color.BLACK}>{`${index + 1}.`}</Text>
                                       )}
-                                      {varFile?.varFile?.type === TerraformStoreTypes.Remote &&
+                                      {get(varFile, 'varFile.type') === TerraformStoreTypes.Remote &&
                                         remoteRender(varFile, index)}
-                                      {varFile?.varFile?.type === TerraformStoreTypes.Inline &&
+                                      {get(varFile, 'varFile.type') === TerraformStoreTypes.Inline &&
                                         inlineRender(varFile, index)}
 
                                       <Button
@@ -211,15 +207,17 @@ export default function TgPlanVarFileList(props: TgVarFileProps): React.ReactEle
                               <MenuItem
                                 text={<Text intent="primary">{getString('cd.addInline')} </Text>}
                                 icon={<Icon name="Inline" className={css.iconMargin} />}
-                                onClick={() => {
-                                  setShowTfModal(true)
-                                }}
+                                onClick={
+                                  /* istanbul ignore next */ () => {
+                                    setShowTfModal(true)
+                                  }
+                                }
                               />
 
                               <MenuItem
                                 text={<Text intent="primary">{getString('cd.addRemote')}</Text>}
                                 icon={<Icon name="Inline" className={css.iconMargin} />}
-                                onClick={() => setShowRemoteWizard(true)}
+                                onClick={/* istanbul ignore next */ () => setShowRemoteWizard(true)}
                               />
                             </Menu>
                           }
@@ -232,74 +230,77 @@ export default function TgPlanVarFileList(props: TgVarFileProps): React.ReactEle
                             {getString('plusAdd')}
                           </Button>
                         </Popover>
-                        {showRemoteWizard && (
-                          <Dialog
-                            {...DIALOG_PROPS}
-                            isOpen={true}
-                            isCloseButtonShown
-                            onClose={() => {
-                              onCloseOfRemoteWizard()
-                            }}
-                            className={cx(css.modal, Classes.DIALOG)}
-                          >
-                            <div className={css.createTfWizard}>
-                              <StepWizard title={getTitle()} initialStep={1} className={css.manifestWizard}>
-                                <TFVarStore
-                                  isReadonly={isReadonly}
-                                  name={getString('cd.tfVarStore')}
-                                  initialValues={isEditMode ? selectedVar : remoteInitialValues}
-                                  isEditMode={isEditMode}
-                                  allowableTypes={allowableTypes}
-                                  setSelectedConnector={setSelectedConnector}
-                                  handleConnectorViewChange={() => setConnectorView(true)}
-                                  setConnectorView={setConnectorView}
-                                />
-                                {connectorView ? getNewConnectorSteps() : null}
-                                {selectedConnector === 'Artifactory' ? (
-                                  <TFArtifactoryForm
-                                    isConfig={false}
-                                    isTerraformPlan={false}
+                        {
+                          /* istanbul ignore next */ showRemoteWizard && (
+                            <Dialog
+                              {...DIALOG_PROPS}
+                              isOpen={true}
+                              isCloseButtonShown
+                              onClose={
+                                /* istanbul ignore next */ () => {
+                                  onCloseOfRemoteWizard()
+                                }
+                              }
+                              className={cx(css.modal, Classes.DIALOG)}
+                            >
+                              <div className={css.createTfWizard}>
+                                <StepWizard title={getTitle} initialStep={1} className={css.manifestWizard}>
+                                  <TFVarStore
+                                    isReadonly={isReadonly}
+                                    name={getString('cd.tfVarStore')}
+                                    initialValues={isEditMode ? selectedVar : remoteInitialValues}
+                                    isEditMode={isEditMode}
                                     allowableTypes={allowableTypes}
-                                    name={getString('cd.varFileDetails')}
-                                    onSubmitCallBack={(values: RemoteVar) => onSubmit(values, arrayHelpers)}
+                                    setSelectedConnector={setSelectedConnector}
+                                    handleConnectorViewChange={/* istanbul ignore next */ () => setConnectorView(true)}
+                                    setConnectorView={setConnectorView}
+                                    isTerragrunt
                                   />
-                                ) : (
+                                  {connectorView ? getNewConnectorSteps() : null}
                                   <TFRemoteWizard
                                     name={getString('cd.varFileDetails')}
-                                    onSubmitCallBack={(values: RemoteVar) => onSubmit(values, arrayHelpers)}
+                                    onSubmitCallBack={
+                                      /* istanbul ignore next */ (values: RemoteVar) => onSubmit(values, arrayHelpers)
+                                    }
                                     isEditMode={isEditMode}
                                     isReadonly={isReadonly}
                                     allowableTypes={allowableTypes}
                                   />
-                                )}
-                              </StepWizard>
-                            </div>
-                            <Button
-                              minimal
-                              icon="cross"
-                              iconProps={{ size: 18 }}
-                              onClick={() => setShowRemoteWizard(false)}
-                              className={css.crossIcon}
+                                </StepWizard>
+                              </div>
+                              <Button
+                                minimal
+                                icon="cross"
+                                iconProps={{ size: 18 }}
+                                onClick={/* istanbul ignore next */ () => setShowRemoteWizard(false)}
+                                className={css.crossIcon}
+                              />
+                            </Dialog>
+                          )
+                        }
+                        {
+                          /* istanbul ignore next */ showTfModal && (
+                            <InlineVarFile
+                              arrayHelpers={arrayHelpers}
+                              isEditMode={isEditMode}
+                              selectedVarIndex={selectedVarIndex}
+                              showTfModal={showTfModal}
+                              selectedVar={selectedVar}
+                              onClose={
+                                /* istanbul ignore next */ () => {
+                                  onCloseOfInlineVarForm()
+                                }
+                              }
+                              onSubmit={
+                                /* istanbul ignore next */ () => {
+                                  onCloseOfInlineVarForm()
+                                }
+                              }
+                              isReadonly={isReadonly}
+                              allowableTypes={allowableTypes}
                             />
-                          </Dialog>
-                        )}
-                        {showTfModal && (
-                          <InlineVarFile
-                            arrayHelpers={arrayHelpers}
-                            isEditMode={isEditMode}
-                            selectedVarIndex={selectedVarIndex}
-                            showTfModal={showTfModal}
-                            selectedVar={selectedVar}
-                            onClose={() => {
-                              onCloseOfInlineVarForm()
-                            }}
-                            onSubmit={() => {
-                              onCloseOfInlineVarForm()
-                            }}
-                            isReadonly={isReadonly}
-                            allowableTypes={allowableTypes}
-                          />
-                        )}
+                          )
+                        }
                       </div>
                     )
                   }}

@@ -18,6 +18,7 @@ import {
 } from '@delegates/components/CreateDelegate/K8sDelegate/DelegateSetupStep/DelegateSetupStep.types'
 import { DelegateSetupDetails, getDelegateTokensPromise, GetDelegateTokensQueryParams } from 'services/cd-ng'
 import {
+  createDelegateGroupPromise,
   DelegateSizeDetails,
   generateKubernetesYamlPromise,
   GenerateKubernetesYamlQueryParams,
@@ -114,7 +115,7 @@ export const CreateK8sDelegate = ({
         identifier: StringUtils.getIdentifierFromName(delegateName1),
         description: '',
         delegateType: delegateType,
-        size: DelegateSize.LAPTOP,
+        size: DelegateSize.LAPTOP as DelegateSizeDetails['size'],
         sesssionIdentifier: '',
         tokenName: delegateToken,
         k8sConfigDetails: {
@@ -169,6 +170,16 @@ export const CreateK8sDelegate = ({
             })
             setVisibleYaml(generatedYamlResponse as any)
             setLoader(false)
+            !existingDelegate &&
+              (await createDelegateGroupPromise({
+                queryParams: {
+                  accountId
+                },
+                body: {
+                  ...createParams1,
+                  delegateType
+                }
+              }))
             onSuccessHandler({ delegateCreated: true, delegateYamlResponse: createKubernetesYamlResponse })
             !existingDelegate &&
               trackEvent(CDOnboardingActions.SaveCreateOnboardingDelegate, {

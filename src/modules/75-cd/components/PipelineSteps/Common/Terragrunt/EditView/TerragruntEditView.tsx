@@ -53,7 +53,6 @@ import StepGitAuthentication from '@connectors/components/CreateConnector/GitCon
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
-import StepArtifactoryAuthentication from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -68,9 +67,7 @@ import {
   getConfigFilePath,
   getPath
 } from '../../ConfigFileStore/ConfigFileStoreHelper'
-import { TFArtifactoryForm } from '../../Terraform/Editview/TerraformArtifactoryForm'
 import { BackendConfigurationTypes, ConfigurationTypes } from '../../Terraform/TerraformInterfaces'
-import { formatArtifactoryData } from '../../Terraform/Editview/TerraformArtifactoryFormHelper'
 import type { TerragruntData, TerragruntProps } from '../TerragruntInterface'
 import { ConfigFileStoreStepOne } from '../../ConfigFileStore/ConfigFileStoreStepOne'
 import { ConfigFileStoreStepTwo } from '../../ConfigFileStore/ConfigFileStoreStepTwo'
@@ -213,18 +210,6 @@ export default function TerragruntEitView(
             projectIdentifier={projectIdentifier}
           />
         ) : null}
-        {connectorType === Connectors.ARTIFACTORY ? (
-          <StepArtifactoryAuthentication
-            name={getString('details')}
-            identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
-            isEditMode={isEditMode}
-            setIsEditMode={setIsEditMode}
-            connectorInfo={undefined}
-            accountId={accountId}
-            orgIdentifier={orgIdentifier}
-            projectIdentifier={projectIdentifier}
-          />
-        ) : null}
         <DelegateSelectorStep
           name={getString('delegate.DelegateselectionLabel')}
           isEditMode={isEditMode}
@@ -274,7 +259,6 @@ export default function TerragruntEitView(
   }
   const newConfigFileComponent = (
     formik: FormikProps<TerragruntData>,
-    isConfig: boolean,
     isBackendConfig: boolean
   ): React.ReactElement => {
     return (
@@ -295,75 +279,52 @@ export default function TerragruntEitView(
           isTerragrunt
         />
         {connectorView ? getNewConnectorSteps() : null}
-        {selectedConnector === 'Artifactory' ? (
-          <TFArtifactoryForm
-            isConfig={isConfig}
-            isTerraformPlan={false}
-            isBackendConfig={isBackendConfig}
-            allowableTypes={allowableTypes}
-            name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
-            onSubmitCallBack={(data: any, prevStepData: any) => {
-              const path = getPath(false, false, isBackendConfig)
-              const configObject = get(prevStepData?.formValues, path)
 
-              const valObj = formatArtifactoryData(
-                prevStepData,
-                data,
-                configObject,
-                formik,
-                isBackendConfig ? 'spec.configuration.backendConfig.spec' : 'spec.configuration.configFiles'
-              )
-              set(valObj, path, { ...configObject })
-              formik.setValues(valObj)
-              setConnectorView(false)
-              setShowModal(false)
-            }}
-          />
-        ) : (
-          <ConfigFileStoreStepTwo
-            name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
-            isBackendConfig={isBackendConfig}
-            isTerragruntPlan={false}
-            isReadonly={readonly}
-            allowableTypes={allowableTypes}
-            onSubmitCallBack={(data: any, prevStepData: any) => {
-              const path = getPath(false, false, isBackendConfig)
-              const configObject = get(data, path) || {
-                store: {}
-              }
-              if (data?.store?.type === 'Harness') {
-                configObject.store = data?.store
-              } else {
-                configObject.moduleSource = data.spec?.configuration?.spec?.configFiles?.moduleSource
+        <ConfigFileStoreStepTwo
+          name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
+          isBackendConfig={isBackendConfig}
+          isTerragruntPlan={false}
+          isTerragrunt
+          isReadonly={readonly}
+          allowableTypes={allowableTypes}
+          onSubmitCallBack={(data: any, prevStepData: any) => {
+            const path = getPath(false, false, isBackendConfig)
+            const configObject = get(data, path) || {
+              store: {}
+            }
+            if (data?.store?.type === 'Harness') {
+              configObject.store = data?.store
+            } else {
+              configObject.moduleSource = data.spec?.configuration?.spec?.configFiles?.moduleSource
 
-                if (prevStepData.identifier && prevStepData.identifier !== data?.identifier) {
-                  configObject.store.spec.connectorRef = prevStepData?.identifier
-                }
-                if (configObject?.store.spec.gitFetchType === 'Branch') {
-                  unset(configObject.store.spec, 'commitId')
-                } else if (configObject?.store.spec.gitFetchType === 'Commit') {
-                  unset(configObject.store.spec, 'branch')
-                }
-                if (configObject?.store?.spec?.artifactPaths) {
-                  unset(configObject?.store?.spec, 'artifactPaths')
-                  unset(configObject?.store?.spec, 'repositoryName')
-                }
-                if (configObject?.store?.spec?.files) {
-                  unset(configObject?.store?.spec, 'files')
-                }
-                if (configObject?.store?.spec?.secretFiles) {
-                  unset(configObject?.store?.spec, 'secretFiles')
-                }
+              if (prevStepData.identifier && prevStepData.identifier !== data?.identifier) {
+                configObject.store.spec.connectorRef = prevStepData?.identifier
               }
-              const valObj = cloneDeep(formik.values)
-              configObject.store.type = prevStepData?.selectedType
-              set(valObj, path, { ...configObject })
-              formik.setValues(valObj)
-              setConnectorView(false)
-              setShowModal(false)
-            }}
-          />
-        )}
+              if (configObject?.store.spec.gitFetchType === 'Branch') {
+                unset(configObject.store.spec, 'commitId')
+              } else if (configObject?.store.spec.gitFetchType === 'Commit') {
+                unset(configObject.store.spec, 'branch')
+              }
+              if (configObject?.store?.spec?.artifactPaths) {
+                unset(configObject?.store?.spec, 'artifactPaths')
+                unset(configObject?.store?.spec, 'repositoryName')
+              }
+              if (configObject?.store?.spec?.files) {
+                unset(configObject?.store?.spec, 'files')
+              }
+              if (configObject?.store?.spec?.secretFiles) {
+                unset(configObject?.store?.spec, 'secretFiles')
+              }
+            }
+            const valObj = cloneDeep(formik.values)
+            configObject.store.type = prevStepData?.selectedType
+            set(valObj, path, { ...configObject })
+            formik.setValues(valObj)
+            setConnectorView(false)
+            setShowModal(false)
+            setShowBackendConfigRemoteWizard(false)
+          }}
+        />
       </StepWizard>
     )
   }
@@ -470,7 +431,6 @@ export default function TerragruntEitView(
         {(formik: FormikProps<TerragruntData>) => {
           const { values, setFieldValue } = formik
           setFormikRef(formikRef, formik)
-
           const configFile = formik.values.spec.configuration.spec?.configFiles
           const configFilePath = getConfigFilePath(configFile)
           const backendConfigFile =
@@ -749,7 +709,7 @@ export default function TerragruntEitView(
                                   {backendConfigFilePath && (
                                     <>
                                       <Text font="normal" lineClamp={1} width={200}>
-                                        {backendConfigFilePath}
+                                        /{backendConfigFilePath}
                                       </Text>
                                       <Button
                                         minimal
@@ -786,7 +746,11 @@ export default function TerragruntEitView(
                                   </Text>
                                 )
                               }}
-                              style={{ marginTop: 'var(--spacing-small)', marginBottom: 'var(--spacing-small)' }}
+                              style={{
+                                marginTop: 'var(--spacing-small)',
+                                marginBottom: 'var(--spacing-small)',
+                                width: 460
+                              }}
                             />
                           </div>
                           <div className={css.divider} />
@@ -825,7 +789,7 @@ export default function TerragruntEitView(
                       }}
                       className={cx(css.modal, Classes.DIALOG)}
                     >
-                      <div className={css.createTfWizard}>{newConfigFileComponent(formik, true, false)}</div>
+                      <div className={css.createTfWizard}>{newConfigFileComponent(formik, false)}</div>
                       <Button
                         variation={ButtonVariation.ICON}
                         icon="cross"
@@ -846,7 +810,7 @@ export default function TerragruntEitView(
                       }}
                       className={cx(css.modal, Classes.DIALOG)}
                     >
-                      <div className={css.createTfWizard}>{newConfigFileComponent(formik, false, true)}</div>
+                      <div className={css.createTfWizard}>{newConfigFileComponent(formik, true)}</div>
                       <Button
                         variation={ButtonVariation.ICON}
                         icon="cross"
