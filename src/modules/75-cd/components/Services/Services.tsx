@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import { Tabs } from '@harness/uicore'
 import moment from 'moment'
 import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -14,11 +13,7 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import { useGetCommunity } from '@common/utils/utils'
-import {
-  startOfDay,
-  TimeRangeSelector,
-  TimeRangeSelectorProps
-} from '@common/components/TimeRangeSelector/TimeRangeSelector'
+import { startOfDay, TimeRangeSelectorProps } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { useLocalStorage } from '@common/hooks'
 import { convertStringToDateTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -26,9 +21,7 @@ import EndOfLifeBanner from '@pipeline/components/PipelineStudio/PipelineCanvas/
 import { DeploymentsTimeRangeContext, ServiceStoreContext, useServiceStore } from './common'
 
 import { ServicesListPage } from './ServicesListPage/ServicesListPage'
-import { ServicesDashboardPage } from './ServicesDashboardPage/ServicesDashboardPage'
-
-import css from './Services.module.scss'
+import { ServiceTab } from './ServiceTabs/ServiceTabs'
 
 export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showServicesDashboard }) => {
   const { view, setView, fetchDeploymentList } = useServiceStore()
@@ -57,37 +50,12 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
       }}
     >
       {showBanner && <EndOfLifeBanner isSvcOrEnv />}
-      <Page.Header
-        title={getString('services')}
-        breadcrumbs={<NGBreadcrumbs />}
-        toolbar={
-          showServicesDashboard && (
-            <TimeRangeSelector timeRange={resultTimeFilterRange?.range} setTimeRange={setTimeRange} minimal />
-          )
-        }
-      />
+      <Page.Header title={getString('services')} breadcrumbs={<NGBreadcrumbs />} />
       {isCommunity || !showServicesDashboard ? (
         <ServicesListPage />
       ) : (
         <DeploymentsTimeRangeContext.Provider value={{ timeRange: resultTimeFilterRange, setTimeRange }}>
-          <div className={css.tabs}>
-            <Tabs
-              id={'serviceLandingPageTabs'}
-              defaultSelectedTabId={'dashboard'}
-              tabList={[
-                {
-                  id: 'dashboard',
-                  title: getString('dashboardLabel'),
-                  panel: <ServicesDashboardPage />
-                },
-                {
-                  id: 'manageServices',
-                  title: getString('cd.serviceDashboard.manageServiceLabel'),
-                  panel: <ServicesListPage />
-                }
-              ]}
-            />
-          </div>
+          <ServiceTab setTimeRange={setTimeRange} timeRange={resultTimeFilterRange} />
         </DeploymentsTimeRangeContext.Provider>
       )}
     </ServiceStoreContext.Provider>

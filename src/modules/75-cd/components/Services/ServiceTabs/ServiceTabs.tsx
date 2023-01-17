@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -7,68 +7,64 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import cx from 'classnames'
-import {
-  Dialog,
-  Layout,
-  Views,
-  VisualYamlSelectedView as SelectedView,
-  Container,
-  GridListToggle,
-  useToaster,
-  Text
-} from '@harness/uicore'
-import { Color } from '@harness/design-system'
-import { useHistory, useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
+import {
+  Button,
+  Container,
+  Dialog,
+  ExpandingSearchInput,
+  Layout,
+  Page,
+  useToaster,
+  VisualYamlSelectedView as SelectedView
+} from '@harness/uicore'
+import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
-import { useServiceStore } from '@cd/components/Services/common'
 import { useStrings } from 'framework/strings'
+import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-
-import { Page } from '@common/exports'
-import RbacButton from '@rbac/components/Button/Button'
-import { GetServiceListQueryParams, ServiceResponseDTO, useGetServiceList } from 'services/cd-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import routes from '@common/RouteDefinitions'
-import { useGetCommunity } from '@common/utils/utils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { FeatureFlag } from '@common/featureFlags'
-import { Sort, SortFields } from '@common/utils/listUtils'
-import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-import { SortOption } from '@common/components/SortOption/SortOption'
-import ServicesGridView from '../ServicesGridView/ServicesGridView'
-import ServicesListView from '../ServicesListView/ServicesListView'
+import type { ServiceResponseDTO } from 'services/cd-ng'
+import { useGetCommunity } from '@common/utils/utils'
+import routes from '@common/RouteDefinitions'
+import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
+import { useStateWithQueryParams } from '@common/hooks/useStateWithQueryParams'
+import { TimeRangeSelector, TimeRangeSelectorProps } from '@common/components/TimeRangeSelector/TimeRangeSelector'
+import { convertStringToDateTimeRange } from '@cd/pages/dashboard/dashboardUtils'
+import { ServicesDashboardPage } from '../ServicesDashboardPage/ServicesDashboardPage'
+import { ServicesListPage } from '../ServicesListPage/ServicesListPage'
+import { useServiceStore } from '../common'
 import { ServiceTabs } from '../utils/ServiceUtils'
-import css from './ServicesListPage.module.scss'
 
-interface ServiceListPageProps {
-  isServiceDashboard?: boolean
-  searchTerm?: string
+import css from './ServiceTabs.module.scss'
+
+enum Tabs {
+  DASHBOARD = 'DASHBOARD',
+  MANAGESERVICE = 'MANAGESERVICE'
 }
 
-export const ServicesListPage = (props: ServiceListPageProps): JSX.Element => {
-  const { isServiceDashboard = false, searchTerm = '' } = props
-  const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
-  const isCommunity = useGetCommunity()
-  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+interface ServiceTabProps {
+  timeRange: TimeRangeSelectorProps
+  setTimeRange: React.Dispatch<React.SetStateAction<TimeRangeSelectorProps>>
+}
+
+export const ServiceTab = (props: ServiceTabProps) => {
+  const { setTimeRange, timeRange } = props
   const { getString } = useStrings()
+  const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const { showError } = useToaster()
   const { fetchDeploymentList } = useServiceStore()
+  const isCommunity = useGetCommunity()
   const history = useHistory()
-
-  const { preference: savedSortOption, setPreference: setSavedSortOption } = usePreferenceStore<string[] | undefined>(
-    PreferenceScope.USER,
-    'sortOptionManageService'
-  )
-
-  const [sort, setSort] = useState<string[]>(savedSortOption || [SortFields.LastModifiedAt, Sort.DESC])
-
-  const [view, setView] = useState(Views.LIST)
-  const [page, setPage] = useState(0)
   const [mode, setMode] = useState<SelectedView>(SelectedView.VISUAL)
+  const [view, setView] = useStateWithQueryParams({ key: 'view' })
   const [isEdit, setIsEdit] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const resultTimeFilterRange = convertStringToDateTimeRange(timeRange)
   const [serviceDetails, setServiceDetails] = useState({
     name: '',
     identifier: '',
@@ -165,37 +161,13 @@ export const ServicesListPage = (props: ServiceListPageProps): JSX.Element => {
     ),
     [fetchDeploymentList, orgIdentifier, projectIdentifier, mode, isEdit, serviceDetails]
   )
-  const queryParams: GetServiceListQueryParams = {
-    accountIdentifier: accountId,
-    orgIdentifier,
-    projectIdentifier,
-    size: 10,
-    page: page,
-    sort,
-    searchTerm
-  }
-
-  const {
-    loading,
-    data: serviceList,
-    refetch
-  } = useGetServiceList({
-    queryParams,
-    queryParamStringifyOptions: { arrayFormat: 'comma' }
-  })
-
-  useEffect(() => {
-    fetchDeploymentList.current = refetch
-  }, [fetchDeploymentList, refetch])
 
   return (
-    <Page.Body className={css.pageBody}>
-      <>
-        <Layout.Horizontal
-          padding={{ left: 'xlarge', right: 'xlarge', top: 'medium' }}
-          flex={{ distribution: 'space-between' }}
-        >
-          {!isServiceDashboard ? (
+    <>
+      <Page.Header
+        className={css.pageHeader}
+        title={
+          <Layout.Horizontal>
             <RbacButton
               intent="primary"
               data-testid="add-service"
@@ -213,40 +185,46 @@ export const ServicesListPage = (props: ServiceListPageProps): JSX.Element => {
                 setMode(SelectedView.VISUAL)
               }}
             />
-          ) : (
-            <Text color={Color.GREY_800} iconProps={{ size: 14 }}>
-              {getString('total')}: {serviceList?.data?.totalItems}
-            </Text>
-          )}
-          <Layout.Horizontal className={css.sortClass}>
-            {SortOption({ setSavedSortOption, setSort, sort })}
-            <GridListToggle initialSelectedView={Views.LIST} onViewToggle={setView} />
           </Layout.Horizontal>
-        </Layout.Horizontal>
-
-        <Layout.Vertical
-          margin={{ left: 'xlarge', right: 'xlarge', top: 'large', bottom: 'large' }}
-          className={css.container}
-        >
-          {view === Views.GRID ? (
-            <ServicesGridView
-              data={serviceList}
-              loading={loading}
-              onRefresh={() => refetch()}
-              gotoPage={(pageNumber: number) => setPage(pageNumber)}
-              onServiceSelect={async service => goToServiceDetails(service)}
+        }
+        content={
+          <Layout.Horizontal height="inherit" flex={{ alignItems: 'flex-end' }} spacing="small">
+            <Button
+              text={getString('dashboardLabel')}
+              minimal
+              className={cx({ [css.selectedTabs]: view !== Tabs.MANAGESERVICE })}
+              intent={view !== Tabs.MANAGESERVICE ? 'primary' : 'none'}
+              onClick={() => setView(Tabs.DASHBOARD)}
             />
-          ) : (
-            <ServicesListView
-              data={serviceList}
-              loading={loading}
-              onRefresh={() => refetch()}
-              gotoPage={(pageNumber: number) => setPage(pageNumber)}
-              onServiceSelect={async service => goToServiceDetails(service)}
+            <Button
+              text={getString('cd.serviceDashboard.manageServiceLabel')}
+              minimal
+              className={cx({ [css.selectedTabs]: view === Tabs.MANAGESERVICE })}
+              intent={view === Tabs.MANAGESERVICE ? 'primary' : 'none'}
+              onClick={() => setView(Tabs.MANAGESERVICE)}
             />
-          )}
-        </Layout.Vertical>
-      </>
-    </Page.Body>
+          </Layout.Horizontal>
+        }
+        toolbar={
+          <Layout.Horizontal margin={{ right: 'small' }} height="xxxlarge" className={css.toolbar} width={250}>
+            {view !== Tabs.MANAGESERVICE ? (
+              <TimeRangeSelector timeRange={resultTimeFilterRange?.range} setTimeRange={setTimeRange} minimal />
+            ) : (
+              <ExpandingSearchInput
+                alwaysExpanded
+                width={200}
+                placeholder={getString('search')}
+                onChange={(query: string) => setSearchTerm(query)}
+              />
+            )}
+          </Layout.Horizontal>
+        }
+      />
+      {view !== Tabs.MANAGESERVICE ? (
+        <ServicesDashboardPage />
+      ) : (
+        <ServicesListPage isServiceDashboard searchTerm={searchTerm} />
+      )}
+    </>
   )
 }
