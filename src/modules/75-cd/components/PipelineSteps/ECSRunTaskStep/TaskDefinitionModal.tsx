@@ -280,6 +280,7 @@ export const TaskDefinitionModal = (props: TaskDefinitionModalProps): React.Reac
     >
       <div className={css.createConnectorWizard}>
         <ManifestWizard
+          isEditMode={isEditMode}
           types={availableManifestTypes}
           manifestStoreTypes={ManifestTypetoStoreMap[selectedManifest]}
           labels={getLabels()}

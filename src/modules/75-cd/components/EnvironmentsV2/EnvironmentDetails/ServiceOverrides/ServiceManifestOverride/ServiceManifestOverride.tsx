@@ -123,6 +123,7 @@ function ServiceManifestOverride({
     store: OverrideManifestStoresTypes,
     index: number
   ): void => {
+    setIsEditMode(true)
     setSelectedManifest(manifestType)
     setManifestStore(store)
     setEditIndex(index)
@@ -381,6 +382,7 @@ function ServiceManifestOverride({
       <Dialog onClose={onClose} {...DIALOG_PROPS}>
         <div className={css.createConnectorWizard}>
           <ManifestWizard
+            isEditMode={isEditMode}
             types={allowedOverrideManifestTypes}
             manifestStoreTypes={OverrideManifestStoreMap[selectedManifest as OverrideManifestTypes]}
             labels={getLabels()}

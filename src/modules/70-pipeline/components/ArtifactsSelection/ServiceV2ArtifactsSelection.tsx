@@ -504,6 +504,7 @@ export default function ServiceV2ArtifactsSelection({
 
     setArtifactContext(viewType)
     setEditIndex(index as number)
+    setIsEditMode(true)
 
     if (!isEmpty(artifactSourceTemplateNode?.template)) {
       setArtifactSourceConfigNode(artifactSourceTemplateNode)
@@ -679,6 +680,7 @@ export default function ServiceV2ArtifactsSelection({
   const renderExistingArtifact = (): JSX.Element => {
     return (
       <ArtifactWizard
+        isEditMode={isEditMode}
         artifactInitialValue={getArtifactInitialValues}
         iconsProps={getIconProps}
         types={allowedArtifactTypes[deploymentType]}

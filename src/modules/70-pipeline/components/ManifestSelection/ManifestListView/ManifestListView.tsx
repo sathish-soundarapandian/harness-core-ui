@@ -163,6 +163,7 @@ function ManifestListView({
     setManifestStore(store)
     setConnectorView(false)
     setEditIndex(index)
+    setIsEditMode(true)
     showConnectorModal()
   }
 
@@ -469,6 +470,7 @@ function ManifestListView({
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
           <ManifestWizard
+            isEditMode={isEditMode}
             types={availableManifestTypes}
             manifestStoreTypes={ManifestTypetoStoreMap[selectedManifest as ManifestTypes]}
             labels={getLabels()}

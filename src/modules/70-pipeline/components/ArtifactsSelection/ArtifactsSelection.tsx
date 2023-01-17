@@ -397,6 +397,7 @@ export default function ArtifactsSelection({
   }
 
   const editArtifact = (viewType: number, type?: ArtifactType, index?: number): void => {
+    setIsEditMode(true)
     setModalContext(viewType)
     setConnectorView(false)
     setSelectedArtifact(type as ArtifactType)
@@ -545,6 +546,7 @@ export default function ArtifactsSelection({
     return (
       <div>
         <ArtifactWizard
+          isEditMode={isEditMode}
           artifactInitialValue={getArtifactInitialValues()}
           iconsProps={getIconProps()}
           types={allowedArtifactTypes[deploymentType]}

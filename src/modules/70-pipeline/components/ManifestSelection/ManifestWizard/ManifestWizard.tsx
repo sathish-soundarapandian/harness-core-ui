@@ -41,6 +41,7 @@ interface ManifestWizardStepsProps<T, U> {
   changeManifestType: (data: U | null) => void
   types: ManifestTypes[]
   listOfDisabledManifestTypes?: ManifestTypes[]
+  isEditMode?: boolean
 }
 
 const showManifestStoreStepDirectly = (selectedManifest: ManifestTypes | null): boolean => {
@@ -76,7 +77,8 @@ export function ManifestWizard<T, U>({
   changeManifestType,
   iconsProps,
   isReadonly,
-  listOfDisabledManifestTypes
+  listOfDisabledManifestTypes,
+  isEditMode
 }: ManifestWizardStepsProps<T, U>): React.ReactElement {
   const { getString } = useStrings()
   const onStepChange = (arg: StepChangeData<any>): void => {
@@ -117,7 +119,7 @@ export function ManifestWizard<T, U>({
       className={css.manifestWizard}
       subtitle={renderSubtitle()}
       onStepChange={onStepChange}
-      initialStep={showManifestStoreStepDirectly(selectedManifest) ? 2 : undefined}
+      initialStep={isEditMode || showManifestStoreStepDirectly(selectedManifest) ? 2 : undefined}
     >
       <ManifestRepoTypes
         manifestTypes={types}

@@ -115,6 +115,7 @@ function K8sOverrideValuesListView({
   }
 
   const editManifest = (manifestType: K8sManifestTypes, store: K8sManifestStores, index: number): void => {
+    setIsEditMode(true)
     setSelectedManifest(manifestType)
     setManifestStore(store)
     setConnectorView(false)
@@ -367,6 +368,7 @@ function K8sOverrideValuesListView({
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
           <ManifestWizard
+            isEditMode={isEditMode}
             types={allowedManifestTypes[deploymentType]}
             manifestStoreTypes={K8sManifestTypetoStoreMap[selectedManifest as K8sManifestTypes]}
             labels={getLabels()}

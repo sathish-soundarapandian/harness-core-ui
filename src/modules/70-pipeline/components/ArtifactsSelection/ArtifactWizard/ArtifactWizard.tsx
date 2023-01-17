@@ -64,6 +64,7 @@ interface ArtifactWizardProps {
   allowableTypes: AllowedTypes
   showConnectorStep: boolean
   newConnectorProps: any
+  isEditMode?: boolean
 }
 
 function ArtifactWizard({
@@ -80,7 +81,8 @@ function ArtifactWizard({
   lastSteps,
   iconsProps,
   showConnectorStep,
-  isReadonly
+  isReadonly,
+  isEditMode
 }: ArtifactWizardProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -198,7 +200,12 @@ function ArtifactWizard({
   }
 
   return (
-    <StepWizard className={css.existingDocker} subtitle={renderSubtitle()} onStepChange={onStepChange}>
+    <StepWizard
+      className={css.existingDocker}
+      subtitle={renderSubtitle()}
+      onStepChange={onStepChange}
+      initialStep={isEditMode ? 2 : undefined}
+    >
       <ArtifactoryRepoType
         artifactTypes={types}
         name={getString('connectors.artifactRepoType')}
