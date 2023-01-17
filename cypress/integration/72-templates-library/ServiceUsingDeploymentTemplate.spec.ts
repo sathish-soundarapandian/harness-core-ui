@@ -74,8 +74,8 @@ describe('ServiceV2 - Deployment Template', () => {
     cy.intercept('GET', useTemplateCall, useTemplateResponse).as('useTemplate')
     cy.intercept('POST', afterUseTemplateListCall, afterUseTemplateListResponse).as('afterUseTemplateList')
 
-    cy.visitPageAssertion('[id*="serviceLandingPageTabs_manageServices"]')
-    cy.get('div[id*="serviceLandingPageTabs_manageServices"]').click({ force: true })
+    cy.visitPageAssertion('button[aria-label="Manage Services"]')
+    cy.get('button[aria-label="Manage Services"]').click({ force: true })
     cy.contains('span', 'New Service').should('be.visible').click()
     cy.fillField('name', serviceName)
     cy.contains('span', 'Save').click()

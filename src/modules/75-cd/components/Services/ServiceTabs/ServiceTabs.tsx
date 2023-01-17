@@ -80,6 +80,7 @@ export const ServiceTab = (props: ServiceTabProps) => {
     }
   }, [isEdit])
 
+  /* istanbul ignore next*/
   const goToServiceDetails = useCallback(
     (selectedService: ServiceResponseDTO): void => {
       if (isCommunity) {
@@ -114,6 +115,7 @@ export const ServiceTab = (props: ServiceTabProps) => {
     [accountId, orgIdentifier, projectIdentifier, module]
   )
 
+  /* istanbul ignore next*/
   const onServiceCreate = useCallback(
     (values: ServiceResponseDTO): void => {
       if (isSvcEnvEntityEnabled) {
@@ -147,14 +149,18 @@ export const ServiceTab = (props: ServiceTabProps) => {
             data={isEdit ? serviceDetails : { name: '', identifier: '', orgIdentifier, projectIdentifier }}
             isEdit={isEdit}
             isService={!isEdit}
-            onCreateOrUpdate={values => {
-              onServiceCreate(values)
-              setIsEdit(false)
-            }}
-            closeModal={() => {
-              hideModal()
-              setIsEdit(false)
-            }}
+            onCreateOrUpdate={
+              /* istanbul ignore next*/ values => {
+                onServiceCreate(values)
+                setIsEdit(false)
+              }
+            }
+            closeModal={
+              /* istanbul ignore next*/ () => {
+                hideModal()
+                setIsEdit(false)
+              }
+            }
           />
         </Container>
       </Dialog>

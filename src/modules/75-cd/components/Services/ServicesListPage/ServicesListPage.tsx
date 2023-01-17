@@ -171,8 +171,7 @@ export const ServicesListPage = (props: ServiceListPageProps): JSX.Element => {
     projectIdentifier,
     size: 10,
     page: page,
-    sort,
-    searchTerm
+    sort
   }
 
   const {
@@ -180,7 +179,7 @@ export const ServicesListPage = (props: ServiceListPageProps): JSX.Element => {
     data: serviceList,
     refetch
   } = useGetServiceList({
-    queryParams,
+    queryParams: searchTerm ? { ...queryParams, searchTerm } : queryParams,
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
